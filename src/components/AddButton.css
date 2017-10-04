@@ -1,0 +1,33 @@
+.AddButton {
+  border: 1px solid #979797;
+  width: 250px;
+  height: 40px;
+  position: relative;
+  background-image: linear-gradient(
+    0deg,
+    rgba(216, 216, 216, 0.23) 0%,
+    rgba(195, 195, 195, 0.36) 77%,
+    #eeeeee 100%
+  );
+  cursor: pointer;
+}
+.Title {
+  position: absolute;
+  left: 55px;
+  top: 10px;
+  font-size: 12px;
+}
+.Plus {
+  position: absolute;
+  width: 40px;
+  height: 39px;
+  left: 0;
+  border-right: 1px solid #979797;
+}
+.AddIcon {
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  font-weight: 100;
+  font-size: 18px;
+}

@@ -1,0 +1,20 @@
+.LanguageSwitcher {
+  background-color: #fff;
+  position: absolute;
+  box-shadow: 0 2px 6px 1px rgba(0, 0, 0, 0.30);
+  bottom: 10px;
+  min-width: 200px;
+  z-index: 999999;
+}
+.ListItem {
+  background: #fff;
+  padding: 10px 5px 10px 5px;
+  cursor: pointer;
+  margin: 10px 0 10px 0;
+}
+.ListItem span {
+  margin-left: 15px;
+}
+.ListItem:hover {
+  background-color: #e8e8e8;
+}

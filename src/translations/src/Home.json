@@ -1,0 +1,26 @@
+[
+  {
+    "id": "home.usermanagement",
+    "defaultMessage": "User management"
+  },
+  {
+    "id": "home.sso_management",
+    "defaultMessage": "Single sign-on account management"
+  },
+  {
+    "id": "home.scenarios",
+    "defaultMessage": "3Di Scenarios"
+  },
+  {
+    "id": "home.scenario_management",
+    "defaultMessage": "Scenario management"
+  },
+  {
+    "id": "home.alarms",
+    "defaultMessage": "Alarms"
+  },
+  {
+    "id": "home.alarm_management",
+    "defaultMessage": "Alarm management"
+  }
+]

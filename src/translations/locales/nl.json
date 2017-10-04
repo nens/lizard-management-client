@@ -1,0 +1,22 @@
+{
+  "alarms.alarms_breadcrumb": "Alarmen",
+  "alarms.alarms_groups": "Groepen",
+  "alarms.alarms_template_management": "Alarmsjablonen beheren",
+  "alarms.alarms_templates": "Sjablonen",
+  "alarms.group_messages": "Groepsberichten",
+  "alarms.manage_notifications": "Alarmberichten beheren",
+  "alarms.notifications": "Notificaties",
+  "alarms.recipient_management": "Ontvangers beheren",
+  "alarms.send_group_messages_subtitle": "Stuur berichten naar groepen",
+  "home.alarm_management": "Alarmenbeheer",
+  "home.alarms": "Alarmen",
+  "home.scenario_management": "Scenariobeheer",
+  "home.scenarios": "3Di Scenario's",
+  "home.sso_management": "Single sign-on beheer",
+  "home.usermanagement": "Gebruikersbeheer",
+  "index.documentation": "Documentatie",
+  "index.support": "Ondersteuning",
+  "notifications.alarms_breadcrumb": "Alarmen",
+  "notifications.alarms_notifications": "Notificaties",
+  "notifications_app.new_notification": "Nieuwe notificatie"
+}

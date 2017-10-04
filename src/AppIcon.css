@@ -1,0 +1,35 @@
+.AppIcon {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  margin: 20px;
+  background: #f2f2f2;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.50);
+  cursor: pointer;
+  float: left;
+  border-radius: 2px;
+}
+.Img {
+  position: absolute;
+  left: 50%;
+  margin-left: -42px;
+  top: 30px;
+}
+.Title {
+  position: absolute;
+  top: 120px;
+  font-size: 18px;
+  width: 100%;
+  text-align: center;
+  color: #333;
+  text-decoration: none;
+}
+.SubTitle {
+  position: absolute;
+  font-size: 12px;
+  top: 150px;
+  width: 100%;
+  text-align: center;
+  color: #a3a3a3;
+  text-decoration: none;
+}

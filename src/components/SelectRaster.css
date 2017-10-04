@@ -1,0 +1,16 @@
+.SelectRaster {
+  position: relative;
+  z-index: 9999999;
+}
+.Results {
+  position: absolute;
+  background-color: #fff;
+  width: 100%;
+  box-shadow: rgba(0, 0, 0, 0.3) 1px 1px 9px -1px;
+}
+.ResultRow {
+  height: 50px;
+  padding: 13px;
+  border-bottom: 1px solid #ccc;
+  cursor: pointer;
+}

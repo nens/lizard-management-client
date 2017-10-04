@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="30px" height="20px" viewBox="0 0 30 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
+    <title>back</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="demo.lizard.net/management/alarms/-[1-level-in]" transform="translate(-170.000000, -195.000000)">
+            <g id="btn-back" transform="translate(168.000000, 195.000000)">
+                <g id="back" transform="translate(2.000000, 0.000000)">
+                    <polygon id="Shape" fill="#00A487" fill-rule="nonzero" points="6 12 0 6 6 0"></polygon>
+                    <path d="M16.4998649,19 L22.5880344,19 C24.2987627,19.0000727 25.9385807,18.3102377 27.1427121,17.0839484 C28.3468436,15.8576591 29.0154245,14.196617 28.9997298,12.4703196 L28.9997298,12.4703196 C28.9997298,8.89686077 26.129116,6 22.5880344,6 L4,6" id="Shape" stroke="#00AA8E" stroke-linecap="square"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
