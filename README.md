@@ -10,6 +10,8 @@ It enables administrators and power-users to perform administrative tasks, such 
 
 - User management
 - Alarm management
+- 3DI scenario management
+- Billing etc.
 
 
 Installation
@@ -21,7 +23,7 @@ Installation
 - `$ yarn start`
 
 
-Create-react-app
+create-react-app
 ================
 
 The base skeleton for this project was generated using [create-react-app](https://github.com/facebookincubator/create-react-app). Have a look at CRA.md for its documentation.
@@ -85,6 +87,18 @@ To execute both subsequently, run: `$ yarn run i18n:extract-then-update`.
 See `src/translations/locales/[language].json`. (where language is 'nl', for now)
 
 
+Redux
+=====
+
+To be written...
+
+
+React-router
+============
+
+To be written...
+
+
 Sentry
 ======
 
@@ -94,7 +108,7 @@ To be written...
 Browser development extensions
 ==============================
 
-This front-end uses React and Redux. These extensions may help:
+These extensions may help:
 
 - React Devtools for [Chrome](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en) or [Firefox](https://addons.mozilla.org/en-US/firefox/addon/react-devtools/)
 
