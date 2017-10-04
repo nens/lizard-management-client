@@ -2,7 +2,7 @@
 lizard-management-client
 ========================
 
-![Screenshot](https://raw.github.com/nens/lizard-management-client/master/screenshot.jpg)
+![Screenshot](https://raw.githubusercontent.com/nens/lizard-management-client/master/screenshot.jpg?token=AAAcGWEdm9ezSIyVUaNIkOxDiImLdpkOks5Z3cBuwA%3D%3D)
 
 This is the React/Redux-based management interface for Lizard.
 
