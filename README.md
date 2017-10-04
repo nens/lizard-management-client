@@ -24,9 +24,10 @@ Installation
 ============
 
 - Required: A working nodejs and yarn installation.
-- In the root directory of the repository: `$ yarn install`
+- Required: `$ cp package.json.original package.json` (needed until better solution is found for proxy credentials)
 - Add your SSO credentials in the proxy headers of `package.json`
-- `$ yarn start`
+- In the root directory of the repository: `$ yarn install`
+- ...followed by `$ yarn start`
 
 
 create-react-app
