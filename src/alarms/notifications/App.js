@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import MDSpinner from "react-md-spinner";
+import Ink from "react-ink";
 import { FormattedMessage } from "react-intl";
 import pluralize from "pluralize";
 import { connect } from "react-redux";
@@ -52,6 +53,7 @@ class App extends Component {
                 id="notifications_app.new_notification"
                 defaultMessage="New notification"
               />
+              <Ink />
             </button>
           </div>
         </div>
