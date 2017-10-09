@@ -5667,6 +5667,10 @@ react-error-overlay@^2.0.1:
     settle-promise "1.0.0"
     source-map "0.5.6"
 
+react-ink@^6.2.0:
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/react-ink/-/react-ink-6.2.0.tgz#b268107bf986c6009bd38d7d3baa9fba1016e368"
+
 react-input-autosize@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/react-input-autosize/-/react-input-autosize-2.0.1.tgz#e92190497b4026c2780ad0f2fd703c835ba03e33"
