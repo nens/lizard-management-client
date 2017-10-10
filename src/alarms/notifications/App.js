@@ -74,7 +74,7 @@ class App extends Component {
             ) : results.length > 0 ? (
               <table className="table table-responsive">
                 <tbody>
-                  {results.reverse().map((alarm, i) => {
+                  {results.map((alarm, i) => {
                     const numberOfThresholds = alarm.thresholds.length;
                     return (
                       <tr key={i}>
