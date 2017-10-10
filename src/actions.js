@@ -14,6 +14,11 @@ export const RECEIVE_ACTIVATE_ALARM = "RECEIVE_ACTIVATE_ALARM";
 export const REQUEST_LIZARD_BOOTSTRAP = "REQUEST_LIZARD_BOOTSTRAP";
 export const RECEIVE_LIZARD_BOOTSTRAP = "RECEIVE_LIZARD_BOOTSTRAP";
 
+export const REQUEST_ORGANISATIONS = "REQUEST_ORGANISATIONS";
+export const RECEIVE_ORGANISATIONS = "RECEIVE_ORGANISATIONS";
+export const SELECT_ORGANISATION = "SELECT_ORGANISATION";
+
+
 // Actions
 function requestAlarms() {
   return {
@@ -67,7 +72,29 @@ function receiveLizardBootstrap(data) {
   };
 }
 
+// function requestOrganisations() {
+//   return {
+//     type: REQUEST_ORGANISATIONS
+//   };
+// }
+
+function receiveOrganisations(data) {
+  return {
+    type: RECEIVE_ORGANISATIONS,
+    data
+  };
+}
+
 // Exported functions
+export function selectOrganisation(organisation) {
+  localStorage.setItem("lizard-management-current-organisation", JSON.stringify(organisation));
+  return {
+    type: SELECT_ORGANISATION,
+    organisation
+  };
+}
+
+
 export function fetchAlarms() {
   return (dispatch, getState) => {
     dispatch(requestAlarms());
@@ -116,6 +143,18 @@ export function fetchLizardBootstrap() {
       .then(response => response.json())
       .then(data => {
         dispatch(receiveLizardBootstrap(data));
+      });
+  };
+}
+
+export function fetchOrganisations() {
+  return (dispatch, getState) => {
+    // dispatch(requestOrganisations());
+    fetch("/api/v3/organisations/?page_size=100000")
+      .then(response => response.json())
+      .then(data => data.results)
+      .then(data => {
+        dispatch(receiveOrganisations(data));
       });
   };
 }

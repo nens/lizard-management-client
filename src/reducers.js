@@ -7,7 +7,10 @@ import {
   REQUEST_REMOVE_ALARM,
   RECEIVE_REMOVE_ALARM,
   REQUEST_LIZARD_BOOTSTRAP,
-  RECEIVE_LIZARD_BOOTSTRAP
+  RECEIVE_LIZARD_BOOTSTRAP,
+  REQUEST_ORGANISATIONS,
+  RECEIVE_ORGANISATIONS,
+  SELECT_ORGANISATION
 } from "./actions";
 
 function alarms(
@@ -48,7 +51,9 @@ function alarms(
 function bootstrap(
   state = {
     bootstrap: {},
-    isFetching: false
+    isFetching: false,
+    organisations: [],
+    organisation: JSON.parse(localStorage.getItem("lizard-management-current-organisation")) || null
   },
   action
 ) {
@@ -57,6 +62,12 @@ function bootstrap(
       return { ...state, isFetching: true };
     case RECEIVE_LIZARD_BOOTSTRAP:
       return { ...state, bootstrap: action.data, isFetching: false };
+    case REQUEST_ORGANISATIONS:
+      return { ...state, isFetching: true };
+    case RECEIVE_ORGANISATIONS:
+      return { ...state, organisations: action.data, isFetching: false };
+    case SELECT_ORGANISATION:
+      return { ...state, organisation: action.organisation };
     default:
       return state;
   }
