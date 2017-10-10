@@ -44,7 +44,6 @@ class NewNotification extends Component {
       numberOfRecipientGroups: 0,
       raster: null,
       rasters: [],
-      showConfigureRecipients: false,
       showConfigureThreshold: false,
       step: 1,
       thresholds: []
@@ -53,7 +52,6 @@ class NewNotification extends Component {
       this
     );
     this.hideConfigureThreshold = this.hideConfigureThreshold.bind(this);
-    this.hideConfigureRecipients = this.hideConfigureRecipients.bind(this);
     this.handleActivateClick = this.handleActivateClick.bind(this);
     this.handleRasterSearchInput = debounce(
       this.handleRasterSearchInput.bind(this),
@@ -72,7 +70,6 @@ class NewNotification extends Component {
   componentDidMount() {
     document.getElementById("rasterName").focus();
     document.addEventListener("keydown", this.hideConfigureThreshold, false);
-    document.addEventListener("keydown", this.hideConfigureRecipients, false);
     fetchContactsAndMessages().then(data => {
       this.setState({
         availableGroups: data.groups,
@@ -82,23 +79,11 @@ class NewNotification extends Component {
   }
   componentWillUnmount() {
     document.removeEventListener("keydown", this.hideConfigureThreshold, false);
-    document.removeEventListener(
-      "keydown",
-      this.hideConfigureRecipients,
-      false
-    );
   }
   hideConfigureThreshold(e) {
     if (e.key === "Escape") {
       this.setState({
         showConfigureThreshold: false
-      });
-    }
-  }
-  hideConfigureRecipients(e) {
-    if (e.key === "Escape") {
-      this.setState({
-        showConfigureRecipients: false
       });
     }
   }
@@ -115,7 +100,7 @@ class NewNotification extends Component {
     });
   }
   handleActivateClick(e) {
-    const { doCreateAlarm } = this.props;
+    const { doCreateAlarm, currentOrganisation } = this.props;
     const {
       name,
       thresholds,
@@ -128,14 +113,14 @@ class NewNotification extends Component {
     doCreateAlarm({
       name: name,
       active: true,
-      organisation: "61f5a464c35044c19bc7d4b42d7f58cb",
+      organisation: currentOrganisation.unique_id,
       thresholds: thresholds,
       comparison: comparison,
-      messages: messages.map((message) => {
+      messages: messages.map(message => {
         return {
-          "contact_group": `https://demo.lizard.net/api/v3/contactgroups/${message.groupName}/`,
-          "message": `https://demo.lizard.net/api/v3/messages/${message.messageName}/`
-        }
+          contact_group: message.groupName,
+          message: message.messageName
+        };
       }),
       intersection: {
         raster: raster.uuid,
@@ -148,6 +133,7 @@ class NewNotification extends Component {
     this.props.history.push("/alarms/notifications");
   }
   handleRasterSearchInput(value) {
+    const { currentOrganisation } = this.props;
     if (value === "") {
       this.setState({
         rasters: []
@@ -158,7 +144,7 @@ class NewNotification extends Component {
       loading: true
     });
     return fetch(
-      `/api/v3/rasters/?organisation__unique_id=61f5a464c35044c19bc7d4b42d7f58cb&page_size=0&name__icontains=${value}`
+      `/api/v3/rasters/?organisation__unique_id=${currentOrganisation.unique_id}&page_size=0&name__icontains=${value}`
     )
       .then(response => response.json())
       .then(json => {
@@ -578,6 +564,7 @@ class NewNotification extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
+    currentOrganisation: state.bootstrap.organisation,
     isFetching: state.isFetching
   };
 };
