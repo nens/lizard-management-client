@@ -25,7 +25,7 @@ Installation
 
 - Required: A working nodejs and yarn installation.
 - In the root directory of the repository: `$ yarn install`
-- ...followed by $ PROXY_USERNAME=<your_sso_username> PROXY_PASSWORD=<your_sso_password> yarn start
+- ...followed by `$ PROXY_USERNAME=<your_sso_username> PROXY_PASSWORD=<your_sso_password> yarn start`
 
 
 
