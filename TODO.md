@@ -14,9 +14,6 @@ Core stuff
 Config
 ------
 
-- Use env variables in `package.json` for proxy credentials.
-  - Question asked on SO:
-    https://stackoverflow.com/questions/46540713/how-to-use-npm-config-in-package-json
 - Add buck-trap and config
 - Add ansible scripts
 
@@ -24,7 +21,7 @@ Config
 Features
 --------
 
-- Create organisation switcher component (needs org id serialized from /bootstrap/lizard/ endpoint)
+DONE - Create organisation switcher component (needs org id serialized from /bootstrap/lizard/ endpoint or call /organisation endpoint on init)
 - Apps pulldown (grid like Lizard/Google Apps)
 
 
@@ -41,4 +38,4 @@ Enhancements
 Bugs / glitches
 ---------------
 
-- Prevent jumping of alarms list ordering (dont use reverse() there)
+- ...
