@@ -5,7 +5,7 @@ lizard-management-client
 IMPORTANT
 =========
 
-This project is in early stages of development. Expect stuff to not work. 
+This project is in early stages of development. Expect stuff to not work.
 
 
 ![Screenshot](https://raw.githubusercontent.com/nens/lizard-management-client/master/screenshot.jpg?token=AAAcGWEdm9ezSIyVUaNIkOxDiImLdpkOks5Z3cBuwA%3D%3D)
@@ -24,10 +24,9 @@ Installation
 ============
 
 - Required: A working nodejs and yarn installation.
-- Required: `$ cp package.json.original package.json` (needed until better solution is found for proxy credentials)
-- Add your SSO credentials in the proxy headers of `package.json`
 - In the root directory of the repository: `$ yarn install`
-- ...followed by `$ yarn start`
+- ...followed by $ PROXY_USERNAME=<your_sso_username> PROXY_PASSWORD=<your_sso_password> yarn start
+
 
 
 create-react-app
