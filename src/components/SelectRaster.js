@@ -59,6 +59,7 @@ class SelectRaster extends Component {
           id="rasterName"
           tabIndex="-1"
           type="text"
+          autocomplete="off"
           className="form-control"
           placeholder={placeholderText}
           onChange={this.handleInput}
