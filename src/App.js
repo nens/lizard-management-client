@@ -8,13 +8,16 @@ import NewNotification from "./alarms/notifications/NewNotification";
 import { fetchLizardBootstrap } from "./actions";
 import { Route, NavLink } from "react-router-dom";
 import LanguageSwitcher from "./components/LanguageSwitcher";
+import OrganisationSwitcher from "./components/OrganisationSwitcher";
 import styles from "./App.css";
 import { withRouter } from "react-router-dom";
 
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      showOrganisationSwitcher: false
+    };
   }
   componentDidMount() {
     this.props.getLizardBootstrap();
@@ -24,7 +27,7 @@ class App extends Component {
     const firstName = bootstrap.bootstrap.user
       ? bootstrap.bootstrap.user.first_name
       : "";
-
+    const { showOrganisationSwitcher } = this.state;
     return (
       <div className={styles.App}>
         <div style={{ backgroundColor: "#239F85" }}>
@@ -60,17 +63,42 @@ class App extends Component {
                 <ul className="navbar-nav ml-auto">
                   <li className="nav-item active">
                     <a className="nav-link" href="#apps">
+                      <i
+                        className="material-icons"
+                        style={{
+                          fontSize: 17,
+                          position: "relative",
+                          left: -7,
+                          top: 3
+                        }}
+                      >
+                        apps
+                      </i>
                       Apps <span className="sr-only">(current)</span>
                     </a>
                   </li>
                   <li className="nav-item">
                     <a className="nav-link" href="#account">
-                      {firstName}
+                      <i className="fa fa-user" />&nbsp;&nbsp;{firstName}
                     </a>
                   </li>
                   <li className="nav-item">
-                    <a className="nav-link" href="#organisation">
-                      Parramatta
+                    <a
+                      className={`nav-link ${styles.OrganisationLink}`}
+                      title={
+                        bootstrap.organisation
+                          ? bootstrap.organisation.name
+                          : "Select organisation"
+                      }
+                      onClick={() =>
+                        this.setState({
+                          showOrganisationSwitcher: true
+                        })}
+                    >
+                      <i className="fa fa-sort" />&nbsp;&nbsp;
+                      {bootstrap.organisation
+                        ? bootstrap.organisation.name
+                        : "Select organisation"}
                     </a>
                   </li>
                 </ul>
@@ -135,6 +163,12 @@ class App extends Component {
             </div>
           </div>
         </footer>
+        {showOrganisationSwitcher ? (
+          <OrganisationSwitcher
+            handleClose={() =>
+              this.setState({ showOrganisationSwitcher: false })}
+          />
+        ) : null}
       </div>
     );
   }
