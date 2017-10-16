@@ -225,7 +225,7 @@ class NewNotification extends Component {
       <div>
         <div className="container">
           <div className="row justify-content-center">
-            <div className="col-12">
+            <div className="col-md-12">
               <div id="steps" style={{ margin: "20px 0 0 20px" }}>
                 <div className={styles.Step} id="Step">
                   <div className="media">

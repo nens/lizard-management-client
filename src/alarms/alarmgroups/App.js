@@ -51,7 +51,6 @@ class App extends Component {
                 style={{
                   position: "relative",
                   top: 50,
-                  width: window.innerWidth,
                   height: 300,
                   bottom: 50,
                   marginLeft: "50%"

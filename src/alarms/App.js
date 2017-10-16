@@ -24,24 +24,20 @@ class App extends Component {
 
   render() {
     return (
-      <div className="container">
-        <div className="row">
-          <div>
-            <Route exact path="/alarms" component={AlarmsHome} />
-            <Route
-              exact
-              path="/alarms/notifications"
-              component={NotificationsApp}
-            />
-            <Route
-              exact
-              path="/alarms/notifications/new"
-              component={NewNotificationApp}
-            />
-            <Route exact path="/alarms/groups" component={AlarmGroupsApp} />
-            <Route exact path="/alarms/templates" component={AlarmTemplatesApp} />
-          </div>
-        </div>
+      <div>
+          <Route exact path="/alarms" component={AlarmsHome} />
+          <Route
+            exact
+            path="/alarms/notifications"
+            component={NotificationsApp}
+          />
+          <Route
+            exact
+            path="/alarms/notifications/new"
+            component={NewNotificationApp}
+          />
+          <Route exact path="/alarms/groups" component={AlarmGroupsApp} />
+          <Route exact path="/alarms/templates" component={AlarmTemplatesApp} />
       </div>
     );
   }
