@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import Notifications from "./notifications/Notifications";
-import NewNotification from "./notifications/NewNotification";
 import { Alarms as AlarmsHome } from "./Alarms";
-import AlarmGroups from "./alarmgroups/AlarmGroups";
-import AlarmTemplates from "./alarmtemplates/AlarmTemplates";
+import { App as NotificationsApp } from "./notifications/App";
+import { App as NewNotificationApp } from "./notifications/App";
+import { App as AlarmGroupsApp } from "./alarmgroups/App";
+import { App as AlarmTemplatesApp } from "./alarmtemplates/App";
 // import { FormattedMessage } from "react-intl";
 import { Route, withRouter } from "react-router-dom";
 
@@ -31,15 +31,15 @@ class App extends Component {
             <Route
               exact
               path="/alarms/notifications"
-              component={Notifications}
+              component={NotificationsApp}
             />
-            <Route exact path="/alarms/groups" component={AlarmGroups} />
-            <Route exact path="/alarms/templates" component={AlarmTemplates} />
             <Route
               exact
               path="/alarms/notifications/new"
-              component={NewNotification}
+              component={NewNotificationApp}
             />
+            <Route exact path="/alarms/groups" component={AlarmGroupsApp} />
+            <Route exact path="/alarms/templates" component={AlarmTemplatesApp} />
           </div>
         </div>
       </div>

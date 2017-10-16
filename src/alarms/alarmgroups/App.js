@@ -51,6 +51,7 @@ class App extends Component {
                 style={{
                   position: "relative",
                   top: 50,
+                  width: window.innerWidth,
                   height: 300,
                   bottom: 50,
                   marginLeft: "50%"
@@ -82,7 +83,7 @@ class App extends Component {
                         </td>
                         <td className="col-md-1">
                           <div
-                            onClick={(e) => console.log("Add contacts to group")}
+                            onClick={e => console.log("Add contacts to group")}
                             style={{
                               backgroundColor: "#D8D8D8",
                               borderRadius: 2,
@@ -101,7 +102,7 @@ class App extends Component {
                         </td>
                         <td className="col-md-1">
                           <div
-                            onClick={(e) => console.log("Group options")}
+                            onClick={e => console.log("Group options")}
                             style={{
                               backgroundColor: "#D8D8D8",
                               borderRadius: 2,
@@ -149,4 +150,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   };
 };
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
+App = withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
+
+export { App };

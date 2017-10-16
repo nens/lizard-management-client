@@ -559,6 +559,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   };
 };
 
-export default withRouter(
+const App = withRouter(
   connect(mapStateToProps, mapDispatchToProps)(NewNotification)
 );
+
+export {App}
