@@ -77,8 +77,8 @@ class App extends Component {
                   {results.map((alarm, i) => {
                     const numberOfThresholds = alarm.thresholds.length;
                     return (
-                      <tr key={i}>
-                        <td className="col-md-6">
+                      <tr key={i} className={styles.AlarmRow}>
+                        <td className="col-md-6" onClick={() => console.log(`Go to detail page of ${alarm.name}`)}>
                           {alarm.name}
                           <br />
                           <small className="text-muted">

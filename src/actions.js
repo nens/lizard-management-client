@@ -9,6 +9,9 @@ export const RECEIVE_REMOVE_ALARM = "RECEIVE_REMOVE_ALARM";
 export const REQUEST_ALARM_GROUPS = "REQUEST_ALARM_GROUPS";
 export const RECEIVE_ALARM_GROUPS = "RECEIVE_ALARM_GROUPS";
 
+export const REQUEST_ALARM_GROUP_DETAILS = "REQUEST_ALARM_GROUP_DETAILS";
+export const RECEIVE_ALARM_GROUP_DETAILS = "RECEIVE_ALARM_GROUP_DETAILS";
+
 export const REQUEST_DEACTIVATE_ALARM = "REQUEST_DEACTIVATE_ALARM";
 export const RECEIVE_DEACTIVATE_ALARM = "RECEIVE_DEACTIVATE_ALARM";
 export const REQUEST_ACTIVATE_ALARM = "REQUEST_ACTIVATE_ALARM";
@@ -102,8 +105,18 @@ function receiveAlarmGroups(data) {
   };
 }
 
+function requestAlarmGroupDetails() {
+  return {
+    type: REQUEST_ALARM_GROUP_DETAILS,
+  };
+}
 
-
+function receiveAlarmGroupDetails(data) {
+  return {
+    type: RECEIVE_ALARM_GROUP_DETAILS,
+    data,
+  };
+}
 
 
 
@@ -134,6 +147,22 @@ export function fetchAlarmGroups() {
       .then(response => response.json())
       .then(data => data.results)
       .then(data => dispatch(receiveAlarmGroups(data)));
+  };
+}
+
+export function fetchAlarmGroupDetailsById(id) {
+  return (dispatch, getState) => {
+    dispatch(requestAlarmGroupDetails());
+    fetch(`/api/v3/contactgroups/${id}/`)
+      .then(response => response.json())
+      .then(data => dispatch(receiveAlarmGroupDetails(data)));
+  };
+}
+
+export function deleteContactsById(ids) {
+  return (dispatch, getState) => {
+    // dispatch(requestDeleteContactsById());
+    // dispatch(receiveDeleteContactsById(data));
   };
 }
 

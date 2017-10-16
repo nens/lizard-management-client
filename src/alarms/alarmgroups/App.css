@@ -18,6 +18,11 @@
 }
 
 .GroupRow {
+  cursor: pointer;
+}
+.GroupRow td a {
+  color: #333;
+  text-decoration: none;
 }
 
 

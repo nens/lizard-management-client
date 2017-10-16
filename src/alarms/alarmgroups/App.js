@@ -6,7 +6,7 @@ import pluralize from "pluralize";
 import { connect } from "react-redux";
 import { fetchAlarmGroups } from "../../actions";
 import styles from "./App.css";
-import { withRouter } from "react-router-dom";
+import { withRouter, NavLink } from "react-router-dom";
 
 class App extends Component {
   constructor(props) {
@@ -65,8 +65,14 @@ class App extends Component {
                     const numberOfContacts = group.contacts.length;
                     return (
                       <tr key={i} className={styles.GroupRow}>
-                        <td className="col-md-8">
-                          <strong>{group.name}</strong>
+                        <td
+                          className="col-md-8"
+                          onClick={() =>
+                            console.log(`Go to detail page of ${group.name}`)}
+                        >
+                          <NavLink to={`/alarms/groups/${group.id}`}>
+                            <strong>{group.name}</strong>
+                          </NavLink>
                         </td>
                         <td className="col-md-2 text-center">
                           <p

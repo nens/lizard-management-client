@@ -11,3 +11,6 @@
   font-weight: 300;
   margin: 30px;
 }
+.AlarmRow {
+  cursor: pointer;
+}
