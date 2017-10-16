@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Alarms as AlarmsHome } from "./Alarms";
 import { App as NotificationsApp } from "./notifications/App";
-import { App as NewNotificationApp } from "./notifications/App";
+import { App as NewNotificationApp } from "./notifications/NewNotification";
 import { App as AlarmGroupsApp } from "./alarmgroups/App";
 import { App as AlarmTemplatesApp } from "./alarmtemplates/App";
 // import { FormattedMessage } from "react-intl";

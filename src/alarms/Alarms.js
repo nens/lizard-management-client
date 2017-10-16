@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { FormattedMessage } from "react-intl";
-// import { NavLink } from "react-router-dom";
 import AppIcon from "../components/AppIcon";
 import { withRouter } from "react-router-dom";
 
