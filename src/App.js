@@ -2,9 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { FormattedMessage } from "react-intl";
 import Home from "./Home";
-import Alarms from "./Alarms";
-import Notifications from "./Notifications";
-import NewNotification from "./alarms/notifications/NewNotification";
+import { App as AlarmsApp } from "./alarms/App";
 import { fetchLizardBootstrap } from "./actions";
 import { Route, NavLink } from "react-router-dom";
 import LanguageSwitcher from "./components/LanguageSwitcher";
@@ -22,15 +20,34 @@ class App extends Component {
   componentDidMount() {
     this.props.getLizardBootstrap();
   }
+  computeBreadcrumb() {
+    const { pathname } = this.props.location;
+    const splitPathnames = pathname.slice().split("/");
+    return pathname === "/"
+      ? null
+      : splitPathnames.map((sp, i) => {
+          const to = `/${splitPathnames.slice(1, i + 1).join("/")}`;
+          return (
+            <NavLink to={to} key={i}>
+              <span style={{ textTransform: "capitalize" }}>
+                &nbsp;{sp}
+                {i === splitPathnames.length - 1 ? null : " /"}
+              </span>
+            </NavLink>
+          );
+        });
+  }
   render() {
     const { preferredLocale, bootstrap } = this.props;
     const firstName = bootstrap.bootstrap.user
       ? bootstrap.bootstrap.user.first_name
       : "";
     const { showOrganisationSwitcher } = this.state;
+    const breadcrumbs = this.computeBreadcrumb();
+
     return (
       <div className={styles.App}>
-        <div style={{ backgroundColor: "#239F85" }}>
+        <div style={{ backgroundColor: "#239f85" }}>
           <div className="container">
             <nav className="navbar navbar-expand-lg">
               <NavLink to={"/"}>
@@ -107,14 +124,21 @@ class App extends Component {
           </div>
         </div>
 
+        <div className="secondary-nav">
+          <div className="container">
+            <div className="row">
+              <div className="col-md-12">
+                <h2 className="breadcrumb-navigation">
+                  <NavLink to="/">Lizard Management</NavLink>
+                  {breadcrumbs}
+                </h2>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <Route exact path="/" component={Home} />
-        <Route exact path="/alarms/" component={Alarms} />
-        <Route exact path="/alarms/notifications" component={Notifications} />
-        <Route
-          exact
-          path="/alarms/notifications/new"
-          component={NewNotification}
-        />
+        <Route path="/alarms" component={AlarmsApp} />
 
         <footer className="footer">
           <div className="container">

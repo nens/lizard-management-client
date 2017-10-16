@@ -20,7 +20,8 @@ const localeData = {
   nl: nl
 };
 
-const preferredLocale = localStorage.getItem("lizard-preferred-language") || "en";
+const preferredLocale =
+  localStorage.getItem("lizard-preferred-language") || "en";
 const messages = localeData[preferredLocale];
 
 const Root = ({ store }) => (
@@ -37,8 +38,8 @@ ReactDOM.render(<Root store={store} />, document.getElementById("root"));
 registerServiceWorker();
 
 if (module.hot) {
-  module.hot.accept('./App', () => {
-    const HotApp = require('./App').default;
+  module.hot.accept("./App", () => {
+    const HotApp = require("./App").default;
     ReactDOM.render(
       <IntlProvider locale={navigator.language} messages={messages}>
         <Provider store={store}>

@@ -6,6 +6,8 @@ import {
   RECEIVE_NEW_ALARM,
   REQUEST_REMOVE_ALARM,
   RECEIVE_REMOVE_ALARM,
+  REQUEST_ALARM_GROUPS,
+  RECEIVE_ALARM_GROUPS,
   REQUEST_LIZARD_BOOTSTRAP,
   RECEIVE_LIZARD_BOOTSTRAP,
   REQUEST_ORGANISATIONS,
@@ -16,6 +18,7 @@ import {
 function alarms(
   state = {
     alarms: [],
+    groups: [],
     isFetching: false
   },
   action
@@ -43,6 +46,10 @@ function alarms(
         }),
         isFetching: false
       };
+      case REQUEST_ALARM_GROUPS:
+        return { ...state, isFetching: true };
+      case RECEIVE_ALARM_GROUPS:
+        return { ...state, groups: action.data, isFetching: false };
     default:
       return state;
   }

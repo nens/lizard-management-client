@@ -1,9 +1,7 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
 import { FormattedMessage } from "react-intl";
-import { NavLink } from "react-router-dom";
 import styles from "./Home.css";
-import AppIcon from "./AppIcon";
+import AppIcon from "./components/AppIcon";
 import { withRouter } from "react-router-dom";
 
 class Home extends Component {
@@ -24,18 +22,6 @@ class Home extends Component {
   render() {
     return (
       <div>
-        <div className="secondary-nav">
-          <div className="container">
-            <div className="row">
-              <div className="col-md-12">
-                <h2 className="breadcrumb-navigation">
-                  <NavLink to="/">Lizard Management</NavLink>
-                </h2>
-              </div>
-            </div>
-          </div>
-        </div>
-
         <div className="container">
           <div className="row">
             <div className={styles.Apps}>
@@ -98,12 +84,4 @@ class Home extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  return {};
-};
-
-const mapDispatchToProps = (dispatch, ownProps) => {
-  return {};
-};
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Home));
+export default withRouter(Home);

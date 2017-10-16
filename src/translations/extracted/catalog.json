@@ -1,5 +1,13 @@
 [
 	{
+		"id": "AlarmGroups.alarms_breadcrumb",
+		"defaultMessage": "Alarms"
+	},
+	{
+		"id": "AlarmGroups.alarms_AlarmGroups",
+		"defaultMessage": "Alarm Groups"
+	},
+	{
 		"id": "alarms.alarms_breadcrumb",
 		"defaultMessage": "Alarms"
 	},
@@ -36,8 +44,28 @@
 		"defaultMessage": "Send one-off messages to groups of recipients"
 	},
 	{
+		"id": "alarmgroups_app.new_group",
+		"defaultMessage": "New group"
+	},
+	{
 		"id": "notifications_app.new_notification",
 		"defaultMessage": "New notification"
+	},
+	{
+		"id": "AlarmTemplates.alarms_breadcrumb",
+		"defaultMessage": "Alarms"
+	},
+	{
+		"id": "AlarmTemplates.alarms_AlarmTemplates",
+		"defaultMessage": "Alarm Templates"
+	},
+	{
+		"id": "index.documentation",
+		"defaultMessage": "Documentation"
+	},
+	{
+		"id": "index.support",
+		"defaultMessage": "Support"
 	},
 	{
 		"id": "home.usermanagement",
@@ -62,14 +90,6 @@
 	{
 		"id": "home.alarm_management",
 		"defaultMessage": "Alarm management"
-	},
-	{
-		"id": "index.documentation",
-		"defaultMessage": "Documentation"
-	},
-	{
-		"id": "index.support",
-		"defaultMessage": "Support"
 	},
 	{
 		"id": "notifications.alarms_breadcrumb",

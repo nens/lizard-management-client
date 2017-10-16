@@ -5,7 +5,6 @@ import { connect } from "react-redux";
 import { createAlarm } from "../../actions";
 import { withRouter } from "react-router-dom";
 import { Map, Marker, TileLayer, WMSTileLayer } from "react-leaflet";
-import { NavLink } from "react-router-dom";
 import styles from "./NewNotification.css";
 import StepIndicator from "../../components/StepIndicator";
 import GroupAndTemplateSelector from "./GroupAndTemplateSelect";
@@ -224,24 +223,9 @@ class NewNotification extends Component {
     } = this.state;
     return (
       <div>
-        <div className="secondary-nav">
-          <div className="container">
-            <div className="row">
-              <div className="col-md-12">
-                <h2 className="breadcrumb-navigation">
-                  <NavLink to="/">Lizard Management</NavLink> /{" "}
-                  <NavLink to="/alarms">Alarms</NavLink> /{" "}
-                  <NavLink to="/alarms/notifications">Notifications</NavLink> /
-                  New notification
-                </h2>
-              </div>
-            </div>
-          </div>
-        </div>
-
         <div className="container">
           <div className="row justify-content-center">
-            <div className="col-md-12">
+            <div className="col-12">
               <div id="steps" style={{ margin: "20px 0 0 20px" }}>
                 <div className={styles.Step} id="Step">
                   <div className="media">

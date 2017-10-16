@@ -1,4 +1,9 @@
 {
+  "AlarmGroups.alarms_AlarmGroups": "Alarm Groups",
+  "AlarmGroups.alarms_breadcrumb": "Alarms",
+  "AlarmTemplates.alarms_AlarmTemplates": "Alarm Templates",
+  "AlarmTemplates.alarms_breadcrumb": "Alarms",
+  "alarmgroups_app.new_group": "New group",
   "alarms.alarms_breadcrumb": "Alarmen",
   "alarms.alarms_groups": "Groepen",
   "alarms.alarms_template_management": "Alarmsjablonen beheren",

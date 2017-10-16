@@ -6,6 +6,9 @@ export const RECEIVE_NEW_ALARM = "RECEIVE_NEW_ALARM";
 export const REQUEST_REMOVE_ALARM = "REQUEST_REMOVE_ALARM";
 export const RECEIVE_REMOVE_ALARM = "RECEIVE_REMOVE_ALARM";
 
+export const REQUEST_ALARM_GROUPS = "REQUEST_ALARM_GROUPS";
+export const RECEIVE_ALARM_GROUPS = "RECEIVE_ALARM_GROUPS";
+
 export const REQUEST_DEACTIVATE_ALARM = "REQUEST_DEACTIVATE_ALARM";
 export const RECEIVE_DEACTIVATE_ALARM = "RECEIVE_DEACTIVATE_ALARM";
 export const REQUEST_ACTIVATE_ALARM = "REQUEST_ACTIVATE_ALARM";
@@ -85,6 +88,26 @@ function receiveOrganisations(data) {
   };
 }
 
+
+function requestAlarmGroups() {
+  return {
+    type: REQUEST_ALARM_GROUPS,
+  };
+}
+
+function receiveAlarmGroups(data) {
+  return {
+    type: RECEIVE_ALARM_GROUPS,
+    data
+  };
+}
+
+
+
+
+
+
+
 // Exported functions
 export function selectOrganisation(organisation) {
   localStorage.setItem("lizard-management-current-organisation", JSON.stringify(organisation));
@@ -101,6 +124,16 @@ export function fetchAlarms() {
     fetch("/api/v3/rasteralarms/?page_size=100000")
       .then(response => response.json())
       .then(data => dispatch(receiveAlarms(data)));
+  };
+}
+
+export function fetchAlarmGroups() {
+  return (dispatch, getState) => {
+    dispatch(requestAlarmGroups());
+    fetch("/api/v3/contactgroups/?page_size=100000")
+      .then(response => response.json())
+      .then(data => data.results)
+      .then(data => dispatch(receiveAlarmGroups(data)));
   };
 }
 
