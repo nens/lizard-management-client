@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { FormattedMessage } from "react-intl";
-import styles from "./Home.css";
-import AppIcon from "./components/AppIcon";
+import styles from "./App.css";
+import AppIcon from "../components/AppIcon";
 import { withRouter } from "react-router-dom";
 
-class Home extends Component {
+class App extends Component {
   constructor(props) {
     super(props);
     this.handleLink = this.handleLink.bind(this);
@@ -84,4 +84,6 @@ class Home extends Component {
   }
 }
 
-export default withRouter(Home);
+App = withRouter(App);
+
+export {App};

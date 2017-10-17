@@ -43,23 +43,29 @@ class ActionBar extends Component {
   }
 
   handleSelectAllCheckboxes() {
-    this.setState({
-      showManageContacts: false,
-    }, () => {
-      document
-        .querySelectorAll("input[type=checkbox]")
-        .forEach(checkbox => (checkbox.checked = true));
-    });
+    this.setState(
+      {
+        showManageContacts: false
+      },
+      () => {
+        document
+          .querySelectorAll("input[type=checkbox]")
+          .forEach(checkbox => (checkbox.checked = true));
+      }
+    );
   }
 
   handleDeselectAllCheckboxes() {
-    this.setState({
-      showManageContacts: false,
-    }, () => {
-      document
-        .querySelectorAll("input[type=checkbox]")
-        .forEach(checkbox => (checkbox.checked = false));
-    });
+    this.setState(
+      {
+        showManageContacts: false
+      },
+      () => {
+        document
+          .querySelectorAll("input[type=checkbox]")
+          .forEach(checkbox => (checkbox.checked = false));
+      }
+    );
   }
 
   handleDeleteSelected() {
@@ -77,25 +83,49 @@ class ActionBar extends Component {
     const { showGroupSettings, showManageContacts } = this.state;
     return (
       <div className={styles.ActionBar}>
-        <div
-          className={styles.ActionBarItem}
-          onClick={this.toggleManageContacts}
-        >
-          <i className="material-icons">keyboard_arrow_down</i>Manage contacts
-          {showManageContacts ? <div className={styles.DropDown}>
-            <div className={styles.DropDownItem} onClick={this.handleSelectAllCheckboxes}>Select all</div>
-            <div className={styles.DropDownItem} onClick={this.handleDeselectAllCheckboxes}>De-select all</div>
-            <div className={styles.DropDownItem} onClick={this.handleDeleteSelected}>Delete selected</div>
-          </div> : null}
+        <div className={styles.ActionBarItemsWrapper}>
+          <div
+            className={styles.ActionBarItem}
+            onClick={this.toggleManageContacts}
+          >
+            <i className="material-icons">keyboard_arrow_down</i>Manage contacts
+            {showManageContacts ? (
+              <div className={styles.DropDown}>
+                <div
+                  className={styles.DropDownItem}
+                  onClick={this.handleSelectAllCheckboxes}
+                >
+                  Select all
+                </div>
+                <div
+                  className={styles.DropDownItem}
+                  onClick={this.handleDeselectAllCheckboxes}
+                >
+                  De-select all
+                </div>
+                <div
+                  className={styles.DropDownItem}
+                  onClick={this.handleDeleteSelected}
+                >
+                  Delete selected
+                </div>
+              </div>
+            ) : null}
+          </div>
+          <div
+            className={styles.ActionBarItem}
+            onClick={this.toggleGroupSettings}
+          >
+            <i className="material-icons">keyboard_arrow_down</i>Group settings
+            {showGroupSettings ? (
+              <div className={styles.DropDown}>
+                <div className={styles.DropDownItem}>Send message</div>
+              </div>
+            ) : null}
+          </div>
         </div>
-        <div
-          className={styles.ActionBarItem}
-          onClick={this.toggleGroupSettings}
-        >
-          <i className="material-icons">keyboard_arrow_down</i>Group settings
-          {showGroupSettings ? <div className={styles.DropDown}>
-            <div className={styles.DropDownItem}>Send message</div>
-          </div> : null}
+        <div className={styles.Search}>
+          <input className="form-control form-control-sm" type="text" placeholder="Type to filter" />
         </div>
       </div>
     );

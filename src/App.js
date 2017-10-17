@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { FormattedMessage } from "react-intl";
-import Home from "./Home";
+import { App as Home } from "./home/App";
 import { App as AlarmsApp } from "./alarms/App";
 import { fetchLizardBootstrap } from "./actions";
 import { Route, NavLink } from "react-router-dom";
