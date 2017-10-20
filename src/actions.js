@@ -12,6 +12,9 @@ export const RECEIVE_ALARM_GROUPS = "RECEIVE_ALARM_GROUPS";
 export const REQUEST_ALARM_GROUP_DETAILS = "REQUEST_ALARM_GROUP_DETAILS";
 export const RECEIVE_ALARM_GROUP_DETAILS = "RECEIVE_ALARM_GROUP_DETAILS";
 
+export const REQUEST_ALARM_TEMPLATES = "REQUEST_ALARM_TEMPLATES";
+export const RECEIVE_ALARM_TEMPLATES = "RECEIVE_ALARM_TEMPLATES";
+
 export const REQUEST_DEACTIVATE_ALARM = "REQUEST_DEACTIVATE_ALARM";
 export const RECEIVE_DEACTIVATE_ALARM = "RECEIVE_DEACTIVATE_ALARM";
 export const REQUEST_ACTIVATE_ALARM = "REQUEST_ACTIVATE_ALARM";
@@ -23,7 +26,6 @@ export const RECEIVE_LIZARD_BOOTSTRAP = "RECEIVE_LIZARD_BOOTSTRAP";
 export const REQUEST_ORGANISATIONS = "REQUEST_ORGANISATIONS";
 export const RECEIVE_ORGANISATIONS = "RECEIVE_ORGANISATIONS";
 export const SELECT_ORGANISATION = "SELECT_ORGANISATION";
-
 
 // Actions
 function requestAlarms() {
@@ -91,10 +93,9 @@ function receiveOrganisations(data) {
   };
 }
 
-
 function requestAlarmGroups() {
   return {
-    type: REQUEST_ALARM_GROUPS,
+    type: REQUEST_ALARM_GROUPS
   };
 }
 
@@ -107,29 +108,41 @@ function receiveAlarmGroups(data) {
 
 function requestAlarmGroupDetails() {
   return {
-    type: REQUEST_ALARM_GROUP_DETAILS,
+    type: REQUEST_ALARM_GROUP_DETAILS
   };
 }
 
 function receiveAlarmGroupDetails(data) {
   return {
     type: RECEIVE_ALARM_GROUP_DETAILS,
-    data,
+    data
   };
 }
 
+function requestAlarmTemplates() {
+  return {
+    type: REQUEST_ALARM_TEMPLATES
+  };
+}
 
-
+function receiveAlarmTemplates(data) {
+  return {
+    type: RECEIVE_ALARM_TEMPLATES,
+    data
+  };
+}
 
 // Exported functions
 export function selectOrganisation(organisation) {
-  localStorage.setItem("lizard-management-current-organisation", JSON.stringify(organisation));
+  localStorage.setItem(
+    "lizard-management-current-organisation",
+    JSON.stringify(organisation)
+  );
   return {
     type: SELECT_ORGANISATION,
     organisation
   };
 }
-
 
 export function fetchAlarms() {
   return (dispatch, getState) => {
@@ -195,6 +208,18 @@ export function removeAlarm(uuid) {
         dispatch(fetchAlarms());
       }
     });
+  };
+}
+
+export function fetchAlarmTemplates() {
+  return (dispatch, getState) => {
+    dispatch(requestAlarmTemplates());
+    fetch("/api/v3/messages/?page_size=100000")
+      .then(response => response.json())
+      .then(data => data.results)
+      .then(data => {
+        dispatch(receiveAlarmTemplates(data));
+      });
   };
 }
 

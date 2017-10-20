@@ -8,6 +8,8 @@ import {
   RECEIVE_REMOVE_ALARM,
   REQUEST_ALARM_GROUPS,
   RECEIVE_ALARM_GROUPS,
+  REQUEST_ALARM_TEMPLATES,
+  RECEIVE_ALARM_TEMPLATES,
   REQUEST_ALARM_GROUP_DETAILS,
   RECEIVE_ALARM_GROUP_DETAILS,
   REQUEST_LIZARD_BOOTSTRAP,
@@ -22,6 +24,7 @@ function alarms(
     alarms: [],
     groups: [],
     group: {},
+    templates: [],
     isFetching: false
   },
   action
@@ -49,14 +52,18 @@ function alarms(
         }),
         isFetching: false
       };
-      case REQUEST_ALARM_GROUPS:
-        return { ...state, isFetching: true };
-      case RECEIVE_ALARM_GROUPS:
-        return { ...state, groups: action.data, isFetching: false };
-      case REQUEST_ALARM_GROUP_DETAILS:
-        return { ...state, isFetching: true };
-      case RECEIVE_ALARM_GROUP_DETAILS:
-        return { ...state, group: action.data, isFetching: false };
+    case REQUEST_ALARM_GROUPS:
+      return { ...state, isFetching: true };
+    case RECEIVE_ALARM_GROUPS:
+      return { ...state, groups: action.data, isFetching: false };
+    case REQUEST_ALARM_GROUP_DETAILS:
+      return { ...state, isFetching: true };
+    case RECEIVE_ALARM_GROUP_DETAILS:
+      return { ...state, group: action.data, isFetching: false };
+    case REQUEST_ALARM_TEMPLATES:
+      return { ...state, isFetching: true };
+    case RECEIVE_ALARM_TEMPLATES:
+      return { ...state, templates: action.data, isFetching: false };
     default:
       return state;
   }
@@ -67,7 +74,10 @@ function bootstrap(
     bootstrap: {},
     isFetching: false,
     organisations: [],
-    organisation: JSON.parse(localStorage.getItem("lizard-management-current-organisation")) || null
+    organisation:
+      JSON.parse(
+        localStorage.getItem("lizard-management-current-organisation")
+      ) || null
   },
   action
 ) {

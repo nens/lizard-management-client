@@ -12,10 +12,9 @@
 }
 .ActionBarItem {
   position: relative;
-  padding: 10px 0 10px 0;
+  padding: 10px 0 10px 40px;
   width: 200px;
   color: #fff;
-  text-align: center;
   border-right: 1px solid #fff;
   cursor: pointer;
 }
@@ -30,6 +29,7 @@
   width: 200px;
   background-color: #626262;
   color: #fff;
+  left: 0;
 }
 .DropDownItem {
   padding: 10px 0 10px 36px;

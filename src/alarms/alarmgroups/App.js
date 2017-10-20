@@ -17,7 +17,7 @@ class App extends Component {
     this.props.doFetchGroups();
   }
   handleNewGroupClick(e) {
-    console.log("handleNewGroupClick()", e);
+    console.log("New group plz");
     // this.props.history.push("groups/new");
   }
   render() {
@@ -27,7 +27,7 @@ class App extends Component {
       <div className="container">
         <div className={`row align-items-center ${styles.App}`}>
           <div className="col-sm-8 justify-content-center text-muted">
-            {numberOfGroups} {pluralize("GROUPS", numberOfGroups)}
+            {numberOfGroups} {pluralize("GROUP", numberOfGroups)}
           </div>
           <div className="col-sm-4">
             <button

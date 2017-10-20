@@ -9,6 +9,12 @@
   float: left;
   border-radius: 2px;
 }
+@media only screen and (max-width: 700px) {
+  .AppIcon {
+    transform: scale(.85);
+  }
+}
+
 .Img {
   position: absolute;
   left: 50%;
