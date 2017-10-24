@@ -1,21 +1,23 @@
 import { combineReducers } from "redux";
 import {
-  REQUEST_ALARMS,
-  RECEIVE_ALARMS,
-  REQUEST_NEW_ALARM,
-  RECEIVE_NEW_ALARM,
-  REQUEST_REMOVE_ALARM,
-  RECEIVE_REMOVE_ALARM,
-  REQUEST_ALARM_GROUPS,
-  RECEIVE_ALARM_GROUPS,
-  REQUEST_ALARM_TEMPLATES,
-  RECEIVE_ALARM_TEMPLATES,
-  REQUEST_ALARM_GROUP_DETAILS,
   RECEIVE_ALARM_GROUP_DETAILS,
-  REQUEST_LIZARD_BOOTSTRAP,
+  RECEIVE_ALARM_GROUPS,
+  RECEIVE_ALARM_TEMPLATE_DETAILS,
+  RECEIVE_ALARM_TEMPLATES,
+  RECEIVE_ALARMS,
   RECEIVE_LIZARD_BOOTSTRAP,
-  REQUEST_ORGANISATIONS,
+  RECEIVE_NEW_ALARM,
   RECEIVE_ORGANISATIONS,
+  RECEIVE_REMOVE_ALARM,
+  REQUEST_ALARM_GROUP_DETAILS,
+  REQUEST_ALARM_GROUPS,
+  REQUEST_ALARM_TEMPLATE_DETAILS,
+  REQUEST_ALARM_TEMPLATES,
+  REQUEST_ALARMS,
+  REQUEST_LIZARD_BOOTSTRAP,
+  REQUEST_NEW_ALARM,
+  REQUEST_ORGANISATIONS,
+  REQUEST_REMOVE_ALARM,
   SELECT_ORGANISATION
 } from "./actions";
 
@@ -25,6 +27,7 @@ function alarms(
     groups: [],
     group: {},
     templates: [],
+    template: {},
     isFetching: false
   },
   action
@@ -64,6 +67,10 @@ function alarms(
       return { ...state, isFetching: true };
     case RECEIVE_ALARM_TEMPLATES:
       return { ...state, templates: action.data, isFetching: false };
+    case REQUEST_ALARM_TEMPLATE_DETAILS:
+      return { ...state, isFetching: true };
+    case RECEIVE_ALARM_TEMPLATE_DETAILS:
+      return { ...state, template: action.data, isFetching: false };
     default:
       return state;
   }

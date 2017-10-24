@@ -12,6 +12,9 @@ export const RECEIVE_ALARM_GROUPS = "RECEIVE_ALARM_GROUPS";
 export const REQUEST_ALARM_GROUP_DETAILS = "REQUEST_ALARM_GROUP_DETAILS";
 export const RECEIVE_ALARM_GROUP_DETAILS = "RECEIVE_ALARM_GROUP_DETAILS";
 
+export const REQUEST_ALARM_TEMPLATE_DETAILS = "REQUEST_ALARM_TEMPLATE_DETAILS";
+export const RECEIVE_ALARM_TEMPLATE_DETAILS = "RECEIVE_ALARM_TEMPLATE_DETAILS";
+
 export const REQUEST_ALARM_TEMPLATES = "REQUEST_ALARM_TEMPLATES";
 export const RECEIVE_ALARM_TEMPLATES = "RECEIVE_ALARM_TEMPLATES";
 
@@ -119,6 +122,19 @@ function receiveAlarmGroupDetails(data) {
   };
 }
 
+function requestAlarmTemplateDetails() {
+  return {
+    type: REQUEST_ALARM_TEMPLATE_DETAILS,
+  };
+}
+
+function receiveAlarmTemplateDetails(data) {
+  return {
+    type: RECEIVE_ALARM_TEMPLATE_DETAILS,
+    data
+  };
+}
+
 function requestAlarmTemplates() {
   return {
     type: REQUEST_ALARM_TEMPLATES
@@ -178,6 +194,16 @@ export function deleteContactsById(ids) {
     // dispatch(receiveDeleteContactsById(data));
   };
 }
+
+export function fetchAlarmTemplateDetailsById(id) {
+  return (dispatch, getState) => {
+    dispatch(requestAlarmTemplateDetails());
+    fetch(`/api/v3/messages/${id}/`)
+    .then(response => response.json())
+    .then(data => dispatch(receiveAlarmTemplateDetails(data)));
+  }
+}
+
 
 export function createAlarm(data) {
   return (dispatch, getState) => {

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import MDSpinner from "react-md-spinner";
 import Ink from "react-ink";
+import ActionBar from "./ActionBar";
 import { FormattedMessage } from "react-intl";
 import pluralize from "pluralize";
 import { connect } from "react-redux";
@@ -43,7 +44,6 @@ class App extends Component {
           </div>
         </div>
 
-
         <div className="row">
           <div className="col-md-12">
             {isFetching ? (
@@ -59,25 +59,51 @@ class App extends Component {
                 <MDSpinner size={24} />
               </div>
             ) : templates.length > 0 ? (
-              <table className="table table-responsive">
-                <tbody>
-                  {templates.map((template, i) => {
-                    return (
-                      <tr key={i} className={styles.TemplateRow}>
-                        <td
-                          className="col-md-8"
-                          onClick={() =>
-                            console.log(`Go to detail page of ${template.name}`)}
-                        >
-                          <NavLink to={`/alarms/templates/${template.id}`}>
-                            <strong>{template.name}</strong>
-                          </NavLink>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+              <div>
+                <ActionBar doDeleteContactsById={() => console.log("test")} />
+                <table className="table table-responsive">
+                  <thead style={{ backgroundColor: "#D8D8D8" }}>
+                    <tr className="text-muted">
+                      <td>&nbsp;</td>
+                      <td>Name</td>
+                      <td>Type</td>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    {templates.map((template, i) => {
+                      return (
+                        <tr key={i} className={styles.TemplateRow}>
+                          <td>
+                            <input
+                              type="checkbox"
+                              name="template"
+                              className="checkbox"
+                              value={template.id}
+                            />
+                          </td>
+                          <td
+                            className="col-md-8"
+                            onClick={() =>
+                              console.log(
+                                `Go to detail page of ${template.name}`
+                              )}
+                          >
+                            <NavLink to={`/alarms/templates/${template.id}`}>
+                              <strong>{template.name}</strong>{" "}
+                            </NavLink>
+                          </td>
+                          <td style={{ textAlign: "center" }}>
+                            <span className={styles.TemplateTypeBadge}>
+                              {template.type}
+                            </span>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
             ) : (
               <div className={styles.NoResults}>
                 <img src="/images/templates@3x.svg" alt="Templates" />
@@ -86,8 +112,6 @@ class App extends Component {
             )}
           </div>
         </div>
-
-
       </div>
     );
   }
