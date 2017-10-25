@@ -1,14 +1,18 @@
 import { combineReducers } from "redux";
 import {
+  RECEIVE_ACTIVATE_ALARM,
+  RECEIVE_ALARM_DETAILS,
   RECEIVE_ALARM_GROUP_DETAILS,
   RECEIVE_ALARM_GROUPS,
   RECEIVE_ALARM_TEMPLATE_DETAILS,
   RECEIVE_ALARM_TEMPLATES,
   RECEIVE_ALARMS,
+  RECEIVE_DEACTIVATE_ALARM,
   RECEIVE_LIZARD_BOOTSTRAP,
   RECEIVE_NEW_ALARM,
   RECEIVE_ORGANISATIONS,
   RECEIVE_REMOVE_ALARM,
+  REQUEST_ALARM_DETAILS,
   REQUEST_ALARM_GROUP_DETAILS,
   REQUEST_ALARM_GROUPS,
   REQUEST_ALARM_TEMPLATE_DETAILS,
@@ -23,16 +27,45 @@ import {
 
 function alarms(
   state = {
+    alarm: {},
     alarms: [],
-    groups: [],
     group: {},
-    templates: [],
+    groups: [],
+    isFetching: false,
     template: {},
-    isFetching: false
+    templates: []
   },
   action
 ) {
   switch (action.type) {
+    case RECEIVE_ACTIVATE_ALARM:
+      return {
+        ...state,
+        alarm: action.data,
+        alarms: {
+          ...state.alarms,
+          results: state.alarms.results.filter(alarm => {
+            if (alarm.uuid === action.data.uuid) {
+              alarm.active = true;
+            }
+            return alarm;
+          })
+        }
+      };
+    case RECEIVE_DEACTIVATE_ALARM:
+      return {
+        ...state,
+        alarm: action.data,
+        alarms: {
+          ...state.alarms,
+          results: state.alarms.results.filter(alarm => {
+            if (alarm.uuid === action.data.uuid) {
+              alarm.active = false;
+            }
+            return alarm;
+          })
+        }
+      };
     case REQUEST_ALARMS:
       return { ...state, isFetching: true };
     case RECEIVE_ALARMS:
@@ -44,6 +77,13 @@ function alarms(
         ...state,
         isFetching: false
       };
+    case REQUEST_ALARM_DETAILS:
+      return {
+        ...state,
+        isFetching: true
+      };
+    case RECEIVE_ALARM_DETAILS:
+      return { ...state, alarm: action.data, isFetching: false };
     case REQUEST_REMOVE_ALARM:
       return { ...state, isFetching: true };
     case RECEIVE_REMOVE_ALARM:

@@ -3,9 +3,9 @@ import styles from "./AddButton.css";
 
 class AddButton extends Component {
   render() {
-    const { title, handleClick } = this.props;
+    const { title, handleClick, style } = this.props;
     return (
-      <div className={styles.AddButton} onClick={handleClick}>
+      <div className={styles.AddButton} style={style} onClick={handleClick}>
         <div className={styles.Plus}>
           <i className={`${styles.AddIcon} material-icons`}>add</i>
         </div>

@@ -16,6 +16,7 @@ class App extends Component {
     this.state = {
       showOrganisationSwitcher: false
     };
+    this.uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
   }
   componentDidMount() {
     this.props.getLizardBootstrap();
@@ -27,10 +28,14 @@ class App extends Component {
       ? null
       : splitPathnames.map((sp, i) => {
           const to = `/${splitPathnames.slice(1, i + 1).join("/")}`;
+          let title = sp;
+          if (this.uuidRegex.test(sp)) {
+            title = "Detail";
+          }
           return (
             <NavLink to={to} key={i}>
               <span style={{ textTransform: "capitalize" }}>
-                &nbsp;{sp}
+                &nbsp;{title}
                 {i === splitPathnames.length - 1 ? null : " /"}
               </span>
             </NavLink>

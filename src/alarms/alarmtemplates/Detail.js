@@ -80,7 +80,7 @@ class Detail extends Component {
           </div>
         </div>
         <div className="row">
-          <div className="col form-group">
+          <div className="col-md-6 form-group">
             <textarea
               spellCheck={false}
               className="form-control"
@@ -88,9 +88,9 @@ class Detail extends Component {
               rows="12"
               defaultValue={template.text}
             />
-            <small className="text-muted">Template</small>
+            <small className="text-muted">TEMPLATE</small>
           </div>
-          <div className="col">
+          <div className="col-md-6">
             <table
               className={`table table-sm table-responsive table-striped ${styles.ParameterTable}`}
             >

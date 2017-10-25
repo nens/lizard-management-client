@@ -4,10 +4,11 @@ import { App as NotificationsApp } from "./notifications/App";
 import { App as NewNotificationApp } from "./notifications/NewNotification";
 import { App as AlarmGroupsApp } from "./alarmgroups/App";
 import { App as AlarmTemplatesApp } from "./alarmtemplates/App";
+import { Detail as NotificationsDetail } from "./notifications/Detail";
 import { Detail as AlarmGroupsDetail } from "./alarmgroups/Detail";
 import { Detail as AlarmTemplatesDetail } from "./alarmtemplates/Detail";
 // import { FormattedMessage } from "react-intl";
-import { Route, withRouter } from "react-router-dom";
+import { Route, Switch, withRouter } from "react-router-dom";
 
 class App extends Component {
   constructor(props) {
@@ -27,21 +28,32 @@ class App extends Component {
   render() {
     return (
       <div>
-          <Route exact path="/alarms" component={AlarmsHome} />
-          <Route
-            exact
-            path="/alarms/notifications"
-            component={NotificationsApp}
-          />
+        <Route exact path="/alarms" component={AlarmsHome} />
+        <Route
+          exact
+          path="/alarms/notifications"
+          component={NotificationsApp}
+        />
+        <Switch>
           <Route
             exact
             path="/alarms/notifications/new"
             component={NewNotificationApp}
           />
-          <Route exact path="/alarms/groups" component={AlarmGroupsApp} />
-          <Route exact path="/alarms/groups/:id" component={AlarmGroupsDetail} />
-          <Route exact path="/alarms/templates" component={AlarmTemplatesApp} />
-          <Route exact path="/alarms/templates/:id" component={AlarmTemplatesDetail} />
+          <Route
+            exact
+            path="/alarms/notifications/:id"
+            component={NotificationsDetail}
+          />
+        </Switch>
+        <Route exact path="/alarms/groups" component={AlarmGroupsApp} />
+        <Route exact path="/alarms/groups/:id" component={AlarmGroupsDetail} />
+        <Route exact path="/alarms/templates" component={AlarmTemplatesApp} />
+        <Route
+          exact
+          path="/alarms/templates/:id"
+          component={AlarmTemplatesDetail}
+        />
       </div>
     );
   }

@@ -22,7 +22,7 @@ Features
 --------
 
 DONE - Create organisation switcher component (needs org id serialized from /bootstrap/lizard/ endpoint or call /organisation endpoint on init)
-- Apps pulldown (grid like Lizard/Google Apps)
+- Apps menu (grid like Lizard/Google Apps)
 
 
 Enhancements
@@ -33,6 +33,7 @@ Enhancements
 - Full i18n/l10n
 - Get i18n catalog translated
 - Use default locale from bootstrap endpoint instead of defaulting to english
+- Snackbar component for errors and notifications
 
 
 Bugs / glitches

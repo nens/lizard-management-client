@@ -1,33 +1,30 @@
+// import find from "lodash.find";
+
 // Actiontypes
-export const RECEIVE_ALARMS = "RECEIVE_ALARMS";
-export const REQUEST_ALARMS = "REQUEST_ALARMS";
-export const REQUEST_NEW_ALARM = "REQUEST_NEW_ALARM";
-export const RECEIVE_NEW_ALARM = "RECEIVE_NEW_ALARM";
-export const REQUEST_REMOVE_ALARM = "REQUEST_REMOVE_ALARM";
-export const RECEIVE_REMOVE_ALARM = "RECEIVE_REMOVE_ALARM";
-
-export const REQUEST_ALARM_GROUPS = "REQUEST_ALARM_GROUPS";
-export const RECEIVE_ALARM_GROUPS = "RECEIVE_ALARM_GROUPS";
-
-export const REQUEST_ALARM_GROUP_DETAILS = "REQUEST_ALARM_GROUP_DETAILS";
-export const RECEIVE_ALARM_GROUP_DETAILS = "RECEIVE_ALARM_GROUP_DETAILS";
-
-export const REQUEST_ALARM_TEMPLATE_DETAILS = "REQUEST_ALARM_TEMPLATE_DETAILS";
-export const RECEIVE_ALARM_TEMPLATE_DETAILS = "RECEIVE_ALARM_TEMPLATE_DETAILS";
-
-export const REQUEST_ALARM_TEMPLATES = "REQUEST_ALARM_TEMPLATES";
-export const RECEIVE_ALARM_TEMPLATES = "RECEIVE_ALARM_TEMPLATES";
-
-export const REQUEST_DEACTIVATE_ALARM = "REQUEST_DEACTIVATE_ALARM";
-export const RECEIVE_DEACTIVATE_ALARM = "RECEIVE_DEACTIVATE_ALARM";
-export const REQUEST_ACTIVATE_ALARM = "REQUEST_ACTIVATE_ALARM";
 export const RECEIVE_ACTIVATE_ALARM = "RECEIVE_ACTIVATE_ALARM";
-
-export const REQUEST_LIZARD_BOOTSTRAP = "REQUEST_LIZARD_BOOTSTRAP";
+export const RECEIVE_ALARM_DETAILS = "RECEIVE_ALARM_DETAILS";
+export const RECEIVE_ALARM_GROUP_DETAILS = "RECEIVE_ALARM_GROUP_DETAILS";
+export const RECEIVE_ALARM_GROUPS = "RECEIVE_ALARM_GROUPS";
+export const RECEIVE_ALARM_TEMPLATE_DETAILS = "RECEIVE_ALARM_TEMPLATE_DETAILS";
+export const RECEIVE_ALARM_TEMPLATES = "RECEIVE_ALARM_TEMPLATES";
+export const RECEIVE_ALARMS = "RECEIVE_ALARMS";
+export const RECEIVE_DEACTIVATE_ALARM = "RECEIVE_DEACTIVATE_ALARM";
 export const RECEIVE_LIZARD_BOOTSTRAP = "RECEIVE_LIZARD_BOOTSTRAP";
-
-export const REQUEST_ORGANISATIONS = "REQUEST_ORGANISATIONS";
+export const RECEIVE_NEW_ALARM = "RECEIVE_NEW_ALARM";
 export const RECEIVE_ORGANISATIONS = "RECEIVE_ORGANISATIONS";
+export const RECEIVE_REMOVE_ALARM = "RECEIVE_REMOVE_ALARM";
+export const REQUEST_ACTIVATE_ALARM = "REQUEST_ACTIVATE_ALARM";
+export const REQUEST_ALARM_DETAILS = "REQUEST_ALARM_DETAILS";
+export const REQUEST_ALARM_GROUP_DETAILS = "REQUEST_ALARM_GROUP_DETAILS";
+export const REQUEST_ALARM_GROUPS = "REQUEST_ALARM_GROUPS";
+export const REQUEST_ALARM_TEMPLATE_DETAILS = "REQUEST_ALARM_TEMPLATE_DETAILS";
+export const REQUEST_ALARM_TEMPLATES = "REQUEST_ALARM_TEMPLATES";
+export const REQUEST_ALARMS = "REQUEST_ALARMS";
+export const REQUEST_DEACTIVATE_ALARM = "REQUEST_DEACTIVATE_ALARM";
+export const REQUEST_LIZARD_BOOTSTRAP = "REQUEST_LIZARD_BOOTSTRAP";
+export const REQUEST_NEW_ALARM = "REQUEST_NEW_ALARM";
+export const REQUEST_ORGANISATIONS = "REQUEST_ORGANISATIONS";
+export const REQUEST_REMOVE_ALARM = "REQUEST_REMOVE_ALARM";
 export const SELECT_ORGANISATION = "SELECT_ORGANISATION";
 
 // Actions
@@ -40,6 +37,19 @@ function requestAlarms() {
 function receiveAlarms(data) {
   return {
     type: RECEIVE_ALARMS,
+    data
+  };
+}
+
+function requestNotificationDetails() {
+  return {
+    type: REQUEST_ALARM_DETAILS
+  };
+}
+
+function receiveNotificationDetails(data) {
+  return {
+    type: RECEIVE_ALARM_DETAILS,
     data
   };
 }
@@ -124,7 +134,7 @@ function receiveAlarmGroupDetails(data) {
 
 function requestAlarmTemplateDetails() {
   return {
-    type: REQUEST_ALARM_TEMPLATE_DETAILS,
+    type: REQUEST_ALARM_TEMPLATE_DETAILS
   };
 }
 
@@ -144,6 +154,20 @@ function requestAlarmTemplates() {
 function receiveAlarmTemplates(data) {
   return {
     type: RECEIVE_ALARM_TEMPLATES,
+    data
+  };
+}
+
+
+function receiveActivateAlarm(data) {
+  return {
+    type: RECEIVE_ACTIVATE_ALARM,
+    data
+  };
+}
+function receiveDeActivateAlarm(data) {
+  return {
+    type: RECEIVE_DEACTIVATE_ALARM,
     data
   };
 }
@@ -199,11 +223,10 @@ export function fetchAlarmTemplateDetailsById(id) {
   return (dispatch, getState) => {
     dispatch(requestAlarmTemplateDetails());
     fetch(`/api/v3/messages/${id}/`)
-    .then(response => response.json())
-    .then(data => dispatch(receiveAlarmTemplateDetails(data)));
-  }
+      .then(response => response.json())
+      .then(data => dispatch(receiveAlarmTemplateDetails(data)));
+  };
 }
-
 
 export function createAlarm(data) {
   return (dispatch, getState) => {
@@ -217,6 +240,42 @@ export function createAlarm(data) {
       .then(data => {
         dispatch(receiveNewAlarm(data));
         dispatch(fetchAlarms());
+      });
+  };
+}
+
+export function activateAlarm(uuid) {
+  return (dispatch, getState) => {
+    fetch(`/api/v3/rasteralarms/${uuid}/`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        active: true
+      })
+    })
+      .then(response => response.json())
+      .then(data => {
+        dispatch(receiveActivateAlarm(data));
+        // dispatch(fetchAlarms());
+        // dispatch(fetchNotificationDetailsById(uuid));
+      });
+  };
+}
+
+export function deActivateAlarm(uuid) {
+  return (dispatch, getState) => {
+    fetch(`/api/v3/rasteralarms/${uuid}/`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        active: false
+      })
+    })
+      .then(response => response.json())
+      .then(data => {
+        dispatch(receiveDeActivateAlarm(data));
+        // dispatch(fetchAlarms());
+        // dispatch(fetchNotificationDetailsById(uuid));
       });
   };
 }
@@ -246,6 +305,15 @@ export function fetchAlarmTemplates() {
       .then(data => {
         dispatch(receiveAlarmTemplates(data));
       });
+  };
+}
+
+export function fetchNotificationDetailsById(id) {
+  return (dispatch, getState) => {
+    dispatch(requestNotificationDetails());
+    fetch(`/api/v3/rasteralarms/${id}/`)
+      .then(response => response.json())
+      .then(data => dispatch(receiveNotificationDetails(data)));
   };
 }
 

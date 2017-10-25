@@ -4,9 +4,14 @@ import Ink from "react-ink";
 import { FormattedMessage } from "react-intl";
 import pluralize from "pluralize";
 import { connect } from "react-redux";
-import { fetchAlarms, removeAlarm } from "../../actions";
+import {
+  fetchAlarms,
+  removeAlarm,
+  activateAlarm,
+  deActivateAlarm
+} from "../../actions";
 import styles from "./App.css";
-import { withRouter } from "react-router-dom";
+import { withRouter, NavLink } from "react-router-dom";
 
 class App extends Component {
   constructor(props) {
@@ -22,7 +27,12 @@ class App extends Component {
     this.props.history.push("notifications/new");
   }
   render() {
-    const { alarms, doRemoveAlarm } = this.props;
+    const {
+      alarms,
+      doRemoveAlarm,
+      doActivateAlarm,
+      doDeActivateAlarm
+    } = this.props;
     let numberOfNotifications = 0;
     let results = [];
     if (alarms.alarms.count > 0) {
@@ -78,8 +88,23 @@ class App extends Component {
                     const numberOfThresholds = alarm.thresholds.length;
                     return (
                       <tr key={i} className={styles.AlarmRow}>
-                        <td className="col-md-6" onClick={() => console.log(`Go to detail page of ${alarm.name}`)}>
-                          {alarm.name}
+                        <td
+                          className="col-md-6"
+                          onClick={() =>
+                            console.log(`Go to detail page of ${alarm.name}`)}
+                        >
+                          <div
+                            className={`${alarm.active
+                              ? styles.Active
+                              : styles.InActive} ${styles.ActiveIndicator}`}
+                          >
+                            {alarm.active ? "ACTIVE" : "INACTIVE"}
+                          </div>
+                          <NavLink to={`/alarms/notifications/${alarm.uuid}`} style={{
+                            color: "#333"
+                          }}>
+                            {alarm.name}
+                          </NavLink>
                           <br />
                           <small className="text-muted">
                             {numberOfThresholds}{" "}
@@ -87,8 +112,15 @@ class App extends Component {
                           </small>
                         </td>
                         <td className="col-md-1">
-                          <button type="button" className="btn btn-sm btn-link">
-                            Deactivate
+                          <button
+                            type="button"
+                            className="btn btn-sm btn-link"
+                            onClick={() =>
+                              alarm.active
+                                ? doDeActivateAlarm(alarm.uuid)
+                                : doActivateAlarm(alarm.uuid)}
+                          >
+                            {alarm.active ? "Deactivate" : "Activate"}
                           </button>
                         </td>
                         <td className="col-md-1">
@@ -132,7 +164,9 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     doFetchAlarms: () => dispatch(fetchAlarms()),
-    doRemoveAlarm: uuid => dispatch(removeAlarm(uuid))
+    doRemoveAlarm: uuid => dispatch(removeAlarm(uuid)),
+    doActivateAlarm: uuid => dispatch(activateAlarm(uuid)),
+    doDeActivateAlarm: uuid => dispatch(deActivateAlarm(uuid))
   };
 };
 
