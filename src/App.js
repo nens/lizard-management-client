@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { FormattedMessage } from "react-intl";
 import { App as Home } from "./home/App";
 import { App as AlarmsApp } from "./alarms/App";
-import { fetchLizardBootstrap } from "./actions";
+import { fetchLizardBootstrap, fetchOrganisations } from "./actions";
 import { Route, NavLink } from "react-router-dom";
 import LanguageSwitcher from "./components/LanguageSwitcher";
 import OrganisationSwitcher from "./components/OrganisationSwitcher";
@@ -20,6 +20,7 @@ class App extends Component {
   }
   componentDidMount() {
     this.props.getLizardBootstrap();
+    this.props.getOrganisations();
   }
   computeBreadcrumb() {
     const { pathname } = this.props.location;
@@ -212,7 +213,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    getLizardBootstrap: () => dispatch(fetchLizardBootstrap())
+    getLizardBootstrap: () => dispatch(fetchLizardBootstrap()),
+    getOrganisations: () => dispatch(fetchOrganisations())
   };
 };
 

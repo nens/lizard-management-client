@@ -37,8 +37,83 @@ class App extends Component {
     let results = [];
     if (alarms.alarms.count > 0) {
       numberOfNotifications = alarms.alarms.results.length;
-      results = alarms.alarms.results;
+      results = alarms.alarms.results.slice()
+        .sort((a,b) => {
+          if (a.name < b.name) {
+            return -1;
+          }
+          if (a.name > b.name) {
+            return 1;
+          }
+          return 0;
+        })
+        .sort((a,b) => {
+          return (a.active === b.active)? 0 : a.active? -1 : 1;
+        });
     }
+
+    const alarmsTable = results.map((alarm, i) => {
+      const numberOfThresholds = alarm.thresholds.length;
+      const numberOfRecipients = alarm.messages.length;
+      return (
+        <tr key={i} className={styles.AlarmRow}>
+          <td
+            className="col-md-6"
+            onClick={() => console.log(`Go to detail page of ${alarm.name}`)}
+          >
+            <div
+              className={`${alarm.active
+                ? styles.Active
+                : styles.InActive} ${styles.ActiveIndicator}`}
+            >
+              {alarm.active ? "ACTIVE" : "INACTIVE"}
+            </div>
+            <NavLink
+              to={`/alarms/notifications/${alarm.uuid}`}
+              style={{
+                color: "#333"
+              }}
+            >
+              {alarm.name}
+            </NavLink>
+            <br />
+            <small className="text-muted">
+              {numberOfThresholds} {pluralize("thresholds", numberOfThresholds)}
+              {", "}{numberOfRecipients}{" "}
+              {pluralize(
+                "recipient group",
+                numberOfRecipients
+              )}{" "}
+            </small>
+          </td>
+          <td className="col-md-1">
+            <button
+              type="button"
+              className="btn btn-sm btn-link"
+              onClick={() =>
+                alarm.active
+                  ? doDeActivateAlarm(alarm.uuid)
+                  : doActivateAlarm(alarm.uuid)}
+            >
+              {alarm.active ? "Deactivate" : "Activate"}
+            </button>
+          </td>
+          <td className="col-md-1">
+            <button
+              type="button"
+              className="btn btn-sm btn-link"
+              onClick={() => {
+                if (window.confirm("Are you sure?")) {
+                  doRemoveAlarm(alarm.uuid);
+                }
+              }}
+            >
+              Remove
+            </button>
+          </td>
+        </tr>
+      );
+    });
 
     return (
       <div className="container">
@@ -83,63 +158,7 @@ class App extends Component {
               </div>
             ) : results.length > 0 ? (
               <table className="table table-responsive">
-                <tbody>
-                  {results.map((alarm, i) => {
-                    const numberOfThresholds = alarm.thresholds.length;
-                    return (
-                      <tr key={i} className={styles.AlarmRow}>
-                        <td
-                          className="col-md-6"
-                          onClick={() =>
-                            console.log(`Go to detail page of ${alarm.name}`)}
-                        >
-                          <div
-                            className={`${alarm.active
-                              ? styles.Active
-                              : styles.InActive} ${styles.ActiveIndicator}`}
-                          >
-                            {alarm.active ? "ACTIVE" : "INACTIVE"}
-                          </div>
-                          <NavLink to={`/alarms/notifications/${alarm.uuid}`} style={{
-                            color: "#333"
-                          }}>
-                            {alarm.name}
-                          </NavLink>
-                          <br />
-                          <small className="text-muted">
-                            {numberOfThresholds}{" "}
-                            {pluralize("thresholds", numberOfThresholds)}
-                          </small>
-                        </td>
-                        <td className="col-md-1">
-                          <button
-                            type="button"
-                            className="btn btn-sm btn-link"
-                            onClick={() =>
-                              alarm.active
-                                ? doDeActivateAlarm(alarm.uuid)
-                                : doActivateAlarm(alarm.uuid)}
-                          >
-                            {alarm.active ? "Deactivate" : "Activate"}
-                          </button>
-                        </td>
-                        <td className="col-md-1">
-                          <button
-                            type="button"
-                            className="btn btn-sm btn-link"
-                            onClick={() => {
-                              if (window.confirm("Are you sure?")) {
-                                doRemoveAlarm(alarm.uuid);
-                              }
-                            }}
-                          >
-                            Remove
-                          </button>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
+                <tbody>{alarmsTable}</tbody>
               </table>
             ) : (
               <div className={styles.NoResults}>
