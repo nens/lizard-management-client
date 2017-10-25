@@ -28,7 +28,9 @@ import {
 function alarms(
   state = {
     alarm: {},
-    alarms: [],
+    alarms: {
+      results: []
+    },
     group: {},
     groups: [],
     isFetching: false,

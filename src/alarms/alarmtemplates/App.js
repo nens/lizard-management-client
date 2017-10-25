@@ -43,7 +43,7 @@ class App extends Component {
             </button>
           </div>
         </div>
-
+        <hr />
         <div className="row">
           <div className="col-md-12">
             {isFetching ? (
