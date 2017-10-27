@@ -1,6 +1,7 @@
 // import find from "lodash.find";
 
 // Actiontypes
+export const DISMISS_NOTIFICATION = "DISMISS_NOTIFICATION";
 export const RECEIVE_ACTIVATE_ALARM = "RECEIVE_ACTIVATE_ALARM";
 export const RECEIVE_ALARM_DETAILS = "RECEIVE_ALARM_DETAILS";
 export const RECEIVE_ALARM_GROUP_DETAILS = "RECEIVE_ALARM_GROUP_DETAILS";
@@ -26,6 +27,7 @@ export const REQUEST_NEW_ALARM = "REQUEST_NEW_ALARM";
 export const REQUEST_ORGANISATIONS = "REQUEST_ORGANISATIONS";
 export const REQUEST_REMOVE_ALARM = "REQUEST_REMOVE_ALARM";
 export const SELECT_ORGANISATION = "SELECT_ORGANISATION";
+export const SHOW_NOTIFICATION = "SHOW_NOTIFICATION";
 
 // Actions
 function requestAlarms() {
@@ -158,7 +160,6 @@ function receiveAlarmTemplates(data) {
   };
 }
 
-
 function receiveActivateAlarm(data) {
   return {
     type: RECEIVE_ACTIVATE_ALARM,
@@ -256,8 +257,7 @@ export function activateAlarm(uuid) {
       .then(response => response.json())
       .then(data => {
         dispatch(receiveActivateAlarm(data));
-        // dispatch(fetchAlarms());
-        // dispatch(fetchNotificationDetailsById(uuid));
+        dispatch(addNotification(`Alarm "${data.name}" activated`, 2000));
       });
   };
 }
@@ -274,8 +274,7 @@ export function deActivateAlarm(uuid) {
       .then(response => response.json())
       .then(data => {
         dispatch(receiveDeActivateAlarm(data));
-        // dispatch(fetchAlarms());
-        // dispatch(fetchNotificationDetailsById(uuid));
+        dispatch(addNotification(`Alarm "${data.name}" deactivated`, 2000));
       });
   };
 }
@@ -291,6 +290,7 @@ export function removeAlarm(uuid) {
       if (response.status === 204) {
         dispatch(receiveRemoveAlarm(uuid));
         dispatch(fetchAlarms());
+        dispatch(addNotification(`Alarm removed`, 2000));
       }
     });
   };
@@ -330,12 +330,37 @@ export function fetchLizardBootstrap() {
 
 export function fetchOrganisations() {
   return (dispatch, getState) => {
-    // dispatch(requestOrganisations());
     fetch("/api/v3/organisations/?page_size=100000")
       .then(response => response.json())
       .then(data => data.results)
       .then(data => {
         dispatch(receiveOrganisations(data));
       });
+  };
+}
+
+export function addNotification(message, timeout = false) {
+  return (dispatch, getState) => {
+    if (timeout) {
+      const idx = getState().notifications.notifications.length;
+      setTimeout(() => {
+        dispatch(dismissNotification(idx));
+      }, timeout);
+    }
+    dispatch(showNotification(message));
+  };
+}
+
+function showNotification(message) {
+  return {
+    type: SHOW_NOTIFICATION,
+    message
+  };
+}
+
+export function dismissNotification(idx) {
+  return {
+    type: DISMISS_NOTIFICATION,
+    idx
   };
 }

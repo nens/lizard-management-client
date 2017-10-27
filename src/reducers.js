@@ -1,5 +1,6 @@
 import { combineReducers } from "redux";
 import {
+  DISMISS_NOTIFICATION,
   RECEIVE_ACTIVATE_ALARM,
   RECEIVE_ALARM_DETAILS,
   RECEIVE_ALARM_GROUP_DETAILS,
@@ -22,7 +23,8 @@ import {
   REQUEST_NEW_ALARM,
   REQUEST_ORGANISATIONS,
   REQUEST_REMOVE_ALARM,
-  SELECT_ORGANISATION
+  SELECT_ORGANISATION,
+  SHOW_NOTIFICATION
 } from "./actions";
 
 function alarms(
@@ -146,9 +148,35 @@ function bootstrap(
   }
 }
 
+function notifications(
+  state = {
+    notifications: [],
+  },
+  action
+) {
+  switch (action.type) {
+    case SHOW_NOTIFICATION:
+      return {
+        ...state,
+        notifications: [...state.notifications, action.message]
+      };
+    case DISMISS_NOTIFICATION:
+      return {
+        ...state,
+        notifications: [
+          ...state.notifications.slice(0, action.idx),
+          ...state.notifications.slice(action.idx + 1),
+        ]
+      }
+    default:
+      return state;
+  }
+}
+
 const rootReducer = combineReducers({
   alarms,
-  bootstrap
+  bootstrap,
+  notifications
 });
 
 export default rootReducer;
