@@ -7,6 +7,7 @@ import { fetchLizardBootstrap, fetchOrganisations } from "./actions";
 import { Route, NavLink } from "react-router-dom";
 import LanguageSwitcher from "./components/LanguageSwitcher";
 import OrganisationSwitcher from "./components/OrganisationSwitcher";
+import Snackbar from "./components/Snackbar";
 import styles from "./App.css";
 import { withRouter } from "react-router-dom";
 
@@ -199,6 +200,7 @@ class App extends Component {
               this.setState({ showOrganisationSwitcher: false })}
           />
         ) : null}
+        <Snackbar />
       </div>
     );
   }
@@ -207,7 +209,7 @@ class App extends Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     isFetching: state.isFetching,
-    bootstrap: state.bootstrap
+    bootstrap: state.bootstrap,
   };
 };
 
