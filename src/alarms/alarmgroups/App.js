@@ -43,7 +43,6 @@ class App extends Component {
             </button>
           </div>
         </div>
-
         <div className="row">
           <div className="col-md-12">
             {isFetching ? (
@@ -71,7 +70,7 @@ class App extends Component {
                             console.log(`Go to detail page of ${group.name}`)}
                         >
                           <NavLink to={`/alarms/groups/${group.id}`}>
-                            <strong>{group.name}</strong>
+                            {group.name}
                           </NavLink>
                         </td>
                         <td className="col-md-2 text-center">
