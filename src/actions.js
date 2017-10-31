@@ -12,8 +12,10 @@ export const RECEIVE_ALARMS = "RECEIVE_ALARMS";
 export const RECEIVE_DEACTIVATE_ALARM = "RECEIVE_DEACTIVATE_ALARM";
 export const RECEIVE_LIZARD_BOOTSTRAP = "RECEIVE_LIZARD_BOOTSTRAP";
 export const RECEIVE_NEW_ALARM = "RECEIVE_NEW_ALARM";
+export const RECEIVE_NEW_GROUP = "RECEIVE_NEW_GPOUP";
 export const RECEIVE_ORGANISATIONS = "RECEIVE_ORGANISATIONS";
 export const RECEIVE_REMOVE_ALARM = "RECEIVE_REMOVE_ALARM";
+export const RECEIVE_REMOVE_GROUP = "RECEIVE_REMOVE_GROUP";
 export const REQUEST_ACTIVATE_ALARM = "REQUEST_ACTIVATE_ALARM";
 export const REQUEST_ALARM_DETAILS = "REQUEST_ALARM_DETAILS";
 export const REQUEST_ALARM_GROUP_DETAILS = "REQUEST_ALARM_GROUP_DETAILS";
@@ -24,6 +26,7 @@ export const REQUEST_ALARMS = "REQUEST_ALARMS";
 export const REQUEST_DEACTIVATE_ALARM = "REQUEST_DEACTIVATE_ALARM";
 export const REQUEST_LIZARD_BOOTSTRAP = "REQUEST_LIZARD_BOOTSTRAP";
 export const REQUEST_NEW_ALARM = "REQUEST_NEW_ALARM";
+export const REQUEST_NEW_GROUP = "REQUEST_NEW_GROUP";
 export const REQUEST_ORGANISATIONS = "REQUEST_ORGANISATIONS";
 export const REQUEST_REMOVE_ALARM = "REQUEST_REMOVE_ALARM";
 export const SELECT_ORGANISATION = "SELECT_ORGANISATION";
@@ -121,6 +124,19 @@ function receiveAlarmGroups(data) {
   };
 }
 
+function requestNewGroup() {
+  return {
+    type: REQUEST_NEW_GROUP
+  };
+}
+
+function receiveNewGroup(data) {
+  return {
+    type: RECEIVE_NEW_GROUP,
+    data
+  };
+}
+
 function requestAlarmGroupDetails() {
   return {
     type: REQUEST_ALARM_GROUP_DETAILS
@@ -131,6 +147,14 @@ function receiveAlarmGroupDetails(data) {
   return {
     type: RECEIVE_ALARM_GROUP_DETAILS,
     data
+  };
+}
+
+
+function receiveRemoveGroup(id) {
+  return {
+    type: RECEIVE_REMOVE_GROUP,
+    id
   };
 }
 
@@ -212,6 +236,39 @@ export function fetchAlarmGroupDetailsById(id) {
       .then(data => dispatch(receiveAlarmGroupDetails(data)));
   };
 }
+
+export function createGroup(data) {
+  return (dispatch, getState) => {
+    dispatch(requestNewGroup());
+    fetch("/api/v3/contactgroups/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    })
+      .then(response => response.json())
+      .then(data => {
+        dispatch(receiveNewGroup(data));
+        dispatch(fetchAlarmGroups());
+      });
+  };
+}
+
+export function deleteGroupById(id) {
+  return (dispatch, getState) => {
+    fetch(`/api/v3/contactgroups/${id}/`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({})
+    }).then(response => {
+      if (response.status === 204) {
+        dispatch(receiveRemoveGroup(id));
+        // dispatch(fetchAlarmGroups());
+        dispatch(addNotification(`Group removed`, 2000));
+      }
+    });
+  }
+}
+
 
 export function deleteContactsById(ids) {
   return (dispatch, getState) => {

@@ -102,7 +102,12 @@ class App extends Component {
                     </a>
                   </li>
                   <li className="nav-item">
-                    <a className="nav-link" href="#account">
+                    <a
+                      className="nav-link"
+                      href="https://sso.lizard.net/edit_profile/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <i className="fa fa-user" />&nbsp;&nbsp;{firstName}
                     </a>
                   </li>
@@ -209,7 +214,7 @@ class App extends Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     isFetching: state.isFetching,
-    bootstrap: state.bootstrap,
+    bootstrap: state.bootstrap
   };
 };
 

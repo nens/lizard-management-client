@@ -19,7 +19,6 @@ class LanguageSwitcherContainer extends Component {
     });
   }
   handleSelect(code) {
-    console.log("handleSelect()", code);
     localStorage.setItem("lizard-preferred-language", code);
     this.props.handleListenToClickOutside(false);
     this.setState(

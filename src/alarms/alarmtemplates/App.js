@@ -18,7 +18,7 @@ class App extends Component {
     this.props.doFetchTemplates();
   }
   handleNewTemplateClick() {
-    console.log("New template plz");
+    this.props.history.push("templates/new");
   }
   render() {
     const { templates, isFetching } = this.props;

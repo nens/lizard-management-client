@@ -4,7 +4,8 @@ import Ink from "react-ink";
 import { FormattedMessage } from "react-intl";
 import pluralize from "pluralize";
 import { connect } from "react-redux";
-import { fetchAlarmGroups } from "../../actions";
+import { Popover, PopoverItem } from "../../components/Popover";
+import { fetchAlarmGroups, deleteGroupById } from "../../actions";
 import styles from "./App.css";
 import { withRouter, NavLink } from "react-router-dom";
 
@@ -17,11 +18,10 @@ class App extends Component {
     this.props.doFetchGroups();
   }
   handleNewGroupClick(e) {
-    console.log("New group plz");
-    // this.props.history.push("groups/new");
+    this.props.history.push("groups/new");
   }
   render() {
-    const { groups, isFetching } = this.props;
+    const { groups, isFetching, doDeleteGroupById } = this.props;
     const numberOfGroups = groups.length;
     return (
       <div className="container">
@@ -88,16 +88,7 @@ class App extends Component {
                         <td className="col-md-1">
                           <div
                             onClick={e => console.log("Add contacts to group")}
-                            style={{
-                              backgroundColor: "#D8D8D8",
-                              borderRadius: 2,
-                              width: 40,
-                              height: 40,
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              cursor: "pointer"
-                            }}
+                            className={styles.MoreButton}
                           >
                             <i className="material-icons text-muted">
                               group_add
@@ -105,23 +96,25 @@ class App extends Component {
                           </div>
                         </td>
                         <td className="col-md-1">
-                          <div
-                            onClick={e => console.log("Group options")}
-                            style={{
-                              backgroundColor: "#D8D8D8",
-                              borderRadius: 2,
-                              width: 40,
-                              height: 40,
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              cursor: "pointer"
-                            }}
+                          <Popover
+                            element={
+                              <div className={styles.MoreButton}>
+                                <i className="material-icons text-muted">
+                                  keyboard_arrow_down
+                                </i>
+                              </div>
+                            }
                           >
-                            <i className="material-icons text-muted">
-                              keyboard_arrow_down
-                            </i>
-                          </div>
+                            <PopoverItem
+                              handleOnClick={() => {
+                                if (window.confirm("Are you sure?")) {
+                                  doDeleteGroupById(group.id);
+                                }
+                              }}
+                            >
+                              Delete group
+                            </PopoverItem>
+                          </Popover>
                         </td>
                       </tr>
                     );
@@ -150,7 +143,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    doFetchGroups: () => dispatch(fetchAlarmGroups())
+    doFetchGroups: () => dispatch(fetchAlarmGroups()),
+    doDeleteGroupById: id => dispatch(deleteGroupById(id))
   };
 };
 

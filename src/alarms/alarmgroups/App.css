@@ -35,3 +35,15 @@
   margin: -5px;
   font-size: 0.8em;
 }
+
+
+.MoreButton {
+  background-color: #D8D8D8;
+  border-radius: 2px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}

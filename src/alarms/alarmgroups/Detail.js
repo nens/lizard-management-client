@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import MDSpinner from "react-md-spinner";
-// import Ink from "react-ink";
-// import { FormattedMessage } from "react-intl";
+import Ink from "react-ink";
+import { FormattedMessage } from "react-intl";
 import ActionBar from "./ActionBar";
 import pluralize from "pluralize";
 import { connect } from "react-redux";
@@ -57,11 +57,25 @@ class Detail extends Component {
     if (group.contacts) {
       return (
         <div className="container">
-          <h4>{group.name}</h4>
-          <p className="text-muted">
-            {group.contacts.length}{" "}
-            {pluralize("recipients", group.contacts.length)}
-          </p>
+          <div className="row">
+            <div className="col-md-12">
+              <button
+                type="button"
+                className="btn btn-success float-right"
+              >
+                <FormattedMessage
+                  id="alarmgroups_detail.add_contacts"
+                  defaultMessage="Add contacts"
+                />
+                <Ink />
+              </button>
+              <h4>{group.name}</h4>
+              <p className="text-muted">
+                {group.contacts.length}{" "}
+                {pluralize("recipients", group.contacts.length)}
+              </p>
+            </div>
+          </div>
 
           <ActionBar doDeleteContactsById={doDeleteContactsById} />
 

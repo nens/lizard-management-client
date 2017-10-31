@@ -4,6 +4,8 @@ import { App as NotificationsApp } from "./notifications/App";
 import { App as NewNotificationApp } from "./notifications/NewNotification";
 import { App as AlarmGroupsApp } from "./alarmgroups/App";
 import { App as AlarmTemplatesApp } from "./alarmtemplates/App";
+import { App as NewAlarmGroupApp } from "./alarmgroups/NewAlarmGroup";
+import { App as NewTemplateApp } from "./alarmtemplates/NewTemplate";
 import { Detail as NotificationsDetail } from "./notifications/Detail";
 import { Detail as AlarmGroupsDetail } from "./alarmgroups/Detail";
 import { Detail as AlarmTemplatesDetail } from "./alarmtemplates/Detail";
@@ -47,13 +49,27 @@ class App extends Component {
           />
         </Switch>
         <Route exact path="/alarms/groups" component={AlarmGroupsApp} />
-        <Route exact path="/alarms/groups/:id" component={AlarmGroupsDetail} />
+        <Switch>
+          <Route exact path="/alarms/groups/new" component={NewAlarmGroupApp} />
+          <Route
+            exact
+            path="/alarms/groups/:id"
+            component={AlarmGroupsDetail}
+          />
+        </Switch>
         <Route exact path="/alarms/templates" component={AlarmTemplatesApp} />
-        <Route
-          exact
-          path="/alarms/templates/:id"
-          component={AlarmTemplatesDetail}
-        />
+        <Switch>
+          <Route
+            exact
+            path="/alarms/templates/new"
+            component={NewTemplateApp}
+          />
+          <Route
+            exact
+            path="/alarms/templates/:id"
+            component={AlarmTemplatesDetail}
+          />
+        </Switch>
       </div>
     );
   }

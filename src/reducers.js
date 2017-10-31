@@ -10,9 +10,11 @@ import {
   RECEIVE_ALARMS,
   RECEIVE_DEACTIVATE_ALARM,
   RECEIVE_LIZARD_BOOTSTRAP,
+  RECEIVE_NEW_GROUP,
   RECEIVE_NEW_ALARM,
   RECEIVE_ORGANISATIONS,
   RECEIVE_REMOVE_ALARM,
+  RECEIVE_REMOVE_GROUP,
   REQUEST_ALARM_DETAILS,
   REQUEST_ALARM_GROUP_DETAILS,
   REQUEST_ALARM_GROUPS,
@@ -21,6 +23,7 @@ import {
   REQUEST_ALARMS,
   REQUEST_LIZARD_BOOTSTRAP,
   REQUEST_NEW_ALARM,
+  REQUEST_NEW_GROUP,
   REQUEST_ORGANISATIONS,
   REQUEST_REMOVE_ALARM,
   SELECT_ORGANISATION,
@@ -99,6 +102,21 @@ function alarms(
         }),
         isFetching: false
       };
+    case REQUEST_NEW_GROUP:
+      return { ...state, isFetching: true };
+    case RECEIVE_NEW_GROUP:
+      return { ...state, isFetching: false };
+    case RECEIVE_REMOVE_GROUP:
+      return {
+        ...state,
+        isFetching: false,
+        groups: state.groups.filter((group, i) => {
+          if (group.id === action.id) {
+            return false;
+          }
+          return group;
+        })
+      };
     case REQUEST_ALARM_GROUPS:
       return { ...state, isFetching: true };
     case RECEIVE_ALARM_GROUPS:
@@ -150,7 +168,7 @@ function bootstrap(
 
 function notifications(
   state = {
-    notifications: [],
+    notifications: []
   },
   action
 ) {
@@ -165,9 +183,9 @@ function notifications(
         ...state,
         notifications: [
           ...state.notifications.slice(0, action.idx),
-          ...state.notifications.slice(action.idx + 1),
+          ...state.notifications.slice(action.idx + 1)
         ]
-      }
+      };
     default:
       return state;
   }
