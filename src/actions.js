@@ -9,10 +9,12 @@ export const RECEIVE_ALARM_GROUPS = "RECEIVE_ALARM_GROUPS";
 export const RECEIVE_ALARM_TEMPLATE_DETAILS = "RECEIVE_ALARM_TEMPLATE_DETAILS";
 export const RECEIVE_ALARM_TEMPLATES = "RECEIVE_ALARM_TEMPLATES";
 export const RECEIVE_ALARMS = "RECEIVE_ALARMS";
+export const RECEIVE_CONTACTS = "RECEIVE_CONTACTS";
 export const RECEIVE_DEACTIVATE_ALARM = "RECEIVE_DEACTIVATE_ALARM";
 export const RECEIVE_LIZARD_BOOTSTRAP = "RECEIVE_LIZARD_BOOTSTRAP";
 export const RECEIVE_NEW_ALARM = "RECEIVE_NEW_ALARM";
 export const RECEIVE_NEW_GROUP = "RECEIVE_NEW_GPOUP";
+export const RECEIVE_NEW_TEMPLATE = "RECEIVE_NEW_TEMPLATE";
 export const RECEIVE_ORGANISATIONS = "RECEIVE_ORGANISATIONS";
 export const RECEIVE_REMOVE_ALARM = "RECEIVE_REMOVE_ALARM";
 export const RECEIVE_REMOVE_GROUP = "RECEIVE_REMOVE_GROUP";
@@ -23,10 +25,12 @@ export const REQUEST_ALARM_GROUPS = "REQUEST_ALARM_GROUPS";
 export const REQUEST_ALARM_TEMPLATE_DETAILS = "REQUEST_ALARM_TEMPLATE_DETAILS";
 export const REQUEST_ALARM_TEMPLATES = "REQUEST_ALARM_TEMPLATES";
 export const REQUEST_ALARMS = "REQUEST_ALARMS";
+export const REQUEST_CONTACTS = "REQUEST_CONTACTS";
 export const REQUEST_DEACTIVATE_ALARM = "REQUEST_DEACTIVATE_ALARM";
 export const REQUEST_LIZARD_BOOTSTRAP = "REQUEST_LIZARD_BOOTSTRAP";
 export const REQUEST_NEW_ALARM = "REQUEST_NEW_ALARM";
 export const REQUEST_NEW_GROUP = "REQUEST_NEW_GROUP";
+export const REQUEST_NEW_TEMPLATE = "REQUEST_NEW_TEMPLATE";
 export const REQUEST_ORGANISATIONS = "REQUEST_ORGANISATIONS";
 export const REQUEST_REMOVE_ALARM = "REQUEST_REMOVE_ALARM";
 export const SELECT_ORGANISATION = "SELECT_ORGANISATION";
@@ -150,6 +154,18 @@ function receiveAlarmGroupDetails(data) {
   };
 }
 
+function requestContacts() {
+  return {
+    type: REQUEST_CONTACTS,
+  };
+}
+
+function receiveContacts(data) {
+  return {
+    type: RECEIVE_CONTACTS,
+    data
+  };
+}
 
 function receiveRemoveGroup(id) {
   return {
@@ -170,6 +186,20 @@ function receiveAlarmTemplateDetails(data) {
     data
   };
 }
+
+function requestNewTemplate() {
+  return {
+    type: REQUEST_NEW_TEMPLATE,
+  }
+}
+
+function receiveNewTemplate(data) {
+  return {
+    type: RECEIVE_NEW_TEMPLATE,
+    data
+  };
+}
+
 
 function requestAlarmTemplates() {
   return {
@@ -396,6 +426,19 @@ export function fetchOrganisations() {
   };
 }
 
+export function fetchContacts() {
+  return (dispatch, getState) => {
+    dispatch(requestContacts());
+    fetch("/api/v3/contacts/?page_size=100000")
+      .then(response => response.json())
+      .then(data => data.results)
+      .then(data => {
+        dispatch(receiveContacts(data));
+      });
+  };
+}
+
+
 export function addNotification(message, timeout = false) {
   return (dispatch, getState) => {
     if (timeout) {
@@ -419,5 +462,23 @@ export function dismissNotification(idx) {
   return {
     type: DISMISS_NOTIFICATION,
     idx
+  };
+}
+
+
+
+export function createTemplate(data) {
+  return (dispatch, getState) => {
+    dispatch(requestNewTemplate());
+    fetch("/api/v3/messages/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    })
+      .then(response => response.json())
+      .then(data => {
+        dispatch(receiveNewTemplate(data));
+        dispatch(fetchAlarmTemplates());
+      });
   };
 }

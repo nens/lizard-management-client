@@ -3,6 +3,7 @@ import MDSpinner from "react-md-spinner";
 import Ink from "react-ink";
 import { FormattedMessage } from "react-intl";
 import { connect } from "react-redux";
+import { createTemplate } from "../../actions";
 import styles from "./NewTemplate.css";
 import { withRouter } from "react-router-dom";
 
@@ -34,9 +35,28 @@ class NewTemplate extends Component {
     this.state = {
       templateType: "email"
     };
+    this.handleClickCreateTemplateButton = this.handleClickCreateTemplateButton.bind(
+      this
+    );
   }
   componentDidMount() {
     document.getElementById("templateName").focus();
+  }
+  handleClickCreateTemplateButton() {
+    const { templateType } = this.state;
+    const { doCreateTemplate, organisation, history } = this.props;
+    doCreateTemplate({
+      name: document.getElementById("templateName").value,
+      organisation: organisation.unique_id,
+      type: templateType,
+      subject:
+        templateType === "email"
+          ? document.getElementById("subject").value
+          : document.getElementById("templateName").value,
+      text: document.getElementById("templatePreview").value,
+      html: document.getElementById("templatePreview").value
+    });
+    history.push("/alarms/templates");
   }
   render() {
     const { template, isFetching } = this.props;
@@ -113,9 +133,7 @@ class NewTemplate extends Component {
             <td>Description</td>
           </tr>
         </thead>
-        <tbody>
-          {parameterTableRows}
-        </tbody>
+        <tbody>{parameterTableRows}</tbody>
       </table>
     );
 
@@ -186,6 +204,7 @@ class NewTemplate extends Component {
               <input
                 className="form-control"
                 type="text"
+                id="subject"
                 defaultValue={template.subject}
               />
               <small id="helpText" className="form-text text-muted">
@@ -212,7 +231,9 @@ class NewTemplate extends Component {
             <button
               type="button"
               className="btn btn-success"
-              onClick={() => console.log("Save template")}
+              onClick={() => {
+                this.handleClickCreateTemplateButton();
+              }}
             >
               <FormattedMessage
                 id="alarmtemplates_new.create_template"
@@ -230,12 +251,15 @@ class NewTemplate extends Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     template: state.alarms.template,
-    isFetching: state.alarms.isFetching
+    isFetching: state.alarms.isFetching,
+    organisation: state.bootstrap.organisation
   };
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
-  return {};
+  return {
+    doCreateTemplate: data => dispatch(createTemplate(data))
+  };
 };
 
 const App = withRouter(

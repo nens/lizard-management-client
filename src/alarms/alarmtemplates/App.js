@@ -82,13 +82,7 @@ class App extends Component {
                               value={template.id}
                             />
                           </td>
-                          <td
-                            className="col-md-8"
-                            onClick={() =>
-                              console.log(
-                                `Go to detail page of ${template.name}`
-                              )}
-                          >
+                          <td className="col-md-8">
                             <NavLink to={`/alarms/templates/${template.id}`}>
                               <strong>{template.name}</strong>{" "}
                             </NavLink>

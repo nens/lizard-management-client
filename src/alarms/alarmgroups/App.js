@@ -21,7 +21,7 @@ class App extends Component {
     this.props.history.push("groups/new");
   }
   render() {
-    const { groups, isFetching, doDeleteGroupById } = this.props;
+    const { groups, isFetching, doDeleteGroupById, history } = this.props;
     const numberOfGroups = groups.length;
     return (
       <div className="container">
@@ -87,7 +87,7 @@ class App extends Component {
                         </td>
                         <td className="col-md-1">
                           <div
-                            onClick={e => console.log("Add contacts to group")}
+                            onClick={() => history.push(`/alarms/groups/${group.id}/new`)}
                             className={styles.MoreButton}
                           >
                             <i className="material-icons text-muted">

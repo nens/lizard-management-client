@@ -41,6 +41,84 @@ class Detail extends Component {
   }
   render() {
     const { template, isFetching } = this.props;
+
+    const availableParameters = [
+      {
+        parameter: "[[var:from]]",
+        description: "Name of the sender",
+        templateType: "email"
+      },
+      {
+        parameter: "[[var:from_email]]",
+        description: "E-mail address of the sender",
+        templateType: "email"
+      },
+      {
+        parameter: "[[var:organisation_name]]",
+        description: "Name of the sending organisation"
+      },
+      {
+        parameter: "[[var:threshold_value]]",
+        description: "Value of the threshold"
+      },
+      {
+        parameter: "[[var:threshold_status]]",
+        description: "Status of the threshold"
+      },
+      {
+        parameter: "[[var:name]]",
+        description: "First and last name of recipient"
+      },
+      {
+        parameter: "[[var:email]]",
+        description: "E-mail address of the recipient",
+        templateType: "email"
+      },
+      {
+        parameter: "[[var:phone_number]]",
+        description: "Telephone number of recipient",
+        templateType: "sms"
+      }
+    ];
+
+    const parameterTableRows = availableParameters.map((parameter, i) => {
+      if (
+        !parameter.templateType ||
+        parameter.templateType === template.type
+      ) {
+        return (
+          <tr
+            key={i}
+            onClick={() => {
+              document
+                .getElementById("templatePreview")
+                .insertAtCaret(parameter.parameter);
+            }}
+          >
+            <td>{parameter.parameter}</td>
+            <td>{parameter.description}</td>
+          </tr>
+        );
+      }
+      return null;
+    });
+
+    const parameterTable = (
+      <table
+        className={`table table-sm table-responsive table-striped ${styles.ParameterTable}`}
+      >
+        <thead>
+          <tr>
+            <td>Parameter</td>
+            <td>Description</td>
+          </tr>
+        </thead>
+        <tbody>{parameterTableRows}</tbody>
+      </table>
+    );
+
+
+
     if (isFetching) {
       return (
         <div
@@ -91,98 +169,7 @@ class Detail extends Component {
             <small className="text-muted">TEMPLATE</small>
           </div>
           <div className="col-md-6">
-            <table
-              className={`table table-sm table-responsive table-striped ${styles.ParameterTable}`}
-            >
-              <thead>
-                <tr>
-                  <td>Parameter</td>
-                  <td>Description</td>
-                </tr>
-              </thead>
-              <tbody>
-                <tr
-                  onClick={() => {
-                    document
-                      .getElementById("templatePreview")
-                      .insertAtCaret("[[var:from]]");
-                  }}
-                >
-                  <td>[[var:from]]</td>
-                  <td>Name of the sender</td>
-                </tr>
-                <tr
-                  onClick={() => {
-                    document
-                      .getElementById("templatePreview")
-                      .insertAtCaret("[[var:from_email]]");
-                  }}
-                >
-                  <td>[[var:from_email]]</td>
-                  <td>E-mail address of the sender</td>
-                </tr>
-                <tr
-                  onClick={() => {
-                    document
-                      .getElementById("templatePreview")
-                      .insertAtCaret("[[var:organisation_name]]");
-                  }}
-                >
-                  <td>[[var:organisation_name]]</td>
-                  <td>Name of the sending organisation</td>
-                </tr>
-                <tr
-                  onClick={() => {
-                    document
-                      .getElementById("templatePreview")
-                      .insertAtCaret("[[var:threshold_value]]");
-                  }}
-                >
-                  <td>[[var:threshold_value]]</td>
-                  <td>Value of the threshold</td>
-                </tr>
-                <tr
-                  onClick={() => {
-                    document
-                      .getElementById("templatePreview")
-                      .insertAtCaret("[[var:threshold_status]]");
-                  }}
-                >
-                  <td>[[var:threshold_status]]</td>
-                  <td>Status of the threshold</td>
-                </tr>
-                <tr
-                  onClick={() => {
-                    document
-                      .getElementById("templatePreview")
-                      .insertAtCaret("[[var:name]]");
-                  }}
-                >
-                  <td>[[var:name]]</td>
-                  <td>First and last name of recipient</td>
-                </tr>
-                <tr
-                  onClick={() => {
-                    document
-                      .getElementById("templatePreview")
-                      .insertAtCaret("[[var:email]]");
-                  }}
-                >
-                  <td>[[var:email]]</td>
-                  <td>E-mail address of the recipient</td>
-                </tr>
-                <tr
-                  onClick={() => {
-                    document
-                      .getElementById("templatePreview")
-                      .insertAtCaret("[[var:phone_number]]");
-                  }}
-                >
-                  <td>[[var:phone_number]]</td>
-                  <td>Telephone number of recipient</td>
-                </tr>
-              </tbody>
-            </table>
+            {parameterTable}
           </div>
         </div>
         <div className="row">

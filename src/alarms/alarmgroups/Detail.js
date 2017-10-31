@@ -44,7 +44,7 @@ class Detail extends Component {
   }
 
   render() {
-    const { isFetching, group, doDeleteContactsById } = this.props;
+    const { isFetching, group, doDeleteContactsById, history } = this.props;
 
     if (isFetching) {
       return (
@@ -62,6 +62,7 @@ class Detail extends Component {
               <button
                 type="button"
                 className="btn btn-success float-right"
+                onClick={() => history.push(`/alarms/groups/${group.id}/new`)}
               >
                 <FormattedMessage
                   id="alarmgroups_detail.add_contacts"

@@ -8,10 +8,12 @@ import {
   RECEIVE_ALARM_TEMPLATE_DETAILS,
   RECEIVE_ALARM_TEMPLATES,
   RECEIVE_ALARMS,
+  RECEIVE_CONTACTS,
   RECEIVE_DEACTIVATE_ALARM,
   RECEIVE_LIZARD_BOOTSTRAP,
-  RECEIVE_NEW_GROUP,
   RECEIVE_NEW_ALARM,
+  RECEIVE_NEW_GROUP,
+  RECEIVE_NEW_TEMPLATE,
   RECEIVE_ORGANISATIONS,
   RECEIVE_REMOVE_ALARM,
   RECEIVE_REMOVE_GROUP,
@@ -21,9 +23,11 @@ import {
   REQUEST_ALARM_TEMPLATE_DETAILS,
   REQUEST_ALARM_TEMPLATES,
   REQUEST_ALARMS,
+  REQUEST_CONTACTS,
   REQUEST_LIZARD_BOOTSTRAP,
   REQUEST_NEW_ALARM,
   REQUEST_NEW_GROUP,
+  REQUEST_NEW_TEMPLATE,
   REQUEST_ORGANISATIONS,
   REQUEST_REMOVE_ALARM,
   SELECT_ORGANISATION,
@@ -36,6 +40,7 @@ function alarms(
     alarms: {
       results: []
     },
+    contacts: [],
     group: {},
     groups: [],
     isFetching: false,
@@ -45,6 +50,14 @@ function alarms(
   action
 ) {
   switch (action.type) {
+    case REQUEST_CONTACTS:
+      return {
+        ...state, isFetching: true
+      };
+    case RECEIVE_CONTACTS:
+      return {
+        ...state, isFetching: false, contacts: action.data,
+      };
     case RECEIVE_ACTIVATE_ALARM:
       return {
         ...state,
@@ -133,6 +146,10 @@ function alarms(
       return { ...state, isFetching: true };
     case RECEIVE_ALARM_TEMPLATE_DETAILS:
       return { ...state, template: action.data, isFetching: false };
+    case REQUEST_NEW_TEMPLATE:
+      return { ...state, isFetching: true };
+    case RECEIVE_NEW_TEMPLATE:
+      return { ...state, isFetching: false };
     default:
       return state;
   }
