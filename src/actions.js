@@ -35,6 +35,7 @@ export const REQUEST_ORGANISATIONS = "REQUEST_ORGANISATIONS";
 export const REQUEST_REMOVE_ALARM = "REQUEST_REMOVE_ALARM";
 export const SELECT_ORGANISATION = "SELECT_ORGANISATION";
 export const SHOW_NOTIFICATION = "SHOW_NOTIFICATION";
+export const UPDATE_GROUP_BY_ID = "UPDATE_GROUP_BY_ID";
 
 // Actions
 function requestAlarms() {
@@ -156,7 +157,7 @@ function receiveAlarmGroupDetails(data) {
 
 function requestContacts() {
   return {
-    type: REQUEST_CONTACTS,
+    type: REQUEST_CONTACTS
   };
 }
 
@@ -174,6 +175,14 @@ function receiveRemoveGroup(id) {
   };
 }
 
+function updateGroupById(group, id) {
+  return {
+    type: UPDATE_GROUP_BY_ID,
+    group,
+    id
+  }
+}
+
 function requestAlarmTemplateDetails() {
   return {
     type: REQUEST_ALARM_TEMPLATE_DETAILS
@@ -189,8 +198,8 @@ function receiveAlarmTemplateDetails(data) {
 
 function requestNewTemplate() {
   return {
-    type: REQUEST_NEW_TEMPLATE,
-  }
+    type: REQUEST_NEW_TEMPLATE
+  };
 }
 
 function receiveNewTemplate(data) {
@@ -199,7 +208,6 @@ function receiveNewTemplate(data) {
     data
   };
 }
-
 
 function requestAlarmTemplates() {
   return {
@@ -296,9 +304,8 @@ export function deleteGroupById(id) {
         dispatch(addNotification(`Group removed`, 2000));
       }
     });
-  }
+  };
 }
-
 
 export function deleteContactsById(ids) {
   return (dispatch, getState) => {
@@ -428,6 +435,9 @@ export function fetchOrganisations() {
 
 export function fetchContacts() {
   return (dispatch, getState) => {
+    // if (getState().alarms.contacts.length > 0) {
+    //   return false;
+    // }
     dispatch(requestContacts());
     fetch("/api/v3/contacts/?page_size=100000")
       .then(response => response.json())
@@ -437,7 +447,6 @@ export function fetchContacts() {
       });
   };
 }
-
 
 export function addNotification(message, timeout = false) {
   return (dispatch, getState) => {
@@ -465,8 +474,6 @@ export function dismissNotification(idx) {
   };
 }
 
-
-
 export function createTemplate(data) {
   return (dispatch, getState) => {
     dispatch(requestNewTemplate());
@@ -479,6 +486,28 @@ export function createTemplate(data) {
       .then(data => {
         dispatch(receiveNewTemplate(data));
         dispatch(fetchAlarmTemplates());
+      });
+  };
+}
+
+export function addContactToGroup(contact, groupId) {
+  return (dispatch, getState) => {
+    const currentGroup = getState().alarms.groups.filter(
+      group => group.id === groupId
+    );
+    const currentContacts = currentGroup[0].contacts;
+    currentContacts.push(contact);
+
+    fetch(`/api/v3/contactgroups/${groupId}/`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contacts: currentContacts.map(contact => contact.id)
+      })
+    })
+      .then(response => response.json())
+      .then(group => {
+        dispatch(updateGroupById(group, groupId));
       });
   };
 }

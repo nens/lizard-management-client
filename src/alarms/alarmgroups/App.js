@@ -5,23 +5,47 @@ import { FormattedMessage } from "react-intl";
 import pluralize from "pluralize";
 import { connect } from "react-redux";
 import { Popover, PopoverItem } from "../../components/Popover";
-import { fetchAlarmGroups, deleteGroupById } from "../../actions";
+import ContactsPicker from "./ContactsPicker";
+import {
+  fetchAlarmGroups,
+  fetchContacts,
+  deleteGroupById
+} from "../../actions";
 import styles from "./App.css";
 import { withRouter, NavLink } from "react-router-dom";
 
 class App extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      showContactsPicker: false,
+      contactsPickerIds: null,
+      contactsPickerGroupId: null
+    };
     this.handleNewGroupClick = this.handleNewGroupClick.bind(this);
+    this.addIdToContactsPickerIds = this.addIdToContactsPickerIds.bind(
+      this
+    );
   }
   componentDidMount() {
     this.props.doFetchGroups();
+    this.props.doFetchContacts();
   }
   handleNewGroupClick(e) {
     this.props.history.push("groups/new");
   }
+  addIdToContactsPickerIds(id) {
+    this.setState({
+      contactsPickerIds: this.state.contactsPickerIds.concat([id])
+    });
+  }
   render() {
-    const { groups, isFetching, doDeleteGroupById, history } = this.props;
+    const { groups, isFetching, doDeleteGroupById } = this.props;
+    const {
+      showContactsPicker,
+      contactsPickerIds,
+      contactsPickerGroupId
+    } = this.state;
     const numberOfGroups = groups.length;
     return (
       <div className="container">
@@ -64,11 +88,7 @@ class App extends Component {
                     const numberOfContacts = group.contacts.length;
                     return (
                       <tr key={i} className={styles.GroupRow}>
-                        <td
-                          className="col-md-8"
-                          onClick={() =>
-                            console.log(`Go to detail page of ${group.name}`)}
-                        >
+                        <td className="col-md-8">
                           <NavLink to={`/alarms/groups/${group.id}`}>
                             {group.name}
                           </NavLink>
@@ -87,7 +107,14 @@ class App extends Component {
                         </td>
                         <td className="col-md-1">
                           <div
-                            onClick={() => history.push(`/alarms/groups/${group.id}/new`)}
+                            onClick={() =>
+                              this.setState({
+                                showContactsPicker: true,
+                                contactsPickerGroupId: group.id,
+                                contactsPickerIds: group.contacts.map(
+                                  contact => contact.id
+                                )
+                              })}
                             className={styles.MoreButton}
                           >
                             <i className="material-icons text-muted">
@@ -129,6 +156,19 @@ class App extends Component {
             )}
           </div>
         </div>
+        {showContactsPicker ? (
+          <ContactsPicker
+            addIdToContactsPickerIds={this.addIdToContactsPickerIds}
+            contactsPickerGroupId={contactsPickerGroupId}
+            contactsPickerIds={contactsPickerIds}
+            handleClose={() =>
+              this.setState({
+                showContactsPicker: false,
+                contactsPickerIds: null,
+                contactsPickerGroupId: null
+              })}
+          />
+        ) : null}
       </div>
     );
   }
@@ -144,7 +184,8 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     doFetchGroups: () => dispatch(fetchAlarmGroups()),
-    doDeleteGroupById: id => dispatch(deleteGroupById(id))
+    doDeleteGroupById: id => dispatch(deleteGroupById(id)),
+    doFetchContacts: () => dispatch(fetchContacts())
   };
 };
 

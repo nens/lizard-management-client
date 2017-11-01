@@ -31,7 +31,8 @@ import {
   REQUEST_ORGANISATIONS,
   REQUEST_REMOVE_ALARM,
   SELECT_ORGANISATION,
-  SHOW_NOTIFICATION
+  SHOW_NOTIFICATION,
+  UPDATE_GROUP_BY_ID
 } from "./actions";
 
 function alarms(
@@ -150,6 +151,8 @@ function alarms(
       return { ...state, isFetching: true };
     case RECEIVE_NEW_TEMPLATE:
       return { ...state, isFetching: false };
+    case UPDATE_GROUP_BY_ID:
+      return { ...state };
     default:
       return state;
   }
