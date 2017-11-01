@@ -3,7 +3,7 @@ import { Alarms as AlarmsHome } from "./Alarms";
 import { App as NotificationsApp } from "./notifications/App";
 import { App as NewNotificationApp } from "./notifications/NewNotification";
 import { App as AlarmGroupsApp } from "./alarmgroups/App";
-import { App as NewContactApp } from "./alarmgroups/NewContact";
+import { App as AlarmContactApp } from "./contacts/App";
 import { App as AlarmTemplatesApp } from "./alarmtemplates/App";
 import { App as NewAlarmGroupApp } from "./alarmgroups/NewAlarmGroup";
 import { App as NewTemplateApp } from "./alarmtemplates/NewTemplate";
@@ -57,8 +57,10 @@ class App extends Component {
             path="/alarms/groups/:id"
             component={AlarmGroupsDetail}
           />
-          <Route exact path="/alarms/groups/:id/new" component={NewContactApp} />
         </Switch>
+
+        <Route exact path="/alarms/contacts" component={AlarmContactApp} />
+
         <Route exact path="/alarms/templates" component={AlarmTemplatesApp} />
         <Switch>
           <Route

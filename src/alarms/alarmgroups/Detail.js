@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import MDSpinner from "react-md-spinner";
-import Ink from "react-ink";
-import { FormattedMessage } from "react-intl";
+// import Ink from "react-ink";
+// import { FormattedMessage } from "react-intl";
 import ActionBar from "./ActionBar";
 import pluralize from "pluralize";
 import { connect } from "react-redux";
@@ -18,10 +18,12 @@ class Detail extends Component {
       this
     );
   }
+
   componentDidMount() {
     const { match, doFetchGroupDetails } = this.props;
     doFetchGroupDetails(match.params.id);
   }
+
 
   handleCheckboxes(e) {
     const checkboxes = [
@@ -44,7 +46,7 @@ class Detail extends Component {
   }
 
   render() {
-    const { isFetching, group, doDeleteContactsById, history } = this.props;
+    const { isFetching, group, doDeleteContactsById } = this.props;
 
     if (isFetching) {
       return (
@@ -59,17 +61,6 @@ class Detail extends Component {
         <div className="container">
           <div className="row">
             <div className="col-md-12">
-              <button
-                type="button"
-                className="btn btn-success float-right"
-                onClick={() => history.push(`/alarms/groups/${group.id}/new`)}
-              >
-                <FormattedMessage
-                  id="alarmgroups_detail.add_contacts"
-                  defaultMessage="Add contacts"
-                />
-                <Ink />
-              </button>
               <h4>{group.name}</h4>
               <p className="text-muted">
                 {group.contacts.length}{" "}

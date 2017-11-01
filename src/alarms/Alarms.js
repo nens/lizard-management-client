@@ -50,6 +50,22 @@ class Alarms extends Component {
               }
             />
             <AppIcon
+              handleClick={e => this.handleLink("alarms/contacts")}
+              src="/images/groups@3x.svg"
+              title={
+                <FormattedMessage
+                  id="alarms.alarms_contacts"
+                  defaultMessage="Contacts"
+                />
+              }
+              subTitle={
+                <FormattedMessage
+                  id="alarms.contacts_management"
+                  defaultMessage="Contacts management"
+                />
+              }
+            />
+            <AppIcon
               handleClick={e => this.handleLink("alarms/templates")}
               src="/images/templates@3x.svg"
               title={
@@ -65,7 +81,7 @@ class Alarms extends Component {
                 />
               }
             />
-            <AppIcon
+            {/* <AppIcon
               handleClick={e => this.handleLink("alarms/message")}
               src="/images/groups@3x.svg"
               title={
@@ -80,7 +96,7 @@ class Alarms extends Component {
                   defaultMessage="Send one-off messages to groups of recipients"
                 />
               }
-            />
+            /> */}
           </div>
         </div>
       </div>
