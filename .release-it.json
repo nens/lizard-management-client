@@ -38,7 +38,7 @@
   "dist": {
     "repo": false,
     "stageDir": ".stage",
-    "baseDir": "build",
+    "baseDir": "dist",
     "files": ["**/*"],
     "pkgFiles": null,
     "commit": true,
