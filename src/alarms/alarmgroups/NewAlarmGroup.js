@@ -15,7 +15,11 @@ class NewAlarmGroup extends Component {
     this.handleClickCreateGroupButton = this.handleClickCreateGroupButton.bind(this);
   }
   componentDidMount() {
-    document.getElementById("groupName").focus();
+    try {
+      document.getElementById("groupName").focus();
+    } catch(e) {
+      console.log("Could not focus() on input element..");
+    }
   }
   handleClickCreateGroupButton() {
     const { organisation, history } = this.props;

@@ -40,7 +40,11 @@ class NewTemplate extends Component {
     );
   }
   componentDidMount() {
-    document.getElementById("templateName").focus();
+    try {
+      document.getElementById("templateName").focus();
+    } catch(e) {
+      console.log("Could not focus() on input element..");
+    }
   }
   handleClickCreateTemplateButton() {
     const { templateType } = this.state;

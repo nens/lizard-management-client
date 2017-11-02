@@ -79,6 +79,8 @@ class ActionBar extends Component {
     }
   }
 
+
+
   render() {
     const { showGroupSettings, showManageContacts } = this.state;
     return (
@@ -119,7 +121,7 @@ class ActionBar extends Component {
             <i className="material-icons">keyboard_arrow_down</i>Group settings
             {showGroupSettings ? (
               <div className={styles.DropDown}>
-                <div className={styles.DropDownItem}>Send message</div>
+                <div className={styles.DropDownItem} onClick={() => this.props.showGroupMessageModal()}>Send message</div>
               </div>
             ) : null}
           </div>

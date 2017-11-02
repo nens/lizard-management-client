@@ -180,7 +180,7 @@ function updateGroupById(group, id) {
     type: UPDATE_GROUP_BY_ID,
     group,
     id
-  }
+  };
 }
 
 function requestAlarmTemplateDetails() {
@@ -234,6 +234,8 @@ function receiveDeActivateAlarm(data) {
     data
   };
 }
+
+
 
 // Exported functions
 export function selectOrganisation(organisation) {

@@ -53,11 +53,14 @@ function alarms(
   switch (action.type) {
     case REQUEST_CONTACTS:
       return {
-        ...state, isFetching: true
+        ...state,
+        isFetching: true
       };
     case RECEIVE_CONTACTS:
       return {
-        ...state, isFetching: false, contacts: action.data,
+        ...state,
+        isFetching: false,
+        contacts: action.data
       };
     case RECEIVE_ACTIVATE_ALARM:
       return {

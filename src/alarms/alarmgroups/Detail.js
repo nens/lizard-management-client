@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import MDSpinner from "react-md-spinner";
 // import Ink from "react-ink";
 // import { FormattedMessage } from "react-intl";
+import GroupMessage from "./GroupMessage";
 import ActionBar from "./ActionBar";
 import pluralize from "pluralize";
 import { connect } from "react-redux";
@@ -12,18 +13,21 @@ import { withRouter } from "react-router-dom";
 class Detail extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      showGroupMessageModal: false
+    };
     this.handleCheckboxes = this.handleCheckboxes.bind(this);
     this.handleSelectAllCheckboxes = this.handleSelectAllCheckboxes.bind(this);
     this.handleDeselectAllCheckboxes = this.handleDeselectAllCheckboxes.bind(
       this
     );
+    this.showGroupMessageModal = this.showGroupMessageModal.bind(this);
   }
 
   componentDidMount() {
     const { match, doFetchGroupDetails } = this.props;
     doFetchGroupDetails(match.params.id);
   }
-
 
   handleCheckboxes(e) {
     const checkboxes = [
@@ -45,8 +49,15 @@ class Detail extends Component {
       .forEach(checkbox => (checkbox.checked = false));
   }
 
+  showGroupMessageModal() {
+    this.setState({
+      showGroupMessageModal: true
+    });
+  }
+
   render() {
     const { isFetching, group, doDeleteContactsById } = this.props;
+    const { showGroupMessageModal } = this.state;
 
     if (isFetching) {
       return (
@@ -69,7 +80,10 @@ class Detail extends Component {
             </div>
           </div>
 
-          <ActionBar doDeleteContactsById={doDeleteContactsById} />
+          <ActionBar
+            doDeleteContactsById={doDeleteContactsById}
+            showGroupMessageModal={this.showGroupMessageModal}
+          />
 
           <table className="table table-responsive">
             <thead style={{ backgroundColor: "#D8D8D8" }}>
@@ -103,6 +117,13 @@ class Detail extends Component {
               })}
             </tbody>
           </table>
+          {showGroupMessageModal ? (
+            <GroupMessage
+              groupId={group.id}
+              handleClose={() =>
+                this.setState({ showGroupMessageModal: false })}
+            />
+          ) : null}
         </div>
       );
     } else {
