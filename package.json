@@ -1,6 +1,6 @@
 {
   "name": "lizard-management-client",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "private": true,
   "repository": {
     "type": "git",
@@ -95,7 +95,7 @@
     "prettier": "^1.7.3",
     "react-hot-loader": "next",
     "react-intl-translations-manager": "^5.0.1",
-    "release-it": "^4.1.1"
+    "release-it": "git+https://git@github.com/webpro/release-it.git"
   },
   "scripts": {
     "start": "node scripts/start.js",
