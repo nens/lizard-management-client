@@ -6,7 +6,7 @@
   "pkgFiles": ["package.json"],
   "increment": "patch",
   "preReleaseId": null,
-  "buildCommand": false,
+  "buildCommand": "tar -czvf dist/lizard-management-client-${src.tagName}.tar.gz build/",
   "changelogCommand": "git log --pretty=format:\"* %s (%h)\" [REV_RANGE]",
   "requireCleanWorkingDir": false,
   "src": {
@@ -28,12 +28,12 @@
     "access": null
   },
   "github": {
-    "release": false,
+    "release": true,
     "releaseName": "Release %s",
     "preRelease": false,
     "draft": false,
     "tokenRef": "GITHUB_TOKEN",
-    "assets": null
+    "assets": "dist/*.zip"
   },
   "dist": {
     "repo": false,
