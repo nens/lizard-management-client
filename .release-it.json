@@ -6,7 +6,7 @@
   "pkgFiles": ["package.json"],
   "increment": "patch",
   "preReleaseId": null,
-  "buildCommand": "zip -r dist/lizard-management-client.zip build/",
+  "buildCommand": "rm dist/client.zip; zip -r dist/client.zip build/",
   "changelogCommand": "git log --pretty=format:\"* %s (%h)\" [REV_RANGE]",
   "requireCleanWorkingDir": false,
   "src": {
