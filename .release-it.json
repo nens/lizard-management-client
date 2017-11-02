@@ -62,7 +62,7 @@
       "commit": true,
       "tag": true,
       "push": true,
-      "release": true,
+      "release": false,
       "publish": false
     },
     "dist": {
@@ -70,7 +70,7 @@
       "commit": true,
       "tag": false,
       "push": true,
-      "release": false,
+      "release": true,
       "publish": false
     }
   }
