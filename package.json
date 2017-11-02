@@ -1,6 +1,6 @@
 {
   "name": "lizard-management-client",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "repository": {
     "type": "git",
@@ -94,12 +94,14 @@
     "lint-staged": "^4.2.3",
     "prettier": "^1.7.3",
     "react-hot-loader": "next",
-    "react-intl-translations-manager": "^5.0.1"
+    "react-intl-translations-manager": "^5.0.1",
+    "release-it": "^4.1.1"
   },
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom",
+    "release": "release-it --no-npm.publish",
     "precommit": "lint-staged",
     "i18n:update": "node translationRunner.js",
     "i18n:extract": "node extract.js",
