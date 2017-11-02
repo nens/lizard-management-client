@@ -1,6 +1,6 @@
 {
   "name": "lizard-management-client",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "private": true,
   "repository": {
     "type": "git",
@@ -101,7 +101,7 @@
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom",
-    "release": "release-it --no-npm.publish",
+    "release": "release-it --verbose",
     "precommit": "lint-staged",
     "i18n:update": "node translationRunner.js",
     "i18n:extract": "node extract.js",
