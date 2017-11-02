@@ -39,7 +39,7 @@ class GroupMessage extends Component {
     }
   }
   sendMessage() {
-    const { groupId } = this.props;
+    const { groupId, addNotification } = this.props;
     const subject = document.getElementById("subject").value;
     const message = document.getElementById("message").value;
     if (subject && message) {
@@ -47,6 +47,8 @@ class GroupMessage extends Component {
         isSending: true
       });
       this.sendMessageToGroup(groupId, subject, message);
+    } else {
+      addNotification(`Please provide a subject and a message`, 2000);
     }
   }
   handleResize() {
@@ -131,7 +133,9 @@ class GroupMessage extends Component {
                 maxLength={80}
                 disabled={isSending ? true : false}
               />
-              <small className="text-muted">Subject (only applies to e-mail messages)</small>
+              <small className="text-muted">
+                Subject (only applies to e-mail messages)
+              </small>
             </div>
             <Scrollbars
               style={{ width: "100%", height: this.state.height - 400 }}
@@ -145,12 +149,15 @@ class GroupMessage extends Component {
                     rows="7"
                     maxLength={160}
                     value={messageText}
-                    onChange={(e) => this.setState({
-                      messageText: e.target.value
-                    })}
+                    onChange={e =>
+                      this.setState({
+                        messageText: e.target.value
+                      })}
                     disabled={isSending ? true : false}
                   />
-                  <small className="text-muted">Message ({160 - messageText.length} characters left)</small>
+                  <small className="text-muted">
+                    Message ({160 - messageText.length} characters left)
+                  </small>
                 </div>
               </div>
             </Scrollbars>

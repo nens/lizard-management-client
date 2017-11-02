@@ -70,7 +70,7 @@ class App extends Component {
               <tbody>
                 {contacts.map((contact, i) => {
                   return (
-                    <tr>
+                    <tr key={i}>
                       <td>
                         <input
                           type="checkbox"
