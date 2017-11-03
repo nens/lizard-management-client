@@ -15,6 +15,9 @@ let store = configureStore();
 // Add localisation data to translations
 addLocaleData([...nl]);
 
+// React-router basename (https://reacttraining.com/react-router/web/api/BrowserRouter/basename-string)
+const basename = "/management";
+
 // Create multiple languages object
 const localeData = {
   nl: nl
@@ -27,7 +30,7 @@ const messages = localeData[preferredLocale];
 const Root = ({ store }) => (
   <IntlProvider locale={navigator.language} messages={messages}>
     <Provider store={store}>
-      <Router>
+      <Router basename={basename}>
         <App preferredLocale={preferredLocale} />
       </Router>
     </Provider>
@@ -43,7 +46,7 @@ if (module.hot) {
     ReactDOM.render(
       <IntlProvider locale={navigator.language} messages={messages}>
         <Provider store={store}>
-          <Router>
+          <Router basename={basename}>
             <HotApp preferredLocale={preferredLocale} />
           </Router>
         </Provider>

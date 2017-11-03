@@ -235,8 +235,6 @@ function receiveDeActivateAlarm(data) {
   };
 }
 
-
-
 // Exported functions
 export function selectOrganisation(organisation) {
   localStorage.setItem(
@@ -419,7 +417,12 @@ export function fetchLizardBootstrap() {
     fetch("/bootstrap/lizard/")
       .then(response => response.json())
       .then(data => {
-        dispatch(receiveLizardBootstrap(data));
+        if (data && data.user && data.user.authenticated === true) {
+          dispatch(receiveLizardBootstrap(data));
+        } else {
+          const nextUrl = window.location.href;
+          window.location.href = `${data.sso.login}&next=${nextUrl}`;
+        }
       });
   };
 }
