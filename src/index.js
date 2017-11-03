@@ -27,7 +27,7 @@ const messages = localeData[preferredLocale];
 const Root = ({ store }) => (
   <IntlProvider locale={navigator.language} messages={messages}>
     <Provider store={store}>
-      <Router basename="/management">
+      <Router>
         <App preferredLocale={preferredLocale} />
       </Router>
     </Provider>

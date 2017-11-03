@@ -41,42 +41,27 @@ Bugs / glitches
 
 - Chart doesnt render proper temporal extent
 
+- Big: Facilitate timeseries-alarms as well...
 
+Notifications:
+- Detail view: Add / remove thresholds
+- Detail view: Add / remove recipient groups
+- Detail view: Map and chart
 
-Group > contact > add  
-- This should be a modal with a list of all contacts MINUS the contacts in the list we're adding to.
-- This modal should have 2 tabs: The list of all contacts and an "Add new user form"
-
-
-
-Groups: Modal voor toevoegen 1 of meerdere gebruikers
 Groups contacts:
-- delete checked
-- pagination?
-- filter?
-- click to edit contact (detail/modal?)
-- send message modal
+- Delete checked (api change needed)
+- Pagination?
+- Filter?
+- Detail view (delete users from group)
 
+Contacts:
+- Add contact
+- Import contacts
+- Delete contacts (api change needed?)
 
 Templates:
-- delete template
-- edit template
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+- Delete template
+- Edit template
 
 
 

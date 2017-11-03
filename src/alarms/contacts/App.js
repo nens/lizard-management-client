@@ -12,13 +12,22 @@ import { withRouter } from "react-router-dom";
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      filterValue: ""
+    };
+    this.handleFilter = this.handleFilter.bind(this);
   }
   componentDidMount() {
     this.props.doFetchContacts();
   }
+  handleFilter(e) {
+    this.setState({
+      filterValue: e.target.value
+    });
+  }
   render() {
     const { isFetching, contacts } = this.props;
+    const { filterValue } = this.state;
 
     if (isFetching) {
       return (
@@ -37,6 +46,16 @@ class App extends Component {
     }
 
     const numberOfContacts = contacts.length;
+
+    const filteredContacts = contacts.filter((contact, i) => {
+      if (
+        contact.first_name.toLowerCase().indexOf(filterValue) !== -1 ||
+        contact.last_name.toLowerCase().indexOf(filterValue) !== -1
+      ) {
+        return contact;
+      }
+      return false;
+    });
     return (
       <div className="container">
         <div className={`row align-items-center ${styles.App}`}>
@@ -56,7 +75,7 @@ class App extends Component {
         <hr />
         <div className="row">
           <div className="col-md-12">
-            <ActionBar />
+            <ActionBar handleFilter={this.handleFilter} />
             <table className="table table-responsive">
               <thead style={{ backgroundColor: "#D8D8D8" }}>
                 <tr className="text-muted">
@@ -68,7 +87,7 @@ class App extends Component {
                 </tr>
               </thead>
               <tbody>
-                {contacts.map((contact, i) => {
+                {filteredContacts.map((contact, i) => {
                   return (
                     <tr key={i}>
                       <td>
