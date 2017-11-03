@@ -17,7 +17,7 @@
   "bugs": {
     "url": "https://github.com/nens/lizard-management-client/issues"
   },
-  "homepage": "https://github.com/nens/lizard-management-client",
+  "homepage": "/management",
   "dependencies": {
     "autoprefixer": "7.1.2",
     "babel-core": "6.25.0",
