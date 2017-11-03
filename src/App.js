@@ -76,7 +76,9 @@ class App extends Component {
                 aria-expanded="false"
                 aria-label="Toggle navigation"
               >
-                <span className="navbar-toggler-icon" />
+                <div className={styles.NavbarTogglebutton}>
+                  <i className="material-icons">menu</i>
+                </div>
               </button>
 
               <div

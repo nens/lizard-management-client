@@ -18,3 +18,11 @@
   background-repeat: no-repeat;
   background-size: 100%;
 }
+.NavbarTogglebutton {
+  cursor: pointer;
+  background-color: #2fcbab;
+  color: #fff;
+  width: 30px;
+  height: 25px;
+  border-radius: 2px;
+}
