@@ -85,22 +85,6 @@ class Alarms extends Component {
                 />
               }
             />
-            {/* <AppIcon
-              handleClick={e => this.handleLink("alarms/message")}
-              src="/images/groups@3x.svg"
-              title={
-                <FormattedMessage
-                  id="alarms.group_messages"
-                  defaultMessage="Group messages"
-                />
-              }
-              subTitle={
-                <FormattedMessage
-                  id="alarms.send_group_messages_subtitle"
-                  defaultMessage="Send one-off messages to groups of recipients"
-                />
-              }
-            /> */}
           </div>
         </div>
       </div>

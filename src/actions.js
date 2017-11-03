@@ -285,6 +285,7 @@ export function createGroup(data) {
   return (dispatch, getState) => {
     dispatch(requestNewGroup());
     fetch("/api/v3/contactgroups/", {
+      credentials: "same-origin",
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data)
@@ -465,7 +466,9 @@ export function fetchContacts() {
     //   return false;
     // }
     dispatch(requestContacts());
-    fetch("/api/v3/contacts/?page_size=100000")
+    fetch("/api/v3/contacts/?page_size=100000", {
+      credentials: "same-origin"
+    })
       .then(response => response.json())
       .then(data => data.results)
       .then(data => {
@@ -504,6 +507,7 @@ export function createTemplate(data) {
   return (dispatch, getState) => {
     dispatch(requestNewTemplate());
     fetch("/api/v3/messages/", {
+      credentials: "same-origin",
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data)
@@ -525,6 +529,7 @@ export function addContactToGroup(contact, groupId) {
     currentContacts.push(contact);
 
     fetch(`/api/v3/contactgroups/${groupId}/`, {
+      credentials: "same-origin",
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

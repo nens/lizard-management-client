@@ -8,6 +8,7 @@ import { connect } from "react-redux";
 import { fetchAlarmTemplates } from "../../actions";
 import styles from "./App.css";
 import { withRouter, NavLink } from "react-router-dom";
+import templatesIcon from "../../images/templates@3x.svg";
 
 class App extends Component {
   constructor(props) {
@@ -100,7 +101,7 @@ class App extends Component {
               </div>
             ) : (
               <div className={styles.NoResults}>
-                <img src="/images/templates@3x.svg" alt="Templates" />
+                <img src={templatesIcon} alt="Templates" />
                 <h5>No templates configured...</h5>
               </div>
             )}

@@ -12,6 +12,7 @@ import {
 } from "../../actions";
 import styles from "./App.css";
 import { withRouter, NavLink } from "react-router-dom";
+import alarmIcon from "../../images/alarm@3x.svg";
 
 class App extends Component {
   constructor(props) {
@@ -162,7 +163,7 @@ class App extends Component {
               </table>
             ) : (
               <div className={styles.NoResults}>
-                <img src="/images/alarm@3x.svg" alt="Alarms" />
+                <img src={alarmIcon} alt="Alarms" />
                 <h5>No notifications configured...</h5>
               </div>
             )}

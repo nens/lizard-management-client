@@ -13,6 +13,7 @@ import {
 } from "../../actions";
 import styles from "./App.css";
 import { withRouter, NavLink } from "react-router-dom";
+import groupsIcon from "../../images/groups@3x.svg";
 
 class App extends Component {
   constructor(props) {
@@ -150,7 +151,7 @@ class App extends Component {
               </table>
             ) : (
               <div className={styles.NoResults}>
-                <img src="/images/groups@3x.svg" alt="Groups" />
+                <img src={groupsIcon} alt="Groups" />
                 <h5>No groups configured...</h5>
               </div>
             )}
