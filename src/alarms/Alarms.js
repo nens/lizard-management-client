@@ -3,6 +3,10 @@ import { FormattedMessage } from "react-intl";
 import AppIcon from "../components/AppIcon";
 import { withRouter } from "react-router-dom";
 
+import alarmIcon from "../images/alarm@3x.svg";
+import groupsIcon from "../images/groups@3x.svg";
+import templatesIcon from "../images/templates@3x.svg";
+
 class Alarms extends Component {
   handleLink(destination) {
     this.props.history.push(destination);
@@ -19,7 +23,7 @@ class Alarms extends Component {
           <div className="row">
             <AppIcon
               handleClick={e => this.handleLink("alarms/notifications")}
-              src="/images/alarm@3x.svg"
+              src={alarmIcon}
               title={
                 <FormattedMessage
                   id="alarms.notifications"
@@ -35,7 +39,7 @@ class Alarms extends Component {
             />
             <AppIcon
               handleClick={e => this.handleLink("alarms/groups")}
-              src="/images/groups@3x.svg"
+              src={groupsIcon}
               title={
                 <FormattedMessage
                   id="alarms.alarms_groups"
@@ -51,7 +55,7 @@ class Alarms extends Component {
             />
             <AppIcon
               handleClick={e => this.handleLink("alarms/contacts")}
-              src="/images/groups@3x.svg"
+              src={groupsIcon}
               title={
                 <FormattedMessage
                   id="alarms.alarms_contacts"
@@ -67,7 +71,7 @@ class Alarms extends Component {
             />
             <AppIcon
               handleClick={e => this.handleLink("alarms/templates")}
-              src="/images/templates@3x.svg"
+              src={templatesIcon}
               title={
                 <FormattedMessage
                   id="alarms.alarms_templates"

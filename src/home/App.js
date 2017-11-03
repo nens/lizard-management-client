@@ -4,6 +4,10 @@ import styles from "./App.css";
 import AppIcon from "../components/AppIcon";
 import { withRouter } from "react-router-dom";
 
+import alarmIcon from "../images/alarm@3x.svg";
+import threediIcon from "../images/3di@3x.svg";
+import lizardIcon from "../images/lizard@3x.svg";
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -30,7 +34,7 @@ class App extends Component {
                   this.handleExternalLink(
                     "https://nxt.staging.lizard.net/management/users/"
                   )}
-                src="/images/lizard@3x.svg"
+                src={lizardIcon}
                 title={
                   <FormattedMessage
                     id="home.usermanagement"
@@ -49,7 +53,7 @@ class App extends Component {
                   this.handleExternalLink(
                     "https://nxt.staging.lizard.net/management/scenarios/"
                   )}
-                src="/images/3di@3x.svg"
+                src={threediIcon}
                 title={
                   <FormattedMessage
                     id="home.scenarios"
@@ -65,7 +69,7 @@ class App extends Component {
               />
               <AppIcon
                 handleClick={e => this.handleLink("/alarms")}
-                src="/images/alarm@3x.svg"
+                src={alarmIcon}
                 title={
                   <FormattedMessage id="home.alarms" defaultMessage="Alarms" />
                 }

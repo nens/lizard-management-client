@@ -9,6 +9,7 @@ import LanguageSwitcher from "./components/LanguageSwitcher";
 import OrganisationSwitcher from "./components/OrganisationSwitcher";
 import Snackbar from "./components/Snackbar";
 import styles from "./App.css";
+import lizardIcon from "./images/lizard@3x.svg";
 import { withRouter } from "react-router-dom";
 
 class App extends Component {
@@ -58,7 +59,12 @@ class App extends Component {
           <div className="container">
             <nav className="navbar navbar-expand-lg">
               <NavLink to={"/"}>
-                <div className="lizard-logo" />
+                <div
+                  className={styles.LizardLogo}
+                  style={{
+                    backgroundImage: `url(${lizardIcon})`
+                  }}
+                />
               </NavLink>
 
               <button

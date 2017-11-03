@@ -8,3 +8,13 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.LizardLogo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 75px;
+  height: 75px;
+  background-repeat: no-repeat;
+  background-size: 100%;
+}
