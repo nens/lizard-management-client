@@ -72,6 +72,7 @@ class GroupMessage extends Component {
       }
     };
     fetch(`/api/v3/contactgroups/${groupId}/send/`, {
+      credentials: "same-origin",
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(messageData)

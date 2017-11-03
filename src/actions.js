@@ -250,7 +250,9 @@ export function selectOrganisation(organisation) {
 export function fetchAlarms() {
   return (dispatch, getState) => {
     dispatch(requestAlarms());
-    fetch("/api/v3/rasteralarms/?page_size=100000")
+    fetch("/api/v3/rasteralarms/?page_size=100000", {
+      credentials: "same-origin"
+    })
       .then(response => response.json())
       .then(data => dispatch(receiveAlarms(data)));
   };
@@ -259,7 +261,9 @@ export function fetchAlarms() {
 export function fetchAlarmGroups() {
   return (dispatch, getState) => {
     dispatch(requestAlarmGroups());
-    fetch("/api/v3/contactgroups/?page_size=100000")
+    fetch("/api/v3/contactgroups/?page_size=100000", {
+      credentials: "same-origin"
+    })
       .then(response => response.json())
       .then(data => data.results)
       .then(data => dispatch(receiveAlarmGroups(data)));
@@ -269,7 +273,9 @@ export function fetchAlarmGroups() {
 export function fetchAlarmGroupDetailsById(id) {
   return (dispatch, getState) => {
     dispatch(requestAlarmGroupDetails());
-    fetch(`/api/v3/contactgroups/${id}/`)
+    fetch(`/api/v3/contactgroups/${id}/`, {
+      credentials: "same-origin"
+    })
       .then(response => response.json())
       .then(data => dispatch(receiveAlarmGroupDetails(data)));
   };
@@ -294,6 +300,7 @@ export function createGroup(data) {
 export function deleteGroupById(id) {
   return (dispatch, getState) => {
     fetch(`/api/v3/contactgroups/${id}/`, {
+      credentials: "same-origin",
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({})
@@ -317,7 +324,9 @@ export function deleteContactsById(ids) {
 export function fetchAlarmTemplateDetailsById(id) {
   return (dispatch, getState) => {
     dispatch(requestAlarmTemplateDetails());
-    fetch(`/api/v3/messages/${id}/`)
+    fetch(`/api/v3/messages/${id}/`, {
+      credentials: "same-origin"
+    })
       .then(response => response.json())
       .then(data => dispatch(receiveAlarmTemplateDetails(data)));
   };
@@ -327,6 +336,7 @@ export function createAlarm(data) {
   return (dispatch, getState) => {
     dispatch(requestNewAlarm());
     fetch("/api/v3/rasteralarms/", {
+      credentials: "same-origin",
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data)
@@ -342,6 +352,7 @@ export function createAlarm(data) {
 export function activateAlarm(uuid) {
   return (dispatch, getState) => {
     fetch(`/api/v3/rasteralarms/${uuid}/`, {
+      credentials: "same-origin",
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -359,6 +370,7 @@ export function activateAlarm(uuid) {
 export function deActivateAlarm(uuid) {
   return (dispatch, getState) => {
     fetch(`/api/v3/rasteralarms/${uuid}/`, {
+      credentials: "same-origin",
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -377,6 +389,7 @@ export function removeAlarm(uuid) {
   return (dispatch, getState) => {
     dispatch(requestRemoveAlarm());
     fetch(`/api/v3/rasteralarms/${uuid}/`, {
+      credentials: "same-origin",
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({})
@@ -393,7 +406,9 @@ export function removeAlarm(uuid) {
 export function fetchAlarmTemplates() {
   return (dispatch, getState) => {
     dispatch(requestAlarmTemplates());
-    fetch("/api/v3/messages/?page_size=100000")
+    fetch("/api/v3/messages/?page_size=100000", {
+      credentials: "same-origin"
+    })
       .then(response => response.json())
       .then(data => data.results)
       .then(data => {
@@ -405,7 +420,9 @@ export function fetchAlarmTemplates() {
 export function fetchNotificationDetailsById(id) {
   return (dispatch, getState) => {
     dispatch(requestNotificationDetails());
-    fetch(`/api/v3/rasteralarms/${id}/`)
+    fetch(`/api/v3/rasteralarms/${id}/`, {
+      credentials: "same-origin"
+    })
       .then(response => response.json())
       .then(data => dispatch(receiveNotificationDetails(data)));
   };
@@ -414,7 +431,9 @@ export function fetchNotificationDetailsById(id) {
 export function fetchLizardBootstrap() {
   return (dispatch, getState) => {
     dispatch(requestLizardBootstrap());
-    fetch("/bootstrap/lizard/")
+    fetch("/bootstrap/lizard/", {
+      credentials: "same-origin"
+    })
       .then(response => response.json())
       .then(data => {
         if (data && data.user && data.user.authenticated === true) {
@@ -429,7 +448,9 @@ export function fetchLizardBootstrap() {
 
 export function fetchOrganisations() {
   return (dispatch, getState) => {
-    fetch("/api/v3/organisations/?page_size=100000")
+    fetch("/api/v3/organisations/?page_size=100000", {
+      credentials: "same-origin"
+    })
       .then(response => response.json())
       .then(data => data.results)
       .then(data => {

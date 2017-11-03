@@ -14,10 +14,14 @@ import ConfigureRecipients from "./ConfigureRecipients";
 
 async function fetchContactsAndMessages() {
   try {
-    const groups = await fetch("/api/v3/contactgroups/")
+    const groups = await fetch("/api/v3/contactgroups/", {
+      credentials: "same-origin"
+    })
       .then(response => response.json())
       .then(data => data.results);
-    const messages = await fetch("/api/v3/messages/")
+    const messages = await fetch("/api/v3/messages/", {
+      credentials: "same-origin"
+    })
       .then(response => response.json())
       .then(data => data.results);
     return {
@@ -143,7 +147,9 @@ class NewNotification extends Component {
       loading: true
     });
     return fetch(
-      `/api/v3/rasters/?organisation__unique_id=${currentOrganisation.unique_id}&page_size=0&name__icontains=${value}`
+      `/api/v3/rasters/?organisation__unique_id=${currentOrganisation.unique_id}&page_size=0&name__icontains=${value}`, {
+        credentials: "same-origin"
+      }
     )
       .then(response => response.json())
       .then(json => {
@@ -174,7 +180,9 @@ class NewNotification extends Component {
 
     const { markerPosition, raster } = this.state;
     return fetch(
-      `/api/v3/raster-aggregates/?agg=curve&geom=POINT+(${markerPosition[1]}+${markerPosition[0]})&rasters=${raster.uuid}&srs=EPSG:4326&start=2008-01-01T12:00:00&stop=2017-12-31T18:00:00&window=2635200000`
+      `/api/v3/raster-aggregates/?agg=curve&geom=POINT+(${markerPosition[1]}+${markerPosition[0]})&rasters=${raster.uuid}&srs=EPSG:4326&start=2008-01-01T12:00:00&stop=2017-12-31T18:00:00&window=2635200000`, {
+        credentials: "same-origin"
+      }
     )
       .then(response => response.json())
       .then(json => {

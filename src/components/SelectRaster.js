@@ -43,7 +43,9 @@ class SelectRaster extends Component {
         showResults: false
       },
       () => {
-        fetch(`/api/v3/rasters/${result.uuid}/`)
+        fetch(`/api/v3/rasters/${result.uuid}/`, {
+          credentials: "same-origin"
+        })
           .then(response => response.json())
           .then(json => {
             this.props.setRaster(json);
