@@ -249,10 +249,19 @@ export function selectOrganisation(organisation) {
 
 export function fetchAlarms() {
   return (dispatch, getState) => {
+    const organisationId = getState().bootstrap.organisation
+      ? getState().bootstrap.organisation.unique_id
+      : null;
+    if (!organisationId) {
+      return Promise.resolve();
+    }
     dispatch(requestAlarms());
-    fetch("/api/v3/rasteralarms/?page_size=100000", {
-      credentials: "same-origin"
-    })
+    fetch(
+      `/api/v3/rasteralarms/?page_size=100000&organisation__unique_id=${organisationId}`,
+      {
+        credentials: "same-origin"
+      }
+    )
       .then(response => response.json())
       .then(data => dispatch(receiveAlarms(data)));
   };
@@ -260,8 +269,11 @@ export function fetchAlarms() {
 
 export function fetchAlarmGroups() {
   return (dispatch, getState) => {
+    const organisationId = getState().bootstrap.organisation
+      ? getState().bootstrap.organisation.unique_id
+      : null;
     dispatch(requestAlarmGroups());
-    fetch("/api/v3/contactgroups/?page_size=100000", {
+    fetch(`/api/v3/contactgroups/?page_size=100000&organisation__unique_id=${organisationId}`, {
       credentials: "same-origin"
     })
       .then(response => response.json())
@@ -406,8 +418,11 @@ export function removeAlarm(uuid) {
 
 export function fetchAlarmTemplates() {
   return (dispatch, getState) => {
+    const organisationId = getState().bootstrap.organisation
+      ? getState().bootstrap.organisation.unique_id
+      : null;
     dispatch(requestAlarmTemplates());
-    fetch("/api/v3/messages/?page_size=100000", {
+    fetch(`/api/v3/messages/?page_size=100000&organisation__unique_id=${organisationId}`, {
       credentials: "same-origin"
     })
       .then(response => response.json())
@@ -449,6 +464,12 @@ export function fetchLizardBootstrap() {
 
 export function fetchOrganisations() {
   return (dispatch, getState) => {
+    const organisations = getState().bootstrap.organisations;
+    const organisation = getState().bootstrap.organisation;
+    if (organisations.length > 0) {
+      // If we already have the organisations, skip this
+      return Promise.resolve();
+    }
     fetch("/api/v3/organisations/?page_size=100000", {
       credentials: "same-origin"
     })
@@ -456,6 +477,17 @@ export function fetchOrganisations() {
       .then(data => data.results)
       .then(data => {
         dispatch(receiveOrganisations(data));
+        if (!organisation) {
+          // No organisation was chosen, select the first one, and let the user know about this
+          const firstOrganisation = data[0];
+          dispatch(selectOrganisation(firstOrganisation));
+          dispatch(
+            addNotification(
+              `Organisation "${firstOrganisation.name}" selected`,
+              2000
+            )
+          );
+        }
       });
   };
 }
@@ -465,10 +497,15 @@ export function fetchContacts() {
     // if (getState().alarms.contacts.length > 0) {
     //   return false;
     // }
+    const organisationId = getState().bootstrap.organisation.unique_id;
+
     dispatch(requestContacts());
-    fetch("/api/v3/contacts/?page_size=100000", {
-      credentials: "same-origin"
-    })
+    fetch(
+      `/api/v3/contacts/?page_size=100000&organisation__unique_id=${organisationId}`,
+      {
+        credentials: "same-origin"
+      }
+    )
       .then(response => response.json())
       .then(data => data.results)
       .then(data => {
@@ -540,5 +577,14 @@ export function addContactToGroup(contact, groupId) {
       .then(group => {
         dispatch(updateGroupById(group, groupId));
       });
+  };
+}
+
+export function fetchAll() {
+  return (dispatch, getState) => {
+    dispatch(fetchAlarms());
+    dispatch(fetchAlarmGroups());
+    dispatch(fetchAlarmTemplates());
+    dispatch(fetchContacts());
   };
 }

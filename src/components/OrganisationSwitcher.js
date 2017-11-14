@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { fetchOrganisations, selectOrganisation } from "../actions";
+import { fetchAll, fetchOrganisations, selectOrganisation } from "../actions";
 import styles from "./OrganisationSwitcher.css";
 import { Scrollbars } from "react-custom-scrollbars";
 import MDSpinner from "react-md-spinner";
@@ -155,8 +155,10 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     getOrganisations: () => dispatch(fetchOrganisations()),
-    selectOrganisation: organisation =>
-      dispatch(selectOrganisation(organisation))
+    selectOrganisation: organisation => {
+      dispatch(selectOrganisation(organisation));
+      dispatch(fetchAll());
+    }
   };
 };
 
