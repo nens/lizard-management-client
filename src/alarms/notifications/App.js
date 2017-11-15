@@ -11,6 +11,8 @@ import {
   deActivateAlarm
 } from "../../actions";
 import styles from "./App.css";
+import gridStyles from "../../styles/Grid.css";
+import buttonStyles from "../../styles/Buttons.css";
 import { withRouter, NavLink } from "react-router-dom";
 import alarmIcon from "../../images/alarm@3x.svg";
 
@@ -38,8 +40,9 @@ class App extends Component {
     let results = [];
     if (alarms.alarms.count > 0) {
       numberOfNotifications = alarms.alarms.results.length;
-      results = alarms.alarms.results.slice()
-        .sort((a,b) => {
+      results = alarms.alarms.results
+        .slice()
+        .sort((a, b) => {
           if (a.name < b.name) {
             return -1;
           }
@@ -48,8 +51,8 @@ class App extends Component {
           }
           return 0;
         })
-        .sort((a,b) => {
-          return (a.active === b.active)? 0 : a.active? -1 : 1;
+        .sort((a, b) => {
+          return a.active === b.active ? 0 : a.active ? -1 : 1;
         });
     }
 
@@ -57,11 +60,8 @@ class App extends Component {
       const numberOfThresholds = alarm.thresholds.length;
       const numberOfRecipients = alarm.messages.length;
       return (
-        <tr key={i} className={styles.AlarmRow}>
-          <td
-            className="col-md-6"
-            onClick={() => console.log(`Go to detail page of ${alarm.name}`)}
-          >
+        <div key={i} className={styles.AlarmRow}>
+          <div style={{ width: 400 }}>
             <div
               className={`${alarm.active
                 ? styles.Active
@@ -80,59 +80,65 @@ class App extends Component {
             <br />
             <small className="text-muted">
               {numberOfThresholds} {pluralize("thresholds", numberOfThresholds)}
-              {", "}{numberOfRecipients}{" "}
-              {pluralize(
-                "recipient group",
-                numberOfRecipients
-              )}{" "}
+              {", "}
+              {numberOfRecipients}{" "}
+              {pluralize("recipient group", numberOfRecipients)}{" "}
             </small>
-          </td>
-          <td className="col-md-1">
-            <button
-              type="button"
-              className="btn btn-sm btn-link"
-              onClick={() =>
-                alarm.active
-                  ? doDeActivateAlarm(alarm.uuid)
-                  : doActivateAlarm(alarm.uuid)}
-            >
-              {alarm.active ? "Deactivate" : "Activate"}
-            </button>
-          </td>
-          <td className="col-md-1">
-            <button
-              type="button"
-              className="btn btn-sm btn-link"
-              onClick={() => {
-                if (window.confirm("Are you sure?")) {
-                  doRemoveAlarm(alarm.uuid);
-                }
-              }}
-            >
-              Remove
-            </button>
-          </td>
-        </tr>
+          </div>
+          <div style={{ width: 250, display: "flex" }}>
+            <div style={{ width: "50%" }}>
+              <button
+                type="button"
+                className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link}`}
+                onClick={() =>
+                  alarm.active
+                    ? doDeActivateAlarm(alarm.uuid)
+                    : doActivateAlarm(alarm.uuid)}
+              >
+                {alarm.active ? "Deactivate" : "Activate"}
+              </button>
+            </div>
+            <div style={{ width: "50%" }}>
+              <button
+                type="button"
+                className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link}`}
+                onClick={() => {
+                  if (window.confirm("Are you sure?")) {
+                    doRemoveAlarm(alarm.uuid);
+                  }
+                }}
+              >
+                Remove
+              </button>
+            </div>
+          </div>
+        </div>
       );
     });
 
     return (
-      <div className="container">
+      <div className={gridStyles.Container}>
         <div
-          className="row align-items-center"
+          className={gridStyles.Row}
           style={{
             padding: "0 0 25px 0",
             borderBottom: "1px solid #bababa"
           }}
         >
-          <div className="col-sm-8 justify-content-center text-muted">
+          <div
+            style={{ color: "#858E9C" }}
+            className={`${gridStyles.colLg8} ${gridStyles.colMd8} ${gridStyles.colSm8} ${gridStyles.colXs8}`}
+          >
             {numberOfNotifications}{" "}
             {pluralize("NOTIFICATIONS", numberOfNotifications)}
           </div>
-          <div className="col-sm-4">
+          <div
+            className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${gridStyles.colSm4} ${gridStyles.colXs4}`}
+          >
             <button
               type="button"
-              className="btn btn-success float-right"
+              style={{ float: "right" }}
+              className={`${buttonStyles.Button} ${buttonStyles.Success}`}
               onClick={this.handleNewNotificationClick}
             >
               <FormattedMessage
@@ -158,9 +164,7 @@ class App extends Component {
                 <MDSpinner size={24} />
               </div>
             ) : results.length > 0 ? (
-              <table className="table table-responsive">
-                <tbody>{alarmsTable}</tbody>
-              </table>
+              alarmsTable
             ) : (
               <div className={styles.NoResults}>
                 <img src={alarmIcon} alt="Alarms" />
