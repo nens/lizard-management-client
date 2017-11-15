@@ -1,4 +1,56 @@
-.App {}
+.App {
+}
+
+
+.Primary {
+  background-color: #009F86;
+  color: #fff;
+}
+.Secondary {
+  background-color: #2FCBAB;
+}
+.Secondary a {
+  text-decoration: none;
+  color: #fff;
+}
+
+.Footer {
+  background-color: #D8D8D8;
+}
+.Footer a {
+  color: #009F86;
+  text-decoration: none;
+}
+
+.FooterLeft {
+  min-height: 120px;
+  display: flex;
+  align-items: center;
+}
+.FooterRight {
+  min-height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+.FooterRightWrapper{
+  display: flex;
+  position: relative;
+}
+
+
+
+
+
+.LizardLogo {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 75px;
+  height: 75px;
+  background-repeat: no-repeat;
+  background-size: 100%;
+}
 
 .OrganisationLink {
   color: #fff !important;
@@ -8,16 +60,6 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-
-.LizardLogo {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 75px;
-  height: 75px;
-  background-repeat: no-repeat;
-  background-size: 100%;
-}
 .NavbarTogglebutton {
   cursor: pointer;
   background-color: #2fcbab;
@@ -25,4 +67,28 @@
   width: 30px;
   height: 25px;
   border-radius: 2px;
+}
+
+
+.TopNav {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  height: 100%;
+}
+.TopNav div {
+  margin: 5px;
+}
+.TopNav div:last-child {
+  width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.TopNav a {
+  color: #fff;
+  text-decoration: none;
+}
+.TopNav li {
+
 }
