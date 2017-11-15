@@ -9,7 +9,7 @@ import LanguageSwitcher from "./components/LanguageSwitcher";
 import OrganisationSwitcher from "./components/OrganisationSwitcher";
 import Snackbar from "./components/Snackbar";
 import styles from "./App.css";
-import gridStyle from "./styles/Grid.css";
+import gridStyles from "./styles/Grid.css";
 import lizardIcon from "./images/lizard@3x.svg";
 import { withRouter } from "react-router-dom";
 
@@ -57,11 +57,11 @@ class App extends Component {
     return (
       <div className={styles.App}>
         <div className={`${styles.Primary}`}>
-          <div className={gridStyle.Container}>
-            <div className={gridStyle.Row}>
+          <div className={gridStyles.Container}>
+            <div className={gridStyles.Row}>
               <div
                 style={{ height: 55 }}
-                className={`${gridStyle.colLg6} ${gridStyle.colMd6} ${gridStyle.colSm6} ${gridStyle.colXs12}`}
+                className={`${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs12}`}
               >
                 <div
                   className={styles.LizardLogo}
@@ -71,7 +71,7 @@ class App extends Component {
                 />
               </div>
               <div
-                className={`${gridStyle.colLg6} ${gridStyle.colMd6} ${gridStyle.colSm6} ${gridStyle.colXs12}`}
+                className={`${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs12}`}
               >
                 <div className={styles.TopNav}>
                   <div>
@@ -124,8 +124,8 @@ class App extends Component {
           </div>
         </div>
         <div className={`${styles.Secondary}`}>
-          <div className={gridStyle.Container}>
-            <div className={gridStyle.Row}>
+          <div className={gridStyles.Container}>
+            <div className={gridStyles.Row}>
               <div
                 style={{
                   height: 65,
@@ -133,7 +133,7 @@ class App extends Component {
                   alignItems: "center",
                   fontSize: "1.2em"
                 }}
-                className={`${gridStyle.colLg12} ${gridStyle.colMd12} ${gridStyle.colSm12} ${gridStyle.colXs12}`}
+                className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
               >
                 <NavLink to="/">Lizard Management</NavLink>
                 {breadcrumbs}
@@ -142,13 +142,13 @@ class App extends Component {
           </div>
         </div>
 
-        <div className={gridStyle.Container}>
-          <div className={gridStyle.Row}>
+        <div className={gridStyles.Container}>
+          <div className={gridStyles.Row}>
             <div
               style={{
                 margin: "25px 0 25px 0"
               }}
-              className={`${gridStyle.colLg12} ${gridStyle.colMd12} ${gridStyle.colSm12} ${gridStyle.colXs12}`}
+              className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
             >
               <Route exact path="/" component={Home} />
               <Route path="/alarms" component={AlarmsApp} />
@@ -156,10 +156,10 @@ class App extends Component {
           </div>
         </div>
         <footer className={styles.Footer}>
-          <div className={gridStyle.Container}>
-            <div className={gridStyle.Row}>
+          <div className={gridStyles.Container}>
+            <div className={gridStyles.Row}>
               <div
-                className={`${styles.FooterLeft} ${gridStyle.colLg6} ${gridStyle.colMd6} ${gridStyle.colSm6} ${gridStyle.colXs6}`}
+                className={`${styles.FooterLeft} ${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs6}`}
               >
                 <a href="https://www.lizard.net/handleidingen/log_in_instructies_lizard_6.01.pdf">
                   <FormattedMessage
@@ -169,7 +169,7 @@ class App extends Component {
                 </a>
               </div>
               <div
-                className={`${styles.FooterRight} ${gridStyle.colLg6} ${gridStyle.colMd6} ${gridStyle.colSm6} ${gridStyle.colXs6}`}
+                className={`${styles.FooterRight} ${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs6}`}
               >
                 <div className={styles.FooterRightWrapper}>
                   <div style={{ margin: "0 10px 0 10px" }}>
