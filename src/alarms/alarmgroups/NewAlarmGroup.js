@@ -1,13 +1,10 @@
 import React, { Component } from "react";
-// import MDSpinner from "react-md-spinner";
 import Ink from "react-ink";
 import { FormattedMessage } from "react-intl";
 import { connect } from "react-redux";
 import { createGroup } from "../../actions";
-// import styles from "./NewAlarmGroup.css";
 import gridStyles from "../../styles/Grid.css";
 import formStyles from "../../styles/Forms.css";
-import tableStyles from "../../styles/Table.css";
 import buttonStyles from "../../styles/Buttons.css";
 
 import { withRouter } from "react-router-dom";

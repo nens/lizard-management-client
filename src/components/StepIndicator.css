@@ -8,7 +8,8 @@
   text-align: center;
   line-height: 43px;
   margin: -10px 20px;
-  display: inline-table;
+  position: relative;
+  top: 25px;
 }
 .Inactive {
   background-color: #b9b9b9;
