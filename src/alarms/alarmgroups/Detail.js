@@ -8,6 +8,8 @@ import pluralize from "pluralize";
 import { connect } from "react-redux";
 import { fetchAlarmGroupDetailsById } from "../../actions";
 import styles from "./Detail.css";
+import tableStyles from "../../styles/Table.css";
+import formStyles from "../../styles/Forms.css";
 import { withRouter } from "react-router-dom";
 
 class Detail extends Component {
@@ -85,7 +87,7 @@ class Detail extends Component {
             showGroupMessageModal={this.showGroupMessageModal}
           />
 
-          <table className="table table-responsive">
+          <table className={`${tableStyles.Table} ${tableStyles.Responsive}`}>
             <thead style={{ backgroundColor: "#D8D8D8" }}>
               <tr className="text-muted">
                 <td>&nbsp;</td>
@@ -104,7 +106,7 @@ class Detail extends Component {
                       <input
                         type="checkbox"
                         name="contact"
-                        className="checkbox"
+                        className={formStyles.Checkbox}
                         value={contact.id}
                       />
                     </td>

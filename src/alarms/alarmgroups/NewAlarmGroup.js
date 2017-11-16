@@ -5,6 +5,11 @@ import { FormattedMessage } from "react-intl";
 import { connect } from "react-redux";
 import { createGroup } from "../../actions";
 // import styles from "./NewAlarmGroup.css";
+import gridStyles from "../../styles/Grid.css";
+import formStyles from "../../styles/Forms.css";
+import tableStyles from "../../styles/Table.css";
+import buttonStyles from "../../styles/Buttons.css";
+
 import { withRouter } from "react-router-dom";
 
 
@@ -35,11 +40,12 @@ class NewAlarmGroup extends Component {
   }
   render() {
     return (
-      <div className="container">
-        <div className="row">
-          <div className="col-md-12 form-group">
+      <div className={gridStyles.Container}>
+        <div className={`${gridStyles.Row}`}>
+          <div className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}>
+            <div className={formStyles.FormGroup}>
             <input
-              className="form-control"
+              className={formStyles.FormControl}
               type="text"
               id="groupName"
               defaultValue=""
@@ -49,13 +55,14 @@ class NewAlarmGroup extends Component {
             <small id="helpText" className="form-text text-muted">
               Please provide a name for this group (max. 80 characters)
             </small>
+            </div>
           </div>
         </div>
-        <div className="row">
-          <div className="col-md-12">
+        <div className={`${gridStyles.Row}`}>
+          <div className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}>
             <button
               type="button"
-              className="btn btn-success"
+              className={`${buttonStyles.Button} ${buttonStyles.Success}`}
               onClick={this.handleClickCreateGroupButton}
             >
               <FormattedMessage
@@ -66,7 +73,6 @@ class NewAlarmGroup extends Component {
             </button>
           </div>
         </div>
-
       </div>
     );
   }

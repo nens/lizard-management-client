@@ -12,6 +12,9 @@ import {
   deleteGroupById
 } from "../../actions";
 import styles from "./App.css";
+import gridStyles from "../../styles/Grid.css";
+import tableStyles from "../../styles/Table.css";
+import buttonStyles from "../../styles/Buttons.css";
 import { withRouter, NavLink } from "react-router-dom";
 import groupsIcon from "../../images/groups@3x.svg";
 
@@ -24,9 +27,7 @@ class App extends Component {
       contactsPickerGroupId: null
     };
     this.handleNewGroupClick = this.handleNewGroupClick.bind(this);
-    this.addIdToContactsPickerIds = this.addIdToContactsPickerIds.bind(
-      this
-    );
+    this.addIdToContactsPickerIds = this.addIdToContactsPickerIds.bind(this);
   }
   componentDidMount() {
     this.props.doFetchGroups();
@@ -49,15 +50,19 @@ class App extends Component {
     } = this.state;
     const numberOfGroups = groups.length;
     return (
-      <div className="container">
-        <div className={`row align-items-center ${styles.App}`}>
-          <div className="col-sm-8 justify-content-center text-muted">
+      <div className={gridStyles.Container}>
+        <div className={`${gridStyles.Row} ${styles.App}`}>
+          <div
+            className={`${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs6}`}
+          >
             {numberOfGroups} {pluralize("GROUP", numberOfGroups)}
           </div>
-          <div className="col-sm-4">
+          <div
+            className={`${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs6}`}
+          >
             <button
               type="button"
-              className="btn btn-success float-right"
+              className={`${buttonStyles.Button} ${buttonStyles.Success} ${gridStyles.FloatRight}`}
               onClick={this.handleNewGroupClick}
             >
               <FormattedMessage
@@ -68,8 +73,10 @@ class App extends Component {
             </button>
           </div>
         </div>
-        <div className="row">
-          <div className="col-md-12">
+        <div className={`${gridStyles.Row}`}>
+          <div
+            className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
+          >
             {isFetching ? (
               <div
                 style={{
@@ -83,18 +90,22 @@ class App extends Component {
                 <MDSpinner size={24} />
               </div>
             ) : groups.length > 0 ? (
-              <table className="table table-responsive">
+              <table
+                className={`${tableStyles.Table} ${tableStyles.Responsive}`}
+              >
                 <tbody>
                   {groups.map((group, i) => {
                     const numberOfContacts = group.contacts.length;
                     return (
                       <tr key={i} className={styles.GroupRow}>
-                        <td className="col-md-8">
+                        <td className={tableStyles.TdCol4}>
                           <NavLink to={`/alarms/groups/${group.id}`}>
                             {group.name}
                           </NavLink>
                         </td>
-                        <td className="col-md-2 text-center">
+                        <td
+                          className={`${tableStyles.TdCol1} ${gridStyles.TextCenter}`}
+                        >
                           <p
                             className={`${styles.NumberOfContacts} text-muted`}
                           >
@@ -106,43 +117,48 @@ class App extends Component {
                             {pluralize("contacts", numberOfContacts)}
                           </p>
                         </td>
-                        <td className="col-md-1">
+                        <td className={tableStyles.TdCol1}>
                           <div
-                            onClick={() =>
-                              this.setState({
-                                showContactsPicker: true,
-                                contactsPickerGroupId: group.id,
-                                contactsPickerIds: group.contacts.map(
-                                  contact => contact.id
-                                )
-                              })}
-                            className={styles.MoreButton}
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-evenly"
+                            }}
                           >
-                            <i className="material-icons text-muted">
-                              group_add
-                            </i>
-                          </div>
-                        </td>
-                        <td className="col-md-1">
-                          <Popover
-                            element={
-                              <div className={styles.MoreButton}>
-                                <i className="material-icons text-muted">
-                                  keyboard_arrow_down
-                                </i>
-                              </div>
-                            }
-                          >
-                            <PopoverItem
-                              handleOnClick={() => {
-                                if (window.confirm("Are you sure?")) {
-                                  doDeleteGroupById(group.id);
-                                }
-                              }}
+                            <div
+                              onClick={() =>
+                                this.setState({
+                                  showContactsPicker: true,
+                                  contactsPickerGroupId: group.id,
+                                  contactsPickerIds: group.contacts.map(
+                                    contact => contact.id
+                                  )
+                                })}
+                              className={styles.MoreButton}
                             >
-                              Delete group
-                            </PopoverItem>
-                          </Popover>
+                              <i className="material-icons text-muted">
+                                group_add
+                              </i>
+                            </div>
+                            <Popover
+                              element={
+                                <div className={styles.MoreButton}>
+                                  <i className="material-icons text-muted">
+                                    keyboard_arrow_down
+                                  </i>
+                                </div>
+                              }
+                            >
+                              <PopoverItem
+                                handleOnClick={() => {
+                                  if (window.confirm("Are you sure?")) {
+                                    doDeleteGroupById(group.id);
+                                  }
+                                }}
+                              >
+                                Delete group
+                              </PopoverItem>
+                            </Popover>
+                          </div>
                         </td>
                       </tr>
                     );

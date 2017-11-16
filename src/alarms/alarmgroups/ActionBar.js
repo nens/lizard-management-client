@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 // import Ink from "react-ink";
 // import { FormattedMessage } from "react-intl";
+import formStyles from "../../styles/Forms.css";
 import styles from "./ActionBar.css";
 
 class ActionBar extends Component {
@@ -127,7 +128,7 @@ class ActionBar extends Component {
           </div>
         </div>
         <div className={styles.Search}>
-          <input className="form-control form-control-sm" type="text" placeholder="Type to filter" />
+          <input className={`${formStyles.FormControlSmall}`} type="text" placeholder="Type to filter" />
         </div>
       </div>
     );
