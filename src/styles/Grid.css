@@ -227,3 +227,26 @@
     grid-column: span 1;
   }
 }
+
+
+
+.FloatRight {
+  float: right!important;
+}
+.FloatLeft {
+  float: left!important;
+}
+.FloatNone {
+  float: none!important;
+}
+
+
+.TextLeft {
+  text-align: left!important;
+}
+.TextRight {
+  text-align: right!important;
+}
+.TextCenter {
+  text-align: center!important;
+}
