@@ -73,6 +73,8 @@ class NewNotification extends Component {
   componentDidMount() {
     document.getElementById("rasterName").focus();
     document.addEventListener("keydown", this.hideConfigureThreshold, false);
+
+    // TODO: Pass the organisation__unique_id here:
     fetchContactsAndMessages().then(data => {
       this.setState({
         availableGroups: data.groups,
