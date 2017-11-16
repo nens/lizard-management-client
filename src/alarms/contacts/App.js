@@ -7,6 +7,9 @@ import pluralize from "pluralize";
 import { connect } from "react-redux";
 import { fetchContacts } from "../../actions";
 import styles from "./App.css";
+import gridStyles from "../../styles/Grid.css";
+import tableStyles from "../../styles/Table.css";
+import buttonStyles from "../../styles/Buttons.css";
 import { withRouter } from "react-router-dom";
 
 class App extends Component {
@@ -57,13 +60,11 @@ class App extends Component {
       return false;
     });
     return (
-      <div className="container">
-        <div className={`row align-items-center ${styles.App}`}>
-          <div className="col-sm-8 justify-content-center text-muted">
+      <div className={gridStyles.Container}>
+        <div className={`${gridStyles.Row} ${styles.App}`}>
+          <div className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}>
             {numberOfContacts} {pluralize("CONTACT", numberOfContacts)}
-          </div>
-          <div className="col-sm-4">
-            <button type="button" className="btn btn-success float-right">
+            <button type="button" className={`${buttonStyles.Button} ${buttonStyles.Success} ${gridStyles.FloatRight}`}>
               <FormattedMessage
                 id="contacts_app.new_contact"
                 defaultMessage="New contact"
@@ -73,10 +74,10 @@ class App extends Component {
           </div>
         </div>
         <hr />
-        <div className="row">
-          <div className="col-md-12">
+        <div className={`${gridStyles.Row}`}>
+          <div className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}>
             <ActionBar handleFilter={this.handleFilter} />
-            <table className="table table-responsive">
+            <table className={`${tableStyles.Table} ${tableStyles.Responsive}`}>
               <thead style={{ backgroundColor: "#D8D8D8" }}>
                 <tr className="text-muted">
                   <td>&nbsp;</td>
