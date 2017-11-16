@@ -1,0 +1,43 @@
+.Table {
+  max-width: 100%;
+  margin-bottom: 1rem;
+  background-color: transparent;
+}
+.Responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+.Table td {
+  padding: .75rem;
+  vertical-align: top;
+  border-top: 1px solid #e9ecef;
+}
+
+
+.TdCol1 {
+  width: 10%;
+}
+.TdCol2 {
+  width: 20%;
+}
+.TdCol3 {
+  width: 30%;
+}
+.TdCol4 {
+  width: 40%;
+}
+.TdCol5 {
+  width: 50%;
+}
+.TdCol6 {
+  width: 60%;
+}
+.TdCol7 {
+  width: 70%;
+}
+.TdCol8 {
+  width: 80%;
+}
+.TdCol9 {
+  width: 90%;
+}
