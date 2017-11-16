@@ -63,12 +63,14 @@ class App extends Component {
                 style={{ height: 55 }}
                 className={`${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs12}`}
               >
-                <div
-                  className={styles.LizardLogo}
-                  style={{
-                    backgroundImage: `url(${lizardIcon})`
-                  }}
-                />
+                <NavLink to="/">
+                  <div
+                    className={styles.LizardLogo}
+                    style={{
+                      backgroundImage: `url(${lizardIcon})`
+                    }}
+                  />
+                </NavLink>
               </div>
               <div
                 className={`${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs12}`}
