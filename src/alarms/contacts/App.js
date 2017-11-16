@@ -73,7 +73,7 @@ class App extends Component {
             </button>
           </div>
         </div>
-        <hr />
+        <br/>
         <div className={`${gridStyles.Row}`}>
           <div className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}>
             <ActionBar handleFilter={this.handleFilter} />

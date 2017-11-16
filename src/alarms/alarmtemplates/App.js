@@ -47,11 +47,8 @@ class App extends Component {
               <Ink />
             </button>
           </div>
-
-
-
         </div>
-        <hr />
+
         <div className={`${gridStyles.Row}`}>
           <div className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}>
             {isFetching ? (
@@ -77,7 +74,6 @@ class App extends Component {
                       <td style={{ textAlign: "center" }}>Type</td>
                     </tr>
                   </thead>
-
                   <tbody>
                     {templates.map((template, i) => {
                       return (

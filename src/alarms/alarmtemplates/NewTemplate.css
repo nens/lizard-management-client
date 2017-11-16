@@ -10,8 +10,12 @@
   text-transform: uppercase;
 }
 
+.ParameterTable {
+  width: 100%;
+}
 .ParameterTable td {
   font-size: 12px;
+  padding: 5px;
 }
 .ParameterTable tbody tr {
   cursor: pointer;

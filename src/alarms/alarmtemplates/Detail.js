@@ -6,6 +6,10 @@ import { FormattedMessage } from "react-intl";
 import { connect } from "react-redux";
 import { fetchAlarmTemplateDetailsById } from "../../actions";
 import styles from "./Detail.css";
+import tableStyles from "../../styles/Table.css";
+import gridStyles from "../../styles/Grid.css";
+import buttonStyles from "../../styles/Buttons.css";
+import formStyles from "../../styles/Forms.css";
 import { withRouter } from "react-router-dom";
 
 HTMLTextAreaElement.prototype.insertAtCaret = function(text) {
@@ -104,9 +108,7 @@ class Detail extends Component {
     });
 
     const parameterTable = (
-      <table
-        className={`table table-sm table-responsive table-striped ${styles.ParameterTable}`}
-      >
+      <table className={`${tableStyles.TableSmall} ${tableStyles.TableStriped} ${styles.ParameterTable}`}>
         <thead>
           <tr>
             <td>Parameter</td>
@@ -135,48 +137,54 @@ class Detail extends Component {
       );
     }
     return (
-      <div className="container">
-        <div className="row">
-          <div className="col-md-12">
+      <div className={gridStyles.Container}>
+        <div className={`${gridStyles.Row}`}>
+          <div
+            className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
+          >
+            <div className={`${gridStyles.FloatRight} ${styles.TemplateTypeBadge}`}>
+              {template.type}
+            </div>
             <h5>
               {template.name}{" "}
-              <span className={`float-right ${styles.TemplateTypeBadge}`}>
-                {template.type}
-              </span>
             </h5>
             <hr />
           </div>
         </div>
-        <div className="row">
-          <div className="col-md-12 form-group">
+        <div className={`${gridStyles.Row}`}>
+          <div className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12} ${formStyles.FormGroup}`}>
             <input
-              className="form-control"
+              className={formStyles.FormControl}
               type="text"
               defaultValue={template.subject}
               placeholder="Provide a subject, please"
             />
           </div>
         </div>
-        <div className="row">
-          <div className="col-md-6 form-group">
+        <div className={`${gridStyles.Row}`}>
+          <div className={`${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs12} ${formStyles.FormGroup}`}>
             <textarea
               spellCheck={false}
-              className="form-control"
+              className={formStyles.FormControl}
               id="templatePreview"
               rows="12"
               defaultValue={template.text}
             />
             <small className="text-muted">TEMPLATE</small>
           </div>
-          <div className="col-md-6">
+          <div
+            className={`${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs12} ${formStyles.FormGroup}`}
+          >
             {parameterTable}
           </div>
         </div>
-        <div className="row">
-          <div className="col-md-12">
+        <div className={`${gridStyles.Row}`}>
+          <div
+            className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
+          >
             <button
               type="button"
-              className="btn btn-success"
+              className={`${buttonStyles.Button} ${buttonStyles.Success}`}
               onClick={() => console.log("Save template")}
             >
               <FormattedMessage

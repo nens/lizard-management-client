@@ -3,6 +3,12 @@
   margin-bottom: 1rem;
   background-color: transparent;
 }
+.TableSmall {
+  background-color: transparent;
+}
+.TableStriped tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
 .Responsive {
   width: 100%;
   overflow-x: auto;
