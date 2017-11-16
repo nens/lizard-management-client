@@ -1,3 +1,6 @@
+.PopoverContainer {
+  position: relative;
+}
 .Popover {
   background-color: #fff;
   position: absolute;
