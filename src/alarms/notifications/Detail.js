@@ -12,6 +12,8 @@ import {
   deActivateAlarm
 } from "../../actions";
 import styles from "./Detail.css";
+import buttonStyles from "../../styles/Buttons.css";
+import gridStyles from "../../styles/Grid.css";
 import { withRouter } from "react-router-dom";
 
 class Detail extends Component {
@@ -58,8 +60,8 @@ class Detail extends Component {
         unit = notification.observation_type.unit;
       } catch (e) {}
       return (
-        <tr key={i}>
-          <td>
+        <div key={i} className={styles.ThresHoldsList}>
+          <div>
             <i
               style={{
                 position: "relative",
@@ -71,22 +73,20 @@ class Detail extends Component {
               access_time
             </i>&nbsp; Alarm when {alarmName} {notification.comparison}{" "}
             {threshold.value} {unit} ({threshold.warning_level.toLowerCase()})
-          </td>
-          <td>
-            <button type="button" className="btn btn-sm btn-link">
+          </div>
+          <div>
+            <button type="button" className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link} ${gridStyles.FloatRight}`}>
               Remove
             </button>
-          </td>
-        </tr>
+          </div>
+        </div>
       );
     });
 
-    // const recipients = <tr><td>No groups</td></tr>;
-
     return (
-      <div className="container">
-        <div className="row">
-          <div className="col-md-12">
+      <div className={gridStyles.Container}>
+        <div className={gridStyles.Row}>
+          <div className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}>
             <div className={styles.Header}>
               <div className={styles.HeaderLeft}>
                 <div
@@ -109,21 +109,21 @@ class Detail extends Component {
                   </p>
                 </div>
               </div>
-              <button type="button" className="btn btn-sm btn-link">
-                <button
-                  type="button"
-                  className="btn btn-sm btn-link"
-                  onClick={() =>
-                    notification.active
-                      ? doDeActivateAlarm(notification.uuid)
-                      : doActivateAlarm(notification.uuid)}
-                >
-                  {notification.active ? "Deactivate" : "Activate"}
-                </button>
-              </button>
+
               <button
                 type="button"
-                className="btn btn-sm btn-link"
+                className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link}`}
+                onClick={() =>
+                  notification.active
+                    ? doDeActivateAlarm(notification.uuid)
+                    : doActivateAlarm(notification.uuid)}
+              >
+                {notification.active ? "Deactivate" : "Activate"}
+              </button>
+
+              <button
+                type="button"
+                className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link}`}
                 onClick={() => {
                   if (window.confirm("Are you sure?")) {
                     doRemoveAlarm(notification.uuid);
@@ -137,45 +137,42 @@ class Detail extends Component {
           </div>
         </div>
         <hr />
-        <div className="row">
-          <div className="col-md-5">
+
+        <div className={gridStyles.Row}>
+          <div className={`${gridStyles.colLg5} ${gridStyles.colMd5} ${gridStyles.colSm5} ${gridStyles.colXs12}`}>
             <h5>Notifications</h5>
             <p className="text-muted">No notifications</p>
           </div>
-          <div className="col-md-7">
-            <div className="row">
-              <div className="col">
-                <h5>Thresholds</h5>
-              </div>
-              <div className="col">
+          <div className={`${gridStyles.colLg7} ${gridStyles.colMd7} ${gridStyles.colSm7} ${gridStyles.colXs12}`}>
+            <div className={gridStyles.Row}>
+              <div className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}>
                 <AddButton
-                  style={{ marginBottom: 10 }}
+                  style={{ marginBottom: 10, float: "right" }}
                   handleClick={() => console.log("Add threshold")}
                   title="Add threshold"
                 />
+                <h5>Thresholds</h5>
               </div>
             </div>
-            <div className="row">
-              <div className="col">
-                <table className="table table-small">
-                  <tbody>{thresholds}</tbody>
-                </table>
+            <div className={gridStyles.Row}>
+              <div className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}>
+                {thresholds}
               </div>
             </div>
             <hr />
-            <div className="row">
-              <div className="col">
-                <h5>Recipient groups</h5>
-              </div>
-              <div className="col">
+            <div className={gridStyles.Row}>
+              <div className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}>
                 <AddButton
-                  style={{ marginBottom: 10 }}
+                  style={{ marginBottom: 10, float: "right" }}
                   handleClick={() => console.log("Add group")}
                   title="Add group"
                 />
+                <h5>Recipient groups</h5>
+              </div>
+              <div className={gridStyles.ColMd6}>
+
               </div>
             </div>
-            <div className="row">...</div>
           </div>
         </div>
       </div>

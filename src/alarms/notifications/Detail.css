@@ -39,3 +39,10 @@
 .InActive {
   background-color: #C9C9C9;
 }
+
+
+.ThresHoldsList {
+  flex-direction: row;
+  display: flex;
+  justify-content: space-between;
+}
