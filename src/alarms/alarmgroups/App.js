@@ -6,10 +6,12 @@ import pluralize from "pluralize";
 import { connect } from "react-redux";
 import { Popover, PopoverItem } from "../../components/Popover";
 import ContactsPicker from "./ContactsPicker";
+import PaginationBar from "./PaginationBar";
 import {
   fetchAlarmGroups,
   fetchContacts,
-  deleteGroupById
+  deleteGroupById,
+  fetchPaginatedContactGroups
 } from "../../actions";
 import styles from "./App.css";
 import gridStyles from "../../styles/Grid.css";
@@ -30,8 +32,10 @@ class App extends Component {
     this.addIdToContactsPickerIds = this.addIdToContactsPickerIds.bind(this);
   }
   componentDidMount() {
-    this.props.doFetchGroups();
     this.props.doFetchContacts();
+
+    const query = new URLSearchParams(window.location.search);
+    this.props.fetchPaginatedContactGroups(query.get("page") || 1);
   }
   handleNewGroupClick(e) {
     this.props.history.push("groups/new");
@@ -42,13 +46,19 @@ class App extends Component {
     });
   }
   render() {
-    const { groups, isFetching, doDeleteGroupById } = this.props;
+    const {
+      groups,
+      isFetching,
+      doDeleteGroupById,
+      currentPage,
+      total
+    } = this.props;
     const {
       showContactsPicker,
       contactsPickerIds,
       contactsPickerGroupId
     } = this.state;
-    const numberOfGroups = groups.length;
+    const numberOfGroups = total;
     return (
       <div className={gridStyles.Container}>
         <div className={`${gridStyles.Row} ${styles.App}`}>
@@ -186,6 +196,16 @@ class App extends Component {
               })}
           />
         ) : null}
+        <div className={gridStyles.Row}>
+          <div
+            className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
+          >
+            <PaginationBar
+              page={currentPage}
+              pages={Math.ceil(total / 10)}
+            />
+          </div>
+        </div>
       </div>
     );
   }
@@ -193,8 +213,10 @@ class App extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    groups: state.alarms.groups,
-    isFetching: state.alarms.isFetching
+    groups: state.alarms._contactGroups.contactGroups,
+    isFetching: state.alarms._contactGroups.isFetching,
+    currentPage: state.alarms._contactGroups.currentPage,
+    total: state.alarms._contactGroups.total
   };
 };
 
@@ -202,7 +224,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     doFetchGroups: () => dispatch(fetchAlarmGroups()),
     doDeleteGroupById: id => dispatch(deleteGroupById(id)),
-    doFetchContacts: () => dispatch(fetchContacts())
+    doFetchContacts: () => dispatch(fetchContacts()),
+    fetchPaginatedContactGroups: page => dispatch(fetchPaginatedContactGroups(page))
   };
 };
 

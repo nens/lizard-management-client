@@ -78,6 +78,45 @@ export const RECEIVE_NEW_TEMPLATE = "RECEIVE_NEW_TEMPLATE";
 export const REQUEST_ALARM_TEMPLATE_DETAILS = "REQUEST_ALARM_TEMPLATE_DETAILS";
 export const REQUEST_ALARM_TEMPLATES = "REQUEST_ALARM_TEMPLATES";
 export const REQUEST_NEW_TEMPLATE = "REQUEST_NEW_TEMPLATE";
+export const RECEIVE_PAGINATED_TEMPLATES = "RECEIVE_PAGINATED_TEMPLATES";
+export const REQUEST_PAGINATED_TEMPLATES = "REQUEST_PAGINATED_TEMPLATES";
+
+
+function requestPaginatedTemplates() {
+  return {
+    type: REQUEST_PAGINATED_TEMPLATES
+  };
+}
+
+function receivePaginatedTemplates(page, data) {
+  return {
+    type: RECEIVE_PAGINATED_TEMPLATES,
+    page: Number(page),
+    data
+  };
+}
+
+export function fetchPaginatedTemplates(page=1) {
+  return (dispatch, getState) => {
+
+    const organisationId = getState().bootstrap.organisation
+      ? getState().bootstrap.organisation.unique_id
+      : null;
+
+    dispatch(requestPaginatedTemplates());
+    fetch(
+      `/api/v3/messages/?page=${page}&organisation__unique_id=${organisationId}`,
+      {
+        credentials: "same-origin"
+      }
+    )
+      .then(response => response.json())
+      .then(data => dispatch(receivePaginatedTemplates(page, data)));
+  }
+}
+
+
+
 
 function requestAlarmTemplateDetails() {
   return {
@@ -179,6 +218,8 @@ export const REQUEST_DEACTIVATE_ALARM = "REQUEST_DEACTIVATE_ALARM";
 export const REQUEST_NEW_ALARM = "REQUEST_NEW_ALARM";
 export const REQUEST_REMOVE_ALARM = "REQUEST_REMOVE_ALARM";
 
+export const REQUEST_PAGINATED_ALARMS = "REQUEST_PAGINATED_ALARMS";
+export const RECEIVE_PAGINATED_ALARMS = "RECEIVE_PAGINATED_ALARMS";
 
 function requestAlarms() {
   return {
@@ -245,6 +286,42 @@ function receiveDeActivateAlarm(data) {
     data
   };
 }
+
+
+
+function requestPaginatedAlarms() {
+  return {
+    type: REQUEST_PAGINATED_ALARMS
+  };
+}
+
+function receivePaginatedAlarms(page, data) {
+  return {
+    type: RECEIVE_PAGINATED_ALARMS,
+    page: Number(page),
+    data
+  };
+}
+
+export function fetchPaginatedAlarms(page=1) {
+  return (dispatch, getState) => {
+
+    const organisationId = getState().bootstrap.organisation
+      ? getState().bootstrap.organisation.unique_id
+      : null;
+
+    dispatch(requestPaginatedAlarms());
+    fetch(
+      `/api/v3/rasteralarms/?page=${page}&organisation__unique_id=${organisationId}`,
+      {
+        credentials: "same-origin"
+      }
+    )
+      .then(response => response.json())
+      .then(data => dispatch(receivePaginatedAlarms(page, data)));
+  }
+}
+
 
 export function fetchAlarms() {
   return (dispatch, getState) => {
@@ -353,6 +430,46 @@ export function fetchNotificationDetailsById(id) {
 // MARK: Contacts
 export const RECEIVE_CONTACTS = "RECEIVE_CONTACTS";
 export const REQUEST_CONTACTS = "REQUEST_CONTACTS";
+export const RECEIVE_PAGINATED_CONTACTS = "RECEIVE_PAGINATED_CONTACTS";
+export const REQUEST_PAGINATED_CONTACTS = "REQUEST_PAGINATED_CONTACTS";
+
+
+function requestPaginatedContacts() {
+  return {
+    type: REQUEST_PAGINATED_CONTACTS
+  };
+}
+
+function receivePaginatedContacts(page, data) {
+  return {
+    type: RECEIVE_PAGINATED_CONTACTS,
+    page: Number(page),
+    data
+  };
+}
+
+export function fetchPaginatedContacts(page=1) {
+  return (dispatch, getState) => {
+
+    const organisationId = getState().bootstrap.organisation
+      ? getState().bootstrap.organisation.unique_id
+      : null;
+
+    dispatch(requestPaginatedContacts());
+    fetch(
+      `/api/v3/contacts/?page=${page}&organisation__unique_id=${organisationId}`,
+      {
+        credentials: "same-origin"
+      }
+    )
+      .then(response => response.json())
+      .then(data => dispatch(receivePaginatedContacts(page, data)));
+  }
+}
+
+
+
+
 
 function requestContacts() {
   return {
@@ -408,6 +525,8 @@ export const REQUEST_ALARM_GROUP_DETAILS = "REQUEST_ALARM_GROUP_DETAILS";
 export const REQUEST_ALARM_GROUPS = "REQUEST_ALARM_GROUPS";
 export const REQUEST_NEW_GROUP = "REQUEST_NEW_GROUP";
 export const UPDATE_GROUP_BY_ID = "UPDATE_GROUP_BY_ID";
+export const REQUEST_PAGINATED_CONTACTGROUPS = "REQUEST_PAGINATED_CONTACTGROUPS";
+export const RECEIVE_PAGINATED_CONTACTGROUPS = "RECEIVE_PAGINATED_CONTACTGROUPS";
 
 
 function requestAlarmGroups() {
@@ -463,6 +582,43 @@ function updateGroupById(group, id) {
     id
   };
 }
+
+
+
+
+function requestPaginatedContactGroups() {
+  return {
+    type: REQUEST_PAGINATED_CONTACTGROUPS
+  };
+}
+
+function receivePaginatedContactGroups(page, data) {
+  return {
+    type: RECEIVE_PAGINATED_CONTACTGROUPS,
+    page: Number(page),
+    data
+  };
+}
+
+export function fetchPaginatedContactGroups(page=1) {
+  return (dispatch, getState) => {
+
+    const organisationId = getState().bootstrap.organisation
+      ? getState().bootstrap.organisation.unique_id
+      : null;
+
+    dispatch(requestPaginatedContactGroups());
+    fetch(
+      `/api/v3/contactgroups/?page=${page}&organisation__unique_id=${organisationId}`,
+      {
+        credentials: "same-origin"
+      }
+    )
+      .then(response => response.json())
+      .then(data => dispatch(receivePaginatedContactGroups(page, data)));
+  }
+}
+
 
 export function fetchAlarmGroups() {
   return (dispatch, getState) => {
