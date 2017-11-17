@@ -408,13 +408,13 @@ class NewNotification extends Component {
                             This alarm will be triggered whenever a threshold is
                             exceeded.
                           </p>
-                          <div className="form-group">
+                          <div className={formStyles.FormGroup}>
                             <label htmlFor="comparison">Comparison</label>
                             <select
                               onChange={e =>
                                 this.handleChangeComparison(e.target.value)}
                               value={this.state.comparison}
-                              className="form-control form-control-lg"
+                              className={`${formStyles.FormControl} ${formStyles.Large}`}
                               id="comparison"
                             >
                               <option value=">">&gt;</option>
