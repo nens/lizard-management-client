@@ -35,15 +35,6 @@ create-react-app
 The base skeleton for this project was generated using [create-react-app](https://github.com/facebookincubator/create-react-app). Have a look at CRA.md for its documentation.
 
 
-Bootstrap 4
-===========
-
-This project uses `Bootstrap 4.0.0-beta` as its base stylesheet. Most of the customization is done in `_lizard.scss`.
-
-To re-build, run `$ npm run dist` in the `public/bootstrap-4.0.0` directory.
-
-You'll need to [install some tooling](https://getbootstrap.com/docs/4.0/getting-started/build-tools/#tooling-setup) first.
-
 
 Development
 ===========
@@ -57,6 +48,19 @@ See [![Standard Version](https://img.shields.io/badge/release-standard%20version
 These commit messages will be used to auto-generate `CHANGELOG.md`.
 
 Have a look at the [buck-trap README](https://github.com/nens/buck-trap/blob/master/README.md) for more information about the release procedure.
+
+
+CSS
+===
+
+The first versions of this project used Twitter Bootstrap 4 for the styling of some components like Buttons, Forms and was especially chosen because of its popular grid system.
+
+This worked well until the point where a lot of customization was needed. It required Ruby and Bundler to be installed, as well as some other dependencies. It also involved rebuilding the entire Bootstrap SCSS sourcetree every time.
+
+Twitter Bootstrap was replaced by CSS Grid and Flexbox entirely in [PR #21](https://github.com/nens/lizard-management-client/pull/12).
+
+This project now uses CSS modules almost entirely, save for some CSS reset code in `index.html`.
+
 
 
 Production bundle
