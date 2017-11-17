@@ -3,6 +3,9 @@ import React, { Component } from "react";
 import { FormattedMessage } from "react-intl";
 import { connect } from "react-redux";
 import styles from "./GroupMessage.css";
+import gridStyles from "../../styles/Grid.css";
+import buttonStyles from "../../styles/Buttons.css";
+import formStyles from "../../styles/Forms.css"
 import { addNotification } from "../../actions";
 import { Scrollbars } from "react-custom-scrollbars";
 import CSSTransition from "react-transition-group/CSSTransition";
@@ -121,14 +124,14 @@ class GroupMessage extends Component {
             <div className={styles.CloseButton} onClick={handleClose}>
               <i className="material-icons">close</i>
             </div>
-            <h5>Send a message to this group</h5>
+            <h3>Send a message to this group</h3>
             <br />
             <div className="form-group">
               <input
                 id="subject"
                 tabIndex="-1"
                 type="text"
-                className="form-control"
+                className={formStyles.FormControl}
                 placeholder="Subject of this message"
                 onChange={this.handleInput}
                 maxLength={80}
@@ -141,11 +144,11 @@ class GroupMessage extends Component {
             <Scrollbars
               style={{ width: "100%", height: this.state.height - 400 }}
             >
-              <div className="row">
-                <div className="col-md-12 form-group">
+              <div className={`${gridStyles.Row}`}>
+                <div className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12} ${formStyles.FormGroup}`}>
                   <textarea
                     spellCheck={false}
-                    className="form-control"
+                    className={formStyles.FormControl}
                     id="message"
                     rows="7"
                     maxLength={160}
@@ -166,7 +169,7 @@ class GroupMessage extends Component {
             <button
               disabled={isSending ? true : false}
               type="button"
-              className="btn btn-success"
+              className={`${buttonStyles.Button} ${buttonStyles.Success}`}
               onClick={() => {
                 if (!isSending) {
                   this.sendMessage();
