@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import styles from "./ConfigureThreshold.css";
+import formStyles from "../../styles/Forms.css";
+import buttonStyles from "../../styles/Buttons.css";
 import { Scrollbars } from "react-custom-scrollbars";
 import CSSTransition from "react-transition-group/CSSTransition";
 import ThresholdChart from "./ThresholdChart";
@@ -61,17 +63,23 @@ class ConfigureThreshold extends Component {
             <div className={styles.CloseButton} onClick={handleClose}>
               <i className="material-icons">close</i>
             </div>
-            <h3>Configure new threshold</h3>
+            <h2>Configure new threshold</h2>
             <p className="text-muted">
               A threshold determines when an alarm should be triggered.
             </p>
             <Scrollbars
               style={{ width: "100%", height: this.state.height - 400 }}
             >
-              <div className="form-group">
+              <div
+                className={formStyles.FormGroup}
+                style={{
+                  display: "flex",
+                  flexDirection: "column"
+                }}
+              >
                 <label htmlFor="val">Value</label>
                 <input
-                  className="form-control form-control-lg"
+                  className={`${formStyles.FormGroup} ${formStyles.Large}`}
                   type="number"
                   id="val"
                   value={value}
@@ -82,10 +90,10 @@ class ConfigureThreshold extends Component {
                   Value of this threshold (float-point number)
                 </small>
               </div>
-              <div className="form-group">
+              <div className={formStyles.FormGroup}>
                 <label htmlFor="warning_level">Warning level</label>
                 <input
-                  className="form-control form-control-lg"
+                  className={`${formStyles.FormControl} ${formStyles.Large}`}
                   type="text"
                   id="warning_level"
                   value={warning_level}
@@ -96,32 +104,32 @@ class ConfigureThreshold extends Component {
                   A warning level label. For example: "Exceeded"
                 </small>
               </div>
-              {raster && timeseries
-                ? <ThresholdChart
-                    timeseries={timeseries}
-                    value={value}
-                    parameter={
-                      raster.observation_type
-                        ? raster.observation_type.parameter
-                        : null
-                    }
-                    unit={
-                      raster.observation_type
-                        ? raster.observation_type.unit
-                        : null
-                    }
-                    code={
-                      raster.observation_type
-                        ? raster.observation_type.code
-                        : null
-                    }
-                  />
-                : null}
+              {raster && timeseries ? (
+                <ThresholdChart
+                  timeseries={timeseries}
+                  value={value}
+                  parameter={
+                    raster.observation_type
+                      ? raster.observation_type.parameter
+                      : null
+                  }
+                  unit={
+                    raster.observation_type
+                      ? raster.observation_type.unit
+                      : null
+                  }
+                  code={
+                    raster.observation_type
+                      ? raster.observation_type.code
+                      : null
+                  }
+                />
+              ) : null}
             </Scrollbars>
             <hr />
             <button
               type="button"
-              className="btn btn-success"
+              className={`${buttonStyles.Button} ${buttonStyles.Success}`}
               onClick={() => {
                 handleAddThreshold(value, warning_level);
                 handleClose();
@@ -131,7 +139,7 @@ class ConfigureThreshold extends Component {
             </button>
             <button
               type="button"
-              className="btn btn-sm btn-link"
+              className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link}`}
               style={{ marginLeft: 15 }}
               onClick={handleClose}
             >
