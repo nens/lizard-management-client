@@ -6,6 +6,9 @@ import { createAlarm } from "../../actions";
 import { withRouter } from "react-router-dom";
 import { Map, Marker, TileLayer, WMSTileLayer } from "react-leaflet";
 import styles from "./NewNotification.css";
+import gridStyles from "../../styles/Grid.css";
+import buttonStyles from "../../styles/Buttons.css";
+import formStyles from "../../styles/Forms.css"
 import StepIndicator from "../../components/StepIndicator";
 import GroupAndTemplateSelector from "./GroupAndTemplateSelect";
 import AddButton from "../../components/AddButton";
@@ -73,6 +76,8 @@ class NewNotification extends Component {
   componentDidMount() {
     document.getElementById("rasterName").focus();
     document.addEventListener("keydown", this.hideConfigureThreshold, false);
+
+    // TODO: Pass the organisation__unique_id here:
     fetchContactsAndMessages().then(data => {
       this.setState({
         availableGroups: data.groups,
@@ -231,21 +236,24 @@ class NewNotification extends Component {
     } = this.state;
     return (
       <div>
-        <div className="container">
-          <div className="row justify-content-center">
-            <div className="col-md-12">
+        <div className={gridStyles.Container}>
+          <div className={`${gridStyles.Row}`}>
+            <div className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}>
               <div id="steps" style={{ margin: "20px 0 0 20px" }}>
                 <div className={styles.Step} id="Step">
                   <div className="media">
                     <StepIndicator indicator="1" active={step === 1} />
-                    <div className="media-body">
-                      <h5
+                    <div style={{
+                      width: "calc(100% - 90px)",
+                      marginLeft: 90
+                    }}>
+                      <h3
                         className={`mt-0 ${this.state.step !== 1
                           ? "text-muted"
                           : null}`}
                       >
                         Raster selection
-                      </h5>
+                      </h3>
                       {step === 1 ? (
                         <div>
                           <p className="text-muted">
@@ -253,7 +261,7 @@ class NewNotification extends Component {
                             The name of the raster will be used in e-mail and
                             SMS alerts.
                           </p>
-                          <div className="form-group">
+                          <div className={formStyles.FormGroup}>
                             <SelectRaster
                               placeholderText="Type the name here"
                               results={this.state.rasters}
@@ -263,7 +271,7 @@ class NewNotification extends Component {
                             />
                             <button
                               type="button"
-                              className="btn btn-success"
+                              className={`${buttonStyles.Button} ${buttonStyles.Success}`}
                               style={{ marginTop: 10 }}
                               onClick={() => {
                                 if (this.state.raster) {
@@ -285,12 +293,14 @@ class NewNotification extends Component {
                 <div className={styles.Step} id="Step">
                   <div className="media">
                     <StepIndicator indicator="2" active={step === 2} />
-                    <div className="media-body">
-                      <h5
+                    <div style={{
+                      marginLeft: 90
+                    }}>
+                      <h3
                         className={`mt-0 ${step !== 2 ? "text-muted" : null}`}
                       >
                         Point-on-map
-                      </h5>
+                      </h3>
                       {step === 2 ? (
                         <div>
                           <p className="text-muted">
@@ -351,7 +361,7 @@ class NewNotification extends Component {
 
                           <button
                             type="button"
-                            className="btn btn-success"
+                            className={`${buttonStyles.Button} ${buttonStyles.Success}`}
                             style={{ marginTop: 10 }}
                             onClick={() => {
                               if (markerPosition) {
@@ -366,7 +376,7 @@ class NewNotification extends Component {
                           </button>
                           <button
                             type="button"
-                            className="btn btn-sm btn-link"
+                            className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link}`}
                             style={{ marginLeft: 15, marginTop: 10 }}
                             onClick={() =>
                               this.setState({
@@ -384,25 +394,27 @@ class NewNotification extends Component {
                 <div className={styles.Step} id="Step">
                   <div className="media">
                     <StepIndicator indicator="3" active={step === 3} />
-                    <div className="media-body">
-                      <h5
+                    <div style={{
+                      marginLeft: 90
+                    }}>
+                      <h3
                         className={`mt-0 ${step !== 3 ? "text-muted" : null}`}
                       >
                         Thresholds
-                      </h5>
+                      </h3>
                       {step === 3 ? (
                         <div>
                           <p className="text-muted">
                             This alarm will be triggered whenever a threshold is
                             exceeded.
                           </p>
-                          <div className="form-group">
+                          <div className={formStyles.FormGroup}>
                             <label htmlFor="comparison">Comparison</label>
                             <select
                               onChange={e =>
                                 this.handleChangeComparison(e.target.value)}
                               value={this.state.comparison}
-                              className="form-control form-control-lg"
+                              className={`${formStyles.FormControl} ${formStyles.Large}`}
                               id="comparison"
                             >
                               <option value=">">&gt;</option>
@@ -440,7 +452,7 @@ class NewNotification extends Component {
                                   </span>
                                   <button
                                     type="button"
-                                    className="btn btn-sm btn-link float-right"
+                                    className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link} ${gridStyles.FloatRight}`}
                                     onClick={() => console.log("remove")}
                                   >
                                     Remove
@@ -457,7 +469,7 @@ class NewNotification extends Component {
                           />
                           <button
                             type="button"
-                            className="btn btn-success"
+                            className={`${buttonStyles.Button} ${buttonStyles.Success}`}
                             style={{ marginTop: 10 }}
                             onClick={() => {
                               this.setState({
@@ -475,10 +487,12 @@ class NewNotification extends Component {
 
                 <div className="media">
                   <StepIndicator indicator="4" active={step === 4} />
-                  <div className="media-body">
-                    <h5 className={`mt-0 ${step !== 4 ? "text-muted" : null}`}>
+                  <div style={{
+                    marginLeft: 90
+                  }}>
+                    <h3 className={`mt-0 ${step !== 4 ? "text-muted" : null}`}>
                       Recipients
-                    </h5>
+                    </h3>
                     {step === 4 ? (
                       <div>
                         <p className="text-muted">
@@ -520,7 +534,7 @@ class NewNotification extends Component {
                         />
                         <button
                           type="button"
-                          className="btn btn-success"
+                          className={`${buttonStyles.Button} ${buttonStyles.Success}`}
                           style={{ marginTop: 10 }}
                           onClick={this.handleActivateClick}
                         >

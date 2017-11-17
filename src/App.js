@@ -9,6 +9,7 @@ import LanguageSwitcher from "./components/LanguageSwitcher";
 import OrganisationSwitcher from "./components/OrganisationSwitcher";
 import Snackbar from "./components/Snackbar";
 import styles from "./App.css";
+import gridStyles from "./styles/Grid.css";
 import lizardIcon from "./images/lizard@3x.svg";
 import { withRouter } from "react-router-dom";
 
@@ -55,46 +56,28 @@ class App extends Component {
 
     return (
       <div className={styles.App}>
-        <div style={{ backgroundColor: "#239f85" }}>
-          <div className="container">
-            <nav className="navbar navbar-expand-lg">
-              <NavLink to={"/"}>
-                <div
-                  className={styles.LizardLogo}
-                  style={{
-                    backgroundImage: `url(${lizardIcon})`
-                  }}
-                />
-              </NavLink>
-
-              <button
-                className="navbar-toggler"
-                type="button"
-                data-toggle="collapse"
-                data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent"
-                aria-expanded="false"
-                aria-label="Toggle navigation"
-              >
-                <div className={styles.NavbarTogglebutton}>
-                  <i className="material-icons">menu</i>
-                </div>
-              </button>
-
+        <div className={`${styles.Primary}`}>
+          <div className={gridStyles.Container}>
+            <div className={gridStyles.Row}>
               <div
-                className="collapse navbar-collapse"
-                id="navbarSupportedContent"
+                style={{ height: 55 }}
+                className={`${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs12}`}
               >
-                <form className="form-inline my-2 my-lg-0">
-                  <input
-                    className="form-control mr-sm-2"
-                    type="text"
-                    placeholder="Search"
+                <NavLink to="/">
+                  <div
+                    className={styles.LizardLogo}
+                    style={{
+                      backgroundImage: `url(${lizardIcon})`
+                    }}
                   />
-                </form>
-                <ul className="navbar-nav ml-auto">
-                  <li className="nav-item active">
-                    <a className="nav-link" href="#apps">
+                </NavLink>
+              </div>
+              <div
+                className={`${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs12}`}
+              >
+                <div className={styles.TopNav}>
+                  <div>
+                    <a href="#apps">
                       <i
                         className="material-icons"
                         style={{
@@ -106,22 +89,21 @@ class App extends Component {
                       >
                         apps
                       </i>
-                      Apps <span className="sr-only">(current)</span>
+                      Apps
                     </a>
-                  </li>
-                  <li className="nav-item">
+                  </div>
+                  <div>
                     <a
-                      className="nav-link"
                       href="https://sso.lizard.net/edit_profile/"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
                       <i className="fa fa-user" />&nbsp;&nbsp;{firstName}
                     </a>
-                  </li>
-                  <li className="nav-item">
+                  </div>
+                  <div>
                     <a
-                      className={`nav-link ${styles.OrganisationLink}`}
+                      className={styles.OrganisationLink}
                       title={
                         bootstrap.organisation
                           ? bootstrap.organisation.name
@@ -137,45 +119,62 @@ class App extends Component {
                         ? bootstrap.organisation.name
                         : "Select organisation"}
                     </a>
-                  </li>
-                </ul>
+                  </div>
+                </div>
               </div>
-            </nav>
+            </div>
           </div>
         </div>
-
-        <div className="secondary-nav">
-          <div className="container">
-            <div className="row">
-              <div className="col-md-12">
-                <h2 className="breadcrumb-navigation">
-                  <NavLink to="/">Lizard Management</NavLink>
-                  {breadcrumbs}
-                </h2>
+        <div className={`${styles.Secondary}`}>
+          <div className={gridStyles.Container}>
+            <div className={gridStyles.Row}>
+              <div
+                style={{
+                  height: 65,
+                  display: "flex",
+                  alignItems: "center",
+                  fontSize: "1.2em"
+                }}
+                className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
+              >
+                <NavLink to="/">Lizard Management</NavLink>
+                {breadcrumbs}
               </div>
             </div>
           </div>
         </div>
 
-        <Route exact path="/" component={Home} />
-        <Route path="/alarms" component={AlarmsApp} />
-
-        <footer className="footer">
-          <div className="container">
-            <div className="row">
-              <div className="col-md-6 col-sm-6">
-                <div>
-                  <a href="https://www.lizard.net/handleidingen/log_in_instructies_lizard_6.01.pdf">
-                    <FormattedMessage
-                      id="index.documentation"
-                      defaultMessage="Documentation"
-                    />
-                  </a>
-                </div>
+        <div className={gridStyles.Container}>
+          <div className={gridStyles.Row}>
+            <div
+              style={{
+                margin: "25px 0 25px 0"
+              }}
+              className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
+            >
+              <Route exact path="/" component={Home} />
+              <Route path="/alarms" component={AlarmsApp} />
+            </div>
+          </div>
+        </div>
+        <footer className={styles.Footer}>
+          <div className={gridStyles.Container}>
+            <div className={gridStyles.Row}>
+              <div
+                className={`${styles.FooterLeft} ${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs6}`}
+              >
+                <a href="https://www.lizard.net/handleidingen/log_in_instructies_lizard_6.01.pdf">
+                  <FormattedMessage
+                    id="index.documentation"
+                    defaultMessage="Documentation"
+                  />
+                </a>
               </div>
-              <div className="col-md-6 col-sm-6">
-                <ul className="list-inline float-right language-and-support">
-                  <li className="list-inline-item">
+              <div
+                className={`${styles.FooterRight} ${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs6}`}
+              >
+                <div className={styles.FooterRightWrapper}>
+                  <div style={{ margin: "0 10px 0 10px" }}>
                     <LanguageSwitcher
                       locale={preferredLocale}
                       languages={[
@@ -183,8 +182,8 @@ class App extends Component {
                         { code: "en", language: "English" }
                       ]}
                     />
-                  </li>
-                  <li className="list-inline-item">
+                  </div>
+                  <div>
                     <a href="https://www.lizard.net/support/">
                       <i
                         style={{
@@ -201,8 +200,8 @@ class App extends Component {
                         defaultMessage="Support"
                       />
                     </a>
-                  </li>
-                </ul>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

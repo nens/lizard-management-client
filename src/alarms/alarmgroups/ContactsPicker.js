@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { fetchContacts, addContactToGroup } from "../../actions";
 import styles from "./ContactsPicker.css";
+import formStyles from "../../styles/Forms.css";
 import { Scrollbars } from "react-custom-scrollbars";
 import MDSpinner from "react-md-spinner";
 import CSSTransition from "react-transition-group/CSSTransition";
@@ -90,14 +91,14 @@ class ContactsPicker extends Component {
             <div className={styles.CloseButton} onClick={handleClose}>
               <i className="material-icons">close</i>
             </div>
-            <h5>Add contacts</h5>
+            <h3>Quickly add contacts</h3>
             <br />
-            <div className="form-group">
+            <div className={formStyles.FormGroup}>
               <input
                 id="contactName"
                 tabIndex="-1"
                 type="text"
-                className="form-control"
+                className={formStyles.FormControl}
                 placeholder="Type here to filter the list of contacts..."
                 onChange={this.handleInput}
               />

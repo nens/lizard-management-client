@@ -8,10 +8,15 @@
   border-radius: 3px;
   margin: 0 5px 0 5px;
   text-transform: uppercase;
+  width: 70px;
+  text-align: center;
 }
-
+.ParameterTable {
+  width: 100%;
+}
 .ParameterTable td {
   font-size: 12px;
+  padding: 5px;
 }
 .ParameterTable tbody tr {
   cursor: pointer;

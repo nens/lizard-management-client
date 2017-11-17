@@ -43,6 +43,8 @@ Bugs / glitches
 
 - Big: Facilitate timeseries-alarms as well...
 
+- Factor Bootstrap out in favor of CSS Grid https://hacks.mozilla.org/2017/04/replace-bootstrap-layouts-with-css-grid/
+
 Notifications:
 - Detail view: Add / remove thresholds
 - Detail view: Add / remove recipient groups

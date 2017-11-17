@@ -37,7 +37,7 @@ class PopoverContainer extends Component {
     const { element, children } = this.props;
     const { isOpen, elementX, screenWidth } = this.state;
     return (
-      <div onClick={this.handleOpen}>
+      <div onClick={this.handleOpen} className={styles.PopoverContainer}>
         {element}
         {isOpen ? <div
           style={{

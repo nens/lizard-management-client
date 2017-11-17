@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { fetchAll, fetchOrganisations, selectOrganisation } from "../actions";
 import styles from "./OrganisationSwitcher.css";
+import formStyles from "../styles/Forms.css";
 import { Scrollbars } from "react-custom-scrollbars";
 import MDSpinner from "react-md-spinner";
 import CSSTransition from "react-transition-group/CSSTransition";
@@ -84,14 +85,14 @@ class OrganisationSwitcher extends Component {
             <div className={styles.CloseButton} onClick={handleClose}>
               <i className="material-icons">close</i>
             </div>
-            <h5>Switch organisation</h5>
+            <h3>Switch organisation</h3>
             <br />
-            <div className="form-group">
+            <div className={formStyles.FormGroup}>
               <input
                 id="organisationName"
                 tabIndex="-1"
                 type="text"
-                className="form-control"
+                className={formStyles.FormControl}
                 placeholder="Type here to filter the list of organisations..."
                 onChange={this.handleInput}
               />
@@ -121,7 +122,7 @@ class OrganisationSwitcher extends Component {
                           organisation.unique_id ===
                             selectedOrganisation.unique_id
                             ? styles.Active
-                            : null}`}
+                            : styles.InActive}`}
                           onClick={() => {
                             this.selectOrganisation(organisation);
                             handleClose();

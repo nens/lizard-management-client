@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import MDSpinner from "react-md-spinner";
 import styles from "./SelectRaster.css";
+import formStyles from "../styles/Forms.css";
 import { Scrollbars } from "react-custom-scrollbars";
 
 class SelectRaster extends Component {
@@ -62,7 +63,7 @@ class SelectRaster extends Component {
           tabIndex="-1"
           type="text"
           autoComplete={false}
-          className="form-control"
+          className={formStyles.FormControl}
           placeholder={placeholderText}
           onChange={this.handleInput}
           onKeyUp={this.handleKeyUp}

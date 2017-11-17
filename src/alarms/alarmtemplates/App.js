@@ -7,6 +7,9 @@ import pluralize from "pluralize";
 import { connect } from "react-redux";
 import { fetchAlarmTemplates } from "../../actions";
 import styles from "./App.css";
+import gridStyles from "../../styles/Grid.css";
+import tableStyles from "../../styles/Table.css";
+import buttonStyles from "../../styles/Buttons.css";
 import { withRouter, NavLink } from "react-router-dom";
 import templatesIcon from "../../images/templates@3x.svg";
 
@@ -25,15 +28,16 @@ class App extends Component {
     const { templates, isFetching } = this.props;
     const numberOfTemplates = templates.length;
     return (
-      <div className="container">
-        <div className={`row align-items-center ${styles.App}`}>
-          <div className="col-sm-8 justify-content-center text-muted">
+      <div className={gridStyles.Container}>
+        <div className={`${gridStyles.Row} ${styles.App}`}>
+          <div
+            className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
+          >
             {numberOfTemplates} {pluralize("TEMPLATE", numberOfTemplates)}
-          </div>
-          <div className="col-sm-4">
+
             <button
               type="button"
-              className="btn btn-success float-right"
+              className={`${buttonStyles.Button} ${buttonStyles.Success} ${gridStyles.FloatRight}`}
               onClick={this.handleNewTemplateClick}
             >
               <FormattedMessage
@@ -44,9 +48,9 @@ class App extends Component {
             </button>
           </div>
         </div>
-        <hr />
-        <div className="row">
-          <div className="col-md-12">
+
+        <div className={`${gridStyles.Row}`}>
+          <div className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}>
             {isFetching ? (
               <div
                 style={{
@@ -62,20 +66,19 @@ class App extends Component {
             ) : templates.length > 0 ? (
               <div>
                 <ActionBar doDeleteContactsById={() => console.log("test")} />
-                <table className="table table-responsive">
+                <table className={`${tableStyles.Table} ${tableStyles.Responsive}`}>
                   <thead style={{ backgroundColor: "#D8D8D8" }}>
                     <tr className="text-muted">
                       <td>&nbsp;</td>
                       <td>Name</td>
-                      <td>Type</td>
+                      <td style={{ textAlign: "center" }}>Type</td>
                     </tr>
                   </thead>
-
                   <tbody>
                     {templates.map((template, i) => {
                       return (
                         <tr key={i} className={styles.TemplateRow}>
-                          <td>
+                          <td className={tableStyles.TdCol1}>
                             <input
                               type="checkbox"
                               name="template"
@@ -83,12 +86,12 @@ class App extends Component {
                               value={template.id}
                             />
                           </td>
-                          <td className="col-md-8">
+                          <td className={tableStyles.TdCol8}>
                             <NavLink to={`/alarms/templates/${template.id}`}>
                               <strong>{template.name}</strong>{" "}
                             </NavLink>
                           </td>
-                          <td style={{ textAlign: "center" }}>
+                          <td style={{ textAlign: "center" }} className={tableStyles.TdCol1}>
                             <span className={styles.TemplateTypeBadge}>
                               {template.type}
                             </span>

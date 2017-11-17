@@ -5,6 +5,10 @@ import { FormattedMessage } from "react-intl";
 import { connect } from "react-redux";
 import { createTemplate } from "../../actions";
 import styles from "./NewTemplate.css";
+import tableStyles from "../../styles/Table.css";
+import gridStyles from "../../styles/Grid.css";
+import buttonStyles from "../../styles/Buttons.css";
+import formStyles from "../../styles/Forms.css";
 import { withRouter } from "react-router-dom";
 
 HTMLTextAreaElement.prototype.insertAtCaret = function(text) {
@@ -42,7 +46,7 @@ class NewTemplate extends Component {
   componentDidMount() {
     try {
       document.getElementById("templateName").focus();
-    } catch(e) {
+    } catch (e) {
       console.log("Could not focus() on input element..");
     }
   }
@@ -128,13 +132,11 @@ class NewTemplate extends Component {
     });
 
     const parameterTable = (
-      <table
-        className={`table table-sm table-responsive table-striped ${styles.ParameterTable}`}
-      >
+      <table className={`${tableStyles.TableSmall} ${tableStyles.TableStriped} ${styles.ParameterTable}`}>
         <thead>
           <tr>
-            <td>Parameter</td>
-            <td>Description</td>
+            <td><strong>Parameter</strong></td>
+            <td><strong>Description</strong></td>
           </tr>
         </thead>
         <tbody>{parameterTableRows}</tbody>
@@ -157,11 +159,13 @@ class NewTemplate extends Component {
       );
     }
     return (
-      <div className="container">
-        <div className="row">
-          <div className="col-md-6 form-group">
+      <div className={gridStyles.Container}>
+        <div className={`${gridStyles.Row}`}>
+          <div
+            className={`${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs6} ${formStyles.FormGroup}`}
+          >
             <input
-              className="form-control"
+              className={formStyles.FormControl}
               type="text"
               id="templateName"
               defaultValue=""
@@ -171,7 +175,9 @@ class NewTemplate extends Component {
               Please provide a name for this template
             </small>
           </div>
-          <div className="col-md-6 form-group">
+          <div
+            className={`${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs6} ${formStyles.FormGroup}`}
+          >
             <div className="form-check form-check-inline">
               <label className="form-check-label">
                 <input
@@ -203,10 +209,12 @@ class NewTemplate extends Component {
           </div>
         </div>
         {templateType === "email" ? (
-          <div className="row">
-            <div className="col-md-12 form-group">
+          <div className={`${gridStyles.Row}`}>
+            <div
+              className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12} ${formStyles.FormGroup}`}
+            >
               <input
-                className="form-control"
+                className={formStyles.FormControl}
                 type="text"
                 id="subject"
                 defaultValue={template.subject}
@@ -217,24 +225,32 @@ class NewTemplate extends Component {
             </div>
           </div>
         ) : null}
-        <div className="row">
-          <div className="col-md-6 form-group">
+        <div className={`${gridStyles.Row}`}>
+          <div
+            className={`${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs12} ${formStyles.FormGroup}`}
+          >
             <textarea
               spellCheck={false}
-              className="form-control"
+              className={formStyles.FormControl}
               id="templatePreview"
               rows="12"
               defaultValue={template.text}
             />
             <small className="text-muted">TEMPLATE</small>
           </div>
-          <div className="col-md-6">{parameterTable}</div>
+          <div
+            className={`${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs12} ${formStyles.FormGroup}`}
+          >
+            {parameterTable}
+          </div>
         </div>
-        <div className="row">
-          <div className="col-md-12">
+        <div className={`${gridStyles.Row}`}>
+          <div
+            className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12} ${formStyles.FormGroup}`}
+          >
             <button
               type="button"
-              className="btn btn-success"
+              className={`${buttonStyles.Button} ${buttonStyles.Success}`}
               onClick={() => {
                 this.handleClickCreateTemplateButton();
               }}

@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 import styles from "./GroupAndTemplateSelect.css";
+import formStyles from "../../styles/Forms.css"
+import gridStyles from "../../styles/Grid.css";
+import buttonStyles from "../../styles/Buttons.css";
 
 class GroupAndTemplateSelect extends Component {
   constructor(props) {
@@ -51,12 +54,12 @@ class GroupAndTemplateSelect extends Component {
       idx
     } = this.props;
     return (
-      <div className={styles.GroupAndTemplateSelect}>
-        <div className="form-row">
-          <div className="form-group col-md-4">
+      <div className={styles.GroupAndTemplateSelector}>
+        <div className={`${gridStyles.Row}`}>
+          <div className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${gridStyles.colSm4} ${gridStyles.colXs4} ${formStyles.FormGroup}`}>
             <select
               id="group"
-              className="form-control"
+              className={formStyles.FormControl}
               onChange={this.selectGroup}
             >
               <option>Select a group</option>
@@ -69,10 +72,10 @@ class GroupAndTemplateSelect extends Component {
               })}
             </select>
           </div>
-          <div className="form-group col-md-4">
+          <div className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${gridStyles.colSm4} ${gridStyles.colXs4} ${formStyles.FormGroup}`}>
             <select
               id="template"
-              className="form-control"
+              className={formStyles.FormControl}
               onChange={this.selectMessage}
             >
               <option>Select a template</option>
@@ -85,10 +88,10 @@ class GroupAndTemplateSelect extends Component {
               })}
             </select>
           </div>
-          <div className="form-group col-md-4">
+          <div className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${gridStyles.colSm4} ${gridStyles.colXs4} ${formStyles.FormGroup}`}>
             <button
               type="button"
-              className="btn btn-sm btn-link"
+              className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link}`}
               onClick={() => removeFromGroupAndTemplate(idx)}
             >
               Remove

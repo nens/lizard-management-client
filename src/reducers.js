@@ -37,6 +37,32 @@ import {
 
 function alarms(
   state = {
+  //   alarms: {
+  //     isFetching: false,
+  //     currentPage: 1, // id
+  //     currentAlarm: null,
+  //     alarms: []
+  //   },
+  //   contactGroups: {
+  //     isFetching: false,
+  //     currentPage: 1, // id
+  //     currentContactGroup: null,
+  //     contactGroups: []
+  //   },
+  //   contacts: {
+  //     isFetching: false,
+  //     currentPage: 1, // id
+  //     currentContact: null,
+  //     contacts: []
+  //   },
+  //   templates: {
+  //     isFetching: false,
+  //     currentPage: 1, // id
+  //     currentTemplate: null,
+  //     templates: []
+  //   }
+  // },
+
     alarm: {},
     alarms: {
       results: []
