@@ -30,11 +30,10 @@ class App extends Component {
     const {
       templates,
       isFetching,
-      doDeleteGroupById,
       currentPage,
       total
     } = this.props;
-    const numberOfTemplates = templates.length;
+    const numberOfTemplates = total;
     return (
       <div className={gridStyles.Container}>
         <div className={`${gridStyles.Row} ${styles.App}`}>
