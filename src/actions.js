@@ -430,8 +430,43 @@ export function fetchNotificationDetailsById(id) {
 // MARK: Contacts
 export const RECEIVE_CONTACTS = "RECEIVE_CONTACTS";
 export const REQUEST_CONTACTS = "REQUEST_CONTACTS";
+export const REQUEST_NEW_CONTACT = "REQUEST_NEW_CONTACT";
+export const RECEIVE_NEW_CONTACT = "RECEIVE_NEW_CONTACT";
 export const RECEIVE_PAGINATED_CONTACTS = "RECEIVE_PAGINATED_CONTACTS";
 export const REQUEST_PAGINATED_CONTACTS = "REQUEST_PAGINATED_CONTACTS";
+
+
+
+function requestNewContact() {
+  return {
+    type: REQUEST_NEW_CONTACT
+  };
+}
+
+function receiveNewContact(data) {
+  return {
+    type: RECEIVE_NEW_CONTACT,
+    data
+  };
+}
+
+export function createContact(data) {
+  return (dispatch, getState) => {
+    dispatch(requestNewContact());
+    fetch("/api/v3/contacts/", {
+      credentials: "same-origin",
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    })
+      .then(response => response.json())
+      .then(data => {
+        dispatch(receiveNewContact(data));
+        dispatch(fetchContacts());
+      });
+  };
+}
+
 
 
 function requestPaginatedContacts() {

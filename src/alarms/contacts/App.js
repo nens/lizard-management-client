@@ -20,10 +20,14 @@ class App extends Component {
       filterValue: ""
     };
     this.handleFilter = this.handleFilter.bind(this);
+    this.handleNewContactClick = this.handleNewContactClick.bind(this);
   }
   componentDidMount() {
     const query = new URLSearchParams(window.location.search);
     this.props.fetchPaginatedContacts(query.get("page") || 1);
+  }
+  handleNewContactClick(e) {
+    this.props.history.push("contacts/new");
   }
   handleFilter(e) {
     this.setState({
@@ -71,7 +75,7 @@ class App extends Component {
         <div className={`${gridStyles.Row} ${styles.App}`}>
           <div className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}>
             {numberOfContacts} {pluralize("CONTACT", numberOfContacts)}
-            <button type="button" className={`${buttonStyles.Button} ${buttonStyles.Success} ${gridStyles.FloatRight}`}>
+            <button type="button" onClick={this.handleNewContactClick} className={`${buttonStyles.Button} ${buttonStyles.Success} ${gridStyles.FloatRight}`}>
               <FormattedMessage
                 id="contacts_app.new_contact"
                 defaultMessage="New contact"
