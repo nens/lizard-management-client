@@ -2,10 +2,11 @@ import React, { Component } from "react";
 import MDSpinner from "react-md-spinner";
 import Ink from "react-ink";
 import ActionBar from "./ActionBar";
+import PaginationBar from "./PaginationBar";
 import { FormattedMessage } from "react-intl";
 import pluralize from "pluralize";
 import { connect } from "react-redux";
-import { fetchAlarmTemplates } from "../../actions";
+import { fetchAlarmTemplates, fetchPaginatedTemplates } from "../../actions";
 import styles from "./App.css";
 import gridStyles from "../../styles/Grid.css";
 import tableStyles from "../../styles/Table.css";
@@ -19,14 +20,20 @@ class App extends Component {
     this.handleNewTemplateClick = this.handleNewTemplateClick.bind(this);
   }
   componentDidMount() {
-    this.props.doFetchTemplates();
+    const query = new URLSearchParams(window.location.search);
+    this.props.fetchPaginatedTemplates(query.get("page") || 1);
   }
   handleNewTemplateClick() {
     this.props.history.push("templates/new");
   }
   render() {
-    const { templates, isFetching } = this.props;
-    const numberOfTemplates = templates.length;
+    const {
+      templates,
+      isFetching,
+      currentPage,
+      total
+    } = this.props;
+    const numberOfTemplates = total;
     return (
       <div className={gridStyles.Container}>
         <div className={`${gridStyles.Row} ${styles.App}`}>
@@ -110,6 +117,16 @@ class App extends Component {
             )}
           </div>
         </div>
+        <div className={gridStyles.Row}>
+          <div
+            className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
+          >
+            <PaginationBar
+              page={currentPage}
+              pages={Math.ceil(total / 10)}
+            />
+          </div>
+        </div>
       </div>
     );
   }
@@ -117,14 +134,17 @@ class App extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    templates: state.alarms.templates,
-    isFetching: state.alarms.isFetching
+    templates: state.alarms._templates.templates,
+    isFetching: state.alarms._templates.isFetching,
+    currentPage: state.alarms._templates.currentPage,
+    total: state.alarms._templates.total
   };
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    doFetchTemplates: () => dispatch(fetchAlarmTemplates())
+    doFetchTemplates: () => dispatch(fetchAlarmTemplates()),
+    fetchPaginatedTemplates: page => dispatch(fetchPaginatedTemplates(page))
   };
 };
 

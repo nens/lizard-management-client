@@ -12,9 +12,14 @@ import {
   RECEIVE_DEACTIVATE_ALARM,
   RECEIVE_LIZARD_BOOTSTRAP,
   RECEIVE_NEW_ALARM,
+  // RECEIVE_NEW_CONTACT,
   RECEIVE_NEW_GROUP,
   RECEIVE_NEW_TEMPLATE,
   RECEIVE_ORGANISATIONS,
+  RECEIVE_PAGINATED_ALARMS,
+  RECEIVE_PAGINATED_CONTACTGROUPS,
+  RECEIVE_PAGINATED_CONTACTS,
+  RECEIVE_PAGINATED_TEMPLATES,
   RECEIVE_REMOVE_ALARM,
   RECEIVE_REMOVE_GROUP,
   REQUEST_ALARM_DETAILS,
@@ -26,9 +31,14 @@ import {
   REQUEST_CONTACTS,
   REQUEST_LIZARD_BOOTSTRAP,
   REQUEST_NEW_ALARM,
+  // REQUEST_NEW_CONTACT,
   REQUEST_NEW_GROUP,
   REQUEST_NEW_TEMPLATE,
   REQUEST_ORGANISATIONS,
+  REQUEST_PAGINATED_ALARMS,
+  REQUEST_PAGINATED_CONTACTGROUPS,
+  REQUEST_PAGINATED_CONTACTS,
+  REQUEST_PAGINATED_TEMPLATES,
   REQUEST_REMOVE_ALARM,
   SELECT_ORGANISATION,
   SHOW_NOTIFICATION,
@@ -37,32 +47,34 @@ import {
 
 function alarms(
   state = {
-  //   alarms: {
-  //     isFetching: false,
-  //     currentPage: 1, // id
-  //     currentAlarm: null,
-  //     alarms: []
-  //   },
-  //   contactGroups: {
-  //     isFetching: false,
-  //     currentPage: 1, // id
-  //     currentContactGroup: null,
-  //     contactGroups: []
-  //   },
-  //   contacts: {
-  //     isFetching: false,
-  //     currentPage: 1, // id
-  //     currentContact: null,
-  //     contacts: []
-  //   },
-  //   templates: {
-  //     isFetching: false,
-  //     currentPage: 1, // id
-  //     currentTemplate: null,
-  //     templates: []
-  //   }
-  // },
-
+    _alarms: {
+      isFetching: false,
+      total: null,
+      currentPage: 1, // id
+      currentAlarm: null,
+      alarms: []
+    },
+    _contactGroups: {
+      isFetching: false,
+      total: null,
+      currentPage: 1, // id
+      currentContactGroup: null,
+      contactGroups: []
+    },
+    _contacts: {
+      isFetching: false,
+      total: null,
+      currentPage: 1, // id
+      currentContact: null,
+      contacts: []
+    },
+    _templates: {
+      isFetching: false,
+      total: null,
+      currentPage: 1, // id
+      currentTemplate: null,
+      templates: []
+    },
     alarm: {},
     alarms: {
       results: []
@@ -77,6 +89,86 @@ function alarms(
   action
 ) {
   switch (action.type) {
+    case REQUEST_PAGINATED_ALARMS:
+      return {
+        ...state,
+        _alarms: {
+          ...state._alarms,
+          isFetching: true
+        }
+      };
+    case RECEIVE_PAGINATED_ALARMS:
+      return {
+        ...state,
+        _alarms: {
+          ...state._alarms,
+          total: action.data.count,
+          alarms: action.data.results,
+          currentPage: action.page,
+          isFetching: false
+        }
+      };
+
+    case REQUEST_PAGINATED_CONTACTGROUPS:
+      return {
+        ...state,
+        _contactGroups: {
+          ...state._contactGroups,
+          isFetching: true
+        }
+      };
+    case RECEIVE_PAGINATED_CONTACTGROUPS:
+      return {
+        ...state,
+        _contactGroups: {
+          ...state._contactGroups,
+          total: action.data.count,
+          contactGroups: action.data.results,
+          currentPage: action.page,
+          isFetching: false
+        }
+      };
+
+    case REQUEST_PAGINATED_TEMPLATES:
+      return {
+        ...state,
+        _templates: {
+          ...state._templates,
+          isFetching: true
+        }
+      };
+    case RECEIVE_PAGINATED_TEMPLATES:
+      return {
+        ...state,
+        _templates: {
+          ...state._templates,
+          total: action.data.count,
+          templates: action.data.results,
+          currentPage: action.page,
+          isFetching: false
+        }
+      };
+
+    case REQUEST_PAGINATED_CONTACTS:
+      return {
+        ...state,
+        _contacts: {
+          ...state._contacts,
+          isFetching: true
+        }
+      };
+    case RECEIVE_PAGINATED_CONTACTS:
+      return {
+        ...state,
+        _contacts: {
+          ...state._contacts,
+          total: action.data.count,
+          contacts: action.data.results,
+          currentPage: action.page,
+          isFetching: false
+        }
+      };
+
     case REQUEST_CONTACTS:
       return {
         ...state,

@@ -8,8 +8,10 @@ import {
   fetchAlarms,
   removeAlarm,
   activateAlarm,
-  deActivateAlarm
+  deActivateAlarm,
+  fetchPaginatedAlarms
 } from "../../actions";
+import PaginationBar from "./PaginationBar";
 import styles from "./App.css";
 import gridStyles from "../../styles/Grid.css";
 import buttonStyles from "../../styles/Buttons.css";
@@ -24,7 +26,8 @@ class App extends Component {
     );
   }
   componentDidMount() {
-    this.props.doFetchAlarms();
+    const query = new URLSearchParams(window.location.search);
+    this.props.fetchPaginatedAlarms(query.get("page") || 1);
   }
   handleNewNotificationClick() {
     this.props.history.push("notifications/new");
@@ -32,15 +35,19 @@ class App extends Component {
   render() {
     const {
       alarms,
+      total,
+      currentPage,
+      isFetching,
       doRemoveAlarm,
       doActivateAlarm,
       doDeActivateAlarm
     } = this.props;
+
     let numberOfNotifications = 0;
     let results = [];
-    if (alarms.alarms.count > 0) {
-      numberOfNotifications = alarms.alarms.results.length;
-      results = alarms.alarms.results
+    if (total && total > 0) {
+      numberOfNotifications = total;
+      results = alarms
         .slice()
         .sort((a, b) => {
           if (a.name < b.name) {
@@ -61,7 +68,7 @@ class App extends Component {
       const numberOfRecipients = alarm.messages.length;
       return (
         <div key={i} className={styles.AlarmRow}>
-          <div style={{ width: 400 }}>
+          <div style={{ display: "flex" }}>
             <div
               className={`${alarm.active
                 ? styles.Active
@@ -69,21 +76,25 @@ class App extends Component {
             >
               {alarm.active ? "ACTIVE" : "INACTIVE"}
             </div>
-            <NavLink
-              to={`/alarms/notifications/${alarm.uuid}`}
-              style={{
-                color: "#333"
-              }}
-            >
-              {alarm.name}
-            </NavLink>
-            <br />
-            <small className="text-muted">
-              {numberOfThresholds} {pluralize("thresholds", numberOfThresholds)}
-              {", "}
-              {numberOfRecipients}{" "}
-              {pluralize("recipient group", numberOfRecipients)}{" "}
-            </small>
+
+            <div>
+              <NavLink
+                to={`/alarms/notifications/${alarm.uuid}`}
+                style={{
+                  color: "#333"
+                }}
+              >
+                {alarm.name}
+              </NavLink>
+              <br />
+              <small className="text-muted">
+                {numberOfThresholds}{" "}
+                {pluralize("thresholds", numberOfThresholds)}
+                {", "}
+                {numberOfRecipients}{" "}
+                {pluralize("recipient group", numberOfRecipients)}{" "}
+              </small>
+            </div>
           </div>
           <div style={{ width: 250, display: "flex" }}>
             <div style={{ width: "50%" }}>
@@ -149,9 +160,11 @@ class App extends Component {
             </button>
           </div>
         </div>
-        <div className="row">
-          <div className="col-md-12">
-            {alarms.isFetching ? (
+        <div className={gridStyles.Row}>
+          <div
+            className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
+          >
+            {isFetching ? (
               <div
                 style={{
                   position: "relative",
@@ -173,6 +186,16 @@ class App extends Component {
             )}
           </div>
         </div>
+        <div className={gridStyles.Row}>
+          <div
+            className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
+          >
+            <PaginationBar
+              page={currentPage}
+              pages={Math.ceil(total / 10)}
+            />
+          </div>
+        </div>
       </div>
     );
   }
@@ -180,13 +203,16 @@ class App extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    alarms: state.alarms,
-    isFetching: state.isFetching
+    currentPage: state.alarms._alarms.currentPage,
+    total: state.alarms._alarms.total,
+    alarms: state.alarms._alarms.alarms,
+    isFetching: state.alarms._alarms.isFetching
   };
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
+    fetchPaginatedAlarms: page => dispatch(fetchPaginatedAlarms(page)),
     doFetchAlarms: () => dispatch(fetchAlarms()),
     doRemoveAlarm: uuid => dispatch(removeAlarm(uuid)),
     doActivateAlarm: uuid => dispatch(activateAlarm(uuid)),

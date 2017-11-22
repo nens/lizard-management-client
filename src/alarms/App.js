@@ -1,15 +1,16 @@
-import React, { Component } from "react";
 import { Alarms as AlarmsHome } from "./Alarms";
-import { App as NotificationsApp } from "./notifications/App";
-import { App as NewNotificationApp } from "./notifications/NewNotification";
-import { App as AlarmGroupsApp } from "./alarmgroups/App";
 import { App as AlarmContactApp } from "./contacts/App";
+import { App as AlarmGroupsApp } from "./alarmgroups/App";
 import { App as AlarmTemplatesApp } from "./alarmtemplates/App";
 import { App as NewAlarmGroupApp } from "./alarmgroups/NewAlarmGroup";
+import { App as NewContactApp } from "./contacts/NewContact";
+import { App as NewNotificationApp } from "./notifications/NewNotification";
 import { App as NewTemplateApp } from "./alarmtemplates/NewTemplate";
-import { Detail as NotificationsDetail } from "./notifications/Detail";
+import { App as NotificationsApp } from "./notifications/App";
 import { Detail as AlarmGroupsDetail } from "./alarmgroups/Detail";
 import { Detail as AlarmTemplatesDetail } from "./alarmtemplates/Detail";
+import { Detail as NotificationsDetail } from "./notifications/Detail";
+import React, { Component } from "react";
 // import { FormattedMessage } from "react-intl";
 import { Route, Switch, withRouter } from "react-router-dom";
 
@@ -60,6 +61,14 @@ class App extends Component {
         </Switch>
 
         <Route exact path="/alarms/contacts" component={AlarmContactApp} />
+        <Switch>
+          <Route exact path="/alarms/contacts/new" component={NewContactApp} />
+          {/* <Route
+            exact
+            path="/alarms/contacts/:id"
+            component={ContactDetail}
+          /> */}
+        </Switch>
 
         <Route exact path="/alarms/templates" component={AlarmTemplatesApp} />
         <Switch>

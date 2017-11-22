@@ -2,10 +2,11 @@ import React, { Component } from "react";
 import MDSpinner from "react-md-spinner";
 import Ink from "react-ink";
 import ActionBar from "./ActionBar";
+import PaginationBar from "./PaginationBar";
 import { FormattedMessage } from "react-intl";
 import pluralize from "pluralize";
 import { connect } from "react-redux";
-import { fetchContacts } from "../../actions";
+import { fetchPaginatedContacts } from "../../actions";
 import styles from "./App.css";
 import gridStyles from "../../styles/Grid.css";
 import tableStyles from "../../styles/Table.css";
@@ -19,9 +20,14 @@ class App extends Component {
       filterValue: ""
     };
     this.handleFilter = this.handleFilter.bind(this);
+    this.handleNewContactClick = this.handleNewContactClick.bind(this);
   }
   componentDidMount() {
-    this.props.doFetchContacts();
+    const query = new URLSearchParams(window.location.search);
+    this.props.fetchPaginatedContacts(query.get("page") || 1);
+  }
+  handleNewContactClick(e) {
+    this.props.history.push("contacts/new");
   }
   handleFilter(e) {
     this.setState({
@@ -29,7 +35,12 @@ class App extends Component {
     });
   }
   render() {
-    const { isFetching, contacts } = this.props;
+    const {
+      contacts,
+      currentPage,
+      isFetching,
+      total
+    } = this.props;
     const { filterValue } = this.state;
 
     if (isFetching) {
@@ -48,7 +59,7 @@ class App extends Component {
       );
     }
 
-    const numberOfContacts = contacts.length;
+    const numberOfContacts = total;
 
     const filteredContacts = contacts.filter((contact, i) => {
       if (
@@ -64,7 +75,7 @@ class App extends Component {
         <div className={`${gridStyles.Row} ${styles.App}`}>
           <div className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}>
             {numberOfContacts} {pluralize("CONTACT", numberOfContacts)}
-            <button type="button" className={`${buttonStyles.Button} ${buttonStyles.Success} ${gridStyles.FloatRight}`}>
+            <button type="button" onClick={this.handleNewContactClick} className={`${buttonStyles.Button} ${buttonStyles.Success} ${gridStyles.FloatRight}`}>
               <FormattedMessage
                 id="contacts_app.new_contact"
                 defaultMessage="New contact"
@@ -110,6 +121,16 @@ class App extends Component {
             </table>
           </div>
         </div>
+        <div className={gridStyles.Row}>
+          <div
+            className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
+          >
+            <PaginationBar
+              page={currentPage}
+              pages={Math.ceil(total / 10)}
+            />
+          </div>
+        </div>
       </div>
     );
   }
@@ -117,16 +138,19 @@ class App extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    isFetching: state.alarms.isFetching,
-    contacts: state.alarms.contacts
+    contacts: state.alarms._contacts.contacts,
+    isFetching: state.alarms._contacts.isFetching,
+    currentPage: state.alarms._contacts.currentPage,
+    total: state.alarms._contacts.total
   };
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    doFetchContacts: () => dispatch(fetchContacts())
+    fetchPaginatedContacts: page => dispatch(fetchPaginatedContacts(page))
   };
 };
+
 
 App = withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
 
