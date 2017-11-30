@@ -5,6 +5,8 @@ import { FormattedMessage } from "react-intl";
 import { connect } from "react-redux";
 import { fetchContacts } from "../../actions";
 // import styles from "./NewContact.css";
+import gridStyles from "../../styles/Grid.css";
+import buttonStyles from "../../styles/Buttons.css";
 import { withRouter } from "react-router-dom";
 
 class NewContact extends Component {
@@ -76,11 +78,11 @@ class NewContact extends Component {
             </table>
           </div>
         </div>
-        <div className="row">
-          <div className="col-md-12">
+        <div className={gridStyles.Row}>
+          <div className="col-md-12">            
             <button type="button" className="btn btn-success">
               <FormattedMessage
-                id="alarmgroups_new.create_group"
+                id="alarmgroups_new.add_selected_contact"
                 defaultMessage="Add selected contacts"
               />
               <Ink />

@@ -69,7 +69,7 @@ class Detail extends Component {
       );
     }
 
-    if (group.contacts) {
+    if (group && group.contacts) {
       return (
         <div className="container">
           <div className="row">
@@ -136,8 +136,8 @@ class Detail extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    group: state.alarms.group,
-    isFetching: state.alarms.isFetching
+    group: state.alarms._contactGroups.currentContactGroup,
+    isFetching: state.alarms._contactGroups.isFetching
   };
 };
 

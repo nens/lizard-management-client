@@ -8,7 +8,6 @@ import { Popover, PopoverItem } from "../../components/Popover";
 import ContactsPicker from "./ContactsPicker";
 import PaginationBar from "./PaginationBar";
 import {
-  fetchAlarmGroups,
   fetchContacts,
   deleteGroupById,
   fetchPaginatedContactGroups
@@ -222,7 +221,6 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    doFetchGroups: () => dispatch(fetchAlarmGroups()),
     doDeleteGroupById: id => dispatch(deleteGroupById(id)),
     doFetchContacts: () => dispatch(fetchContacts()),
     fetchPaginatedContactGroups: page => dispatch(fetchPaginatedContactGroups(page))

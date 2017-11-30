@@ -6,7 +6,7 @@ import PaginationBar from "./PaginationBar";
 import { FormattedMessage } from "react-intl";
 import pluralize from "pluralize";
 import { connect } from "react-redux";
-import { fetchAlarmTemplates, fetchPaginatedTemplates } from "../../actions";
+import { fetchPaginatedTemplates } from "../../actions";
 import styles from "./App.css";
 import gridStyles from "../../styles/Grid.css";
 import tableStyles from "../../styles/Table.css";
@@ -97,6 +97,7 @@ class App extends Component {
                             <NavLink to={`/alarms/templates/${template.id}`}>
                               <strong>{template.name}</strong>{" "}
                             </NavLink>
+                            - {template.subject}
                           </td>
                           <td style={{ textAlign: "center" }} className={tableStyles.TdCol1}>
                             <span className={styles.TemplateTypeBadge}>
@@ -143,7 +144,6 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    doFetchTemplates: () => dispatch(fetchAlarmTemplates()),
     fetchPaginatedTemplates: page => dispatch(fetchPaginatedTemplates(page))
   };
 };

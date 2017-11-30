@@ -4,15 +4,12 @@ import {
   RECEIVE_ACTIVATE_ALARM,
   RECEIVE_ALARM_DETAILS,
   RECEIVE_ALARM_GROUP_DETAILS,
-  RECEIVE_ALARM_GROUPS,
   RECEIVE_ALARM_TEMPLATE_DETAILS,
   RECEIVE_ALARM_TEMPLATES,
-  RECEIVE_ALARMS,
   RECEIVE_CONTACTS,
   RECEIVE_DEACTIVATE_ALARM,
   RECEIVE_LIZARD_BOOTSTRAP,
   RECEIVE_NEW_ALARM,
-  // RECEIVE_NEW_CONTACT,
   RECEIVE_NEW_GROUP,
   RECEIVE_NEW_TEMPLATE,
   RECEIVE_ORGANISATIONS,
@@ -22,16 +19,14 @@ import {
   RECEIVE_PAGINATED_TEMPLATES,
   RECEIVE_REMOVE_ALARM,
   RECEIVE_REMOVE_GROUP,
+  RECEIVE_UPDATE_TEMPLATE,
   REQUEST_ALARM_DETAILS,
   REQUEST_ALARM_GROUP_DETAILS,
-  REQUEST_ALARM_GROUPS,
   REQUEST_ALARM_TEMPLATE_DETAILS,
   REQUEST_ALARM_TEMPLATES,
-  REQUEST_ALARMS,
   REQUEST_CONTACTS,
   REQUEST_LIZARD_BOOTSTRAP,
   REQUEST_NEW_ALARM,
-  // REQUEST_NEW_CONTACT,
   REQUEST_NEW_GROUP,
   REQUEST_NEW_TEMPLATE,
   REQUEST_ORGANISATIONS,
@@ -50,7 +45,7 @@ function alarms(
     _alarms: {
       isFetching: false,
       total: null,
-      currentPage: 1, // id
+      currentPage: null,
       currentAlarm: null,
       alarms: []
     },
@@ -74,17 +69,7 @@ function alarms(
       currentPage: 1, // id
       currentTemplate: null,
       templates: []
-    },
-    alarm: {},
-    alarms: {
-      results: []
-    },
-    contacts: [],
-    group: {},
-    groups: [],
-    isFetching: false,
-    template: {},
-    templates: []
+    }
   },
   action
 ) {
@@ -168,7 +153,6 @@ function alarms(
           isFetching: false
         }
       };
-
     case REQUEST_CONTACTS:
       return {
         ...state,
@@ -183,35 +167,31 @@ function alarms(
     case RECEIVE_ACTIVATE_ALARM:
       return {
         ...state,
-        alarm: action.data,
-        alarms: {
-          ...state.alarms,
-          results: state.alarms.results.filter(alarm => {
+        _alarms: {
+          ...state._alarms,
+          alarms: state._alarms.alarms.filter(alarm => {
             if (alarm.uuid === action.data.uuid) {
               alarm.active = true;
             }
             return alarm;
-          })
+          }),
+          currentAlarm: { ...state._alarms.currentAlarm, active: true }
         }
       };
     case RECEIVE_DEACTIVATE_ALARM:
       return {
         ...state,
-        alarm: action.data,
-        alarms: {
-          ...state.alarms,
-          results: state.alarms.results.filter(alarm => {
+        _alarms: {
+          ...state._alarms,
+          alarms: state._alarms.alarms.filter(alarm => {
             if (alarm.uuid === action.data.uuid) {
               alarm.active = false;
             }
             return alarm;
-          })
+          }),
+          currentAlarm: { ...state._alarms.currentAlarm, active: false }
         }
       };
-    case REQUEST_ALARMS:
-      return { ...state, isFetching: true };
-    case RECEIVE_ALARMS:
-      return { ...state, alarms: action.data, isFetching: false };
     case REQUEST_NEW_ALARM:
       return { ...state, isFetching: true };
     case RECEIVE_NEW_ALARM:
@@ -222,56 +202,145 @@ function alarms(
     case REQUEST_ALARM_DETAILS:
       return {
         ...state,
-        isFetching: true
+        _alarms: {
+          ...state._alarms,
+          isFetching: true
+        }
       };
     case RECEIVE_ALARM_DETAILS:
-      return { ...state, alarm: action.data, isFetching: false };
+      const currentAlarm = action.rasteralarm;
+      currentAlarm.rasterdetail = action.rasterdetail;
+      currentAlarm.timeseriesdetail = action.timeseriesdetail;
+      return {
+        ...state,
+        _alarms: {
+          ...state._alarms,
+          isFetching: false,
+          currentAlarm: currentAlarm
+        },
+        isFetching: false
+      };
     case REQUEST_REMOVE_ALARM:
-      return { ...state, isFetching: true };
+      return {
+        ...state,
+        _alarms: {
+          ...state._alarms,
+          isFetching: true
+        }
+      };
     case RECEIVE_REMOVE_ALARM:
       return {
         ...state,
-        alarms: state.alarms.results.filter(alarm => {
-          if (alarm.uuid !== action.uuid) return alarm;
-          return false;
-        }),
-        isFetching: false
+        _alarms: {
+          ...state._alarms,
+          isFetching: false,
+          alarms: state._alarms.alarms.filter(alarm => {
+            if (alarm.uuid !== action.uuid) return alarm;
+            return false;
+          })
+        }
       };
     case REQUEST_NEW_GROUP:
-      return { ...state, isFetching: true };
+      return {
+        ...state,
+        _contactGroups: {
+          ...state._contactGroups,
+          isFetching: true
+        }
+      };
     case RECEIVE_NEW_GROUP:
-      return { ...state, isFetching: false };
+      return {
+        ...state,
+        _contactGroups: {
+          ...state._contactGroups,
+          isFetching: false,
+          currentContactGroup: action.data
+        }
+      };
     case RECEIVE_REMOVE_GROUP:
       return {
         ...state,
-        isFetching: false,
-        groups: state.groups.filter((group, i) => {
-          if (group.id === action.id) {
-            return false;
-          }
-          return group;
-        })
+        _contactGroups: {
+          ...state._contactGroups,
+          isFetching: false,
+          contactGroups: state._contactGroups.contactGroups.filter(group => {
+            if (group.id === action.id) {
+              return false;
+            }
+            return group;
+          })
+        }
       };
-    case REQUEST_ALARM_GROUPS:
-      return { ...state, isFetching: true };
-    case RECEIVE_ALARM_GROUPS:
-      return { ...state, groups: action.data, isFetching: false };
     case REQUEST_ALARM_GROUP_DETAILS:
-      return { ...state, isFetching: true };
+      return {
+        ...state,
+        _contactGroups: {
+          ...state._contactGroups,
+          isFetching: true
+        }
+      };
     case RECEIVE_ALARM_GROUP_DETAILS:
-      return { ...state, group: action.data, isFetching: false };
+      return {
+        ...state,
+        _contactGroups: {
+          ...state._contactGroups,
+          isFetching: false,
+          currentContactGroup: action.data
+        }
+      };
     case REQUEST_ALARM_TEMPLATES:
       return { ...state, isFetching: true };
     case RECEIVE_ALARM_TEMPLATES:
       return { ...state, templates: action.data, isFetching: false };
     case REQUEST_ALARM_TEMPLATE_DETAILS:
-      return { ...state, isFetching: true };
+      return {
+        ...state,
+        _templates: {
+          ...state._templates,
+          isFetching: true
+        }
+      };
     case RECEIVE_ALARM_TEMPLATE_DETAILS:
-      return { ...state, template: action.data, isFetching: false };
+      return {
+        ...state,
+        _templates: {
+          ...state._templates,
+          isFetching: false,
+          currentTemplate: action.data
+        }
+      };
+    case RECEIVE_UPDATE_TEMPLATE:
+      return {
+        ...state,
+        _templates: {
+          ...state._templates,
+          templates: state._templates.templates.filter(template => {
+            if (Number(template.id) === Number(action.id)) {
+              template.subject = action.data.subject;
+              template.text = action.data.text;
+              template.html = action.data.text;
+            }
+            return template;
+          })
+        }
+      };
     case REQUEST_NEW_TEMPLATE:
-      return { ...state, isFetching: true };
+      return {
+        ...state,
+        _templates: {
+          ...state._templates,
+          isFetching: true
+        }
+      };
     case RECEIVE_NEW_TEMPLATE:
-      return { ...state, isFetching: false };
+      return {
+        ...state,
+        _templates: {
+          ...state._templates,
+          isFetching: false,
+          templates: [...state._templates.templates, action.data]
+        }
+      };
     case UPDATE_GROUP_BY_ID:
       return { ...state };
     default:

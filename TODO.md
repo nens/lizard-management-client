@@ -1,16 +1,6 @@
 TODO
 ====
 
-Core stuff
-----------
-
-- Notifications: Detailview
-- Notifications: re-instantiate threshold modal on edit
-- Groups: List and detailview
-- Templates: List and detailview
-- Send Messages: List and 'action' view
-
-
 Config
 ------
 
@@ -29,90 +19,28 @@ Enhancements
 ------------
 
 - Draw preview timeseries chart as bars or lines based on ratio/interval property
-- Auth handling (via sso)
-- Full i18n/l10n
+- Full i18n/l10n-ify
 - Get i18n catalog translated
 - Use default locale from bootstrap endpoint instead of defaulting to english
-- Snackbar component for errors and notifications
+- DONE Snackbar component for errors and notifications
 
 
 Bugs / glitches
 ---------------
 
-- Chart doesnt render proper temporal extent
-
+- Big: Chart doesnt render proper temporal extent
 - Big: Facilitate timeseries-alarms as well...
-
-- Factor Bootstrap out in favor of CSS Grid https://hacks.mozilla.org/2017/04/replace-bootstrap-layouts-with-css-grid/
+- DONE! Refactor redux code to support pagination
+- DONE! Factor Bootstrap out in favor of CSS Grid
 
 Notifications:
 - Detail view: Add / remove thresholds
 - Detail view: Add / remove recipient groups
-- Detail view: Map and chart
 
 Groups contacts:
 - Delete checked (api change needed)
-- Pagination?
 - Filter?
-- Detail view (delete users from group)
 
 Contacts:
-- Add contact
 - Import contacts
 - Delete contacts (api change needed?)
-
-Templates:
-- Delete template
-- Edit template
-
-
-
-
-
-
-
-
-
-<div className="row">
-  <div className="col-md-6 form-group">
-    <input
-      className="form-control"
-      type="text"
-      id="firstName"
-      defaultValue=""
-      placeholder=""
-      maxLength={80}
-    />
-    <small id="helpText" className="form-text text-muted">
-      First name
-    </small>
-  </div>
-  <div className="col-md-6 form-group">
-    <input
-      className="form-control"
-      type="text"
-      id="lastName"
-      defaultValue=""
-      placeholder=""
-      maxLength={80}
-    />
-    <small id="helpText" className="form-text text-muted">
-      Last name
-    </small>
-  </div>
-</div>
-<div className="row">
-  <div className="col-md-12 form-group">
-    <input
-      className="form-control"
-      type="text"
-      id="emailAddress"
-      defaultValue=""
-      placeholder=""
-      maxLength={200}
-    />
-    <small id="helpText" className="form-text text-muted">
-      E-mail address
-    </small>
-  </div>
-</div>

@@ -46,3 +46,13 @@
   display: flex;
   justify-content: space-between;
 }
+.GroupsList {
+  flex-direction: row;
+  display: flex;
+  justify-content: space-between;
+}
+
+.MapStyle {
+  width: 100%;
+  height: 400px;
+}

@@ -4,7 +4,12 @@ import Ink from "react-ink";
 import { FormattedMessage } from "react-intl";
 // import pluralize from "pluralize";
 import { connect } from "react-redux";
-import { fetchAlarmTemplateDetailsById } from "../../actions";
+import {
+  fetchAlarmTemplateDetailsById,
+  fetchPaginatedTemplates,
+  updateTemplate,
+  removeAlarmById
+} from "../../actions";
 import styles from "./Detail.css";
 import tableStyles from "../../styles/Table.css";
 import gridStyles from "../../styles/Grid.css";
@@ -38,13 +43,52 @@ class Detail extends Component {
   constructor(props) {
     super(props);
     this.state = {};
+    this.handleSaveTemplate = this.handleSaveTemplate.bind(this);
+    this.handleDeleteTemplate = this.handleDeleteTemplate.bind(this);
   }
   componentDidMount() {
     const { match, doFetchTemplateDetails } = this.props;
     doFetchTemplateDetails(match.params.id);
   }
+  handleDeleteTemplate() {
+    const { doDeleteTemplateById, match } = this.props;
+    doDeleteTemplateById(match.params.id);
+  }
+  handleSaveTemplate() {
+    const { doSaveTemplateById, match } = this.props;
+    const subject = this.messageSubject.value;
+    const body = this.messageBody.value;
+
+    if (body) {
+      doSaveTemplateById(
+        {
+          subject,
+          body
+        },
+        match.params.id
+      );
+    } else {
+      alert("Please provide a template text");
+    }
+  }
   render() {
     const { template, isFetching } = this.props;
+
+    if (isFetching || !template) {
+      return (
+        <div
+          style={{
+            position: "relative",
+            top: 50,
+            height: 300,
+            bottom: 50,
+            marginLeft: "50%"
+          }}
+        >
+          <MDSpinner size={24} />
+        </div>
+      );
+    }
 
     const availableParameters = [
       {
@@ -86,10 +130,7 @@ class Detail extends Component {
     ];
 
     const parameterTableRows = availableParameters.map((parameter, i) => {
-      if (
-        !parameter.templateType ||
-        parameter.templateType === template.type
-      ) {
+      if (!parameter.templateType || parameter.templateType === template.type) {
         return (
           <tr
             key={i}
@@ -108,7 +149,9 @@ class Detail extends Component {
     });
 
     const parameterTable = (
-      <table className={`${tableStyles.TableSmall} ${tableStyles.TableStriped} ${styles.ParameterTable}`}>
+      <table
+        className={`${tableStyles.TableSmall} ${tableStyles.TableStriped} ${styles.ParameterTable}`}
+      >
         <thead>
           <tr>
             <td>Parameter</td>
@@ -119,56 +162,49 @@ class Detail extends Component {
       </table>
     );
 
-
-
-    if (isFetching) {
-      return (
-        <div
-          style={{
-            position: "relative",
-            top: 50,
-            height: 300,
-            bottom: 50,
-            marginLeft: "50%"
-          }}
-        >
-          <MDSpinner size={24} />
-        </div>
-      );
-    }
     return (
       <div className={gridStyles.Container}>
         <div className={`${gridStyles.Row}`}>
           <div
             className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
           >
-            <div className={`${gridStyles.FloatRight} ${styles.TemplateTypeBadge}`}>
+            <div
+              className={`${gridStyles.FloatRight} ${styles.TemplateTypeBadge}`}
+            >
               {template.type}
             </div>
-            <h5>
-              {template.name}{" "}
-            </h5>
+            <h5>{template.name} </h5>
             <hr />
           </div>
         </div>
         <div className={`${gridStyles.Row}`}>
-          <div className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12} ${formStyles.FormGroup}`}>
+          <div
+            className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12} ${formStyles.FormGroup}`}
+          >
             <input
               className={formStyles.FormControl}
               type="text"
               defaultValue={template.subject}
               placeholder="Provide a subject, please"
+              ref={subject => {
+                this.messageSubject = subject;
+              }}
             />
           </div>
         </div>
         <div className={`${gridStyles.Row}`}>
-          <div className={`${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs12} ${formStyles.FormGroup}`}>
+          <div
+            className={`${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs12} ${formStyles.FormGroup}`}
+          >
             <textarea
               spellCheck={false}
               className={formStyles.FormControl}
               id="templatePreview"
               rows="12"
               defaultValue={template.text}
+              ref={body => {
+                this.messageBody = body;
+              }}
             />
             <small className="text-muted">TEMPLATE</small>
           </div>
@@ -184,8 +220,22 @@ class Detail extends Component {
           >
             <button
               type="button"
+              style={{
+                float: "right"
+              }}
+              className={`${buttonStyles.Button} ${buttonStyles.Danger} ${buttonStyles.Small}`}
+              onClick={this.handleDeleteTemplate}
+            >
+              <FormattedMessage
+                id="alarmtemplates_app.delete_template"
+                defaultMessage="Delete template"
+              />
+              <Ink />
+            </button>
+            <button
+              type="button"
               className={`${buttonStyles.Button} ${buttonStyles.Success}`}
-              onClick={() => console.log("Save template")}
+              onClick={this.handleSaveTemplate}
             >
               <FormattedMessage
                 id="alarmtemplates_app.save_template"
@@ -202,13 +252,27 @@ class Detail extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    template: state.alarms.template,
-    isFetching: state.alarms.isFetching
+    template: state.alarms._templates.currentTemplate || null,
+    isFetching: state.alarms._templates.isFetching
   };
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
+    doDeleteTemplateById: id => {
+      dispatch(removeAlarmById(id));
+      ownProps.history.push("/alarms/templates");
+      setTimeout(() => {
+        dispatch(fetchPaginatedTemplates());
+      }, 500);
+    },
+    doSaveTemplateById: (data, id) => {
+      dispatch(updateTemplate(data, id));
+      ownProps.history.push("/alarms/templates");
+      setTimeout(() => {
+        dispatch(fetchPaginatedTemplates());
+      }, 500);
+    },
     doFetchTemplateDetails: id => {
       dispatch(fetchAlarmTemplateDetailsById(id));
     }

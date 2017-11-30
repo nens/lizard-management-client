@@ -15,6 +15,32 @@
   border-radius: 0;
   transition: all 0.15s ease-in-out;
 }
+
+
+
+.Danger {
+  color: #fff;
+  background-color: #BE404A;
+  border-color: #BE404A;
+}
+.Danger:active {
+  background-color: #BE404A;
+  background-image: none;
+  border-color: #BE404A;
+  outline: 0;
+  box-shadow: 0 0 0 3px rgba(205, 0, 31, 0.5);
+}
+.Danger:hover {
+  color: #fff;
+  background-color: #BE404A;
+  border-color: #BE404A;
+}
+.Danger:focus {
+  outline: 0;
+  box-shadow: 0 0 0 3px rgba(205, 0, 31, 0.5);
+}
+
+
 .Success {
   color: #fff;
   background-color: #00cdab;

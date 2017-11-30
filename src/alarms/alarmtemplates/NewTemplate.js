@@ -67,7 +67,7 @@ class NewTemplate extends Component {
     history.push("/alarms/templates");
   }
   render() {
-    const { template, isFetching } = this.props;
+    const { isFetching } = this.props;
     const { templateType } = this.state;
 
     const availableParameters = [
@@ -217,7 +217,7 @@ class NewTemplate extends Component {
                 className={formStyles.FormControl}
                 type="text"
                 id="subject"
-                defaultValue={template.subject}
+                defaultValue=""
               />
               <small id="helpText" className="form-text text-muted">
                 The subject will be used in e-mail messages
@@ -234,7 +234,7 @@ class NewTemplate extends Component {
               className={formStyles.FormControl}
               id="templatePreview"
               rows="12"
-              defaultValue={template.text}
+              defaultValue=""
             />
             <small className="text-muted">TEMPLATE</small>
           </div>
@@ -270,8 +270,7 @@ class NewTemplate extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    template: state.alarms.template,
-    isFetching: state.alarms.isFetching,
+    isFetching: state.alarms._templates.isFetching,
     organisation: state.bootstrap.organisation
   };
 };

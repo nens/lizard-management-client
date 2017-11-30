@@ -5,7 +5,6 @@ import { FormattedMessage } from "react-intl";
 import pluralize from "pluralize";
 import { connect } from "react-redux";
 import {
-  fetchAlarms,
   removeAlarm,
   activateAlarm,
   deActivateAlarm,
@@ -213,7 +212,6 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     fetchPaginatedAlarms: page => dispatch(fetchPaginatedAlarms(page)),
-    doFetchAlarms: () => dispatch(fetchAlarms()),
     doRemoveAlarm: uuid => dispatch(removeAlarm(uuid)),
     doActivateAlarm: uuid => dispatch(activateAlarm(uuid)),
     doDeActivateAlarm: uuid => dispatch(deActivateAlarm(uuid))

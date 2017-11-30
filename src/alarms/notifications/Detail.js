@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import MDSpinner from "react-md-spinner";
+import ThresholdChart from "./ThresholdChart";
 // import Ink from "react-ink";
 // import { FormattedMessage } from "react-intl";
+import { Map, Marker, TileLayer, WMSTileLayer } from "react-leaflet";
 import AddButton from "../../components/AddButton";
 import pluralize from "pluralize";
 import { connect } from "react-redux";
@@ -27,11 +29,11 @@ class Detail extends Component {
   }
   render() {
     const {
-      notification,
       isFetching,
       doRemoveAlarm,
       doActivateAlarm,
-      doDeActivateAlarm
+      doDeActivateAlarm,
+      currentAlarm
     } = this.props;
     if (isFetching) {
       return (
@@ -48,16 +50,17 @@ class Detail extends Component {
         </div>
       );
     }
-    if (!notification.name) {
+
+    if (!currentAlarm) {
       return null;
     }
 
-    const thresholds = notification.thresholds.map((threshold, i) => {
+    const thresholds = currentAlarm.thresholds.map((threshold, i) => {
       let alarmName = "";
       let unit = "";
       try {
-        alarmName = notification.observation_type.parameter.toLowerCase();
-        unit = notification.observation_type.unit;
+        alarmName = currentAlarm.observation_type.parameter.toLowerCase();
+        unit = currentAlarm.observation_type.unit;
       } catch (e) {}
       return (
         <div key={i} className={styles.ThresHoldsList}>
@@ -71,40 +74,116 @@ class Detail extends Component {
               className="material-icons"
             >
               access_time
-            </i>&nbsp; Alarm when {alarmName} {notification.comparison}{" "}
+            </i>&nbsp; Alarm when {alarmName} {currentAlarm.comparison}{" "}
             {threshold.value} {unit} ({threshold.warning_level.toLowerCase()})
           </div>
           <div>
-            <button type="button" className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link} ${gridStyles.FloatRight}`}>
+            <button
+              type="button"
+              className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link} ${gridStyles.FloatRight}`}
+            >
               Remove
             </button>
           </div>
         </div>
       );
     });
+    const recipientGroups = currentAlarm.messages.map((message, i) => {
+      return (
+        <div key={i} className={styles.GroupsList}>
+          {message.message.name} / {message.contact_group.name}
+          <button
+            type="button"
+            className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link} ${gridStyles.FloatRight}`}
+          >
+            Remove
+          </button>
+        </div>
+      );
+    });
+
+    const map = (currentAlarm.rasterdetail) ?
+        <Map
+          onClick={this.handleMapClick}
+          bounds={[
+            [
+              currentAlarm.rasterdetail.spatial_bounds.south,
+              currentAlarm.rasterdetail.spatial_bounds.west
+            ],
+            [
+              currentAlarm.rasterdetail.spatial_bounds.north,
+              currentAlarm.rasterdetail.spatial_bounds.east
+            ]
+          ]}
+          className={styles.MapStyle}
+        >
+          <TileLayer
+            // url="https://{s}.tiles.mapbox.com/v3/nelenschuurmans.iaa98k8k/{z}/{x}/{y}.png"
+            url="https://{s}.tiles.mapbox.com/v3/nelenschuurmans.5641a12c/{z}/{x}/{y}.png"
+            attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+          />
+          <WMSTileLayer
+            url={`https://nxt.staging.lizard.net/api/v3/wms/`}
+            styles={currentAlarm.rasterdetail.options.styles}
+            layers={currentAlarm.rasterdetail.wms_info.layer}
+            opacity={0.9}
+          />
+          <TileLayer
+            url="https://{s}.tiles.mapbox.com/v3/nelenschuurmans.0a5c8e74/{z}/{x}/{y}.png"
+            attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+          />
+          {currentAlarm.intersection ? (
+            <Marker position={[currentAlarm.intersection.geometry.coordinates[1],currentAlarm.intersection.geometry.coordinates[0]]} />
+          ) : null}
+        </Map> : null;
+
+        const chart = currentAlarm.timeseriesdetail ? (
+          <ThresholdChart
+            timeseries={currentAlarm.timeseriesdetail.data}
+            value={currentAlarm.warning_threshold}
+            parameter={
+              currentAlarm.rasterdetail.observation_type
+                ? currentAlarm.rasterdetail.observation_type.parameter
+                : null
+            }
+            unit={
+              currentAlarm.rasterdetail.observation_type
+                ? currentAlarm.rasterdetail.observation_type.unit
+                : null
+            }
+            code={
+              currentAlarm.rasterdetail.observation_type
+                ? currentAlarm.rasterdetail.observation_type.code
+                : null
+            }
+          />
+        ) : null;
+
 
     return (
       <div className={gridStyles.Container}>
         <div className={gridStyles.Row}>
-          <div className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}>
+          <div
+            className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
+          >
             <div className={styles.Header}>
               <div className={styles.HeaderLeft}>
                 <div
-                  className={`${notification.active
+                  className={`${currentAlarm.active
                     ? styles.Active
                     : styles.InActive} ${styles.ActiveIndicator}`}
                 >
-                  {notification.active ? "ACTIVE" : "INACTIVE"}
+                  {currentAlarm.active ? "ACTIVE" : "INACTIVE"}
                 </div>
                 <div>
-                  <p className={styles.Name}>{notification.name}</p>
+                  <p className={styles.Name}>{currentAlarm.name}</p>
                   <p className={`text-muted ${styles.Counts}`}>
-                    {notification.thresholds.length}{" "}
-                    {pluralize("threshold", notification.thresholds.length)},{" "}
-                    {notification.messages.length}{" "}
+                    {currentAlarm.thresholds.length}{" "}
+                    {pluralize("threshold", currentAlarm.thresholds.length)},{" "}
+                    {currentAlarm.messages.length}{" "}
                     {pluralize(
                       "recipient group",
-                      notification.messages.length
+                      currentAlarm.messages.length
                     )}{" "}
                   </p>
                 </div>
@@ -114,11 +193,11 @@ class Detail extends Component {
                 type="button"
                 className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link}`}
                 onClick={() =>
-                  notification.active
-                    ? doDeActivateAlarm(notification.uuid)
-                    : doActivateAlarm(notification.uuid)}
+                  currentAlarm.active
+                    ? doDeActivateAlarm(currentAlarm.uuid)
+                    : doActivateAlarm(currentAlarm.uuid)}
               >
-                {notification.active ? "Deactivate" : "Activate"}
+                {currentAlarm.active ? "Deactivate" : "Activate"}
               </button>
 
               <button
@@ -126,7 +205,7 @@ class Detail extends Component {
                 className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link}`}
                 onClick={() => {
                   if (window.confirm("Are you sure?")) {
-                    doRemoveAlarm(notification.uuid);
+                    doRemoveAlarm(currentAlarm.uuid);
                     this.props.history.push("/alarms/notifications");
                   }
                 }}
@@ -139,38 +218,55 @@ class Detail extends Component {
         <hr />
 
         <div className={gridStyles.Row}>
-          <div className={`${gridStyles.colLg5} ${gridStyles.colMd5} ${gridStyles.colSm5} ${gridStyles.colXs12}`}>
-            <h5>Notifications</h5>
-            <p className="text-muted">No notifications</p>
+          <div
+            className={`${gridStyles.colLg5} ${gridStyles.colMd5} ${gridStyles.colSm5} ${gridStyles.colXs12}`}
+          >
+            <h3>Map</h3>
+            {map || <p>Not available</p>}
+            <hr />
+            <h3>Chart</h3>
+            {chart || <p>Not available</p>}
           </div>
-          <div className={`${gridStyles.colLg7} ${gridStyles.colMd7} ${gridStyles.colSm7} ${gridStyles.colXs12}`}>
+          <div
+            className={`${gridStyles.colLg7} ${gridStyles.colMd7} ${gridStyles.colSm7} ${gridStyles.colXs12}`}
+          >
             <div className={gridStyles.Row}>
-              <div className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}>
+              <div
+                className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
+              >
                 <AddButton
                   style={{ marginBottom: 10, float: "right" }}
                   handleClick={() => console.log("Add threshold")}
                   title="Add threshold"
                 />
-                <h5>Thresholds</h5>
+                <h3>Thresholds</h3>
               </div>
             </div>
             <div className={gridStyles.Row}>
-              <div className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}>
+              <div
+                className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
+              >
                 {thresholds}
               </div>
             </div>
             <hr />
             <div className={gridStyles.Row}>
-              <div className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}>
+              <div
+                className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
+              >
                 <AddButton
                   style={{ marginBottom: 10, float: "right" }}
                   handleClick={() => console.log("Add group")}
                   title="Add group"
                 />
-                <h5>Recipient groups</h5>
+                <h3>Recipient groups</h3>
               </div>
-              <div className={gridStyles.ColMd6}>
-
+            </div>
+            <div className={gridStyles.Row}>
+              <div
+                className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
+              >
+                {recipientGroups}
               </div>
             </div>
           </div>
@@ -183,6 +279,7 @@ class Detail extends Component {
 const mapStateToProps = (state, ownProps) => {
   console.log(state);
   return {
+    currentAlarm: state.alarms._alarms.currentAlarm || null,
     notification: state.alarms.alarm,
     isFetching: state.alarms.isFetching
   };
