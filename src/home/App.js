@@ -8,6 +8,9 @@ import alarmIcon from "../images/alarm@3x.svg";
 import threediIcon from "../images/3di@3x.svg";
 import lizardIcon from "../images/lizard@3x.svg";
 
+// Beetje verwarrend voor mij dat dit weer helemaal App heet, maar ik
+// neem aan dat sub-management dingen zoals alarmen etc dan ook hun eigen
+// sub-App zijn?
 class App extends Component {
   constructor(props) {
     super(props);

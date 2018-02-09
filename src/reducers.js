@@ -1,3 +1,4 @@
+// Over het algemeen zijn er wel request en receive actions, maar geen error handling!
 import { combineReducers } from "redux";
 import {
   DISMISS_NOTIFICATION,
@@ -42,7 +43,7 @@ import {
 
 function alarms(
   state = {
-    _alarms: {
+    _alarms: { // Waarom die underscores?
       isFetching: false,
       total: null,
       currentPage: null,
@@ -52,7 +53,7 @@ function alarms(
     _contactGroups: {
       isFetching: false,
       total: null,
-      currentPage: 1, // id
+      currentPage: 1, // id // Wat betekent dat commentaar "id"? Is het niet gewoon een paginanr?
       currentContactGroup: null,
       contactGroups: []
     },
@@ -79,13 +80,13 @@ function alarms(
         ...state,
         _alarms: {
           ...state._alarms,
-          isFetching: true
+          isFetching: true // Bij dit soort dingen twijfel ik altijd: Moet je als fetching true wordt de andere dingen niet resetten? Nu is het onduidelijk of die data gebruikt mag worden.
         }
       };
     case RECEIVE_PAGINATED_ALARMS:
       return {
         ...state,
-        _alarms: {
+        _alarms: { // Hier updaten we alles, behalve currentAlarm. Ik zie aan de code niet waarom.
           ...state._alarms,
           total: action.data.count,
           alarms: action.data.results,

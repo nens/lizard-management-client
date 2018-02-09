@@ -74,6 +74,19 @@ class Detail extends Component {
   render() {
     const { template, isFetching } = this.props;
 
+    // Algemeen gevoel en een beetje laat, maar als je ziet hoeveel
+    // logica we overal nodig hebben om in
+    // JS dingen op te halen, hoeveel we moeten aangeven dat dingen fetching zijn etc...
+    // Heb ik het gevoel dat dit het type applicatie is waarbij traditionele Django
+    // templates en normale form submits / nieuwe pagina's veel beter werken dan een
+    // single page JS app.
+
+    // Een van de problemen is dat alle input hier gevalideerd moet worden, maar natuurlijk
+    // ook aan de server side, en dan is er een kans dat het uit elkaar gaat lopen.
+
+    // Alle extra foutafhandeling die je nodig hebt als een request faalt is een ander punt.
+
+    // Maar: wizards gaan wel veel handiger met een single page app.
     if (isFetching || !template) {
       return (
         <div
@@ -252,6 +265,7 @@ class Detail extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
+    // Selector functies? Dan hoeft de kennis van de structuur van de state alleen in reducers.js
     template: state.alarms._templates.currentTemplate || null,
     isFetching: state.alarms._templates.isFetching
   };
@@ -259,6 +273,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
+    // Dit soort functies zou ik in actions.js zetten, geen logica in mapDispatchToProps
     doDeleteTemplateById: id => {
       dispatch(removeAlarmById(id));
       ownProps.history.push("/alarms/templates");

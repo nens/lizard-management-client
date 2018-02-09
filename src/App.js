@@ -19,6 +19,7 @@ class App extends Component {
     this.state = {
       showOrganisationSwitcher: false
     };
+    // Gek dat dit een property is van deze class, misschien een constant ergens
     this.uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
   }
   componentDidMount() {
@@ -26,13 +27,14 @@ class App extends Component {
     this.props.getOrganisations();
   }
   computeBreadcrumb() {
+    // Dit werkt niet als we # routes gebruiken denk ik, en het is brittle, te hacky.
     const { pathname } = this.props.location;
     const splitPathnames = pathname.slice().split("/");
     return pathname === "/"
       ? null
       : splitPathnames.map((sp, i) => {
           const to = `/${splitPathnames.slice(1, i + 1).join("/")}`;
-          let title = sp;
+        let title = sp;
           if (this.uuidRegex.test(sp)) {
             title = "Detail";
           }
@@ -220,7 +222,7 @@ class App extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    isFetching: state.isFetching,
+    isFetching: state.isFetching, // Deze bestaat niet op de state, maar je gebruikt hem ook niet
     bootstrap: state.bootstrap
   };
 };
