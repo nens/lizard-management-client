@@ -158,7 +158,6 @@ export function fetchAlarmTemplateDetailsById(id) {
   };
 }
 
-
 export function createTemplate(data) {
   return (dispatch, getState) => {
     dispatch(requestNewTemplate());
@@ -200,25 +199,16 @@ export function removeAlarmById(id) {
       credentials: "same-origin",
       method: "DELETE",
       headers: { "Content-Type": "application/json" }
-    })
-      .then(response => {
-        if (response.status === 204) {
-          dispatch(addNotification(`Template removed`, 2000));
-          return Promise.resolve();
-        } else {
-          return Promise.error("500");
-        }
-      });
+    }).then(response => {
+      if (response.status === 204) {
+        dispatch(addNotification(`Template removed`, 2000));
+        return Promise.resolve();
+      } else {
+        return Promise.error("500");
+      }
+    });
   };
 }
-
-
-
-
-
-
-
-
 
 // MARK: Alarms
 export const RECEIVE_ACTIVATE_ALARM = "RECEIVE_ACTIVATE_ALARM";
@@ -233,8 +223,111 @@ export const REQUEST_NEW_ALARM = "REQUEST_NEW_ALARM";
 export const REQUEST_REMOVE_ALARM = "REQUEST_REMOVE_ALARM";
 export const REQUEST_PAGINATED_ALARMS = "REQUEST_PAGINATED_ALARMS";
 export const RECEIVE_PAGINATED_ALARMS = "RECEIVE_PAGINATED_ALARMS";
+export const RECEIVE_REMOVE_THRESHOLD_FROM_ALARM =
+  "RECEIVE_REMOVE_THRESHOLD_FROM_ALARM";
+export const RECEIVE_REMOVE_MESSAGE_FROM_ALARM =
+  "RECEIVE_REMOVE_MESSAGE_FROM_ALARM";
+export const RECEIVE_ADD_THRESHOLD_TO_ALARM = "RECEIVE_ADD_THRESHOLD_TO_ALARM";
 
 
+function receiveAddThresholdToAlarm(data) {
+  return {
+    type: RECEIVE_ADD_THRESHOLD_TO_ALARM,
+    data,
+  };
+}
+
+
+export function addThresholdToAlarm(uuid, value, warning_level) {
+  return (dispatch, getState) => {
+    let thresholds = getState().alarms._alarms.currentAlarm.thresholds;
+    thresholds.push({
+      value,
+      warning_level
+    });
+    fetch(`/api/v3/rasteralarms/${uuid}/`, {
+      credentials: "same-origin",
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        thresholds
+      })
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        dispatch(receiveAddThresholdToAlarm(data));
+      });
+
+  }
+}
+
+
+
+function receiveRemoveMessageFromAlarm(data) {
+  return {
+    type: RECEIVE_REMOVE_MESSAGE_FROM_ALARM,
+    data
+  };
+}
+
+export function removeMessageFromAlarmByIdx(uuid, idx) {
+  return (dispatch, getState) => {
+    const messages = getState().alarms._alarms.currentAlarm.messages.filter(
+      (message, i) => {
+        if (i === idx) {
+          return false;
+        }
+        return message;
+      }
+    );
+    fetch(`/api/v3/rasteralarms/${uuid}/`, {
+      credentials: "same-origin",
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        messages
+      })
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        dispatch(receiveRemoveMessageFromAlarm(data));
+      });
+  };
+}
+
+function receiveRemoveThresholdFromAlarm(data) {
+  return {
+    type: RECEIVE_REMOVE_THRESHOLD_FROM_ALARM,
+    data
+  };
+}
+
+export function removeThresholdFromAlarmByIdx(uuid, idx) {
+  return (dispatch, getState) => {
+    const thresholds = getState().alarms._alarms.currentAlarm.thresholds.filter(
+      (threshold, i) => {
+        if (i === idx) {
+          return false;
+        }
+        return threshold;
+      }
+    );
+    fetch(`/api/v3/rasteralarms/${uuid}/`, {
+      credentials: "same-origin",
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        thresholds
+      })
+    })
+      .then(response => response.json())
+      .then(data => {
+        dispatch(receiveRemoveThresholdFromAlarm(data));
+      });
+  };
+}
 
 function requestNotificationDetails() {
   return {
@@ -588,7 +681,6 @@ export const REQUEST_PAGINATED_CONTACTGROUPS =
 export const RECEIVE_PAGINATED_CONTACTGROUPS =
   "RECEIVE_PAGINATED_CONTACTGROUPS";
 
-
 function requestNewGroup() {
   return {
     type: REQUEST_NEW_GROUP
@@ -732,7 +824,6 @@ export function addContactToGroup(contact, groupId) {
 export const RECEIVE_ORGANISATIONS = "RECEIVE_ORGANISATIONS";
 export const REQUEST_ORGANISATIONS = "REQUEST_ORGANISATIONS";
 export const SELECT_ORGANISATION = "SELECT_ORGANISATION";
-
 
 function receiveOrganisations(data) {
   return {

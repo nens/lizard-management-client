@@ -27,6 +27,8 @@ import {
   REQUEST_CONTACTS,
   REQUEST_LIZARD_BOOTSTRAP,
   REQUEST_NEW_ALARM,
+  RECEIVE_REMOVE_MESSAGE_FROM_ALARM,
+  RECEIVE_REMOVE_THRESHOLD_FROM_ALARM,
   REQUEST_NEW_GROUP,
   REQUEST_NEW_TEMPLATE,
   REQUEST_ORGANISATIONS,
@@ -74,6 +76,28 @@ function alarms(
   action
 ) {
   switch (action.type) {
+    case RECEIVE_REMOVE_MESSAGE_FROM_ALARM:
+      return {
+        ...state,
+        _alarms: {
+          ...state._alarms,
+          currentAlarm: {
+            ...state._alarms.currentAlarm,
+            messages: action.data.messages
+          }
+        }
+      };
+    case RECEIVE_REMOVE_THRESHOLD_FROM_ALARM:
+      return {
+        ...state,
+        _alarms: {
+          ...state._alarms,
+          currentAlarm: {
+            ...state._alarms.currentAlarm,
+            thresholds: action.data.thresholds
+          }
+        }
+      };
     case REQUEST_PAGINATED_ALARMS:
       return {
         ...state,
