@@ -56,3 +56,13 @@
   width: 100%;
   height: 400px;
 }
+
+
+.Thresholds {
+}
+.Threshold {
+  width: 100%;
+  border: 1px solid #a5a5a5;
+  padding: 5px;
+  margin: 0 0 10px 0;
+}

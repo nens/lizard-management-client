@@ -5,10 +5,14 @@ import ThresholdChart from "./ThresholdChart";
 // import { FormattedMessage } from "react-intl";
 import { Map, Marker, TileLayer, WMSTileLayer } from "react-leaflet";
 import AddButton from "../../components/AddButton";
+import ConfigureThreshold from "./ConfigureThreshold";
 import pluralize from "pluralize";
 import { connect } from "react-redux";
 import {
+  addThresholdToAlarm,
   fetchNotificationDetailsById,
+  removeThresholdFromAlarmByIdx,
+  removeMessageFromAlarmByIdx,
   removeAlarm,
   activateAlarm,
   deActivateAlarm
@@ -18,23 +22,82 @@ import buttonStyles from "../../styles/Buttons.css";
 import gridStyles from "../../styles/Grid.css";
 import { withRouter } from "react-router-dom";
 
+async function fetchContactsAndMessages() {
+  try {
+    const groups = await fetch("/api/v3/contactgroups/", {
+      credentials: "same-origin"
+    })
+      .then(response => response.json())
+      .then(data => data.results);
+    const messages = await fetch("/api/v3/messages/", {
+      credentials: "same-origin"
+    })
+      .then(response => response.json())
+      .then(data => data.results);
+    return {
+      groups,
+      messages
+    };
+  } catch (e) {
+    throw new Error(e);
+  }
+}
+
 class Detail extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      showConfigureThreshold: false,
+      availableGroups: [],
+      availableMessages: []
+    };
+    this.hideConfigureThreshold = this.hideConfigureThreshold.bind(this);
+    this.handleAddThreshold = this.handleAddThreshold.bind(this);
   }
   componentDidMount() {
     const { match, doFetchNotificationDetails } = this.props;
     doFetchNotificationDetails(match.params.id);
+    document.addEventListener("keydown", this.hideConfigureThreshold, false);
+    fetchContactsAndMessages().then(data => {
+      this.setState({
+        availableGroups: data.groups,
+        availableMessages: data.messages
+      });
+    });
+  }
+  componentWillUnmount() {
+    document.removeEventListener("keydown", this.hideConfigureThreshold, false);
+  }
+  hideConfigureThreshold(e) {
+    if (e.key === "Escape") {
+      this.setState({
+        showConfigureThreshold: false
+      });
+    }
+  }
+  handleAddThreshold(value, warning_level) {
+    this.props.addThresholdToAlarm(
+      this.props.match.params.id,
+      value,
+      warning_level
+    );
   }
   render() {
+    const {
+      showConfigureThreshold,
+      availableGroups,
+      availableMessages
+    } = this.state;
     const {
       isFetching,
       doRemoveAlarm,
       doActivateAlarm,
       doDeActivateAlarm,
-      currentAlarm
+      currentAlarm,
+      removeThresholdFromAlarmByIdx,
+      removeMessageFromAlarmByIdx
     } = this.props;
+
     if (isFetching) {
       return (
         <div
@@ -80,6 +143,8 @@ class Detail extends Component {
           <div>
             <button
               type="button"
+              onClick={() =>
+                removeThresholdFromAlarmByIdx(currentAlarm.uuid, i)}
               className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link} ${gridStyles.FloatRight}`}
             >
               Remove
@@ -88,13 +153,33 @@ class Detail extends Component {
         </div>
       );
     });
+
     const recipientGroups = currentAlarm.messages.map((message, i) => {
       return (
-        <div key={i} className={styles.GroupsList}>
-          {message.message.name} / {message.contact_group.name}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            margin: 5
+          }}
+          key={i}
+        >
+          <div>
+            <select style={{ marginRight: 5 }} defaultValue={message.contact_group.id}>
+              {availableGroups.map((g, i) => {
+                return <option key={Math.floor(Math.random()*100000)} value={g.id}>{g.name}</option>;
+              })}
+            </select>
+            <select defaultValue={message.message.id}>
+              {availableMessages.map((m, j) => {
+                return <option key={Math.floor(Math.random()*100000)} value={m.id}>{m.name}</option>;
+              })}
+            </select>
+          </div>
           <button
             type="button"
-            className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link} ${gridStyles.FloatRight}`}
+            onClick={() => removeMessageFromAlarmByIdx(currentAlarm.uuid, i)}
+            className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link}`}
           >
             Remove
           </button>
@@ -102,63 +187,68 @@ class Detail extends Component {
       );
     });
 
-    const map = (currentAlarm.rasterdetail) ?
-        <Map
-          onClick={this.handleMapClick}
-          bounds={[
-            [
-              currentAlarm.rasterdetail.spatial_bounds.south,
-              currentAlarm.rasterdetail.spatial_bounds.west
-            ],
-            [
-              currentAlarm.rasterdetail.spatial_bounds.north,
-              currentAlarm.rasterdetail.spatial_bounds.east
-            ]
-          ]}
-          className={styles.MapStyle}
-        >
-          <TileLayer
-            // url="https://{s}.tiles.mapbox.com/v3/nelenschuurmans.iaa98k8k/{z}/{x}/{y}.png"
-            url="https://{s}.tiles.mapbox.com/v3/nelenschuurmans.5641a12c/{z}/{x}/{y}.png"
-            attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+    const map = currentAlarm.rasterdetail ? (
+      <Map
+        onClick={this.handleMapClick}
+        bounds={[
+          [
+            currentAlarm.rasterdetail.spatial_bounds.south,
+            currentAlarm.rasterdetail.spatial_bounds.west
+          ],
+          [
+            currentAlarm.rasterdetail.spatial_bounds.north,
+            currentAlarm.rasterdetail.spatial_bounds.east
+          ]
+        ]}
+        className={styles.MapStyle}
+      >
+        <TileLayer
+          // url="https://{s}.tiles.mapbox.com/v3/nelenschuurmans.iaa98k8k/{z}/{x}/{y}.png"
+          url="https://{s}.tiles.mapbox.com/v3/nelenschuurmans.5641a12c/{z}/{x}/{y}.png"
+          attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+        />
+        <WMSTileLayer
+          url={`https://nxt.staging.lizard.net/api/v3/wms/`}
+          styles={currentAlarm.rasterdetail.options.styles}
+          layers={currentAlarm.rasterdetail.wms_info.layer}
+          opacity={0.9}
+        />
+        <TileLayer
+          url="https://{s}.tiles.mapbox.com/v3/nelenschuurmans.0a5c8e74/{z}/{x}/{y}.png"
+          attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+        />
+        {currentAlarm.intersection ? (
+          <Marker
+            position={[
+              currentAlarm.intersection.geometry.coordinates[1],
+              currentAlarm.intersection.geometry.coordinates[0]
+            ]}
           />
-          <WMSTileLayer
-            url={`https://nxt.staging.lizard.net/api/v3/wms/`}
-            styles={currentAlarm.rasterdetail.options.styles}
-            layers={currentAlarm.rasterdetail.wms_info.layer}
-            opacity={0.9}
-          />
-          <TileLayer
-            url="https://{s}.tiles.mapbox.com/v3/nelenschuurmans.0a5c8e74/{z}/{x}/{y}.png"
-            attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-          />
-          {currentAlarm.intersection ? (
-            <Marker position={[currentAlarm.intersection.geometry.coordinates[1],currentAlarm.intersection.geometry.coordinates[0]]} />
-          ) : null}
-        </Map> : null;
+        ) : null}
+      </Map>
+    ) : null;
 
-        const chart = currentAlarm.timeseriesdetail ? (
-          <ThresholdChart
-            timeseries={currentAlarm.timeseriesdetail.data}
-            value={currentAlarm.warning_threshold}
-            parameter={
-              currentAlarm.rasterdetail.observation_type
-                ? currentAlarm.rasterdetail.observation_type.parameter
-                : null
-            }
-            unit={
-              currentAlarm.rasterdetail.observation_type
-                ? currentAlarm.rasterdetail.observation_type.unit
-                : null
-            }
-            code={
-              currentAlarm.rasterdetail.observation_type
-                ? currentAlarm.rasterdetail.observation_type.code
-                : null
-            }
-          />
-        ) : null;
-
+    const chart = currentAlarm.timeseriesdetail ? (
+      <ThresholdChart
+        timeseries={currentAlarm.timeseriesdetail.data}
+        value={currentAlarm.warning_threshold}
+        parameter={
+          currentAlarm.rasterdetail.observation_type
+            ? currentAlarm.rasterdetail.observation_type.parameter
+            : null
+        }
+        unit={
+          currentAlarm.rasterdetail.observation_type
+            ? currentAlarm.rasterdetail.observation_type.unit
+            : null
+        }
+        code={
+          currentAlarm.rasterdetail.observation_type
+            ? currentAlarm.rasterdetail.observation_type.code
+            : null
+        }
+      />
+    ) : null;
 
     return (
       <div className={gridStyles.Container}>
@@ -236,7 +326,10 @@ class Detail extends Component {
               >
                 <AddButton
                   style={{ marginBottom: 10, float: "right" }}
-                  handleClick={() => console.log("Add threshold")}
+                  handleClick={() =>
+                    this.setState({
+                      showConfigureThreshold: true
+                    })}
                   title="Add threshold"
                 />
                 <h3>Thresholds</h3>
@@ -271,13 +364,20 @@ class Detail extends Component {
             </div>
           </div>
         </div>
+        {showConfigureThreshold ? (
+          <ConfigureThreshold
+            handleAddThreshold={this.handleAddThreshold}
+            raster={currentAlarm.rasterdetail}
+            timeseries={currentAlarm.timeseriesdetail.data}
+            handleClose={() => this.setState({ showConfigureThreshold: false })}
+          />
+        ) : null}
       </div>
     );
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
-  console.log(state);
   return {
     currentAlarm: state.alarms._alarms.currentAlarm || null,
     notification: state.alarms.alarm,
@@ -287,6 +387,15 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
+    addThresholdToAlarm: (id, value, warning_level) => {
+      dispatch(addThresholdToAlarm(id, value, warning_level));
+    },
+    removeMessageFromAlarmByIdx: (uuid, idx) => {
+      dispatch(removeMessageFromAlarmByIdx(uuid, idx));
+    },
+    removeThresholdFromAlarmByIdx: (uuid, idx) => {
+      dispatch(removeThresholdFromAlarmByIdx(uuid, idx));
+    },
     doFetchNotificationDetails: id => {
       dispatch(fetchNotificationDetailsById(id));
     },
