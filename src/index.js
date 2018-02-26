@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import configureStore from "./configureStore";
 import { addLocaleData, IntlProvider } from "react-intl";
-import { BrowserRouter as Router } from "react-router-dom";
+import { HashRouter as Router } from "react-router-dom";
 import App from "./App";
 
 import registerServiceWorker from "./registerServiceWorker";
@@ -16,7 +16,7 @@ let store = configureStore();
 addLocaleData([...nl]);
 
 // React-router basename (https://reacttraining.com/react-router/web/api/BrowserRouter/basename-string)
-const basename = "/management";
+const basename = "/";
 
 // Create multiple languages object
 const localeData = {
