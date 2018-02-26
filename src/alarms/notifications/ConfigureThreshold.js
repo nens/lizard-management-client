@@ -42,7 +42,7 @@ class ConfigureThreshold extends Component {
     });
   }
   render() {
-    const { handleClose, raster, timeseries, handleAddThreshold } = this.props;
+    const { handleClose, raster, timeseries, handleAddThreshold } = this.props;    
     const { value, warning_level } = this.state;
     return (
       <div className={styles.ConfigureThresholdContainer}>
