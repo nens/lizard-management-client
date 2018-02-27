@@ -182,9 +182,5 @@
         "password": ""
       }
     }
-  },
-  "github": {
-    "release": true,
-    "assets": "dist/lizard-management-client.zip"
   }
 }
