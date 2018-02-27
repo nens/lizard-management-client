@@ -4793,6 +4793,10 @@ miller-rabin@^4.0.0:
   version "1.30.0"
   resolved "https://registry.yarnpkg.com/mime-db/-/mime-db-1.30.0.tgz#74c643da2dd9d6a45399963465b26d5ca7d71f01"
 
+mime-lookup@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/mime-lookup/-/mime-lookup-0.0.2.tgz#a3525d262c42e4cada585991f850038a5d5d241d"
+
 mime-types@^2.1.12, mime-types@~2.1.15, mime-types@~2.1.16, mime-types@~2.1.17:
   version "2.1.17"
   resolved "https://registry.yarnpkg.com/mime-types/-/mime-types-2.1.17.tgz#09d7a393f03e995a79f8af857b70a9e0ab16557a"
