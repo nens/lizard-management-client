@@ -1,6 +1,6 @@
 {
   "name": "lizard-management-client",
-  "version": "0.1.14",
+  "version": "0.1.15",
   "private": true,
   "repository": {
     "type": "git",
@@ -100,7 +100,7 @@
   },
   "scripts": {
     "start": "node scripts/start.js",
-    "build": "node scripts/build.js",
+    "build": "node scripts/build.js && scripts/makedist.sh",
     "test": "node scripts/test.js --env=jsdom",
     "release": "release-it --verbose",
     "staging-deploy": "read -p 'Version? (see above) ' V && test $V && ansible-playbook -i deploy/hosts -K deploy/deploy.yml --limit=staging --extra-vars=\"sitename=staging.nxt.lizard.net version=v$V\"",
@@ -182,5 +182,9 @@
         "password": ""
       }
     }
+  },
+  "github": {
+    "release": true,
+    "assets": "dist/lizard-management-client.zip"
   }
 }
