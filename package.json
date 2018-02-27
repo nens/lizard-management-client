@@ -1,6 +1,6 @@
 {
   "name": "lizard-management-client",
-  "version": "0.1.16",
+  "version": "0.1.17",
   "private": true,
   "repository": {
     "type": "git",
@@ -50,6 +50,7 @@
     "lodash": "^4.17.4",
     "lodash.debounce": "^4.0.8",
     "lodash.find": "^4.6.0",
+    "mime": "^2.2.0",
     "object-assign": "4.1.1",
     "pluralize": "^7.0.0",
     "pondjs": "^0.8.7",
