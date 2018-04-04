@@ -99,7 +99,7 @@
     "prettier": "^1.7.3",
     "react-hot-loader": "next",
     "react-intl-translations-manager": "^5.0.1",
-    "release-it": "git+https://git@github.com/webpro/release-it.git"
+    "release-it": "7.3.0"
   },
   "scripts": {
     "start": "node scripts/start.js",
