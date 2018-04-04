@@ -38,7 +38,8 @@ const Root = ({ store }) => (
 );
 
 ReactDOM.render(<Root store={store} />, document.getElementById("root"));
-registerServiceWorker();
+// Does not work correctly with /management/otherthings/ URLs
+// registerServiceWorker();
 
 if (module.hot) {
   module.hot.accept("./App", () => {
