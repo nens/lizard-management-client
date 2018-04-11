@@ -329,7 +329,7 @@ class NewNotification extends Component {
                                 attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
                               />
                               <WMSTileLayer
-                                url={`https://nxt.staging.lizard.net/api/v3/wms/`}
+                                url={`/api/v3/wms/`}
                                 styles={raster.options.styles}
                                 layers={raster.wms_info.layer}
                                 opacity={0.9}
