@@ -42,7 +42,7 @@ class Detail extends Component {
 
     document.addEventListener("keydown", this.hideConfigureThreshold, false);
 
-    // Load the raster alarm detail data and 
+    // Load the raster alarm detail data and
     this.fetchAlarmAndRasterDetails(match.params.id);
 
     this.fetchContactsAndMessages(organisationId);
@@ -126,12 +126,47 @@ class Detail extends Component {
       });
     }
   }
+
   handleAddThreshold(value, warning_level) {
-    this.props.addThresholdToAlarm(
-      this.props.match.params.id,
-      value,
-      warning_level
-    );
+    const { match, addNotification } = this.props;
+    const { rasteralarm } = this.state;
+    console.log("match.params.id", match.params.id);
+    console.log("value", value);
+    console.log("warning_level", warning_level);
+
+    // this.props.addThresholdToAlarm(
+    //   this.props.match.params.id,
+    //   value,
+    //   warning_level
+    // );
+
+    const updatedThresholds = [
+      ...rasteralarm.thresholds,
+      {
+        value: value,
+        warning_level: warning_level
+      }
+    ];
+
+    fetch(`/api/v3/rasteralarms/${rasteralarm.uuid}/`, {
+      credentials: "same-origin",
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        thresholds: updatedThresholds
+      })
+    })
+      .then(response => response.json())
+      .then(data => {
+        this.setState({
+          ...this.state,
+          rasteralarm: {
+            ...this.state.rasteralarm,
+            thresholds: updatedThresholds
+          }
+        });
+        addNotification(`Threshold with value ${value} (${warning_level}) added`, 2000);
+      });
   }
 
   activateAlarm(uuid) {
@@ -190,6 +225,7 @@ class Detail extends Component {
   }
 
   removeThresholdByIdx(uuid, idx) {
+    const { addNotification } = this.props;
     (async () => {
       const thresholds = await fetch(`/api/v3/rasteralarms/${uuid}`, {
         credentials: "same-origin",
@@ -214,6 +250,7 @@ class Detail extends Component {
       })
         .then(response => response.json())
         .then(data => {
+          addNotification(`Threshold removed from alarm`, 2000);
           this.setState({
             rasteralarm: {
               ...this.state.rasteralarm,
