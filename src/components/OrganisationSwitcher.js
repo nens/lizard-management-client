@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { fetchAll, fetchOrganisations, selectOrganisation } from "../actions";
+import { fetchOrganisations, selectOrganisation } from "../actions";
 import styles from "./OrganisationSwitcher.css";
 import formStyles from "../styles/Forms.css";
 import { Scrollbars } from "react-custom-scrollbars";
@@ -28,7 +28,11 @@ class OrganisationSwitcher extends Component {
   }
   componentWillUnmount() {
     window.removeEventListener("resize", this.handleResize, false);
-    document.removeEventListener("keydown", this.hideOrganisationSwitcher, false);
+    document.removeEventListener(
+      "keydown",
+      this.hideOrganisationSwitcher,
+      false
+    );
   }
   hideOrganisationSwitcher(e) {
     if (e.key === "Escape") {
@@ -48,6 +52,7 @@ class OrganisationSwitcher extends Component {
   }
   selectOrganisation(organisation) {
     this.props.selectOrganisation(organisation);
+    window.location.reload();
   }
   render() {
     const {
@@ -158,7 +163,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     getOrganisations: () => dispatch(fetchOrganisations()),
     selectOrganisation: organisation => {
       dispatch(selectOrganisation(organisation));
-      dispatch(fetchAll());
     }
   };
 };
