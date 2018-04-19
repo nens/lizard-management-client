@@ -184,7 +184,11 @@ class App extends Component {
                     />
                   </div>
                   <div>
-                    <a href="https://www.lizard.net/support/">
+                    <a
+                      href="https://www.lizard.net/support/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <i
                         style={{
                           position: "relative",
