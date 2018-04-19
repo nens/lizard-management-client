@@ -11,7 +11,6 @@ import { Detail as AlarmGroupsDetail } from "./alarmgroups/Detail";
 import { Detail as AlarmTemplatesDetail } from "./alarmtemplates/Detail";
 import { Detail as NotificationsDetail } from "./notifications/Detail";
 import React, { Component } from "react";
-// import { FormattedMessage } from "react-intl";
 import { Route, Switch, withRouter } from "react-router-dom";
 
 class App extends Component {
