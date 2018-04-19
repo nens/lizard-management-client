@@ -3,7 +3,6 @@ import MDSpinner from "react-md-spinner";
 import Ink from "react-ink";
 import { FormattedMessage } from "react-intl";
 import { connect } from "react-redux";
-import { createTemplate } from "../../actions";
 import styles from "./NewTemplate.css";
 import tableStyles from "../../styles/Table.css";
 import gridStyles from "../../styles/Grid.css";
@@ -52,23 +51,32 @@ class NewTemplate extends Component {
   }
   handleClickCreateTemplateButton() {
     const { templateType } = this.state;
-    const { doCreateTemplate, organisation, history } = this.props;
-    doCreateTemplate({
-      name: document.getElementById("templateName").value,
-      organisation: organisation.unique_id,
-      type: templateType,
-      subject:
-        templateType === "email"
-          ? document.getElementById("subject").value
-          : document.getElementById("templateName").value,
-      text: document.getElementById("templatePreview").value,
-      html: document.getElementById("templatePreview").value
-    });
-    history.push("/alarms/templates");
+    const { bootstrap, history } = this.props;
+    const organisationId = bootstrap.organisation.unique_id;
+
+    fetch("/api/v3/messages/", {
+      credentials: "same-origin",
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: document.getElementById("templateName").value,
+        organisation: organisationId,
+        type: templateType,
+        subject:
+          templateType === "email"
+            ? document.getElementById("subject").value
+            : document.getElementById("templateName").value,
+        text: document.getElementById("templatePreview").value,
+        html: document.getElementById("templatePreview").value
+      })
+    })
+      .then(response => response.json())
+      .then(data => {
+        history.push("/alarms/templates");
+      });
   }
   render() {
-    const { isFetching } = this.props;
-    const { templateType } = this.state;
+    const { templateType, isFetching } = this.state;
 
     const availableParameters = [
       {
@@ -110,10 +118,7 @@ class NewTemplate extends Component {
     ];
 
     const parameterTableRows = availableParameters.map((parameter, i) => {
-      if (
-        !parameter.templateType ||
-        parameter.templateType === this.state.templateType
-      ) {
+      if (!parameter.templateType || parameter.templateType === templateType) {
         return (
           <tr
             key={i}
@@ -132,11 +137,17 @@ class NewTemplate extends Component {
     });
 
     const parameterTable = (
-      <table className={`${tableStyles.TableSmall} ${tableStyles.TableStriped} ${styles.ParameterTable}`}>
+      <table
+        className={`${tableStyles.TableSmall} ${tableStyles.TableStriped} ${styles.ParameterTable}`}
+      >
         <thead>
           <tr>
-            <td><strong>Parameter</strong></td>
-            <td><strong>Description</strong></td>
+            <td>
+              <strong>Parameter</strong>
+            </td>
+            <td>
+              <strong>Description</strong>
+            </td>
           </tr>
         </thead>
         <tbody>{parameterTableRows}</tbody>
@@ -270,19 +281,13 @@ class NewTemplate extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    isFetching: state.alarms._templates.isFetching,
-    organisation: state.bootstrap.organisation
+    bootstrap: state.bootstrap
   };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => {
-  return {
-    doCreateTemplate: data => dispatch(createTemplate(data))
-  };
-};
 
 const App = withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(NewTemplate)
+  connect(mapStateToProps, null)(NewTemplate)
 );
 
 export { App };

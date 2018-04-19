@@ -2,14 +2,8 @@ import React, { Component } from "react";
 import MDSpinner from "react-md-spinner";
 import Ink from "react-ink";
 import { FormattedMessage } from "react-intl";
-// import pluralize from "pluralize";
+import { addNotification } from "../../actions";
 import { connect } from "react-redux";
-import {
-  fetchAlarmTemplateDetailsById,
-  fetchPaginatedTemplates,
-  updateTemplate,
-  removeAlarmById
-} from "../../actions";
 import styles from "./Detail.css";
 import tableStyles from "../../styles/Table.css";
 import gridStyles from "../../styles/Grid.css";
@@ -42,37 +36,75 @@ HTMLTextAreaElement.prototype.insertAtCaret = function(text) {
 class Detail extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      template: null,
+      isFetching: true
+    };
     this.handleSaveTemplate = this.handleSaveTemplate.bind(this);
     this.handleDeleteTemplate = this.handleDeleteTemplate.bind(this);
   }
   componentDidMount() {
-    const { match, doFetchTemplateDetails } = this.props;
-    doFetchTemplateDetails(match.params.id);
+    const { match, history } = this.props;
+    fetch(`/api/v3/messages/${match.params.id}/`, {
+      credentials: "same-origin"
+    })
+      .then(response => {
+        if (response.status === 404) {
+          history.push("/alarms/templates");
+        }
+        return response.json();
+      })
+      .then(data => {
+        this.setState({
+          isFetching: false,
+          template: data
+        });
+      });
   }
   handleDeleteTemplate() {
-    const { doDeleteTemplateById, match } = this.props;
-    doDeleteTemplateById(match.params.id);
+    const { match, history, addNotification } = this.props;
+    const confirmed = window.confirm("Are you sure?");
+    if (confirmed) {
+      fetch(`/api/v3/messages/${match.params.id}/`, {
+        credentials: "same-origin",
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" }
+      }).then(response => {
+        if (response.status === 204) {
+          addNotification("Template removed", 2000);
+          history.push("/alarms/templates");
+        } else {
+          alert("Unable to delete template");
+        }
+      });
+    }
   }
   handleSaveTemplate() {
-    const { doSaveTemplateById, match } = this.props;
+    const { match, history, addNotification } = this.props;
     const subject = this.messageSubject.value;
     const body = this.messageBody.value;
 
     if (body) {
-      doSaveTemplateById(
-        {
-          subject,
-          body
-        },
-        match.params.id
-      );
+      fetch(`/api/v3/messages/${match.params.id}/`, {
+          credentials: "same-origin",
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            subject: subject,
+            text: body
+          })
+        })
+          .then(response => response.json())
+          .then(data => {
+            addNotification(`Template "${subject}" updated`, 2000);
+            history.push("/alarms/templates");
+          });
     } else {
       alert("Please provide a template text");
     }
   }
   render() {
-    const { template, isFetching } = this.props;
+    const { template, isFetching } = this.state;
 
     if (isFetching || !template) {
       return (
@@ -252,29 +284,14 @@ class Detail extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    template: state.alarms._templates.currentTemplate || null,
-    isFetching: state.alarms._templates.isFetching
+    bootstrap: state.bootstrap
   };
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    doDeleteTemplateById: id => {
-      dispatch(removeAlarmById(id));
-      ownProps.history.push("/alarms/templates");
-      setTimeout(() => {
-        dispatch(fetchPaginatedTemplates());
-      }, 500);
-    },
-    doSaveTemplateById: (data, id) => {
-      dispatch(updateTemplate(data, id));
-      ownProps.history.push("/alarms/templates");
-      setTimeout(() => {
-        dispatch(fetchPaginatedTemplates());
-      }, 500);
-    },
-    doFetchTemplateDetails: id => {
-      dispatch(fetchAlarmTemplateDetailsById(id));
+    addNotification: (message, timeout) => {
+      dispatch(addNotification(message, timeout));
     }
   };
 };
