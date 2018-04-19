@@ -1,52 +1,70 @@
-import React, { Component } from "react";
-import MDSpinner from "react-md-spinner";
-import Ink from "react-ink";
-import { FormattedMessage } from "react-intl";
-import pluralize from "pluralize";
-import { connect } from "react-redux";
-import {
-  removeAlarm,
-  activateAlarm,
-  deActivateAlarm,
-  fetchPaginatedAlarms
-} from "../../actions";
-import PaginationBar from "./PaginationBar";
-import styles from "./App.css";
-import gridStyles from "../../styles/Grid.css";
-import buttonStyles from "../../styles/Buttons.css";
-import { withRouter, NavLink } from "react-router-dom";
 import alarmIcon from "../../images/alarm@3x.svg";
+import buttonStyles from "../../styles/Buttons.css";
+import gridStyles from "../../styles/Grid.css";
+import Ink from "react-ink";
+import MDSpinner from "react-md-spinner";
+import PaginationBar from "./PaginationBar";
+import { AlarmRow } from "./AlarmRow";
+import pluralize from "pluralize";
+import React, { Component } from "react";
+import styles from "./App.css";
+import { addNotification } from "../../actions";
+import { connect } from "react-redux";
+import { FormattedMessage } from "react-intl";
+import { withRouter } from "react-router-dom";
 
 class App extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      isFetching: true,
+      alarms: [],
+      total: 0,
+      page: 1
+    };
     this.handleNewNotificationClick = this.handleNewNotificationClick.bind(
       this
     );
+    this.loadAlarmsOnPage = this.loadAlarmsOnPage.bind(this);
   }
   componentDidMount() {
-    const query = new URLSearchParams(window.location.search);
-    this.props.fetchPaginatedAlarms(query.get("page") || 1);
+    const { page } = this.state;
+    this.loadAlarmsOnPage(page);
   }
+
+  loadAlarmsOnPage(page) {
+    const { bootstrap } = this.props;
+    const organisationId = bootstrap.organisation.unique_id;
+
+    fetch(
+      `/api/v3/rasteralarms/?page=${page}&organisation__unique_id=${organisationId}`,
+      {
+        credentials: "same-origin"
+      }
+    )
+      .then(response => response.json())
+      .then(data => {
+        this.setState({
+          isFetching: false,
+          total: data.count,
+          alarms: data.results
+        });
+      });
+  }
+
   handleNewNotificationClick() {
-    this.props.history.push("notifications/new");
+    const { history } = this.props;
+    history.push("notifications/new");
   }
+
   render() {
-    const {
-      alarms,
-      total,
-      currentPage,
-      isFetching,
-      doRemoveAlarm,
-      doActivateAlarm,
-      doDeActivateAlarm
-    } = this.props;
+    const { alarms, isFetching, total, page } = this.state;
 
     let numberOfNotifications = 0;
-    let results = [];
+    let alarmRows = [];
     if (total && total > 0) {
       numberOfNotifications = total;
-      results = alarms
+      alarmRows = alarms
         .slice()
         .sort((a, b) => {
           if (a.name < b.name) {
@@ -62,67 +80,13 @@ class App extends Component {
         });
     }
 
-    const alarmsTable = results.map((alarm, i) => {
-      const numberOfThresholds = alarm.thresholds.length;
-      const numberOfRecipients = alarm.messages.length;
+    const alarmsTable = alarmRows.map((alarm, i) => {
       return (
-        <div key={i} className={styles.AlarmRow}>
-          <div style={{ display: "flex" }}>
-            <div
-              className={`${alarm.active
-                ? styles.Active
-                : styles.InActive} ${styles.ActiveIndicator}`}
-            >
-              {alarm.active ? "ACTIVE" : "INACTIVE"}
-            </div>
-
-            <div>
-              <NavLink
-                to={`/alarms/notifications/${alarm.uuid}`}
-                style={{
-                  color: "#333"
-                }}
-              >
-                {alarm.name}
-              </NavLink>
-              <br />
-              <small className="text-muted">
-                {numberOfThresholds}{" "}
-                {pluralize("thresholds", numberOfThresholds)}
-                {", "}
-                {numberOfRecipients}{" "}
-                {pluralize("recipient group", numberOfRecipients)}{" "}
-              </small>
-            </div>
-          </div>
-          <div style={{ width: 250, display: "flex" }}>
-            <div style={{ width: "50%" }}>
-              <button
-                type="button"
-                className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link}`}
-                onClick={() =>
-                  alarm.active
-                    ? doDeActivateAlarm(alarm.uuid)
-                    : doActivateAlarm(alarm.uuid)}
-              >
-                {alarm.active ? "Deactivate" : "Activate"}
-              </button>
-            </div>
-            <div style={{ width: "50%" }}>
-              <button
-                type="button"
-                className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link}`}
-                onClick={() => {
-                  if (window.confirm("Are you sure?")) {
-                    doRemoveAlarm(alarm.uuid);
-                  }
-                }}
-              >
-                Remove
-              </button>
-            </div>
-          </div>
-        </div>
+        <AlarmRow
+          key={i}
+          alarm={alarm}
+          loadAlarmsOnPage={this.loadAlarmsOnPage}
+        />
       );
     });
 
@@ -175,7 +139,7 @@ class App extends Component {
               >
                 <MDSpinner size={24} />
               </div>
-            ) : results.length > 0 ? (
+            ) : alarmRows.length > 0 ? (
               alarmsTable
             ) : (
               <div className={styles.NoResults}>
@@ -190,7 +154,8 @@ class App extends Component {
             className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
           >
             <PaginationBar
-              page={currentPage}
+              loadAlarmsOnPage={this.loadAlarmsOnPage}
+              page={page}
               pages={Math.ceil(total / 10)}
             />
           </div>
@@ -202,19 +167,15 @@ class App extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    currentPage: state.alarms._alarms.currentPage,
-    total: state.alarms._alarms.total,
-    alarms: state.alarms._alarms.alarms,
-    isFetching: state.alarms._alarms.isFetching
+    bootstrap: state.bootstrap
   };
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    fetchPaginatedAlarms: page => dispatch(fetchPaginatedAlarms(page)),
-    doRemoveAlarm: uuid => dispatch(removeAlarm(uuid)),
-    doActivateAlarm: uuid => dispatch(activateAlarm(uuid)),
-    doDeActivateAlarm: uuid => dispatch(deActivateAlarm(uuid))
+    addNotification: (message, timeout) => {
+      dispatch(addNotification(message, timeout));
+    }
   };
 };
 

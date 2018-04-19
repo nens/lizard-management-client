@@ -2,27 +2,27 @@ import React, { Component } from "react";
 import debounce from "lodash.debounce";
 import SelectRaster from "../../components/SelectRaster";
 import { connect } from "react-redux";
-import { createAlarm } from "../../actions";
+import { addNotification } from "../../actions";
 import { withRouter } from "react-router-dom";
 import { Map, Marker, TileLayer, WMSTileLayer } from "react-leaflet";
 import styles from "./NewNotification.css";
 import gridStyles from "../../styles/Grid.css";
 import buttonStyles from "../../styles/Buttons.css";
-import formStyles from "../../styles/Forms.css"
+import formStyles from "../../styles/Forms.css";
 import StepIndicator from "../../components/StepIndicator";
 import GroupAndTemplateSelector from "./GroupAndTemplateSelect";
 import AddButton from "../../components/AddButton";
 import ConfigureThreshold from "./ConfigureThreshold";
 import ConfigureRecipients from "./ConfigureRecipients";
 
-async function fetchContactsAndMessages() {
+async function fetchContactsAndMessages(organisationId) {
   try {
-    const groups = await fetch("/api/v3/contactgroups/", {
+    const groups = await fetch(`/api/v3/contactgroups/?organisation__unique_id=${organisationId}`, {
       credentials: "same-origin"
     })
       .then(response => response.json())
       .then(data => data.results);
-    const messages = await fetch("/api/v3/messages/", {
+    const messages = await fetch(`/api/v3/messages/?organisation__unique_id=${organisationId}`, {
       credentials: "same-origin"
     })
       .then(response => response.json())
@@ -74,11 +74,14 @@ class NewNotification extends Component {
     );
   }
   componentDidMount() {
+    const { bootstrap } = this.props;
+    const organisationId = bootstrap.organisation.unique_id;
+
     document.getElementById("rasterName").focus();
     document.addEventListener("keydown", this.hideConfigureThreshold, false);
 
     // TODO: Pass the organisation__unique_id here:
-    fetchContactsAndMessages().then(data => {
+    fetchContactsAndMessages(organisationId).then(data => {
       this.setState({
         availableGroups: data.groups,
         availableMessages: data.messages
@@ -108,7 +111,9 @@ class NewNotification extends Component {
     });
   }
   handleActivateClick(e) {
-    const { doCreateAlarm, currentOrganisation } = this.props;
+    const { bootstrap, history, addNotification } = this.props;
+    const organisationId = bootstrap.organisation.unique_id;
+
     const {
       name,
       thresholds,
@@ -118,30 +123,41 @@ class NewNotification extends Component {
       markerPosition
     } = this.state;
 
-    doCreateAlarm({
-      name: name,
-      active: true,
-      organisation: currentOrganisation.unique_id,
-      thresholds: thresholds,
-      comparison: comparison,
-      messages: messages.map(message => {
-        return {
-          contact_group: message.groupName,
-          message: message.messageName
-        };
-      }),
-      intersection: {
-        raster: raster.uuid,
-        geometry: {
-          type: "Point",
-          coordinates: [markerPosition[1], markerPosition[0], 0.0]
+    fetch("/api/v3/rasteralarms/", {
+      credentials: "same-origin",
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: name,
+        active: true,
+        organisation: organisationId,
+        thresholds: thresholds,
+        comparison: comparison,
+        messages: messages.map(message => {
+          return {
+            contact_group: message.groupName,
+            message: message.messageName
+          };
+        }),
+        intersection: {
+          raster: raster.uuid,
+          geometry: {
+            type: "Point",
+            coordinates: [markerPosition[1], markerPosition[0], 0.0]
+          }
         }
-      }
-    });
-    this.props.history.push("/alarms/notifications");
+      })
+    })
+      .then(response => response.json())
+      .then(data => {
+        addNotification(`Alarm added and activated`, 2000);
+        history.push("/alarms/notifications");
+      });    
   }
   handleRasterSearchInput(value) {
-    const { currentOrganisation } = this.props;
+    const { bootstrap } = this.props;
+    const organisationId = bootstrap.organisation.unique_id;
+
     if (value === "") {
       this.setState({
         rasters: []
@@ -152,7 +168,8 @@ class NewNotification extends Component {
       loading: true
     });
     return fetch(
-      `/api/v3/rasters/?organisation__unique_id=${currentOrganisation.unique_id}&page_size=0&name__icontains=${value}`, {
+      `/api/v3/rasters/?organisation__unique_id=${organisationId}&page_size=0&name__icontains=${value}`,
+      {
         credentials: "same-origin"
       }
     )
@@ -185,7 +202,8 @@ class NewNotification extends Component {
 
     const { markerPosition, raster } = this.state;
     return fetch(
-      `/api/v3/raster-aggregates/?agg=curve&geom=POINT+(${markerPosition[1]}+${markerPosition[0]})&rasters=${raster.uuid}&srs=EPSG:4326&start=2008-01-01T12:00:00&stop=2017-12-31T18:00:00&window=2635200000`, {
+      `/api/v3/raster-aggregates/?agg=curve&geom=POINT+(${markerPosition[1]}+${markerPosition[0]})&rasters=${raster.uuid}&srs=EPSG:4326&start=2008-01-01T12:00:00&stop=2017-12-31T18:00:00&window=2635200000`,
+      {
         credentials: "same-origin"
       }
     )
@@ -228,6 +246,8 @@ class NewNotification extends Component {
       markerPosition,
       messages,
       raster,
+      rasters,
+      loading,
       showConfigureRecipients,
       showConfigureThreshold,
       step,
@@ -238,19 +258,21 @@ class NewNotification extends Component {
       <div>
         <div className={gridStyles.Container}>
           <div className={`${gridStyles.Row}`}>
-            <div className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}>
+            <div
+              className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
+            >
               <div id="steps" style={{ margin: "20px 0 0 20px" }}>
                 <div className={styles.Step} id="Step">
                   <div className="media">
                     <StepIndicator indicator="1" active={step === 1} />
-                    <div style={{
-                      width: "calc(100% - 90px)",
-                      marginLeft: 90
-                    }}>
+                    <div
+                      style={{
+                        width: "calc(100% - 90px)",
+                        marginLeft: 90
+                      }}
+                    >
                       <h3
-                        className={`mt-0 ${this.state.step !== 1
-                          ? "text-muted"
-                          : null}`}
+                        className={`mt-0 ${step !== 1 ? "text-muted" : null}`}
                       >
                         Raster selection
                       </h3>
@@ -264,25 +286,27 @@ class NewNotification extends Component {
                           <div className={formStyles.FormGroup}>
                             <SelectRaster
                               placeholderText="Type the name here"
-                              results={this.state.rasters}
-                              loading={this.state.loading}
+                              results={rasters}
+                              loading={loading}
                               onInput={this.handleRasterSearchInput}
                               setRaster={this.handleSetRaster}
                             />
-                            <button
-                              type="button"
-                              className={`${buttonStyles.Button} ${buttonStyles.Success}`}
-                              style={{ marginTop: 10 }}
-                              onClick={() => {
-                                if (this.state.raster) {
-                                  this.setState({
-                                    step: 2
-                                  });
-                                }
-                              }}
-                            >
-                              Next step
-                            </button>
+                            {this.state.name ? (
+                              <button
+                                type="button"
+                                className={`${buttonStyles.Button} ${buttonStyles.Success}`}
+                                style={{ marginTop: 10 }}
+                                onClick={() => {
+                                  if (raster) {
+                                    this.setState({
+                                      step: 2
+                                    });
+                                  }
+                                }}
+                              >
+                                Next step
+                              </button>
+                            ) : null}
                           </div>
                         </div>
                       ) : null}
@@ -293,9 +317,11 @@ class NewNotification extends Component {
                 <div className={styles.Step} id="Step">
                   <div className="media">
                     <StepIndicator indicator="2" active={step === 2} />
-                    <div style={{
-                      marginLeft: 90
-                    }}>
+                    <div
+                      style={{
+                        marginLeft: 90
+                      }}
+                    >
                       <h3
                         className={`mt-0 ${step !== 2 ? "text-muted" : null}`}
                       >
@@ -394,9 +420,11 @@ class NewNotification extends Component {
                 <div className={styles.Step} id="Step">
                   <div className="media">
                     <StepIndicator indicator="3" active={step === 3} />
-                    <div style={{
-                      marginLeft: 90
-                    }}>
+                    <div
+                      style={{
+                        marginLeft: 90
+                      }}
+                    >
                       <h3
                         className={`mt-0 ${step !== 3 ? "text-muted" : null}`}
                       >
@@ -487,9 +515,11 @@ class NewNotification extends Component {
 
                 <div className="media">
                   <StepIndicator indicator="4" active={step === 4} />
-                  <div style={{
-                    marginLeft: 90
-                  }}>
+                  <div
+                    style={{
+                      marginLeft: 90
+                    }}
+                  >
                     <h3 className={`mt-0 ${step !== 4 ? "text-muted" : null}`}>
                       Recipients
                     </h3>
@@ -570,14 +600,15 @@ class NewNotification extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    currentOrganisation: state.bootstrap.organisation,
-    isFetching: state.isFetching
+    bootstrap: state.bootstrap
   };
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    doCreateAlarm: data => dispatch(createAlarm(data))
+    addNotification: (message, timeout) => {
+      dispatch(addNotification(message, timeout));
+    }
   };
 };
 
@@ -585,4 +616,4 @@ const App = withRouter(
   connect(mapStateToProps, mapDispatchToProps)(NewNotification)
 );
 
-export {App}
+export { App };

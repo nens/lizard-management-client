@@ -62,7 +62,7 @@ class ThresholdChart extends Component {
       console.log(
         "Something went wrong trying to draw the timeseries chart... probably no data!"
       );
-      return null;
+      return <div><em>No data to plot</em></div>;
     }
   }
 }

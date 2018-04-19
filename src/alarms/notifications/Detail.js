@@ -1,47 +1,16 @@
-import React, { Component } from "react";
-import MDSpinner from "react-md-spinner";
-import ThresholdChart from "./ThresholdChart";
-// import Ink from "react-ink";
-// import { FormattedMessage } from "react-intl";
-import { Map, Marker, TileLayer, WMSTileLayer } from "react-leaflet";
 import AddButton from "../../components/AddButton";
-import ConfigureThreshold from "./ConfigureThreshold";
-import pluralize from "pluralize";
-import { connect } from "react-redux";
-import {
-  addThresholdToAlarm,
-  fetchNotificationDetailsById,
-  removeThresholdFromAlarmByIdx,
-  removeMessageFromAlarmByIdx,
-  removeAlarm,
-  activateAlarm,
-  deActivateAlarm
-} from "../../actions";
-import styles from "./Detail.css";
 import buttonStyles from "../../styles/Buttons.css";
+import ConfigureThreshold from "./ConfigureThreshold";
 import gridStyles from "../../styles/Grid.css";
+import MDSpinner from "react-md-spinner";
+import pluralize from "pluralize";
+import React, { Component } from "react";
+import styles from "./Detail.css";
+import ThresholdChart from "./ThresholdChart";
+import { addNotification } from "../../actions";
+import { connect } from "react-redux";
+import { Map, Marker, TileLayer, WMSTileLayer } from "react-leaflet";
 import { withRouter } from "react-router-dom";
-
-async function fetchContactsAndMessages() {
-  try {
-    const groups = await fetch("/api/v3/contactgroups/", {
-      credentials: "same-origin"
-    })
-      .then(response => response.json())
-      .then(data => data.results);
-    const messages = await fetch("/api/v3/messages/", {
-      credentials: "same-origin"
-    })
-      .then(response => response.json())
-      .then(data => data.results);
-    return {
-      groups,
-      messages
-    };
-  } catch (e) {
-    throw new Error(e);
-  }
-}
 
 class Detail extends Component {
   constructor(props) {
@@ -49,25 +18,107 @@ class Detail extends Component {
     this.state = {
       showConfigureThreshold: false,
       availableGroups: [],
-      availableMessages: []
+      availableMessages: [],
+      loadingComplete: false,
+      messages: [],
+      groups: [],
+      rasteralarm: null,
+      rasterdetail: null,
+      timeseriesdetail: null
     };
     this.hideConfigureThreshold = this.hideConfigureThreshold.bind(this);
     this.handleAddThreshold = this.handleAddThreshold.bind(this);
+    this.fetchAlarmAndRasterDetails = this.fetchAlarmAndRasterDetails.bind(
+      this
+    );
+    this.fetchContactsAndMessages = this.fetchContactsAndMessages.bind(this);
+    this.activateAlarm = this.activateAlarm.bind(this);
+    this.deActivateAlarm = this.deActivateAlarm.bind(this);
+    this.removeThresholdByIdx = this.removeThresholdByIdx.bind(this);
   }
   componentDidMount() {
-    const { match, doFetchNotificationDetails } = this.props;
-    doFetchNotificationDetails(match.params.id);
+    const { bootstrap, match } = this.props;
+    const organisationId = bootstrap.organisation.unique_id;
+
     document.addEventListener("keydown", this.hideConfigureThreshold, false);
-    fetchContactsAndMessages().then(data => {
-      this.setState({
-        availableGroups: data.groups,
-        availableMessages: data.messages
-      });
-    });
+
+    // Load the raster alarm detail data and 
+    this.fetchAlarmAndRasterDetails(match.params.id);
+
+    this.fetchContactsAndMessages(organisationId);
   }
   componentWillUnmount() {
     document.removeEventListener("keydown", this.hideConfigureThreshold, false);
   }
+
+  fetchContactsAndMessages(organisationId) {
+    (async () => {
+      try {
+        const groups = await fetch(
+          `/api/v3/contactgroups/?organisation__unique_id=${organisationId}`,
+          {
+            credentials: "same-origin"
+          }
+        )
+          .then(response => response.json())
+          .then(data => data.results);
+
+        const messages = await fetch(
+          `/api/v3/messages/?organisation__unique_id=${organisationId}`,
+          {
+            credentials: "same-origin"
+          }
+        )
+          .then(response => response.json())
+          .then(data => data.results);
+
+        this.setState({
+          availableMessages: messages,
+          availableGroups: groups
+        });
+      } catch (e) {
+        throw new Error(e);
+      }
+    })();
+  }
+
+  fetchAlarmAndRasterDetails(rasterUuid) {
+    (async () => {
+      const rasteralarm = await fetch(`/api/v3/rasteralarms/${rasterUuid}/`, {
+        credentials: "same-origin"
+      }).then(response => response.json());
+
+      let rasterdetail = null;
+      let timeseriesdetail = null;
+
+      if (rasteralarm.intersection) {
+        // MARK: Hack to get relative URL
+        const parser = document.createElement("a");
+        parser.href = rasteralarm.intersection.raster;
+        rasterdetail = await fetch(parser.pathname, {
+          credentials: "same-origin"
+        }).then(response => response.json());
+      }
+
+      if (rasteralarm.intersection) {
+        const markerPosition = rasteralarm.intersection.geometry.coordinates;
+        timeseriesdetail = await fetch(
+          `/api/v3/raster-aggregates/?agg=curve&geom=POINT+(${markerPosition[1]}+${markerPosition[0]})&rasters=${rasterdetail.uuid}&srs=EPSG:4326&start=2008-01-01T12:00:00&stop=2017-12-31T18:00:00&window=2635200000`,
+          {
+            credentials: "same-origin"
+          }
+        ).then(response => response.json());
+      }
+
+      this.setState({
+        rasteralarm,
+        rasterdetail,
+        timeseriesdetail,
+        loadingComplete: true
+      });
+    })();
+  }
+
   hideConfigureThreshold(e) {
     if (e.key === "Escape") {
       this.setState({
@@ -82,23 +133,110 @@ class Detail extends Component {
       warning_level
     );
   }
+
+  activateAlarm(uuid) {
+    const { addNotification } = this.props;
+
+    fetch(`/api/v3/rasteralarms/${uuid}/`, {
+      credentials: "same-origin",
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        active: true
+      })
+    })
+      .then(response => response.json())
+      .then(data => {
+        this.setState({
+          rasteralarm: { ...this.state.rasteralarm, active: true }
+        });
+        addNotification(`Alarm "${data.name}" activated`, 2000);
+      });
+  }
+
+  deActivateAlarm(uuid) {
+    const { addNotification } = this.props;
+
+    fetch(`/api/v3/rasteralarms/${uuid}/`, {
+      credentials: "same-origin",
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        active: false
+      })
+    })
+      .then(response => response.json())
+      .then(data => {
+        this.setState({
+          rasteralarm: { ...this.state.rasteralarm, active: false }
+        });
+        addNotification(`Alarm "${data.name}" deactivated`, 2000);
+      });
+  }
+
+  removeAlarm(uuid) {
+    const { history, addNotification } = this.props;
+    fetch(`/api/v3/rasteralarms/${uuid}/`, {
+      credentials: "same-origin",
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({})
+    }).then(response => {
+      if (response.status === 204) {
+        addNotification(`Alarm removed`, 2000);
+        history.push("/alarms/notifications");
+      }
+    });
+  }
+
+  removeThresholdByIdx(uuid, idx) {
+    (async () => {
+      const thresholds = await fetch(`/api/v3/rasteralarms/${uuid}`, {
+        credentials: "same-origin",
+        method: "GET",
+        headers: { "Content-Type": "application/json" }
+      })
+        .then(response => response.json())
+        .then(json => json.thresholds);
+
+      const sliced_thresholds = [
+        ...thresholds.slice(0, idx),
+        ...thresholds.slice(idx + 1)
+      ];
+
+      fetch(`/api/v3/rasteralarms/${uuid}/`, {
+        credentials: "same-origin",
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          thresholds: sliced_thresholds
+        })
+      })
+        .then(response => response.json())
+        .then(data => {
+          this.setState({
+            rasteralarm: {
+              ...this.state.rasteralarm,
+              thresholds: sliced_thresholds
+            }
+          });
+        });
+    })();
+  }
+
   render() {
     const {
       showConfigureThreshold,
       availableGroups,
-      availableMessages
+      availableMessages,
+      loadingComplete,
+      rasteralarm,
+      rasterdetail,
+      timeseriesdetail
     } = this.state;
-    const {
-      isFetching,
-      doRemoveAlarm,
-      doActivateAlarm,
-      doDeActivateAlarm,
-      currentAlarm,
-      removeThresholdFromAlarmByIdx,
-      removeMessageFromAlarmByIdx
-    } = this.props;
+    const { removeMessageFromAlarmByIdx } = this.props;
 
-    if (isFetching) {
+    if (!loadingComplete) {
       return (
         <div
           style={{
@@ -113,6 +251,10 @@ class Detail extends Component {
         </div>
       );
     }
+
+    const currentAlarm = rasteralarm;
+    currentAlarm.rasterdetail = rasterdetail;
+    currentAlarm.timeseriesdetail = timeseriesdetail;
 
     if (!currentAlarm) {
       return null;
@@ -143,8 +285,7 @@ class Detail extends Component {
           <div>
             <button
               type="button"
-              onClick={() =>
-                removeThresholdFromAlarmByIdx(currentAlarm.uuid, i)}
+              onClick={() => this.removeThresholdByIdx(currentAlarm.uuid, i)}
               className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link} ${gridStyles.FloatRight}`}
             >
               Remove
@@ -165,14 +306,25 @@ class Detail extends Component {
           key={i}
         >
           <div>
-            <select style={{ marginRight: 5 }} defaultValue={message.contact_group.id}>
+            <select
+              style={{ marginRight: 5 }}
+              defaultValue={message.contact_group.id}
+            >
               {availableGroups.map((g, i) => {
-                return <option key={Math.floor(Math.random()*100000)} value={g.id}>{g.name}</option>;
+                return (
+                  <option key={Math.floor(Math.random() * 100000)} value={g.id}>
+                    {g.name.slice(0, 25)}
+                  </option>
+                );
               })}
             </select>
             <select defaultValue={message.message.id}>
               {availableMessages.map((m, j) => {
-                return <option key={Math.floor(Math.random()*100000)} value={m.id}>{m.name}</option>;
+                return (
+                  <option key={Math.floor(Math.random() * 100000)} value={m.id}>
+                    {m.name.slice(0, 25)}
+                  </option>
+                );
               })}
             </select>
           </div>
@@ -189,7 +341,6 @@ class Detail extends Component {
 
     const map = currentAlarm.rasterdetail ? (
       <Map
-        onClick={this.handleMapClick}
         bounds={[
           [
             currentAlarm.rasterdetail.spatial_bounds.south,
@@ -203,12 +354,11 @@ class Detail extends Component {
         className={styles.MapStyle}
       >
         <TileLayer
-          // url="https://{s}.tiles.mapbox.com/v3/nelenschuurmans.iaa98k8k/{z}/{x}/{y}.png"
           url="https://{s}.tiles.mapbox.com/v3/nelenschuurmans.5641a12c/{z}/{x}/{y}.png"
           attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
         />
         <WMSTileLayer
-          url={`https://nxt.staging.lizard.net/api/v3/wms/`}
+          url={`/api/v3/wms/`}
           styles={currentAlarm.rasterdetail.options.styles}
           layers={currentAlarm.rasterdetail.wms_info.layer}
           opacity={0.9}
@@ -284,8 +434,8 @@ class Detail extends Component {
                 className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link}`}
                 onClick={() =>
                   currentAlarm.active
-                    ? doDeActivateAlarm(currentAlarm.uuid)
-                    : doActivateAlarm(currentAlarm.uuid)}
+                    ? this.deActivateAlarm(currentAlarm.uuid)
+                    : this.activateAlarm(currentAlarm.uuid)}
               >
                 {currentAlarm.active ? "Deactivate" : "Activate"}
               </button>
@@ -295,8 +445,7 @@ class Detail extends Component {
                 className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link}`}
                 onClick={() => {
                   if (window.confirm("Are you sure?")) {
-                    doRemoveAlarm(currentAlarm.uuid);
-                    this.props.history.push("/alarms/notifications");
+                    this.removeAlarm(currentAlarm.uuid);
                   }
                 }}
               >
@@ -379,29 +528,15 @@ class Detail extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    currentAlarm: state.alarms._alarms.currentAlarm || null,
-    notification: state.alarms.alarm,
-    isFetching: state.alarms.isFetching
+    bootstrap: state.bootstrap
   };
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    addThresholdToAlarm: (id, value, warning_level) => {
-      dispatch(addThresholdToAlarm(id, value, warning_level));
-    },
-    removeMessageFromAlarmByIdx: (uuid, idx) => {
-      dispatch(removeMessageFromAlarmByIdx(uuid, idx));
-    },
-    removeThresholdFromAlarmByIdx: (uuid, idx) => {
-      dispatch(removeThresholdFromAlarmByIdx(uuid, idx));
-    },
-    doFetchNotificationDetails: id => {
-      dispatch(fetchNotificationDetailsById(id));
-    },
-    doRemoveAlarm: uuid => dispatch(removeAlarm(uuid)),
-    doActivateAlarm: uuid => dispatch(activateAlarm(uuid)),
-    doDeActivateAlarm: uuid => dispatch(deActivateAlarm(uuid))
+    addNotification: (message, timeout) => {
+      dispatch(addNotification(message, timeout));
+    }
   };
 };
 
