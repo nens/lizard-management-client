@@ -6,7 +6,6 @@ import { addLocaleData, IntlProvider } from "react-intl";
 import { HashRouter as Router } from "react-router-dom";
 import App from "./App";
 
-import registerServiceWorker from "./registerServiceWorker";
 import nl from "./translations/locales/nl.json";
 
 // Initialize Redux store
@@ -38,8 +37,6 @@ const Root = ({ store }) => (
 );
 
 ReactDOM.render(<Root store={store} />, document.getElementById("root"));
-// Does not work correctly with /management/otherthings/ URLs
-// registerServiceWorker();
 
 if (module.hot) {
   module.hot.accept("./App", () => {
