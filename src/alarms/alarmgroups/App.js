@@ -1,23 +1,19 @@
-import React, { Component } from "react";
-import MDSpinner from "react-md-spinner";
-import Ink from "react-ink";
-import { FormattedMessage } from "react-intl";
-import pluralize from "pluralize";
-import { connect } from "react-redux";
-import { Popover, PopoverItem } from "../../components/Popover";
-import ContactsPicker from "./ContactsPicker";
-import PaginationBar from "./PaginationBar";
-import {
-  fetchContacts,
-  deleteGroupById,
-  fetchPaginatedContactGroups
-} from "../../actions";
-import styles from "./App.css";
-import gridStyles from "../../styles/Grid.css";
-import tableStyles from "../../styles/Table.css";
 import buttonStyles from "../../styles/Buttons.css";
-import { withRouter, NavLink } from "react-router-dom";
+import ContactsPicker from "./ContactsPicker";
+import gridStyles from "../../styles/Grid.css";
 import groupsIcon from "../../images/groups@3x.svg";
+import Ink from "react-ink";
+import MDSpinner from "react-md-spinner";
+import PaginationBar from "./PaginationBar";
+import pluralize from "pluralize";
+import React, { Component } from "react";
+import styles from "./App.css";
+import tableStyles from "../../styles/Table.css";
+import { addNotification } from "../../actions";
+import { connect } from "react-redux";
+import { FormattedMessage } from "react-intl";
+import { Popover, PopoverItem } from "../../components/Popover";
+import { withRouter, NavLink } from "react-router-dom";
 
 class App extends Component {
   constructor(props) {
@@ -25,17 +21,60 @@ class App extends Component {
     this.state = {
       showContactsPicker: false,
       contactsPickerIds: null,
-      contactsPickerGroupId: null
+      contactsPickerGroupId: null,
+      isFetching: true,
+      page: 1,
+      total: 0,
+      contactgroups: []
     };
     this.handleNewGroupClick = this.handleNewGroupClick.bind(this);
     this.addIdToContactsPickerIds = this.addIdToContactsPickerIds.bind(this);
+    this.loadContactGroupsOnPage = this.loadContactGroupsOnPage.bind(this);
   }
   componentDidMount() {
-    this.props.doFetchContacts();
-
-    const query = new URLSearchParams(window.location.search);
-    this.props.fetchPaginatedContactGroups(query.get("page") || 1);
+    const { page } = this.state;
+    this.loadContactGroupsOnPage(page);
   }
+
+  loadContactGroupsOnPage(page) {
+    const { bootstrap } = this.props;
+    const organisationId = bootstrap.organisation.unique_id;
+    this.setState({
+      isFetching: true
+    });
+
+    fetch(
+      `/api/v3/contactgroups/?page=${page}&organisation__unique_id=${organisationId}`,
+      {
+        credentials: "same-origin"
+      }
+    )
+      .then(response => response.json())
+      .then(data => {
+        this.setState({
+          isFetching: false,
+          contactgroups: data.results,
+          total: data.count,
+          page: page
+        });
+      });
+  }
+
+  deleteGroupById(groupid) {
+    const { addNotification } = this.props;
+    fetch(`/api/v3/contactgroups/${groupid}/`, {
+      credentials: "same-origin",
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({})
+    }).then(response => {
+      if (response.status === 204) {
+        this.loadContactGroupsOnPage(1);
+        addNotification(`Group removed`, 2000);
+      }
+    });
+  }
+
   handleNewGroupClick(e) {
     this.props.history.push("groups/new");
   }
@@ -46,16 +85,13 @@ class App extends Component {
   }
   render() {
     const {
-      groups,
-      isFetching,
-      doDeleteGroupById,
-      currentPage,
-      total
-    } = this.props;
-    const {
       showContactsPicker,
       contactsPickerIds,
-      contactsPickerGroupId
+      contactsPickerGroupId,
+      isFetching,
+      total,
+      page,
+      contactgroups
     } = this.state;
     const numberOfGroups = total;
     return (
@@ -98,12 +134,12 @@ class App extends Component {
               >
                 <MDSpinner size={24} />
               </div>
-            ) : groups.length > 0 ? (
+            ) : contactgroups.length > 0 ? (
               <table
                 className={`${tableStyles.Table} ${tableStyles.Responsive}`}
               >
                 <tbody>
-                  {groups.map((group, i) => {
+                  {contactgroups.map((group, i) => {
                     const numberOfContacts = group.contacts.length;
                     return (
                       <tr key={i} className={styles.GroupRow}>
@@ -160,7 +196,7 @@ class App extends Component {
                               <PopoverItem
                                 handleOnClick={() => {
                                   if (window.confirm("Are you sure?")) {
-                                    doDeleteGroupById(group.id);
+                                    this.deleteGroupById(group.id);
                                   }
                                 }}
                               >
@@ -187,6 +223,7 @@ class App extends Component {
             addIdToContactsPickerIds={this.addIdToContactsPickerIds}
             contactsPickerGroupId={contactsPickerGroupId}
             contactsPickerIds={contactsPickerIds}
+            loadContactGroupsOnPage={this.loadContactGroupsOnPage}
             handleClose={() =>
               this.setState({
                 showContactsPicker: false,
@@ -199,10 +236,7 @@ class App extends Component {
           <div
             className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
           >
-            <PaginationBar
-              page={currentPage}
-              pages={Math.ceil(total / 10)}
-            />
+            <PaginationBar loadContactGroupsOnPage={this.loadContactGroupsOnPage} page={page} pages={Math.ceil(total / 10)} />
           </div>
         </div>
       </div>
@@ -212,18 +246,15 @@ class App extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    groups: state.alarms._contactGroups.contactGroups,
-    isFetching: state.alarms._contactGroups.isFetching,
-    currentPage: state.alarms._contactGroups.currentPage,
-    total: state.alarms._contactGroups.total
+    bootstrap: state.bootstrap
   };
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    doDeleteGroupById: id => dispatch(deleteGroupById(id)),
-    doFetchContacts: () => dispatch(fetchContacts()),
-    fetchPaginatedContactGroups: page => dispatch(fetchPaginatedContactGroups(page))
+    addNotification: (message, timeout) => {
+      dispatch(addNotification(message, timeout));
+    }
   };
 };
 

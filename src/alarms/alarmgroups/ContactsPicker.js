@@ -1,11 +1,11 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { fetchContacts, addContactToGroup } from "../../actions";
-import styles from "./ContactsPicker.css";
-import formStyles from "../../styles/Forms.css";
-import { Scrollbars } from "react-custom-scrollbars";
-import MDSpinner from "react-md-spinner";
 import CSSTransition from "react-transition-group/CSSTransition";
+import formStyles from "../../styles/Forms.css";
+import MDSpinner from "react-md-spinner";
+import React, { Component } from "react";
+import styles from "./ContactsPicker.css";
+import { addNotification } from "../../actions";
+import { connect } from "react-redux";
+import { Scrollbars } from "react-custom-scrollbars";
 
 class ContactsPicker extends Component {
   constructor(props) {
@@ -13,7 +13,9 @@ class ContactsPicker extends Component {
     this.state = {
       width: window.innerWidth,
       height: window.innerHeight,
-      filterValue: null
+      filterValue: null,
+      contacts: [],
+      isFetching: true
     };
     this.handleResize = this.handleResize.bind(this);
     this.handleInput = this.handleInput.bind(this);
@@ -21,9 +23,26 @@ class ContactsPicker extends Component {
   }
   componentDidMount() {
     document.getElementById("contactName").focus();
-    this.props.doFetchContacts();
     window.addEventListener("resize", this.handleResize, false);
     document.addEventListener("keydown", this.hideContactsPicker, false);
+
+    const { bootstrap } = this.props;
+    const organisationId = bootstrap.organisation.unique_id;
+
+    fetch(
+      `/api/v3/contacts/?page_size=100000&organisation__unique_id=${organisationId}`,
+      {
+        credentials: "same-origin"
+      }
+    )
+      .then(response => response.json())
+      .then(data => data.results)
+      .then(data => {
+        this.setState({
+          contacts: data,
+          isFetching: false
+        });
+      });
   }
   componentWillUnmount() {
     window.removeEventListener("resize", this.handleResize, false);
@@ -46,12 +65,43 @@ class ContactsPicker extends Component {
     });
   }
   addContact(contact) {
-    const { contactsPickerGroupId, addContactToGroup } = this.props;
-    addContactToGroup(contact, contactsPickerGroupId);
+    const {
+      contactsPickerGroupId,
+      loadContactGroupsOnPage,
+      addNotification
+    } = this.props;
+
+    (async () => {
+      const getContactGroups = await fetch(
+        `/api/v3/contactgroups/${contactsPickerGroupId}/`,
+        {
+          credentials: "same-origin",
+          method: "GET",
+          headers: { "Content-Type": "application/json" }
+        }
+      );
+      const contactGroupsJson = await getContactGroups.json();
+      const contacts = contactGroupsJson.contacts;
+      contacts.push(contact);
+
+      fetch(`/api/v3/contactgroups/${contactsPickerGroupId}/`, {
+        credentials: "same-origin",
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contacts: contacts.map(contact => contact.id)
+        })
+      })
+        .then(response => response.json())
+        .then(group => {
+          addNotification(`Contact added`, 2000);
+          loadContactGroupsOnPage(1);
+        });
+    })();
   }
   render() {
-    const { handleClose, contacts, isFetching, contactsPickerIds } = this.props;
-    const { filterValue } = this.state;
+    const { handleClose, contactsPickerIds } = this.props;
+    const { contacts, isFetching, filterValue } = this.state;
 
     const contactsWithoutContactsAlreadyInGroup = contacts.filter(contact => {
       if (contactsPickerIds.some(id => id === contact.id)) {
@@ -163,16 +213,15 @@ class ContactsPicker extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    isFetching: state.alarms.isFetching,
-    organisation: state.bootstrap.organisation,
-    contacts: state.alarms.contacts
+    bootstrap: state.bootstrap
   };
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    doFetchContacts: () => dispatch(fetchContacts()),
-    addContactToGroup: (contact, groupId) => dispatch(addContactToGroup(contact, groupId))
+    addNotification: (message, timeout) => {
+      dispatch(addNotification(message, timeout));
+    }
   };
 };
 

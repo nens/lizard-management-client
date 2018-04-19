@@ -6,7 +6,6 @@ import GroupMessage from "./GroupMessage";
 import ActionBar from "./ActionBar";
 import pluralize from "pluralize";
 import { connect } from "react-redux";
-import { fetchAlarmGroupDetailsById } from "../../actions";
 import styles from "./Detail.css";
 import tableStyles from "../../styles/Table.css";
 import formStyles from "../../styles/Forms.css";
@@ -16,7 +15,9 @@ class Detail extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      showGroupMessageModal: false
+      showGroupMessageModal: false,
+      contactgroup: null,
+      isFetching: true
     };
     this.handleCheckboxes = this.handleCheckboxes.bind(this);
     this.handleSelectAllCheckboxes = this.handleSelectAllCheckboxes.bind(this);
@@ -24,11 +25,25 @@ class Detail extends Component {
       this
     );
     this.showGroupMessageModal = this.showGroupMessageModal.bind(this);
+    this.fetchGroupDetails = this.fetchGroupDetails.bind(this);
   }
 
   componentDidMount() {
-    const { match, doFetchGroupDetails } = this.props;
-    doFetchGroupDetails(match.params.id);
+    const { match } = this.props;
+    this.fetchGroupDetails(match.params.id);
+  }
+
+  fetchGroupDetails(groupId) {
+    fetch(`/api/v3/contactgroups/${groupId}/`, {
+      credentials: "same-origin"
+    })
+      .then(response => response.json())
+      .then(contactgroup => {
+        this.setState({
+          contactgroup,
+          isFetching: false
+        });
+      });
   }
 
   handleCheckboxes(e) {
@@ -58,8 +73,7 @@ class Detail extends Component {
   }
 
   render() {
-    const { isFetching, group, doDeleteContactsById } = this.props;
-    const { showGroupMessageModal } = this.state;
+    const { isFetching, contactgroup, showGroupMessageModal } = this.state;
 
     if (isFetching) {
       return (
@@ -69,21 +83,21 @@ class Detail extends Component {
       );
     }
 
-    if (group && group.contacts) {
+    if (contactgroup && contactgroup.contacts) {
       return (
         <div className="container">
           <div className="row">
             <div className="col-md-12">
-              <h4>{group.name}</h4>
+              <h4>{contactgroup.name}</h4>
               <p className="text-muted">
-                {group.contacts.length}{" "}
-                {pluralize("recipients", group.contacts.length)}
+                {contactgroup.contacts.length}{" "}
+                {pluralize("recipients", contactgroup.contacts.length)}
               </p>
             </div>
           </div>
 
           <ActionBar
-            doDeleteContactsById={doDeleteContactsById}
+            // doDeleteContactsById={doDeleteContactsById}
             showGroupMessageModal={this.showGroupMessageModal}
           />
 
@@ -98,7 +112,7 @@ class Detail extends Component {
               </tr>
             </thead>
             <tbody>
-              {group.contacts.map((contact, i) => {
+              {contactgroup.contacts.map((contact, i) => {
                 const email = contact.user ? contact.user.email : contact.email;
                 return (
                   <tr key={i}>
@@ -121,7 +135,7 @@ class Detail extends Component {
           </table>
           {showGroupMessageModal ? (
             <GroupMessage
-              groupId={group.id}
+              groupId={contactgroup.id}
               handleClose={() =>
                 this.setState({ showGroupMessageModal: false })}
             />
@@ -136,21 +150,12 @@ class Detail extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    group: state.alarms._contactGroups.currentContactGroup,
-    isFetching: state.alarms._contactGroups.isFetching
+    bootstrap: state.bootstrap
   };
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
-  return {
-    doDeleteContactsById: ids => {
-      console.log("Deleting id's", ids);
-      // dispatch(deleteContactsById(ids));
-    },
-    doFetchGroupDetails: id => {
-      dispatch(fetchAlarmGroupDetailsById(id));
-    }
-  };
+  return {};
 };
 
 Detail = withRouter(connect(mapStateToProps, mapDispatchToProps)(Detail));
