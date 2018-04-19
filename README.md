@@ -72,22 +72,23 @@ Run `yarn build` and look in the `build/` folder.
 Releasing
 =========
 
-To be written...
+To be written... `release-it` perhaps?
 
 
 Deployment
 ==========
 
 Uses Ansible for deployment.
-To be written...
+To be extended...
 
 
 Internationalisation
 ====================
 
 This client has l10n/i18n support via react-intl.
+
 English is the default/fallback language.
-Dutch is the only supported other language for now.
+Dutch is the only planned supported other language for now.
 
 To extract translation tags to the i18n catalog: `$ yarn run i18n:extract`.
 To update the language catalogs: `$ yarn run i18n:update`
@@ -100,13 +101,13 @@ See `src/translations/locales/[language].json`. (where language is 'nl', for now
 Redux
 =====
 
-To be written...
+Redux is used for the app-wide notification system.
 
 
 React-router
 ============
 
-To be written...
+React-router is used for the URL setup.
 
 
 Sentry
