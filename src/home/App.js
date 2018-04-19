@@ -32,7 +32,7 @@ class App extends Component {
               <AppIcon
                 handleClick={e =>
                   this.handleExternalLink(
-                    "https://nxt.staging.lizard.net/management/users/"
+                    "/management/users/"
                   )}
                 src={lizardIcon}
                 title={
@@ -51,7 +51,7 @@ class App extends Component {
               <AppIcon
                 handleClick={e =>
                   this.handleExternalLink(
-                    "https://nxt.staging.lizard.net/management/scenarios/"
+                    "/management/scenarios/"
                   )}
                 src={threediIcon}
                 title={
