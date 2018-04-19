@@ -6,7 +6,6 @@ import PaginationBar from "./PaginationBar";
 import { FormattedMessage } from "react-intl";
 import pluralize from "pluralize";
 import { connect } from "react-redux";
-import { fetchPaginatedContacts } from "../../actions";
 import styles from "./App.css";
 import gridStyles from "../../styles/Grid.css";
 import tableStyles from "../../styles/Table.css";
@@ -16,32 +15,65 @@ import { withRouter } from "react-router-dom";
 class App extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      filterValue: ""
+      filterValue: "",
+      page: 1,
+      total: 0,
+      isFetching: true,
+      contacts: []
     };
     this.handleFilter = this.handleFilter.bind(this);
+    this.loadContactsOnPage = this.loadContactsOnPage.bind(this);
     this.handleNewContactClick = this.handleNewContactClick.bind(this);
   }
   componentDidMount() {
-    const query = new URLSearchParams(window.location.search);
-    this.props.fetchPaginatedContacts(query.get("page") || 1);
+    const { page } = this.state;
+    this.loadContactsOnPage(page);
   }
   handleNewContactClick(e) {
     this.props.history.push("contacts/new");
   }
+  loadContactsOnPage(page) {
+    const { bootstrap } = this.props;
+    const organisationId = bootstrap.organisation.unique_id;
+    this.setState({
+      isFetching: true
+    });
+    fetch(
+      `/api/v3/contacts/?page=${page}&organisation__unique_id=${organisationId}`,
+      {
+        credentials: "same-origin"
+      }
+    )
+      .then(response => response.json())
+      .then(data => {
+        this.setState({
+          isFetching: false,
+          contacts: data.results,
+          total: data.count,
+          page: page
+        });
+      });
+  }
+
   handleFilter(e) {
     this.setState({
       filterValue: e.target.value
     });
   }
   render() {
-    const {
-      contacts,
-      currentPage,
-      isFetching,
-      total
-    } = this.props;
-    const { filterValue } = this.state;
+    const { total, isFetching, page, contacts, filterValue } = this.state;
+
+    const filteredContacts = contacts.filter((contact, i) => {
+      if (
+        contact.first_name.toLowerCase().indexOf(filterValue) !== -1 ||
+        contact.last_name.toLowerCase().indexOf(filterValue) !== -1
+      ) {
+        return contact;
+      }
+      return false;
+    });
 
     if (isFetching) {
       return (
@@ -59,23 +91,18 @@ class App extends Component {
       );
     }
 
-    const numberOfContacts = total;
-
-    const filteredContacts = contacts.filter((contact, i) => {
-      if (
-        contact.first_name.toLowerCase().indexOf(filterValue) !== -1 ||
-        contact.last_name.toLowerCase().indexOf(filterValue) !== -1
-      ) {
-        return contact;
-      }
-      return false;
-    });
     return (
       <div className={gridStyles.Container}>
         <div className={`${gridStyles.Row} ${styles.App}`}>
-          <div className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}>
-            {numberOfContacts} {pluralize("CONTACT", numberOfContacts)}
-            <button type="button" onClick={this.handleNewContactClick} className={`${buttonStyles.Button} ${buttonStyles.Success} ${gridStyles.FloatRight}`}>
+          <div
+            className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
+          >
+            {total} {pluralize("CONTACT", total)}
+            <button
+              type="button"
+              onClick={this.handleNewContactClick}
+              className={`${buttonStyles.Button} ${buttonStyles.Success} ${gridStyles.FloatRight}`}
+            >
               <FormattedMessage
                 id="contacts_app.new_contact"
                 defaultMessage="New contact"
@@ -84,9 +111,11 @@ class App extends Component {
             </button>
           </div>
         </div>
-        <br/>
+        <br />
         <div className={`${gridStyles.Row}`}>
-          <div className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}>
+          <div
+            className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
+          >
             <ActionBar handleFilter={this.handleFilter} />
             <table className={`${tableStyles.Table} ${tableStyles.Responsive}`}>
               <thead style={{ backgroundColor: "#D8D8D8" }}>
@@ -100,22 +129,44 @@ class App extends Component {
               </thead>
               <tbody>
                 {filteredContacts.map((contact, i) => {
-                  return (
-                    <tr key={i}>
-                      <td>
-                        <input
-                          type="checkbox"
-                          name="contact"
-                          className="checkbox"
-                          value={contact.id}
-                        />
-                      </td>
-                      <td>{contact.first_name}</td>
-                      <td>{contact.last_name}</td>
-                      <td>{contact.email}</td>
-                      <td>{contact.phone_number}</td>
-                    </tr>
-                  );
+                  // If contact.user is not null, that means a Django User is linked to this contact
+                  // so show contact.user.first_name etcetera
+                  if (contact.user) {
+                    return (
+                      <tr key={i}>
+                        <td>
+                          <input
+                            type="checkbox"
+                            name="contact"
+                            className="checkbox"
+                            value={contact.id}
+                          />
+                        </td>
+                        <td>{contact.user.first_name}</td>
+                        <td>{contact.user.last_name}</td>
+                        <td>{contact.user.email}</td>
+                        <td>{contact.user.phone_number}</td>
+                      </tr>
+                    );
+                  } else {
+                    // Otherwise, no Django User is linked, so show contact.first_name etc.
+                    return (
+                      <tr key={i}>
+                        <td>
+                          <input
+                            type="checkbox"
+                            name="contact"
+                            className="checkbox"
+                            value={contact.id}
+                          />
+                        </td>
+                        <td>{contact.first_name}</td>
+                        <td>{contact.last_name}</td>
+                        <td>{contact.email}</td>
+                        <td>{contact.phone_number}</td>
+                      </tr>
+                    );
+                  }
                 })}
               </tbody>
             </table>
@@ -126,7 +177,8 @@ class App extends Component {
             className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
           >
             <PaginationBar
-              page={currentPage}
+              loadContactsOnPage={this.loadContactsOnPage}
+              page={page}
               pages={Math.ceil(total / 10)}
             />
           </div>
@@ -138,20 +190,10 @@ class App extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    contacts: state.alarms._contacts.contacts,
-    isFetching: state.alarms._contacts.isFetching,
-    currentPage: state.alarms._contacts.currentPage,
-    total: state.alarms._contacts.total
+    bootstrap: state.bootstrap
   };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => {
-  return {
-    fetchPaginatedContacts: page => dispatch(fetchPaginatedContacts(page))
-  };
-};
-
-
-App = withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
+App = withRouter(connect(mapStateToProps, null)(App));
 
 export { App };

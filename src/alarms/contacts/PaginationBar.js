@@ -1,12 +1,9 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
-import { NavLink } from "react-router-dom";
 import styles from "./PaginationBar.css";
-import { fetchPaginatedContacts } from "../../actions";
 
 class PaginationBar extends Component {
   render() {
-    const { pages, page } = this.props;
+    const { pages, page, loadContactsOnPage } = this.props;
 
     if (!page && !pages) {
       return null;
@@ -18,32 +15,27 @@ class PaginationBar extends Component {
         <div className={styles.PaginationBar}>
           {links.map((link, i) => {
             const linkPlusOne = link + 1;
-            if (linkPlusOne === page) {
+            if (page === linkPlusOne) {
               return <div key={i}>{linkPlusOne}</div>;
             }
             return (
               <div
+                style={{ cursor: "pointer", color: "#007bff" }}
                 key={i}
-                onClick={() => this.props.fetchPaginatedContacts(linkPlusOne)}
+                onClick={() => {
+                  loadContactsOnPage(linkPlusOne);
+                }}
               >
-                <NavLink to={`/alarms/contacts?page=${linkPlusOne}`}>
-                  {linkPlusOne}
-                </NavLink>
+                <a>{linkPlusOne}</a>
               </div>
             );
           })}
         </div>
       );
     } catch (e) {
-      return <div/>;
+      return <div />;
     }
   }
 }
 
-const mapDispatchToProps = (dispatch, ownProps) => {
-  return {
-    fetchPaginatedContacts: page => dispatch(fetchPaginatedContacts(page))
-  };
-};
-
-export default connect(null, mapDispatchToProps)(PaginationBar);
+export default PaginationBar;

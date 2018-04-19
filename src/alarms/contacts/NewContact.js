@@ -2,17 +2,17 @@ import React, { Component } from "react";
 import Ink from "react-ink";
 import { FormattedMessage } from "react-intl";
 import { connect } from "react-redux";
-import { createContact } from "../../actions";
 import gridStyles from "../../styles/Grid.css";
 import formStyles from "../../styles/Forms.css";
 import buttonStyles from "../../styles/Buttons.css";
-
 import { withRouter } from "react-router-dom";
 
 class NewContact extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      submitActive: false
+    };
     this.handleClickCreateContactButton = this.handleClickCreateContactButton.bind(
       this
     );
@@ -31,7 +31,9 @@ class NewContact extends Component {
     return false;
   }
   handleClickCreateContactButton() {
-    console.log("handleClickCreateContactButton()");
+    this.setState({
+      submitActive: true
+    });
     const { organisation, history } = this.props;
     const firstName = document.getElementById("firstName").value;
     const lastName = document.getElementById("lastName").value;
@@ -44,14 +46,33 @@ class NewContact extends Component {
       this.validateEmail(email) &&
       phoneNumber.length > 0
     ) {
-      this.props.doCreateContact({
-        first_name: firstName,
-        last_name: lastName,
-        email: email,
-        phone_number: phoneNumber,
-        organisation: organisation.unique_id
-      });
-      history.push("/alarms/contacts");
+      fetch("/api/v3/contacts/", {
+        credentials: "same-origin",
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          first_name: firstName,
+          last_name: lastName,
+          email: email,
+          phone_number: phoneNumber,
+          organisation: organisation.unique_id
+        })
+      })
+        .then(response => {
+          if (response.status === 201) {
+            return response.json();
+          } else if (response.status === 403) {
+            alert("Not authorized");
+            return response.json();
+          } else {
+            alert("An error occurred while trying to create a new contact");
+            return response.json();
+          }
+        })
+        .then(data => {
+          history.push("/alarms/contacts");
+        });
+
     } else {
       alert("Please provide valid values in all fields!");
     }
@@ -144,6 +165,7 @@ class NewContact extends Component {
               type="button"
               className={`${buttonStyles.Button} ${buttonStyles.Success}`}
               onClick={this.handleClickCreateContactButton}
+              disabled={this.state.submitActive ? true : false}
             >
               <FormattedMessage
                 id="contacts_new.create_contact"
@@ -160,20 +182,10 @@ class NewContact extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    template: state.alarms.template,
-    isFetching: state.alarms.isFetching,
     organisation: state.bootstrap.organisation
   };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => {
-  return {
-    doCreateContact: data => dispatch(createContact(data))
-  };
-};
-
-const App = withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(NewContact)
-);
+const App = withRouter(connect(mapStateToProps, null)(NewContact));
 
 export { App };
