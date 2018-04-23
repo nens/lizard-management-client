@@ -86,6 +86,29 @@
   color: #00649a;
 }
 
+.Danger2 {
+  background-color: rgba(255, 255, 255, 0);
+  border-color: transparent;
+  box-shadow: none;
+  font-weight: normal;
+  color: #FC0E1D;
+}
+.Danger2:active {
+  background-image: none;
+  outline: 0;
+  color: #FC0E1D;
+}
+.Danger2:hover {
+  background-image: none;
+  outline: 0;
+  color: #FC0E1D;
+}
+.Danger2:focus {
+  background-image: none;
+  outline: 0;
+  color: #FC0E1D;
+}
+
 .Small {
   padding: 0.25rem 0.5rem;
   font-size: 0.875rem;

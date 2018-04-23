@@ -491,18 +491,6 @@ class Detail extends Component {
               <div
                 className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
               >
-                <AddButton
-                  style={{ marginBottom: 10, float: "right" }}
-                  handleClick={() => console.log("Add group")}
-                  title="Add group"
-                />
-                <h3>Recipient groups</h3>
-              </div>
-            </div>
-            <div className={gridStyles.Row}>
-              <div
-                className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
-              >
                 <RecipientGroups
                   currentAlarm={currentAlarm}
                   availableGroups={availableGroups}

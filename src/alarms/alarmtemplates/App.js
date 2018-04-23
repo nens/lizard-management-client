@@ -127,23 +127,15 @@ class App extends Component {
                 >
                   <thead style={{ backgroundColor: "#D8D8D8" }}>
                     <tr className="text-muted">
-                      <td>&nbsp;</td>
                       <td>Name</td>
                       <td style={{ textAlign: "center" }}>Type</td>
+                      <td>&nbsp;</td>
                     </tr>
                   </thead>
                   <tbody>
                     {filteredTemplates.map((template, i) => {
                       return (
                         <tr key={i} className={styles.TemplateRow}>
-                          <td className={tableStyles.TdCol1}>
-                            <input
-                              type="checkbox"
-                              name="template"
-                              className="checkbox"
-                              value={template.id}
-                            />
-                          </td>
                           <td className={tableStyles.TdCol8}>
                             <NavLink to={`/alarms/templates/${template.id}`}>
                               <strong>{template.name}</strong>{" "}
@@ -157,6 +149,15 @@ class App extends Component {
                             <span className={styles.TemplateTypeBadge}>
                               {template.type}
                             </span>
+                          </td>
+                          <td>
+                            <button
+                              type="button"
+                              onClick={() => console.log("Delete", template)}
+                              className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Danger2} ${gridStyles.FloatRight}`}
+                            >
+                              Delete
+                            </button>
                           </td>
                         </tr>
                       );

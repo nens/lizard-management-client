@@ -120,11 +120,11 @@ class App extends Component {
             <table className={`${tableStyles.Table} ${tableStyles.Responsive}`}>
               <thead style={{ backgroundColor: "#D8D8D8" }}>
                 <tr className="text-muted">
-                  <td>&nbsp;</td>
                   <td>First name</td>
                   <td>Last name</td>
                   <td>E-mail address</td>
                   <td>Telephone number</td>
+                  <td>&nbsp;</td>
                 </tr>
               </thead>
               <tbody>
@@ -134,36 +134,38 @@ class App extends Component {
                   if (contact.user) {
                     return (
                       <tr key={i}>
-                        <td>
-                          <input
-                            type="checkbox"
-                            name="contact"
-                            className="checkbox"
-                            value={contact.id}
-                          />
-                        </td>
                         <td>{contact.user.first_name}</td>
                         <td>{contact.user.last_name}</td>
                         <td>{contact.user.email}</td>
                         <td>{contact.user.phone_number}</td>
+                        <td>
+                          <button
+                            type="button"
+                            onClick={() => console.log("Delete", contact)}
+                            className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Danger2} ${gridStyles.FloatRight}`}
+                          >
+                            Delete
+                          </button>
+                        </td>
                       </tr>
                     );
                   } else {
                     // Otherwise, no Django User is linked, so show contact.first_name etc.
                     return (
                       <tr key={i}>
-                        <td>
-                          <input
-                            type="checkbox"
-                            name="contact"
-                            className="checkbox"
-                            value={contact.id}
-                          />
-                        </td>
                         <td>{contact.first_name}</td>
                         <td>{contact.last_name}</td>
                         <td>{contact.email}</td>
                         <td>{contact.phone_number}</td>
+                        <td>
+                          <button
+                            type="button"
+                            onClick={() => console.log("Delete", contact)}
+                            className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Danger2} ${gridStyles.FloatRight}`}
+                          >
+                            Delete
+                          </button>
+                        </td>                        
                       </tr>
                     );
                   }
