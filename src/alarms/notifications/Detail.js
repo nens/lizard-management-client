@@ -5,6 +5,7 @@ import gridStyles from "../../styles/Grid.css";
 import MDSpinner from "react-md-spinner";
 import pluralize from "pluralize";
 import React, { Component } from "react";
+import RecipientGroups from "./RecipientGroups";
 import styles from "./Detail.css";
 import ThresholdChart from "./ThresholdChart";
 import { addNotification } from "../../actions";
@@ -42,9 +43,7 @@ class Detail extends Component {
 
     document.addEventListener("keydown", this.hideConfigureThreshold, false);
 
-    // Load the raster alarm detail data and
     this.fetchAlarmAndRasterDetails(match.params.id);
-
     this.fetchContactsAndMessages(organisationId);
   }
   componentWillUnmount() {
@@ -165,7 +164,10 @@ class Detail extends Component {
             thresholds: updatedThresholds
           }
         });
-        addNotification(`Threshold with value ${value} (${warning_level}) added`, 2000);
+        addNotification(
+          `Threshold with value ${value} (${warning_level}) added`,
+          2000
+        );
       });
   }
 
@@ -271,7 +273,6 @@ class Detail extends Component {
       rasterdetail,
       timeseriesdetail
     } = this.state;
-    const { removeMessageFromAlarmByIdx } = this.props;
 
     if (!loadingComplete) {
       return (
@@ -332,49 +333,6 @@ class Detail extends Component {
       );
     });
 
-    const recipientGroups = currentAlarm.messages.map((message, i) => {
-      return (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            margin: 5
-          }}
-          key={i}
-        >
-          <div>
-            <select
-              style={{ marginRight: 5 }}
-              defaultValue={message.contact_group.id}
-            >
-              {availableGroups.map((g, i) => {
-                return (
-                  <option key={Math.floor(Math.random() * 100000)} value={g.id}>
-                    {g.name.slice(0, 25)}
-                  </option>
-                );
-              })}
-            </select>
-            <select defaultValue={message.message.id}>
-              {availableMessages.map((m, j) => {
-                return (
-                  <option key={Math.floor(Math.random() * 100000)} value={m.id}>
-                    {m.name.slice(0, 25)}
-                  </option>
-                );
-              })}
-            </select>
-          </div>
-          <button
-            type="button"
-            onClick={() => removeMessageFromAlarmByIdx(currentAlarm.uuid, i)}
-            className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link}`}
-          >
-            Remove
-          </button>
-        </div>
-      );
-    });
 
     const map = currentAlarm.rasterdetail ? (
       <Map
@@ -545,11 +503,16 @@ class Detail extends Component {
               <div
                 className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
               >
-                {recipientGroups}
+                <RecipientGroups
+                  currentAlarm={currentAlarm}
+                  availableGroups={availableGroups}
+                  availableMessages={availableMessages}
+                />
               </div>
             </div>
           </div>
         </div>
+
         {showConfigureThreshold ? (
           <ConfigureThreshold
             handleAddThreshold={this.handleAddThreshold}
@@ -558,6 +521,7 @@ class Detail extends Component {
             handleClose={() => this.setState({ showConfigureThreshold: false })}
           />
         ) : null}
+
       </div>
     );
   }
