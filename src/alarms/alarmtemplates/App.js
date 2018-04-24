@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { addNotification } from "../../actions";
 import MDSpinner from "react-md-spinner";
 import Ink from "react-ink";
 import ActionBar from "./ActionBar";
@@ -23,14 +24,32 @@ class App extends Component {
       isFetching: true,
       templates: []
     };
-    this.handleNewTemplateClick = this.handleNewTemplateClick.bind(this);
+    this.handleDeleteTemplate = this.handleDeleteTemplate.bind(this);
     this.handleFilter = this.handleFilter.bind(this);
+    this.handleNewTemplateClick = this.handleNewTemplateClick.bind(this);
     this.loadTemplatesOnPage = this.loadTemplatesOnPage.bind(this);
   }
   componentDidMount() {
-    // const query = new URLSearchParams(window.location.search);
-    // this.props.fetchPaginatedTemplates(query.get("page") || 1);
     this.loadTemplatesOnPage(1);
+  }
+  handleDeleteTemplate(template) {
+    const { addNotification } = this.props;
+    const sure = window.confirm("Are you sure?");
+    if (sure) {
+      fetch(`/api/v3/messages/${template.id}/`, {
+        credentials: "same-origin",
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({})
+      }).then(response => {
+        if (response.status === 204) {
+          addNotification(`Template deleted`, 2000);
+          this.loadTemplatesOnPage(1);
+        } else {
+          addNotification(`Something went wrong, template not deleted`, 2000);
+        }
+      });
+    }
   }
   loadTemplatesOnPage(page) {
     const { bootstrap } = this.props;
@@ -153,7 +172,8 @@ class App extends Component {
                           <td>
                             <button
                               type="button"
-                              onClick={() => console.log("Delete", template)}
+                              onClick={() =>
+                                this.handleDeleteTemplate(template)}
                               className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Danger2} ${gridStyles.FloatRight}`}
                             >
                               Delete
@@ -186,6 +206,14 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-App = withRouter(connect(mapStateToProps, null)(App));
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    addNotification: (message, timeout) => {
+      dispatch(addNotification(message, timeout));
+    }
+  };
+};
+
+App = withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
 
 export { App };

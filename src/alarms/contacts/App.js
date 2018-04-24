@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { addNotification } from "../../actions";
 import MDSpinner from "react-md-spinner";
 import Ink from "react-ink";
 import ActionBar from "./ActionBar";
@@ -26,6 +27,7 @@ class App extends Component {
     this.handleFilter = this.handleFilter.bind(this);
     this.loadContactsOnPage = this.loadContactsOnPage.bind(this);
     this.handleNewContactClick = this.handleNewContactClick.bind(this);
+    this.handleDeleteContact = this.handleDeleteContact.bind(this);
   }
   componentDidMount() {
     const { page } = this.state;
@@ -33,6 +35,25 @@ class App extends Component {
   }
   handleNewContactClick(e) {
     this.props.history.push("contacts/new");
+  }
+  handleDeleteContact(contact) {
+    const { addNotification } = this.props;
+    const sure = window.confirm("Are you sure?");
+    if (sure) {
+      fetch(`/api/v3/contacts/${contact.id}/`, {
+        credentials: "same-origin",
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({})
+      }).then(response => {
+        if (response.status === 204) {
+          addNotification(`Contact deleted`, 2000);
+          this.loadContactsOnPage(1);
+        } else {
+          addNotification(`Something went wrong, contact not deleted`, 2000);
+        }
+      });
+    }
   }
   loadContactsOnPage(page) {
     const { bootstrap } = this.props;
@@ -141,7 +162,7 @@ class App extends Component {
                         <td>
                           <button
                             type="button"
-                            onClick={() => console.log("Delete", contact)}
+                            onClick={() => this.handleDeleteContact(contact)}
                             className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Danger2} ${gridStyles.FloatRight}`}
                           >
                             Delete
@@ -160,12 +181,12 @@ class App extends Component {
                         <td>
                           <button
                             type="button"
-                            onClick={() => console.log("Delete", contact)}
+                            onClick={() => this.handleDeleteContact(contact)}
                             className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Danger2} ${gridStyles.FloatRight}`}
                           >
                             Delete
                           </button>
-                        </td>                        
+                        </td>
                       </tr>
                     );
                   }
@@ -196,6 +217,14 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-App = withRouter(connect(mapStateToProps, null)(App));
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    addNotification: (message, timeout) => {
+      dispatch(addNotification(message, timeout));
+    }
+  };
+};
+
+App = withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
 
 export { App };
