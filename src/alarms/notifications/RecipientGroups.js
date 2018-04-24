@@ -34,21 +34,26 @@ class RecipientGroups extends Component {
 
   updateMessagesForRasterAlarm(messages) {
     const { currentAlarm, addNotification } = this.props;
+
+    const filteredMessages = messages.map((message, i) => {
+      if (
+        Object.keys(message.message).length > 0 &&
+        Object.keys(message.contact_group).length > 0
+      ) {
+        return {
+          contact_group: message.contact_group.name,
+          message: message.message.name
+        };
+      }
+      return false;
+    });
+
     fetch(`/api/v3/rasteralarms/${currentAlarm.uuid}/`, {
       credentials: "same-origin",
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        messages: messages.filter((message, i) => {
-          if (
-            Object.keys(message.message).length > 0 &&
-            Object.keys(message.contact_group).length > 0
-          ) {
-            return message;
-          } else {
-            return false;
-          }
-        })
+        messages: filteredMessages
       })
     })
       .then(response => response.json())
@@ -61,8 +66,6 @@ class RecipientGroups extends Component {
     const { availableGroups } = this.props;
     const { messages } = this.state;
     const messagesCopy = Array.from(messages);
-
-    console.log(this.state.messages, idx);
 
     const selectedGroup = availableGroups.find(g => {
       if (g.id === parseInt(id, 0)) {
