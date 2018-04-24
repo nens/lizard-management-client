@@ -127,18 +127,9 @@ class Detail extends Component {
   }
 
   handleAddThreshold(value, warning_level) {
-    const { match, addNotification } = this.props;
+    const { addNotification } = this.props;
     const { rasteralarm } = this.state;
-    console.log("match.params.id", match.params.id);
-    console.log("value", value);
-    console.log("warning_level", warning_level);
-
-    // this.props.addThresholdToAlarm(
-    //   this.props.match.params.id,
-    //   value,
-    //   warning_level
-    // );
-
+    
     const updatedThresholds = [
       ...rasteralarm.thresholds,
       {
