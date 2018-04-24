@@ -1,3 +1,4 @@
+import React, { Component } from "react";
 import { Alarms as AlarmsHome } from "./Alarms";
 import { App as AlarmContactApp } from "./contacts/App";
 import { App as AlarmGroupsApp } from "./alarmgroups/App";
@@ -9,8 +10,8 @@ import { App as NewTemplateApp } from "./alarmtemplates/NewTemplate";
 import { App as NotificationsApp } from "./notifications/App";
 import { Detail as AlarmGroupsDetail } from "./alarmgroups/Detail";
 import { Detail as AlarmTemplatesDetail } from "./alarmtemplates/Detail";
+import { Detail as ContactDetail} from "./contacts/Detail";
 import { Detail as NotificationsDetail } from "./notifications/Detail";
-import React, { Component } from "react";
 import { Route, Switch, withRouter } from "react-router-dom";
 
 class App extends Component {
@@ -62,11 +63,11 @@ class App extends Component {
         <Route exact path="/alarms/contacts" component={AlarmContactApp} />
         <Switch>
           <Route exact path="/alarms/contacts/new" component={NewContactApp} />
-          {/* <Route
+          <Route
             exact
             path="/alarms/contacts/:id"
             component={ContactDetail}
-          /> */}
+          />
         </Switch>
 
         <Route exact path="/alarms/templates" component={AlarmTemplatesApp} />

@@ -11,7 +11,7 @@ import styles from "./App.css";
 import gridStyles from "../../styles/Grid.css";
 import tableStyles from "../../styles/Table.css";
 import buttonStyles from "../../styles/Buttons.css";
-import { withRouter } from "react-router-dom";
+import { withRouter, NavLink } from "react-router-dom";
 
 class App extends Component {
   constructor(props) {
@@ -155,8 +155,16 @@ class App extends Component {
                   if (contact.user) {
                     return (
                       <tr key={i}>
-                        <td>{contact.user.first_name}</td>
-                        <td>{contact.user.last_name}</td>
+                        <td>
+                          <NavLink to={`/alarms/contacts/${contact.id}`} style={{color:"#000"}}>
+                            {contact.user.first_name}
+                          </NavLink>
+                        </td>
+                        <td>
+                          <NavLink to={`/alarms/contacts/${contact.id}`} style={{color:"#000"}}>
+                            {contact.user.last_name}
+                          </NavLink>                                        
+                        </td>
                         <td>{contact.user.email}</td>
                         <td>{contact.user.phone_number}</td>
                         <td>
@@ -174,8 +182,16 @@ class App extends Component {
                     // Otherwise, no Django User is linked, so show contact.first_name etc.
                     return (
                       <tr key={i}>
-                        <td>{contact.first_name}</td>
-                        <td>{contact.last_name}</td>
+                        <td>
+                          <NavLink to={`/alarms/contacts/${contact.id}`} style={{color:"#000"}}>
+                            {contact.first_name}
+                          </NavLink>                          
+                        </td>
+                        <td>
+                          <NavLink to={`/alarms/contacts/${contact.id}`} style={{color:"#000"}}>
+                            {contact.last_name}
+                          </NavLink>                                                    
+                        </td>
                         <td>{contact.email}</td>
                         <td>{contact.phone_number}</td>
                         <td>
