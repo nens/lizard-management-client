@@ -3,7 +3,11 @@ import { connect } from "react-redux";
 import { FormattedMessage } from "react-intl";
 import { App as Home } from "./home/App";
 import { App as AlarmsApp } from "./alarms/App";
-import { fetchLizardBootstrap, fetchOrganisations } from "./actions";
+import {
+  addNotification,
+  fetchLizardBootstrap,
+  fetchOrganisations
+} from "./actions";
 import { Route, NavLink } from "react-router-dom";
 import LanguageSwitcher from "./components/LanguageSwitcher";
 import OrganisationSwitcher from "./components/OrganisationSwitcher";
@@ -20,10 +24,21 @@ class App extends Component {
       showOrganisationSwitcher: false
     };
     this.uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    this.updateOnlineStatus = this.updateOnlineStatus.bind(this);
   }
   componentDidMount() {
+    window.addEventListener("online", e => this.updateOnlineStatus(e));
+    window.addEventListener("offline", e => this.updateOnlineStatus(e));
     this.props.getLizardBootstrap();
     this.props.getOrganisations();
+  }
+  componentWillUnmount() {
+    window.removeEventListener("online", e => this.updateOnlineStatus(e));
+    window.removeEventListener("offline", e => this.updateOnlineStatus(e));
+  }
+  updateOnlineStatus(e) {
+    const { addNotification } = this.props;
+    addNotification(`Your internet connection seems to be ${e.type}`, 2000);
   }
   computeBreadcrumb() {
     const { pathname } = this.props.location;
@@ -232,7 +247,10 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     getLizardBootstrap: () => dispatch(fetchLizardBootstrap()),
-    getOrganisations: () => dispatch(fetchOrganisations())
+    getOrganisations: () => dispatch(fetchOrganisations()),
+    addNotification: (message, timeout) => {
+      dispatch(addNotification(message, timeout));
+    }
   };
 };
 
