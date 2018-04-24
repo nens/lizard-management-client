@@ -91,7 +91,7 @@ class App extends Component {
                 className={`${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs12}`}
               >
                 <div className={styles.TopNav}>
-                  <div>
+                  <div style={{ display: "none" }}>
                     <a href="#apps">
                       <i
                         className="material-icons"
@@ -182,7 +182,14 @@ class App extends Component {
                   <FormattedMessage
                     id="index.documentation"
                     defaultMessage="Documentation"
-                  />
+                  />&nbsp;
+                  <i
+                    style={{
+                      position: "relative",
+                      top: 5,
+                      fontSize: 20
+                    }} 
+                    className="material-icons">local_library</i>                  
                 </a>
               </div>
               <div
