@@ -66,7 +66,7 @@ This project now uses CSS modules almost entirely, save for some CSS reset code 
 Production bundle
 =================
 
-Run `yarn build` and look in the `build/` folder.
+Run `$ GENERATE_SOURCEMAP=false yarn build` and look in the `build/` folder.
 
 
 Releasing
