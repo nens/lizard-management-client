@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import styles from "./GroupMessage.css";
 import gridStyles from "../../styles/Grid.css";
 import buttonStyles from "../../styles/Buttons.css";
-import formStyles from "../../styles/Forms.css"
+import formStyles from "../../styles/Forms.css";
 import { addNotification } from "../../actions";
 import { Scrollbars } from "react-custom-scrollbars";
 import CSSTransition from "react-transition-group/CSSTransition";
@@ -124,7 +124,12 @@ class GroupMessage extends Component {
             <div className={styles.CloseButton} onClick={handleClose}>
               <i className="material-icons">close</i>
             </div>
-            <h3>Send a message to this group</h3>
+            <h3>
+              <FormattedMessage
+                id="alarmgroups_app.send_a_message_to_this_group"
+                defaultMessage="Send a message to this group"
+              />
+            </h3>
             <br />
             <div className="form-group">
               <input
@@ -138,14 +143,19 @@ class GroupMessage extends Component {
                 disabled={isSending ? true : false}
               />
               <small className="text-muted">
-                Subject (only applies to e-mail messages)
+                <FormattedMessage
+                  id="alarmgroups_app.subject_only_applies"
+                  defaultMessage="Subject (only applies to e-mail messages)"
+                />
               </small>
             </div>
             <Scrollbars
               style={{ width: "100%", height: this.state.height - 400 }}
             >
               <div className={`${gridStyles.Row}`}>
-                <div className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12} ${formStyles.FormGroup}`}>
+                <div
+                  className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12} ${formStyles.FormGroup}`}
+                >
                   <textarea
                     spellCheck={false}
                     className={formStyles.FormControl}
@@ -160,7 +170,15 @@ class GroupMessage extends Component {
                     disabled={isSending ? true : false}
                   />
                   <small className="text-muted">
-                    Message ({160 - messageText.length} characters left)
+                    <FormattedMessage
+                      id="alarmgroups_app.message"
+                      defaultMessage="Message"
+                    />{" "}
+                    ({160 - messageText.length}{" "}
+                    <FormattedMessage
+                      id="alarmgroups_app.characters_left"
+                      defaultMessage="characters left"
+                    />)
                   </small>
                 </div>
               </div>

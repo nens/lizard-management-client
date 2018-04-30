@@ -322,7 +322,10 @@ class NewNotification extends Component {
                                   }
                                 }}
                               >
-                                Next step
+                                <FormattedMessage
+                                  id="notifications_app.next_step"
+                                  defaultMessage="Next step"
+                                />
                               </button>
                             ) : null}
                           </div>
@@ -343,13 +346,18 @@ class NewNotification extends Component {
                       <h3
                         className={`mt-0 ${step !== 2 ? "text-muted" : null}`}
                       >
-                        Point-on-map
+                        <FormattedMessage
+                          id="notifications_app.point_on_map"
+                          defaultMessage="Point-on-map"
+                        />
                       </h3>
                       {step === 2 ? (
                         <div>
                           <p className="text-muted">
-                            Set the location of this alarm by placing a marker
-                            (tap/click on the map)
+                            <FormattedMessage
+                              id="notifications_app.set_the_location"
+                              defaultMessage="Set the location of this alarm by placing a marker (tap/click on the map)"
+                            />
                           </p>
 
                           {raster.spatial_bounds ? (
@@ -416,7 +424,10 @@ class NewNotification extends Component {
                               }
                             }}
                           >
-                            Next step
+                            <FormattedMessage
+                              id="notifications_app.next_step"
+                              defaultMessage="Next step"
+                            />
                           </button>
                           <button
                             type="button"
@@ -427,7 +438,10 @@ class NewNotification extends Component {
                                 step: 1
                               })}
                           >
-                            Back
+                            <FormattedMessage
+                              id="notifications_app.back"
+                              defaultMessage="Back"
+                            />
                           </button>
                         </div>
                       ) : null}
@@ -446,16 +460,26 @@ class NewNotification extends Component {
                       <h3
                         className={`mt-0 ${step !== 3 ? "text-muted" : null}`}
                       >
-                        Thresholds
+                        <FormattedMessage
+                          id="notifications_app.newnotification_thresholds"
+                          defaultMessage="Thresholds"
+                        />
                       </h3>
                       {step === 3 ? (
                         <div>
                           <p className="text-muted">
-                            This alarm will be triggered whenever a threshold is
-                            exceeded.
+                            <FormattedMessage
+                              id="notifications_app.this_alarm_will_be_triggered"
+                              defaultMessage="This alarm will be triggered whenever a threshold is exceeded."
+                            />
                           </p>
                           <div className={formStyles.FormGroup}>
-                            <label htmlFor="comparison">Comparison</label>
+                            <label htmlFor="comparison">
+                              <FormattedMessage
+                                id="notifications_app.comparison"
+                                defaultMessage="Comparison"
+                              />
+                            </label>
                             <select
                               onChange={e =>
                                 this.handleChangeComparison(e.target.value)}
@@ -467,8 +491,10 @@ class NewNotification extends Component {
                               <option value="<">&lt;</option>
                             </select>
                             <small className="form-text text-muted">
-                              Comparison for all alarm thresholds, either &lt;
-                              or &gt;
+                              <FormattedMessage
+                                id="notifications_app.comparison_for_all_alarm_thresholds"
+                                defaultMessage="Comparison for all alarm thresholds, either < or >"
+                              />
                             </small>
                           </div>
 
@@ -493,15 +519,21 @@ class NewNotification extends Component {
                                       position: "relative"
                                     }}
                                   >
-                                    Alarm when value {comparison}{" "}
-                                    {threshold.value}
+                                    <FormattedMessage
+                                      id="notifications_app.alarm_when_value"
+                                      defaultMessage="Alarm when value"
+                                    />{" "}
+                                    {comparison} {threshold.value}
                                   </span>
                                   <button
                                     type="button"
                                     className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link} ${gridStyles.FloatRight}`}
                                     onClick={() => console.log("remove")}
                                   >
-                                    Remove
+                                    <FormattedMessage
+                                      id="notifications_app.newnotification_remove"
+                                      defaultMessage="Remove"
+                                    />
                                   </button>
                                 </div>
                               );
@@ -523,7 +555,10 @@ class NewNotification extends Component {
                               });
                             }}
                           >
-                            Next step
+                            <FormattedMessage
+                              id="notifications_app.next_step"
+                              defaultMessage="Next step"
+                            />
                           </button>
                         </div>
                       ) : null}
@@ -539,13 +574,18 @@ class NewNotification extends Component {
                     }}
                   >
                     <h3 className={`mt-0 ${step !== 4 ? "text-muted" : null}`}>
-                      Recipients
+                      <FormattedMessage
+                        id="notifications_app.recipients"
+                        defaultMessage="Recipients"
+                      />
                     </h3>
                     {step === 4 ? (
                       <div>
                         <p className="text-muted">
-                          When an alarm is triggered, these groups of recipients
-                          will be notified.
+                          <FormattedMessage
+                            id="notifications_app.when_an_alarm_is_triggered"
+                            defaultMessage="When an alarm is triggered, these groups of recipients will be notified."
+                          />
                         </p>
                         <div>
                           {messages.map((message, i) => {
@@ -586,7 +626,10 @@ class NewNotification extends Component {
                           style={{ marginTop: 10 }}
                           onClick={this.handleActivateClick}
                         >
-                          Activate
+                          <FormattedMessage
+                            id="notifications_app.activate"
+                            defaultMessage="Activate"
+                          />
                         </button>
                       </div>
                     ) : null}

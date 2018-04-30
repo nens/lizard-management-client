@@ -1,6 +1,7 @@
 import React, { Component } from "react";
+import { FormattedMessage } from "react-intl";
 import styles from "./GroupAndTemplateSelect.css";
-import formStyles from "../../styles/Forms.css"
+import formStyles from "../../styles/Forms.css";
 import gridStyles from "../../styles/Grid.css";
 import buttonStyles from "../../styles/Buttons.css";
 
@@ -56,13 +57,21 @@ class GroupAndTemplateSelect extends Component {
     return (
       <div className={styles.GroupAndTemplateSelector}>
         <div className={`${gridStyles.Row}`}>
-          <div className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${gridStyles.colSm4} ${gridStyles.colXs4} ${formStyles.FormGroup}`}>
+          <div
+            className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${gridStyles.colSm4} ${gridStyles.colXs4} ${formStyles.FormGroup}`}
+          >
             <select
               id="group"
               className={formStyles.FormControl}
               onChange={this.selectGroup}
             >
-              <option>Select a group</option>
+              <option>
+                {" "}
+                <FormattedMessage
+                  id="notifications_app.select_a_group"
+                  defaultMessage="Select a group"
+                />
+              </option>
               {availableGroups.map((group, i) => {
                 return (
                   <option key={i} value={group.name}>
@@ -72,13 +81,21 @@ class GroupAndTemplateSelect extends Component {
               })}
             </select>
           </div>
-          <div className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${gridStyles.colSm4} ${gridStyles.colXs4} ${formStyles.FormGroup}`}>
+          <div
+            className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${gridStyles.colSm4} ${gridStyles.colXs4} ${formStyles.FormGroup}`}
+          >
             <select
               id="template"
               className={formStyles.FormControl}
               onChange={this.selectMessage}
             >
-              <option>Select a template</option>
+              <option>
+                {" "}
+                <FormattedMessage
+                  id="notifications_app.select_a_template"
+                  defaultMessage="Select a template"
+                />
+              </option>
               {availableMessages.map((message, i) => {
                 return (
                   <option key={i} value={message.name}>
@@ -88,13 +105,18 @@ class GroupAndTemplateSelect extends Component {
               })}
             </select>
           </div>
-          <div className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${gridStyles.colSm4} ${gridStyles.colXs4} ${formStyles.FormGroup}`}>
+          <div
+            className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${gridStyles.colSm4} ${gridStyles.colXs4} ${formStyles.FormGroup}`}
+          >
             <button
               type="button"
               className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link}`}
               onClick={() => removeFromGroupAndTemplate(idx)}
             >
-              Remove
+              <FormattedMessage
+                id="notifications_app.group_and_template_remove"
+                defaultMessage="Remove"
+              />
             </button>
           </div>
         </div>

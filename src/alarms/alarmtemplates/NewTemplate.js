@@ -143,10 +143,22 @@ class NewTemplate extends Component {
         <thead>
           <tr>
             <td>
-              <strong>Parameter</strong>
+              <strong>
+                {" "}
+                <FormattedMessage
+                  id="alarmtemplates_app.parameter"
+                  defaultMessage="Parameter"
+                />
+              </strong>
             </td>
             <td>
-              <strong>Description</strong>
+              <strong>
+                {" "}
+                <FormattedMessage
+                  id="alarmtemplates_app.description"
+                  defaultMessage="Description"
+                />
+              </strong>
             </td>
           </tr>
         </thead>
@@ -183,7 +195,10 @@ class NewTemplate extends Component {
               placeholder=""
             />
             <small id="helpText" className="form-text text-muted">
-              Please provide a name for this template
+              <FormattedMessage
+                id="alarmtemplates_app.please_provide_a_name"
+                defaultMessage="Please provide a name for this template"
+              />
             </small>
           </div>
           <div
@@ -231,7 +246,10 @@ class NewTemplate extends Component {
                 defaultValue=""
               />
               <small id="helpText" className="form-text text-muted">
-                The subject will be used in e-mail messages
+                <FormattedMessage
+                  id="alarmtemplates_app.the_subject_will_be_used_in_email_messages"
+                  defaultMessage="The subject will be used in e-mail messages"
+                />
               </small>
             </div>
           </div>
@@ -247,7 +265,12 @@ class NewTemplate extends Component {
               rows="12"
               defaultValue=""
             />
-            <small className="text-muted">TEMPLATE</small>
+            <small className="text-muted">
+              <FormattedMessage
+                id="alarmtemplates_app.template"
+                defaultMessage="Template"
+              />
+            </small>
           </div>
           <div
             className={`${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs12} ${formStyles.FormGroup}`}
@@ -285,9 +308,6 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-
-const App = withRouter(
-  connect(mapStateToProps, null)(NewTemplate)
-);
+const App = withRouter(connect(mapStateToProps, null)(NewTemplate));
 
 export { App };

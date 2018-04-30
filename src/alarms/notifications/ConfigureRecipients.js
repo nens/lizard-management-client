@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { FormattedMessage } from "react-intl";
 import styles from "./ConfigureRecipients.css";
 import CSSTransition from "react-transition-group/CSSTransition";
 
@@ -9,7 +10,7 @@ class ConfigureRecipients extends Component {
   }
   componentDidMount() {}
   render() {
-    const {handleClose} = this.props;
+    const { handleClose } = this.props;
     return (
       <div className={styles.ConfigureRecipientsContainer}>
         <CSSTransition
@@ -29,11 +30,18 @@ class ConfigureRecipients extends Component {
             <div className={styles.CloseButton} onClick={handleClose}>
               <i className="material-icons">close</i>
             </div>
-            <h3>Configure recipients</h3>
+            <h3>
+              <FormattedMessage
+                id="notifications_app.configure_recipients"
+                defaultMessage="Configure recipients"
+              />
+            </h3>
             <p className="text-muted">
-              Recipients will receive a message when the threshold is exceeded.
+              <FormattedMessage
+                id="notifications_app.recipients_will_receive_a_message_when_the_threshold_is_exceeded"
+                defaultMessage="Recipients will receive a message when the threshold is exceeded"
+              />
             </p>
-
           </div>
         </CSSTransition>
       </div>

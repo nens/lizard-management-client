@@ -1,10 +1,11 @@
+import buttonStyles from "../../styles/Buttons.css";
+import CSSTransition from "react-transition-group/CSSTransition";
+import formStyles from "../../styles/Forms.css";
 import React, { Component } from "react";
 import styles from "./ConfigureThreshold.css";
-import formStyles from "../../styles/Forms.css";
-import buttonStyles from "../../styles/Buttons.css";
-import { Scrollbars } from "react-custom-scrollbars";
-import CSSTransition from "react-transition-group/CSSTransition";
 import ThresholdChart from "./ThresholdChart";
+import { FormattedMessage } from "react-intl";
+import { Scrollbars } from "react-custom-scrollbars";
 
 class ConfigureThreshold extends Component {
   constructor(props) {
@@ -42,7 +43,7 @@ class ConfigureThreshold extends Component {
     });
   }
   render() {
-    const { handleClose, raster, timeseries, handleAddThreshold } = this.props;    
+    const { handleClose, raster, timeseries, handleAddThreshold } = this.props;
     const { value, warning_level } = this.state;
     return (
       <div className={styles.ConfigureThresholdContainer}>
@@ -63,9 +64,18 @@ class ConfigureThreshold extends Component {
             <div className={styles.CloseButton} onClick={handleClose}>
               <i className="material-icons">close</i>
             </div>
-            <h2>Configure new threshold</h2>
+            <h2>
+              {" "}
+              <FormattedMessage
+                id="notifications_app.configure_new_threshold"
+                defaultMessage="Configure new threshold"
+              />
+            </h2>
             <p className="text-muted">
-              A threshold determines when an alarm should be triggered.
+              <FormattedMessage
+                id="notifications_app.a_threshold_determines_when_an_alarm_should_be_triggered"
+                defaultMessage="A threshold determines when an alarm should be triggered"
+              />
             </p>
             <Scrollbars
               style={{ width: "100%", height: this.state.height - 400 }}
@@ -77,7 +87,12 @@ class ConfigureThreshold extends Component {
                   flexDirection: "column"
                 }}
               >
-                <label htmlFor="val">Value</label>
+                <label htmlFor="val">
+                  <FormattedMessage
+                    id="notifications_app.value"
+                    defaultMessage="value"
+                  />
+                </label>
                 <input
                   className={`${formStyles.FormGroup} ${formStyles.Large}`}
                   type="number"
@@ -87,11 +102,19 @@ class ConfigureThreshold extends Component {
                   placeholder=""
                 />
                 <small className="form-text text-muted">
-                  Value of this threshold (float-point number)
+                  <FormattedMessage
+                    id="notifications_app.value_of_this_threshold"
+                    defaultMessage="Value of this threshold (float-point number)"
+                  />
                 </small>
               </div>
               <div className={formStyles.FormGroup}>
-                <label htmlFor="warning_level">Warning level</label>
+                <label htmlFor="warning_level">
+                  <FormattedMessage
+                    id="notifications_app.warning_level"
+                    defaultMessage="Warning level"
+                  />
+                </label>
                 <input
                   className={`${formStyles.FormControl} ${formStyles.Large}`}
                   type="text"
@@ -101,7 +124,10 @@ class ConfigureThreshold extends Component {
                   placeholder=""
                 />
                 <small className="form-text text-muted">
-                  A warning level label. For example: "Exceeded"
+                  <FormattedMessage
+                    id="notifications_app.warning_level_label"
+                    defaultMessage="A warning level label. For example: 'Exceeded'"
+                  />
                 </small>
               </div>
               {raster && timeseries ? (
@@ -135,7 +161,10 @@ class ConfigureThreshold extends Component {
                 handleClose();
               }}
             >
-              Apply
+              <FormattedMessage
+                id="notifications_app.apply"
+                defaultMessage="Apply"
+              />
             </button>
             <button
               type="button"
@@ -143,7 +172,10 @@ class ConfigureThreshold extends Component {
               style={{ marginLeft: 15 }}
               onClick={handleClose}
             >
-              Close
+              <FormattedMessage
+                id="notifications_app.close"
+                defaultMessage="Close"
+              />
             </button>
           </div>
         </CSSTransition>

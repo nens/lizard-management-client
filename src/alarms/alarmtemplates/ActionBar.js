@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { FormattedMessage } from "react-intl";
 import formStyles from "../../styles/Forms.css";
 import styles from "./ActionBar.css";
 
@@ -87,33 +88,52 @@ class ActionBar extends Component {
             className={styles.ActionBarItem}
             onClick={this.toggleManageContacts}
           >
-            <i className="material-icons">keyboard_arrow_down</i>Manage templates
+            <i className="material-icons">keyboard_arrow_down</i>
+            <FormattedMessage
+              id="alarmtemplates_app.manage_templates"
+              defaultMessage="Manage templates"
+            />
+
             {showManageContacts ? (
               <div className={styles.DropDown}>
                 <div
                   className={styles.DropDownItem}
                   onClick={this.handleSelectAllCheckboxes}
                 >
-                  Select all
+                  <FormattedMessage
+                    id="alarmtemplates_app.select_all"
+                    defaultMessage="Select all"
+                  />
                 </div>
                 <div
                   className={styles.DropDownItem}
                   onClick={this.handleDeselectAllCheckboxes}
                 >
-                  De-select all
+                  <FormattedMessage
+                    id="alarmtemplates_app.deselect_all"
+                    defaultMessage="Deselect all"
+                  />
                 </div>
                 <div
                   className={styles.DropDownItem}
                   onClick={this.handleDeleteSelected}
                 >
-                  Delete selected
+                  <FormattedMessage
+                    id="alarmtemplates_app.delete_selected"
+                    defaultMessage="Delete selected"
+                  />
                 </div>
               </div>
             ) : null}
           </div>
         </div>
         <div className={styles.Search}>
-          <input onChange={this.props.handleFilter} className={`${formStyles.FormControlSmall}`} type="text" placeholder="Type to filter" />
+          <input
+            onChange={this.props.handleFilter}
+            className={`${formStyles.FormControlSmall}`}
+            type="text"
+            placeholder="Type to filter"
+          />
         </div>
       </div>
     );

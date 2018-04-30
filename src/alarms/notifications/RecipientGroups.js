@@ -5,6 +5,7 @@ import React, { Component } from "react";
 import styles from "./RecipientGroups.css";
 import { addNotification } from "../../actions";
 import { connect } from "react-redux";
+import { FormattedMessage } from "react-intl";
 
 class RecipientGroups extends Component {
   constructor(props) {
@@ -148,7 +149,13 @@ class RecipientGroups extends Component {
               handleClick={this.handleAddRow}
               title="Add group"
             />
-            <h3>Recipient groups</h3>
+            <h3>
+              {" "}
+              <FormattedMessage
+                id="notifications_app.recipient_groups"
+                defaultMessage="Recipient groups"
+              />
+            </h3>
           </div>
         </div>
         {messages.map((message, i) => {
@@ -161,7 +168,12 @@ class RecipientGroups extends Component {
                   this.handleGroupChanged(e.target.value, i);
                 }}
               >
-                <option value="">-- Choose a recipient group --</option>
+                <FormattedMessage
+                  tagName="option"
+                  id="notifications_app.choose_a_recipient_group"
+                  defaultMessage="--- Choose a recipient group ---"
+                />
+
                 {availableGroups.map((g, i) => {
                   return (
                     <option
@@ -179,7 +191,12 @@ class RecipientGroups extends Component {
                   this.handleTemplateChanged(e.target.value, i);
                 }}
               >
-                <option value="">-- Choose a template --</option>
+                <FormattedMessage
+                  tagName="option"
+                  id="notifications_app.choose_a_template"
+                  defaultMessage="--- Choose a template ---"
+                />
+
                 {availableMessages.map((m, j) => {
                   return (
                     <option
@@ -196,7 +213,10 @@ class RecipientGroups extends Component {
                 onClick={() => this.deleteGroupAndMessageAtIndex(i)}
                 className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link}`}
               >
-                Remove
+                <FormattedMessage
+                  id="notifications_app.recipientgroups_remove"
+                  defaultMessage="Remove"
+                />
               </button>
             </div>
           );

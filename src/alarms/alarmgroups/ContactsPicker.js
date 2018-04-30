@@ -5,6 +5,7 @@ import React, { Component } from "react";
 import styles from "./ContactsPicker.css";
 import { addNotification } from "../../actions";
 import { connect } from "react-redux";
+import { FormattedMessage } from "react-intl";
 import { Scrollbars } from "react-custom-scrollbars";
 
 class ContactsPicker extends Component {
@@ -141,7 +142,12 @@ class ContactsPicker extends Component {
             <div className={styles.CloseButton} onClick={handleClose}>
               <i className="material-icons">close</i>
             </div>
-            <h3>Quickly add contacts</h3>
+            <h3>
+              <FormattedMessage
+                id="alarmgroups_app.quickly_add_contacts"
+                defaultMessage="Quickly add contacts"
+              />
+            </h3>
             <br />
             <div className={formStyles.FormGroup}>
               <input

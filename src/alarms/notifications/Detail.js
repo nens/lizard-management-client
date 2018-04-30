@@ -2,8 +2,8 @@ import AddButton from "../../components/AddButton";
 import buttonStyles from "../../styles/Buttons.css";
 import ConfigureThreshold from "./ConfigureThreshold";
 import gridStyles from "../../styles/Grid.css";
+import { FormattedMessage } from "react-intl";
 import MDSpinner from "react-md-spinner";
-import pluralize from "pluralize";
 import React, { Component } from "react";
 import RecipientGroups from "./RecipientGroups";
 import styles from "./Detail.css";
@@ -26,7 +26,14 @@ class ErrorBoundary extends React.Component {
   render() {
     if (this.state.hasError) {
       // Render custom fallback UI
-      return <h3>Something went wrong...</h3>;
+      return (
+        <h3>
+          <FormattedMessage
+            id="notifications_app.something_wrong"
+            defaultMessage="Something went wrong..."
+          />
+        </h3>
+      );
     }
     return this.props.children;
   }
@@ -344,7 +351,10 @@ class Detail extends Component {
               onClick={() => this.removeThresholdByIdx(currentAlarm.uuid, i)}
               className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link} ${gridStyles.FloatRight}`}
             >
-              Remove
+              <FormattedMessage
+                id="notifications_app.remove"
+                defaultMessage="Remove"
+              />
             </button>
           </div>
         </div>
@@ -412,6 +422,9 @@ class Detail extends Component {
       />
     ) : null;
 
+    const number_of_thresholds = currentAlarm.thresholds.length;
+    const number_of_messages = currentAlarm.messages.length;
+
     return (
       <ErrorBoundary>
         <div className={gridStyles.Container}>
@@ -426,18 +439,36 @@ class Detail extends Component {
                       ? styles.Active
                       : styles.InActive} ${styles.ActiveIndicator}`}
                   >
-                    {currentAlarm.active ? "ACTIVE" : "INACTIVE"}
+                    {currentAlarm.active ? (
+                      <FormattedMessage
+                        id="alarmtemplates_app.active"
+                        defaultMessage="ACTIVE"
+                      />
+                    ) : (
+                      <FormattedMessage
+                        id="alarmtemplates_app.inactive"
+                        defaultMessage="INACTIVE"
+                      />
+                    )}
                   </div>
                   <div>
                     <p className={styles.Name}>{currentAlarm.name}</p>
                     <p className={`text-muted ${styles.Counts}`}>
-                      {currentAlarm.thresholds.length}{" "}
-                      {pluralize("threshold", currentAlarm.thresholds.length)},{" "}
-                      {currentAlarm.messages.length}{" "}
-                      {pluralize(
-                        "recipient group",
-                        currentAlarm.messages.length
-                      )}{" "}
+                      <FormattedMessage
+                        id="alarmtemplates_app.number_of_thresholds"
+                        defaultMessage={`{number_of_thresholds, number} {number_of_thresholds, plural, 
+                one {threshold}
+                other {thresholds}}`}
+                        values={{ number_of_thresholds }}
+                      />
+                      {", "}
+                      <FormattedMessage
+                        id="alarmtemplates_app.number_of_messages"
+                        defaultMessage={`{number_of_messages, number} {number_of_messages, plural, 
+                one {recipient}
+                other {recipient groups}}`}
+                        values={{ number_of_messages }}
+                      />
                     </p>
                   </div>
                 </div>
@@ -450,7 +481,17 @@ class Detail extends Component {
                       ? this.deActivateAlarm(currentAlarm.uuid)
                       : this.activateAlarm(currentAlarm.uuid)}
                 >
-                  {currentAlarm.active ? "Deactivate" : "Activate"}
+                  {currentAlarm.active ? (
+                    <FormattedMessage
+                      id="alarmtemplates_app.deactivate"
+                      defaultMessage="DEACTIVATE"
+                    />
+                  ) : (
+                    <FormattedMessage
+                      id="alarmtemplates_app.activate"
+                      defaultMessage="ACTIVATE"
+                    />
+                  )}
                 </button>
 
                 <button
@@ -462,7 +503,10 @@ class Detail extends Component {
                     }
                   }}
                 >
-                  Remove
+                  <FormattedMessage
+                    id="notifications_app.remove"
+                    defaultMessage="Remove"
+                  />
                 </button>
               </div>
             </div>
@@ -473,11 +517,39 @@ class Detail extends Component {
             <div
               className={`${gridStyles.colLg5} ${gridStyles.colMd5} ${gridStyles.colSm5} ${gridStyles.colXs12}`}
             >
-              <h3>Map</h3>
-              {map || <p>Not available</p>}
+              <h3>
+                {" "}
+                <FormattedMessage
+                  id="notifications_app.map"
+                  defaultMessage="Map"
+                />
+              </h3>
+              {map || (
+                <p>
+                  {" "}
+                  <FormattedMessage
+                    id="notifications_app.not_available"
+                    defaultMessage="Not available"
+                  />
+                </p>
+              )}
               <hr />
-              <h3>Chart</h3>
-              {chart || <p>Not available</p>}
+              <h3>
+                {" "}
+                <FormattedMessage
+                  id="notifications_app.chart"
+                  defaultMessage="Chart"
+                />
+              </h3>
+              {chart || (
+                <p>
+                  {" "}
+                  <FormattedMessage
+                    id="notifications_app.not_available"
+                    defaultMessage="Not available"
+                  />
+                </p>
+              )}
             </div>
             <div
               className={`${gridStyles.colLg7} ${gridStyles.colMd7} ${gridStyles.colSm7} ${gridStyles.colXs12}`}
@@ -494,7 +566,13 @@ class Detail extends Component {
                       })}
                     title="Add threshold"
                   />
-                  <h3>Thresholds</h3>
+                  <h3>
+                    {" "}
+                    <FormattedMessage
+                      id="notifications_app.thresholds"
+                      defaultMessage="Thresholds"
+                    />
+                  </h3>
                 </div>
               </div>
               <div className={gridStyles.Row}>

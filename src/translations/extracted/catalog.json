@@ -20,8 +20,56 @@
 		"defaultMessage": "No groups configured..."
 	},
 	{
+		"id": "alarmgroups_app.quickly_add_contacts",
+		"defaultMessage": "Quickly add contacts"
+	},
+	{
+		"id": "alarmgroups_app.number_of_contactgroups",
+		"defaultMessage": "{numberOfContactgroups, number} {numberOfContactgroups, plural, one {recipient} other {recipients}}"
+	},
+	{
+		"id": "alarmgroups_app.email_address",
+		"defaultMessage": "E-mail address"
+	},
+	{
+		"id": "alarmgroups_app.phone_number",
+		"defaultMessage": "Phone number"
+	},
+	{
+		"id": "alarmgroups_app.first_name",
+		"defaultMessage": "First name"
+	},
+	{
+		"id": "alarmgroups_app.last_name",
+		"defaultMessage": "Last name"
+	},
+	{
+		"id": "alarmgroups_app.remove_from_group",
+		"defaultMessage": "Remove from group"
+	},
+	{
+		"id": "alarmgroups_app.send_a_message_to_this_group",
+		"defaultMessage": "Send a message to this group"
+	},
+	{
+		"id": "alarmgroups_app.subject_only_applies",
+		"defaultMessage": "Subject (only applies to e-mail messages)"
+	},
+	{
+		"id": "alarmgroups_app.message",
+		"defaultMessage": "Message"
+	},
+	{
+		"id": "alarmgroups_app.characters_left",
+		"defaultMessage": "characters left"
+	},
+	{
 		"id": "alarmgroup.send_message",
 		"defaultMessage": "Send message"
+	},
+	{
+		"id": "alarmgroups_app.please_provide_a_name_for_this_group",
+		"defaultMessage": "Please provide a name for this group (max. 80 characters)"
 	},
 	{
 		"id": "alarmgroups_new.create_group",
@@ -60,8 +108,44 @@
 		"defaultMessage": "Alarm template management"
 	},
 	{
+		"id": "alarmtemplates_app.manage_templates",
+		"defaultMessage": "Manage templates"
+	},
+	{
+		"id": "alarmtemplates_app.select_all",
+		"defaultMessage": "Select all"
+	},
+	{
+		"id": "alarmtemplates_app.deselect_all",
+		"defaultMessage": "Deselect all"
+	},
+	{
+		"id": "alarmtemplates_app.delete_selected",
+		"defaultMessage": "Delete selected"
+	},
+	{
+		"id": "alarmtemplates_app.number_of_templates",
+		"defaultMessage": "{numberOfTemplates, number} {numberOfTemplates, plural, one {TEMPLATE} other {TEMPLATES}}"
+	},
+	{
 		"id": "alarmtemplates_app.new_group",
 		"defaultMessage": "New template"
+	},
+	{
+		"id": "alarmtemplates_app.no_templates_configured",
+		"defaultMessage": "No templates configured..."
+	},
+	{
+		"id": "alarmtemplates_app.name",
+		"defaultMessage": "Name"
+	},
+	{
+		"id": "alarmtemplates_app.type",
+		"defaultMessage": "Type"
+	},
+	{
+		"id": "alarmtemplates_app.delete",
+		"defaultMessage": "Delete"
 	},
 	{
 		"id": "alarmtemplates_app.delete_template",
@@ -72,16 +156,112 @@
 		"defaultMessage": "Save template"
 	},
 	{
+		"id": "alarmtemplates_app.parameter",
+		"defaultMessage": "Parameter"
+	},
+	{
+		"id": "alarmtemplates_app.description",
+		"defaultMessage": "Description"
+	},
+	{
+		"id": "alarmtemplates_app.please_provide_a_name",
+		"defaultMessage": "Please provide a name for this template"
+	},
+	{
+		"id": "alarmtemplates_app.the_subject_will_be_used_in_email_messages",
+		"defaultMessage": "The subject will be used in e-mail messages"
+	},
+	{
+		"id": "alarmtemplates_app.template",
+		"defaultMessage": "Template"
+	},
+	{
 		"id": "alarmtemplates_new.create_template",
 		"defaultMessage": "Create template"
+	},
+	{
+		"id": "contacts_app.manage_contacts",
+		"defaultMessage": "Manage contacts"
+	},
+	{
+		"id": "contacts_app.number_of_contacts",
+		"defaultMessage": "{total, number} {total, plural, one {CONTACT} other {CONTACTS}}"
 	},
 	{
 		"id": "contacts_app.new_contact",
 		"defaultMessage": "New contact"
 	},
 	{
+		"id": "contacts_app.first_name",
+		"defaultMessage": "First name"
+	},
+	{
+		"id": "contacts_app.last_name",
+		"defaultMessage": "Last name"
+	},
+	{
+		"id": "contacts_app.email_address",
+		"defaultMessage": "E-mail address"
+	},
+	{
+		"id": "contacts_app.phone_number",
+		"defaultMessage": "Telephone number"
+	},
+	{
+		"id": "contacts_app.delete",
+		"defaultMessage": "Delete"
+	},
+	{
+		"id": "contacts_app.first_name_1",
+		"defaultMessage": "First name"
+	},
+	{
+		"id": "contacts_app.last_name_1",
+		"defaultMessage": "Last name"
+	},
+	{
+		"id": "contacts_app.email_address_1",
+		"defaultMessage": "E-mail address"
+	},
+	{
+		"id": "contacts_app.phone_number_1",
+		"defaultMessage": "Phone number"
+	},
+	{
 		"id": "contacts_new.update_contact",
 		"defaultMessage": "Update contact"
+	},
+	{
+		"id": "contacts_app.first_name_2",
+		"defaultMessage": "First name"
+	},
+	{
+		"id": "contacts_app.last_name_2",
+		"defaultMessage": "Last name"
+	},
+	{
+		"id": "contacts_app.email_address_2",
+		"defaultMessage": "E-mail address"
+	},
+	{
+		"id": "contacts_app.phone_number_2",
+		"defaultMessage": "Phone number"
+	},
+	{
+		"id": "contacts_app.first_name_3",
+		"defaultMessage": "First name"
+	},
+	{
+		"id": "contacts_app.last_name_3",
+		"defaultMessage": "Last name"
+	},
+	{
+		"id": "contacts_app.email_address_3",
+		"defaultMessage": "E-mail address"
+	},
+	{
+		"id": "contacts_app.phone_number_3",
+		"defaultMessage": "Phone number"
 	},
 	{
 		"id": "contacts_new.create_contact",
@@ -128,6 +308,106 @@
 		"defaultMessage": "No notifications configured..."
 	},
 	{
+		"id": "notifications_app.configure_recipients",
+		"defaultMessage": "Configure recipients"
+	},
+	{
+		"id": "notifications_app.recipients_will_receive_a_message_when_the_threshold_is_exceeded",
+		"defaultMessage": "Recipients will receive a message when the threshold is exceeded"
+	},
+	{
+		"id": "notifications_app.configure_new_threshold",
+		"defaultMessage": "Configure new threshold"
+	},
+	{
+		"id": "notifications_app.a_threshold_determines_when_an_alarm_should_be_triggered",
+		"defaultMessage": "A threshold determines when an alarm should be triggered"
+	},
+	{
+		"id": "notifications_app.value",
+		"defaultMessage": "value"
+	},
+	{
+		"id": "notifications_app.value_of_this_threshold",
+		"defaultMessage": "Value of this threshold (float-point number)"
+	},
+	{
+		"id": "notifications_app.warning_level",
+		"defaultMessage": "Warning level"
+	},
+	{
+		"id": "notifications_app.warning_level_label",
+		"defaultMessage": "A warning level label. For example: 'Exceeded'"
+	},
+	{
+		"id": "notifications_app.apply",
+		"defaultMessage": "Apply"
+	},
+	{
+		"id": "notifications_app.close",
+		"defaultMessage": "Close"
+	},
+	{
+		"id": "notifications_app.something_wrong",
+		"defaultMessage": "Something went wrong..."
+	},
+	{
+		"id": "notifications_app.remove",
+		"defaultMessage": "Remove"
+	},
+	{
+		"id": "alarmtemplates_app.active",
+		"defaultMessage": "ACTIVE"
+	},
+	{
+		"id": "alarmtemplates_app.inactive",
+		"defaultMessage": "INACTIVE"
+	},
+	{
+		"id": "alarmtemplates_app.number_of_thresholds",
+		"defaultMessage": "{number_of_thresholds, number} {number_of_thresholds, plural, one {threshold} other {thresholds}}"
+	},
+	{
+		"id": "alarmtemplates_app.number_of_messages",
+		"defaultMessage": "{number_of_messages, number} {number_of_messages, plural, one {recipient} other {recipient groups}}"
+	},
+	{
+		"id": "alarmtemplates_app.deactivate",
+		"defaultMessage": "DEACTIVATE"
+	},
+	{
+		"id": "alarmtemplates_app.activate",
+		"defaultMessage": "ACTIVATE"
+	},
+	{
+		"id": "notifications_app.map",
+		"defaultMessage": "Map"
+	},
+	{
+		"id": "notifications_app.not_available",
+		"defaultMessage": "Not available"
+	},
+	{
+		"id": "notifications_app.chart",
+		"defaultMessage": "Chart"
+	},
+	{
+		"id": "notifications_app.thresholds",
+		"defaultMessage": "Thresholds"
+	},
+	{
+		"id": "notifications_app.select_a_group",
+		"defaultMessage": "Select a group"
+	},
+	{
+		"id": "notifications_app.select_a_template",
+		"defaultMessage": "Select a template"
+	},
+	{
+		"id": "notifications_app.group_and_template_remove",
+		"defaultMessage": "Remove"
+	},
+	{
 		"id": "notifications_app.raster_selection",
 		"defaultMessage": "Raster selection"
 	},
@@ -140,12 +420,92 @@
 		"defaultMessage": "The name of the raster will be used in e-mail and SMS alerts"
 	},
 	{
+		"id": "notifications_app.next_step",
+		"defaultMessage": "Next step"
+	},
+	{
+		"id": "notifications_app.point_on_map",
+		"defaultMessage": "Point-on-map"
+	},
+	{
+		"id": "notifications_app.set_the_location",
+		"defaultMessage": "Set the location of this alarm by placing a marker (tap/click on the map)"
+	},
+	{
+		"id": "notifications_app.back",
+		"defaultMessage": "Back"
+	},
+	{
+		"id": "notifications_app.newnotification_thresholds",
+		"defaultMessage": "Thresholds"
+	},
+	{
+		"id": "notifications_app.this_alarm_will_be_triggered",
+		"defaultMessage": "This alarm will be triggered whenever a threshold is exceeded."
+	},
+	{
+		"id": "notifications_app.comparison",
+		"defaultMessage": "Comparison"
+	},
+	{
+		"id": "notifications_app.comparison_for_all_alarm_thresholds",
+		"defaultMessage": "Comparison for all alarm thresholds, either < or >"
+	},
+	{
+		"id": "notifications_app.alarm_when_value",
+		"defaultMessage": "Alarm when value"
+	},
+	{
+		"id": "notifications_app.newnotification_remove",
+		"defaultMessage": "Remove"
+	},
+	{
+		"id": "notifications_app.recipients",
+		"defaultMessage": "Recipients"
+	},
+	{
+		"id": "notifications_app.when_an_alarm_is_triggered",
+		"defaultMessage": "When an alarm is triggered, these groups of recipients will be notified."
+	},
+	{
+		"id": "notifications_app.activate",
+		"defaultMessage": "Activate"
+	},
+	{
+		"id": "notifications_app.recipient_groups",
+		"defaultMessage": "Recipient groups"
+	},
+	{
+		"id": "notifications_app.choose_a_recipient_group",
+		"defaultMessage": "--- Choose a recipient group ---"
+	},
+	{
+		"id": "notifications_app.choose_a_template",
+		"defaultMessage": "--- Choose a template ---"
+	},
+	{
+		"id": "notifications_app.recipientgroups_remove",
+		"defaultMessage": "Remove"
+	},
+	{
+		"id": "notifications_app.no_data_to_plot",
+		"defaultMessage": "No data to plot"
+	},
+	{
 		"id": "index.documentation",
 		"defaultMessage": "Documentation"
 	},
 	{
 		"id": "index.support",
 		"defaultMessage": "Support"
+	},
+	{
+		"id": "components.switch_org",
+		"defaultMessage": "Switch organisation"
+	},
+	{
+		"id": "components_snackbar.dismiss",
+		"defaultMessage": "Dismiss"
 	},
 	{
 		"id": "home.usermanagement",

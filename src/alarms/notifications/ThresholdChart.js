@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { FormattedMessage } from "react-intl";
 import moment from "moment";
 import styles from "./ThresholdChart.css";
 import {
@@ -62,7 +63,16 @@ class ThresholdChart extends Component {
       console.log(
         "Something went wrong trying to draw the timeseries chart... probably no data!"
       );
-      return <div><em>No data to plot</em></div>;
+      return (
+        <div>
+          <em>
+            <FormattedMessage
+              id="notifications_app.no_data_to_plot"
+              defaultMessage="No data to plot"
+            />
+          </em>
+        </div>
+      );
     }
   }
 }

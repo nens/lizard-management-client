@@ -2,10 +2,9 @@ import React, { Component } from "react";
 import { addNotification } from "../../actions";
 import MDSpinner from "react-md-spinner";
 import Ink from "react-ink";
-import ActionBar from "./ActionBar";
+// import ActionBar from "./ActionBar";
 import PaginationBar from "./PaginationBar";
 import { FormattedMessage } from "react-intl";
-import pluralize from "pluralize";
 import { connect } from "react-redux";
 import styles from "./App.css";
 import gridStyles from "../../styles/Grid.css";
@@ -111,7 +110,14 @@ class App extends Component {
           <div
             className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
           >
-            {numberOfTemplates} {pluralize("TEMPLATE", numberOfTemplates)}
+            <FormattedMessage
+              id="alarmtemplates_app.number_of_templates"
+              defaultMessage={`{numberOfTemplates, number} {numberOfTemplates, plural, 
+                one {TEMPLATE}
+                other {TEMPLATES}}`}
+              values={{ numberOfTemplates }}
+            />
+
             <button
               type="button"
               className={`${buttonStyles.Button} ${buttonStyles.Success} ${gridStyles.FloatRight}`}
@@ -129,7 +135,12 @@ class App extends Component {
         {total === 0 ? (
           <div className={styles.NoResults}>
             <img src={templatesIcon} alt="Templates" />
-            <h5>No templates configured...</h5>
+            <h5>
+              <FormattedMessage
+                id="alarmtemplates_app.no_templates_configured"
+                defaultMessage="No templates configured..."
+              />
+            </h5>
           </div>
         ) : (
           <div className={`${gridStyles.Row}`}>
@@ -137,17 +148,28 @@ class App extends Component {
               className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
             >
               <div>
-                <ActionBar
+                {/*<ActionBar
                   handleFilter={this.handleFilter}
                   doDeleteContactsById={() => console.log("test")}
-                />
+                />*/}
                 <table
                   className={`${tableStyles.Table} ${tableStyles.Responsive}`}
                 >
                   <thead style={{ backgroundColor: "#D8D8D8" }}>
                     <tr className="text-muted">
-                      <td>Name</td>
-                      <td style={{ textAlign: "center" }}>Type</td>
+                      <td>
+                        {" "}
+                        <FormattedMessage
+                          id="alarmtemplates_app.name"
+                          defaultMessage="Name"
+                        />
+                      </td>
+                      <td style={{ textAlign: "center" }}>
+                        <FormattedMessage
+                          id="alarmtemplates_app.type"
+                          defaultMessage="Type"
+                        />
+                      </td>
                       <td>&nbsp;</td>
                     </tr>
                   </thead>
@@ -176,7 +198,10 @@ class App extends Component {
                                 this.handleDeleteTemplate(template)}
                               className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Danger2} ${gridStyles.FloatRight}`}
                             >
-                              Delete
+                              <FormattedMessage
+                                id="alarmtemplates_app.delete"
+                                defaultMessage="Delete"
+                              />
                             </button>
                           </td>
                         </tr>

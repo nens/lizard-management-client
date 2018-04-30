@@ -80,14 +80,13 @@ class ActionBar extends Component {
     }
   }
 
-
-
   render() {
     const { showGroupSettings, showManageContacts } = this.state;
     return (
       <div className={styles.ActionBar}>
         <div className={styles.ActionBarItemsWrapper}>
           <div
+            style={{ display: "none" }}
             className={styles.ActionBarItem}
             onClick={this.toggleManageContacts}
           >
@@ -122,13 +121,23 @@ class ActionBar extends Component {
             <i className="material-icons">keyboard_arrow_down</i>Group settings
             {showGroupSettings ? (
               <div className={styles.DropDown}>
-                <div className={styles.DropDownItem} onClick={() => this.props.showGroupMessageModal()}>Send message</div>
+                <div
+                  className={styles.DropDownItem}
+                  onClick={() => this.props.showGroupMessageModal()}
+                >
+                  Send message
+                </div>
               </div>
             ) : null}
           </div>
         </div>
         <div className={styles.Search}>
-          <input className={`${formStyles.FormControlSmall}`} type="text" placeholder="Type to filter" />
+          <input
+            style={{ display: "none" }}
+            className={`${formStyles.FormControlSmall}`}
+            type="text"
+            placeholder="Type to filter"
+          />
         </div>
       </div>
     );

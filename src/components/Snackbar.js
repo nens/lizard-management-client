@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { FormattedMessage } from "react-intl";
 import { connect } from "react-redux";
 import { dismissNotification } from "../actions";
 
@@ -20,7 +21,10 @@ class Snackbar extends Component {
             className={styles.DismissButton}
             onClick={() => dismiss(notifications.length - 1)}
           >
-            dismiss
+            <FormattedMessage
+              id="components_snackbar.dismiss"
+              defaultMessage="Dismiss"
+            />
           </div>
         </div>
       </div>

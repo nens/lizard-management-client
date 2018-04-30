@@ -91,7 +91,7 @@ class Detail extends Component {
         .then(response => response.json())
         .then(data => {
           addNotification(`Contact updated`, 2000);
-        });      
+        });
     } else {
       fetch(`/api/v3/contacts/${match.params.id}/`, {
         credentials: "same-origin",
@@ -161,7 +161,10 @@ class Detail extends Component {
                   maxLength={80}
                 />
                 <small id="firstName" className="form-text text-muted">
-                  First name
+                  <FormattedMessage
+                    id="contacts_app.first_name_1"
+                    defaultMessage="First name"
+                  />
                 </small>
               </div>
             </div>
@@ -179,7 +182,10 @@ class Detail extends Component {
                   maxLength={80}
                 />
                 <small id="firstName" className="form-text text-muted">
-                  Last name
+                  <FormattedMessage
+                    id="contacts_app.last_name_1"
+                    defaultMessage="Last name"
+                  />
                 </small>
               </div>
             </div>
@@ -200,7 +206,10 @@ class Detail extends Component {
                   maxLength={80}
                 />
                 <small id="firstName" className="form-text text-muted">
-                  E-mail address
+                  <FormattedMessage
+                    id="contacts_app.email_address_1"
+                    defaultMessage="E-mail address"
+                  />
                 </small>
               </div>
             </div>
@@ -221,7 +230,10 @@ class Detail extends Component {
                   maxLength={80}
                 />
                 <small id="firstName" className="form-text text-muted">
-                  Phone number
+                  <FormattedMessage
+                    id="contacts_app.phone_number_1"
+                    defaultMessage="Phone number"
+                  />
                 </small>
               </div>
             </div>
@@ -267,7 +279,10 @@ class Detail extends Component {
                   maxLength={80}
                 />
                 <small id="firstName" className="form-text text-muted">
-                  First name
+                  <FormattedMessage
+                    id="contacts_app.first_name_2"
+                    defaultMessage="First name"
+                  />
                 </small>
               </div>
             </div>
@@ -285,7 +300,10 @@ class Detail extends Component {
                   maxLength={80}
                 />
                 <small id="firstName" className="form-text text-muted">
-                  Last name
+                  <FormattedMessage
+                    id="contacts_app.last_name_2"
+                    defaultMessage="Last name"
+                  />
                 </small>
               </div>
             </div>
@@ -306,7 +324,10 @@ class Detail extends Component {
                   maxLength={80}
                 />
                 <small id="firstName" className="form-text text-muted">
-                  E-mail address
+                  <FormattedMessage
+                    id="contacts_app.email_address_2"
+                    defaultMessage="E-mail address"
+                  />
                 </small>
               </div>
             </div>
@@ -327,7 +348,10 @@ class Detail extends Component {
                   maxLength={80}
                 />
                 <small id="firstName" className="form-text text-muted">
-                  Phone number
+                  <FormattedMessage
+                    id="contacts_app.phone_number_2"
+                    defaultMessage="Phone number"
+                  />
                 </small>
               </div>
             </div>

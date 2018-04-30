@@ -60,7 +60,10 @@ class NewAlarmGroup extends Component {
                 maxLength={80}
               />
               <small id="helpText" className="form-text text-muted">
-                Please provide a name for this group (max. 80 characters)
+                <FormattedMessage
+                  id="alarmgroups_app.please_provide_a_name_for_this_group"
+                  defaultMessage="Please provide a name for this group (max. 80 characters)"
+                />
               </small>
             </div>
           </div>

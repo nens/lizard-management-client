@@ -1,14 +1,14 @@
-import React, { Component } from "react";
-import MDSpinner from "react-md-spinner";
-// import Ink from "react-ink";
-// import { FormattedMessage } from "react-intl";
-import GroupMessage from "./GroupMessage";
 import ActionBar from "./ActionBar";
-import pluralize from "pluralize";
-import { connect } from "react-redux";
+import buttonStyles from "../../styles/Buttons.css";
+import gridStyles from "../../styles/Grid.css";
+import GroupMessage from "./GroupMessage";
+import MDSpinner from "react-md-spinner";
+import React, { Component } from "react";
 import styles from "./Detail.css";
 import tableStyles from "../../styles/Table.css";
-import formStyles from "../../styles/Forms.css";
+import { addNotification } from "../../actions";
+import { connect } from "react-redux";
+import { FormattedMessage } from "react-intl";
 import { withRouter } from "react-router-dom";
 
 class Detail extends Component {
@@ -26,6 +26,9 @@ class Detail extends Component {
     );
     this.showGroupMessageModal = this.showGroupMessageModal.bind(this);
     this.fetchGroupDetails = this.fetchGroupDetails.bind(this);
+    this.handleRemoveContactFromGroup = this.handleRemoveContactFromGroup.bind(
+      this
+    );
   }
 
   componentDidMount() {
@@ -66,6 +69,38 @@ class Detail extends Component {
       .forEach(checkbox => (checkbox.checked = false));
   }
 
+  handleRemoveContactFromGroup(contact) {
+    const sure = window.confirm("Are you sure?");
+    const { match, addNotification } = this.props;
+    const { contactgroup } = this.state;
+
+    if (sure) {
+      const filteredContacts = contactgroup.contacts.filter(
+        c => (c.id === contact.id ? false : c)
+      );
+
+      fetch(`/api/v3/contactgroups/${match.params.id}/`, {
+        credentials: "same-origin",
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contacts: filteredContacts
+        })
+      })
+        .then(response => response.json())
+        .then(data => {
+          this.setState({
+            ...this.state,
+            contactgroup: {
+              ...this.state.contactgroup,
+              contacts: filteredContacts
+            }
+          });
+          addNotification("Contact removed from group", 2000);
+        });
+    }
+  }
+
   showGroupMessageModal() {
     this.setState({
       showGroupMessageModal: true
@@ -84,14 +119,20 @@ class Detail extends Component {
     }
 
     if (contactgroup && contactgroup.contacts) {
+      const numberOfContactgroups = contactgroup.contacts.length;
       return (
         <div className="container">
           <div className="row">
             <div className="col-md-12">
               <h4>{contactgroup.name}</h4>
               <p className="text-muted">
-                {contactgroup.contacts.length}{" "}
-                {pluralize("recipients", contactgroup.contacts.length)}
+                <FormattedMessage
+                  id="alarmgroups_app.number_of_contactgroups"
+                  defaultMessage={`{numberOfContactgroups, number} {numberOfContactgroups, plural, 
+                one {recipient}
+                other {recipients}}`}
+                  values={{ numberOfContactgroups }}
+                />
               </p>
             </div>
           </div>
@@ -104,11 +145,33 @@ class Detail extends Component {
           <table className={`${tableStyles.Table} ${tableStyles.Responsive}`}>
             <thead style={{ backgroundColor: "#D8D8D8" }}>
               <tr className="text-muted">
+                <td>
+                  <FormattedMessage
+                    id="alarmgroups_app.email_address"
+                    defaultMessage="E-mail address"
+                  />
+                </td>
+                <td>
+                  <FormattedMessage
+                    id="alarmgroups_app.phone_number"
+                    defaultMessage="Phone number"
+                  />
+                </td>
+                <td>
+                  {" "}
+                  <FormattedMessage
+                    id="alarmgroups_app.first_name"
+                    defaultMessage="First name"
+                  />
+                </td>
+                <td>
+                  {" "}
+                  <FormattedMessage
+                    id="alarmgroups_app.last_name"
+                    defaultMessage="Last name"
+                  />
+                </td>
                 <td>&nbsp;</td>
-                <td>E-mail address</td>
-                <td>Phone number</td>
-                <td>First name</td>
-                <td>Last name</td>
               </tr>
             </thead>
             <tbody>
@@ -116,18 +179,23 @@ class Detail extends Component {
                 const email = contact.user ? contact.user.email : contact.email;
                 return (
                   <tr key={i}>
-                    <td>
-                      <input
-                        type="checkbox"
-                        name="contact"
-                        className={formStyles.Checkbox}
-                        value={contact.id}
-                      />
-                    </td>
                     <td>{email || "-"}</td>
                     <td>{contact.phone_number || "-"}</td>
                     <td>{contact.first_name || "-"}</td>
                     <td>{contact.last_name || "-"}</td>
+                    <td>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          this.handleRemoveContactFromGroup(contact)}
+                        className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Danger2} ${gridStyles.FloatRight}`}
+                      >
+                        <FormattedMessage
+                          id="alarmgroups_app.remove_from_group"
+                          defaultMessage="Remove from group"
+                        />
+                      </button>
+                    </td>
                   </tr>
                 );
               })}
@@ -155,7 +223,11 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
-  return {};
+  return {
+    addNotification: (message, timeout) => {
+      dispatch(addNotification(message, timeout));
+    }
+  };
 };
 
 Detail = withRouter(connect(mapStateToProps, mapDispatchToProps)(Detail));

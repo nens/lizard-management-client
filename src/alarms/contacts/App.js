@@ -2,10 +2,9 @@ import React, { Component } from "react";
 import { addNotification } from "../../actions";
 import MDSpinner from "react-md-spinner";
 import Ink from "react-ink";
-import ActionBar from "./ActionBar";
+// import ActionBar from "./ActionBar";
 import PaginationBar from "./PaginationBar";
 import { FormattedMessage } from "react-intl";
-import pluralize from "pluralize";
 import { connect } from "react-redux";
 import styles from "./App.css";
 import gridStyles from "../../styles/Grid.css";
@@ -118,7 +117,14 @@ class App extends Component {
           <div
             className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
           >
-            {total} {pluralize("CONTACT", total)}
+            <FormattedMessage
+              id="contacts_app.number_of_contacts"
+              defaultMessage={`{total, number} {total, plural, 
+                one {CONTACT}
+                other {CONTACTS}}`}
+              values={{ total }}
+            />
+
             <button
               type="button"
               onClick={this.handleNewContactClick}
@@ -137,14 +143,36 @@ class App extends Component {
           <div
             className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
           >
-            <ActionBar handleFilter={this.handleFilter} />
+            {/* <ActionBar handleFilter={this.handleFilter} /> */}
             <table className={`${tableStyles.Table} ${tableStyles.Responsive}`}>
               <thead style={{ backgroundColor: "#D8D8D8" }}>
                 <tr className="text-muted">
-                  <td>First name</td>
-                  <td>Last name</td>
-                  <td>E-mail address</td>
-                  <td>Telephone number</td>
+                  <td>
+                    <FormattedMessage
+                      id="contacts_app.first_name"
+                      defaultMessage="First name"
+                    />
+                  </td>
+                  <td>
+                    <FormattedMessage
+                      id="contacts_app.last_name"
+                      defaultMessage="Last name"
+                    />
+                  </td>
+                  <td>
+                    {" "}
+                    <FormattedMessage
+                      id="contacts_app.email_address"
+                      defaultMessage="E-mail address"
+                    />{" "}
+                  </td>
+                  <td>
+                    {" "}
+                    <FormattedMessage
+                      id="contacts_app.phone_number"
+                      defaultMessage="Telephone number"
+                    />{" "}
+                  </td>
                   <td>&nbsp;</td>
                 </tr>
               </thead>
@@ -156,14 +184,20 @@ class App extends Component {
                     return (
                       <tr key={i}>
                         <td>
-                          <NavLink to={`/alarms/contacts/${contact.id}`} style={{color:"#000"}}>
+                          <NavLink
+                            to={`/alarms/contacts/${contact.id}`}
+                            style={{ color: "#000" }}
+                          >
                             {contact.user.first_name}
                           </NavLink>
                         </td>
                         <td>
-                          <NavLink to={`/alarms/contacts/${contact.id}`} style={{color:"#000"}}>
+                          <NavLink
+                            to={`/alarms/contacts/${contact.id}`}
+                            style={{ color: "#000" }}
+                          >
                             {contact.user.last_name}
-                          </NavLink>                                        
+                          </NavLink>
                         </td>
                         <td>{contact.user.email}</td>
                         <td>{contact.user.phone_number}</td>
@@ -173,7 +207,10 @@ class App extends Component {
                             onClick={() => this.handleDeleteContact(contact)}
                             className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Danger2} ${gridStyles.FloatRight}`}
                           >
-                            Delete
+                            <FormattedMessage
+                              id="contacts_app.delete"
+                              defaultMessage="Delete"
+                            />
                           </button>
                         </td>
                       </tr>
@@ -183,14 +220,20 @@ class App extends Component {
                     return (
                       <tr key={i}>
                         <td>
-                          <NavLink to={`/alarms/contacts/${contact.id}`} style={{color:"#000"}}>
+                          <NavLink
+                            to={`/alarms/contacts/${contact.id}`}
+                            style={{ color: "#000" }}
+                          >
                             {contact.first_name}
-                          </NavLink>                          
+                          </NavLink>
                         </td>
                         <td>
-                          <NavLink to={`/alarms/contacts/${contact.id}`} style={{color:"#000"}}>
+                          <NavLink
+                            to={`/alarms/contacts/${contact.id}`}
+                            style={{ color: "#000" }}
+                          >
                             {contact.last_name}
-                          </NavLink>                                                    
+                          </NavLink>
                         </td>
                         <td>{contact.email}</td>
                         <td>{contact.phone_number}</td>
@@ -200,7 +243,10 @@ class App extends Component {
                             onClick={() => this.handleDeleteContact(contact)}
                             className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Danger2} ${gridStyles.FloatRight}`}
                           >
-                            Delete
+                            <FormattedMessage
+                              id="contacts_app.delete"
+                              defaultMessage="Delete"
+                            />
                           </button>
                         </td>
                       </tr>

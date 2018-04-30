@@ -1,11 +1,12 @@
+import CSSTransition from "react-transition-group/CSSTransition";
+import formStyles from "../styles/Forms.css";
+import MDSpinner from "react-md-spinner";
 import React, { Component } from "react";
+import styles from "./OrganisationSwitcher.css";
 import { connect } from "react-redux";
 import { fetchOrganisations, selectOrganisation } from "../actions";
-import styles from "./OrganisationSwitcher.css";
-import formStyles from "../styles/Forms.css";
+import { FormattedMessage } from "react-intl";
 import { Scrollbars } from "react-custom-scrollbars";
-import MDSpinner from "react-md-spinner";
-import CSSTransition from "react-transition-group/CSSTransition";
 
 class OrganisationSwitcher extends Component {
   constructor(props) {
@@ -90,7 +91,12 @@ class OrganisationSwitcher extends Component {
             <div className={styles.CloseButton} onClick={handleClose}>
               <i className="material-icons">close</i>
             </div>
-            <h3>Switch organisation</h3>
+            <h3>
+              <FormattedMessage
+                id="components.switch_org"
+                defaultMessage="Switch organisation"
+              />
+            </h3>
             <br />
             <div className={formStyles.FormGroup}>
               <input
