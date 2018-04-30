@@ -1,9 +1,9 @@
-import React, { Component } from "react";
 import buttonStyles from "../../styles/Buttons.css";
-import pluralize from "pluralize";
+import React, { Component } from "react";
 import styles from "./AlarmRow.css";
-import { connect } from "react-redux";
 import { addNotification } from "../../actions";
+import { connect } from "react-redux";
+import { FormattedMessage } from "react-intl";
 import { withRouter, NavLink } from "react-router-dom";
 
 class AlarmRow extends Component {
@@ -86,7 +86,17 @@ class AlarmRow extends Component {
               ? styles.Active
               : styles.InActive} ${styles.ActiveIndicator}`}
           >
-            {isActive ? "ACTIVE" : "INACTIVE"}
+            {isActive ? (
+              <FormattedMessage
+                id="notifications_app.is_active"
+                defaultMessage="ACTIVE"
+              />
+            ) : (
+              <FormattedMessage
+                id="notifications_app.is_inactive"
+                defaultMessage="INACTIVE"
+              />
+            )}
           </div>
 
           <div>
@@ -100,10 +110,21 @@ class AlarmRow extends Component {
             </NavLink>
             <br />
             <small className="text-muted">
-              {numberOfThresholds} {pluralize("thresholds", numberOfThresholds)}
+              <FormattedMessage
+                id="notifications_app.number_of_thresholds"
+                defaultMessage={`{numberOfThresholds, number} {numberOfThresholds, plural, 
+                  one {threshold}
+                  other {thresholds}}`}
+                values={{ numberOfThresholds }}
+              />
               {", "}
-              {numberOfRecipients}{" "}
-              {pluralize("recipient group", numberOfRecipients)}{" "}
+              <FormattedMessage
+                id="notifications_app.number_of_recipients"
+                defaultMessage={`{numberOfRecipients, number} {numberOfRecipients, plural, 
+                  one {recipient}
+                  other {recipients}}`}
+                values={{ numberOfRecipients }}
+              />
             </small>
           </div>
         </div>
@@ -117,7 +138,17 @@ class AlarmRow extends Component {
                   ? this.deActivateAlarm(alarm.uuid)
                   : this.activateAlarm(alarm.uuid)}
             >
-              {isActive ? "Deactivate" : "Activate"}
+              {isActive ? (
+                <FormattedMessage
+                  id="notifications_app.deactivate_alarm"
+                  defaultMessage="Deactivate"
+                />
+              ) : (
+                <FormattedMessage
+                  id="notifications_app.activate_alarm"
+                  defaultMessage="Activate"
+                />
+              )}
             </button>
           </div>
           <div style={{ width: "50%" }}>
@@ -130,7 +161,10 @@ class AlarmRow extends Component {
                 }
               }}
             >
-              Remove
+              <FormattedMessage
+                id="notifications_app.remove_alarm"
+                defaultMessage="Remove"
+              />
             </button>
           </div>
         </div>

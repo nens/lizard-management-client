@@ -13,18 +13,38 @@ import { connect } from "react-redux";
 import { Map, Marker, TileLayer, WMSTileLayer } from "react-leaflet";
 import { withRouter } from "react-router-dom";
 
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  componentDidCatch(error, info) {
+    this.setState({ hasError: true });
+  }
+
+  render() {
+    if (this.state.hasError) {
+      // Render custom fallback UI
+      return <h3>Something went wrong...</h3>;
+    }
+    return this.props.children;
+  }
+}
+
 class Detail extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      showConfigureThreshold: false,
       availableGroups: [],
       availableMessages: [],
+      groups: [],
+      hasError: false,
       loadingComplete: false,
       messages: [],
-      groups: [],
       rasteralarm: null,
       rasterdetail: null,
+      showConfigureThreshold: false,
       timeseriesdetail: null
     };
     this.hideConfigureThreshold = this.hideConfigureThreshold.bind(this);
@@ -49,7 +69,9 @@ class Detail extends Component {
   componentWillUnmount() {
     document.removeEventListener("keydown", this.hideConfigureThreshold, false);
   }
-
+  componentDidCatch() {
+    this.setState(state => ({ ...state, hasError: true }));
+  }
   fetchContactsAndMessages(organisationId) {
     (async () => {
       try {
@@ -129,7 +151,7 @@ class Detail extends Component {
   handleAddThreshold(value, warning_level) {
     const { addNotification } = this.props;
     const { rasteralarm } = this.state;
-    
+
     const updatedThresholds = [
       ...rasteralarm.thresholds,
       {
@@ -256,14 +278,19 @@ class Detail extends Component {
 
   render() {
     const {
-      showConfigureThreshold,
       availableGroups,
       availableMessages,
+      hasError,
       loadingComplete,
       rasteralarm,
       rasterdetail,
+      showConfigureThreshold,
       timeseriesdetail
     } = this.state;
+
+    if (hasError) {
+      return <div>Sorry, something went wrong</div>;
+    }
 
     if (!loadingComplete) {
       return (
@@ -323,7 +350,6 @@ class Detail extends Component {
         </div>
       );
     });
-
 
     const map = currentAlarm.rasterdetail ? (
       <Map
@@ -387,121 +413,123 @@ class Detail extends Component {
     ) : null;
 
     return (
-      <div className={gridStyles.Container}>
-        <div className={gridStyles.Row}>
-          <div
-            className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
-          >
-            <div className={styles.Header}>
-              <div className={styles.HeaderLeft}>
-                <div
-                  className={`${currentAlarm.active
-                    ? styles.Active
-                    : styles.InActive} ${styles.ActiveIndicator}`}
+      <ErrorBoundary>
+        <div className={gridStyles.Container}>
+          <div className={gridStyles.Row}>
+            <div
+              className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
+            >
+              <div className={styles.Header}>
+                <div className={styles.HeaderLeft}>
+                  <div
+                    className={`${currentAlarm.active
+                      ? styles.Active
+                      : styles.InActive} ${styles.ActiveIndicator}`}
+                  >
+                    {currentAlarm.active ? "ACTIVE" : "INACTIVE"}
+                  </div>
+                  <div>
+                    <p className={styles.Name}>{currentAlarm.name}</p>
+                    <p className={`text-muted ${styles.Counts}`}>
+                      {currentAlarm.thresholds.length}{" "}
+                      {pluralize("threshold", currentAlarm.thresholds.length)},{" "}
+                      {currentAlarm.messages.length}{" "}
+                      {pluralize(
+                        "recipient group",
+                        currentAlarm.messages.length
+                      )}{" "}
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link}`}
+                  onClick={() =>
+                    currentAlarm.active
+                      ? this.deActivateAlarm(currentAlarm.uuid)
+                      : this.activateAlarm(currentAlarm.uuid)}
                 >
-                  {currentAlarm.active ? "ACTIVE" : "INACTIVE"}
+                  {currentAlarm.active ? "Deactivate" : "Activate"}
+                </button>
+
+                <button
+                  type="button"
+                  className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link}`}
+                  onClick={() => {
+                    if (window.confirm("Are you sure?")) {
+                      this.removeAlarm(currentAlarm.uuid);
+                    }
+                  }}
+                >
+                  Remove
+                </button>
+              </div>
+            </div>
+          </div>
+          <hr />
+
+          <div className={gridStyles.Row}>
+            <div
+              className={`${gridStyles.colLg5} ${gridStyles.colMd5} ${gridStyles.colSm5} ${gridStyles.colXs12}`}
+            >
+              <h3>Map</h3>
+              {map || <p>Not available</p>}
+              <hr />
+              <h3>Chart</h3>
+              {chart || <p>Not available</p>}
+            </div>
+            <div
+              className={`${gridStyles.colLg7} ${gridStyles.colMd7} ${gridStyles.colSm7} ${gridStyles.colXs12}`}
+            >
+              <div className={gridStyles.Row}>
+                <div
+                  className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
+                >
+                  <AddButton
+                    style={{ marginBottom: 10, float: "right" }}
+                    handleClick={() =>
+                      this.setState({
+                        showConfigureThreshold: true
+                      })}
+                    title="Add threshold"
+                  />
+                  <h3>Thresholds</h3>
                 </div>
-                <div>
-                  <p className={styles.Name}>{currentAlarm.name}</p>
-                  <p className={`text-muted ${styles.Counts}`}>
-                    {currentAlarm.thresholds.length}{" "}
-                    {pluralize("threshold", currentAlarm.thresholds.length)},{" "}
-                    {currentAlarm.messages.length}{" "}
-                    {pluralize(
-                      "recipient group",
-                      currentAlarm.messages.length
-                    )}{" "}
-                  </p>
+              </div>
+              <div className={gridStyles.Row}>
+                <div
+                  className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
+                >
+                  {thresholds}
                 </div>
               </div>
-
-              <button
-                type="button"
-                className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link}`}
-                onClick={() =>
-                  currentAlarm.active
-                    ? this.deActivateAlarm(currentAlarm.uuid)
-                    : this.activateAlarm(currentAlarm.uuid)}
-              >
-                {currentAlarm.active ? "Deactivate" : "Activate"}
-              </button>
-
-              <button
-                type="button"
-                className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link}`}
-                onClick={() => {
-                  if (window.confirm("Are you sure?")) {
-                    this.removeAlarm(currentAlarm.uuid);
-                  }
-                }}
-              >
-                Remove
-              </button>
+              <hr />
+              <div className={gridStyles.Row}>
+                <div
+                  className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
+                >
+                  <RecipientGroups
+                    currentAlarm={currentAlarm}
+                    availableGroups={availableGroups}
+                    availableMessages={availableMessages}
+                  />
+                </div>
+              </div>
             </div>
           </div>
+
+          {showConfigureThreshold ? (
+            <ConfigureThreshold
+              handleAddThreshold={this.handleAddThreshold}
+              raster={currentAlarm.rasterdetail}
+              timeseries={currentAlarm.timeseriesdetail.data}
+              handleClose={() =>
+                this.setState({ showConfigureThreshold: false })}
+            />
+          ) : null}
         </div>
-        <hr />
-
-        <div className={gridStyles.Row}>
-          <div
-            className={`${gridStyles.colLg5} ${gridStyles.colMd5} ${gridStyles.colSm5} ${gridStyles.colXs12}`}
-          >
-            <h3>Map</h3>
-            {map || <p>Not available</p>}
-            <hr />
-            <h3>Chart</h3>
-            {chart || <p>Not available</p>}
-          </div>
-          <div
-            className={`${gridStyles.colLg7} ${gridStyles.colMd7} ${gridStyles.colSm7} ${gridStyles.colXs12}`}
-          >
-            <div className={gridStyles.Row}>
-              <div
-                className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
-              >
-                <AddButton
-                  style={{ marginBottom: 10, float: "right" }}
-                  handleClick={() =>
-                    this.setState({
-                      showConfigureThreshold: true
-                    })}
-                  title="Add threshold"
-                />
-                <h3>Thresholds</h3>
-              </div>
-            </div>
-            <div className={gridStyles.Row}>
-              <div
-                className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
-              >
-                {thresholds}
-              </div>
-            </div>
-            <hr />
-            <div className={gridStyles.Row}>
-              <div
-                className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
-              >
-                <RecipientGroups
-                  currentAlarm={currentAlarm}
-                  availableGroups={availableGroups}
-                  availableMessages={availableMessages}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {showConfigureThreshold ? (
-          <ConfigureThreshold
-            handleAddThreshold={this.handleAddThreshold}
-            raster={currentAlarm.rasterdetail}
-            timeseries={currentAlarm.timeseriesdetail.data}
-            handleClose={() => this.setState({ showConfigureThreshold: false })}
-          />
-        ) : null}
-
-      </div>
+      </ErrorBoundary>
     );
   }
 }

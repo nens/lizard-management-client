@@ -7,12 +7,13 @@ import { HashRouter as Router } from "react-router-dom";
 import App from "./App";
 
 import nl from "./translations/locales/nl.json";
+import nldata from 'react-intl/locale-data/nl';
 
 // Initialize Redux store
 let store = configureStore();
 
 // Add localisation data to translations
-addLocaleData([...nl]);
+addLocaleData([...nldata]);
 
 // React-router basename (https://reacttraining.com/react-router/web/api/BrowserRouter/basename-string)
 const basename = "/";

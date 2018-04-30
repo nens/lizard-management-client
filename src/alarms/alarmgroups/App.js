@@ -5,7 +5,6 @@ import groupsIcon from "../../images/groups@3x.svg";
 import Ink from "react-ink";
 import MDSpinner from "react-md-spinner";
 import PaginationBar from "./PaginationBar";
-import pluralize from "pluralize";
 import React, { Component } from "react";
 import styles from "./App.css";
 import tableStyles from "../../styles/Table.css";
@@ -100,7 +99,13 @@ class App extends Component {
           <div
             className={`${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs6}`}
           >
-            {numberOfGroups} {pluralize("GROUP", numberOfGroups)}
+            <FormattedMessage
+              id="alarmgroups_app.number_of_groups"
+              defaultMessage={`{numberOfGroups, number} {numberOfGroups, plural, 
+                one {GROUP}
+                other {GROUPS}}`}
+              values={{ numberOfGroups }}
+            />
           </div>
           <div
             className={`${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs6}`}
@@ -159,7 +164,13 @@ class App extends Component {
                           <p
                             className={`${styles.NumberOfContactsText} text-muted`}
                           >
-                            {pluralize("contacts", numberOfContacts)}
+                            <FormattedMessage
+                              id="alarmgroups_app.number_of_contacts"
+                              defaultMessage={`{numberOfContacts, plural, 
+                                one {contact}
+                                other {contacts}}`}
+                              values={{ numberOfContacts }}
+                            />
                           </p>
                         </td>
                         <td className={tableStyles.TdCol1}>
@@ -200,7 +211,10 @@ class App extends Component {
                                   }
                                 }}
                               >
-                                Delete group
+                                <FormattedMessage
+                                  id="alarmgroups_app.delete_group"
+                                  defaultMessage="Delete group"
+                                />
                               </PopoverItem>
                             </Popover>
                           </div>
@@ -213,7 +227,12 @@ class App extends Component {
             ) : (
               <div className={styles.NoResults}>
                 <img src={groupsIcon} alt="Groups" />
-                <h5>No groups configured...</h5>
+                <h5>
+                  <FormattedMessage
+                    id="alarmgroups_app.no_groups_configured"
+                    defaultMessage="No groups configured..."
+                  />
+                </h5>
               </div>
             )}
           </div>
@@ -236,7 +255,11 @@ class App extends Component {
           <div
             className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
           >
-            <PaginationBar loadContactGroupsOnPage={this.loadContactGroupsOnPage} page={page} pages={Math.ceil(total / 10)} />
+            <PaginationBar
+              loadContactGroupsOnPage={this.loadContactGroupsOnPage}
+              page={page}
+              pages={Math.ceil(total / 10)}
+            />
           </div>
         </div>
       </div>

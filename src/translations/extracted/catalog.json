@@ -1,15 +1,31 @@
 [
 	{
-		"id": "AlarmGroups.alarms_breadcrumb",
-		"defaultMessage": "Alarms"
+		"id": "alarmgroups_app.number_of_groups",
+		"defaultMessage": "{numberOfGroups, number} {numberOfGroups, plural, one {GROUP} other {GROUPS}}"
 	},
 	{
-		"id": "AlarmGroups.alarms_AlarmGroups",
-		"defaultMessage": "Alarm Groups"
+		"id": "alarmgroups_app.new_group",
+		"defaultMessage": "New group"
 	},
 	{
-		"id": "alarms.alarms_breadcrumb",
-		"defaultMessage": "Alarms"
+		"id": "alarmgroups_app.number_of_contacts",
+		"defaultMessage": "{numberOfContacts, plural, one {contact} other {contacts}}"
+	},
+	{
+		"id": "alarmgroups_app.delete_group",
+		"defaultMessage": "Delete group"
+	},
+	{
+		"id": "alarmgroups_app.no_groups_configured",
+		"defaultMessage": "No groups configured..."
+	},
+	{
+		"id": "alarmgroup.send_message",
+		"defaultMessage": "Send message"
+	},
+	{
+		"id": "alarmgroups_new.create_group",
+		"defaultMessage": "Create group"
 	},
 	{
 		"id": "alarms.notifications",
@@ -28,6 +44,14 @@
 		"defaultMessage": "Recipient management"
 	},
 	{
+		"id": "alarms.alarms_contacts",
+		"defaultMessage": "Contacts"
+	},
+	{
+		"id": "alarms.contacts_management",
+		"defaultMessage": "Contacts management"
+	},
+	{
 		"id": "alarms.alarms_templates",
 		"defaultMessage": "Templates"
 	},
@@ -36,28 +60,84 @@
 		"defaultMessage": "Alarm template management"
 	},
 	{
-		"id": "alarms.group_messages",
-		"defaultMessage": "Group messages"
+		"id": "alarmtemplates_app.new_group",
+		"defaultMessage": "New template"
 	},
 	{
-		"id": "alarms.send_group_messages_subtitle",
-		"defaultMessage": "Send one-off messages to groups of recipients"
+		"id": "alarmtemplates_app.delete_template",
+		"defaultMessage": "Delete template"
 	},
 	{
-		"id": "alarmgroups_app.new_group",
-		"defaultMessage": "New group"
+		"id": "alarmtemplates_app.save_template",
+		"defaultMessage": "Save template"
+	},
+	{
+		"id": "alarmtemplates_new.create_template",
+		"defaultMessage": "Create template"
+	},
+	{
+		"id": "contacts_app.new_contact",
+		"defaultMessage": "New contact"
+	},
+	{
+		"id": "contacts_new.update_contact",
+		"defaultMessage": "Update contact"
+	},
+	{
+		"id": "contacts_new.create_contact",
+		"defaultMessage": "Create contact"
+	},
+	{
+		"id": "notifications_app.is_active",
+		"defaultMessage": "ACTIVE"
+	},
+	{
+		"id": "notifications_app.is_inactive",
+		"defaultMessage": "INACTIVE"
+	},
+	{
+		"id": "notifications_app.number_of_thresholds",
+		"defaultMessage": "{numberOfThresholds, number} {numberOfThresholds, plural, one {threshold} other {thresholds}}"
+	},
+	{
+		"id": "notifications_app.number_of_recipients",
+		"defaultMessage": "{numberOfRecipients, number} {numberOfRecipients, plural, one {recipient} other {recipients}}"
+	},
+	{
+		"id": "notifications_app.deactivate_alarm",
+		"defaultMessage": "Deactivate"
+	},
+	{
+		"id": "notifications_app.activate_alarm",
+		"defaultMessage": "Activate"
+	},
+	{
+		"id": "notifications_app.remove_alarm",
+		"defaultMessage": "Remove"
+	},
+	{
+		"id": "notifications_app.number_of_notifications",
+		"defaultMessage": "{numberOfNotifications, number} {numberOfNotifications, plural, one {NOTIFICATION} other {NOTIFICATIONS}}"
 	},
 	{
 		"id": "notifications_app.new_notification",
 		"defaultMessage": "New notification"
 	},
 	{
-		"id": "AlarmTemplates.alarms_breadcrumb",
-		"defaultMessage": "Alarms"
+		"id": "notifications_app.no_notifications",
+		"defaultMessage": "No notifications configured..."
 	},
 	{
-		"id": "AlarmTemplates.alarms_AlarmTemplates",
-		"defaultMessage": "Alarm Templates"
+		"id": "notifications_app.raster_selection",
+		"defaultMessage": "Raster selection"
+	},
+	{
+		"id": "notifications_app.which_temporal_raster_to_use",
+		"defaultMessage": "Which temporal raster do you want to use?"
+	},
+	{
+		"id": "notifications_app.name_will_be_used_in_alerts",
+		"defaultMessage": "The name of the raster will be used in e-mail and SMS alerts"
 	},
 	{
 		"id": "index.documentation",
@@ -90,13 +170,5 @@
 	{
 		"id": "home.alarm_management",
 		"defaultMessage": "Alarm management"
-	},
-	{
-		"id": "notifications.alarms_breadcrumb",
-		"defaultMessage": "Alarms"
-	},
-	{
-		"id": "notifications.alarms_notifications",
-		"defaultMessage": "Notifications"
 	}
 ]

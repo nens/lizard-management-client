@@ -5,7 +5,6 @@ import Ink from "react-ink";
 import MDSpinner from "react-md-spinner";
 import PaginationBar from "./PaginationBar";
 import { AlarmRow } from "./AlarmRow";
-import pluralize from "pluralize";
 import React, { Component } from "react";
 import styles from "./App.css";
 import { addNotification } from "../../actions";
@@ -103,8 +102,13 @@ class App extends Component {
             style={{ color: "#858E9C" }}
             className={`${gridStyles.colLg8} ${gridStyles.colMd8} ${gridStyles.colSm8} ${gridStyles.colXs8}`}
           >
-            {numberOfNotifications}{" "}
-            {pluralize("NOTIFICATIONS", numberOfNotifications)}
+            <FormattedMessage
+              id="notifications_app.number_of_notifications"
+              defaultMessage={`{numberOfNotifications, number} {numberOfNotifications, plural, 
+                one {NOTIFICATION}
+                other {NOTIFICATIONS}}`}
+              values={{ numberOfNotifications }}
+            />
           </div>
           <div
             className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${gridStyles.colSm4} ${gridStyles.colXs4}`}
@@ -144,7 +148,12 @@ class App extends Component {
             ) : (
               <div className={styles.NoResults}>
                 <img src={alarmIcon} alt="Alarms" />
-                <h5>No notifications configured...</h5>
+                <h5>
+                  <FormattedMessage
+                    id="notifications_app.no_notifications"
+                    defaultMessage="No notifications configured..."
+                  />                  
+                </h5>
               </div>
             )}
           </div>

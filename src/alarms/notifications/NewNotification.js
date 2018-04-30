@@ -1,30 +1,37 @@
-import React, { Component } from "react";
-import debounce from "lodash.debounce";
-import SelectRaster from "../../components/SelectRaster";
-import { connect } from "react-redux";
-import { addNotification } from "../../actions";
-import { withRouter } from "react-router-dom";
-import { Map, Marker, TileLayer, WMSTileLayer } from "react-leaflet";
-import styles from "./NewNotification.css";
-import gridStyles from "../../styles/Grid.css";
-import buttonStyles from "../../styles/Buttons.css";
-import formStyles from "../../styles/Forms.css";
-import StepIndicator from "../../components/StepIndicator";
-import GroupAndTemplateSelector from "./GroupAndTemplateSelect";
 import AddButton from "../../components/AddButton";
-import ConfigureThreshold from "./ConfigureThreshold";
+import buttonStyles from "../../styles/Buttons.css";
 import ConfigureRecipients from "./ConfigureRecipients";
+import ConfigureThreshold from "./ConfigureThreshold";
+import debounce from "lodash.debounce";
+import formStyles from "../../styles/Forms.css";
+import gridStyles from "../../styles/Grid.css";
+import GroupAndTemplateSelector from "./GroupAndTemplateSelect";
+import React, { Component } from "react";
+import SelectRaster from "../../components/SelectRaster";
+import StepIndicator from "../../components/StepIndicator";
+import styles from "./NewNotification.css";
+import { addNotification } from "../../actions";
+import { connect } from "react-redux";
+import { FormattedMessage } from "react-intl";
+import { Map, Marker, TileLayer, WMSTileLayer } from "react-leaflet";
+import { withRouter } from "react-router-dom";
 
 async function fetchContactsAndMessages(organisationId) {
   try {
-    const groups = await fetch(`/api/v3/contactgroups/?organisation__unique_id=${organisationId}`, {
-      credentials: "same-origin"
-    })
+    const groups = await fetch(
+      `/api/v3/contactgroups/?organisation__unique_id=${organisationId}`,
+      {
+        credentials: "same-origin"
+      }
+    )
       .then(response => response.json())
       .then(data => data.results);
-    const messages = await fetch(`/api/v3/messages/?organisation__unique_id=${organisationId}`, {
-      credentials: "same-origin"
-    })
+    const messages = await fetch(
+      `/api/v3/messages/?organisation__unique_id=${organisationId}`,
+      {
+        credentials: "same-origin"
+      }
+    )
       .then(response => response.json())
       .then(data => data.results);
     return {
@@ -152,7 +159,7 @@ class NewNotification extends Component {
       .then(data => {
         addNotification(`Alarm added and activated`, 2000);
         history.push("/alarms/notifications");
-      });    
+      });
   }
   handleRasterSearchInput(value) {
     const { bootstrap } = this.props;
@@ -239,6 +246,7 @@ class NewNotification extends Component {
   }
   render() {
     const position = [52.1858, 5.2677];
+
     const {
       availableGroups,
       availableMessages,
@@ -254,6 +262,7 @@ class NewNotification extends Component {
       thresholds,
       timeseries
     } = this.state;
+
     return (
       <div>
         <div className={gridStyles.Container}>
@@ -274,14 +283,23 @@ class NewNotification extends Component {
                       <h3
                         className={`mt-0 ${step !== 1 ? "text-muted" : null}`}
                       >
-                        Raster selection
+                        <FormattedMessage
+                          id="notifications_app.raster_selection"
+                          defaultMessage="Raster selection"
+                        />
                       </h3>
                       {step === 1 ? (
                         <div>
                           <p className="text-muted">
-                            Which temporal raster do you want to use?<br />
-                            The name of the raster will be used in e-mail and
-                            SMS alerts.
+                            <FormattedMessage
+                              id="notifications_app.which_temporal_raster_to_use"
+                              defaultMessage="Which temporal raster do you want to use?"
+                            />
+                            <br />
+                            <FormattedMessage
+                              id="notifications_app.name_will_be_used_in_alerts"
+                              defaultMessage="The name of the raster will be used in e-mail and SMS alerts"
+                            />
                           </p>
                           <div className={formStyles.FormGroup}>
                             <SelectRaster
