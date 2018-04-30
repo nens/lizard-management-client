@@ -33,10 +33,9 @@ class PaginationBar extends Component {
         </div>
       );
     } catch (e) {
-      return <div/>;
+      return <div />;
     }
   }
 }
-
 
 export default PaginationBar;

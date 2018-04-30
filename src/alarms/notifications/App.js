@@ -46,7 +46,8 @@ class App extends Component {
         this.setState({
           isFetching: false,
           total: data.count,
-          alarms: data.results
+          alarms: data.results,
+          page :page
         });
       });
   }
