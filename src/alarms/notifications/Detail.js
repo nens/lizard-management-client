@@ -83,22 +83,20 @@ class Detail extends Component {
     (async () => {
       try {
         const groups = await fetch(
-          `/api/v3/contactgroups/?organisation__unique_id=${organisationId}`,
+          `/api/v3/contactgroups/?organisation__unique_id=${organisationId}&page_size=0`,
           {
             credentials: "same-origin"
           }
         )
-          .then(response => response.json())
-          .then(data => data.results);
+          .then(response => response.json());
 
         const messages = await fetch(
-          `/api/v3/messages/?organisation__unique_id=${organisationId}`,
+          `/api/v3/messages/?organisation__unique_id=${organisationId}&page_size=0`,
           {
             credentials: "same-origin"
           }
         )
-          .then(response => response.json())
-          .then(data => data.results);
+          .then(response => response.json());
 
         this.setState({
           availableMessages: messages,
