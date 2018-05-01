@@ -15,13 +15,16 @@ import { withRouter, NavLink } from "react-router-dom";
 class App extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       filterValue: "",
       page: 1,
       total: 0,
       isFetching: true,
-      contacts: []
+      contacts: [],
+      ordering: {
+        column: "first_name",
+        direction: ""
+      }
     };
     this.handleFilter = this.handleFilter.bind(this);
     this.loadContactsOnPage = this.loadContactsOnPage.bind(this);
@@ -55,13 +58,16 @@ class App extends Component {
     }
   }
   loadContactsOnPage(page) {
+    const { ordering } = this.state;
     const { bootstrap } = this.props;
     const organisationId = bootstrap.organisation.unique_id;
     this.setState({
       isFetching: true
     });
     fetch(
-      `/api/v3/contacts/?page=${page}&organisation__unique_id=${organisationId}`,
+      `/api/v3/contacts/?page=${page}&organisation__unique_id=${organisationId}${ordering.column
+        ? `&ordering=${ordering.direction}${ordering.column}`
+        : ""}`,
       {
         credentials: "same-origin"
       }
@@ -83,7 +89,14 @@ class App extends Component {
     });
   }
   render() {
-    const { total, isFetching, page, contacts, filterValue } = this.state;
+    const {
+      total,
+      isFetching,
+      page,
+      contacts,
+      filterValue,
+      ordering
+    } = this.state;
 
     const filteredContacts = contacts.filter((contact, i) => {
       if (
@@ -147,31 +160,147 @@ class App extends Component {
             <table className={`${tableStyles.Table} ${tableStyles.Responsive}`}>
               <thead style={{ backgroundColor: "#D8D8D8" }}>
                 <tr className="text-muted">
-                  <td>
+                  <td
+                    style={{ cursor: "pointer", position: "relative" }}
+                    onClick={() =>
+                      this.setState(
+                        {
+                          ordering: {
+                            column: "first_name",
+                            direction: ordering.direction === "-" ? "" : "-"
+                          }
+                        },
+                        () => this.loadContactsOnPage(page)
+                      )}
+                  >
                     <FormattedMessage
                       id="contacts_app.first_name"
                       defaultMessage="First name"
                     />
+                    {ordering.column === "first_name" ? (
+                      ordering.direction === "-" ? (
+                        <i
+                          style={{ position: "absolute", right: 0 }}
+                          className="material-icons"
+                        >
+                          arrow_drop_up
+                        </i>
+                      ) : (
+                        <i
+                          style={{ position: "absolute", right: 0 }}
+                          className="material-icons"
+                        >
+                          arrow_drop_down
+                        </i>
+                      )
+                    ) : null}
                   </td>
-                  <td>
+                  <td
+                    style={{ cursor: "pointer", position: "relative" }}
+                    onClick={() =>
+                      this.setState(
+                        {
+                          ordering: {
+                            column: "last_name",
+                            direction: ordering.direction === "-" ? "" : "-"
+                          }
+                        },
+                        () => this.loadContactsOnPage(page)
+                      )}
+                  >
                     <FormattedMessage
                       id="contacts_app.last_name"
                       defaultMessage="Last name"
                     />
+                    {ordering.column === "last_name" ? (
+                      ordering.direction === "-" ? (
+                        <i
+                          style={{ position: "absolute", right: 0 }}
+                          className="material-icons"
+                        >
+                          arrow_drop_up
+                        </i>
+                      ) : (
+                        <i
+                          style={{ position: "absolute", right: 0 }}
+                          className="material-icons"
+                        >
+                          arrow_drop_down
+                        </i>
+                      )
+                    ) : null}
                   </td>
-                  <td>
+                  <td
+                    style={{ cursor: "pointer", position: "relative" }}
+                    onClick={() =>
+                      this.setState(
+                        {
+                          ordering: {
+                            column: "email",
+                            direction: ordering.direction === "-" ? "" : "-"
+                          }
+                        },
+                        () => this.loadContactsOnPage(page)
+                      )}
+                  >
                     {" "}
                     <FormattedMessage
                       id="contacts_app.email_address"
                       defaultMessage="E-mail address"
                     />{" "}
+                    {ordering.column === "email" ? (
+                      ordering.direction === "-" ? (
+                        <i
+                          style={{ position: "absolute", right: 0 }}
+                          className="material-icons"
+                        >
+                          arrow_drop_up
+                        </i>
+                      ) : (
+                        <i
+                          style={{ position: "absolute", right: 0 }}
+                          className="material-icons"
+                        >
+                          arrow_drop_down
+                        </i>
+                      )
+                    ) : null}
                   </td>
-                  <td>
+                  <td
+                    style={{ cursor: "pointer", position: "relative" }}
+                    onClick={() =>
+                      this.setState(
+                        {
+                          ordering: {
+                            column: "phone_number",
+                            direction: ordering.direction === "-" ? "" : "-"
+                          }
+                        },
+                        () => this.loadContactsOnPage(page)
+                      )}
+                  >
                     {" "}
                     <FormattedMessage
                       id="contacts_app.phone_number"
                       defaultMessage="Telephone number"
                     />{" "}
+                    {ordering.column === "phone_number" ? (
+                      ordering.direction === "-" ? (
+                        <i
+                          style={{ position: "absolute", right: 0 }}
+                          className="material-icons"
+                        >
+                          arrow_drop_up
+                        </i>
+                      ) : (
+                        <i
+                          style={{ position: "absolute", right: 0 }}
+                          className="material-icons"
+                        >
+                          arrow_drop_down
+                        </i>
+                      )
+                    ) : null}
                   </td>
                   <td>&nbsp;</td>
                 </tr>

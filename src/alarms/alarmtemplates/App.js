@@ -21,7 +21,11 @@ class App extends Component {
       page: 1,
       total: 0,
       isFetching: true,
-      templates: []
+      templates: [],
+      ordering: {
+        column: "name",
+        direction: ""
+      }
     };
     this.handleDeleteTemplate = this.handleDeleteTemplate.bind(this);
     this.handleFilter = this.handleFilter.bind(this);
@@ -52,9 +56,13 @@ class App extends Component {
   }
   loadTemplatesOnPage(page) {
     const { bootstrap } = this.props;
+    const { ordering } = this.state;
     const organisationId = bootstrap.organisation.unique_id;
+
     fetch(
-      `/api/v3/messages/?page=${page}&organisation__unique_id=${organisationId}`,
+      `/api/v3/messages/?page=${page}&organisation__unique_id=${organisationId}${ordering.column
+        ? `&ordering=${ordering.direction}${ordering.column}`
+        : ""}`,
       {
         credentials: "same-origin"
       }
@@ -78,7 +86,14 @@ class App extends Component {
     this.props.history.push("templates/new");
   }
   render() {
-    const { templates, filterValue, isFetching, page, total } = this.state;
+    const {
+      templates,
+      filterValue,
+      isFetching,
+      page,
+      total,
+      ordering
+    } = this.state;
     const numberOfTemplates = total;
 
     const filteredTemplates = templates.filter((template, i) => {
@@ -157,18 +172,83 @@ class App extends Component {
                 >
                   <thead style={{ backgroundColor: "#D8D8D8" }}>
                     <tr className="text-muted">
-                      <td>
+                      <td
+                        style={{
+                          cursor: "pointer",
+                          position: "relative"
+                        }}
+                        onClick={() =>
+                          this.setState(
+                            {
+                              ordering: {
+                                column: "name",
+                                direction: ordering.direction === "-" ? "" : "-"
+                              }
+                            },
+                            () => this.loadTemplatesOnPage(page)
+                          )}
+                      >
                         {" "}
                         <FormattedMessage
                           id="alarmtemplates_app.name"
                           defaultMessage="Name"
                         />
+                        {ordering.column === "name" ? (
+                          ordering.direction === "-" ? (
+                            <i
+                              style={{ position: "absolute", right: 0 }}
+                              className="material-icons"
+                            >
+                              arrow_drop_up
+                            </i>
+                          ) : (
+                            <i
+                              style={{ position: "absolute", right: 0 }}
+                              className="material-icons"
+                            >
+                              arrow_drop_down
+                            </i>
+                          )
+                        ) : null}
                       </td>
-                      <td style={{ textAlign: "center" }}>
+                      <td
+                        style={{
+                          textAlign: "center",
+                          cursor: "pointer",
+                          position: "relative"
+                        }}
+                        onClick={() =>
+                          this.setState(
+                            {
+                              ordering: {
+                                column: "type",
+                                direction: ordering.direction === "-" ? "" : "-"
+                              }
+                            },
+                            () => this.loadTemplatesOnPage(page)
+                          )}
+                      >
                         <FormattedMessage
                           id="alarmtemplates_app.type"
                           defaultMessage="Type"
                         />
+                        {ordering.column === "type" ? (
+                          ordering.direction === "-" ? (
+                            <i
+                              style={{ position: "absolute", right: 0 }}
+                              className="material-icons"
+                            >
+                              arrow_drop_up
+                            </i>
+                          ) : (
+                            <i
+                              style={{ position: "absolute", right: 0 }}
+                              className="material-icons"
+                            >
+                              arrow_drop_down
+                            </i>
+                          )
+                        ) : null}
                       </td>
                       <td>&nbsp;</td>
                     </tr>
