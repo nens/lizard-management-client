@@ -72,7 +72,7 @@ Run `$ GENERATE_SOURCEMAP=false yarn build` and look in the `build/` folder.
 Releasing
 =========
 
-To be written... `release-it` perhaps?
+Run `$ yarn run release` and answer the questions accordingly.
 
 
 Deployment
