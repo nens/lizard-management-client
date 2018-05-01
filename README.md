@@ -78,8 +78,21 @@ Run `$ yarn run release` and answer the questions accordingly.
 Deployment
 ==========
 
-Uses Ansible for deployment.
-To be extended...
+1) Log in to these webservers using SSH:
+
+- p-web-ws-d20.external-nens.local
+- p-web-ws-d21.external-nens.local
+- p-web-ws-d22.external-nens.local
+
+2) For each webserver, download the release asset you want from [Github](https://github.com/nens/lizard-management-client/releases) to a tmp dir in your home dir using `wget`
+
+3) Unzip the archive
+
+4) Copy or move the contents of the unzipped archive to /srv/nxt.lizard.net/src/lizard-management-client/dist/
+
+5) Set permissions on that directory. Done.
+
+
 
 
 Internationalisation
