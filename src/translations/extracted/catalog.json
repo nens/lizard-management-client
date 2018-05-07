@@ -176,6 +176,14 @@
 		"defaultMessage": "Template"
 	},
 	{
+		"id": "alarmtemplates_new.characters",
+		"defaultMessage": "characters"
+	},
+	{
+		"id": "alarmtemplates_new.sms_max_char_warning",
+		"defaultMessage": "SMS messages have a limit of 160 characters after substituting the parameter tags"
+	},
+	{
 		"id": "alarmtemplates_new.create_template",
 		"defaultMessage": "Create template"
 	},
@@ -408,12 +416,8 @@
 		"defaultMessage": "Remove"
 	},
 	{
-		"id": "notifications_app.raster_selection",
-		"defaultMessage": "Raster selection"
-	},
-	{
-		"id": "notifications_app.which_temporal_raster_to_use",
-		"defaultMessage": "Which temporal raster do you want to use?"
+		"id": "notifications_app.name_of_alarm",
+		"defaultMessage": "Name of this alarm"
 	},
 	{
 		"id": "notifications_app.name_will_be_used_in_alerts",
@@ -422,6 +426,14 @@
 	{
 		"id": "notifications_app.next_step",
 		"defaultMessage": "Next step"
+	},
+	{
+		"id": "notifications_app.raster_selection",
+		"defaultMessage": "Raster selection"
+	},
+	{
+		"id": "notifications_app.which_temporal_raster_to_use",
+		"defaultMessage": "Which temporal raster do you want to use?"
 	},
 	{
 		"id": "notifications_app.point_on_map",
