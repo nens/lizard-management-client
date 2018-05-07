@@ -116,3 +116,14 @@ export function selectOrganisation(organisation) {
     organisation
   };
 }
+
+// MARK: Viewport
+export const UPDATE_VIEWPORT_DIMENSIONS = "UPDATE_VIEWPORT_DIMENSIONS";
+
+export function updateViewportDimensions(width, height) {
+  return {
+    type: UPDATE_VIEWPORT_DIMENSIONS,
+    width,
+    height
+  };
+}

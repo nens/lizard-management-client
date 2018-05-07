@@ -1,12 +1,13 @@
 import { combineReducers } from "redux";
 import {
-  REQUEST_LIZARD_BOOTSTRAP,
+  DISMISS_NOTIFICATION,
   RECEIVE_LIZARD_BOOTSTRAP,
-  REQUEST_ORGANISATIONS,
   RECEIVE_ORGANISATIONS,
+  REQUEST_LIZARD_BOOTSTRAP,
+  REQUEST_ORGANISATIONS,
   SELECT_ORGANISATION,
   SHOW_NOTIFICATION,
-  DISMISS_NOTIFICATION
+  UPDATE_VIEWPORT_DIMENSIONS
 } from "./actions";
 
 function bootstrap(
@@ -62,9 +63,29 @@ function notifications(
   }
 }
 
+function viewport(
+  state = {
+    width: window.innerWidth,
+    height: window.innerHeight
+  },
+  action
+) {
+  switch (action.type) {
+    case UPDATE_VIEWPORT_DIMENSIONS:
+      return {
+        ...state,
+        width: action.width,
+        height: action.height
+      };
+    default:
+      return state;
+  }
+}
+
 const rootReducer = combineReducers({
   bootstrap,
-  notifications
+  notifications,
+  viewport
 });
 
 export default rootReducer;
