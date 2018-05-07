@@ -6,7 +6,8 @@ import { App as AlarmsApp } from "./alarms/App";
 import {
   addNotification,
   fetchLizardBootstrap,
-  fetchOrganisations
+  fetchOrganisations,
+  updateViewportDimensions
 } from "./actions";
 import { Route, NavLink } from "react-router-dom";
 import LanguageSwitcher from "./components/LanguageSwitcher";
@@ -25,20 +26,28 @@ class App extends Component {
     };
     this.uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
     this.updateOnlineStatus = this.updateOnlineStatus.bind(this);
+    this.updateViewportDimensions = this.updateViewportDimensions.bind(this);
   }
   componentDidMount() {
     window.addEventListener("online", e => this.updateOnlineStatus(e));
     window.addEventListener("offline", e => this.updateOnlineStatus(e));
+    window.addEventListener("resize", e => this.updateViewportDimensions(e));
     this.props.getLizardBootstrap();
     this.props.getOrganisations();
   }
   componentWillUnmount() {
     window.removeEventListener("online", e => this.updateOnlineStatus(e));
     window.removeEventListener("offline", e => this.updateOnlineStatus(e));
+    window.removeEventListener("resize", e => this.updateViewportDimensions(e));
   }
   updateOnlineStatus(e) {
     const { addNotification } = this.props;
     addNotification(`Your internet connection seems to be ${e.type}`, 2000);
+  }
+  updateViewportDimensions() {
+    const { updateViewportDimensions } = this.props;
+    const { innerWidth, innerHeight } = window;
+    updateViewportDimensions(innerWidth, innerHeight);
   }
   computeBreadcrumb() {
     const { pathname } = this.props.location;
@@ -147,13 +156,23 @@ class App extends Component {
                 style={{
                   height: 65,
                   display: "flex",
+                  flexWrap: "nowrap",
                   alignItems: "center",
-                  fontSize: "1.2em"
+                  fontSize: "1.2em",
+                  overflowX: "hidden",
+                  msOverflowStyle: "-ms-autohiding-scrollbar"
                 }}
                 className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
               >
-                <NavLink to="/">Lizard Management</NavLink>
-                {breadcrumbs}
+                <div
+                  style={{
+                    display: "flex",
+                    flex: "0 0 auto"
+                  }}
+                >
+                  <NavLink to="/">Lizard Management</NavLink>
+                  {breadcrumbs}
+                </div>
               </div>
             </div>
           </div>
@@ -188,8 +207,11 @@ class App extends Component {
                       position: "relative",
                       top: 5,
                       fontSize: 20
-                    }} 
-                    className="material-icons">local_library</i>                  
+                    }}
+                    className="material-icons"
+                  >
+                    local_library
+                  </i>
                 </a>
               </div>
               <div
@@ -257,7 +279,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     getOrganisations: () => dispatch(fetchOrganisations()),
     addNotification: (message, timeout) => {
       dispatch(addNotification(message, timeout));
-    }
+    },
+    updateViewportDimensions: (width, height) =>
+      dispatch(updateViewportDimensions(width, height))
   };
 };
 

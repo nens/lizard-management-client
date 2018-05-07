@@ -36,7 +36,8 @@ class NewTemplate extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      templateType: "email"
+      templateType: "email",
+      templateText: ""
     };
     this.handleClickCreateTemplateButton = this.handleClickCreateTemplateButton.bind(
       this
@@ -50,7 +51,7 @@ class NewTemplate extends Component {
     }
   }
   handleClickCreateTemplateButton() {
-    const { templateType } = this.state;
+    const { templateType, templateText } = this.state;
     const { bootstrap, history } = this.props;
     const organisationId = bootstrap.organisation.unique_id;
 
@@ -66,8 +67,8 @@ class NewTemplate extends Component {
           templateType === "email"
             ? document.getElementById("subject").value
             : document.getElementById("templateName").value,
-        text: document.getElementById("templatePreview").value,
-        html: document.getElementById("templatePreview").value
+        text: templateText,
+        html: templateText
       })
     })
       .then(response => response.json())
@@ -76,7 +77,7 @@ class NewTemplate extends Component {
       });
   }
   render() {
-    const { templateType, isFetching } = this.state;
+    const { templateType, templateText, isFetching } = this.state;
 
     const availableParameters = [
       {
@@ -263,13 +264,30 @@ class NewTemplate extends Component {
               className={formStyles.FormControl}
               id="templatePreview"
               rows="12"
-              defaultValue=""
+              value={templateText}
+              onChange={e =>
+                this.setState({
+                  templateText: e.target.value
+                })}
             />
             <small className="text-muted">
               <FormattedMessage
                 id="alarmtemplates_app.template"
                 defaultMessage="Template"
-              />
+              />{" "}
+              ({templateText.length}{" "}
+              <FormattedMessage
+                id="alarmtemplates_new.characters"
+                defaultMessage="characters"
+              />)<br />
+              {templateType === "sms" ? (
+                <i>
+                  <FormattedMessage
+                    id="alarmtemplates_new.sms_max_char_warning"
+                    defaultMessage="SMS messages have a limit of 160 characters after substituting the parameter tags"
+                  />
+                </i>
+              ) : null}
             </small>
           </div>
           <div

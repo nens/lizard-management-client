@@ -59,7 +59,7 @@ class SelectRaster extends Component {
     return (
       <div className={`${styles.SelectRaster} form-input`}>
         <input
-          id="rasterName"
+          id="rasterSelection"
           tabIndex="-1"
           type="text"
           autoComplete="false"

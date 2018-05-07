@@ -5,6 +5,7 @@ import { FormattedMessage } from "react-intl";
 import { addNotification } from "../../actions";
 import { connect } from "react-redux";
 import styles from "./Detail.css";
+import TemplateTypeSelection from "./TemplateTypeSelection";
 import tableStyles from "../../styles/Table.css";
 import gridStyles from "../../styles/Grid.css";
 import buttonStyles from "../../styles/Buttons.css";
@@ -86,19 +87,19 @@ class Detail extends Component {
 
     if (body) {
       fetch(`/api/v3/messages/${match.params.id}/`, {
-          credentials: "same-origin",
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            subject: subject,
-            text: body
-          })
+        credentials: "same-origin",
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          subject: subject,
+          text: body
         })
-          .then(response => response.json())
-          .then(data => {
-            addNotification(`Template "${subject}" updated`, 2000);
-            history.push("/alarms/templates");
-          });
+      })
+        .then(response => response.json())
+        .then(data => {
+          addNotification(`Template "${subject}" updated`, 2000);
+          history.push("/alarms/templates");
+        });
     } else {
       alert("Please provide a template text");
     }
@@ -201,9 +202,9 @@ class Detail extends Component {
             className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
           >
             <div
-              className={`${gridStyles.FloatRight} ${styles.TemplateTypeBadge}`}
+              className={`${gridStyles.FloatRight}`}
             >
-              {template.type}
+              <TemplateTypeSelection type={template.type} />
             </div>
             <h5>{template.name} </h5>
             <hr />
@@ -233,12 +234,29 @@ class Detail extends Component {
               className={formStyles.FormControl}
               id="templatePreview"
               rows="12"
-              defaultValue={template.text}
+              value={this.state.template.text}
+              onChange={e => {
+                this.setState({
+                  template: {
+                    ...this.state.template,
+                    text: e.target.value
+                  }
+                });
+              }}
               ref={body => {
                 this.messageBody = body;
               }}
             />
-            <small className="text-muted">TEMPLATE</small>
+            <small className="text-muted">
+              <FormattedMessage
+                id="alarmtemplates_app.template"
+                defaultMessage="TEMPLATE"
+              />{" "}({this.state.template.text.length}{" "}
+              <FormattedMessage
+                id="alarmtemplates_detail.characters"
+                defaultMessage="characters"
+              />)
+            </small>
           </div>
           <div
             className={`${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs12} ${formStyles.FormGroup}`}

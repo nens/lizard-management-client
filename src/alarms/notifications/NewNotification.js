@@ -47,6 +47,7 @@ class NewNotification extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      alarmName: "",
       availableGroups: [],
       availableMessages: [],
       comparison: ">",
@@ -84,7 +85,7 @@ class NewNotification extends Component {
     const { bootstrap } = this.props;
     const organisationId = bootstrap.organisation.unique_id;
 
-    document.getElementById("rasterName").focus();
+    document.getElementById("alarmName").focus();
     document.addEventListener("keydown", this.hideConfigureThreshold, false);
 
     // TODO: Pass the organisation__unique_id here:
@@ -94,6 +95,9 @@ class NewNotification extends Component {
         availableMessages: data.messages
       });
     });
+  }
+  componentDidCatch() {
+    console.log("componentDidCatch()");
   }
   componentWillUnmount() {
     document.removeEventListener("keydown", this.hideConfigureThreshold, false);
@@ -122,7 +126,7 @@ class NewNotification extends Component {
     const organisationId = bootstrap.organisation.unique_id;
 
     const {
-      name,
+      alarmName,
       thresholds,
       comparison,
       messages,
@@ -135,7 +139,7 @@ class NewNotification extends Component {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        name: name,
+        name: alarmName,
         active: true,
         organisation: organisationId,
         thresholds: thresholds,
@@ -248,6 +252,7 @@ class NewNotification extends Component {
     const position = [52.1858, 5.2677];
 
     const {
+      alarmName,
       availableGroups,
       availableMessages,
       comparison,
@@ -284,42 +289,41 @@ class NewNotification extends Component {
                         className={`mt-0 ${step !== 1 ? "text-muted" : null}`}
                       >
                         <FormattedMessage
-                          id="notifications_app.raster_selection"
-                          defaultMessage="Raster selection"
+                          id="notifications_app.name_of_alarm"
+                          defaultMessage="Name of this alarm"
                         />
                       </h3>
                       {step === 1 ? (
                         <div>
                           <p className="text-muted">
                             <FormattedMessage
-                              id="notifications_app.which_temporal_raster_to_use"
-                              defaultMessage="Which temporal raster do you want to use?"
-                            />
-                            <br />
-                            <FormattedMessage
                               id="notifications_app.name_will_be_used_in_alerts"
                               defaultMessage="The name of the raster will be used in e-mail and SMS alerts"
                             />
                           </p>
                           <div className={formStyles.FormGroup}>
-                            <SelectRaster
-                              placeholderText="Type the name here"
-                              results={rasters}
-                              loading={loading}
-                              onInput={this.handleRasterSearchInput}
-                              setRaster={this.handleSetRaster}
+                            <input
+                              id="alarmName"
+                              tabIndex="-2"
+                              type="text"
+                              autoComplete="false"
+                              className={formStyles.FormControl}
+                              placeholder="Name of this alarm"
+                              onChange={e =>
+                                this.setState({
+                                  alarmName: e.target.value
+                                })}
+                              value={alarmName}
                             />
-                            {this.state.name ? (
+                            {alarmName.length > 1 && alarmName ? (
                               <button
                                 type="button"
                                 className={`${buttonStyles.Button} ${buttonStyles.Success}`}
                                 style={{ marginTop: 10 }}
                                 onClick={() => {
-                                  if (raster) {
-                                    this.setState({
-                                      step: 2
-                                    });
-                                  }
+                                  this.setState({
+                                    step: 2
+                                  });
                                 }}
                               >
                                 <FormattedMessage
@@ -340,6 +344,7 @@ class NewNotification extends Component {
                     <StepIndicator indicator="2" active={step === 2} />
                     <div
                       style={{
+                        width: "calc(100% - 90px)",
                         marginLeft: 90
                       }}
                     >
@@ -347,11 +352,69 @@ class NewNotification extends Component {
                         className={`mt-0 ${step !== 2 ? "text-muted" : null}`}
                       >
                         <FormattedMessage
+                          id="notifications_app.raster_selection"
+                          defaultMessage="Raster selection"
+                        />
+                      </h3>
+                      {step === 2 ? (
+                        <div>
+                          <p className="text-muted">
+                            <FormattedMessage
+                              id="notifications_app.which_temporal_raster_to_use"
+                              defaultMessage="Which temporal raster do you want to use?"
+                            />
+                          </p>
+                          <div className={formStyles.FormGroup}>
+                            <SelectRaster
+                              placeholderText="Type to search"
+                              results={rasters}
+                              loading={loading}
+                              onInput={this.handleRasterSearchInput}
+                              setRaster={this.handleSetRaster}
+                            />
+                            {this.state.name ? (
+                              <button
+                                type="button"
+                                className={`${buttonStyles.Button} ${buttonStyles.Success}`}
+                                style={{ marginTop: 10 }}
+                                onClick={() => {
+                                  if (raster) {
+                                    this.setState({
+                                      step: 3
+                                    });
+                                  }
+                                }}
+                              >
+                                <FormattedMessage
+                                  id="notifications_app.next_step"
+                                  defaultMessage="Next step"
+                                />
+                              </button>
+                            ) : null}
+                          </div>
+                        </div>
+                      ) : null}
+                    </div>
+                  </div>
+                </div>
+
+                <div className={styles.Step} id="Step">
+                  <div className="media">
+                    <StepIndicator indicator="3" active={step === 3} />
+                    <div
+                      style={{
+                        marginLeft: 90
+                      }}
+                    >
+                      <h3
+                        className={`mt-0 ${step !== 3 ? "text-muted" : null}`}
+                      >
+                        <FormattedMessage
                           id="notifications_app.point_on_map"
                           defaultMessage="Point-on-map"
                         />
                       </h3>
-                      {step === 2 ? (
+                      {step === 3 ? (
                         <div>
                           <p className="text-muted">
                             <FormattedMessage
@@ -419,7 +482,7 @@ class NewNotification extends Component {
                               if (markerPosition) {
                                 this.loadTimeseriesData();
                                 this.setState({
-                                  step: 3
+                                  step: 4
                                 });
                               }
                             }}
@@ -435,7 +498,7 @@ class NewNotification extends Component {
                             style={{ marginLeft: 15, marginTop: 10 }}
                             onClick={() =>
                               this.setState({
-                                step: 1
+                                step: 2
                               })}
                           >
                             <FormattedMessage
@@ -451,21 +514,21 @@ class NewNotification extends Component {
 
                 <div className={styles.Step} id="Step">
                   <div className="media">
-                    <StepIndicator indicator="3" active={step === 3} />
+                    <StepIndicator indicator="4" active={step === 4} />
                     <div
                       style={{
                         marginLeft: 90
                       }}
                     >
                       <h3
-                        className={`mt-0 ${step !== 3 ? "text-muted" : null}`}
+                        className={`mt-0 ${step !== 4 ? "text-muted" : null}`}
                       >
                         <FormattedMessage
                           id="notifications_app.newnotification_thresholds"
                           defaultMessage="Thresholds"
                         />
                       </h3>
-                      {step === 3 ? (
+                      {step === 4 ? (
                         <div>
                           <p className="text-muted">
                             <FormattedMessage
@@ -551,7 +614,7 @@ class NewNotification extends Component {
                             style={{ marginTop: 10 }}
                             onClick={() => {
                               this.setState({
-                                step: 4
+                                step: 5
                               });
                             }}
                           >
@@ -567,19 +630,19 @@ class NewNotification extends Component {
                 </div>
 
                 <div className="media">
-                  <StepIndicator indicator="4" active={step === 4} />
+                  <StepIndicator indicator="5" active={step === 5} />
                   <div
                     style={{
                       marginLeft: 90
                     }}
                   >
-                    <h3 className={`mt-0 ${step !== 4 ? "text-muted" : null}`}>
+                    <h3 className={`mt-0 ${step !== 5 ? "text-muted" : null}`}>
                       <FormattedMessage
                         id="notifications_app.recipients"
                         defaultMessage="Recipients"
                       />
                     </h3>
-                    {step === 4 ? (
+                    {step === 5 ? (
                       <div>
                         <p className="text-muted">
                           <FormattedMessage
