@@ -115,7 +115,7 @@
   "notifications_app.number_of_notifications": "{numberOfNotifications, number} {numberOfNotifications, plural, one {NOTIFICATIE} other {NOTIFICATIES}}",
   "notifications_app.number_of_recipients": "{numberOfRecipients, number} {numberOfRecipients, plural, one {ontvanger} other {ontvangers}}",
   "notifications_app.number_of_thresholds": "{numberOfThresholds, number} {numberOfThresholds, plural, one {drempelwaarde} other {drempelwaardes}}",
-  "notifications_app.point_on_map": "Punt-op-de-laart",
+  "notifications_app.point_on_map": "Punt-op-de-kaart",
   "notifications_app.raster_selection": "Raster selecteren",
   "notifications_app.recipient_groups": "Groep van ontvangers",
   "notifications_app.recipientgroups_remove": "Verwijderen",
