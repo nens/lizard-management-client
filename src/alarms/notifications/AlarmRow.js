@@ -33,7 +33,7 @@ class AlarmRow extends Component {
         this.setState({
           isActive: true
         });
-        addNotification(`Alarm "${data.name}" activated`, 2000);
+        addNotification(`Alarm activated`, 2000);
       });
   }
 
@@ -53,7 +53,7 @@ class AlarmRow extends Component {
         this.setState({
           isActive: false
         });
-        addNotification(`Alarm "${data.name}" deactivated`, 2000);
+        addNotification(`Alarm deactivated`, 2000);
       });
   }
 

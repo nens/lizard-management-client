@@ -49,6 +49,8 @@
   "alarmtemplates_app.template": "Sjabloon",
   "alarmtemplates_app.the_subject_will_be_used_in_email_messages": "Het onderwerp wordt gebruikt in e-mailberichten",
   "alarmtemplates_app.type": "Soort",
+  "alarmtemplates_detail.characters": "tekens",
+  "alarmtemplates_detail.template": "SJABLOON",
   "alarmtemplates_new.characters": "tekens",
   "alarmtemplates_new.create_template": "Sjabloon aanmaken",
   "alarmtemplates_new.sms_max_char_warning": "SMS berichten kunnen maximaal 160 tekens bevatten",

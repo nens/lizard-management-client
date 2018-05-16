@@ -148,6 +148,14 @@
 		"defaultMessage": "Delete"
 	},
 	{
+		"id": "alarmtemplates_detail.template",
+		"defaultMessage": "TEMPLATE"
+	},
+	{
+		"id": "alarmtemplates_detail.characters",
+		"defaultMessage": "characters"
+	},
+	{
 		"id": "alarmtemplates_app.delete_template",
 		"defaultMessage": "Delete template"
 	},
@@ -345,7 +353,7 @@
 	},
 	{
 		"id": "notifications_app.warning_level_label",
-		"defaultMessage": "A warning level label. For example: 'Exceeded'"
+		"defaultMessage": "A warning level label. For example: 'Major'"
 	},
 	{
 		"id": "notifications_app.apply",

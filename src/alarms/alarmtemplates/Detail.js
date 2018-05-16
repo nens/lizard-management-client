@@ -249,7 +249,7 @@ class Detail extends Component {
             />
             <small className="text-muted">
               <FormattedMessage
-                id="alarmtemplates_app.template"
+                id="alarmtemplates_detail.template"
                 defaultMessage="TEMPLATE"
               />{" "}({this.state.template.text.length}{" "}
               <FormattedMessage

@@ -126,7 +126,7 @@ class ConfigureThreshold extends Component {
                 <small className="form-text text-muted">
                   <FormattedMessage
                     id="notifications_app.warning_level_label"
-                    defaultMessage="A warning level label. For example: 'Exceeded'"
+                    defaultMessage="A warning level label. For example: 'Major'"
                   />
                 </small>
               </div>
