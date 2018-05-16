@@ -8,6 +8,7 @@ import gridStyles from "../../styles/Grid.css";
 import GroupAndTemplateSelector from "./GroupAndTemplateSelect";
 import React, { Component } from "react";
 import SelectRaster from "../../components/SelectRaster";
+import SelectAsset from "../../components/SelectAsset";
 import StepIndicator from "../../components/StepIndicator";
 import styles from "./NewNotification.css";
 import { addNotification } from "../../actions";
@@ -47,6 +48,7 @@ class NewNotification extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      assets: [],
       alarmName: "",
       availableGroups: [],
       availableMessages: [],
@@ -71,7 +73,12 @@ class NewNotification extends Component {
       this.handleRasterSearchInput.bind(this),
       450
     );
+    this.handleAssetSearchInput = debounce(
+      this.handleAssetSearchInput.bind(this),
+      450
+    );
     this.handleSetRaster = this.handleSetRaster.bind(this);
+    this.handleSetAsset = this.handleSetAsset.bind(this);
     this.handleMapClick = this.handleMapClick.bind(this);
     this.loadTimeseriesData = this.loadTimeseriesData.bind(this);
     this.handleAddThreshold = this.handleAddThreshold.bind(this);
@@ -192,6 +199,44 @@ class NewNotification extends Component {
         });
       });
   }
+  handleAssetSearchInput(value) {
+    const { raster } = this.state;
+
+    if (value === "") {
+      this.setState({
+        assets: []
+      });
+      return;
+    }
+    this.setState({
+      loading: true
+    });
+
+    console.log("spatial bounds:", raster.spatial_bounds);
+
+    const { west, east, north, south } = raster.spatial_bounds;
+
+    const NUMBER_OF_RESULTS = 50;
+
+    return fetch(
+      `/api/v3/search/?page_size=${NUMBER_OF_RESULTS}&q=${value}&in_bbox=${west},${south},${east},${north}`,
+      {
+        credentials: "same-origin"
+      }
+    )
+      .then(response => response.json())
+      .then(json => {
+        this.setState({
+          loading: false,
+          assets: json
+        });
+      });
+  }
+  handleSetAsset(view) {
+    this.setState({
+      markerPosition: [view[0], view[1]]
+    });
+  }
   handleSetRaster(raster) {
     this.setState({
       name: raster.name,
@@ -253,6 +298,7 @@ class NewNotification extends Component {
 
     const {
       alarmName,
+      assets,
       availableGroups,
       availableMessages,
       comparison,
@@ -422,6 +468,14 @@ class NewNotification extends Component {
                               defaultMessage="Set the location of this alarm by placing a marker (tap/click on the map)"
                             />
                           </p>
+
+                          <SelectAsset
+                            placeholderText="Type to search"
+                            results={assets}
+                            loading={loading}
+                            onInput={this.handleAssetSearchInput}
+                            setAsset={this.handleSetAsset}
+                          />
 
                           {raster.spatial_bounds ? (
                             <Map
