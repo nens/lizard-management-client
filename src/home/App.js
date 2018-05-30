@@ -3,6 +3,7 @@ import { FormattedMessage } from "react-intl";
 import styles from "./App.css";
 import AppIcon from "../components/AppIcon";
 import { withRouter } from "react-router-dom";
+import { Trail, animated } from "react-spring";
 
 import alarmIcon from "../images/alarm@3x.svg";
 import threediIcon from "../images/3di@3x.svg";
@@ -24,62 +25,82 @@ class App extends Component {
   }
 
   render() {
+    const appIcons = [
+      {
+        key: 0,
+        handleClick: () => this.handleExternalLink("/management/users/"),
+        title: (
+          <FormattedMessage
+            id="home.usermanagement"
+            defaultMessage="User management"
+          />
+        ),
+        icon: lizardIcon,
+        subTitle: (
+          <FormattedMessage
+            id="home.sso_management"
+            defaultMessage="Single sign-on account management"
+          />
+        )
+      },
+      {
+        key: 1,
+        handleClick: () => this.handleExternalLink("/management/scenarios/"),
+        title: (
+          <FormattedMessage
+            id="home.scenarios"
+            defaultMessage="3Di Scenarios"
+          />
+        ),
+        icon: threediIcon,
+        subTitle: (
+          <FormattedMessage
+            id="home.scenario_management"
+            defaultMessage="Scenario management"
+          />
+        )
+      },
+      {
+        key: 2,
+        handleClick: () => this.handleLink("/alarms"),
+        title: <FormattedMessage id="home.alarms" defaultMessage="Alarms" />,
+        icon: alarmIcon,
+        subTitle: (
+          <FormattedMessage
+            id="home.alarm_management"
+            defaultMessage="Alarm management"
+          />
+        )
+      }
+    ];
     return (
       <div>
         <div className="container">
           <div className="row">
             <div className={styles.Apps}>
-              <AppIcon
-                handleClick={e =>
-                  this.handleExternalLink(
-                    "/management/users/"
-                  )}
-                src={lizardIcon}
-                title={
-                  <FormattedMessage
-                    id="home.usermanagement"
-                    defaultMessage="User management"
-                  />
-                }
-                subTitle={
-                  <FormattedMessage
-                    id="home.sso_management"
-                    defaultMessage="Single sign-on account management"
-                  />
-                }
-              />
-              <AppIcon
-                handleClick={e =>
-                  this.handleExternalLink(
-                    "/management/scenarios/"
-                  )}
-                src={threediIcon}
-                title={
-                  <FormattedMessage
-                    id="home.scenarios"
-                    defaultMessage="3Di Scenarios"
-                  />
-                }
-                subTitle={
-                  <FormattedMessage
-                    id="home.scenario_management"
-                    defaultMessage="Scenario management"
-                  />
-                }
-              />
-              <AppIcon
-                handleClick={e => this.handleLink("/alarms")}
-                src={alarmIcon}
-                title={
-                  <FormattedMessage id="home.alarms" defaultMessage="Alarms" />
-                }
-                subTitle={
-                  <FormattedMessage
-                    id="home.alarm_management"
-                    defaultMessage="Alarm management"
-                  />
-                }
-              />
+              <Trail
+                native
+                from={{ opacity: 0, x: -5 }}
+                to={{ opacity: 1, x: 0 }}
+                keys={appIcons.map(item => item.key)}
+              >
+                {appIcons.map((appIcon, i) => ({ x, opacity }) => (
+                  <animated.div
+                    style={{
+                      opacity,
+                      transform: x.interpolate(x => `translate3d(${x}%,0,0)`)
+                    }}
+                  >
+                    <AppIcon
+                      handleClick={appIcon.handleClick}
+                      key={+new Date()}
+                      src={appIcon.icon}
+                      title={appIcon.title}
+                      subTitle={appIcon.subTitle}
+                    />
+                  </animated.div>
+                ))}
+              </Trail>
             </div>
           </div>
         </div>
@@ -90,4 +111,4 @@ class App extends Component {
 
 App = withRouter(App);
 
-export {App};
+export { App };
