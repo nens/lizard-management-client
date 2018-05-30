@@ -75,6 +75,7 @@
     "react-router-dom": "^4.2.2",
     "react-router-redux": "next",
     "react-select": "1.0.0-rc.10",
+    "react-spring": "^5.3.7",
     "react-timeseries-charts": "^0.12.8",
     "react-toolbox": "^2.0.0-beta.12",
     "react-transition-group": "^2.2.1",
