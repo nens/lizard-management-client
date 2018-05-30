@@ -13,6 +13,7 @@
 }
 .Inactive {
   background-color: #b9b9b9;
+  cursor: pointer;
 }
 .Active {
   background-color: #00cdab;
