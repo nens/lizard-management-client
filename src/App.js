@@ -197,7 +197,11 @@ class App extends Component {
               <div
                 className={`${styles.FooterLeft} ${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs6}`}
               >
-                <a href="https://www.lizard.net/handleidingen/log_in_instructies_lizard_6.01.pdf">
+                <a
+                  href="https://www.lizard.net/handleidingen/log_in_instructies_lizard_6.01.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <FormattedMessage
                     id="index.documentation"
                     defaultMessage="Documentation"
