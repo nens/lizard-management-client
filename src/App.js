@@ -116,16 +116,27 @@ class App extends Component {
                       Apps
                     </a>
                   </div>
-                  <div>
+                  <div style={{
+                    width: 60,
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap"
+                  }}>
                     <a
                       href="https://sso.lizard.net/edit_profile/"
                       target="_blank"
                       rel="noopener noreferrer"
+                      title={`${firstName}`}
                     >
-                      <i className="fa fa-user" />&nbsp;&nbsp;{firstName}
+                      <i className="fa fa-user" style={{paddingRight: 8}} />{firstName}
                     </a>
                   </div>
-                  <div>
+                  <div style={{
+                    width: 120,
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap"                    
+                  }}>
                     <a
                       className={styles.OrganisationLink}
                       title={
@@ -144,6 +155,11 @@ class App extends Component {
                         : "Select organisation"}
                     </a>
                   </div>
+                  <div>
+                    <a href="https://demo.lizard.net/accounts/logout/">
+                      <i className="fa fa-power-off" />&nbsp;&nbsp;Logout
+                    </a>
+                  </div>                  
                 </div>
               </div>
             </div>
