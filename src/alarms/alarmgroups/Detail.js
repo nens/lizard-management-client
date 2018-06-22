@@ -84,7 +84,7 @@ class Detail extends Component {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          contacts: filteredContacts
+          contacts: filteredContacts.map(fc => fc.id)
         })
       })
         .then(response => response.json())
