@@ -8,6 +8,7 @@ import { Trail, animated } from "react-spring";
 import alarmIcon from "../images/alarm@3x.svg";
 import threediIcon from "../images/3di@3x.svg";
 import lizardIcon from "../images/lizard@3x.svg";
+import templateIcon from "../images/templates@3x.svg";
 
 class App extends Component {
   constructor(props) {
@@ -28,7 +29,7 @@ class App extends Component {
     const appIcons = [
       {
         key: 0,
-        handleClick: () => this.handleExternalLink("/management/users/"),
+        handleClick: () => this.handleExternalLink("/"), //management/users/"),
         title: (
           <FormattedMessage
             id="home.usermanagement"
@@ -45,7 +46,7 @@ class App extends Component {
       },
       {
         key: 1,
-        handleClick: () => this.handleExternalLink("/management/scenarios/"),
+        handleClick: () => this.handleExternalLink("/"), //management/scenarios/"),
         title: (
           <FormattedMessage
             id="home.scenarios"
@@ -69,6 +70,23 @@ class App extends Component {
           <FormattedMessage
             id="home.alarm_management"
             defaultMessage="Alarm management"
+          />
+        )
+      },
+      {
+        key: 3,
+        handleClick: () => this.handleLink("/data_monitor"),
+        title: (
+          <FormattedMessage
+            id="home.data_monitor"
+            defaultMessage="Data Monitor"
+          />
+        ),
+        icon: templateIcon,
+        subTitle: (
+          <FormattedMessage
+            id="home.gegevensbeheer"
+            defaultMessage="Gegevensbeheer"
           />
         )
       }

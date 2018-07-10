@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { FormattedMessage } from "react-intl";
 import { App as Home } from "./home/App";
 import { App as AlarmsApp } from "./alarms/App";
+import { App as DataMonitorApp } from "./data_monitor/App";
 import {
   addNotification,
   fetchLizardBootstrap,
@@ -56,7 +57,7 @@ class App extends Component {
       ? null
       : splitPathnames.map((sp, i) => {
           const to = `/${splitPathnames.slice(1, i + 1).join("/")}`;
-          let title = sp;
+          let title = sp.replace("_", " ");
           if (this.uuidRegex.test(sp)) {
             title = "Detail";
           }
@@ -116,27 +117,32 @@ class App extends Component {
                       Apps
                     </a>
                   </div>
-                  <div style={{
-                    width: 60,
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    whiteSpace: "nowrap"
-                  }}>
+                  <div
+                    style={{
+                      width: 60,
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap"
+                    }}
+                  >
                     <a
                       href="https://sso.lizard.net/edit_profile/"
                       target="_blank"
                       rel="noopener noreferrer"
                       title={`${firstName}`}
                     >
-                      <i className="fa fa-user" style={{paddingRight: 8}} />{firstName}
+                      <i className="fa fa-user" style={{ paddingRight: 8 }} />
+                      {firstName}
                     </a>
                   </div>
-                  <div style={{
-                    width: 120,
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    whiteSpace: "nowrap"                    
-                  }}>
+                  <div
+                    style={{
+                      width: 120,
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap"
+                    }}
+                  >
                     <a
                       className={styles.OrganisationLink}
                       title={
@@ -159,7 +165,7 @@ class App extends Component {
                     <a href="https://demo.lizard.net/accounts/logout/">
                       <i className="fa fa-power-off" />&nbsp;&nbsp;Logout
                     </a>
-                  </div>                  
+                  </div>
                 </div>
               </div>
             </div>
@@ -204,6 +210,7 @@ class App extends Component {
             >
               <Route exact path="/" component={Home} />
               <Route path="/alarms" component={AlarmsApp} />
+              <Route path="/data_monitor" component={DataMonitorApp} />
             </div>
           </div>
         </div>
