@@ -4,20 +4,21 @@ import gridStyles from "../../styles/Grid.css";
 import Ink from "react-ink";
 import MDSpinner from "react-md-spinner";
 import PaginationBar from "./PaginationBar";
-import { AlarmRow } from "./AlarmRow";
+import { Row } from "./Row";
 import React, { Component } from "react";
 import styles from "./App.css";
 import { addNotification } from "../../actions";
 import { connect } from "react-redux";
 import { FormattedMessage } from "react-intl";
 import { withRouter } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
-class App extends Component {
+class Raster extends Component {
   constructor(props) {
     super(props);
     this.state = {
       isFetching: true,
-      alarms: [],
+      rasters: [],
       total: 0,
       page: 1
     };
@@ -36,7 +37,7 @@ class App extends Component {
     const organisationId = bootstrap.organisation.unique_id;
 
     fetch(
-      `/api/v3/rasteralarms/?page=${page}`, // &organisation__unique_id=${organisationId},
+      `/api/v3/rasters/?page=${page}`, // &organisation__unique_id=${organisationId},
       {
         credentials: "same-origin"
       }
@@ -46,7 +47,7 @@ class App extends Component {
         this.setState({
           isFetching: false,
           total: data.count,
-          alarms: data.results,
+          rasters: data.results,
           page: page
         });
       });
@@ -54,39 +55,67 @@ class App extends Component {
 
   handleNewNotificationClick() {
     const { history } = this.props;
-    history.push("notifications/new");
+    history.push("rasters/new");
+  }
+
+  sortList(list) {
+    const sortedList = list
+      .slice()
+      .sort((a, b) => {
+        if (a.name < b.name) {
+          return -1;
+        }
+        if (a.name > b.name) {
+          return 1;
+        }
+        return 0;
+      })
+      .sort((a, b) => {
+        return a.active === b.active ? 0 : a.active ? -1 : 1;
+      });
+    return sortedList;
   }
 
   render() {
-    const { alarms, isFetching, total, page } = this.state;
+    const { rasters, isFetching, total, page } = this.state;
 
-    let numberOfNotifications = 0;
-    let alarmRows = [];
-    if (total && total > 0) {
-      numberOfNotifications = total;
-      alarmRows = alarms
-        .slice()
-        .sort((a, b) => {
-          if (a.name < b.name) {
-            return -1;
-          }
-          if (a.name > b.name) {
-            return 1;
-          }
-          return 0;
-        })
-        .sort((a, b) => {
-          return a.active === b.active ? 0 : a.active ? -1 : 1;
-        });
-    }
+    const numberOfRasters = total;
+    const rasterRows = this.sortList(rasters);
 
-    const alarmsTable = alarmRows.map((alarm, i) => {
+    const htmlRasterTable = rasterRows.map((alarm, i) => {
       return (
-        <AlarmRow
-          key={i}
-          alarm={alarm}
-          loadAlarmsOnPage={this.loadAlarmsOnPage}
-        />
+        <Row key={i} alarm={alarm} loadAlarmsOnPage={this.loadAlarmsOnPage}>
+          <NavLink
+            to={`/alarms/notifications/${alarm.uuid}`}
+            style={{
+              color: "#333"
+            }}
+          >
+            {alarm.name}
+          </NavLink>
+          <NavLink
+            to={`/alarms/notifications/${alarm.uuid}`}
+            style={{
+              color: "#333"
+            }}
+          >
+            {alarm.description}
+          </NavLink>
+          <button
+            type="button"
+            className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link}`}
+            onClick={() => {
+              if (window.confirm("Are you sure?")) {
+                this.removeAlarm(alarm.uuid);
+              }
+            }}
+          >
+            <FormattedMessage
+              id="notifications_app.remove_alarm"
+              defaultMessage="edit"
+            />
+          </button>
+        </Row>
       );
     });
 
@@ -105,10 +134,10 @@ class App extends Component {
           >
             <FormattedMessage
               id="notifications_app.number_of_notifications"
-              defaultMessage={`{numberOfNotifications, number} {numberOfNotifications, plural, 
-                one {NOTIFICATION}
-                other {NOTIFICATIONS}}`}
-              values={{ numberOfNotifications }}
+              defaultMessage={`{numberOfRasters, number} {numberOfRasters, plural, 
+                one {Raster}
+                other {Rasters}}`}
+              values={{ numberOfRasters }}
             />
           </div>
           <div
@@ -122,7 +151,7 @@ class App extends Component {
             >
               <FormattedMessage
                 id="notifications_app.new_notification"
-                defaultMessage="New notification"
+                defaultMessage="New raster"
               />
               <Ink />
             </button>
@@ -144,15 +173,15 @@ class App extends Component {
               >
                 <MDSpinner size={24} />
               </div>
-            ) : alarmRows.length > 0 ? (
-              alarmsTable
+            ) : rasterRows.length > 0 ? (
+              htmlRasterTable
             ) : (
               <div className={styles.NoResults}>
                 <img src={alarmIcon} alt="Alarms" />
                 <h5>
                   <FormattedMessage
                     id="notifications_app.no_notifications"
-                    defaultMessage="No notifications configured..."
+                    defaultMessage="No rasters configured..."
                   />
                 </h5>
               </div>
@@ -189,6 +218,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   };
 };
 
-App = withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
+Raster = withRouter(connect(mapStateToProps, mapDispatchToProps)(Raster));
 
-export { App };
+export { Raster };

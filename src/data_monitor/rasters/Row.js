@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 import { FormattedMessage } from "react-intl";
 import { withRouter, NavLink } from "react-router-dom";
 
-class AlarmRow extends Component {
+class Row extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -78,57 +78,30 @@ class AlarmRow extends Component {
     const { isActive } = this.state;
     const numberOfThresholds = 1; //threshold not defined on raster remove feature later, but hardcode now just to test page //alarm.thresholds.length;
     const numberOfRecipients = 1; // iem // alarm.messages.length;
-    return (
-      <div className={styles.AlarmRow}>
-        <div style={{ display: "flex" }}>
-          <div
-            className={`${isActive
-              ? styles.Active
-              : styles.InActive} ${styles.ActiveIndicator}`}
-          >
-            {isActive ? (
-              <FormattedMessage
-                id="notifications_app.is_active"
-                defaultMessage="ACTIVE"
-              />
-            ) : (
-              <FormattedMessage
-                id="notifications_app.is_inactive"
-                defaultMessage="INACTIVE"
-              />
-            )}
-          </div>
+    return <div className={styles.AlarmRow}>{this.props.children}</div>;
+  }
+}
 
-          <div>
-            <NavLink
-              to={`/alarms/notifications/${alarm.uuid}`}
-              style={{
-                color: "#333"
-              }}
-            >
-              {alarm.name}
-            </NavLink>
-            <br />
-            <small className="text-muted">
-              <FormattedMessage
-                id="notifications_app.number_of_thresholds"
-                defaultMessage={`{numberOfThresholds, number} {numberOfThresholds, plural, 
-                  one {threshold}
-                  other {thresholds}}`}
-                values={{ numberOfThresholds }}
-              />
-              {", "}
-              <FormattedMessage
-                id="notifications_app.number_of_recipients"
-                defaultMessage={`{numberOfRecipients, number} {numberOfRecipients, plural, 
-                  one {recipient}
-                  other {recipients}}`}
-                values={{ numberOfRecipients }}
-              />
-            </small>
-          </div>
-        </div>
-        <div style={{ width: 250, display: "flex" }}>
+const mapStateToProps = (state, ownProps) => {
+  return {
+    bootstrap: state.bootstrap
+  };
+};
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    addNotification: (message, timeout) => {
+      dispatch(addNotification(message, timeout));
+    }
+  };
+};
+
+Row = withRouter(connect(mapStateToProps, mapDispatchToProps)(Row));
+
+export { Row };
+
+/*
+<div style={{ width: 250, display: "flex" }}>
           <div style={{ width: "50%" }}>
             <button
               type="button"
@@ -168,25 +141,4 @@ class AlarmRow extends Component {
             </button>
           </div>
         </div>
-      </div>
-    );
-  }
-}
-
-const mapStateToProps = (state, ownProps) => {
-  return {
-    bootstrap: state.bootstrap
-  };
-};
-
-const mapDispatchToProps = (dispatch, ownProps) => {
-  return {
-    addNotification: (message, timeout) => {
-      dispatch(addNotification(message, timeout));
-    }
-  };
-};
-
-AlarmRow = withRouter(connect(mapStateToProps, mapDispatchToProps)(AlarmRow));
-
-export { AlarmRow };
+        //*/

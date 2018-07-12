@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { DataMonitor as DataMonitorHome } from "./DataMonitor";
-import { App as RasterApp } from "./rasters/App";
+import { Raster as RasterApp } from "./rasters/Raster";
+import { NewRaster } from "./rasters/NewRaster";
 /*
 import { App as AlarmContactApp } from "./contacts/App";
 import { App as AlarmGroupsApp } from "./alarmgroups/App";
@@ -37,6 +38,9 @@ class App extends Component {
       <div>
         <Route exact path="/data_monitor" component={DataMonitorHome} />
         <Route exact path="/data_monitor/rasters" component={RasterApp} />
+        <Switch>
+          <Route exact path="/data_monitor/rasters/new" component={NewRaster} />
+        </Switch>
       </div>
     );
   }

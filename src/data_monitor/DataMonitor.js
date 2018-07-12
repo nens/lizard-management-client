@@ -4,6 +4,7 @@ import AppIcon from "../components/AppIcon";
 import { withRouter } from "react-router-dom";
 import { Trail, animated } from "react-spring";
 import templateIcon from "../images/templates@3x.svg";
+import rasterIcon from "../images/rasters@3x.svg";
 
 class DataMonitor extends Component {
   handleLink(destination) {
@@ -25,7 +26,7 @@ class DataMonitor extends Component {
             defaultMessage="Rasters"
           />
         ),
-        icon: templateIcon,
+        icon: rasterIcon,
         subTitle: (
           <FormattedMessage
             id="data_monitor.manage_rasters"
