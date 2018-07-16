@@ -14,23 +14,6 @@ import { withRouter } from "react-router-dom";
 import { NewRasterName } from "./NewRasterName";
 import SelectOrganisation from "../../components/SelectOrganisation";
 
-async function fetchOrganisations() {
-  try {
-    const organisations = await fetch(
-      "/api/v3/organisations/?format=json&page_size=1000000",
-      {
-        credentials: "same-origin"
-      }
-    )
-      .then(response => response.json())
-      .then(data => (data.results ? data.results : data));
-
-    return organisations;
-  } catch (e) {
-    throw new Error(e);
-  }
-}
-
 class NewRasterModel extends Component {
   constructor(props) {
     super(props);
@@ -107,11 +90,7 @@ class NewRasterModel extends Component {
     document.getElementById("rasterName").focus();
     document.addEventListener("keydown", this.hideConfigureThreshold, false);
 
-    // fetchOrganisations().then(organisations=>{
-    //   this.setState({
-    //     organisations: organisations
-    //   });
-    // });
+    console.log("[!] organisations =", bootstrap.organisations);
   }
   componentDidCatch() {
     console.log("componentDidCatch()");
@@ -316,7 +295,6 @@ class NewRasterModel extends Component {
 
     const {
       rasterName,
-      organisations,
       rasterOrganisation,
       raster,
       loading,
@@ -325,6 +303,8 @@ class NewRasterModel extends Component {
       currentStep,
       timeseries
     } = this.state;
+
+    const { organisations } = this.props.bootstrap;
 
     return (
       <div>
