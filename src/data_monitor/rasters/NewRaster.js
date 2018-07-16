@@ -1,45 +1,31 @@
-import AddButton from "../../components/AddButton";
 import buttonStyles from "../../styles/Buttons.css";
 import ConfigureRecipients from "./ConfigureRecipients";
 import ConfigureThreshold from "./ConfigureThreshold";
 import debounce from "lodash.debounce";
 import formStyles from "../../styles/Forms.css";
 import gridStyles from "../../styles/Grid.css";
-import GroupAndTemplateSelector from "./GroupAndTemplateSelect";
 import React, { Component } from "react";
-import SelectRaster from "../../components/SelectRaster";
-import SelectAsset from "../../components/SelectAsset";
 import StepIndicator from "../../components/StepIndicator";
 import styles from "./NewNotification.css";
 import { addNotification } from "../../actions";
 import { connect } from "react-redux";
 import { FormattedMessage } from "react-intl";
-import { Map, Marker, TileLayer, WMSTileLayer } from "react-leaflet";
 import { withRouter } from "react-router-dom";
 import { NewRasterName } from "./NewRasterName";
+import SelectOrganisation from "../../components/SelectOrganisation";
 
-async function fetchContactsAndMessages(organisationId) {
+async function fetchOrganisations() {
   try {
-    const groups = await fetch(
-      `/api/v3/contactgroups/?organisation__unique_id=${organisationId}`,
+    const organisations = await fetch(
+      "/api/v3/organisations/?format=json&page_size=1000000",
       {
         credentials: "same-origin"
       }
     )
       .then(response => response.json())
-      .then(data => data.results);
-    const messages = await fetch(
-      `/api/v3/messages/?organisation__unique_id=${organisationId}`,
-      {
-        credentials: "same-origin"
-      }
-    )
-      .then(response => response.json())
-      .then(data => data.results);
-    return {
-      groups,
-      messages
-    };
+      .then(data => (data.results ? data.results : data));
+
+    return organisations;
   } catch (e) {
     throw new Error(e);
   }
@@ -49,10 +35,14 @@ class NewRasterModel extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      assets: [],
+      currentStep: 1,
       rasterName: "",
-      availableGroups: [],
-      availableMessages: [],
+      organisations: [{ name: "hardcoded example" }],
+      rasterOrganisation: {
+        name: "",
+        unique_id: ""
+      },
+      assets: [],
       comparison: ">",
       loading: false,
       markerPosition: null,
@@ -62,11 +52,12 @@ class NewRasterModel extends Component {
       raster: null,
       rasters: [],
       showConfigureThreshold: false,
-      step: 1,
       thresholds: []
     };
     this.setCurrentStep = this.setCurrentStep.bind(this);
     this.setRasterName = this.setRasterName.bind(this);
+    this.setRasterOrganisation = this.setRasterOrganisation.bind(this);
+
     this.handleInputNotificationName = this.handleInputNotificationName.bind(
       this
     );
@@ -92,15 +83,20 @@ class NewRasterModel extends Component {
     );
     this.goBackToStep = this.goBackToStep.bind(this);
   }
-
+  setCurrentStep(currentStep) {
+    this.setState({
+      currentStep: currentStep
+    });
+  }
   setRasterName(name) {
     this.setState({
       rasterName: name
     });
   }
-  setCurrentStep(step) {
+  setRasterOrganisation(rasterOrganisation) {
+    console.log(rasterOrganisation);
     this.setState({
-      step: step
+      rasterOrganisation: rasterOrganisation
     });
   }
 
@@ -111,13 +107,11 @@ class NewRasterModel extends Component {
     document.getElementById("rasterName").focus();
     document.addEventListener("keydown", this.hideConfigureThreshold, false);
 
-    // TODO: Pass the organisation__unique_id here:
-    fetchContactsAndMessages(organisationId).then(data => {
-      this.setState({
-        availableGroups: data.groups,
-        availableMessages: data.messages
-      });
-    });
+    // fetchOrganisations().then(organisations=>{
+    //   this.setState({
+    //     organisations: organisations
+    //   });
+    // });
   }
   componentDidCatch() {
     console.log("componentDidCatch()");
@@ -135,7 +129,7 @@ class NewRasterModel extends Component {
   handleInputNotificationName(e) {
     if (e.key === "Enter" && this.state.name) {
       this.setState({
-        step: 2
+        currentStep: 2
       });
     }
   }
@@ -311,10 +305,9 @@ class NewRasterModel extends Component {
     });
   }
   goBackToStep(toStep) {
-    const { step } = this.state;
-    if (toStep < step) {
+    if (toStep < this.state.currentStep) {
       this.setState({
-        step: toStep
+        currentStep: toStep
       });
     }
   }
@@ -323,19 +316,13 @@ class NewRasterModel extends Component {
 
     const {
       rasterName,
-      assets,
-      availableGroups,
-      availableMessages,
-      comparison,
-      markerPosition,
-      messages,
+      organisations,
+      rasterOrganisation,
       raster,
-      rasters,
       loading,
       showConfigureRecipients,
       showConfigureThreshold,
-      step,
-      thresholds,
+      currentStep,
       timeseries
     } = this.state;
 
@@ -349,7 +336,7 @@ class NewRasterModel extends Component {
               <div id="steps" style={{ margin: "20px 0 0 20px" }}>
                 <NewRasterName
                   step={1}
-                  currentStep={step}
+                  currentStep={currentStep}
                   rasterName={rasterName}
                   setRasterName={this.setRasterName}
                   setCurrentStep={this.setCurrentStep}
@@ -358,7 +345,7 @@ class NewRasterModel extends Component {
                   <div className="media">
                     <StepIndicator
                       indicator="2"
-                      active={step === 2}
+                      active={currentStep === 2}
                       handleClick={() => this.goBackToStep(2)}
                     />
                     <div
@@ -368,14 +355,16 @@ class NewRasterModel extends Component {
                       }}
                     >
                       <h3
-                        className={`mt-0 ${step !== 2 ? "text-muted" : null}`}
+                        className={`mt-0 ${currentStep !== 2
+                          ? "text-muted"
+                          : null}`}
                       >
                         <FormattedMessage
-                          id="notifications_app.raster_selection"
-                          defaultMessage="Raster selection"
+                          id="raster.organisation_selection"
+                          defaultMessage="Organisation"
                         />
                       </h3>
-                      {step === 2 ? (
+                      {currentStep === 2 ? (
                         <div>
                           <p className="text-muted">
                             <FormattedMessage
@@ -384,14 +373,16 @@ class NewRasterModel extends Component {
                             />
                           </p>
                           <div className={formStyles.FormGroup}>
-                            <SelectRaster
+                            <SelectOrganisation
                               placeholderText="Type to search"
-                              results={rasters}
+                              results={organisations}
                               loading={loading}
-                              onInput={this.handleRasterSearchInput}
-                              setRaster={this.handleSetRaster}
+                              selected={rasterOrganisation}
+                              //onInput={this.handleRasterSearchInput}
+                              //setRaster={this.handleSetRaster}
+                              setValue={this.setRasterOrganisation}
                             />
-                            {this.state.name ? (
+                            {this.state.rasterOrganisation ? (
                               <button
                                 type="button"
                                 className={`${buttonStyles.Button} ${buttonStyles.Success}`}
@@ -399,7 +390,7 @@ class NewRasterModel extends Component {
                                 onClick={() => {
                                   if (raster) {
                                     this.setState({
-                                      step: 3
+                                      currentStep: 3
                                     });
                                   }
                                 }}
@@ -414,326 +405,6 @@ class NewRasterModel extends Component {
                         </div>
                       ) : null}
                     </div>
-                  </div>
-                </div>
-
-                <div className={styles.Step} id="Step">
-                  <div className="media">
-                    <StepIndicator
-                      indicator="3"
-                      active={step === 3}
-                      handleClick={() => this.goBackToStep(3)}
-                    />
-                    <div
-                      style={{
-                        marginLeft: 90
-                      }}
-                    >
-                      <h3
-                        className={`mt-0 ${step !== 3 ? "text-muted" : null}`}
-                      >
-                        <FormattedMessage
-                          id="notifications_app.point_on_map"
-                          defaultMessage="Point-on-map"
-                        />
-                      </h3>
-                      {step === 3 ? (
-                        <div>
-                          <p className="text-muted">
-                            <FormattedMessage
-                              id="notifications_app.set_the_location"
-                              defaultMessage="Set the location of this alarm by placing a marker (tap/click on the map)"
-                            />
-                          </p>
-
-                          <SelectAsset
-                            placeholderText="Type to search"
-                            results={assets}
-                            loading={loading}
-                            onInput={this.handleAssetSearchInput}
-                            setAsset={this.handleSetAsset}
-                          />
-
-                          {raster.spatial_bounds ? (
-                            <Map
-                              onClick={this.handleMapClick}
-                              bounds={[
-                                [
-                                  raster.spatial_bounds.south,
-                                  raster.spatial_bounds.west
-                                ],
-                                [
-                                  raster.spatial_bounds.north,
-                                  raster.spatial_bounds.east
-                                ]
-                              ]}
-                              className={styles.MapStyle}
-                            >
-                              <TileLayer
-                                // url="https://{s}.tiles.mapbox.com/v3/nelenschuurmans.iaa98k8k/{z}/{x}/{y}.png"
-                                url="https://{s}.tiles.mapbox.com/v3/nelenschuurmans.5641a12c/{z}/{x}/{y}.png"
-                                attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-                              />
-                              <WMSTileLayer
-                                url={`/api/v3/wms/`}
-                                styles={raster.options.styles}
-                                layers={raster.wms_info.layer}
-                                opacity={0.9}
-                              />
-                              <TileLayer
-                                url="https://{s}.tiles.mapbox.com/v3/nelenschuurmans.0a5c8e74/{z}/{x}/{y}.png"
-                                attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-                              />
-                              {markerPosition ? (
-                                <Marker position={markerPosition} />
-                              ) : null}
-                            </Map>
-                          ) : (
-                            <Map
-                              onClick={this.handleMapClick}
-                              center={position}
-                              zoom={8}
-                              className={styles.MapStyle}
-                            >
-                              <TileLayer
-                                url="https://b.tiles.mapbox.com/v3/nelenschuurmans.iaa98k8k/{z}/{x}/{y}.png"
-                                attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-                              />
-                              {markerPosition ? (
-                                <Marker position={markerPosition} />
-                              ) : null}
-                            </Map>
-                          )}
-
-                          <button
-                            type="button"
-                            className={`${buttonStyles.Button} ${buttonStyles.Success}`}
-                            style={{ marginTop: 10 }}
-                            onClick={() => {
-                              if (markerPosition) {
-                                this.loadTimeseriesData();
-                                this.setState({
-                                  step: 4
-                                });
-                              }
-                            }}
-                          >
-                            <FormattedMessage
-                              id="notifications_app.next_step"
-                              defaultMessage="Next step"
-                            />
-                          </button>
-                          <button
-                            type="button"
-                            className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link}`}
-                            style={{ marginLeft: 15, marginTop: 10 }}
-                            onClick={() =>
-                              this.setState({
-                                step: 2
-                              })}
-                          >
-                            <FormattedMessage
-                              id="notifications_app.back"
-                              defaultMessage="Back"
-                            />
-                          </button>
-                        </div>
-                      ) : null}
-                    </div>
-                  </div>
-                </div>
-
-                <div className={styles.Step} id="Step">
-                  <div className="media">
-                    <StepIndicator
-                      indicator="4"
-                      active={step === 4}
-                      handleClick={() => this.goBackToStep(4)}
-                    />
-                    <div
-                      style={{
-                        marginLeft: 90
-                      }}
-                    >
-                      <h3
-                        className={`mt-0 ${step !== 4 ? "text-muted" : null}`}
-                      >
-                        <FormattedMessage
-                          id="notifications_app.newnotification_thresholds"
-                          defaultMessage="Thresholds"
-                        />
-                      </h3>
-                      {step === 4 ? (
-                        <div>
-                          <p className="text-muted">
-                            <FormattedMessage
-                              id="notifications_app.this_alarm_will_be_triggered"
-                              defaultMessage="This alarm will be triggered whenever a threshold is exceeded."
-                            />
-                          </p>
-                          <div className={formStyles.FormGroup}>
-                            <label htmlFor="comparison">
-                              <FormattedMessage
-                                id="notifications_app.comparison"
-                                defaultMessage="Comparison"
-                              />
-                            </label>
-                            <select
-                              onChange={e =>
-                                this.handleChangeComparison(e.target.value)}
-                              value={this.state.comparison}
-                              className={`${formStyles.FormControl} ${formStyles.Large}`}
-                              id="comparison"
-                            >
-                              <option value=">">&gt;</option>
-                              <option value="<">&lt;</option>
-                            </select>
-                            <small className="form-text text-muted">
-                              <FormattedMessage
-                                id="notifications_app.comparison_for_all_alarm_thresholds"
-                                defaultMessage="Comparison for all alarm thresholds, either < or >"
-                              />
-                            </small>
-                          </div>
-
-                          <div className={styles.Thresholds}>
-                            {thresholds.map((threshold, i) => {
-                              return (
-                                <div key={i} className={styles.Threshold}>
-                                  <i
-                                    style={{
-                                      position: "relative",
-                                      top: 3,
-                                      left: 2
-                                    }}
-                                    className="material-icons"
-                                  >
-                                    access_time
-                                  </i>&nbsp;
-                                  <span
-                                    style={{
-                                      marginLeft: 10,
-                                      top: -1,
-                                      position: "relative"
-                                    }}
-                                  >
-                                    <FormattedMessage
-                                      id="notifications_app.alarm_when_value"
-                                      defaultMessage="Alarm when value"
-                                    />{" "}
-                                    {comparison} {threshold.value}
-                                  </span>
-                                  <button
-                                    type="button"
-                                    className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link} ${gridStyles.FloatRight}`}
-                                    onClick={() =>
-                                      console.log(
-                                        "Remove still has to be implemented..."
-                                      )}
-                                  >
-                                    <FormattedMessage
-                                      id="notifications_app.newnotification_remove"
-                                      defaultMessage="Remove"
-                                    />
-                                  </button>
-                                </div>
-                              );
-                            })}
-                          </div>
-
-                          <AddButton
-                            handleClick={() =>
-                              this.setState({ showConfigureThreshold: true })}
-                            title="Add threshold"
-                          />
-                          <button
-                            type="button"
-                            className={`${buttonStyles.Button} ${buttonStyles.Success}`}
-                            style={{ marginTop: 10 }}
-                            onClick={() => {
-                              this.setState({
-                                step: 5
-                              });
-                            }}
-                          >
-                            <FormattedMessage
-                              id="notifications_app.next_step"
-                              defaultMessage="Next step"
-                            />
-                          </button>
-                        </div>
-                      ) : null}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="media">
-                  <StepIndicator indicator="5" active={step === 5} />
-                  <div
-                    style={{
-                      marginLeft: 90
-                    }}
-                  >
-                    <h3 className={`mt-0 ${step !== 5 ? "text-muted" : null}`}>
-                      <FormattedMessage
-                        id="notifications_app.recipients"
-                        defaultMessage="Recipients"
-                      />
-                    </h3>
-                    {step === 5 ? (
-                      <div>
-                        <p className="text-muted">
-                          <FormattedMessage
-                            id="notifications_app.when_an_alarm_is_triggered"
-                            defaultMessage="When an alarm is triggered, these groups of recipients will be notified."
-                          />
-                        </p>
-                        <div>
-                          {messages.map((message, i) => {
-                            return (
-                              <GroupAndTemplateSelector
-                                key={i}
-                                idx={i}
-                                messageName={message.messageName}
-                                groupName={message.groupName}
-                                availableGroups={availableGroups}
-                                availableMessages={availableMessages}
-                                addGroupAndTemplate={
-                                  this.handleAddGroupAndTemplate
-                                }
-                                removeFromGroupAndTemplate={
-                                  this.removeFromGroupAndTemplate
-                                }
-                              />
-                            );
-                          })}
-                        </div>
-                        <AddButton
-                          handleClick={() => {
-                            const messages = this.state.messages.slice();
-                            messages.push({
-                              messageName: null,
-                              groupName: null
-                            });
-                            this.setState({
-                              messages
-                            });
-                          }}
-                          title="Add recipients"
-                        />
-                        <button
-                          type="button"
-                          className={`${buttonStyles.Button} ${buttonStyles.Success}`}
-                          style={{ marginTop: 10 }}
-                          onClick={this.handleActivateClick}
-                        >
-                          <FormattedMessage
-                            id="notifications_app.activate"
-                            defaultMessage="Activate"
-                          />
-                        </button>
-                      </div>
-                    ) : null}
                   </div>
                 </div>
               </div>

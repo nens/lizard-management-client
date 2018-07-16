@@ -41,7 +41,7 @@ class NewRasterName extends Component {
           <StepIndicator
             indicator={step}
             active={step === currentStep}
-            handleClick={() => this.goBackToStep(1)}
+            handleClick={() => setCurrentStep(step)}
           />
           <div
             style={{
