@@ -16,11 +16,13 @@ import { TimeSeries, Index } from "pondjs";
 class ThresholdChart extends Component {
   render() {
     const { value, timeseries, parameter, unit } = this.props;
+    console.log("[F] ThresholdChart.render; timeseries =", timeseries);
 
     try {
       const data = timeseries.map(d => {
         return [moment(d[0]), d[1]];
       });
+      console.log("*** data =", data);
 
       const series = new TimeSeries({
         name: "timeserie",
@@ -30,6 +32,7 @@ class ThresholdChart extends Component {
           value
         ])
       });
+      console.log("*** series =", series, "; range =", series.range());
 
       return (
         <div className={styles.ThresholdChart}>
