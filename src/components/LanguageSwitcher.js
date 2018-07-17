@@ -39,13 +39,14 @@ class LanguageSwitcherContainer extends Component {
   render() {
     const { isOpen } = this.state;
     const { languages, locale } = this.props;
+
     let selectedLanguage = languages[0];
 
     if (locale) {
       selectedLanguage = languages.filter(lang => {
         if (lang.code === locale) return lang;
-        return false;
-      });
+        else return false;
+      })[0];
     }
 
     return (
@@ -60,7 +61,7 @@ class LanguageSwitcherContainer extends Component {
             className="material-icons"
           >
             mode_comment
-          </i>&nbsp;{selectedLanguage[0].language}
+          </i>&nbsp;{selectedLanguage.language}
         </a>
         {isOpen ? (
           <div className={styles.LanguageSwitcher}>

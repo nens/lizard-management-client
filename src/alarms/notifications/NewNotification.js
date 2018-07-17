@@ -213,8 +213,6 @@ class NewNotification extends Component {
       loading: true
     });
 
-    // console.log("spatial bounds:", raster.spatial_bounds);
-
     const { west, east, north, south } = raster.spatial_bounds;
 
     const NUMBER_OF_RESULTS = 50;
@@ -250,7 +248,6 @@ class NewNotification extends Component {
     });
   }
   loadTimeseriesData() {
-    
     // EXAMPLE ENDPOINT URLS:
 
     // /api/v3/raster-aggregates/?agg=average&geom=POINT+(4.6307373046875+52.00855538139683)&rasters=730d667&srs=EPSG:4326&start=2017-09-27T00:12:01&stop=2017-09-29T03:12:01&window=3600000
@@ -260,8 +257,17 @@ class NewNotification extends Component {
     // TODO: Show bars / lines depending on ratio or interval type
 
     const { markerPosition, raster } = this.state;
+
+    let aggWindow;
+    if (raster.name === "Regen") {
+      // We're dealing with 'rain' layer; we need to set the aggWindow differently
+      aggWindow = 60 * 60 * 1000;
+    } else {
+      aggWindow = 2635200000;
+    }
+
     return fetch(
-      `/api/v3/raster-aggregates/?agg=curve&geom=POINT+(${markerPosition[1]}+${markerPosition[0]})&rasters=${raster.uuid}&srs=EPSG:4326&start=2008-01-01T12:00:00&stop=2017-12-31T18:00:00&window=2635200000`,
+      `/api/v3/raster-aggregates/?agg=curve&geom=POINT+(${markerPosition[1]}+${markerPosition[0]})&rasters=${raster.uuid}&srs=EPSG:4326&start=2008-01-01T12:00:00&stop=2017-12-31T18:00:00&window=${aggWindow}`,
       {
         credentials: "same-origin"
       }
@@ -297,12 +303,26 @@ class NewNotification extends Component {
     });
   }
   goBackToStep(toStep) {
-    const {step} = this.state;
+    const { step } = this.state;
     if (toStep < step) {
       this.setState({
         step: toStep
       });
     }
+  }
+  formatWMSStyles(rawStyles) {
+    /* 
+    Needed for compound WMS styling, i.e. 'rain' which has three seperate raster stores 
+    behind the screens.
+    */
+    return typeof rawStyles === typeof {} ? rawStyles[0][0] : rawStyles;
+  }
+  formatWMSLayers(rawLayerNames) {
+    /* 
+    Needed for compound WMS styling, i.e. 'rain' which has three seperate raster stores 
+    behind the screens.
+    */
+    return rawLayerNames.split(",")[0];
   }
   render() {
     const position = [52.1858, 5.2677];
@@ -335,7 +355,11 @@ class NewNotification extends Component {
               <div id="steps" style={{ margin: "20px 0 0 20px" }}>
                 <div className={styles.Step} id="Step">
                   <div className="media">
-                    <StepIndicator indicator="1" active={step === 1} handleClick={() => this.goBackToStep(1)} />
+                    <StepIndicator
+                      indicator="1"
+                      active={step === 1}
+                      handleClick={() => this.goBackToStep(1)}
+                    />
                     <div
                       style={{
                         width: "calc(100% - 90px)",
@@ -372,7 +396,7 @@ class NewNotification extends Component {
                                 })}
                               value={alarmName}
                             />
-                            {alarmName.length > 1 && alarmName ? (
+                            {alarmName && alarmName.length > 1 ? (
                               <button
                                 type="button"
                                 className={`${buttonStyles.Button} ${buttonStyles.Success}`}
@@ -398,7 +422,11 @@ class NewNotification extends Component {
 
                 <div className={styles.Step} id="Step">
                   <div className="media">
-                    <StepIndicator indicator="2" active={step === 2} handleClick={() => this.goBackToStep(2)} />
+                    <StepIndicator
+                      indicator="2"
+                      active={step === 2}
+                      handleClick={() => this.goBackToStep(2)}
+                    />
                     <div
                       style={{
                         width: "calc(100% - 90px)",
@@ -457,7 +485,11 @@ class NewNotification extends Component {
 
                 <div className={styles.Step} id="Step">
                   <div className="media">
-                    <StepIndicator indicator="3" active={step === 3} handleClick={() => this.goBackToStep(3)} />
+                    <StepIndicator
+                      indicator="3"
+                      active={step === 3}
+                      handleClick={() => this.goBackToStep(3)}
+                    />
                     <div
                       style={{
                         marginLeft: 90
@@ -510,8 +542,12 @@ class NewNotification extends Component {
                               />
                               <WMSTileLayer
                                 url={`/api/v3/wms/`}
-                                styles={raster.options.styles}
-                                layers={raster.wms_info.layer}
+                                styles={this.formatWMSStyles(
+                                  raster.options.styles
+                                )}
+                                layers={this.formatWMSLayers(
+                                  raster.wms_info.layer
+                                )}
                                 opacity={0.9}
                               />
                               <TileLayer
@@ -579,7 +615,11 @@ class NewNotification extends Component {
 
                 <div className={styles.Step} id="Step">
                   <div className="media">
-                    <StepIndicator indicator="4" active={step === 4} handleClick={() => this.goBackToStep(4)} />
+                    <StepIndicator
+                      indicator="4"
+                      active={step === 4}
+                      handleClick={() => this.goBackToStep(4)}
+                    />
                     <div
                       style={{
                         marginLeft: 90
@@ -656,7 +696,10 @@ class NewNotification extends Component {
                                   <button
                                     type="button"
                                     className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link} ${gridStyles.FloatRight}`}
-                                    onClick={() => console.log("Remove still has to be implemented...")}
+                                    onClick={() =>
+                                      console.log(
+                                        "Remove still has to be implemented..."
+                                      )}
                                   >
                                     <FormattedMessage
                                       id="notifications_app.newnotification_remove"

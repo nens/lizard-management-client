@@ -65,13 +65,11 @@ class GroupAndTemplateSelect extends Component {
               className={formStyles.FormControl}
               onChange={this.selectGroup}
             >
-              <option>
-                {" "}
-                <FormattedMessage
-                  id="notifications_app.select_a_group"
-                  defaultMessage="Select a group"
-                />
-              </option>
+              <FormattedMessage
+                id="notifications_app.select_a_group"
+                defaultMessage="Select a group"
+                tagName="option"
+              />
               {availableGroups.map((group, i) => {
                 return (
                   <option key={i} value={group.name}>
@@ -89,13 +87,11 @@ class GroupAndTemplateSelect extends Component {
               className={formStyles.FormControl}
               onChange={this.selectMessage}
             >
-              <option>
-                {" "}
-                <FormattedMessage
-                  id="notifications_app.select_a_template"
-                  defaultMessage="Select a template"
-                />
-              </option>
+              <FormattedMessage
+                id="notifications_app.select_a_template"
+                defaultMessage="Select a template"
+                tagName="option"
+              />
               {availableMessages.map((message, i) => {
                 return (
                   <option key={i} value={message.name}>
