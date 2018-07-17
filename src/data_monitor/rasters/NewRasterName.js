@@ -1,127 +1,99 @@
-import buttonStyles from "../../styles/Buttons.css";
 import React, { Component } from "react";
-import styles from "./AlarmRow.css";
-import { addNotification } from "../../actions";
 import { connect } from "react-redux";
 import { FormattedMessage } from "react-intl";
-import { withRouter, NavLink } from "react-router-dom";
+import { withRouter } from "react-router-dom";
+
+import CheckMark from "../../components/CheckMark";
 import StepIndicator from "../../components/StepIndicator";
+import FormatMessage from "../../utils/FormatMessage.js";
+
+import styles from "./NewRasterName.css";
 import formStyles from "../../styles/Forms.css";
+import buttonStyles from "../../styles/Buttons.css";
 
 class NewRasterName extends Component {
   constructor(props) {
     super(props);
-    ///*
     this.state = {
-      isFetching: true,
-      isActive: true //props.alarm.active
+      textInput: ""
     };
-    //*/
-    //this.activateAlarm = this.activateAlarm.bind(this);
-    //this.deActivateAlarm = this.deActivateAlarm.bind(this);
   }
-
+  handleNextStepClick() {
+    // for parent:
+    this.props.setRasterName(this.state.textInput);
+    // intern:
+    this.setState({ textInput: "" });
+  }
+  componentWillReceiveProps(newProps) {
+    if (newProps.rasterName) this.setState({ textInput: newProps.rasterName });
+  }
   render() {
-    //const { alarm } = this.props;
-    //const { isActive } = this.state;
-    //const numberOfThresholds = 1; //threshold not defined on raster remove feature later, but hardcode now just to test page //alarm.thresholds.length;
-    //const numberOfRecipients = 1; // iem // alarm.messages.length;
-    // const step = 1;
-    // const rasterName = 'dummie';
-    let {
-      step,
-      currentStep,
-      rasterName,
-      setRasterName,
-      setCurrentStep
-    } = this.props;
+    let { step, currentStep, setCurrentStep, isValid } = this.props;
+    let { textInput } = this.state;
+    const active = step === currentStep;
+
     return (
       <div className={styles.Step} id="Step">
-        <div className="media">
-          <StepIndicator
-            indicator={step}
-            active={step === currentStep}
-            handleClick={() => setCurrentStep(step)}
-          />
-          <div
-            style={{
-              width: "calc(100% - 90px)",
-              marginLeft: 90
-            }}
-          >
-            <h3
-              className={`mt-0 ${step === currentStep ? "text-muted" : null}`}
-            >
-              <FormattedMessage
-                id="rasters.raster"
-                defaultMessage="Name of this raster"
-              />
-            </h3>
-            {step === currentStep ? (
-              <div>
-                <p className="text-muted">
-                  <FormattedMessage
-                    id="notifications_app.name_will_be_used_in_alerts"
-                    defaultMessage="The name of the raster will be used in e-mail and SMS alerts"
-                  />
-                </p>
-                <div className={formStyles.FormGroup}>
-                  <input
-                    id="rasterName"
-                    tabIndex="-2"
-                    type="text"
-                    autoComplete="false"
-                    className={formStyles.FormControl}
-                    placeholder="Name of this alarm"
-                    onChange={e => setRasterName(e.target.value)}
-                    value={rasterName}
-                  />
-                  {rasterName.length > 1 && rasterName ? (
-                    <button
-                      type="button"
-                      className={`${buttonStyles.Button} ${buttonStyles.Success}`}
-                      style={{ marginTop: 10 }}
-                      onClick={() => {
-                        /*
-                                  this.setState({
-                                    step: 2
-                                  });
-                                  //*/
-                        setCurrentStep(step + 1);
-                      }}
-                    >
-                      <FormattedMessage
-                        id="notifications_app.next_step"
-                        defaultMessage="Next step"
-                      />
-                    </button>
-                  ) : null}
-                </div>
+        <StepIndicator
+          indicator={step}
+          active={active}
+          handleClick={() => setCurrentStep(step)}
+        />
+        <div className={styles.InputContainer}>
+          <h3 className={`mt-0 ${active ? "text-muted" : null}`}>
+            <FormatMessage id="rasters.name_of_this_raster" />
+            {isValid ? <CheckMark /> : null}
+          </h3>
+          {active ? (
+            <div>
+              <p className="text-muted">
+                <FormatMessage
+                  id="notifications_app.name_will_be_used_in_alerts"
+                  defaultMessage="The name of the raster will be used in e-mail and SMS alerts"
+                />
+              </p>
+              <div className={formStyles.FormGroup}>
+                <input
+                  id="rasterName"
+                  tabIndex="-2"
+                  type="text"
+                  autoComplete="false"
+                  className={formStyles.FormControl}
+                  placeholder="Name of this alarm"
+                  onChange={e => this.setState({ textInput: e.target.value })}
+                  value={textInput}
+                />
+                {textInput.length > 1 ? (
+                  <button
+                    className={`${buttonStyles.Button} ${buttonStyles.Success}`}
+                    style={{ marginTop: 10 }}
+                    onClick={() => {
+                      setCurrentStep(step + 1);
+                      this.handleNextStepClick();
+                    }}
+                  >
+                    <FormatMessage id="notifications_app.next_step" />
+                  </button>
+                ) : null}
               </div>
-            ) : null}
-          </div>
+            </div>
+          ) : null}
         </div>
       </div>
     );
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  return {
-    bootstrap: state.bootstrap
-  };
+const mapStateToProps = state => {
+  return {};
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => {
-  return {
-    addNotification: (message, timeout) => {
-      dispatch(addNotification(message, timeout));
-    }
-  };
+const mapDispatchToProps = dispatch => {
+  return {};
 };
 
 NewRasterName = withRouter(
   connect(mapStateToProps, mapDispatchToProps)(NewRasterName)
 );
 
-export { NewRasterName };
+export default NewRasterName;

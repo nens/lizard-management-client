@@ -34,7 +34,6 @@ class Raster extends Component {
 
   loadAlarmsOnPage(page) {
     const { bootstrap } = this.props;
-    const organisationId = bootstrap.organisation.unique_id;
 
     fetch(
       `/api/v3/rasters/?page=${page}`, // &organisation__unique_id=${organisationId},
@@ -150,7 +149,7 @@ class Raster extends Component {
               onClick={this.handleNewNotificationClick}
             >
               <FormattedMessage
-                id="notifications_app.new_notification"
+                id="notifications_app.new_raster"
                 defaultMessage="New raster"
               />
               <Ink />

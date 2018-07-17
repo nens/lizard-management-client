@@ -85,8 +85,8 @@ class App extends Component {
         icon: templateIcon,
         subTitle: (
           <FormattedMessage
-            id="home.gegevensbeheer"
-            defaultMessage="Gegevensbeheer"
+            id="home.data_administration"
+            defaultMessage="Data administration"
           />
         )
       }
