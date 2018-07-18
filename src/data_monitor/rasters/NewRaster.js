@@ -37,20 +37,25 @@ class NewRasterModel extends Component {
 
     this.setCurrentStep = this.setCurrentStep.bind(this);
     this.setRasterName = this.setRasterName.bind(this);
+    this.resetRasterName = this.resetRasterName.bind(this);
     this.setSelectedOrganisation = this.setSelectedOrganisation.bind(this);
     this.resetSelectedOrganisation = this.resetSelectedOrganisation.bind(this);
 
     // this.goBackToStep = this.goBackToStep.bind(this); // TO BE REPLACED BY this.setCurrentStep
   }
-  hasSelectedOrganisation() {
-    const { unique_id, name } = this.state.selectedOrganisation;
-    return unique_id && name;
-  }
+
   setCurrentStep(currentStep) {
     this.setState({ currentStep });
   }
   setRasterName(rasterName) {
     this.setState({ rasterName });
+  }
+  resetRasterName() {
+    this.setState({ rasterName: "" });
+  }
+  hasSelectedOrganisation() {
+    const { unique_id, name } = this.state.selectedOrganisation;
+    return unique_id && name;
   }
   setSelectedOrganisation(selectedOrganisation) {
     this.setState({ selectedOrganisation });
@@ -94,8 +99,9 @@ class NewRasterModel extends Component {
                   currentStep={currentStep}
                   setCurrentStep={this.setCurrentStep}
                   isValid={rasterName.length > 1}
-                  rasterName={rasterName}
-                  setRasterName={this.setRasterName}
+                  parentState={rasterName}
+                  setParentState={this.setRasterName}
+                  resetParentState={this.resetRasterName}
                 />
                 <NewRasterOrganisation
                   step={2}

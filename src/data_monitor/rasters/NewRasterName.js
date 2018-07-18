@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { injectIntl } from "react-intl";
 import { withRouter } from "react-router-dom";
 
 import CheckMark from "../../components/CheckMark";
@@ -16,29 +15,41 @@ class NewRasterName extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      textInput: ""
+      localState: ""
     };
   }
-  handleNextStepClick() {
-    // for parent:
-    this.props.setRasterName(this.state.textInput);
-    // intern:
-    this.setState({ textInput: "" });
+  resetLocalState() {
+    this.setState({ localState: "" });
   }
   componentWillReceiveProps(newProps) {
-    if (newProps.rasterName) this.setState({ textInput: newProps.rasterName });
+    if (newProps.parentState)
+      this.setState({ localState: newProps.parentState });
   }
   render() {
-    let { step, currentStep, setCurrentStep, isValid } = this.props;
-    let { textInput } = this.state;
+    const {
+      step,
+      currentStep,
+      setCurrentStep,
+      isValid,
+      setParentState,
+      resetParentState
+    } = this.props;
+    const { localState } = this.state;
     const active = step === currentStep;
+    const showClearButton = localState.length > 0;
+    const showNextButton = localState.length > 1;
 
     return (
       <div className={styles.Step} id="Step">
         <StepIndicator
           indicator={step}
           active={active}
-          handleClick={() => setCurrentStep(step)}
+          handleClick={() => {
+            // currently we can only allow to go to steps backwards because
+            // going forward can only be allowed with the 'next step' button,
+            // since this is the only way that local state is written to parent state
+            if (currentStep > step) setCurrentStep(step);
+          }}
         />
         <div className={styles.InputContainer}>
           <h3 className={`mt-0 ${active ? "text-muted" : null}`}>
@@ -63,24 +74,25 @@ class NewRasterName extends Component {
                   autoComplete="false"
                   className={formStyles.FormControl}
                   placeholder="Name of this alarm"
-                  onChange={e => this.setState({ textInput: e.target.value })}
-                  value={textInput}
+                  onChange={e => this.setState({ localState: e.target.value })}
+                  value={localState}
                 />
-                {textInput.length > 1 ? (
+                {showClearButton > 0 ? (
                   <ClearInputButton
                     onClick={() => {
-                      this.props.resetSelectedOrganisation();
-                      this.resetQuery();
+                      resetParentState();
+                      this.resetLocalState();
                     }}
                   />
                 ) : null}
-                {textInput.length > 1 ? (
+                {showNextButton ? (
                   <button
                     className={`${buttonStyles.Button} ${buttonStyles.Success}`}
                     style={{ marginTop: 10 }}
                     onClick={() => {
+                      setParentState(localState);
+                      this.resetLocalState();
                       setCurrentStep(step + 1);
-                      this.handleNextStepClick();
                     }}
                   >
                     <FormatMessage id="notifications_app.next_step" />
