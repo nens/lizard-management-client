@@ -47,7 +47,7 @@ class SelectOrganisation extends Component {
             <MDSpinner size={18} />
           </div>
         ) : null}
-        {valueInputField != "" ? (
+        {valueInputField !== "" ? (
           <ClearInputButton
             onClick={() => {
               this.props.resetSelectedOrganisation();

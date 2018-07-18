@@ -4,7 +4,7 @@ import styles from "./AlarmRow.css";
 import { addNotification } from "../../actions";
 import { connect } from "react-redux";
 import { FormattedMessage } from "react-intl";
-import { withRouter, NavLink } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import StepIndicator from "../../components/StepIndicator";
 import CheckMark from "../../components/CheckMark";
 
@@ -12,10 +12,6 @@ import formStyles from "../../styles/Forms.css";
 import SelectOrganisation from "../../components/SelectOrganisation";
 
 class NewRasterOrganisation extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     //const { alarm } = this.props;
     //const { isActive } = this.state;
@@ -26,14 +22,10 @@ class NewRasterOrganisation extends Component {
     let {
       step,
       currentStep,
-      rasterName,
-      setRasterName,
       setCurrentStep,
       isFetching,
-
       organisations,
       setSelectedOrganisation,
-      hasSelectedOrganisation,
       selectedOrganisation,
       isValid
     } = this.props;
@@ -87,7 +79,7 @@ class NewRasterOrganisation extends Component {
                       type="button"
                       className={`${buttonStyles.Button} ${buttonStyles.Success}`}
                       style={{ marginTop: 10 }}
-                      onClick={() => this.setState({ currentStep: 3 })}
+                      onClick={() => setCurrentStep(step + 1)}
                     >
                       <FormattedMessage
                         id="notifications_app.next_step"

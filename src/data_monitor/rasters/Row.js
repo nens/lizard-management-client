@@ -1,10 +1,8 @@
-import buttonStyles from "../../styles/Buttons.css";
 import React, { Component } from "react";
 import styles from "./AlarmRow.css";
 import { addNotification } from "../../actions";
 import { connect } from "react-redux";
-import { FormattedMessage } from "react-intl";
-import { withRouter, NavLink } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 
 class Row extends Component {
   constructor(props) {
@@ -74,10 +72,6 @@ class Row extends Component {
   }
 
   render() {
-    const { alarm } = this.props;
-    const { isActive } = this.state;
-    const numberOfThresholds = 1; //threshold not defined on raster remove feature later, but hardcode now just to test page //alarm.thresholds.length;
-    const numberOfRecipients = 1; // iem // alarm.messages.length;
     return <div className={styles.AlarmRow}>{this.props.children}</div>;
   }
 }

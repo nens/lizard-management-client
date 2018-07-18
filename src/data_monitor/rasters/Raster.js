@@ -33,8 +33,6 @@ class Raster extends Component {
   }
 
   loadAlarmsOnPage(page) {
-    const { bootstrap } = this.props;
-
     fetch(
       `/api/v3/rasters/?page=${page}`, // &organisation__unique_id=${organisationId},
       {

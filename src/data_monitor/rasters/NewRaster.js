@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import NewRasterName from "./NewRasterName";
 import { NewRasterOrganisation } from "./NewRasterOrganisation";
+import NewStorePathName from "./NewStorePathName";
 
 class NewRasterModel extends Component {
   constructor(props) {
@@ -16,7 +17,8 @@ class NewRasterModel extends Component {
       selectedOrganisation: {
         name: "",
         unique_id: ""
-      }
+      },
+      storePathName: ""
     };
 
     // Experiment: TODO!
@@ -40,6 +42,7 @@ class NewRasterModel extends Component {
     this.resetRasterName = this.resetRasterName.bind(this);
     this.setSelectedOrganisation = this.setSelectedOrganisation.bind(this);
     this.resetSelectedOrganisation = this.resetSelectedOrganisation.bind(this);
+    this.setStorePathName = this.setStorePathName.bind(this);
 
     // this.goBackToStep = this.goBackToStep.bind(this); // TO BE REPLACED BY this.setCurrentStep
   }
@@ -63,6 +66,9 @@ class NewRasterModel extends Component {
   resetSelectedOrganisation() {
     this.setState({ selectedOrganisation: { name: "", unique_id: "" } });
   }
+  setStorePathName(storePathName) {
+    this.setState({ storePathName });
+  }
   // handleInputNotificationName(e) {
   //   if (e.key === "Enter" && this.state.name) {
   //     this.setState({
@@ -82,7 +88,12 @@ class NewRasterModel extends Component {
   }
   componentWillUnmount() {}
   render() {
-    const { rasterName, selectedOrganisation, currentStep } = this.state;
+    const {
+      rasterName,
+      selectedOrganisation,
+      currentStep,
+      storePathName
+    } = this.state;
 
     const { organisations } = this.props.bootstrap;
 
@@ -114,6 +125,15 @@ class NewRasterModel extends Component {
                   selectedOrganisation={selectedOrganisation}
                   resetSelectedOrganisation={this.resetSelectedOrganisation}
                   setCurrentStep={this.setCurrentStep}
+                />
+                <NewStorePathName
+                  step={3}
+                  currentStep={currentStep}
+                  setCurrentStep={this.setCurrentStep}
+                  isValid={storePathName.length > 1}
+                  value={storePathName}
+                  setParentState={this.setStorePathName}
+                  resetParentState={() => this.setStorePathName("")}
                 />
               </div>
             </div>
