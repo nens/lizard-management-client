@@ -27,8 +27,7 @@ class SelectOrganisation extends Component {
   render() {
     const { organisations, placeholderText, loading } = this.props;
     const showOptions = organisations.length > 0 && this.state.mustShowResults;
-    const valueInputField =
-      (this.props.selected && this.props.selected.name) || this.state.query;
+    const valueInputField = this.state.query;
     return (
       <div className={`${styles.SelectOrganisation} form-input`}>
         <input
@@ -90,7 +89,11 @@ class SelectOrganisation extends Component {
                     onClick={() => {
                       // User selected an organisation from the filtered ones:
                       this.props.setValue(org);
-                      this.resetQuery();
+                      //this.resetQuery();
+                      this.setState({
+                        mustShowResults: false,
+                        query: org.name
+                      });
                     }}
                   >
                     {org.name}
