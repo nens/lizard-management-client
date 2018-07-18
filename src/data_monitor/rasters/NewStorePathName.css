@@ -1,11 +1,3 @@
-.AlarmRow {
-    cursor: pointer;
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin: 10px 0 0 0;
-  }
   .Active {
     background-color: #a2c6bf;
   }

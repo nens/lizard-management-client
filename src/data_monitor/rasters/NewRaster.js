@@ -6,6 +6,8 @@ import { withRouter } from "react-router-dom";
 import NewRasterName from "./NewRasterName";
 import { NewRasterOrganisation } from "./NewRasterOrganisation";
 import NewStorePathName from "./NewStorePathName";
+import NewDescription from "./NewDescription";
+import bindReactFunctions from "../../utils/BindReactFunctions.js";
 
 class NewRasterModel extends Component {
   constructor(props) {
@@ -18,7 +20,24 @@ class NewRasterModel extends Component {
         name: "",
         unique_id: ""
       },
-      storePathName: ""
+      storePathName: "",
+      description: "",
+      temporal: {
+        bool: false,
+        origin: "2000-01-01T00:00:00",
+        intervalInSeconds: 60,
+        optimizer: true
+      },
+      styles: {
+        choice: "",
+        min: 0,
+        max: 10
+      },
+      aggregationType: "",
+      supplierId: "",
+      supplierCode: "",
+      observationType: "",
+      sharedWith: []
     };
 
     // Experiment: TODO!
@@ -34,6 +53,9 @@ class NewRasterModel extends Component {
     // BINDABLE_FUNCTIONS.forEach(fnName =>
     //   that[fnName] = that[fnName].bind(that)
     // );
+    //
+    // bindReactFunctions(this);
+    // this.goBackToStep = this.goBackToStep.bind(this); // TO BE REPLACED BY this.setCurrentStep
 
     // old:
 
@@ -43,8 +65,7 @@ class NewRasterModel extends Component {
     this.setSelectedOrganisation = this.setSelectedOrganisation.bind(this);
     this.resetSelectedOrganisation = this.resetSelectedOrganisation.bind(this);
     this.setStorePathName = this.setStorePathName.bind(this);
-
-    // this.goBackToStep = this.goBackToStep.bind(this); // TO BE REPLACED BY this.setCurrentStep
+    this.setDescription = this.setDescription.bind(this);
   }
 
   setCurrentStep(currentStep) {
@@ -69,6 +90,9 @@ class NewRasterModel extends Component {
   setStorePathName(storePathName) {
     this.setState({ storePathName });
   }
+  setDescription(description) {
+    this.setState({ description });
+  }
   // handleInputNotificationName(e) {
   //   if (e.key === "Enter" && this.state.name) {
   //     this.setState({
@@ -92,7 +116,8 @@ class NewRasterModel extends Component {
       rasterName,
       selectedOrganisation,
       currentStep,
-      storePathName
+      storePathName,
+      description
     } = this.state;
 
     const { organisations } = this.props.bootstrap;
@@ -134,6 +159,15 @@ class NewRasterModel extends Component {
                   value={storePathName}
                   setParentState={this.setStorePathName}
                   resetParentState={() => this.setStorePathName("")}
+                />
+                <NewDescription
+                  step={4}
+                  currentStep={currentStep}
+                  setCurrentStep={this.setCurrentStep}
+                  isValid={description.length > 1}
+                  value={description}
+                  setParentState={this.setDescription}
+                  resetParentState={() => this.setDescription("")}
                 />
               </div>
             </div>
