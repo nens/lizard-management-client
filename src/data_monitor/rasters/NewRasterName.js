@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { FormattedMessage } from "react-intl";
+import { injectIntl } from "react-intl";
 import { withRouter } from "react-router-dom";
 
 import CheckMark from "../../components/CheckMark";
 import StepIndicator from "../../components/StepIndicator";
 import FormatMessage from "../../utils/FormatMessage.js";
+import ClearInputButton from "../../components/ClearInputButton.js";
 
 import styles from "./NewRasterName.css";
 import formStyles from "../../styles/Forms.css";
@@ -52,7 +53,9 @@ class NewRasterName extends Component {
                   defaultMessage="The name of the raster will be used in e-mail and SMS alerts"
                 />
               </p>
-              <div className={formStyles.FormGroup}>
+              <div
+                className={formStyles.FormGroup + " " + styles.PositionRelative}
+              >
                 <input
                   id="rasterName"
                   tabIndex="-2"
@@ -63,6 +66,14 @@ class NewRasterName extends Component {
                   onChange={e => this.setState({ textInput: e.target.value })}
                   value={textInput}
                 />
+                {textInput.length > 1 ? (
+                  <ClearInputButton
+                    onClick={() => {
+                      this.props.resetSelectedOrganisation();
+                      this.resetQuery();
+                    }}
+                  />
+                ) : null}
                 {textInput.length > 1 ? (
                   <button
                     className={`${buttonStyles.Button} ${buttonStyles.Success}`}
