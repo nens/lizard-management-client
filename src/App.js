@@ -200,7 +200,7 @@ class App extends Component {
           </div>
         </div>
 
-        <div className={gridStyles.Container}>
+        <div className={gridStyles.Container + " " + styles.AppContent}>
           <div className={gridStyles.Row}>
             <div
               style={{

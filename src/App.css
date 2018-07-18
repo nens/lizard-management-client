@@ -1,4 +1,11 @@
 .App {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+.AppContent {
+  flex: 1;
 }
 
 
@@ -16,6 +23,9 @@
 
 .Footer {
   background-color: #D8D8D8;
+  /* position: absolute;
+  width: 100%;
+  bottom: 0px; */
 }
 .Footer a {
   color: #009F86;
