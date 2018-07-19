@@ -15,6 +15,19 @@ class SelectOrganisation extends Component {
     this.handleInput = this.handleInput.bind(this);
     this.handleKeyUp = this.handleKeyUp.bind(this);
   }
+  componentDidMount() {
+    console.log(
+      "[F] componentDidMount; this.props.selected.name =",
+      this.props.selected.name
+    );
+    if (this.props.selected.name)
+      this.setState({ query: this.props.selected.name });
+  }
+  componentWillReceiveProps(newProps) {
+    console.log("[F] componentWillReceiveProps =", newProps.selected.name);
+    if (newProps.selected.name)
+      this.setState({ query: newProps.selected.name });
+  }
   handleKeyUp(e) {
     if (e.key === "Escape") this.resetQuery();
   }
@@ -39,7 +52,7 @@ class SelectOrganisation extends Component {
           placeholder={placeholderText}
           onChange={this.handleInput}
           onKeyUp={this.handleKeyUp}
-          value={valueInputField} //{this.props.selected.name}
+          value={this.state.query}
           onFocus={() => this.setState({ mustShowResults: true })}
         />
         {loading ? (
@@ -71,13 +84,15 @@ class SelectOrganisation extends Component {
                 if (this.state.query === "") {
                   // if nothing is typed show all results
                   return true;
-                } else if (this.props.selected.unique_id) {
-                  // if value is prefilled show all results
-                  return true;
+                  // } else if (this.props.selected.unique_id) {
+                  //   // if value is prefilled show all results
+                  //   return true;
                 } else {
                   // if user typed search string only show those that contain string
                   // TODO sort by search string ?
-                  return org.name.toLowerCase().includes(this.state.query);
+                  return org.name
+                    .toLowerCase()
+                    .includes(this.state.query.toLowerCase());
                 }
               })
               .map((org, i) => {

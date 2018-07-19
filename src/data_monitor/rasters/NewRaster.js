@@ -5,8 +5,8 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import NewRasterName from "./NewRasterName";
 import { NewRasterOrganisation } from "./NewRasterOrganisation";
-import NewStorePathName from "./NewStorePathName";
-import NewDescription from "./NewDescription";
+import NewRasterStorePath from "./NewRasterStorePath";
+import NewRasterDescription from "./NewRasterDescription";
 import bindReactFunctions from "../../utils/BindReactFunctions.js";
 
 class NewRasterModel extends Component {
@@ -21,6 +21,7 @@ class NewRasterModel extends Component {
         unique_id: ""
       },
       storePathName: "",
+      slug: "",
       description: "",
       temporal: {
         bool: false,
@@ -37,7 +38,13 @@ class NewRasterModel extends Component {
       supplierId: "",
       supplierCode: "",
       observationType: "",
-      sharedWith: []
+      sharedWith: [],
+      validSteps: {
+        step1: false,
+        step2: false,
+        step3: false,
+        step4: false
+      }
     };
 
     // Experiment: TODO!
@@ -66,6 +73,17 @@ class NewRasterModel extends Component {
     this.resetSelectedOrganisation = this.resetSelectedOrganisation.bind(this);
     this.setStorePathName = this.setStorePathName.bind(this);
     this.setDescription = this.setDescription.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
+    this.validateNewRasterName = this.validateNewRasterName.bind(this);
+    this.validateNewRasterOrganisation = this.validateNewRasterOrganisation.bind(
+      this
+    );
+    this.validateNewRasterStorePath = this.validateNewRasterStorePath.bind(
+      this
+    );
+    this.validateNewRasterDescription = this.validateNewRasterDescription.bind(
+      this
+    );
   }
 
   setCurrentStep(currentStep) {
@@ -77,10 +95,6 @@ class NewRasterModel extends Component {
   resetRasterName() {
     this.setState({ rasterName: "" });
   }
-  hasSelectedOrganisation() {
-    const { unique_id, name } = this.state.selectedOrganisation;
-    return unique_id && name;
-  }
   setSelectedOrganisation(selectedOrganisation) {
     this.setState({ selectedOrganisation });
   }
@@ -88,7 +102,7 @@ class NewRasterModel extends Component {
     this.setState({ selectedOrganisation: { name: "", unique_id: "" } });
   }
   setStorePathName(storePathName) {
-    this.setState({ storePathName });
+    this.setState({ storePathName, slug: storePathName.replace(/\//g, ":") });
   }
   setDescription(description) {
     this.setState({ description });
@@ -107,10 +121,34 @@ class NewRasterModel extends Component {
       });
     }
   }
+
+  handleKeyDown(event) {
+    if (event.key === "Enter") {
+      this.setState({
+        currentStep: this.state.currentStep + 1
+      });
+    }
+  }
+
   componentDidMount() {
     document.getElementById("rasterName").focus();
+    // commented out because this component does not have an easy way to validate,
+    // therefore it does not know if going to the next step should be required
+    //document.addEventListener("keydown", this.handleKeyDown, false);
   }
-  componentWillUnmount() {}
+  validateNewRasterName(str) {
+    return str.length > 1;
+  }
+  validateNewRasterOrganisation(obj) {
+    const { unique_id, name } = obj;
+    return unique_id && name;
+  }
+  validateNewRasterStorePath(str) {
+    // regex..
+  }
+  validateNewRasterDescription(str) {
+    return str.length > 1;
+  }
   render() {
     const {
       rasterName,
@@ -134,7 +172,7 @@ class NewRasterModel extends Component {
                   step={1}
                   currentStep={currentStep}
                   setCurrentStep={this.setCurrentStep}
-                  isValid={rasterName.length > 1}
+                  validate={this.validateNewRasterName}
                   parentState={rasterName}
                   setParentState={this.setRasterName}
                   resetParentState={this.resetRasterName}
@@ -143,15 +181,16 @@ class NewRasterModel extends Component {
                   step={2}
                   currentStep={currentStep}
                   handleNextStepClick={() => this.setCurrentStep(3)}
-                  isValid={this.hasSelectedOrganisation()}
                   allOrganisations={organisations}
-                  hasSelectedOrganisation={this.hasSelectedOrganisation()}
+                  isValid={this.validateNewRasterOrganisation(
+                    this.state.selectedOrganisation
+                  )}
                   setSelectedOrganisation={this.setSelectedOrganisation}
                   selectedOrganisation={selectedOrganisation}
                   resetSelectedOrganisation={this.resetSelectedOrganisation}
                   setCurrentStep={this.setCurrentStep}
                 />
-                <NewStorePathName
+                <NewRasterStorePath
                   step={3}
                   currentStep={currentStep}
                   setCurrentStep={this.setCurrentStep}
@@ -160,11 +199,12 @@ class NewRasterModel extends Component {
                   setParentState={this.setStorePathName}
                   resetParentState={() => this.setStorePathName("")}
                 />
-                <NewDescription
+                <NewRasterDescription
                   step={4}
                   currentStep={currentStep}
                   setCurrentStep={this.setCurrentStep}
-                  isValid={description.length > 1}
+                  //isValid={description.length > 1}
+                  validate={this.validateNewRasterDescription}
                   value={description}
                   setParentState={this.setDescription}
                   resetParentState={() => this.setDescription("")}

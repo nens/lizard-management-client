@@ -7,11 +7,11 @@ import StepIndicator from "../../components/StepIndicator";
 import FormatMessage from "../../utils/FormatMessage.js";
 import ClearInputButton from "../../components/ClearInputButton.js";
 
-import styles from "./NewStorePathName.css";
+import styles from "./NewRasterStorePath.css";
 import formStyles from "../../styles/Forms.css";
 import buttonStyles from "../../styles/Buttons.css";
 
-class NewStorePathName extends Component {
+class NewRasterStorePath extends Component {
   render() {
     const {
       step,
@@ -32,23 +32,20 @@ class NewStorePathName extends Component {
           indicator={step}
           active={active}
           handleClick={() => {
-            // currently we can only allow to go to steps backwards because
-            // going forward can only be allowed with the 'next step' button,
-            // since this is the only way that local state is written to parent state
-            if (currentStep > step) setCurrentStep(step);
+            setCurrentStep(step);
           }}
         />
         <div className={styles.InputContainer}>
           <h3 className={`mt-0 ${active ? "text-muted" : null}`}>
-            <FormatMessage id="rasters.url_name" />
+            <FormatMessage id="rasters.store_path" />
             {isValid ? <CheckMark /> : null}
           </h3>
           {active ? (
             <div>
               <p className="text-muted">
                 <FormatMessage
-                  id="notifications_app.url_name_to_retrieve"
-                  defaultMessage="URL name to retrieve raster"
+                  id="rasters.path_on_disk"
+                  defaultMessage="Relative path of raster store. Should be unique within organisation. Multiple, comma-separated paths allowed."
                 />
               </p>
               <div
@@ -60,7 +57,7 @@ class NewStorePathName extends Component {
                   type="text"
                   autoComplete="false"
                   className={formStyles.FormControl}
-                  placeholder="pathname/of/url"
+                  placeholder="path/to/store"
                   onChange={e => setParentState(e.target.value)}
                   value={value}
                 />
@@ -99,8 +96,8 @@ const mapDispatchToProps = dispatch => {
   return {};
 };
 
-NewStorePathName = withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(NewStorePathName)
+NewRasterStorePath = withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(NewRasterStorePath)
 );
 
-export default NewStorePathName;
+export default NewRasterStorePath;

@@ -15,29 +15,37 @@ class NewRasterName extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      localState: ""
+      inputText: ""
     };
   }
   resetLocalState() {
-    this.setState({ localState: "" });
+    this.setState({ inputText: "" });
+  }
+
+  validateAndSaveToParent(inputText) {
+    this.setState({ inputText });
+    if (this.props.validate(inputText)) {
+      this.props.setParentState(inputText);
+    }
   }
   componentWillReceiveProps(newProps) {
     if (newProps.parentState)
-      this.setState({ localState: newProps.parentState });
+      this.setState({ inputText: newProps.parentState });
   }
   render() {
     const {
       step,
       currentStep,
       setCurrentStep,
-      isValid,
+      validate,
       setParentState,
       resetParentState
     } = this.props;
-    const { localState } = this.state;
+    const { inputText } = this.state;
     const active = step === currentStep;
-    const showClearButton = localState.length > 0;
-    const showNextButton = localState.length > 1;
+    const showCheckMark = validate(inputText);
+    const showClearButton = inputText !== "";
+    const showNextButton = validate(inputText);
 
     return (
       <div className={styles.Step} id="Step">
@@ -45,16 +53,13 @@ class NewRasterName extends Component {
           indicator={step}
           active={active}
           handleClick={() => {
-            // currently we can only allow to go to steps backwards because
-            // going forward can only be allowed with the 'next step' button,
-            // since this is the only way that local state is written to parent state
-            if (currentStep > step) setCurrentStep(step);
+            setCurrentStep(step);
           }}
         />
         <div className={styles.InputContainer}>
           <h3 className={`mt-0 ${active ? "text-muted" : null}`}>
             <FormatMessage id="rasters.name_of_this_raster" />
-            {isValid ? <CheckMark /> : null}
+            {showCheckMark ? <CheckMark /> : null}
           </h3>
           {active ? (
             <div>
@@ -74,8 +79,8 @@ class NewRasterName extends Component {
                   autoComplete="false"
                   className={formStyles.FormControl}
                   placeholder="Name of this alarm"
-                  onChange={e => this.setState({ localState: e.target.value })}
-                  value={localState}
+                  onChange={e => this.validateAndSaveToParent(e.target.value)}
+                  value={inputText}
                 />
                 {showClearButton > 0 ? (
                   <ClearInputButton
@@ -90,8 +95,8 @@ class NewRasterName extends Component {
                     className={`${buttonStyles.Button} ${buttonStyles.Success}`}
                     style={{ marginTop: 10 }}
                     onClick={() => {
-                      setParentState(localState);
-                      this.resetLocalState();
+                      setParentState(inputText);
+                      //this.resetLocalState();
                       setCurrentStep(step + 1);
                     }}
                   >

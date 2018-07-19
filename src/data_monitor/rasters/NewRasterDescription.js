@@ -7,28 +7,26 @@ import StepIndicator from "../../components/StepIndicator";
 import FormatMessage from "../../utils/FormatMessage.js";
 import ClearInputButton from "../../components/ClearInputButton.js";
 
-import styles from "./NewDescription.css";
+import styles from "./NewRasterDescription.css";
 import formStyles from "../../styles/Forms.css";
 import buttonStyles from "../../styles/Buttons.css";
 
-class NewDescription extends Component {
-  constructor(props) {
-    super(props);
-  }
-
+class NewRasterDescription extends Component {
   render() {
     const {
       step,
       currentStep,
       setCurrentStep,
-      isValid,
+      // isValid,
+      validate,
       value,
       setParentState,
       resetParentState
     } = this.props;
     const active = step === currentStep;
+    const showCheckmark = validate(value);
     const showClearButton = value && value.length > 1;
-    const showNextButton = value && value.length > 1;
+    const showNextButton = validate(value);
 
     return (
       <div className={styles.Step} id="Step">
@@ -36,16 +34,13 @@ class NewDescription extends Component {
           indicator={step}
           active={active}
           handleClick={() => {
-            // currently we can only allow to go to steps backwards because
-            // going forward can only be allowed with the 'next step' button,
-            // since this is the only way that local state is written to parent state
-            if (currentStep > step) setCurrentStep(step);
+            setCurrentStep(step);
           }}
         />
         <div className={styles.InputContainer}>
           <h3 className={`mt-0 ${active ? "text-muted" : null}`}>
             <FormatMessage id="rasters.description" />
-            {isValid ? <CheckMark /> : null}
+            {showCheckmark ? <CheckMark /> : null}
           </h3>
           {active ? (
             <div>
@@ -56,16 +51,19 @@ class NewDescription extends Component {
                 className={formStyles.FormGroup + " " + styles.PositionRelative}
               >
                 <textarea
-                  className={styles.Textarea}
+                  className={styles.Textarea + " " + formStyles.FormControl}
                   rows="3"
                   id="rasterName"
                   tabIndex="-2"
                   type="text"
                   autoComplete="false"
-                  className={formStyles.FormControl}
                   placeholder="description of raster"
-                  onChange={e => setParentState(e.target.value)}
-                  value={value}
+                  onChange={e => {
+                    if (validate(e.target.value)) {
+                      setParentState(e.target.value);
+                    }
+                  }}
+                  //value={value}
                 />
                 {showClearButton > 0 ? (
                   <ClearInputButton
@@ -102,8 +100,8 @@ const mapDispatchToProps = dispatch => {
   return {};
 };
 
-NewDescription = withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(NewDescription)
+NewRasterDescription = withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(NewRasterDescription)
 );
 
-export default NewDescription;
+export default NewRasterDescription;
