@@ -1,3 +1,6 @@
 .None {
-    display: none;
+  display: none;
+}
+.Block {
+  display: block;
 }

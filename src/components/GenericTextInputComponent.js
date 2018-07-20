@@ -59,7 +59,7 @@ class GenericTextInputComponent extends Component {
     const opened = currentStep >= step;
     const showCheckMark = validate(this.state.inputText);
     const showClearButton = modelValue !== "";
-    const showNextButton = validate(this.state.inputText);
+    const showNextButton = validate(this.state.inputText) && active;
 
     return (
       <div className={styles.Step} id="Step">

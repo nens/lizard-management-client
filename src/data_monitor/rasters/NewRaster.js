@@ -10,6 +10,10 @@ import { NewRasterOrganisation } from "./NewRasterOrganisation";
 import NewRasterStorePath from "./NewRasterStorePath";
 import NewRasterDescription from "./NewRasterDescription";
 import bindReactFunctions from "../../utils/BindReactFunctions.js";
+import GenericWizardStep from "../../components/GenericWizardStep";
+import formStyles from "../../styles/Forms.css";
+import displayStyles from "../../styles/Display.css";
+import ClearInputButton from "../../components/ClearInputButton.js";
 
 class NewRasterModel extends Component {
   constructor(props) {
@@ -36,7 +40,7 @@ class NewRasterModel extends Component {
         min: 0,
         max: 10
       },
-      aggregationType: "",
+      aggregationType: "", // choice: none | counts | curve | histogram | sum | average
       supplierId: "",
       supplierCode: "",
       observationType: "",
@@ -86,6 +90,7 @@ class NewRasterModel extends Component {
     this.validateNewRasterDescription = this.validateNewRasterDescription.bind(
       this
     );
+    this.setAggregationType = this.setAggregationType.bind(this);
   }
 
   setCurrentStep(currentStep) {
@@ -108,6 +113,9 @@ class NewRasterModel extends Component {
   }
   setDescription(description) {
     this.setState({ description });
+  }
+  setAggregationType(aggregationType) {
+    this.setState({ aggregationType });
   }
   // handleInputNotificationName(e) {
   //   if (e.key === "Enter" && this.state.name) {
@@ -157,7 +165,8 @@ class NewRasterModel extends Component {
       selectedOrganisation,
       currentStep,
       storePathName,
-      description
+      description,
+      aggregationType
     } = this.state;
 
     const { organisations } = this.props.bootstrap;
@@ -267,6 +276,58 @@ class NewRasterModel extends Component {
                   setParentState={this.setDescription}
                   resetParentState={() => this.setDescription("")}
                 /> */}
+                <GenericTextInputComponent
+                  titleComponent={
+                    <FormatMessage id="rasters.aggregation_type" />
+                  } // <FormatText ... //>
+                  subtitleComponent={
+                    <FormatMessage id="rasters.please_select_type_of_aggregation" />
+                  } // <FormatText ... />
+                  placeholder="aggregation type"
+                  multiline={false} // boolean for which input elem to use: text OR textarea
+                  step={5} // int for denoting which step it the GenericTextInputComponent refers to
+                  currentStep={currentStep} // int for denoting which step is currently active
+                  setCurrentStep={this.setCurrentStep} // cb function for updating which step becomes active
+                  modelValue={aggregationType} // string: e.g. the name of a raster
+                  updateModelValue={this.setAggregationType} // cb function to *update* the value of e.g. a raster's name in the parent model
+                  resetModelValue={() => this.setAggregationType("")} // cb function to *reset* the value of e.g. a raster's name in the parent model
+                  validate={() => true} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
+                />
+                <GenericWizardStep
+                  titleComponent={
+                    <FormatMessage id="rasters.aggregation_type" />
+                  }
+                  inputComponent={
+                    <div>
+                      <input
+                        id="rasterName"
+                        tabIndex="-2"
+                        type="text"
+                        autoComplete="false"
+                        className={formStyles.FormControl}
+                        placeholder={"select aggregation"}
+                        onChange={e => this.setAggregationType(e.target.value)}
+                        value={aggregationType}
+                      />
+                      <ClearInputButton
+                        className={
+                          (value => value != "")(aggregationType)
+                            ? displayStyles.Block
+                            : displayStyles.None
+                        }
+                        onClick={e => {
+                          this.setAggregationType("");
+                        }}
+                      />
+                    </div>
+                  }
+                  step={6}
+                  active={currentStep === 6}
+                  opened={currentStep >= 6}
+                  setCurrentStep={this.setCurrentStep}
+                  modelValue={aggregationType}
+                  validate={value => value != ""}
+                />
               </div>
             </div>
           </div>
