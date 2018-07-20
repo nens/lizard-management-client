@@ -3,6 +3,8 @@ import React, { Component } from "react";
 import { addNotification } from "../../actions";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
+import FormatMessage from "../../utils/FormatMessage.js";
+import GenericTextInputComponent from "../../components/GenericTextInputComponent";
 import NewRasterName from "./NewRasterName";
 import { NewRasterOrganisation } from "./NewRasterOrganisation";
 import NewRasterStorePath from "./NewRasterStorePath";
@@ -168,15 +170,38 @@ class NewRasterModel extends Component {
               className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
             >
               <div id="steps" style={{ margin: "20px 0 0 20px" }}>
-                <NewRasterName
+                {/* <NewRasterName
                   step={1}
                   currentStep={currentStep}
                   setCurrentStep={this.setCurrentStep}
                   validate={this.validateNewRasterName}
+
                   parentState={rasterName}
                   setParentState={this.setRasterName}
                   resetParentState={this.resetRasterName}
+                /> */}
+
+                <GenericTextInputComponent
+                  titleComponent={
+                    <FormatMessage id="rasters.name_of_this_raster" />
+                  } // <FormatText ... //>
+                  subtitleComponent={
+                    <FormatMessage
+                      id="notifications_app.name_will_be_used_in_alerts"
+                      defaultMessage="The name of the raster will be used in e-mail and SMS alerts"
+                    />
+                  } // <FormatText ... />
+                  placeholder="name of this raster"
+                  multiline={false} // boolean for which input elem to use: text OR textarea
+                  step={1} // int for denoting which step it the GenericTextInputComponent refers to
+                  currentStep={currentStep} // int for denoting which step is currently active
+                  setCurrentStep={this.setCurrentStep} // cb function for updating which step becomes active
+                  modelValue={rasterName} // string: e.g. the name of a raster
+                  updateModelValue={this.setRasterName} // cb function to *update* the value of e.g. a raster's name in the parent model
+                  resetModelValue={this.resetRasterName} // cb function to *reset* the value of e.g. a raster's name in the parent model
+                  validate={this.validateNewRasterName} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
                 />
+
                 <NewRasterOrganisation
                   step={2}
                   currentStep={currentStep}
@@ -190,7 +215,25 @@ class NewRasterModel extends Component {
                   resetSelectedOrganisation={this.resetSelectedOrganisation}
                   setCurrentStep={this.setCurrentStep}
                 />
-                <NewRasterStorePath
+                <GenericTextInputComponent
+                  titleComponent={<FormatMessage id="rasters.store_path" />} // <FormatText ... //>
+                  subtitleComponent={
+                    <FormatMessage
+                      id="rasters.path_on_disk"
+                      defaultMessage="Relative path of raster store. Should be unique within organisation. Multiple, comma-separated paths allowed."
+                    />
+                  } // <FormatText ... />
+                  placeholder="path/to/store"
+                  multiline={false} // boolean for which input elem to use: text OR textarea
+                  step={3} // int for denoting which step it the GenericTextInputComponent refers to
+                  currentStep={currentStep} // int for denoting which step is currently active
+                  setCurrentStep={this.setCurrentStep} // cb function for updating which step becomes active
+                  modelValue={storePathName} // string: e.g. the name of a raster
+                  updateModelValue={this.setStorePathName} // cb function to *update* the value of e.g. a raster's name in the parent model
+                  resetModelValue={() => this.setStorePathName("")} // cb function to *reset* the value of e.g. a raster's name in the parent model
+                  validate={storePathName => storePathName.length > 1} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
+                />
+                {/* <NewRasterStorePath
                   step={3}
                   currentStep={currentStep}
                   setCurrentStep={this.setCurrentStep}
@@ -198,8 +241,23 @@ class NewRasterModel extends Component {
                   value={storePathName}
                   setParentState={this.setStorePathName}
                   resetParentState={() => this.setStorePathName("")}
+                /> */}
+                <GenericTextInputComponent
+                  titleComponent={<FormatMessage id="rasters.description" />} // <FormatText ... //>
+                  subtitleComponent={
+                    <FormatMessage id="rasters.please_describe_the_new_raster" />
+                  } // <FormatText ... />
+                  placeholder="description here"
+                  multiline={false} // boolean for which input elem to use: text OR textarea
+                  step={4} // int for denoting which step it the GenericTextInputComponent refers to
+                  currentStep={currentStep} // int for denoting which step is currently active
+                  setCurrentStep={this.setCurrentStep} // cb function for updating which step becomes active
+                  modelValue={description} // string: e.g. the name of a raster
+                  updateModelValue={this.setDescription} // cb function to *update* the value of e.g. a raster's name in the parent model
+                  resetModelValue={() => this.setDescription("")} // cb function to *reset* the value of e.g. a raster's name in the parent model
+                  validate={this.validateNewRasterDescription} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
                 />
-                <NewRasterDescription
+                {/* <NewRasterDescription
                   step={4}
                   currentStep={currentStep}
                   setCurrentStep={this.setCurrentStep}
@@ -208,7 +266,7 @@ class NewRasterModel extends Component {
                   value={description}
                   setParentState={this.setDescription}
                   resetParentState={() => this.setDescription("")}
-                />
+                /> */}
               </div>
             </div>
           </div>

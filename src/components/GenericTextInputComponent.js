@@ -2,14 +2,14 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
-import CheckMark from "../../components/CheckMark";
-import StepIndicator from "../../components/StepIndicator";
-import FormatMessage from "../../utils/FormatMessage.js";
-import ClearInputButton from "../../components/ClearInputButton.js";
+import CheckMark from "./CheckMark";
+import StepIndicator from "./StepIndicator";
+import FormatMessage from "../utils/FormatMessage.js";
+import ClearInputButton from "./ClearInputButton.js";
 
 import styles from "./GenericTextInputComponent.css";
-import formStyles from "../../styles/Forms.css";
-import buttonStyles from "../../styles/Buttons.css";
+import formStyles from "../styles/Forms.css";
+import buttonStyles from "../styles/Buttons.css";
 
 class GenericTextInputComponent extends Component {
   constructor(props) {
@@ -18,6 +18,11 @@ class GenericTextInputComponent extends Component {
       inputText: ""
     };
   }
+  setLocalStateFromProps(prop) {
+    if (prop.parentState) {
+      this.setState({ inputText: prop.modelValue });
+    }
+  }
   resetLocalState() {
     this.setState({ inputText: "" });
   }
@@ -25,27 +30,35 @@ class GenericTextInputComponent extends Component {
   validateAndSaveToParent(inputText) {
     this.setState({ inputText });
     if (this.props.validate(inputText)) {
-      this.props.setParentState(inputText);
+      this.props.updateModelValue(inputText);
     }
   }
   componentWillReceiveProps(newProps) {
-    if (newProps.parentState) {
-      //this.setState({ inputText: newProps.parentState });
-    }
+    this.setLocalStateFromProps(newProps.modelValue);
+  }
+
+  componentDidMount() {
+    this.setLocalStateFromProps(this.props);
   }
 
   render() {
     const {
-      step,
-      currentStep,
-      setCurrentStep,
-      validate,
-      parentState,
-      resetParentState
+      titleComponent, // <FormatText ... //>
+      subtitleComponent, // <FormatText ... />
+      placeholder,
+      multiline, // boolean for which input elem to use: text OR textarea
+      step, // int for denoting which step it the GenericTextInputComponent refers to
+      currentStep, // int for denoting which step is currently active
+      setCurrentStep, // cb function for updating which step becomes active
+      modelValue, // string: e.g. the name of a raster
+      updateModelValue, // cb function to *update* the value of e.g. a raster's name in the parent model
+      resetModelValue, // cb function to *reset* the value of e.g. a raster's name in the parent model
+      validate
     } = this.props;
     const active = step === currentStep;
+    const opened = currentStep >= step;
     const showCheckMark = validate(this.state.inputText);
-    const showClearButton = parentState !== "";
+    const showClearButton = modelValue !== "";
     const showNextButton = validate(this.state.inputText);
 
     return (
@@ -59,33 +72,42 @@ class GenericTextInputComponent extends Component {
         />
         <div className={styles.InputContainer}>
           <h3 className={`mt-0 ${active ? "text-muted" : null}`}>
-            <FormatMessage id="rasters.name_of_this_raster" />
+            {titleComponent}
             {showCheckMark ? <CheckMark /> : null}
           </h3>
-          <div style={{ display: active ? "block" : "none" }}>
-            <p className="text-muted">
-              <FormatMessage
-                id="notifications_app.name_will_be_used_in_alerts"
-                defaultMessage="The name of the raster will be used in e-mail and SMS alerts"
-              />
-            </p>
+          <div style={{ display: opened ? "block" : "none" }}>
+            <p className="text-muted">{subtitleComponent}</p>
             <div
               className={formStyles.FormGroup + " " + styles.PositionRelative}
             >
-              <input
-                id="rasterName"
-                tabIndex="-2"
-                type="text"
-                autoComplete="false"
-                className={formStyles.FormControl}
-                placeholder="Name of this alarm"
-                onChange={e => this.validateAndSaveToParent(e.target.value)}
-                value={this.state.inputText}
-              />
+              {multiline ? (
+                <textarea
+                  id="rasterName"
+                  rows="3"
+                  tabIndex="-2"
+                  type="text"
+                  autoComplete="false"
+                  className={formStyles.FormControl}
+                  placeholder={placeholder}
+                  onChange={e => this.validateAndSaveToParent(e.target.value)}
+                  value={this.state.inputText}
+                />
+              ) : (
+                <input
+                  id="rasterName"
+                  tabIndex="-2"
+                  type="text"
+                  autoComplete="false"
+                  className={formStyles.FormControl}
+                  placeholder={placeholder}
+                  onChange={e => this.validateAndSaveToParent(e.target.value)}
+                  value={this.state.inputText}
+                />
+              )}
               {showClearButton ? (
                 <ClearInputButton
                   onClick={e => {
-                    resetParentState();
+                    resetModelValue();
                     this.resetLocalState();
                   }}
                 />
