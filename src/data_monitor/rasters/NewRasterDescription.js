@@ -42,50 +42,48 @@ class NewRasterDescription extends Component {
             <FormatMessage id="rasters.description" />
             {showCheckmark ? <CheckMark /> : null}
           </h3>
-          {active ? (
-            <div>
-              <p className="text-muted">
-                <FormatMessage id="notifications_app.please_describe_the_new_raster" />
-              </p>
-              <div
-                className={formStyles.FormGroup + " " + styles.PositionRelative}
-              >
-                <textarea
-                  className={styles.Textarea + " " + formStyles.FormControl}
-                  rows="3"
-                  id="rasterName"
-                  tabIndex="-2"
-                  type="text"
-                  autoComplete="false"
-                  placeholder="description of raster"
-                  onChange={e => {
-                    if (validate(e.target.value)) {
-                      setParentState(e.target.value);
-                    }
+          <div style={{ display: active ? "block" : "none" }}>
+            <p className="text-muted">
+              <FormatMessage id="notifications_app.please_describe_the_new_raster" />
+            </p>
+            <div
+              className={formStyles.FormGroup + " " + styles.PositionRelative}
+            >
+              <textarea
+                className={styles.Textarea + " " + formStyles.FormControl}
+                rows="3"
+                id="rasterName"
+                tabIndex="-2"
+                type="text"
+                autoComplete="false"
+                placeholder="description of raster"
+                onChange={e => {
+                  if (validate(e.target.value)) {
+                    setParentState(e.target.value);
+                  }
+                }}
+                //value={value}
+              />
+              {showClearButton > 0 ? (
+                <ClearInputButton
+                  onClick={() => {
+                    resetParentState();
                   }}
-                  //value={value}
                 />
-                {showClearButton > 0 ? (
-                  <ClearInputButton
-                    onClick={() => {
-                      resetParentState();
-                    }}
-                  />
-                ) : null}
-                {showNextButton ? (
-                  <button
-                    className={`${buttonStyles.Button} ${buttonStyles.Success}`}
-                    style={{ marginTop: 10 }}
-                    onClick={() => {
-                      setCurrentStep(step + 1);
-                    }}
-                  >
-                    <FormatMessage id="notifications_app.next_step" />
-                  </button>
-                ) : null}
-              </div>
+              ) : null}
+              {showNextButton ? (
+                <button
+                  className={`${buttonStyles.Button} ${buttonStyles.Success}`}
+                  style={{ marginTop: 10 }}
+                  onClick={() => {
+                    setCurrentStep(step + 1);
+                  }}
+                >
+                  <FormatMessage id="notifications_app.next_step" />
+                </button>
+              ) : null}
             </div>
-          ) : null}
+          </div>
         </div>
       </div>
     );

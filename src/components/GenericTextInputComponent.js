@@ -7,11 +7,11 @@ import StepIndicator from "../../components/StepIndicator";
 import FormatMessage from "../../utils/FormatMessage.js";
 import ClearInputButton from "../../components/ClearInputButton.js";
 
-import styles from "./NewRasterName.css";
+import styles from "./GenericTextInputComponent.css";
 import formStyles from "../../styles/Forms.css";
 import buttonStyles from "../../styles/Buttons.css";
 
-class NewRasterName extends Component {
+class GenericTextInputComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -78,7 +78,7 @@ class NewRasterName extends Component {
                 type="text"
                 autoComplete="false"
                 className={formStyles.FormControl}
-                placeholder="Name of this raster"
+                placeholder="Name of this alarm"
                 onChange={e => this.validateAndSaveToParent(e.target.value)}
                 value={this.state.inputText}
               />
@@ -117,8 +117,8 @@ const mapDispatchToProps = dispatch => {
   return {};
 };
 
-NewRasterName = withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(NewRasterName)
+GenericTextInputComponent = withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(GenericTextInputComponent)
 );
 
-export default NewRasterName;
+export default GenericTextInputComponent;

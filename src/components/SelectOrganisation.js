@@ -20,19 +20,24 @@ class SelectOrganisation extends Component {
       "[F] componentDidMount; this.props.selected.name =",
       this.props.selected.name
     );
-    if (this.props.selected.name)
-      this.setState({ query: this.props.selected.name });
+    this.setQuery(this.props);
+    // if (this.props.selected.name)
+    //   this.setState({ query: this.props.selected.name });
   }
   componentWillReceiveProps(newProps) {
     console.log("[F] componentWillReceiveProps =", newProps.selected.name);
-    if (newProps.selected.name)
-      this.setState({ query: newProps.selected.name });
+    this.setQuery(newProps);
+    // if (newProps.selected.name)
+    //   this.setState({ query: newProps.selected.name });
   }
   handleKeyUp(e) {
     if (e.key === "Escape") this.resetQuery();
   }
   handleInput(e) {
     this.setState({ mustShowResults: true, query: e.target.value });
+  }
+  setQuery(props) {
+    if (props.selected.name) this.setState({ query: props.selected.name });
   }
   resetQuery() {
     this.setState({ mustShowResults: false, query: "" });
