@@ -141,7 +141,13 @@ class NewRasterModel extends Component {
   }
 
   componentDidMount() {
-    document.getElementById("rasterName").focus();
+    // TODO fix original focus
+
+    const firstElement = document.getElementById(
+      "rasters.name_of_this_raster_input"
+    );
+    console.log("[]firstElement ", firstElement);
+    firstElement.focus();
     // commented out because this component does not have an easy way to validate,
     // therefore it does not know if going to the next step should be required
     //document.addEventListener("keydown", this.handleKeyDown, false);
@@ -196,13 +202,14 @@ class NewRasterModel extends Component {
                   } // <FormatText ... //>
                   subtitleComponent={
                     <FormatMessage
-                      id="notifications_app.name_will_be_used_in_alerts"
+                      id="rasters.name_will_be_used_in_alerts"
                       defaultMessage="The name of the raster will be used in e-mail and SMS alerts"
                     />
                   } // <FormatText ... />
                   placeholder="name of this raster"
                   multiline={false} // boolean for which input elem to use: text OR textarea
                   step={1} // int for denoting which step it the GenericTextInputComponent refers to
+                  opened={currentStep === 1}
                   currentStep={currentStep} // int for denoting which step is currently active
                   setCurrentStep={this.setCurrentStep} // cb function for updating which step becomes active
                   modelValue={rasterName} // string: e.g. the name of a raster
@@ -211,7 +218,7 @@ class NewRasterModel extends Component {
                   validate={this.validateNewRasterName} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
                 />
 
-                <NewRasterOrganisation
+                {/* <NewRasterOrganisation
                   step={2}
                   currentStep={currentStep}
                   handleNextStepClick={() => this.setCurrentStep(3)}
@@ -223,7 +230,7 @@ class NewRasterModel extends Component {
                   selectedOrganisation={selectedOrganisation}
                   resetSelectedOrganisation={this.resetSelectedOrganisation}
                   setCurrentStep={this.setCurrentStep}
-                />
+                /> */}
                 <GenericTextInputComponent
                   titleComponent={<FormatMessage id="rasters.store_path" />} // <FormatText ... //>
                   subtitleComponent={
@@ -234,13 +241,19 @@ class NewRasterModel extends Component {
                   } // <FormatText ... />
                   placeholder="path/to/store"
                   multiline={false} // boolean for which input elem to use: text OR textarea
-                  step={3} // int for denoting which step it the GenericTextInputComponent refers to
+                  step={2} // int for denoting which step it the GenericTextInputComponent refers to
+                  opened={currentStep === 2}
                   currentStep={currentStep} // int for denoting which step is currently active
                   setCurrentStep={this.setCurrentStep} // cb function for updating which step becomes active
                   modelValue={storePathName} // string: e.g. the name of a raster
                   updateModelValue={this.setStorePathName} // cb function to *update* the value of e.g. a raster's name in the parent model
                   resetModelValue={() => this.setStorePathName("")} // cb function to *reset* the value of e.g. a raster's name in the parent model
-                  validate={storePathName => storePathName.length > 1} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
+                  validate={storePathName => {
+                    // one or more alphanumerical or "-" or "_" plus one "/" , this hole combination one or more time
+                    // after this again one or more alphanumerical or "-" or "_"
+                    const reg = /^([-_a-zA-Z0-9]+\/)+[-_a-zA-Z0-9]+$/g;
+                    return reg.test(storePathName);
+                  }} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
                 />
                 {/* <NewRasterStorePath
                   step={3}
@@ -257,8 +270,9 @@ class NewRasterModel extends Component {
                     <FormatMessage id="rasters.please_describe_the_new_raster" />
                   } // <FormatText ... />
                   placeholder="description here"
-                  multiline={false} // boolean for which input elem to use: text OR textarea
-                  step={4} // int for denoting which step it the GenericTextInputComponent refers to
+                  multiline={true} // boolean for which input elem to use: text OR textarea
+                  step={3} // int for denoting which step it the GenericTextInputComponent refers to
+                  opened={currentStep === 3}
                   currentStep={currentStep} // int for denoting which step is currently active
                   setCurrentStep={this.setCurrentStep} // cb function for updating which step becomes active
                   modelValue={description} // string: e.g. the name of a raster
@@ -285,15 +299,16 @@ class NewRasterModel extends Component {
                   } // <FormatText ... />
                   placeholder="aggregation type"
                   multiline={false} // boolean for which input elem to use: text OR textarea
-                  step={5} // int for denoting which step it the GenericTextInputComponent refers to
+                  step={4} // int for denoting which step it the GenericTextInputComponent refers to
+                  opened={currentStep === 4}
                   currentStep={currentStep} // int for denoting which step is currently active
                   setCurrentStep={this.setCurrentStep} // cb function for updating which step becomes active
                   modelValue={aggregationType} // string: e.g. the name of a raster
                   updateModelValue={this.setAggregationType} // cb function to *update* the value of e.g. a raster's name in the parent model
                   resetModelValue={() => this.setAggregationType("")} // cb function to *reset* the value of e.g. a raster's name in the parent model
-                  validate={() => true} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
+                  validate={value => value != ""} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
                 />
-                <GenericWizardStep
+                {/* <GenericWizardStep
                   titleComponent={
                     <FormatMessage id="rasters.aggregation_type" />
                   }
@@ -311,7 +326,7 @@ class NewRasterModel extends Component {
                       />
                       <ClearInputButton
                         className={
-                          (value => value != "")(aggregationType)
+                          aggregationType !== ''
                             ? displayStyles.Block
                             : displayStyles.None
                         }
@@ -327,7 +342,7 @@ class NewRasterModel extends Component {
                   setCurrentStep={this.setCurrentStep}
                   modelValue={aggregationType}
                   validate={value => value != ""}
-                />
+                /> */}
               </div>
             </div>
           </div>

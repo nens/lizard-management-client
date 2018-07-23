@@ -50,13 +50,13 @@ class GenericTextInputComponent extends Component {
       step, // int for denoting which step it the GenericTextInputComponent refers to
       currentStep, // int for denoting which step is currently active
       setCurrentStep, // cb function for updating which step becomes active
+      opened,
       modelValue, // string: e.g. the name of a raster
       updateModelValue, // cb function to *update* the value of e.g. a raster's name in the parent model
       resetModelValue, // cb function to *reset* the value of e.g. a raster's name in the parent model
       validate
     } = this.props;
     const active = step === currentStep;
-    const opened = currentStep >= step;
     const showCheckMark = validate(this.state.inputText);
     const showClearButton = modelValue !== "";
     const showNextButton = validate(this.state.inputText) && active;
@@ -80,21 +80,23 @@ class GenericTextInputComponent extends Component {
             <div
               className={formStyles.FormGroup + " " + styles.PositionRelative}
             >
-              {multiline ? (
-                <textarea
-                  id="rasterName"
-                  rows="3"
-                  tabIndex="-2"
-                  type="text"
-                  autoComplete="false"
-                  className={formStyles.FormControl}
-                  placeholder={placeholder}
-                  onChange={e => this.validateAndSaveToParent(e.target.value)}
-                  value={this.state.inputText}
-                />
-              ) : (
+              {/* {multiline ? ( */}
+              <textarea
+                // id="rasterName"
+                id={titleComponent.props.id + "_input"}
+                rows="3"
+                tabIndex="-2"
+                type="text"
+                autoComplete="false"
+                className={formStyles.FormControl}
+                placeholder={placeholder}
+                onChange={e => this.validateAndSaveToParent(e.target.value)}
+                value={this.state.inputText}
+              />
+              {/* ) : (
                 <input
-                  id="rasterName"
+                  // id="rasterName"
+                  id={titleComponent.props.id + '_input'}
                   tabIndex="-2"
                   type="text"
                   autoComplete="false"
@@ -103,7 +105,7 @@ class GenericTextInputComponent extends Component {
                   onChange={e => this.validateAndSaveToParent(e.target.value)}
                   value={this.state.inputText}
                 />
-              )}
+              )} */}
               {showClearButton ? (
                 <ClearInputButton
                   onClick={e => {
