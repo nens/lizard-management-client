@@ -10,6 +10,7 @@ import ClearInputButton from "./ClearInputButton.js";
 import styles from "./GenericTextInputComponent.css";
 import formStyles from "../styles/Forms.css";
 import buttonStyles from "../styles/Buttons.css";
+import inputStyles from "../styles/Input.css";
 
 class GenericTextInputComponent extends Component {
   constructor(props) {
@@ -44,6 +45,14 @@ class GenericTextInputComponent extends Component {
       this.props.updateModelValue(inputText);
     }
   }
+  handleEnter(event) {
+    // on ENTER
+    if (event.keyCode === 13) {
+      // 13 is keycode 'enter'
+      this.props.setCurrentStep(this.props.step + 1);
+    }
+  }
+
   componentWillReceiveProps(newProps) {
     this.setLocalStateFromProps(newProps);
   }
@@ -81,7 +90,7 @@ class GenericTextInputComponent extends Component {
             setCurrentStep(step);
           }}
         />
-        <div className={styles.InputContainer}>
+        <div className={inputStyles.InputContainer}>
           <h3 className={`mt-0 ${active ? "text-muted" : null}`}>
             {titleComponent}
             {showCheckMark ? <CheckMark /> : null}
@@ -89,7 +98,9 @@ class GenericTextInputComponent extends Component {
           <div style={{ display: opened ? "block" : "none" }}>
             <p className="text-muted">{subtitleComponent}</p>
             <div
-              className={formStyles.FormGroup + " " + styles.PositionRelative}
+              className={
+                formStyles.FormGroup + " " + inputStyles.PositionRelative
+              }
             >
               {multiline ? (
                 <textarea
@@ -102,6 +113,7 @@ class GenericTextInputComponent extends Component {
                   placeholder={placeholder}
                   onChange={e => this.validateAndSaveToParent(e.target.value)}
                   value={this.state.inputText}
+                  // onKeyUp={e => this.handleEnter(e)}
                 />
               ) : (
                 <input
@@ -113,13 +125,7 @@ class GenericTextInputComponent extends Component {
                   placeholder={placeholder}
                   onChange={e => this.validateAndSaveToParent(e.target.value)}
                   value={this.state.inputText}
-                  onKeyUp={event => {
-                    // on ENTER
-                    if (event.keyCode === 13) {
-                      // 13 is keycode 'enter'
-                      setCurrentStep(step + 1);
-                    }
-                  }}
+                  onKeyUp={e => this.handleEnter(e)}
                 />
               )}
               {showClearButton ? (
