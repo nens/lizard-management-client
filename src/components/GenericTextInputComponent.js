@@ -18,9 +18,20 @@ class GenericTextInputComponent extends Component {
       inputText: ""
     };
   }
-  setLocalStateFromProps(prop) {
-    if (prop.parentState) {
-      this.setState({ inputText: prop.modelValue });
+  setLocalStateFromProps(props) {
+    if (props.parentState) {
+      this.setState({ inputText: props.modelValue });
+    }
+    // If this component is the "current step component", set the page focus to the components
+    // input field:
+    if (props.step === props.currentStep) {
+      const inputElem = document.getElementById(
+        this.props.titleComponent.props.id + "_input"
+      );
+      // inputElem.focus(); does not work outside setTimeout. Is this the right solution?
+      setTimeout(function() {
+        inputElem.focus();
+      }, 0);
     }
   }
   resetLocalState() {
@@ -34,7 +45,7 @@ class GenericTextInputComponent extends Component {
     }
   }
   componentWillReceiveProps(newProps) {
-    this.setLocalStateFromProps(newProps.modelValue);
+    this.setLocalStateFromProps(newProps);
   }
 
   componentDidMount() {
@@ -50,11 +61,11 @@ class GenericTextInputComponent extends Component {
       step, // int for denoting which step it the GenericTextInputComponent refers to
       currentStep, // int for denoting which step is currently active
       setCurrentStep, // cb function for updating which step becomes active
-      opened,
+      opened, // complete question and input fields become visible if set to true
       modelValue, // string: e.g. the name of a raster
       updateModelValue, // cb function to *update* the value of e.g. a raster's name in the parent model
       resetModelValue, // cb function to *reset* the value of e.g. a raster's name in the parent model
-      validate
+      validate // function used to validate the inputText. If validate returns true the inputText passed to updateModelValue and checkmark is set.
     } = this.props;
     const active = step === currentStep;
     const showCheckMark = validate(this.state.inputText);
@@ -62,7 +73,7 @@ class GenericTextInputComponent extends Component {
     const showNextButton = validate(this.state.inputText) && active;
 
     return (
-      <div className={styles.Step} id="Step">
+      <div className={styles.Step} id={"Step-" + step}>
         <StepIndicator
           indicator={step}
           active={active}
@@ -80,23 +91,10 @@ class GenericTextInputComponent extends Component {
             <div
               className={formStyles.FormGroup + " " + styles.PositionRelative}
             >
-              {/* {multiline ? ( */}
-              <textarea
-                // id="rasterName"
-                id={titleComponent.props.id + "_input"}
-                rows="3"
-                tabIndex="-2"
-                type="text"
-                autoComplete="false"
-                className={formStyles.FormControl}
-                placeholder={placeholder}
-                onChange={e => this.validateAndSaveToParent(e.target.value)}
-                value={this.state.inputText}
-              />
-              {/* ) : (
-                <input
-                  // id="rasterName"
-                  id={titleComponent.props.id + '_input'}
+              {multiline ? (
+                <textarea
+                  id={titleComponent.props.id + "_input"}
+                  rows="3"
                   tabIndex="-2"
                   type="text"
                   autoComplete="false"
@@ -105,7 +103,25 @@ class GenericTextInputComponent extends Component {
                   onChange={e => this.validateAndSaveToParent(e.target.value)}
                   value={this.state.inputText}
                 />
-              )} */}
+              ) : (
+                <input
+                  id={titleComponent.props.id + "_input"}
+                  tabIndex="-2"
+                  type="text"
+                  autoComplete="false"
+                  className={formStyles.FormControl}
+                  placeholder={placeholder}
+                  onChange={e => this.validateAndSaveToParent(e.target.value)}
+                  value={this.state.inputText}
+                  onKeyUp={event => {
+                    // on ENTER
+                    if (event.keyCode === 13) {
+                      // 13 is keycode 'enter'
+                      setCurrentStep(step + 1);
+                    }
+                  }}
+                />
+              )}
               {showClearButton ? (
                 <ClearInputButton
                   onClick={e => {

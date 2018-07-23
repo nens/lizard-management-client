@@ -95,6 +95,7 @@ class NewRasterModel extends Component {
 
   setCurrentStep(currentStep) {
     this.setState({ currentStep });
+    // Also, set focus to the new currentstep:
   }
   setRasterName(rasterName) {
     this.setState({ rasterName });
@@ -142,12 +143,10 @@ class NewRasterModel extends Component {
 
   componentDidMount() {
     // TODO fix original focus
-
-    const firstElement = document.getElementById(
-      "rasters.name_of_this_raster_input"
-    );
-    console.log("[]firstElement ", firstElement);
-    firstElement.focus();
+    // const firstElement = document.getElementById(
+    //   "rasters.name_of_this_raster_input"
+    // );
+    // firstElement.focus();
     // commented out because this component does not have an easy way to validate,
     // therefore it does not know if going to the next step should be required
     //document.addEventListener("keydown", this.handleKeyDown, false);
