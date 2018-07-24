@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import FormatMessage from "../../utils/FormatMessage.js";
 import GenericTextInputComponent from "../../components/GenericTextInputComponent";
+import GenericSelectBoxComponent from "../../components/GenericSelectBoxComponent";
 import NewRasterName from "./NewRasterName";
 import { NewRasterOrganisation } from "./NewRasterOrganisation";
 import NewRasterStorePath from "./NewRasterStorePath";
@@ -289,7 +290,7 @@ class NewRasterModel extends Component {
                   setParentState={this.setDescription}
                   resetParentState={() => this.setDescription("")}
                 /> */}
-                <GenericTextInputComponent
+                <GenericSelectBoxComponent
                   titleComponent={
                     <FormatMessage id="rasters.aggregation_type" />
                   } // <FormatText ... //>
@@ -297,11 +298,11 @@ class NewRasterModel extends Component {
                     <FormatMessage id="rasters.please_select_type_of_aggregation" />
                   } // <FormatText ... />
                   placeholder="aggregation type"
-                  multiline={false} // boolean for which input elem to use: text OR textarea
                   step={4} // int for denoting which step it the GenericTextInputComponent refers to
                   opened={currentStep === 4}
                   currentStep={currentStep} // int for denoting which step is currently active
                   setCurrentStep={this.setCurrentStep} // cb function for updating which step becomes active
+                  choices={["counts", "curve", "histogram", "sum", "average"]}
                   modelValue={aggregationType} // string: e.g. the name of a raster
                   updateModelValue={this.setAggregationType} // cb function to *update* the value of e.g. a raster's name in the parent model
                   resetModelValue={() => this.setAggregationType("")} // cb function to *reset* the value of e.g. a raster's name in the parent model
