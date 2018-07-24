@@ -6,15 +6,15 @@ import { withRouter } from "react-router-dom";
 import FormatMessage from "../../utils/FormatMessage.js";
 import GenericTextInputComponent from "../../components/GenericTextInputComponent";
 import GenericSelectBoxComponent from "../../components/GenericSelectBoxComponent";
-import NewRasterName from "./NewRasterName";
-import { NewRasterOrganisation } from "./NewRasterOrganisation";
-import NewRasterStorePath from "./NewRasterStorePath";
-import NewRasterDescription from "./NewRasterDescription";
-import bindReactFunctions from "../../utils/BindReactFunctions.js";
-import GenericWizardStep from "../../components/GenericWizardStep";
-import formStyles from "../../styles/Forms.css";
-import displayStyles from "../../styles/Display.css";
-import ClearInputButton from "../../components/ClearInputButton.js";
+// import NewRasterName from "./NewRasterName";
+// import { NewRasterOrganisation } from "./NewRasterOrganisation";
+// import NewRasterStorePath from "./NewRasterStorePath";
+// import NewRasterDescription from "./NewRasterDescription";
+// import bindReactFunctions from "../../utils/BindReactFunctions.js";
+// import GenericWizardStep from "../../components/GenericWizardStep";
+// import formStyles from "../../styles/Forms.css";
+// import displayStyles from "../../styles/Display.css";
+// import ClearInputButton from "../../components/ClearInputButton.js";
 
 class NewRasterModel extends Component {
   constructor(props) {
@@ -168,14 +168,14 @@ class NewRasterModel extends Component {
   render() {
     const {
       rasterName,
-      selectedOrganisation,
+      //selectedOrganisation,
       currentStep,
       storePathName,
       description,
       aggregationType
     } = this.state;
 
-    const { organisations } = this.props.bootstrap;
+    //const { organisations } = this.props.bootstrap;
 
     return (
       <div>
@@ -306,7 +306,7 @@ class NewRasterModel extends Component {
                   modelValue={aggregationType} // string: e.g. the name of a raster
                   updateModelValue={this.setAggregationType} // cb function to *update* the value of e.g. a raster's name in the parent model
                   resetModelValue={() => this.setAggregationType("")} // cb function to *reset* the value of e.g. a raster's name in the parent model
-                  validate={value => value != ""} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
+                  validate={value => value !== ""} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
                 />
                 {/* <GenericWizardStep
                   titleComponent={

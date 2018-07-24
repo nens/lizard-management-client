@@ -5,7 +5,7 @@ import { withRouter } from "react-router-dom";
 import CheckMark from "./CheckMark";
 import StepIndicator from "./StepIndicator";
 import FormatMessage from "../utils/FormatMessage.js";
-import ClearInputButton from "./ClearInputButton.js";
+//import ClearInputButton from "./ClearInputButton.js";
 import SelectBoxSimple from "./SelectBoxSimple.js";
 
 import styles from "./GenericSelectBoxComponent.css";
@@ -26,15 +26,15 @@ class GenericSelectBoxComponent extends Component {
     }
     // If this component is the "current step component", set the page focus to the components
     // input field:
-    if (props.step === props.currentStep) {
-      const inputElem = document.getElementById(
-        this.props.titleComponent.props.id + "_input"
-      );
-      // inputElem.focus(); does not work outside setTimeout. Is this the right solution?
-      setTimeout(function() {
-        //inputElem.focus();
-      }, 0);
-    }
+    // if (props.step === props.currentStep) {
+    //   const inputElem = document.getElementById(
+    //     this.props.titleComponent.props.id + "_input"
+    //   );
+    //   // inputElem.focus(); does not work outside setTimeout. Is this the right solution?
+    //   setTimeout(function() {
+    //     //inputElem.focus();
+    //   }, 0);
+    // }
   }
   resetLocalState() {
     this.setState({ inputText: "" });
@@ -66,7 +66,7 @@ class GenericSelectBoxComponent extends Component {
     const {
       titleComponent, // <FormatText ... //>
       subtitleComponent, // <FormatText ... />
-      placeholder,
+      //placeholder,
       step, // int for denoting which step it the GenericTextInputComponent refers to
       currentStep, // int for denoting which step is currently active
       setCurrentStep, // cb function for updating which step becomes active
@@ -74,12 +74,12 @@ class GenericSelectBoxComponent extends Component {
       choices, // list of choices in select box
       modelValue, // string: e.g. the name of a raster
       updateModelValue, // cb function to *update* the value of e.g. a raster's name in the parent model
-      resetModelValue, // cb function to *reset* the value of e.g. a raster's name in the parent model
+      //resetModelValue, // cb function to *reset* the value of e.g. a raster's name in the parent model
       validate // function used to validate the inputText. If validate returns true the inputText passed to updateModelValue and checkmark is set.
     } = this.props;
     const active = step === currentStep;
     const showCheckMark = validate(this.state.inputText);
-    const showClearButton = modelValue !== "";
+    //const showClearButton = modelValue !== "";
     const showNextButton = validate(this.state.inputText) && active;
 
     return (
