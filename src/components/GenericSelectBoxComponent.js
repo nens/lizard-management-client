@@ -80,8 +80,7 @@ class GenericSelectBoxComponent extends Component {
     const active = step === currentStep;
     const showCheckMark = validate(this.state.inputText);
     //const showClearButton = modelValue !== "";
-    const showNextButton = validate(this.state.inputText) && active;
-
+    const showNextButton = choices.includes(modelValue);
     return (
       <div className={styles.Step} id={"Step-" + step}>
         <StepIndicator
