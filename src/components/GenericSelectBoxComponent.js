@@ -103,17 +103,6 @@ class GenericSelectBoxComponent extends Component {
                 formStyles.FormGroup + " " + inputStyles.PositionRelative
               }
             >
-              {/* <select 
-                id={titleComponent.props.id + "_input"}
-                className={formStyles.FormControl}
-              >
-                <option disabled selected value> -- select an option -- </option>
-                {choices.map(
-                  function (choice) {
-                    return <option value={choice}>{choice}</option>
-                  }
-                )}
-              </select> */}
               <SelectBoxSimple
                 choices={choices}
                 choice={modelValue}
