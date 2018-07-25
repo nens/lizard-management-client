@@ -165,7 +165,7 @@
   },
   "proxy": {
     "/bootstrap/lizard/": {
-      "target": "https://demo.lizard.net",
+      "target": "https://demo.lizard.net/",
       "changeOrigin": true,
       "ssl": false,
       "secure": false,
@@ -175,7 +175,7 @@
       }
     },
     "/api/v3/": {
-      "target": "https://demo.lizard.net",
+      "target": "https://demo.lizard.net/",
       "changeOrigin": true,
       "ssl": false,
       "secure": false,

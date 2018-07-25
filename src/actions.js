@@ -152,7 +152,6 @@ export function fetchObservationTypes() {
 
     fetch(url, opts)
       .then(responseObj => {
-        console.log("[!] responseObj =", responseObj);
         if (!responseObj.ok) {
           dispatch({
             type: RECEIVE_OBSERVATION_TYPES_ERROR,
@@ -200,7 +199,6 @@ export function fetchSupplierIds() {
 
     fetch(url, opts)
       .then(responseObj => {
-        console.log("[!] responseObj =", responseObj);
         if (!responseObj.ok) {
           dispatch({
             type: RECEIVE_SUPPLIER_IDS_ERROR,

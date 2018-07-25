@@ -65,10 +65,8 @@ class App extends Component {
     const opts = { credentials: "same-origin" };
 
     fetch(url, opts)
-      //.then(response => response.json())
       .then(responseObj => responseObj.json())
       .then(responseData => {
-        // const data = response.json();
         this.setState({
           total: responseData.count,
           templates: responseData.results,
