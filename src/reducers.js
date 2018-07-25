@@ -6,7 +6,8 @@ import {
   RECEIVE_ORGANISATIONS,
   SELECT_ORGANISATION,
   REQUEST_OBSERVATION_TYPES,
-  RECEIVE_OBSERVATION_TYPES,
+  RECEIVE_OBSERVATION_TYPES_SUCCESS,
+  RECEIVE_OBSERVATION_TYPES_ERROR,
   SHOW_NOTIFICATION,
   DISMISS_NOTIFICATION,
   UPDATE_VIEWPORT_DIMENSIONS
@@ -62,6 +63,8 @@ function organisations(
 function observationTypes(
   state = {
     isFetching: false,
+    hasError: false,
+    errorMessage: "",
     available: []
   },
   action
@@ -70,9 +73,23 @@ function observationTypes(
     case REQUEST_OBSERVATION_TYPES:
       console.log("[A] REQUEST_OBSERVATION_TYPES");
       return { ...state, isFetching: true };
-    case RECEIVE_OBSERVATION_TYPES:
-      console.log("[A] RECEIVE_OBSERVATION_TYPES", action);
-      return { ...state, available: action.data, isFetching: false };
+    case RECEIVE_OBSERVATION_TYPES_SUCCESS:
+      console.log("[A] RECEIVE_OBSERVATION_TYPES_SUCCESS; action =", action);
+      return {
+        ...state,
+        available: action.data,
+        isFetching: false,
+        hasError: false
+      };
+    case RECEIVE_OBSERVATION_TYPES_ERROR:
+      console.log("[A] RECEIVE_OBSERVATION_TYPES_ERROR", action.responseObj);
+      return {
+        ...state,
+        available: [],
+        isFetching: false,
+        hasError: true,
+        errorMessage: action.errorMessage
+      };
     default:
       return state;
   }
