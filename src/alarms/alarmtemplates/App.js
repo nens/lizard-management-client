@@ -66,11 +66,12 @@ class App extends Component {
 
     fetch(url, opts)
       //.then(response => response.json())
-      .then(response => {
-        const data = response.json();
+      .then(responseObj => responseObj.json())
+      .then(responseData => {
+        // const data = response.json();
         this.setState({
-          total: data.count,
-          templates: data.results,
+          total: responseData.count,
+          templates: responseData.results,
           page: 1,
           isFetching: false
         });
