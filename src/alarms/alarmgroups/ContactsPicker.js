@@ -32,12 +32,14 @@ class ContactsPicker extends Component {
     const url = `/api/v3/contacts/?page_size=100000&organisation__unique_id=${organisationId}`;
     const opts = { credentials: "same-origin" };
 
-    fetch(url, opts).then(response => {
-      this.setState({
-        contacts: response.json().results,
-        isFetching: false
+    fetch(url, opts)
+      .then(responseObj => responseObj.json())
+      .then(responseData => {
+        this.setState({
+          contacts: responseData.results,
+          isFetching: false
+        });
       });
-    });
   }
   componentWillUnmount() {
     window.removeEventListener("resize", this.handleResize, false);
