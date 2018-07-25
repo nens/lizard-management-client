@@ -8,6 +8,9 @@ import {
   REQUEST_OBSERVATION_TYPES,
   RECEIVE_OBSERVATION_TYPES_SUCCESS,
   RECEIVE_OBSERVATION_TYPES_ERROR,
+  REQUEST_SUPPLIER_IDS,
+  RECEIVE_SUPPLIER_IDS_SUCCESS,
+  RECEIVE_SUPPLIER_IDS_ERROR,
   SHOW_NOTIFICATION,
   DISMISS_NOTIFICATION,
   UPDATE_VIEWPORT_DIMENSIONS
@@ -95,6 +98,41 @@ function observationTypes(
   }
 }
 
+function supplierIds(
+  state = {
+    isFetching: false,
+    hasError: false,
+    errorMessage: "",
+    available: []
+  },
+  action
+) {
+  switch (action.type) {
+    case REQUEST_SUPPLIER_IDS:
+      console.log("[A] REQUEST_SUPPLIER_IDS");
+      return { ...state, isFetching: true };
+    case RECEIVE_SUPPLIER_IDS_SUCCESS:
+      console.log("[A] RECEIVE_SUPPLIER_IDS_SUCCESS; action =", action);
+      return {
+        ...state,
+        available: action.data,
+        isFetching: false,
+        hasError: false
+      };
+    case RECEIVE_SUPPLIER_IDS_ERROR:
+      console.log("[A] RECEIVE_SUPPLIER_IDS_ERROR", action.responseObj);
+      return {
+        ...state,
+        available: [],
+        isFetching: false,
+        hasError: true,
+        errorMessage: action.errorMessage
+      };
+    default:
+      return state;
+  }
+}
+
 function notifications(
   state = {
     notifications: []
@@ -143,6 +181,7 @@ const rootReducer = combineReducers({
   bootstrap,
   organisations,
   observationTypes,
+  supplierIds,
   notifications,
   viewport
 });

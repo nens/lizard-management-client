@@ -171,6 +171,54 @@ export function fetchObservationTypes() {
   };
 }
 
+// MARK: Observation types
+// /api/v3/users/
+export const REQUEST_SUPPLIER_IDS = "REQUEST_SUPPLIER_IDS";
+export const RECEIVE_SUPPLIER_IDS_SUCCESS = "RECEIVE_SUPPLIER_IDS_SUCCESS";
+export const RECEIVE_SUPPLIER_IDS_ERROR = "RECEIVE_SUPPLIER_IDS_ERROR";
+
+// TODO fetch users needed as supplier ids from organisation_user_url:
+// /api/v3/organisations/<organisation_uid>/users/
+// To perform above query we first would need to have the organisation before performing this query
+// TODO only show users that have supplier role for the organisation
+// at the moment roles cannot be queried from the api, thus it cannot be known by client which users have supllier role
+export function fetchSupplierIds() {
+  return (dispatch, getState) => {
+    const state = getState();
+
+    const supplierIds = state.supplierIds.available;
+
+    if (supplierIds.length > 0) {
+      // If we already have the observationTypes, skip this
+      return Promise.resolve();
+    }
+
+    dispatch({ type: REQUEST_SUPPLIER_IDS });
+
+    const url = "/api/v3/users/?page_size=100000";
+    const opts = { credentials: "same-origin" };
+
+    fetch(url, opts)
+      .then(responseObj => {
+        console.log("[!] responseObj =", responseObj);
+        if (!responseObj.ok) {
+          dispatch({
+            type: RECEIVE_SUPPLIER_IDS_ERROR,
+            errorMessage: `HTTP error ${responseObj.status} while fetching Supplier Ids: ${responseObj.statusText}`
+          });
+          console.error("[P] error retrieving Supplier Ids=", responseObj);
+        } else {
+          return responseObj.json();
+        }
+      })
+      .then(responseData => {
+        const data = responseData.results;
+        console.log("[P] observation types data=", data);
+        dispatch({ type: RECEIVE_SUPPLIER_IDS_SUCCESS, data });
+      });
+  };
+}
+
 // MARK: Viewport
 export const UPDATE_VIEWPORT_DIMENSIONS = "UPDATE_VIEWPORT_DIMENSIONS";
 
