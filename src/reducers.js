@@ -1,12 +1,14 @@
 import { combineReducers } from "redux";
 import {
-  DISMISS_NOTIFICATION,
-  RECEIVE_LIZARD_BOOTSTRAP,
-  RECEIVE_ORGANISATIONS,
   REQUEST_LIZARD_BOOTSTRAP,
+  RECEIVE_LIZARD_BOOTSTRAP,
   REQUEST_ORGANISATIONS,
+  RECEIVE_ORGANISATIONS,
   SELECT_ORGANISATION,
+  REQUEST_OBSERVATION_TYPES,
+  RECEIVE_OBSERVATION_TYPES,
   SHOW_NOTIFICATION,
+  DISMISS_NOTIFICATION,
   UPDATE_VIEWPORT_DIMENSIONS
 } from "./actions";
 
@@ -49,10 +51,28 @@ function organisations(
       return { ...state, isFetching: true };
     case RECEIVE_ORGANISATIONS:
       console.log("[A] RECEIVE_ORGANISATIONS", action);
-      // return { ...state, organisations: action.data, isFetching: false };
       return { ...state, available: action.data, isFetching: false };
     case SELECT_ORGANISATION:
       return { ...state, selected: action.organisation };
+    default:
+      return state;
+  }
+}
+
+function observationTypes(
+  state = {
+    isFetching: false,
+    available: []
+  },
+  action
+) {
+  switch (action.type) {
+    case REQUEST_OBSERVATION_TYPES:
+      console.log("[A] REQUEST_OBSERVATION_TYPES");
+      return { ...state, isFetching: true };
+    case RECEIVE_OBSERVATION_TYPES:
+      console.log("[A] RECEIVE_OBSERVATION_TYPES", action);
+      return { ...state, available: action.data, isFetching: false };
     default:
       return state;
   }
@@ -105,6 +125,7 @@ function viewport(
 const rootReducer = combineReducers({
   bootstrap,
   organisations,
+  observationTypes,
   notifications,
   viewport
 });

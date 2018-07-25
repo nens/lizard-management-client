@@ -8,6 +8,7 @@ import {
   addNotification,
   fetchLizardBootstrap,
   fetchOrganisations,
+  fetchObservationTypes,
   updateViewportDimensions
 } from "./actions";
 import { Route, NavLink } from "react-router-dom";
@@ -91,6 +92,7 @@ class App extends Component {
       );
     } else {
       this.props.getOrganisations();
+      this.props.getObservationTypes();
 
       const { preferredLocale, bootstrap, selectedOrganisation } = this.props;
       const firstName = bootstrap.bootstrap.user
@@ -326,6 +328,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     getLizardBootstrap: () => dispatch(fetchLizardBootstrap()),
     getOrganisations: () => dispatch(fetchOrganisations()),
+    getObservationTypes: () => dispatch(fetchObservationTypes()),
     addNotification: (message, timeout) => {
       dispatch(addNotification(message, timeout));
     },

@@ -127,6 +127,51 @@ export function selectOrganisation(organisation) {
   };
 }
 
+// MARK: Observation types
+export const REQUEST_OBSERVATION_TYPES = "REQUEST_OBSERVATION_TYPES";
+export const RECEIVE_OBSERVATION_TYPES = "RECEIVE_OBSERVATION_TYPES";
+
+export function fetchObservationTypes() {
+  return (dispatch, getState) => {
+    const state = getState();
+
+    const observationTypes = state.observationTypes.available;
+    // const organisation = state.organisations.selected;
+
+    if (observationTypes.length > 0) {
+      // If we already have the organisations, skip this
+      return Promise.resolve();
+    }
+
+    dispatch({ type: REQUEST_ORGANISATIONS });
+
+    const url = "/api/v3/observationtypes/?page_size=100000";
+    const opts = { credentials: "same-origin" };
+
+    fetch(url, opts)
+      .then(responseObj => responseObj.json())
+      .then(responseData => {
+        const data = responseData.results;
+        console.log("[P] observation types data=", data);
+        dispatch({ type: RECEIVE_OBSERVATION_TYPES, data });
+
+        // if (!organisation) {
+        //   // No organisation was chosen, select the first one, and let
+        //   // the user know about this
+        //   //const firstOrganisation = data[0];
+
+        //   //dispatch(selectOrganisation(firstOrganisation));
+        //   dispatch(
+        //     addNotification(
+        //       `Organisation "${firstOrganisation.name}" selected`,
+        //       2000
+        //     )
+        //   );
+        // }
+      });
+  };
+}
+
 // MARK: Viewport
 export const UPDATE_VIEWPORT_DIMENSIONS = "UPDATE_VIEWPORT_DIMENSIONS";
 
