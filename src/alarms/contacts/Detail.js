@@ -77,7 +77,7 @@ class Detail extends Component {
 
   handleUpdateContact() {
     const { contact } = this.state;
-    const { match, bootstrap, addNotification } = this.props;
+    const { match, addNotification, selectedOrganisation } = this.props;
 
     if (contact.user) {
       fetch(`/api/v3/contacts/${match.params.id}/`, {
@@ -98,7 +98,7 @@ class Detail extends Component {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          organisation: bootstrap.organisation.unique_id,
+          organisation: selectedOrganisation.unique_id,
           first_name: contact.first_name || "",
           last_name: contact.last_name || "",
           id: match.params.id,
@@ -385,7 +385,7 @@ class Detail extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    bootstrap: state.bootstrap
+    selectedOrganisation: state.organisations.selected
   };
 };
 

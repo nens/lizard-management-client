@@ -90,8 +90,7 @@ class NewNotification extends Component {
     this.goBackToStep = this.goBackToStep.bind(this);
   }
   componentDidMount() {
-    const { bootstrap } = this.props;
-    const organisationId = bootstrap.organisation.unique_id;
+    const organisationId = this.props.selectedOrganisation.unique_id;
 
     document.getElementById("alarmName").focus();
     document.addEventListener("keydown", this.hideConfigureThreshold, false);
@@ -130,8 +129,8 @@ class NewNotification extends Component {
     });
   }
   handleActivateClick(e) {
-    const { bootstrap, history, addNotification } = this.props;
-    const organisationId = bootstrap.organisation.unique_id;
+    const { history, addNotification } = this.props;
+    const organisationId = this.props.selectedOrganisation.unique_id;
 
     const {
       alarmName,
@@ -174,8 +173,8 @@ class NewNotification extends Component {
       });
   }
   handleRasterSearchInput(value) {
-    const { bootstrap } = this.props;
-    const organisationId = bootstrap.organisation.unique_id;
+    const { selectedOrganisation } = this.props;
+    const organisationId = selectedOrganisation.unique_id;
 
     if (value === "") {
       this.setState({
@@ -832,7 +831,7 @@ class NewNotification extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    bootstrap: state.bootstrap
+    selectedOrganisation: state.organisations.selected
   };
 };
 

@@ -24,26 +24,20 @@ class ContactsPicker extends Component {
   }
   componentDidMount() {
     document.getElementById("contactName").focus();
+
     window.addEventListener("resize", this.handleResize, false);
     document.addEventListener("keydown", this.hideContactsPicker, false);
 
-    const { bootstrap } = this.props;
-    const organisationId = bootstrap.organisation.unique_id;
+    const organisationId = this.props.selectedOrganisation.unique_id;
+    const url = `/api/v3/contacts/?page_size=100000&organisation__unique_id=${organisationId}`;
+    const opts = { credentials: "same-origin" };
 
-    fetch(
-      `/api/v3/contacts/?page_size=100000&organisation__unique_id=${organisationId}`,
-      {
-        credentials: "same-origin"
-      }
-    )
-      .then(response => response.json())
-      .then(data => data.results)
-      .then(data => {
-        this.setState({
-          contacts: data,
-          isFetching: false
-        });
+    fetch(url, opts).then(response => {
+      this.setState({
+        contacts: response.json().results,
+        isFetching: false
       });
+    });
   }
   componentWillUnmount() {
     window.removeEventListener("resize", this.handleResize, false);
@@ -219,7 +213,7 @@ class ContactsPicker extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    bootstrap: state.bootstrap
+    selectedOrganisation: state.organisations.selected
   };
 };
 

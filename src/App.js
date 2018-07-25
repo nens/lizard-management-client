@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { FormattedMessage } from "react-intl";
 import { App as Home } from "./home/App";
 import { App as AlarmsApp } from "./alarms/App";
-// import { App as DataMonitorApp } from "./data_monitor/App";
+import MDSpinner from "react-md-spinner";
 import {
   addNotification,
   fetchLizardBootstrap,
@@ -35,10 +35,10 @@ class App extends Component {
     window.addEventListener("offline", e => this.updateOnlineStatus(e));
     window.addEventListener("resize", e => this.updateViewportDimensions(e));
     this.props.getLizardBootstrap();
-
-    this.props.getOrganisations();
+    // if (this.props.isAuthenticated) {
+    //   this.props.getOrganisations();
+    // }
   }
-
   componentWillUnmount() {
     window.removeEventListener("online", e => this.updateOnlineStatus(e));
     window.removeEventListener("offline", e => this.updateOnlineStatus(e));
@@ -75,12 +75,24 @@ class App extends Component {
         });
   }
   render() {
-    const { isAuthenticated } = this.props;
-
-    if (!isAuthenticated()) {
-      return "Wait for it....";
+    if (!this.props.isAuthenticated) {
+      return (
+        <div
+          style={{
+            position: "relative",
+            top: 50,
+            height: 300,
+            bottom: 50,
+            marginLeft: "50%"
+          }}
+        >
+          <MDSpinner size={24} />
+        </div>
+      );
     } else {
-      const { preferredLocale, bootstrap } = this.props;
+      this.props.getOrganisations();
+
+      const { preferredLocale, bootstrap, selectedOrganisation } = this.props;
       const firstName = bootstrap.bootstrap.user
         ? bootstrap.bootstrap.user.first_name
         : "";
@@ -154,8 +166,8 @@ class App extends Component {
                       <a
                         className={styles.OrganisationLink}
                         title={
-                          bootstrap.organisation
-                            ? bootstrap.organisation.name
+                          selectedOrganisation
+                            ? selectedOrganisation.name
                             : "Select organisation"
                         }
                         onClick={() =>
@@ -164,8 +176,8 @@ class App extends Component {
                           })}
                       >
                         <i className="fa fa-sort" />&nbsp;&nbsp;
-                        {bootstrap.organisation
-                          ? "We have selcted org: " + bootstrap.organisation
+                        {selectedOrganisation
+                          ? selectedOrganisation.name
                           : "Select organisation"}
                       </a>
                     </div>
@@ -305,17 +317,8 @@ const mapStateToProps = (state, ownProps) => {
   return {
     isFetching: state.isFetching,
     bootstrap: state.bootstrap,
-    isAuthenticated: () => {
-      console.log("[F] isAuthenticated");
-      const result =
-        state &&
-        state.bootstrap &&
-        state.bootstrap.bootstrap &&
-        state.bootstrap.bootstrap.user &&
-        state.bootstrap.bootstrap.user.authenticated;
-      console.log("*** result =", result);
-      return result;
-    }
+    selectedOrganisation: state.organisations.selected,
+    isAuthenticated: state.bootstrap.isAuthenticated
   };
 };
 

@@ -89,16 +89,13 @@ export function fetchOrganisations() {
 
     dispatch({ type: REQUEST_ORGANISATIONS });
 
-    fetch("/api/v3/organisations/?page_size=100000", {
-      credentials: "same-origin"
-    })
-      // .then(response => response.json())
-      // .then(data => data.results)
-      // .then(data => {
-      .then(response => {
-        const data = response.json().results; // == JSON.parse()
+    const url = "/api/v3/organisations/?page_size=100000";
+    const opts = { credentials: "same-origin" };
 
-        // dispatch(receiveOrganisations(data));
+    fetch(url, opts)
+      .then(responseObj => responseObj.json())
+      .then(responseData => {
+        const data = responseData.results;
 
         dispatch({ type: RECEIVE_ORGANISATIONS, data });
 

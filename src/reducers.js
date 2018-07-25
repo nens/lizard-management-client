@@ -13,12 +13,8 @@ import {
 function bootstrap(
   state = {
     bootstrap: {},
-    isFetching: false,
-    organisations: [],
-    organisation:
-      JSON.parse(
-        localStorage.getItem("lizard-management-current-organisation")
-      ) || null
+    isAuthenticated: null,
+    isFetching: false
   },
   action
 ) {
@@ -28,13 +24,12 @@ function bootstrap(
       return { ...state, isFetching: true };
     case RECEIVE_LIZARD_BOOTSTRAP:
       console.log("[A] RECEIVE_LIZARD_BOOTSTRAP");
-      return { ...state, bootstrap: action.data, isFetching: false };
-    // case REQUEST_ORGANISATIONS:
-    //   return { ...state, isFetching: true };
-    // case RECEIVE_ORGANISATIONS:
-    //   return { ...state, organisations: action.data, isFetching: false };
-    // case SELECT_ORGANISATION:
-    //   return { ...state, organisation: action.organisation };
+      return {
+        ...state,
+        bootstrap: action.data,
+        isAuthenticated: action.data.user.authenticated,
+        isFetching: false
+      };
     default:
       return state;
   }
@@ -53,10 +48,11 @@ function organisations(
       console.log("[A] REQUEST_ORGANISATIONS");
       return { ...state, isFetching: true };
     case RECEIVE_ORGANISATIONS:
-      console.log("[A] RECEIVE_ORGANISATIONS");
-      return { ...state, organisations: action.data, isFetching: false };
+      console.log("[A] RECEIVE_ORGANISATIONS", action);
+      // return { ...state, organisations: action.data, isFetching: false };
+      return { ...state, available: action.data, isFetching: false };
     case SELECT_ORGANISATION:
-      return { ...state, organisation: action.organisation };
+      return { ...state, selected: action.organisation };
     default:
       return state;
   }

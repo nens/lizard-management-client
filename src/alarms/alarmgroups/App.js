@@ -36,27 +36,25 @@ class App extends Component {
   }
 
   loadContactGroupsOnPage(page) {
-    const { bootstrap } = this.props;
-    const organisationId = bootstrap.organisation.unique_id;
+    const { selectedOrganisation } = this.props;
+    const organisationId = selectedOrganisation.unique_id;
+
     this.setState({
       isFetching: true
     });
 
-    fetch(
-      `/api/v3/contactgroups/?page=${page}&organisation__unique_id=${organisationId}`,
-      {
-        credentials: "same-origin"
-      }
-    )
-      .then(response => response.json())
-      .then(data => {
-        this.setState({
-          isFetching: false,
-          contactgroups: data.results,
-          total: data.count,
-          page: page
-        });
+    const url = `/api/v3/contactgroups/?page=${page}&organisation__unique_id=${organisationId}`;
+    const opts = { credentials: "same-origin" };
+
+    fetch(url, opts).then(response => {
+      const data = response.json();
+      this.setState({
+        isFetching: false,
+        contactgroups: data.results,
+        total: data.count,
+        page: page
       });
+    });
   }
 
   deleteGroupById(groupid) {
@@ -269,7 +267,8 @@ class App extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    bootstrap: state.bootstrap
+    availableOrganisations: state.organistations.available,
+    selectedOrganisation: state.organisations.selected
   };
 };
 

@@ -59,19 +59,16 @@ class App extends Component {
   }
   loadContactsOnPage(page) {
     const { ordering } = this.state;
-    const { bootstrap } = this.props;
-    const organisationId = bootstrap.organisation.unique_id;
+    const organisationId = this.props.selectedOrganisation.unique_id;
     this.setState({
       isFetching: true
     });
-    fetch(
-      `/api/v3/contacts/?page=${page}&organisation__unique_id=${organisationId}${ordering.column
-        ? `&ordering=${ordering.direction}${ordering.column}`
-        : ""}`,
-      {
-        credentials: "same-origin"
-      }
-    )
+
+    const url = `/api/v3/contacts/?page=${page}&organisation__unique_id=${organisationId}${ordering.column
+      ? `&ordering=${ordering.direction}${ordering.column}`
+      : ""}`;
+    const opts = { credentials: "same-origin" };
+    fetch(url, opts)
       .then(response => response.json())
       .then(data => {
         this.setState({
@@ -404,7 +401,7 @@ class App extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    bootstrap: state.bootstrap
+    selectedOrganisation: state.organisations.selected
   };
 };
 
