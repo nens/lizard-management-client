@@ -77,23 +77,36 @@ function receiveOrganisations(data) {
 
 export function fetchOrganisations() {
   return (dispatch, getState) => {
-    const organisations = getState().bootstrap.organisations;
-    const organisation = getState().bootstrap.organisation;
+    const state = getState();
+
+    const organisations = state.organisations.available;
+    const organisation = state.organisations.selected;
+
     if (organisations.length > 0) {
       // If we already have the organisations, skip this
       return Promise.resolve();
     }
+
+    dispatch({ type: REQUEST_ORGANISATIONS });
+
     fetch("/api/v3/organisations/?page_size=100000", {
       credentials: "same-origin"
     })
-      .then(response => response.json())
-      .then(data => data.results)
-      .then(data => {
-        dispatch(receiveOrganisations(data));
+      // .then(response => response.json())
+      // .then(data => data.results)
+      // .then(data => {
+      .then(response => {
+        const data = response.json().results; // == JSON.parse()
+
+        // dispatch(receiveOrganisations(data));
+
+        dispatch({ type: RECEIVE_ORGANISATIONS, data });
+
         if (!organisation) {
           // No organisation was chosen, select the first one, and let
           // the user know about this
           const firstOrganisation = data[0];
+
           dispatch(selectOrganisation(firstOrganisation));
           dispatch(
             addNotification(

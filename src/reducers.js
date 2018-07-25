@@ -24,12 +24,36 @@ function bootstrap(
 ) {
   switch (action.type) {
     case REQUEST_LIZARD_BOOTSTRAP:
+      console.log("[A] REQUEST_LIZARD_BOOTSTRAP");
       return { ...state, isFetching: true };
     case RECEIVE_LIZARD_BOOTSTRAP:
+      console.log("[A] RECEIVE_LIZARD_BOOTSTRAP");
       return { ...state, bootstrap: action.data, isFetching: false };
+    // case REQUEST_ORGANISATIONS:
+    //   return { ...state, isFetching: true };
+    // case RECEIVE_ORGANISATIONS:
+    //   return { ...state, organisations: action.data, isFetching: false };
+    // case SELECT_ORGANISATION:
+    //   return { ...state, organisation: action.organisation };
+    default:
+      return state;
+  }
+}
+
+function organisations(
+  state = {
+    isFetching: false,
+    available: [],
+    selected: null
+  },
+  action
+) {
+  switch (action.type) {
     case REQUEST_ORGANISATIONS:
+      console.log("[A] REQUEST_ORGANISATIONS");
       return { ...state, isFetching: true };
     case RECEIVE_ORGANISATIONS:
+      console.log("[A] RECEIVE_ORGANISATIONS");
       return { ...state, organisations: action.data, isFetching: false };
     case SELECT_ORGANISATION:
       return { ...state, organisation: action.organisation };
@@ -84,6 +108,7 @@ function viewport(
 
 const rootReducer = combineReducers({
   bootstrap,
+  organisations,
   notifications,
   viewport
 });

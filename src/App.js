@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { FormattedMessage } from "react-intl";
 import { App as Home } from "./home/App";
 import { App as AlarmsApp } from "./alarms/App";
+// import { App as DataMonitorApp } from "./data_monitor/App";
 import {
   addNotification,
   fetchLizardBootstrap,
@@ -29,12 +30,15 @@ class App extends Component {
     this.updateViewportDimensions = this.updateViewportDimensions.bind(this);
   }
   componentDidMount() {
+    console.log("[F] componentDidMount");
     window.addEventListener("online", e => this.updateOnlineStatus(e));
     window.addEventListener("offline", e => this.updateOnlineStatus(e));
     window.addEventListener("resize", e => this.updateViewportDimensions(e));
     this.props.getLizardBootstrap();
+
     this.props.getOrganisations();
   }
+
   componentWillUnmount() {
     window.removeEventListener("online", e => this.updateOnlineStatus(e));
     window.removeEventListener("offline", e => this.updateOnlineStatus(e));
@@ -56,7 +60,7 @@ class App extends Component {
       ? null
       : splitPathnames.map((sp, i) => {
           const to = `/${splitPathnames.slice(1, i + 1).join("/")}`;
-          let title = sp;
+          let title = sp.replace("_", " ");
           if (this.uuidRegex.test(sp)) {
             title = "Detail";
           }
@@ -71,225 +75,247 @@ class App extends Component {
         });
   }
   render() {
-    const { preferredLocale, bootstrap } = this.props;
-    const firstName = bootstrap.bootstrap.user
-      ? bootstrap.bootstrap.user.first_name
-      : "";
-    const { showOrganisationSwitcher } = this.state;
-    const breadcrumbs = this.computeBreadcrumb();
+    const { isAuthenticated } = this.props;
 
-    return (
-      <div className={styles.App}>
-        <div className={`${styles.Primary}`}>
-          <div className={gridStyles.Container}>
-            <div className={gridStyles.Row}>
-              <div
-                style={{ height: 55 }}
-                className={`${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs12}`}
-              >
-                <NavLink to="/">
-                  <div
-                    className={styles.LizardLogo}
-                    style={{
-                      backgroundImage: `url(${lizardIcon})`
-                    }}
-                  />
-                </NavLink>
-              </div>
-              <div
-                className={`${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs12}`}
-              >
-                <div className={styles.TopNav}>
-                  <div style={{ display: "none" }}>
-                    <a href="#apps">
-                      <i
-                        className="material-icons"
-                        style={{
-                          fontSize: 17,
-                          position: "relative",
-                          left: -7,
-                          top: 3
-                        }}
+    if (!isAuthenticated()) {
+      return "Wait for it....";
+    } else {
+      const { preferredLocale, bootstrap } = this.props;
+      const firstName = bootstrap.bootstrap.user
+        ? bootstrap.bootstrap.user.first_name
+        : "";
+      const { showOrganisationSwitcher } = this.state;
+      const breadcrumbs = this.computeBreadcrumb();
+
+      return (
+        <div className={styles.App}>
+          <div className={`${styles.Primary}`}>
+            <div className={gridStyles.Container}>
+              <div className={gridStyles.Row}>
+                <div
+                  style={{ height: 55 }}
+                  className={`${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs12}`}
+                >
+                  <NavLink to="/">
+                    <div
+                      className={styles.LizardLogo}
+                      style={{
+                        backgroundImage: `url(${lizardIcon})`
+                      }}
+                    />
+                  </NavLink>
+                </div>
+                <div
+                  className={`${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs12}`}
+                >
+                  <div className={styles.TopNav}>
+                    <div style={{ display: "none" }}>
+                      <a href="#apps">
+                        <i
+                          className="material-icons"
+                          style={{
+                            fontSize: 17,
+                            position: "relative",
+                            left: -7,
+                            top: 3
+                          }}
+                        >
+                          apps
+                        </i>
+                        Apps
+                      </a>
+                    </div>
+                    <div
+                      style={{
+                        width: 60,
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap"
+                      }}
+                    >
+                      <a
+                        href="https://sso.lizard.net/edit_profile/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title={`${firstName}`}
                       >
-                        apps
-                      </i>
-                      Apps
-                    </a>
-                  </div>
-                  <div style={{
-                    width: 60,
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    whiteSpace: "nowrap"
-                  }}>
-                    <a
-                      href="https://sso.lizard.net/edit_profile/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      title={`${firstName}`}
+                        <i className="fa fa-user" style={{ paddingRight: 8 }} />
+                        {firstName}
+                      </a>
+                    </div>
+                    <div
+                      style={{
+                        width: 120,
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap"
+                      }}
                     >
-                      <i className="fa fa-user" style={{paddingRight: 8}} />{firstName}
-                    </a>
+                      <a
+                        className={styles.OrganisationLink}
+                        title={
+                          bootstrap.organisation
+                            ? bootstrap.organisation.name
+                            : "Select organisation"
+                        }
+                        onClick={() =>
+                          this.setState({
+                            showOrganisationSwitcher: true
+                          })}
+                      >
+                        <i className="fa fa-sort" />&nbsp;&nbsp;
+                        {bootstrap.organisation
+                          ? "We have selcted org: " + bootstrap.organisation
+                          : "Select organisation"}
+                      </a>
+                    </div>
+                    <div>
+                      <a href="https://demo.lizard.net/accounts/logout/">
+                        <i className="fa fa-power-off" />&nbsp;&nbsp;Logout
+                      </a>
+                    </div>
                   </div>
-                  <div style={{
-                    width: 120,
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    whiteSpace: "nowrap"                    
-                  }}>
-                    <a
-                      className={styles.OrganisationLink}
-                      title={
-                        bootstrap.organisation
-                          ? bootstrap.organisation.name
-                          : "Select organisation"
-                      }
-                      onClick={() =>
-                        this.setState({
-                          showOrganisationSwitcher: true
-                        })}
-                    >
-                      <i className="fa fa-sort" />&nbsp;&nbsp;
-                      {bootstrap.organisation
-                        ? bootstrap.organisation.name
-                        : "Select organisation"}
-                    </a>
-                  </div>
-                  <div>
-                    <a href="https://demo.lizard.net/accounts/logout/">
-                      <i className="fa fa-power-off" />&nbsp;&nbsp;Logout
-                    </a>
-                  </div>                  
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div className={`${styles.Secondary}`}>
-          <div className={gridStyles.Container}>
+          <div className={`${styles.Secondary}`}>
+            <div className={gridStyles.Container}>
+              <div className={gridStyles.Row}>
+                <div
+                  style={{
+                    height: 65,
+                    display: "flex",
+                    flexWrap: "nowrap",
+                    alignItems: "center",
+                    fontSize: "1.2em",
+                    overflowX: "hidden",
+                    msOverflowStyle: "-ms-autohiding-scrollbar"
+                  }}
+                  className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      flex: "0 0 auto"
+                    }}
+                  >
+                    <NavLink to="/">Lizard Management</NavLink>
+                    {breadcrumbs}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className={gridStyles.Container + " " + styles.AppContent}>
             <div className={gridStyles.Row}>
               <div
                 style={{
-                  height: 65,
-                  display: "flex",
-                  flexWrap: "nowrap",
-                  alignItems: "center",
-                  fontSize: "1.2em",
-                  overflowX: "hidden",
-                  msOverflowStyle: "-ms-autohiding-scrollbar"
+                  margin: "25px 0 25px 0"
                 }}
                 className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
               >
+                <Route exact path="/" component={Home} />
+                <Route path="/alarms" component={AlarmsApp} />
+              </div>
+            </div>
+          </div>
+          <footer className={styles.Footer}>
+            <div className={gridStyles.Container}>
+              <div className={gridStyles.Row}>
                 <div
-                  style={{
-                    display: "flex",
-                    flex: "0 0 auto"
-                  }}
+                  className={`${styles.FooterLeft} ${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs6}`}
                 >
-                  <NavLink to="/">Lizard Management</NavLink>
-                  {breadcrumbs}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className={gridStyles.Container}>
-          <div className={gridStyles.Row}>
-            <div
-              style={{
-                margin: "25px 0 25px 0"
-              }}
-              className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
-            >
-              <Route exact path="/" component={Home} />
-              <Route path="/alarms" component={AlarmsApp} />
-            </div>
-          </div>
-        </div>
-        <footer className={styles.Footer}>
-          <div className={gridStyles.Container}>
-            <div className={gridStyles.Row}>
-              <div
-                className={`${styles.FooterLeft} ${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs6}`}
-              >
-                <a
-                  href="https://www.lizard.net/handleidingen/log_in_instructies_lizard_6.01.pdf"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <FormattedMessage
-                    id="index.documentation"
-                    defaultMessage="Documentation"
-                  />&nbsp;
-                  <i
-                    style={{
-                      position: "relative",
-                      top: 5,
-                      fontSize: 20
-                    }}
-                    className="material-icons"
+                  <a
+                    href="https://www.lizard.net/handleidingen/log_in_instructies_lizard_6.01.pdf"
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
-                    local_library
-                  </i>
-                </a>
-              </div>
-              <div
-                className={`${styles.FooterRight} ${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs6}`}
-              >
-                <div className={styles.FooterRightWrapper}>
-                  <div style={{ margin: "0 10px 0 10px" }}>
-                    <LanguageSwitcher
-                      locale={preferredLocale}
-                      languages={[
-                        { code: "nl", language: "Nederlands" },
-                        { code: "en", language: "English" }
-                      ]}
-                    />
-                  </div>
-                  <div>
-                    <a
-                      href="https://www.lizard.net/support/"
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <FormattedMessage
+                      id="index.documentation"
+                      defaultMessage="Documentation"
+                    />&nbsp;
+                    <i
+                      style={{
+                        position: "relative",
+                        top: 5,
+                        fontSize: 20
+                      }}
+                      className="material-icons"
                     >
-                      <i
-                        style={{
-                          position: "relative",
-                          top: 5,
-                          fontSize: "20px"
-                        }}
-                        className="material-icons"
-                      >
-                        headset_mic
-                      </i>&nbsp;
-                      <FormattedMessage
-                        id="index.support"
-                        defaultMessage="Support"
+                      local_library
+                    </i>
+                  </a>
+                </div>
+                <div
+                  className={`${styles.FooterRight} ${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs6}`}
+                >
+                  <div className={styles.FooterRightWrapper}>
+                    <div style={{ margin: "0 10px 0 10px" }}>
+                      <LanguageSwitcher
+                        locale={preferredLocale}
+                        languages={[
+                          { code: "nl", language: "Nederlands" },
+                          { code: "en", language: "English" }
+                        ]}
                       />
-                    </a>
+                    </div>
+                    <div>
+                      <a
+                        href="https://www.lizard.net/support/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <i
+                          style={{
+                            position: "relative",
+                            top: 5,
+                            fontSize: "20px"
+                          }}
+                          className="material-icons"
+                        >
+                          headset_mic
+                        </i>&nbsp;
+                        <FormattedMessage
+                          id="index.support"
+                          defaultMessage="Support"
+                        />
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        </footer>
-        {showOrganisationSwitcher ? (
-          <OrganisationSwitcher
-            handleClose={() =>
-              this.setState({ showOrganisationSwitcher: false })}
-          />
-        ) : null}
-        <Snackbar />
-      </div>
-    );
+          </footer>
+          {showOrganisationSwitcher ? (
+            <OrganisationSwitcher
+              handleClose={() =>
+                this.setState({ showOrganisationSwitcher: false })}
+            />
+          ) : null}
+          <Snackbar />
+        </div>
+      );
+    }
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
   return {
     isFetching: state.isFetching,
-    bootstrap: state.bootstrap
+    bootstrap: state.bootstrap,
+    isAuthenticated: () => {
+      console.log("[F] isAuthenticated");
+      const result =
+        state &&
+        state.bootstrap &&
+        state.bootstrap.bootstrap &&
+        state.bootstrap.bootstrap.user &&
+        state.bootstrap.bootstrap.user.authenticated;
+      console.log("*** result =", result);
+      return result;
+    }
   };
 };
 

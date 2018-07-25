@@ -158,9 +158,9 @@ class OrganisationSwitcher extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    selectedOrganisation: state.bootstrap.organisation,
-    organisations: state.bootstrap.organisations,
-    isFetching: state.bootstrap.isFetching
+    selectedOrganisation: state.organisations.selected,
+    organisations: state.organisations.available,
+    isFetching: state.organisations.isFetching
   };
 };
 
