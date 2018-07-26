@@ -22,7 +22,6 @@ class OrganisationSwitcher extends Component {
     this.hideOrganisationSwitcher = this.hideOrganisationSwitcher.bind(this);
   }
   componentDidMount() {
-    // this.props.getOrganisations();
     window.addEventListener("resize", this.handleResize, false);
     document.addEventListener("keydown", this.hideOrganisationSwitcher, false);
     document.getElementById("organisationName").focus();
@@ -53,7 +52,6 @@ class OrganisationSwitcher extends Component {
   }
   selectOrganisation(organisation) {
     this.props.selectOrganisation(organisation);
-    // window.location.reload();
   }
   render() {
     const {

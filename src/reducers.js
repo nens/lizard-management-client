@@ -89,7 +89,7 @@ function observationTypes(
         hasError: false
       };
     case RECEIVE_OBSERVATION_TYPES_ERROR:
-      console.log("[A] RECEIVE_OBSERVATION_TYPES_ERROR", action.responseObj);
+      console.log("[A] RECEIVE_OBSERVATION_TYPES_ERROR", action.errorMessage);
       return {
         ...state,
         available: [],
@@ -124,7 +124,7 @@ function supplierIds(
         hasError: false
       };
     case RECEIVE_SUPPLIER_IDS_ERROR:
-      console.log("[A] RECEIVE_SUPPLIER_IDS_ERROR", action.responseObj);
+      console.log("[A] RECEIVE_SUPPLIER_IDS_ERROR", action.errorMessage);
       return {
         ...state,
         available: [],
@@ -159,7 +159,7 @@ function colorMaps(
         hasError: false
       };
     case RECEIVE_COLORMAPS_ERROR:
-      console.log("[A] RECEIVE_COLORMAPS_ERROR", action.responseObj);
+      console.log("[A] RECEIVE_COLORMAPS_ERROR", action.errorMessage);
       return {
         ...state,
         available: [],

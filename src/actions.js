@@ -69,13 +69,6 @@ export const RECEIVE_ORGANISATIONS = "RECEIVE_ORGANISATIONS";
 export const REQUEST_ORGANISATIONS = "REQUEST_ORGANISATIONS";
 export const SELECT_ORGANISATION = "SELECT_ORGANISATION";
 
-// function receiveOrganisations(data) {
-//   return {
-//     type: RECEIVE_ORGANISATIONS,
-//     data
-//   };
-// }
-
 export function fetchOrganisations() {
   return (dispatch, getState) => {
     const state = getState();
@@ -113,10 +106,6 @@ export function fetchOrganisations() {
 }
 
 export function selectOrganisation(organisation) {
-  // localStorage.setItem(
-  //   "lizard-management-current-organisation",
-  //   JSON.stringify(organisation)
-  // );
   return {
     type: SELECT_ORGANISATION,
     organisation
@@ -140,11 +129,16 @@ export function fetchObservationTypes() {
     fetch(url, opts)
       .then(responseObj => {
         if (!responseObj.ok) {
+          const errorMessage = `HTTP error ${responseObj.status} while fetching Observation Types: ${responseObj.statusText}`;
           dispatch({
             type: RECEIVE_OBSERVATION_TYPES_ERROR,
-            errorMessage: `HTTP error ${responseObj.status} while fetching Observation Types: ${responseObj.statusText}`
+            errorMessage
           });
-          console.error("[P] error retrieving observation types=", responseObj);
+          console.error(
+            "[E] error retrieving observation types=",
+            errorMessage,
+            responseObj
+          );
         } else {
           return responseObj.json();
         }
@@ -185,7 +179,7 @@ export function fetchSupplierIds() {
         if (!responseObj.ok) {
           const errorMessage = `HTTP error ${responseObj.status} while fetching Supplier Ids: ${responseObj.statusText}`;
           dispatch({ type: RECEIVE_SUPPLIER_IDS_ERROR, errorMessage });
-          console.error(errorMessage, responseObj);
+          console.error("[E]", errorMessage, responseObj);
         } else {
           return responseObj.json();
         }
