@@ -10,6 +10,7 @@ import {
   fetchOrganisations,
   fetchObservationTypes,
   fetchSupplierIds,
+  fetchColorMaps,
   updateViewportDimensions
 } from "./actions";
 import { Route, NavLink } from "react-router-dom";
@@ -37,14 +38,19 @@ class App extends Component {
     window.addEventListener("offline", e => this.updateOnlineStatus(e));
     window.addEventListener("resize", e => this.updateViewportDimensions(e));
     this.props.getLizardBootstrap();
-    // if (this.props.isAuthenticated) {
-    //   this.props.getOrganisations();
-    // }
   }
   componentWillUnmount() {
     window.removeEventListener("online", e => this.updateOnlineStatus(e));
     window.removeEventListener("offline", e => this.updateOnlineStatus(e));
     window.removeEventListener("resize", e => this.updateViewportDimensions(e));
+  }
+  componentWillReceiveProps(props) {
+    if (props.isAuthenticated) {
+      if (props.mustFetchColorMaps) props.getColorMaps();
+      if (props.mustFetchOrganisations) props.getOrganisations();
+      if (props.mustFetchObservationTypes) props.getObservationTypes();
+      if (props.mustFetchSupplierIds) props.getSupplierIds();
+    }
   }
   updateOnlineStatus(e) {
     const { addNotification } = this.props;
@@ -92,14 +98,10 @@ class App extends Component {
         </div>
       );
     } else {
-      this.props.getOrganisations();
-      this.props.getObservationTypes();
-      this.props.getSupplierIds();
-
       const { preferredLocale, bootstrap, selectedOrganisation } = this.props;
       const firstName = bootstrap.bootstrap.user
         ? bootstrap.bootstrap.user.first_name
-        : "";
+        : "...";
       const { showOrganisationSwitcher } = this.state;
       const breadcrumbs = this.computeBreadcrumb();
 
@@ -115,9 +117,7 @@ class App extends Component {
                   <NavLink to="/">
                     <div
                       className={styles.LizardLogo}
-                      style={{
-                        backgroundImage: `url(${lizardIcon})`
-                      }}
+                      style={{ backgroundImage: `url(${lizardIcon})` }}
                     />
                   </NavLink>
                 </div>
@@ -321,8 +321,23 @@ const mapStateToProps = (state, ownProps) => {
   return {
     isFetching: state.isFetching,
     bootstrap: state.bootstrap,
+    isAuthenticated: state.bootstrap.isAuthenticated,
+
+    mustFetchOrganisations:
+      state.organisations.available.length === 0 &&
+      !state.organisations.isFetching,
+
     selectedOrganisation: state.organisations.selected,
-    isAuthenticated: state.bootstrap.isAuthenticated
+
+    mustFetchObservationTypes:
+      state.observationTypes.available.length === 0 &&
+      !state.observationTypes.isFetching,
+    mustFetchSupplierIds:
+      state.organisations.selected &&
+      state.supplierIds.available.length === 0 &&
+      !state.supplierIds.isFetching,
+    mustFetchColorMaps:
+      state.colorMaps.available.length === 0 && !state.colorMaps.isFetching
   };
 };
 
@@ -332,6 +347,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     getOrganisations: () => dispatch(fetchOrganisations()),
     getObservationTypes: () => dispatch(fetchObservationTypes()),
     getSupplierIds: () => dispatch(fetchSupplierIds()),
+    getColorMaps: () => dispatch(fetchColorMaps()),
     addNotification: (message, timeout) => {
       dispatch(addNotification(message, timeout));
     },

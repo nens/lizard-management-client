@@ -18,6 +18,7 @@ function receiveLizardBootstrap(data) {
 export function fetchLizardBootstrap() {
   return (dispatch, getState) => {
     dispatch(requestLizardBootstrap());
+
     fetch("/bootstrap/lizard/", {
       credentials: "same-origin"
     })
@@ -68,24 +69,18 @@ export const RECEIVE_ORGANISATIONS = "RECEIVE_ORGANISATIONS";
 export const REQUEST_ORGANISATIONS = "REQUEST_ORGANISATIONS";
 export const SELECT_ORGANISATION = "SELECT_ORGANISATION";
 
-function receiveOrganisations(data) {
-  return {
-    type: RECEIVE_ORGANISATIONS,
-    data
-  };
-}
+// function receiveOrganisations(data) {
+//   return {
+//     type: RECEIVE_ORGANISATIONS,
+//     data
+//   };
+// }
 
 export function fetchOrganisations() {
   return (dispatch, getState) => {
     const state = getState();
 
-    const organisations = state.organisations.available;
     const organisation = state.organisations.selected;
-
-    if (organisations.length > 0) {
-      // If we already have the organisations, skip this
-      return Promise.resolve();
-    }
 
     dispatch({ type: REQUEST_ORGANISATIONS });
 
@@ -105,6 +100,7 @@ export function fetchOrganisations() {
           const firstOrganisation = data[0];
 
           dispatch(selectOrganisation(firstOrganisation));
+
           dispatch(
             addNotification(
               `Organisation "${firstOrganisation.name}" selected`,
@@ -117,10 +113,10 @@ export function fetchOrganisations() {
 }
 
 export function selectOrganisation(organisation) {
-  localStorage.setItem(
-    "lizard-management-current-organisation",
-    JSON.stringify(organisation)
-  );
+  // localStorage.setItem(
+  //   "lizard-management-current-organisation",
+  //   JSON.stringify(organisation)
+  // );
   return {
     type: SELECT_ORGANISATION,
     organisation
@@ -135,16 +131,7 @@ export const RECEIVE_OBSERVATION_TYPES_ERROR =
   "RECEIVE_OBSERVATION_TYPES_ERROR";
 
 export function fetchObservationTypes() {
-  return (dispatch, getState) => {
-    const state = getState();
-
-    const observationTypes = state.observationTypes.available;
-
-    if (observationTypes.length > 0) {
-      // If we already have the observationTypes, skip this
-      return Promise.resolve();
-    }
-
+  return dispatch => {
     dispatch({ type: REQUEST_OBSERVATION_TYPES });
 
     const url = "/api/v3/observationtypes/?page_size=100000";
@@ -164,55 +151,79 @@ export function fetchObservationTypes() {
       })
       .then(responseData => {
         const data = responseData.results;
-        console.log("[P] observation types data=", data);
         dispatch({ type: RECEIVE_OBSERVATION_TYPES_SUCCESS, data });
       });
   };
 }
 
-// MARK: Observation types
-// /api/v3/users/
+// MARK: Supplier IDs
 export const REQUEST_SUPPLIER_IDS = "REQUEST_SUPPLIER_IDS";
 export const RECEIVE_SUPPLIER_IDS_SUCCESS = "RECEIVE_SUPPLIER_IDS_SUCCESS";
 export const RECEIVE_SUPPLIER_IDS_ERROR = "RECEIVE_SUPPLIER_IDS_ERROR";
 
-// TODO fetch users needed as supplier ids from organisation_user_url:
-// /api/v3/organisations/<organisation_uid>/users/
-// To perform above query we first would need to have the organisation before performing this query
 // TODO only show users that have supplier role for the organisation
 // at the moment roles cannot be queried from the api, thus it cannot be known by client which users have supllier role
 export function fetchSupplierIds() {
   return (dispatch, getState) => {
     const state = getState();
-
-    const supplierIds = state.supplierIds.available;
-
-    if (supplierIds.length > 0) {
-      // If we already have the observationTypes, skip this
-      return Promise.resolve();
+    const selectOrganisation = state.organisations.selected;
+    if (!selectOrganisation) {
+      console.error(
+        "[E] Cannot fetch supplier ids if no organisation is selected",
+        selectOrganisation,
+        state.organisations
+      );
     }
 
-    dispatch({ type: REQUEST_SUPPLIER_IDS });
-
-    const url = "/api/v3/users/?page_size=100000";
+    const url = `/api/v3/organisations/${selectOrganisation.unique_id}/users/`;
     const opts = { credentials: "same-origin" };
+
+    dispatch({ type: REQUEST_SUPPLIER_IDS });
 
     fetch(url, opts)
       .then(responseObj => {
         if (!responseObj.ok) {
-          dispatch({
-            type: RECEIVE_SUPPLIER_IDS_ERROR,
-            errorMessage: `HTTP error ${responseObj.status} while fetching Supplier Ids: ${responseObj.statusText}`
-          });
-          console.error("[P] error retrieving Supplier Ids=", responseObj);
+          const errorMessage = `HTTP error ${responseObj.status} while fetching Supplier Ids: ${responseObj.statusText}`;
+          dispatch({ type: RECEIVE_SUPPLIER_IDS_ERROR, errorMessage });
+          console.error(errorMessage, responseObj);
+        } else {
+          return responseObj.json();
+        }
+      })
+      .then(responseData => {
+        const data = responseData;
+        dispatch({ type: RECEIVE_SUPPLIER_IDS_SUCCESS, data });
+      });
+  };
+}
+
+// MARK: ColorMaps
+export const REQUEST_COLORMAPS = "REQUEST_COLORMAPS";
+export const RECEIVE_COLORMAPS_SUCCESS = "RECEIVE_COLORMAPS_SUCCESS";
+export const RECEIVE_COLORMAPS_ERROR = "RECEIVE_COLORMAPS_ERROR";
+
+// TODO only show users that have supplier role for the organisation
+// at the moment roles cannot be queried from the api, thus it cannot be known by client which users have supllier role
+export function fetchColorMaps() {
+  return dispatch => {
+    const url = "/api/v3/colormaps/?format=json&page_size=100000";
+    const opts = { credentials: "same-origin" };
+
+    dispatch({ type: REQUEST_COLORMAPS });
+
+    fetch(url, opts)
+      .then(responseObj => {
+        if (!responseObj.ok) {
+          const errorMessage = `HTTP error ${responseObj.status} while fetching ColorMaps: ${responseObj.statusText}`;
+          console.error(errorMessage, responseObj);
+          dispatch({ type: RECEIVE_COLORMAPS_ERROR, errorMessage });
         } else {
           return responseObj.json();
         }
       })
       .then(responseData => {
         const data = responseData.results;
-        console.log("[P] observation types data=", data);
-        dispatch({ type: RECEIVE_SUPPLIER_IDS_SUCCESS, data });
+        dispatch({ type: RECEIVE_COLORMAPS_SUCCESS, data });
       });
   };
 }

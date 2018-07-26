@@ -11,6 +11,9 @@ import {
   REQUEST_SUPPLIER_IDS,
   RECEIVE_SUPPLIER_IDS_SUCCESS,
   RECEIVE_SUPPLIER_IDS_ERROR,
+  REQUEST_COLORMAPS,
+  RECEIVE_COLORMAPS_SUCCESS,
+  RECEIVE_COLORMAPS_ERROR,
   SHOW_NOTIFICATION,
   DISMISS_NOTIFICATION,
   UPDATE_VIEWPORT_DIMENSIONS
@@ -57,6 +60,7 @@ function organisations(
       console.log("[A] RECEIVE_ORGANISATIONS", action);
       return { ...state, available: action.data, isFetching: false };
     case SELECT_ORGANISATION:
+      console.log("[A] SELECT_ORGANISATION");
       return { ...state, selected: action.organisation };
     default:
       return state;
@@ -133,6 +137,41 @@ function supplierIds(
   }
 }
 
+function colorMaps(
+  state = {
+    isFetching: false,
+    hasError: false,
+    errorMessage: "",
+    available: []
+  },
+  action
+) {
+  switch (action.type) {
+    case REQUEST_COLORMAPS:
+      console.log("[A] REQUEST_COLORMAPS");
+      return { ...state, isFetching: true };
+    case RECEIVE_COLORMAPS_SUCCESS:
+      console.log("[A] RECEIVE_COLORMAPS_SUCCESS; action =", action);
+      return {
+        ...state,
+        available: action.data,
+        isFetching: false,
+        hasError: false
+      };
+    case RECEIVE_COLORMAPS_ERROR:
+      console.log("[A] RECEIVE_COLORMAPS_ERROR", action.responseObj);
+      return {
+        ...state,
+        available: [],
+        isFetching: false,
+        hasError: true,
+        errorMessage: action.errorMessage
+      };
+    default:
+      return state;
+  }
+}
+
 function notifications(
   state = {
     notifications: []
@@ -182,6 +221,7 @@ const rootReducer = combineReducers({
   organisations,
   observationTypes,
   supplierIds,
+  colorMaps,
   notifications,
   viewport
 });
