@@ -52,10 +52,11 @@ class NewTemplate extends Component {
   }
   handleClickCreateTemplateButton() {
     const { templateType, templateText } = this.state;
-    const { bootstrap, history } = this.props;
-    const organisationId = bootstrap.organisation.unique_id;
+    const { selectedOrganisation, history } = this.props;
+    const organisationId = selectedOrganisation.unique_id;
 
-    fetch("/api/v3/messages/", {
+    const url = "/api/v3/messages/";
+    const opts = {
       credentials: "same-origin",
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -70,10 +71,12 @@ class NewTemplate extends Component {
         text: templateText,
         html: templateText
       })
-    })
-      .then(response => response.json())
-      .then(data => {
-        history.push("/alarms/templates");
+    };
+
+    fetch(url, opts)
+      .then(response => response.json()) // TODO: kan dit weg?
+      .then(_ => {
+        history.push("/alarms/templates/");
       });
   }
   render() {
@@ -322,7 +325,7 @@ class NewTemplate extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    bootstrap: state.bootstrap
+    selectedOrganisation: state.organisations.selected
   };
 };
 

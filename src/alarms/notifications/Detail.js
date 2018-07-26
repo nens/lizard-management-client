@@ -65,8 +65,8 @@ class Detail extends Component {
     this.removeThresholdByIdx = this.removeThresholdByIdx.bind(this);
   }
   componentDidMount() {
-    const { bootstrap, match } = this.props;
-    const organisationId = bootstrap.organisation.unique_id;
+    const { match, selectedOrganisation } = this.props;
+    const organisationId = selectedOrganisation.unique_id;
 
     document.addEventListener("keydown", this.hideConfigureThreshold, false);
 
@@ -87,16 +87,14 @@ class Detail extends Component {
           {
             credentials: "same-origin"
           }
-        )
-          .then(response => response.json());
+        ).then(response => response.json());
 
         const messages = await fetch(
           `/api/v3/messages/?organisation__unique_id=${organisationId}&page_size=0`,
           {
             credentials: "same-origin"
           }
-        )
-          .then(response => response.json());
+        ).then(response => response.json());
 
         this.setState({
           availableMessages: messages,
@@ -612,7 +610,7 @@ class Detail extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    bootstrap: state.bootstrap
+    selectedOrganisation: state.organisations.selected
   };
 };
 

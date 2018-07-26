@@ -4,7 +4,7 @@ import MDSpinner from "react-md-spinner";
 import React, { Component } from "react";
 import styles from "./OrganisationSwitcher.css";
 import { connect } from "react-redux";
-import { fetchOrganisations, selectOrganisation } from "../actions";
+import { fetchSupplierIds, selectOrganisation } from "../actions";
 import { FormattedMessage } from "react-intl";
 import { Scrollbars } from "react-custom-scrollbars";
 
@@ -22,7 +22,6 @@ class OrganisationSwitcher extends Component {
     this.hideOrganisationSwitcher = this.hideOrganisationSwitcher.bind(this);
   }
   componentDidMount() {
-    this.props.getOrganisations();
     window.addEventListener("resize", this.handleResize, false);
     document.addEventListener("keydown", this.hideOrganisationSwitcher, false);
     document.getElementById("organisationName").focus();
@@ -53,7 +52,6 @@ class OrganisationSwitcher extends Component {
   }
   selectOrganisation(organisation) {
     this.props.selectOrganisation(organisation);
-    window.location.reload();
   }
   render() {
     const {
@@ -158,17 +156,17 @@ class OrganisationSwitcher extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    selectedOrganisation: state.bootstrap.organisation,
-    organisations: state.bootstrap.organisations,
-    isFetching: state.bootstrap.isFetching
+    selectedOrganisation: state.organisations.selected,
+    organisations: state.organisations.available,
+    isFetching: state.organisations.isFetching
   };
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    getOrganisations: () => dispatch(fetchOrganisations()),
     selectOrganisation: organisation => {
       dispatch(selectOrganisation(organisation));
+      dispatch(fetchSupplierIds());
     }
   };
 };

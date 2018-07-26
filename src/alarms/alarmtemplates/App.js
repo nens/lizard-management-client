@@ -55,23 +55,21 @@ class App extends Component {
     }
   }
   loadTemplatesOnPage(page) {
-    const { bootstrap } = this.props;
     const { ordering } = this.state;
-    const organisationId = bootstrap.organisation.unique_id;
+    const organisationId = this.props.selectedOrganisation.unique_id;
 
-    fetch(
-      `/api/v3/messages/?page=${page}&organisation__unique_id=${organisationId}${ordering.column
+    const url = `/api/v3/messages/?page=${page}&organisation__unique_id=${organisationId}
+      ${ordering.column
         ? `&ordering=${ordering.direction}${ordering.column}`
-        : ""}`,
-      {
-        credentials: "same-origin"
-      }
-    )
-      .then(response => response.json())
-      .then(data => {
+        : ""}`;
+    const opts = { credentials: "same-origin" };
+
+    fetch(url, opts)
+      .then(responseObj => responseObj.json())
+      .then(responseData => {
         this.setState({
-          total: data.count,
-          templates: data.results,
+          total: responseData.count,
+          templates: responseData.results,
           page: 1,
           isFetching: false
         });
@@ -307,7 +305,7 @@ class App extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    bootstrap: state.bootstrap
+    selectedOrganisation: state.organisations.selected
   };
 };
 

@@ -227,9 +227,7 @@ class RecipientGroups extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  return {
-    bootstrap: state.bootstrap
-  };
+  return {};
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {

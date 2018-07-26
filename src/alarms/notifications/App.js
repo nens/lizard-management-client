@@ -32,8 +32,8 @@ class App extends Component {
   }
 
   loadAlarmsOnPage(page) {
-    const { bootstrap } = this.props;
-    const organisationId = bootstrap.organisation.unique_id;
+    const { selectedOrganisation } = this.props;
+    const organisationId = selectedOrganisation.unique_id;
 
     fetch(
       `/api/v3/rasteralarms/?page=${page}&organisation__unique_id=${organisationId}`,
@@ -47,7 +47,7 @@ class App extends Component {
           isFetching: false,
           total: data.count,
           alarms: data.results,
-          page :page
+          page: page
         });
       });
   }
@@ -153,7 +153,7 @@ class App extends Component {
                   <FormattedMessage
                     id="notifications_app.no_notifications"
                     defaultMessage="No notifications configured..."
-                  />                  
+                  />
                 </h5>
               </div>
             )}
@@ -177,7 +177,7 @@ class App extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    bootstrap: state.bootstrap
+    selectedOrganisation: state.organisations.selected
   };
 };
 

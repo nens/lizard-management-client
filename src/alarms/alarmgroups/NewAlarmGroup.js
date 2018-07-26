@@ -92,7 +92,7 @@ class NewAlarmGroup extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    organisation: state.bootstrap.organisation
+    organisation: state.organisations.selected
   };
 };
 
