@@ -86,15 +86,7 @@ class App extends Component {
   render() {
     if (!this.props.isAuthenticated) {
       return (
-        <div
-          style={{
-            position: "relative",
-            top: 50,
-            height: 300,
-            bottom: 50,
-            marginLeft: "50%"
-          }}
-        >
+        <div className={styles.MDSpinner}>
           <MDSpinner size={24} />
         </div>
       );
@@ -128,28 +120,13 @@ class App extends Component {
                   <div className={styles.TopNav}>
                     <div style={{ display: "none" }}>
                       <a href="#apps">
-                        <i
-                          className="material-icons"
-                          style={{
-                            fontSize: 17,
-                            position: "relative",
-                            left: -7,
-                            top: 3
-                          }}
-                        >
+                        <i className={"material-icons ${styles.AppIcon}"}>
                           apps
                         </i>
                         Apps
                       </a>
                     </div>
-                    <div
-                      style={{
-                        width: 60,
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap"
-                      }}
-                    >
+                    <div className={styles.Profile}>
                       <a
                         href="https://sso.lizard.net/edit_profile/"
                         target="_blank"
@@ -160,14 +137,7 @@ class App extends Component {
                         {firstName}
                       </a>
                     </div>
-                    <div
-                      style={{
-                        width: 120,
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap"
-                      }}
-                    >
+                    <div className={styles.OrganisationLinkContainer}>
                       <a
                         className={styles.OrganisationLink}
                         title={
@@ -192,12 +162,12 @@ class App extends Component {
                       </a>
                     </div>
                   </div>
-
-                  <div>
+                  {/* Why is below html ? compare to master */}
+                  {/* <div>
                     <a href="https://demo.lizard.net/accounts/logout/">
                       <i className="fa fa-power-off" />&nbsp;&nbsp;Logout
                     </a>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
@@ -206,16 +176,7 @@ class App extends Component {
             <div className={gridStyles.Container}>
               <div className={gridStyles.Row}>
                 <div
-                  style={{
-                    height: 65,
-                    display: "flex",
-                    flexWrap: "nowrap",
-                    alignItems: "center",
-                    fontSize: "1.2em",
-                    overflowX: "hidden",
-                    msOverflowStyle: "-ms-autohiding-scrollbar"
-                  }}
-                  className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
+                  className={`${styles.BreadcrumbsContainer} ${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
                 >
                   <div
                     style={{
@@ -233,9 +194,7 @@ class App extends Component {
           <div className={gridStyles.Container + " " + styles.AppContent}>
             <div className={gridStyles.Row}>
               <div
-                style={{
-                  margin: "25px 0 25px 0"
-                }}
+                style={{ margin: "25px 0 25px 0" }}
                 className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
               >
                 <Route exact path="/" component={Home} />
@@ -260,12 +219,7 @@ class App extends Component {
                       defaultMessage="Documentation"
                     />&nbsp;
                     <i
-                      style={{
-                        position: "relative",
-                        top: 5,
-                        fontSize: 20
-                      }}
-                      className="material-icons"
+                      className={`${styles.DocumentationHyperlink} material-icons`}
                     >
                       local_library
                     </i>
@@ -291,12 +245,7 @@ class App extends Component {
                         rel="noopener noreferrer"
                       >
                         <i
-                          style={{
-                            position: "relative",
-                            top: 5,
-                            fontSize: "20px"
-                          }}
-                          className="material-icons"
+                          className={`${styles.SupportHyperlink} material-icons`}
                         >
                           headset_mic
                         </i>&nbsp;

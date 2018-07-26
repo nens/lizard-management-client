@@ -7,14 +7,13 @@ import styles from "./SelectBoxSimple.css";
 import formStyles from "../styles/Forms.css";
 import displayStyles from "../styles/Display.css";
 
-class SelectOrganisation extends Component {
+class SelectBoxSimple extends Component {
   constructor(props) {
     super(props);
     this.state = { showChoices: false };
     this.handleInput = this.handleInput.bind(this);
     this.handleKeyUp = this.handleKeyUp.bind(this);
   }
-
   handleKeyUp(e) {
     if (e.key === "Escape") {
       this.setState({ showChoices: false });
@@ -25,7 +24,7 @@ class SelectOrganisation extends Component {
   }
 
   render() {
-    const { choices, choice, updateModelValue } = this.props;
+    const { choices, choice, updateModelValue, onKeyUp } = this.props;
     const { showChoices } = this.state;
     return (
       <div className={`${styles.SelectOrganisation} form-input`}>
@@ -40,6 +39,7 @@ class SelectOrganisation extends Component {
           value={choice}
           onFocus={() => this.setState({ showChoices: true })}
           onBlur={() => this.setState({ showChoices: false })}
+          onKeyUp={onKeyUp}
         />
         <div
           className={
@@ -73,4 +73,4 @@ class SelectOrganisation extends Component {
   }
 }
 
-export default SelectOrganisation;
+export default SelectBoxSimple;

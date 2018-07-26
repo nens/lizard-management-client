@@ -46,9 +46,8 @@ class GenericTextInputComponent extends Component {
     }
   }
   handleEnter(event) {
-    // on ENTER
-    if (event.keyCode === 13) {
-      // 13 is keycode 'enter'
+    if (this.props.validate(this.state.inputText) && event.keyCode === 13) {
+      // 13 is keycode 'enter' (works only when current input validates)
       this.props.setCurrentStep(this.props.step + 1);
     }
   }
@@ -78,8 +77,8 @@ class GenericTextInputComponent extends Component {
     } = this.props;
     const active = step === currentStep;
     const showCheckMark = validate(this.state.inputText);
-    const showClearButton = modelValue !== "";
-    const showNextButton = validate(this.state.inputText) && active;
+    const mustShowClearButton = modelValue !== "";
+    const mustShowNextButton = validate(this.state.inputText) && active;
 
     return (
       <div className={styles.Step} id={"Step-" + step}>
@@ -128,7 +127,7 @@ class GenericTextInputComponent extends Component {
                   onKeyUp={e => this.handleEnter(e)}
                 />
               )}
-              {showClearButton ? (
+              {mustShowClearButton ? (
                 <ClearInputButton
                   onClick={e => {
                     resetModelValue();
@@ -136,7 +135,7 @@ class GenericTextInputComponent extends Component {
                   }}
                 />
               ) : null}
-              {showNextButton ? (
+              {mustShowNextButton ? (
                 <button
                   className={`${buttonStyles.Button} ${buttonStyles.Success}`}
                   style={{ marginTop: 10 }}

@@ -47,9 +47,8 @@ class GenericSelectBoxComponent extends Component {
     }
   }
   handleEnter(event) {
-    // on ENTER
-    if (event.keyCode === 13) {
-      // 13 is keycode 'enter'
+    if (this.props.validate(this.state.inputText) && event.keyCode === 13) {
+      // 13 is keycode 'enter' (works only when current input validates)
       this.props.setCurrentStep(this.props.step + 1);
     }
   }
@@ -75,7 +74,8 @@ class GenericSelectBoxComponent extends Component {
       modelValue, // string: e.g. the name of a raster
       updateModelValue, // cb function to *update* the value of e.g. a raster's name in the parent model
       //resetModelValue, // cb function to *reset* the value of e.g. a raster's name in the parent model
-      validate // function used to validate the inputText. If validate returns true the inputText passed to updateModelValue and checkmark is set.
+      validate, // function used to validate the inputText. If validate returns true the inputText passed to updateModelValue and checkmark is set.
+      choicesSearchable
     } = this.props;
     const active = step === currentStep;
     const showCheckMark = validate(this.state.inputText);
@@ -102,20 +102,22 @@ class GenericSelectBoxComponent extends Component {
                 formStyles.FormGroup + " " + inputStyles.PositionRelative
               }
             >
-              <SelectBoxSimple
-                choices={choices}
-                choice={modelValue}
-                updateModelValue={updateModelValue}
-              />
-
-              {/* {showClearButton ? (
-                <ClearInputButton
-                  onClick={e => {
-                    resetModelValue();
-                    this.resetLocalState();
-                  }}
+              {choicesSearchable ? null : (
+                <SelectBoxSimple
+                  choices={choices}
+                  choice={modelValue}
+                  updateModelValue={updateModelValue}
+                  onKeyUp={e => this.handleEnter(e)}
                 />
-              ) : null} */}
+              )}
+              {/* {showClearButton ? (
+              //   <ClearInputButton
+              //     onClick={e => {
+              //       resetModelValue();
+              //       this.resetLocalState();
+              //     }}
+              //   />
+              // ) : null} */}
               {showNextButton ? (
                 <button
                   className={`${buttonStyles.Button} ${buttonStyles.Success}`}

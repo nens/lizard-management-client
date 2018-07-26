@@ -117,6 +117,7 @@ class NewRasterModel extends Component {
     this.setState({ description });
   }
   setAggregationType(aggregationType) {
+    console.log("[F] setAggType to:", aggregationType);
     this.setState({ aggregationType });
   }
   // handleInputNotificationName(e) {
@@ -302,11 +303,18 @@ class NewRasterModel extends Component {
                   opened={currentStep === 4}
                   currentStep={currentStep} // int for denoting which step is currently active
                   setCurrentStep={this.setCurrentStep} // cb function for updating which step becomes active
-                  choices={["counts", "curve", "histogram", "sum", "average"]}
+                  choices={[
+                    "none",
+                    "counts",
+                    "curve",
+                    "histogram",
+                    "sum",
+                    "average"
+                  ]}
                   modelValue={aggregationType} // string: e.g. the name of a raster
                   updateModelValue={this.setAggregationType} // cb function to *update* the value of e.g. a raster's name in the parent model
                   resetModelValue={() => this.setAggregationType("")} // cb function to *reset* the value of e.g. a raster's name in the parent model
-                  validate={value => value !== ""} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
+                  validate={() => this.state.aggregationType} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
                 />
                 {/* <GenericWizardStep
                   titleComponent={
