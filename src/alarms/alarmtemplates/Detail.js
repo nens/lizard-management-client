@@ -201,9 +201,7 @@ class Detail extends Component {
           <div
             className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
           >
-            <div
-              className={`${gridStyles.FloatRight}`}
-            >
+            <div className={`${gridStyles.FloatRight}`}>
               <TemplateTypeSelection type={template.type} />
             </div>
             <h5>{template.name} </h5>
@@ -251,7 +249,8 @@ class Detail extends Component {
               <FormattedMessage
                 id="alarmtemplates_detail.template"
                 defaultMessage="TEMPLATE"
-              />{" "}({this.state.template.text.length}{" "}
+              />{" "}
+              ({this.state.template.text.length}{" "}
               <FormattedMessage
                 id="alarmtemplates_detail.characters"
                 defaultMessage="characters"
@@ -301,9 +300,7 @@ class Detail extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  return {
-    bootstrap: state.bootstrap
-  };
+  return {};
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
