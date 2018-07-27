@@ -24,12 +24,12 @@ class SelectBoxSimple extends Component {
   }
 
   render() {
-    const { choices, choice, updateModelValue, onKeyUp } = this.props;
+    const { choices, choice, updateModelValue, onKeyUp, inputId } = this.props;
     const { showChoices } = this.state;
     return (
       <div className={`${styles.SelectOrganisation} form-input`}>
         <input
-          id="rasterSelection"
+          id={inputId}
           tabIndex="-1"
           type="text"
           autoComplete="false"
@@ -37,7 +37,7 @@ class SelectBoxSimple extends Component {
           placeholder="- select a value -"
           onKeyUp={this.handleKeyUp}
           value={choice}
-          onFocus={() => this.setState({ showChoices: true })}
+          onClick={() => this.setState({ showChoices: true })}
           onBlur={() => this.setState({ showChoices: false })}
           onKeyUp={onKeyUp}
         />

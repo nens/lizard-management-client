@@ -26,15 +26,15 @@ class GenericSelectBoxComponent extends Component {
     }
     // If this component is the "current step component", set the page focus to the components
     // input field:
-    // if (props.step === props.currentStep) {
-    //   const inputElem = document.getElementById(
-    //     this.props.titleComponent.props.id + "_input"
-    //   );
-    //   // inputElem.focus(); does not work outside setTimeout. Is this the right solution?
-    //   setTimeout(function() {
-    //     //inputElem.focus();
-    //   }, 0);
-    // }
+    if (props.step === props.currentStep) {
+      const inputElem = document.getElementById(
+        this.props.titleComponent.props.id + "_input"
+      );
+      // inputElem.focus(); does not work outside setTimeout. Is this the right solution?
+      setTimeout(function() {
+        inputElem.focus();
+      }, 0);
+    }
   }
   resetLocalState() {
     this.setState({ inputText: "" });
@@ -108,6 +108,7 @@ class GenericSelectBoxComponent extends Component {
                   choice={modelValue}
                   updateModelValue={updateModelValue}
                   onKeyUp={e => this.handleEnter(e)}
+                  inputId={titleComponent.props.id + "_input"}
                 />
               )}
               {/* {showClearButton ? (
