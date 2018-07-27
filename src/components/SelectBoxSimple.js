@@ -31,11 +31,13 @@ class SelectBoxSimple extends Component {
           autoComplete="false"
           className={formStyles.FormControl}
           placeholder="- select a value -"
-          onKeyUp={this.handleKeyUp}
           value={choice}
           onClick={() => this.setState({ showChoices: true })}
           onBlur={() => this.setState({ showChoices: false })}
-          onKeyUp={onKeyUp}
+          onKeyUp={event => {
+            onKeyUp(event);
+            this.handleKeyUp(event);
+          }}
         />
         <div
           className={
