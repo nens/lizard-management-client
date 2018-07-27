@@ -50,21 +50,38 @@ class DataMonitor extends Component {
       },
       {
         key: 2,
-        handleClick: () => this.handleLink("data_monitor/other_data"),
+        handleClick: () => this.handleLink("data_monitor/time_series"),
         title: (
           <FormattedMessage
-            id="data_monitor.other_data"
-            defaultMessage="Other"
+            id="data_monitor.time_series"
+            defaultMessage="Time Series"
           />
         ),
         icon: templateIcon,
         subTitle: (
           <FormattedMessage
-            id="data_monitor.manage_other_data"
-            defaultMessage="Manage other data"
+            id="data_monitor.manage_time_series"
+            defaultMessage="Manage Time Series"
           />
         )
       }
+      // {
+      //   key: 3,
+      //   handleClick: () => this.handleLink("data_monitor/other_data"),
+      //   title: (
+      //     <FormattedMessage
+      //       id="data_monitor.other_data"
+      //       defaultMessage="Other"
+      //     />
+      //   ),
+      //   icon: templateIcon,
+      //   subTitle: (
+      //     <FormattedMessage
+      //       id="data_monitor.manage_other_data"
+      //       defaultMessage="Manage other data"
+      //     />
+      //   )
+      // }
     ];
 
     return (
