@@ -8,25 +8,25 @@ import styles from "./SelectOrganisation.css";
 import formStyles from "../styles/Forms.css";
 import displayStyles from "../styles/Display.css";
 
-class SelectOrganisation extends Component {
+class SelectBoxSearch extends Component {
   constructor(props) {
     super(props);
-    this.state = { query: "", mustShowResults: false };
+    this.state = { query: "", mustShowChoices: false };
     this.handleInput = this.handleInput.bind(this);
     this.handleKeyUp = this.handleKeyUp.bind(this);
   }
   componentDidMount() {
     console.log(
       "[F] componentDidMount; this.props.selected.name =",
-      this.props.selected.name
+      this.props.choice && this.props.choice[this.props.choicesDisplayField]
     );
     this.setQuery(this.props);
     // if (this.props.selected.name)
     //   this.setState({ query: this.props.selected.name });
   }
   componentWillReceiveProps(newProps) {
-    console.log("[F] componentWillReceiveProps =", newProps.selected.name);
-    this.setQuery(newProps);
+    console.log("[F] componentWillReceiveProps =", this.props.choice);
+    // this.setQuery(newProps);
     // if (newProps.selected.name)
     //   this.setState({ query: newProps.selected.name });
   }
@@ -34,22 +34,44 @@ class SelectOrganisation extends Component {
     if (e.key === "Escape") this.resetQuery();
   }
   handleInput(e) {
-    this.setState({ mustShowResults: true, query: e.target.value });
+    console.log("[F] handle input ");
+    this.setState({ mustShowChoices: true, query: e.target.value });
   }
   setQuery(props) {
-    if (props.selected.name) this.setState({ query: props.selected.name });
+    if (this.props.choice) {
+      if (this.props.choicesDisplayField) {
+        this.setState({
+          query: this.props.choice[this.props.choicesDisplayField]
+        });
+      } else {
+        this.setState({ query: this.props.choice });
+      }
+    }
   }
   resetQuery() {
-    this.setState({ mustShowResults: false, query: "" });
+    this.setState({ mustShowChoices: false, query: "" });
   }
   render() {
-    const { organisations, placeholderText, loading } = this.props;
-    const showOptions = organisations.length > 0 && this.state.mustShowResults;
+    const {
+      choices,
+      placeholderText,
+      loading,
+      updateModelValue,
+      inputId
+    } = this.props;
+    const showOptions = choices.length > 0 && this.state.mustShowChoices;
     const valueInputField = this.state.query;
+
+    console.log(
+      "this.state.mustShowChoices; ",
+      this.state.mustShowChoices,
+      "showOptions",
+      showOptions
+    );
     return (
       <div className={`${styles.SelectOrganisation} form-input`}>
         <input
-          id="rasterSelection"
+          id={inputId}
           tabIndex="-1"
           type="text"
           autoComplete="false"
@@ -58,23 +80,24 @@ class SelectOrganisation extends Component {
           onChange={this.handleInput}
           onKeyUp={this.handleKeyUp}
           value={this.state.query}
-          onFocus={() => this.setState({ mustShowResults: true })}
+          onClick={() => this.setState({ mustShowChoices: true })}
+          //onFocus={() => this.setState({ mustShowChoices: true })}
         />
         {loading ? (
           <div lassName={styles.Spinner}>
             <MDSpinner size={18} />
           </div>
         ) : null}
-        {valueInputField !== "" ? (
+        {/* {valueInputField !== "" ? (
           <ClearInputButton
             onClick={() => {
               this.props.resetSelectedOrganisation();
               this.resetQuery();
             }}
           />
-        ) : null}
+        ) : null} */}
 
-        {/* {results.length > 0 && this.state.mustShowResults ? ( */}
+        {/* {results.length > 0 && this.state.mustShowChoices ? ( */}
         <div
           className={
             showOptions
@@ -84,8 +107,8 @@ class SelectOrganisation extends Component {
         >
           {/* <div className={styles.Results}> */}
           <Scrollbars autoHeight autoHeightMin={50} autoHeightMax={400}>
-            {organisations
-              .filter(org => {
+            {choices
+              .filter(choiceItem => {
                 if (this.state.query === "") {
                   // if nothing is typed show all results
                   return true;
@@ -95,28 +118,39 @@ class SelectOrganisation extends Component {
                 } else {
                   // if user typed search string only show those that contain string
                   // TODO sort by search string ?
-                  return org.name
-                    .toLowerCase()
-                    .includes(this.state.query.toLowerCase());
+                  if (this.props.choicesDisplayField) {
+                    return choiceItem[this.props.choicesDisplayField]
+                      .toLowerCase()
+                      .includes(this.state.query.toLowerCase());
+                  } else {
+                    return choiceItem
+                      .toLowerCase()
+                      .includes(this.state.query.toLowerCase());
+                  }
                 }
               })
-              .map((org, i) => {
+              .map((choiceItem, i) => {
                 return (
                   <div
                     tabIndex={i + 1}
                     key={i}
                     className={styles.ResultRow}
                     onClick={() => {
-                      // User selected an organisation from the filtered ones:
-                      this.props.setValue(org);
+                      // User selected a choice from the filtered ones:
+                      updateModelValue(choiceItem);
                       //this.resetQuery();
+                      console.log("[ONCLICK] select search", choiceItem);
                       this.setState({
-                        mustShowResults: false,
-                        query: org.name
+                        mustShowChoices: false,
+                        query: this.props.choicesDisplayField
+                          ? choiceItem[this.props.choicesDisplayField]
+                          : choiceItem
                       });
                     }}
                   >
-                    {org.name}
+                    {this.props.choicesDisplayField
+                      ? choiceItem[this.props.choicesDisplayField]
+                      : choiceItem}
                   </div>
                 );
               })}
@@ -128,4 +162,4 @@ class SelectOrganisation extends Component {
   }
 }
 
-export default SelectOrganisation;
+export default SelectBoxSearch;

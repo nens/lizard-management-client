@@ -92,6 +92,7 @@ class NewRasterModel extends Component {
       this
     );
     this.setAggregationType = this.setAggregationType.bind(this);
+    this.setObservationType = this.setObservationType.bind(this);
   }
 
   setCurrentStep(currentStep) {
@@ -119,6 +120,10 @@ class NewRasterModel extends Component {
   setAggregationType(aggregationType) {
     console.log("[F] setAggType to:", aggregationType);
     this.setState({ aggregationType });
+  }
+  setObservationType(observationType) {
+    console.log("[F] observationType to:", observationType);
+    this.setState({ observationType });
   }
   // handleInputNotificationName(e) {
   //   if (e.key === "Enter" && this.state.name) {
@@ -351,6 +356,34 @@ class NewRasterModel extends Component {
                   modelValue={aggregationType}
                   validate={value => value != ""}
                 /> */}
+                <GenericSelectBoxComponent
+                  titleComponent={
+                    <FormatMessage id="rasters.observation_type" />
+                  } // <FormatText ... //>
+                  subtitleComponent={
+                    <FormatMessage id="rasters.please_select_type_of_observation" />
+                  } // <FormatText ... />
+                  placeholder="observation type"
+                  step={5} // int for denoting which step it the GenericTextInputComponent refers to
+                  opened={currentStep === 5}
+                  currentStep={currentStep} // int for denoting which step is currently active
+                  setCurrentStep={this.setCurrentStep} // cb function for updating which step becomes active
+                  // choices={[
+                  //   {name: "none"},
+                  //   {name: "counts"},
+                  //   {name: "curve"},
+                  //   {name: "histogram"},
+                  //   {name: "sum"},
+                  //   {name: "average"},
+                  // ]}
+                  choices={this.props.observationTypes.available}
+                  choicesDisplayField="code" // optional parameter if choices are objects, which field contains the displayvalue, default item itself is displayvalue
+                  choicesSearchable={true}
+                  modelValue={this.state.observationType} // string: e.g. the name of a raster
+                  updateModelValue={this.setObservationType} // cb function to *update* the value of e.g. a raster's name in the parent model
+                  resetModelValue={() => this.setObservationType("")} // cb function to *reset* the value of e.g. a raster's name in the parent model
+                  validate={() => this.state.observationType !== ""} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
+                />
               </div>
             </div>
           </div>
@@ -362,7 +395,8 @@ class NewRasterModel extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    bootstrap: state.bootstrap
+    bootstrap: state.bootstrap,
+    observationTypes: state.observationTypes
   };
 };
 

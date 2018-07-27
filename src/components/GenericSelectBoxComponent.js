@@ -5,8 +5,8 @@ import { withRouter } from "react-router-dom";
 import CheckMark from "./CheckMark";
 import StepIndicator from "./StepIndicator";
 import FormatMessage from "../utils/FormatMessage.js";
-//import ClearInputButton from "./ClearInputButton.js";
 import SelectBoxSimple from "./SelectBoxSimple.js";
+import SelectBoxSearch from "./SelectBoxSearch.js";
 
 import styles from "./GenericSelectBoxComponent.css";
 import formStyles from "../styles/Forms.css";
@@ -71,6 +71,7 @@ class GenericSelectBoxComponent extends Component {
       setCurrentStep, // cb function for updating which step becomes active
       opened, // complete question and input fields become visible if set to true
       choices, // list of choices in select box
+      choicesDisplayField, // optional parameter if choices are objects, which field contains the displayvalue, default item itself is displayvalue
       modelValue, // string: e.g. the name of a raster
       updateModelValue, // cb function to *update* the value of e.g. a raster's name in the parent model
       //resetModelValue, // cb function to *reset* the value of e.g. a raster's name in the parent model
@@ -102,10 +103,20 @@ class GenericSelectBoxComponent extends Component {
                 formStyles.FormGroup + " " + inputStyles.PositionRelative
               }
             >
-              {choicesSearchable ? null : (
+              {choicesSearchable ? (
+                <SelectBoxSearch
+                  choices={choices}
+                  choice={modelValue}
+                  choicesDisplayField={choicesDisplayField}
+                  updateModelValue={updateModelValue}
+                  onKeyUp={e => this.handleEnter(e)}
+                  inputId={titleComponent.props.id + "_input"}
+                />
+              ) : (
                 <SelectBoxSimple
                   choices={choices}
                   choice={modelValue}
+                  choicesDisplayField={choicesDisplayField}
                   updateModelValue={updateModelValue}
                   onKeyUp={e => this.handleEnter(e)}
                   inputId={titleComponent.props.id + "_input"}
