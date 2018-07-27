@@ -57,17 +57,12 @@ class SelectBoxSearch extends Component {
       isFetching,
       placeholder,
       updateModelValue,
-      inputId
+      onKeyUp,
+      inputId,
+      choicesDisplayField
     } = this.props;
     const showOptions = choices.length > 0 && this.state.mustShowChoices;
-    const valueInputField = this.state.query;
 
-    console.log(
-      "this.state.mustShowChoices; ",
-      this.state.mustShowChoices,
-      "showOptions",
-      showOptions
-    );
     return (
       <div className={`${styles.SelectChoice} form-input`}>
         <input
@@ -78,7 +73,10 @@ class SelectBoxSearch extends Component {
           className={formStyles.FormControl}
           placeholder={placeholder}
           onChange={this.handleInput}
-          onKeyUp={this.handleKeyUp}
+          onKeyUp={event => {
+            onKeyUp(event);
+            this.handleKeyUp(event);
+          }}
           value={this.state.query}
           onClick={() => this.setState({ mustShowChoices: true })}
           //onFocus={() => this.setState({ mustShowChoices: true })}
@@ -122,8 +120,8 @@ class SelectBoxSearch extends Component {
                 } else {
                   // if user typed search string only show those that contain string
                   // TODO sort by search string ?
-                  if (this.props.choicesDisplayField) {
-                    return choiceItem[this.props.choicesDisplayField]
+                  if (choicesDisplayField) {
+                    return choiceItem[choicesDisplayField]
                       .toLowerCase()
                       .includes(this.state.query.toLowerCase());
                   } else {
@@ -146,8 +144,8 @@ class SelectBoxSearch extends Component {
                       console.log("[onMouseDown] select search", choiceItem);
                       this.setState({
                         mustShowChoices: false,
-                        query: this.props.choicesDisplayField
-                          ? choiceItem[this.props.choicesDisplayField]
+                        query: choicesDisplayField
+                          ? choiceItem[choicesDisplayField]
                           : choiceItem
                       });
                     }}

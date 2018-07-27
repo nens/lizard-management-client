@@ -421,8 +421,8 @@ class NewRasterModel extends Component {
                   isFetching={this.props.supplierIds.isFetching}
                   choicesSearchable={true}
                   modelValue={this.state.supplierId} // string: e.g. the name of a raster
-                  updateModelValue={this.setsupplierId} // cb function to *update* the value of e.g. a raster's name in the parent model
-                  resetModelValue={() => this.setsupplierId("")} // cb function to *reset* the value of e.g. a raster's name in the parent model
+                  updateModelValue={this.setSupplierId} // cb function to *update* the value of e.g. a raster's name in the parent model
+                  resetModelValue={() => this.setSupplierId("")} // cb function to *reset* the value of e.g. a raster's name in the parent model
                   validate={() => this.state.supplierId !== ""} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
                 />
               </div>
