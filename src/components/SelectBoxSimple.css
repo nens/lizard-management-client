@@ -1,5 +1,5 @@
 
-.SelectOrganisation {
+.SelectGeneralClass {
   position: relative;
   z-index: 9999999;
 }
@@ -14,5 +14,17 @@
   padding: 13px;
   border-bottom: 1px solid #ccc;
   cursor: pointer;
+}
+
+.ResultRow:hover {
+  background-color: #00cdab;
+  color: #fff;
+}
+.Active {
+  background-color: #00cdab;
+  color: #fff;
+}
+.InActive {
+
 }
 

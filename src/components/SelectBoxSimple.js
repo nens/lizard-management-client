@@ -11,7 +11,6 @@ class SelectBoxSimple extends Component {
   constructor(props) {
     super(props);
     this.state = { showChoices: false };
-    this.handleInput = this.handleInput.bind(this);
     this.handleKeyUp = this.handleKeyUp.bind(this);
   }
   handleKeyUp(e) {
@@ -19,15 +18,12 @@ class SelectBoxSimple extends Component {
       this.setState({ showChoices: false });
     }
   }
-  handleInput(e) {
-    this.setState({ mustShowResults: true, query: e.target.value });
-  }
 
   render() {
     const { choices, choice, updateModelValue, onKeyUp, inputId } = this.props;
     const { showChoices } = this.state;
     return (
-      <div className={`${styles.SelectOrganisation} form-input`}>
+      <div className={`${styles.SelectGeneralClass} form-input`}>
         <input
           id={inputId}
           tabIndex="-1"
@@ -49,20 +45,22 @@ class SelectBoxSimple extends Component {
           }
         >
           <Scrollbars autoHeight autoHeightMin={50} autoHeightMax={400}>
-            {choices.map((choice, i) => {
+            {choices.map((choiceItem, i) => {
               return (
                 <div
                   tabIndex={i + 1}
                   key={i}
-                  className={styles.ResultRow}
+                  className={`${styles.ResultRow} ${choiceItem === choice
+                    ? styles.Active
+                    : styles.Inactive}`}
                   onMouseDown={e => {
                     this.setState({
                       showChoices: false
                     });
-                    updateModelValue(choice);
+                    updateModelValue(choiceItem);
                   }}
                 >
-                  {choice}
+                  {choiceItem}
                 </div>
               );
             })}
