@@ -4,7 +4,7 @@ import MDSpinner from "react-md-spinner";
 import { Scrollbars } from "react-custom-scrollbars";
 import ClearInputButton from "../components/ClearInputButton.js";
 
-import styles from "./SelectOrganisation.css";
+import styles from "./SelectBoxSearch.css";
 import formStyles from "../styles/Forms.css";
 import displayStyles from "../styles/Display.css";
 
@@ -54,8 +54,8 @@ class SelectBoxSearch extends Component {
   render() {
     const {
       choices,
-      placeholderText,
-      loading,
+      isFetching,
+      placeholder,
       updateModelValue,
       inputId
     } = this.props;
@@ -69,25 +69,29 @@ class SelectBoxSearch extends Component {
       showOptions
     );
     return (
-      <div className={`${styles.SelectOrganisation} form-input`}>
+      <div className={`${styles.SelectChoice} form-input`}>
         <input
           id={inputId}
           tabIndex="-1"
           type="text"
           autoComplete="false"
           className={formStyles.FormControl}
-          placeholder={placeholderText}
+          placeholder={placeholder}
           onChange={this.handleInput}
           onKeyUp={this.handleKeyUp}
           value={this.state.query}
           onClick={() => this.setState({ mustShowChoices: true })}
           //onFocus={() => this.setState({ mustShowChoices: true })}
+          onBlur={() => this.setState({ mustShowChoices: false })}
         />
-        {loading ? (
-          <div lassName={styles.Spinner}>
-            <MDSpinner size={18} />
-          </div>
-        ) : null}
+        <div
+          className={`${styles.Spinner} ${isFetching
+            ? displayStyles.Block
+            : displayStyles.None}`}
+        >
+          <MDSpinner size={18} />
+        </div>
+
         {/* {valueInputField !== "" ? (
           <ClearInputButton
             onClick={() => {
@@ -135,11 +139,11 @@ class SelectBoxSearch extends Component {
                     tabIndex={i + 1}
                     key={i}
                     className={styles.ResultRow}
-                    onClick={() => {
+                    onMouseDown={() => {
                       // User selected a choice from the filtered ones:
                       updateModelValue(choiceItem);
                       //this.resetQuery();
-                      console.log("[ONCLICK] select search", choiceItem);
+                      console.log("[onMouseDown] select search", choiceItem);
                       this.setState({
                         mustShowChoices: false,
                         query: this.props.choicesDisplayField

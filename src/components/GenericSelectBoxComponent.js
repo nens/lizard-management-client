@@ -72,11 +72,13 @@ class GenericSelectBoxComponent extends Component {
       opened, // complete question and input fields become visible if set to true
       choices, // list of choices in select box
       choicesDisplayField, // optional parameter if choices are objects, which field contains the displayvalue, default item itself is displayvalue
+      isFetching, // is the component still waiting for data from server?
       modelValue, // string: e.g. the name of a raster
       updateModelValue, // cb function to *update* the value of e.g. a raster's name in the parent model
       //resetModelValue, // cb function to *reset* the value of e.g. a raster's name in the parent model
       validate, // function used to validate the inputText. If validate returns true the inputText passed to updateModelValue and checkmark is set.
-      choicesSearchable
+      choicesSearchable,
+      placeholder
     } = this.props;
     const active = step === currentStep;
     const showCheckMark = validate(this.state.inputText);
@@ -108,18 +110,22 @@ class GenericSelectBoxComponent extends Component {
                   choices={choices}
                   choice={modelValue}
                   choicesDisplayField={choicesDisplayField}
+                  isFetching={isFetching}
                   updateModelValue={updateModelValue}
                   onKeyUp={e => this.handleEnter(e)}
                   inputId={titleComponent.props.id + "_input"}
+                  placeholder={placeholder}
                 />
               ) : (
                 <SelectBoxSimple
                   choices={choices}
                   choice={modelValue}
+                  isFetching={isFetching}
                   choicesDisplayField={choicesDisplayField}
                   updateModelValue={updateModelValue}
                   onKeyUp={e => this.handleEnter(e)}
                   inputId={titleComponent.props.id + "_input"}
+                  placeholder={placeholder}
                 />
               )}
               {/* {showClearButton ? (

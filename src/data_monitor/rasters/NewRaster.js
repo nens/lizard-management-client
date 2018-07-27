@@ -36,11 +36,13 @@ class NewRasterModel extends Component {
         intervalInSeconds: 60,
         optimizer: true
       },
-      styles: {
-        choice: "",
-        min: 0,
-        max: 10
-      },
+      // TODO let colormap have min and max as below with styles
+      colormap: "",
+      // styles: {
+      //   choice: "",
+      //   min: 0,
+      //   max: 10,
+      // },
       aggregationType: "", // choice: none | counts | curve | histogram | sum | average
       supplierId: "",
       supplierCode: "",
@@ -93,6 +95,8 @@ class NewRasterModel extends Component {
     );
     this.setAggregationType = this.setAggregationType.bind(this);
     this.setObservationType = this.setObservationType.bind(this);
+    this.setColormap = this.setColormap.bind(this);
+    this.setSupplierId = this.setSupplierId.bind(this);
   }
 
   setCurrentStep(currentStep) {
@@ -124,6 +128,12 @@ class NewRasterModel extends Component {
   setObservationType(observationType) {
     console.log("[F] observationType to:", observationType);
     this.setState({ observationType });
+  }
+  setColormap(colormap) {
+    this.setState({ colormap });
+  }
+  setSupplierId(supplierId) {
+    this.setState({ supplierId });
   }
   // handleInputNotificationName(e) {
   //   if (e.key === "Enter" && this.state.name) {
@@ -303,7 +313,7 @@ class NewRasterModel extends Component {
                   subtitleComponent={
                     <FormatMessage id="rasters.please_select_type_of_aggregation" />
                   } // <FormatText ... />
-                  placeholder="aggregation type"
+                  placeholder="click to select aggregation type"
                   step={4} // int for denoting which step it the GenericTextInputComponent refers to
                   opened={currentStep === 4}
                   currentStep={currentStep} // int for denoting which step is currently active
@@ -363,26 +373,57 @@ class NewRasterModel extends Component {
                   subtitleComponent={
                     <FormatMessage id="rasters.please_select_type_of_observation" />
                   } // <FormatText ... />
-                  placeholder="observation type"
+                  placeholder="click to select observation type"
                   step={5} // int for denoting which step it the GenericTextInputComponent refers to
                   opened={currentStep === 5}
                   currentStep={currentStep} // int for denoting which step is currently active
                   setCurrentStep={this.setCurrentStep} // cb function for updating which step becomes active
-                  // choices={[
-                  //   {name: "none"},
-                  //   {name: "counts"},
-                  //   {name: "curve"},
-                  //   {name: "histogram"},
-                  //   {name: "sum"},
-                  //   {name: "average"},
-                  // ]}
                   choices={this.props.observationTypes.available}
                   choicesDisplayField="code" // optional parameter if choices are objects, which field contains the displayvalue, default item itself is displayvalue
+                  isFetching={this.props.observationTypes.isFetching}
                   choicesSearchable={true}
                   modelValue={this.state.observationType} // string: e.g. the name of a raster
                   updateModelValue={this.setObservationType} // cb function to *update* the value of e.g. a raster's name in the parent model
                   resetModelValue={() => this.setObservationType("")} // cb function to *reset* the value of e.g. a raster's name in the parent model
                   validate={() => this.state.observationType !== ""} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
+                />
+                <GenericSelectBoxComponent
+                  titleComponent={<FormatMessage id="rasters.colormap" />} // <FormatText ... //>
+                  subtitleComponent={
+                    <FormatMessage id="rasters.please_select_colormap" />
+                  } // <FormatText ... />
+                  placeholder="click to select colormap"
+                  step={6} // int for denoting which step it the GenericTextInputComponent refers to
+                  opened={currentStep === 6}
+                  currentStep={currentStep} // int for denoting which step is currently active
+                  setCurrentStep={this.setCurrentStep} // cb function for updating which step becomes active
+                  choices={this.props.colorMaps.available}
+                  choicesDisplayField="name" // optional parameter if choices are objects, which field contains the displayvalue, default item itself is displayvalue
+                  isFetching={this.props.colorMaps.isFetching}
+                  choicesSearchable={true}
+                  modelValue={this.state.colorMap} // string: e.g. the name of a raster
+                  updateModelValue={this.setColormap} // cb function to *update* the value of e.g. a raster's name in the parent model
+                  resetModelValue={() => this.setColorMap("")} // cb function to *reset* the value of e.g. a raster's name in the parent model
+                  validate={() => this.state.colormap !== ""} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
+                />
+                <GenericSelectBoxComponent
+                  titleComponent={<FormatMessage id="rasters.supplier_id" />} // <FormatText ... //>
+                  subtitleComponent={
+                    <FormatMessage id="rasters.please_select_supplier_id" />
+                  } // <FormatText ... />
+                  placeholder="click to select supplier id"
+                  step={7} // int for denoting which step it the GenericTextInputComponent refers to
+                  opened={currentStep === 7}
+                  currentStep={currentStep} // int for denoting which step is currently active
+                  setCurrentStep={this.setCurrentStep} // cb function for updating which step becomes active
+                  choices={this.props.supplierIds.available}
+                  choicesDisplayField="username" // optional parameter if choices are objects, which field contains the displayvalue, default item itself is displayvalue
+                  isFetching={this.props.supplierIds.isFetching}
+                  choicesSearchable={true}
+                  modelValue={this.state.supplierId} // string: e.g. the name of a raster
+                  updateModelValue={this.setsupplierId} // cb function to *update* the value of e.g. a raster's name in the parent model
+                  resetModelValue={() => this.setsupplierId("")} // cb function to *reset* the value of e.g. a raster's name in the parent model
+                  validate={() => this.state.supplierId !== ""} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
                 />
               </div>
             </div>
@@ -396,7 +437,9 @@ class NewRasterModel extends Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     bootstrap: state.bootstrap,
-    observationTypes: state.observationTypes
+    observationTypes: state.observationTypes,
+    colorMaps: state.colorMaps,
+    supplierIds: state.supplierIds
   };
 };
 

@@ -20,7 +20,14 @@ class SelectBoxSimple extends Component {
   }
 
   render() {
-    const { choices, choice, updateModelValue, onKeyUp, inputId } = this.props;
+    const {
+      choices,
+      choice,
+      updateModelValue,
+      onKeyUp,
+      inputId,
+      placeholder
+    } = this.props;
     const { showChoices } = this.state;
     return (
       <div className={`${styles.SelectGeneralClass} form-input`}>
@@ -30,7 +37,7 @@ class SelectBoxSimple extends Component {
           type="text"
           autoComplete="false"
           className={formStyles.FormControl}
-          placeholder="- select a value -"
+          placeholder={placeholder} //"- select a value -"
           value={choice}
           onClick={() => this.setState({ showChoices: true })}
           onBlur={() => this.setState({ showChoices: false })}
