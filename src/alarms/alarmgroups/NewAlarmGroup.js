@@ -20,7 +20,7 @@ class NewAlarmGroup extends Component {
     try {
       document.getElementById("groupName").focus();
     } catch (e) {
-      console.log("Could not focus() on input element..");
+      console.error("Could not focus() on input element..");
     }
   }
   handleClickCreateGroupButton() {
