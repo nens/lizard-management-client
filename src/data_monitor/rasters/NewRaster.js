@@ -37,7 +37,7 @@ class NewRasterModel extends Component {
         optimizer: true
       },
       // TODO let colormap have min and max as below with styles
-      colormap: "",
+      colorMap: "",
       // styles: {
       //   choice: "",
       //   min: 0,
@@ -95,7 +95,7 @@ class NewRasterModel extends Component {
     );
     this.setAggregationType = this.setAggregationType.bind(this);
     this.setObservationType = this.setObservationType.bind(this);
-    this.setColormap = this.setColormap.bind(this);
+    this.setColorMap = this.setColorMap.bind(this);
     this.setSupplierId = this.setSupplierId.bind(this);
   }
 
@@ -122,18 +122,16 @@ class NewRasterModel extends Component {
     this.setState({ description });
   }
   setAggregationType(aggregationType) {
-    console.log("[F] setAggType to:", aggregationType);
     this.setState({ aggregationType });
   }
-  setObservationType(observationType) {
-    console.log("[F] observationType to:", observationType);
-    this.setState({ observationType });
+  setObservationType(observationTypeObj) {
+    this.setState({ observationType: observationTypeObj.code });
   }
-  setColormap(colormap) {
-    this.setState({ colormap });
+  setColorMap(colorMapObj) {
+    this.setState({ colorMap: colorMapObj.name });
   }
-  setSupplierId(supplierId) {
-    this.setState({ supplierId });
+  setSupplierId(supplierIdObj) {
+    this.setState({ supplierId: supplierIdObj.username });
   }
   // handleInputNotificationName(e) {
   //   if (e.key === "Enter" && this.state.name) {
@@ -233,20 +231,6 @@ class NewRasterModel extends Component {
                   resetModelValue={this.resetRasterName} // cb function to *reset* the value of e.g. a raster's name in the parent model
                   validate={this.validateNewRasterName} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
                 />
-
-                {/* <NewRasterOrganisation
-                  step={2}
-                  currentStep={currentStep}
-                  handleNextStepClick={() => this.setCurrentStep(3)}
-                  allOrganisations={organisations}
-                  isValid={this.validateNewRasterOrganisation(
-                    this.state.selectedOrganisation
-                  )}
-                  setSelectedOrganisation={this.setSelectedOrganisation}
-                  selectedOrganisation={selectedOrganisation}
-                  resetSelectedOrganisation={this.resetSelectedOrganisation}
-                  setCurrentStep={this.setCurrentStep}
-                /> */}
                 <GenericTextInputComponent
                   titleComponent={<FormatMessage id="rasters.store_path" />} // <FormatText ... //>
                   subtitleComponent={
@@ -271,15 +255,6 @@ class NewRasterModel extends Component {
                     return reg.test(storePathName);
                   }} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
                 />
-                {/* <NewRasterStorePath
-                  step={3}
-                  currentStep={currentStep}
-                  setCurrentStep={this.setCurrentStep}
-                  isValid={storePathName.length > 1}
-                  value={storePathName}
-                  setParentState={this.setStorePathName}
-                  resetParentState={() => this.setStorePathName("")}
-                /> */}
                 <GenericTextInputComponent
                   titleComponent={<FormatMessage id="rasters.description" />} // <FormatText ... //>
                   subtitleComponent={
@@ -296,16 +271,6 @@ class NewRasterModel extends Component {
                   resetModelValue={() => this.setDescription("")} // cb function to *reset* the value of e.g. a raster's name in the parent model
                   validate={this.validateNewRasterDescription} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
                 />
-                {/* <NewRasterDescription
-                  step={4}
-                  currentStep={currentStep}
-                  setCurrentStep={this.setCurrentStep}
-                  //isValid={description.length > 1}
-                  validate={this.validateNewRasterDescription}
-                  value={description}
-                  setParentState={this.setDescription}
-                  resetParentState={() => this.setDescription("")}
-                /> */}
                 <GenericSelectBoxComponent
                   titleComponent={
                     <FormatMessage id="rasters.aggregation_type" />
@@ -331,41 +296,6 @@ class NewRasterModel extends Component {
                   resetModelValue={() => this.setAggregationType("")} // cb function to *reset* the value of e.g. a raster's name in the parent model
                   validate={() => this.state.aggregationType} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
                 />
-                {/* <GenericWizardStep
-                  titleComponent={
-                    <FormatMessage id="rasters.aggregation_type" />
-                  }
-                  inputComponent={
-                    <div>
-                      <input
-                        id="rasterName"
-                        tabIndex="-2"
-                        type="text"
-                        autoComplete="false"
-                        className={formStyles.FormControl}
-                        placeholder={"select aggregation"}
-                        onChange={e => this.setAggregationType(e.target.value)}
-                        value={aggregationType}
-                      />
-                      <ClearInputButton
-                        className={
-                          aggregationType !== ''
-                            ? displayStyles.Block
-                            : displayStyles.None
-                        }
-                        onClick={e => {
-                          this.setAggregationType("");
-                        }}
-                      />
-                    </div>
-                  }
-                  step={6}
-                  active={currentStep === 6}
-                  opened={currentStep >= 6}
-                  setCurrentStep={this.setCurrentStep}
-                  modelValue={aggregationType}
-                  validate={value => value != ""}
-                /> */}
                 <GenericSelectBoxComponent
                   titleComponent={
                     <FormatMessage id="rasters.observation_type" />
@@ -384,7 +314,7 @@ class NewRasterModel extends Component {
                   choicesSearchable={true}
                   modelValue={this.state.observationType} // string: e.g. the name of a raster
                   updateModelValue={this.setObservationType} // cb function to *update* the value of e.g. a raster's name in the parent model
-                  resetModelValue={() => this.setObservationType("")} // cb function to *reset* the value of e.g. a raster's name in the parent model
+                  resetModelValue={() => this.setObservationType({ code: "" })} // cb function to *reset* the value of e.g. a raster's name in the parent model
                   validate={() => this.state.observationType !== ""} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
                 />
                 <GenericSelectBoxComponent
@@ -402,9 +332,9 @@ class NewRasterModel extends Component {
                   isFetching={this.props.colorMaps.isFetching}
                   choicesSearchable={true}
                   modelValue={this.state.colorMap} // string: e.g. the name of a raster
-                  updateModelValue={this.setColormap} // cb function to *update* the value of e.g. a raster's name in the parent model
-                  resetModelValue={() => this.setColorMap("")} // cb function to *reset* the value of e.g. a raster's name in the parent model
-                  validate={() => this.state.colormap !== ""} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
+                  updateModelValue={this.setColorMap} // cb function to *update* the value of e.g. a raster's name in the parent model
+                  resetModelValue={() => this.setColorMap({ name: "" })} // cb function to *reset* the value of e.g. a raster's name in the parent model
+                  validate={() => this.state.colorMap !== ""} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
                 />
                 <GenericSelectBoxComponent
                   titleComponent={<FormatMessage id="rasters.supplier_id" />} // <FormatText ... //>
@@ -422,7 +352,7 @@ class NewRasterModel extends Component {
                   choicesSearchable={true}
                   modelValue={this.state.supplierId} // string: e.g. the name of a raster
                   updateModelValue={this.setSupplierId} // cb function to *update* the value of e.g. a raster's name in the parent model
-                  resetModelValue={() => this.setSupplierId("")} // cb function to *reset* the value of e.g. a raster's name in the parent model
+                  resetModelValue={() => this.setSupplierId({ username: "" })} // cb function to *reset* the value of e.g. a raster's name in the parent model
                   validate={() => this.state.supplierId !== ""} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
                 />
               </div>

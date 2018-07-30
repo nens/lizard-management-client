@@ -14,16 +14,7 @@ import buttonStyles from "../styles/Buttons.css";
 import inputStyles from "../styles/Input.css";
 
 class GenericSelectBoxComponent extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      inputText: ""
-    };
-  }
   setLocalStateFromProps(props) {
-    if (props.parentState) {
-      this.setState({ inputText: props.modelValue });
-    }
     // If this component is the "current step component", set the page focus to the components
     // input field:
     if (props.step === props.currentStep) {
@@ -36,36 +27,22 @@ class GenericSelectBoxComponent extends Component {
       }, 0);
     }
   }
-  resetLocalState() {
-    this.setState({ inputText: "" });
-  }
-
-  validateAndSaveToParent(inputText) {
-    this.setState({ inputText });
-    if (this.props.validate(inputText)) {
-      this.props.updateModelValue(inputText);
-    }
-  }
   handleEnter(event) {
-    if (this.props.validate(this.state.inputText) && event.keyCode === 13) {
+    if (this.props.validate(this.props.modelValue) && event.keyCode === 13) {
       // 13 is keycode 'enter' (works only when current input validates)
       this.props.setCurrentStep(this.props.step + 1);
     }
   }
-
   componentWillReceiveProps(newProps) {
     this.setLocalStateFromProps(newProps);
   }
-
   componentDidMount() {
     this.setLocalStateFromProps(this.props);
   }
-
   render() {
     const {
       titleComponent, // <FormatText ... //>
       subtitleComponent, // <FormatText ... />
-      //placeholder,
       step, // int for denoting which step it the GenericTextInputComponent refers to
       currentStep, // int for denoting which step is currently active
       setCurrentStep, // cb function for updating which step becomes active
@@ -75,15 +52,16 @@ class GenericSelectBoxComponent extends Component {
       isFetching, // is the component still waiting for data from server?
       modelValue, // string: e.g. the name of a raster
       updateModelValue, // cb function to *update* the value of e.g. a raster's name in the parent model
-      //resetModelValue, // cb function to *reset* the value of e.g. a raster's name in the parent model
-      validate, // function used to validate the inputText. If validate returns true the inputText passed to updateModelValue and checkmark is set.
+      resetModelValue, // cb function to *reset* the value of e.g. a raster's name in the parent model
+      validate, // function used to validate the props.modelValue. If validate returns true the props.modelValue passed to updateModelValue and checkmark is set.
       choicesSearchable,
       placeholder
     } = this.props;
     const active = step === currentStep;
-    const showCheckMark = validate(this.state.inputText);
-    //const showClearButton = modelValue !== "";
-    const showNextButton = choices.includes(modelValue);
+    const showCheckMark = validate(modelValue);
+    const showNextButton = choices
+      .map(e => (choicesDisplayField ? e[choicesDisplayField] : e))
+      .includes(modelValue);
     return (
       <div className={styles.Step} id={"Step-" + step}>
         <StepIndicator
@@ -115,6 +93,8 @@ class GenericSelectBoxComponent extends Component {
                   onKeyUp={e => this.handleEnter(e)}
                   inputId={titleComponent.props.id + "_input"}
                   placeholder={placeholder}
+                  validate={validate}
+                  resetModelValue={resetModelValue}
                 />
               ) : (
                 <SelectBoxSimple
@@ -126,16 +106,9 @@ class GenericSelectBoxComponent extends Component {
                   onKeyUp={e => this.handleEnter(e)}
                   inputId={titleComponent.props.id + "_input"}
                   placeholder={placeholder}
+                  // validate={validate}
                 />
               )}
-              {/* {showClearButton ? (
-              //   <ClearInputButton
-              //     onClick={e => {
-              //       resetModelValue();
-              //       this.resetLocalState();
-              //     }}
-              //   />
-              // ) : null} */}
               {showNextButton ? (
                 <button
                   className={`${buttonStyles.Button} ${buttonStyles.Success}`}

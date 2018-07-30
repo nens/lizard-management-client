@@ -20,5 +20,17 @@
   border-bottom: 1px solid #ccc;
   cursor: pointer;
 }
+
+.ResultRow:hover {
+  background-color: #00cdab;
+  color: #fff;
+}
+.Active {
+  background-color: #00cdab;
+  color: #fff;
+}
+.InActive {
+
+}
   
   

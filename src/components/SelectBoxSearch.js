@@ -17,15 +17,17 @@ class SelectBoxSearch extends Component {
   }
   componentDidMount() {
     console.log(
-      "[F] componentDidMount; this.props.selected.name =",
+      "[F] componentDidMount",
       this.props.choice && this.props.choice[this.props.choicesDisplayField]
     );
     this.setQuery(this.props);
-    // if (this.props.selected.name)
-    //   this.setState({ query: this.props.selected.name });
   }
   componentWillReceiveProps(newProps) {
-    console.log("[F] componentWillReceiveProps =", this.props.choice);
+    console.log("[F] componentWillReceiveProps");
+    if (newProps.validate()) {
+      console.log("*** newProps =", newProps);
+      this.setState({ query: newProps.choice });
+    }
     // this.setQuery(newProps);
     // if (newProps.selected.name)
     //   this.setState({ query: newProps.selected.name });
@@ -34,16 +36,21 @@ class SelectBoxSearch extends Component {
     if (e.key === "Escape") this.resetQuery();
   }
   handleInput(e) {
-    console.log("[F] handle input ");
+    // console.log("[F] handle input ");
     this.setState({ mustShowChoices: true, query: e.target.value });
   }
   setQuery(props) {
     if (this.props.choice) {
       if (this.props.choicesDisplayField) {
+        console.log(
+          "[F] setQuery this.props.choicesDisplayField ",
+          this.props.choice[this.props.choicesDisplayField]
+        );
         this.setState({
           query: this.props.choice[this.props.choicesDisplayField]
         });
       } else {
+        console.log("[F] setQuery this.props.choice ", this.props.choice);
         this.setState({ query: this.props.choice });
       }
     }
@@ -54,14 +61,18 @@ class SelectBoxSearch extends Component {
   render() {
     const {
       choices,
+      choice,
       isFetching,
       placeholder,
       updateModelValue,
+      resetModelValue,
       onKeyUp,
       inputId,
-      choicesDisplayField
+      choicesDisplayField,
+      validate
     } = this.props;
     const showOptions = choices.length > 0 && this.state.mustShowChoices;
+    const mustShowClearButton = validate(choice);
 
     return (
       <div className={`${styles.SelectChoice} form-input`}>
@@ -90,14 +101,14 @@ class SelectBoxSearch extends Component {
           <MDSpinner size={18} />
         </div>
 
-        {/* {valueInputField !== "" ? (
+        {mustShowClearButton ? (
           <ClearInputButton
             onClick={() => {
-              this.props.resetSelectedOrganisation();
+              resetModelValue();
               this.resetQuery();
             }}
           />
-        ) : null} */}
+        ) : null}
 
         {/* {results.length > 0 && this.state.mustShowChoices ? ( */}
         <div
@@ -121,6 +132,7 @@ class SelectBoxSearch extends Component {
                   // if user typed search string only show those that contain string
                   // TODO sort by search string ?
                   if (choicesDisplayField) {
+                    console.log("[F]");
                     return choiceItem[choicesDisplayField]
                       .toLowerCase()
                       .includes(this.state.query.toLowerCase());
@@ -132,11 +144,18 @@ class SelectBoxSearch extends Component {
                 }
               })
               .map((choiceItem, i) => {
+                const currentChoiceString =
+                  (choicesDisplayField && choiceItem[choicesDisplayField]) ||
+                  choiceItem;
+                //console.log(currentChoiceString, choice)
                 return (
                   <div
                     tabIndex={i + 1}
                     key={i}
-                    className={styles.ResultRow}
+                    className={`${styles.ResultRow} ${currentChoiceString ===
+                    choice
+                      ? styles.Active
+                      : styles.Inactive}`}
                     onMouseDown={() => {
                       // User selected a choice from the filtered ones:
                       updateModelValue(choiceItem);
