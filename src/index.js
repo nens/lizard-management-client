@@ -7,6 +7,7 @@ import { HashRouter as Router } from "react-router-dom";
 import App from "./App";
 
 import nl from "./translations/locales/nl.json";
+import en from "./translations/locales/en.json";
 import nldata from "react-intl/locale-data/nl";
 
 // Initialize Redux store
@@ -20,7 +21,8 @@ const basename = "/";
 
 // Create multiple languages object
 const localeData = {
-  nl: nl
+  nl: nl,
+  en: en
 };
 
 const preferredLocale =

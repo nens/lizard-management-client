@@ -71,6 +71,7 @@ class GenericSelectBoxComponent extends Component {
             setCurrentStep(step);
           }}
         />
+
         <div className={inputStyles.InputContainer}>
           <h3 className={`mt-0 ${active ? "text-muted" : null}`}>
             {titleComponent}

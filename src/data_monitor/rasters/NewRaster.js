@@ -97,6 +97,7 @@ class NewRasterModel extends Component {
     this.setObservationType = this.setObservationType.bind(this);
     this.setColorMap = this.setColorMap.bind(this);
     this.setSupplierId = this.setSupplierId.bind(this);
+    this.setSupplierCode = this.setSupplierCode.bind(this);
   }
 
   setCurrentStep(currentStep) {
@@ -133,26 +134,18 @@ class NewRasterModel extends Component {
   setSupplierId(supplierIdObj) {
     this.setState({ supplierId: supplierIdObj.username });
   }
-  // handleInputNotificationName(e) {
-  //   if (e.key === "Enter" && this.state.name) {
-  //     this.setState({
-  //       currentStep: 2
-  //     });
-  //   }
-  // }
+  setSupplierCode(supplierCode) {
+    this.setState({ supplierCode });
+  }
   goBackToStep(toStep) {
     if (toStep < this.state.currentStep) {
-      this.setState({
-        currentStep: toStep
-      });
+      this.setState({ currentStep: toStep });
     }
   }
 
   handleKeyDown(event) {
     if (event.key === "Enter") {
-      this.setState({
-        currentStep: this.state.currentStep + 1
-      });
+      this.setState({ currentStep: this.state.currentStep + 1 });
     }
   }
 
@@ -354,6 +347,25 @@ class NewRasterModel extends Component {
                   updateModelValue={this.setSupplierId} // cb function to *update* the value of e.g. a raster's name in the parent model
                   resetModelValue={() => this.setSupplierId({ username: "" })} // cb function to *reset* the value of e.g. a raster's name in the parent model
                   validate={() => this.state.supplierId !== ""} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
+                />
+                <GenericTextInputComponent
+                  titleComponent={<FormatMessage id="rasters.supplier_code" />} // <FormatText ... //>
+                  subtitleComponent={
+                    <FormatMessage
+                      id="rasters.unique_supplier_code"
+                      defaultMessage="The combination supplier name and supplier code should be unique"
+                    />
+                  } // <FormatText ... />
+                  placeholder="type supplier code here"
+                  multiline={false} // boolean for which input elem to use: text OR textarea
+                  step={8} // int for denoting which step it the GenericTextInputComponent refers to
+                  opened={currentStep === 8}
+                  currentStep={currentStep} // int for denoting which step is currently active
+                  setCurrentStep={this.setCurrentStep} // cb function for updating which step becomes active
+                  modelValue={this.state.supplierCode} // string: e.g. the name of a raster
+                  updateModelValue={this.setSupplierCode} // cb function to *update* the value of e.g. a raster's name in the parent model
+                  resetModelValue={() => this.setSupplierCode("")} // cb function to *reset* the value of e.g. a raster's name in the parent model
+                  validate={supplierCode => supplierCode.length > 1} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
                 />
               </div>
             </div>

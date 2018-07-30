@@ -130,6 +130,28 @@ class SelectBoxSearch extends Component {
                   }
                 }
               })
+              .sort((choiceItemA, choiceItemB) => {
+                let nameA, nameB;
+
+                if (choicesDisplayField) {
+                  nameA = choiceItemA[choicesDisplayField];
+                  nameB = choiceItemB[choicesDisplayField];
+                } else {
+                  nameA = choiceItemA;
+                  nameB = choiceItemB;
+                }
+
+                if (nameA < nameB) {
+                  return -1;
+                }
+
+                if (nameA > nameB) {
+                  return 1;
+                }
+
+                // names must be equal
+                return 0;
+              })
               .map((choiceItem, i) => {
                 const currentChoiceString =
                   (choicesDisplayField && choiceItem[choicesDisplayField]) ||
