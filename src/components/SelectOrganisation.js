@@ -16,16 +16,11 @@ class SelectOrganisation extends Component {
     this.handleKeyUp = this.handleKeyUp.bind(this);
   }
   componentDidMount() {
-    console.log(
-      "[F] componentDidMount; this.props.selected.name =",
-      this.props.selected.name
-    );
     this.setQuery(this.props);
     // if (this.props.selected.name)
     //   this.setState({ query: this.props.selected.name });
   }
   componentWillReceiveProps(newProps) {
-    console.log("[F] componentWillReceiveProps =", newProps.selected.name);
     this.setQuery(newProps);
     // if (newProps.selected.name)
     //   this.setState({ query: newProps.selected.name });

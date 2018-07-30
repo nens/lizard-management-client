@@ -39,7 +39,6 @@ class ActionBar extends Component {
       ...document.querySelectorAll("input[type=checkbox]:checked")
     ];
     const values = checkboxes.map(cb => cb.value);
-    console.log("Selected:", values);
   }
 
   handleSelectAllCheckboxes() {

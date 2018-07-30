@@ -103,9 +103,6 @@ class NewNotification extends Component {
       });
     });
   }
-  componentDidCatch() {
-    console.log("componentDidCatch()");
-  }
   componentWillUnmount() {
     document.removeEventListener("keydown", this.hideConfigureThreshold, false);
   }
@@ -696,7 +693,7 @@ class NewNotification extends Component {
                                     type="button"
                                     className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link} ${gridStyles.FloatRight}`}
                                     onClick={() =>
-                                      console.log(
+                                      console.error(
                                         "Remove still has to be implemented..."
                                       )}
                                   >

@@ -26,7 +26,6 @@ class GenericWizardStep extends Component {
     } = this.props;
     const showCheckMark = validate(modelValue);
     const showNextButton = validate(modelValue);
-    console.log("opened", opened);
 
     return (
       <div className={styles.Step} id="Step">

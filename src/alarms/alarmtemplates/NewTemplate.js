@@ -47,7 +47,7 @@ class NewTemplate extends Component {
     try {
       document.getElementById("templateName").focus();
     } catch (e) {
-      console.log("Could not focus() on input element..");
+      console.error("Could not focus() on input element..");
     }
   }
   handleClickCreateTemplateButton() {

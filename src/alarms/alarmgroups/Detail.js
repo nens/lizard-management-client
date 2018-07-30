@@ -19,7 +19,6 @@ class Detail extends Component {
       contactgroup: null,
       isFetching: true
     };
-    this.handleCheckboxes = this.handleCheckboxes.bind(this);
     this.handleSelectAllCheckboxes = this.handleSelectAllCheckboxes.bind(this);
     this.handleDeselectAllCheckboxes = this.handleDeselectAllCheckboxes.bind(
       this
@@ -47,14 +46,6 @@ class Detail extends Component {
           isFetching: false
         });
       });
-  }
-
-  handleCheckboxes(e) {
-    const checkboxes = [
-      ...document.querySelectorAll("input[type=checkbox]:checked")
-    ];
-    const values = checkboxes.map(cb => cb.value);
-    console.log("Selected:", values);
   }
 
   handleSelectAllCheckboxes() {

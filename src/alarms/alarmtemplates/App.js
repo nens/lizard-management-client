@@ -161,10 +161,6 @@ class App extends Component {
               className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
             >
               <div>
-                {/*<ActionBar
-                  handleFilter={this.handleFilter}
-                  doDeleteContactsById={() => console.log("test")}
-                />*/}
                 <table
                   className={`${tableStyles.Table} ${tableStyles.Responsive}`}
                 >

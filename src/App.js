@@ -34,7 +34,6 @@ class App extends Component {
     this.updateViewportDimensions = this.updateViewportDimensions.bind(this);
   }
   componentDidMount() {
-    console.log("[F] componentDidMount");
     window.addEventListener("online", e => this.updateOnlineStatus(e));
     window.addEventListener("offline", e => this.updateOnlineStatus(e));
     window.addEventListener("resize", e => this.updateViewportDimensions(e));
@@ -120,7 +119,7 @@ class App extends Component {
                   <div className={styles.TopNav}>
                     <div style={{ display: "none" }}>
                       <a href="#apps">
-                        <i className={"material-icons ${styles.AppIcon}"}>
+                        <i className={`material-icons ${styles.AppIcon}`}>
                           apps
                         </i>
                         Apps

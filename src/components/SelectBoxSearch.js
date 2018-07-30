@@ -16,16 +16,10 @@ class SelectBoxSearch extends Component {
     this.handleKeyUp = this.handleKeyUp.bind(this);
   }
   componentDidMount() {
-    console.log(
-      "[F] componentDidMount",
-      this.props.choice && this.props.choice[this.props.choicesDisplayField]
-    );
     this.setQuery(this.props);
   }
   componentWillReceiveProps(newProps) {
-    console.log("[F] componentWillReceiveProps");
     if (newProps.validate()) {
-      console.log("*** newProps =", newProps);
       this.setState({ query: newProps.choice });
     }
     // this.setQuery(newProps);
@@ -36,21 +30,15 @@ class SelectBoxSearch extends Component {
     if (e.key === "Escape") this.resetQuery();
   }
   handleInput(e) {
-    // console.log("[F] handle input ");
     this.setState({ mustShowChoices: true, query: e.target.value });
   }
   setQuery(props) {
     if (this.props.choice) {
       if (this.props.choicesDisplayField) {
-        console.log(
-          "[F] setQuery this.props.choicesDisplayField ",
-          this.props.choice[this.props.choicesDisplayField]
-        );
         this.setState({
           query: this.props.choice[this.props.choicesDisplayField]
         });
       } else {
-        console.log("[F] setQuery this.props.choice ", this.props.choice);
         this.setState({ query: this.props.choice });
       }
     }
@@ -132,7 +120,6 @@ class SelectBoxSearch extends Component {
                   // if user typed search string only show those that contain string
                   // TODO sort by search string ?
                   if (choicesDisplayField) {
-                    console.log("[F]");
                     return choiceItem[choicesDisplayField]
                       .toLowerCase()
                       .includes(this.state.query.toLowerCase());
@@ -147,7 +134,6 @@ class SelectBoxSearch extends Component {
                 const currentChoiceString =
                   (choicesDisplayField && choiceItem[choicesDisplayField]) ||
                   choiceItem;
-                //console.log(currentChoiceString, choice)
                 return (
                   <div
                     tabIndex={i + 1}
@@ -160,7 +146,6 @@ class SelectBoxSearch extends Component {
                       // User selected a choice from the filtered ones:
                       updateModelValue(choiceItem);
                       //this.resetQuery();
-                      console.log("[onMouseDown] select search", choiceItem);
                       this.setState({
                         mustShowChoices: false,
                         query: choicesDisplayField
