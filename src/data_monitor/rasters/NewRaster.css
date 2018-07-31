@@ -1,0 +1,7 @@
+.custom_rc_checkbox_class:nth-child(2) {
+  background-color: red;
+}
+
+.rc-checkbox-inner {
+  background-color: red;
+}

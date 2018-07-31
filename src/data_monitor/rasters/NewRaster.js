@@ -6,6 +6,11 @@ import { withRouter } from "react-router-dom";
 import FormatMessage from "../../utils/FormatMessage.js";
 import GenericTextInputComponent from "../../components/GenericTextInputComponent";
 import GenericSelectBoxComponent from "../../components/GenericSelectBoxComponent";
+
+import Checkbox from "rc-checkbox";
+import RcCheckboxStyles from "rc-checkbox/assets/index.css";
+import styles from "./NewRaster.css";
+
 // import NewRasterName from "./NewRasterName";
 // import { NewRasterOrganisation } from "./NewRasterOrganisation";
 // import NewRasterStorePath from "./NewRasterStorePath";
@@ -175,21 +180,20 @@ class NewRasterModel extends Component {
   render() {
     const {
       rasterName,
-      //selectedOrganisation,
       currentStep,
       storePathName,
       description,
       aggregationType
     } = this.state;
 
-    //const { organisations } = this.props.bootstrap;
-
     return (
       <div>
         <div className={gridStyles.Container}>
           <div className={`${gridStyles.Row}`}>
             <div
-              className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
+              className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${
+                gridStyles.colSm12
+              } ${gridStyles.colXs12}`}
             >
               <div id="steps" style={{ margin: "20px 0 0 20px" }}>
                 {/* <NewRasterName
@@ -367,6 +371,15 @@ class NewRasterModel extends Component {
                   resetModelValue={() => this.setSupplierCode("")} // cb function to *reset* the value of e.g. a raster's name in the parent model
                   validate={supplierCode => supplierCode.length > 1} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
                 />
+                <label>
+                  <Checkbox
+                    //className="custom_rc_checkbox_class"
+                    //className={styles.custom_rc_checkbox_class}
+                    onChange={() => console.log("Checkbox change detected!")}
+                    disabled={false}
+                  />
+                  &nbsp;checking our checkbox
+                </label>
               </div>
             </div>
           </div>
@@ -394,7 +407,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 };
 
 const NewRaster = withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(NewRasterModel)
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(NewRasterModel)
 );
 
 export { NewRaster };
