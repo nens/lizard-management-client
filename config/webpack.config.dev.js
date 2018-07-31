@@ -157,7 +157,10 @@ module.exports = {
           // in development "style" loader enables hot editing of CSS.
           {
             test: /\.css$/,
-            exclude: /node_modules\/rc-checkbox\/assets\/index.css$/,
+            exclude: [
+              /node_modules\/rc-checkbox\/assets\/index.css$/,
+              /src\/data_monitor\/rasters\/NewRaster.css$/
+            ],
             use: [
               require.resolve("style-loader"),
               {
@@ -206,30 +209,24 @@ module.exports = {
                 }
               }
             ]
-
-            // use: [
-            //   require.resolve('style-loader'),
-            //   {
-            //     loader: require.resolve('css-loader'),
-            //     options: {
-            //       importLoaders: 1,
-            //       modules: true,
-            //       localIdentName: "[local]"
-            //     },
-            //   }
-            // ]
-
-            // use: [
-            //   require.resolve('style-loader'),
-            //   {
-            //     loader: require.resolve('css-loader'),
-            //     options: {
-            //       importLoaders: 1,
-            //       modules: true,
-            //       localIdentName: "[local]"
-            //     },
-            //   },
-            // ],
+          },
+          //
+          {
+            test: /src\/data_monitor\/rasters\/NewRaster.css$/,
+            use: [
+              {
+                loader: require.resolve("style-loader")
+                // options: {
+                //   localIdentName: "[local]"
+                // },
+              },
+              {
+                loader: require.resolve("css-loader"),
+                options: {
+                  localIdentName: "[local]"
+                }
+              }
+            ]
           },
           // "file" loader makes sure those assets get served by WebpackDevServer.
           // When you `import` an asset, you get its (virtual) filename.

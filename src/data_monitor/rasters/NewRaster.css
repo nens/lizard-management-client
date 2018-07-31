@@ -1,7 +1,28 @@
-.custom_rc_checkbox_class:nth-child(2) {
+/* .custom_rc_checkbox_class:nth-child(2) {
   background-color: red;
+} */
+
+/* .rc-checkbox-inner {
+  background-color: red;
+} */
+
+.rc-checkbox-checked .rc-checkbox-inner {
+  border-color: red;
+  background-color:red;
+  width: 34px;
+  height: 34px;
 }
 
-.rc-checkbox-inner {
-  background-color: red;
+.rc-checkbox-checked:hover .rc-checkbox-inner {
+  background-color:red;
 }
+
+.rc-checkbox-inner:hover {
+  background-color:red;
+}
+
+.rc-checkbox:hover .rc-checkbox-inner,
+.rc-checkbox-input:focus + .rc-checkbox-inner {
+  border-color:red;
+}
+

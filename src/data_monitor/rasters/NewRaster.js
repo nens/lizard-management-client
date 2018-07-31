@@ -186,6 +186,8 @@ class NewRasterModel extends Component {
       aggregationType
     } = this.state;
 
+    console.log("styles", styles);
+
     return (
       <div>
         <div className={gridStyles.Container}>
