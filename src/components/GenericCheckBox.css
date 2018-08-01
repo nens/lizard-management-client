@@ -1,5 +1,6 @@
 .Container {
   cursor: pointer;
+  display: inline-block;
 }
 .Label {
   vertical-align:middle;
