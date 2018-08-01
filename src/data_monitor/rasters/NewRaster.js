@@ -6,6 +6,7 @@ import { withRouter } from "react-router-dom";
 import FormatMessage from "../../utils/FormatMessage.js";
 import GenericTextInputComponent from "../../components/GenericTextInputComponent";
 import GenericSelectBoxComponent from "../../components/GenericSelectBoxComponent";
+import GenericCheckBox from "../../components/GenericCheckBox";
 
 import Checkbox from "rc-checkbox";
 import RcCheckboxStyles from "rc-checkbox/assets/index.css";
@@ -103,6 +104,7 @@ class NewRasterModel extends Component {
     this.setColorMap = this.setColorMap.bind(this);
     this.setSupplierId = this.setSupplierId.bind(this);
     this.setSupplierCode = this.setSupplierCode.bind(this);
+    this.setTemporalBool = this.setTemporalBool.bind(this);
   }
 
   setCurrentStep(currentStep) {
@@ -147,6 +149,17 @@ class NewRasterModel extends Component {
       this.setState({ currentStep: toStep });
     }
   }
+  setTemporalBool(temporalBool) {
+    const temporal = this.state.temporal;
+    this.setState({
+      temporal: {
+        bool: temporalBool,
+        origin: temporal.origin,
+        intervalInSeconds: temporal.intervalInSeconds,
+        optimizer: temporal.optimizer
+      }
+    });
+  }
 
   handleKeyDown(event) {
     if (event.key === "Enter") {
@@ -185,8 +198,6 @@ class NewRasterModel extends Component {
       description,
       aggregationType
     } = this.state;
-
-    console.log("styles", styles);
 
     return (
       <div>
@@ -373,7 +384,7 @@ class NewRasterModel extends Component {
                   resetModelValue={() => this.setSupplierCode("")} // cb function to *reset* the value of e.g. a raster's name in the parent model
                   validate={supplierCode => supplierCode.length > 1} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
                 />
-                <label>
+                {/* <label>
                   <Checkbox
                     //className="custom_rc_checkbox_class"
                     //className={styles.custom_rc_checkbox_class}
@@ -381,7 +392,12 @@ class NewRasterModel extends Component {
                     disabled={false}
                   />
                   &nbsp;checking our checkbox
-                </label>
+                </label> */}
+                <GenericCheckBox
+                  modelValue={this.state.temporal.bool}
+                  label={"test own checkbox"}
+                  updateModelValue={this.setTemporalBool}
+                />
               </div>
             </div>
           </div>

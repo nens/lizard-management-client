@@ -1,80 +1,69 @@
 import React, { Component } from "react";
 
 import styles from "./GenericCheckBox.css";
-import formStyles from "../styles/Forms.css";
-import displayStyles from "../styles/Display.css";
+// import formStyles from "../styles/Forms.css";
+// import displayStyles from "../styles/Display.css";
 
-class SelectBoxSimple extends Component {
+class GenericCheckBox extends Component {
   constructor(props) {
     super(props);
-    this.state = { showChoices: false };
-    this.handleKeyUp = this.handleKeyUp.bind(this);
+    this.state = {
+      // boolean to hold if mouse is hoovering over the element after unchecking it.
+      // In this case checkmark '✔' should not appear on hoover
+      // this to prevent user from seeing confusing checkmark after unchecking it
+      hoverAfterUncheck: false,
+      hover: false
+    };
   }
-  handleKeyUp(e) {
-    if (e.key === "Escape") {
-      this.setState({ showChoices: false });
+
+  setHoverAfterUncheck(hoverAfterUncheck) {
+    this.setState({ hover: hoverAfterUncheck });
+
+    if (hoverAfterUncheck === true) {
+      if (this.props.modelValue === true) {
+        this.setState({ hoverAfterUncheck });
+      }
+    } else {
+      this.setState({ hoverAfterUncheck });
     }
   }
 
   render() {
     const {
-      choices,
-      choice,
-      updateModelValue,
-      onKeyUp,
-      inputId,
-      placeholder
+      modelValue, // boolean
+      updateModelValue, // function to update modelvalue on parent
+      label // text to set the label
     } = this.props;
-    const { showChoices } = this.state;
+    const { hoverAfterUncheck, hover } = this.state;
+
+    const checkedClass =
+      modelValue === true ? styles.Checked : styles.Unchecked;
+    // only set hover css class if element is unchecked and mouse is not hovering after unchecking the checkbox
+    const hoverClass =
+      modelValue === false && hoverAfterUncheck === false && hover === true
+        ? styles.Hover
+        : null;
+
     return (
-      <div className={`${styles.SelectGeneralClass} form-input`}>
-        <input
-          id={inputId}
-          tabIndex="-1"
-          type="text"
-          autoComplete="false"
-          className={formStyles.FormControl}
-          placeholder={placeholder} //"- select a value -"
-          value={choice}
-          onClick={() => this.setState({ showChoices: true })}
-          onBlur={() => this.setState({ showChoices: false })}
-          onKeyUp={event => {
-            onKeyUp(event);
-            this.handleKeyUp(event);
-          }}
-        />
-        <div
-          className={
-            showChoices
-              ? styles.Results
-              : displayStyles.None + " " + styles.Results
-          }
+      <div
+        className={styles.Container}
+        onMouseUp={e => {
+          this.setHoverAfterUncheck(true);
+          updateModelValue(!modelValue);
+        }}
+        onMouseEnter={e => this.setHoverAfterUncheck(true)}
+        onMouseLeave={e => this.setHoverAfterUncheck(false)}
+      >
+        <span
+          className={`${styles.CheckboxSpan} ${checkedClass} ${hoverClass}`}
         >
-          <Scrollbars autoHeight autoHeightMin={50} autoHeightMax={400}>
-            {choices.map((choiceItem, i) => {
-              return (
-                <div
-                  tabIndex={i + 1}
-                  key={i}
-                  className={`${styles.ResultRow} ${choiceItem === choice
-                    ? styles.Active
-                    : styles.Inactive}`}
-                  onMouseDown={e => {
-                    this.setState({
-                      showChoices: false
-                    });
-                    updateModelValue(choiceItem);
-                  }}
-                >
-                  {choiceItem}
-                </div>
-              );
-            })}
-          </Scrollbars>
-        </div>
+          {/* always render checkmark but make color transparent with css */}
+          {"✔"}
+        </span>
+        <label className={styles.Label}>{label}</label>
       </div>
     );
   }
 }
 
-export default SelectBoxSimple;
+export default GenericCheckBox;
