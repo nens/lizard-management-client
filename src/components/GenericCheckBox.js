@@ -16,7 +16,7 @@ class GenericCheckBox extends Component {
     };
   }
 
-  setHoverAfterUncheck(hoverAfterUncheck) {
+  setHoverState(hoverAfterUncheck) {
     this.setState({ hover: hoverAfterUncheck });
 
     if (hoverAfterUncheck === true) {
@@ -48,12 +48,19 @@ class GenericCheckBox extends Component {
       <div
         className={styles.Container}
         onMouseUp={e => {
-          this.setHoverAfterUncheck(true);
+          this.setHoverState(true);
           updateModelValue(!modelValue);
         }}
-        onMouseEnter={e => this.setHoverAfterUncheck(true)}
-        onMouseLeave={e => this.setHoverAfterUncheck(false)}
+        onMouseEnter={e => this.setHoverState(true)}
+        onMouseLeave={e => this.setHoverState(false)}
       >
+        {/* this input element has currently no use but should be kept in sync with the custom checkbox */}
+        {/* this way it will be possible to use the standard browser funvtionality as onfocus and screenreaders etc */}
+        <input
+          type="checkbox"
+          // style={{opacity:0}}
+          checked={modelValue}
+        />
         <span
           className={`${styles.CheckboxSpan} ${checkedClass} ${hoverClass}`}
         >

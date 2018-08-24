@@ -12,12 +12,14 @@
   display: inline-block;
   vertical-align:middle;
   text-align: center;
-  line-height: 34px;
-  width: 34px;
-  height: 34px;
+  /* size same as input elements on page 24px + 2 padding 10px  */
+  box-sizing: border-box;
+  line-height: 44px;
+  width: 44px;
+  height: 44px;
   border-radius: .25rem;
   border: 1px solid #ced4da;
-  font-size: 2.5rem;
+  font-size: 3.3rem;
   border-radius: .25rem;
   cursor: pointer;
   color: rgba(0, 159, 134, 1);
@@ -37,7 +39,7 @@
   }
 }
 .Unchecked {
-  color: rgba(0, 159, 134, 0);
+  color: rgba(0, 159, 134, 0.1);
 }
 
 /* hover check is now done with javascript no longer with css */
@@ -45,17 +47,23 @@
 /* if user uncheckes the checkbox hover animation is confusing */
 /* .Container:hover .Hover { */
 .Hover {
+  background-color: #fff;
+  border-color: #80bdff;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+
   color: rgba(0, 159, 134, 0.1);
-  animation-timing-function: ease-out;
-  animation-duration: 2s;
+  animation-timing-function: ease;
+  animation-duration: 1.5s;
   animation-name: hover-animation;
 }
 @keyframes hover-animation {
   0% {
     color: rgba(0, 159, 134, 0)
   }
-  7% {
-    color: rgba(0, 159, 134, 0.2)
+  5% {
+    color: rgba(0, 159, 134, 0.27)
   }
   100% {
     color: rgba(0, 159, 134, 0.1)
