@@ -2,6 +2,9 @@ import gridStyles from "../../styles/Grid.css";
 import React, { Component } from "react";
 import { addNotification } from "../../actions";
 import { connect } from "react-redux";
+import moment from "moment";
+import InputMoment from "input-moment";
+import "../../../node_modules/input-moment/dist/input-moment.css";
 import { withRouter } from "react-router-dom";
 import FormatMessage from "../../utils/FormatMessage.js";
 import GenericTextInputComponent from "../../components/GenericTextInputComponent";
@@ -42,7 +45,7 @@ class NewRasterModel extends Component {
       // },
       // new temporal structure:
       temporalBool: false,
-      temporalOrigin: "2000-01-01T00:00:00Z",
+      temporalOrigin: moment(), //"2000-01-01T00:00:00Z",
       temporalIntervalUnit: "seconds", // for now assume seconds// one of [seconds minutes hours days weeks] no months years because those are not a static amount of seconds..
       temporalIntervalAmount: "", //60*60, //minutes times seconds = hour // positive integer. amount of temporalIntervalUnit
       temporalOptimizer: true, // default true, not set by the user for first iteration
@@ -110,6 +113,7 @@ class NewRasterModel extends Component {
     this.setSupplierCode = this.setSupplierCode.bind(this);
     this.setTemporalBool = this.setTemporalBool.bind(this);
     this.setTemporalIntervalAmount = this.setTemporalIntervalAmount.bind(this);
+    this.setTemporalOrigin = this.setTemporalOrigin.bind(this);
   }
 
   setCurrentStep(currentStep) {
@@ -159,6 +163,9 @@ class NewRasterModel extends Component {
   }
   setTemporalIntervalAmount(temporalIntervalAmount) {
     this.setState({ temporalIntervalAmount });
+  }
+  setTemporalOrigin(temporalOrigin) {
+    this.setState({ temporalOrigin });
   }
 
   handleKeyDown(event) {
@@ -433,6 +440,22 @@ class NewRasterModel extends Component {
                   updateModelValue={this.setTemporalIntervalAmount}
                   resetModelValue={() => this.setTemporalIntervalAmount("")}
                   validate={value => /^[1-9][0-9]*$/.test(value)}
+                />
+                <input
+                  className="output"
+                  type="text"
+                  value={this.state.temporalOrigin.format("llll")}
+                  readOnly
+                />
+                <div />
+                <InputMoment
+                  moment={this.state.temporalOrigin}
+                  onChange={e => this.setTemporalOrigin(e)}
+                  // onSave={e=>this.setTemporalOrigin(e)}
+                  minStep={1} // default
+                  hourStep={1} // default
+                  prevMonthIcon="ion-ios-arrow-left" // default
+                  nextMonthIcon="ion-ios-arrow-right" // default
                 />
               </div>
             </div>

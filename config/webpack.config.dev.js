@@ -159,6 +159,7 @@ module.exports = {
             test: /\.css$/,
             exclude: [
               /node_modules\/rc-checkbox\/assets\/index.css$/,
+              /node_modules\/input-moment\/dist\/input-moment.css$/,
               /src\/data_monitor\/rasters\/NewRaster.css$/
             ],
             use: [
@@ -195,6 +196,23 @@ module.exports = {
           },
           {
             test: /node_modules\/rc-checkbox\/assets\/index.css$/,
+            use: [
+              {
+                loader: require.resolve("style-loader")
+                // options: {
+                //   localIdentName: "[local]"
+                // },
+              },
+              {
+                loader: require.resolve("css-loader"),
+                options: {
+                  localIdentName: "[local]"
+                }
+              }
+            ]
+          },
+          {
+            test: /node_modules\/input-moment\/dist\/input-moment.css$/,
             use: [
               {
                 loader: require.resolve("style-loader")
