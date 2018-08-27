@@ -412,6 +412,12 @@ class NewRasterModel extends Component {
                     "Check if Raster is a temporal raster: it changes over time"
                   }
                   updateModelValue={this.setTemporalBool}
+                  yesCheckedComponent={
+                    <FormatMessage id="rasters.yes_the_raster_is_temporal" />
+                  }
+                  noNotCheckedComponent={
+                    <FormatMessage id="rasters.no_the_raster_is_not_temporal" />
+                  }
                 />
                 <GenericTextInputComponent
                   titleComponent={

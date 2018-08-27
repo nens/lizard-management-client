@@ -43,6 +43,8 @@ class GenericSelectBoxComponent extends Component {
     const {
       titleComponent, // <FormatText ... //>
       subtitleComponent, // <FormatText ... />
+      yesCheckedComponent,
+      noNotCheckedComponent,
       step, // int for denoting which step it this GenericSelectBoxComponent refers to
       currentStep, // int for denoting which step is currently active
       setCurrentStep, // cb function for updating which step becomes active
@@ -71,7 +73,16 @@ class GenericSelectBoxComponent extends Component {
           <h3 className={`mt-0 ${active ? "text-muted" : null}`}>
             {titleComponent}
             {showCheckMark ? <CheckMark /> : null}
+            <span style={{ fontWeight: 400 }}>
+              {showCheckMark && modelValue === true
+                ? yesCheckedComponent
+                : null}
+              {showCheckMark && modelValue === false
+                ? noNotCheckedComponent
+                : null}
+            </span>
           </h3>
+
           <div style={{ display: opened ? "block" : "none" }}>
             <p className="text-muted">{subtitleComponent}</p>
             <div
