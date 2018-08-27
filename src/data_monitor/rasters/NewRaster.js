@@ -6,7 +6,7 @@ import { withRouter } from "react-router-dom";
 import FormatMessage from "../../utils/FormatMessage.js";
 import GenericTextInputComponent from "../../components/GenericTextInputComponent";
 import GenericSelectBoxComponent from "../../components/GenericSelectBoxComponent";
-import GenericCheckBox from "../../components/GenericCheckBox";
+import GenericCheckBoxComponent from "../../components/GenericCheckBoxComponent";
 
 import Checkbox from "rc-checkbox";
 import RcCheckboxStyles from "rc-checkbox/assets/index.css";
@@ -36,12 +36,20 @@ class NewRasterModel extends Component {
       storePathName: "",
       slug: "",
       description: "",
-      temporal: {
-        bool: false,
-        origin: "2000-01-01T00:00:00",
-        intervalInSeconds: 60,
-        optimizer: true
-      },
+      // temporal: {
+      //   bool: false,
+      //   origin: "2000-01-01T00:00:00",
+      //   // interval will eventually be saved in seconds so intervalUnit * intervalAmount
+      //   intervalUnit: 'seconds', // one of [seconds minutes hours days weeks] no months years because those are not a static amount of seconds..
+      //   intervalAmount: 0, // positive integer
+      //   optimizer: true
+      // },
+      // new temporal structure:
+      temporalBool: false,
+      temporalOrigin: "2000-01-01T00:00:00Z",
+      temporalIntervalUnit: "seconds", // one of [seconds minutes hours days weeks] no months years because those are not a static amount of seconds..
+      temporalIntervalAmount: 0, // positive integer. amount of temporalIntervalUnit
+      temporalOptimizer: true, // default true, not set by the user for first iteration
       // TODO let colormap have min and max as below with styles
       colorMap: "",
       // styles: {
@@ -150,15 +158,7 @@ class NewRasterModel extends Component {
     }
   }
   setTemporalBool(temporalBool) {
-    const temporal = this.state.temporal;
-    this.setState({
-      temporal: {
-        bool: temporalBool,
-        origin: temporal.origin,
-        intervalInSeconds: temporal.intervalInSeconds,
-        optimizer: temporal.optimizer
-      }
-    });
+    this.setState({ temporalBool });
   }
 
   handleKeyDown(event) {
@@ -393,11 +393,50 @@ class NewRasterModel extends Component {
                   />
                   &nbsp;checking our checkbox
                 </label> */}
-                <GenericCheckBox
+                {/* <GenericCheckBox
+                  titleComponent={<FormatMessage id="rasters.supplier_code" />} // <FormatText ... //>
                   modelValue={this.state.temporal.bool}
                   label={"test own checkbox"}
                   updateModelValue={this.setTemporalBool}
+                /> */}
+                <GenericCheckBoxComponent
+                  titleComponent={
+                    <FormatMessage id="rasters.raster_is_temporal" />
+                  } // <FormatText ... //>
+                  step={9}
+                  opened={currentStep === 9}
+                  currentStep={currentStep}
+                  setCurrentStep={this.setCurrentStep}
+                  modelValue={this.state.temporalBool}
+                  label={
+                    "Check if Raster is a temporal raster: it changes over time"
+                  }
+                  updateModelValue={this.setTemporalBool}
                 />
+                {/* <div class={modelValue.bool===true ? "" : displayStyles.None}>
+                <span>More information required for temporal rasters</span>
+                <input
+                  tabIndex="-1"
+                  type="text"
+                  autoComplete="false"
+                  className={formStyles.FormControl}
+                  placeholder={60}
+                  //onChange={e => this.validateAndSaveToParent(e.target.value)}
+                  //value={this.state.inputText}
+                  //onKeyUp={e => this.handleEnter(e)}
+                /> */}
+                {/* <SelectBoxSimple
+                  choices={["weeks", "days", "hours", "minutes", "seconds"]}
+                  choice={modelValue.intervalUnit}
+                  isFetching={false}
+                  choicesDisplayField={null}
+                  updateModelValue={(frequencyEntity)=>{}}
+                  onKeyUp={e => this.handleEnter(e)}
+                  inputId={titleComponent.props.id + "_input"}
+                  placeholder={'test'}
+                  // validate={validate}
+                /> */}
+                {/* </div> */}
               </div>
             </div>
           </div>

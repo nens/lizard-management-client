@@ -58,7 +58,7 @@ class GenericCheckBox extends Component {
         {/* this way it will be possible to use the standard browser funvtionality as onfocus and screenreaders etc */}
         <input
           type="checkbox"
-          // style={{opacity:0}}
+          style={{ opacity: 0, position: "absolute" }}
           checked={modelValue}
         />
         <span

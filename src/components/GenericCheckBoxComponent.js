@@ -1,0 +1,142 @@
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
+
+import CheckMark from "./CheckMark";
+import StepIndicator from "./StepIndicator";
+import FormatMessage from "../utils/FormatMessage.js";
+import GenericCheckBox from "./GenericCheckBox.js";
+import SelectBoxSimple from "./SelectBoxSimple.js";
+
+import styles from "./GenericCheckBoxComponent.css";
+import formStyles from "../styles/Forms.css";
+import buttonStyles from "../styles/Buttons.css";
+import inputStyles from "../styles/Input.css";
+import displayStyles from "../styles/Display.css";
+
+class GenericSelectBoxComponent extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      wasEverOpen: false // holds if the question was ever opened by the user. If not no checkmark should be shown
+    };
+  }
+  setLocalStateFromProps(props) {
+    // for checkbox it is probably not convenient to set the focus
+    // technically difficult and it would also cause a difference in behaviour:
+    // What does hitting enter mean? yes select the checkbox OR go to next step ??
+    // // If this component is the "current step component", set the page focus to the components
+    // // input field:
+    // if (props.step === props.currentStep) {
+    //   const inputElem = document.getElementById(
+    //     this.props.titleComponent.props.id + "_input"
+    //   );
+    //   // inputElem.focus(); does not work outside setTimeout. Is this the right solution?
+    //   setTimeout(function() {
+    //     inputElem.focus();
+    //   }, 0);
+    // }
+  }
+  handleEnter(event) {
+    if (
+      /*this.props.validate(this.props.modelValue) && */ event.keyCode === 13
+    ) {
+      // 13 is keycode 'enter' (works only when current input validates)
+      this.props.setCurrentStep(this.props.step + 1);
+    }
+  }
+  componentWillReceiveProps(newProps) {
+    //this.setLocalStateFromProps(newProps);
+    const active = newProps.step === newProps.currentStep;
+
+    if (active === true && this.state.wasEverOpen === false) {
+      this.setState({ wasEverOpen: true });
+    }
+  }
+
+  render() {
+    const {
+      titleComponent, // <FormatText ... //>
+      subtitleComponent, // <FormatText ... />
+      step, // int for denoting which step it this GenericSelectBoxComponent refers to
+      currentStep, // int for denoting which step is currently active
+      setCurrentStep, // cb function for updating which step becomes active
+      opened, // complete question and input fields become visible if set to true
+      modelValue, // string: e.g. the name of a raster
+      updateModelValue, // cb function to *update* the value of e.g. a raster's name in the parent model
+      label
+    } = this.props;
+    const active = step === currentStep;
+    const showCheckMark = this.state.wasEverOpen; //true;//= validate(modelValue);
+    const showNextButton = true; //choices
+    //   .map(e => (choicesDisplayField ? e[choicesDisplayField] : e))
+    //   .includes(modelValue);
+
+    return (
+      <div className={styles.Step} id={"Step-" + step}>
+        <StepIndicator
+          indicator={step}
+          active={active}
+          handleClick={() => {
+            setCurrentStep(step);
+          }}
+        />
+
+        <div className={inputStyles.InputContainer}>
+          <h3 className={`mt-0 ${active ? "text-muted" : null}`}>
+            {titleComponent}
+            {showCheckMark ? <CheckMark /> : null}
+          </h3>
+          <div style={{ display: opened ? "block" : "none" }}>
+            <p className="text-muted">{subtitleComponent}</p>
+            <div
+              className={
+                formStyles.FormGroup + " " + inputStyles.PositionRelative
+              }
+            >
+              <GenericCheckBox
+                titleComponent={titleComponent} // <FormatText ... //>
+                modelValue={modelValue}
+                label={label}
+                updateModelValue={updateModelValue}
+              />
+
+              {/* add div to force next button to newline. 
+              Probably should use styling instead */}
+              <div />
+
+              {showNextButton ? (
+                <button
+                  className={`${buttonStyles.Button} ${buttonStyles.Success}`}
+                  style={{ marginTop: 10 }}
+                  onClick={() => {
+                    setCurrentStep(step + 1);
+                  }}
+                >
+                  <FormatMessage id="notifications_app.next_step" />
+                </button>
+              ) : null}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+}
+
+const mapStateToProps = state => {
+  return {};
+};
+
+const mapDispatchToProps = dispatch => {
+  return {};
+};
+
+GenericSelectBoxComponent = withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(GenericSelectBoxComponent)
+);
+
+export default GenericSelectBoxComponent;
