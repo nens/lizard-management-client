@@ -8,10 +8,6 @@ import GenericTextInputComponent from "../../components/GenericTextInputComponen
 import GenericSelectBoxComponent from "../../components/GenericSelectBoxComponent";
 import GenericCheckBoxComponent from "../../components/GenericCheckBoxComponent";
 
-import Checkbox from "rc-checkbox";
-import RcCheckboxStyles from "rc-checkbox/assets/index.css";
-import styles from "./NewRaster.css";
-
 // import NewRasterName from "./NewRasterName";
 // import { NewRasterOrganisation } from "./NewRasterOrganisation";
 // import NewRasterStorePath from "./NewRasterStorePath";
@@ -47,8 +43,8 @@ class NewRasterModel extends Component {
       // new temporal structure:
       temporalBool: false,
       temporalOrigin: "2000-01-01T00:00:00Z",
-      temporalIntervalUnit: "seconds", // one of [seconds minutes hours days weeks] no months years because those are not a static amount of seconds..
-      temporalIntervalAmount: 0, // positive integer. amount of temporalIntervalUnit
+      temporalIntervalUnit: "seconds", // for now assume seconds// one of [seconds minutes hours days weeks] no months years because those are not a static amount of seconds..
+      temporalIntervalAmount: "", //60*60, //minutes times seconds = hour // positive integer. amount of temporalIntervalUnit
       temporalOptimizer: true, // default true, not set by the user for first iteration
       // TODO let colormap have min and max as below with styles
       colorMap: "",
@@ -113,6 +109,7 @@ class NewRasterModel extends Component {
     this.setSupplierId = this.setSupplierId.bind(this);
     this.setSupplierCode = this.setSupplierCode.bind(this);
     this.setTemporalBool = this.setTemporalBool.bind(this);
+    this.setTemporalIntervalAmount = this.setTemporalIntervalAmount.bind(this);
   }
 
   setCurrentStep(currentStep) {
@@ -159,6 +156,9 @@ class NewRasterModel extends Component {
   }
   setTemporalBool(temporalBool) {
     this.setState({ temporalBool });
+  }
+  setTemporalIntervalAmount(temporalIntervalAmount) {
+    this.setState({ temporalIntervalAmount });
   }
 
   handleKeyDown(event) {
@@ -413,30 +413,21 @@ class NewRasterModel extends Component {
                   }
                   updateModelValue={this.setTemporalBool}
                 />
-                {/* <div class={modelValue.bool===true ? "" : displayStyles.None}>
-                <span>More information required for temporal rasters</span>
-                <input
-                  tabIndex="-1"
-                  type="text"
-                  autoComplete="false"
-                  className={formStyles.FormControl}
-                  placeholder={60}
-                  //onChange={e => this.validateAndSaveToParent(e.target.value)}
-                  //value={this.state.inputText}
-                  //onKeyUp={e => this.handleEnter(e)}
-                /> */}
-                {/* <SelectBoxSimple
-                  choices={["weeks", "days", "hours", "minutes", "seconds"]}
-                  choice={modelValue.intervalUnit}
-                  isFetching={false}
-                  choicesDisplayField={null}
-                  updateModelValue={(frequencyEntity)=>{}}
-                  onKeyUp={e => this.handleEnter(e)}
-                  inputId={titleComponent.props.id + "_input"}
-                  placeholder={'test'}
-                  // validate={validate}
-                /> */}
-                {/* </div> */}
+                <GenericTextInputComponent
+                  titleComponent={
+                    <FormatMessage id="rasters.temporal_raster_frequency" />
+                  } // <FormatText ... //>
+                  subtitleComponent={"Frequency of temporal raster in seconds"}
+                  multiline={false} // boolean for which input elem to use: text OR textarea
+                  step={11}
+                  opened={currentStep === 11}
+                  currentStep={currentStep}
+                  setCurrentStep={this.setCurrentStep}
+                  modelValue={this.state.temporalIntervalAmount} // for now always in seconds
+                  updateModelValue={this.setTemporalIntervalAmount}
+                  resetModelValue={() => this.setTemporalIntervalAmount("")}
+                  validate={value => /^[1-9][0-9]*$/.test(value)}
+                />
               </div>
             </div>
           </div>

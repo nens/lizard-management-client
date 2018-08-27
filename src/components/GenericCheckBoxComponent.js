@@ -6,7 +6,6 @@ import CheckMark from "./CheckMark";
 import StepIndicator from "./StepIndicator";
 import FormatMessage from "../utils/FormatMessage.js";
 import GenericCheckBox from "./GenericCheckBox.js";
-import SelectBoxSimple from "./SelectBoxSimple.js";
 
 import styles from "./GenericCheckBoxComponent.css";
 import formStyles from "../styles/Forms.css";
@@ -21,22 +20,8 @@ class GenericSelectBoxComponent extends Component {
       wasEverOpen: false // holds if the question was ever opened by the user. If not no checkmark should be shown
     };
   }
-  setLocalStateFromProps(props) {
-    // for checkbox it is probably not convenient to set the focus
-    // technically difficult and it would also cause a difference in behaviour:
-    // What does hitting enter mean? yes select the checkbox OR go to next step ??
-    // // If this component is the "current step component", set the page focus to the components
-    // // input field:
-    // if (props.step === props.currentStep) {
-    //   const inputElem = document.getElementById(
-    //     this.props.titleComponent.props.id + "_input"
-    //   );
-    //   // inputElem.focus(); does not work outside setTimeout. Is this the right solution?
-    //   setTimeout(function() {
-    //     inputElem.focus();
-    //   }, 0);
-    // }
-  }
+
+  // this is currently not working properly !
   handleEnter(event) {
     if (
       /*this.props.validate(this.props.modelValue) && */ event.keyCode === 13
