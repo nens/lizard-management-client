@@ -73,7 +73,13 @@ class GenericSelectBoxComponent extends Component {
           <h3 className={`mt-0 ${active ? "text-muted" : null}`}>
             {titleComponent}
             {showCheckMark ? <CheckMark /> : null}
-            <span style={{ fontWeight: 400 }}>
+            <span
+              style={{
+                fontWeight: 400,
+                fontSize: "1rem",
+                lineHeight: 1.3
+              }}
+            >
               {showCheckMark && modelValue === true
                 ? yesCheckedComponent
                 : null}
