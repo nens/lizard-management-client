@@ -1,15 +1,18 @@
 import gridStyles from "../../styles/Grid.css";
+import "./NewRaster.css";
 import React, { Component } from "react";
 import { addNotification } from "../../actions";
 import { connect } from "react-redux";
 import moment from "moment";
-import InputMoment from "input-moment";
-import "../../../node_modules/input-moment/dist/input-moment.css";
+// import InputMoment from "input-moment";
+//import "../../../node_modules/input-moment/dist/input-moment.css";
+//import "https://unpkg.com/ionicons@4.2.2/dist/css/ionicons.min.css";
 import { withRouter } from "react-router-dom";
 import FormatMessage from "../../utils/FormatMessage.js";
 import GenericTextInputComponent from "../../components/GenericTextInputComponent";
 import GenericSelectBoxComponent from "../../components/GenericSelectBoxComponent";
 import GenericCheckBoxComponent from "../../components/GenericCheckBoxComponent";
+import GenericDateComponent from "../../components/GenericDateComponent";
 
 // import NewRasterName from "./NewRasterName";
 // import { NewRasterOrganisation } from "./NewRasterOrganisation";
@@ -426,6 +429,21 @@ class NewRasterModel extends Component {
                     <FormatMessage id="rasters.no_the_raster_is_not_temporal" />
                   }
                 />
+                <GenericDateComponent
+                  titleComponent={
+                    <FormatMessage id="rasters.temporal_raster_origin" />
+                  } // <FormatText ... //>
+                  subtitleComponent={"Frequency of temporal raster in seconds"}
+                  multiline={false} // boolean for which input elem to use: text OR textarea
+                  step={10}
+                  opened={currentStep === 10}
+                  currentStep={currentStep}
+                  setCurrentStep={this.setCurrentStep}
+                  modelValue={this.state.temporalOrigin} // for now always in seconds
+                  updateModelValue={e => this.setTemporalOrigin(e)}
+                  //resetModelValue={() => this.setTemporalIntervalAmount("")}
+                  validate={value => true}
+                />
                 <GenericTextInputComponent
                   titleComponent={
                     <FormatMessage id="rasters.temporal_raster_frequency" />
@@ -440,22 +458,6 @@ class NewRasterModel extends Component {
                   updateModelValue={this.setTemporalIntervalAmount}
                   resetModelValue={() => this.setTemporalIntervalAmount("")}
                   validate={value => /^[1-9][0-9]*$/.test(value)}
-                />
-                <input
-                  className="output"
-                  type="text"
-                  value={this.state.temporalOrigin.format("llll")}
-                  readOnly
-                />
-                <div />
-                <InputMoment
-                  moment={this.state.temporalOrigin}
-                  onChange={e => this.setTemporalOrigin(e)}
-                  // onSave={e=>this.setTemporalOrigin(e)}
-                  minStep={1} // default
-                  hourStep={1} // default
-                  prevMonthIcon="ion-ios-arrow-left" // default
-                  nextMonthIcon="ion-ios-arrow-right" // default
                 />
               </div>
             </div>

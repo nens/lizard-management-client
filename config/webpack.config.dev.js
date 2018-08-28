@@ -160,7 +160,7 @@ module.exports = {
             exclude: [
               /node_modules\/rc-checkbox\/assets\/index.css$/,
               /node_modules\/input-moment\/dist\/input-moment.css$/,
-              /src\/data_monitor\/rasters\/NewRaster.css$/
+              /src\/components\/GenericDateComponentSymbols.css$/
             ],
             use: [
               require.resolve("style-loader"),
@@ -230,7 +230,7 @@ module.exports = {
           },
           //
           {
-            test: /src\/data_monitor\/rasters\/NewRaster.css$/,
+            test: /src\/components\/GenericDateComponentSymbols.css$/,
             use: [
               {
                 loader: require.resolve("style-loader")
