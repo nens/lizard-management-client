@@ -169,7 +169,22 @@ class NewRasterModel extends Component {
   validateSupplierCode(supplierCode) {
     return supplierCode.length > 1;
   }
-
+  validateAll() {
+    return (
+      this.validateNewRasterName(this.state.rasterName) &&
+      //this.validateNewRasterOrganisation(this.state.selectedOrganisation) &&
+      this.validateNewRasterStorePath(this.state.storePathName) &&
+      this.validateNewRasterDescription(this.state.description) &&
+      this.validateAggregationType(this.state.aggregationType) &&
+      this.validateObservationType(this.state.observationType) &&
+      this.validateColorMap(this.state.colorMap) &&
+      this.validateSupplierId(this.state.supplierId) &&
+      this.validateSupplierCode(this.state.supplierCode) &&
+      this.validateTemporalBool(this.state.temporalBool) &&
+      this.validateTemporalIntervalAmount(this.state.temporalIntervalAmount) &&
+      this.validateTemporalOrigin(this.state.temporalOrigin)
+    );
+  }
   setTemporalBool(temporalBool) {
     this.setState({ temporalBool });
   }
@@ -431,6 +446,11 @@ class NewRasterModel extends Component {
                   resetModelValue={() => this.setTemporalIntervalAmount("")}
                   validate={this.validateTemporalIntervalAmount}
                 />
+                {this.validateAll() ? (
+                  <button>SUBMIT</button>
+                ) : (
+                  <span>Please make sure that all answers are valid</span>
+                )}
               </div>
             </div>
           </div>
