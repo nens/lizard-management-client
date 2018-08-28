@@ -4,9 +4,6 @@ import React, { Component } from "react";
 import { addNotification } from "../../actions";
 import { connect } from "react-redux";
 import moment from "moment";
-// import InputMoment from "input-moment";
-//import "../../../node_modules/input-moment/dist/input-moment.css";
-//import "https://unpkg.com/ionicons@4.2.2/dist/css/ionicons.min.css";
 import { withRouter } from "react-router-dom";
 import FormatMessage from "../../utils/FormatMessage.js";
 import GenericTextInputComponent from "../../components/GenericTextInputComponent";
@@ -14,15 +11,9 @@ import GenericSelectBoxComponent from "../../components/GenericSelectBoxComponen
 import GenericCheckBoxComponent from "../../components/GenericCheckBoxComponent";
 import GenericDateComponent from "../../components/GenericDateComponent";
 
-// import NewRasterName from "./NewRasterName";
-// import { NewRasterOrganisation } from "./NewRasterOrganisation";
-// import NewRasterStorePath from "./NewRasterStorePath";
-// import NewRasterDescription from "./NewRasterDescription";
-// import bindReactFunctions from "../../utils/BindReactFunctions.js";
-// import GenericWizardStep from "../../components/GenericWizardStep";
-// import formStyles from "../../styles/Forms.css";
-// import displayStyles from "../../styles/Display.css";
-// import ClearInputButton from "../../components/ClearInputButton.js";
+// ! important, these old component may later be used! Ther corresponding files already exist
+// import bindReactFunctions from "../../utils/BindReactFunctions.js"; // currently not working. Probably needs a list with functions in which case this is probably only overcomplicating things
+// import GenericWizardStep from "../../components/GenericWizardStep"; // working but is expected to create tons of overhead binding to the right objects functions
 
 class NewRasterModel extends Component {
   constructor(props) {
@@ -38,17 +29,11 @@ class NewRasterModel extends Component {
       storePathName: "",
       slug: "",
       description: "",
-      // temporal: {
-      //   bool: false,
-      //   origin: "2000-01-01T00:00:00",
-      //   // interval will eventually be saved in seconds so intervalUnit * intervalAmount
-      //   intervalUnit: 'seconds', // one of [seconds minutes hours days weeks] no months years because those are not a static amount of seconds..
-      //   intervalAmount: 0, // positive integer
-      //   optimizer: true
-      // },
-      // new temporal structure:
+
       temporalBool: false,
+      temporalBoolComponentWasEverOpenedByUser: false, // a checkbbox is always valid, but we should only mark it as valid if the user has actualy opened the question
       temporalOrigin: moment(), //"2000-01-01T00:00:00Z",
+      temporalOriginComponentWasEverOpenedByUser: false, // the data is valid since it is created with momentJS, but should only be marked as such when the date component was actually opened once
       temporalIntervalUnit: "seconds", // for now assume seconds// one of [seconds minutes hours days weeks] no months years because those are not a static amount of seconds..
       temporalIntervalAmount: "", //60*60, //minutes times seconds = hour // positive integer. amount of temporalIntervalUnit
       temporalOptimizer: true, // default true, not set by the user for first iteration
