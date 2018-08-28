@@ -158,7 +158,6 @@ module.exports = {
           {
             test: /\.css$/,
             exclude: [
-              /node_modules\/rc-checkbox\/assets\/index.css$/,
               /node_modules\/input-moment\/dist\/input-moment.css$/,
               /src\/components\/GenericDateComponentSymbols.css$/
             ],
@@ -190,23 +189,6 @@ module.exports = {
                       flexbox: "no-2009"
                     })
                   ]
-                }
-              }
-            ]
-          },
-          {
-            test: /node_modules\/rc-checkbox\/assets\/index.css$/,
-            use: [
-              {
-                loader: require.resolve("style-loader")
-                // options: {
-                //   localIdentName: "[local]"
-                // },
-              },
-              {
-                loader: require.resolve("css-loader"),
-                options: {
-                  localIdentName: "[local]"
                 }
               }
             ]

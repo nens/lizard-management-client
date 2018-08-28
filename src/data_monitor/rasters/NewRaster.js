@@ -121,7 +121,6 @@ class NewRasterModel extends Component {
 
   setCurrentStep(currentStep) {
     this.setState({ currentStep });
-    // Also, set focus to the new currentstep:
   }
   setRasterName(rasterName) {
     this.setState({ rasterName });
@@ -178,14 +177,11 @@ class NewRasterModel extends Component {
   }
 
   componentDidMount() {
-    // TODO fix original focus
-    // const firstElement = document.getElementById(
-    //   "rasters.name_of_this_raster_input"
-    // );
-    // firstElement.focus();
     // commented out because this component does not have an easy way to validate,
     // therefore it does not know if going to the next step should be required
-    //document.addEventListener("keydown", this.handleKeyDown, false);
+    // document.addEventListener("keydown", this.handleKeyDown, false);
+    // but currently a problem with event listeners on checkbox and date field
+    // therefore maybe better to add eventlistener here
   }
   validateNewRasterName(str) {
     return str.length > 1;
@@ -214,9 +210,7 @@ class NewRasterModel extends Component {
         <div className={gridStyles.Container}>
           <div className={`${gridStyles.Row}`}>
             <div
-              className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${
-                gridStyles.colSm12
-              } ${gridStyles.colXs12}`}
+              className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
             >
               <div id="steps" style={{ margin: "20px 0 0 20px" }}>
                 {/* <NewRasterName
@@ -394,21 +388,6 @@ class NewRasterModel extends Component {
                   resetModelValue={() => this.setSupplierCode("")} // cb function to *reset* the value of e.g. a raster's name in the parent model
                   validate={supplierCode => supplierCode.length > 1} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
                 />
-                {/* <label>
-                  <Checkbox
-                    //className="custom_rc_checkbox_class"
-                    //className={styles.custom_rc_checkbox_class}
-                    onChange={() => console.log("Checkbox change detected!")}
-                    disabled={false}
-                  />
-                  &nbsp;checking our checkbox
-                </label> */}
-                {/* <GenericCheckBox
-                  titleComponent={<FormatMessage id="rasters.supplier_code" />} // <FormatText ... //>
-                  modelValue={this.state.temporal.bool}
-                  label={"test own checkbox"}
-                  updateModelValue={this.setTemporalBool}
-                /> */}
                 <GenericCheckBoxComponent
                   titleComponent={
                     <FormatMessage id="rasters.raster_is_temporal" />
@@ -486,10 +465,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 };
 
 const NewRaster = withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(NewRasterModel)
+  connect(mapStateToProps, mapDispatchToProps)(NewRasterModel)
 );
 
 export { NewRaster };
