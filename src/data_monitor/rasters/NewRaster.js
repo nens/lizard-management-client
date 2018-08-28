@@ -21,7 +21,6 @@ class NewRasterModel extends Component {
     this.state = {
       currentStep: 1,
       rasterName: "",
-
       selectedOrganisation: {
         name: "",
         unique_id: ""
@@ -29,7 +28,6 @@ class NewRasterModel extends Component {
       storePathName: "",
       slug: "",
       description: "",
-
       temporalBool: false,
       temporalBoolComponentWasEverOpenedByUser: false, // a checkbbox is always valid, but we should only mark it as valid if the user has actualy opened the question
       temporalOrigin: moment(), //"2000-01-01T00:00:00Z",
@@ -39,11 +37,8 @@ class NewRasterModel extends Component {
       temporalOptimizer: true, // default true, not set by the user for first iteration
       // TODO let colormap have min and max as below with styles
       colorMap: "",
-      // styles: {
-      //   choice: "",
-      //   min: 0,
-      //   max: 10,
-      // },
+      // colorMapMin: 0,
+      // colorMapMax: 100, // what are reasonable defaults?
       aggregationType: "", // choice: none | counts | curve | histogram | sum | average
       supplierId: "",
       supplierCode: "",
@@ -56,25 +51,6 @@ class NewRasterModel extends Component {
         step4: false
       }
     };
-
-    // Experiment: TODO!
-
-    // const BINDABLE_FUNCTIONS = [
-    //   "setCurrentStep",
-    //   "setRasterName",
-    //   "setRasterOrganisation"
-    // ];
-
-    // const that = this;
-
-    // BINDABLE_FUNCTIONS.forEach(fnName =>
-    //   that[fnName] = that[fnName].bind(that)
-    // );
-    //
-    // bindReactFunctions(this);
-    // this.goBackToStep = this.goBackToStep.bind(this); // TO BE REPLACED BY this.setCurrentStep
-
-    // old:
 
     this.setCurrentStep = this.setCurrentStep.bind(this);
     this.setRasterName = this.setRasterName.bind(this);
@@ -95,23 +71,47 @@ class NewRasterModel extends Component {
       this
     );
     this.setAggregationType = this.setAggregationType.bind(this);
+    this.validateAggregationType = this.validateAggregationType.bind(this);
     this.setObservationType = this.setObservationType.bind(this);
+    this.validateObservationType = this.validateObservationType.bind(this);
     this.setColorMap = this.setColorMap.bind(this);
+    this.validateColorMap = this.validateColorMap.bind(this);
     this.setSupplierId = this.setSupplierId.bind(this);
+    this.validateSupplierId = this.validateSupplierId.bind(this);
     this.setSupplierCode = this.setSupplierCode.bind(this);
+    this.validateSupplierCode = this.validateSupplierCode.bind(this);
     this.setTemporalBool = this.setTemporalBool.bind(this);
+    this.validateTemporalBool = this.validateTemporalBool.bind(this);
     this.setTemporalIntervalAmount = this.setTemporalIntervalAmount.bind(this);
+    this.validateTemporalIntervalAmount = this.validateTemporalIntervalAmount.bind(
+      this
+    );
     this.setTemporalOrigin = this.setTemporalOrigin.bind(this);
+    this.validateTemporalOrigin = this.validateTemporalOrigin.bind(this);
   }
-
   setCurrentStep(currentStep) {
+    // The steps "raster is temporal" (9) and "temporal origin" (10) need to be flagged if they are opened once.
+    if (currentStep === 9) {
+      this.setState({ temporalBoolComponentWasEverOpenedByUser: true });
+    } else if (currentStep === 10) {
+      this.setState({ temporalOriginComponentWasEverOpenedByUser: true });
+    }
     this.setState({ currentStep });
   }
+  goBackToStep(toStep) {
+    if (toStep < this.state.currentStep) {
+      this.setState({ currentStep: toStep });
+    }
+  }
+
   setRasterName(rasterName) {
     this.setState({ rasterName });
   }
   resetRasterName() {
     this.setState({ rasterName: "" });
+  }
+  validateNewRasterName(str) {
+    return str.length > 1;
   }
   setSelectedOrganisation(selectedOrganisation) {
     this.setState({ selectedOrganisation });
@@ -119,40 +119,75 @@ class NewRasterModel extends Component {
   resetSelectedOrganisation() {
     this.setState({ selectedOrganisation: { name: "", unique_id: "" } });
   }
+  validateNewRasterOrganisation(obj) {
+    const { unique_id, name } = obj;
+    return unique_id && name;
+  }
   setStorePathName(storePathName) {
     this.setState({ storePathName, slug: storePathName.replace(/\//g, ":") });
+  }
+  // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
+  validateNewRasterStorePath(storePathName) {
+    // one or more alphanumerical or "-" or "_" plus one "/" , this hole combination one or more time
+    // after this again one or more alphanumerical or "-" or "_"
+    const reg = /^([-_a-zA-Z0-9]+\/)+[-_a-zA-Z0-9]+$/g;
+    return reg.test(storePathName);
   }
   setDescription(description) {
     this.setState({ description });
   }
+  validateNewRasterDescription(str) {
+    return str.length > 1;
+  }
   setAggregationType(aggregationType) {
     this.setState({ aggregationType });
+  }
+  validateAggregationType(aggragationType) {
+    return aggragationType !== "";
   }
   setObservationType(observationTypeObj) {
     this.setState({ observationType: observationTypeObj.code });
   }
+  validateObservationType(obserVationType) {
+    return obserVationType !== "";
+  }
   setColorMap(colorMapObj) {
     this.setState({ colorMap: colorMapObj.name });
+  }
+  validateColorMap(colorMap) {
+    return colorMap !== "";
   }
   setSupplierId(supplierIdObj) {
     this.setState({ supplierId: supplierIdObj.username });
   }
+  validateSupplierId(supplierId) {
+    return supplierId !== "";
+  }
   setSupplierCode(supplierCode) {
     this.setState({ supplierCode });
   }
-  goBackToStep(toStep) {
-    if (toStep < this.state.currentStep) {
-      this.setState({ currentStep: toStep });
-    }
+  validateSupplierCode(supplierCode) {
+    return supplierCode.length > 1;
   }
+
   setTemporalBool(temporalBool) {
     this.setState({ temporalBool });
+  }
+  validateTemporalBool(temporalBool) {
+    return this.state.temporalBoolComponentWasEverOpenedByUser;
   }
   setTemporalIntervalAmount(temporalIntervalAmount) {
     this.setState({ temporalIntervalAmount });
   }
+  validateTemporalIntervalAmount(temporalIntervalAmount) {
+    // positive non-zero integers (also not starting with zero)
+    return /^[1-9][0-9]*$/.test(temporalIntervalAmount);
+  }
   setTemporalOrigin(temporalOrigin) {
     this.setState({ temporalOrigin });
+  }
+  validateTemporalOrigin(_temporalOrigin) {
+    return this.state.temporalOriginComponentWasEverOpenedByUser;
   }
 
   handleKeyDown(event) {
@@ -168,19 +203,7 @@ class NewRasterModel extends Component {
     // but currently a problem with event listeners on checkbox and date field
     // therefore maybe better to add eventlistener here
   }
-  validateNewRasterName(str) {
-    return str.length > 1;
-  }
-  validateNewRasterOrganisation(obj) {
-    const { unique_id, name } = obj;
-    return unique_id && name;
-  }
-  validateNewRasterStorePath(str) {
-    // regex..
-  }
-  validateNewRasterDescription(str) {
-    return str.length > 1;
-  }
+
   render() {
     const {
       rasterName,
@@ -198,27 +221,16 @@ class NewRasterModel extends Component {
               className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
             >
               <div id="steps" style={{ margin: "20px 0 0 20px" }}>
-                {/* <NewRasterName
-                  step={1}
-                  currentStep={currentStep}
-                  setCurrentStep={this.setCurrentStep}
-                  validate={this.validateNewRasterName}
-
-                  parentState={rasterName}
-                  setParentState={this.setRasterName}
-                  resetParentState={this.resetRasterName}
-                /> */}
-
                 <GenericTextInputComponent
                   titleComponent={
                     <FormatMessage id="rasters.name_of_this_raster" />
-                  } // <FormatText ... //>
+                  }
                   subtitleComponent={
                     <FormatMessage
                       id="rasters.name_will_be_used_in_alerts"
                       defaultMessage="The name of the raster will be used in e-mail and SMS alerts"
                     />
-                  } // <FormatText ... />
+                  }
                   placeholder="name of this raster"
                   multiline={false} // boolean for which input elem to use: text OR textarea
                   step={1} // int for denoting which step it the GenericTextInputComponent refers to
@@ -237,7 +249,7 @@ class NewRasterModel extends Component {
                       id="rasters.path_on_disk"
                       defaultMessage="Relative path of raster store. Should be unique within organisation. Multiple, comma-separated paths allowed."
                     />
-                  } // <FormatText ... />
+                  }
                   placeholder="path/to/store"
                   multiline={false} // boolean for which input elem to use: text OR textarea
                   step={2} // int for denoting which step it the GenericTextInputComponent refers to
@@ -247,18 +259,13 @@ class NewRasterModel extends Component {
                   modelValue={storePathName} // string: e.g. the name of a raster
                   updateModelValue={this.setStorePathName} // cb function to *update* the value of e.g. a raster's name in the parent model
                   resetModelValue={() => this.setStorePathName("")} // cb function to *reset* the value of e.g. a raster's name in the parent model
-                  validate={storePathName => {
-                    // one or more alphanumerical or "-" or "_" plus one "/" , this hole combination one or more time
-                    // after this again one or more alphanumerical or "-" or "_"
-                    const reg = /^([-_a-zA-Z0-9]+\/)+[-_a-zA-Z0-9]+$/g;
-                    return reg.test(storePathName);
-                  }} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
+                  validate={this.validateNewRasterStorePath}
                 />
                 <GenericTextInputComponent
                   titleComponent={<FormatMessage id="rasters.description" />} // <FormatText ... //>
                   subtitleComponent={
                     <FormatMessage id="rasters.please_describe_the_new_raster" />
-                  } // <FormatText ... />
+                  }
                   placeholder="description here"
                   multiline={true} // boolean for which input elem to use: text OR textarea
                   step={3} // int for denoting which step it the GenericTextInputComponent refers to
@@ -273,10 +280,10 @@ class NewRasterModel extends Component {
                 <GenericSelectBoxComponent
                   titleComponent={
                     <FormatMessage id="rasters.aggregation_type" />
-                  } // <FormatText ... //>
+                  }
                   subtitleComponent={
                     <FormatMessage id="rasters.please_select_type_of_aggregation" />
-                  } // <FormatText ... />
+                  }
                   placeholder="click to select aggregation type"
                   step={4} // int for denoting which step it the GenericTextInputComponent refers to
                   opened={currentStep === 4}
@@ -293,15 +300,15 @@ class NewRasterModel extends Component {
                   modelValue={aggregationType} // string: e.g. the name of a raster
                   updateModelValue={this.setAggregationType} // cb function to *update* the value of e.g. a raster's name in the parent model
                   resetModelValue={() => this.setAggregationType("")} // cb function to *reset* the value of e.g. a raster's name in the parent model
-                  validate={() => this.state.aggregationType} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
+                  validate={this.validateAggregationType} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
                 />
                 <GenericSelectBoxComponent
                   titleComponent={
                     <FormatMessage id="rasters.observation_type" />
-                  } // <FormatText ... //>
+                  }
                   subtitleComponent={
                     <FormatMessage id="rasters.please_select_type_of_observation" />
-                  } // <FormatText ... />
+                  }
                   placeholder="click to select observation type"
                   step={5} // int for denoting which step it the GenericTextInputComponent refers to
                   opened={currentStep === 5}
@@ -314,13 +321,13 @@ class NewRasterModel extends Component {
                   modelValue={this.state.observationType} // string: e.g. the name of a raster
                   updateModelValue={this.setObservationType} // cb function to *update* the value of e.g. a raster's name in the parent model
                   resetModelValue={() => this.setObservationType({ code: "" })} // cb function to *reset* the value of e.g. a raster's name in the parent model
-                  validate={() => this.state.observationType !== ""} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
+                  validate={this.validateObservationType} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
                 />
                 <GenericSelectBoxComponent
                   titleComponent={<FormatMessage id="rasters.colormap" />} // <FormatText ... //>
                   subtitleComponent={
                     <FormatMessage id="rasters.please_select_colormap" />
-                  } // <FormatText ... />
+                  }
                   placeholder="click to select colormap"
                   step={6} // int for denoting which step it the GenericTextInputComponent refers to
                   opened={currentStep === 6}
@@ -333,13 +340,13 @@ class NewRasterModel extends Component {
                   modelValue={this.state.colorMap} // string: e.g. the name of a raster
                   updateModelValue={this.setColorMap} // cb function to *update* the value of e.g. a raster's name in the parent model
                   resetModelValue={() => this.setColorMap({ name: "" })} // cb function to *reset* the value of e.g. a raster's name in the parent model
-                  validate={() => this.state.colorMap !== ""} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
+                  validate={this.validateColorMap} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
                 />
                 <GenericSelectBoxComponent
                   titleComponent={<FormatMessage id="rasters.supplier_id" />} // <FormatText ... //>
                   subtitleComponent={
                     <FormatMessage id="rasters.please_select_supplier_id" />
-                  } // <FormatText ... />
+                  }
                   placeholder="click to select supplier id"
                   step={7} // int for denoting which step it the GenericTextInputComponent refers to
                   opened={currentStep === 7}
@@ -352,7 +359,7 @@ class NewRasterModel extends Component {
                   modelValue={this.state.supplierId} // string: e.g. the name of a raster
                   updateModelValue={this.setSupplierId} // cb function to *update* the value of e.g. a raster's name in the parent model
                   resetModelValue={() => this.setSupplierId({ username: "" })} // cb function to *reset* the value of e.g. a raster's name in the parent model
-                  validate={() => this.state.supplierId !== ""} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
+                  validate={this.validateSupplierId} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
                 />
                 <GenericTextInputComponent
                   titleComponent={<FormatMessage id="rasters.supplier_code" />} // <FormatText ... //>
@@ -361,7 +368,7 @@ class NewRasterModel extends Component {
                       id="rasters.unique_supplier_code"
                       defaultMessage="The combination supplier name and supplier code should be unique"
                     />
-                  } // <FormatText ... />
+                  }
                   placeholder="type supplier code here"
                   multiline={false} // boolean for which input elem to use: text OR textarea
                   step={8} // int for denoting which step it the GenericTextInputComponent refers to
@@ -371,12 +378,12 @@ class NewRasterModel extends Component {
                   modelValue={this.state.supplierCode} // string: e.g. the name of a raster
                   updateModelValue={this.setSupplierCode} // cb function to *update* the value of e.g. a raster's name in the parent model
                   resetModelValue={() => this.setSupplierCode("")} // cb function to *reset* the value of e.g. a raster's name in the parent model
-                  validate={supplierCode => supplierCode.length > 1} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
+                  validate={this.validateSupplierCode} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
                 />
                 <GenericCheckBoxComponent
                   titleComponent={
                     <FormatMessage id="rasters.raster_is_temporal" />
-                  } // <FormatText ... //>
+                  }
                   step={9}
                   opened={currentStep === 9}
                   currentStep={currentStep}
@@ -392,6 +399,7 @@ class NewRasterModel extends Component {
                   noNotCheckedComponent={
                     <FormatMessage id="rasters.no_the_raster_is_not_temporal" />
                   }
+                  validate={this.validateTemporalBool}
                 />
                 <GenericDateComponent
                   titleComponent={
@@ -406,12 +414,12 @@ class NewRasterModel extends Component {
                   modelValue={this.state.temporalOrigin} // for now always in seconds
                   updateModelValue={e => this.setTemporalOrigin(e)}
                   //resetModelValue={() => this.setTemporalIntervalAmount("")}
-                  validate={value => true}
+                  validate={this.validateTemporalOrigin}
                 />
                 <GenericTextInputComponent
                   titleComponent={
                     <FormatMessage id="rasters.temporal_raster_frequency" />
-                  } // <FormatText ... //>
+                  }
                   subtitleComponent={"Frequency of temporal raster in seconds"}
                   multiline={false} // boolean for which input elem to use: text OR textarea
                   step={11}
@@ -421,7 +429,7 @@ class NewRasterModel extends Component {
                   modelValue={this.state.temporalIntervalAmount} // for now always in seconds
                   updateModelValue={this.setTemporalIntervalAmount}
                   resetModelValue={() => this.setTemporalIntervalAmount("")}
-                  validate={value => /^[1-9][0-9]*$/.test(value)}
+                  validate={this.validateTemporalIntervalAmount}
                 />
               </div>
             </div>
