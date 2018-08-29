@@ -1,3 +1,49 @@
+// // example from https://demo.lizard.net/doc/api.html#rasters
+// POST https://demo.lizard.net/api/v3/rasters/ HTTP/1.1
+// Host: demo.lizard.net
+// Accept: application/json, text/javascript
+
+// {
+//     "name": "newstore",
+//     "organisation": "c5e37ca3495045168f5d911c37ee2319",
+//     "access_modifier": 0,
+//     "observation_type": 10,
+//     "supplier": "user.name",
+//     "supplier_code": "123456"
+//     "temporal": true,
+//     "interval": "PT5M",
+//     "rescalable": true
+// }
+
+// // example to create new template
+
+// const url = "/api/v3/rasters/";
+// const opts = {
+//   credentials: "same-origin",
+//   method: "POST",
+//   headers: { "Content-Type": "application/json" },
+//   body: JSON.stringify({
+//     "name": "newstore",
+//     "organisation": "c5e37ca3495045168f5d911c37ee2319",
+//     "access_modifier": 0,
+//     "observation_type": 10,
+//     "supplier": "user.name",
+//     "supplier_code": "123456"
+//     "temporal": true,
+//     "interval": "PT5M",
+//     "rescalable": true
+//   })
+// };
+
+// fetch(url, opts)
+// .then(response => response.json()) // TODO: kan dit weg?
+// .then(responseParsed => {
+//   console.log('[PROMISE] responseParsed', responseParsed);
+//   // what shall we do with history?
+//   //history.push("/alarms/templates/");
+// });
+
+/*
 var http = new XMLHttpRequest();
 var url = "/admin/lizard_nxt/rasterstore/add/";
 var params =
@@ -86,6 +132,7 @@ http.onreadystatechange = function() {
   }
 };
 http.send(params);
+//*/
 
 /*
 !DOCTYPE html>

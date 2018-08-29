@@ -42,14 +42,11 @@ class NewRasterModel extends Component {
       aggregationType: "", // choice: none | counts | curve | histogram | sum | average
       supplierId: "",
       supplierCode: "",
-      observationType: "",
-      sharedWith: [],
-      validSteps: {
-        step1: false,
-        step2: false,
-        step3: false,
-        step4: false
-      }
+      observationType: {
+        code: "",
+        url: ""
+      },
+      sharedWith: []
     };
 
     this.setCurrentStep = this.setCurrentStep.bind(this);
@@ -88,6 +85,7 @@ class NewRasterModel extends Component {
     );
     this.setTemporalOrigin = this.setTemporalOrigin.bind(this);
     this.validateTemporalOrigin = this.validateTemporalOrigin.bind(this);
+    this.handleClickCreateRaster = this.handleClickCreateRaster.bind(this);
   }
   setCurrentStep(currentStep) {
     // The steps "raster is temporal" (9) and "temporal origin" (10) need to be flagged if they are opened once.
@@ -145,11 +143,23 @@ class NewRasterModel extends Component {
   validateAggregationType(aggragationType) {
     return aggragationType !== "";
   }
-  setObservationType(observationTypeObj) {
-    this.setState({ observationType: observationTypeObj.code });
+  setObservationType(observationType) {
+    // const url = observationTypeObj.url;
+    // // parse number from url: https://api.ddsc.nl/api/v1/observationtypes/16/ -> 16
+    // // remove last slash /
+    // const trimmedUrl = url.slice(0,-1);
+    // // get last item after splitted on slash /
+    // const urlInteger = trimmedUrl.split('/').pop();
+    this.setState({ observationType });
+
+    // console.log('[F]setObservationType observationInteger ', observationInteger);
+    // this.setState({ observationType: observationTypeObj.code });
+    // this.setState({ observationType: parseInt(observationInteger) });
+    //this.setState({ observationType: observationTypeObj.url });
   }
-  validateObservationType(obserVationType) {
-    return obserVationType !== "";
+  validateObservationType(observationType) {
+    //return observationType.url !== "" && observationType.code !== "";
+    return true;
   }
   setColorMap(colorMapObj) {
     this.setState({ colorMap: colorMapObj.name });
@@ -169,22 +179,7 @@ class NewRasterModel extends Component {
   validateSupplierCode(supplierCode) {
     return supplierCode.length > 1;
   }
-  validateAll() {
-    return (
-      this.validateNewRasterName(this.state.rasterName) &&
-      //this.validateNewRasterOrganisation(this.state.selectedOrganisation) &&
-      this.validateNewRasterStorePath(this.state.storePathName) &&
-      this.validateNewRasterDescription(this.state.description) &&
-      this.validateAggregationType(this.state.aggregationType) &&
-      this.validateObservationType(this.state.observationType) &&
-      this.validateColorMap(this.state.colorMap) &&
-      this.validateSupplierId(this.state.supplierId) &&
-      this.validateSupplierCode(this.state.supplierCode) &&
-      this.validateTemporalBool(this.state.temporalBool) &&
-      this.validateTemporalIntervalAmount(this.state.temporalIntervalAmount) &&
-      this.validateTemporalOrigin(this.state.temporalOrigin)
-    );
-  }
+
   setTemporalBool(temporalBool) {
     this.setState({ temporalBool });
   }
@@ -209,6 +204,77 @@ class NewRasterModel extends Component {
     if (event.key === "Enter") {
       this.setState({ currentStep: this.state.currentStep + 1 });
     }
+  }
+
+  // if this function returns true, then the user should be able to submit the raster
+  validateAll() {
+    return (
+      this.validateNewRasterName(this.state.rasterName) &&
+      // organisation is currently taken from the organisation picker in the header, but we might change this
+      //this.validateNewRasterOrganisation(this.state.selectedOrganisation) &&
+      this.validateNewRasterStorePath(this.state.storePathName) &&
+      this.validateNewRasterDescription(this.state.description) &&
+      this.validateAggregationType(this.state.aggregationType) &&
+      this.validateObservationType(this.state.observationType) &&
+      this.validateColorMap(this.state.colorMap) &&
+      this.validateSupplierId(this.state.supplierId) &&
+      this.validateSupplierCode(this.state.supplierCode) &&
+      this.validateTemporalBool(this.state.temporalBool) &&
+      this.validateTemporalIntervalAmount(this.state.temporalIntervalAmount) &&
+      this.validateTemporalOrigin(this.state.temporalOrigin)
+    );
+  }
+
+  parseObservationTypeIdFromUrl(url) {
+    // parse number from url: https://api.ddsc.nl/api/v1/observationtypes/16/ -> 16
+    // remove last slash /
+    const trimmedUrl = url.slice(0, -1);
+    // get last item after splitted on slash /
+    const urlInteger = trimmedUrl.split("/").pop();
+    return urlInteger;
+  }
+
+  handleClickCreateRaster() {
+    const url = "/api/v3/rasters/";
+    const observationTypeId = this.parseObservationTypeIdFromUrl(
+      this.observationType.url
+    );
+
+    const opts = {
+      credentials: "same-origin",
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: this.state.rasterName,
+        organisation: this.props.organisations.selected.unique_id, //"61f5a464c35044c19bc7d4b42d7f58cb",
+        access_modifier: 0,
+        observation_type: observationTypeId, //this.state.observationType,
+        supplier: this.state.supplierId,
+        supplier_code: this.state.supplierCode,
+        temporal: this.state.temporalBool,
+        interval: "PT5M",
+        rescalable: true
+      })
+      // body: JSON.stringify({
+      //   "name": 'tom test 14',
+      //   "organisation": "61f5a464c35044c19bc7d4b42d7f58cb",//this.props.organisations.selected.unique_id,//"61f5a464c35044c19bc7d4b42d7f58cb",
+      //   "access_modifier": 0,
+      //   "observation_type": this.state.observationType,
+      //   "supplier": "tom.deboer", //this.state.supplierId,
+      //   "supplier_code": "123456789_14",//this.state.supplierCode,
+      //   "temporal": false,//this.state.temporalBool,
+      //   "interval": "PT5M",
+      //   "rescalable": true,
+      // })
+    };
+
+    fetch(url, opts)
+      .then(response => response.json()) // TODO: kan dit weg?
+      .then(responseParsed => {
+        console.log("[PROMISE] responseParsed", responseParsed);
+        // what shall we do with history?
+        //history.push("/alarms/templates/");
+      });
   }
 
   componentDidMount() {
@@ -333,7 +399,7 @@ class NewRasterModel extends Component {
                   choicesDisplayField="code" // optional parameter if choices are objects, which field contains the displayvalue, default item itself is displayvalue
                   isFetching={this.props.observationTypes.isFetching}
                   choicesSearchable={true}
-                  modelValue={this.state.observationType} // string: e.g. the name of a raster
+                  modelValue={this.state.observationType.code} // string: e.g. the name of a raster
                   updateModelValue={this.setObservationType} // cb function to *update* the value of e.g. a raster's name in the parent model
                   resetModelValue={() => this.setObservationType({ code: "" })} // cb function to *reset* the value of e.g. a raster's name in the parent model
                   validate={this.validateObservationType} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
@@ -446,11 +512,20 @@ class NewRasterModel extends Component {
                   resetModelValue={() => this.setTemporalIntervalAmount("")}
                   validate={this.validateTemporalIntervalAmount}
                 />
-                {this.validateAll() ? (
+                <button
+                  type="button"
+                  // className={`${buttonStyles.Button} ${buttonStyles.Success}`}
+                  onClick={() => {
+                    this.handleClickCreateRaster();
+                  }}
+                >
+                  SUBMIT
+                </button>
+                {/* {this.validateAll() ? (
                   <button>SUBMIT</button>
                 ) : (
                   <span>Please make sure that all answers are valid</span>
-                )}
+                )} */}
               </div>
             </div>
           </div>
@@ -462,6 +537,7 @@ class NewRasterModel extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
+    organisations: state.organisations,
     bootstrap: state.bootstrap,
     observationTypes: state.observationTypes,
     colorMaps: state.colorMaps,
