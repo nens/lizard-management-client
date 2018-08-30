@@ -1,4 +1,5 @@
 import gridStyles from "../../styles/Grid.css";
+import buttonStyles from "../../styles/Buttons.css";
 import "./NewRaster.css";
 import React, { Component } from "react";
 import { addNotification } from "../../actions";
@@ -42,10 +43,11 @@ class NewRasterModel extends Component {
       aggregationType: "", // choice: none | counts | curve | histogram | sum | average
       supplierId: "",
       supplierCode: "",
-      observationType: {
-        code: "",
-        url: ""
-      },
+      // observationType: {
+      //   code: "",
+      //   url: ""
+      // },
+      observationType: null,
       sharedWith: []
     };
 
@@ -102,6 +104,7 @@ class NewRasterModel extends Component {
     }
   }
 
+  // RasterName
   setRasterName(rasterName) {
     this.setState({ rasterName });
   }
@@ -111,6 +114,7 @@ class NewRasterModel extends Component {
   validateNewRasterName(str) {
     return str.length > 1;
   }
+  // Organisation
   setSelectedOrganisation(selectedOrganisation) {
     this.setState({ selectedOrganisation });
   }
@@ -121,6 +125,7 @@ class NewRasterModel extends Component {
     const { unique_id, name } = obj;
     return unique_id && name;
   }
+  // StorepathName
   setStorePathName(storePathName) {
     this.setState({ storePathName, slug: storePathName.replace(/\//g, ":") });
   }
@@ -131,6 +136,7 @@ class NewRasterModel extends Component {
     const reg = /^([-_a-zA-Z0-9]+\/)+[-_a-zA-Z0-9]+$/g;
     return reg.test(storePathName);
   }
+  // Description
   setDescription(description) {
     this.setState({ description });
   }
@@ -143,49 +149,52 @@ class NewRasterModel extends Component {
   validateAggregationType(aggragationType) {
     return aggragationType !== "";
   }
+  // ObservationType
   setObservationType(observationType) {
-    // const url = observationTypeObj.url;
-    // // parse number from url: https://api.ddsc.nl/api/v1/observationtypes/16/ -> 16
-    // // remove last slash /
-    // const trimmedUrl = url.slice(0,-1);
-    // // get last item after splitted on slash /
-    // const urlInteger = trimmedUrl.split('/').pop();
     this.setState({ observationType });
-
-    // console.log('[F]setObservationType observationInteger ', observationInteger);
-    // this.setState({ observationType: observationTypeObj.code });
-    // this.setState({ observationType: parseInt(observationInteger) });
-    //this.setState({ observationType: observationTypeObj.url });
+  }
+  resetObservationType() {
+    this.setState({ observationType: null });
   }
   validateObservationType(observationType) {
-    //return observationType.url !== "" && observationType.code !== "";
-    return true;
+    return (
+      observationType &&
+      observationType.url !== "" &&
+      observationType.code !== ""
+    );
   }
-  setColorMap(colorMapObj) {
-    this.setState({ colorMap: colorMapObj.name });
+  // Colormap
+  setColorMap(colorMap) {
+    this.setState({ colorMap });
   }
   validateColorMap(colorMap) {
-    return colorMap !== "";
+    return colorMap && colorMap.name !== "";
   }
-  setSupplierId(supplierIdObj) {
-    this.setState({ supplierId: supplierIdObj.username });
+  // SupplierId
+  setSupplierId(supplierId) {
+    this.setState({ supplierId });
+  }
+  resetSupplierId() {
+    this.setSupplierId(null);
   }
   validateSupplierId(supplierId) {
-    return supplierId !== "";
+    return supplierId && supplierId.username !== "";
   }
+  // SupplierCode
   setSupplierCode(supplierCode) {
     this.setState({ supplierCode });
   }
   validateSupplierCode(supplierCode) {
     return supplierCode.length > 1;
   }
-
+  // TemporalBool
   setTemporalBool(temporalBool) {
     this.setState({ temporalBool });
   }
   validateTemporalBool(temporalBool) {
     return this.state.temporalBoolComponentWasEverOpenedByUser;
   }
+  // TemporalInterval
   setTemporalIntervalAmount(temporalIntervalAmount) {
     this.setState({ temporalIntervalAmount });
   }
@@ -193,6 +202,7 @@ class NewRasterModel extends Component {
     // positive non-zero integers (also not starting with zero)
     return /^[1-9][0-9]*$/.test(temporalIntervalAmount);
   }
+  // temporalOrigin
   setTemporalOrigin(temporalOrigin) {
     this.setState({ temporalOrigin });
   }
@@ -237,7 +247,7 @@ class NewRasterModel extends Component {
   handleClickCreateRaster() {
     const url = "/api/v3/rasters/";
     const observationTypeId = this.parseObservationTypeIdFromUrl(
-      this.observationType.url
+      this.state.observationType.url
     );
 
     const opts = {
@@ -249,12 +259,24 @@ class NewRasterModel extends Component {
         organisation: this.props.organisations.selected.unique_id, //"61f5a464c35044c19bc7d4b42d7f58cb",
         access_modifier: 0,
         observation_type: observationTypeId, //this.state.observationType,
-        supplier: this.state.supplierId,
+        supplier: this.state.supplierId.username,
         supplier_code: this.state.supplierCode,
         temporal: this.state.temporalBool,
         interval: "PT5M",
         rescalable: true
       })
+      // body: JSON.stringify({
+      //   name: this.state.rasterName,
+      //   organisation: this.props.organisations.selected.unique_id, //"61f5a464c35044c19bc7d4b42d7f58cb",
+      //   access_modifier: 0,
+      //   observation_type: observationTypeId, //this.state.observationType,
+      //   supplier: this.state.supplierId.username,
+      //   supplier_code: this.state.supplierCode,
+      //   temporal: this.state.temporalBool,
+      //   interval: "PT5M",
+      //   rescalable: true
+      // })
+
       // body: JSON.stringify({
       //   "name": 'tom test 14',
       //   "organisation": "61f5a464c35044c19bc7d4b42d7f58cb",//this.props.organisations.selected.unique_id,//"61f5a464c35044c19bc7d4b42d7f58cb",
@@ -378,6 +400,7 @@ class NewRasterModel extends Component {
                     "sum",
                     "average"
                   ]}
+                  transformChoiceToDisplayValue={id => id}
                   modelValue={aggregationType} // string: e.g. the name of a raster
                   updateModelValue={this.setAggregationType} // cb function to *update* the value of e.g. a raster's name in the parent model
                   resetModelValue={() => this.setAggregationType("")} // cb function to *reset* the value of e.g. a raster's name in the parent model
@@ -396,10 +419,10 @@ class NewRasterModel extends Component {
                   currentStep={currentStep} // int for denoting which step is currently active
                   setCurrentStep={this.setCurrentStep} // cb function for updating which step becomes active
                   choices={this.props.observationTypes.available}
-                  choicesDisplayField="code" // optional parameter if choices are objects, which field contains the displayvalue, default item itself is displayvalue
+                  transformChoiceToDisplayValue={e => (e && e.code) || ""} // optional parameter if choices are objects, which field contains the displayvalue, default item itself is displayvalue
                   isFetching={this.props.observationTypes.isFetching}
                   choicesSearchable={true}
-                  modelValue={this.state.observationType.code} // string: e.g. the name of a raster
+                  modelValue={this.state.observationType} // string: e.g. the name of a raster
                   updateModelValue={this.setObservationType} // cb function to *update* the value of e.g. a raster's name in the parent model
                   resetModelValue={() => this.setObservationType({ code: "" })} // cb function to *reset* the value of e.g. a raster's name in the parent model
                   validate={this.validateObservationType} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
@@ -415,7 +438,7 @@ class NewRasterModel extends Component {
                   currentStep={currentStep} // int for denoting which step is currently active
                   setCurrentStep={this.setCurrentStep} // cb function for updating which step becomes active
                   choices={this.props.colorMaps.available}
-                  choicesDisplayField="name" // optional parameter if choices are objects, which field contains the displayvalue, default item itself is displayvalue
+                  transformChoiceToDisplayValue={e => (e && e.name) || ""} // optional parameter if choices are objects, which field contains the displayvalue, default item itself is displayvalue
                   isFetching={this.props.colorMaps.isFetching}
                   choicesSearchable={true}
                   modelValue={this.state.colorMap} // string: e.g. the name of a raster
@@ -434,12 +457,12 @@ class NewRasterModel extends Component {
                   currentStep={currentStep} // int for denoting which step is currently active
                   setCurrentStep={this.setCurrentStep} // cb function for updating which step becomes active
                   choices={this.props.supplierIds.available}
-                  choicesDisplayField="username" // optional parameter if choices are objects, which field contains the displayvalue, default item itself is displayvalue
+                  transformChoiceToDisplayValue={e => (e && e.username) || ""} // optional parameter if choices are objects, which field contains the displayvalue, default item itself is displayvalue
                   isFetching={this.props.supplierIds.isFetching}
                   choicesSearchable={true}
                   modelValue={this.state.supplierId} // string: e.g. the name of a raster
                   updateModelValue={this.setSupplierId} // cb function to *update* the value of e.g. a raster's name in the parent model
-                  resetModelValue={() => this.setSupplierId({ username: "" })} // cb function to *reset* the value of e.g. a raster's name in the parent model
+                  resetModelValue={this.resetSupplierId} // cb function to *reset* the value of e.g. a raster's name in the parent model
                   validate={this.validateSupplierId} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
                 />
                 <GenericTextInputComponent
@@ -514,18 +537,20 @@ class NewRasterModel extends Component {
                 />
                 <button
                   type="button"
-                  // className={`${buttonStyles.Button} ${buttonStyles.Success}`}
+                  className={`${buttonStyles.Button} ${buttonStyles.Success}`}
+                  style={{ marginTop: 10 }}
                   onClick={() => {
                     this.handleClickCreateRaster();
                   }}
                 >
-                  SUBMIT
+                  <FormatMessage id="rasters.submit" />
                 </button>
-                {/* {this.validateAll() ? (
+
+                {this.validateAll() ? (
                   <button>SUBMIT</button>
                 ) : (
                   <span>Please make sure that all answers are valid</span>
-                )} */}
+                )}
               </div>
             </div>
           </div>

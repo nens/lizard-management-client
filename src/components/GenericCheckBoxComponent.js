@@ -55,9 +55,7 @@ class GenericSelectBoxComponent extends Component {
     } = this.props;
     const active = step === currentStep;
     const showCheckMark = this.state.wasEverOpen; //true;//= validate(modelValue);
-    const showNextButton = true; //choices
-    //   .map(e => (choicesDisplayField ? e[choicesDisplayField] : e))
-    //   .includes(modelValue);
+    const showNextButton = true;
 
     return (
       <div className={styles.Step} id={"Step-" + step}>
@@ -135,10 +133,7 @@ const mapDispatchToProps = dispatch => {
 };
 
 GenericSelectBoxComponent = withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(GenericSelectBoxComponent)
+  connect(mapStateToProps, mapDispatchToProps)(GenericSelectBoxComponent)
 );
 
 export default GenericSelectBoxComponent;

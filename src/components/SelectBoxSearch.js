@@ -34,13 +34,9 @@ class SelectBoxSearch extends Component {
   }
   setQuery(props) {
     if (this.props.choice) {
-      if (this.props.choicesDisplayField) {
-        this.setState({
-          query: this.props.choice[this.props.choicesDisplayField]
-        });
-      } else {
-        this.setState({ query: this.props.choice });
-      }
+      this.setState({
+        query: this.props.transformChoiceToDisplayValue(this.props.choice)
+      });
     }
   }
   resetQuery() {
@@ -56,7 +52,7 @@ class SelectBoxSearch extends Component {
       resetModelValue,
       onKeyUp,
       inputId,
-      choicesDisplayField,
+      transformChoiceToDisplayValue,
       validate
     } = this.props;
     const showOptions = choices.length > 0 && this.state.mustShowChoices;
@@ -113,78 +109,58 @@ class SelectBoxSearch extends Component {
                 if (this.state.query === "") {
                   // if nothing is typed show all results
                   return true;
-                  // } else if (this.props.selected.unique_id) {
-                  //   // if value is prefilled show all results
-                  //   return true;
                 } else {
                   // if user typed search string only show those that contain string
                   // TODO sort by search string ?
-                  if (choicesDisplayField) {
-                    return choiceItem[choicesDisplayField]
-                      .toLowerCase()
-                      .includes(this.state.query.toLowerCase());
-                  } else {
-                    return choiceItem
-                      .toLowerCase()
-                      .includes(this.state.query.toLowerCase());
-                  }
+                  return transformChoiceToDisplayValue(choiceItem)
+                    .toLowerCase()
+                    .includes(this.state.query.toLowerCase());
                 }
               })
               .sort((choiceItemA, choiceItemB) => {
-                let nameA, nameB;
-
-                if (choicesDisplayField) {
-                  nameA = choiceItemA[choicesDisplayField];
-                  nameB = choiceItemB[choicesDisplayField];
-                } else {
-                  nameA = choiceItemA;
-                  nameB = choiceItemB;
-                }
-
+                const nameA = transformChoiceToDisplayValue(choiceItemA);
+                const nameB = transformChoiceToDisplayValue(choiceItemB);
                 if (nameA < nameB) {
                   return -1;
                 }
-
                 if (nameA > nameB) {
                   return 1;
                 }
-
                 // names must be equal
                 return 0;
               })
               .map((choiceItem, i) => {
-                const currentChoiceString =
-                  (choicesDisplayField && choiceItem[choicesDisplayField]) ||
-                  choiceItem;
+                const currentChoiceString = transformChoiceToDisplayValue(
+                  choiceItem
+                );
+                const SelectedChoiceString = transformChoiceToDisplayValue(
+                  choice
+                );
+
                 return (
                   <div
                     tabIndex={i + 1}
                     key={i}
                     className={`${styles.ResultRow} ${currentChoiceString ===
-                    choice
+                    SelectedChoiceString
                       ? styles.Active
                       : styles.Inactive}`}
                     onMouseDown={() => {
                       // User selected a choice from the filtered ones:
                       updateModelValue(choiceItem);
-                      //this.resetQuery();
+                      // this.resetQuery();
                       this.setState({
                         mustShowChoices: false,
-                        query: choicesDisplayField
-                          ? choiceItem[choicesDisplayField]
-                          : choiceItem
+                        query: currentChoiceString
                       });
                     }}
                   >
-                    {this.props.choicesDisplayField
-                      ? choiceItem[this.props.choicesDisplayField]
-                      : choiceItem}
+                    {currentChoiceString}
                   </div>
                 );
               })}
           </Scrollbars>
         </div>
-        {/* ) : null} */}
       </div>
     );
   }

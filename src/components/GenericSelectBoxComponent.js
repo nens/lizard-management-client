@@ -48,7 +48,7 @@ class GenericSelectBoxComponent extends Component {
       setCurrentStep, // cb function for updating which step becomes active
       opened, // complete question and input fields become visible if set to true
       choices, // list of choices in select box
-      choicesDisplayField, // optional parameter if choices are objects, which field contains the displayvalue, default item itself is displayvalue
+      transformChoiceToDisplayValue, // optional parameter if choices are objects, which field contains the displayvalue, default item itself is displayvalue
       isFetching, // is the component still waiting for data from server?
       modelValue, // string: e.g. the name of a raster
       updateModelValue, // cb function to *update* the value of e.g. a raster's name in the parent model
@@ -60,8 +60,8 @@ class GenericSelectBoxComponent extends Component {
     const active = step === currentStep;
     const showCheckMark = validate(modelValue);
     const showNextButton = choices
-      .map(e => (choicesDisplayField ? e[choicesDisplayField] : e))
-      .includes(modelValue);
+      .map(e => transformChoiceToDisplayValue(e))
+      .includes(transformChoiceToDisplayValue(modelValue));
     return (
       <div className={styles.Step} id={"Step-" + step}>
         <StepIndicator
@@ -88,7 +88,7 @@ class GenericSelectBoxComponent extends Component {
                 <SelectBoxSearch
                   choices={choices}
                   choice={modelValue}
-                  choicesDisplayField={choicesDisplayField}
+                  transformChoiceToDisplayValue={transformChoiceToDisplayValue}
                   isFetching={isFetching}
                   updateModelValue={updateModelValue}
                   onKeyUp={e => this.handleEnter(e)}
@@ -102,7 +102,7 @@ class GenericSelectBoxComponent extends Component {
                   choices={choices}
                   choice={modelValue}
                   isFetching={isFetching}
-                  choicesDisplayField={choicesDisplayField}
+                  transformChoiceToDisplayValue={transformChoiceToDisplayValue}
                   updateModelValue={updateModelValue}
                   onKeyUp={e => this.handleEnter(e)}
                   inputId={titleComponent.props.id + "_input"}
