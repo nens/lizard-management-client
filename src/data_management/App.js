@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { DataMonitor as DataMonitorHome } from "./DataMonitor";
+import { DataManagement as DataManagementHome } from "./DataManagement";
 import { Raster as RasterApp } from "./rasters/Raster";
 import { NewRaster } from "./rasters/NewRaster";
 /*
@@ -36,10 +36,14 @@ class App extends Component {
   render() {
     return (
       <div>
-        <Route exact path="/data_monitor" component={DataMonitorHome} />
-        <Route exact path="/data_monitor/rasters" component={RasterApp} />
+        <Route exact path="/data_management" component={DataManagementHome} />
+        <Route exact path="/data_management/rasters" component={RasterApp} />
         <Switch>
-          <Route exact path="/data_monitor/rasters/new" component={NewRaster} />
+          <Route
+            exact
+            path="/data_management/rasters/new"
+            component={NewRaster}
+          />
         </Switch>
       </div>
     );

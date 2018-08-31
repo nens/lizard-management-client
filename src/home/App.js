@@ -75,11 +75,11 @@ class App extends Component {
       },
       {
         key: 3,
-        handleClick: () => this.handleLink("/data_monitor"),
+        handleClick: () => this.handleLink("/data_management"),
         title: (
           <FormattedMessage
-            id="home.data_monitor"
-            defaultMessage="Data Monitor"
+            id="home.data_management"
+            defaultMessage="Data Management"
           />
         ),
         icon: templateIcon,

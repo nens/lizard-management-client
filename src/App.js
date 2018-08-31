@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { FormattedMessage } from "react-intl";
 import { App as Home } from "./home/App";
 import { App as AlarmsApp } from "./alarms/App";
-import { App as DataMonitorApp } from "./data_monitor/App";
+import { App as DataManagementApp } from "./data_management/App";
 import MDSpinner from "react-md-spinner";
 import {
   addNotification,
@@ -198,7 +198,7 @@ class App extends Component {
               >
                 <Route exact path="/" component={Home} />
                 <Route path="/alarms" component={AlarmsApp} />
-                <Route path="/data_monitor" component={DataMonitorApp} />
+                <Route path="/data_management" component={DataManagementApp} />
               </div>
             </div>
           </div>

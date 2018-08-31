@@ -137,6 +137,6 @@
   "notifications_app.warning_level_label": "Een label voor dit waarschuwingsniveau. Bijvoorbeeld: 'Overschreden'",
   "notifications_app.when_an_alarm_is_triggered": "Wanneer dit alarm afgaat, zullen deze groepen bericht krijgen.",
   "notifications_app.which_temporal_raster_to_use": "Welk temporeel raster wil je gebruiken?",
-  "home.data_monitor": "Data monitor",
+  "home.data_management": "Data Management",
   "home.data_administration": "Gegevensbeheer"
 }
