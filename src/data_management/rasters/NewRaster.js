@@ -11,6 +11,7 @@ import GenericTextInputComponent from "../../components/GenericTextInputComponen
 import GenericSelectBoxComponent from "../../components/GenericSelectBoxComponent";
 import GenericCheckBoxComponent from "../../components/GenericCheckBoxComponent";
 import GenericDateComponent from "../../components/GenericDateComponent";
+import DurationComponent from "../../components/DurationComponent";
 
 // ! important, these old component may later be used! Ther corresponding files already exist
 // import bindReactFunctions from "../../utils/BindReactFunctions.js"; // currently not working. Probably needs a list with functions in which case this is probably only overcomplicating things
@@ -19,6 +20,7 @@ import GenericDateComponent from "../../components/GenericDateComponent";
 class NewRasterModel extends Component {
   constructor(props) {
     super(props);
+    console.log("moment", moment(), moment().toISOString());
     this.state = {
       currentStep: 1,
       rasterName: "",
@@ -35,6 +37,10 @@ class NewRasterModel extends Component {
       temporalOriginComponentWasEverOpenedByUser: false, // the data is valid since it is created with momentJS, but should only be marked as such when the date component was actually opened once
       temporalIntervalUnit: "seconds", // for now assume seconds// one of [seconds minutes hours days weeks] no months years because those are not a static amount of seconds..
       temporalIntervalAmount: "", //60*60, //minutes times seconds = hour // positive integer. amount of temporalIntervalUnit
+      temporalIntervalDays: 1,
+      temporalIntervalHours: "00",
+      temporalIntervalMinutes: "00",
+      temporalIntervalSeconds: "00",
       temporalOptimizer: true, // default true, not set by the user for first iteration
       // TODO let colormap have min and max as below with styles
       colorMap: "",
@@ -88,6 +94,14 @@ class NewRasterModel extends Component {
     this.setTemporalOrigin = this.setTemporalOrigin.bind(this);
     this.validateTemporalOrigin = this.validateTemporalOrigin.bind(this);
     this.handleClickCreateRaster = this.handleClickCreateRaster.bind(this);
+    this.setTemporalIntervalDays = this.setTemporalIntervalDays.bind(this);
+    this.setTemporalIntervalHours = this.setTemporalIntervalHours.bind(this);
+    this.setTemporalIntervalMinutes = this.setTemporalIntervalMinutes.bind(
+      this
+    );
+    this.setTemporalIntervalSeconds = this.setTemporalIntervalSeconds.bind(
+      this
+    );
   }
   setCurrentStep(currentStep) {
     // The steps "raster is temporal" (9) and "temporal origin" (10) need to be flagged if they are opened once.
@@ -202,7 +216,20 @@ class NewRasterModel extends Component {
     // positive non-zero integers (also not starting with zero)
     return /^[1-9][0-9]*$/.test(temporalIntervalAmount);
   }
-  // temporalOrigin
+  // temporal interval Days Hours Minutes Seconds
+  setTemporalIntervalDays(temporalIntervalDays) {
+    this.setState({ temporalIntervalDays });
+  }
+  setTemporalIntervalHours(temporalIntervalHours) {
+    this.setState({ temporalIntervalHours });
+  }
+  setTemporalIntervalMinutes(temporalIntervalMinutes) {
+    this.setState({ temporalIntervalMinutes });
+  }
+  setTemporalIntervalSeconds(temporalIntervalSeconds) {
+    this.setState({ temporalIntervalSeconds });
+  }
+  // temporal origin
   setTemporalOrigin(temporalOrigin) {
     this.setState({ temporalOrigin });
   }
@@ -244,11 +271,38 @@ class NewRasterModel extends Component {
     return urlInteger;
   }
 
+  aggregationTypeStringToInteger(str) {
+    if (str === "none") return 0;
+    if (str === "counts") return 1;
+    if (str === "curve") return 2;
+    if (str === "histogram") return 3;
+    if (str === "sum") return 4;
+    if (str === "average") return 5;
+    return 0; // default
+  }
+
+  intervalToISODuration(days, hours, minutes, seconds) {
+    return "P" + days + "D" + "T" + hours + "H" + minutes + "M" + seconds + "S";
+    //example: 4DT12H30M5S
+    // https://www.digi.com/resources/documentation/digidocs/90001437-13/reference/r_iso_8601_duration_format.htm
+  }
+
   handleClickCreateRaster() {
     const url = "/api/v3/rasters/";
     const observationTypeId = this.parseObservationTypeIdFromUrl(
       this.state.observationType.url
     );
+    const intAggregationType = this.aggregationTypeStringToInteger(
+      this.state.aggregationType
+    );
+
+    const isoIntervalDuration = this.intervalToISODuration(
+      this.state.temporalIntervalDays,
+      this.state.temporalIntervalHours,
+      this.state.temporalIntervalMinutes,
+      this.state.temporalIntervalSeconds
+    );
+    console.log("isoIntervalDuration", isoIntervalDuration);
 
     const opts = {
       credentials: "same-origin",
@@ -257,26 +311,22 @@ class NewRasterModel extends Component {
       body: JSON.stringify({
         name: this.state.rasterName,
         organisation: this.props.organisations.selected.unique_id, //"61f5a464c35044c19bc7d4b42d7f58cb",
-        access_modifier: 0,
+        access_modifier: 200, // private to organisation
         observation_type: observationTypeId, //this.state.observationType,
+        description: this.state.description,
         supplier: this.state.supplierId.username,
         supplier_code: this.state.supplierCode,
         temporal: this.state.temporalBool,
-        interval: "PT5M",
-        rescalable: true
+        origin:
+          this.state.temporalBool && this.state.temporalOrigin.toISOString(), // toISOString = momentJS function
+        interval: this.state.temporalBool && isoIntervalDuration, //'P1D', // P1D is default, = ISO 8601 datetime for 1 day",
+        rescalable: false,
+        optimizer: false, // default
+        aggregation_type: intAggregationType,
+        options: {
+          styles: this.state.colorMap.name
+        }
       })
-      // body: JSON.stringify({
-      //   name: this.state.rasterName,
-      //   organisation: this.props.organisations.selected.unique_id, //"61f5a464c35044c19bc7d4b42d7f58cb",
-      //   access_modifier: 0,
-      //   observation_type: observationTypeId, //this.state.observationType,
-      //   supplier: this.state.supplierId.username,
-      //   supplier_code: this.state.supplierCode,
-      //   temporal: this.state.temporalBool,
-      //   interval: "PT5M",
-      //   rescalable: true
-      // })
-
       // body: JSON.stringify({
       //   "name": 'tom test 14',
       //   "organisation": "61f5a464c35044c19bc7d4b42d7f58cb",//this.props.organisations.selected.unique_id,//"61f5a464c35044c19bc7d4b42d7f58cb",
@@ -520,7 +570,7 @@ class NewRasterModel extends Component {
                   //resetModelValue={() => this.setTemporalIntervalAmount("")}
                   validate={this.validateTemporalOrigin}
                 />
-                <GenericTextInputComponent
+                {/* <GenericTextInputComponent
                   titleComponent={
                     <FormatMessage id="rasters.temporal_raster_frequency" />
                   }
@@ -533,6 +583,29 @@ class NewRasterModel extends Component {
                   modelValue={this.state.temporalIntervalAmount} // for now always in seconds
                   updateModelValue={this.setTemporalIntervalAmount}
                   resetModelValue={() => this.setTemporalIntervalAmount("")}
+                  validate={this.validateTemporalIntervalAmount}
+                /> */}
+                <DurationComponent
+                  titleComponent={
+                    <FormatMessage id="rasters.temporal_raster_frequency" />
+                  }
+                  subtitleComponent={"Frequency of temporal raster"}
+                  multiline={false} // boolean for which input elem to use: text OR textarea
+                  step={11}
+                  opened={currentStep === 11}
+                  currentStep={currentStep}
+                  setCurrentStep={this.setCurrentStep}
+                  //modelValue={this.state.temporalIntervalAmount} // for now always in seconds
+                  modelValueDays={this.state.temporalIntervalDays}
+                  modelValueHours={this.state.temporalIntervalHours}
+                  modelValueMinutes={this.state.temporalIntervalMinutes}
+                  modelValueSeconds={this.state.temporalIntervalSeconds}
+                  updateModelValue={this.setTemporalIntervalAmount}
+                  //resetModelValue={() => this.setTemporalIntervalAmount("")}
+                  updateModelValueDays={this.setTemporalIntervalDays}
+                  updateModelValueHours={this.setTemporalIntervalHours}
+                  updateModelValueMinutes={this.setTemporalIntervalMinutes}
+                  updateModelValueSeconds={this.setTemporalIntervalSeconds}
                   validate={this.validateTemporalIntervalAmount}
                 />
                 <button
