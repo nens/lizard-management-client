@@ -19,12 +19,12 @@ import inputStyles from "../styles/Input.css";
 import displayStyles from "../styles/Display.css";
 
 class GenericDateComponent extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      wasEverOpen: false // holds if the question was ever opened by the user. If not no checkmark should be shown
-    };
-  }
+  // constructor(props) {
+  //   super(props);
+  //   this.state = {
+  //     wasEverOpen: false // holds if the question was ever opened by the user. If not no checkmark should be shown
+  //   };
+  // }
 
   // this is currently not working properly !
   handleEnter(event) {
@@ -35,14 +35,14 @@ class GenericDateComponent extends Component {
       this.props.setCurrentStep(this.props.step + 1);
     }
   }
-  componentWillReceiveProps(newProps) {
-    //this.setLocalStateFromProps(newProps);
-    const active = newProps.step === newProps.currentStep;
+  // componentWillReceiveProps(newProps) {
+  //   //this.setLocalStateFromProps(newProps);
+  //   const active = newProps.step === newProps.currentStep;
 
-    if (active === true && this.state.wasEverOpen === false) {
-      this.setState({ wasEverOpen: true });
-    }
-  }
+  //   if (active === true && this.state.wasEverOpen === false) {
+  //     this.setState({ wasEverOpen: true });
+  //   }
+  // }
 
   render() {
     const {
@@ -132,10 +132,7 @@ const mapDispatchToProps = dispatch => {
 };
 
 GenericDateComponent = withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(GenericDateComponent)
+  connect(mapStateToProps, mapDispatchToProps)(GenericDateComponent)
 );
 
 export default GenericDateComponent;

@@ -37,6 +37,7 @@ class NewRasterModel extends Component {
       temporalOriginComponentWasEverOpenedByUser: false, // the data is valid since it is created with momentJS, but should only be marked as such when the date component was actually opened once
       temporalIntervalUnit: "seconds", // for now assume seconds// one of [seconds minutes hours days weeks] no months years because those are not a static amount of seconds..
       temporalIntervalAmount: "", //60*60, //minutes times seconds = hour // positive integer. amount of temporalIntervalUnit
+      temporalIntervalWasEverOpenedByUser: false,
       temporalIntervalDays: 1,
       temporalIntervalHours: "00",
       temporalIntervalMinutes: "00",
@@ -109,6 +110,8 @@ class NewRasterModel extends Component {
       this.setState({ temporalBoolComponentWasEverOpenedByUser: true });
     } else if (currentStep === 10) {
       this.setState({ temporalOriginComponentWasEverOpenedByUser: true });
+    } else if (currentStep === 11) {
+      this.setState({ temporalIntervalWasEverOpenedByUser: true });
     }
     this.setState({ currentStep });
   }
@@ -212,9 +215,32 @@ class NewRasterModel extends Component {
   setTemporalIntervalAmount(temporalIntervalAmount) {
     this.setState({ temporalIntervalAmount });
   }
-  validateTemporalIntervalAmount(temporalIntervalAmount) {
+  validateTemporalIntervalAmount(days, hours, minutes, seconds) {
     // positive non-zero integers (also not starting with zero)
-    return /^[1-9][0-9]*$/.test(temporalIntervalAmount);
+    // return /^[1-9][0-9]*$/.test(temporalIntervalAmount);
+    return (
+      this.validateDaysTemporalInterval(days) &&
+      this.validateHoursTemporalInterval(hours) &&
+      this.validateMinutesTemporalInterval(minutes) &&
+      this.validateSecondsTemporalInterval(seconds) &&
+      this.state.temporalIntervalWasEverOpenedByUser
+    );
+  }
+  // return /^[1-9][0-9]*$/.test(temporalIntervalAmount);
+  validateDaysTemporalInterval(days) {
+    return /^[1-9][0-9]*$/.test(days);
+  }
+  validateHoursTemporalInterval(hours) {
+    // return /^[0-9][0-9]$/.test(hours) && parseInt(hours) < 24;
+    return /^[0-9]{1,2}$/.test(hours) && parseInt(hours) < 24;
+  }
+  validateMinutesTemporalInterval(minutes) {
+    // return /^[0-9][0-9]$/.test(minutes) && parseInt(minutes) < 60;
+    return /^[0-9]{1,2}$/.test(minutes) && parseInt(minutes) < 60;
+  }
+  validateSecondsTemporalInterval(seconds) {
+    // return /^[0-9][0-9]$/.test(seconds) && parseInt(seconds) < 60;
+    return /^[0-9]{1,2}$/.test(seconds) && parseInt(seconds) < 60;
   }
   // temporal interval Days Hours Minutes Seconds
   setTemporalIntervalDays(temporalIntervalDays) {
@@ -282,6 +308,9 @@ class NewRasterModel extends Component {
   }
 
   intervalToISODuration(days, hours, minutes, seconds) {
+    if (hours[0] === "0") hours = hours[1];
+    if (minutes[0] === "0") minutes = minutes[1];
+    if (seconds[0] === "0") seconds = seconds[1];
     return "P" + days + "D" + "T" + hours + "H" + minutes + "M" + seconds + "S";
     //example: 4DT12H30M5S
     // https://www.digi.com/resources/documentation/digidocs/90001437-13/reference/r_iso_8601_duration_format.htm
@@ -607,6 +636,10 @@ class NewRasterModel extends Component {
                   updateModelValueMinutes={this.setTemporalIntervalMinutes}
                   updateModelValueSeconds={this.setTemporalIntervalSeconds}
                   validate={this.validateTemporalIntervalAmount}
+                  validateDays={this.validateDaysTemporalInterval}
+                  validateHours={this.validateHoursTemporalInterval}
+                  validateMinutes={this.validateMinutesTemporalInterval}
+                  validateSeconds={this.validateSecondsTemporalInterval}
                 />
                 <button
                   type="button"

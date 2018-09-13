@@ -13,15 +13,27 @@ import buttonStyles from "../styles/Buttons.css";
 import inputStyles from "../styles/Input.css";
 
 class DurationComponent extends Component {
-  // constructor(props) {
-  //   super(props);
-  //   this.state = {
-  //     days: 1,
-  //     hours: 0,
-  //     minutes: 0,
-  //     seconds: 0,
-  //   };
-  // }
+  constructor(props) {
+    super(props);
+    this.state = {
+      wasEverOpen: false // holds if the question was ever opened by the user. If not no checkmark should be shown
+    };
+  }
+  componentWillReceiveProps(newProps) {
+    console.log(
+      "[F] componentWillReceiveProps",
+      newProps.step,
+      newProps.currentStep
+    );
+    //this.setLocalStateFromProps(newProps);
+    const active = newProps.step === newProps.currentStep;
+
+    if (active === true && this.state.wasEverOpen === false) {
+      console.log("[F] componentWillReceiveProps 2");
+      this.setState({ wasEverOpen: true });
+    }
+  }
+
   setLocalStateFromProps(props) {
     // if (props.parentState) {
     //   this.setState({ inputText: props.modelValue });
@@ -64,6 +76,23 @@ class DurationComponent extends Component {
     this.setLocalStateFromProps(this.props);
   }
 
+  // // return /^[1-9][0-9]*$/.test(temporalIntervalAmount);
+  // validateDays(days){
+  //   return /^[1-9][0-9]*$/.test(days);
+  // }
+  // validateHours(hours) {
+  //   // return /^[0-9][0-9]$/.test(hours) && parseInt(hours) < 24;
+  //   return /^[0-9]{1,2}$/.test(hours) && parseInt(hours) < 24;
+  // }
+  // validateMinutes(minutes) {
+  //   // return /^[0-9][0-9]$/.test(minutes) && parseInt(minutes) < 60;
+  //   return /^[0-9]{1,2}$/.test(minutes) && parseInt(minutes) < 60;
+  // }
+  // validateSeconds(seconds) {
+  //   // return /^[0-9][0-9]$/.test(seconds) && parseInt(seconds) < 60;
+  //   return /^[0-9]{1,2}$/.test(seconds) && parseInt(seconds) < 60;
+  // }
+
   render() {
     const {
       titleComponent, // <FormatText ... //>
@@ -85,9 +114,22 @@ class DurationComponent extends Component {
     } = this.props;
     const active = step === currentStep;
     // const showCheckMark = validate(this.state.inputText);
-    const showCheckMark = validate(this.props.modelValue);
+    const valid = validate(
+      modelValueDays,
+      modelValueHours,
+      modelValueMinutes,
+      modelValueSeconds
+    );
+    const showCheckMark = valid;
     const mustShowClearButton = modelValue !== "";
-    const mustShowNextButton = validate(this.props) && active;
+    const mustShowNextButton = valid && active;
+
+    console.log("wasEverOpen", this.state.wasEverOpen);
+
+    const daysValid = this.props.validateDays(modelValueDays);
+    const hoursValid = this.props.validateHours(modelValueHours);
+    const minutesValid = this.props.validateMinutes(modelValueMinutes);
+    const secondsValid = this.props.validateSeconds(modelValueSeconds);
 
     return (
       <div className={styles.Step} id={"Step-" + step}>
@@ -111,7 +153,7 @@ class DurationComponent extends Component {
               }
             >
               <div
-                class={
+                className={
                   styles.DurationInputFields +
                   " " +
                   styles.DurationInputFieldDays +
@@ -126,9 +168,12 @@ class DurationComponent extends Component {
                   type="text"
                   autoComplete="false"
                   className={
-                    formStyles.FormControl + " " + styles.TextAlignRight
+                    formStyles.FormControl +
+                    " " +
+                    styles.TextAlignRight +
+                    (!daysValid ? " " + styles.Invalid : "")
                   }
-                  maxLength="2"
+                  maxLength="4"
                   size="4"
                   placeholder={placeholder}
                   onChange={e =>
@@ -138,7 +183,9 @@ class DurationComponent extends Component {
                 />
               </div>
               <div
-                class={styles.DurationInputFields + " " + styles.TextAlignRight}
+                className={
+                  styles.DurationInputFields + " " + styles.TextAlignRight
+                }
               >
                 <label>Hours</label>
                 <input
@@ -147,7 +194,10 @@ class DurationComponent extends Component {
                   type="text"
                   autoComplete="false"
                   className={
-                    formStyles.FormControl + " " + styles.TextAlignRight
+                    formStyles.FormControl +
+                    " " +
+                    styles.TextAlignRight +
+                    (!hoursValid ? " " + styles.Invalid : "")
                   }
                   maxLength="2"
                   size="2"
@@ -158,15 +208,18 @@ class DurationComponent extends Component {
                   //onKeyUp={e => this.handleEnter(e)}
                 />
               </div>
-              <div class={styles.DurationInputHourSecondSeperator}>:</div>
-              <div class={styles.DurationInputFields}>
+              <div className={styles.DurationInputHourSecondSeperator}>:</div>
+              <div className={styles.DurationInputFields}>
                 <label>Mins</label>
                 <input
                   id={titleComponent.props.id + "_input"}
                   tabIndex="-2"
                   type="text"
                   autoComplete="false"
-                  className={formStyles.FormControl}
+                  className={
+                    formStyles.FormControl +
+                    (!minutesValid ? " " + styles.Invalid : "")
+                  }
                   maxLength="2"
                   size="2"
                   placeholder={placeholder}
@@ -177,7 +230,7 @@ class DurationComponent extends Component {
                 />
               </div>
               <div
-                class={
+                className={
                   styles.DurationInputFields +
                   " " +
                   styles.DurationInputFieldSeconds
@@ -189,7 +242,10 @@ class DurationComponent extends Component {
                   tabIndex="-2"
                   type="text"
                   autoComplete="false"
-                  className={formStyles.FormControl}
+                  className={
+                    formStyles.FormControl +
+                    (!secondsValid ? " " + styles.Invalid : "")
+                  }
                   maxLength="2"
                   size="4"
                   placeholder={placeholder}
@@ -199,7 +255,8 @@ class DurationComponent extends Component {
                   //onKeyUp={e => this.handleEnter(e)}
                 />
               </div>
-
+              <div />
+              {/* above div to make layout newline */}
               {mustShowNextButton ? (
                 <button
                   className={`${buttonStyles.Button} ${buttonStyles.Success}`}
