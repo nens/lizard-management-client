@@ -20,9 +20,13 @@ class GenericTextInputComponent extends Component {
     };
   }
   setLocalStateFromProps(props) {
-    if (props.parentState) {
-      this.setState({ inputText: props.modelValue });
-    }
+    console.log(
+      "genericTextInputComponent setLocalStateFromProps",
+      props.modelValue
+    );
+    //if (props.parentState) {
+    this.setState({ inputText: props.modelValue });
+    //}
     // If this component is the "current step component", set the page focus to the components
     // input field:
     if (props.step === props.currentStep) {

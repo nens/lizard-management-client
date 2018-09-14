@@ -23,42 +23,48 @@ class RasterFormModel extends Component {
   constructor(props) {
     super(props);
     console.log("moment", moment(), moment().toISOString());
-    this.state = {
-      currentStep: 1,
-      rasterName: "",
-      selectedOrganisation: {
-        name: "",
-        unique_id: ""
-      },
-      storePathName: "",
-      slug: "",
-      description: "",
-      temporalBool: false,
-      temporalBoolComponentWasEverOpenedByUser: false, // a checkbbox is always valid, but we should only mark it as valid if the user has actualy opened the question
-      temporalOrigin: moment(), //"2000-01-01T00:00:00Z",
-      temporalOriginComponentWasEverOpenedByUser: false, // the data is valid since it is created with momentJS, but should only be marked as such when the date component was actually opened once
-      temporalIntervalUnit: "seconds", // for now assume seconds// one of [seconds minutes hours days weeks] no months years because those are not a static amount of seconds..
-      temporalIntervalAmount: "", //60*60, //minutes times seconds = hour // positive integer. amount of temporalIntervalUnit
-      temporalIntervalWasEverOpenedByUser: false,
-      temporalIntervalDays: 1,
-      temporalIntervalHours: "00",
-      temporalIntervalMinutes: "00",
-      temporalIntervalSeconds: "00",
-      temporalOptimizer: true, // default true, not set by the user for first iteration
-      // TODO let colormap have min and max as below with styles
-      colorMap: "",
-      // colorMapMin: 0,
-      // colorMapMax: 100, // what are reasonable defaults?
-      aggregationType: "", // choice: none | counts | curve | histogram | sum | average
-      supplierId: "",
-      supplierCode: "",
-      // observationType: {
-      //   code: "",
-      //   url: ""
-      // },
-      observationType: null,
-      sharedWith: []
-    };
+
+    if (this.props.currentRaster) {
+      console.log("[F] rasterfrom currentRaster", this.props.currentRaster);
+      this.state = this.currentRasterToState(this.props.currentRaster);
+    } else {
+      this.state = {
+        currentStep: 1,
+        rasterName: "13579",
+        selectedOrganisation: {
+          name: "",
+          unique_id: ""
+        },
+        storePathName: "",
+        slug: "",
+        description: "",
+        temporalBool: false,
+        temporalBoolComponentWasEverOpenedByUser: false, // a checkbbox is always valid, but we should only mark it as valid if the user has actualy opened the question
+        temporalOrigin: moment(), //"2000-01-01T00:00:00Z",
+        temporalOriginComponentWasEverOpenedByUser: false, // the data is valid since it is created with momentJS, but should only be marked as such when the date component was actually opened once
+        temporalIntervalUnit: "seconds", // for now assume seconds// one of [seconds minutes hours days weeks] no months years because those are not a static amount of seconds..
+        temporalIntervalAmount: "", //60*60, //minutes times seconds = hour // positive integer. amount of temporalIntervalUnit
+        temporalIntervalWasEverOpenedByUser: false,
+        temporalIntervalDays: 1,
+        temporalIntervalHours: "00",
+        temporalIntervalMinutes: "00",
+        temporalIntervalSeconds: "00",
+        temporalOptimizer: true, // default true, not set by the user for first iteration
+        // TODO let colormap have min and max as below with styles
+        colorMap: "",
+        // colorMapMin: 0,
+        // colorMapMax: 100, // what are reasonable defaults?
+        aggregationType: "", // choice: none | counts | curve | histogram | sum | average
+        supplierId: "",
+        supplierCode: "",
+        // observationType: {
+        //   code: "",
+        //   url: ""
+        // },
+        observationType: null,
+        sharedWith: []
+      };
+    }
 
     this.setCurrentStep = this.setCurrentStep.bind(this);
     this.setRasterName = this.setRasterName.bind(this);
@@ -125,9 +131,14 @@ class RasterFormModel extends Component {
 
   // RasterName
   setRasterName(rasterName) {
-    this.setState({ rasterName });
+    //console.log('setRasterName', rasterName);
+    this.setState({ rasterName }, () =>
+      console.log("[callback setState]", this.state.rasterName)
+    );
+    //console.log('setRasterName2', this.state.rasterName);
   }
   resetRasterName() {
+    //console.log('resetRasterName');
     this.setState({ rasterName: "" });
   }
   validateNewRasterName(str) {
@@ -318,6 +329,51 @@ class RasterFormModel extends Component {
     // https://www.digi.com/resources/documentation/digidocs/90001437-13/reference/r_iso_8601_duration_format.htm
   }
 
+  currentRasterToState(currentRaster) {
+    //console.log('currentRaster.name', currentRaster.name);
+    // this.setState({
+    //   rasterName: currentRaster.name + '',
+    // })
+    //this.setRasterName('1234567')
+    //console.log('this.state.rasterName', this.state.rasterName);
+    return {
+      currentStep: 1,
+      rasterName: currentRaster.name,
+      selectedOrganisation: {
+        name: "",
+        unique_id: ""
+      },
+      storePathName: "",
+      slug: "",
+      description: "",
+      temporalBool: false,
+      temporalBoolComponentWasEverOpenedByUser: false, // a checkbbox is always valid, but we should only mark it as valid if the user has actualy opened the question
+      temporalOrigin: moment(), //"2000-01-01T00:00:00Z",
+      temporalOriginComponentWasEverOpenedByUser: false, // the data is valid since it is created with momentJS, but should only be marked as such when the date component was actually opened once
+      temporalIntervalUnit: "seconds", // for now assume seconds// one of [seconds minutes hours days weeks] no months years because those are not a static amount of seconds..
+      temporalIntervalAmount: "", //60*60, //minutes times seconds = hour // positive integer. amount of temporalIntervalUnit
+      temporalIntervalWasEverOpenedByUser: false,
+      temporalIntervalDays: 1,
+      temporalIntervalHours: "00",
+      temporalIntervalMinutes: "00",
+      temporalIntervalSeconds: "00",
+      temporalOptimizer: true, // default true, not set by the user for first iteration
+      // TODO let colormap have min and max as below with styles
+      colorMap: "",
+      // colorMapMin: 0,
+      // colorMapMax: 100, // what are reasonable defaults?
+      aggregationType: "", // choice: none | counts | curve | histogram | sum | average
+      supplierId: "",
+      supplierCode: "",
+      // observationType: {
+      //   code: "",
+      //   url: ""
+      // },
+      observationType: null,
+      sharedWith: []
+    };
+  }
+
   handleClickCreateRaster() {
     const url = "/api/v3/rasters/";
     const observationTypeId = this.parseObservationTypeIdFromUrl(
@@ -396,6 +452,8 @@ class RasterFormModel extends Component {
       description,
       aggregationType
     } = this.state;
+
+    console.log("rasterform render rasterName=", rasterName);
 
     return (
       <div>

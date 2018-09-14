@@ -98,7 +98,7 @@ class Raster extends Component {
           >
             {raster.description}
           </NavLink>
-          <button
+          {/* <button
             type="button"
             className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link}`}
             onClick={() => {
@@ -108,7 +108,7 @@ class Raster extends Component {
             }}
           >
             <FormattedMessage id="rasters.remove_alarm" defaultMessage="edit" />
-          </button>
+          </button> */}
         </Row>
       );
     });
