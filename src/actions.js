@@ -106,6 +106,10 @@ export function fetchOrganisations() {
 }
 
 export function selectOrganisation(organisation) {
+  localStorage.setItem(
+    "lizard-management-current-organisation",
+    JSON.stringify(organisation)
+  );
   return {
     type: SELECT_ORGANISATION,
     organisation
