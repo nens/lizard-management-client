@@ -29,21 +29,21 @@ class App extends Component {
   }
   componentDidMount() {
     const { page } = this.state;
-    // this.loadAlarmsOnPage(page);
+    this.loadAlarmsOnPage(page);
   }
-  componentWillReceiveProps(newProps) {
-    console.log("componentWillReceiveProps notifications app");
-    const { page, hasFiredFetch } = this.state;
-    const { isFetchingOrganisations, selectedOrganisation } = newProps;
-    console.log(
-      "isFetchingOrganisations",
-      isFetchingOrganisations,
-      selectedOrganisation
-    );
-    if (!isFetchingOrganisations && !hasFiredFetch && selectedOrganisation) {
-      this.loadAlarmsOnPage(page, newProps);
-    }
-  }
+  // componentWillReceiveProps(newProps) {
+  //   console.log("componentWillReceiveProps notifications app");
+  //   const { page, hasFiredFetch } = this.state;
+  //   const { isFetchingOrganisations, selectedOrganisation } = newProps;
+  //   console.log(
+  //     "isFetchingOrganisations",
+  //     isFetchingOrganisations,
+  //     selectedOrganisation
+  //   );
+  //   if ( !hasFiredFetch && selectedOrganisation) {
+  //     this.loadAlarmsOnPage(page, newProps);
+  //   }
+  // }
 
   loadAlarmsOnPage(page, newProps) {
     const { selectedOrganisation } = newProps || this.props;
