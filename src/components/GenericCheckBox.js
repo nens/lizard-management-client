@@ -64,8 +64,8 @@ class GenericCheckBox extends Component {
         <span
           className={`${styles.CheckboxSpan} ${checkedClass} ${hoverClass}`}
         >
-          {/* always render checkmark but make color transparent with css */}
-          {"✔"}
+          {/* always render checkmark but make hidden or transparent with css */}
+          <span>{"✔"}</span>
         </span>
         <label className={styles.Label}>{label}</label>
       </div>

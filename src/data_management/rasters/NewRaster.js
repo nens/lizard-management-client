@@ -12,6 +12,8 @@ import GenericSelectBoxComponent from "../../components/GenericSelectBoxComponen
 import GenericCheckBoxComponent from "../../components/GenericCheckBoxComponent";
 import GenericDateComponent from "../../components/GenericDateComponent";
 import DurationComponent from "../../components/DurationComponent";
+import inputStyles from "../../styles/Input.css";
+import StepIndicator from "../../components/StepIndicator";
 
 // ! important, these old component may later be used! Ther corresponding files already exist
 // import bindReactFunctions from "../../utils/BindReactFunctions.js"; // currently not working. Probably needs a list with functions in which case this is probably only overcomplicating things
@@ -641,21 +643,23 @@ class NewRasterModel extends Component {
                   validateMinutes={this.validateMinutesTemporalInterval}
                   validateSeconds={this.validateSecondsTemporalInterval}
                 />
-                <button
-                  type="button"
-                  className={`${buttonStyles.Button} ${buttonStyles.Success}`}
-                  style={{ marginTop: 10 }}
-                  onClick={() => {
-                    this.handleClickCreateRaster();
-                  }}
-                >
-                  <FormatMessage id="rasters.submit" />
-                </button>
-
                 {this.validateAll() ? (
-                  <button>SUBMIT</button>
+                  <div className={inputStyles.InputContainer}>
+                    <button
+                      type="button"
+                      className={`${buttonStyles.Button} ${buttonStyles.Success}`}
+                      style={{ marginTop: 10 }}
+                      onClick={() => {
+                        this.handleClickCreateRaster();
+                      }}
+                    >
+                      <FormatMessage id="rasters.submit" />
+                    </button>
+                  </div>
                 ) : (
-                  <span>Please make sure that all answers are valid</span>
+                  <div className={inputStyles.InputContainer}>
+                    <FormatMessage id="rasters.please complete the form before submitting" />
+                  </div>
                 )}
               </div>
             </div>
