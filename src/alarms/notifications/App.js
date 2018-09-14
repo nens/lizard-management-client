@@ -16,6 +16,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      hasFiredFetch: false,
       isFetching: true,
       alarms: [],
       total: 0,
@@ -28,13 +29,26 @@ class App extends Component {
   }
   componentDidMount() {
     const { page } = this.state;
-    this.loadAlarmsOnPage(page);
+    // this.loadAlarmsOnPage(page);
+  }
+  componentWillReceiveProps(newProps) {
+    console.log("componentWillReceiveProps notifications app");
+    const { page, hasFiredFetch } = this.state;
+    const { isFetchingOrganisations, selectedOrganisation } = newProps;
+    console.log(
+      "isFetchingOrganisations",
+      isFetchingOrganisations,
+      selectedOrganisation
+    );
+    if (!isFetchingOrganisations && !hasFiredFetch && selectedOrganisation) {
+      this.loadAlarmsOnPage(page, newProps);
+    }
   }
 
-  loadAlarmsOnPage(page) {
-    const { selectedOrganisation } = this.props;
+  loadAlarmsOnPage(page, newProps) {
+    const { selectedOrganisation } = newProps || this.props;
     const organisationId = selectedOrganisation.unique_id;
-
+    this.setState({ hasFiredFetch: true });
     fetch(
       `/api/v3/rasteralarms/?page=${page}&organisation__unique_id=${organisationId}`,
       {
@@ -176,8 +190,10 @@ class App extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
+  console.log("[F] mapStateToProps state.organisations ", state.organisations);
   return {
-    selectedOrganisation: state.organisations.selected
+    selectedOrganisation: state.organisations.selected,
+    isFetchingOrganisations: state.organisations.isFetching
   };
 };
 
