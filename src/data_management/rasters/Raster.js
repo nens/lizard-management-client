@@ -79,38 +79,35 @@ class Raster extends Component {
     const numberOfRasters = total;
     const rasterRows = this.sortList(rasters);
 
-    const htmlRasterTable = rasterRows.map((alarm, i) => {
+    const htmlRasterTable = rasterRows.map((raster, i) => {
       return (
-        <Row key={i} alarm={alarm} loadAlarmsOnPage={this.loadAlarmsOnPage}>
+        <Row key={i} alarm={raster} loadAlarmsOnPage={this.loadAlarmsOnPage}>
           <NavLink
-            to={`/alarms/notifications/${alarm.uuid}`}
+            to={`/data_management/rasters/${raster.uuid}`}
             style={{
               color: "#333"
             }}
           >
-            {alarm.name}
+            {raster.name}
           </NavLink>
           <NavLink
-            to={`/alarms/notifications/${alarm.uuid}`}
+            to={`/data_management/rasters/${raster.uuid}`}
             style={{
               color: "#333"
             }}
           >
-            {alarm.description}
+            {raster.description}
           </NavLink>
           <button
             type="button"
             className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link}`}
             onClick={() => {
               if (window.confirm("Are you sure?")) {
-                this.removeAlarm(alarm.uuid);
+                this.removeAlarm(raster.uuid);
               }
             }}
           >
-            <FormattedMessage
-              id="notifications_app.remove_alarm"
-              defaultMessage="edit"
-            />
+            <FormattedMessage id="rasters.remove_alarm" defaultMessage="edit" />
           </button>
         </Row>
       );

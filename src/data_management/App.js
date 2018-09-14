@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { DataManagement as DataManagementHome } from "./DataManagement";
 import { Raster as RasterApp } from "./rasters/Raster";
 import { NewRaster } from "./rasters/NewRaster";
+import { EditRaster } from "./rasters/EditRaster";
 
 import { Route, Switch, withRouter } from "react-router-dom";
 
@@ -30,6 +31,11 @@ class App extends Component {
             exact
             path="/data_management/rasters/new"
             component={NewRaster}
+          />
+          <Route
+            exact
+            path="/data_management/rasters/:id"
+            component={EditRaster}
           />
         </Switch>
       </div>

@@ -4,12 +4,12 @@ import { withRouter } from "react-router-dom";
 
 import { RasterForm } from "./RasterForm";
 
-class NewRasterModel extends Component {
+class EditRasterModel extends Component {
   render() {
     return <RasterForm />;
   }
 }
 
-const NewRaster = withRouter(connect()(NewRasterModel));
+const EditRaster = withRouter(connect()(EditRasterModel));
 
-export { NewRaster };
+export { EditRaster };
