@@ -48,7 +48,10 @@ function organisations(
   state = {
     isFetching: false,
     available: [],
-    selected: null
+    selected:
+      JSON.parse(
+        localStorage.getItem("lizard-management-current-organisation")
+      ) || null
   },
   action
 ) {
