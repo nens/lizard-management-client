@@ -22,48 +22,10 @@ import StepIndicator from "../../components/StepIndicator";
 class RasterFormModel extends Component {
   constructor(props) {
     super(props);
-    console.log("moment", moment(), moment().toISOString());
-
     if (this.props.currentRaster) {
-      console.log("[F] rasterfrom currentRaster", this.props.currentRaster);
       this.state = this.currentRasterToState(this.props.currentRaster);
     } else {
-      this.state = {
-        currentStep: 1,
-        rasterName: "13579",
-        selectedOrganisation: {
-          name: "",
-          unique_id: ""
-        },
-        storePathName: "",
-        slug: "",
-        description: "",
-        temporalBool: false,
-        temporalBoolComponentWasEverOpenedByUser: false, // a checkbbox is always valid, but we should only mark it as valid if the user has actualy opened the question
-        temporalOrigin: moment(), //"2000-01-01T00:00:00Z",
-        temporalOriginComponentWasEverOpenedByUser: false, // the data is valid since it is created with momentJS, but should only be marked as such when the date component was actually opened once
-        temporalIntervalUnit: "seconds", // for now assume seconds// one of [seconds minutes hours days weeks] no months years because those are not a static amount of seconds..
-        temporalIntervalAmount: "", //60*60, //minutes times seconds = hour // positive integer. amount of temporalIntervalUnit
-        temporalIntervalWasEverOpenedByUser: false,
-        temporalIntervalDays: 1,
-        temporalIntervalHours: "00",
-        temporalIntervalMinutes: "00",
-        temporalIntervalSeconds: "00",
-        temporalOptimizer: true, // default true, not set by the user for first iteration
-        // TODO let colormap have min and max as below with styles
-        colorMap: "",
-        // colorMapMin: 0,
-        // colorMapMax: 100, // what are reasonable defaults?
-        aggregationType: "", // choice: none | counts | curve | histogram | sum | average
-        supplierId: "",
-        supplierCode: "",
-        // observationType: {
-        //   code: "",
-        //   url: ""
-        // },
-        observationType: null,
-        sharedWith: []
-      };
+      this.state = this.setInitialState(props);
     }
 
     this.setCurrentStep = this.setCurrentStep.bind(this);
@@ -131,14 +93,9 @@ class RasterFormModel extends Component {
 
   // RasterName
   setRasterName(rasterName) {
-    //console.log('setRasterName', rasterName);
-    this.setState({ rasterName }, () =>
-      console.log("[callback setState]", this.state.rasterName)
-    );
-    //console.log('setRasterName2', this.state.rasterName);
+    this.setState({ rasterName });
   }
   resetRasterName() {
-    //console.log('resetRasterName');
     this.setState({ rasterName: "" });
   }
   validateNewRasterName(str) {
@@ -329,16 +286,10 @@ class RasterFormModel extends Component {
     // https://www.digi.com/resources/documentation/digidocs/90001437-13/reference/r_iso_8601_duration_format.htm
   }
 
-  currentRasterToState(currentRaster) {
-    //console.log('currentRaster.name', currentRaster.name);
-    // this.setState({
-    //   rasterName: currentRaster.name + '',
-    // })
-    //this.setRasterName('1234567')
-    //console.log('this.state.rasterName', this.state.rasterName);
+  setInitialState(props) {
     return {
       currentStep: 1,
-      rasterName: currentRaster.name,
+      rasterName: "",
       selectedOrganisation: {
         name: "",
         unique_id: ""
@@ -374,6 +325,43 @@ class RasterFormModel extends Component {
     };
   }
 
+  currentRasterToState(currentRaster) {
+    // is there the possibility that available supplier id is not yet retrieved from server?
+    const selectedSupplierId = this.props.supplierIds.available.filter(
+      e => e.url === currentRaster.supplier
+    )[0];
+
+    return {
+      currentStep: 1,
+      rasterName: currentRaster.name,
+      selectedOrganisation: {
+        name: currentRaster.organisation.name,
+        unique_id: currentRaster.organisation.unique_id
+      },
+      storePathName: currentRaster.slug.replace(/:/g, "/"),
+      slug: currentRaster.slug,
+      description: currentRaster.description,
+      temporalBool: currentRaster.temporal,
+      temporalBoolComponentWasEverOpenedByUser: true, // a checkbbox is always valid, but we should only mark it as valid if the user has actualy opened the question
+      temporalOrigin: moment(currentRaster.origin), //"2000-01-01T00:00:00Z",
+      temporalOriginComponentWasEverOpenedByUser: true, // the data is valid since it is created with momentJS, but should only be marked as such when the date component was actually opened once
+      temporalIntervalUnit: "seconds", // for now assume seconds// one of [seconds minutes hours days weeks] no months years because those are not a static amount of seconds..
+      temporalIntervalAmount: "", //60*60, //minutes times seconds = hour // positive integer. amount of temporalIntervalUnit
+      temporalIntervalWasEverOpenedByUser: true,
+      temporalIntervalDays: 1,
+      temporalIntervalHours: "00",
+      temporalIntervalMinutes: "00",
+      temporalIntervalSeconds: "00",
+      temporalOptimizer: true, // default true, not set by the user for first iteration
+      colorMap: { name: currentRaster.options.styles },
+      aggregationType: currentRaster.aggregation_type, // choice: none | counts | curve | histogram | sum | average
+      supplierId: selectedSupplierId,
+      supplierCode: currentRaster.supplier_code,
+      observationType: currentRaster.observation_type,
+      sharedWith: []
+    };
+  }
+
   handleClickCreateRaster() {
     const url = "/api/v3/rasters/";
     const observationTypeId = this.parseObservationTypeIdFromUrl(
@@ -389,7 +377,6 @@ class RasterFormModel extends Component {
       this.state.temporalIntervalMinutes,
       this.state.temporalIntervalSeconds
     );
-    console.log("isoIntervalDuration", isoIntervalDuration);
 
     const opts = {
       credentials: "same-origin",
@@ -414,17 +401,6 @@ class RasterFormModel extends Component {
           styles: this.state.colorMap.name
         }
       })
-      // body: JSON.stringify({
-      //   "name": 'tom test 14',
-      //   "organisation": "61f5a464c35044c19bc7d4b42d7f58cb",//this.props.organisations.selected.unique_id,//"61f5a464c35044c19bc7d4b42d7f58cb",
-      //   "access_modifier": 0,
-      //   "observation_type": this.state.observationType,
-      //   "supplier": "tom.deboer", //this.state.supplierId,
-      //   "supplier_code": "123456789_14",//this.state.supplierCode,
-      //   "temporal": false,//this.state.temporalBool,
-      //   "interval": "PT5M",
-      //   "rescalable": true,
-      // })
     };
 
     fetch(url, opts)
@@ -452,8 +428,6 @@ class RasterFormModel extends Component {
       description,
       aggregationType
     } = this.state;
-
-    console.log("rasterform render rasterName=", rasterName);
 
     return (
       <div>

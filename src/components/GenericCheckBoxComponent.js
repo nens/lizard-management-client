@@ -54,7 +54,8 @@ class GenericSelectBoxComponent extends Component {
       label
     } = this.props;
     const active = step === currentStep;
-    const showCheckMark = this.state.wasEverOpen; //true;//= validate(modelValue);
+    //const showCheckMark = this.state.wasEverOpen; //true;//= validate(modelValue);
+    const showCheckMark = this.props.validate(modelValue);
     const showNextButton = true;
 
     return (
