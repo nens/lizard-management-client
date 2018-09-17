@@ -78,8 +78,16 @@
   "contacts_app.phone_number_3": "Telefoonnummer",
   "contacts_new.create_contact": "Maak contact",
   "contacts_new.update_contact": "Contact aanpassen",
+  "data_management.assets": "Assets",
+  "data_management.manage_assets": "Beheer assets",
+  "data_management.manage_rasters": "Beheer rasters",
+  "data_management.manage_time_series": "Beheer Tijd Series",
+  "data_management.rasters": "Rasters",
+  "data_management.time_series": "Tijd Series",
   "home.alarm_management": "Alarmenbeheer",
   "home.alarms": "Alarmen",
+  "home.data_administration": "Gegevensbeheer",
+  "home.data_management": "Data Management",
   "home.scenario_management": "Scenariobeheer",
   "home.scenarios": "3Di Scenario's",
   "home.sso_management": "Single sign-on beheer",
@@ -137,6 +145,8 @@
   "notifications_app.warning_level_label": "Een label voor dit waarschuwingsniveau. Bijvoorbeeld: 'Overschreden'",
   "notifications_app.when_an_alarm_is_triggered": "Wanneer dit alarm afgaat, zullen deze groepen bericht krijgen.",
   "notifications_app.which_temporal_raster_to_use": "Welk temporeel raster wil je gebruiken?",
-  "home.data_management": "Data Management",
-  "home.data_administration": "Gegevensbeheer"
+  "rasters.new_raster": "Nieuw raster",
+  "rasters.next_step": "Volgende",
+  "rasters.no_rasters": "Geen rasters gevonden...",
+  "rasters.number_of_rasters": "{numberOfRasters, Aantal} {numberOfRasters, plural, one {Raster} other {Rasters}}"
 }

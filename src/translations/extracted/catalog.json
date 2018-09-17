@@ -520,6 +520,10 @@
 		"defaultMessage": "Support"
 	},
 	{
+		"id": "rasters.next_step",
+		"defaultMessage": "Next Step"
+	},
+	{
 		"id": "components.switch_org",
 		"defaultMessage": "Switch organisation"
 	},

@@ -4,7 +4,7 @@ import { withRouter } from "react-router-dom";
 
 import CheckMark from "./CheckMark";
 import StepIndicator from "./StepIndicator";
-import FormatMessage from "../utils/FormatMessage.js";
+import { FormattedMessage } from "react-intl";
 import ClearInputButton from "./ClearInputButton.js";
 
 import styles from "./DurationComponent.css";
@@ -75,23 +75,6 @@ class DurationComponent extends Component {
   componentDidMount() {
     this.setLocalStateFromProps(this.props);
   }
-
-  // // return /^[1-9][0-9]*$/.test(temporalIntervalAmount);
-  // validateDays(days){
-  //   return /^[1-9][0-9]*$/.test(days);
-  // }
-  // validateHours(hours) {
-  //   // return /^[0-9][0-9]$/.test(hours) && parseInt(hours) < 24;
-  //   return /^[0-9]{1,2}$/.test(hours) && parseInt(hours) < 24;
-  // }
-  // validateMinutes(minutes) {
-  //   // return /^[0-9][0-9]$/.test(minutes) && parseInt(minutes) < 60;
-  //   return /^[0-9]{1,2}$/.test(minutes) && parseInt(minutes) < 60;
-  // }
-  // validateSeconds(seconds) {
-  //   // return /^[0-9][0-9]$/.test(seconds) && parseInt(seconds) < 60;
-  //   return /^[0-9]{1,2}$/.test(seconds) && parseInt(seconds) < 60;
-  // }
 
   render() {
     const {
@@ -265,7 +248,10 @@ class DurationComponent extends Component {
                     setCurrentStep(step + 1);
                   }}
                 >
-                  <FormatMessage id="notifications_app.next_step" />
+                  <FormattedMessage
+                    id="rasters.next_step"
+                    defaultMessage="Next Step"
+                  />
                 </button>
               ) : null}
             </div>
