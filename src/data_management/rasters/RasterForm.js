@@ -7,6 +7,8 @@ import { connect } from "react-redux";
 import moment from "moment";
 import { withRouter } from "react-router-dom";
 import FormatMessage from "../../utils/FormatMessage";
+import { FormattedMessage } from "react-intl";
+
 import GenericTextInputComponent from "../../components/GenericTextInputComponent";
 import GenericSelectBoxComponent from "../../components/GenericSelectBoxComponent";
 import GenericCheckBoxComponent from "../../components/GenericCheckBoxComponent";
@@ -466,7 +468,10 @@ class RasterFormModel extends Component {
               <div id="steps" style={{ margin: "20px 0 0 20px" }}>
                 <GenericTextInputComponent
                   titleComponent={
-                    <FormatMessage id="rasters.name_of_this_raster" />
+                    <FormattedMessage
+                      id="rasters.name_of_this_raster"
+                      defaultMessage="Name of this Raster"
+                    />
                   }
                   subtitleComponent={
                     <FormatMessage

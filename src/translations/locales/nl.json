@@ -148,5 +148,5 @@
   "rasters.new_raster": "Nieuw raster",
   "rasters.next_step": "Volgende",
   "rasters.no_rasters": "Geen rasters gevonden...",
-  "rasters.number_of_rasters": "{numberOfRasters, Aantal} {numberOfRasters, plural, one {Raster} other {Rasters}}"
+  "rasters.number_of_rasters": "{numberOfRasters, number} {numberOfRasters, plural, one {Raster} other {Rasters}}"
 }

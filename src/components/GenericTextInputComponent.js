@@ -4,7 +4,7 @@ import { withRouter } from "react-router-dom";
 
 import CheckMark from "./CheckMark";
 import StepIndicator from "./StepIndicator";
-import FormatMessage from "../utils/FormatMessage.js";
+import { FormattedMessage } from "react-intl";
 import ClearInputButton from "./ClearInputButton.js";
 
 import styles from "./GenericTextInputComponent.css";
@@ -143,7 +143,10 @@ class GenericTextInputComponent extends Component {
                     setCurrentStep(step + 1);
                   }}
                 >
-                  <FormatMessage id="notifications_app.next_step" />
+                  <FormattedMessage
+                    id="rasters.next_step"
+                    defaultMessage="Next Step"
+                  />;
                 </button>
               ) : null}
             </div>

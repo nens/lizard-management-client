@@ -11,8 +11,8 @@ class FormatMessage extends Component {
   render() {
     const id = this.props.id,
       defaultMessage = this.props.defaultMessage || this.getDefaultMessage(id);
-    return <div>placeholder for formatted message</div>;
-    //return <FormattedMessage id={id} defaultMessage={defaultMessage} />;
+    // return <div>placeholder for formatted message</div>;
+    return <FormattedMessage id={id} defaultMessage={defaultMessage} />;
   }
 }
 

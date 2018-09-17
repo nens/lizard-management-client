@@ -4,14 +4,13 @@ import { withRouter } from "react-router-dom";
 
 import CheckMark from "./CheckMark";
 import StepIndicator from "./StepIndicator";
-import FormatMessage from "../utils/FormatMessage.js";
+import { FormattedMessage } from "react-intl";
 import GenericCheckBox from "./GenericCheckBox.js";
 
 import styles from "./GenericCheckBoxComponent.css";
 import formStyles from "../styles/Forms.css";
 import buttonStyles from "../styles/Buttons.css";
 import inputStyles from "../styles/Input.css";
-import displayStyles from "../styles/Display.css";
 
 class GenericSelectBoxComponent extends Component {
   constructor(props) {
@@ -114,7 +113,10 @@ class GenericSelectBoxComponent extends Component {
                     setCurrentStep(step + 1);
                   }}
                 >
-                  <FormatMessage id="notifications_app.next_step" />
+                  <FormattedMessage
+                    id="rasters.next_step"
+                    defaultMessage="Next Step"
+                  />
                 </button>
               ) : null}
             </div>
