@@ -22,17 +22,15 @@ class Raster extends Component {
       total: 0,
       page: 1
     };
-    this.handleNewNotificationClick = this.handleNewNotificationClick.bind(
-      this
-    );
-    this.loadAlarmsOnPage = this.loadAlarmsOnPage.bind(this);
+    this.handleNewRasterClick = this.handleNewRasterClick.bind(this);
+    this.loadRastersOnPage = this.loadRastersOnPage.bind(this);
   }
   componentDidMount() {
     const { page } = this.state;
-    this.loadAlarmsOnPage(page);
+    this.loadRastersOnPage(page);
   }
 
-  loadAlarmsOnPage(page) {
+  loadRastersOnPage(page) {
     fetch(
       `/api/v3/rasters/?page=${page}`, // &organisation__unique_id=${organisationId},
       {
@@ -50,7 +48,7 @@ class Raster extends Component {
       });
   }
 
-  handleNewNotificationClick() {
+  handleNewRasterClick() {
     const { history } = this.props;
     history.push("rasters/new");
   }
@@ -81,7 +79,7 @@ class Raster extends Component {
 
     const htmlRasterTable = rasterRows.map((raster, i) => {
       return (
-        <Row key={i} alarm={raster} loadAlarmsOnPage={this.loadAlarmsOnPage}>
+        <Row key={i} alarm={raster} loadRastersOnPage={this.loadRastersOnPage}>
           <NavLink
             to={`/data_management/rasters/${raster.uuid}`}
             style={{
@@ -98,17 +96,6 @@ class Raster extends Component {
           >
             {raster.description}
           </NavLink>
-          {/* <button
-            type="button"
-            className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link}`}
-            onClick={() => {
-              if (window.confirm("Are you sure?")) {
-                this.removeAlarm(raster.uuid);
-              }
-            }}
-          >
-            <FormattedMessage id="rasters.remove_alarm" defaultMessage="edit" />
-          </button> */}
         </Row>
       );
     });
@@ -127,7 +114,7 @@ class Raster extends Component {
             className={`${gridStyles.colLg8} ${gridStyles.colMd8} ${gridStyles.colSm8} ${gridStyles.colXs8}`}
           >
             <FormattedMessage
-              id="notifications_app.number_of_notifications"
+              id="rasters.number_of_rasters"
               defaultMessage={`{numberOfRasters, number} {numberOfRasters, plural, 
                 one {Raster}
                 other {Rasters}}`}
@@ -141,10 +128,10 @@ class Raster extends Component {
               type="button"
               style={{ float: "right" }}
               className={`${buttonStyles.Button} ${buttonStyles.Success}`}
-              onClick={this.handleNewNotificationClick}
+              onClick={this.handleNewRasterClick}
             >
               <FormattedMessage
-                id="notifications_app.new_raster"
+                id="rasters.new_raster"
                 defaultMessage="New raster"
               />
               <Ink />
@@ -174,7 +161,7 @@ class Raster extends Component {
                 <img src={alarmIcon} alt="Alarms" />
                 <h5>
                   <FormattedMessage
-                    id="notifications_app.no_notifications"
+                    id="rasters.no_rasters"
                     defaultMessage="No rasters configured..."
                   />
                 </h5>
@@ -187,7 +174,7 @@ class Raster extends Component {
             className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
           >
             <PaginationBar
-              loadAlarmsOnPage={this.loadAlarmsOnPage}
+              loadRastersOnPage={this.loadRastersOnPage}
               page={page}
               pages={Math.ceil(total / 10)}
             />

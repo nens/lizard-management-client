@@ -528,6 +528,42 @@
 		"defaultMessage": "Dismiss"
 	},
 	{
+		"id": "data_management.rasters",
+		"defaultMessage": "Rasters"
+	},
+	{
+		"id": "data_management.manage_rasters",
+		"defaultMessage": "Manage rasters"
+	},
+	{
+		"id": "data_management.assets",
+		"defaultMessage": "Assets"
+	},
+	{
+		"id": "data_management.manage_assets",
+		"defaultMessage": "Manage assets"
+	},
+	{
+		"id": "data_management.time_series",
+		"defaultMessage": "Time Series"
+	},
+	{
+		"id": "data_management.manage_time_series",
+		"defaultMessage": "Manage Time Series"
+	},
+	{
+		"id": "rasters.number_of_rasters",
+		"defaultMessage": "{numberOfRasters, number} {numberOfRasters, plural, one {Raster} other {Rasters}}"
+	},
+	{
+		"id": "rasters.new_raster",
+		"defaultMessage": "New raster"
+	},
+	{
+		"id": "rasters.no_rasters",
+		"defaultMessage": "No rasters configured..."
+	},
+	{
 		"id": "home.usermanagement",
 		"defaultMessage": "User management"
 	},
@@ -550,5 +586,13 @@
 	{
 		"id": "home.alarm_management",
 		"defaultMessage": "Alarm management"
+	},
+	{
+		"id": "home.data_management",
+		"defaultMessage": "Data Management"
+	},
+	{
+		"id": "home.data_administration",
+		"defaultMessage": "Data administration"
 	}
 ]
