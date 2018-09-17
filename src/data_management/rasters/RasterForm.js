@@ -198,7 +198,7 @@ class RasterFormModel extends Component {
   }
   // return /^[1-9][0-9]*$/.test(temporalIntervalAmount);
   validateDaysTemporalInterval(days) {
-    return /^[1-9][0-9]*$/.test(days);
+    return /^[1-9][0-9]*$/.test(days) || days == 0;
   }
   validateHoursTemporalInterval(hours) {
     // return /^[0-9][0-9]$/.test(hours) && parseInt(hours) < 24;
@@ -253,7 +253,12 @@ class RasterFormModel extends Component {
       this.validateSupplierId(this.state.supplierId) &&
       this.validateSupplierCode(this.state.supplierCode) &&
       this.validateTemporalBool(this.state.temporalBool) &&
-      this.validateTemporalIntervalAmount(this.state.temporalIntervalAmount) &&
+      this.validateTemporalIntervalAmount(
+        this.state.temporalIntervalDays,
+        this.state.temporalIntervalHours,
+        this.state.temporalIntervalMinutes,
+        this.state.temporalIntervalSeconds
+      ) &&
       this.validateTemporalOrigin(this.state.temporalOrigin)
     );
   }
@@ -284,6 +289,25 @@ class RasterFormModel extends Component {
     return "P" + days + "D" + "T" + hours + "H" + minutes + "M" + seconds + "S";
     //example: 4DT12H30M5S
     // https://www.digi.com/resources/documentation/digidocs/90001437-13/reference/r_iso_8601_duration_format.htm
+  }
+
+  // converts strings like:
+  // '1 00:00:00'
+  // '05:00:00'
+  // to {days:10, hours:'01', minutes:'09', seconds:'51'}
+  getIntervalToDaysHoursMinutesSeconds(str) {
+    const splitColon = str.split(":");
+    const splitSpace = splitColon[0].split(" ");
+    let obj = {
+      days: 0,
+      hours: splitSpace[splitSpace.length - 1],
+      minutes: splitColon[1],
+      seconds: splitColon[2]
+    };
+    if (splitSpace.length == 2) {
+      obj.days = parseInt(splitSpace[0], 10);
+    }
+    return obj;
   }
 
   setInitialState(props) {
@@ -330,6 +354,9 @@ class RasterFormModel extends Component {
     const selectedSupplierId = this.props.supplierIds.available.filter(
       e => e.url === currentRaster.supplier
     )[0];
+    const intervalObj = this.getIntervalToDaysHoursMinutesSeconds(
+      currentRaster.interval
+    );
 
     return {
       currentStep: 1,
@@ -348,10 +375,10 @@ class RasterFormModel extends Component {
       temporalIntervalUnit: "seconds", // for now assume seconds// one of [seconds minutes hours days weeks] no months years because those are not a static amount of seconds..
       temporalIntervalAmount: "", //60*60, //minutes times seconds = hour // positive integer. amount of temporalIntervalUnit
       temporalIntervalWasEverOpenedByUser: true,
-      temporalIntervalDays: 1,
-      temporalIntervalHours: "00",
-      temporalIntervalMinutes: "00",
-      temporalIntervalSeconds: "00",
+      temporalIntervalDays: intervalObj.days,
+      temporalIntervalHours: intervalObj.hours,
+      temporalIntervalMinutes: intervalObj.minutes,
+      temporalIntervalSeconds: intervalObj.seconds,
       temporalOptimizer: true, // default true, not set by the user for first iteration
       colorMap: { name: currentRaster.options.styles },
       aggregationType: currentRaster.aggregation_type, // choice: none | counts | curve | histogram | sum | average
