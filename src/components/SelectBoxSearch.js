@@ -112,6 +112,7 @@ class SelectBoxSearch extends Component {
                 } else {
                   // if user typed search string only show those that contain string
                   // TODO sort by search string ?
+                  // console.log('transformChoiceToDisplayValue', transformChoiceToDisplayValue(choiceItem), choiceItem, this.state.query);
                   return transformChoiceToDisplayValue(choiceItem)
                     .toLowerCase()
                     .includes(this.state.query.toLowerCase());

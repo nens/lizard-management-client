@@ -20,10 +20,6 @@ class GenericTextInputComponent extends Component {
     };
   }
   setLocalStateFromProps(props) {
-    console.log(
-      "genericTextInputComponent setLocalStateFromProps",
-      props.modelValue
-    );
     //if (props.parentState) {
     this.setState({ inputText: props.modelValue });
     //}

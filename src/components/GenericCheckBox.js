@@ -60,6 +60,7 @@ class GenericCheckBox extends Component {
           type="checkbox"
           style={{ opacity: 0, position: "absolute" }}
           checked={modelValue}
+          onChange={() => {}} // no op in order to suppress error in console
         />
         <span
           className={`${styles.CheckboxSpan} ${checkedClass} ${hoverClass}`}

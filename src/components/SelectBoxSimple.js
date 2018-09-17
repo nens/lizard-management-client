@@ -41,6 +41,7 @@ class SelectBoxSimple extends Component {
           value={choice}
           onClick={() => this.setState({ showChoices: true })}
           onBlur={() => this.setState({ showChoices: false })}
+          onChange={() => {}} // no op in order to suppress error in console
           onKeyUp={event => {
             onKeyUp(event);
             this.handleKeyUp(event);

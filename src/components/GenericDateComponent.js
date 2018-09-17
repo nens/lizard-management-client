@@ -7,6 +7,9 @@ import StepIndicator from "./StepIndicator";
 import FormatMessage from "../utils/FormatMessage.js";
 
 import moment from "moment";
+import "moment/locale/nl";
+//import 'moment/locale/en';
+//import 'moment/locale/nl';
 import InputMoment from "input-moment";
 import "../../node_modules/input-moment/dist/input-moment.css";
 
@@ -61,6 +64,12 @@ class GenericDateComponent extends Component {
     const showCheckMark = validate(modelValue);
     const showNextButton = validate(modelValue);
 
+    //  // moment.locale(localStorage.getItem("lizard-preferred-language") || "en");
+    //   console.log('localStorage.getItem("lizard-preferred-language")',localStorage.getItem("lizard-preferred-language"));
+    //   console.log(modelValue.locale('nl'), modelValue.lang('nl'));
+    //   modelValue.lang('nl');
+    //   console.log(modelValue.lang("nl").locale('nl'), moment.locales, moment.locales());
+
     return (
       <div className={styles.Step} id={"Step-" + step}>
         <StepIndicator
@@ -84,12 +93,17 @@ class GenericDateComponent extends Component {
                 formStyles.FormGroup + " " + inputStyles.PositionRelative
               }
             >
-              <input
+              {/* <input
                 className="output"
                 type="text"
                 value={modelValue.format()}
                 readOnly
-              />
+              /> */}
+              <span style={{ color: "rgb(19, 133, 229)" }}>
+                {modelValue.lang(
+                  localStorage.getItem("lizard-preferred-language") || "en"
+                ) && modelValue.format("LLLL")}
+              </span>
               <div />
               <InputMoment
                 moment={modelValue}
