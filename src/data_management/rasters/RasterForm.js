@@ -241,7 +241,8 @@ class RasterFormModel extends Component {
 
   // if this function returns true, then the user should be able to submit the raster
   validateAll() {
-    return (
+    //return (
+    const normalFields =
       this.validateNewRasterName(this.state.rasterName) &&
       // organisation is currently taken from the organisation picker in the header, but we might change this
       //this.validateNewRasterOrganisation(this.state.selectedOrganisation) &&
@@ -252,15 +253,19 @@ class RasterFormModel extends Component {
       this.validateColorMap(this.state.colorMap) &&
       this.validateSupplierId(this.state.supplierId) &&
       this.validateSupplierCode(this.state.supplierCode) &&
-      this.validateTemporalBool(this.state.temporalBool) &&
-      this.validateTemporalIntervalAmount(
-        this.state.temporalIntervalDays,
-        this.state.temporalIntervalHours,
-        this.state.temporalIntervalMinutes,
-        this.state.temporalIntervalSeconds
-      ) &&
-      this.validateTemporalOrigin(this.state.temporalOrigin)
-    );
+      this.validateTemporalBool(this.state.temporalBool);
+
+    const temporalFields =
+      !this.state.temporalBool ||
+      (this.state.temporalBool &&
+        this.validateTemporalIntervalAmount(
+          this.state.temporalIntervalDays,
+          this.state.temporalIntervalHours,
+          this.state.temporalIntervalMinutes,
+          this.state.temporalIntervalSeconds
+        ) &&
+        this.validateTemporalOrigin(this.state.temporalOrigin));
+    return normalFields && temporalFields;
   }
 
   parseObservationTypeIdFromUrl(url) {
@@ -706,64 +711,68 @@ class RasterFormModel extends Component {
                   }
                   validate={this.validateTemporalBool}
                 />
-                <GenericDateComponent
-                  titleComponent={
-                    <FormattedMessage
-                      id="rasters.temporal_raster_origin"
-                      defaultMessage="Temporal Raster Origin"
+                {this.state.temporalBool ? (
+                  <div>
+                    <GenericDateComponent
+                      titleComponent={
+                        <FormattedMessage
+                          id="rasters.temporal_raster_origin"
+                          defaultMessage="Temporal Raster Origin"
+                        />
+                      } // <FormatText ... //>
+                      subtitleComponent={
+                        <FormattedMessage
+                          id="rasters.temporal_raster_origin_description"
+                          defaultMessage="First possible measurement off the temporal raster"
+                        />
+                      }
+                      multiline={false} // boolean for which input elem to use: text OR textarea
+                      step={10}
+                      opened={currentStep === 10}
+                      currentStep={currentStep}
+                      setCurrentStep={this.setCurrentStep}
+                      modelValue={this.state.temporalOrigin} // for now always in seconds
+                      updateModelValue={e => this.setTemporalOrigin(e)}
+                      //resetModelValue={() => this.setTemporalIntervalAmount("")}
+                      validate={this.validateTemporalOrigin}
                     />
-                  } // <FormatText ... //>
-                  subtitleComponent={
-                    <FormattedMessage
-                      id="rasters.temporal_raster_origin_description"
-                      defaultMessage="First possible measurement off the temporal raster"
+                    <DurationComponent
+                      titleComponent={
+                        <FormattedMessage
+                          id="rasters.temporal_raster_frequency"
+                          defaultMessage="Temporal Raster Frequency"
+                        />
+                      }
+                      subtitleComponent={
+                        <FormattedMessage
+                          id="rasters.temporal_raster_frequency_description"
+                          defaultMessage="Frequency of temporal raster"
+                        />
+                      }
+                      multiline={false} // boolean for which input elem to use: text OR textarea
+                      step={11}
+                      opened={currentStep === 11}
+                      currentStep={currentStep}
+                      setCurrentStep={this.setCurrentStep}
+                      //modelValue={this.state.temporalIntervalAmount} // for now always in seconds
+                      modelValueDays={this.state.temporalIntervalDays}
+                      modelValueHours={this.state.temporalIntervalHours}
+                      modelValueMinutes={this.state.temporalIntervalMinutes}
+                      modelValueSeconds={this.state.temporalIntervalSeconds}
+                      updateModelValue={this.setTemporalIntervalAmount}
+                      //resetModelValue={() => this.setTemporalIntervalAmount("")}
+                      updateModelValueDays={this.setTemporalIntervalDays}
+                      updateModelValueHours={this.setTemporalIntervalHours}
+                      updateModelValueMinutes={this.setTemporalIntervalMinutes}
+                      updateModelValueSeconds={this.setTemporalIntervalSeconds}
+                      validate={this.validateTemporalIntervalAmount}
+                      validateDays={this.validateDaysTemporalInterval}
+                      validateHours={this.validateHoursTemporalInterval}
+                      validateMinutes={this.validateMinutesTemporalInterval}
+                      validateSeconds={this.validateSecondsTemporalInterval}
                     />
-                  }
-                  multiline={false} // boolean for which input elem to use: text OR textarea
-                  step={10}
-                  opened={currentStep === 10}
-                  currentStep={currentStep}
-                  setCurrentStep={this.setCurrentStep}
-                  modelValue={this.state.temporalOrigin} // for now always in seconds
-                  updateModelValue={e => this.setTemporalOrigin(e)}
-                  //resetModelValue={() => this.setTemporalIntervalAmount("")}
-                  validate={this.validateTemporalOrigin}
-                />
-                <DurationComponent
-                  titleComponent={
-                    <FormattedMessage
-                      id="rasters.temporal_raster_frequency"
-                      defaultMessage="Temporal Raster Frequency"
-                    />
-                  }
-                  subtitleComponent={
-                    <FormattedMessage
-                      id="rasters.temporal_raster_frequency_description"
-                      defaultMessage="Frequency of temporal raster"
-                    />
-                  }
-                  multiline={false} // boolean for which input elem to use: text OR textarea
-                  step={11}
-                  opened={currentStep === 11}
-                  currentStep={currentStep}
-                  setCurrentStep={this.setCurrentStep}
-                  //modelValue={this.state.temporalIntervalAmount} // for now always in seconds
-                  modelValueDays={this.state.temporalIntervalDays}
-                  modelValueHours={this.state.temporalIntervalHours}
-                  modelValueMinutes={this.state.temporalIntervalMinutes}
-                  modelValueSeconds={this.state.temporalIntervalSeconds}
-                  updateModelValue={this.setTemporalIntervalAmount}
-                  //resetModelValue={() => this.setTemporalIntervalAmount("")}
-                  updateModelValueDays={this.setTemporalIntervalDays}
-                  updateModelValueHours={this.setTemporalIntervalHours}
-                  updateModelValueMinutes={this.setTemporalIntervalMinutes}
-                  updateModelValueSeconds={this.setTemporalIntervalSeconds}
-                  validate={this.validateTemporalIntervalAmount}
-                  validateDays={this.validateDaysTemporalInterval}
-                  validateHours={this.validateHoursTemporalInterval}
-                  validateMinutes={this.validateMinutesTemporalInterval}
-                  validateSeconds={this.validateSecondsTemporalInterval}
-                />
+                  </div>
+                ) : null}
                 {this.validateAll() ? (
                   <div className={inputStyles.InputContainer}>
                     <button
