@@ -121,7 +121,7 @@ class GenericSelectBoxComponent extends Component {
                   <FormattedMessage
                     id="rasters.next_step"
                     defaultMessage="Next Step"
-                  />;
+                  />
                 </button>
               ) : null}
             </div>
