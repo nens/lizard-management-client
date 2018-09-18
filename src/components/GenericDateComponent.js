@@ -5,7 +5,7 @@ import { withRouter } from "react-router-dom";
 import CheckMark from "./CheckMark";
 import StepIndicator from "./StepIndicator";
 import { FormattedMessage } from "react-intl";
-
+// moment is required for datepicker
 import moment from "moment";
 import "moment/locale/nl";
 //import 'moment/locale/en';
@@ -19,7 +19,6 @@ import "./GenericDateComponentSymbols.css";
 import formStyles from "../styles/Forms.css";
 import buttonStyles from "../styles/Buttons.css";
 import inputStyles from "../styles/Input.css";
-import displayStyles from "../styles/Display.css";
 
 class GenericDateComponent extends Component {
   // constructor(props) {
@@ -57,7 +56,6 @@ class GenericDateComponent extends Component {
       opened, // complete question and input fields become visible if set to true
       modelValue, // momentJS obj moment()
       updateModelValue, // cb function to *update* the value
-      resetModelValue,
       validate //
     } = this.props;
     const active = step === currentStep;

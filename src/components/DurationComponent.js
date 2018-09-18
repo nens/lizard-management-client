@@ -5,7 +5,6 @@ import { withRouter } from "react-router-dom";
 import CheckMark from "./CheckMark";
 import StepIndicator from "./StepIndicator";
 import { FormattedMessage } from "react-intl";
-import ClearInputButton from "./ClearInputButton.js";
 
 import styles from "./DurationComponent.css";
 import formStyles from "../styles/Forms.css";
@@ -19,20 +18,6 @@ class DurationComponent extends Component {
       wasEverOpen: false // holds if the question was ever opened by the user. If not no checkmark should be shown
     };
   }
-  componentWillReceiveProps(newProps) {
-    console.log(
-      "[F] componentWillReceiveProps",
-      newProps.step,
-      newProps.currentStep
-    );
-    //this.setLocalStateFromProps(newProps);
-    const active = newProps.step === newProps.currentStep;
-
-    if (active === true && this.state.wasEverOpen === false) {
-      console.log("[F] componentWillReceiveProps 2");
-      this.setState({ wasEverOpen: true });
-    }
-  }
 
   setLocalStateFromProps(props) {
     // if (props.parentState) {
@@ -42,9 +27,9 @@ class DurationComponent extends Component {
     // If this component is the "current step component", set the page focus to the components
     // input field:
     if (props.step === props.currentStep) {
-      const inputElem = document.getElementById(
-        this.props.titleComponent.props.id + "_input"
-      );
+      // const inputElem = document.getElementById(
+      //   this.props.titleComponent.props.id + "_input"
+      // );
       // inputElem.focus(); does not work outside setTimeout. Is this the right solution?
       // setTimeout(function() {
       //   inputElem.focus();
@@ -81,18 +66,15 @@ class DurationComponent extends Component {
       titleComponent, // <FormatText ... //>
       subtitleComponent, // <FormatText ... />
       placeholder,
-      multiline, // boolean for which input elem to use: text OR textarea
       step, // int for denoting which step it the GenericTextInputComponent refers to
       currentStep, // int for denoting which step is currently active
       setCurrentStep, // cb function for updating which step becomes active
       opened, // complete question and input fields become visible if set to true
-      modelValue, // string: e.g. the name of a raster
       modelValueDays,
       modelValueHours,
       modelValueMinutes,
       modelValueSeconds,
       //updateModelValue, // cb function to *update* the value of e.g. a raster's name in the parent model
-      resetModelValue, // cb function to *reset* the value of e.g. a raster's name in the parent model
       validate // function used to validate the inputText. If validate returns true the inputText passed to updateModelValue and checkmark is set.
     } = this.props;
     const active = step === currentStep;
@@ -104,7 +86,6 @@ class DurationComponent extends Component {
       modelValueSeconds
     );
     const showCheckMark = valid;
-    const mustShowClearButton = modelValue !== "";
     const mustShowNextButton = valid && active;
 
     console.log("wasEverOpen", this.state.wasEverOpen);

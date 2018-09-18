@@ -6,7 +6,6 @@ import { addNotification } from "../../actions";
 import { connect } from "react-redux";
 import moment from "moment";
 import { withRouter } from "react-router-dom";
-import FormatMessage from "../../utils/FormatMessage";
 import { FormattedMessage } from "react-intl";
 
 import GenericTextInputComponent from "../../components/GenericTextInputComponent";
@@ -15,7 +14,6 @@ import GenericCheckBoxComponent from "../../components/GenericCheckBoxComponent"
 import GenericDateComponent from "../../components/GenericDateComponent";
 import DurationComponent from "../../components/DurationComponent";
 import inputStyles from "../../styles/Input.css";
-import StepIndicator from "../../components/StepIndicator";
 
 // ! important, these old component may later be used! Ther corresponding files already exist
 // import bindReactFunctions from "../../utils/BindReactFunctions.js"; // currently not working. Probably needs a list with functions in which case this is probably only overcomplicating things
@@ -200,19 +198,19 @@ class RasterFormModel extends Component {
   }
   // return /^[1-9][0-9]*$/.test(temporalIntervalAmount);
   validateDaysTemporalInterval(days) {
-    return /^[1-9][0-9]*$/.test(days) || days == 0;
+    return /^[1-9][0-9]*$/.test(days) || days === 0;
   }
   validateHoursTemporalInterval(hours) {
     // return /^[0-9][0-9]$/.test(hours) && parseInt(hours) < 24;
-    return /^[0-9]{1,2}$/.test(hours) && parseInt(hours) < 24;
+    return /^[0-9]{1,2}$/.test(hours) && parseInt(hours, 10) < 24;
   }
   validateMinutesTemporalInterval(minutes) {
     // return /^[0-9][0-9]$/.test(minutes) && parseInt(minutes) < 60;
-    return /^[0-9]{1,2}$/.test(minutes) && parseInt(minutes) < 60;
+    return /^[0-9]{1,2}$/.test(minutes) && parseInt(minutes, 10) < 60;
   }
   validateSecondsTemporalInterval(seconds) {
     // return /^[0-9][0-9]$/.test(seconds) && parseInt(seconds) < 60;
-    return /^[0-9]{1,2}$/.test(seconds) && parseInt(seconds) < 60;
+    return /^[0-9]{1,2}$/.test(seconds) && parseInt(seconds, 10) < 60;
   }
   // temporal interval Days Hours Minutes Seconds
   setTemporalIntervalDays(temporalIntervalDays) {
@@ -288,7 +286,7 @@ class RasterFormModel extends Component {
     if (hours[0] === "0") hours = hours[1];
     if (minutes[0] === "0") minutes = minutes[1];
     if (seconds[0] === "0") seconds = seconds[1];
-    return "P" + days + "D" + "T" + hours + "H" + minutes + "M" + seconds + "S";
+    return `P${days}DT${hours}H${minutes}M${seconds}S`;
     //example: 4DT12H30M5S
     // https://www.digi.com/resources/documentation/digidocs/90001437-13/reference/r_iso_8601_duration_format.htm
   }
@@ -306,7 +304,7 @@ class RasterFormModel extends Component {
       minutes: splitColon[1],
       seconds: splitColon[2]
     };
-    if (splitSpace.length == 2) {
+    if (splitSpace.length === 2) {
       obj.days = parseInt(splitSpace[0], 10);
     }
     return obj;
@@ -474,8 +472,8 @@ class RasterFormModel extends Component {
                     />
                   }
                   subtitleComponent={
-                    <FormatMessage
-                      id="rasters.name_will_be_used_in_alerts"
+                    <FormattedMessage
+                      id="rasters.choose_descriptive_name"
                       defaultMessage="The name of the raster will be used in e-mail and SMS alerts"
                     />
                   }
@@ -491,9 +489,14 @@ class RasterFormModel extends Component {
                   validate={this.validateNewRasterName} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
                 />
                 <GenericTextInputComponent
-                  titleComponent={<FormatMessage id="rasters.store_path" />} // <FormatText ... //>
+                  titleComponent={
+                    <FormattedMessage
+                      id="rasters.store_path"
+                      defaultMessage="Store Path"
+                    />
+                  } // <FormatText ... //>
                   subtitleComponent={
-                    <FormatMessage
+                    <FormattedMessage
                       id="rasters.path_on_disk"
                       defaultMessage="Relative path of raster store. Should be unique within organisation. Multiple, comma-separated paths allowed."
                     />
@@ -510,9 +513,17 @@ class RasterFormModel extends Component {
                   validate={this.validateNewRasterStorePath}
                 />
                 <GenericTextInputComponent
-                  titleComponent={<FormatMessage id="rasters.description" />} // <FormatText ... //>
+                  titleComponent={
+                    <FormattedMessage
+                      id="rasters.description"
+                      defaultMessage="Description"
+                    />
+                  } // <FormatText ... //>
                   subtitleComponent={
-                    <FormatMessage id="rasters.please_describe_the_new_raster" />
+                    <FormattedMessage
+                      id="rasters.please_describe_the_new_raster"
+                      defaultMessage="Please describe the new Raster"
+                    />
                   }
                   placeholder="description here"
                   multiline={true} // boolean for which input elem to use: text OR textarea
@@ -527,10 +538,16 @@ class RasterFormModel extends Component {
                 />
                 <GenericSelectBoxComponent
                   titleComponent={
-                    <FormatMessage id="rasters.aggregation_type" />
+                    <FormattedMessage
+                      id="rasters.aggregation_type"
+                      defaultMessage="Aggregation Type"
+                    />
                   }
                   subtitleComponent={
-                    <FormatMessage id="rasters.please_select_type_of_aggregation" />
+                    <FormattedMessage
+                      id="rasters.please_select_type_of_aggregation"
+                      defaultMessage="Please select type of aggregation"
+                    />
                   }
                   placeholder="click to select aggregation type"
                   step={4} // int for denoting which step it the GenericTextInputComponent refers to
@@ -553,10 +570,16 @@ class RasterFormModel extends Component {
                 />
                 <GenericSelectBoxComponent
                   titleComponent={
-                    <FormatMessage id="rasters.observation_type" />
+                    <FormattedMessage
+                      id="rasters.observation_type"
+                      defaultMessage="Observation Type"
+                    />
                   }
                   subtitleComponent={
-                    <FormatMessage id="rasters.please_select_type_of_observation" />
+                    <FormattedMessage
+                      id="rasters.please_select_type_of_observation"
+                      defaultMessage="Please select type of observation"
+                    />
                   }
                   placeholder="click to select observation type"
                   step={5} // int for denoting which step it the GenericTextInputComponent refers to
@@ -573,9 +596,17 @@ class RasterFormModel extends Component {
                   validate={this.validateObservationType} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
                 />
                 <GenericSelectBoxComponent
-                  titleComponent={<FormatMessage id="rasters.colormap" />} // <FormatText ... //>
+                  titleComponent={
+                    <FormattedMessage
+                      id="rasters.colormap"
+                      defaultMessage="Colormap"
+                    />
+                  } // <FormatText ... //>
                   subtitleComponent={
-                    <FormatMessage id="rasters.please_select_colormap" />
+                    <FormattedMessage
+                      id="rasters.please_select_colormap"
+                      defaultMessage="Please select Colormap"
+                    />
                   }
                   placeholder="click to select colormap"
                   step={6} // int for denoting which step it the GenericTextInputComponent refers to
@@ -592,9 +623,17 @@ class RasterFormModel extends Component {
                   validate={this.validateColorMap} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
                 />
                 <GenericSelectBoxComponent
-                  titleComponent={<FormatMessage id="rasters.supplier_id" />} // <FormatText ... //>
+                  titleComponent={
+                    <FormattedMessage
+                      id="rasters.supplier_id"
+                      defaultMessage="Supplier ID"
+                    />
+                  }
                   subtitleComponent={
-                    <FormatMessage id="rasters.please_select_supplier_id" />
+                    <FormattedMessage
+                      id="rasters.please_select_supplier_id"
+                      defaultMessage="Please select Supplier ID"
+                    />
                   }
                   placeholder="click to select supplier id"
                   step={7} // int for denoting which step it the GenericTextInputComponent refers to
@@ -611,9 +650,14 @@ class RasterFormModel extends Component {
                   validate={this.validateSupplierId} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
                 />
                 <GenericTextInputComponent
-                  titleComponent={<FormatMessage id="rasters.supplier_code" />} // <FormatText ... //>
+                  titleComponent={
+                    <FormattedMessage
+                      id="rasters.supplier_code"
+                      defaultMessage="Supplier Code"
+                    />
+                  } // <FormatText ... //>
                   subtitleComponent={
-                    <FormatMessage
+                    <FormattedMessage
                       id="rasters.unique_supplier_code"
                       defaultMessage="The combination supplier name and supplier code should be unique"
                     />
@@ -631,7 +675,10 @@ class RasterFormModel extends Component {
                 />
                 <GenericCheckBoxComponent
                   titleComponent={
-                    <FormatMessage id="rasters.raster_is_temporal" />
+                    <FormattedMessage
+                      id="rasters.raster_is_temporal"
+                      defaultMessage="Raster is Temporal"
+                    />
                   }
                   step={9}
                   opened={currentStep === 9}
@@ -639,22 +686,39 @@ class RasterFormModel extends Component {
                   setCurrentStep={this.setCurrentStep}
                   modelValue={this.state.temporalBool}
                   label={
-                    "Check if Raster is a temporal raster: it changes over time"
+                    <FormattedMessage
+                      id="rasters.check_if_raster_is_temporal"
+                      defaultMessage="Check if Raster is a temporal raster: it changes over time"
+                    />
                   }
                   updateModelValue={this.setTemporalBool}
                   yesCheckedComponent={
-                    <FormatMessage id="rasters.yes_the_raster_is_temporal" />
+                    <FormattedMessage
+                      id="rasters.yes_the_raster_is_temporal"
+                      defaultMessage="Yes, the raster is temporal"
+                    />
                   }
                   noNotCheckedComponent={
-                    <FormatMessage id="rasters.no_the_raster_is_not_temporal" />
+                    <FormattedMessage
+                      id="rasters.no_the_raster_is_not_temporal"
+                      defaultMessage="No, the raster is not temporal"
+                    />
                   }
                   validate={this.validateTemporalBool}
                 />
                 <GenericDateComponent
                   titleComponent={
-                    <FormatMessage id="rasters.temporal_raster_origin" />
+                    <FormattedMessage
+                      id="rasters.temporal_raster_origin"
+                      defaultMessage="Temporal Raster Origin"
+                    />
                   } // <FormatText ... //>
-                  subtitleComponent={"Frequency of temporal raster in seconds"}
+                  subtitleComponent={
+                    <FormattedMessage
+                      id="rasters.temporal_raster_origin_description"
+                      defaultMessage="First possible measurement off the temporal raster"
+                    />
+                  }
                   multiline={false} // boolean for which input elem to use: text OR textarea
                   step={10}
                   opened={currentStep === 10}
@@ -665,26 +729,19 @@ class RasterFormModel extends Component {
                   //resetModelValue={() => this.setTemporalIntervalAmount("")}
                   validate={this.validateTemporalOrigin}
                 />
-                {/* <GenericTextInputComponent
-                  titleComponent={
-                    <FormatMessage id="rasters.temporal_raster_frequency" />
-                  }
-                  subtitleComponent={"Frequency of temporal raster in seconds"}
-                  multiline={false} // boolean for which input elem to use: text OR textarea
-                  step={11}
-                  opened={currentStep === 11}
-                  currentStep={currentStep}
-                  setCurrentStep={this.setCurrentStep}
-                  modelValue={this.state.temporalIntervalAmount} // for now always in seconds
-                  updateModelValue={this.setTemporalIntervalAmount}
-                  resetModelValue={() => this.setTemporalIntervalAmount("")}
-                  validate={this.validateTemporalIntervalAmount}
-                /> */}
                 <DurationComponent
                   titleComponent={
-                    <FormatMessage id="rasters.temporal_raster_frequency" />
+                    <FormattedMessage
+                      id="rasters.temporal_raster_frequency"
+                      defaultMessage="Temporal Raster Frequency"
+                    />
                   }
-                  subtitleComponent={"Frequency of temporal raster"}
+                  subtitleComponent={
+                    <FormattedMessage
+                      id="rasters.temporal_raster_frequency_description"
+                      defaultMessage="Frequency of temporal raster"
+                    />
+                  }
                   multiline={false} // boolean for which input elem to use: text OR textarea
                   step={11}
                   opened={currentStep === 11}
@@ -717,12 +774,18 @@ class RasterFormModel extends Component {
                         this.handleClickCreateRaster();
                       }}
                     >
-                      <FormatMessage id="rasters.submit" />
+                      <FormattedMessage
+                        id="rasters.submit"
+                        defaultMessage="Submit"
+                      />
                     </button>
                   </div>
                 ) : (
                   <div className={inputStyles.InputContainer}>
-                    <FormatMessage id="rasters.please complete the form before submitting" />
+                    <FormattedMessage
+                      id="rasters.please complete the form before submitting"
+                      defaultMessage="Please complete the form for submitting"
+                    />
                   </div>
                 )}
               </div>
