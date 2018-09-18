@@ -437,9 +437,7 @@ class RasterFormModel extends Component {
     fetch(url, opts)
       .then(response => response.json()) // TODO: kan dit weg?
       .then(responseParsed => {
-        console.log("[PROMISE] responseParsed", responseParsed);
-        // what shall we do with history?
-        //history.push("/alarms/templates/");
+        this.props.history.push("data_management/rasters/");
       });
   }
 
