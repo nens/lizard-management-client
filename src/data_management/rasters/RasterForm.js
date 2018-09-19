@@ -410,35 +410,55 @@ class RasterFormModel extends Component {
       this.state.temporalIntervalSeconds
     );
 
-    const opts = {
-      credentials: "same-origin",
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: this.state.rasterName,
-        organisation: this.props.organisations.selected.unique_id, //"61f5a464c35044c19bc7d4b42d7f58cb",
-        access_modifier: 200, // private to organisation
-        observation_type: observationTypeId, //this.state.observationType,
-        description: this.state.description,
-        supplier: this.state.supplierId.username,
-        supplier_code: this.state.supplierCode,
-        temporal: this.state.temporalBool,
-        origin: this.state.temporalOrigin.toISOString(), // toISOString = momentJS function
-        interval: isoIntervalDuration, //'P1D', // P1D is default, = ISO 8601 datetime for 1 day",
-        rescalable: false,
-        optimizer: false, // default
-        aggregation_type: intAggregationType,
-        options: {
-          styles: this.state.colorMap.name
-        }
-      })
-    };
+    if (!this.props.currentRaster) {
+      const opts = {
+        credentials: "same-origin",
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: this.state.rasterName,
+          organisation: this.props.organisations.selected.unique_id, //"61f5a464c35044c19bc7d4b42d7f58cb",
+          access_modifier: 200, // private to organisation
+          observation_type: observationTypeId, //this.state.observationType,
+          description: this.state.description,
+          supplier: this.state.supplierId.username,
+          supplier_code: this.state.supplierCode,
+          temporal: this.state.temporalBool,
+          origin: this.state.temporalOrigin.toISOString(), // toISOString = momentJS function
+          interval: isoIntervalDuration, //'P1D', // P1D is default, = ISO 8601 datetime for 1 day",
+          rescalable: false,
+          optimizer: false, // default
+          aggregation_type: intAggregationType,
+          options: {
+            styles: this.state.colorMap.name
+          }
+        })
+      };
 
-    fetch(url, opts)
-      .then(response => response.json()) // TODO: kan dit weg?
-      .then(responseParsed => {
-        this.props.history.push("data_management/rasters/");
-      });
+      fetch(url, opts)
+        .then(response => response.json()) // TODO: kan dit weg?
+        .then(responseParsed => {
+          this.props.history.push("data_management/rasters/");
+        });
+    } else {
+      const opts = {
+        credentials: "same-origin",
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: this.state.rasterName,
+          organisation: this.props.organisations.selected.unique_id,
+          access_modifier: 200, // private to organisation
+          observation_type: observationTypeId
+        })
+      };
+
+      fetch(url + "uuid:" + this.props.currentRaster.uuid + "/", opts)
+        .then(response => response.json()) // TODO: kan dit weg?
+        .then(responseParsed => {
+          this.props.history.push("data_management/rasters/");
+        });
+    }
   }
 
   componentDidMount() {
