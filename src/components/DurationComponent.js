@@ -191,7 +191,7 @@ class DurationComponent extends Component {
                   className={
                     formStyles.FormControl +
                     (!minutesValid ? " " + styles.Invalid : "") +
-                    (readonly ? " " + inputStyles.ReadOnly : null)
+                    (readonly ? " " + inputStyles.ReadOnly : "")
                   }
                   maxLength="2"
                   size="2"
@@ -220,7 +220,7 @@ class DurationComponent extends Component {
                   className={
                     formStyles.FormControl +
                     (!secondsValid ? " " + styles.Invalid : "") +
-                    (readonly ? " " + inputStyles.ReadOnly : null)
+                    (readonly ? " " + inputStyles.ReadOnly : "")
                   }
                   maxLength="2"
                   size="4"
