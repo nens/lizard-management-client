@@ -59,7 +59,7 @@ class GenericDateComponent extends Component {
       readonly,
       formUpdate
     } = this.props;
-    const active = step === currentStep;
+    const active = step === currentStep || (formUpdate && !readonly);
     const showCheckMark = validate(modelValue) || formUpdate;
     const showNextButton = validate(modelValue) && !formUpdate;
 

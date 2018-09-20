@@ -74,9 +74,10 @@ class GenericTextInputComponent extends Component {
       //updateModelValue, // cb function to *update* the value of e.g. a raster's name in the parent model
       resetModelValue, // cb function to *reset* the value of e.g. a raster's name in the parent model
       validate, // function used to validate the inputText. If validate returns true the inputText passed to updateModelValue and checkmark is set.
-      formUpdate
+      formUpdate,
+      readonly
     } = this.props;
-    const active = step === currentStep;
+    const active = step === currentStep || (formUpdate && !readonly);
     const showCheckMark = validate(this.state.inputText);
     const mustShowClearButton = modelValue !== "";
     const mustShowNextButton =

@@ -56,9 +56,10 @@ class GenericSelectBoxComponent extends Component {
       validate, // function used to validate the props.modelValue. If validate returns true the props.modelValue passed to updateModelValue and checkmark is set.
       choicesSearchable,
       placeholder,
-      formUpdate
+      formUpdate,
+      readonly
     } = this.props;
-    const active = step === currentStep;
+    const active = step === currentStep || (formUpdate && !readonly);
     const showCheckMark = validate(modelValue);
     const showNextButton =
       choices
