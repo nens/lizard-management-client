@@ -53,6 +53,7 @@ class RasterFormModel extends Component {
     this.setColorMap = this.setColorMap.bind(this);
     this.validateColorMap = this.validateColorMap.bind(this);
     this.setSupplierId = this.setSupplierId.bind(this);
+    this.resetSupplierId = this.resetSupplierId.bind(this);
     this.validateSupplierId = this.validateSupplierId.bind(this);
     this.setSupplierCode = this.setSupplierCode.bind(this);
     this.validateSupplierCode = this.validateSupplierCode.bind(this);
@@ -151,7 +152,7 @@ class RasterFormModel extends Component {
     this.setState({ colorMap });
   }
   validateColorMap(colorMap) {
-    return colorMap && colorMap.name !== "";
+    return colorMap && colorMap.name;
   }
   // SupplierId
   setSupplierId(supplierId) {
@@ -161,7 +162,7 @@ class RasterFormModel extends Component {
     this.setSupplierId(null);
   }
   validateSupplierId(supplierId) {
-    return supplierId && supplierId.username !== "";
+    return supplierId && supplierId.username;
   }
   // SupplierCode
   setSupplierCode(supplierCode) {
@@ -324,7 +325,7 @@ class RasterFormModel extends Component {
       description: "",
       temporalBool: false,
       temporalBoolComponentWasEverOpenedByUser: false, // a checkbbox is always valid, but we should only mark it as valid if the user has actualy opened the question
-      temporalOrigin: moment(), //"2000-01-01T00:00:00Z",
+      temporalOrigin: moment("1970-01-01T00:00:00Z"), // start time at 1970 because current datepicker makes moving so far back difficult
       temporalOriginComponentWasEverOpenedByUser: false, // the data is valid since it is created with momentJS, but should only be marked as such when the date component was actually opened once
       temporalIntervalUnit: "seconds", // for now assume seconds// one of [seconds minutes hours days weeks] no months years because those are not a static amount of seconds..
       temporalIntervalAmount: "", //60*60, //minutes times seconds = hour // positive integer. amount of temporalIntervalUnit
@@ -443,9 +444,17 @@ class RasterFormModel extends Component {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: this.state.rasterName,
-          organisation: this.props.organisations.selected.unique_id,
-          access_modifier: 200, // private to organisation
-          observation_type: observationTypeId
+          organisation: this.props.organisations.selected.unique_id, // required
+          access_modifier: 200, // private to organisation // required
+          observation_type: observationTypeId, // required
+
+          description: this.state.description,
+          supplier: this.state.supplierId.username,
+          supplier_code: this.state.supplierCode,
+          aggregation_type: intAggregationType,
+          options: {
+            styles: this.state.colorMap.name
+          }
         })
       };
 
@@ -651,7 +660,7 @@ class RasterFormModel extends Component {
                   transformChoiceToDisplayValue={e => (e && e.name) || ""} // optional parameter if choices are objects, which field contains the displayvalue, default item itself is displayvalue
                   isFetching={this.props.colorMaps.isFetching}
                   choicesSearchable={true}
-                  modelValue={this.state.colorMap} // string: e.g. the name of a raster
+                  modelValue={this.state.colorMap}
                   updateModelValue={this.setColorMap} // cb function to *update* the value of e.g. a raster's name in the parent model
                   resetModelValue={() => this.setColorMap({ name: "" })} // cb function to *reset* the value of e.g. a raster's name in the parent model
                   validate={this.validateColorMap} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
