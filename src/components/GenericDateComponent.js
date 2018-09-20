@@ -8,13 +8,12 @@ import { FormattedMessage } from "react-intl";
 // moment is required for datepicker
 import moment from "moment";
 import "moment/locale/nl";
-//import 'moment/locale/en';
-//import 'moment/locale/nl';
 import InputMoment from "input-moment";
 import "../../node_modules/input-moment/dist/input-moment.css";
 
 import styles from "./GenericDateComponent.css";
 import "./GenericDateComponentSymbols.css";
+import displayStyles from "../styles/Display.css";
 
 import formStyles from "../styles/Forms.css";
 import buttonStyles from "../styles/Buttons.css";
@@ -56,11 +55,13 @@ class GenericDateComponent extends Component {
       opened, // complete question and input fields become visible if set to true
       modelValue, // momentJS obj moment()
       updateModelValue, // cb function to *update* the value
-      validate //
+      validate, //
+      readonly,
+      formUpdate
     } = this.props;
     const active = step === currentStep;
-    const showCheckMark = validate(modelValue);
-    const showNextButton = validate(modelValue);
+    const showCheckMark = validate(modelValue) && !formUpdate;
+    const showNextButton = validate(modelValue) && !formUpdate;
 
     //  // moment.locale(localStorage.getItem("lizard-preferred-language") || "en");
     //   console.log('localStorage.getItem("lizard-preferred-language")',localStorage.getItem("lizard-preferred-language"));
@@ -97,23 +98,28 @@ class GenericDateComponent extends Component {
                 value={modelValue.format()}
                 readOnly
               /> */}
-              <span style={{ color: "rgb(19, 133, 229)" }}>
+              <span
+                style={{ color: "rgb(19, 133, 229)", cursor: "not-allowed" }}
+              >
                 {modelValue.lang(
                   localStorage.getItem("lizard-preferred-language") || "en"
                 ) && modelValue.format("LLLL")}
               </span>
               <div />
-              <InputMoment
-                moment={modelValue}
-                onChange={e => updateModelValue(e)}
-                // onSave={e=>this.setTemporalOrigin(e)}
-                //minStep={1} // default
-                //hourStep={1} // default
-                //prevMonthIcon="ion-ios-arrow-left" // default // problem loading in these icons therefore use custom css
-                //nextMonthIcon="ion-ios-arrow-right" // default // problem loading in these icons therefore use custom css
-                prevMonthIcon="date-time-picker-month-arrow-prev"
-                nextMonthIcon="date-time-picker-month-arrow-next"
-              />
+              <div className={readonly ? displayStyles.None : null}>
+                <InputMoment
+                  moment={modelValue}
+                  onChange={e => updateModelValue(e)}
+                  // onSave={e=>this.setTemporalOrigin(e)}
+                  //minStep={1} // default
+                  //hourStep={1} // default
+                  //prevMonthIcon="ion-ios-arrow-left" // default // problem loading in these icons therefore use custom css
+                  //nextMonthIcon="ion-ios-arrow-right" // default // problem loading in these icons therefore use custom css
+                  prevMonthIcon="date-time-picker-month-arrow-prev"
+                  nextMonthIcon="date-time-picker-month-arrow-next"
+                />
+              </div>
+              {/* div to enforce layout nextline */}
               <div />
 
               {showNextButton ? (

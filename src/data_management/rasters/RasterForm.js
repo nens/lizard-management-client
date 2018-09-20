@@ -76,11 +76,11 @@ class RasterFormModel extends Component {
   }
   setCurrentStep(currentStep) {
     // The steps "raster is temporal" (9) and "temporal origin" (10) need to be flagged if they are opened once.
-    if (currentStep === 9) {
+    if (currentStep === 8) {
       this.setState({ temporalBoolComponentWasEverOpenedByUser: true });
-    } else if (currentStep === 10) {
+    } else if (currentStep === 9) {
       this.setState({ temporalOriginComponentWasEverOpenedByUser: true });
-    } else if (currentStep === 11) {
+    } else if (currentStep === 10) {
       this.setState({ temporalIntervalWasEverOpenedByUser: true });
     }
     this.setState({ currentStep });
@@ -559,6 +559,8 @@ class RasterFormModel extends Component {
                     this.props.currentRaster ||
                     currentStep === 2
                   }
+                  formUpdate={!!this.props.currentRaster}
+                  readonly={false}
                   currentStep={currentStep} // int for denoting which step is currently active
                   setCurrentStep={this.setCurrentStep} // cb function for updating which step becomes active
                   modelValue={description} // string: e.g. the name of a raster
@@ -582,6 +584,8 @@ class RasterFormModel extends Component {
                   placeholder="click to select aggregation type"
                   step={3} // int for denoting which step it the GenericTextInputComponent refers to
                   opened={this.props.currentRaster || currentStep === 3}
+                  formUpdate={!!this.props.currentRaster}
+                  readonly={false}
                   currentStep={currentStep} // int for denoting which step is currently active
                   setCurrentStep={this.setCurrentStep} // cb function for updating which step becomes active
                   choices={[
@@ -614,6 +618,8 @@ class RasterFormModel extends Component {
                   placeholder="click to select observation type"
                   step={4} // int for denoting which step it the GenericTextInputComponent refers to
                   opened={this.props.currentRaster || currentStep === 4}
+                  formUpdate={!!this.props.currentRaster}
+                  readonly={false}
                   currentStep={currentStep} // int for denoting which step is currently active
                   setCurrentStep={this.setCurrentStep} // cb function for updating which step becomes active
                   choices={this.props.observationTypes.available}
@@ -641,6 +647,8 @@ class RasterFormModel extends Component {
                   placeholder="click to select colormap"
                   step={5} // int for denoting which step it the GenericTextInputComponent refers to
                   opened={this.props.currentRaster || currentStep === 5}
+                  formUpdate={!!this.props.currentRaster}
+                  readonly={false}
                   currentStep={currentStep} // int for denoting which step is currently active
                   setCurrentStep={this.setCurrentStep} // cb function for updating which step becomes active
                   choices={this.props.colorMaps.available}
@@ -668,6 +676,8 @@ class RasterFormModel extends Component {
                   placeholder="click to select supplier id"
                   step={6} // int for denoting which step it the GenericTextInputComponent refers to
                   opened={this.props.currentRaster || currentStep === 6}
+                  formUpdate={!!this.props.currentRaster}
+                  readonly={false}
                   currentStep={currentStep} // int for denoting which step is currently active
                   setCurrentStep={this.setCurrentStep} // cb function for updating which step becomes active
                   choices={this.props.supplierIds.available}
@@ -696,6 +706,8 @@ class RasterFormModel extends Component {
                   multiline={false} // boolean for which input elem to use: text OR textarea
                   step={7} // int for denoting which step it the GenericTextInputComponent refers to
                   opened={this.props.currentRaster || currentStep === 7}
+                  formUpdate={!!this.props.currentRaster}
+                  readonly={false}
                   currentStep={currentStep} // int for denoting which step is currently active
                   setCurrentStep={this.setCurrentStep} // cb function for updating which step becomes active
                   modelValue={this.state.supplierCode} // string: e.g. the name of a raster
@@ -712,6 +724,8 @@ class RasterFormModel extends Component {
                   }
                   step={8}
                   opened={this.props.currentRaster || currentStep === 8}
+                  formUpdate={!!this.props.currentRaster}
+                  readonly={!!this.props.currentRaster}
                   currentStep={currentStep}
                   setCurrentStep={this.setCurrentStep}
                   modelValue={this.state.temporalBool}
@@ -754,6 +768,8 @@ class RasterFormModel extends Component {
                       multiline={false} // boolean for which input elem to use: text OR textarea
                       step={9}
                       opened={this.props.currentRaster || currentStep === 9}
+                      formUpdate={!!this.props.currentRaster}
+                      readonly={!!this.props.currentRaster}
                       currentStep={currentStep}
                       setCurrentStep={this.setCurrentStep}
                       modelValue={this.state.temporalOrigin} // for now always in seconds
@@ -777,6 +793,8 @@ class RasterFormModel extends Component {
                       multiline={false} // boolean for which input elem to use: text OR textarea
                       step={10}
                       opened={this.props.currentRaster || currentStep === 10}
+                      formUpdate={!!this.props.currentRaster}
+                      readonly={!!this.props.currentRaster}
                       currentStep={currentStep}
                       setCurrentStep={this.setCurrentStep}
                       //modelValue={this.state.temporalIntervalAmount} // for now always in seconds

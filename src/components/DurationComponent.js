@@ -75,7 +75,9 @@ class DurationComponent extends Component {
       modelValueMinutes,
       modelValueSeconds,
       //updateModelValue, // cb function to *update* the value of e.g. a raster's name in the parent model
-      validate // function used to validate the inputText. If validate returns true the inputText passed to updateModelValue and checkmark is set.
+      validate, // function used to validate the inputText. If validate returns true the inputText passed to updateModelValue and checkmark is set.
+      readonly,
+      formUpdate
     } = this.props;
     const active = step === currentStep;
     // const showCheckMark = validate(this.state.inputText);
@@ -86,9 +88,9 @@ class DurationComponent extends Component {
       modelValueSeconds
     );
     const showCheckMark = valid;
-    const mustShowNextButton = valid && active;
+    const mustShowNextButton = valid && active && !formUpdate;
 
-    console.log("wasEverOpen", this.state.wasEverOpen);
+    console.log("[Comp]durationComponent readonly", readonly);
 
     const daysValid = this.props.validateDays(modelValueDays);
     const hoursValid = this.props.validateHours(modelValueHours);
@@ -135,7 +137,8 @@ class DurationComponent extends Component {
                     formStyles.FormControl +
                     " " +
                     styles.TextAlignRight +
-                    (!daysValid ? " " + styles.Invalid : "")
+                    (!daysValid ? " " + styles.Invalid : "") +
+                    (readonly ? " " + inputStyles.ReadOnly : null)
                   }
                   maxLength="4"
                   size="4"
@@ -144,6 +147,8 @@ class DurationComponent extends Component {
                     this.props.updateModelValueDays(e.target.value)}
                   value={modelValueDays}
                   //onKeyUp={e => this.handleEnter(e)}
+                  readOnly={readonly}
+                  disabled={readonly}
                 />
               </div>
               <div
@@ -161,7 +166,8 @@ class DurationComponent extends Component {
                     formStyles.FormControl +
                     " " +
                     styles.TextAlignRight +
-                    (!hoursValid ? " " + styles.Invalid : "")
+                    (!hoursValid ? " " + styles.Invalid : "") +
+                    (readonly ? " " + inputStyles.ReadOnly : null)
                   }
                   maxLength="2"
                   size="2"
@@ -170,6 +176,8 @@ class DurationComponent extends Component {
                     this.props.updateModelValueHours(e.target.value)}
                   value={modelValueHours}
                   //onKeyUp={e => this.handleEnter(e)}
+                  readOnly={readonly}
+                  disabled={readonly}
                 />
               </div>
               <div className={styles.DurationInputHourSecondSeperator}>:</div>
@@ -182,7 +190,8 @@ class DurationComponent extends Component {
                   autoComplete="false"
                   className={
                     formStyles.FormControl +
-                    (!minutesValid ? " " + styles.Invalid : "")
+                    (!minutesValid ? " " + styles.Invalid : "") +
+                    (readonly ? " " + inputStyles.ReadOnly : null)
                   }
                   maxLength="2"
                   size="2"
@@ -191,6 +200,8 @@ class DurationComponent extends Component {
                     this.props.updateModelValueMinutes(e.target.value)}
                   value={modelValueMinutes}
                   //onKeyUp={e => this.handleEnter(e)}
+                  readOnly={readonly}
+                  disabled={readonly}
                 />
               </div>
               <div
@@ -208,7 +219,8 @@ class DurationComponent extends Component {
                   autoComplete="false"
                   className={
                     formStyles.FormControl +
-                    (!secondsValid ? " " + styles.Invalid : "")
+                    (!secondsValid ? " " + styles.Invalid : "") +
+                    (readonly ? " " + inputStyles.ReadOnly : null)
                   }
                   maxLength="2"
                   size="4"
@@ -217,6 +229,8 @@ class DurationComponent extends Component {
                     this.props.updateModelValueSeconds(e.target.value)}
                   value={modelValueSeconds}
                   //onKeyUp={e => this.handleEnter(e)}
+                  readOnly={readonly}
+                  disabled={readonly}
                 />
               </div>
               <div />
