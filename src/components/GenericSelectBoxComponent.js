@@ -55,13 +55,15 @@ class GenericSelectBoxComponent extends Component {
       resetModelValue, // cb function to *reset* the value of e.g. a raster's name in the parent model
       validate, // function used to validate the props.modelValue. If validate returns true the props.modelValue passed to updateModelValue and checkmark is set.
       choicesSearchable,
-      placeholder
+      placeholder,
+      formUpdate
     } = this.props;
     const active = step === currentStep;
     const showCheckMark = validate(modelValue);
-    const showNextButton = choices
-      .map(e => transformChoiceToDisplayValue(e))
-      .includes(transformChoiceToDisplayValue(modelValue));
+    const showNextButton =
+      choices
+        .map(e => transformChoiceToDisplayValue(e))
+        .includes(transformChoiceToDisplayValue(modelValue)) && !formUpdate;
     return (
       <div className={styles.Step} id={"Step-" + step}>
         <StepIndicator

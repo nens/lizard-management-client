@@ -60,7 +60,7 @@ class GenericDateComponent extends Component {
       formUpdate
     } = this.props;
     const active = step === currentStep;
-    const showCheckMark = validate(modelValue) && !formUpdate;
+    const showCheckMark = validate(modelValue) || formUpdate;
     const showNextButton = validate(modelValue) && !formUpdate;
 
     //  // moment.locale(localStorage.getItem("lizard-preferred-language") || "en");
