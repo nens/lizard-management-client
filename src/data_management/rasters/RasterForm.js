@@ -797,6 +797,7 @@ class RasterFormModel extends Component {
                       }
                       multiline={false} // boolean for which input elem to use: text OR textarea
                       step={10}
+                      isLastItem={true}
                       opened={this.props.currentRaster || currentStep === 10}
                       formUpdate={!!this.props.currentRaster}
                       readonly={!!this.props.currentRaster}
