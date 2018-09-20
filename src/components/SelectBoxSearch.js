@@ -31,6 +31,7 @@ class SelectBoxSearch extends Component {
   }
   handleInput(e) {
     this.setState({ mustShowChoices: true, query: e.target.value });
+    this.props.updateModelValue(e.target.value);
   }
   setQuery(props) {
     if (this.props.choice) {

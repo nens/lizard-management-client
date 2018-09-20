@@ -17,7 +17,7 @@ class GenericSelectBoxComponent extends Component {
   setLocalStateFromProps(props) {
     // If this component is the "current step component", set the page focus to the components
     // input field:
-    if (props.step === props.currentStep) {
+    if (props.step === props.currentStep && !this.props.formUpdate) {
       const inputElem = document.getElementById(
         this.props.titleComponent.props.id + "_input"
       );
@@ -65,6 +65,8 @@ class GenericSelectBoxComponent extends Component {
       choices
         .map(e => transformChoiceToDisplayValue(e))
         .includes(transformChoiceToDisplayValue(modelValue)) && !formUpdate;
+
+    console.log("[Comp] Generic Select Box Component: modelValue ", modelValue);
     return (
       <div className={styles.Step} id={"Step-" + step}>
         <StepIndicator

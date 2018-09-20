@@ -32,6 +32,7 @@ class SelectBoxSimple extends Component {
     return (
       <div className={`${styles.SelectGeneralClass} form-input`}>
         <input
+          style={{ caretColor: "transparent" }}
           id={inputId}
           tabIndex="-1"
           type="text"

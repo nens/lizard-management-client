@@ -25,7 +25,7 @@ class GenericTextInputComponent extends Component {
     //}
     // If this component is the "current step component", set the page focus to the components
     // input field:
-    if (props.step === props.currentStep) {
+    if (props.step === props.currentStep && !this.props.formUpdate) {
       const inputElem = document.getElementById(
         this.props.titleComponent.props.id + "_input"
       );
@@ -41,9 +41,11 @@ class GenericTextInputComponent extends Component {
 
   validateAndSaveToParent(inputText) {
     this.setState({ inputText });
-    if (this.props.validate(inputText)) {
-      this.props.updateModelValue(inputText);
-    }
+    // this validationstep before updating the parent seems like over engineering :(
+    // I comment it out
+    //if (this.props.validate(inputText)) {
+    this.props.updateModelValue(inputText);
+    //}
   }
   handleEnter(event) {
     if (this.props.validate(this.state.inputText) && event.keyCode === 13) {

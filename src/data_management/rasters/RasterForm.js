@@ -144,11 +144,7 @@ class RasterFormModel extends Component {
     this.setState({ observationType: null });
   }
   validateObservationType(observationType) {
-    return (
-      observationType &&
-      observationType.url !== "" &&
-      observationType.code !== ""
-    );
+    return observationType && observationType.url && observationType.code;
   }
   // Colormap
   setColorMap(colorMap) {
