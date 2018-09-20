@@ -52,11 +52,11 @@ class GenericCheckBox extends Component {
           (readonly ? styles.CursorNotAllowed : styles.CursorPointer)
         }
         onMouseUp={e => {
-          this.setHoverState(true);
-          updateModelValue(!modelValue);
+          !readonly && this.setHoverState(true);
+          !readonly && updateModelValue(!modelValue);
         }}
         onMouseEnter={e => !readonly && this.setHoverState(true)}
-        onMouseLeave={e => this.setHoverState(false)}
+        onMouseLeave={e => !readonly && this.setHoverState(false)}
       >
         {/* this input element has currently no use but should be kept in sync with the custom checkbox */}
         {/* this way it will be possible to use the standard browser funvtionality as onfocus and screenreaders etc */}
