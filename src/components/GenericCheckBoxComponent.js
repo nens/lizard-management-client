@@ -50,12 +50,14 @@ class GenericSelectBoxComponent extends Component {
       opened, // complete question and input fields become visible if set to true
       modelValue, // string: e.g. the name of a raster
       updateModelValue, // cb function to *update* the value of e.g. a raster's name in the parent model
-      label
+      label,
+      readonly,
+      formUpdate
     } = this.props;
     const active = step === currentStep;
     //const showCheckMark = this.state.wasEverOpen; //true;//= validate(modelValue);
     const showCheckMark = this.props.validate(modelValue);
-    const showNextButton = true;
+    const showNextButton = true && !formUpdate;
 
     return (
       <div className={styles.Step} id={"Step-" + step}>
@@ -99,6 +101,7 @@ class GenericSelectBoxComponent extends Component {
                 modelValue={modelValue}
                 label={label}
                 updateModelValue={updateModelValue}
+                readonly={readonly}
               />
 
               {/* add div to force next button to newline. 

@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 
 import styles from "./GenericCheckBox.css";
-// import formStyles from "../styles/Forms.css";
-// import displayStyles from "../styles/Display.css";
+import inputStyles from "../styles/Input.css";
 
 class GenericCheckBox extends Component {
   constructor(props) {
@@ -32,7 +31,8 @@ class GenericCheckBox extends Component {
     const {
       modelValue, // boolean
       updateModelValue, // function to update modelvalue on parent
-      label // text to set the label
+      label, // text to set the label
+      readonly
     } = this.props;
     const { hoverAfterUncheck, hover } = this.state;
 
@@ -46,12 +46,16 @@ class GenericCheckBox extends Component {
 
     return (
       <div
-        className={styles.Container}
+        className={
+          styles.Container +
+          " " +
+          (readonly ? styles.CursorNotAllowed : styles.CursorPointer)
+        }
         onMouseUp={e => {
           this.setHoverState(true);
           updateModelValue(!modelValue);
         }}
-        onMouseEnter={e => this.setHoverState(true)}
+        onMouseEnter={e => !readonly && this.setHoverState(true)}
         onMouseLeave={e => this.setHoverState(false)}
       >
         {/* this input element has currently no use but should be kept in sync with the custom checkbox */}
@@ -63,12 +67,20 @@ class GenericCheckBox extends Component {
           onChange={() => {}} // no op in order to suppress error in console
         />
         <span
-          className={`${styles.CheckboxSpan} ${checkedClass} ${hoverClass}`}
+          className={`${styles.CheckboxSpan} ${checkedClass} ${hoverClass} ${readonly
+            ? inputStyles.ReadOnly
+            : ""}`}
         >
           {/* always render checkmark but make hidden or transparent with css */}
           <span>{"✔"}</span>
         </span>
-        <label className={styles.Label}>{label}</label>
+        <label
+          className={
+            styles.Label + " " + (readonly ? "" : styles.CursorPointer)
+          }
+        >
+          {label}
+        </label>
       </div>
     );
   }

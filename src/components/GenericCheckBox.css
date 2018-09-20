@@ -1,12 +1,19 @@
-.Container {
+.CursorNotAllowed {
+  cursor: not-allowed;
+}
+.CursorPointer {
   cursor: pointer;
+}
+
+.Container {
+  /* cursor: pointer; */
   display: inline-block;
 }
 .Label {
   vertical-align:middle;
   margin: 0px;
   margin-left: 1rem;
-  cursor: pointer;
+  /* cursor: pointer; */
 }
 .CheckboxSpan {
   display: inline-block;
@@ -21,7 +28,7 @@
   border: 1px solid #ced4da;
   font-size: 3.3rem;
   border-radius: .25rem;
-  cursor: pointer;
+  /* cursor: pointer; */
   color: rgba(0, 159, 134, 1);
 
   -webkit-user-select: none; /* Safari */        
