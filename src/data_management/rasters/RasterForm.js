@@ -435,7 +435,7 @@ class RasterFormModel extends Component {
       fetch(url, opts)
         .then(response => response.json()) // TODO: kan dit weg?
         .then(responseParsed => {
-          this.props.history.push("data_management/rasters/");
+          this.props.history.push("/data_management/rasters");
         });
     } else {
       const opts = {
@@ -461,7 +461,7 @@ class RasterFormModel extends Component {
       fetch(url + "uuid:" + this.props.currentRaster.uuid + "/", opts)
         .then(response => response.json()) // TODO: kan dit weg?
         .then(responseParsed => {
-          this.props.history.push("data_management/rasters/");
+          this.props.history.push("/data_management/rasters");
         });
     }
   }

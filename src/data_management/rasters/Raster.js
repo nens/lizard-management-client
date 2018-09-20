@@ -50,7 +50,7 @@ class Raster extends Component {
 
   handleNewRasterClick() {
     const { history } = this.props;
-    history.push("rasters/new");
+    history.push("/data_management/rasters/new");
   }
 
   sortList(list) {
