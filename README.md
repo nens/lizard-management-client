@@ -78,19 +78,52 @@ Run `$ yarn run release` and answer the questions accordingly.
 Deployment
 ==========
 
-1) Log in to these webservers using SSH:
+For the deployment of frontend repositories we make use of the client
+deployment repository https://github.com/nens/client-deployment. It is already
+included as a git submodule in this repo.
 
-- p-web-ws-d20.external-nens.local
-- p-web-ws-d21.external-nens.local
-- p-web-ws-d22.external-nens.local
+Init the git submodule if you haven't done `clone --recursive`  or ran this command earlier:
 
-2) For each webserver, download the release asset you want from [Github](https://github.com/nens/lizard-management-client/releases) to a tmp dir in your home dir using `wget`
+```sh
+git submodule init
+```
 
-3) Unzip the archive
+To update the git submodule:
 
-4) Copy or move the contents of the unzipped archive to /srv/nxt.lizard.net/src/lizard-management-client/dist/
+```sh
+git pull --recurse-submodules
+git submodule update --remote
+```
 
-5) Set permissions on that directory. Done.
+Uses Ansible for deployment.
+
+Ansible requires:
+
+- the file `deploy/hosts` which can be created from `deploy.hosts.example` by filling out the server names. But it is best is to ask a collegue for this file.
+- the file `deploy/production_hosts` which can be created from `deploy/production_hosts.example` by filling out the server names. But it is best is to ask a collegue for this file.
+- the file `deploy/group_vars/all` which can be created from `deploy/group_vars/all.example` by filling each line with the correct value. But best is to ask a collegue for this file.
+
+Ansible requires you to set a public ssh key on the remote server. Run the following command to send your public key to the server:
+
+```sh
+ssh-copy-id <USERNAME>@<SERVER_NAME>
+```
+
+Now deploy for staging:
+
+```sh
+npm run staging-deploy
+```
+
+Or deploy for production:
+
+```sh
+npm run production-deploy
+```
+
+
+_NOTE: When ansible complains about permissions this may be because the owners for some files were changed to `root`, where this should be `buildout`. In this case use ssh to connect to the server and navigate to the folder of the deployment path. Then change the owner of the `dist/` folder to buildout: ```chown -R buildout:buildout /dist```._
+
 
 
 
