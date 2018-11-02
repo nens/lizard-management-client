@@ -50,15 +50,20 @@ class SelectBoxSimple extends Component {
         />
         <div
           className={
-            showChoices
-              ? styles.Results
-              : displayStyles.None + " " + styles.Results
+            // showChoices ?
+            styles.Results
+            // : displayStyles.None + " " + styles.Results
           }
         >
           <Scrollbars autoHeight autoHeightMin={50} autoHeightMax={400}>
             {choices.map((choiceItem, i) => {
               return (
                 <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "start"
+                  }}
                   tabIndex={i + 1}
                   key={i}
                   className={`${styles.ResultRow} ${choiceItem === choice
@@ -71,7 +76,22 @@ class SelectBoxSimple extends Component {
                     updateModelValue(choiceItem);
                   }}
                 >
-                  {choiceItem}
+                  <div style={{ flex: "1" }}>{choiceItem}</div>
+                  {/* <div style={{flex: '1 0 10px', flexBasis: '100%'}}>
+                  </div> */}
+                  <div
+                    style={{
+                      flex: "2",
+                      textOverflow: "ellipsis",
+                      overflow: "hidden",
+                      whiteSpace: "nowrap"
+                    }}
+                  >
+                    some description
+                  </div>
+                  {/* <div style={{flex: '1 0 10px', flexBasis: '100%'}}>
+                  </div> */}
+                  <div style={{ marginLeft: "auto" }}>i</div>
                 </div>
               );
             })}
