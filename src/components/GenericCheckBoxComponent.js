@@ -59,7 +59,7 @@ class GenericSelectBoxComponent extends Component {
     const showCheckMark = this.props.validate(modelValue);
     // modelValue==true is added specific for the temporal checkbox, namely if this value is false the next fields need not be shown
     // in order to make this component more generic we would thus need to make a workaround for this, but for now its not worth the effort
-    const showNextButton = modelValue == true && !formUpdate;
+    const showNextButton = modelValue === true && !formUpdate;
 
     return (
       <div className={styles.Step} id={"Step-" + step}>

@@ -5,7 +5,6 @@ import { Scrollbars } from "react-custom-scrollbars";
 
 import styles from "./SelectBoxSimple.css";
 import formStyles from "../styles/Forms.css";
-import displayStyles from "../styles/Display.css";
 
 class SelectBoxSimple extends Component {
   constructor(props) {
@@ -28,7 +27,6 @@ class SelectBoxSimple extends Component {
       inputId,
       placeholder
     } = this.props;
-    const { showChoices } = this.state;
     return (
       <div className={`${styles.SelectGeneralClass} form-input`}>
         <input

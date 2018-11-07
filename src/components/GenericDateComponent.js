@@ -121,6 +121,8 @@ class GenericDateComponent extends Component {
               </div>
               {/* div to enforce layout nextline */}
               <div />
+              {/* div to suppress moment unused vars error */}
+              <div style={{ display: "none" }}>{moment}</div>
 
               {showNextButton ? (
                 <button

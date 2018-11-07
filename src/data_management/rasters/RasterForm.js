@@ -478,7 +478,6 @@ class RasterFormModel extends Component {
     const {
       rasterName,
       currentStep,
-      storePathName,
       description,
       aggregationType
     } = this.state;
