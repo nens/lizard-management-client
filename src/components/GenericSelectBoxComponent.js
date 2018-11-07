@@ -47,8 +47,10 @@ class GenericSelectBoxComponent extends Component {
       currentStep, // int for denoting which step is currently active
       setCurrentStep, // cb function for updating which step becomes active
       opened, // complete question and input fields become visible if set to true
-      choices, // list of choices in select box
+      choices, // list of choices in select box. Depending on transformChoiceToDisplayValue,transformChoiceToDescription, transformChoiceToOption
       transformChoiceToDisplayValue, // optional parameter if choices are objects, which field contains the displayvalue, default item itself is displayvalue
+      transformChoiceToDescription, // now only possible if choicesSearchable == false
+      transformChoiceToInfo, // // now only possible if choicesSearchable == false
       isFetching, // is the component still waiting for data from server?
       modelValue, // string: e.g. the name of a raster
       updateModelValue, // cb function to *update* the value of e.g. a raster's name in the parent model
@@ -113,6 +115,8 @@ class GenericSelectBoxComponent extends Component {
                   inputId={titleComponent.props.id + "_input"}
                   placeholder={placeholder}
                   // validate={validate}
+                  transformChoiceToDescription={transformChoiceToDescription}
+                  transformChoiceToInfo={transformChoiceToInfo}
                 />
               )}
               {showNextButton ? (
