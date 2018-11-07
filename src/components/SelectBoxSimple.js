@@ -54,9 +54,9 @@ class SelectBoxSimple extends Component {
         />
         <div
           className={
-            // showChoices ?
-            styles.Results
-            // : displayStyles.None + " " + styles.Results
+            showChoices
+              ? styles.Results
+              : displayStyles.None + " " + styles.Results
           }
         >
           <Scrollbars autoHeight autoHeightMin={50} autoHeightMax={400}>
@@ -91,22 +91,17 @@ class SelectBoxSimple extends Component {
                       whiteSpace: "nowrap"
                     }}
                   >
-                    {transformChoiceToDescription(choiceItemObj)}
+                    <i>{transformChoiceToDescription(choiceItemObj)}</i>
                   </div>
-                  <div
-                    style={{ marginLeft: "auto" }}
-                    className={` material-icons ${isSelected
-                      ? appStyles.Secondary
-                      : appStyles.Secondary}`}
-                  >
+                  <div style={{ marginLeft: "auto" }}>
                     <a
+                      className="material-icons"
                       href=""
                       target="_blank"
                       rel="noopener noreferrer"
                       title={transformChoiceToInfo(choiceItemObj)}
                     >
-                      <i>info</i>
-                      &nbsp;
+                      info
                     </a>
                   </div>
                 </div>
