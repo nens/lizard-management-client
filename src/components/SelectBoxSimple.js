@@ -75,9 +75,7 @@ class SelectBoxSimple extends Component {
                   }}
                 >
                   <div style={{ flex: "1" }}>{choiceItem}</div>
-                  {/* <div style={{flex: '1 0 10px', flexBasis: '100%'}}>
-                  </div> */}
-                  <div
+                  {/* <div
                     style={{
                       flex: "2",
                       textOverflow: "ellipsis",
@@ -87,9 +85,7 @@ class SelectBoxSimple extends Component {
                   >
                     some description
                   </div>
-                  {/* <div style={{flex: '1 0 10px', flexBasis: '100%'}}>
-                  </div> */}
-                  <div style={{ marginLeft: "auto" }}>i</div>
+                  <div style={{ marginLeft: "auto" }}>i</div> */}
                 </div>
               );
             })}
