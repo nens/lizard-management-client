@@ -383,7 +383,7 @@ class RasterFormModel extends Component {
       temporalIntervalSeconds: intervalObj.seconds,
       temporalOptimizer: true, // default true, not set by the user for first iteration
       colorMap: { name: currentRaster.options.styles },
-      aggregationType: currentRaster.aggregation_type, // choice: none | counts | curve | histogram | sum | average
+      aggregationType: { display: currentRaster.aggregation_type }, // choice: none | counts | curve | histogram | sum | average
       supplierId: selectedSupplierId,
       supplierCode: currentRaster.supplier_code,
       observationType: currentRaster.observation_type,
