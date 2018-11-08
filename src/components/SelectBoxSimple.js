@@ -43,7 +43,7 @@ class SelectBoxSimple extends Component {
           autoComplete="false"
           className={formStyles.FormControl}
           placeholder={placeholder} //"- select a value -"
-          value={choice}
+          value={transformChoiceToDisplayValue(choice)}
           onClick={() => this.setState({ showChoices: true })}
           onBlur={() => this.setState({ showChoices: false })}
           onChange={() => {}} // no op in order to suppress error in console
@@ -79,7 +79,7 @@ class SelectBoxSimple extends Component {
                     this.setState({
                       showChoices: false
                     });
-                    updateModelValue(choiceItem);
+                    updateModelValue(choiceItemObj);
                   }}
                 >
                   <div style={{ flex: "1" }}>{choiceItem}</div>

@@ -397,7 +397,7 @@ class RasterFormModel extends Component {
       this.state.observationType.url
     );
     const intAggregationType = this.aggregationTypeStringToInteger(
-      this.state.aggregationType
+      this.state.aggregationType.display
     );
 
     const isoIntervalDuration = this.intervalToISODuration(
