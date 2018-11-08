@@ -383,7 +383,7 @@ class RasterFormModel extends Component {
       temporalIntervalSeconds: intervalObj.seconds,
       temporalOptimizer: true, // default true, not set by the user for first iteration
       colorMap: { name: currentRaster.options.styles },
-      aggregationType: { display: currentRaster.aggregation_type }, // choice: none | counts | curve | histogram | sum | average
+      aggregationType: currentRaster.aggregation_type, // choice: none | counts | curve | histogram | sum | average
       supplierId: selectedSupplierId,
       supplierCode: currentRaster.supplier_code,
       observationType: currentRaster.observation_type,
@@ -397,7 +397,7 @@ class RasterFormModel extends Component {
       this.state.observationType.url
     );
     const intAggregationType = this.aggregationTypeStringToInteger(
-      this.state.aggregationType.display
+      this.state.aggregationType
     );
 
     const isoIntervalDuration = this.intervalToISODuration(
@@ -628,7 +628,8 @@ class RasterFormModel extends Component {
                   transformChoiceToDescription={item => item.description}
                   transformChoiceToInfo={item => item.info}
                   modelValue={aggregationType} // string: e.g. the name of a raster
-                  updateModelValue={this.setAggregationType} // cb function to *update* the value of e.g. a raster's name in the parent model
+                  updateModelValue={item =>
+                    this.setAggregationType(item.display)} // cb function to *update* the value of e.g. a raster's name in the parent model
                   resetModelValue={() => this.setAggregationType("")} // cb function to *reset* the value of e.g. a raster's name in the parent model
                   validate={this.validateAggregationType} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
                 />

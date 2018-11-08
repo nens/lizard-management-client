@@ -43,7 +43,7 @@ class SelectBoxSimple extends Component {
           autoComplete="false"
           className={formStyles.FormControl}
           placeholder={placeholder} //"- select a value -"
-          value={transformChoiceToDisplayValue(choice)}
+          value={choice}
           onClick={() => this.setState({ showChoices: true })}
           onBlur={() => this.setState({ showChoices: false })}
           onChange={() => {}} // no op in order to suppress error in console
