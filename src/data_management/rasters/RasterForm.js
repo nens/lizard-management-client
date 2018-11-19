@@ -370,7 +370,8 @@ class RasterFormModel extends Component {
         name: currentRaster.organisation.name,
         unique_id: currentRaster.organisation.unique_id
       },
-      storePathName: currentRaster.slug.replace(/:/g, "/"),
+      storePathName:
+        currentRaster.slug && currentRaster.slug.replace(/:/g, "/"),
       slug: currentRaster.slug,
       description: currentRaster.description,
       temporalBool: currentRaster.temporal,
