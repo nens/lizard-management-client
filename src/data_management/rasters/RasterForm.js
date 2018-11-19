@@ -298,6 +298,9 @@ class RasterFormModel extends Component {
   // '05:00:00'
   // to {days:10, hours:'01', minutes:'09', seconds:'51'}
   getIntervalToDaysHoursMinutesSeconds(str) {
+    if (!str) {
+      return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+    }
     const splitColon = str.split(":");
     const splitSpace = splitColon[0].split(" ");
     let obj = {
