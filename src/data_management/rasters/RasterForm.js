@@ -169,7 +169,7 @@ class RasterFormModel extends Component {
     this.setState({ supplierCode });
   }
   validateSupplierCode(supplierCode) {
-    return supplierCode.length > 1;
+    return supplierCode && supplierCode.length > 1;
   }
   // TemporalBool
   setTemporalBool(temporalBool) {
