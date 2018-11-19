@@ -13,6 +13,8 @@ class PaginationBar extends Component {
     return links.map(link => {
       if (page === link) {
         return <div key={link}>{link}</div>;
+      } else if (link === "...") {
+        return <div key={link}>{link}</div>;
       } else {
         return (
           <div
@@ -83,8 +85,8 @@ class PaginationBar extends Component {
         page - (showPagesAhead + 1),
         page + showPagesAhead
       );
-      // linkEnd = [29,30,31,32] given that links.length =32
-      const linkEnd = links.slice(-showPagesAhead);
+      // linksEnd = [29,30,31,32] given that links.length =32
+      const linksEnd = links.slice(-showPagesAhead);
       const linksFromStartToCurrentPage = links.slice(0, page + showPagesAhead);
       const linksFromCurrentPageToEnd = links.slice(
         page - (showPagesAhead + 1),
@@ -110,7 +112,7 @@ class PaginationBar extends Component {
                 loadRastersOnPage
               )}
               {this.renderLinks(["..."], page)}
-              {this.renderLinks(linkEnd, page, loadRastersOnPage)}
+              {this.renderLinks(linksEnd, page, loadRastersOnPage)}
             </div>
             <div className={styles.NavigatorBar}>
               {this.renderNavigator(links, page, loadRastersOnPage)}
@@ -149,7 +151,7 @@ class PaginationBar extends Component {
               {this.renderLinks(["..."], page)}
               {this.renderLinks(linksCenter, page, loadRastersOnPage)}
               {this.renderLinks(["..."], page)}
-              {this.renderLinks(linkEnd, page, loadRastersOnPage)}
+              {this.renderLinks(linksEnd, page, loadRastersOnPage)}
             </div>
             <div className={styles.NavigatorBar}>
               {this.renderNavigator(links, page, loadRastersOnPage)}
