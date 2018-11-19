@@ -593,16 +593,43 @@ class RasterFormModel extends Component {
                   currentStep={currentStep} // int for denoting which step is currently active
                   setCurrentStep={this.setCurrentStep} // cb function for updating which step becomes active
                   choices={[
-                    "none",
-                    "counts",
-                    "curve",
-                    "histogram",
-                    "sum",
-                    "average"
+                    {
+                      display: "none",
+                      description: "",
+                      info: "no aggregation available for this raster"
+                    },
+                    {
+                      display: "counts",
+                      description: "means percentage per category",
+                      info: "means percentage per category"
+                    },
+                    {
+                      display: "curve",
+                      description: "means percentile curve",
+                      info: "means percentile curve"
+                    },
+                    {
+                      display: "histogram",
+                      description: "means frequency per data band",
+                      info: "means frequency per data band"
+                    },
+                    {
+                      display: "sum",
+                      description: "",
+                      info: "sum"
+                    },
+                    {
+                      display: "average",
+                      description: "",
+                      info: "average"
+                    }
                   ]}
-                  transformChoiceToDisplayValue={id => id}
+                  transformChoiceToDisplayValue={item => item.display}
+                  transformChoiceToDescription={item => item.description}
+                  transformChoiceToInfo={item => item.info}
                   modelValue={aggregationType} // string: e.g. the name of a raster
-                  updateModelValue={this.setAggregationType} // cb function to *update* the value of e.g. a raster's name in the parent model
+                  updateModelValue={item =>
+                    this.setAggregationType(item.display)} // cb function to *update* the value of e.g. a raster's name in the parent model
                   resetModelValue={() => this.setAggregationType("")} // cb function to *reset* the value of e.g. a raster's name in the parent model
                   validate={this.validateAggregationType} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
                 />
