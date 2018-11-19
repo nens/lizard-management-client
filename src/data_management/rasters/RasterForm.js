@@ -595,33 +595,33 @@ class RasterFormModel extends Component {
                   choices={[
                     {
                       display: "none",
-                      description: "description here",
-                      info: "information here"
+                      description: "",
+                      info: "no aggregation available for this raster"
                     },
                     {
                       display: "counts",
-                      description: "description here",
-                      info: "information here"
+                      description: "means percentage per category",
+                      info: "means percentage per category"
                     },
                     {
                       display: "curve",
-                      description: "description here",
-                      info: "information here"
+                      description: "means percentile curve",
+                      info: "means percentile curve"
                     },
                     {
                       display: "histogram",
-                      description: "description here",
-                      info: "information here"
+                      description: "means frequency per data band",
+                      info: "means frequency per data band"
                     },
                     {
                       display: "sum",
-                      description: "description here",
-                      info: "information here"
+                      description: "",
+                      info: "sum"
                     },
                     {
                       display: "average",
-                      description: "description here",
-                      info: "information here"
+                      description: "",
+                      info: "average"
                     }
                   ]}
                   transformChoiceToDisplayValue={item => item.display}
