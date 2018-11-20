@@ -386,7 +386,13 @@ class RasterFormModel extends Component {
       temporalIntervalMinutes: intervalObj.minutes,
       temporalIntervalSeconds: intervalObj.seconds,
       temporalOptimizer: true, // default true, not set by the user for first iteration
-      colorMap: { name: currentRaster.options.styles },
+      colorMap: {
+        name:
+          (typeof currentRaster.options.styles === "object" &&
+            currentRaster.options.styles[0] &&
+            currentRaster.options.styles[0][0]) ||
+          currentRaster.options.styles
+      },
       aggregationType: currentRaster.aggregation_type, // choice: none | counts | curve | histogram | sum | average
       supplierId: selectedSupplierId,
       supplierCode: currentRaster.supplier_code,
@@ -422,7 +428,7 @@ class RasterFormModel extends Component {
           access_modifier: 200, // private to organisation
           observation_type: observationTypeId, //this.state.observationType,
           description: this.state.description,
-          supplier: this.state.supplierId.username,
+          supplier: this.state.supplierId && this.state.supplierId.username,
           supplier_code: this.state.supplierCode,
           temporal: this.state.temporalBool,
           origin: this.state.temporalOrigin.toISOString(), // toISOString = momentJS function
