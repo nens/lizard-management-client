@@ -403,12 +403,15 @@ class RasterFormModel extends Component {
 
   handleClickCreateRaster() {
     const url = "/api/v3/rasters/";
-    const observationTypeId = this.parseObservationTypeIdFromUrl(
-      this.state.observationType.url
-    );
-    const intAggregationType = this.aggregationTypeStringToInteger(
-      this.state.aggregationType
-    );
+    const observationTypeId =
+      (this.state.observationType &&
+        this.state.observationType.url &&
+        this.parseObservationTypeIdFromUrl(this.state.observationType.url)) ||
+      undefined;
+    const intAggregationType =
+      (this.state.aggregationType &&
+        this.aggregationTypeStringToInteger(this.state.aggregationType)) ||
+      undefined;
 
     const isoIntervalDuration = this.intervalToISODuration(
       this.state.temporalIntervalDays,
