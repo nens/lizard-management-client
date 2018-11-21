@@ -15,14 +15,11 @@ class EditRasterModel extends Component {
 
   componentDidMount() {
     const { match } = this.props;
-    console.log(match.params.id);
 
     (async () => {
       const currentRaster = await fetch(`/api/v3/rasters/${match.params.id}/`, {
         credentials: "same-origin"
       }).then(response => response.json());
-
-      console.log("currentRaster", currentRaster);
 
       this.setState({ currentRaster });
     })();

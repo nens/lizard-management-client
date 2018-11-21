@@ -91,8 +91,6 @@ class DurationComponent extends Component {
     const showCheckMark = valid;
     const mustShowNextButton = valid && active && !formUpdate && !isLastItem;
 
-    console.log("[Comp]durationComponent readonly", readonly);
-
     const daysValid = this.props.validateDays(modelValueDays);
     const hoursValid = this.props.validateHours(modelValueHours);
     const minutesValid = this.props.validateMinutes(modelValueMinutes);

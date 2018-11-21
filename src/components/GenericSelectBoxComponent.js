@@ -63,11 +63,8 @@ class GenericSelectBoxComponent extends Component {
     } = this.props;
     const active = step === currentStep || (formUpdate && !readonly);
     const showCheckMark = validate(modelValue);
-    const showNextButton =
-      // choices.map(e => transformChoiceToDisplayValue(e)).includes(modelValue) &&
-      validate(modelValue) && !formUpdate;
+    const showNextButton = validate(modelValue) && !formUpdate;
 
-    console.log("[Comp] Generic Select Box Component: modelValue ", modelValue);
     return (
       <div className={styles.Step} id={"Step-" + step}>
         <StepIndicator
