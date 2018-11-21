@@ -13,12 +13,20 @@ class SearchBox extends Component {
     };
   }
 
+  handleEnter(event) {
+    if (event.keyCode === 13) {
+      // 13 is keycode 'enter' (works only when current input validates)
+      this.props.handleSearch(this.state.localSearchTerms);
+    }
+  }
+
   render() {
     const { searchTerm, handleSearch } = this.props;
 
     return (
       <div
         style={{
+          // align search button on same line as input search field
           display: "flex",
           flexDirection: "row",
           alignItems: "flex-start"
@@ -30,19 +38,19 @@ class SearchBox extends Component {
           value={this.state.localSearchTerms}
           className={formStyles.FormControl}
           style={{
+            // make sure input field has same height as search button
             padding: "6px",
+            // right corners will touch button, remove these rounded corners added by FormStyles
             borderTopRightRadius: "0px",
-            borderBottomRightRadius: "0px",
-            float: "left"
+            borderBottomRightRadius: "0px"
           }}
           onChange={e => {
             this.setState({ localSearchTerms: e.target.value });
-            // handleSearch(e.target.value);
           }}
+          onKeyUp={e => this.handleEnter(e)}
         />
         <button
           type="button"
-          style={{ float: "left" }}
           className={`${buttonStyles.Button} ${buttonStyles.Success}`}
           onClick={e => handleSearch(this.state.localSearchTerms)}
         >

@@ -33,7 +33,7 @@ class Raster extends Component {
 
   loadRastersOnPage(page, searchContains) {
     const url = searchContains
-      ? `/api/v3/rasters/?page=${page}&name__contains=${searchContains}` // &organisation__unique_id=${organisationId},
+      ? `/api/v3/rasters/?page=${page}&name__icontains=${searchContains}` // &organisation__unique_id=${organisationId},
       : `/api/v3/rasters/?page=${page}`;
 
     fetch(url, {
