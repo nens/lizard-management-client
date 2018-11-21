@@ -4,6 +4,9 @@ import { FormattedMessage } from "react-intl";
 import Ink from "react-ink";
 import buttonStyles from "../styles/Buttons.css";
 import formStyles from "../styles/Forms.css";
+import ClearInputButton from "../components/ClearInputButton.js";
+import clearInputStyles from "./ClearInputButton.css";
+import inputStyles from "../styles/Input.css";
 
 class SearchBox extends Component {
   constructor(props) {
@@ -29,26 +32,45 @@ class SearchBox extends Component {
           // align search button on same line as input search field
           display: "flex",
           flexDirection: "row",
+          // alignItems: "flex-start",
           alignItems: "flex-start"
         }}
       >
-        <input
-          type="text"
-          placeholder={searchTerm}
-          value={this.state.localSearchTerms}
-          className={formStyles.FormControl}
-          style={{
-            // make sure input field has same height as search button
-            padding: "6px",
-            // right corners will touch button, remove these rounded corners added by FormStyles
-            borderTopRightRadius: "0px",
-            borderBottomRightRadius: "0px"
-          }}
-          onChange={e => {
-            this.setState({ localSearchTerms: e.target.value });
-          }}
-          onKeyUp={e => this.handleEnter(e)}
-        />
+        <div style={{ position: "relative" }}>
+          <input
+            type="text"
+            placeholder={searchTerm}
+            value={this.state.localSearchTerms}
+            className={formStyles.FormControl}
+            style={{
+              // make sure input field has same height as search button
+              padding: "6px",
+              // right corners will touch button, remove these rounded corners added by FormStyles
+              borderTopRightRadius: "0px",
+              borderBottomRightRadius: "0px"
+            }}
+            onChange={e => {
+              this.setState({ localSearchTerms: e.target.value });
+            }}
+            onKeyUp={e => this.handleEnter(e)}
+          />
+          {/* <ClearInputButton
+            onClick={() => {
+              this.setState({ localSearchTerms: '' });
+              this.props.handleSearch('');
+            }}
+          /> */}
+          <i
+            className={`${clearInputStyles.ClearInput} material-icons`}
+            style={{ right: "6px", top: "10px" }}
+            onClick={() => {
+              this.setState({ localSearchTerms: "" });
+              this.props.handleSearch("");
+            }}
+          >
+            clear
+          </i>
+        </div>
         <button
           type="button"
           className={`${buttonStyles.Button} ${buttonStyles.Success}`}
