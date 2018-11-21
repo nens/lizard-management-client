@@ -36,7 +36,14 @@ class SearchBox extends Component {
           alignItems: "flex-start"
         }}
       >
-        <div style={{ position: "relative" }}>
+        <div
+          style={{
+            position: "relative",
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center"
+          }}
+        >
           <input
             type="text"
             placeholder={searchTerm}
@@ -54,15 +61,10 @@ class SearchBox extends Component {
             }}
             onKeyUp={e => this.handleEnter(e)}
           />
-          {/* <ClearInputButton
-            onClick={() => {
-              this.setState({ localSearchTerms: '' });
-              this.props.handleSearch('');
-            }}
-          /> */}
+
           <i
             className={`${clearInputStyles.ClearInput} material-icons`}
-            style={{ right: "6px", top: "10px" }}
+            style={{ right: "6px" }}
             onClick={() => {
               this.setState({ localSearchTerms: "" });
               this.props.handleSearch("");
