@@ -55,31 +55,12 @@ class Raster extends Component {
     history.push("/data_management/rasters/new");
   }
 
-  sortList(list) {
-    const sortedList = list
-      .slice()
-      // .sort((a, b) => {
-      //   if (a.name < b.name) {
-      //     return -1;
-      //   }
-      //   if (a.name > b.name) {
-      //     return 1;
-      //   }
-      //   return 0;
-      // })
-      .sort((a, b) => {
-        return a.active === b.active ? 0 : a.active ? -1 : 1;
-      });
-    return sortedList;
-  }
-
   render() {
     const { rasters, isFetching, total, page } = this.state;
 
     const numberOfRasters = total;
-    const rasterRows = this.sortList(rasters);
 
-    const htmlRasterTable = rasterRows.map((raster, i) => {
+    const htmlRasterTable = rasters.map((raster, i) => {
       return (
         <Row key={i} alarm={raster} loadRastersOnPage={this.loadRastersOnPage}>
           <NavLink
@@ -165,7 +146,7 @@ class Raster extends Component {
               >
                 <MDSpinner size={24} />
               </div>
-            ) : rasterRows.length > 0 ? (
+            ) : rasters.length > 0 ? (
               htmlRasterTable
             ) : (
               <div className={styles.NoResults}>
