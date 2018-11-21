@@ -12,6 +12,7 @@ import { connect } from "react-redux";
 import { FormattedMessage } from "react-intl";
 import { withRouter } from "react-router-dom";
 import { NavLink } from "react-router-dom";
+import SearchBox from "../../components/SearchBox";
 
 class Raster extends Component {
   constructor(props) {
@@ -56,15 +57,15 @@ class Raster extends Component {
   sortList(list) {
     const sortedList = list
       .slice()
-      .sort((a, b) => {
-        if (a.name < b.name) {
-          return -1;
-        }
-        if (a.name > b.name) {
-          return 1;
-        }
-        return 0;
-      })
+      // .sort((a, b) => {
+      //   if (a.name < b.name) {
+      //     return -1;
+      //   }
+      //   if (a.name > b.name) {
+      //     return 1;
+      //   }
+      //   return 0;
+      // })
       .sort((a, b) => {
         return a.active === b.active ? 0 : a.active ? -1 : 1;
       });
@@ -110,8 +111,13 @@ class Raster extends Component {
           }}
         >
           <div
-            style={{ color: "#858E9C" }}
-            className={`${gridStyles.colLg8} ${gridStyles.colMd8} ${gridStyles.colSm8} ${gridStyles.colXs8}`}
+            className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${gridStyles.colSm4} ${gridStyles.colXs4}`}
+          >
+            <SearchBox />
+          </div>
+          <div
+            style={{ color: "#858E9C", alignSelf: "center" }}
+            className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${gridStyles.colSm4} ${gridStyles.colXs4}`}
           >
             <FormattedMessage
               id="rasters.number_of_rasters"
@@ -121,6 +127,7 @@ class Raster extends Component {
               values={{ numberOfRasters }}
             />
           </div>
+
           <div
             className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${gridStyles.colSm4} ${gridStyles.colXs4}`}
           >
