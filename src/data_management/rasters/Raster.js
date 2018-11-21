@@ -31,13 +31,14 @@ class Raster extends Component {
     this.loadRastersOnPage(page);
   }
 
-  loadRastersOnPage(page) {
-    fetch(
-      `/api/v3/rasters/?page=${page}`, // &organisation__unique_id=${organisationId},
-      {
-        credentials: "same-origin"
-      }
-    )
+  loadRastersOnPage(page, searchContains) {
+    const url = searchContains
+      ? `/api/v3/rasters/?page=${page}&name__contains=${searchContains}` // &organisation__unique_id=${organisationId},
+      : `/api/v3/rasters/?page=${page}`;
+
+    fetch(url, {
+      credentials: "same-origin"
+    })
       .then(response => response.json())
       .then(data => {
         this.setState({
@@ -113,7 +114,10 @@ class Raster extends Component {
           <div
             className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${gridStyles.colSm4} ${gridStyles.colXs4}`}
           >
-            <SearchBox />
+            <SearchBox
+              handleSearch={searchContains =>
+                this.loadRastersOnPage(this.state.page, searchContains)}
+            />
           </div>
           <div
             style={{ color: "#858E9C", alignSelf: "center" }}

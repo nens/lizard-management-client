@@ -24,9 +24,7 @@ class SearchBox extends Component {
           alignItems: "flex-start"
         }}
       >
-        {/* <label>SEARCH</label> */}
         <input
-          // style={{float: 'left'}}
           type="text"
           placeholder={searchTerm}
           value={this.state.localSearchTerms}
@@ -37,12 +35,16 @@ class SearchBox extends Component {
             borderBottomRightRadius: "0px",
             float: "left"
           }}
+          onChange={e => {
+            this.setState({ localSearchTerms: e.target.value });
+            // handleSearch(e.target.value);
+          }}
         />
         <button
           type="button"
           style={{ float: "left" }}
           className={`${buttonStyles.Button} ${buttonStyles.Success}`}
-          onClick={e => handleSearch(searchTerm)}
+          onClick={e => handleSearch(this.state.localSearchTerms)}
         >
           <FormattedMessage id="search" defaultMessage="Search" />
           <Ink />
