@@ -89,13 +89,19 @@ class Raster extends Component {
         <span
           className={`${gridStyles.colLg8} ${gridStyles.colMd8} ${gridStyles.colSm8} ${gridStyles.colXs8}`}
         >
-          Raster Name
+          <FormattedMessage
+            id="rasters.header_raster_name"
+            defaultMessage="Raster name"
+          />
         </span>
         <span
           className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${gridStyles.colSm4} ${gridStyles.colXs4}`}
           style={{ float: "right" }}
         >
-          Information
+          <FormattedMessage
+            id="rasters.header_raster_description"
+            defaultMessage="Description"
+          />
         </span>
       </div>
     );
