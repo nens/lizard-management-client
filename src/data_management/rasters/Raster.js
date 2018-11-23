@@ -77,6 +77,28 @@ class Raster extends Component {
     const numberOfRasters = total;
     const rasterRows = this.sortList(rasters);
 
+    const htmlRasterTableHeader = (
+      <div
+        className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
+        style={{
+          padding: "0 0 15px 0",
+          borderBottom: "1px solid #bababa",
+          color: "#858e9c"
+        }}
+      >
+        <span
+          className={`${gridStyles.colLg8} ${gridStyles.colMd8} ${gridStyles.colSm8} ${gridStyles.colXs8}`}
+        >
+          Raster Name
+        </span>
+        <span
+          className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${gridStyles.colSm4} ${gridStyles.colXs4}`}
+          style={{ float: "right" }}
+        >
+          Information
+        </span>
+      </div>
+    );
     const htmlRasterTable = rasterRows.map((raster, i) => {
       return (
         <Row key={i} alarm={raster} loadRastersOnPage={this.loadRastersOnPage}>
@@ -105,8 +127,7 @@ class Raster extends Component {
         <div
           className={gridStyles.Row}
           style={{
-            padding: "0 0 25px 0",
-            borderBottom: "1px solid #bababa"
+            padding: "0 0 30px 0"
           }}
         >
           <div
@@ -138,6 +159,7 @@ class Raster extends Component {
             </button>
           </div>
         </div>
+        {htmlRasterTableHeader}
         <div className={gridStyles.Row}>
           <div
             className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
@@ -155,7 +177,7 @@ class Raster extends Component {
                 <MDSpinner size={24} />
               </div>
             ) : rasterRows.length > 0 ? (
-              htmlRasterTable
+              <div>{htmlRasterTable}</div>
             ) : (
               <div className={styles.NoResults}>
                 <img src={alarmIcon} alt="Alarms" />
