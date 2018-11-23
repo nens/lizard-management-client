@@ -1,12 +1,9 @@
 import React, { Component } from "react";
-import styles from "./SearchBox.css";
 import { FormattedMessage } from "react-intl";
 import Ink from "react-ink";
 import buttonStyles from "../styles/Buttons.css";
 import formStyles from "../styles/Forms.css";
-import ClearInputButton from "../components/ClearInputButton.js";
 import clearInputStyles from "./ClearInputButton.css";
-import inputStyles from "../styles/Input.css";
 
 class SearchBox extends Component {
   constructor(props) {
