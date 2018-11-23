@@ -89,7 +89,6 @@ class Raster extends Component {
           className={gridStyles.Row}
           style={{
             padding: "0 0 25px 0"
-            // borderBottom: "1px solid #bababa"
           }}
         >
           <div
@@ -100,19 +99,6 @@ class Raster extends Component {
                 this.loadRastersOnPage(this.state.page, searchContains)}
             />
           </div>
-          {/* <div
-            style={{ color: "#858E9C", alignSelf: "center" }}
-            className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${gridStyles.colSm4} ${gridStyles.colXs4}`}
-          >
-            <FormattedMessage
-              id="rasters.number_of_rasters"
-              defaultMessage={`{numberOfRasters, number} {numberOfRasters, plural, 
-                one {Raster}
-                other {Rasters}}`}
-              values={{ numberOfRasters }}
-            />
-          </div> */}
-
           <div
             className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${gridStyles.colSm4} ${gridStyles.colXs4}`}
           >

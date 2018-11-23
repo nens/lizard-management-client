@@ -32,7 +32,6 @@ class SearchBox extends Component {
           // align search button on same line as input search field
           display: "flex",
           flexDirection: "row",
-          // alignItems: "flex-start",
           alignItems: "flex-start"
         }}
       >
