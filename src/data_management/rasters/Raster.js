@@ -79,12 +79,7 @@ class Raster extends Component {
 
     const htmlRasterTableHeader = (
       <div
-        className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
-        style={{
-          padding: "0 0 15px 0",
-          borderBottom: "1px solid #bababa",
-          color: "#858e9c"
-        }}
+        className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12} ${styles.RasterTableHeader}`}
       >
         <span
           className={`${gridStyles.colLg8} ${gridStyles.colMd8} ${gridStyles.colSm8} ${gridStyles.colXs8}`}
