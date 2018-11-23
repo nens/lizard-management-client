@@ -14,13 +14,15 @@ def get_username():
         print "\n[!] Aborting..."
         sys.exit(0)
 
-    if username:
-        print "[+] OK, we'll be using '%s' as username for this session." % \
-            username
-        return username
-    else:
-        print "[!] You have failed to enter a valid username. Please try again."
-        return get_username()
+    return username
+    # commented out by Tom de Boer so user of this script can choose to leave password empty in which case it is not send
+    # if username:
+    #     print "[+] OK, we'll be using '%s' as username for this session." % \
+    #         username
+    #     return username
+    # else:
+    #     print "[!] You have failed to enter a valid username. Please try again."
+    #     return get_username()
 
 
 def get_password():
@@ -30,12 +32,14 @@ def get_password():
         print "\n[!] Aborting..."
         sys.exit(0)
 
-    if password:
-        print "[+] OK, we'll be using %s as password." % (len(password) * '*')
-        return password
-    else:
-        print "[!] You have failed to enter a valid password. Please try again."
-        return get_password()
+    return password
+    # commented out by Tom de Boer so user of this script can choose to leave password empty in which case it is not send
+    # if password:
+    #     print "[+] OK, we'll be using %s as password." % (len(password) * '*')
+    #     return password
+    # else:
+    #     print "[!] You have failed to enter a valid password. Please try again."
+    #     return get_password()
 
 
 if __name__ == '__main__':

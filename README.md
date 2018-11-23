@@ -25,7 +25,11 @@ Installation
 
 - Required: A working nodejs and yarn installation.
 - In the root directory of the repository: `$ yarn install`
-- ...followed by `$ PROXY_USERNAME=<your_sso_username> PROXY_PASSWORD=<your_sso_password> yarn start`
+- Login to the '/admin' page of the url you proxy to.
+Find the '/admin' page by appending '/admin' to the url in your 'proxy' settings in package.json file. For example, if the proxy target is 'http://localhost:8000' then you can find the admin page at 'http://localhost:8000/admin'.
+- To start dev-server run `./start`
+This runs a python script that prompts for authentication and then calls 'yarn start'. 
+It is easiest to just leave username password empty. This way your authentication cookie is used and not every api call will authenticate over and over again. If the authentication somehow fails and the page keeps redirecting then do supply username password.
 
 
 
