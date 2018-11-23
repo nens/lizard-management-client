@@ -54,7 +54,7 @@ class PaginationBar extends Component {
               this.setState({ navigatorInError: true });
             }
           }}
-          maxlength={(links.length + "").length}
+          maxLength={(links.length + "").length}
           size={(links.length + "").length}
         />
         <span> of {links.length}</span>
