@@ -183,7 +183,7 @@ class Raster extends Component {
                 <MDSpinner size={24} />
               </div>
             ) : rasterRows.length > 0 ? (
-              <div>{htmlRasterTable}</div>
+              htmlRasterTable
             ) : (
               <div className={styles.NoResults}>
                 <img src={alarmIcon} alt="Alarms" />
