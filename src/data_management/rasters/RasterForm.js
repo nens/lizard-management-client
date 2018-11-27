@@ -8,6 +8,7 @@ import moment from "moment";
 import { withRouter } from "react-router-dom";
 import { FormattedMessage } from "react-intl";
 
+import UploadFileComponent from "../../components/UploadFileComponent";
 import GenericTextInputComponent from "../../components/GenericTextInputComponent";
 import GenericSelectBoxComponent from "../../components/GenericSelectBoxComponent";
 import GenericCheckBoxComponent from "../../components/GenericCheckBoxComponent";
@@ -490,6 +491,36 @@ class RasterFormModel extends Component {
               className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
             >
               <div id="steps" style={{ margin: "20px 0 0 20px" }}>
+                <UploadFileComponent
+                  titleComponent={
+                    <FormattedMessage
+                      id="rasters.upload_raster"
+                      defaultMessage="Upload raster"
+                    />
+                  } // <FormatText ... //>
+                  subtitleComponent={
+                    <FormattedMessage
+                      id="rasters.upload_raster_description"
+                      defaultMessage="Upload een raster file"
+                    />
+                  }
+                  placeholder="description here"
+                  multiline={false} // boolean for which input elem to use: text OR textarea
+                  step={1} // int for denoting which step it the GenericTextInputComponent refers to
+                  opened={
+                    this.props.currentRaster ||
+                    this.props.currentRaster ||
+                    currentStep === 1
+                  }
+                  formUpdate={!!this.props.currentRaster}
+                  readonly={false}
+                  currentStep={currentStep} // int for denoting which step is currently active
+                  setCurrentStep={this.setCurrentStep} // cb function for updating which step becomes active
+                  modelValue={description} // string: e.g. the name of a raster
+                  updateModelValue={this.setDescription} // cb function to *update* the value of e.g. a raster's name in the parent model
+                  resetModelValue={() => this.setDescription("")} // cb function to *reset* the value of e.g. a raster's name in the parent model
+                  validate={this.validateNewRasterDescription} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
+                />
                 <GenericTextInputComponent
                   titleComponent={
                     <FormattedMessage
@@ -505,8 +536,8 @@ class RasterFormModel extends Component {
                   }
                   placeholder="name of this raster"
                   multiline={false} // boolean for which input elem to use: text OR textarea
-                  step={1} // int for denoting which step it the GenericTextInputComponent refers to
-                  opened={this.props.currentRaster || currentStep === 1}
+                  step={2} // int for denoting which step it the GenericTextInputComponent refers to
+                  opened={this.props.currentRaster || currentStep === 2}
                   formUpdate={!!this.props.currentRaster}
                   readonly={false}
                   currentStep={currentStep} // int for denoting which step is currently active
@@ -557,11 +588,11 @@ class RasterFormModel extends Component {
                   }
                   placeholder="description here"
                   multiline={true} // boolean for which input elem to use: text OR textarea
-                  step={2} // int for denoting which step it the GenericTextInputComponent refers to
+                  step={3} // int for denoting which step it the GenericTextInputComponent refers to
                   opened={
                     this.props.currentRaster ||
                     this.props.currentRaster ||
-                    currentStep === 2
+                    currentStep === 3
                   }
                   formUpdate={!!this.props.currentRaster}
                   readonly={false}
@@ -586,8 +617,8 @@ class RasterFormModel extends Component {
                     />
                   }
                   placeholder="click to select aggregation type"
-                  step={3} // int for denoting which step it the GenericTextInputComponent refers to
-                  opened={this.props.currentRaster || currentStep === 3}
+                  step={4} // int for denoting which step it the GenericTextInputComponent refers to
+                  opened={this.props.currentRaster || currentStep === 4}
                   formUpdate={!!this.props.currentRaster}
                   readonly={false}
                   currentStep={currentStep} // int for denoting which step is currently active
@@ -647,8 +678,8 @@ class RasterFormModel extends Component {
                     />
                   }
                   placeholder="click to select observation type"
-                  step={4} // int for denoting which step it the GenericTextInputComponent refers to
-                  opened={this.props.currentRaster || currentStep === 4}
+                  step={5} // int for denoting which step it the GenericTextInputComponent refers to
+                  opened={this.props.currentRaster || currentStep === 5}
                   formUpdate={!!this.props.currentRaster}
                   readonly={false}
                   currentStep={currentStep} // int for denoting which step is currently active
@@ -676,8 +707,8 @@ class RasterFormModel extends Component {
                     />
                   }
                   placeholder="click to select colormap"
-                  step={5} // int for denoting which step it the GenericTextInputComponent refers to
-                  opened={this.props.currentRaster || currentStep === 5}
+                  step={6} // int for denoting which step it the GenericTextInputComponent refers to
+                  opened={this.props.currentRaster || currentStep === 6}
                   formUpdate={!!this.props.currentRaster}
                   readonly={false}
                   currentStep={currentStep} // int for denoting which step is currently active
@@ -705,8 +736,8 @@ class RasterFormModel extends Component {
                     />
                   }
                   placeholder="click to select supplier id"
-                  step={6} // int for denoting which step it the GenericTextInputComponent refers to
-                  opened={this.props.currentRaster || currentStep === 6}
+                  step={7} // int for denoting which step it the GenericTextInputComponent refers to
+                  opened={this.props.currentRaster || currentStep === 7}
                   formUpdate={!!this.props.currentRaster}
                   readonly={false}
                   currentStep={currentStep} // int for denoting which step is currently active
@@ -735,8 +766,8 @@ class RasterFormModel extends Component {
                   }
                   placeholder="type supplier code here"
                   multiline={false} // boolean for which input elem to use: text OR textarea
-                  step={7} // int for denoting which step it the GenericTextInputComponent refers to
-                  opened={this.props.currentRaster || currentStep === 7}
+                  step={8} // int for denoting which step it the GenericTextInputComponent refers to
+                  opened={this.props.currentRaster || currentStep === 8}
                   formUpdate={!!this.props.currentRaster}
                   readonly={false}
                   currentStep={currentStep} // int for denoting which step is currently active
@@ -753,8 +784,8 @@ class RasterFormModel extends Component {
                       defaultMessage="Raster is Temporal"
                     />
                   }
-                  step={8}
-                  opened={this.props.currentRaster || currentStep === 8}
+                  step={9}
+                  opened={this.props.currentRaster || currentStep === 9}
                   formUpdate={!!this.props.currentRaster}
                   readonly={!!this.props.currentRaster}
                   currentStep={currentStep}
@@ -797,8 +828,8 @@ class RasterFormModel extends Component {
                         />
                       }
                       multiline={false} // boolean for which input elem to use: text OR textarea
-                      step={9}
-                      opened={this.props.currentRaster || currentStep === 9}
+                      step={10}
+                      opened={this.props.currentRaster || currentStep === 10}
                       formUpdate={!!this.props.currentRaster}
                       readonly={!!this.props.currentRaster}
                       currentStep={currentStep}
@@ -822,9 +853,9 @@ class RasterFormModel extends Component {
                         />
                       }
                       multiline={false} // boolean for which input elem to use: text OR textarea
-                      step={10}
+                      step={11}
                       isLastItem={true}
-                      opened={this.props.currentRaster || currentStep === 10}
+                      opened={this.props.currentRaster || currentStep === 11}
                       formUpdate={!!this.props.currentRaster}
                       readonly={!!this.props.currentRaster}
                       currentStep={currentStep}
