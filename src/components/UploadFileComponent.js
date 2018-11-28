@@ -17,39 +17,33 @@ class UploadFileComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      fileName: ""
+      filePath: ""
     };
   }
   setLocalStateFromProps(props) {
-    //if (props.parentState) {
-    this.setState({ fileName: props.modelValue });
-    //}
+    this.setState({ filePath: props.modelValue });
     // If this component is the "current step component", set the page focus to the components
     // input field:
     if (props.step === props.currentStep && !this.props.formUpdate) {
       const inputElem = document.getElementById(
         this.props.titleComponent.props.id + "_input"
       );
-      // inputElem.focus(); does not work outside setTimeout. Is this the right solution?
-      // setTimeout(function() {
-      //   inputElem.focus();
-      // }, 0);
     }
   }
   resetLocalState() {
-    this.setState({ fileName: "" });
+    this.setState({ filePath: "" });
   }
 
-  validateAndSaveToParent(fileName) {
-    this.setState({ fileName });
+  validateAndSaveToParent(filePath) {
+    this.setState({ filePath });
     // this validationstep before updating the parent seems like over engineering :(
     // I comment it out
-    //if (this.props.validate(fileName)) {
-    this.props.updateModelValue(fileName);
+    //if (this.props.validate(filePath)) {
+    this.props.updateModelValue(filePath);
     //}
   }
   handleEnter(event) {
-    if (this.props.validate(this.state.fileName) && event.keyCode === 13) {
+    if (this.props.validate(this.state.filePath) && event.keyCode === 13) {
       // 13 is keycode 'enter' (works only when current input validates)
       this.props.setCurrentStep(this.props.step + 1);
     }
@@ -73,18 +67,18 @@ class UploadFileComponent extends Component {
       currentStep, // int for denoting which step is currently active
       setCurrentStep, // cb function for updating which step becomes active
       opened, // complete question and input fields become visible if set to true
-      modelValue, // string: e.g. the name of a raster
-      //updateModelValue, // cb function to *update* the value of e.g. a raster's name in the parent model
-      resetModelValue, // cb function to *reset* the value of e.g. a raster's name in the parent model
-      validate, // function used to validate the inputText. If validate returns true the inputText passed to updateModelValue and checkmark is set.
+      modelValue, // string: e.g. the filePath of a raster
+      //updateModelValue, // cb function to *update* the value of e.g. a raster's filePath in the parent model
+      resetModelValue, // cb function to *reset* the value of e.g. a raster's filePath in the parent model
+      validate, // function used to validate the filePath. If validate returns true the filePath passed to updateModelValue and checkmark is set.
       formUpdate,
       readonly
     } = this.props;
     const active = step === currentStep || (formUpdate && !readonly);
-    const showCheckMark = validate(this.state.fileName);
+    const showCheckMark = validate(this.state.filePath);
     const mustShowClearButton = modelValue !== "";
     const mustShowNextButton =
-      validate(this.state.fileName) && active && !formUpdate;
+      validate(this.state.filePath) && active && !formUpdate;
 
     return (
       <div className={styles.Step} id={"Step-" + step}>
@@ -112,17 +106,18 @@ class UploadFileComponent extends Component {
                   type="file"
                   id="upload-raster-button"
                   onChange={e => this.validateAndSaveToParent(e.target.value)}
-                  value={this.state.fileName}
+                  value={this.state.filePath}
                   accept=".tiff,.tif,.geotiff,.geotiff"
                 />
                 {mustShowClearButton ? (
-                  <ClearInputButton
-                    style={{ float: "left" }}
-                    onClick={e => {
-                      resetModelValue();
-                      this.resetLocalState();
-                    }}
-                  />
+                  <div>
+                    <ClearInputButton
+                      onClick={e => {
+                        resetModelValue();
+                        this.resetLocalState();
+                      }}
+                    />
+                  </div>
                 ) : null}
               </div>
               <div>
