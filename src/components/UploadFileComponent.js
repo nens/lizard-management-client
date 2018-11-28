@@ -1,3 +1,4 @@
+import gridStyles from "../styles/Grid.css";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
@@ -12,7 +13,7 @@ import formStyles from "../styles/Forms.css";
 import buttonStyles from "../styles/Buttons.css";
 import inputStyles from "../styles/Input.css";
 
-class GenericTextInputComponent extends Component {
+class UploadFileComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -21,7 +22,7 @@ class GenericTextInputComponent extends Component {
   }
   setLocalStateFromProps(props) {
     //if (props.parentState) {
-    this.setState({ inputText: props.modelValue });
+    this.setState({ fileName: props.modelValue });
     //}
     // If this component is the "current step component", set the page focus to the components
     // input field:
@@ -36,7 +37,7 @@ class GenericTextInputComponent extends Component {
     }
   }
   resetLocalState() {
-    this.setState({ inputText: "" });
+    this.setState({ fileName: "" });
   }
 
   validateAndSaveToParent(fileName) {
@@ -48,7 +49,7 @@ class GenericTextInputComponent extends Component {
     //}
   }
   handleEnter(event) {
-    if (this.props.validate(this.state.inputText) && event.keyCode === 13) {
+    if (this.props.validate(this.state.fileName) && event.keyCode === 13) {
       // 13 is keycode 'enter' (works only when current input validates)
       this.props.setCurrentStep(this.props.step + 1);
     }
@@ -68,7 +69,7 @@ class GenericTextInputComponent extends Component {
       subtitleComponent, // <FormatText ... />
       placeholder,
       multiline, // boolean for which input elem to use: text OR textarea
-      step, // int for denoting which step it the GenericTextInputComponent refers to
+      step, // int for denoting which step it the UploadFileComponent refers to
       currentStep, // int for denoting which step is currently active
       setCurrentStep, // cb function for updating which step becomes active
       opened, // complete question and input fields become visible if set to true
@@ -81,6 +82,7 @@ class GenericTextInputComponent extends Component {
     } = this.props;
     const active = step === currentStep || (formUpdate && !readonly);
     const showCheckMark = validate(this.state.fileName);
+    const mustShowClearButton = modelValue !== "";
     const mustShowNextButton =
       validate(this.state.fileName) && active && !formUpdate;
 
@@ -113,6 +115,15 @@ class GenericTextInputComponent extends Component {
                   value={this.state.fileName}
                   accept=".tiff,.tif,.geotiff,.geotiff"
                 />
+                {mustShowClearButton ? (
+                  <ClearInputButton
+                    style={{ float: "left" }}
+                    onClick={e => {
+                      resetModelValue();
+                      this.resetLocalState();
+                    }}
+                  />
+                ) : null}
               </div>
               <div>
                 {mustShowNextButton ? (
@@ -146,8 +157,8 @@ const mapDispatchToProps = dispatch => {
   return {};
 };
 
-GenericTextInputComponent = withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(GenericTextInputComponent)
+UploadFileComponent = withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(UploadFileComponent)
 );
 
-export default GenericTextInputComponent;
+export default UploadFileComponent;

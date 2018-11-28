@@ -36,6 +36,7 @@ class RasterFormModel extends Component {
     this.resetSelectedOrganisation = this.resetSelectedOrganisation.bind(this);
     this.setStorePathName = this.setStorePathName.bind(this);
     this.setDescription = this.setDescription.bind(this);
+    this.setFilePath = this.setFilePath.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.validateNewRasterName = this.validateNewRasterName.bind(this);
     this.validateNewRasterOrganisation = this.validateNewRasterOrganisation.bind(
@@ -128,6 +129,10 @@ class RasterFormModel extends Component {
   // Description
   setDescription(description) {
     this.setState({ description });
+  }
+  // Description
+  setFilePath(filePath) {
+    this.setState({ filePath });
   }
   validateNewRasterDescription(str) {
     return str.length > 1;
@@ -324,6 +329,7 @@ class RasterFormModel extends Component {
       storePathName: "",
       slug: "",
       description: "",
+      filePath: "",
       temporalBool: false,
       temporalBoolComponentWasEverOpenedByUser: false, // a checkbbox is always valid, but we should only mark it as valid if the user has actualy opened the question
       temporalOrigin: moment("1970-01-01T00:00:00Z"), // start time at 1970 because current datepicker makes moving so far back difficult
@@ -371,6 +377,7 @@ class RasterFormModel extends Component {
       storePathName: currentRaster.slug.replace(/:/g, "/"),
       slug: currentRaster.slug,
       description: currentRaster.description,
+      filePath: currentRaster.filePath,
       temporalBool: currentRaster.temporal,
       temporalBoolComponentWasEverOpenedByUser: true, // a checkbbox is always valid, but we should only mark it as valid if the user has actualy opened the question
       temporalOrigin: moment(currentRaster.origin), //"2000-01-01T00:00:00Z",
@@ -419,6 +426,7 @@ class RasterFormModel extends Component {
           access_modifier: 200, // private to organisation
           observation_type: observationTypeId, //this.state.observationType,
           description: this.state.description,
+          filePath: this.state.filePath,
           supplier: this.state.supplierId.username,
           supplier_code: this.state.supplierCode,
           temporal: this.state.temporalBool,
@@ -450,6 +458,7 @@ class RasterFormModel extends Component {
           observation_type: observationTypeId, // required
 
           description: this.state.description,
+          filePath: this.state.filePath,
           supplier: this.state.supplierId.username,
           supplier_code: this.state.supplierCode,
           aggregation_type: intAggregationType,
@@ -480,7 +489,8 @@ class RasterFormModel extends Component {
       rasterName,
       currentStep,
       description,
-      aggregationType
+      aggregationType,
+      filePath
     } = this.state;
 
     return (
@@ -516,9 +526,9 @@ class RasterFormModel extends Component {
                   readonly={false}
                   currentStep={currentStep} // int for denoting which step is currently active
                   setCurrentStep={this.setCurrentStep} // cb function for updating which step becomes active
-                  modelValue={description} // string: e.g. the name of a raster
-                  updateModelValue={this.setDescription} // cb function to *update* the value of e.g. a raster's name in the parent model
-                  resetModelValue={() => this.setDescription("")} // cb function to *reset* the value of e.g. a raster's name in the parent model
+                  modelValue={filePath} // string: e.g. the name of a raster
+                  updateModelValue={this.setFilePath} // cb function to *update* the value of e.g. a raster's name in the parent model
+                  resetModelValue={() => this.setFilePath("")} // cb function to *reset* the value of e.g. a raster's name in the parent model
                   validate={this.validateNewRasterDescription} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
                 />
                 <GenericTextInputComponent
@@ -547,32 +557,6 @@ class RasterFormModel extends Component {
                   resetModelValue={this.resetRasterName} // cb function to *reset* the value of e.g. a raster's name in the parent model
                   validate={this.validateNewRasterName} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
                 />
-                {/* <GenericTextInputComponent
-                  titleComponent={
-                    <FormattedMessage
-                      id="rasters.store_path"
-                      defaultMessage="Store Path"
-                    />
-                  } // <FormatText ... //>
-                  subtitleComponent={
-                    <FormattedMessage
-                      id="rasters.path_on_disk"
-                      defaultMessage="Relative path of raster store. Should be unique within organisation. Multiple, comma-separated paths allowed."
-                    />
-                  }
-                  placeholder="path/to/store"
-                  multiline={false} // boolean for which input elem to use: text OR textarea
-                  step={2} // int for denoting which step it the GenericTextInputComponent refers to
-                  opened={this.props.currentRaster || currentStep === 2}
-                  formUpdate={!!this.props.currentRaster}
-                  readonly={!!this.props.currentRaster}
-                  currentStep={currentStep} // int for denoting which step is currently active
-                  setCurrentStep={this.setCurrentStep} // cb function for updating which step becomes active
-                  modelValue={storePathName} // string: e.g. the name of a raster
-                  updateModelValue={this.setStorePathName} // cb function to *update* the value of e.g. a raster's name in the parent model
-                  resetModelValue={() => this.setStorePathName("")} // cb function to *reset* the value of e.g. a raster's name in the parent model
-                  validate={this.validateNewRasterStorePath}
-                /> */}
                 <GenericTextInputComponent
                   titleComponent={
                     <FormattedMessage
