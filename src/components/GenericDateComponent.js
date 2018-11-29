@@ -149,7 +149,10 @@ const mapDispatchToProps = dispatch => {
 };
 
 GenericDateComponent = withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(GenericDateComponent)
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(GenericDateComponent)
 );
 
 export default GenericDateComponent;

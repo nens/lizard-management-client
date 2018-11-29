@@ -71,9 +71,9 @@ class SelectBoxSimple extends Component {
                   }}
                   tabIndex={i + 1}
                   key={i}
-                  className={`${styles.ResultRow} ${isSelected
-                    ? styles.Active
-                    : styles.Inactive}`}
+                  className={`${styles.ResultRow} ${
+                    isSelected ? styles.Active : styles.Inactive
+                  }`}
                   onMouseDown={e => {
                     this.setState({
                       showChoices: false

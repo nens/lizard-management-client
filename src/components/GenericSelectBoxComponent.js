@@ -146,7 +146,10 @@ const mapDispatchToProps = dispatch => {
 };
 
 GenericSelectBoxComponent = withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(GenericSelectBoxComponent)
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(GenericSelectBoxComponent)
 );
 
 export default GenericSelectBoxComponent;

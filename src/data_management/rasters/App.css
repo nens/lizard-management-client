@@ -11,4 +11,8 @@
   font-weight: 300;
   margin: 30px;
 }
-
+.RasterTableHeader {
+	padding: 0 0 15px 0;
+	border-bottom: 1px solid #bababa;
+	color: #858E9C;
+}
