@@ -63,12 +63,6 @@ class GenericDateComponent extends Component {
     const showCheckMark = validate(modelValue) || formUpdate;
     const showNextButton = validate(modelValue) && !formUpdate;
 
-    //  // moment.locale(localStorage.getItem("lizard-preferred-language") || "en");
-    //   console.log('localStorage.getItem("lizard-preferred-language")',localStorage.getItem("lizard-preferred-language"));
-    //   console.log(modelValue.locale('nl'), modelValue.lang('nl'));
-    //   modelValue.lang('nl');
-    //   console.log(modelValue.lang("nl").locale('nl'), moment.locales, moment.locales());
-
     return (
       <div className={styles.Step} id={"Step-" + step}>
         <StepIndicator
