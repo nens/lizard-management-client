@@ -520,12 +520,156 @@
 		"defaultMessage": "Support"
 	},
 	{
+		"id": "rasters.next_step",
+		"defaultMessage": "Next Step"
+	},
+	{
 		"id": "components.switch_org",
 		"defaultMessage": "Switch organisation"
 	},
 	{
 		"id": "components_snackbar.dismiss",
 		"defaultMessage": "Dismiss"
+	},
+	{
+		"id": "data_management.rasters",
+		"defaultMessage": "Rasters"
+	},
+	{
+		"id": "data_management.manage_rasters",
+		"defaultMessage": "Manage rasters"
+	},
+	{
+		"id": "data_management.assets",
+		"defaultMessage": "Assets"
+	},
+	{
+		"id": "data_management.manage_assets",
+		"defaultMessage": "Manage assets"
+	},
+	{
+		"id": "data_management.time_series",
+		"defaultMessage": "Time Series"
+	},
+	{
+		"id": "data_management.manage_time_series",
+		"defaultMessage": "Manage Time Series"
+	},
+	{
+		"id": "rasters.number_of_rasters",
+		"defaultMessage": "{numberOfRasters, number} {numberOfRasters, plural, one {Raster} other {Rasters}}"
+	},
+	{
+		"id": "rasters.new_raster",
+		"defaultMessage": "New raster"
+	},
+	{
+		"id": "rasters.no_rasters",
+		"defaultMessage": "No rasters configured..."
+	},
+	{
+		"id": "rasters.name_of_this_raster",
+		"defaultMessage": "Name of this Raster"
+	},
+	{
+		"id": "rasters.choose_descriptive_name",
+		"defaultMessage": "The name of the raster will be used in e-mail and SMS alerts"
+	},
+	{
+		"id": "rasters.store_path",
+		"defaultMessage": "Store Path"
+	},
+	{
+		"id": "rasters.path_on_disk",
+		"defaultMessage": "Relative path of raster store. Should be unique within organisation. Multiple, comma-separated paths allowed."
+	},
+	{
+		"id": "rasters.description",
+		"defaultMessage": "Description"
+	},
+	{
+		"id": "rasters.please_describe_the_new_raster",
+		"defaultMessage": "Please describe the new Raster"
+	},
+	{
+		"id": "rasters.aggregation_type",
+		"defaultMessage": "Aggregation Type"
+	},
+	{
+		"id": "rasters.please_select_type_of_aggregation",
+		"defaultMessage": "Please select type of aggregation"
+	},
+	{
+		"id": "rasters.observation_type",
+		"defaultMessage": "Observation Type"
+	},
+	{
+		"id": "rasters.please_select_type_of_observation",
+		"defaultMessage": "Please select type of observation"
+	},
+	{
+		"id": "rasters.colormap",
+		"defaultMessage": "Colormap"
+	},
+	{
+		"id": "rasters.please_select_colormap",
+		"defaultMessage": "Please select Colormap"
+	},
+	{
+		"id": "rasters.supplier_id",
+		"defaultMessage": "Supplier ID"
+	},
+	{
+		"id": "rasters.please_select_supplier_id",
+		"defaultMessage": "Please select Supplier ID"
+	},
+	{
+		"id": "rasters.supplier_code",
+		"defaultMessage": "Supplier Code"
+	},
+	{
+		"id": "rasters.unique_supplier_code",
+		"defaultMessage": "The combination supplier name and supplier code should be unique"
+	},
+	{
+		"id": "rasters.raster_is_temporal",
+		"defaultMessage": "Raster is Temporal"
+	},
+	{
+		"id": "rasters.check_if_raster_is_temporal",
+		"defaultMessage": "Check if Raster is a temporal raster: it changes over time"
+	},
+	{
+		"id": "rasters.yes_the_raster_is_temporal",
+		"defaultMessage": "Yes, the raster is temporal"
+	},
+	{
+		"id": "rasters.no_the_raster_is_not_temporal",
+		"defaultMessage": "No, the raster is not temporal"
+	},
+	{
+		"id": "rasters.temporal_raster_origin",
+		"defaultMessage": "Temporal Raster Origin"
+	},
+	{
+		"id": "rasters.temporal_raster_origin_description",
+		"defaultMessage": "First possible measurement off the temporal raster"
+	},
+	{
+		"id": "rasters.temporal_raster_frequency",
+		"defaultMessage": "Temporal Raster Frequency"
+	},
+	{
+		"id": "rasters.temporal_raster_frequency_description",
+		"defaultMessage": "Frequency of temporal raster"
+	},
+	{
+		"id": "rasters.submit",
+		"defaultMessage": "Submit"
+	},
+	{
+		"id": "rasters.please complete the form before submitting",
+		"defaultMessage": "Please complete the form for submitting"
 	},
 	{
 		"id": "home.usermanagement",
@@ -550,5 +694,13 @@
 	{
 		"id": "home.alarm_management",
 		"defaultMessage": "Alarm management"
+	},
+	{
+		"id": "home.data_management",
+		"defaultMessage": "Data Management"
+	},
+	{
+		"id": "home.data_administration",
+		"defaultMessage": "Data administration"
 	}
 ]

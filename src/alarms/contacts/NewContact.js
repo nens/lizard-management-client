@@ -21,7 +21,7 @@ class NewContact extends Component {
     try {
       document.getElementById("firstName").focus();
     } catch (e) {
-      console.log("Could not focus() on input element..");
+      console.error("Could not focus() on input element..");
     }
   }
   validateEmail(address) {

@@ -1,4 +1,18 @@
 .App {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+.AppContent {
+  flex: 1;
+}
+
+.AppIcon {
+  font-size: 17;
+  position: relative;
+  left: -7px;
+  top: 3px;
 }
 
 
@@ -16,12 +30,14 @@
 
 .Footer {
   background-color: #D8D8D8;
+  /* position: absolute;
+  width: 100%;
+  bottom: 0px; */
 }
 .Footer a {
   color: #009F86;
   text-decoration: none;
 }
-
 .FooterLeft {
   min-height: 120px;
   display: flex;
@@ -38,9 +54,25 @@
   position: relative;
 }
 
-
-
-
+.BreadcrumbsContainer{
+  height: 65px;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  font-size: 1.2em;
+  overflow-x: hidden;
+  -ms-overflow-style: -ms-autohiding-scrollbar;
+}
+.DocumentationHyperlink{
+  position: relative;
+  top: 5px;
+  font-size: 20px;
+}
+.SupportHyperlink {
+  position: relative;
+  top: 5px;
+  font-size: 20px;
+}
 
 .LizardLogo {
   position: relative;
@@ -52,6 +84,28 @@
   background-size: 100%;
 }
 
+.MDSpinner {
+  position: relative;
+  top: 50px;
+  height: 300px;
+  bottom: 50px;
+  margin-left: 50%;
+}
+
+.NavbarTogglebutton {
+  cursor: pointer;
+  background-color: #2fcbab;
+  color: #fff;
+  width: 30px;
+  height: 25px;
+  border-radius: 2px;
+}
+.OrganisationLinkContainer {
+  width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .OrganisationLink {
   color: #fff !important;
   cursor: pointer;
@@ -60,13 +114,12 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.NavbarTogglebutton {
-  cursor: pointer;
-  background-color: #2fcbab;
-  color: #fff;
-  width: 30px;
-  height: 25px;
-  border-radius: 2px;
+
+.Profile {
+  width: 60px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 
@@ -88,7 +141,4 @@
 .TopNav a {
   color: #fff;
   text-decoration: none;
-}
-.TopNav li {
-
 }

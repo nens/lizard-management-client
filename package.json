@@ -19,6 +19,7 @@
   },
   "homepage": "/management",
   "dependencies": {
+    "ajv": "^6.5.3",
     "autoprefixer": "7.1.2",
     "babel-core": "6.25.0",
     "babel-eslint": "7.2.3",
@@ -42,6 +43,7 @@
     "file-loader": "0.11.2",
     "fs-extra": "3.0.1",
     "html-webpack-plugin": "2.29.0",
+    "input-moment": "^0.4.0",
     "jest": "20.0.4",
     "jquery": "^3.2.1",
     "leaflet": "^1.2.0",
@@ -50,6 +52,7 @@
     "lodash.find": "^4.6.0",
     "mime": "1.4.0",
     "mime-lookup": "^0.0.2",
+    "moment": "^2.22.2",
     "node-mime": "^1.0.0",
     "object-assign": "4.1.1",
     "pluralize": "^7.0.0",
@@ -57,13 +60,13 @@
     "postcss-flexbugs-fixes": "3.2.0",
     "postcss-loader": "2.0.6",
     "promise": "8.0.1",
-    "react": "16.3.0",
+    "react": "^16.3.2",
     "react-addons-css-transition-group": "^15.6.2",
     "react-addons-transition-group": "^15.6.2",
     "react-custom-scrollbars": "^4.1.2",
     "react-dev-utils": "^4.0.1",
     "react-document-title": "^2.0.3",
-    "react-dom": "16.3.0",
+    "react-dom": "^16.3.2",
     "react-ink": "^6.2.0",
     "react-intl": "^2.4.0",
     "react-leaflet": "^1.7.0",
@@ -165,7 +168,7 @@
   },
   "proxy": {
     "/bootstrap/lizard/": {
-      "target": "https://demo.lizard.net/",
+      "target": "http://localhost:8000/",
       "changeOrigin": true,
       "ssl": false,
       "secure": false,
@@ -175,7 +178,7 @@
       }
     },
     "/api/v3/": {
-      "target": "https://demo.lizard.net/",
+      "target": "http://localhost:8000/",
       "changeOrigin": true,
       "ssl": false,
       "secure": false,

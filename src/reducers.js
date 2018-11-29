@@ -29,10 +29,10 @@ function bootstrap(
 ) {
   switch (action.type) {
     case REQUEST_LIZARD_BOOTSTRAP:
-      console.log("[A] REQUEST_LIZARD_BOOTSTRAP");
+      // console.log("[A] REQUEST_LIZARD_BOOTSTRAP");
       return { ...state, isFetching: true };
     case RECEIVE_LIZARD_BOOTSTRAP:
-      console.log("[A] RECEIVE_LIZARD_BOOTSTRAP");
+      // console.log("[A] RECEIVE_LIZARD_BOOTSTRAP");
       return {
         ...state,
         bootstrap: action.data,
@@ -57,13 +57,13 @@ function organisations(
 ) {
   switch (action.type) {
     case REQUEST_ORGANISATIONS:
-      console.log("[A] REQUEST_ORGANISATIONS");
+      // console.log("[A] REQUEST_ORGANISATIONS");
       return { ...state, isFetching: true };
     case RECEIVE_ORGANISATIONS:
-      console.log("[A] RECEIVE_ORGANISATIONS", action);
+      // console.log("[A] RECEIVE_ORGANISATIONS", action);
       return { ...state, available: action.data, isFetching: false };
     case SELECT_ORGANISATION:
-      console.log("[A] SELECT_ORGANISATION");
+      // console.log("[A] SELECT_ORGANISATION");
       return { ...state, selected: action.organisation };
     default:
       return state;
@@ -81,10 +81,10 @@ function observationTypes(
 ) {
   switch (action.type) {
     case REQUEST_OBSERVATION_TYPES:
-      console.log("[A] REQUEST_OBSERVATION_TYPES");
+      // console.log("[A] REQUEST_OBSERVATION_TYPES");
       return { ...state, isFetching: true };
     case RECEIVE_OBSERVATION_TYPES_SUCCESS:
-      console.log("[A] RECEIVE_OBSERVATION_TYPES_SUCCESS; action =", action);
+      // console.log("[A] RECEIVE_OBSERVATION_TYPES_SUCCESS; action =", action);
       return {
         ...state,
         available: action.data,
@@ -92,7 +92,7 @@ function observationTypes(
         hasError: false
       };
     case RECEIVE_OBSERVATION_TYPES_ERROR:
-      console.log("[A] RECEIVE_OBSERVATION_TYPES_ERROR", action.errorMessage);
+      // console.log("[A] RECEIVE_OBSERVATION_TYPES_ERROR", action.errorMessage);
       return {
         ...state,
         available: [],
@@ -116,10 +116,10 @@ function supplierIds(
 ) {
   switch (action.type) {
     case REQUEST_SUPPLIER_IDS:
-      console.log("[A] REQUEST_SUPPLIER_IDS");
+      // console.log("[A] REQUEST_SUPPLIER_IDS");
       return { ...state, isFetching: true };
     case RECEIVE_SUPPLIER_IDS_SUCCESS:
-      console.log("[A] RECEIVE_SUPPLIER_IDS_SUCCESS; action =", action);
+      // console.log("[A] RECEIVE_SUPPLIER_IDS_SUCCESS; action =", action);
       return {
         ...state,
         available: action.data,
@@ -127,7 +127,7 @@ function supplierIds(
         hasError: false
       };
     case RECEIVE_SUPPLIER_IDS_ERROR:
-      console.log("[A] RECEIVE_SUPPLIER_IDS_ERROR", action.errorMessage);
+      // console.log("[A] RECEIVE_SUPPLIER_IDS_ERROR", action.errorMessage);
       return {
         ...state,
         available: [],
@@ -151,10 +151,10 @@ function colorMaps(
 ) {
   switch (action.type) {
     case REQUEST_COLORMAPS:
-      console.log("[A] REQUEST_COLORMAPS");
+      // console.log("[A] REQUEST_COLORMAPS");
       return { ...state, isFetching: true };
     case RECEIVE_COLORMAPS_SUCCESS:
-      console.log("[A] RECEIVE_COLORMAPS_SUCCESS; action =", action);
+      // console.log("[A] RECEIVE_COLORMAPS_SUCCESS; action =", action);
       return {
         ...state,
         available: action.data,
@@ -162,7 +162,7 @@ function colorMaps(
         hasError: false
       };
     case RECEIVE_COLORMAPS_ERROR:
-      console.log("[A] RECEIVE_COLORMAPS_ERROR", action.errorMessage);
+      // console.log("[A] RECEIVE_COLORMAPS_ERROR", action.errorMessage);
       return {
         ...state,
         available: [],

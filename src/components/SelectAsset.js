@@ -37,7 +37,6 @@ class SelectAsset extends Component {
     });
   }
   handleSelect(result) {
-    console.log("------>", result);
     this.setState(
       {
         input: `${result.title}, ${result.description} (${result.description})`,

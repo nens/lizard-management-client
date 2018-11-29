@@ -1,0 +1,18 @@
+.NoResults {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 300px;
+  align-items: center;
+}
+.NoResults h5 {
+  color: #C1C1C1;
+  font-weight: 300;
+  margin: 30px;
+}
+.RasterTableHeader {
+	padding: 0 0 15px 0;
+	border-bottom: 1px solid #bababa;
+	color: #858E9C;
+}

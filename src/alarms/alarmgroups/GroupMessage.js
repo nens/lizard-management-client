@@ -27,7 +27,7 @@ class GroupMessage extends Component {
     try {
       document.getElementById("subject").focus();
     } catch (e) {
-      console.log("Could not focus() on input element..");
+      console.error("Could not focus() on input element..");
     }
     window.addEventListener("resize", this.handleResize, false);
     document.addEventListener("keydown", this.hideGroupMessage, false);
@@ -98,7 +98,7 @@ class GroupMessage extends Component {
         this.props.handleClose();
       })
       .catch(err => {
-        console.log(err);
+        console.error(err);
       });
   }
 

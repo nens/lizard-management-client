@@ -11,7 +11,6 @@ class ActionBar extends Component {
       showManageContacts: false,
       showGroupSettings: false
     };
-    this.handleCheckboxes = this.handleCheckboxes.bind(this);
     this.handleDeleteSelected = this.handleDeleteSelected.bind(this);
     this.handleSelectAllCheckboxes = this.handleSelectAllCheckboxes.bind(this);
     this.handleDeselectAllCheckboxes = this.handleDeselectAllCheckboxes.bind(
@@ -33,14 +32,6 @@ class ActionBar extends Component {
       showGroupSettings: !this.state.showGroupSettings,
       showManageContacts: false
     });
-  }
-
-  handleCheckboxes(e) {
-    const checkboxes = [
-      ...document.querySelectorAll("input[type=checkbox]:checked")
-    ];
-    const values = checkboxes.map(cb => cb.value);
-    console.log("Selected:", values);
   }
 
   handleSelectAllCheckboxes() {
