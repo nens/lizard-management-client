@@ -1,9 +1,12 @@
 .ClearInput {
     position: absolute;
-    top: 16px;
-    right: 16px;
     margin: 0;
     font-size: 18px;
     cursor: pointer;
     color: #989898;
   }
+
+.ClearInputTopRight {
+  top: 16px;
+  right: 16px;
+}

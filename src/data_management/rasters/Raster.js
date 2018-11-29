@@ -12,6 +12,7 @@ import { connect } from "react-redux";
 import { FormattedMessage } from "react-intl";
 import { withRouter } from "react-router-dom";
 import { NavLink } from "react-router-dom";
+import SearchBox from "../../components/SearchBox";
 
 class Raster extends Component {
   constructor(props) {
@@ -30,13 +31,14 @@ class Raster extends Component {
     this.loadRastersOnPage(page);
   }
 
-  loadRastersOnPage(page) {
-    fetch(
-      `/api/v3/rasters/?page=${page}`, // &organisation__unique_id=${organisationId},
-      {
-        credentials: "same-origin"
-      }
-    )
+  loadRastersOnPage(page, searchContains) {
+    const url = searchContains
+      ? `/api/v3/rasters/?page=${page}&name__icontains=${searchContains}` // &organisation__unique_id=${organisationId},
+      : `/api/v3/rasters/?page=${page}`;
+
+    fetch(url, {
+      credentials: "same-origin"
+    })
       .then(response => response.json())
       .then(data => {
         this.setState({
@@ -53,31 +55,12 @@ class Raster extends Component {
     history.push("/data_management/rasters/new");
   }
 
-  sortList(list) {
-    const sortedList = list
-      .slice()
-      .sort((a, b) => {
-        if (a.name < b.name) {
-          return -1;
-        }
-        if (a.name > b.name) {
-          return 1;
-        }
-        return 0;
-      })
-      .sort((a, b) => {
-        return a.active === b.active ? 0 : a.active ? -1 : 1;
-      });
-    return sortedList;
-  }
-
   render() {
     const { rasters, isFetching, total, page } = this.state;
 
     const numberOfRasters = total;
-    const rasterRows = this.sortList(rasters);
 
-    const htmlRasterTable = rasterRows.map((raster, i) => {
+    const htmlRasterTable = rasters.map((raster, i) => {
       return (
         <Row key={i} alarm={raster} loadRastersOnPage={this.loadRastersOnPage}>
           <NavLink
@@ -105,20 +88,15 @@ class Raster extends Component {
         <div
           className={gridStyles.Row}
           style={{
-            padding: "0 0 25px 0",
-            borderBottom: "1px solid #bababa"
+            padding: "0 0 25px 0"
           }}
         >
           <div
-            style={{ color: "#858E9C" }}
             className={`${gridStyles.colLg8} ${gridStyles.colMd8} ${gridStyles.colSm8} ${gridStyles.colXs8}`}
           >
-            <FormattedMessage
-              id="rasters.number_of_rasters"
-              defaultMessage={`{numberOfRasters, number} {numberOfRasters, plural, 
-                one {Raster}
-                other {Rasters}}`}
-              values={{ numberOfRasters }}
+            <SearchBox
+              handleSearch={searchContains =>
+                this.loadRastersOnPage(this.state.page, searchContains)}
             />
           </div>
           <div
@@ -138,6 +116,26 @@ class Raster extends Component {
             </button>
           </div>
         </div>
+        <div
+          className={gridStyles.Row}
+          style={{
+            padding: "0 0 25px 0",
+            borderBottom: "1px solid #bababa"
+          }}
+        >
+          <div
+            style={{ color: "#858E9C", alignSelf: "center" }}
+            className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${gridStyles.colSm4} ${gridStyles.colXs4}`}
+          >
+            <FormattedMessage
+              id="rasters.number_of_rasters"
+              defaultMessage={`{numberOfRasters, number} {numberOfRasters, plural, 
+                one {Raster}
+                other {Rasters}}`}
+              values={{ numberOfRasters }}
+            />
+          </div>
+        </div>
         <div className={gridStyles.Row}>
           <div
             className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
@@ -154,7 +152,7 @@ class Raster extends Component {
               >
                 <MDSpinner size={24} />
               </div>
-            ) : rasterRows.length > 0 ? (
+            ) : rasters.length > 0 ? (
               htmlRasterTable
             ) : (
               <div className={styles.NoResults}>
