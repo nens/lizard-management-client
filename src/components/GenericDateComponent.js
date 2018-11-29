@@ -9,7 +9,7 @@ import { FormattedMessage } from "react-intl";
 import moment from "moment";
 import "moment/locale/nl";
 import InputMoment from "input-moment";
-import "../../node_modules/input-moment/dist/input-moment.css";
+import "input-moment/dist/input-moment.css";
 
 import styles from "./GenericDateComponent.css";
 import "./GenericDateComponentSymbols.css";
