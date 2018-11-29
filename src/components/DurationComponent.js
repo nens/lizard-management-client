@@ -91,8 +91,6 @@ class DurationComponent extends Component {
     const showCheckMark = valid;
     const mustShowNextButton = valid && active && !formUpdate && !isLastItem;
 
-    console.log("[Comp]durationComponent readonly", readonly);
-
     const daysValid = this.props.validateDays(modelValueDays);
     const hoursValid = this.props.validateHours(modelValueHours);
     const minutesValid = this.props.validateMinutes(modelValueMinutes);
@@ -145,7 +143,8 @@ class DurationComponent extends Component {
                   size="4"
                   placeholder={placeholder}
                   onChange={e =>
-                    this.props.updateModelValueDays(e.target.value)}
+                    this.props.updateModelValueDays(e.target.value)
+                  }
                   value={modelValueDays}
                   //onKeyUp={e => this.handleEnter(e)}
                   readOnly={readonly}
@@ -174,7 +173,8 @@ class DurationComponent extends Component {
                   size="2"
                   placeholder={placeholder}
                   onChange={e =>
-                    this.props.updateModelValueHours(e.target.value)}
+                    this.props.updateModelValueHours(e.target.value)
+                  }
                   value={modelValueHours}
                   //onKeyUp={e => this.handleEnter(e)}
                   readOnly={readonly}
@@ -198,7 +198,8 @@ class DurationComponent extends Component {
                   size="2"
                   placeholder={placeholder}
                   onChange={e =>
-                    this.props.updateModelValueMinutes(e.target.value)}
+                    this.props.updateModelValueMinutes(e.target.value)
+                  }
                   value={modelValueMinutes}
                   //onKeyUp={e => this.handleEnter(e)}
                   readOnly={readonly}
@@ -227,7 +228,8 @@ class DurationComponent extends Component {
                   size="4"
                   placeholder={placeholder}
                   onChange={e =>
-                    this.props.updateModelValueSeconds(e.target.value)}
+                    this.props.updateModelValueSeconds(e.target.value)
+                  }
                   value={modelValueSeconds}
                   //onKeyUp={e => this.handleEnter(e)}
                   readOnly={readonly}
@@ -267,7 +269,10 @@ const mapDispatchToProps = dispatch => {
 };
 
 DurationComponent = withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(DurationComponent)
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(DurationComponent)
 );
 
 export default DurationComponent;

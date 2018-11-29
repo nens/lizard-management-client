@@ -169,7 +169,7 @@ class RasterFormModel extends Component {
     this.setState({ supplierCode });
   }
   validateSupplierCode(supplierCode) {
-    return supplierCode.length > 1;
+    return supplierCode && supplierCode.length > 1;
   }
   // TemporalBool
   setTemporalBool(temporalBool) {
@@ -298,6 +298,9 @@ class RasterFormModel extends Component {
   // '05:00:00'
   // to {days:10, hours:'01', minutes:'09', seconds:'51'}
   getIntervalToDaysHoursMinutesSeconds(str) {
+    if (!str) {
+      return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+    }
     const splitColon = str.split(":");
     const splitSpace = splitColon[0].split(" ");
     let obj = {
@@ -367,7 +370,8 @@ class RasterFormModel extends Component {
         name: currentRaster.organisation.name,
         unique_id: currentRaster.organisation.unique_id
       },
-      storePathName: currentRaster.slug.replace(/:/g, "/"),
+      storePathName:
+        currentRaster.slug && currentRaster.slug.replace(/:/g, "/"),
       slug: currentRaster.slug,
       description: currentRaster.description,
       temporalBool: currentRaster.temporal,
@@ -382,7 +386,13 @@ class RasterFormModel extends Component {
       temporalIntervalMinutes: intervalObj.minutes,
       temporalIntervalSeconds: intervalObj.seconds,
       temporalOptimizer: true, // default true, not set by the user for first iteration
-      colorMap: { name: currentRaster.options.styles },
+      colorMap: {
+        name:
+          (typeof currentRaster.options.styles === "object" &&
+            currentRaster.options.styles[0] &&
+            currentRaster.options.styles[0][0]) ||
+          currentRaster.options.styles
+      },
       aggregationType: currentRaster.aggregation_type, // choice: none | counts | curve | histogram | sum | average
       supplierId: selectedSupplierId,
       supplierCode: currentRaster.supplier_code,
@@ -393,12 +403,15 @@ class RasterFormModel extends Component {
 
   handleClickCreateRaster() {
     const url = "/api/v3/rasters/";
-    const observationTypeId = this.parseObservationTypeIdFromUrl(
-      this.state.observationType.url
-    );
-    const intAggregationType = this.aggregationTypeStringToInteger(
-      this.state.aggregationType
-    );
+    const observationTypeId =
+      (this.state.observationType &&
+        this.state.observationType.url &&
+        this.parseObservationTypeIdFromUrl(this.state.observationType.url)) ||
+      undefined;
+    const intAggregationType =
+      (this.state.aggregationType &&
+        this.aggregationTypeStringToInteger(this.state.aggregationType)) ||
+      undefined;
 
     const isoIntervalDuration = this.intervalToISODuration(
       this.state.temporalIntervalDays,
@@ -418,7 +431,7 @@ class RasterFormModel extends Component {
           access_modifier: 200, // private to organisation
           observation_type: observationTypeId, //this.state.observationType,
           description: this.state.description,
-          supplier: this.state.supplierId.username,
+          supplier: this.state.supplierId && this.state.supplierId.username,
           supplier_code: this.state.supplierCode,
           temporal: this.state.temporalBool,
           origin: this.state.temporalOrigin.toISOString(), // toISOString = momentJS function
@@ -487,7 +500,9 @@ class RasterFormModel extends Component {
         <div className={gridStyles.Container}>
           <div className={`${gridStyles.Row}`}>
             <div
-              className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
+              className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${
+                gridStyles.colSm12
+              } ${gridStyles.colXs12}`}
             >
               <div id="steps" style={{ margin: "20px 0 0 20px" }}>
                 <GenericTextInputComponent
@@ -629,7 +644,8 @@ class RasterFormModel extends Component {
                   transformChoiceToInfo={item => item.info}
                   modelValue={aggregationType} // string: e.g. the name of a raster
                   updateModelValue={item =>
-                    this.setAggregationType(item.display)} // cb function to *update* the value of e.g. a raster's name in the parent model
+                    this.setAggregationType(item.display)
+                  } // cb function to *update* the value of e.g. a raster's name in the parent model
                   resetModelValue={() => this.setAggregationType("")} // cb function to *reset* the value of e.g. a raster's name in the parent model
                   validate={this.validateAggregationType} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
                 />
@@ -852,7 +868,9 @@ class RasterFormModel extends Component {
                   <div className={inputStyles.InputContainer}>
                     <button
                       type="button"
-                      className={`${buttonStyles.Button} ${buttonStyles.Success}`}
+                      className={`${buttonStyles.Button} ${
+                        buttonStyles.Success
+                      }`}
                       style={{ marginTop: 10 }}
                       onClick={() => {
                         this.handleClickCreateRaster();
@@ -900,7 +918,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 };
 
 const RasterForm = withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(RasterFormModel)
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(RasterFormModel)
 );
 
 export { RasterForm };

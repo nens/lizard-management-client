@@ -47,8 +47,11 @@ class PaginationBar extends Component {
             // navigates to page
             const value = e.target.value;
             // only navigate if page is valid
-            if (parseInt(value) > 0 && parseInt(value) <= links.length) {
-              loadRastersOnPage(parseInt(value));
+            if (
+              parseInt(value, 10) > 0 &&
+              parseInt(value, 10) <= links.length
+            ) {
+              loadRastersOnPage(parseInt(value, 10));
               this.setState({ navigatorInError: false });
             } else {
               this.setState({ navigatorInError: true });

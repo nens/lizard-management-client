@@ -79,9 +79,9 @@ class SelectBoxSearch extends Component {
           onBlur={() => this.setState({ mustShowChoices: false })}
         />
         <div
-          className={`${styles.Spinner} ${isFetching
-            ? displayStyles.Block
-            : displayStyles.None}`}
+          className={`${styles.Spinner} ${
+            isFetching ? displayStyles.Block : displayStyles.None
+          }`}
         >
           <MDSpinner size={18} />
         </div>
@@ -113,7 +113,6 @@ class SelectBoxSearch extends Component {
                 } else {
                   // if user typed search string only show those that contain string
                   // TODO sort by search string ?
-                  // console.log('transformChoiceToDisplayValue', transformChoiceToDisplayValue(choiceItem), choiceItem, this.state.query);
                   return transformChoiceToDisplayValue(choiceItem)
                     .toLowerCase()
                     .includes(this.state.query.toLowerCase());
@@ -143,10 +142,11 @@ class SelectBoxSearch extends Component {
                   <div
                     tabIndex={i + 1}
                     key={i}
-                    className={`${styles.ResultRow} ${currentChoiceString ===
-                    SelectedChoiceString
-                      ? styles.Active
-                      : styles.Inactive}`}
+                    className={`${styles.ResultRow} ${
+                      currentChoiceString === SelectedChoiceString
+                        ? styles.Active
+                        : styles.Inactive
+                    }`}
                     onMouseDown={() => {
                       // User selected a choice from the filtered ones:
                       updateModelValue(choiceItem);
