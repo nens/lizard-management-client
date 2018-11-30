@@ -15,6 +15,8 @@ import GenericDateComponent from "../../components/GenericDateComponent";
 import DurationComponent from "../../components/DurationComponent";
 import inputStyles from "../../styles/Input.css";
 
+import SlushBucket from "../../components/SlushBucket";
+
 // ! important, these old component may later be used! Ther corresponding files already exist
 // import bindReactFunctions from "../../utils/BindReactFunctions.js"; // currently not working. Probably needs a list with functions in which case this is probably only overcomplicating things
 // import GenericWizardStep from "../../components/GenericWizardStep"; // working but is expected to create tons of overhead binding to the right objects functions
@@ -323,6 +325,7 @@ class RasterFormModel extends Component {
         name: "",
         unique_id: ""
       },
+      sharedWithOrganisations: [],
       storePathName: "",
       slug: "",
       description: "",
@@ -505,6 +508,20 @@ class RasterFormModel extends Component {
               } ${gridStyles.colXs12}`}
             >
               <div id="steps" style={{ margin: "20px 0 0 20px" }}>
+                <SlushBucket
+                  choices={this.props.organisations.available}
+                  selected={this.state.sharedWithOrganisations}
+                  isFetching={this.props.organisations.isFetching}
+                  placeholder={"search organisation"}
+                  updateModelValue={e =>
+                    this.setState({ sharedWithOrganisations: e })
+                  }
+                  resetModelValue={e => e}
+                  onKeyUp={e => e}
+                  inputId={e => e}
+                  transformChoiceToDisplayValue={e => e.name}
+                  validate={e => e}
+                />
                 <GenericTextInputComponent
                   titleComponent={
                     <FormattedMessage
