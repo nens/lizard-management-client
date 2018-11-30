@@ -31,7 +31,7 @@ class SlushBucket extends Component {
   }
   handleInput(e) {
     this.setState({ mustShowChoices: true, query: e.target.value });
-    this.props.updateModelValue(e.target.value);
+    // this.props.updateModelValue(e.target.value);
   }
   setQuery(props) {
     if (this.props.choice) {
@@ -97,16 +97,20 @@ class SlushBucket extends Component {
 
         {/* {results.length > 0 && this.state.mustShowChoices ? ( */}
         <div
-          className={styles.Results}
           style={{
             display: "flex"
           }}
         >
           {/* <div className={styles.Results}> */}
-          <div>
-            <span>
-              <b>Available organisations</b>
-            </span>
+          <div
+            className={styles.Results}
+            style={{
+              marginRight: "20px"
+            }}
+          >
+            <div className={`${styles.ResultRow}`}>
+              <b>Available Organisations</b>
+            </div>
             <Scrollbars autoHeight autoHeightMin={50} autoHeightMax={400}>
               {choices
                 .filter(choiceItem => {
@@ -169,7 +173,12 @@ class SlushBucket extends Component {
                 })}
             </Scrollbars>
           </div>
-          <div>
+          <div
+            className={styles.Results}
+            style={{
+              marginLeft: "20px"
+            }}
+          >
             <span>
               <b>Selected organisations</b>
             </span>
