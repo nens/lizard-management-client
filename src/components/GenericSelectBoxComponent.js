@@ -93,7 +93,10 @@ class GenericSelectBoxComponent extends Component {
                   choice={modelValue}
                   transformChoiceToDisplayValue={transformChoiceToDisplayValue}
                   isFetching={isFetching}
-                  updateModelValue={updateModelValue}
+                  updateModelValue={e => {
+                    console.log("updateModelValue", e);
+                    updateModelValue(e);
+                  }}
                   onKeyUp={e => this.handleEnter(e)}
                   inputId={titleComponent.props.id + "_input"}
                   placeholder={placeholder}

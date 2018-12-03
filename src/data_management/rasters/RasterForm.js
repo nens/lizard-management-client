@@ -148,19 +148,26 @@ class RasterFormModel extends Component {
     return observationType && observationType.url && observationType.code;
   }
   // Colormap
-  setColorMap(colorMapStyle) {
-    const oldColorMap = this.state.colorMap;
+
+  createColorMapFromStyle(colorMapStyle) {
+    const colorMap = this.state.colorMap;
 
     if (
-      typeof oldColorMap.styles === "object" &&
-      oldColorMap.styles[0] &&
-      oldColorMap.styles[0][0]
+      typeof colorMap.styles === "object" &&
+      colorMap.styles[0] &&
+      colorMap.styles[0][0]
     ) {
-      oldColorMap.styles;
+      colorMap.styles[0][0] = colorMapStyle;
     } else {
+      colorMap.styles = colorMapStyle;
     }
+    return colorMap;
+  }
 
-    this.setState({ colorMap });
+  setColorMap(colorMapStyle) {
+    const colorMap = this.createColorMapFromStyle(colorMapStyle);
+
+    this.setState({ colorMap: colorMap });
   }
 
   getColorMapStyle(colorMap) {
@@ -173,7 +180,11 @@ class RasterFormModel extends Component {
   }
 
   validateColorMap(colorMap) {
-    return colorMap && colorMap.name;
+    if (typeof colorMap.styles === "object") {
+      return colorMap.styles[0] && colorMap.styles[0][0];
+    } else {
+      return colorMap.styles;
+    }
   }
   // SupplierId
   setSupplierId(supplierId) {
@@ -407,13 +418,7 @@ class RasterFormModel extends Component {
       temporalIntervalMinutes: intervalObj.minutes,
       temporalIntervalSeconds: intervalObj.seconds,
       temporalOptimizer: true, // default true, not set by the user for first iteration
-      colorMap: {
-        styles:
-          (typeof currentRaster.options.styles === "object" &&
-            currentRaster.options.styles[0] &&
-            currentRaster.options.styles[0][0]) ||
-          currentRaster.options.styles
-      },
+      colorMap: currentRaster.options,
       aggregationType: currentRaster.aggregation_type, // choice: none | counts | curve | histogram | sum | average
       supplierId: selectedSupplierId,
       supplierCode: currentRaster.supplier_code,
@@ -719,10 +724,24 @@ class RasterFormModel extends Component {
                   transformChoiceToDisplayValue={e => (e && e.name) || ""} // optional parameter if choices are objects, which field contains the displayvalue, default item itself is displayvalue
                   isFetching={this.props.colorMaps.isFetching}
                   choicesSearchable={true}
-                  modelValue={this.getColorMapStyle(this.state.colorMap)}
-                  updateModelValue={colorMap => this.setColorMap(colorMap.name)} // cb function to *update* the value of e.g. a raster's name in the parent model
-                  resetModelValue={() => this.setColorMap({ name: "" })} // cb function to *reset* the value of e.g. a raster's name in the parent model
-                  validate={this.validateColorMap} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
+                  modelValue={{
+                    name: this.getColorMapStyle(this.state.colorMap)
+                  }}
+                  updateModelValue={colorMap => {
+                    console.log("rasterform colormap,", colorMap);
+                    if (colorMap && colorMap.name) {
+                      this.setColorMap(colorMap.name);
+                    } else {
+                      this.setColorMap(colorMap);
+                    }
+                  }} // cb function to *update* the value of e.g. a raster's name in the parent model
+                  resetModelValue={() => this.setColorMap("")} // cb function to *reset* the value of e.g. a raster's name in the parent model
+                  validate={colorMap => {
+                    console.log("colorMap", colorMap);
+                    return this.validateColorMap(
+                      this.createColorMapFromStyle(colorMap && colorMap.name)
+                    );
+                  }} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
                 />
                 <GenericSelectBoxComponent
                   titleComponent={
