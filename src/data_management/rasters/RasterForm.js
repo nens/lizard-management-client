@@ -148,9 +148,30 @@ class RasterFormModel extends Component {
     return observationType && observationType.url && observationType.code;
   }
   // Colormap
-  setColorMap(colorMap) {
+  setColorMap(colorMapStyle) {
+    const oldColorMap = this.state.colorMap;
+
+    if (
+      typeof oldColorMap.styles === "object" &&
+      oldColorMap.styles[0] &&
+      oldColorMap.styles[0][0]
+    ) {
+      oldColorMap.styles;
+    } else {
+    }
+
     this.setState({ colorMap });
   }
+
+  getColorMapStyle(colorMap) {
+    return (
+      (typeof colorMap.styles === "object" &&
+        colorMap.styles[0] &&
+        colorMap.styles[0][0]) ||
+      colorMap.styles
+    );
+  }
+
   validateColorMap(colorMap) {
     return colorMap && colorMap.name;
   }
@@ -339,7 +360,7 @@ class RasterFormModel extends Component {
       temporalIntervalSeconds: "00",
       temporalOptimizer: true, // default true, not set by the user for first iteration
       // TODO let colormap have min and max as below with styles
-      colorMap: "",
+      colorMap: {},
       // colorMapMin: 0,
       // colorMapMax: 100, // what are reasonable defaults?
       aggregationType: "", // choice: none | counts | curve | histogram | sum | average
@@ -387,7 +408,7 @@ class RasterFormModel extends Component {
       temporalIntervalSeconds: intervalObj.seconds,
       temporalOptimizer: true, // default true, not set by the user for first iteration
       colorMap: {
-        name:
+        styles:
           (typeof currentRaster.options.styles === "object" &&
             currentRaster.options.styles[0] &&
             currentRaster.options.styles[0][0]) ||
@@ -439,9 +460,7 @@ class RasterFormModel extends Component {
           rescalable: false,
           optimizer: false, // default
           aggregation_type: intAggregationType,
-          options: {
-            styles: this.state.colorMap.name
-          }
+          options: this.state.colorMap
         })
       };
 
@@ -465,9 +484,7 @@ class RasterFormModel extends Component {
           supplier: this.state.supplierId.username,
           supplier_code: this.state.supplierCode,
           aggregation_type: intAggregationType,
-          options: {
-            styles: this.state.colorMap.name
-          }
+          options: this.state.colorMap
         })
       };
 
@@ -702,8 +719,8 @@ class RasterFormModel extends Component {
                   transformChoiceToDisplayValue={e => (e && e.name) || ""} // optional parameter if choices are objects, which field contains the displayvalue, default item itself is displayvalue
                   isFetching={this.props.colorMaps.isFetching}
                   choicesSearchable={true}
-                  modelValue={this.state.colorMap}
-                  updateModelValue={this.setColorMap} // cb function to *update* the value of e.g. a raster's name in the parent model
+                  modelValue={this.getColorMapStyle(this.state.colorMap)}
+                  updateModelValue={colorMap => this.setColorMap(colorMap.name)} // cb function to *update* the value of e.g. a raster's name in the parent model
                   resetModelValue={() => this.setColorMap({ name: "" })} // cb function to *reset* the value of e.g. a raster's name in the parent model
                   validate={this.validateColorMap} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
                 />
