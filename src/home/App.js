@@ -7,7 +7,7 @@ import { Trail, animated } from "react-spring";
 
 import alarmIcon from "../images/alarm@3x.svg";
 import threediIcon from "../images/3di@3x.svg";
-import lizardIcon from "../images/lizard@3x.svg";
+import userManagementIcon from "../images/usermanagement.svg";
 import templateIcon from "../images/templates@3x.svg";
 
 class App extends Component {
@@ -36,7 +36,7 @@ class App extends Component {
             defaultMessage="User management"
           />
         ),
-        icon: lizardIcon,
+        icon: userManagementIcon,
         subTitle: (
           <FormattedMessage
             id="home.sso_management"
