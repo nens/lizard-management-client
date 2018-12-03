@@ -6,17 +6,10 @@ import formStyles from "../styles/Forms.css";
 import clearInputStyles from "./ClearInputButton.css";
 
 class SearchBox extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      localSearchTerms: ""
-    };
-  }
-
   handleEnter(event) {
     if (event.keyCode === 13) {
       // 13 is keycode 'enter' (works only when current input validates)
-      this.props.handleSearch(this.state.localSearchTerms);
+      this.props.handleSearch(this.props.searchTerms);
     }
   }
 
@@ -43,7 +36,7 @@ class SearchBox extends Component {
           <input
             type="text"
             placeholder={searchTerm}
-            value={this.state.localSearchTerms}
+            value={this.props.searchTerms}
             className={formStyles.FormControl}
             style={{
               // make sure input field has same height as search button
@@ -53,7 +46,7 @@ class SearchBox extends Component {
               borderBottomRightRadius: "0px"
             }}
             onChange={e => {
-              this.setState({ localSearchTerms: e.target.value });
+              this.props.setSearchTerms(e.target.value);
             }}
             onKeyUp={e => this.handleEnter(e)}
           />
@@ -62,7 +55,7 @@ class SearchBox extends Component {
             className={`${clearInputStyles.ClearInput} material-icons`}
             style={{ right: "6px" }}
             onClick={() => {
-              this.setState({ localSearchTerms: "" });
+              this.props.setSearchTerms(this.props.searchTerms);
               this.props.handleSearch("");
             }}
           >
@@ -72,7 +65,7 @@ class SearchBox extends Component {
         <button
           type="button"
           className={`${buttonStyles.Button} ${buttonStyles.Success}`}
-          onClick={e => handleSearch(this.state.localSearchTerms)}
+          onClick={e => handleSearch(this.props.searchTerms)}
         >
           <FormattedMessage id="search" defaultMessage="Search" />
           <Ink />
