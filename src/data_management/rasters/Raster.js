@@ -33,8 +33,10 @@ class Raster extends Component {
 
   loadRastersOnPage(page, searchContains) {
     const url = searchContains
-      ? `/api/v3/rasters/?page=${page}&name__icontains=${searchContains}` // &organisation__unique_id=${organisationId},
-      : `/api/v3/rasters/?page=${page}`;
+      ? // ordering is done by filter
+        `/api/v3/rasters/?page=${page}&name__icontains=${searchContains}` // &organisation__unique_id=${organisationId},
+      : // ordering is done so latest rasters first
+        `/api/v3/rasters/?ordering=-last_modified&page=${page}`;
 
     fetch(url, {
       credentials: "same-origin"
