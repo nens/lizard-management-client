@@ -11,9 +11,15 @@ import { FormattedMessage } from "react-intl";
 import GenericTextInputComponent from "../../components/GenericTextInputComponent";
 import GenericSelectBoxComponent from "../../components/GenericSelectBoxComponent";
 import GenericCheckBoxComponent from "../../components/GenericCheckBoxComponent";
+import ColorMapComponent from "../../components/ColorMapComponent";
 import GenericDateComponent from "../../components/GenericDateComponent";
 import DurationComponent from "../../components/DurationComponent";
 import inputStyles from "../../styles/Input.css";
+import {
+  optionsHasLayers,
+  getStyleFromOptions,
+  validateStyleObj
+} from "../../utils/rasterOptionFunctions";
 
 // ! important, these old component may later be used! Ther corresponding files already exist
 // import bindReactFunctions from "../../utils/BindReactFunctions.js"; // currently not working. Probably needs a list with functions in which case this is probably only overcomplicating things
@@ -149,6 +155,20 @@ class RasterFormModel extends Component {
   }
   // Colormap
 
+  setStyles(styles) {
+    let newStyles = Object.assign({}, this.state.styles);
+    if (styles.name) {
+      newStyles.name = styles.name;
+    }
+    if (styles.min) {
+      newStyles.min = styles.min;
+    }
+    if (styles.max) {
+      newStyles.max = styles.max;
+    }
+    co;
+  }
+
   colorMapHasLayers(colorMap) {
     if (typeof colorMap.styles === "object") {
       return true;
@@ -162,7 +182,7 @@ class RasterFormModel extends Component {
 
     console.log("createColorMapFromStyle", colorMap, colorMapStyle);
 
-    if (this.colorMapHasLayers(colorMap)) {
+    if (optionsHasLayers(colorMap)) {
       colorMap.styles[0][0] = colorMapStyle;
     } else {
       colorMap.styles = colorMapStyle;
@@ -170,7 +190,59 @@ class RasterFormModel extends Component {
     return colorMap;
   }
 
-  setColorMap(colorMapStyle) {
+  // name: (this.getColorMapStyle(this.state.colorMap)||'').split(':')[0],
+  // min: (this.getColorMapStyle(this.state.colorMap)||'').split(':')[1],
+  // max: (this.getColorMapStyle(this.state.colorMap)||'').split(':')[2],
+
+  getColorMapFromStyle(style) {
+    if (typeof style === "string") {
+      return style.split(":")[0];
+    } else {
+      return "";
+    }
+  }
+  getColorMinFromStyle(style) {
+    if (typeof style === "string") {
+      return style.split(":")[1];
+    } else {
+      return "";
+    }
+  }
+  getColorMaxFromStyle(style) {
+    if (typeof style === "string") {
+      return style.split(":")[2];
+    } else {
+      return "";
+    }
+  }
+
+  // composeStyleString (color, min, max) {
+  //   let str = '';
+  //   str += color;
+  //   if (min && min != '') {
+  //     str += (':'+min)
+  //   }
+  //   if
+
+  // }
+
+  setColorMap(colorMapStylePart) {
+    const oldStyle = this.getColorMapStyle(this.state.colorMap);
+    const color = this.getColorMapFromStyle(oldStyle);
+    const min = this.getColorMinFromStyle(oldStyle);
+    const max = this.getColorMaxFromStyle(oldStyle);
+    let newStyleString = "";
+
+    if (colorMapStylePart && colorMapStylePart.name) {
+      newStyleString;
+    } else if (colorMapStylePart && colorMapStylePart.min) {
+      this.setColorMap(colorMapStylePart.min, "min");
+    } else if (colorMapStylePart && colorMapStylePart.max) {
+      this.setColorMap(colorMapStylePart.max, "max");
+    } else {
+      this.setColorMap(colorMapStylePart, "name");
+    }
+
     const colorMap = this.createColorMapFromStyle(colorMapStyle);
 
     console.log("function setColorMap ", colorMap);
@@ -378,7 +450,12 @@ class RasterFormModel extends Component {
       temporalIntervalSeconds: "00",
       temporalOptimizer: true, // default true, not set by the user for first iteration
       // TODO let colormap have min and max as below with styles
-      colorMap: {},
+      styles: {
+        colorMap: "",
+        min: "",
+        max: ""
+      },
+      options: {},
       // colorMapMin: 0,
       // colorMapMax: 100, // what are reasonable defaults?
       aggregationType: "", // choice: none | counts | curve | histogram | sum | average
@@ -425,7 +502,10 @@ class RasterFormModel extends Component {
       temporalIntervalMinutes: intervalObj.minutes,
       temporalIntervalSeconds: intervalObj.seconds,
       temporalOptimizer: true, // default true, not set by the user for first iteration
-      colorMap: currentRaster.options,
+
+      styles: getStyleFromOptions(currentRaster.options),
+      options: currentRaster.options,
+
       aggregationType: currentRaster.aggregation_type, // choice: none | counts | curve | histogram | sum | average
       supplierId: selectedSupplierId,
       supplierCode: currentRaster.supplier_code,
@@ -707,7 +787,7 @@ class RasterFormModel extends Component {
                   resetModelValue={() => this.setObservationType({ code: "" })} // cb function to *reset* the value of e.g. a raster's name in the parent model
                   validate={this.validateObservationType} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
                 />
-                <GenericSelectBoxComponent
+                <ColorMapComponent
                   titleComponent={
                     <FormattedMessage
                       id="rasters.colormap"
@@ -720,39 +800,40 @@ class RasterFormModel extends Component {
                       defaultMessage="Please select Colormap"
                     />
                   }
+                  minTitleComponent={
+                    <FormattedMessage
+                      id="rasters.fill_colormap_min"
+                      defaultMessage="Minimum, if applicable fill the minimum of the colormap"
+                    />
+                  }
+                  maxTitleComponent={
+                    <FormattedMessage
+                      id="rasters.fill_colormap_max"
+                      defaultMessage="Maximum, if applicable fill the maximum of the colormap"
+                    />
+                  }
                   placeholder="click to select colormap"
                   step={5} // int for denoting which step it the GenericTextInputComponent refers to
                   opened={this.props.currentRaster || currentStep === 5}
                   formUpdate={!!this.props.currentRaster}
-                  readonly={
-                    console.log(
-                      "this.state.colorMap readonly",
-                      JSON.stringify(this.state.colorMap)
-                    ) || this.colorMapHasLayers(this.state.colorMap)
-                  }
+                  readonly={optionsHasLayers(this.state.options)}
                   currentStep={currentStep} // int for denoting which step is currently active
                   setCurrentStep={this.setCurrentStep} // cb function for updating which step becomes active
                   choices={this.props.colorMaps.available}
                   transformChoiceToDisplayValue={e => (e && e.name) || ""} // optional parameter if choices are objects, which field contains the displayvalue, default item itself is displayvalue
                   isFetching={this.props.colorMaps.isFetching}
                   choicesSearchable={true}
-                  modelValue={{
-                    name: this.getColorMapStyle(this.state.colorMap)
-                  }}
-                  updateModelValue={colorMap => {
-                    // console.log("rasterform colormap update,", colorMap);
-                    if (colorMap && colorMap.name) {
-                      this.setColorMap(colorMap.name);
-                    } else {
-                      this.setColorMap(colorMap);
-                    }
+                  modelValue={this.state.styles}
+                  updateModelValue={styles => {
+                    this.setStyles(styles);
                   }} // cb function to *update* the value of e.g. a raster's name in the parent model
-                  resetModelValue={() => this.setColorMap("")} // cb function to *reset* the value of e.g. a raster's name in the parent model
-                  validate={colorMap => {
+                  // resetModelValue={() => this.setColorMap("")} // cb function to *reset* the value of e.g. a raster's name in the parent model
+                  validate={styles => {
                     // console.log("colorMap", colorMap);
-                    return this.validateColorMap(
-                      this.createColorMapFromStyle(colorMap && colorMap.name)
-                    );
+                    // return this.validateColorMap(
+                    //   this.createColorMapFromStyle(colorMap && colorMap.name)
+                    // );
+                    return validateStyleObj(styles);
                   }} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
                 />
                 <GenericSelectBoxComponent
