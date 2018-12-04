@@ -102,7 +102,7 @@ class DurationComponent extends Component {
           indicator={step}
           active={active}
           handleClick={() => {
-            setCurrentStep(step);
+            !readonly && setCurrentStep(step);
           }}
         />
         <div className={inputStyles.InputContainer}>

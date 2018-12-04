@@ -7,6 +7,7 @@ import ClearInputButton from "../components/ClearInputButton.js";
 import styles from "./SelectBoxSearch.css";
 import formStyles from "../styles/Forms.css";
 import displayStyles from "../styles/Display.css";
+import inputStyles from "../styles/Input.css";
 
 class SelectBoxSearch extends Component {
   constructor(props) {
@@ -31,7 +32,7 @@ class SelectBoxSearch extends Component {
   }
   handleInput(e) {
     this.setState({ mustShowChoices: true, query: e.target.value });
-    console.log("handleInput", e.target.value);
+    // console.log("handleInput", e.target.value);
     this.props.updateModelValue(e.target.value);
   }
   setQuery(props) {
@@ -55,10 +56,11 @@ class SelectBoxSearch extends Component {
       onKeyUp,
       inputId,
       transformChoiceToDisplayValue,
-      validate
+      validate,
+      readonly
     } = this.props;
     const showOptions = choices.length > 0 && this.state.mustShowChoices;
-    const mustShowClearButton = validate(choice);
+    const mustShowClearButton = validate(choice) && !readonly;
 
     return (
       <div className={`${styles.SelectChoice} form-input`}>
@@ -67,7 +69,11 @@ class SelectBoxSearch extends Component {
           tabIndex="-1"
           type="text"
           autoComplete="false"
-          className={formStyles.FormControl}
+          className={
+            formStyles.FormControl +
+            " " +
+            (readonly ? " " + inputStyles.ReadOnly : null)
+          }
           placeholder={placeholder}
           onChange={this.handleInput}
           onKeyUp={event => {
@@ -75,13 +81,15 @@ class SelectBoxSearch extends Component {
             this.handleKeyUp(event);
           }}
           value={this.state.query}
-          onClick={() => this.setState({ mustShowChoices: true })}
+          onClick={() => !readonly && this.setState({ mustShowChoices: true })}
           //onFocus={() => this.setState({ mustShowChoices: true })}
           onBlur={() => this.setState({ mustShowChoices: false })}
+          readOnly={readonly}
+          disabled={readonly}
         />
         <div
           className={`${styles.Spinner} ${
-            isFetching ? displayStyles.Block : displayStyles.None
+            isFetching && !readonly ? displayStyles.Block : displayStyles.None
           }`}
         >
           <MDSpinner size={18} />

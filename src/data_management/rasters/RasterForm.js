@@ -149,14 +149,20 @@ class RasterFormModel extends Component {
   }
   // Colormap
 
-  createColorMapFromStyle(colorMapStyle) {
-    const colorMap = this.state.colorMap;
+  colorMapHasLayers(colorMap) {
+    if (typeof colorMap.styles === "object") {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
-    if (
-      typeof colorMap.styles === "object" &&
-      colorMap.styles[0] &&
-      colorMap.styles[0][0]
-    ) {
+  createColorMapFromStyle(colorMapStyle) {
+    const colorMap = Object.assign({}, this.state.colorMap);
+
+    console.log("createColorMapFromStyle", colorMap, colorMapStyle);
+
+    if (this.colorMapHasLayers(colorMap)) {
       colorMap.styles[0][0] = colorMapStyle;
     } else {
       colorMap.styles = colorMapStyle;
@@ -167,6 +173,7 @@ class RasterFormModel extends Component {
   setColorMap(colorMapStyle) {
     const colorMap = this.createColorMapFromStyle(colorMapStyle);
 
+    console.log("function setColorMap ", colorMap);
     this.setState({ colorMap: colorMap });
   }
 
@@ -717,7 +724,12 @@ class RasterFormModel extends Component {
                   step={5} // int for denoting which step it the GenericTextInputComponent refers to
                   opened={this.props.currentRaster || currentStep === 5}
                   formUpdate={!!this.props.currentRaster}
-                  readonly={false}
+                  readonly={
+                    console.log(
+                      "this.state.colorMap readonly",
+                      JSON.stringify(this.state.colorMap)
+                    ) || this.colorMapHasLayers(this.state.colorMap)
+                  }
                   currentStep={currentStep} // int for denoting which step is currently active
                   setCurrentStep={this.setCurrentStep} // cb function for updating which step becomes active
                   choices={this.props.colorMaps.available}
@@ -728,7 +740,7 @@ class RasterFormModel extends Component {
                     name: this.getColorMapStyle(this.state.colorMap)
                   }}
                   updateModelValue={colorMap => {
-                    console.log("rasterform colormap,", colorMap);
+                    // console.log("rasterform colormap update,", colorMap);
                     if (colorMap && colorMap.name) {
                       this.setColorMap(colorMap.name);
                     } else {
@@ -737,7 +749,7 @@ class RasterFormModel extends Component {
                   }} // cb function to *update* the value of e.g. a raster's name in the parent model
                   resetModelValue={() => this.setColorMap("")} // cb function to *reset* the value of e.g. a raster's name in the parent model
                   validate={colorMap => {
-                    console.log("colorMap", colorMap);
+                    // console.log("colorMap", colorMap);
                     return this.validateColorMap(
                       this.createColorMapFromStyle(colorMap && colorMap.name)
                     );

@@ -71,7 +71,7 @@ class GenericSelectBoxComponent extends Component {
           indicator={step}
           active={active}
           handleClick={() => {
-            setCurrentStep(step);
+            !readonly && setCurrentStep(step);
           }}
         />
 
@@ -94,7 +94,7 @@ class GenericSelectBoxComponent extends Component {
                   transformChoiceToDisplayValue={transformChoiceToDisplayValue}
                   isFetching={isFetching}
                   updateModelValue={e => {
-                    console.log("updateModelValue", e);
+                    // console.log("updateModelValue", e);
                     updateModelValue(e);
                   }}
                   onKeyUp={e => this.handleEnter(e)}
@@ -102,6 +102,7 @@ class GenericSelectBoxComponent extends Component {
                   placeholder={placeholder}
                   validate={validate}
                   resetModelValue={resetModelValue}
+                  readonly={readonly}
                 />
               ) : (
                 <SelectBoxSimple

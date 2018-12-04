@@ -67,7 +67,7 @@ class GenericSelectBoxComponent extends Component {
           indicator={step}
           active={active}
           handleClick={() => {
-            setCurrentStep(step);
+            !readonly && setCurrentStep(step);
           }}
         />
 
@@ -141,7 +141,10 @@ const mapDispatchToProps = dispatch => {
 };
 
 GenericSelectBoxComponent = withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(GenericSelectBoxComponent)
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(GenericSelectBoxComponent)
 );
 
 export default GenericSelectBoxComponent;
