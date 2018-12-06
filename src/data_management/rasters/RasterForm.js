@@ -500,9 +500,7 @@ class RasterFormModel extends Component {
         <div className={gridStyles.Container}>
           <div className={`${gridStyles.Row}`}>
             <div
-              className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${
-                gridStyles.colSm12
-              } ${gridStyles.colXs12}`}
+              className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
             >
               <div id="steps" style={{ margin: "20px 0 0 20px" }}>
                 <GenericTextInputComponent
@@ -644,8 +642,7 @@ class RasterFormModel extends Component {
                   transformChoiceToInfo={item => item.info}
                   modelValue={aggregationType} // string: e.g. the name of a raster
                   updateModelValue={item =>
-                    this.setAggregationType(item.display)
-                  } // cb function to *update* the value of e.g. a raster's name in the parent model
+                    this.setAggregationType(item.display)} // cb function to *update* the value of e.g. a raster's name in the parent model
                   resetModelValue={() => this.setAggregationType("")} // cb function to *reset* the value of e.g. a raster's name in the parent model
                   validate={this.validateAggregationType} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
                 />
@@ -711,16 +708,16 @@ class RasterFormModel extends Component {
                   titleComponent={
                     <FormattedMessage
                       id="rasters.supplier_id"
-                      defaultMessage="Supplier ID"
+                      defaultMessage="Supplier Name"
                     />
                   }
                   subtitleComponent={
                     <FormattedMessage
                       id="rasters.please_select_supplier_id"
-                      defaultMessage="Please select Supplier ID"
+                      defaultMessage="Please select Supplier Name"
                     />
                   }
-                  placeholder="click to select supplier id"
+                  placeholder="click to select supplier name"
                   step={6} // int for denoting which step it the GenericTextInputComponent refers to
                   opened={this.props.currentRaster || currentStep === 6}
                   formUpdate={!!this.props.currentRaster}
@@ -868,9 +865,7 @@ class RasterFormModel extends Component {
                   <div className={inputStyles.InputContainer}>
                     <button
                       type="button"
-                      className={`${buttonStyles.Button} ${
-                        buttonStyles.Success
-                      }`}
+                      className={`${buttonStyles.Button} ${buttonStyles.Success}`}
                       style={{ marginTop: 10 }}
                       onClick={() => {
                         this.handleClickCreateRaster();
@@ -918,10 +913,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 };
 
 const RasterForm = withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(RasterFormModel)
+  connect(mapStateToProps, mapDispatchToProps)(RasterFormModel)
 );
 
 export { RasterForm };
