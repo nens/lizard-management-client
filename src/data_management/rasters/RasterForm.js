@@ -724,16 +724,16 @@ class RasterFormModel extends Component {
                   titleComponent={
                     <FormattedMessage
                       id="rasters.supplier_id"
-                      defaultMessage="Supplier ID"
+                      defaultMessage="Supplier Name"
                     />
                   }
                   subtitleComponent={
                     <FormattedMessage
                       id="rasters.please_select_supplier_id"
-                      defaultMessage="Please select Supplier ID"
+                      defaultMessage="Please select Supplier Name"
                     />
                   }
-                  placeholder="click to select supplier id"
+                  placeholder="click to select supplier name"
                   step={6} // int for denoting which step it the GenericTextInputComponent refers to
                   opened={this.props.currentRaster || currentStep === 6}
                   formUpdate={!!this.props.currentRaster}
