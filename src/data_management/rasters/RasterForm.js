@@ -190,12 +190,13 @@ class RasterFormModel extends Component {
       this.validateHoursTemporalInterval(hours) &&
       this.validateMinutesTemporalInterval(minutes) &&
       this.validateSecondsTemporalInterval(seconds) &&
+      this.validateIfNotZero(days, hours, minutes, seconds) &&
       this.state.temporalIntervalWasEverOpenedByUser
     );
   }
   // return /^[1-9][0-9]*$/.test(temporalIntervalAmount);
   validateDaysTemporalInterval(days) {
-    return /^[1-9][0-9]*$/.test(days) || days === 0;
+    return /^[0-9]{1,3}$/.test(days) && parseInt(days, 10) < 365;
   }
   validateHoursTemporalInterval(hours) {
     // return /^[0-9][0-9]$/.test(hours) && parseInt(hours) < 24;
@@ -209,6 +210,21 @@ class RasterFormModel extends Component {
     // return /^[0-9][0-9]$/.test(seconds) && parseInt(seconds) < 60;
     return /^[0-9]{1,2}$/.test(seconds) && parseInt(seconds, 10) < 60;
   }
+
+  // Validate if the user did not fill in '0' for every field
+  validateIfNotZero(days, hours, minutes, seconds) {
+    if (
+      parseInt(days, 10) === 0 &&
+      parseInt(hours, 10) === 0 &&
+      parseInt(minutes, 10) === 0 &&
+      parseInt(seconds, 10) === 0
+    ) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   // temporal interval Days Hours Minutes Seconds
   setTemporalIntervalDays(temporalIntervalDays) {
     this.setState({ temporalIntervalDays });
@@ -500,9 +516,7 @@ class RasterFormModel extends Component {
         <div className={gridStyles.Container}>
           <div className={`${gridStyles.Row}`}>
             <div
-              className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${
-                gridStyles.colSm12
-              } ${gridStyles.colXs12}`}
+              className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
             >
               <div id="steps" style={{ margin: "20px 0 0 20px" }}>
                 <GenericTextInputComponent
@@ -644,8 +658,7 @@ class RasterFormModel extends Component {
                   transformChoiceToInfo={item => item.info}
                   modelValue={aggregationType} // string: e.g. the name of a raster
                   updateModelValue={item =>
-                    this.setAggregationType(item.display)
-                  } // cb function to *update* the value of e.g. a raster's name in the parent model
+                    this.setAggregationType(item.display)} // cb function to *update* the value of e.g. a raster's name in the parent model
                   resetModelValue={() => this.setAggregationType("")} // cb function to *reset* the value of e.g. a raster's name in the parent model
                   validate={this.validateAggregationType} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
                 />
@@ -868,9 +881,7 @@ class RasterFormModel extends Component {
                   <div className={inputStyles.InputContainer}>
                     <button
                       type="button"
-                      className={`${buttonStyles.Button} ${
-                        buttonStyles.Success
-                      }`}
+                      className={`${buttonStyles.Button} ${buttonStyles.Success}`}
                       style={{ marginTop: 10 }}
                       onClick={() => {
                         this.handleClickCreateRaster();
@@ -918,10 +929,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 };
 
 const RasterForm = withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(RasterFormModel)
+  connect(mapStateToProps, mapDispatchToProps)(RasterFormModel)
 );
 
 export { RasterForm };
