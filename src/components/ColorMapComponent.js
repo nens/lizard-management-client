@@ -23,7 +23,7 @@ class ColorMapComponent extends Component {
       );
       // inputElem.focus(); does not work outside setTimeout. Is this the right solution?
       setTimeout(function() {
-        inputElem.focus();
+        // inputElem.focus();
       }, 0);
     }
   }
@@ -102,7 +102,7 @@ class ColorMapComponent extends Component {
                     isFetching={isFetching}
                     updateModelValue={e => {
                       // console.log("updateModelValue", e);
-                      updateModelValue(e);
+                      updateModelValue({ colorMap: e.name });
                     }}
                     onKeyUp={e => this.handleEnter(e)}
                     inputId={titleComponent.props.id + "_input"}
@@ -137,8 +137,9 @@ class ColorMapComponent extends Component {
                   autoComplete="false"
                   className={formStyles.FormControl}
                   // placeholder={placeholder}
-                  // onChange={e => this.validateAndSaveToParent(e.target.value)}
+                  onChange={e => updateModelValue({ min: e.target.value })}
                   value={modelValue.min}
+
                   // onKeyUp={e => this.handleEnter(e)}
                 />
                 <br />
@@ -152,6 +153,7 @@ class ColorMapComponent extends Component {
                   // placeholder={placeholder}
                   // onChange={e => this.validateAndSaveToParent(e.target.value)}
                   value={modelValue.max}
+                  onChange={e => updateModelValue({ max: e.target.value })}
                   // onKeyUp={e => this.handleEnter(e)}
                 />
               </div>

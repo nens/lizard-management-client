@@ -1,3 +1,80 @@
+export function calculateNewStyleAndOptions(
+  oldStyle,
+  oldOptions,
+  newStyleSignal
+) {
+  const oldColor = oldStyle.colorMap;
+  const oldMin = oldStyle.min;
+  const oldmax = oldStyle.max;
+  let styleString = "";
+  let newoptions = {};
+  let newStyles = {};
+
+  if (newStyleSignal.colorMap) {
+    console.log("newStyleSignal.colorMap");
+    newStyles = {
+      colorMap: newStyleSignal.colorMap,
+      min: oldMin,
+      max: oldmax
+    };
+    styleString = composeStyleString(
+      newStyleSignal.colorMap,
+      styleMinMaxStrToValidString(oldMin),
+      styleMinMaxStrToValidString(oldmax)
+    );
+    console.log("styleString", styleString);
+    newoptions = createColorMapFromStylePlusOptions(styleString, oldOptions);
+    console.log("newoptions", newoptions);
+    return {
+      styles: newStyles,
+      options: newoptions
+    };
+  } else if (newStyleSignal.min) {
+    console.log("newStyleSignal.min");
+    newStyles = {
+      colorMap: oldColor,
+      min: newStyleSignal.min,
+      max: oldmax
+    };
+    styleString = composeStyleString(
+      oldColor,
+      styleMinMaxStrToValidString(newStyleSignal.min),
+      styleMinMaxStrToValidString(oldmax)
+    );
+    console.log("styleString", styleString);
+    newoptions = createColorMapFromStylePlusOptions(styleString, oldOptions);
+    console.log("newoptions", newoptions);
+    return {
+      styles: newStyles,
+      options: newoptions
+    };
+  } else if (newStyleSignal.max) {
+    console.log("newStyleSignal.max");
+    newStyles = {
+      colorMap: oldColor,
+      min: oldMin,
+      max: newStyleSignal.max
+    };
+    styleString = composeStyleString(
+      oldColor,
+      styleMinMaxStrToValidString(oldMin),
+      styleMinMaxStrToValidString(newStyleSignal.max)
+    );
+    console.log("styleString", styleString);
+    newoptions = createColorMapFromStylePlusOptions(styleString, oldOptions);
+    console.log("newoptions", newoptions);
+    return {
+      styles: newStyles,
+      options: newoptions
+    };
+  } else {
+    return {
+      styles: oldStyle,
+      options: oldOptions
+    };
+  }
+}
+
 // if options is an object ( not a flat string) then it will have multiple layers
 export function optionsHasLayers(options) {
   if (typeof options.styles === "object") {
@@ -12,12 +89,12 @@ export function optionsHasLayers(options) {
 export function createColorMapFromStylePlusOptions(styles, options) {
   const newOptions = Object.assign({}, options);
 
-  if (this.colorMapHasLayers(newOptions)) {
+  if (optionsHasLayers(newOptions)) {
     newOptions.styles[0][0] = styles;
   } else {
     newOptions.styles = styles;
   }
-  return colorMap;
+  return newOptions;
 }
 
 // style has this format:
@@ -48,11 +125,11 @@ export function getColorMaxFromStyle(style) {
 export function composeStyleString(color, min, max) {
   let str = "";
   str += color;
-  if (min && min != "") {
+  if (min && min !== "") {
     str += ":" + min;
 
     // we can only add max if min is also added
-    if (max && max != "") {
+    if (max && max !== "") {
       str += ":" + max;
     }
   }
@@ -76,13 +153,13 @@ export function getStyleFromOptions(options) {
 // name should always be filled
 // if max is filled then min should also be filled
 export function validateStyleObj(style) {
-  if (style.max && style.max != "") {
+  if (style.max && style.max !== "") {
     if (style.min === "" || !style.min) {
       return false;
     }
   }
 
-  if (style.name && style.name != "") {
+  if (style.name && style.name !== "") {
     return true;
   } else {
     return false;

@@ -16,9 +16,16 @@ import GenericDateComponent from "../../components/GenericDateComponent";
 import DurationComponent from "../../components/DurationComponent";
 import inputStyles from "../../styles/Input.css";
 import {
+  calculateNewStyleAndOptions,
   optionsHasLayers,
+  createColorMapFromStylePlusOptions,
+  getColorMapFromStyle,
+  getColorMinFromStyle,
+  getColorMaxFromStyle,
+  composeStyleString,
   getStyleFromOptions,
-  validateStyleObj
+  validateStyleObj,
+  styleMinMaxStrToValidString
 } from "../../utils/rasterOptionFunctions";
 
 // ! important, these old component may later be used! Ther corresponding files already exist
@@ -56,7 +63,7 @@ class RasterFormModel extends Component {
     this.validateAggregationType = this.validateAggregationType.bind(this);
     this.setObservationType = this.setObservationType.bind(this);
     this.validateObservationType = this.validateObservationType.bind(this);
-    this.setColorMap = this.setColorMap.bind(this);
+    this.setStyleAndOptions = this.setStyleAndOptions.bind(this);
     this.validateColorMap = this.validateColorMap.bind(this);
     this.setSupplierId = this.setSupplierId.bind(this);
     this.resetSupplierId = this.resetSupplierId.bind(this);
@@ -155,6 +162,19 @@ class RasterFormModel extends Component {
   }
   // Colormap
 
+  setStyleAndOptions(styleObj) {
+    const oldStyle = Object.assign({}, this.state.styles);
+    const oldOptions = Object.assign({}, this.state.options);
+    const newStyleOptions = calculateNewStyleAndOptions(
+      oldStyle,
+      oldOptions,
+      styleObj
+    );
+
+    this.setState({ options: newStyleOptions.options });
+    this.setState({ styles: newStyleOptions.styles });
+  }
+
   setStyles(styles) {
     let newStyles = Object.assign({}, this.state.styles);
     if (styles.name) {
@@ -166,7 +186,6 @@ class RasterFormModel extends Component {
     if (styles.max) {
       newStyles.max = styles.max;
     }
-    co;
   }
 
   colorMapHasLayers(colorMap) {
@@ -225,29 +244,6 @@ class RasterFormModel extends Component {
   //   if
 
   // }
-
-  setColorMap(colorMapStylePart) {
-    const oldStyle = this.getColorMapStyle(this.state.colorMap);
-    const color = this.getColorMapFromStyle(oldStyle);
-    const min = this.getColorMinFromStyle(oldStyle);
-    const max = this.getColorMaxFromStyle(oldStyle);
-    let newStyleString = "";
-
-    if (colorMapStylePart && colorMapStylePart.name) {
-      newStyleString;
-    } else if (colorMapStylePart && colorMapStylePart.min) {
-      this.setColorMap(colorMapStylePart.min, "min");
-    } else if (colorMapStylePart && colorMapStylePart.max) {
-      this.setColorMap(colorMapStylePart.max, "max");
-    } else {
-      this.setColorMap(colorMapStylePart, "name");
-    }
-
-    const colorMap = this.createColorMapFromStyle(colorMapStyle);
-
-    console.log("function setColorMap ", colorMap);
-    this.setState({ colorMap: colorMap });
-  }
 
   getColorMapStyle(colorMap) {
     return (
@@ -825,15 +821,16 @@ class RasterFormModel extends Component {
                   choicesSearchable={true}
                   modelValue={this.state.styles}
                   updateModelValue={styles => {
-                    this.setStyles(styles);
+                    this.setStyleAndOptions(styles);
                   }} // cb function to *update* the value of e.g. a raster's name in the parent model
                   // resetModelValue={() => this.setColorMap("")} // cb function to *reset* the value of e.g. a raster's name in the parent model
                   validate={styles => {
+                    console.log("styles", styles);
                     // console.log("colorMap", colorMap);
                     // return this.validateColorMap(
                     //   this.createColorMapFromStyle(colorMap && colorMap.name)
                     // );
-                    return validateStyleObj(styles);
+                    // return validateStyleObj(styles);
                   }} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
                 />
                 <GenericSelectBoxComponent
