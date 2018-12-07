@@ -199,8 +199,6 @@ class RasterFormModel extends Component {
   createColorMapFromStyle(colorMapStyle) {
     const colorMap = Object.assign({}, this.state.colorMap);
 
-    console.log("createColorMapFromStyle", colorMap, colorMapStyle);
-
     if (optionsHasLayers(colorMap)) {
       colorMap.styles[0][0] = colorMapStyle;
     } else {
@@ -345,12 +343,6 @@ class RasterFormModel extends Component {
 
   // if this function returns true, then the user should be able to submit the raster
   validateAll() {
-    console.log(
-      "validateStyleObj(this.state.styles)",
-      validateStyleObj(this.state.styles),
-      this.state.styles
-    );
-    //return (
     const normalFields =
       this.validateNewRasterName(this.state.rasterName) &&
       // organisation is currently taken from the organisation picker in the header, but we might change this
@@ -488,7 +480,6 @@ class RasterFormModel extends Component {
       min: getColorMinFromStyle(getStyleFromOptions(currentRaster.options)),
       max: getColorMaxFromStyle(getStyleFromOptions(currentRaster.options))
     };
-    console.log("setState initial styles", styles);
 
     return {
       currentStep: 1,
@@ -846,13 +837,7 @@ class RasterFormModel extends Component {
                   }} // cb function to *update* the value of e.g. a raster's name in the parent model
                   // resetModelValue={() => this.setColorMap("")} // cb function to *reset* the value of e.g. a raster's name in the parent model
                   validate={styles => {
-                    console.log("styles", styles);
                     return styles && validateStyleObj(styles);
-                    // console.log("colorMap", colorMap);
-                    // return this.validateColorMap(
-                    //   this.createColorMapFromStyle(colorMap && colorMap.name)
-                    // );
-                    // return validateStyleObj(styles);
                   }} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
                 />
                 <GenericSelectBoxComponent

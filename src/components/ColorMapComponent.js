@@ -94,9 +94,7 @@ class ColorMapComponent extends Component {
                 formStyles.FormGroup + " " + inputStyles.PositionRelative
               }
             >
-              <div
-              // style={{display: "flex"}}
-              >
+              <div>
                 <SelectBoxSearch
                   choices={choices}
                   choice={{ name: modelValue.colorMap }}
@@ -109,7 +107,6 @@ class ColorMapComponent extends Component {
                   inputId={titleComponent.props.id + "_input"}
                   placeholder={placeholder}
                   validate={e => {
-                    console.log("validate searchBoxColor", e);
                     return e.name != "";
                   }}
                   resetModelValue={e => {
@@ -142,36 +139,25 @@ class ColorMapComponent extends Component {
                   </span>
                 ) : null}
                 <input
-                  // id={titleComponent.props.id + "_input"}
-                  // tabIndex="-2"
-                  // type="text"
                   autoComplete="false"
                   className={`${formStyles.FormControl} ${
                     readonly ? inputStyles.ReadOnly : null
                   }`}
-                  // placeholder={placeholder}
                   onChange={e => updateModelValue({ min: e.target.value })}
                   value={modelValue.min}
                   placeholder="optional minimum of range"
-                  // onKeyUp={e => this.handleEnter(e)}
                   readOnly={readonly}
                   disabled={readonly}
                 />
                 <br />
                 <span className="text-muted">{maxTitleComponent}</span>
                 <input
-                  // id={titleComponent.props.id + "_input"}
-                  // tabIndex="-2"
-                  // type="text"
                   autoComplete="false"
                   className={`${formStyles.FormControl} ${
                     readonly ? inputStyles.ReadOnly : null
                   }`}
-                  // placeholder={placeholder}
-                  // onChange={e => this.validateAndSaveToParent(e.target.value)}
                   value={modelValue.max}
                   onChange={e => updateModelValue({ max: e.target.value })}
-                  // onKeyUp={e => this.handleEnter(e)}
                   placeholder="optional maximum of range"
                   readOnly={readonly}
                   disabled={readonly}
