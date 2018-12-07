@@ -191,12 +191,13 @@ class RasterFormModel extends Component {
       this.validateHoursTemporalInterval(hours) &&
       this.validateMinutesTemporalInterval(minutes) &&
       this.validateSecondsTemporalInterval(seconds) &&
+      this.validateIfNotZero(days, hours, minutes, seconds) &&
       this.state.temporalIntervalWasEverOpenedByUser
     );
   }
   // return /^[1-9][0-9]*$/.test(temporalIntervalAmount);
   validateDaysTemporalInterval(days) {
-    return /^[1-9][0-9]*$/.test(days) || days === 0;
+    return /^[0-9]{1,3}$/.test(days) && parseInt(days, 10) < 365;
   }
   validateHoursTemporalInterval(hours) {
     // return /^[0-9][0-9]$/.test(hours) && parseInt(hours) < 24;
@@ -210,6 +211,21 @@ class RasterFormModel extends Component {
     // return /^[0-9][0-9]$/.test(seconds) && parseInt(seconds) < 60;
     return /^[0-9]{1,2}$/.test(seconds) && parseInt(seconds, 10) < 60;
   }
+
+  // Validate if the user did not fill in '0' for every field
+  validateIfNotZero(days, hours, minutes, seconds) {
+    if (
+      parseInt(days, 10) === 0 &&
+      parseInt(hours, 10) === 0 &&
+      parseInt(minutes, 10) === 0 &&
+      parseInt(seconds, 10) === 0
+    ) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   // temporal interval Days Hours Minutes Seconds
   setTemporalIntervalDays(temporalIntervalDays) {
     this.setState({ temporalIntervalDays });
@@ -741,16 +757,16 @@ class RasterFormModel extends Component {
                   titleComponent={
                     <FormattedMessage
                       id="rasters.supplier_id"
-                      defaultMessage="Supplier ID"
+                      defaultMessage="Supplier Name"
                     />
                   }
                   subtitleComponent={
                     <FormattedMessage
                       id="rasters.please_select_supplier_id"
-                      defaultMessage="Please select Supplier ID"
+                      defaultMessage="Please select Supplier Name"
                     />
                   }
-                  placeholder="click to select supplier id"
+                  placeholder="click to select supplier name"
                   step={7} // int for denoting which step it the GenericTextInputComponent refers to
                   opened={this.props.currentRaster || currentStep === 7}
                   formUpdate={!!this.props.currentRaster}
