@@ -19,20 +19,12 @@ class SelectBoxSearch extends Component {
   componentDidMount() {
     this.setQuery(this.props);
   }
-  componentWillReceiveProps(newProps) {
-    // if (newProps.validate()) {
-    //   this.setState({ query: newProps.choice });
-    // }
-    // this.setQuery(newProps);
-    // if (newProps.selected.name)
-    //   this.setState({ query: newProps.selected.name });
-  }
+
   handleKeyUp(e) {
     if (e.key === "Escape") this.resetQuery();
   }
   handleInput(e) {
     this.setState({ mustShowChoices: true, query: e.target.value });
-    // console.log("handleInput", e.target.value);
     this.props.updateModelValue(e.target.value);
   }
   setQuery(props) {
@@ -127,7 +119,6 @@ class SelectBoxSearch extends Component {
                 } else {
                   // if user typed search string only show those that contain string
                   // TODO sort by search string ?
-                  console.log("this.state.query", this.state.query);
                   return transformChoiceToDisplayValue(choiceItem)
                     .toLowerCase()
                     .includes(this.state.query.toLowerCase());
@@ -165,11 +156,8 @@ class SelectBoxSearch extends Component {
                     onMouseDown={() => {
                       // User selected a choice from the filtered ones:
                       updateModelValue(choiceItem);
-                      // this.resetQuery();
-                      console.log("currentChoiceString", currentChoiceString);
                       this.setState({
                         mustShowChoices: false,
-                        // query: currentChoiceString
                         query: ""
                       });
                     }}

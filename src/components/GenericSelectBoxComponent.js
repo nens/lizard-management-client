@@ -94,7 +94,6 @@ class GenericSelectBoxComponent extends Component {
                   transformChoiceToDisplayValue={transformChoiceToDisplayValue}
                   isFetching={isFetching}
                   updateModelValue={e => {
-                    // console.log("updateModelValue", e);
                     updateModelValue(e);
                   }}
                   onKeyUp={e => this.handleEnter(e)}

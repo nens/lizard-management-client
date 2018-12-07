@@ -64,7 +64,6 @@ class RasterFormModel extends Component {
     this.setObservationType = this.setObservationType.bind(this);
     this.validateObservationType = this.validateObservationType.bind(this);
     this.setStyleAndOptions = this.setStyleAndOptions.bind(this);
-    this.validateColorMap = this.validateColorMap.bind(this);
     this.setSupplierId = this.setSupplierId.bind(this);
     this.resetSupplierId = this.resetSupplierId.bind(this);
     this.validateSupplierId = this.validateSupplierId.bind(this);
@@ -175,90 +174,6 @@ class RasterFormModel extends Component {
     this.setState({ styles: newStyleOptions.styles });
   }
 
-  setStyles(styles) {
-    let newStyles = Object.assign({}, this.state.styles);
-    if (styles.name) {
-      newStyles.name = styles.name;
-    }
-    if (styles.min) {
-      newStyles.min = styles.min;
-    }
-    if (styles.max) {
-      newStyles.max = styles.max;
-    }
-  }
-
-  colorMapHasLayers(colorMap) {
-    if (typeof colorMap.styles === "object") {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  createColorMapFromStyle(colorMapStyle) {
-    const colorMap = Object.assign({}, this.state.colorMap);
-
-    if (optionsHasLayers(colorMap)) {
-      colorMap.styles[0][0] = colorMapStyle;
-    } else {
-      colorMap.styles = colorMapStyle;
-    }
-    return colorMap;
-  }
-
-  // name: (this.getColorMapStyle(this.state.colorMap)||'').split(':')[0],
-  // min: (this.getColorMapStyle(this.state.colorMap)||'').split(':')[1],
-  // max: (this.getColorMapStyle(this.state.colorMap)||'').split(':')[2],
-
-  getColorMapFromStyle(style) {
-    if (typeof style === "string") {
-      return style.split(":")[0];
-    } else {
-      return "";
-    }
-  }
-  getColorMinFromStyle(style) {
-    if (typeof style === "string") {
-      return style.split(":")[1];
-    } else {
-      return "";
-    }
-  }
-  getColorMaxFromStyle(style) {
-    if (typeof style === "string") {
-      return style.split(":")[2];
-    } else {
-      return "";
-    }
-  }
-
-  // composeStyleString (color, min, max) {
-  //   let str = '';
-  //   str += color;
-  //   if (min && min != '') {
-  //     str += (':'+min)
-  //   }
-  //   if
-
-  // }
-
-  getColorMapStyle(colorMap) {
-    return (
-      (typeof colorMap.styles === "object" &&
-        colorMap.styles[0] &&
-        colorMap.styles[0][0]) ||
-      colorMap.styles
-    );
-  }
-
-  validateColorMap(colorMap) {
-    if (typeof colorMap.styles === "object") {
-      return colorMap.styles[0] && colorMap.styles[0][0];
-    } else {
-      return colorMap.styles;
-    }
-  }
   // SupplierId
   setSupplierId(supplierId) {
     this.setState({ supplierId });
