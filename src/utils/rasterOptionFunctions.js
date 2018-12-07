@@ -3,7 +3,6 @@ export function calculateNewStyleAndOptions(
   oldOptions,
   newStyleSignal
 ) {
-  console.log("calculateNewStyleAndOptions", oldStyle);
   const oldColor = oldStyle.colorMap;
   const oldMin = oldStyle.min;
   const oldmax = oldStyle.max;
@@ -12,7 +11,6 @@ export function calculateNewStyleAndOptions(
   let newStyles = {};
 
   if (newStyleSignal.colorMap || newStyleSignal.colorMap === "") {
-    console.log("newStyleSignal.colorMap");
     newStyles = {
       colorMap: newStyleSignal.colorMap,
       min: oldMin,
@@ -23,9 +21,7 @@ export function calculateNewStyleAndOptions(
       styleMinMaxStrToValidString(oldMin),
       styleMinMaxStrToValidString(oldmax)
     );
-    console.log("styleString", styleString);
     newoptions = createColorMapFromStylePlusOptions(styleString, oldOptions);
-    console.log("newoptions", newoptions);
     return {
       styles: newStyles,
       options: newoptions
@@ -35,7 +31,6 @@ export function calculateNewStyleAndOptions(
     newStyleSignal.min === "" ||
     newStyleSignal.min === 0
   ) {
-    console.log("newStyleSignal.min");
     newStyles = {
       colorMap: oldColor,
       min: newStyleSignal.min,
@@ -46,9 +41,7 @@ export function calculateNewStyleAndOptions(
       styleMinMaxStrToValidString(newStyleSignal.min),
       styleMinMaxStrToValidString(oldmax)
     );
-    console.log("styleString", styleString);
     newoptions = createColorMapFromStylePlusOptions(styleString, oldOptions);
-    console.log("newoptions", newoptions);
     return {
       styles: newStyles,
       options: newoptions
@@ -58,7 +51,6 @@ export function calculateNewStyleAndOptions(
     newStyleSignal.max === "" ||
     newStyleSignal.max === 0
   ) {
-    console.log("newStyleSignal.max");
     newStyles = {
       colorMap: oldColor,
       min: oldMin,
@@ -69,9 +61,7 @@ export function calculateNewStyleAndOptions(
       styleMinMaxStrToValidString(oldMin),
       styleMinMaxStrToValidString(newStyleSignal.max)
     );
-    console.log("styleString", styleString);
     newoptions = createColorMapFromStylePlusOptions(styleString, oldOptions);
-    console.log("newoptions", newoptions);
     return {
       styles: newStyles,
       options: newoptions
@@ -187,7 +177,6 @@ export function validateStyleObj(style) {
 // 0. -> 0.0
 // . -> ""
 export function styleMinMaxStrToValidString(str) {
-  console.log("styleMinMaxStrToValidString", str);
   if (str === ".") {
     return "";
   } else if (str.slice(-1) === ".") {
