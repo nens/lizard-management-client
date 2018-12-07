@@ -20,9 +20,9 @@ class SelectBoxSearch extends Component {
     this.setQuery(this.props);
   }
   componentWillReceiveProps(newProps) {
-    if (newProps.validate()) {
-      this.setState({ query: newProps.choice });
-    }
+    // if (newProps.validate()) {
+    //   this.setState({ query: newProps.choice });
+    // }
     // this.setQuery(newProps);
     // if (newProps.selected.name)
     //   this.setState({ query: newProps.selected.name });
@@ -60,7 +60,8 @@ class SelectBoxSearch extends Component {
       readonly
     } = this.props;
     const showOptions = choices.length > 0 && this.state.mustShowChoices;
-    const mustShowClearButton = validate(choice) && !readonly;
+    const mustShowClearButton =
+      (validate(choice) || this.state.query != "") && !readonly;
 
     return (
       <div className={`${styles.SelectChoice} form-input`}>
@@ -80,7 +81,11 @@ class SelectBoxSearch extends Component {
             onKeyUp(event);
             this.handleKeyUp(event);
           }}
-          value={this.state.query}
+          value={
+            (!this.state.mustShowChoices &&
+              transformChoiceToDisplayValue(choice)) ||
+            this.state.query
+          }
           onClick={() => !readonly && this.setState({ mustShowChoices: true })}
           //onFocus={() => this.setState({ mustShowChoices: true })}
           onBlur={() => this.setState({ mustShowChoices: false })}
@@ -122,6 +127,7 @@ class SelectBoxSearch extends Component {
                 } else {
                   // if user typed search string only show those that contain string
                   // TODO sort by search string ?
+                  console.log("this.state.query", this.state.query);
                   return transformChoiceToDisplayValue(choiceItem)
                     .toLowerCase()
                     .includes(this.state.query.toLowerCase());
@@ -160,9 +166,11 @@ class SelectBoxSearch extends Component {
                       // User selected a choice from the filtered ones:
                       updateModelValue(choiceItem);
                       // this.resetQuery();
+                      console.log("currentChoiceString", currentChoiceString);
                       this.setState({
                         mustShowChoices: false,
-                        query: currentChoiceString
+                        // query: currentChoiceString
+                        query: ""
                       });
                     }}
                   >

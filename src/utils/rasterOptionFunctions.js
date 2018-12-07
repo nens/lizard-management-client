@@ -10,7 +10,7 @@ export function calculateNewStyleAndOptions(
   let newoptions = {};
   let newStyles = {};
 
-  if (newStyleSignal.colorMap) {
+  if (newStyleSignal.colorMap || newStyleSignal.colorMap === "") {
     console.log("newStyleSignal.colorMap");
     newStyles = {
       colorMap: newStyleSignal.colorMap,
@@ -29,7 +29,11 @@ export function calculateNewStyleAndOptions(
       styles: newStyles,
       options: newoptions
     };
-  } else if (newStyleSignal.min) {
+  } else if (
+    newStyleSignal.min ||
+    newStyleSignal.min === "" ||
+    newStyleSignal.min === 0
+  ) {
     console.log("newStyleSignal.min");
     newStyles = {
       colorMap: oldColor,
@@ -48,7 +52,11 @@ export function calculateNewStyleAndOptions(
       styles: newStyles,
       options: newoptions
     };
-  } else if (newStyleSignal.max) {
+  } else if (
+    newStyleSignal.max ||
+    newStyleSignal.max === "" ||
+    newStyleSignal.max === 0
+  ) {
     console.log("newStyleSignal.max");
     newStyles = {
       colorMap: oldColor,
@@ -146,11 +154,11 @@ export function getStyleFromOptions(options) {
 }
 
 // style = {
-//   name: '',
+//   colorMap: '',
 //   min: '',
 //   max: '',
 // }
-// name should always be filled
+// colorMap should always be filled
 // if max is filled then min should also be filled
 export function validateStyleObj(style) {
   if (style.max && style.max !== "") {
@@ -159,7 +167,15 @@ export function validateStyleObj(style) {
     }
   }
 
-  if (style.name && style.name !== "") {
+  if (
+    parseFloat(style.min) &&
+    parseFloat(style.max) &&
+    parseFloat(style.min) > parseFloat(style.max)
+  ) {
+    return false;
+  }
+
+  if (style.colorMap && style.colorMap !== "") {
     return true;
   } else {
     return false;

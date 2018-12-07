@@ -799,13 +799,13 @@ class RasterFormModel extends Component {
                   minTitleComponent={
                     <FormattedMessage
                       id="rasters.fill_colormap_min"
-                      defaultMessage="Minimum, if applicable fill the minimum of the colormap"
+                      defaultMessage="Minimum"
                     />
                   }
                   maxTitleComponent={
                     <FormattedMessage
                       id="rasters.fill_colormap_max"
-                      defaultMessage="Maximum, if applicable fill the maximum of the colormap"
+                      defaultMessage="Maximum"
                     />
                   }
                   placeholder="click to select colormap"
@@ -826,6 +826,7 @@ class RasterFormModel extends Component {
                   // resetModelValue={() => this.setColorMap("")} // cb function to *reset* the value of e.g. a raster's name in the parent model
                   validate={styles => {
                     console.log("styles", styles);
+                    return styles && validateStyleObj(styles);
                     // console.log("colorMap", colorMap);
                     // return this.validateColorMap(
                     //   this.createColorMapFromStyle(colorMap && colorMap.name)

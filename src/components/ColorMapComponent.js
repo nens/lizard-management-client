@@ -92,44 +92,50 @@ class ColorMapComponent extends Component {
               <div
               // style={{display: "flex"}}
               >
-                {choicesSearchable ? (
-                  <SelectBoxSearch
-                    choices={choices}
-                    choice={modelValue}
-                    transformChoiceToDisplayValue={
-                      transformChoiceToDisplayValue
-                    }
-                    isFetching={isFetching}
-                    updateModelValue={e => {
-                      // console.log("updateModelValue", e);
-                      updateModelValue({ colorMap: e.name });
-                    }}
-                    onKeyUp={e => this.handleEnter(e)}
-                    inputId={titleComponent.props.id + "_input"}
-                    placeholder={placeholder}
-                    validate={validate}
-                    resetModelValue={resetModelValue}
-                    readonly={readonly}
-                  />
-                ) : (
-                  <SelectBoxSimple
-                    choices={choices}
-                    choice={modelValue}
-                    isFetching={isFetching}
-                    transformChoiceToDisplayValue={
-                      transformChoiceToDisplayValue
-                    }
-                    updateModelValue={updateModelValue}
-                    onKeyUp={e => this.handleEnter(e)}
-                    inputId={titleComponent.props.id + "_input"}
-                    placeholder={placeholder}
-                    // validate={validate}
-                    transformChoiceToDescription={transformChoiceToDescription}
-                    transformChoiceToInfo={transformChoiceToInfo}
-                  />
-                )}
+                <SelectBoxSearch
+                  choices={choices}
+                  choice={{ name: modelValue.colorMap }}
+                  transformChoiceToDisplayValue={transformChoiceToDisplayValue}
+                  isFetching={isFetching}
+                  updateModelValue={e => {
+                    updateModelValue({ colorMap: e.name });
+                  }}
+                  onKeyUp={e => this.handleEnter(e)}
+                  inputId={titleComponent.props.id + "_input"}
+                  placeholder={placeholder}
+                  validate={e => {
+                    console.log("validate searchBoxColor", e);
+                    return e.name != "";
+                  }}
+                  resetModelValue={e => {
+                    updateModelValue({ colorMap: "" });
+                  }}
+                  readonly={readonly}
+                />
                 <br />
-                <p className="text-muted">{minTitleComponent}</p>
+                <span className="text-muted">{minTitleComponent}</span>
+                <br />
+                {modelValue.max &&
+                modelValue.max !== "" &&
+                (modelValue.min === "" || !modelValue.min) ? (
+                  <span style={{ color: "red" }}>
+                    <FormattedMessage
+                      id="rasters.colormap_min_mandatory"
+                      defaultMessage="Mandatory if a maximum is given"
+                    />
+                  </span>
+                ) : null}
+
+                {parseFloat(modelValue.min) &&
+                parseFloat(modelValue.max) &&
+                parseFloat(modelValue.min) > parseFloat(modelValue.max) ? (
+                  <span style={{ color: "red" }}>
+                    <FormattedMessage
+                      id="rasters.colormap_max>min"
+                      defaultMessage="Max should be Greater then Min"
+                    />
+                  </span>
+                ) : null}
                 <input
                   // id={titleComponent.props.id + "_input"}
                   // tabIndex="-2"
@@ -139,11 +145,11 @@ class ColorMapComponent extends Component {
                   // placeholder={placeholder}
                   onChange={e => updateModelValue({ min: e.target.value })}
                   value={modelValue.min}
-
+                  placeholder="optional fill minimum of range"
                   // onKeyUp={e => this.handleEnter(e)}
                 />
                 <br />
-                <p className="text-muted">{maxTitleComponent}</p>
+                <span className="text-muted">{maxTitleComponent}</span>
                 <input
                   // id={titleComponent.props.id + "_input"}
                   // tabIndex="-2"
@@ -155,6 +161,7 @@ class ColorMapComponent extends Component {
                   value={modelValue.max}
                   onChange={e => updateModelValue({ max: e.target.value })}
                   // onKeyUp={e => this.handleEnter(e)}
+                  placeholder="optional fill maximum of range"
                 />
               </div>
               {showNextButton ? (
