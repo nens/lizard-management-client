@@ -61,7 +61,8 @@ class ColorMapComponent extends Component {
       choicesSearchable,
       placeholder,
       formUpdate,
-      readonly
+      readonly,
+      readOnlyReason
     } = this.props;
     const active = step === currentStep || (formUpdate && !readonly);
     const showCheckMark = validate(modelValue);
@@ -83,7 +84,11 @@ class ColorMapComponent extends Component {
             {showCheckMark ? <CheckMark /> : null}
           </h3>
           <div style={{ display: opened ? "block" : "none" }}>
-            <p className="text-muted">{subtitleComponent}</p>
+            {readOnlyReason ? (
+              <p className="text-muted">{readOnlyReason}</p>
+            ) : (
+              <p className="text-muted">{subtitleComponent}</p>
+            )}
             <div
               className={
                 formStyles.FormGroup + " " + inputStyles.PositionRelative
@@ -141,12 +146,16 @@ class ColorMapComponent extends Component {
                   // tabIndex="-2"
                   // type="text"
                   autoComplete="false"
-                  className={formStyles.FormControl}
+                  className={`${formStyles.FormControl} ${
+                    readonly ? inputStyles.ReadOnly : null
+                  }`}
                   // placeholder={placeholder}
                   onChange={e => updateModelValue({ min: e.target.value })}
                   value={modelValue.min}
-                  placeholder="optional fill minimum of range"
+                  placeholder="optional minimum of range"
                   // onKeyUp={e => this.handleEnter(e)}
+                  readOnly={readonly}
+                  disabled={readonly}
                 />
                 <br />
                 <span className="text-muted">{maxTitleComponent}</span>
@@ -155,13 +164,17 @@ class ColorMapComponent extends Component {
                   // tabIndex="-2"
                   // type="text"
                   autoComplete="false"
-                  className={formStyles.FormControl}
+                  className={`${formStyles.FormControl} ${
+                    readonly ? inputStyles.ReadOnly : null
+                  }`}
                   // placeholder={placeholder}
                   // onChange={e => this.validateAndSaveToParent(e.target.value)}
                   value={modelValue.max}
                   onChange={e => updateModelValue({ max: e.target.value })}
                   // onKeyUp={e => this.handleEnter(e)}
-                  placeholder="optional fill maximum of range"
+                  placeholder="optional maximum of range"
+                  readOnly={readonly}
+                  disabled={readonly}
                 />
               </div>
               {showNextButton ? (

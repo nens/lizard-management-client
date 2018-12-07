@@ -345,6 +345,11 @@ class RasterFormModel extends Component {
 
   // if this function returns true, then the user should be able to submit the raster
   validateAll() {
+    console.log(
+      "validateStyleObj(this.state.styles)",
+      validateStyleObj(this.state.styles),
+      this.state.styles
+    );
     //return (
     const normalFields =
       this.validateNewRasterName(this.state.rasterName) &&
@@ -354,7 +359,9 @@ class RasterFormModel extends Component {
       this.validateNewRasterDescription(this.state.description) &&
       this.validateAggregationType(this.state.aggregationType) &&
       this.validateObservationType(this.state.observationType) &&
-      this.validateColorMap(this.state.colorMap) &&
+      // this is now done in validateStyleObj instead
+      // this.validateColorMap(this.state.colorMap) &&
+      validateStyleObj(this.state.styles) &&
       this.validateSupplierId(this.state.supplierId) &&
       this.validateSupplierCode(this.state.supplierCode) &&
       this.validateTemporalBool(this.state.temporalBool);
@@ -474,6 +481,14 @@ class RasterFormModel extends Component {
     const intervalObj = this.getIntervalToDaysHoursMinutesSeconds(
       currentRaster.interval
     );
+    const styles = {
+      colorMap: getColorMapFromStyle(
+        getStyleFromOptions(currentRaster.options)
+      ),
+      min: getColorMinFromStyle(getStyleFromOptions(currentRaster.options)),
+      max: getColorMaxFromStyle(getStyleFromOptions(currentRaster.options))
+    };
+    console.log("setState initial styles", styles);
 
     return {
       currentStep: 1,
@@ -499,7 +514,7 @@ class RasterFormModel extends Component {
       temporalIntervalSeconds: intervalObj.seconds,
       temporalOptimizer: true, // default true, not set by the user for first iteration
 
-      styles: getStyleFromOptions(currentRaster.options),
+      styles: styles,
       options: currentRaster.options,
 
       aggregationType: currentRaster.aggregation_type, // choice: none | counts | curve | histogram | sum | average
@@ -572,7 +587,7 @@ class RasterFormModel extends Component {
           supplier: this.state.supplierId.username,
           supplier_code: this.state.supplierCode,
           aggregation_type: intAggregationType,
-          options: this.state.colorMap
+          options: this.state.options
         })
       };
 
@@ -813,6 +828,12 @@ class RasterFormModel extends Component {
                   opened={this.props.currentRaster || currentStep === 5}
                   formUpdate={!!this.props.currentRaster}
                   readonly={optionsHasLayers(this.state.options)}
+                  readOnlyReason={
+                    <FormattedMessage
+                      id="rasters.colormap_readonly_layers"
+                      defaultMessage="Colormap is read-only because it contains multiple layers. Changing this is currently not supported."
+                    />
+                  }
                   currentStep={currentStep} // int for denoting which step is currently active
                   setCurrentStep={this.setCurrentStep} // cb function for updating which step becomes active
                   choices={this.props.colorMaps.available}

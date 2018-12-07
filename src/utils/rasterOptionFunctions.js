@@ -3,6 +3,7 @@ export function calculateNewStyleAndOptions(
   oldOptions,
   newStyleSignal
 ) {
+  console.log("calculateNewStyleAndOptions", oldStyle);
   const oldColor = oldStyle.colorMap;
   const oldMin = oldStyle.min;
   const oldmax = oldStyle.max;
@@ -118,14 +119,14 @@ export function getColorMapFromStyle(style) {
 }
 export function getColorMinFromStyle(style) {
   if (typeof style === "string") {
-    return style.split(":")[1];
+    return style.split(":")[1] || "";
   } else {
     return "";
   }
 }
 export function getColorMaxFromStyle(style) {
   if (typeof style === "string") {
-    return style.split(":")[2];
+    return style.split(":")[2] || "";
   } else {
     return "";
   }
@@ -186,6 +187,7 @@ export function validateStyleObj(style) {
 // 0. -> 0.0
 // . -> ""
 export function styleMinMaxStrToValidString(str) {
+  console.log("styleMinMaxStrToValidString", str);
   if (str === ".") {
     return "";
   } else if (str.slice(-1) === ".") {
