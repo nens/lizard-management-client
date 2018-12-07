@@ -17,8 +17,8 @@ class GenericWizardStep extends Component {
     const {
       titleComponent, // <FormatText ... //>
       inputComponent,
-      step, // int for denoting which step it the GenericTextInputComponent refers to
-      active, // int for denoting which step is currently active
+      step, //  which step it the GenericTextInputComponent refers to
+      active, // which step is currently active
       opened,
       setCurrentStep, // cb function for updating which step becomes active
       modelValue, // string: e.g. the name of a raster
@@ -59,7 +59,8 @@ class GenericWizardStep extends Component {
                   <FormattedMessage
                     id="rasters.next_step"
                     defaultMessage="Next Step"
-                  />;
+                  />
+                  ;
                 </button>
               ) : null}
             </div>
@@ -80,7 +81,10 @@ const mapDispatchToProps = dispatch => {
 };
 
 GenericWizardStep = withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(GenericWizardStep)
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(GenericWizardStep)
 );
 
 export default GenericWizardStep;
