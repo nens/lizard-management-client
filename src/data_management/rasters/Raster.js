@@ -21,7 +21,8 @@ class Raster extends Component {
       isFetching: true,
       rasters: [],
       total: 0,
-      page: 1
+      page: 1,
+      searchTerms: ""
     };
     this.handleNewRasterClick = this.handleNewRasterClick.bind(this);
     this.loadRastersOnPage = this.loadRastersOnPage.bind(this);
@@ -131,6 +132,8 @@ class Raster extends Component {
               handleSearch={searchContains =>
                 this.loadRastersOnPage(this.state.page, searchContains)
               }
+              searchTerms={this.state.searchTerms}
+              setSearchTerms={searchTerms => this.setState({ searchTerms })}
             />
           </div>
           <div
@@ -216,7 +219,9 @@ class Raster extends Component {
             } ${gridStyles.colXs8}`}
           >
             <PaginationBar
-              loadRastersOnPage={this.loadRastersOnPage}
+              loadRastersOnPage={page =>
+                this.loadRastersOnPage(page, this.state.searchTerms)
+              }
               page={page}
               pages={Math.ceil(total / 10)}
             />

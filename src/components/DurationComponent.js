@@ -139,7 +139,7 @@ class DurationComponent extends Component {
                     (!daysValid ? " " + styles.Invalid : "") +
                     (readonly ? " " + inputStyles.ReadOnly : null)
                   }
-                  maxLength="4"
+                  maxLength="3"
                   size="4"
                   placeholder={placeholder}
                   onChange={e =>
