@@ -441,7 +441,8 @@ class RasterFormModel extends Component {
           aggregation_type: intAggregationType,
           options: {
             styles: this.state.colorMap.name
-          }
+          },
+          slug: "testslugtom"
         })
       };
 
@@ -467,7 +468,8 @@ class RasterFormModel extends Component {
           aggregation_type: intAggregationType,
           options: {
             styles: this.state.colorMap.name
-          }
+          },
+          slug: "testslugtom"
         })
       };
 
