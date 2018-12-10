@@ -186,6 +186,16 @@
         "username": "",
         "password": ""
       }
+    },
+    "/api/v4/": {
+      "target": "http://localhost:8000/",
+      "changeOrigin": true,
+      "ssl": false,
+      "secure": false,
+      "headers": {
+        "username": "",
+        "password": ""
+      }
     }
   }
 }
