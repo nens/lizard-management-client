@@ -12,8 +12,21 @@ class UploadRasterDataModel extends Component {
     super(props);
     this.state = {
       acceptedFiles: [],
-      rejectedFiles: []
+      rejectedFiles: [],
+      currentRaster: null
     };
+  }
+
+  componentDidMount() {
+    const { match } = this.props;
+
+    (async () => {
+      const currentRaster = await fetch(`/api/v3/rasters/${match.params.id}/`, {
+        credentials: "same-origin"
+      }).then(response => response.json());
+
+      this.setState({ currentRaster });
+    })();
   }
 
   onDrop = (acceptedFiles, rejectedFiles) => {
@@ -25,6 +38,24 @@ class UploadRasterDataModel extends Component {
   };
 
   render() {
+    if (this.state.currentRaster) return this.renderFileUpload();
+    else
+      return (
+        <div
+          style={{
+            position: "relative",
+            top: 50,
+            height: 300,
+            bottom: 50,
+            marginLeft: "50%"
+          }}
+        >
+          <MDSpinner size={24} />
+        </div>
+      );
+  }
+
+  renderFileUpload() {
     return (
       <div>
         <Dropzone onDrop={this.onDrop}>
@@ -53,10 +84,37 @@ class UploadRasterDataModel extends Component {
             );
           }}
         </Dropzone>
+
         {this.state.acceptedFiles.length === 0 ? (
           <h3>No files selected yet</h3>
         ) : (
-          <h3>Selected files</h3>
+          <div>
+            <button
+              onClick={e => {
+                var form = new FormData();
+                form.append("file", this.state.acceptedFiles[0]);
+                const url =
+                  "/api/v4/rasters/" + this.props.match.params.id + "/data/";
+                const opts = {
+                  credentials: "same-origin",
+                  method: "POST",
+                  headers: {
+                    mimeType: "multipart/form-data"
+                  },
+                  body: form
+                };
+
+                fetch(url, opts)
+                  .then(responseObj => responseObj.json())
+                  .then(responseData => {
+                    console.log(responseData);
+                  });
+              }}
+            >
+              Upload selected files
+            </button>
+            <h3>Selected files</h3>
+          </div>
         )}
         {this.state.acceptedFiles.map(e => <div key={e.name}>{e.name}</div>)}
         {this.state.rejectedFiles.length !== 0 ? (
