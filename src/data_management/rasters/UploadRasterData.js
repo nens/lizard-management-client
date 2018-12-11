@@ -6,6 +6,14 @@ import MDSpinner from "react-md-spinner";
 import classNames from "classnames";
 import Dropzone from "react-dropzone";
 import styles from "./UploadRasterData.css";
+import { FormattedMessage } from "react-intl";
+
+import ClearInputButton from "../../components/ClearInputButton.js";
+
+import formStyles from "../../styles/Forms.css";
+import buttonStyles from "../../styles/Buttons.css";
+import inputStyles from "../../styles/Input.css";
+import gridStyles from "../../styles/Grid.css";
 
 class UploadRasterDataModel extends Component {
   constructor(props) {
@@ -26,14 +34,25 @@ class UploadRasterDataModel extends Component {
       }).then(response => response.json());
 
       this.setState({ currentRaster });
+      console.log("currentRaster", currentRaster);
     })();
   }
 
   onDrop = (acceptedFiles, rejectedFiles) => {
     // Do something with files
+    // event.stopPropagation()
     this.setState({
       acceptedFiles: this.state.acceptedFiles.concat(acceptedFiles),
       rejectedFiles: this.state.rejectedFiles.concat(rejectedFiles)
+    });
+  };
+
+  onDropSingle = (acceptedFiles, rejectedFiles) => {
+    // Do something with files
+    // event.stopPropagation()
+    this.setState({
+      acceptedFiles: acceptedFiles,
+      rejectedFiles: rejectedFiles
     });
   };
 
@@ -55,9 +74,10 @@ class UploadRasterDataModel extends Component {
       );
   }
 
-  renderFileUpload() {
-    return (
-      <div>
+  renderDropZone() {
+    if (this.state.currentRaster.temporal === true) {
+      console.log("render for temporal");
+      return (
         <Dropzone onDrop={this.onDrop}>
           {({ getRootProps, getInputProps, isDragActive }) => {
             return (
@@ -84,12 +104,100 @@ class UploadRasterDataModel extends Component {
             );
           }}
         </Dropzone>
+      );
+    } else {
+      console.log("render for single");
+      return (
+        <Dropzone onDrop={this.onDropSingle} multiple={false}>
+          {({ getRootProps, getInputProps, isDragActive }) => {
+            return (
+              <div
+                {...getRootProps()}
+                className={classNames(
+                  styles.DropZoneContainer,
+                  "dropzone",
+                  { "dropzone--isActive": isDragActive },
+                  styles.UploadBox
+                )}
+              >
+                <input {...getInputProps()} />
+                {isDragActive ? (
+                  <h4 className={styles.GreyedText}>
+                    <FormattedMessage
+                      id="rasters.file_dropping"
+                      defaultMessage="Drop files here..."
+                    />
+                  </h4>
+                ) : (
+                  <div>
+                    {this.state.acceptedFiles.length === 0 ? (
+                      <div>
+                        <h3>
+                          <FormattedMessage
+                            id="rasters.drop_file_here"
+                            defaultMessage="Drop single file"
+                          />
+                        </h3>
+                        <h4 className={styles.GreyedText}>
+                          <FormattedMessage
+                            id="rasters.no_file_selected"
+                            defaultMessage="No file selected yet"
+                          />
+                        </h4>
+                      </div>
+                    ) : (
+                      <div>
+                        <h3>Selected file</h3>
+                        {this.state.acceptedFiles.map(e => (
+                          <div className={gridStyles.Row} key={e.name}>
+                            <div className={gridStyles.colSm9}>{e.name}</div>
+                            <div className={gridStyles.colSm3}>
+                              <div
+                                // className={this.props.className}
+                                onClick={e => {
+                                  this.setState({ acceptedFiles: [] });
+                                  e.stopPropagation();
+                                }}
+                              >
+                                <i className={`material-icons`}>clear</i>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
 
-        {this.state.acceptedFiles.length === 0 ? (
+                    <button
+                      className={`${buttonStyles.Button} ${buttonStyles.Success}`}
+                      style={{ marginTop: 10 }}
+                    >
+                      <FormattedMessage
+                        id="rasters.raster_upload_browse"
+                        defaultMessage="Browse"
+                      />
+                    </button>
+                  </div>
+                )}
+              </div>
+            );
+          }}
+        </Dropzone>
+        // </div>
+      );
+    }
+  }
+
+  renderPostDropZone() {
+    return (
+      <div>
+        {this.state.acceptedFiles.length === 0 &&
+        this.state.currentRaster.temporal === true ? (
           <h3>No files selected yet</h3>
         ) : (
           <div>
             <button
+              className={`${buttonStyles.Button} ${buttonStyles.Success}`}
+              style={{ marginTop: 10 }}
               onClick={e => {
                 var form = new FormData();
                 form.append("file", this.state.acceptedFiles[0]);
@@ -111,16 +219,48 @@ class UploadRasterDataModel extends Component {
                   });
               }}
             >
-              Upload selected files
+              <FormattedMessage
+                id="rasters.upload_selected_file"
+                defaultMessage="Save"
+              />
             </button>
-            <h3>Selected files</h3>
+            {this.state.currentRaster.temporal === true ? (
+              <div>
+                <h3>Selected files</h3>
+                {this.state.acceptedFiles.map(e => (
+                  <div key={e.name}>{e.name}</div>
+                ))}
+              </div>
+            ) : null}
           </div>
         )}
-        {this.state.acceptedFiles.map(e => <div key={e.name}>{e.name}</div>)}
         {this.state.rejectedFiles.length !== 0 ? (
-          <h3>Following files could not be uploaded</h3>
+          <div
+            style={{
+              color: "red",
+              marginTop: "10px"
+            }}
+          >
+            <h3>Following files could not be uploaded</h3>
+            {this.state.rejectedFiles.map(e => (
+              <div key={e.name}>{e.name}</div>
+            ))}
+          </div>
         ) : null}
-        {this.state.rejectedFiles.map(e => <div key={e.name}>{e.name}</div>)}
+      </div>
+    );
+  }
+
+  renderFileUpload() {
+    return (
+      <div>
+        <div>
+          <h3 className={`mt-0 text-muted`}>
+            Upload raster data for <b>{this.state.currentRaster.name}</b>
+          </h3>
+        </div>
+        {this.renderDropZone()}
+        {this.renderPostDropZone()}
       </div>
     );
   }
