@@ -65,53 +65,111 @@ class Raster extends Component {
 
     const htmlRasterTableHeader = (
       <div
-        className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${
-          gridStyles.colSm12
-        } ${gridStyles.colXs12} ${styles.RasterTableHeader}`}
+        // className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${
+        //   gridStyles.colSm12
+        // } ${gridStyles.colXs12} ${styles.RasterTableHeader}`}
+        className={`${gridStyles.Row} ${styles.RasterTableHeader}`}
       >
-        <span
-          className={`${gridStyles.colLg8} ${gridStyles.colMd8} ${
-            gridStyles.colSm8
-          } ${gridStyles.colXs8}`}
+        <div
+          className={`${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs6}`}
         >
           <FormattedMessage
             id="rasters.header_raster_name"
             defaultMessage="Raster name"
           />
-        </span>
-        <span
-          className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${
-            gridStyles.colSm4
-          } ${gridStyles.colXs4}`}
+        </div>
+        <div
+          className={`${gridStyles.colLg3} ${gridStyles.colMd3} ${gridStyles.colSm3} ${gridStyles.colXs3}`}
           style={{ float: "right" }}
         >
           <FormattedMessage
             id="rasters.header_raster_description"
             defaultMessage="Description"
           />
-        </span>
+        </div>
+        <div
+          className={`${gridStyles.colLg3} ${gridStyles.colMd3} ${gridStyles.colSm3} ${gridStyles.colXs3}`}
+          style={{ float: "right", textAlign: "right" }}
+        >
+          <FormattedMessage
+            id="rasters.click_to_adapt_data"
+            defaultMessage="Data"
+          />
+        </div>
       </div>
     );
     const htmlRasterTable = rasters.map((raster, i) => {
       return (
-        <Row key={i} alarm={raster} loadRastersOnPage={this.loadRastersOnPage}>
-          <NavLink
-            to={`/data_management/rasters/${raster.uuid}`}
-            style={{
-              color: "#333"
-            }}
+        // <Row
+        //   key={i}
+        //   alarm={raster}
+        //   // loadRastersOnPage={this.loadRastersOnPage}
+        // >
+        // <NavLink
+        //   to={`/data_management/rasters/${raster.uuid}`}
+        //   style={{
+        //     color: "#333"
+        //   }}
+        // >
+        //   {raster.name}
+        // </NavLink>
+        //   <NavLink
+        //     to={`/data_management/rasters/${raster.uuid}`}
+        //     style={{
+        //       color: "#333"
+        //     }}
+        //   >
+        //     {raster.description}
+        //   </NavLink>
+        // </Row>
+        <div
+          className={`${gridStyles.Row}`}
+          style={{
+            marginTop: "10px"
+          }}
+        >
+          <div
+            className={`${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs6}`}
           >
-            {raster.name}
-          </NavLink>
-          <NavLink
-            to={`/data_management/rasters/${raster.uuid}`}
-            style={{
-              color: "#333"
-            }}
+            <NavLink
+              to={`/data_management/rasters/${raster.uuid}`}
+              style={{
+                color: "#333"
+              }}
+            >
+              {raster.name}
+            </NavLink>
+          </div>
+          <div
+            className={`${gridStyles.colLg3} ${gridStyles.colMd3} ${gridStyles.colSm3} ${gridStyles.colXs3}`}
+            style={{ float: "right" }}
           >
-            {raster.description}
-          </NavLink>
-        </Row>
+            <NavLink
+              to={`/data_management/rasters/${raster.uuid}`}
+              style={{
+                color: "#333"
+              }}
+            >
+              {raster.description}
+            </NavLink>
+          </div>
+          <div
+            className={`${gridStyles.colLg3} ${gridStyles.colMd3} ${gridStyles.colSm3} ${gridStyles.colXs3}`}
+            style={{ float: "right", textAlign: "right" }}
+          >
+            <NavLink
+              to={`/data_management/rasters/${raster.uuid}/data`}
+              style={{
+                // color: "#333"
+              }}
+            >
+              <FormattedMessage
+                id="rasters.link_to_upload_data"
+                defaultMessage="Load"
+              />
+            </NavLink>
+          </div>
+        </div>
       );
     });
 
@@ -124,22 +182,17 @@ class Raster extends Component {
           }}
         >
           <div
-            className={`${gridStyles.colLg8} ${gridStyles.colMd8} ${
-              gridStyles.colSm8
-            } ${gridStyles.colXs8}`}
+            className={`${gridStyles.colLg8} ${gridStyles.colMd8} ${gridStyles.colSm8} ${gridStyles.colXs8}`}
           >
             <SearchBox
               handleSearch={searchContains =>
-                this.loadRastersOnPage(this.state.page, searchContains)
-              }
+                this.loadRastersOnPage(this.state.page, searchContains)}
               searchTerms={this.state.searchTerms}
               setSearchTerms={searchTerms => this.setState({ searchTerms })}
             />
           </div>
           <div
-            className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${
-              gridStyles.colSm4
-            } ${gridStyles.colXs4}`}
+            className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${gridStyles.colSm4} ${gridStyles.colXs4}`}
           >
             <button
               type="button"
@@ -158,9 +211,7 @@ class Raster extends Component {
         {htmlRasterTableHeader}
         <div className={gridStyles.Row}>
           <div
-            className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${
-              gridStyles.colSm12
-            } ${gridStyles.colXs12}`}
+            className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
           >
             {isFetching ? (
               <div
@@ -201,9 +252,7 @@ class Raster extends Component {
             style={{
               color: "#858E9C"
             }}
-            className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${
-              gridStyles.colSm4
-            } ${gridStyles.colXs4}`}
+            className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${gridStyles.colSm4} ${gridStyles.colXs4}`}
           >
             <FormattedMessage
               id="rasters.number_of_rasters"
@@ -214,14 +263,11 @@ class Raster extends Component {
             />
           </div>
           <div
-            className={`${gridStyles.colLg8} ${gridStyles.colMd8} ${
-              gridStyles.colSm8
-            } ${gridStyles.colXs8}`}
+            className={`${gridStyles.colLg8} ${gridStyles.colMd8} ${gridStyles.colSm8} ${gridStyles.colXs8}`}
           >
             <PaginationBar
               loadRastersOnPage={page =>
-                this.loadRastersOnPage(page, this.state.searchTerms)
-              }
+                this.loadRastersOnPage(page, this.state.searchTerms)}
               page={page}
               pages={Math.ceil(total / 10)}
             />
@@ -246,11 +292,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   };
 };
 
-Raster = withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(Raster)
-);
+Raster = withRouter(connect(mapStateToProps, mapDispatchToProps)(Raster));
 
 export { Raster };
