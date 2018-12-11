@@ -50,8 +50,11 @@ class UploadRasterDataModel extends Component {
   onDropSingle = (acceptedFiles, rejectedFiles) => {
     // Do something with files
     // event.stopPropagation()
+    const newAcceptedFiles =
+      (acceptedFiles.length === 1 && acceptedFiles) || this.state.acceptedFiles;
+
     this.setState({
-      acceptedFiles: acceptedFiles,
+      acceptedFiles: newAcceptedFiles,
       rejectedFiles: rejectedFiles
     });
   };
@@ -223,6 +226,15 @@ class UploadRasterDataModel extends Component {
                         defaultMessage="Browse"
                       />
                     </button>
+                    {/* this input field is preferred for styling but can currently npot get is to work with preventdefault */}
+                    {/* <input
+                      type="file"
+                      id="upload-raster-button"
+                      onClick={e=>{e.preventDefault()}}
+                      onChange={e => this.validateAndSaveToParent(e.target.value)}
+                      value={this.state.filePath}
+                      accept=".tiff,.tif,.geotiff,.geotiff"
+                    /> */}
                   </div>
                 )}
               </div>
