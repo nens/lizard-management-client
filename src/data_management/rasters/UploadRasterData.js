@@ -125,32 +125,32 @@ class UploadRasterDataModel extends Component {
   //   if (this.state.currentRaster.temporal === true) {
   //     console.log("render for temporal");
   //     return (
-  //       <Dropzone onDrop={this.onDrop}>
-  //         {({ getRootProps, getInputProps, isDragActive }) => {
-  //           return (
-  //             <div
-  //               {...getRootProps()}
-  //               className={classNames(
-  //                 "dropzone",
-  //                 { "dropzone--isActive": isDragActive },
-  //                 styles.UploadBox
-  //               )}
-  //             >
-  //               <input {...getInputProps()} />
-  //               {/* {
-  //               isDragActive ?
-  //                 <p>Drop files here...</p> :
-  //                 <div>
-  //                   <p>Try dropping some files here</p>
-  //                   <button>Browse</button>
-  //                 </div>
-  //             } */}
-  //               <p>Try dropping some files here</p>
-  //               <button>Browse</button>
-  //             </div>
-  //           );
-  //         }}
-  //       </Dropzone>
+  // <Dropzone onDrop={this.onDrop}>
+  //   {({ getRootProps, getInputProps, isDragActive }) => {
+  //     return (
+  //       <div
+  //         {...getRootProps()}
+  //         className={classNames(
+  //           "dropzone",
+  //           { "dropzone--isActive": isDragActive },
+  //           styles.UploadBox
+  //         )}
+  //       >
+  //         <input {...getInputProps()} />
+  //         {/* {
+  //         isDragActive ?
+  //           <p>Drop files here...</p> :
+  //           <div>
+  //             <p>Try dropping some files here</p>
+  //             <button>Browse</button>
+  //           </div>
+  //       } */}
+  //         <p>Try dropping some files here</p>
+  //         <button>Browse</button>
+  //       </div>
+  //     );
+  //   }}
+  // </Dropzone>
   //     );
   //   } else {
   //     console.log("render for single");
