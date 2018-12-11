@@ -57,21 +57,54 @@ class UploadRasterDataModel extends Component {
   };
 
   render() {
-    if (this.state.currentRaster) return this.renderFileUpload();
-    else
-      return (
-        <div
-          style={{
-            position: "relative",
-            top: 50,
-            height: 300,
-            bottom: 50,
-            marginLeft: "50%"
-          }}
-        >
-          <MDSpinner size={24} />
+    return (
+      <div>
+        <div>
+          <h2 className={`mt-0 text-muted`}>Upload raster data</h2>
         </div>
-      );
+        <div className={gridStyles.Row}>
+          <div
+            className={classNames(
+              gridStyles.colMd3,
+              gridStyles.colSm6,
+              gridStyles.colXs6
+            )}
+          >
+            <FormattedMessage
+              id="rasters.data for"
+              defaultMessage="for raster with name"
+            />
+          </div>
+          <div
+            className={classNames(
+              gridStyles.colMd6,
+              gridStyles.colSm6,
+              gridStyles.colXs6
+            )}
+          >
+            <b>
+              {(this.state.currentRaster && this.state.currentRaster.name) ||
+                ""}
+            </b>
+          </div>
+        </div>
+        {this.state.currentRaster ? (
+          <div>{this.renderFileUpload()}</div>
+        ) : (
+          <div
+            style={{
+              position: "relative",
+              top: 50,
+              height: 300,
+              bottom: 50,
+              marginLeft: "50%"
+            }}
+          >
+            <MDSpinner size={24} />
+          </div>
+        )}
+      </div>
+    );
   }
 
   renderDropZone() {
@@ -150,8 +183,22 @@ class UploadRasterDataModel extends Component {
                         <h3>Selected file</h3>
                         {this.state.acceptedFiles.map(e => (
                           <div className={gridStyles.Row} key={e.name}>
-                            <div className={gridStyles.colSm9}>{e.name}</div>
-                            <div className={gridStyles.colSm3}>
+                            <div
+                              className={classNames(
+                                gridStyles.colMd9,
+                                gridStyles.colSm9,
+                                gridStyles.colXs6
+                              )}
+                            >
+                              {e.name}
+                            </div>
+                            <div
+                              className={classNames(
+                                gridStyles.colMd3,
+                                gridStyles.colSm3,
+                                gridStyles.colXs3
+                              )}
+                            >
                               <div
                                 // className={this.props.className}
                                 onClick={e => {
@@ -188,6 +235,12 @@ class UploadRasterDataModel extends Component {
   }
 
   renderPostDropZone() {
+    console.log(
+      "renderPostDropZone ",
+      this.state.acceptedFiles.length > 0,
+      this.state.acceptedFiles.length,
+      this.state.acceptedFiles
+    );
     return (
       <div>
         {this.state.acceptedFiles.length === 0 &&
@@ -195,35 +248,38 @@ class UploadRasterDataModel extends Component {
           <h3>No files selected yet</h3>
         ) : (
           <div>
-            <button
-              className={`${buttonStyles.Button} ${buttonStyles.Success}`}
-              style={{ marginTop: 10 }}
-              onClick={e => {
-                var form = new FormData();
-                form.append("file", this.state.acceptedFiles[0]);
-                const url =
-                  "/api/v4/rasters/" + this.props.match.params.id + "/data/";
-                const opts = {
-                  credentials: "same-origin",
-                  method: "POST",
-                  headers: {
-                    mimeType: "multipart/form-data"
-                  },
-                  body: form
-                };
+            {this.state.acceptedFiles.length > 0 ? (
+              <button
+                className={`${buttonStyles.Button} ${buttonStyles.Success}`}
+                style={{ marginTop: 10 }}
+                onClick={e => {
+                  var form = new FormData();
+                  form.append("file", this.state.acceptedFiles[0]);
+                  const url =
+                    "/api/v4/rasters/" + this.props.match.params.id + "/data/";
+                  const opts = {
+                    credentials: "same-origin",
+                    method: "POST",
+                    headers: {
+                      mimeType: "multipart/form-data"
+                    },
+                    body: form
+                  };
 
-                fetch(url, opts)
-                  .then(responseObj => responseObj.json())
-                  .then(responseData => {
-                    console.log(responseData);
-                  });
-              }}
-            >
-              <FormattedMessage
-                id="rasters.upload_selected_file"
-                defaultMessage="Save"
-              />
-            </button>
+                  fetch(url, opts)
+                    .then(responseObj => responseObj.json())
+                    .then(responseData => {
+                      console.log(responseData);
+                      this.props.history.push("/data_management/rasters/");
+                    });
+                }}
+              >
+                <FormattedMessage
+                  id="rasters.upload_selected_file"
+                  defaultMessage="Save"
+                />
+              </button>
+            ) : null}
             {this.state.currentRaster.temporal === true ? (
               <div>
                 <h3>Selected files</h3>
@@ -241,10 +297,31 @@ class UploadRasterDataModel extends Component {
               marginTop: "10px"
             }}
           >
-            <h3>Following files could not be uploaded</h3>
+            <h3>
+              <FormattedMessage
+                id="rasters.files_unable_to_select"
+                defaultMessage="Following files could not be selected"
+              />
+            </h3>
             {this.state.rejectedFiles.map(e => (
               <div key={e.name}>{e.name}</div>
             ))}
+            {this.state.rejectedFiles.length > 1 &&
+            this.state.currentRaster.temporal === false ? (
+              <h3>
+                <FormattedMessage
+                  id="rasters.files_non_temporal_upload_multiple_files_not_allowed"
+                  defaultMessage="For non-temporal rasters it is not possible to upload more than 1 file"
+                />
+              </h3>
+            ) : (
+              <h3>
+                <FormattedMessage
+                  id="rasters.file_selection_failed_unknown_reason"
+                  defaultMessage="Reason not known"
+                />
+              </h3>
+            )}
           </div>
         ) : null}
       </div>
@@ -254,11 +331,6 @@ class UploadRasterDataModel extends Component {
   renderFileUpload() {
     return (
       <div>
-        <div>
-          <h3 className={`mt-0 text-muted`}>
-            Upload raster data for <b>{this.state.currentRaster.name}</b>
-          </h3>
-        </div>
         {this.renderDropZone()}
         {this.renderPostDropZone()}
       </div>
