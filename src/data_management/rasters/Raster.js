@@ -62,14 +62,10 @@ class Raster extends Component {
 
     const htmlRasterTableHeader = (
       <div
-        className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${
-          gridStyles.colSm12
-        } ${gridStyles.colXs12} ${styles.RasterTableHeader}`}
+        className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12} ${styles.RasterTableHeader}`}
       >
         <span
-          className={`${gridStyles.colLg8} ${gridStyles.colMd8} ${
-            gridStyles.colSm8
-          } ${gridStyles.colXs8}`}
+          className={`${gridStyles.colLg8} ${gridStyles.colMd8} ${gridStyles.colSm8} ${gridStyles.colXs8}`}
         >
           <FormattedMessage
             id="rasters.header_raster_name"
@@ -77,9 +73,7 @@ class Raster extends Component {
           />
         </span>
         <span
-          className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${
-            gridStyles.colSm4
-          } ${gridStyles.colXs4}`}
+          className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${gridStyles.colSm4} ${gridStyles.colXs4}`}
           style={{ float: "right" }}
         >
           <FormattedMessage
@@ -92,25 +86,81 @@ class Raster extends Component {
     const htmlRasterTable = rasters.map((raster, i) => {
       return (
         <Row key={i} alarm={raster} loadRastersOnPage={this.loadRastersOnPage}>
-          <NavLink
-            to={`/data_management/rasters/${raster.uuid}`}
-            style={{
-              color: "#333"
-            }}
+          <span
+            className={"col-lg-9 col-md-9 col-sm-9 col-xs-9"} // werkt niet goed, ligt aan lokale styling?
+            // style={{ float: "left" }}
           >
-            {raster.name}
-          </NavLink>
-          <NavLink
-            to={`/data_management/rasters/${raster.uuid}`}
-            style={{
-              color: "#333"
-            }}
+            <label>
+              <input
+                type="checkbox"
+                // onClick={"if(event.stopPropagation){event.stopPropagation();}event.cancelBubble=true;"}
+                // checked={this.state.checkbox[i]}
+                id={"checkbox_" + raster.name}
+              />
+              {
+                " " // empty space between checkbox and raster.name
+              }
+              <NavLink
+                to={`/data_management/rasters/${raster.uuid}`}
+                style={{
+                  color: "#333"
+                }}
+              >
+                {raster.name}
+              </NavLink>
+            </label>
+          </span>
+          <span
+            className={"col-lg-3 col-md-3 col-sm-3 col-xs-3"} // werkt niet goed, ligt aan lokale styling?
+            // style={{ float: "right" }}
           >
-            {raster.description}
-          </NavLink>
+            <NavLink
+              to={`/data_management/rasters/${raster.uuid}`}
+              style={{
+                color: "#333"
+              }}
+            >
+              {raster.description}
+            </NavLink>
+          </span>
         </Row>
       );
     });
+    const htmlRasterTableFooter = ( // line above instead of beneath div
+      // https://stackoverflow.com/questions/32174317/how-to-set-default-checked-in-checkbox-reactjs
+      <div
+        className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12} ${styles.RasterTableFooter}`}
+      >
+        <span
+          className={`${gridStyles.colLg1} ${gridStyles.colMd1} ${gridStyles.colSm1} ${gridStyles.colXs1}`}
+        >
+          <label>
+            <input
+              type="checkbox"
+              // checked={false}
+              onClick={this.checkAllCheckBoxes}
+            />
+            {" Check all on this page"}
+          </label>
+        </span>
+        <span
+          className={`${gridStyles.colLg11} ${gridStyles.colMd11} ${gridStyles.colSm11} ${gridStyles.colXs11}`}
+        >
+          <button
+            type="button"
+            style={{ float: "right" }}
+            className={`${buttonStyles.Button} ${buttonStyles.Success}`}
+            onClick={this.handleNewRasterClick}
+          >
+            <FormattedMessage
+              id="rasters.delete_rasters"
+              defaultMessage="Delete raster(s)"
+            />
+            <Ink />
+          </button>
+        </span>
+      </div>
+    );
 
     return (
       <div className={gridStyles.Container}>
@@ -121,20 +171,15 @@ class Raster extends Component {
           }}
         >
           <div
-            className={`${gridStyles.colLg8} ${gridStyles.colMd8} ${
-              gridStyles.colSm8
-            } ${gridStyles.colXs8}`}
+            className={`${gridStyles.colLg8} ${gridStyles.colMd8} ${gridStyles.colSm8} ${gridStyles.colXs8}`}
           >
             <SearchBox
               handleSearch={searchContains =>
-                this.loadRastersOnPage(this.state.page, searchContains)
-              }
+                this.loadRastersOnPage(this.state.page, searchContains)}
             />
           </div>
           <div
-            className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${
-              gridStyles.colSm4
-            } ${gridStyles.colXs4}`}
+            className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${gridStyles.colSm4} ${gridStyles.colXs4}`}
           >
             <button
               type="button"
@@ -153,9 +198,7 @@ class Raster extends Component {
         {htmlRasterTableHeader}
         <div className={gridStyles.Row}>
           <div
-            className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${
-              gridStyles.colSm12
-            } ${gridStyles.colXs12}`}
+            className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
           >
             {isFetching ? (
               <div
@@ -184,21 +227,19 @@ class Raster extends Component {
             )}
           </div>
         </div>
+        {htmlRasterTableFooter}
         <div
           className={gridStyles.Row}
           style={{
-            borderTop: "1px solid #BABABA",
-            margin: "30px 0 0 0",
-            padding: "30px 0 0 0"
+            margin: "10px 0 0 0",
+            padding: "0px 0 0 0"
           }}
         >
           <div
             style={{
               color: "#858E9C"
             }}
-            className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${
-              gridStyles.colSm4
-            } ${gridStyles.colXs4}`}
+            className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${gridStyles.colSm4} ${gridStyles.colXs4}`}
           >
             <FormattedMessage
               id="rasters.number_of_rasters"
@@ -209,9 +250,7 @@ class Raster extends Component {
             />
           </div>
           <div
-            className={`${gridStyles.colLg8} ${gridStyles.colMd8} ${
-              gridStyles.colSm8
-            } ${gridStyles.colXs8}`}
+            className={`${gridStyles.colLg8} ${gridStyles.colMd8} ${gridStyles.colSm8} ${gridStyles.colXs8}`}
           >
             <PaginationBar
               loadRastersOnPage={this.loadRastersOnPage}
@@ -239,11 +278,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   };
 };
 
-Raster = withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(Raster)
-);
+Raster = withRouter(connect(mapStateToProps, mapDispatchToProps)(Raster));
 
 export { Raster };
