@@ -415,12 +415,16 @@ class RasterFormModel extends Component {
     });
 
     // Return message based on either normal or temporal raster
-    if (step < 9) {
-      return "Please complete steps " + normal + " before submitting";
-    } else if (step >= 9) {
+    if (this.state.temporalBool) {
       return (
-        "Please complete steps " + normal + temporal + " before submitting"
+        "Please complete steps " +
+        normal +
+        "," +
+        temporal +
+        " before submitting"
       );
+    } else if (step <= 9) {
+      return "Please complete steps " + normal + " before submitting";
     } else {
       return "";
     }
