@@ -29,11 +29,38 @@ class UploadRasterDataMultipleModel extends Component {
     };
   }
 
+  // check for valid date
+  // https://stackoverflow.com/questions/1353684/detecting-an-invalid-date-date-instance-in-javascript
+  isValidDateObj(d) {
+    if (Object.prototype.toString.call(d) === "[object Date]") {
+      // it is a date
+      if (isNaN(d.getTime())) {
+        // d.valueOf() could also work
+        return false;
+      } else {
+        return true;
+      }
+    } else {
+      return false;
+    }
+  }
+
   onDrop = (acceptedFiles, rejectedFiles) => {
-    // Do something with files
-    // event.stopPropagation()
+    // convert acceptedFilesToobjectsWithDate
+    const acceptedFilesData = acceptedFiles.map(e => {
+      const dateStrFromFile = (e.name + "").split(".")[0];
+      const dateObjFromFile = new Date(dateStrFromFile);
+      const fileDateValid = this.isValidDateObj(dateObjFromFile);
+      return {
+        file: e,
+        dateTime: (fileDateValid && dateObjFromFile) || new Date(),
+        sendingState: "NOT_SEND", // NOT_SEND, SEND, RECEIVED_BY_SERVER, FAILED
+        sendingMessage: ""
+      };
+    });
+
     this.setState({
-      acceptedFiles: this.state.acceptedFiles.concat(acceptedFiles),
+      acceptedFiles: this.state.acceptedFiles.concat(acceptedFilesData),
       rejectedFiles: this.state.rejectedFiles.concat(rejectedFiles)
     });
   };
@@ -117,77 +144,6 @@ class UploadRasterDataMultipleModel extends Component {
   renderPostDropZone() {
     return (
       <div>
-        {this.state.acceptedFiles.length === 0 &&
-        this.props.currentRaster.temporal === true ? (
-          // <h3>No files selected yet</h3>
-          <div />
-        ) : (
-          <div>
-            {this.state.acceptedFiles.length > 0 ? (
-              <button
-                className={`${buttonStyles.Button} ${buttonStyles.Success}`}
-                style={{ marginTop: 10 }}
-                onClick={e => {
-                  var form = new FormData();
-                  form.append("file", this.state.acceptedFiles[0]);
-                  const url =
-                    "/api/v4/rasters/" + this.props.match.params.id + "/data/";
-                  const opts = {
-                    credentials: "same-origin",
-                    method: "POST",
-                    headers: {
-                      mimeType: "multipart/form-data"
-                    },
-                    body: form
-                  };
-
-                  fetch(url, opts)
-                    .then(responseObj => responseObj.json())
-                    .then(responseData => {
-                      console.log(responseData);
-                      this.props.history.push("/data_management/rasters/");
-                    });
-                }}
-              >
-                <FormattedMessage
-                  id="rasters.upload_selected_file"
-                  defaultMessage="Save"
-                />
-              </button>
-            ) : null}
-            <br />
-            <div
-              style={{
-                marginTop: "10px"
-              }}
-            >
-              <h3>Selected files</h3>
-              {this.state.acceptedFiles.map(e => (
-                <div key={e.name}>
-                  <div>{e.name}</div>
-                  <div>
-                    {/* <InputMoment
-                      moment={moment}
-                      onChange={e=>{true;}}
-                      showSeconds={true}
-                      locale="en"
-                    /> */}
-                    <Datetime />
-                  </div>
-                  <div
-                    // className={this.props.className}
-                    onClick={e => {
-                      // this.setState({ acceptedFiles: [] });
-                      // e.stopPropagation();
-                    }}
-                  >
-                    <i className={`material-icons`}>clear</i>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
         {this.state.rejectedFiles.length !== 0 ? (
           <div
             style={{
@@ -222,6 +178,135 @@ class UploadRasterDataMultipleModel extends Component {
             )}
           </div>
         ) : null}
+
+        {this.state.acceptedFiles.length === 0 &&
+        this.props.currentRaster.temporal === true ? (
+          // <h3>No files selected yet</h3>
+          <div />
+        ) : (
+          <div>
+            {this.state.acceptedFiles.length > 0
+              ? // <button
+                //   className={`${buttonStyles.Button} ${buttonStyles.Success}`}
+                //   style={{ marginTop: 10 }}
+                //   onClick={e => {
+                //     var form = new FormData();
+                //     form.append("file", this.state.acceptedFiles[0].file);
+                //     const url =
+                //       "/api/v4/rasters/" + this.props.match.params.id + "/data/";
+                //     const opts = {
+                //       credentials: "same-origin",
+                //       method: "POST",
+                //       headers: {
+                //         mimeType: "multipart/form-data"
+                //       },
+                //       body: form
+                //     };
+
+                //     fetch(url, opts)
+                //       .then(responseObj => responseObj.json())
+                //       .then(responseData => {
+                //         console.log(responseData);
+                //         this.props.history.push("/data_management/rasters/");
+                //       });
+                //   }}
+                // >
+                //   <FormattedMessage
+                //     id="rasters.upload_selected_file"
+                //     defaultMessage="Save"
+                //   />
+                // </button>
+                null
+              : null}
+            <br />
+            <div
+              style={{
+                marginTop: "10px"
+              }}
+            >
+              <h3>Selected files</h3>
+              {this.state.acceptedFiles.map((e, i) => (
+                <div
+                  key={e.file.name}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    width: "100%",
+                    flexFlow: "row nowrap",
+                    justifyContent: "space-between",
+                    height: "45px"
+                  }}
+                >
+                  <div style={{ flex: 1 }}>{e.file.name}</div>
+                  <div style={{ flex: 1 }}>
+                    <Datetime
+                      value={e.dateTime}
+                      onChange={e => {
+                        let jsDate;
+                        // if not valid date react-datetime returns string
+                        if (typeof e === "string") {
+                          console.log("received string from react-datetime");
+                          jsDate = e;
+                        } else {
+                          // convert momentjs to js date
+                          jsDate = e.toDate();
+                        }
+                        let acceptedFiles = this.state.acceptedFiles;
+                        acceptedFiles[i].dateTime = jsDate;
+                        this.setState({ acceptedFiles: acceptedFiles });
+                      }}
+                    />
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <button
+                      className={`${buttonStyles.Button} ${buttonStyles.Success}`}
+                      // style={{ marginTop: 10 }}
+                      // onClick={e => {
+                      //   var form = new FormData();
+                      //   form.append("file", this.state.acceptedFiles[0].file);
+                      //   const url =
+                      //     "/api/v4/rasters/" + this.props.match.params.id + "/data/";
+                      //   const opts = {
+                      //     credentials: "same-origin",
+                      //     method: "POST",
+                      //     headers: {
+                      //       mimeType: "multipart/form-data"
+                      //     },
+                      //     body: form
+                      //   };
+
+                      //   fetch(url, opts)
+                      //     .then(responseObj => responseObj.json())
+                      //     .then(responseData => {
+                      //       console.log(responseData);
+                      //       this.props.history.push("/data_management/rasters/");
+                      //     });
+                      // }}
+                    >
+                      <FormattedMessage
+                        id="rasters.upload_selected_file"
+                        defaultMessage="Save"
+                      />
+                    </button>
+                  </div>
+                  <div
+                    style={{ flex: 1 }}
+                    // className={this.props.className}
+                    onClick={e => {
+                      const acceptedFiles = this.state.acceptedFiles;
+                      const newAcceptedFiles = acceptedFiles.filter(
+                        (e, iLoc) => i !== iLoc
+                      );
+                      this.setState({ acceptedFiles: newAcceptedFiles });
+                    }}
+                  >
+                    <i className={`material-icons`}>clear</i>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     );
   }
