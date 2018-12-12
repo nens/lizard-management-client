@@ -89,7 +89,7 @@ class UploadRasterDataMultipleModel extends Component {
 
   renderDropZone() {
     return (
-      <Dropzone onDrop={this.onDrop}>
+      <Dropzone onDrop={this.onDrop} accept="image/tiff">
         {({ getRootProps, getInputProps, isDragActive }) => {
           return (
             <div
@@ -170,15 +170,56 @@ class UploadRasterDataMultipleModel extends Component {
                 defaultMessage="Following files could not be selected"
               />
             </h3>
-            {this.state.rejectedFiles.map(e => (
-              <div key={e.name}>{e.name}</div>
+
+            {this.state.rejectedFiles.map((e, i) => (
+              <div className={gridStyles.Row} key={e.name}>
+                <div
+                  className={classNames(
+                    gridStyles.colMd9,
+                    gridStyles.colSm9,
+                    gridStyles.colXs6
+                  )}
+                >
+                  {e.name}
+                </div>
+                <div
+                  className={classNames(
+                    gridStyles.colMd3,
+                    gridStyles.colSm3,
+                    gridStyles.colXs3
+                  )}
+                >
+                  <div
+                    // className={this.props.className}
+                    onClick={e => {
+                      const rejectedFiles = this.state.rejectedFiles;
+                      const newRejectedFiles = rejectedFiles.filter(
+                        (e, iLoc) => i !== iLoc
+                      );
+                      this.setState({ rejectedFiles: newRejectedFiles });
+                    }}
+                  >
+                    <i className={`material-icons`}>clear</i>
+                  </div>
+                </div>
+              </div>
             ))}
-            {this.state.rejectedFiles.length > 1 &&
-            this.props.currentRaster.temporal === false ? (
+
+            {this.state.rejectedFiles.length > 1 ? (
               <h3>
                 <FormattedMessage
                   id="rasters.files_non_temporal_upload_multiple_files_not_allowed"
                   defaultMessage="For non-temporal rasters it is not possible to upload more than 1 file"
+                />
+              </h3>
+            ) : (this.state.rejectedFiles[0].name + "").indexOf(
+              ".tiff",
+              (this.state.rejectedFiles[0].name + "").length - ".tiff".length
+            ) === -1 ? (
+              <h3>
+                <FormattedMessage
+                  id="rasters.file_selection_not_tiff"
+                  defaultMessage="Only .tiff files are valid"
                 />
               </h3>
             ) : (
@@ -247,7 +288,7 @@ class UploadRasterDataMultipleModel extends Component {
                     width: "100%",
                     flexFlow: "row nowrap",
                     justifyContent: "space-between",
-                    height: "45px"
+                    height: "60px"
                   }}
                 >
                   <div style={{ flex: 1 }}>{e.file.name}</div>
@@ -269,12 +310,16 @@ class UploadRasterDataMultipleModel extends Component {
                         this.setState({ acceptedFiles: acceptedFiles });
                       }}
                     />
+                    {!this.isValidDateObj(e.dateTime) ? (
+                      <span style={{ color: "red" }}>Date not valid</span>
+                    ) : null}
                   </div>
                   <div style={{ flex: 1 }}>
                     <button
                       style={
-                        e.sendingState === "FAILED" ||
-                        e.sendingState === "NOT_SEND"
+                        (e.sendingState === "FAILED" ||
+                          e.sendingState === "NOT_SEND") &&
+                        this.isValidDateObj(e.dateTime)
                           ? {}
                           : { visibility: "hidden" }
                       }

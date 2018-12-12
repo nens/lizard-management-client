@@ -46,7 +46,7 @@ class UploadRasterDataSingleModel extends Component {
   renderDropZone() {
     console.log("render for single");
     return (
-      <Dropzone onDrop={this.onDropSingle} multiple={false}>
+      <Dropzone onDrop={this.onDropSingle} multiple={false} accept="image/tiff">
         {({ getRootProps, getInputProps, isDragActive }) => {
           return (
             <div
@@ -198,8 +198,38 @@ class UploadRasterDataSingleModel extends Component {
               />
             </h3>
 
-            {this.state.rejectedFiles.map(e => (
-              <div key={e.name}>{e.name}</div>
+            {this.state.rejectedFiles.map((e, i) => (
+              <div className={gridStyles.Row} key={e.name}>
+                <div
+                  className={classNames(
+                    gridStyles.colMd9,
+                    gridStyles.colSm9,
+                    gridStyles.colXs6
+                  )}
+                >
+                  {e.name}
+                </div>
+                <div
+                  className={classNames(
+                    gridStyles.colMd3,
+                    gridStyles.colSm3,
+                    gridStyles.colXs3
+                  )}
+                >
+                  <div
+                    // className={this.props.className}
+                    onClick={e => {
+                      const rejectedFiles = this.state.rejectedFiles;
+                      const newRejectedFiles = rejectedFiles.filter(
+                        (e, iLoc) => i !== iLoc
+                      );
+                      this.setState({ rejectedFiles: newRejectedFiles });
+                    }}
+                  >
+                    <i className={`material-icons`}>clear</i>
+                  </div>
+                </div>
+              </div>
             ))}
 
             {this.state.rejectedFiles.length > 1 ? (
@@ -207,6 +237,16 @@ class UploadRasterDataSingleModel extends Component {
                 <FormattedMessage
                   id="rasters.files_non_temporal_upload_multiple_files_not_allowed"
                   defaultMessage="For non-temporal rasters it is not possible to upload more than 1 file"
+                />
+              </h3>
+            ) : (this.state.rejectedFiles[0].name + "").indexOf(
+              ".tiff",
+              (this.state.rejectedFiles[0].name + "").length - ".tiff".length
+            ) === -1 ? (
+              <h3>
+                <FormattedMessage
+                  id="rasters.file_selection_not_tiff"
+                  defaultMessage="Only .tiff files are valid"
                 />
               </h3>
             ) : (
