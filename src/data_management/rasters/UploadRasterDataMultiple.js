@@ -46,8 +46,21 @@ class UploadRasterDataMultipleModel extends Component {
   }
 
   onDrop = (acceptedFiles, rejectedFiles) => {
+    const oldAcceptedFiles = this.state.acceptedFiles.map(e => e.file);
+
+    // ensure newAcceptedFilesNonDuplicates are unique by name and size (not yet in oldacceptedfiles)
+    const newAcceptedFilesNonDuplicates = acceptedFiles.filter(e => {
+      return oldAcceptedFiles.every(oldE => {
+        if (oldE.name === e.name && oldE.size === e.size) {
+          return false;
+        } else {
+          return true;
+        }
+      });
+    });
+
     // convert acceptedFilesToobjectsWithDate
-    const acceptedFilesData = acceptedFiles.map(e => {
+    const acceptedFilesData = newAcceptedFilesNonDuplicates.map(e => {
       const dateStrFromFile = (e.name + "").split(".")[0];
       const dateObjFromFile = new Date(dateStrFromFile);
       const fileDateValid = this.isValidDateObj(dateObjFromFile);
@@ -259,29 +272,66 @@ class UploadRasterDataMultipleModel extends Component {
                   </div>
                   <div style={{ flex: 1 }}>
                     <button
+                      style={
+                        e.sendingState === "FAILED" ||
+                        e.sendingState === "NOT_SEND"
+                          ? {}
+                          : { visibility: "hidden" }
+                      }
                       className={`${buttonStyles.Button} ${buttonStyles.Success}`}
-                      // style={{ marginTop: 10 }}
-                      // onClick={e => {
-                      //   var form = new FormData();
-                      //   form.append("file", this.state.acceptedFiles[0].file);
-                      //   const url =
-                      //     "/api/v4/rasters/" + this.props.match.params.id + "/data/";
-                      //   const opts = {
-                      //     credentials: "same-origin",
-                      //     method: "POST",
-                      //     headers: {
-                      //       mimeType: "multipart/form-data"
-                      //     },
-                      //     body: form
-                      //   };
+                      onClick={eventClick => {
+                        let acceptedFiles = this.state.acceptedFiles;
+                        acceptedFiles[i].sendingState = "SEND";
+                        this.setState({ acceptedFiles: acceptedFiles });
 
-                      //   fetch(url, opts)
-                      //     .then(responseObj => responseObj.json())
-                      //     .then(responseData => {
-                      //       console.log(responseData);
-                      //       this.props.history.push("/data_management/rasters/");
-                      //     });
-                      // }}
+                        var form = new FormData();
+                        form.append("file", e.file);
+                        form.append("timestamp", e.dateTime.toISOString());
+                        const url =
+                          "/api/v4/rasters/" +
+                          this.props.match.params.id +
+                          "/data/";
+                        const opts = {
+                          credentials: "same-origin",
+                          method: "POST",
+                          headers: {
+                            mimeType: "multipart/form-data"
+                          },
+                          body: form
+                        };
+
+                        fetch(url, opts)
+                          .then(responseObj => responseObj.json())
+                          .then(responseData => {
+                            console.log(
+                              "responseData post raster",
+                              responseData
+                            );
+                            // this.props.history.push("/data_management/rasters/");
+
+                            const newAcceptedFiles = this.state.acceptedFiles.map(
+                              oldE => {
+                                if (
+                                  e.file.size === oldE.file.size &&
+                                  e.file.name === oldE.file.name
+                                ) {
+                                  console.log("responseData", responseData);
+                                  if (responseData.status == 400) {
+                                    oldE.sendingState = "FAILED";
+                                    oldE.sendingMessage = responseData.detail;
+                                  } else {
+                                    oldE.sendingState = "SERVER_RECEIVED";
+                                  }
+                                  return oldE;
+                                } else {
+                                  return oldE;
+                                }
+                              }
+                            );
+
+                            this.setState({ acceptedFiles: newAcceptedFiles });
+                          });
+                      }}
                     >
                       <FormattedMessage
                         id="rasters.upload_selected_file"
@@ -289,6 +339,8 @@ class UploadRasterDataMultipleModel extends Component {
                       />
                     </button>
                   </div>
+                  <div style={{ flex: 1 }}>{e.sendingState}</div>
+                  <div style={{ flex: 1 }}>{e.sendingMessage}</div>
                   <div
                     style={{ flex: 1 }}
                     // className={this.props.className}
