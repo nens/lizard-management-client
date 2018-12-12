@@ -12,6 +12,13 @@ import formStyles from "../../styles/Forms.css";
 import buttonStyles from "../../styles/Buttons.css";
 import inputStyles from "../../styles/Input.css";
 import gridStyles from "../../styles/Grid.css";
+// // moment is required for datepicker
+import moment from "moment";
+import "moment/locale/nl";
+
+// import {InputMoment} from 'react-input-moment';
+import Datetime from "react-datetime";
+import "react-datetime/css/react-datetime.css";
 
 class UploadRasterDataMultipleModel extends Component {
   constructor(props) {
@@ -156,7 +163,27 @@ class UploadRasterDataMultipleModel extends Component {
             >
               <h3>Selected files</h3>
               {this.state.acceptedFiles.map(e => (
-                <div key={e.name}>{e.name}</div>
+                <div key={e.name}>
+                  <div>{e.name}</div>
+                  <div>
+                    {/* <InputMoment
+                      moment={moment}
+                      onChange={e=>{true;}}
+                      showSeconds={true}
+                      locale="en"
+                    /> */}
+                    <Datetime />
+                  </div>
+                  <div
+                    // className={this.props.className}
+                    onClick={e => {
+                      // this.setState({ acceptedFiles: [] });
+                      // e.stopPropagation();
+                    }}
+                  >
+                    <i className={`material-icons`}>clear</i>
+                  </div>
+                </div>
               ))}
             </div>
           </div>
