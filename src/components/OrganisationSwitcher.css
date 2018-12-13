@@ -17,7 +17,7 @@
   box-shadow: 0 2px 6px 5px rgba(0, 0, 0, 0.3);
   width: 80%;
   min-height: 550px;
-  padding: 40px;
+  padding: 70px;
 }
 
 .CloseButton {
@@ -82,4 +82,10 @@
 .AppearActive {
   opacity: 1;
   transition: opacity 200ms ease-in;
+}
+
+.SuccesText {
+  display: block;
+  text-align: center;
+  color: green;
 }

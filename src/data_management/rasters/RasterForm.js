@@ -14,6 +14,7 @@ import GenericCheckBoxComponent from "../../components/GenericCheckBoxComponent"
 import GenericDateComponent from "../../components/GenericDateComponent";
 import DurationComponent from "../../components/DurationComponent";
 import inputStyles from "../../styles/Input.css";
+import ErrorOverlay from "./ErrorOverlay.js";
 
 // ! important, these old component may later be used! Ther corresponding files already exist
 // import bindReactFunctions from "../../utils/BindReactFunctions.js"; // currently not working. Probably needs a list with functions in which case this is probably only overcomplicating things
@@ -28,6 +29,7 @@ class RasterFormModel extends Component {
       this.state = this.setInitialState(props);
     }
 
+    this.handleResponse = this.handleResponse.bind(this);
     this.setCurrentStep = this.setCurrentStep.bind(this);
     this.setRasterName = this.setRasterName.bind(this);
     this.resetRasterName = this.resetRasterName.bind(this);
@@ -334,6 +336,8 @@ class RasterFormModel extends Component {
 
   setInitialState(props) {
     return {
+      isFetching: false,
+      modalErrorMessage: "",
       currentStep: 1,
       rasterName: "",
       selectedOrganisation: {
@@ -418,7 +422,22 @@ class RasterFormModel extends Component {
     };
   }
 
+  handleResponse(response) {
+    if (!response.ok) {
+      const modalErrorMessage = {};
+      console.log("error response: ", response.status);
+      if (response.status !== 200) {
+        console.log("Tweede if statement!");
+        this.setState({ modalErrorMessage: response });
+        console.log(this.state.modalErrorMessage);
+      }
+    } else {
+      this.props.history.push("/data_management/rasters");
+    }
+  }
+
   handleClickCreateRaster() {
+    this.setState({ isFetching: true });
     const url = "/api/v3/rasters/";
     const observationTypeId =
       (this.state.observationType &&
@@ -443,30 +462,28 @@ class RasterFormModel extends Component {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: this.state.rasterName,
-          organisation: this.state.selectedOrganisation.unique_id,
-          access_modifier: 200, // private to organisation
-          observation_type: observationTypeId, //this.state.observationType,
-          description: this.state.description,
-          supplier: this.state.supplierId && this.state.supplierId.username,
-          supplier_code: this.state.supplierCode,
-          temporal: this.state.temporalBool,
-          origin: this.state.temporalOrigin.toISOString(), // toISOString = momentJS function
-          interval: isoIntervalDuration, //'P1D', // P1D is default, = ISO 8601 datetime for 1 day",
-          rescalable: false,
-          optimizer: false, // default
-          aggregation_type: intAggregationType,
+          // name: this.state.rasterName,
+          // organisation: this.state.selectedOrganisation.unique_id,
+          // access_modifier: 200, // private to organisation
+          // observation_type: observationTypeId, //this.state.observationType,
+          // description: this.state.description,
+          // supplier: this.state.supplierId && this.state.supplierId.username,
+          // supplier_code: this.state.supplierCode,
+          // temporal: this.state.temporalBool,
+          // origin: this.state.temporalOrigin.toISOString(), // toISOString = momentJS function
+          // interval: isoIntervalDuration, //'P1D', // P1D is default, = ISO 8601 datetime for 1 day",
+          // rescalable: false,
+          // optimizer: false, // default
+          // aggregation_type: intAggregationType,
           options: {
             styles: this.state.colorMap.name
           }
         })
       };
 
-      fetch(url, opts)
-        .then(response => response.json()) // TODO: kan dit weg?
-        .then(responseParsed => {
-          this.props.history.push("/data_management/rasters");
-        });
+      fetch(url, opts).then(responseParsed => {
+        this.handleResponse(responseParsed);
+      });
     } else {
       const opts = {
         credentials: "same-origin",
@@ -514,6 +531,13 @@ class RasterFormModel extends Component {
 
     return (
       <div>
+        {this.state.modalErrorMessage.status === 400 ? (
+          <ErrorOverlay
+            isFetching={this.state.isFetching}
+            errorMessage={this.state.modalErrorMessage.status}
+            handleClose={() => this.setState({ modalErrorMessage: false })}
+          />
+        ) : null}
         <div className={gridStyles.Container}>
           <div className={`${gridStyles.Row}`}>
             <div
@@ -900,7 +924,7 @@ class RasterFormModel extends Component {
                     />
                   </div>
                 ) : null}
-                {this.validateAll() ? (
+                {!this.validateAll() ? (
                   <div className={inputStyles.InputContainer}>
                     <button
                       type="button"
