@@ -165,7 +165,7 @@ class Raster extends Component {
             >
               <FormattedMessage
                 id="rasters.link_to_upload_data"
-                defaultMessage="Load"
+                defaultMessage="Upload"
               />
             </NavLink>
           </div>

@@ -451,7 +451,7 @@ class RasterFormModel extends Component {
           supplier: this.state.supplierId && this.state.supplierId.username,
           supplier_code: this.state.supplierCode,
           temporal: this.state.temporalBool,
-          origin: this.state.temporalOrigin.toISOString(), // toISOString = momentJS function
+          // origin: this.state.temporalOrigin.toISOString(), // toISOString = momentJS function
           interval: isoIntervalDuration, //'P1D', // P1D is default, = ISO 8601 datetime for 1 day",
           rescalable: false,
           optimizer: false, // default
