@@ -337,6 +337,7 @@ class RasterFormModel extends Component {
   setInitialState(props) {
     return {
       isFetching: false,
+      openOverlay: false,
       modalErrorMessage: "",
       currentStep: 1,
       rasterName: "",
@@ -385,6 +386,8 @@ class RasterFormModel extends Component {
     );
 
     return {
+      isFetching: false,
+      openOverlay: false,
       currentStep: 1,
       rasterName: currentRaster.name,
       selectedOrganisation: {
@@ -423,21 +426,14 @@ class RasterFormModel extends Component {
   }
 
   handleResponse(response) {
-    if (!response.ok) {
-      const modalErrorMessage = {};
-      console.log("error response: ", response.status);
-      if (response.status !== 200) {
-        console.log("Tweede if statement!");
-        this.setState({ modalErrorMessage: response });
-        console.log(this.state.modalErrorMessage);
-      }
-    } else {
-      this.props.history.push("/data_management/rasters");
-    }
+    const modalErrorMessage = {};
+    this.setState({ modalErrorMessage: response });
+    this.setState({ isFetching: false });
+    this.setState({ handlingDone: true });
   }
 
   handleClickCreateRaster() {
-    this.setState({ isFetching: true });
+    this.setState({ isFetching: true, openOverlay: true });
     const url = "/api/v3/rasters/";
     const observationTypeId =
       (this.state.observationType &&
@@ -462,19 +458,19 @@ class RasterFormModel extends Component {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          // name: this.state.rasterName,
-          // organisation: this.state.selectedOrganisation.unique_id,
-          // access_modifier: 200, // private to organisation
-          // observation_type: observationTypeId, //this.state.observationType,
-          // description: this.state.description,
-          // supplier: this.state.supplierId && this.state.supplierId.username,
-          // supplier_code: this.state.supplierCode,
-          // temporal: this.state.temporalBool,
-          // origin: this.state.temporalOrigin.toISOString(), // toISOString = momentJS function
-          // interval: isoIntervalDuration, //'P1D', // P1D is default, = ISO 8601 datetime for 1 day",
-          // rescalable: false,
-          // optimizer: false, // default
-          // aggregation_type: intAggregationType,
+          name: this.state.rasterName,
+          organisation: this.state.selectedOrganisation.unique_id,
+          access_modifier: 200, // private to organisation
+          observation_type: observationTypeId, //this.state.observationType,
+          description: this.state.description,
+          supplier: this.state.supplierId && this.state.supplierId.username,
+          supplier_code: this.state.supplierCode,
+          temporal: this.state.temporalBool,
+          origin: this.state.temporalOrigin.toISOString(), // toISOString = momentJS function
+          interval: isoIntervalDuration, //'P1D', // P1D is default, = ISO 8601 datetime for 1 day",
+          rescalable: false,
+          optimizer: false, // default
+          aggregation_type: intAggregationType,
           options: {
             styles: this.state.colorMap.name
           }
@@ -505,11 +501,12 @@ class RasterFormModel extends Component {
         })
       };
 
-      fetch(url + "uuid:" + this.props.currentRaster.uuid + "/", opts)
-        .then(response => response.json()) // TODO: kan dit weg?
-        .then(responseParsed => {
-          this.props.history.push("/data_management/rasters");
-        });
+      fetch(
+        url + "uuid:" + this.props.currentRaster.uuid + "/",
+        opts
+      ).then(responseParsed => {
+        this.handleResponse(responseParsed);
+      });
     }
   }
 
@@ -529,13 +526,16 @@ class RasterFormModel extends Component {
       aggregationType
     } = this.state;
 
+    console.log(this.state.openOverlay);
     return (
       <div>
-        {this.state.modalErrorMessage.status === 400 ? (
+        {this.state.openOverlay ? (
           <ErrorOverlay
             isFetching={this.state.isFetching}
-            errorMessage={this.state.modalErrorMessage.status}
-            handleClose={() => this.setState({ modalErrorMessage: false })}
+            history={this.props.history}
+            errorMessage={this.state.modalErrorMessage}
+            handleClose={() =>
+              this.setState({ handlingDone: false, openOverlay: false })}
           />
         ) : null}
         <div className={gridStyles.Container}>
@@ -924,7 +924,7 @@ class RasterFormModel extends Component {
                     />
                   </div>
                 ) : null}
-                {!this.validateAll() ? (
+                {this.validateAll() ? (
                   <div className={inputStyles.InputContainer}>
                     <button
                       type="button"
