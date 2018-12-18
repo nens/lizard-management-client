@@ -1,7 +1,7 @@
 import CSSTransition from "react-transition-group/CSSTransition";
 import MDSpinner from "react-md-spinner";
 import React, { Component } from "react";
-import styles from "../../components/OrganisationSwitcher.css";
+import styles from "../../components/ErrorOverlay.css";
 import Lottie from "react-lottie";
 import * as animationSucces from "./success.json";
 import * as animationError from "./error.json";
@@ -67,6 +67,7 @@ class ErrorOverlay extends Component {
       this.props.errorMessage.status === 201 ||
       this.props.errorMessage.status === 200
     ) {
+      console.log(window.pageYOffset);
       return true;
     } else {
       return false;
@@ -117,8 +118,6 @@ class ErrorOverlay extends Component {
         }
       };
     }
-
-    console.log("errorclosecomponent ", isFetching);
 
     return (
       <div className={styles.OrganisationSwitcherContainer}>

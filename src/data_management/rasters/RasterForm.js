@@ -29,6 +29,7 @@ class RasterFormModel extends Component {
       this.state = this.setInitialState(props);
     }
 
+    this.scrollToTop = this.scrollToTop.bind(this);
     this.handleResponse = this.handleResponse.bind(this);
     this.setCurrentStep = this.setCurrentStep.bind(this);
     this.setRasterName = this.setRasterName.bind(this);
@@ -425,6 +426,13 @@ class RasterFormModel extends Component {
     };
   }
 
+  // If a raster is updated, make sure to scroll to top
+  scrollToTop() {
+    if (window.pageYOffset > 0) {
+      window.scroll(0, 0);
+    }
+  }
+
   handleResponse(response) {
     const modalErrorMessage = {};
     this.setState({ modalErrorMessage: response });
@@ -433,6 +441,7 @@ class RasterFormModel extends Component {
   }
 
   handleClickCreateRaster() {
+    this.scrollToTop();
     this.setState({ isFetching: true, openOverlay: true });
     const url = "/api/v3/rasters/";
     const observationTypeId =
