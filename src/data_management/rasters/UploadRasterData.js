@@ -53,8 +53,8 @@ class UploadRasterDataModel extends Component {
             )}
           >
             <FormattedMessage
-              id="rasters.data for"
-              defaultMessage="for raster with name"
+              id="rasters.data_for"
+              defaultMessage="for raster"
             />
           </div>
           <div

@@ -491,7 +491,9 @@ class UploadRasterDataMultipleModel extends Component {
                       />
                     </button>
                   </div> */}
-                  <div style={{ flex: 1 }}>{e.sendingState}</div>
+                  <div style={{ flex: 1 }}>
+                    {e.sendingState === "SEND" ? <MDSpinner /> : e.sendingState}
+                  </div>
                   <div style={{ flex: 1 }}>{e.sendingMessage}</div>
                   <div
                     style={{ flex: 1 }}
