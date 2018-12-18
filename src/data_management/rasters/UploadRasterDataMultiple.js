@@ -46,6 +46,41 @@ class UploadRasterDataMultipleModel extends Component {
     }
   }
 
+  filesArrayContainsFile(files, file) {
+    return files.some(oneFile => this.filesAreEqual(oneFile, file));
+  }
+
+  filesAreEqual(a, b) {
+    return a.name === b.name && a.size === b.size;
+  }
+
+  getFileClientsideRejectionReason(file) {
+    var acceptedFiles = this.state.acceptedFiles.map(e => e.file);
+
+    if (this.filesArrayContainsFile(acceptedFiles, file)) {
+      return (
+        <FormattedMessage
+          id="rasters.file_already_selected"
+          defaultMessage="A file with this name and size was already selected"
+        />
+      );
+    } else if (!file.name.endsWith(".tif")) {
+      return (
+        <FormattedMessage
+          id="rasters.file_selection_not_tiff"
+          defaultMessage="Only .tif files are valid"
+        />
+      );
+    } else {
+      return (
+        <FormattedMessage
+          id="rasters.file_selection_failed_unknown_reason"
+          defaultMessage="Reason not known"
+        />
+      );
+    }
+  }
+
   sendAcceptedFilesRecursive(filesToSend) {
     // end recursion if filesToSend is empty array
     if (filesToSend.length === 0) {
@@ -71,7 +106,8 @@ class UploadRasterDataMultipleModel extends Component {
     // else proceed sending the file
     // first mark file as "SEND"
     const acceptedFilesMarkedSend = this.state.acceptedFiles.map(oldE => {
-      if (e.file.size === oldE.file.size && e.file.name === oldE.file.name) {
+      // if (e.file.size === oldE.file.size && e.file.name === oldE.file.name) {
+      if (this.filesAreEqual(e.file, oldE.file)) {
         oldE.sendingState = "SEND";
         return oldE;
       } else {
@@ -101,10 +137,11 @@ class UploadRasterDataMultipleModel extends Component {
         console.log("responseData post raster", responseData);
 
         const newAcceptedFiles = this.state.acceptedFiles.map(oldE => {
-          if (
-            e.file.size === oldE.file.size &&
-            e.file.name === oldE.file.name
-          ) {
+          // if (
+          //   e.file.size === oldE.file.size &&
+          //   e.file.name === oldE.file.name
+          // ) {
+          if (this.filesAreEqual(e.file, oldE.file)) {
             console.log("responseData", responseData);
             if (responseData.status === 400) {
               oldE.sendingState = "FAILED";
@@ -130,14 +167,19 @@ class UploadRasterDataMultipleModel extends Component {
     const oldAcceptedFiles = this.state.acceptedFiles.map(e => e.file);
 
     // ensure newAcceptedFilesNonDuplicates are unique by name and size (not yet in oldacceptedfiles)
-    const newAcceptedFilesNonDuplicates = acceptedFiles.filter(e => {
-      return oldAcceptedFiles.every(oldE => {
-        if (oldE.name === e.name && oldE.size === e.size) {
-          return false;
-        } else {
-          return true;
-        }
-      });
+    const newAcceptedFilesNonDuplicates = acceptedFiles.filter(file => {
+      return !this.filesArrayContainsFile(oldAcceptedFiles, file);
+    });
+    const duplicateFiles = acceptedFiles.filter(file => {
+      return this.filesArrayContainsFile(oldAcceptedFiles, file);
+    });
+
+    const concatedRejectedFiles = rejectedFiles.concat(duplicateFiles);
+    const rejectedFilesPlusReason = concatedRejectedFiles.map(file => {
+      return {
+        file: file,
+        reason: this.getFileClientsideRejectionReason(file)
+      };
     });
 
     // convert acceptedFilesToobjectsWithDate
@@ -155,7 +197,7 @@ class UploadRasterDataMultipleModel extends Component {
 
     this.setState({
       acceptedFiles: this.state.acceptedFiles.concat(acceptedFilesData),
-      rejectedFiles: this.state.rejectedFiles.concat(rejectedFiles)
+      rejectedFiles: this.state.rejectedFiles.concat(rejectedFilesPlusReason)
     });
   };
 
@@ -268,18 +310,27 @@ class UploadRasterDataMultipleModel extends Component {
               <div className={gridStyles.Row} key={e.name}>
                 <div
                   className={classNames(
-                    gridStyles.colMd9,
-                    gridStyles.colSm9,
-                    gridStyles.colXs6
+                    gridStyles.colMd5,
+                    gridStyles.colSm5,
+                    gridStyles.colXs5
                   )}
                 >
-                  {e.name}
+                  {e.file.name}
                 </div>
                 <div
                   className={classNames(
-                    gridStyles.colMd3,
-                    gridStyles.colSm3,
-                    gridStyles.colXs3
+                    gridStyles.colMd5,
+                    gridStyles.colSm5,
+                    gridStyles.colXs5
+                  )}
+                >
+                  {e.reason}
+                </div>
+                <div
+                  className={classNames(
+                    gridStyles.colMd2,
+                    gridStyles.colSm2,
+                    gridStyles.colXs2
                   )}
                 >
                   <div
@@ -298,15 +349,16 @@ class UploadRasterDataMultipleModel extends Component {
               </div>
             ))}
 
-            {this.state.rejectedFiles.length > 1 ? (
+            {/* {this.state.rejectedFiles.length > 1 ? (
               <h3>
                 <FormattedMessage
                   id="rasters.files_non_temporal_upload_multiple_files_not_allowed"
                   defaultMessage="For non-temporal rasters it is not possible to upload more than 1 file"
                 />
               </h3>
-            ) : (this.state.rejectedFiles[0].name + "").indexOf(
-              ".tiff",
+            ) : null} */}
+            {/* {(this.state.rejectedFiles[0].name + "").indexOf(
+              ".tif",
               (this.state.rejectedFiles[0].name + "").length - ".tiff".length
             ) === -1 ? (
               <h3>
@@ -315,14 +367,15 @@ class UploadRasterDataMultipleModel extends Component {
                   defaultMessage="Only .tiff files are valid"
                 />
               </h3>
-            ) : (
+            ) : null} */}
+            {/* {(
               <h3>
                 <FormattedMessage
                   id="rasters.file_selection_failed_unknown_reason"
                   defaultMessage="Reason not known"
                 />
               </h3>
-            )}
+            )} */}
           </div>
         ) : null}
 
@@ -491,8 +544,34 @@ class UploadRasterDataMultipleModel extends Component {
                       />
                     </button>
                   </div> */}
-                  <div style={{ flex: 1 }}>
-                    {e.sendingState === "SEND" ? <MDSpinner /> : e.sendingState}
+                  <div style={{ flex: 2, marginLeft: "10px" }}>
+                    {e.sendingState === "SEND" ? <MDSpinner /> : null}
+                    {/* {e.sendingState === "NOT_SEND" ? <MDSpinner /> : e.sendingState} */}
+                    {e.sendingState === "SERVER_RECEIVED" ? (
+                      <span style={{ color: "green" }}>
+                        <FormattedMessage
+                          id="rasters.selected_file_succesfully uploaded"
+                          defaultMessage="File succesfully uploaded to server"
+                        />
+                      </span>
+                    ) : null}
+                    {e.sendingState === "FAILED" ? (
+                      <span style={{ color: "red" }}>
+                        <FormattedMessage
+                          id="rasters.selected_file_failed_upload"
+                          defaultMessage="File could not be uploaded"
+                        />
+                      </span>
+                    ) : null}
+                    {e.sendingState === "NOT_SEND" &&
+                    this.state.saveAllButtonBusy === true ? (
+                      <span style={{ color: "blue" }}>
+                        <FormattedMessage
+                          id="rasters.selected_file_in queue"
+                          defaultMessage="File waiting to be uploaded"
+                        />
+                      </span>
+                    ) : null}
                   </div>
                   <div style={{ flex: 1 }}>{e.sendingMessage}</div>
                   <div
@@ -514,26 +593,27 @@ class UploadRasterDataMultipleModel extends Component {
           </div>
         )}
 
-        {
-          <button
-            style={showSaveButton ? {} : { visibility: "hidden" }}
-            disabled={!showSaveButton}
-            readOnly={!showSaveButton}
-            className={`${buttonStyles.Button} ${buttonStyles.Success}`}
-            onClick={_ => {
-              let acceptedFiles = this.state.acceptedFiles;
+        <button
+          style={showSaveButton ? {} : { visibility: "hidden" }}
+          disabled={!showSaveButton}
+          readOnly={!showSaveButton}
+          className={`${buttonStyles.Button} ${buttonStyles.Success}`}
+          onClick={_ => {
+            let acceptedFiles = this.state.acceptedFiles;
 
-              this.sendAcceptedFilesRecursive(acceptedFiles.slice());
+            this.sendAcceptedFilesRecursive(acceptedFiles.slice());
 
-              ////////////////////////////////////////
-            }}
-          >
-            <FormattedMessage
-              id="rasters.upload_selected_file"
-              defaultMessage="Save all files"
-            />
-          </button>
-        }
+            ////////////////////////////////////////
+          }}
+        >
+          <FormattedMessage
+            id="rasters.upload_selected_file"
+            defaultMessage="Save all files"
+          />
+        </button>
+        <MDSpinner
+          style={this.state.saveAllButtonBusy ? {} : { visibility: "hidden" }}
+        />
       </div>
     );
   }
