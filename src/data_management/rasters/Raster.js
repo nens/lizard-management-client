@@ -48,7 +48,8 @@ class Raster extends Component {
           isFetching: false,
           total: data.count,
           rasters: data.results,
-          page: page
+          page: page,
+          checkAllCheckBoxes: false
         });
       });
   }
@@ -227,12 +228,12 @@ class Raster extends Component {
           <button
             type="button"
             style={{ float: "right" }}
-            className={`${buttonStyles.Button} ${buttonStyles.Success}`}
+            className={`${buttonStyles.Button} ${buttonStyles.Danger}`}
             onClick={this.handleDeleteRasterClick}
           >
             <FormattedMessage
               id="rasters.delete_rasters"
-              defaultMessage="Delete raster(s)"
+              defaultMessage="Delete selected raster(s)"
             />
             <Ink />
           </button>
