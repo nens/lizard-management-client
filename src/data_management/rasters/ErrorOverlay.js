@@ -19,23 +19,21 @@ class ErrorOverlay extends Component {
       isPaused: false
     };
     this.handleResize = this.handleResize.bind(this);
-    this.hideOrganisationSwitcher = this.hideOrganisationSwitcher.bind(this);
+    this.hideErrorOverlay = this.hideErrorOverlay.bind(this);
     this.whichAnimation = this.whichAnimation.bind(this);
     this.whichMessage = this.whichMessage.bind(this);
     this.succesButtons = this.succesButtons.bind(this);
   }
   componentDidMount() {
     window.addEventListener("resize", this.handleResize, false);
-    document.addEventListener("keydown", this.hideOrganisationSwitcher, false);
+    document.addEventListener("keydown", this.hideErrorOverlay, false);
   }
   componentWillUnmount() {
     window.removeEventListener("resize", this.handleResize, false);
-    document.removeEventListener(
-      "keydown",
-      this.hideOrganisationSwitcher,
-      false
-    );
+    document.removeEventListener("keydown", this.hideErrorOverlay, false);
   }
+
+  // Resize the overlay
   handleResize() {
     this.setState({
       width: window.innerWidth,
@@ -43,12 +41,14 @@ class ErrorOverlay extends Component {
     });
   }
 
-  hideOrganisationSwitcher(e) {
+  // Close the overlay
+  hideErrorOverlay(e) {
     if (e.key === "Escape") {
       this.props.handleClose();
     }
   }
 
+  // Animation based on success or fail of a request
   whichAnimation() {
     var animationData;
     if (
@@ -62,45 +62,58 @@ class ErrorOverlay extends Component {
     return animationData;
   }
 
+  // Different buttons based on succes or fail of a request
   succesButtons() {
     if (
       this.props.errorMessage.status === 201 ||
       this.props.errorMessage.status === 200
     ) {
-      console.log(window.pageYOffset);
       return true;
     } else {
       return false;
     }
   }
 
+  // Generate message based on returned API status code
   whichMessage() {
     if (
       this.props.errorMessage.status === 201 ||
       this.props.errorMessage.status === 200
     ) {
-      return "Succes! Your raster meta-data was uploaded succesfully. You can add your data now, or do it later";
-    } else if (this.props.errorMessage.status.toString().startsWith(4)) {
       return (
-        "Oops, something went wrong. Please check the form and your internet settings. Error code is: " +
-        JSON.stringify(this.props.errorMessage.status) +
-        JSON.stringify(this.props.errorMessage.statusText)
+        <FormattedMessage
+          id="raster.post_metadata_error_success"
+          defaultMessage="Succes! Your raster meta-data was uploaded succesfully. You can add your data now, or do it later"
+        />
+      );
+    } else if (this.props.errorMessage.status.toString().startsWith(4)) {
+      console.log("Correct errorMessage");
+      return (
+        <div>
+          <FormattedMessage
+            id="raster.post_metadata_error"
+            defaultMessage="Oops, something went wrong. Please check the form and your internet settings. Error code is: "
+          />
+          {JSON.stringify(this.props.errorMessage.status) +
+            JSON.stringify(this.props.errorMessage.statusText)}
+        </div>
       );
     } else if (this.props.errorMessage.status.toString().startsWith(5)) {
       return (
-        "Oops, something went wrong. Please contact us through the support section. Error code is: " +
-        JSON.stringify(this.props.errorMessage.status) +
-        JSON.stringify(this.props.errorMessage.statusText)
+        <div>
+          <FormattedMessage
+            id="raster.post_metadata_error_success"
+            defaultMessage="Oops, something went wrong. Please contact support. Error code is: "
+          />
+          {JSON.stringify(this.props.errorMessage.status) +
+            JSON.stringify(this.props.errorMessage.statusText)}{" "}
+        </div>
       );
     }
   }
 
   render() {
-    const buttonStyle = {
-      display: "block",
-      margin: "10px auto"
-    };
-    const { handleClose, isFetching, errorMessage } = this.props;
+    const { handleClose, isFetching } = this.props;
 
     let message;
     let buttons;
@@ -120,7 +133,7 @@ class ErrorOverlay extends Component {
     }
 
     return (
-      <div className={styles.OrganisationSwitcherContainer}>
+      <div className={styles.ErrorOverlayContainer}>
         <CSSTransition
           in={true}
           appear={true}
@@ -134,7 +147,7 @@ class ErrorOverlay extends Component {
             appearActive: styles.AppearActive
           }}
         >
-          <div className={styles.OrganisationSwitcher}>
+          <div className={styles.ErrorOverlay}>
             {isFetching ? (
               <div
                 style={{
@@ -150,7 +163,7 @@ class ErrorOverlay extends Component {
             ) : (
               <div>
                 <div>
-                  <h1 className={styles.SuccesText}>{message}</h1>
+                  <h1 className={styles.SuccesText}>{this.whichMessage()}</h1>
                   <Lottie
                     options={defaultOptions}
                     height={400}
@@ -164,7 +177,7 @@ class ErrorOverlay extends Component {
                     <button
                       type="button"
                       className={`${buttonStyles.Button} ${buttonStyles.Success}`}
-                      style={{ marginTop: 10 }}
+                      style={{ marginTop: 10, marginRight: 10 }}
                       onClick={() =>
                         this.props.history.push("/data_management/rasters")}
                     >
@@ -177,7 +190,9 @@ class ErrorOverlay extends Component {
                       type="button"
                       className={`${buttonStyles.Button} ${buttonStyles.Success}`}
                       style={{ marginTop: 10 }}
-                      onClick={handleClose}
+                      onClick={
+                        handleClose /*HIER MOET DE LINK NAAR TOMS UPLOAD SCREEN*/
+                      }
                     >
                       <FormattedMessage
                         id="upload"

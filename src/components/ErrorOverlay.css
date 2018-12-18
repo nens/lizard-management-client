@@ -1,4 +1,4 @@
-.OrganisationSwitcherContainer {
+.ErrorOverlayContainer {
   align-items: center;
   display: flex;
   height: 100%;
@@ -11,7 +11,7 @@
   background-color: hsla(210, 11%, 15%, 0.49);
 }
 
-.OrganisationSwitcher {
+.ErrorOverlay {
   position: relative;
   background-color: #fff;
   box-shadow: 0 2px 6px 5px rgba(0, 0, 0, 0.3);
