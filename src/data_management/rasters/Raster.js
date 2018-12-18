@@ -21,9 +21,12 @@ class Raster extends Component {
       isFetching: true,
       rasters: [],
       total: 0,
-      page: 1
+      page: 1,
+      checkAllCheckBoxes: false
     };
     this.handleNewRasterClick = this.handleNewRasterClick.bind(this);
+    this.handleDeleteRasterClick = this.handleDeleteRasterClick.bind(this);
+    this.checkAllCheckBoxes = this.checkAllCheckBoxes.bind(this);
     this.loadRastersOnPage = this.loadRastersOnPage.bind(this);
   }
   componentDidMount() {
@@ -53,6 +56,79 @@ class Raster extends Component {
   handleNewRasterClick() {
     const { history } = this.props;
     history.push("/data_management/rasters/new");
+  }
+
+  handleDeleteRasterClick() {
+    var toBeDeletedRasterNamesArray = [];
+    var toBeDeletedRasterUuidsArray = [];
+    var checkboxes = document.querySelectorAll("input[type=checkbox]:checked");
+
+    for (var i = 0; i < checkboxes.length; i++) {
+      if (checkboxes[i].id.indexOf("checkbox_") > -1) {
+        let selectedUuid = checkboxes[i].id.split("checkbox_")[1];
+        console.log("checkboxes[i]", checkboxes[i]);
+        console.log(
+          "checkboxes[i].parentNode.childNodes[2].innerHTML",
+          checkboxes[i].parentNode.childNodes[2].innerHTML
+        );
+        toBeDeletedRasterNamesArray.push(
+          checkboxes[i].parentNode.childNodes[2].innerHTML
+        );
+        toBeDeletedRasterUuidsArray.push(selectedUuid);
+      }
+    }
+
+    if (
+      window.confirm(
+        "Are you sure you want to delete the next raster(s)? \n  \n " +
+          toBeDeletedRasterNamesArray
+      )
+    ) {
+      const url = "/api/v3/rasters/";
+      for (var i = 0; i < toBeDeletedRasterUuidsArray.length; i++) {
+        document.getElementById(
+          "checkbox_" + toBeDeletedRasterUuidsArray[i]
+        ).checked = false;
+        const opts = {
+          credentials: "same-origin",
+          method: "DELETE"
+          // In the future, use PATCH request for deleting rasters,
+          // so that the rasters are not permanently deleted
+          // method: "PATCH",
+          // headers: { "Content-Type": "application/json" },
+          // body: JSON.stringify({
+          //   access_modifier: "Deleted", // 9999
+          // })
+        };
+        fetch(url + toBeDeletedRasterUuidsArray[i] + "/", opts);
+        console.log("Deleted raster " + toBeDeletedRasterUuidsArray[i]);
+        // Refresh the page, so that the removed rasters are not anymore visible
+        this.setState({
+          checkAllCheckBoxes: false
+        });
+        this.loadRastersOnPage(this.state.page);
+      }
+    }
+  }
+
+  checkAllCheckBoxes() {
+    var checkboxes = document.querySelectorAll("input[type=checkbox]");
+
+    if (this.state.checkAllCheckBoxes) {
+      for (var i = 0; i < checkboxes.length; i++) {
+        checkboxes[i].checked = false;
+      }
+      this.setState({
+        checkAllCheckBoxes: false
+      });
+    } else {
+      for (var i = 0; i < checkboxes.length; i++) {
+        checkboxes[i].checked = true;
+      }
+      this.setState({
+        checkAllCheckBoxes: true
+      });
+    }
   }
 
   render() {
@@ -95,7 +171,7 @@ class Raster extends Component {
                 type="checkbox"
                 // onClick={"if(event.stopPropagation){event.stopPropagation();}event.cancelBubble=true;"}
                 // checked={this.state.checkbox[i]}
-                id={"checkbox_" + raster.name}
+                id={"checkbox_" + raster.uuid}
               />
               {
                 " " // empty space between checkbox and raster.name
@@ -140,7 +216,9 @@ class Raster extends Component {
               // checked={false}
               onClick={this.checkAllCheckBoxes}
             />
-            {" Check all on this page"}
+            {this.state.checkAllCheckBoxes
+              ? " Uncheck all checkboxes on this page"
+              : " Check all checkboxes on this page"}
           </label>
         </span>
         <span
@@ -150,7 +228,7 @@ class Raster extends Component {
             type="button"
             style={{ float: "right" }}
             className={`${buttonStyles.Button} ${buttonStyles.Success}`}
-            onClick={this.handleNewRasterClick}
+            onClick={this.handleDeleteRasterClick}
           >
             <FormattedMessage
               id="rasters.delete_rasters"
