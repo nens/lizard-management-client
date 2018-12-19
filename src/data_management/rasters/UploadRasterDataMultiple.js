@@ -18,9 +18,10 @@ import "moment/locale/nl";
 
 // import {InputMoment} from 'react-input-moment';
 import Datetime from "react-datetime";
-// import "../../components/ReactDateTime.css";
 import "react-datetime/css/react-datetime.css";
 import { Scrollbars } from "react-custom-scrollbars";
+
+import Overlay from "../../components/Overlay";
 
 class UploadRasterDataMultipleModel extends Component {
   constructor(props) {
@@ -28,7 +29,8 @@ class UploadRasterDataMultipleModel extends Component {
     this.state = {
       acceptedFiles: [],
       rejectedFiles: [],
-      saveAllButtonBusy: false
+      saveAllButtonBusy: false,
+      showOverlaySaveFiles: false
     };
   }
 
@@ -86,7 +88,10 @@ class UploadRasterDataMultipleModel extends Component {
   sendAcceptedFilesRecursive(filesToSend) {
     // end recursion if filesToSend is empty array
     if (filesToSend.length === 0) {
-      this.setState({ saveAllButtonBusy: false });
+      this.setState({
+        saveAllButtonBusy: false,
+        showOverlaySaveFiles: true
+      });
       console.log("sendAcceptedFilesRecursive stop recursion");
       return;
     }
@@ -222,6 +227,86 @@ class UploadRasterDataMultipleModel extends Component {
 
     return (
       <div>
+        {this.state.showOverlaySaveFiles ? (
+          <Overlay
+            handleClose={e => this.setState({ showOverlaySaveFiles: false })}
+          >
+            <h3>
+              <FormattedMessage
+                id="rasters.following_files_upload_succes"
+                defaultMessage="Following files where succesfully uploaded"
+              />
+            </h3>
+
+            <div style={{ marginTop: "10px" }}>
+              {this.state.acceptedFiles
+                .filter(fileObj => fileObj.sendingState === "SERVER_RECEIVED")
+                .map(fileObj => (
+                  <div key={fileObj.file.name + fileObj.file.size}>
+                    <div>{fileObj.file.name}</div>
+                  </div>
+                ))}
+            </div>
+            <div style={{ marginTop: "10px" }}>
+              <span>
+                <FormattedMessage
+                  id="rasters.uploading_takes_additional_time_on_server"
+                  defaultMessage="Please keep in mind that it might take a while before your changes are committed to the database."
+                />
+                <FormattedMessage
+                  id="rasters.check_url_for_progress_file_upload"
+                  defaultMessage="The urls behind the files can show the progress for each file."
+                />
+              </span>
+            </div>
+            <div
+              style={{
+                flex: 1,
+                display: "flex",
+                justifyContent: "flex-start",
+                marginTop: "10px"
+              }}
+            >
+              <button
+                style={{}}
+                className={`${buttonStyles.Button} ${buttonStyles.Success}`}
+                onClick={_ => {
+                  this.props.history.push("/data_management/rasters/");
+
+                  ////////////////////////////////////////
+                }}
+              >
+                <FormattedMessage
+                  id="rasters.back_to_rasters"
+                  defaultMessage="Back to Raster list"
+                />
+              </button>
+              <button
+                style={
+                  this.props.currentRaster
+                    ? { marginLeft: "10px" }
+                    : { marginLeft: "10px", visibility: "hidden" }
+                }
+                className={`${buttonStyles.Button} ${buttonStyles.Success}`}
+                onClick={_ => {
+                  this.props.history.push(
+                    "/data_management/rasters/" +
+                      (this.props.currentRaster &&
+                        this.props.currentRaster.uuid) +
+                      "/"
+                  );
+
+                  ////////////////////////////////////////
+                }}
+              >
+                <FormattedMessage
+                  id="rasters.back_to_rasters"
+                  defaultMessage="Back to Metadata"
+                />
+              </button>
+            </div>
+          </Overlay>
+        ) : null}
         {this.renderDropZone(showSaveButton)}
         {this.renderPostDropZone(showSaveButton)}
       </div>
