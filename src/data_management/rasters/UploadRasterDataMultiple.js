@@ -87,9 +87,11 @@ class UploadRasterDataMultipleModel extends Component {
       this.setState({ saveAllButtonBusy: false });
       console.log("sendAcceptedFilesRecursive stop recursion");
       return;
-    } else {
-      this.setState({ saveAllButtonBusy: true });
     }
+
+    // else {
+    //   this.setState({ saveAllButtonBusy: true });
+    // }
 
     const e = filesToSend.shift();
     // skip this file if any of the following is true
@@ -137,10 +139,6 @@ class UploadRasterDataMultipleModel extends Component {
         console.log("responseData post raster", responseData);
 
         const newAcceptedFiles = this.state.acceptedFiles.map(oldE => {
-          // if (
-          //   e.file.size === oldE.file.size &&
-          //   e.file.name === oldE.file.name
-          // ) {
           if (this.filesAreEqual(e.file, oldE.file)) {
             console.log("responseData", responseData);
             if (responseData.status === 400) {
@@ -158,8 +156,14 @@ class UploadRasterDataMultipleModel extends Component {
         this.setState({ acceptedFiles: newAcceptedFiles });
 
         // continue with next file
-        console.log("response received, go to next file", e);
-        this.sendAcceptedFilesRecursive(filesToSend);
+        if (this.state.saveAllButtonBusy === true) {
+          console.log("response received, go to next file", e);
+          this.sendAcceptedFilesRecursive(filesToSend);
+          return;
+        } else {
+          console.log("response received, but actions aborted abort");
+          return;
+        }
       });
   }
 
@@ -449,20 +453,32 @@ class UploadRasterDataMultipleModel extends Component {
                     <div style={{ flex: 1 }}>
                       <Datetime
                         value={e.dateTime}
-                        onChange={e => {
+                        onChange={event_ => {
                           let jsDate;
                           // if not valid date react-datetime returns string
-                          if (typeof e === "string") {
+                          if (typeof event_ === "string") {
                             console.log("received string from react-datetime");
-                            jsDate = e;
+                            jsDate = event_;
                           } else {
                             // convert momentjs to js date
-                            jsDate = e.toDate();
+                            jsDate = event_.toDate();
                           }
                           let acceptedFiles = this.state.acceptedFiles;
                           acceptedFiles[i].dateTime = jsDate;
                           this.setState({ acceptedFiles: acceptedFiles });
                         }}
+                        inputProps={
+                          this.state.saveAllButtonBusy ||
+                          e.sendingState === "SERVER_RECEIVED"
+                            ? { readOnly: true }
+                            : {}
+                        }
+                        open={
+                          this.state.saveAllButtonBusy ||
+                          e.sendingState === "SERVER_RECEIVED"
+                            ? false
+                            : undefined
+                        }
                       />
                       {!this.isValidDateObj(e.dateTime) ? (
                         <span style={{ color: "red" }}>Date not valid</span>
@@ -545,8 +561,22 @@ class UploadRasterDataMultipleModel extends Component {
                     </button>
                   </div> */}
                   <div style={{ flex: 2, marginLeft: "10px" }}>
-                    {e.sendingState === "SEND" ? <MDSpinner /> : null}
-                    {/* {e.sendingState === "NOT_SEND" ? <MDSpinner /> : e.sendingState} */}
+                    {e.sendingState === "SEND" ? (
+                      <div>
+                        <FormattedMessage
+                          id="rasters.selected_file_busy_uploading"
+                          defaultMessage="File busy being uploaded"
+                        />
+                        <MDSpinner />
+                      </div>
+                    ) : null}
+                    {e.sendingState === "NOT_SEND" &&
+                    this.state.saveAllButtonBusy === false ? (
+                      <FormattedMessage
+                        id="rasters.selected_file_ready_to_send"
+                        defaultMessage="file ready, click button to upload"
+                      />
+                    ) : null}
                     {e.sendingState === "SERVER_RECEIVED" ? (
                       <span style={{ color: "green" }}>
                         <FormattedMessage
@@ -559,7 +589,7 @@ class UploadRasterDataMultipleModel extends Component {
                       <span style={{ color: "red" }}>
                         <FormattedMessage
                           id="rasters.selected_file_failed_upload"
-                          defaultMessage="File could not be uploaded"
+                          defaultMessage="File could not be uploaded, click the button to try again"
                         />
                       </span>
                     ) : null}
@@ -574,9 +604,13 @@ class UploadRasterDataMultipleModel extends Component {
                     ) : null}
                   </div>
                   <div style={{ flex: 1 }}>{e.sendingMessage}</div>
+
                   <div
-                    style={{ flex: 1 }}
-                    // className={this.props.className}
+                    style={
+                      this.state.saveAllButtonBusy
+                        ? { flex: 1, visibility: "hidden" }
+                        : { flex: 1 }
+                    }
                     onClick={e => {
                       const acceptedFiles = this.state.acceptedFiles;
                       const newAcceptedFiles = acceptedFiles.filter(
@@ -594,13 +628,18 @@ class UploadRasterDataMultipleModel extends Component {
         )}
 
         <button
-          style={showSaveButton ? {} : { visibility: "hidden" }}
+          style={
+            showSaveButton
+              ? { marginRight: "10px", marginTop: "10px" }
+              : { display: "none" }
+          }
           disabled={!showSaveButton}
           readOnly={!showSaveButton}
           className={`${buttonStyles.Button} ${buttonStyles.Success}`}
           onClick={_ => {
             let acceptedFiles = this.state.acceptedFiles;
 
+            this.setState({ saveAllButtonBusy: true });
             this.sendAcceptedFilesRecursive(acceptedFiles.slice());
 
             ////////////////////////////////////////
@@ -611,9 +650,25 @@ class UploadRasterDataMultipleModel extends Component {
             defaultMessage="Save all files"
           />
         </button>
-        <MDSpinner
-          style={this.state.saveAllButtonBusy ? {} : { visibility: "hidden" }}
-        />
+        <button
+          style={
+            this.state.saveAllButtonBusy
+              ? { marginRight: "10px", marginTop: "10px" }
+              : { display: "none" }
+          }
+          className={`${buttonStyles.Button} ${buttonStyles.Success}`}
+          onClick={_ => {
+            this.setState({ saveAllButtonBusy: false });
+          }}
+        >
+          <FormattedMessage
+            id="rasters.upload_abort_selected_file"
+            defaultMessage="Abort"
+          />
+        </button>
+        {/* <MDSpinner
+          style={this.state.saveAllButtonBusy ? {} : { display: "none" }}
+        /> */}
       </div>
     );
   }

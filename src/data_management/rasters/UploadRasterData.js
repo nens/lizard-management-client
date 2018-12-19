@@ -41,8 +41,49 @@ class UploadRasterDataModel extends Component {
   render() {
     return (
       <div>
-        <div>
-          <h2 className={`mt-0 text-muted`}>Upload raster data</h2>
+        <div style={{ display: "flex" }}>
+          <div style={{ flex: 1 }}>
+            <h2 className={`mt-0 text-muted`}>Upload raster data</h2>
+          </div>
+          <div style={{ flex: 1, display: "flex", justifyContent: "flex-end" }}>
+            <button
+              style={{}}
+              className={`${buttonStyles.Button} ${buttonStyles.Success}`}
+              onClick={_ => {
+                this.props.history.push("/data_management/rasters/");
+
+                ////////////////////////////////////////
+              }}
+            >
+              <FormattedMessage
+                id="rasters.back_to_rasters"
+                defaultMessage="Back to Raster list"
+              />
+            </button>
+            <button
+              style={
+                this.state.currentRaster
+                  ? { marginLeft: "10px" }
+                  : { marginLeft: "10px", visibility: "hidden" }
+              }
+              className={`${buttonStyles.Button} ${buttonStyles.Success}`}
+              onClick={_ => {
+                this.props.history.push(
+                  "/data_management/rasters/" +
+                    (this.state.currentRaster &&
+                      this.state.currentRaster.uuid) +
+                    "/"
+                );
+
+                ////////////////////////////////////////
+              }}
+            >
+              <FormattedMessage
+                id="rasters.back_to_rasters"
+                defaultMessage="Back to Metadata"
+              />
+            </button>
+          </div>
         </div>
         <div className={gridStyles.Row}>
           <div
