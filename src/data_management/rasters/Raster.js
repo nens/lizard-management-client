@@ -13,6 +13,7 @@ import { FormattedMessage } from "react-intl";
 import { withRouter } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import SearchBox from "../../components/SearchBox";
+// constante voor page_size
 
 class Raster extends Component {
   constructor(props) {
@@ -22,11 +23,27 @@ class Raster extends Component {
       rasters: [],
       total: 0,
       page: 1,
-      checkAllCheckBoxes: false
+      checkAllCheckBoxes: false,
+      // Add raster uuid and raster name to the checkboxes dict,
+      // to be able to find the raster back from the checked checkboxes.
+      checkboxes: [
+        { id: "", checkboxId: "", uuid: "", name: "", checked: false },
+        { id: "", checkboxId: "", uuid: "", name: "", checked: false },
+        { id: "", checkboxId: "", uuid: "", name: "", checked: false },
+        { id: "", checkboxId: "", uuid: "", name: "", checked: false },
+        { id: "", checkboxId: "", uuid: "", name: "", checked: false },
+        { id: "", checkboxId: "", uuid: "", name: "", checked: false },
+        { id: "", checkboxId: "", uuid: "", name: "", checked: false },
+        { id: "", checkboxId: "", uuid: "", name: "", checked: false },
+        { id: "", checkboxId: "", uuid: "", name: "", checked: false },
+        { id: "", checkboxId: "", uuid: "", name: "", checked: false }
+      ],
+      checkboxAllCheckboxesChecked: false
     };
     this.handleNewRasterClick = this.handleNewRasterClick.bind(this);
     this.handleDeleteRasterClick = this.handleDeleteRasterClick.bind(this);
     this.checkAllCheckBoxes = this.checkAllCheckBoxes.bind(this);
+    this.clickRegularCheckbox = this.clickRegularCheckbox.bind(this);
     this.loadRastersOnPage = this.loadRastersOnPage.bind(this);
   }
   componentDidMount() {
@@ -35,6 +52,7 @@ class Raster extends Component {
   }
 
   loadRastersOnPage(page, searchContains) {
+    console.log("loadRastersOnPage");
     const url = searchContains
       ? `/api/v3/rasters/?page=${page}&name__icontains=${searchContains}` // &organisation__unique_id=${organisationId},
       : `/api/v3/rasters/?page=${page}`;
@@ -51,7 +69,47 @@ class Raster extends Component {
           page: page,
           checkAllCheckBoxes: false
         });
+        // Clear the checkboxes
+        this.resetAllCheckboxes();
+
+        // Set the checkboxes with the new results.
+        this.setAllCheckBoxes(data.results);
       });
+    console.log("this.state", this.state);
+  }
+
+  setAllCheckBoxes(resultsList) {
+    let newState = Object.assign({}, this.state);
+    for (var i = 0; i < resultsList.length; i++) {
+      var checkbox = newState.checkboxes[i];
+      newState.checkboxes[i].id = i;
+      newState.checkboxes[i].checkboxId =
+        [i] + "_checkbox_" + resultsList[i].uuid + "_" + resultsList[i].name;
+      newState.checkboxes[i].uuid = resultsList[i].uuid;
+      newState.checkboxes[i].name = resultsList[i].name;
+      newState.checkboxes[i].checked = false;
+    }
+    this.setState(newState);
+    this.setState({
+      checkAllCheckBoxes: false,
+      checkboxAllCheckboxesChecked: false
+    });
+  }
+
+  resetAllCheckboxes() {
+    let resetState = Object.assign({}, this.state);
+    for (var i = 0; i < this.state.checkboxes.length; i++) {
+      resetState.checkboxes[i].id = "";
+      resetState.checkboxes[i].checkboxId = "";
+      resetState.checkboxes[i].uuid = "";
+      resetState.checkboxes[i].name = "";
+      resetState.checkboxes[i].checked = false;
+    }
+    this.setState(resetState);
+    this.setState({
+      checkAllCheckBoxes: false,
+      checkboxAllCheckboxesChecked: false
+    });
   }
 
   handleNewRasterClick() {
@@ -62,30 +120,32 @@ class Raster extends Component {
   handleDeleteRasterClick() {
     var toBeDeletedRasterNamesArray = [];
     var toBeDeletedRasterUuidsArray = [];
-    var checkboxes = document.querySelectorAll("input[type=checkbox]:checked");
 
-    for (var i = 0; i < checkboxes.length; i++) {
-      if (checkboxes[i].id.indexOf("checkbox_") > -1) {
-        let selectedUuid = checkboxes[i].id.split("checkbox_")[1];
-        toBeDeletedRasterNamesArray.push(
-          checkboxes[i].parentNode.childNodes[2].innerHTML
-        );
-        toBeDeletedRasterUuidsArray.push(selectedUuid);
+    console.log("this.state.checkboxes", this.state.checkboxes);
+    for (var i = 0; i < this.state.checkboxes.length; i++) {
+      const checkbox = this.state.checkboxes[i];
+      console.log("checkbox", checkbox);
+      // Make sure that the id is an int and not an empty string.
+      // Also make sure that the raster is checked.
+      if (this.state.checkboxes[i].id !== "" && checkbox.checked) {
+        toBeDeletedRasterNamesArray.push(checkbox.name);
+        console.log("toBeDeletedRasterNamesArray", toBeDeletedRasterNamesArray);
+        toBeDeletedRasterUuidsArray.push(checkbox.uuid);
+        console.log("toBeDeletedRasterUuidsArray", toBeDeletedRasterUuidsArray);
       }
     }
 
     if (
       window.confirm(
         "Are you sure you want to delete the next raster(s)? \n  \n " +
-          toBeDeletedRasterNamesArray
+          toBeDeletedRasterNamesArray //make rows.
       )
     ) {
-      const url = "/api/v3/rasters/";
-      document.getElementById("checkboxCheckAll").checked = false;
+      const url = "/api/v3/rasters/"; // api/v4?
       for (var i = 0; i < toBeDeletedRasterUuidsArray.length; i++) {
-        document.getElementById(
-          "checkbox_" + toBeDeletedRasterUuidsArray[i]
-        ).checked = false;
+        // document.getElementById( // React
+        //   i + "_checkbox_" + toBeDeletedRasterUuidsArray[i]
+        // ).checked = false;
         const opts = {
           // Use PATCH request for deleting rasters, so that the rasters are
           // not permanently deleted
@@ -93,35 +153,68 @@ class Raster extends Component {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            access_modifier: "Deleted" // 9999
+            access_modifier: "Deleted" // or 9999
           })
         };
         fetch(url + toBeDeletedRasterUuidsArray[i] + "/", opts);
         // Refresh the page, so that the removed rasters are no longer visible
         this.setState({
-          checkAllCheckBoxes: false
+          checkAllCheckBoxes: false,
+          checkboxAllCheckboxesChecked: false
         });
+        this.checkAllCheckBoxes(false);
         this.loadRastersOnPage(this.state.page);
       }
     }
   }
 
+  clickRegularCheckbox(e) {
+    // also set alls thingsnames and uuids
+
+    // Make sure that you can click on the checkbox
+    if (e.stopPropagation) {
+      e.stopPropagation();
+    }
+    e.cancelBubble = true;
+
+    // Get the number of the checkbox in the array of this.state.checkboxes
+    // and set the checked value to false/ true.
+    const checkboxId = e.target.id.split("_checkbox_")[0]; //react
+    let newState = Object.assign({}, this.state);
+    if (this.state.checkboxes[checkboxId].checked) {
+      newState.checkboxes[checkboxId].checked = false;
+    } else {
+      newState.checkboxes[checkboxId].checked = true;
+    }
+    this.setState(newState);
+    console.log("this.state", this.state);
+  }
+
   checkAllCheckBoxes() {
-    var checkboxes = document.querySelectorAll("input[type=checkbox]");
+    // also set all names and uuids
 
     if (this.state.checkAllCheckBoxes) {
-      for (var i = 0; i < checkboxes.length; i++) {
-        checkboxes[i].checked = false;
+      let newState = Object.assign({}, this.state);
+      for (var i = 0; i < this.state.checkboxes.length; i++) {
+        newState.checkboxes[i].checked = false;
       }
+      this.setState(newState);
       this.setState({
-        checkAllCheckBoxes: false
+        checkAllCheckBoxes: false,
+        checkboxAllCheckboxesChecked: false
       });
     } else {
-      for (var i = 0; i < checkboxes.length; i++) {
-        checkboxes[i].checked = true;
+      let newState = Object.assign({}, this.state);
+      for (var i = 0; i < this.state.checkboxes.length; i++) {
+        // Only set it to true if there is a raster
+        if (Number.isInteger(this.state.checkboxes[i].id)) {
+          newState.checkboxes[i].checked = true;
+        }
       }
+      this.setState(newState);
       this.setState({
-        checkAllCheckBoxes: true
+        checkAllCheckBoxes: true,
+        checkboxAllCheckboxesChecked: true
       });
     }
   }
@@ -164,9 +257,12 @@ class Raster extends Component {
             <label>
               <input
                 type="checkbox"
-                // onClick={"if(event.stopPropagation){event.stopPropagation();}event.cancelBubble=true;"}
-                // checked={this.state.checkbox[i]}
-                id={"checkbox_" + raster.uuid}
+                // Make sure that you can still use the checkbox to click on,
+                // in combination with the check all checkbox.
+                onClick={this.clickRegularCheckbox}
+                checked={this.state.checkboxes[i].checked}
+                // Pay attention: a rastername can include an underscore.
+                id={i + "_checkbox_" + raster.uuid + "_" + raster.name}
               />
               {
                 " " // empty space between checkbox and raster.name
@@ -208,8 +304,10 @@ class Raster extends Component {
           <label>
             <input
               type="checkbox"
+              // Don't set id to [i]_checkbox_["something"],
+              // otherwise the code will also try to find an accompanying uuid
               id="checkboxCheckAll"
-              // checked={false}
+              checked={this.state.checkboxAllCheckboxesChecked}
               onClick={this.checkAllCheckBoxes}
             />
             {this.state.checkAllCheckBoxes
