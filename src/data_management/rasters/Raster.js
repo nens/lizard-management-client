@@ -92,15 +92,14 @@ class Raster extends Component {
           "checkbox_" + toBeDeletedRasterUuidsArray[i]
         ).checked = false;
         const opts = {
+          // Use PATCH request for deleting rasters, so that the rasters are
+          // not permanently deleted
           credentials: "same-origin",
-          method: "DELETE"
-          // In the future, use PATCH request for deleting rasters,
-          // so that the rasters are not permanently deleted
-          // method: "PATCH",
-          // headers: { "Content-Type": "application/json" },
-          // body: JSON.stringify({
-          //   access_modifier: "Deleted", // 9999
-          // })
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            access_modifier: "Deleted" // 9999
+          })
         };
         fetch(url + toBeDeletedRasterUuidsArray[i] + "/", opts);
         console.log("Deleted raster " + toBeDeletedRasterUuidsArray[i]);
