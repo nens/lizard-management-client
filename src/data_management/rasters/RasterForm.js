@@ -11,7 +11,6 @@ import { FormattedMessage } from "react-intl";
 import GenericTextInputComponent from "../../components/GenericTextInputComponent";
 import GenericSelectBoxComponent from "../../components/GenericSelectBoxComponent";
 import GenericCheckBoxComponent from "../../components/GenericCheckBoxComponent";
-import GenericDateComponent from "../../components/GenericDateComponent";
 import DurationComponent from "../../components/DurationComponent";
 import inputStyles from "../../styles/Input.css";
 import ErrorOverlay from "./ErrorOverlay.js";
@@ -66,8 +65,6 @@ class RasterFormModel extends Component {
     this.validateTemporalIntervalAmount = this.validateTemporalIntervalAmount.bind(
       this
     );
-    this.setTemporalOrigin = this.setTemporalOrigin.bind(this);
-    this.validateTemporalOrigin = this.validateTemporalOrigin.bind(this);
     this.handleClickCreateRaster = this.handleClickCreateRaster.bind(this);
     this.setTemporalIntervalDays = this.setTemporalIntervalDays.bind(this);
     this.setTemporalIntervalHours = this.setTemporalIntervalHours.bind(this);
@@ -79,12 +76,10 @@ class RasterFormModel extends Component {
     );
   }
   setCurrentStep(currentStep) {
-    // The steps "raster is temporal" (9) and "temporal origin" (10) need to be flagged if they are opened once.
+    // The steps "raster is temporal" (9) and "temporal interval" (10) need to be flagged if they are opened once.
     if (currentStep === 9) {
       this.setState({ temporalBoolComponentWasEverOpenedByUser: true });
     } else if (currentStep === 10) {
-      this.setState({ temporalOriginComponentWasEverOpenedByUser: true });
-    } else if (currentStep === 11) {
       this.setState({ temporalIntervalWasEverOpenedByUser: true });
     }
     this.setState({ currentStep });
@@ -242,13 +237,6 @@ class RasterFormModel extends Component {
   setTemporalIntervalSeconds(temporalIntervalSeconds) {
     this.setState({ temporalIntervalSeconds });
   }
-  // temporal origin
-  setTemporalOrigin(temporalOrigin) {
-    this.setState({ temporalOrigin });
-  }
-  validateTemporalOrigin(_temporalOrigin) {
-    return this.state.temporalOriginComponentWasEverOpenedByUser;
-  }
 
   handleKeyDown(event) {
     if (event.key === "Enter") {
@@ -280,8 +268,7 @@ class RasterFormModel extends Component {
           this.state.temporalIntervalHours,
           this.state.temporalIntervalMinutes,
           this.state.temporalIntervalSeconds
-        ) &&
-        this.validateTemporalOrigin(this.state.temporalOrigin));
+        ));
     return normalFields && temporalFields;
   }
 
@@ -402,8 +389,6 @@ class RasterFormModel extends Component {
       description: currentRaster.description,
       temporalBool: currentRaster.temporal,
       temporalBoolComponentWasEverOpenedByUser: true, // a checkbbox is always valid, but we should only mark it as valid if the user has actualy opened the question
-      temporalOrigin: moment(currentRaster.origin), //"2000-01-01T00:00:00Z",
-      temporalOriginComponentWasEverOpenedByUser: true, // the data is valid since it is created with momentJS, but should only be marked as such when the date component was actually opened once
       temporalIntervalUnit: "seconds", // for now assume seconds// one of [seconds minutes hours days weeks] no months years because those are not a static amount of seconds..
       temporalIntervalAmount: "", //60*60, //minutes times seconds = hour // positive integer. amount of temporalIntervalUnit
       temporalIntervalWasEverOpenedByUser: true,
@@ -475,7 +460,7 @@ class RasterFormModel extends Component {
           supplier: this.state.supplierId && this.state.supplierId.username,
           supplier_code: this.state.supplierCode,
           temporal: this.state.temporalBool,
-          origin: this.state.temporalOrigin.toISOString(), // toISOString = momentJS function
+
           interval: isoIntervalDuration, //'P1D', // P1D is default, = ISO 8601 datetime for 1 day",
           rescalable: false,
           optimizer: false, // default
@@ -868,31 +853,6 @@ class RasterFormModel extends Component {
                 />
                 {this.state.temporalBool ? (
                   <div>
-                    <GenericDateComponent
-                      titleComponent={
-                        <FormattedMessage
-                          id="rasters.temporal_raster_origin"
-                          defaultMessage="Temporal Raster Origin"
-                        />
-                      } // <FormatText ... //>
-                      subtitleComponent={
-                        <FormattedMessage
-                          id="rasters.temporal_raster_origin_description"
-                          defaultMessage="First possible measurement off the temporal raster"
-                        />
-                      }
-                      multiline={false} // boolean for which input elem to use: text OR textarea
-                      step={10}
-                      opened={this.props.currentRaster || currentStep === 10}
-                      formUpdate={!!this.props.currentRaster}
-                      readonly={!!this.props.currentRaster}
-                      currentStep={currentStep}
-                      setCurrentStep={this.setCurrentStep}
-                      modelValue={this.state.temporalOrigin} // for now always in seconds
-                      updateModelValue={e => this.setTemporalOrigin(e)}
-                      //resetModelValue={() => this.setTemporalIntervalAmount("")}
-                      validate={this.validateTemporalOrigin}
-                    />
                     <DurationComponent
                       titleComponent={
                         <FormattedMessage
@@ -907,9 +867,9 @@ class RasterFormModel extends Component {
                         />
                       }
                       multiline={false} // boolean for which input elem to use: text OR textarea
-                      step={11}
+                      step={10}
                       isLastItem={true}
-                      opened={this.props.currentRaster || currentStep === 11}
+                      opened={this.props.currentRaster || currentStep === 10}
                       formUpdate={!!this.props.currentRaster}
                       readonly={!!this.props.currentRaster}
                       currentStep={currentStep}

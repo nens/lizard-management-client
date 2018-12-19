@@ -65,14 +65,10 @@ class Raster extends Component {
 
     const htmlRasterTableHeader = (
       <div
-        className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${
-          gridStyles.colSm12
-        } ${gridStyles.colXs12} ${styles.RasterTableHeader}`}
+        className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12} ${styles.RasterTableHeader}`}
       >
         <span
-          className={`${gridStyles.colLg8} ${gridStyles.colMd8} ${
-            gridStyles.colSm8
-          } ${gridStyles.colXs8}`}
+          className={`${gridStyles.colLg8} ${gridStyles.colMd8} ${gridStyles.colSm8} ${gridStyles.colXs8}`}
         >
           <FormattedMessage
             id="rasters.header_raster_name"
@@ -80,9 +76,7 @@ class Raster extends Component {
           />
         </span>
         <span
-          className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${
-            gridStyles.colSm4
-          } ${gridStyles.colXs4}`}
+          className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${gridStyles.colSm4} ${gridStyles.colXs4}`}
           style={{ float: "right" }}
         >
           <FormattedMessage
@@ -124,22 +118,17 @@ class Raster extends Component {
           }}
         >
           <div
-            className={`${gridStyles.colLg8} ${gridStyles.colMd8} ${
-              gridStyles.colSm8
-            } ${gridStyles.colXs8}`}
+            className={`${gridStyles.colLg8} ${gridStyles.colMd8} ${gridStyles.colSm8} ${gridStyles.colXs8}`}
           >
             <SearchBox
               handleSearch={searchContains =>
-                this.loadRastersOnPage(this.state.page, searchContains)
-              }
+                this.loadRastersOnPage(this.state.page, searchContains)}
               searchTerms={this.state.searchTerms}
               setSearchTerms={searchTerms => this.setState({ searchTerms })}
             />
           </div>
           <div
-            className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${
-              gridStyles.colSm4
-            } ${gridStyles.colXs4}`}
+            className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${gridStyles.colSm4} ${gridStyles.colXs4}`}
           >
             <button
               type="button"
@@ -158,9 +147,7 @@ class Raster extends Component {
         {htmlRasterTableHeader}
         <div className={gridStyles.Row}>
           <div
-            className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${
-              gridStyles.colSm12
-            } ${gridStyles.colXs12}`}
+            className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
           >
             {isFetching ? (
               <div
@@ -201,27 +188,22 @@ class Raster extends Component {
             style={{
               color: "#858E9C"
             }}
-            className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${
-              gridStyles.colSm4
-            } ${gridStyles.colXs4}`}
+            className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${gridStyles.colSm4} ${gridStyles.colXs4}`}
           >
             <FormattedMessage
               id="rasters.number_of_rasters"
-              defaultMessage={`{numberOfRasters, number} {numberOfRasters, plural, 
+              defaultMessage={`{numberOfRasters, number} {numberOfRasters, plural,
                 one {Raster}
                 other {Rasters}}`}
               values={{ numberOfRasters }}
             />
           </div>
           <div
-            className={`${gridStyles.colLg8} ${gridStyles.colMd8} ${
-              gridStyles.colSm8
-            } ${gridStyles.colXs8}`}
+            className={`${gridStyles.colLg8} ${gridStyles.colMd8} ${gridStyles.colSm8} ${gridStyles.colXs8}`}
           >
             <PaginationBar
               loadRastersOnPage={page =>
-                this.loadRastersOnPage(page, this.state.searchTerms)
-              }
+                this.loadRastersOnPage(page, this.state.searchTerms)}
               page={page}
               pages={Math.ceil(total / 10)}
             />
@@ -246,11 +228,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   };
 };
 
-Raster = withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(Raster)
-);
+Raster = withRouter(connect(mapStateToProps, mapDispatchToProps)(Raster));
 
 export { Raster };
