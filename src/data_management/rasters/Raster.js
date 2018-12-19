@@ -86,6 +86,7 @@ class Raster extends Component {
       )
     ) {
       const url = "/api/v3/rasters/";
+      document.getElementById("checkboxCheckAll").checked = false;
       for (var i = 0; i < toBeDeletedRasterUuidsArray.length; i++) {
         document.getElementById(
           "checkbox_" + toBeDeletedRasterUuidsArray[i]
@@ -214,6 +215,7 @@ class Raster extends Component {
           <label>
             <input
               type="checkbox"
+              id="checkboxCheckAll"
               // checked={false}
               onClick={this.checkAllCheckBoxes}
             />
