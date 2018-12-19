@@ -14,6 +14,7 @@ import GenericCheckBoxComponent from "../../components/GenericCheckBoxComponent"
 import GenericDateComponent from "../../components/GenericDateComponent";
 import DurationComponent from "../../components/DurationComponent";
 import inputStyles from "../../styles/Input.css";
+import ErrorOverlay from "./ErrorOverlay.js";
 
 // ! important, these old component may later be used! Ther corresponding files already exist
 // import bindReactFunctions from "../../utils/BindReactFunctions.js"; // currently not working. Probably needs a list with functions in which case this is probably only overcomplicating things
@@ -28,6 +29,8 @@ class RasterFormModel extends Component {
       this.state = this.setInitialState(props);
     }
 
+    this.scrollToTop = this.scrollToTop.bind(this);
+    this.handleResponse = this.handleResponse.bind(this);
     this.setCurrentStep = this.setCurrentStep.bind(this);
     this.setRasterName = this.setRasterName.bind(this);
     this.resetRasterName = this.resetRasterName.bind(this);
@@ -334,6 +337,9 @@ class RasterFormModel extends Component {
 
   setInitialState(props) {
     return {
+      isFetching: false,
+      openOverlay: false,
+      modalErrorMessage: "",
       currentStep: 1,
       rasterName: "",
       selectedOrganisation: {
@@ -381,6 +387,9 @@ class RasterFormModel extends Component {
     );
 
     return {
+      modalErrorMessage: "",
+      isFetching: false,
+      openOverlay: false,
       currentStep: 1,
       rasterName: currentRaster.name,
       selectedOrganisation: {
@@ -418,7 +427,22 @@ class RasterFormModel extends Component {
     };
   }
 
+  // If a screen is too long for the overlay, make sure to scroll to top
+  scrollToTop() {
+    if (window.pageYOffset > 0) {
+      window.scroll(0, 0);
+    }
+  }
+
+  handleResponse(response) {
+    this.setState({ modalErrorMessage: response });
+    this.setState({ isFetching: false });
+    this.setState({ handlingDone: true });
+  }
+
   handleClickCreateRaster() {
+    this.scrollToTop();
+    this.setState({ isFetching: true, openOverlay: true });
     const url = "/api/v3/rasters/";
     const observationTypeId =
       (this.state.observationType &&
@@ -462,11 +486,9 @@ class RasterFormModel extends Component {
         })
       };
 
-      fetch(url, opts)
-        .then(response => response.json()) // TODO: kan dit weg?
-        .then(responseParsed => {
-          this.props.history.push("/data_management/rasters");
-        });
+      fetch(url, opts).then(responseParsed => {
+        this.handleResponse(responseParsed);
+      });
     } else {
       const opts = {
         credentials: "same-origin",
@@ -488,11 +510,12 @@ class RasterFormModel extends Component {
         })
       };
 
-      fetch(url + "uuid:" + this.props.currentRaster.uuid + "/", opts)
-        .then(response => response.json()) // TODO: kan dit weg?
-        .then(responseParsed => {
-          this.props.history.push("/data_management/rasters");
-        });
+      fetch(
+        url + "uuid:" + this.props.currentRaster.uuid + "/",
+        opts
+      ).then(responseParsed => {
+        this.handleResponse(responseParsed);
+      });
     }
   }
 
@@ -512,14 +535,22 @@ class RasterFormModel extends Component {
       aggregationType
     } = this.state;
 
+    console.log(this.state.openOverlay);
     return (
       <div>
+        {this.state.openOverlay ? (
+          <ErrorOverlay
+            isFetching={this.state.isFetching}
+            history={this.props.history}
+            errorMessage={this.state.modalErrorMessage}
+            handleClose={() =>
+              this.setState({ handlingDone: false, openOverlay: false })}
+          />
+        ) : null}
         <div className={gridStyles.Container}>
           <div className={`${gridStyles.Row}`}>
             <div
-              className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${
-                gridStyles.colSm12
-              } ${gridStyles.colXs12}`}
+              className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
             >
               <div id="steps" style={{ margin: "20px 0 0 20px" }}>
                 <GenericTextInputComponent
@@ -683,8 +714,7 @@ class RasterFormModel extends Component {
                   transformChoiceToDescription={item => item.description}
                   modelValue={aggregationType} // string: e.g. the name of a raster
                   updateModelValue={item =>
-                    this.setAggregationType(item.display)
-                  } // cb function to *update* the value of e.g. a raster's name in the parent model
+                    this.setAggregationType(item.display)} // cb function to *update* the value of e.g. a raster's name in the parent model
                   resetModelValue={() => this.setAggregationType("")} // cb function to *reset* the value of e.g. a raster's name in the parent model
                   validate={this.validateAggregationType} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
                 />
@@ -907,9 +937,7 @@ class RasterFormModel extends Component {
                   <div className={inputStyles.InputContainer}>
                     <button
                       type="button"
-                      className={`${buttonStyles.Button} ${
-                        buttonStyles.Success
-                      }`}
+                      className={`${buttonStyles.Button} ${buttonStyles.Success}`}
                       style={{ marginTop: 10 }}
                       onClick={() => {
                         this.handleClickCreateRaster();
@@ -957,10 +985,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 };
 
 const RasterForm = withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(RasterFormModel)
+  connect(mapStateToProps, mapDispatchToProps)(RasterFormModel)
 );
 
 export { RasterForm };
