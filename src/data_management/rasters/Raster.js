@@ -67,11 +67,6 @@ class Raster extends Component {
     for (var i = 0; i < checkboxes.length; i++) {
       if (checkboxes[i].id.indexOf("checkbox_") > -1) {
         let selectedUuid = checkboxes[i].id.split("checkbox_")[1];
-        console.log("checkboxes[i]", checkboxes[i]);
-        console.log(
-          "checkboxes[i].parentNode.childNodes[2].innerHTML",
-          checkboxes[i].parentNode.childNodes[2].innerHTML
-        );
         toBeDeletedRasterNamesArray.push(
           checkboxes[i].parentNode.childNodes[2].innerHTML
         );
@@ -102,8 +97,7 @@ class Raster extends Component {
           })
         };
         fetch(url + toBeDeletedRasterUuidsArray[i] + "/", opts);
-        console.log("Deleted raster " + toBeDeletedRasterUuidsArray[i]);
-        // Refresh the page, so that the removed rasters are not anymore visible
+        // Refresh the page, so that the removed rasters are no longer visible
         this.setState({
           checkAllCheckBoxes: false
         });
