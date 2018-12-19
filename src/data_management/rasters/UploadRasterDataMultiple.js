@@ -18,7 +18,9 @@ import "moment/locale/nl";
 
 // import {InputMoment} from 'react-input-moment';
 import Datetime from "react-datetime";
+// import "../../components/ReactDateTime.css";
 import "react-datetime/css/react-datetime.css";
+import { Scrollbars } from "react-custom-scrollbars";
 
 class UploadRasterDataMultipleModel extends Component {
   constructor(props) {
@@ -309,49 +311,50 @@ class UploadRasterDataMultipleModel extends Component {
                 defaultMessage="Following files could not be selected"
               />
             </h3>
-
-            {this.state.rejectedFiles.map((e, i) => (
-              <div className={gridStyles.Row} key={e.name}>
-                <div
-                  className={classNames(
-                    gridStyles.colMd5,
-                    gridStyles.colSm5,
-                    gridStyles.colXs5
-                  )}
-                >
-                  {e.file.name}
-                </div>
-                <div
-                  className={classNames(
-                    gridStyles.colMd5,
-                    gridStyles.colSm5,
-                    gridStyles.colXs5
-                  )}
-                >
-                  {e.reason}
-                </div>
-                <div
-                  className={classNames(
-                    gridStyles.colMd2,
-                    gridStyles.colSm2,
-                    gridStyles.colXs2
-                  )}
-                >
+            <Scrollbars autoHeight autoHeightMin={0} autoHeightMax={250}>
+              {this.state.rejectedFiles.map((e, i) => (
+                <div className={gridStyles.Row} key={e.name}>
                   <div
-                    // className={this.props.className}
-                    onClick={e => {
-                      const rejectedFiles = this.state.rejectedFiles;
-                      const newRejectedFiles = rejectedFiles.filter(
-                        (e, iLoc) => i !== iLoc
-                      );
-                      this.setState({ rejectedFiles: newRejectedFiles });
-                    }}
+                    className={classNames(
+                      gridStyles.colMd5,
+                      gridStyles.colSm5,
+                      gridStyles.colXs5
+                    )}
                   >
-                    <i className={`material-icons`}>clear</i>
+                    {e.file.name}
+                  </div>
+                  <div
+                    className={classNames(
+                      gridStyles.colMd5,
+                      gridStyles.colSm5,
+                      gridStyles.colXs5
+                    )}
+                  >
+                    {e.reason}
+                  </div>
+                  <div
+                    className={classNames(
+                      gridStyles.colMd2,
+                      gridStyles.colSm2,
+                      gridStyles.colXs2
+                    )}
+                  >
+                    <div
+                      // className={this.props.className}
+                      onClick={e => {
+                        const rejectedFiles = this.state.rejectedFiles;
+                        const newRejectedFiles = rejectedFiles.filter(
+                          (e, iLoc) => i !== iLoc
+                        );
+                        this.setState({ rejectedFiles: newRejectedFiles });
+                      }}
+                    >
+                      <i className={`material-icons`}>clear</i>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </Scrollbars>
 
             {/* {this.state.rejectedFiles.length > 1 ? (
               <h3>
@@ -436,6 +439,7 @@ class UploadRasterDataMultipleModel extends Component {
                   />
                 </h3>
               ) : null}
+              {/* <Scrollbars autoHeight autoHeightMin={0} autoHeightMax={600}> */}
               {this.state.acceptedFiles.map((e, i) => (
                 <div
                   key={e.file.name}
@@ -623,6 +627,8 @@ class UploadRasterDataMultipleModel extends Component {
                   </div>
                 </div>
               ))}
+              {/* scrollbars have problem with datepicker namely that the datepicker falls underneath the scroll */}
+              {/* </Scrollbars> */}
             </div>
           </div>
         )}
@@ -630,7 +636,11 @@ class UploadRasterDataMultipleModel extends Component {
         <button
           style={
             showSaveButton
-              ? { marginRight: "10px", marginTop: "10px" }
+              ? {
+                  marginRight: "10px",
+                  marginTop: "10px",
+                  marginBottom: "100px"
+                } // MARGIN BOTTOM TO PUSH PAGE END DOWN SO DATEPICKER DOES NOT GET OF PAGE...
               : { display: "none" }
           }
           disabled={!showSaveButton}
