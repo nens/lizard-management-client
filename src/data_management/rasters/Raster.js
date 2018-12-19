@@ -135,17 +135,19 @@ class Raster extends Component {
       }
     }
 
+    let rasterNamesWithEnter = "";
+    toBeDeletedRasterNamesArray.forEach(function(rasterName) {
+      rasterNamesWithEnter += rasterName + " \n ";
+    });
+
     if (
       window.confirm(
         "Are you sure you want to delete the next raster(s)? \n  \n " +
-          toBeDeletedRasterNamesArray //make rows.
+          rasterNamesWithEnter //make rows.
       )
     ) {
-      const url = "/api/v3/rasters/"; // api/v4?
+      const url = "/api/v3/rasters/"; // werkt nog niet op api/v4
       for (var i = 0; i < toBeDeletedRasterUuidsArray.length; i++) {
-        // document.getElementById( // React
-        //   i + "_checkbox_" + toBeDeletedRasterUuidsArray[i]
-        // ).checked = false;
         const opts = {
           // Use PATCH request for deleting rasters, so that the rasters are
           // not permanently deleted
