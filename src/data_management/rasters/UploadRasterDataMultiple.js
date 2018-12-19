@@ -230,68 +230,70 @@ class UploadRasterDataMultipleModel extends Component {
 
   renderDropZone() {
     return (
-      <Dropzone onDrop={this.onDrop} accept="image/tiff">
-        {({ getRootProps, getInputProps, isDragActive }) => {
-          return (
-            <div
-              {...getRootProps()}
-              className={classNames(
-                styles.DropZoneContainer,
-                "dropzone",
-                { "dropzone--isActive": isDragActive },
-                styles.UploadBox
-              )}
-            >
-              <input {...getInputProps()} />
-              {isDragActive ? (
-                <h4 className={styles.GreyedText}>
-                  <FormattedMessage
-                    id="rasters.file_dropping"
-                    defaultMessage="Drop files here..."
-                  />
-                </h4>
-              ) : (
-                <div>
-                  <h3>
+      <div style={this.state.saveAllButtonBusy ? { visibility: "hidden" } : {}}>
+        <Dropzone onDrop={this.onDrop} accept="image/tiff">
+          {({ getRootProps, getInputProps, isDragActive }) => {
+            return (
+              <div
+                {...getRootProps()}
+                className={classNames(
+                  styles.DropZoneContainer,
+                  "dropzone",
+                  { "dropzone--isActive": isDragActive },
+                  styles.UploadBox
+                )}
+              >
+                <input {...getInputProps()} />
+                {isDragActive ? (
+                  <h4 className={styles.GreyedText}>
                     <FormattedMessage
-                      id="rasters.drop_file_here"
-                      defaultMessage="Drop Files here"
+                      id="rasters.file_dropping"
+                      defaultMessage="Drop files here..."
                     />
-                  </h3>
-                  {this.state.acceptedFiles.length === 0 ? (
-                    <h4 className={styles.GreyedText}>
+                  </h4>
+                ) : (
+                  <div>
+                    <h3>
                       <FormattedMessage
-                        id="rasters.no_file_selected"
-                        defaultMessage="No file selected yet"
+                        id="rasters.drop_file_here"
+                        defaultMessage="Drop Files here"
                       />
-                    </h4>
-                  ) : (
-                    <div>
-                      <h4>
-                        {this.state.acceptedFiles.length + " "}
+                    </h3>
+                    {this.state.acceptedFiles.length === 0 ? (
+                      <h4 className={styles.GreyedText}>
                         <FormattedMessage
                           id="rasters.no_file_selected"
-                          defaultMessage="Files Selected"
+                          defaultMessage="No file selected yet"
                         />
                       </h4>
-                    </div>
-                  )}
+                    ) : (
+                      <div>
+                        <h4>
+                          {this.state.acceptedFiles.length + " "}
+                          <FormattedMessage
+                            id="rasters.no_file_selected"
+                            defaultMessage="Files Selected"
+                          />
+                        </h4>
+                      </div>
+                    )}
 
-                  <button
-                    className={`${buttonStyles.Button} ${buttonStyles.Success}`}
-                    style={{ marginTop: 10 }}
-                  >
-                    <FormattedMessage
-                      id="rasters.raster_upload_browse"
-                      defaultMessage="Browse"
-                    />
-                  </button>
-                </div>
-              )}
-            </div>
-          );
-        }}
-      </Dropzone>
+                    <button
+                      className={`${buttonStyles.Button} ${buttonStyles.Success}`}
+                      style={{ marginTop: 10 }}
+                    >
+                      <FormattedMessage
+                        id="rasters.raster_upload_browse"
+                        defaultMessage="Browse"
+                      />
+                    </button>
+                  </div>
+                )}
+              </div>
+            );
+          }}
+        </Dropzone>
+      </div>
     );
   }
 

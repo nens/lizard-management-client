@@ -256,7 +256,7 @@ class Raster extends Component {
           >
             <FormattedMessage
               id="rasters.number_of_rasters"
-              defaultMessage={`{numberOfRasters, number} {numberOfRasters, plural, 
+              defaultMessage={`{numberOfRasters, number} {numberOfRasters, plural,
                 one {Raster}
                 other {Rasters}}`}
               values={{ numberOfRasters }}

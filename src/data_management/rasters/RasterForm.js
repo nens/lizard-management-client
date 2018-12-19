@@ -11,9 +11,9 @@ import { FormattedMessage } from "react-intl";
 import GenericTextInputComponent from "../../components/GenericTextInputComponent";
 import GenericSelectBoxComponent from "../../components/GenericSelectBoxComponent";
 import GenericCheckBoxComponent from "../../components/GenericCheckBoxComponent";
-import GenericDateComponent from "../../components/GenericDateComponent";
 import DurationComponent from "../../components/DurationComponent";
 import inputStyles from "../../styles/Input.css";
+import ErrorOverlay from "./ErrorOverlay.js";
 
 // ! important, these old component may later be used! Ther corresponding files already exist
 // import bindReactFunctions from "../../utils/BindReactFunctions.js"; // currently not working. Probably needs a list with functions in which case this is probably only overcomplicating things
@@ -28,6 +28,8 @@ class RasterFormModel extends Component {
       this.state = this.setInitialState(props);
     }
 
+    this.scrollToTop = this.scrollToTop.bind(this);
+    this.handleResponse = this.handleResponse.bind(this);
     this.setCurrentStep = this.setCurrentStep.bind(this);
     this.setRasterName = this.setRasterName.bind(this);
     this.resetRasterName = this.resetRasterName.bind(this);
@@ -63,8 +65,6 @@ class RasterFormModel extends Component {
     this.validateTemporalIntervalAmount = this.validateTemporalIntervalAmount.bind(
       this
     );
-    this.setTemporalOrigin = this.setTemporalOrigin.bind(this);
-    this.validateTemporalOrigin = this.validateTemporalOrigin.bind(this);
     this.handleClickCreateRaster = this.handleClickCreateRaster.bind(this);
     this.setTemporalIntervalDays = this.setTemporalIntervalDays.bind(this);
     this.setTemporalIntervalHours = this.setTemporalIntervalHours.bind(this);
@@ -76,12 +76,10 @@ class RasterFormModel extends Component {
     );
   }
   setCurrentStep(currentStep) {
-    // The steps "raster is temporal" (9) and "temporal origin" (10) need to be flagged if they are opened once.
+    // The steps "raster is temporal" (9) and "temporal interval" (10) need to be flagged if they are opened once.
     if (currentStep === 9) {
       this.setState({ temporalBoolComponentWasEverOpenedByUser: true });
     } else if (currentStep === 10) {
-      this.setState({ temporalOriginComponentWasEverOpenedByUser: true });
-    } else if (currentStep === 11) {
       this.setState({ temporalIntervalWasEverOpenedByUser: true });
     }
     this.setState({ currentStep });
@@ -239,13 +237,6 @@ class RasterFormModel extends Component {
   setTemporalIntervalSeconds(temporalIntervalSeconds) {
     this.setState({ temporalIntervalSeconds });
   }
-  // temporal origin
-  setTemporalOrigin(temporalOrigin) {
-    this.setState({ temporalOrigin });
-  }
-  validateTemporalOrigin(_temporalOrigin) {
-    return this.state.temporalOriginComponentWasEverOpenedByUser;
-  }
 
   handleKeyDown(event) {
     if (event.key === "Enter") {
@@ -277,8 +268,7 @@ class RasterFormModel extends Component {
           this.state.temporalIntervalHours,
           this.state.temporalIntervalMinutes,
           this.state.temporalIntervalSeconds
-        ) &&
-        this.validateTemporalOrigin(this.state.temporalOrigin));
+        ));
     return normalFields && temporalFields;
   }
 
@@ -334,6 +324,10 @@ class RasterFormModel extends Component {
 
   setInitialState(props) {
     return {
+      isFetching: false,
+      openOverlay: false,
+      modalErrorMessage: "",
+      createdRaster: null,
       currentStep: 1,
       rasterName: "",
       selectedOrganisation: {
@@ -381,6 +375,10 @@ class RasterFormModel extends Component {
     );
 
     return {
+      modalErrorMessage: "",
+      createdRaster: null,
+      isFetching: false,
+      openOverlay: false,
       currentStep: 1,
       rasterName: currentRaster.name,
       selectedOrganisation: {
@@ -393,8 +391,6 @@ class RasterFormModel extends Component {
       description: currentRaster.description,
       temporalBool: currentRaster.temporal,
       temporalBoolComponentWasEverOpenedByUser: true, // a checkbbox is always valid, but we should only mark it as valid if the user has actualy opened the question
-      temporalOrigin: moment(currentRaster.origin), //"2000-01-01T00:00:00Z",
-      temporalOriginComponentWasEverOpenedByUser: true, // the data is valid since it is created with momentJS, but should only be marked as such when the date component was actually opened once
       temporalIntervalUnit: "seconds", // for now assume seconds// one of [seconds minutes hours days weeks] no months years because those are not a static amount of seconds..
       temporalIntervalAmount: "", //60*60, //minutes times seconds = hour // positive integer. amount of temporalIntervalUnit
       temporalIntervalWasEverOpenedByUser: true,
@@ -418,7 +414,22 @@ class RasterFormModel extends Component {
     };
   }
 
+  // If a screen is too long for the overlay, make sure to scroll to top
+  scrollToTop() {
+    if (window.pageYOffset > 0) {
+      window.scroll(0, 0);
+    }
+  }
+
+  handleResponse(response) {
+    this.setState({ modalErrorMessage: response });
+    this.setState({ isFetching: false });
+    this.setState({ handlingDone: true });
+  }
+
   handleClickCreateRaster() {
+    this.scrollToTop();
+    this.setState({ isFetching: true, openOverlay: true });
     const url = "/api/v3/rasters/";
     const observationTypeId =
       (this.state.observationType &&
@@ -451,7 +462,6 @@ class RasterFormModel extends Component {
           supplier: this.state.supplierId && this.state.supplierId.username,
           supplier_code: this.state.supplierCode,
           temporal: this.state.temporalBool,
-          // origin: this.state.temporalOrigin.toISOString(), // toISOString = momentJS function
           interval: isoIntervalDuration, //'P1D', // P1D is default, = ISO 8601 datetime for 1 day",
           rescalable: false,
           optimizer: false, // default
@@ -464,12 +474,13 @@ class RasterFormModel extends Component {
       };
 
       fetch(url, opts)
-        .then(response => response.json()) // TODO: kan dit weg?
         .then(responseParsed => {
-          // this.props.history.push("/data_management/rasters");
-          this.props.history.push(
-            "/data_management/rasters/" + responseParsed.uuid + "/data/"
-          );
+          this.handleResponse(responseParsed);
+          return responseParsed.json();
+        })
+        .then(parsedBody => {
+          console.log("parsedBody", parsedBody);
+          this.setState({ createdRaster: parsedBody });
         });
     } else {
       const opts = {
@@ -494,11 +505,14 @@ class RasterFormModel extends Component {
       };
 
       fetch(url + "uuid:" + this.props.currentRaster.uuid + "/", opts)
-        .then(response => response.json()) // TODO: kan dit weg?
         .then(responseParsed => {
-          this.props.history.push(
-            "/data_management/rasters/" + responseParsed.uuid + "/data/"
-          );
+          console.log("responseParsed put", responseParsed);
+          this.handleResponse(responseParsed);
+          return responseParsed.json();
+        })
+        .then(parsedBody => {
+          console.log("parsedBody", parsedBody);
+          this.setState({ createdRaster: parsedBody });
         });
     }
   }
@@ -519,8 +533,19 @@ class RasterFormModel extends Component {
       aggregationType
     } = this.state;
 
+    console.log(this.state.openOverlay);
     return (
       <div>
+        {this.state.openOverlay ? (
+          <ErrorOverlay
+            isFetching={this.state.isFetching}
+            history={this.props.history}
+            errorMessage={this.state.modalErrorMessage}
+            handleClose={() =>
+              this.setState({ handlingDone: false, openOverlay: false })}
+            currentRaster={this.props.currentRaster || this.state.createdRaster}
+          />
+        ) : null}
         <div className={gridStyles.Container}>
           <div className={`${gridStyles.Row}`}>
             <div
@@ -842,31 +867,6 @@ class RasterFormModel extends Component {
                 />
                 {this.state.temporalBool ? (
                   <div>
-                    <GenericDateComponent
-                      titleComponent={
-                        <FormattedMessage
-                          id="rasters.temporal_raster_origin"
-                          defaultMessage="Temporal Raster Origin"
-                        />
-                      } // <FormatText ... //>
-                      subtitleComponent={
-                        <FormattedMessage
-                          id="rasters.temporal_raster_origin_description"
-                          defaultMessage="First possible measurement off the temporal raster"
-                        />
-                      }
-                      multiline={false} // boolean for which input elem to use: text OR textarea
-                      step={10}
-                      opened={this.props.currentRaster || currentStep === 10}
-                      formUpdate={!!this.props.currentRaster}
-                      readonly={!!this.props.currentRaster}
-                      currentStep={currentStep}
-                      setCurrentStep={this.setCurrentStep}
-                      modelValue={this.state.temporalOrigin} // for now always in seconds
-                      updateModelValue={e => this.setTemporalOrigin(e)}
-                      //resetModelValue={() => this.setTemporalIntervalAmount("")}
-                      validate={this.validateTemporalOrigin}
-                    />
                     <DurationComponent
                       titleComponent={
                         <FormattedMessage
@@ -881,9 +881,9 @@ class RasterFormModel extends Component {
                         />
                       }
                       multiline={false} // boolean for which input elem to use: text OR textarea
-                      step={11}
+                      step={10}
                       isLastItem={true}
-                      opened={this.props.currentRaster || currentStep === 11}
+                      opened={this.props.currentRaster || currentStep === 10}
                       formUpdate={!!this.props.currentRaster}
                       readonly={!!this.props.currentRaster}
                       currentStep={currentStep}
