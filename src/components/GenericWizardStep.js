@@ -81,10 +81,7 @@ const mapDispatchToProps = dispatch => {
 };
 
 GenericWizardStep = withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(GenericWizardStep)
+  connect(mapStateToProps, mapDispatchToProps)(GenericWizardStep)
 );
 
 export default GenericWizardStep;

@@ -171,10 +171,7 @@ const mapDispatchToProps = dispatch => {
 };
 
 GenericTextInputComponent = withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(GenericTextInputComponent)
+  connect(mapStateToProps, mapDispatchToProps)(GenericTextInputComponent)
 );
 
 export default GenericTextInputComponent;

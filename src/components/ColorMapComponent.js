@@ -13,7 +13,7 @@ import formStyles from "../styles/Forms.css";
 import buttonStyles from "../styles/Buttons.css";
 import inputStyles from "../styles/Input.css";
 
-class GenericSelectBoxComponent extends Component {
+class ColorMapComponent extends Component {
   setLocalStateFromProps(props) {
     // If this component is the "current step component", set the page focus to the components
     // input field:
@@ -23,7 +23,7 @@ class GenericSelectBoxComponent extends Component {
       );
       // inputElem.focus(); does not work outside setTimeout. Is this the right solution?
       setTimeout(function() {
-        inputElem.focus();
+        // inputElem.focus();
       }, 0);
     }
   }
@@ -43,8 +43,10 @@ class GenericSelectBoxComponent extends Component {
     const {
       titleComponent, // <FormatText ... //>
       subtitleComponent, // <FormatText ... />
-      step, //  which step it this GenericSelectBoxComponent refers to
-      currentStep, // which step is currently active
+      minTitleComponent,
+      maxTitleComponent,
+      step, // int for denoting which step it this GenericSelectBoxComponent refers to
+      currentStep, // int for denoting which step is currently active
       setCurrentStep, // cb function for updating which step becomes active
       opened, // complete question and input fields become visible if set to true
       choices, // list of choices in select box. Depending on transformChoiceToDisplayValue,transformChoiceToDescription, transformChoiceToOption
@@ -59,7 +61,8 @@ class GenericSelectBoxComponent extends Component {
       choicesSearchable,
       placeholder,
       formUpdate,
-      readonly
+      readonly,
+      readOnlyReason
     } = this.props;
     const active = step === currentStep || (formUpdate && !readonly);
     const showCheckMark = validate(modelValue);
@@ -81,43 +84,85 @@ class GenericSelectBoxComponent extends Component {
             {showCheckMark ? <CheckMark /> : null}
           </h3>
           <div style={{ display: opened ? "block" : "none" }}>
-            <p className="text-muted">{subtitleComponent}</p>
+            {readOnlyReason ? (
+              <p className="text-muted">{readOnlyReason}</p>
+            ) : (
+              <p className="text-muted">{subtitleComponent}</p>
+            )}
             <div
               className={
                 formStyles.FormGroup + " " + inputStyles.PositionRelative
               }
             >
-              {choicesSearchable ? (
+              <div>
                 <SelectBoxSearch
                   choices={choices}
-                  choice={modelValue}
+                  choice={{ name: modelValue.colorMap }}
                   transformChoiceToDisplayValue={transformChoiceToDisplayValue}
                   isFetching={isFetching}
                   updateModelValue={e => {
-                    updateModelValue(e);
+                    updateModelValue({ colorMap: e.name });
                   }}
                   onKeyUp={e => this.handleEnter(e)}
                   inputId={titleComponent.props.id + "_input"}
                   placeholder={placeholder}
-                  validate={validate}
-                  resetModelValue={resetModelValue}
+                  validate={e => {
+                    return e.name != "";
+                  }}
+                  resetModelValue={e => {
+                    updateModelValue({ colorMap: "" });
+                  }}
                   readonly={readonly}
                 />
-              ) : (
-                <SelectBoxSimple
-                  choices={choices}
-                  choice={modelValue}
-                  isFetching={isFetching}
-                  transformChoiceToDisplayValue={transformChoiceToDisplayValue}
-                  updateModelValue={updateModelValue}
-                  onKeyUp={e => this.handleEnter(e)}
-                  inputId={titleComponent.props.id + "_input"}
-                  placeholder={placeholder}
-                  // validate={validate}
-                  transformChoiceToDescription={transformChoiceToDescription}
-                  transformChoiceToInfo={transformChoiceToInfo}
+                <br />
+                <span className="text-muted">{minTitleComponent}</span>
+                <br />
+                {modelValue.max &&
+                modelValue.max !== "" &&
+                (modelValue.min === "" || !modelValue.min) ? (
+                  <span style={{ color: "red" }}>
+                    <FormattedMessage
+                      id="rasters.colormap_min_mandatory"
+                      defaultMessage="Mandatory if a maximum is given"
+                    />
+                  </span>
+                ) : null}
+
+                {parseFloat(modelValue.min) &&
+                parseFloat(modelValue.max) &&
+                parseFloat(modelValue.min) > parseFloat(modelValue.max) ? (
+                  <span style={{ color: "red" }}>
+                    <FormattedMessage
+                      id="rasters.colormap_max>min"
+                      defaultMessage="Max should be Greater then Min"
+                    />
+                  </span>
+                ) : null}
+                <input
+                  autoComplete="false"
+                  className={`${formStyles.FormControl} ${readonly
+                    ? inputStyles.ReadOnly
+                    : null}`}
+                  onChange={e => updateModelValue({ min: e.target.value })}
+                  value={modelValue.min}
+                  placeholder="optional minimum of range"
+                  readOnly={readonly}
+                  disabled={readonly}
                 />
-              )}
+                <br />
+                <span className="text-muted">{maxTitleComponent}</span>
+                <input
+                  autoComplete="false"
+                  className={`${formStyles.FormControl} ${readonly
+                    ? inputStyles.ReadOnly
+                    : null}`}
+                  value={modelValue.max}
+                  onChange={e => updateModelValue({ max: e.target.value })}
+                  placeholder="optional maximum of range"
+                  readOnly={readonly}
+                  disabled={readonly}
+                />
+              </div>
               {showNextButton ? (
                 <button
                   className={`${buttonStyles.Button} ${buttonStyles.Success}`}
@@ -148,8 +193,8 @@ const mapDispatchToProps = dispatch => {
   return {};
 };
 
-GenericSelectBoxComponent = withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(GenericSelectBoxComponent)
+ColorMapComponent = withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(ColorMapComponent)
 );
 
-export default GenericSelectBoxComponent;
+export default ColorMapComponent;
