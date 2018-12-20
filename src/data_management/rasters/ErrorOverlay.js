@@ -65,8 +65,9 @@ class ErrorOverlay extends Component {
   // Different buttons based on succes or fail of a request
   succesButtons() {
     if (
-      this.props.errorMessage.status === 201 ||
-      this.props.errorMessage.status === 200
+      (this.props.errorMessage.status === 201 ||
+        this.props.errorMessage.status === 200) &&
+      this.props.currentRaster
     ) {
       return true;
     } else {
@@ -190,9 +191,15 @@ class ErrorOverlay extends Component {
                       type="button"
                       className={`${buttonStyles.Button} ${buttonStyles.Success}`}
                       style={{ marginTop: 10 }}
-                      onClick={
-                        handleClose /*HIER MOET DE LINK NAAR TOMS UPLOAD SCREEN*/
-                      }
+                      onClick={e => {
+                        // handleClose /*HIER MOET DE LINK NAAR TOMS UPLOAD SCREEN*/
+                        console.log(this.props);
+                        this.props.history.push(
+                          "/data_management/rasters/" +
+                            this.props.currentRaster.uuid +
+                            "/data"
+                        );
+                      }}
                     >
                       <FormattedMessage
                         id="upload"

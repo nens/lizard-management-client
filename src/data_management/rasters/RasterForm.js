@@ -349,6 +349,7 @@ class RasterFormModel extends Component {
       isFetching: false,
       openOverlay: false,
       modalErrorMessage: "",
+      createdRaster: null,
       currentStep: 1,
       rasterName: "",
       selectedOrganisation: {
@@ -409,6 +410,7 @@ class RasterFormModel extends Component {
 
     return {
       modalErrorMessage: "",
+      createdRaster: null,
       isFetching: false,
       openOverlay: false,
       currentStep: 1,
@@ -491,18 +493,23 @@ class RasterFormModel extends Component {
           supplier: this.state.supplierId && this.state.supplierId.username,
           supplier_code: this.state.supplierCode,
           temporal: this.state.temporalBool,
-
           interval: isoIntervalDuration, //'P1D', // P1D is default, = ISO 8601 datetime for 1 day",
           rescalable: false,
           optimizer: false, // default
           aggregation_type: intAggregationType,
-          options: this.state.colorMap
+          options: this.state.options
         })
       };
 
-      fetch(url, opts).then(responseParsed => {
-        this.handleResponse(responseParsed);
-      });
+      fetch(url, opts)
+        .then(responseParsed => {
+          this.handleResponse(responseParsed);
+          return responseParsed.json();
+        })
+        .then(parsedBody => {
+          console.log("parsedBody", parsedBody);
+          this.setState({ createdRaster: parsedBody });
+        });
     } else {
       const opts = {
         credentials: "same-origin",
@@ -522,12 +529,16 @@ class RasterFormModel extends Component {
         })
       };
 
-      fetch(
-        url + "uuid:" + this.props.currentRaster.uuid + "/",
-        opts
-      ).then(responseParsed => {
-        this.handleResponse(responseParsed);
-      });
+      fetch(url + "uuid:" + this.props.currentRaster.uuid + "/", opts)
+        .then(responseParsed => {
+          console.log("responseParsed put", responseParsed);
+          this.handleResponse(responseParsed);
+          return responseParsed.json();
+        })
+        .then(parsedBody => {
+          console.log("parsedBody", parsedBody);
+          this.setState({ createdRaster: parsedBody });
+        });
     }
   }
 
@@ -557,6 +568,7 @@ class RasterFormModel extends Component {
             errorMessage={this.state.modalErrorMessage}
             handleClose={() =>
               this.setState({ handlingDone: false, openOverlay: false })}
+            currentRaster={this.props.currentRaster || this.state.createdRaster}
           />
         ) : null}
         <div className={gridStyles.Container}>

@@ -140,9 +140,9 @@ class ColorMapComponent extends Component {
                 ) : null}
                 <input
                   autoComplete="false"
-                  className={`${formStyles.FormControl} ${
-                    readonly ? inputStyles.ReadOnly : null
-                  }`}
+                  className={`${formStyles.FormControl} ${readonly
+                    ? inputStyles.ReadOnly
+                    : null}`}
                   onChange={e => updateModelValue({ min: e.target.value })}
                   value={modelValue.min}
                   placeholder="optional minimum of range"
@@ -153,9 +153,9 @@ class ColorMapComponent extends Component {
                 <span className="text-muted">{maxTitleComponent}</span>
                 <input
                   autoComplete="false"
-                  className={`${formStyles.FormControl} ${
-                    readonly ? inputStyles.ReadOnly : null
-                  }`}
+                  className={`${formStyles.FormControl} ${readonly
+                    ? inputStyles.ReadOnly
+                    : null}`}
                   value={modelValue.max}
                   onChange={e => updateModelValue({ max: e.target.value })}
                   placeholder="optional maximum of range"
@@ -194,10 +194,7 @@ const mapDispatchToProps = dispatch => {
 };
 
 ColorMapComponent = withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(ColorMapComponent)
+  connect(mapStateToProps, mapDispatchToProps)(ColorMapComponent)
 );
 
 export default ColorMapComponent;

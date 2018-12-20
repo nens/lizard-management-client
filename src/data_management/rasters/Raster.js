@@ -65,47 +65,111 @@ class Raster extends Component {
 
     const htmlRasterTableHeader = (
       <div
-        className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12} ${styles.RasterTableHeader}`}
+        // className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${
+        //   gridStyles.colSm12
+        // } ${gridStyles.colXs12} ${styles.RasterTableHeader}`}
+        className={`${gridStyles.Row} ${styles.RasterTableHeader}`}
       >
-        <span
-          className={`${gridStyles.colLg8} ${gridStyles.colMd8} ${gridStyles.colSm8} ${gridStyles.colXs8}`}
+        <div
+          className={`${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs6}`}
         >
           <FormattedMessage
             id="rasters.header_raster_name"
             defaultMessage="Raster name"
           />
-        </span>
-        <span
-          className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${gridStyles.colSm4} ${gridStyles.colXs4}`}
+        </div>
+        <div
+          className={`${gridStyles.colLg3} ${gridStyles.colMd3} ${gridStyles.colSm3} ${gridStyles.colXs3}`}
           style={{ float: "right" }}
         >
           <FormattedMessage
             id="rasters.header_raster_description"
             defaultMessage="Description"
           />
-        </span>
+        </div>
+        <div
+          className={`${gridStyles.colLg3} ${gridStyles.colMd3} ${gridStyles.colSm3} ${gridStyles.colXs3}`}
+          style={{ float: "right", textAlign: "right" }}
+        >
+          <FormattedMessage
+            id="rasters.click_to_adapt_data"
+            defaultMessage="Data"
+          />
+        </div>
       </div>
     );
     const htmlRasterTable = rasters.map((raster, i) => {
       return (
-        <Row key={i} alarm={raster} loadRastersOnPage={this.loadRastersOnPage}>
-          <NavLink
-            to={`/data_management/rasters/${raster.uuid}`}
-            style={{
-              color: "#333"
-            }}
+        // <Row
+        //   key={i}
+        //   alarm={raster}
+        //   // loadRastersOnPage={this.loadRastersOnPage}
+        // >
+        // <NavLink
+        //   to={`/data_management/rasters/${raster.uuid}`}
+        //   style={{
+        //     color: "#333"
+        //   }}
+        // >
+        //   {raster.name}
+        // </NavLink>
+        //   <NavLink
+        //     to={`/data_management/rasters/${raster.uuid}`}
+        //     style={{
+        //       color: "#333"
+        //     }}
+        //   >
+        //     {raster.description}
+        //   </NavLink>
+        // </Row>
+        <div
+          className={`${gridStyles.Row}`}
+          style={{
+            marginTop: "10px"
+          }}
+        >
+          <div
+            className={`${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs6}`}
           >
-            {raster.name}
-          </NavLink>
-          <NavLink
-            to={`/data_management/rasters/${raster.uuid}`}
-            style={{
-              color: "#333"
-            }}
+            <NavLink
+              to={`/data_management/rasters/${raster.uuid}`}
+              style={{
+                color: "#333"
+              }}
+            >
+              {raster.name}
+            </NavLink>
+          </div>
+          <div
+            className={`${gridStyles.colLg3} ${gridStyles.colMd3} ${gridStyles.colSm3} ${gridStyles.colXs3}`}
+            style={{ float: "right" }}
           >
-            {raster.description}
-          </NavLink>
-        </Row>
+            <NavLink
+              to={`/data_management/rasters/${raster.uuid}`}
+              style={{
+                color: "#333"
+              }}
+            >
+              {raster.description}
+            </NavLink>
+          </div>
+          <div
+            className={`${gridStyles.colLg3} ${gridStyles.colMd3} ${gridStyles.colSm3} ${gridStyles.colXs3}`}
+            style={{ float: "right", textAlign: "right" }}
+          >
+            <NavLink
+              to={`/data_management/rasters/${raster.uuid}/data`}
+              style={{
+                // color: "#333"
+              }}
+            >
+              <FormattedMessage
+                id="rasters.link_to_upload_data"
+                defaultMessage="Upload"
+              />
+            </NavLink>
+          </div>
+        </div>
       );
     });
 
