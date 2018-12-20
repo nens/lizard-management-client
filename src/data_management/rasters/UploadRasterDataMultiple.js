@@ -230,12 +230,12 @@ class UploadRasterDataMultipleModel extends Component {
 
     return (
       <div>
-        {this.state.showOverlayAreYouSureToSaveFiles
+        {/* {this.state.showOverlayAreYouSureToSaveFiles
           ? this.renderOverLayAreYouSureToSaveFiles()
           : null}
         {this.state.showOverlayFilesSendToServer
           ? this.renderOverLayFilesSendToServer()
-          : null}
+          : null} */}
         {this.renderDropZone(showSaveButton)}
         {this.renderPostDropZone(showSaveButton)}
       </div>
@@ -340,7 +340,7 @@ class UploadRasterDataMultipleModel extends Component {
               <div key={fileObj.file.name + fileObj.file.size}>
                 <div>{fileObj.file.name}</div>
                 <div>
-                  <a href={fileObj.url}>
+                  <a href={fileObj.url} target="_blank">
                     <FormattedMessage
                       id="rasters.click_to_url_upload_task"
                       defaultMessage="Show asynchronous task"
@@ -794,7 +794,7 @@ class UploadRasterDataMultipleModel extends Component {
                   </div>
                   <div style={{ flex: 1 }}>
                     {e.url ? (
-                      <a href={e.url}>
+                      <a href={e.url} target="_blank">
                         {" "}
                         <FormattedMessage
                           id="rasters.click_to_url_upload_task"
