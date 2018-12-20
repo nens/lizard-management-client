@@ -55,7 +55,7 @@ class SearchBox extends Component {
             className={`${clearInputStyles.ClearInput} material-icons`}
             style={{ right: "6px" }}
             onClick={() => {
-              this.props.setSearchTerms(this.props.searchTerms);
+              this.props.setSearchTerms("");
               this.props.handleSearch("");
             }}
           >
