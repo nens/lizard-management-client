@@ -28,8 +28,8 @@ class SelectBoxSimple extends Component {
       inputId,
       placeholder,
       transformChoiceToDisplayValue, // optional parameter if choices are objects, which field contains the displayvalue, default item itself is displayvalue
-      transformChoiceToDescription, // now only possible if choicesSearchable == false
-      transformChoiceToInfo // // now only possible if choicesSearchable == false
+      transformChoiceToDescription // now only possible if choicesSearchable == false
+      //transformChoiceToInfo // // now only possible if choicesSearchable == false
     } = this.props;
     const { showChoices } = this.state;
     return (
@@ -71,9 +71,9 @@ class SelectBoxSimple extends Component {
                   }}
                   tabIndex={i + 1}
                   key={i}
-                  className={`${styles.ResultRow} ${
-                    isSelected ? styles.Active : styles.Inactive
-                  }`}
+                  className={`${styles.ResultRow} ${isSelected
+                    ? styles.Active
+                    : styles.Inactive}`}
                   onMouseDown={e => {
                     this.setState({
                       showChoices: false
@@ -91,17 +91,6 @@ class SelectBoxSimple extends Component {
                     }}
                   >
                     <i>{transformChoiceToDescription(choiceItemObj)}</i>
-                  </div>
-                  <div style={{ marginLeft: "auto" }}>
-                    <a
-                      className="material-icons"
-                      href=""
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      title={transformChoiceToInfo(choiceItemObj)}
-                    >
-                      info
-                    </a>
                   </div>
                 </div>
               );

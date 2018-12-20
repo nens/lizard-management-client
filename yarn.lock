@@ -4254,6 +4254,7 @@ inline-style-prefixer@^3.0.3:
 input-moment@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/input-moment/-/input-moment-0.4.0.tgz#4a43201b7d70610accab838f55965da1583fa76e"
+  integrity sha512-R/o4RsIUcMykauPA16O1kM0DpwC3n+Y0pWxRzNDFlKmHZCbfhchBZADmdY0PGUHMcuyM7eFvW0vzrxTUUR3Blg==
   dependencies:
     classnames "^2.2.0"
     lodash "^4.17.4"
