@@ -24,8 +24,9 @@ class Raster extends Component {
       total: 0,
       page: 1,
       checkAllCheckBoxes: false,
-      // Add raster uuid and raster name to the checkboxes dict,
-      // to be able to find the raster back from the checked checkboxes.
+      // Add checkbox array with id, raster and whether of not the checkbox
+      // is checked, to be able to find the raster back from the checked
+      // checkboxes.
       checkboxes: [],
       checkboxAllCheckboxesChecked: false
     };
@@ -58,20 +59,14 @@ class Raster extends Component {
           page: page,
           checkAllCheckBoxes: false
         });
-        const rasterList = data.results;
 
-        // Clear the checkboxes
+        const rasterList = data.results;
         this.resetAllCheckboxes();
-        // Set the checkboxes with the new results.
-        console.log("rasterList", rasterList);
         this.setAllCheckBoxes(rasterList);
       });
-    console.log("this.state", this.state);
   }
 
   setAllCheckBoxes(rasterList) {
-    console.log("rasterList", rasterList);
-    // let newState = Object.assign({}, this.state);
     let checkboxes = [];
     for (var i = 0; i < rasterList.length; i++) {
       var newDict = {
@@ -81,25 +76,20 @@ class Raster extends Component {
       };
       checkboxes.push(newDict);
     }
-    // newState.checkboxes = checkboxes;
-    // this.setState(newState);
+
     this.setState({
       checkboxes: checkboxes,
       checkAllCheckBoxes: false,
       checkboxAllCheckboxesChecked: false
     });
-    console.log("this.state", this.state);
   }
 
   resetAllCheckboxes() {
     let resetState = Object.assign({}, this.state);
     resetState.checkboxes = [];
-
+    resetState.checkAllCheckBoxes = false;
+    resetState.checkboxAllCheckboxesChecked = false;
     this.setState(resetState);
-    this.setState({
-      checkAllCheckBoxes: false,
-      checkboxAllCheckboxesChecked: false
-    });
   }
 
   handleNewRasterClick() {
@@ -115,9 +105,7 @@ class Raster extends Component {
       // Make sure that the checkbox is checked
       if (checkbox.checked) {
         toBeDeletedRasterNamesArray.push(checkbox.raster.name);
-        console.log("toBeDeletedRasterNamesArray", toBeDeletedRasterNamesArray);
         toBeDeletedRasterUuidsArray.push(checkbox.raster.uuid);
-        console.log("toBeDeletedRasterUuidsArray", toBeDeletedRasterUuidsArray);
       }
     });
 
@@ -130,7 +118,7 @@ class Raster extends Component {
     if (
       window.confirm(
         "Are you sure you want to delete the next raster(s)? \n  \n " +
-          rasterNamesWithEnter //make rows.
+          rasterNamesWithEnter
       )
     ) {
       const url = "/api/v3/rasters/"; // werkt nog niet op api/v4
@@ -164,37 +152,24 @@ class Raster extends Component {
     }
     e.cancelBubble = true;
 
-    // Get the number of the checkbox in the array of this.state.checkboxes
+    // Get the number of the checkbox from the id of the checkbox
     const checkboxId = e.target.id.split("checkbox_")[1];
-    // and set the checked value to false/ true.
-    let newStateCheckboxes = this.state.checkboxes.slice(); //Object.assign({}, this.state.checkboxes);
+
+    let newStateCheckboxes = this.state.checkboxes.slice();
     if (newStateCheckboxes[checkboxId].checked) {
       newStateCheckboxes[checkboxId].checked = false;
     } else {
       newStateCheckboxes[checkboxId].checked = true;
     }
+
     this.setState({
       checkboxes: newStateCheckboxes
     });
-    console.log("this.state", this.state);
   }
 
   checkAllCheckBoxes(checkboxAllCheckboxesChecked) {
-    // parameter meegeven!
+    let checkboxes = this.state.checkboxes.slice();
 
-    let checkboxes = this.state.checkboxes.slice(); // Object.assign({}, this.state.checkboxes);
-    console.log("checkboxes", checkboxes);
-    console.log("checkboxes.length", checkboxes.length); //newState weg
-
-    // if (this.state.checkAllCheckBoxes) {
-    //   for (var i = 0; i < newState.checkboxes.length; i++) {
-    //     newState.checkboxes[i].checked = false;
-    //   }
-    // } else {
-    //   for (var i = 0; i < newState.checkboxes.length; i++) {
-    //     newState.checkboxes[i].checked = true;
-    //   }
-    // }
     checkboxes.map(checkBox => {
       checkBox.checked = checkboxAllCheckboxesChecked;
       return checkBox;
@@ -238,10 +213,7 @@ class Raster extends Component {
     const htmlRasterTable = rasters.map((raster, i) => {
       return (
         <Row key={i} alarm={raster} loadRastersOnPage={this.loadRastersOnPage}>
-          <span
-            className={"col-lg-9 col-md-9 col-sm-9 col-xs-9"} // werkt niet goed, ligt aan lokale styling?
-            // style={{ float: "left" }}
-          >
+          <span className={"col-lg-9 col-md-9 col-sm-9 col-xs-9"}>
             <label>
               <input
                 type="checkbox"
@@ -253,7 +225,6 @@ class Raster extends Component {
                     ? this.state.checkboxes[i].checked
                     : false
                 }
-                // Pay attention: a rastername can include an underscore.
                 id={"checkbox_" + i}
               />
               {
@@ -269,10 +240,7 @@ class Raster extends Component {
               </NavLink>
             </label>
           </span>
-          <span
-            className={"col-lg-3 col-md-3 col-sm-3 col-xs-3"} // werkt niet goed, ligt aan lokale styling?
-            // style={{ float: "right" }}
-          >
+          <span className={"col-lg-3 col-md-3 col-sm-3 col-xs-3"}>
             <NavLink
               to={`/data_management/rasters/${raster.uuid}`}
               style={{
@@ -296,8 +264,10 @@ class Raster extends Component {
           <label>
             <input
               type="checkbox"
-              // Don't set id to [i]_checkbox_["something"],
+              // Don't set id to checkbox_[i],
               // otherwise the code will also try to find an accompanying uuid
+              // when going over the checked checkboxes and trying to find
+              // rasters to delete these rasters.
               id="checkboxCheckAll"
               checked={this.state.checkboxAllCheckboxesChecked}
               onClick={e =>
