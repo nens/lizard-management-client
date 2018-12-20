@@ -227,14 +227,7 @@ class Raster extends Component {
     );
     const htmlRasterTable = rasters.map((raster, i) => {
       return (
-        <Row
-          key={i}
-          alarm={raster}
-          loadRastersOnPage={this.loadRastersOnPage(
-            page,
-            this.state.searchTerms
-          )}
-        >
+        <Row key={i} alarm={raster}>
           <span className={"col-lg-6 col-md-6 col-sm-6 col-xs-6"}>
             <label>
               <input
