@@ -75,7 +75,8 @@ class App extends Component {
           return (
             <NavLink to={to} key={i}>
               <span style={{ textTransform: "capitalize" }}>
-                &nbsp;{title}
+                &nbsp;
+                {title}
                 {i === splitPathnames.length - 1 ? null : " /"}
               </span>
             </NavLink>
@@ -149,7 +150,8 @@ class App extends Component {
                             showOrganisationSwitcher: true
                           })}
                       >
-                        <i className="fa fa-sort" />&nbsp;&nbsp;
+                        <i className="fa fa-sort" />
+                        &nbsp;&nbsp;
                         {selectedOrganisation
                           ? selectedOrganisation.name
                           : "Select organisation"}
@@ -157,7 +159,8 @@ class App extends Component {
                     </div>
                     <div>
                       <a href="https://demo.lizard.net/accounts/logout/">
-                        <i className="fa fa-power-off" />&nbsp;&nbsp;Logout
+                        <i className="fa fa-power-off" />
+                        &nbsp;&nbsp;Logout
                       </a>
                     </div>
                   </div>
@@ -216,7 +219,8 @@ class App extends Component {
                     <FormattedMessage
                       id="index.documentation"
                       defaultMessage="Documentation"
-                    />&nbsp;
+                    />
+                    &nbsp;
                     <i
                       className={`${styles.DocumentationHyperlink} material-icons`}
                     >
@@ -239,7 +243,7 @@ class App extends Component {
                     </div>
                     <div>
                       <a
-                        href="https://www.lizard.net/support/"
+                        href="https://nelen-schuurmans.topdesk.net/tas/public/ssp"
                         target="_blank"
                         rel="noopener noreferrer"
                       >
@@ -247,7 +251,8 @@ class App extends Component {
                           className={`${styles.SupportHyperlink} material-icons`}
                         >
                           headset_mic
-                        </i>&nbsp;
+                        </i>
+                        &nbsp;
                         <FormattedMessage
                           id="index.support"
                           defaultMessage="Support"

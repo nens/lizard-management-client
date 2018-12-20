@@ -9,7 +9,7 @@ import { FormattedMessage } from "react-intl";
 import moment from "moment";
 import "moment/locale/nl";
 import InputMoment from "input-moment";
-import "../../node_modules/input-moment/dist/input-moment.css";
+import "input-moment/dist/input-moment.css";
 
 import styles from "./GenericDateComponent.css";
 import "./GenericDateComponentSymbols.css";
@@ -49,8 +49,8 @@ class GenericDateComponent extends Component {
     const {
       titleComponent, // <FormatText ... //>
       subtitleComponent, // <FormatText ... />
-      step, // int for denoting which step it this GenericSelectBoxComponent refers to
-      currentStep, // int for denoting which step is currently active
+      step, // which step of the GenericSelectBoxComponent it refers to
+      currentStep, // which step is currently active
       setCurrentStep, // cb function for updating which step becomes active
       opened, // complete question and input fields become visible if set to true
       modelValue, // momentJS obj moment()
@@ -69,7 +69,7 @@ class GenericDateComponent extends Component {
           indicator={step}
           active={active}
           handleClick={() => {
-            setCurrentStep(step);
+            !readonly && setCurrentStep(step);
           }}
         />
 
@@ -116,7 +116,7 @@ class GenericDateComponent extends Component {
               {/* div to enforce layout nextline */}
               <div />
               {/* div to suppress moment unused vars error */}
-              <div style={{ display: "none" }}>{moment}</div>
+              <div style={{ display: "none" }}>{moment().format()}</div>
 
               {showNextButton ? (
                 <button
@@ -149,10 +149,7 @@ const mapDispatchToProps = dispatch => {
 };
 
 GenericDateComponent = withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(GenericDateComponent)
+  connect(mapStateToProps, mapDispatchToProps)(GenericDateComponent)
 );
 
 export default GenericDateComponent;

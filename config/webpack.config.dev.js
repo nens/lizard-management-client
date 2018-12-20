@@ -159,7 +159,9 @@ module.exports = {
             test: /\.css$/,
             exclude: [
               /node_modules\/input-moment\/dist\/input-moment.css$/,
-              /src\/components\/GenericDateComponentSymbols.css$/
+              /src\/components\/GenericDateComponentSymbols.css$/,
+              /node_modules\/react-datetime\/css\/react-datetime.css$/,
+              /src\/components\/ReactDateTime.css$/
             ],
             use: [
               require.resolve("style-loader"),
@@ -201,6 +203,37 @@ module.exports = {
                 // options: {
                 //   localIdentName: "[local]"
                 // },
+              },
+              {
+                loader: require.resolve("css-loader"),
+                options: {
+                  localIdentName: "[local]"
+                }
+              }
+            ]
+          },
+          {
+            test: /node_modules\/react-datetime\/css\/react-datetime.css$/,
+            use: [
+              {
+                loader: require.resolve("style-loader")
+                // options: {
+                //   localIdentName: "[local]"
+                // },
+              },
+              {
+                loader: require.resolve("css-loader"),
+                options: {
+                  localIdentName: "[local]"
+                }
+              }
+            ]
+          },
+          {
+            test: /src\/components\/ReactDateTime.css$/,
+            use: [
+              {
+                loader: require.resolve("style-loader")
               },
               {
                 loader: require.resolve("css-loader"),

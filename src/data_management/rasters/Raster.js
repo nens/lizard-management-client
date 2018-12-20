@@ -13,7 +13,7 @@ import { FormattedMessage } from "react-intl";
 import { withRouter } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import SearchBox from "../../components/SearchBox";
-// constante voor page_size
+// constante voor page_size?
 
 class Raster extends Component {
   constructor(props) {
@@ -28,24 +28,27 @@ class Raster extends Component {
       // is checked, to be able to find the raster back from the checked
       // checkboxes.
       checkboxes: [],
-      checkboxAllCheckboxesChecked: false
+      checkboxAllCheckboxesChecked: false,
+      searchTerms: ""
     };
     this.handleNewRasterClick = this.handleNewRasterClick.bind(this);
     this.handleDeleteRasterClick = this.handleDeleteRasterClick.bind(this);
     this.checkAllCheckBoxes = this.checkAllCheckBoxes.bind(this);
     this.clickRegularCheckbox = this.clickRegularCheckbox.bind(this);
+    this.handleNewRasterClick = this.handleNewRasterClick.bind(this);
     this.loadRastersOnPage = this.loadRastersOnPage.bind(this);
   }
   componentDidMount() {
     const { page } = this.state;
-    this.loadRastersOnPage(page);
+    this.loadRastersOnPage(page, this.state.searchTerms);
   }
 
   loadRastersOnPage(page, searchContains) {
-    console.log("loadRastersOnPage");
     const url = searchContains
-      ? `/api/v3/rasters/?page=${page}&name__icontains=${searchContains}` // &organisation__unique_id=${organisationId},
-      : `/api/v3/rasters/?page=${page}`;
+      ? // ordering is done by filter
+        `/api/v3/rasters/?page=${page}&name__icontains=${searchContains}` // &organisation__unique_id=${organisationId},
+      : // ordering is done so latest rasters first
+        `/api/v3/rasters/?ordering=-last_modified&page=${page}`;
 
     fetch(url, {
       credentials: "same-origin"
@@ -140,7 +143,7 @@ class Raster extends Component {
           checkboxAllCheckboxesChecked: false
         });
         this.checkAllCheckBoxes(false);
-        this.loadRastersOnPage(this.state.page);
+        this.loadRastersOnPage(this.state.page, this.state.searchTerms);
       }
     }
   }
@@ -189,31 +192,50 @@ class Raster extends Component {
 
     const htmlRasterTableHeader = (
       <div
-        className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12} ${styles.RasterTableHeader}`}
+        // className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${
+        //   gridStyles.colSm12
+        // } ${gridStyles.colLg8} ${gridStyles.colMd8} ${gridStyles.colSm8} ${gridStyles.colXs8}`}
+        className={`${gridStyles.Row} ${styles.RasterTableHeader}`}
       >
-        <span
-          className={`${gridStyles.colLg8} ${gridStyles.colMd8} ${gridStyles.colSm8} ${gridStyles.colXs8}`}
+        <div
+          className={`${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs6}`}
         >
           <FormattedMessage
             id="rasters.header_raster_name"
             defaultMessage="Raster name"
           />
-        </span>
-        <span
-          className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${gridStyles.colSm4} ${gridStyles.colXs4}`}
+        </div>
+        <div
+          className={`${gridStyles.colLg3} ${gridStyles.colMd3} ${gridStyles.colSm3} ${gridStyles.colXs3}`}
           style={{ float: "right" }}
         >
           <FormattedMessage
             id="rasters.header_raster_description"
             defaultMessage="Description"
           />
-        </span>
+        </div>
+        <div
+          className={`${gridStyles.colLg3} ${gridStyles.colMd3} ${gridStyles.colSm3} ${gridStyles.colXs3}`}
+          style={{ float: "right", textAlign: "right" }}
+        >
+          <FormattedMessage
+            id="rasters.click_to_adapt_data"
+            defaultMessage="Data"
+          />
+        </div>
       </div>
     );
     const htmlRasterTable = rasters.map((raster, i) => {
       return (
-        <Row key={i} alarm={raster} loadRastersOnPage={this.loadRastersOnPage}>
-          <span className={"col-lg-9 col-md-9 col-sm-9 col-xs-9"}>
+        <Row
+          key={i}
+          alarm={raster}
+          loadRastersOnPage={this.loadRastersOnPage(
+            page,
+            this.state.searchTerms
+          )}
+        >
+          <span className={"col-lg-6 col-md-6 col-sm-6 col-xs-6"}>
             <label>
               <input
                 type="checkbox"
@@ -250,6 +272,22 @@ class Raster extends Component {
               {raster.description}
             </NavLink>
           </span>
+          <div
+            className={`${gridStyles.colLg3} ${gridStyles.colMd3} ${gridStyles.colSm3} ${gridStyles.colXs3}`}
+            style={{ float: "right", textAlign: "right" }}
+          >
+            <NavLink
+              to={`/data_management/rasters/${raster.uuid}/data`}
+              style={{
+                // color: "#333"
+              }}
+            >
+              <FormattedMessage
+                id="rasters.link_to_upload_data"
+                defaultMessage="Upload"
+              />
+            </NavLink>
+          </div>
         </Row>
       );
     });
@@ -313,6 +351,8 @@ class Raster extends Component {
             <SearchBox
               handleSearch={searchContains =>
                 this.loadRastersOnPage(this.state.page, searchContains)}
+              searchTerms={this.state.searchTerms}
+              setSearchTerms={searchTerms => this.setState({ searchTerms })}
             />
           </div>
           <div
@@ -380,7 +420,7 @@ class Raster extends Component {
           >
             <FormattedMessage
               id="rasters.number_of_rasters"
-              defaultMessage={`{numberOfRasters, number} {numberOfRasters, plural, 
+              defaultMessage={`{numberOfRasters, number} {numberOfRasters, plural,
                 one {Raster}
                 other {Rasters}}`}
               values={{ numberOfRasters }}
@@ -390,7 +430,8 @@ class Raster extends Component {
             className={`${gridStyles.colLg8} ${gridStyles.colMd8} ${gridStyles.colSm8} ${gridStyles.colXs8}`}
           >
             <PaginationBar
-              loadRastersOnPage={this.loadRastersOnPage}
+              loadRastersOnPage={page =>
+                this.loadRastersOnPage(page, this.state.searchTerms)}
               page={page}
               pages={Math.ceil(total / 10)}
             />

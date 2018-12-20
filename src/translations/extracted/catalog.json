@@ -617,11 +617,11 @@
 	},
 	{
 		"id": "rasters.supplier_id",
-		"defaultMessage": "Supplier ID"
+		"defaultMessage": "Supplier Name"
 	},
 	{
 		"id": "rasters.please_select_supplier_id",
-		"defaultMessage": "Please select Supplier ID"
+		"defaultMessage": "Please select Supplier Name"
 	},
 	{
 		"id": "rasters.supplier_code",
