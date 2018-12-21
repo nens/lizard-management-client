@@ -17,7 +17,7 @@ class GenericWizardStep extends Component {
     const {
       titleComponent, // <FormatText ... //>
       inputComponent,
-      step, //  which step it the GenericTextInputComponent refers to
+      step, //  which step of the GenericTextInputComponent it refers to
       active, // which step is currently active
       opened,
       setCurrentStep, // cb function for updating which step becomes active
@@ -60,7 +60,6 @@ class GenericWizardStep extends Component {
                     id="rasters.next_step"
                     defaultMessage="Next Step"
                   />
-                  ;
                 </button>
               ) : null}
             </div>

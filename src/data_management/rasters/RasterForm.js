@@ -159,8 +159,7 @@ class RasterFormModel extends Component {
   validateObservationType(observationType) {
     return observationType && observationType.url && observationType.code;
   }
-  // Colormap
-
+  // Options (contains colormaps)
   setStyleAndOptions(styleObj) {
     const oldStyle = Object.assign({}, this.state.styles);
     const oldOptions = Object.assign({}, this.state.options);
@@ -173,7 +172,6 @@ class RasterFormModel extends Component {
     this.setState({ options: newStyleOptions.options });
     this.setState({ styles: newStyleOptions.styles });
   }
-
   // SupplierId
   setSupplierId(supplierId) {
     this.setState({ supplierId });
@@ -361,8 +359,6 @@ class RasterFormModel extends Component {
       description: "",
       temporalBool: false,
       temporalBoolComponentWasEverOpenedByUser: false, // a checkbbox is always valid, but we should only mark it as valid if the user has actualy opened the question
-      temporalOrigin: moment("1970-01-01T00:00:00Z"), // start time at 1970 because current datepicker makes moving so far back difficult
-      temporalOriginComponentWasEverOpenedByUser: false, // the data is valid since it is created with momentJS, but should only be marked as such when the date component was actually opened once
       temporalIntervalUnit: "seconds", // for now assume seconds// one of [seconds minutes hours days weeks] no months years because those are not a static amount of seconds..
       temporalIntervalAmount: "", //60*60, //minutes times seconds = hour // positive integer. amount of temporalIntervalUnit
       temporalIntervalWasEverOpenedByUser: false,
@@ -433,10 +429,8 @@ class RasterFormModel extends Component {
       temporalIntervalMinutes: intervalObj.minutes,
       temporalIntervalSeconds: intervalObj.seconds,
       temporalOptimizer: true, // default true, not set by the user for first iteration
-
       styles: styles,
       options: currentRaster.options,
-
       aggregationType: currentRaster.aggregation_type, // choice: none | counts | curve | histogram | sum | average
       supplierId: selectedSupplierId,
       supplierCode: currentRaster.supplier_code,
@@ -592,7 +586,7 @@ class RasterFormModel extends Component {
                   }
                   placeholder="name of this raster"
                   multiline={false} // boolean for which input elem to use: text OR textarea
-                  step={1} // int for denoting which step it the GenericTextInputComponent refers to
+                  step={1} // int for denoting which step of the GenericTextInputComponent it refers to
                   opened={this.props.currentRaster || currentStep === 1}
                   formUpdate={!!this.props.currentRaster}
                   readonly={false}
@@ -618,7 +612,7 @@ class RasterFormModel extends Component {
                   }
                   placeholder="path/to/store"
                   multiline={false} // boolean for which input elem to use: text OR textarea
-                  step={2} // int for denoting which step it the GenericTextInputComponent refers to
+                  step={2} // int for denoting which step of the GenericTextInputComponent it refers to
                   opened={this.props.currentRaster || currentStep === 2}
                   formUpdate={!!this.props.currentRaster}
                   readonly={!!this.props.currentRaster}
@@ -644,7 +638,7 @@ class RasterFormModel extends Component {
                   }
                   placeholder="description here"
                   multiline={true} // boolean for which input elem to use: text OR textarea
-                  step={2} // int for denoting which step it the GenericTextInputComponent refers to
+                  step={2} // int for denoting which step of the GenericTextInputComponent it refers to
                   opened={
                     this.props.currentRaster ||
                     this.props.currentRaster ||
@@ -673,7 +667,7 @@ class RasterFormModel extends Component {
                     />
                   }
                   placeholder="click to select organisation"
-                  step={3} // int for denoting which step it the GenericTextInputComponent refers to
+                  step={3} // int for denoting which step of the GenericTextInputComponent it refers to
                   opened={this.props.currentRaster || currentStep === 3}
                   formUpdate={!!this.props.currentRaster}
                   readonly={false}
@@ -702,7 +696,7 @@ class RasterFormModel extends Component {
                     />
                   }
                   placeholder="click to select aggregation type"
-                  step={4} // int for denoting which step it the GenericTextInputComponent refers to
+                  step={4} // int for denoting which step of the GenericTextInputComponent it refers to
                   opened={this.props.currentRaster || currentStep === 4}
                   formUpdate={!!this.props.currentRaster}
                   readonly={false}
@@ -756,7 +750,7 @@ class RasterFormModel extends Component {
                     />
                   }
                   placeholder="click to select observation type"
-                  step={5} // int for denoting which step it the GenericTextInputComponent refers to
+                  step={5} // int for denoting which step of the GenericTextInputComponent it refers to
                   opened={this.props.currentRaster || currentStep === 5}
                   formUpdate={!!this.props.currentRaster}
                   readonly={false}
@@ -797,7 +791,7 @@ class RasterFormModel extends Component {
                     />
                   }
                   placeholder="click to select colormap"
-                  step={6} // int for denoting which step it the GenericTextInputComponent refers to
+                  step={6} // int for denoting which step of the GenericTextInputComponent it refers to
                   opened={this.props.currentRaster || currentStep === 6}
                   formUpdate={!!this.props.currentRaster}
                   readonly={optionsHasLayers(this.state.options)}
@@ -836,7 +830,7 @@ class RasterFormModel extends Component {
                     />
                   }
                   placeholder="click to select supplier name"
-                  step={7} // int for denoting which step it the GenericTextInputComponent refers to
+                  step={7} // int for denoting which step of the GenericTextInputComponent it refers to
                   opened={this.props.currentRaster || currentStep === 7}
                   formUpdate={!!this.props.currentRaster}
                   readonly={false}
@@ -866,7 +860,7 @@ class RasterFormModel extends Component {
                   }
                   placeholder="type supplier code here"
                   multiline={false} // boolean for which input elem to use: text OR textarea
-                  step={8} // int for denoting which step it the GenericTextInputComponent refers to
+                  step={8} // int for denoting which step of the GenericTextInputComponent it refers to
                   opened={this.props.currentRaster || currentStep === 8}
                   formUpdate={!!this.props.currentRaster}
                   readonly={false}
@@ -884,7 +878,7 @@ class RasterFormModel extends Component {
                       defaultMessage="Raster is Temporal"
                     />
                   }
-                  step={9}
+                  step={9} // int for denoting which step of the GenericTextInputComponent it refers to
                   opened={this.props.currentRaster || currentStep === 9}
                   formUpdate={!!this.props.currentRaster}
                   readonly={!!this.props.currentRaster}
@@ -928,7 +922,7 @@ class RasterFormModel extends Component {
                         />
                       }
                       multiline={false} // boolean for which input elem to use: text OR textarea
-                      step={10}
+                      step={10} // int for denoting which step of the GenericTextInputComponent it refers to
                       isLastItem={true}
                       opened={this.props.currentRaster || currentStep === 10}
                       formUpdate={!!this.props.currentRaster}

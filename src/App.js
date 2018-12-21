@@ -105,9 +105,7 @@ class App extends Component {
               <div className={gridStyles.Row}>
                 <div
                   style={{ height: 55 }}
-                  className={`${gridStyles.colLg6} ${gridStyles.colMd6} ${
-                    gridStyles.colSm6
-                  } ${gridStyles.colXs12}`}
+                  className={`${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs12}`}
                 >
                   <NavLink to="/">
                     <div
@@ -117,9 +115,7 @@ class App extends Component {
                   </NavLink>
                 </div>
                 <div
-                  className={`${gridStyles.colLg6} ${gridStyles.colMd6} ${
-                    gridStyles.colSm6
-                  } ${gridStyles.colXs12}`}
+                  className={`${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs12}`}
                 >
                   <div className={styles.TopNav}>
                     <div style={{ display: "none" }}>
@@ -152,8 +148,7 @@ class App extends Component {
                         onClick={() =>
                           this.setState({
                             showOrganisationSwitcher: true
-                          })
-                        }
+                          })}
                       >
                         <i className="fa fa-sort" />
                         &nbsp;&nbsp;
@@ -183,11 +178,7 @@ class App extends Component {
             <div className={gridStyles.Container}>
               <div className={gridStyles.Row}>
                 <div
-                  className={`${styles.BreadcrumbsContainer} ${
-                    gridStyles.colLg12
-                  } ${gridStyles.colMd12} ${gridStyles.colSm12} ${
-                    gridStyles.colXs12
-                  }`}
+                  className={`${styles.BreadcrumbsContainer} ${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
                 >
                   <div
                     style={{
@@ -206,9 +197,7 @@ class App extends Component {
             <div className={gridStyles.Row}>
               <div
                 style={{ margin: "25px 0 25px 0" }}
-                className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${
-                  gridStyles.colSm12
-                } ${gridStyles.colXs12}`}
+                className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
               >
                 <Route exact path="/" component={Home} />
                 <Route path="/alarms" component={AlarmsApp} />
@@ -220,9 +209,7 @@ class App extends Component {
             <div className={gridStyles.Container}>
               <div className={gridStyles.Row}>
                 <div
-                  className={`${styles.FooterLeft} ${gridStyles.colLg6} ${
-                    gridStyles.colMd6
-                  } ${gridStyles.colSm6} ${gridStyles.colXs6}`}
+                  className={`${styles.FooterLeft} ${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs6}`}
                 >
                   <a
                     href="https://www.lizard.net/handleidingen/log_in_instructies_lizard_6.01.pdf"
@@ -235,18 +222,14 @@ class App extends Component {
                     />
                     &nbsp;
                     <i
-                      className={`${
-                        styles.DocumentationHyperlink
-                      } material-icons`}
+                      className={`${styles.DocumentationHyperlink} material-icons`}
                     >
                       local_library
                     </i>
                   </a>
                 </div>
                 <div
-                  className={`${styles.FooterRight} ${gridStyles.colLg6} ${
-                    gridStyles.colMd6
-                  } ${gridStyles.colSm6} ${gridStyles.colXs6}`}
+                  className={`${styles.FooterRight} ${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs6}`}
                 >
                   <div className={styles.FooterRightWrapper}>
                     <div style={{ margin: "0 10px 0 10px" }}>
@@ -265,9 +248,7 @@ class App extends Component {
                         rel="noopener noreferrer"
                       >
                         <i
-                          className={`${
-                            styles.SupportHyperlink
-                          } material-icons`}
+                          className={`${styles.SupportHyperlink} material-icons`}
                         >
                           headset_mic
                         </i>
@@ -286,8 +267,7 @@ class App extends Component {
           {showOrganisationSwitcher ? (
             <OrganisationSwitcher
               handleClose={() =>
-                this.setState({ showOrganisationSwitcher: false })
-              }
+                this.setState({ showOrganisationSwitcher: false })}
             />
           ) : null}
           <Snackbar />
@@ -336,9 +316,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   };
 };
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(App)
-);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));

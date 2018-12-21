@@ -43,7 +43,7 @@ class GenericSelectBoxComponent extends Component {
     const {
       titleComponent, // <FormatText ... //>
       subtitleComponent, // <FormatText ... />
-      step, //  which step it this GenericSelectBoxComponent refers to
+      step, // which step of the GenericSelectBoxComponent it refers to
       currentStep, // which step is currently active
       setCurrentStep, // cb function for updating which step becomes active
       opened, // complete question and input fields become visible if set to true
