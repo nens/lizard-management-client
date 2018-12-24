@@ -44,8 +44,8 @@ class GenericSelectBoxComponent extends Component {
       subtitleComponent, // <FormatText ... />
       yesCheckedComponent,
       noNotCheckedComponent,
-      step, // int for denoting which step it this GenericSelectBoxComponent refers to
-      currentStep, // int for denoting which step is currently active
+      step, // which step of this GenericSelectBoxComponent it refers to
+      currentStep, // which step is currently active
       setCurrentStep, // cb function for updating which step becomes active
       opened, // complete question and input fields become visible if set to true
       modelValue, // string: e.g. the name of a raster
@@ -67,7 +67,7 @@ class GenericSelectBoxComponent extends Component {
           indicator={step}
           active={active}
           handleClick={() => {
-            setCurrentStep(step);
+            !readonly && setCurrentStep(step);
           }}
         />
 

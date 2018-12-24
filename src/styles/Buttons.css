@@ -21,8 +21,8 @@
 
 .Danger {
   color: #fff;
-  background-color: #BE404A;
-  border-color: #BE404A;
+  background-color: #ff7070;
+  border-color: #ff7070;
 }
 .Danger:active {
   background-color: #BE404A;
@@ -63,6 +63,7 @@
   outline: 0;
   box-shadow: 0 0 0 3px rgba(0, 205, 171, 0.5);
 }
+
 
 .Link {
   background-color: rgba(255, 255, 255, 0);
