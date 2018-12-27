@@ -22,15 +22,22 @@
 }
 
 .ResultRow:hover {
-  background-color: #00cdab;
-  color: #fff;
+  background-color: #a6ece0;;
 }
 .Active {
   background-color: #00cdab;
   color: #fff;
 }
-.InActive {
 
+.Active:hover {
+  background-color: #00cdab;
+  color: #fff;
+}
+
+.SelectedRow {
+  min-height: 50px;
+  padding: 13px;
+  border-bottom: 1px solid #ccc;
 }
   
   

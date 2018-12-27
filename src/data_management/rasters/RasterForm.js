@@ -418,6 +418,7 @@ class RasterFormModel extends Component {
         name: currentRaster.organisation.name,
         unique_id: currentRaster.organisation.unique_id
       },
+      sharedWithOrganisations: currentRaster.sharedWithOrganisations,
       storePathName:
         currentRaster.slug && currentRaster.slug.replace(/:/g, "/"),
       slug: currentRaster.slug,
@@ -494,7 +495,9 @@ class RasterFormModel extends Component {
           rescalable: false,
           optimizer: false, // default
           aggregation_type: intAggregationType,
-          options: this.state.options
+          options: this.state.options,
+
+          sharedWithOrganisations: this.state.sharedWithOrganisations
         })
       };
 
@@ -522,7 +525,9 @@ class RasterFormModel extends Component {
           supplier: this.state.supplierId.username,
           supplier_code: this.state.supplierCode,
           aggregation_type: intAggregationType,
-          options: this.state.options
+          options: this.state.options,
+
+          sharedWithOrganisations: this.state.sharedWithOrganisations
         })
       };
 
@@ -578,15 +583,11 @@ class RasterFormModel extends Component {
                   choices={this.props.organisations.available}
                   selected={this.state.sharedWithOrganisations}
                   isFetching={this.props.organisations.isFetching}
-                  placeholder={"search organisation"}
+                  placeholder={"search"}
                   updateModelValue={e =>
-                    this.setState({ sharedWithOrganisations: e })
-                  }
+                    this.setState({ sharedWithOrganisations: e })}
                   resetModelValue={e => e}
-                  onKeyUp={e => e}
-                  inputId={e => e}
                   transformChoiceToDisplayValue={e => e.name}
-                  validate={e => e}
                 />
                 <GenericTextInputComponent
                   titleComponent={

@@ -2,7 +2,6 @@ import React, { Component } from "react";
 
 import MDSpinner from "react-md-spinner";
 import { Scrollbars } from "react-custom-scrollbars";
-// import ClearInputButton from "../components/ClearInputButton.js";
 import ClearButton from "../components/ClearButton.js";
 
 import styles from "./SlushBucket.css";
@@ -12,37 +11,37 @@ import displayStyles from "../styles/Display.css";
 class SlushBucket extends Component {
   constructor(props) {
     super(props);
-    this.state = { query: "", mustShowChoices: false };
-    this.handleInput = this.handleInput.bind(this);
-    this.handleKeyUp = this.handleKeyUp.bind(this);
+    this.state = { query: "" };
+    // this.handleInput = this.handleInput.bind(this);
+    // this.handleKeyUp = this.handleKeyUp.bind(this);
   }
-  componentDidMount() {
-    this.setQuery(this.props);
-  }
-  componentWillReceiveProps(newProps) {
-    if (newProps.validate()) {
-      this.setState({ query: newProps.choice });
-    }
-    // this.setQuery(newProps);
-    // if (newProps.selected.name)
-    //   this.setState({ query: newProps.selected.name });
-  }
+  // componentDidMount() {
+  //   this.setQuery(this.props);
+  // }
+  // componentWillReceiveProps(newProps) {
+  //   if (newProps.validate()) {
+  //     this.setState({ query: newProps.choice });
+  //   }
+  //   // this.setQuery(newProps);
+  //   // if (newProps.selected.name)
+  //   //   this.setState({ query: newProps.selected.name });
+  // }
   handleKeyUp(e) {
     if (e.key === "Escape") this.resetQuery();
   }
-  handleInput(e) {
-    this.setState({ mustShowChoices: true, query: e.target.value });
-    // this.props.updateModelValue(e.target.value);
-  }
-  setQuery(props) {
-    if (this.props.choice) {
-      this.setState({
-        query: this.props.transformChoiceToDisplayValue(this.props.choice)
-      });
-    }
-  }
+  // handleInput(e) {
+  //   this.setState({ mustShowChoices: true, query: e.target.value });
+  //   // this.props.updateModelValue(e.target.value);
+  // }
+  // setQuery(props) {
+  //   if (this.props.choice) {
+  //     this.setState({
+  //       query: this.props.transformChoiceToDisplayValue(this.props.choice)
+  //     });
+  //   }
+  // }
   resetQuery() {
-    this.setState({ mustShowChoices: false, query: "" });
+    this.setState({ query: "" });
   }
   render() {
     const {
@@ -51,14 +50,10 @@ class SlushBucket extends Component {
       isFetching,
       placeholder,
       updateModelValue,
-      resetModelValue,
       onKeyUp,
-      inputId,
-      transformChoiceToDisplayValue,
-      validate
+      transformChoiceToDisplayValue
+      // validate
     } = this.props;
-    const showOptions = choices.length > 0 && this.state.mustShowChoices;
-    const mustShowClearButton = validate(selected);
 
     return (
       <div className={`${styles.SelectChoice} form-input`}>
@@ -70,7 +65,6 @@ class SlushBucket extends Component {
           }}
         >
           <input
-            id={inputId}
             tabIndex="-1"
             type="text"
             autoComplete="false"
@@ -78,13 +72,9 @@ class SlushBucket extends Component {
             placeholder={placeholder}
             onChange={this.handleInput}
             onKeyUp={event => {
-              onKeyUp(event);
               this.handleKeyUp(event);
             }}
             value={this.state.query}
-            // onClick={() => this.setState({ mustShowChoices: true })}
-            //onFocus={() => this.setState({ mustShowChoices: true })}
-            onBlur={() => this.setState({ mustShowChoices: false })}
           />
           <div
             className={`${styles.Spinner} ${isFetching
@@ -94,10 +84,9 @@ class SlushBucket extends Component {
             <MDSpinner size={18} />
           </div>
 
-          {/* {this.state.query !== '' ? ( */}
           <div
             style={{
-              transform: "translateX(-24px)",
+              transform: "translateX(-33px)",
               display: "flex",
               alignItems: "center",
               visibility: this.state.query === "" ? "hidden" : "visible"
@@ -105,31 +94,27 @@ class SlushBucket extends Component {
           >
             <ClearButton
               onClick={() => {
-                resetModelValue();
                 this.resetQuery();
               }}
             />
           </div>
-          {/* ) : null} */}
         </div>
 
-        {/* {results.length > 0 && this.state.mustShowChoices ? ( */}
         <div
           style={{
             display: "flex"
           }}
         >
-          {/* <div className={styles.Results}> */}
           <div
             className={styles.Results}
             style={{
               marginRight: "20px"
             }}
           >
-            <div className={`${styles.ResultRow}`}>
-              <b>Available Organisations</b>
+            <div className={`${styles.SelectedRow}`}>
+              <b>Available</b>
             </div>
-            <Scrollbars autoHeight autoHeightMin={50} autoHeightMax={400}>
+            <Scrollbars autoHeight autoHeightMin={400} autoHeightMax={400}>
               {choices
                 .filter(choiceItem => {
                   if (this.state.query === "") {
@@ -159,20 +144,16 @@ class SlushBucket extends Component {
                   const currentChoiceString = transformChoiceToDisplayValue(
                     choiceItem
                   );
-                  // const SelectedChoiceString = transformChoiceToDisplayValue(
-                  //   choice
-                  // );
 
                   return (
                     <div
                       tabIndex={i + 1}
                       key={i}
-                      // className={`${styles.ResultRow} ${
-                      //   currentChoiceString === SelectedChoiceString
-                      //     ? styles.Active
-                      //     : styles.Inactive
-                      // }`}
-                      className={`${styles.ResultRow}`}
+                      className={`${styles.ResultRow} ${this.props.selected.includes(
+                        choiceItem
+                      )
+                        ? styles.Active
+                        : ""}`}
                       onMouseDown={() => {
                         // User selected a choice from the filtered ones:
                         // updateModelValue(selected.filter(e=>e.name !== choiceItem.name))
@@ -181,9 +162,14 @@ class SlushBucket extends Component {
                             .length === 0
                         ) {
                           selected.push(choiceItem);
+                          updateModelValue(selected);
+                        } else {
+                          updateModelValue(
+                            selected.filter(e => e.name !== choiceItem.name)
+                          );
                         }
-                        updateModelValue(selected);
                       }}
+                      key={currentChoiceString}
                     >
                       {currentChoiceString}
                     </div>
@@ -197,10 +183,10 @@ class SlushBucket extends Component {
               marginLeft: "20px"
             }}
           >
-            <div className={`${styles.ResultRow}`}>
-              <b>Selected organisations</b>
+            <div className={`${styles.SelectedRow}`}>
+              <b>Selected</b>
             </div>
-            <Scrollbars autoHeight autoHeightMin={50} autoHeightMax={400}>
+            <Scrollbars autoHeight autoHeightMin={400} autoHeightMax={400}>
               {selected
                 .sort((choiceItemA, choiceItemB) => {
                   const nameA = transformChoiceToDisplayValue(choiceItemA);
@@ -218,47 +204,20 @@ class SlushBucket extends Component {
                   const currentChoiceString = transformChoiceToDisplayValue(
                     choiceItem
                   );
-                  // const SelectedChoiceString = transformChoiceToDisplayValue(
-                  //   choice
-                  // );
 
                   return (
                     <div
-                      className={`${styles.ResultRow} ${styles.Inactive}`}
+                      className={`${styles.SelectedRow}`}
                       style={{
                         display: "flex",
                         justifyContent: "space-between",
                         alignItems: "center"
                       }}
+                      key={currentChoiceString}
                     >
-                      <div
-                        tabIndex={i + 1}
-                        key={i}
-                        // className={`${styles.ResultRow} ${
-                        //   currentChoiceString === SelectedChoiceString
-                        //     ? styles.Active
-                        //     : styles.Inactive
-                        // }`}
-
-                        onMouseDown={() => {
-                          // User selected a choice from the filtered ones:
-                          // updateModelValue(choiceItem);
-                          // // this.resetQuery();
-                          // this.setState({
-                          //   mustShowChoices: false,
-                          //   query: currentChoiceString
-                          // });
-                          // updateModelValue(
-                          //   selected.filter(e => e.name !== choiceItem.name)
-                          // );
-                        }}
-                      >
-                        {currentChoiceString}
-                      </div>
+                      <div>{currentChoiceString}</div>
                       <ClearButton
                         onClick={() => {
-                          // resetModelValue();
-                          // this.resetQuery();
                           updateModelValue(
                             selected.filter(e => e.name !== choiceItem.name)
                           );
