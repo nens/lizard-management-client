@@ -12,7 +12,7 @@ import GenericTextInputComponent from "../../components/GenericTextInputComponen
 import GenericSelectBoxComponent from "../../components/GenericSelectBoxComponent";
 import GenericCheckBoxComponent from "../../components/GenericCheckBoxComponent";
 import ColorMapComponent from "../../components/ColorMapComponent";
-import GenericDateComponent from "../../components/GenericDateComponent";
+import GenericStep from "../../components/GenericStep";
 import DurationComponent from "../../components/DurationComponent";
 import inputStyles from "../../styles/Input.css";
 import {
@@ -92,6 +92,9 @@ class RasterFormModel extends Component {
   }
   setCurrentStep(currentStep) {
     // The steps "raster is temporal" (9) and "temporal interval" (10) need to be flagged if they are opened once.
+    if (currentStep === 2) {
+      this.setState({ sharedWithOrganisationsWasEverOpenedByUser: true });
+    }
     if (currentStep === 9) {
       this.setState({ temporalBoolComponentWasEverOpenedByUser: true });
     } else if (currentStep === 10) {
@@ -280,7 +283,8 @@ class RasterFormModel extends Component {
       validateStyleObj(this.state.styles) &&
       this.validateSupplierId(this.state.supplierId) &&
       this.validateSupplierCode(this.state.supplierCode) &&
-      this.validateTemporalBool(this.state.temporalBool);
+      this.validateTemporalBool(this.state.temporalBool) &&
+      this.state.sharedWithOrganisationsWasEverOpenedByUser === true;
 
     const temporalFields =
       !this.state.temporalBool ||
@@ -361,6 +365,7 @@ class RasterFormModel extends Component {
       slug: "",
       description: "",
       temporalBool: false,
+      sharedWithOrganisationsWasEverOpenedByUser: false,
       temporalBoolComponentWasEverOpenedByUser: false, // a checkbbox is always valid, but we should only mark it as valid if the user has actualy opened the question
       temporalIntervalUnit: "seconds", // for now assume seconds// one of [seconds minutes hours days weeks] no months years because those are not a static amount of seconds..
       temporalIntervalAmount: "", //60*60, //minutes times seconds = hour // positive integer. amount of temporalIntervalUnit
@@ -424,6 +429,7 @@ class RasterFormModel extends Component {
       slug: currentRaster.slug,
       description: currentRaster.description,
       temporalBool: currentRaster.temporal,
+      sharedWithOrganisationsWasEverOpenedByUser: true,
       temporalBoolComponentWasEverOpenedByUser: true, // a checkbbox is always valid, but we should only mark it as valid if the user has actualy opened the question
       temporalIntervalUnit: "seconds", // for now assume seconds// one of [seconds minutes hours days weeks] no months years because those are not a static amount of seconds..
       temporalIntervalAmount: "", //60*60, //minutes times seconds = hour // positive integer. amount of temporalIntervalUnit
@@ -578,23 +584,48 @@ class RasterFormModel extends Component {
               className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
             >
               <div id="steps" style={{ margin: "20px 0 0 20px" }}>
-                <SlushBucket
-                  choices={this.props.organisations.available.map(e => e.name)}
-                  selected={this.state.sharedWithOrganisations.map(e => e.name)}
-                  isFetching={this.props.organisations.isFetching}
-                  placeholder={"search"}
-                  updateModelValue={selected => {
-                    this.setState({
-                      sharedWithOrganisations: selected
-                        .map(selectedItem =>
-                          this.props.organisations.available.find(
-                            availableItem => availableItem.name === selectedItem
-                          )
-                        )
-                        .filter(e => e != true)
-                    });
-                  }}
-                />
+                {/* <GenericStep
+                  titleComponent={
+                    <FormattedMessage
+                      id="rasters.shared_with_organisations"
+                      defaultMessage="Shared with organisations"
+                    />
+                  }
+                  subtitleComponent={
+                    <FormattedMessage
+                      id="rasters.which_organisations_would_you_like_to_share"
+                      defaultMessage="The organisations you would like to share the raster with"
+                    />
+                  }
+                  step={2} // int for denoting which step of the GenericTextInputComponent it refers to
+                  opened={this.props.currentRaster || currentStep === 1}
+                  readonly={false}
+                  currentStep={currentStep} // int for denoting which step is currently active
+                  setCurrentStep={this.setCurrentStep} // cb function for updating which step becomes active
+                  showCheckMark={this.state.sharedWithOrganisationsWasEverOpenedByUser}
+                  showNextButton={true}
+                  fields={
+                    <SlushBucket
+                      choices={this.props.organisations.available.map(e => e.name)}
+                      selected={this.state.sharedWithOrganisations.map(e => e.name)}
+                      isFetching={this.props.organisations.isFetching}
+                      placeholder={"search organisations"}
+                      updateModelValue={selected => {
+                        this.setState({
+                          sharedWithOrganisations: selected
+                            .map(selectedItem =>
+                              this.props.organisations.available.find(
+                                availableItem => availableItem.name === selectedItem
+                              )
+                            )
+                            .filter(e => e != true)
+                        });
+                      }}
+                    />
+
+                  }
+                /> */}
+
                 <GenericTextInputComponent
                   titleComponent={
                     <FormattedMessage
