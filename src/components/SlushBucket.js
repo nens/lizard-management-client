@@ -27,8 +27,7 @@ class SlushBucket extends Component {
       selected,
       isFetching,
       placeholder,
-      updateModelValue,
-      transformChoiceToDisplayValue
+      updateModelValue
     } = this.props;
 
     return (
@@ -99,14 +98,12 @@ class SlushBucket extends Component {
                   } else {
                     // if user typed search string only show those that contain string
                     // TODO sort by search string ?
-                    return transformChoiceToDisplayValue(choiceItem)
+                    return choiceItem
                       .toLowerCase()
                       .includes(this.state.query.toLowerCase());
                   }
                 })
-                .sort((choiceItemA, choiceItemB) => {
-                  const nameA = transformChoiceToDisplayValue(choiceItemA);
-                  const nameB = transformChoiceToDisplayValue(choiceItemB);
+                .sort((nameA, nameB) => {
                   if (nameA < nameB) {
                     return -1;
                   }
@@ -117,10 +114,6 @@ class SlushBucket extends Component {
                   return 0;
                 })
                 .map((choiceItem, i) => {
-                  const currentChoiceString = transformChoiceToDisplayValue(
-                    choiceItem
-                  );
-
                   return (
                     <div
                       tabIndex={i + 1}
@@ -131,23 +124,20 @@ class SlushBucket extends Component {
                         ? styles.Active
                         : ""}`}
                       onMouseDown={() => {
-                        // User selected a choice from the filtered ones:
-                        // updateModelValue(selected.filter(e=>e.name !== choiceItem.name))
                         if (
-                          selected.filter(e => e.name === choiceItem.name)
-                            .length === 0
+                          selected.filter(e => e === choiceItem).length === 0
                         ) {
                           selected.push(choiceItem);
                           updateModelValue(selected);
                         } else {
                           updateModelValue(
-                            selected.filter(e => e.name !== choiceItem.name)
+                            selected.filter(e => e !== choiceItem)
                           );
                         }
                       }}
-                      key={currentChoiceString}
+                      key={choiceItem}
                     >
-                      {currentChoiceString}
+                      {choiceItem}
                     </div>
                   );
                 })}
@@ -164,9 +154,7 @@ class SlushBucket extends Component {
             </div>
             <Scrollbars autoHeight autoHeightMin={400} autoHeightMax={400}>
               {selected
-                .sort((choiceItemA, choiceItemB) => {
-                  const nameA = transformChoiceToDisplayValue(choiceItemA);
-                  const nameB = transformChoiceToDisplayValue(choiceItemB);
+                .sort((nameA, nameB) => {
                   if (nameA < nameB) {
                     return -1;
                   }
@@ -177,10 +165,6 @@ class SlushBucket extends Component {
                   return 0;
                 })
                 .map((choiceItem, i) => {
-                  const currentChoiceString = transformChoiceToDisplayValue(
-                    choiceItem
-                  );
-
                   return (
                     <div
                       className={`${styles.SelectedRow}`}
@@ -189,13 +173,13 @@ class SlushBucket extends Component {
                         justifyContent: "space-between",
                         alignItems: "center"
                       }}
-                      key={currentChoiceString}
+                      key={choiceItem}
                     >
-                      <div>{currentChoiceString}</div>
+                      <div>{choiceItem}</div>
                       <ClearButton
                         onClick={() => {
                           updateModelValue(
-                            selected.filter(e => e.name !== choiceItem.name)
+                            selected.filter(e => e !== choiceItem)
                           );
                         }}
                       />

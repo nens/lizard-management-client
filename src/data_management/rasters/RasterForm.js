@@ -560,7 +560,6 @@ class RasterFormModel extends Component {
       aggregationType
     } = this.state;
 
-    console.log(this.state.openOverlay);
     return (
       <div>
         {this.state.openOverlay ? (
@@ -580,13 +579,21 @@ class RasterFormModel extends Component {
             >
               <div id="steps" style={{ margin: "20px 0 0 20px" }}>
                 <SlushBucket
-                  choices={this.props.organisations.available}
-                  selected={this.state.sharedWithOrganisations}
+                  choices={this.props.organisations.available.map(e => e.name)}
+                  selected={this.state.sharedWithOrganisations.map(e => e.name)}
                   isFetching={this.props.organisations.isFetching}
                   placeholder={"search"}
-                  updateModelValue={e =>
-                    this.setState({ sharedWithOrganisations: e })}
-                  transformChoiceToDisplayValue={e => e.name}
+                  updateModelValue={selected => {
+                    this.setState({
+                      sharedWithOrganisations: selected
+                        .map(selectedItem =>
+                          this.props.organisations.available.find(
+                            availableItem => availableItem.name === selectedItem
+                          )
+                        )
+                        .filter(e => e != true)
+                    });
+                  }}
                 />
                 <GenericTextInputComponent
                   titleComponent={
