@@ -12,34 +12,12 @@ class SlushBucket extends Component {
   constructor(props) {
     super(props);
     this.state = { query: "" };
-    // this.handleInput = this.handleInput.bind(this);
-    // this.handleKeyUp = this.handleKeyUp.bind(this);
   }
-  // componentDidMount() {
-  //   this.setQuery(this.props);
-  // }
-  // componentWillReceiveProps(newProps) {
-  //   if (newProps.validate()) {
-  //     this.setState({ query: newProps.choice });
-  //   }
-  //   // this.setQuery(newProps);
-  //   // if (newProps.selected.name)
-  //   //   this.setState({ query: newProps.selected.name });
-  // }
+
   handleKeyUp(e) {
     if (e.key === "Escape") this.resetQuery();
   }
-  // handleInput(e) {
-  //   this.setState({ mustShowChoices: true, query: e.target.value });
-  //   // this.props.updateModelValue(e.target.value);
-  // }
-  // setQuery(props) {
-  //   if (this.props.choice) {
-  //     this.setState({
-  //       query: this.props.transformChoiceToDisplayValue(this.props.choice)
-  //     });
-  //   }
-  // }
+
   resetQuery() {
     this.setState({ query: "" });
   }
@@ -50,9 +28,7 @@ class SlushBucket extends Component {
       isFetching,
       placeholder,
       updateModelValue,
-      onKeyUp,
       transformChoiceToDisplayValue
-      // validate
     } = this.props;
 
     return (

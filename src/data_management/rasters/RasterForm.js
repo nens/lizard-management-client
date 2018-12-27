@@ -586,7 +586,6 @@ class RasterFormModel extends Component {
                   placeholder={"search"}
                   updateModelValue={e =>
                     this.setState({ sharedWithOrganisations: e })}
-                  resetModelValue={e => e}
                   transformChoiceToDisplayValue={e => e.name}
                 />
                 <GenericTextInputComponent
