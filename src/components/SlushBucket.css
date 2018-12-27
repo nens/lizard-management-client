@@ -15,7 +15,7 @@
   /* z-index: 2; */
 }
 .ResultRow {
-  height: 50px;
+  min-height: 50px;
   padding: 13px;
   border-bottom: 1px solid #ccc;
   cursor: pointer;

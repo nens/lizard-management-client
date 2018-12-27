@@ -2,7 +2,8 @@ import React, { Component } from "react";
 
 import MDSpinner from "react-md-spinner";
 import { Scrollbars } from "react-custom-scrollbars";
-import ClearInputButton from "../components/ClearInputButton.js";
+// import ClearInputButton from "../components/ClearInputButton.js";
+import ClearButton from "../components/ClearButton.js";
 
 import styles from "./SlushBucket.css";
 import formStyles from "../styles/Forms.css";
@@ -61,39 +62,56 @@ class SlushBucket extends Component {
 
     return (
       <div className={`${styles.SelectChoice} form-input`}>
-        <input
-          id={inputId}
-          tabIndex="-1"
-          type="text"
-          autoComplete="false"
-          className={formStyles.FormControl}
-          placeholder={placeholder}
-          onChange={this.handleInput}
-          onKeyUp={event => {
-            onKeyUp(event);
-            this.handleKeyUp(event);
-          }}
-          value={this.state.query}
-          onClick={() => this.setState({ mustShowChoices: true })}
-          //onFocus={() => this.setState({ mustShowChoices: true })}
-          onBlur={() => this.setState({ mustShowChoices: false })}
-        />
         <div
-          className={`${styles.Spinner} ${
-            isFetching ? displayStyles.Block : displayStyles.None
-          }`}
+          style={{
+            width: "50%",
+            display: "flex",
+            justifyContent: "space-between"
+          }}
         >
-          <MDSpinner size={18} />
-        </div>
-
-        {mustShowClearButton ? (
-          <ClearInputButton
-            onClick={() => {
-              resetModelValue();
-              this.resetQuery();
+          <input
+            id={inputId}
+            tabIndex="-1"
+            type="text"
+            autoComplete="false"
+            className={formStyles.FormControl}
+            placeholder={placeholder}
+            onChange={this.handleInput}
+            onKeyUp={event => {
+              onKeyUp(event);
+              this.handleKeyUp(event);
             }}
+            value={this.state.query}
+            // onClick={() => this.setState({ mustShowChoices: true })}
+            //onFocus={() => this.setState({ mustShowChoices: true })}
+            onBlur={() => this.setState({ mustShowChoices: false })}
           />
-        ) : null}
+          <div
+            className={`${styles.Spinner} ${isFetching
+              ? displayStyles.Block
+              : displayStyles.None}`}
+          >
+            <MDSpinner size={18} />
+          </div>
+
+          {/* {this.state.query !== '' ? ( */}
+          <div
+            style={{
+              transform: "translateX(-24px)",
+              display: "flex",
+              alignItems: "center",
+              visibility: this.state.query === "" ? "hidden" : "visible"
+            }}
+          >
+            <ClearButton
+              onClick={() => {
+                resetModelValue();
+                this.resetQuery();
+              }}
+            />
+          </div>
+          {/* ) : null} */}
+        </div>
 
         {/* {results.length > 0 && this.state.mustShowChoices ? ( */}
         <div
@@ -179,9 +197,9 @@ class SlushBucket extends Component {
               marginLeft: "20px"
             }}
           >
-            <span>
+            <div className={`${styles.ResultRow}`}>
               <b>Selected organisations</b>
-            </span>
+            </div>
             <Scrollbars autoHeight autoHeightMin={50} autoHeightMax={400}>
               {selected
                 .sort((choiceItemA, choiceItemB) => {
@@ -206,28 +224,46 @@ class SlushBucket extends Component {
 
                   return (
                     <div
-                      tabIndex={i + 1}
-                      key={i}
-                      // className={`${styles.ResultRow} ${
-                      //   currentChoiceString === SelectedChoiceString
-                      //     ? styles.Active
-                      //     : styles.Inactive
-                      // }`}
                       className={`${styles.ResultRow} ${styles.Inactive}`}
-                      onMouseDown={() => {
-                        // User selected a choice from the filtered ones:
-                        // updateModelValue(choiceItem);
-                        // // this.resetQuery();
-                        // this.setState({
-                        //   mustShowChoices: false,
-                        //   query: currentChoiceString
-                        // });
-                        updateModelValue(
-                          selected.filter(e => e.name !== choiceItem.name)
-                        );
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center"
                       }}
                     >
-                      {currentChoiceString}
+                      <div
+                        tabIndex={i + 1}
+                        key={i}
+                        // className={`${styles.ResultRow} ${
+                        //   currentChoiceString === SelectedChoiceString
+                        //     ? styles.Active
+                        //     : styles.Inactive
+                        // }`}
+
+                        onMouseDown={() => {
+                          // User selected a choice from the filtered ones:
+                          // updateModelValue(choiceItem);
+                          // // this.resetQuery();
+                          // this.setState({
+                          //   mustShowChoices: false,
+                          //   query: currentChoiceString
+                          // });
+                          // updateModelValue(
+                          //   selected.filter(e => e.name !== choiceItem.name)
+                          // );
+                        }}
+                      >
+                        {currentChoiceString}
+                      </div>
+                      <ClearButton
+                        onClick={() => {
+                          // resetModelValue();
+                          // this.resetQuery();
+                          updateModelValue(
+                            selected.filter(e => e.name !== choiceItem.name)
+                          );
+                        }}
+                      />
                     </div>
                   );
                 })}
