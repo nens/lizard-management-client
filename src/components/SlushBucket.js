@@ -21,6 +21,11 @@ class SlushBucket extends Component {
   resetQuery() {
     this.setState({ query: "" });
   }
+
+  handleInput(e) {
+    this.setState({ query: e.target.value });
+  }
+
   render() {
     const {
       choices,
@@ -45,7 +50,7 @@ class SlushBucket extends Component {
             autoComplete="false"
             className={formStyles.FormControl}
             placeholder={placeholder}
-            onChange={this.handleInput}
+            onChange={e => this.handleInput(e)}
             onKeyUp={event => {
               this.handleKeyUp(event);
             }}
