@@ -634,7 +634,10 @@ class UploadRasterDataMultipleModel extends Component {
                     width: "100%",
                     flexFlow: "row nowrap",
                     justifyContent: "space-between",
-                    height: "60px"
+                    height: "60px",
+                    padding: "13px",
+                    borderBottom: "1px solid #ccc",
+                    borderTop: i === 0 ? "1px solid #ccc" : "0px solid #ccc"
                   }}
                 >
                   <div style={{ flex: 2 }}>{e.file.name}</div>
@@ -763,7 +766,7 @@ class UploadRasterDataMultipleModel extends Component {
                     this.state.saveAllButtonBusy === false ? (
                       <FormattedMessage
                         id="rasters.selected_file_ready_to_send"
-                        defaultMessage="file ready, click button to upload"
+                        defaultMessage="file selected, ready to upload"
                       />
                     ) : null}
                     {e.sendingState === "SERVER_RECEIVED" ? (
@@ -778,7 +781,7 @@ class UploadRasterDataMultipleModel extends Component {
                       <span style={{ color: "red" }}>
                         <FormattedMessage
                           id="rasters.selected_file_failed_upload"
-                          defaultMessage="File could not be uploaded, click the button to try again"
+                          defaultMessage="File could not be uploaded, maybe try once more"
                         />
                       </span>
                     ) : null}
@@ -809,8 +812,19 @@ class UploadRasterDataMultipleModel extends Component {
                   <div
                     style={
                       this.state.saveAllButtonBusy
-                        ? { flex: 1, visibility: "hidden" }
-                        : { flex: 1 }
+                        ? {
+                            flex: 1,
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "flex-end",
+                            visibility: "hidden"
+                          }
+                        : {
+                            flex: 1,
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "flex-end"
+                          }
                     }
                     onClick={e => {
                       const acceptedFiles = this.state.acceptedFiles;
