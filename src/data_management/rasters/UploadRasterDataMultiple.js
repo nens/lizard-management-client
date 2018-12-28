@@ -375,8 +375,6 @@ class UploadRasterDataMultipleModel extends Component {
             className={`${buttonStyles.Button} ${buttonStyles.Success}`}
             onClick={_ => {
               this.props.history.push("/data_management/rasters/");
-
-              ////////////////////////////////////////
             }}
           >
             <FormattedMessage
@@ -397,8 +395,6 @@ class UploadRasterDataMultipleModel extends Component {
                   (this.props.currentRaster && this.props.currentRaster.uuid) +
                   "/"
               );
-
-              ////////////////////////////////////////
             }}
           >
             <FormattedMessage
@@ -496,50 +492,81 @@ class UploadRasterDataMultipleModel extends Component {
                 defaultMessage="Following files could not be selected"
               />
             </h3>
-            <Scrollbars autoHeight autoHeightMin={0} autoHeightMax={250}>
-              {this.state.rejectedFiles.map((e, i) => (
-                <div className={gridStyles.Row} key={e.name}>
-                  <div
-                    className={classNames(
-                      gridStyles.colMd5,
-                      gridStyles.colSm5,
-                      gridStyles.colXs5
-                    )}
-                  >
-                    {e.file.name}
-                  </div>
-                  <div
-                    className={classNames(
-                      gridStyles.colMd5,
-                      gridStyles.colSm5,
-                      gridStyles.colXs5
-                    )}
-                  >
-                    {e.reason}
-                  </div>
-                  <div
-                    className={classNames(
-                      gridStyles.colMd2,
-                      gridStyles.colSm2,
-                      gridStyles.colXs2
-                    )}
-                  >
-                    <div
-                      // className={this.props.className}
-                      onClick={e => {
-                        const rejectedFiles = this.state.rejectedFiles;
-                        const newRejectedFiles = rejectedFiles.filter(
-                          (e, iLoc) => i !== iLoc
-                        );
-                        this.setState({ rejectedFiles: newRejectedFiles });
-                      }}
-                    >
-                      <i className={`material-icons`}>clear</i>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </Scrollbars>
+
+            <div
+              style={{
+                borderBottom: "2px solid #ccc",
+                borderTop: "2px solid #ccc"
+              }}
+            >
+              <Scrollbars
+                autoHeight
+                autoHeightMin={"0rem"}
+                autoHeightMax={"20rem"}
+              >
+                <table
+                  style={{
+                    width: "100%"
+                  }}
+                >
+                  <tbody>
+                    {this.state.rejectedFiles.map((e, i) => (
+                      <tr
+                        style={{
+                          height: "3.5rem",
+                          borderTop:
+                            i === 0 ? "0px solid #ccc" : "1px solid #ccc"
+                        }}
+                        key={e.file.name + e.file.size}
+                      >
+                        <td
+                          style={{
+                            width: "40%",
+                            padding: "1rem"
+                          }}
+                        >
+                          {e.file.name}
+                        </td>
+                        <td
+                          style={{
+                            width: "40%",
+                            padding: "1rem"
+                          }}
+                        >
+                          {e.reason}
+                        </td>
+                        <td
+                          style={{
+                            width: "40%",
+                            padding: "1rem",
+                            verticalAlign: "center"
+                          }}
+                        >
+                          <div
+                            onClick={e => {
+                              const rejectedFiles = this.state.rejectedFiles;
+                              const newRejectedFiles = rejectedFiles.filter(
+                                (e, iLoc) => i !== iLoc
+                              );
+                              this.setState({
+                                rejectedFiles: newRejectedFiles
+                              });
+                            }}
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "flex-end"
+                            }}
+                          >
+                            <i className={`material-icons`}>clear</i>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </Scrollbars>
+            </div>
 
             {/* {this.state.rejectedFiles.length > 1 ? (
               <h3>
@@ -624,6 +651,7 @@ class UploadRasterDataMultipleModel extends Component {
                   />
                 </h3>
               ) : null}
+              {/* scrollbars have problem with datepicker namely that the datepicker falls underneath the scroll */}
               {/* <Scrollbars autoHeight autoHeightMin={0} autoHeightMax={600}> */}
               {this.state.acceptedFiles.map((e, i) => (
                 <div
