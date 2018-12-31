@@ -21,8 +21,11 @@ class Raster extends Component {
     this.state = {
       isFetching: true,
       rasters: [],
+      filteredSortedRasters: [],
+      paginatedRasters: [],
       total: 0,
       page: 1,
+      pageSize: 10,
       checkAllCheckBoxes: false,
       // Add checkbox array with id, raster and whether of not the checkbox
       // is checked, to be able to find the raster back from the checked
@@ -36,38 +39,74 @@ class Raster extends Component {
     this.checkAllCheckBoxes = this.checkAllCheckBoxes.bind(this);
     this.clickRegularCheckbox = this.clickRegularCheckbox.bind(this);
     this.handleNewRasterClick = this.handleNewRasterClick.bind(this);
-    this.loadRastersOnPage = this.loadRastersOnPage.bind(this);
+    // this.loadRastersOnPage = this.loadRastersOnPage.bind(this);
   }
   componentDidMount() {
     const { page } = this.state;
     this.loadRastersOnPage(page, this.state.searchTerms);
   }
 
-  loadRastersOnPage(page, searchContains) {
-    const url = searchContains
-      ? // ordering is done by filter
-        `/api/v3/rasters/?page=${page}&name__icontains=${searchContains}` // &organisation__unique_id=${organisationId},
-      : // ordering is done so latest rasters first
-        `/api/v3/rasters/?ordering=-last_modified&page=${page}`;
+  filterSortRasters = (rasters, searchContains) => {
+    const filteredRasters = rasters.filter(
+      e =>
+        e.name.toLowerCase().includes(searchContains.toLowerCase()) ||
+        e.description.toLowerCase().includes(searchContains.toLowerCase())
+    );
+    const sortedFilteredRasters = filteredRasters.sort(
+      (a, b) => a.last_modified > b.last_modified
+    );
+    return sortedFilteredRasters;
+  };
+
+  paginateRasters = (rasters, page) => {
+    console.log("[F] paginateRasters", rasters, page);
+    const paginatedRasters = rasters.slice(
+      this.state.pageSize * (page - 1),
+      this.state.pageSize * page
+    );
+    console.log("[F] paginateRasters", rasters, page, paginatedRasters);
+    return paginatedRasters;
+  };
+
+  loadRastersOnPage = (page, searchContains) => {
+    // const url = searchContains
+    //   ? // ordering is done by filter
+    //     `/api/v3/rasters/?writable=true&page=${page}&name__icontains=${searchContains}` // &organisation__unique_id=${organisationId},
+    //   : // ordering is done so latest rasters first
+    //     `/api/v3/rasters/?writable=true&ordering=-last_modified&page=${page}`;
+    const url = "/api/v3/rasters/?writable=true&page_size=100000";
 
     fetch(url, {
       credentials: "same-origin"
     })
       .then(response => response.json())
       .then(data => {
+        const rasters = data.results;
+        const filteredSortedRasters = this.filterSortRasters(
+          rasters,
+          searchContains
+        );
+        const paginatedRasters = this.paginateRasters(
+          filteredSortedRasters,
+          page
+        );
         this.setState({
           isFetching: false,
-          total: data.count,
-          rasters: data.results,
+          // total: data.count,
+          total: filteredSortedRasters.length,
+          rasters: rasters,
+          filteredSortedRasters: filteredSortedRasters,
+          paginatedRasters: paginatedRasters,
           page: page,
           checkAllCheckBoxes: false
         });
 
-        const rasterList = data.results;
+        console.log("[F] loadRastersOnPage 3");
+
         this.resetAllCheckboxes();
-        this.setAllCheckBoxes(rasterList);
+        this.setAllCheckBoxes(paginatedRasters);
       });
-  }
+  };
 
   setAllCheckBoxes(rasterList) {
     let checkboxes = [];
@@ -225,7 +264,7 @@ class Raster extends Component {
         </div>
       </div>
     );
-    const htmlRasterTable = rasters.map((raster, i) => {
+    const htmlRasterTable = this.state.paginatedRasters.map((raster, i) => {
       return (
         <Row key={i} alarm={raster}>
           <span className={"col-lg-6 col-md-6 col-sm-6 col-xs-6"}>
@@ -426,7 +465,7 @@ class Raster extends Component {
               loadRastersOnPage={page =>
                 this.loadRastersOnPage(page, this.state.searchTerms)}
               page={page}
-              pages={Math.ceil(total / 10)}
+              pages={Math.ceil(total / this.state.pageSize)}
             />
           </div>
         </div>
