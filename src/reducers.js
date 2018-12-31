@@ -47,6 +47,7 @@ function bootstrap(
 function organisations(
   state = {
     isFetching: false,
+    timesFetched: 0,
     available: [],
     selected:
       JSON.parse(
@@ -61,7 +62,12 @@ function organisations(
       return { ...state, isFetching: true };
     case RECEIVE_ORGANISATIONS:
       // console.log("[A] RECEIVE_ORGANISATIONS", action);
-      return { ...state, available: action.data, isFetching: false };
+      return {
+        ...state,
+        available: action.data,
+        isFetching: false,
+        timesFetched: state.timesFetched + 1
+      };
     case SELECT_ORGANISATION:
       // console.log("[A] SELECT_ORGANISATION");
       return { ...state, selected: action.organisation };
@@ -73,6 +79,7 @@ function organisations(
 function observationTypes(
   state = {
     isFetching: false,
+    timesFetched: 0,
     hasError: false,
     errorMessage: "",
     available: []
@@ -89,7 +96,8 @@ function observationTypes(
         ...state,
         available: action.data,
         isFetching: false,
-        hasError: false
+        hasError: false,
+        timesFetched: state.timesFetched + 1
       };
     case RECEIVE_OBSERVATION_TYPES_ERROR:
       // console.log("[A] RECEIVE_OBSERVATION_TYPES_ERROR", action.errorMessage);
@@ -98,7 +106,8 @@ function observationTypes(
         available: [],
         isFetching: false,
         hasError: true,
-        errorMessage: action.errorMessage
+        errorMessage: action.errorMessage,
+        timesFetched: state.timesFetched + 1
       };
     default:
       return state;
@@ -108,6 +117,7 @@ function observationTypes(
 function supplierIds(
   state = {
     isFetching: false,
+    timesFetched: 0,
     hasError: false,
     errorMessage: "",
     available: []
@@ -124,7 +134,8 @@ function supplierIds(
         ...state,
         available: action.data,
         isFetching: false,
-        hasError: false
+        hasError: false,
+        timesFetched: state.timesFetched + 1
       };
     case RECEIVE_SUPPLIER_IDS_ERROR:
       // console.log("[A] RECEIVE_SUPPLIER_IDS_ERROR", action.errorMessage);
@@ -133,7 +144,8 @@ function supplierIds(
         available: [],
         isFetching: false,
         hasError: true,
-        errorMessage: action.errorMessage
+        errorMessage: action.errorMessage,
+        timesFetched: state.timesFetched + 1
       };
     default:
       return state;
@@ -143,6 +155,7 @@ function supplierIds(
 function colorMaps(
   state = {
     isFetching: false,
+    timesFetched: 0,
     hasError: false,
     errorMessage: "",
     available: []
@@ -159,7 +172,8 @@ function colorMaps(
         ...state,
         available: action.data,
         isFetching: false,
-        hasError: false
+        hasError: false,
+        timesFetched: state.timesFetched + 1
       };
     case RECEIVE_COLORMAPS_ERROR:
       // console.log("[A] RECEIVE_COLORMAPS_ERROR", action.errorMessage);
@@ -168,7 +182,8 @@ function colorMaps(
         available: [],
         isFetching: false,
         hasError: true,
-        errorMessage: action.errorMessage
+        errorMessage: action.errorMessage,
+        timesFetched: state.timesFetched + 1
       };
     default:
       return state;
