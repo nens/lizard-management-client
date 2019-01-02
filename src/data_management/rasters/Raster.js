@@ -13,7 +13,6 @@ import { FormattedMessage } from "react-intl";
 import { withRouter } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import SearchBox from "../../components/SearchBox";
-// constante voor page_size?
 
 class Raster extends Component {
   constructor(props) {
@@ -21,14 +20,15 @@ class Raster extends Component {
     this.state = {
       isFetching: true,
       rasters: [],
+      filteredSortedRasters: [],
+      paginatedRasters: [],
       total: 0,
       page: 1,
+      pageSize: 10,
       checkAllCheckBoxes: false,
       // Add checkbox array with id, raster and whether of not the checkbox
-      // is checked, to be able to find the raster back from the checked
-      // checkboxes.
+      // is checked, to be able to find the raster back from the checked checkboxes.
       checkboxes: [],
-      checkboxAllCheckboxesChecked: false,
       searchTerms: ""
     };
     this.handleNewRasterClick = this.handleNewRasterClick.bind(this);
@@ -36,40 +36,77 @@ class Raster extends Component {
     this.checkAllCheckBoxes = this.checkAllCheckBoxes.bind(this);
     this.clickRegularCheckbox = this.clickRegularCheckbox.bind(this);
     this.handleNewRasterClick = this.handleNewRasterClick.bind(this);
-    this.loadRastersOnPage = this.loadRastersOnPage.bind(this);
   }
   componentDidMount() {
     const { page } = this.state;
-    this.loadRastersOnPage(page, this.state.searchTerms);
+    this.getRastersFromApi(page, this.state.searchTerms);
   }
 
-  loadRastersOnPage(page, searchContains) {
-    const url = searchContains
-      ? // ordering is done by filter
-        `/api/v3/rasters/?page=${page}&name__icontains=${searchContains}` // &organisation__unique_id=${organisationId},
-      : // ordering is done so latest rasters first
-        `/api/v3/rasters/?ordering=-last_modified&page=${page}`;
+  filterSortRasters = (rasters, searchContains) => {
+    const filteredRasters = rasters.filter(
+      e =>
+        e.name.toLowerCase().includes(searchContains.toLowerCase()) ||
+        e.description.toLowerCase().includes(searchContains.toLowerCase())
+    );
+    const sortedFilteredRasters = filteredRasters.sort(
+      (a, b) => a.last_modified > b.last_modified
+    );
+    return sortedFilteredRasters;
+  };
+
+  paginateRasters = (rasters, page) => {
+    const paginatedRasters = rasters.slice(
+      this.state.pageSize * (page - 1),
+      this.state.pageSize * page
+    );
+    return paginatedRasters;
+  };
+
+  refreshRasterFilteringAndPaginationAndUpdateState = (
+    rasters,
+    page,
+    searchTerms
+  ) => {
+    const filteredSortedRasters = this.filterSortRasters(rasters, searchTerms);
+    const paginatedRasters = this.paginateRasters(filteredSortedRasters, page);
+    const checkboxes = this.createCheckboxDataFromRaster(paginatedRasters);
+
+    this.setState({
+      isFetching: false,
+      total: filteredSortedRasters.length,
+      rasters: rasters,
+      filteredSortedRasters: filteredSortedRasters,
+      paginatedRasters: paginatedRasters,
+      page: page,
+      checkAllCheckBoxes: false,
+      checkboxes: checkboxes,
+      searchTerms: searchTerms
+    });
+  };
+
+  getRastersFromApi = (page, searchContains) => {
+    // const url = searchContains
+    //   ? // ordering is done by filter
+    //     `/api/v3/rasters/?writable=true&page=${page}&name__icontains=${searchContains}` // &organisation__unique_id=${organisationId},
+    //   : // ordering is done so latest rasters first
+    //     `/api/v3/rasters/?writable=true&ordering=-last_modified&page=${page}`;
+    const url = "/api/v3/rasters/?writable=true&page_size=100000";
 
     fetch(url, {
       credentials: "same-origin"
     })
       .then(response => response.json())
       .then(data => {
-        this.setState({
-          isFetching: false,
-          total: data.count,
-          rasters: data.results,
-          page: page,
-          checkAllCheckBoxes: false
-        });
-
-        const rasterList = data.results;
-        this.resetAllCheckboxes();
-        this.setAllCheckBoxes(rasterList);
+        const rasters = data.results;
+        this.refreshRasterFilteringAndPaginationAndUpdateState(
+          rasters,
+          page,
+          searchContains
+        );
       });
-  }
+  };
 
-  setAllCheckBoxes(rasterList) {
+  createCheckboxDataFromRaster(rasterList) {
     let checkboxes = [];
     for (var i = 0; i < rasterList.length; i++) {
       var newDict = {
@@ -79,20 +116,7 @@ class Raster extends Component {
       };
       checkboxes.push(newDict);
     }
-
-    this.setState({
-      checkboxes: checkboxes,
-      checkAllCheckBoxes: false,
-      checkboxAllCheckboxesChecked: false
-    });
-  }
-
-  resetAllCheckboxes() {
-    let resetState = Object.assign({}, this.state);
-    resetState.checkboxes = [];
-    resetState.checkAllCheckBoxes = false;
-    resetState.checkboxAllCheckboxesChecked = false;
-    this.setState(resetState);
+    return checkboxes;
   }
 
   handleNewRasterClick() {
@@ -138,12 +162,9 @@ class Raster extends Component {
         };
         fetch(url + toBeDeletedRasterUuidsArray[i] + "/", opts);
         // Refresh the page, so that the removed rasters are no longer visible
-        this.setState({
-          checkAllCheckBoxes: false,
-          checkboxAllCheckboxesChecked: false
-        });
-        this.checkAllCheckBoxes(false);
-        this.loadRastersOnPage(this.state.page, this.state.searchTerms);
+        // fetch is a asynchrounous action. the following line should only be executed on .then. todo fix this
+
+        this.getRastersFromApi(this.state.page, this.state.searchTerms);
       }
     }
   }
@@ -170,18 +191,17 @@ class Raster extends Component {
     });
   }
 
-  checkAllCheckBoxes(checkboxAllCheckboxesChecked) {
+  checkAllCheckBoxes(checkAllCheckBoxes) {
     let checkboxes = this.state.checkboxes.slice();
 
     checkboxes.map(checkBox => {
-      checkBox.checked = checkboxAllCheckboxesChecked;
+      checkBox.checked = checkAllCheckBoxes;
       return checkBox;
     });
 
     this.setState({
       checkboxes: checkboxes,
-      checkAllCheckBoxes: checkboxAllCheckboxesChecked,
-      checkboxAllCheckboxesChecked: checkboxAllCheckboxesChecked // nog nodig?
+      checkAllCheckBoxes: checkAllCheckBoxes
     });
   }
 
@@ -225,7 +245,7 @@ class Raster extends Component {
         </div>
       </div>
     );
-    const htmlRasterTable = rasters.map((raster, i) => {
+    const htmlRasterTable = this.state.paginatedRasters.map((raster, i) => {
       return (
         <Row key={i} alarm={raster}>
           <span className={"col-lg-6 col-md-6 col-sm-6 col-xs-6"}>
@@ -300,11 +320,9 @@ class Raster extends Component {
               // when going over the checked checkboxes and trying to find
               // rasters to delete these rasters.
               id="checkboxCheckAll"
-              checked={this.state.checkboxAllCheckboxesChecked}
+              checked={this.state.checkAllCheckBoxes}
               onClick={e =>
-                this.checkAllCheckBoxes(
-                  !this.state.checkboxAllCheckboxesChecked
-                )}
+                this.checkAllCheckBoxes(!this.state.checkAllCheckBoxes)}
             />
             {this.state.checkAllCheckBoxes
               ? " Uncheck all checkboxes on this page"
@@ -342,10 +360,20 @@ class Raster extends Component {
             className={`${gridStyles.colLg8} ${gridStyles.colMd8} ${gridStyles.colSm8} ${gridStyles.colXs8}`}
           >
             <SearchBox
-              handleSearch={searchContains =>
-                this.loadRastersOnPage(this.state.page, searchContains)}
+              handleSearch={searchTerms =>
+                this.refreshRasterFilteringAndPaginationAndUpdateState(
+                  this.state.rasters,
+                  1,
+                  searchTerms
+                )}
               searchTerms={this.state.searchTerms}
-              setSearchTerms={searchTerms => this.setState({ searchTerms })}
+              setSearchTerms={searchTerms => {
+                this.refreshRasterFilteringAndPaginationAndUpdateState(
+                  this.state.rasters,
+                  1,
+                  searchTerms
+                );
+              }}
             />
           </div>
           <div
@@ -424,9 +452,13 @@ class Raster extends Component {
           >
             <PaginationBar
               loadRastersOnPage={page =>
-                this.loadRastersOnPage(page, this.state.searchTerms)}
+                this.refreshRasterFilteringAndPaginationAndUpdateState(
+                  this.state.rasters,
+                  page,
+                  this.state.searchTerms
+                )}
               page={page}
-              pages={Math.ceil(total / 10)}
+              pages={Math.ceil(total / this.state.pageSize)}
             />
           </div>
         </div>
