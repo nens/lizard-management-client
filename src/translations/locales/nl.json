@@ -174,5 +174,6 @@
   "rasters.temporal_raster_origin": "Temporal Raster Origin (begin in tijd)",
   "rasters.temporal_raster_origin_description": "Eerst mogelijke meetwaarde van temporeel raster",
   "rasters.unique_supplier_code": "De combinatie Supplier en Supplier-code dient uniek te zijn",
-  "rasters.yes_the_raster_is_temporal": "Ja, het raster is temporeel"
+  "rasters.yes_the_raster_is_temporal": "Ja, het raster is temporeel",
+  "Search in name and description": "Zoek in naam en beschrijving"
 }
