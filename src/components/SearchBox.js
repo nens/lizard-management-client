@@ -41,7 +41,9 @@ class SearchBox extends Component {
             style={{
               // make sure input field has same height as search button
               padding: "6px",
-              paddingLeft: "35px"
+              paddingLeft: "35px",
+              paddingRight: "25px"
+              // dit zijn de borders aan de searchbutton. Searchbutton is nu verborgen, maar zetten we later misschien terug of achter boolean
               // right corners will touch button, remove these rounded corners added by FormStyles
               // borderTopRightRadius: "0px",
               // borderBottomRightRadius: "0px"
@@ -50,7 +52,6 @@ class SearchBox extends Component {
               this.props.setSearchTerms(e.target.value);
             }}
             onKeyUp={e => this.handleEnter(e)}
-            // title={"search in name and description"}
             title={intl.formatMessage({ id: "Search in name and description" })}
           />
 
@@ -70,11 +71,12 @@ class SearchBox extends Component {
           </i>
           <i
             className={`${clearInputStyles.ClearInput} material-icons`}
-            style={{ left: "6px", fontSize: "30px" }}
+            style={{ left: "6px", fontSize: "30px", pointerEvents: "none" }}
           >
             search
           </i>
         </div>
+        {/* button is currenlty not shown, but will later maybe be used again for server-side search */}
         <button
           style={{ display: "none" }}
           type="button"

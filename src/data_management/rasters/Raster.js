@@ -162,12 +162,8 @@ class Raster extends Component {
         };
         fetch(url + toBeDeletedRasterUuidsArray[i] + "/", opts);
         // Refresh the page, so that the removed rasters are no longer visible
-        // fetch is a asynchrounous action. the following lines should only be executed on .then. todo fix this
-        // these lines are commented out because they also happen in getRastersFromApi
-        // this.setState({
-        //   checkAllCheckBoxes: false,
-        // });
-        // this.checkAllCheckBoxes(false);
+        // fetch is a asynchrounous action. the following line should only be executed on .then. todo fix this
+
         this.getRastersFromApi(this.state.page, this.state.searchTerms);
       }
     }
@@ -456,7 +452,6 @@ class Raster extends Component {
           >
             <PaginationBar
               loadRastersOnPage={page =>
-                // this.getRastersFromApi(page, this.state.searchTerms)
                 this.refreshRasterFilteringAndPaginationAndUpdateState(
                   this.state.rasters,
                   page,
