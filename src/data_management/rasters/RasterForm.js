@@ -4,7 +4,6 @@ import "./NewRaster.css";
 import React, { Component } from "react";
 import { addNotification } from "../../actions";
 import { connect } from "react-redux";
-import moment from "moment";
 import { withRouter } from "react-router-dom";
 import { FormattedMessage } from "react-intl";
 
@@ -12,20 +11,16 @@ import GenericTextInputComponent from "../../components/GenericTextInputComponen
 import GenericSelectBoxComponent from "../../components/GenericSelectBoxComponent";
 import GenericCheckBoxComponent from "../../components/GenericCheckBoxComponent";
 import ColorMapComponent from "../../components/ColorMapComponent";
-import GenericDateComponent from "../../components/GenericDateComponent";
 import DurationComponent from "../../components/DurationComponent";
 import inputStyles from "../../styles/Input.css";
 import {
   calculateNewStyleAndOptions,
   optionsHasLayers,
-  createColorMapFromStylePlusOptions,
   getColorMapFromStyle,
   getColorMinFromStyle,
   getColorMaxFromStyle,
-  composeStyleString,
   getStyleFromOptions,
-  validateStyleObj,
-  styleMinMaxStrToValidString
+  validateStyleObj
 } from "../../utils/rasterOptionFunctions";
 import ErrorOverlay from "./ErrorOverlay.js";
 

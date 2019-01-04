@@ -88,7 +88,6 @@ class ErrorOverlay extends Component {
         />
       );
     } else if (this.props.errorMessage.status.toString().startsWith(4)) {
-      console.log("Correct errorMessage");
       return (
         <div>
           <FormattedMessage
@@ -116,12 +115,10 @@ class ErrorOverlay extends Component {
   render() {
     const { handleClose, isFetching } = this.props;
 
-    let message;
     let buttons;
     let defaultOptions;
 
     if (!isFetching) {
-      message = this.whichMessage();
       buttons = this.succesButtons();
       defaultOptions = {
         loop: false,
@@ -192,8 +189,6 @@ class ErrorOverlay extends Component {
                       className={`${buttonStyles.Button} ${buttonStyles.Success}`}
                       style={{ marginTop: 10 }}
                       onClick={e => {
-                        // handleClose /*HIER MOET DE LINK NAAR TOMS UPLOAD SCREEN*/
-                        console.log(this.props);
                         this.props.history.push(
                           "/data_management/rasters/" +
                             this.props.currentRaster.uuid +
