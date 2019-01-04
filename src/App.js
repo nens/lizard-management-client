@@ -285,19 +285,25 @@ const mapStateToProps = (state, ownProps) => {
 
     mustFetchOrganisations:
       state.organisations.available.length === 0 &&
-      !state.organisations.isFetching,
+      !state.organisations.isFetching &&
+      state.organisations.timesFetched < 1,
 
     selectedOrganisation: state.organisations.selected,
 
     mustFetchObservationTypes:
       state.observationTypes.available.length === 0 &&
-      !state.observationTypes.isFetching,
+      !state.observationTypes.isFetching &&
+      state.observationTypes.timesFetched < 1,
     mustFetchSupplierIds:
       state.organisations.selected &&
       state.supplierIds.available.length === 0 &&
-      !state.supplierIds.isFetching,
+      !state.supplierIds.isFetching &&
+      // !state.supplierIds.hasError &&
+      state.supplierIds.timesFetched < 1,
     mustFetchColorMaps:
-      state.colorMaps.available.length === 0 && !state.colorMaps.isFetching
+      state.colorMaps.available.length === 0 &&
+      !state.colorMaps.isFetching &&
+      state.colorMaps.timesFetched < 1
   };
 };
 

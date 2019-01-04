@@ -144,6 +144,7 @@ export function fetchObservationTypes() {
             errorMessage,
             responseObj
           );
+          return Promise.reject(errorMessage);
         } else {
           return responseObj.json();
         }
@@ -184,6 +185,7 @@ export function fetchSupplierIds() {
           const errorMessage = `HTTP error ${responseObj.status} while fetching Supplier Ids: ${responseObj.statusText}`;
           dispatch({ type: RECEIVE_SUPPLIER_IDS_ERROR, errorMessage });
           console.error("[E]", errorMessage, responseObj);
+          return Promise.reject(errorMessage);
         } else {
           return responseObj.json();
         }
@@ -215,6 +217,7 @@ export function fetchColorMaps() {
           const errorMessage = `HTTP error ${responseObj.status} while fetching ColorMaps: ${responseObj.statusText}`;
           console.error(errorMessage, responseObj);
           dispatch({ type: RECEIVE_COLORMAPS_ERROR, errorMessage });
+          return Promise.reject(errorMessage);
         } else {
           return responseObj.json();
         }
