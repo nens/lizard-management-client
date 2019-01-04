@@ -55,7 +55,7 @@ function organisations(
 ) {
   // if there is already a selected organisation then this organisation must not have the unique_id field.
   // if it has the unique_id field then empty the selected organisation
-  if (state.selected && state.selected.unique_id != undefined) {
+  if (state.selected && state.selected.unique_id !== undefined) {
     state.selected = null;
   }
   // the api v3 accepts no dashes in the uuid (this is called unique_id in api v3)
