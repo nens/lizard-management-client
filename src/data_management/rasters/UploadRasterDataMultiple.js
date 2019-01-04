@@ -8,12 +8,10 @@ import Dropzone from "react-dropzone";
 import styles from "./UploadRasterData.css";
 import { FormattedMessage } from "react-intl";
 
-import formStyles from "../../styles/Forms.css";
 import buttonStyles from "../../styles/Buttons.css";
-import inputStyles from "../../styles/Input.css";
 import gridStyles from "../../styles/Grid.css";
 // // moment is required for datepicker
-import moment from "moment";
+import moment from "moment"; // do not remove, is needed for datepicker!
 import "moment/locale/nl";
 
 // import {InputMoment} from 'react-input-moment';

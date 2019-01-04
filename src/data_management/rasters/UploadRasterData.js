@@ -4,16 +4,11 @@ import { withRouter } from "react-router-dom";
 import MDSpinner from "react-md-spinner";
 
 import classNames from "classnames";
-import Dropzone from "react-dropzone";
-import styles from "./UploadRasterData.css";
 import { FormattedMessage } from "react-intl";
 
-import { UploadRasterDataSingle } from "./UploadRasterDataSingle";
 import { UploadRasterDataMultiple } from "./UploadRasterDataMultiple";
 
-import formStyles from "../../styles/Forms.css";
 import buttonStyles from "../../styles/Buttons.css";
-import inputStyles from "../../styles/Input.css";
 import gridStyles from "../../styles/Grid.css";
 
 class UploadRasterDataModel extends Component {
