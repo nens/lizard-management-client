@@ -53,7 +53,7 @@ class NewTemplate extends Component {
   handleClickCreateTemplateButton() {
     const { templateType, templateText } = this.state;
     const { selectedOrganisation, history } = this.props;
-    const organisationId = selectedOrganisation.unique_id;
+    const organisationId = selectedOrganisation.uuid;
 
     const url = "/api/v3/messages/";
     const opts = {

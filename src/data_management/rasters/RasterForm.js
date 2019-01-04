@@ -113,12 +113,12 @@ class RasterFormModel extends Component {
     this.setState({ selectedOrganisation });
   }
   resetSelectedOrganisation() {
-    this.setState({ selectedOrganisation: { name: "", unique_id: "" } });
+    this.setState({ selectedOrganisation: { name: "", uuid: "" } });
   }
   validateNewRasterOrganisation(obj) {
     if (!obj) return false;
-    const { unique_id, name } = obj;
-    return unique_id && name;
+    const { uuid, name } = obj;
+    return uuid && name;
   }
   // StorepathName
   setStorePathName(storePathName) {
@@ -347,7 +347,7 @@ class RasterFormModel extends Component {
       rasterName: "",
       selectedOrganisation: {
         name: "",
-        unique_id: ""
+        uuid: ""
       },
       storePathName: "",
       slug: "",
@@ -408,7 +408,7 @@ class RasterFormModel extends Component {
       rasterName: currentRaster.name,
       selectedOrganisation: {
         name: currentRaster.organisation.name,
-        unique_id: currentRaster.organisation.unique_id
+        uuid: currentRaster.organisation.uuid
       },
       storePathName:
         currentRaster.slug && currentRaster.slug.replace(/:/g, "/"),
@@ -475,7 +475,7 @@ class RasterFormModel extends Component {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: this.state.rasterName,
-          organisation: this.state.selectedOrganisation.unique_id,
+          organisation: this.state.selectedOrganisation.uuid,
           access_modifier: 200, // private to organisation
           observation_type: observationTypeId, //this.state.observationType,
           description: this.state.description,
@@ -506,7 +506,7 @@ class RasterFormModel extends Component {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: this.state.rasterName,
-          organisation: this.state.selectedOrganisation.unique_id, // required
+          organisation: this.state.selectedOrganisation.uuid, // required
           access_modifier: 200, // private to organisation // required
           observation_type: observationTypeId, // required
 
