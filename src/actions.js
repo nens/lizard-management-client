@@ -192,7 +192,6 @@ export function fetchSupplierIds() {
       })
       .then(responseData => {
         const data = responseData;
-        console.log("[API SUCCES]", "succes retrieving supplier id");
         dispatch({ type: RECEIVE_SUPPLIER_IDS_SUCCESS, data });
       });
   };
