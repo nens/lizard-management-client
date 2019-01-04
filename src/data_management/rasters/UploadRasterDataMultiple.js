@@ -309,7 +309,7 @@ class UploadRasterDataMultipleModel extends Component {
             }}
           >
             <FormattedMessage
-              id="rasters.back_to_rasters"
+              id="rasters.back_to_raster_metadata"
               defaultMessage="Back to Metadata"
             />
           </button>
@@ -400,7 +400,7 @@ class UploadRasterDataMultipleModel extends Component {
             }}
           >
             <FormattedMessage
-              id="rasters.back_to_rasters"
+              id="rasters.back_to_raster_metadata"
               defaultMessage="Back to Metadata"
             />
           </button>
@@ -452,7 +452,7 @@ class UploadRasterDataMultipleModel extends Component {
                         <h4>
                           {this.state.acceptedFiles.length + " "}
                           <FormattedMessage
-                            id="rasters.no_file_selected"
+                            id="rasters.files_selected"
                             defaultMessage="Files Selected"
                           />
                         </h4>
