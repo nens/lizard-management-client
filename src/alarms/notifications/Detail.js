@@ -66,7 +66,7 @@ class Detail extends Component {
   }
   componentDidMount() {
     const { match, selectedOrganisation } = this.props;
-    const organisationId = selectedOrganisation.unique_id;
+    const organisationId = selectedOrganisation.uuid;
 
     document.addEventListener("keydown", this.hideConfigureThreshold, false);
 

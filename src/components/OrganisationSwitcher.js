@@ -128,8 +128,7 @@ class OrganisationSwitcher extends Component {
                         <div
                           key={i}
                           className={`${styles.OrganisationRow} ${selectedOrganisation &&
-                          organisation.unique_id ===
-                            selectedOrganisation.unique_id
+                          organisation.uuid === selectedOrganisation.uuid
                             ? styles.Active
                             : styles.InActive}`}
                           onClick={() => {

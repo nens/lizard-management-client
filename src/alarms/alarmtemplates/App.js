@@ -56,7 +56,7 @@ class App extends Component {
   }
   loadTemplatesOnPage(page) {
     const { ordering } = this.state;
-    const organisationId = this.props.selectedOrganisation.unique_id;
+    const organisationId = this.props.selectedOrganisation.uuid;
 
     const url = `/api/v3/messages/?page=${page}&organisation__unique_id=${organisationId}
       ${ordering.column

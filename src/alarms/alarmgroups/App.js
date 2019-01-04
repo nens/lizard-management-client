@@ -37,7 +37,7 @@ class App extends Component {
 
   loadContactGroupsOnPage(page) {
     const { selectedOrganisation } = this.props;
-    const organisationId = selectedOrganisation.unique_id;
+    const organisationId = selectedOrganisation.uuid;
 
     this.setState({
       isFetching: true

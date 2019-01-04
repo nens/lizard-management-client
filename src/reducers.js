@@ -54,6 +54,16 @@ function organisations(
   },
   action
 ) {
+  // if there is already a selected organisation then this organisation must not have the unique_id field.
+  // if it has the unique_id field then empty the selected organisation
+  if (state.selected && state.selected.unique_id !== undefined) {
+    state.selected = null;
+  }
+  // the api v3 accepts no dashes in the uuid (this is called unique_id in api v3)
+  if (state.selected) {
+    state.selected.uuid = state.selected.uuid.replace(/-/g, "");
+  }
+
   switch (action.type) {
     case REQUEST_ORGANISATIONS:
       return { ...state, isFetching: true };
@@ -65,7 +75,10 @@ function organisations(
         timesFetched: state.timesFetched + 1
       };
     case SELECT_ORGANISATION:
-      return { ...state, selected: action.organisation };
+      // the api v3 accepts no dashes in the uuid (this is called unique_id in api v3)
+      const selectedOrganisation = action.organisation;
+      selectedOrganisation.uuid = selectedOrganisation.uuid.replace(/-/g, "");
+      return { ...state, selected: selectedOrganisation };
     default:
       return state;
   }
