@@ -74,7 +74,7 @@ class UploadRasterDataModel extends Component {
               }}
             >
               <FormattedMessage
-                id="rasters.back_to_rasters"
+                id="rasters.back_to_metadata"
                 defaultMessage="Back to Metadata"
               />
             </button>

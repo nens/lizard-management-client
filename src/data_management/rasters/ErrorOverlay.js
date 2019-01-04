@@ -83,7 +83,7 @@ class ErrorOverlay extends Component {
     ) {
       return (
         <FormattedMessage
-          id="raster.post_metadata_error_success"
+          id="raster.post_metadata_success"
           defaultMessage="Succes! Your raster meta-data was uploaded succesfully. You can add your data now, or do it later"
         />
       );
@@ -91,7 +91,7 @@ class ErrorOverlay extends Component {
       return (
         <div>
           <FormattedMessage
-            id="raster.post_metadata_error"
+            id="raster.post_metadata_error_in_400"
             defaultMessage="Oops, something went wrong. Please check the form and your internet settings. Error code is: "
           />
           {JSON.stringify(this.props.errorMessage.status) +
@@ -102,7 +102,7 @@ class ErrorOverlay extends Component {
       return (
         <div>
           <FormattedMessage
-            id="raster.post_metadata_error_success"
+            id="raster.post_metadata_error_in_500"
             defaultMessage="Oops, something went wrong. Please contact support. Error code is: "
           />
           {JSON.stringify(this.props.errorMessage.status) +
