@@ -42,9 +42,17 @@ class Raster extends Component {
     this.getRastersFromApi(page, this.state.searchTerms);
   }
   componentWillReceiveProps(props) {
+    let page = 1;
+    if (
+      this.props.organisations.selected.uuid ===
+      props.organisations.selected.uuid
+    ) {
+      page = this.state.page;
+    }
+
     this.refreshRasterFilteringAndPaginationAndUpdateState(
       this.state.rasters,
-      this.state.page,
+      page,
       this.state.searchTerms,
       props.organisations.selected
     );
