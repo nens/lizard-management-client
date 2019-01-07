@@ -520,12 +520,24 @@
 		"defaultMessage": "Support"
 	},
 	{
+		"id": "rasters.colormap_min_mandatory",
+		"defaultMessage": "Mandatory if a maximum is given"
+	},
+	{
+		"id": "rasters.colormap_max>min",
+		"defaultMessage": "Max should be Greater then Min"
+	},
+	{
 		"id": "rasters.next_step",
 		"defaultMessage": "Next Step"
 	},
 	{
 		"id": "components.switch_org",
 		"defaultMessage": "Switch organisation"
+	},
+	{
+		"id": "search",
+		"defaultMessage": "Search"
 	},
 	{
 		"id": "components_snackbar.dismiss",
@@ -556,8 +568,48 @@
 		"defaultMessage": "Manage Time Series"
 	},
 	{
-		"id": "rasters.number_of_rasters",
-		"defaultMessage": "{numberOfRasters, number} {numberOfRasters, plural, one {Raster} other {Rasters}}"
+		"id": "raster.post_metadata_success",
+		"defaultMessage": "Succes! Your raster meta-data was uploaded succesfully. You can add your data now, or do it later"
+	},
+	{
+		"id": "raster.post_metadata_error_in_400",
+		"defaultMessage": "Oops, something went wrong. Please check the form and your internet settings. Error code is:"
+	},
+	{
+		"id": "raster.post_metadata_error_in_500",
+		"defaultMessage": "Oops, something went wrong. Please contact support. Error code is:"
+	},
+	{
+		"id": "rasterscreen",
+		"defaultMessage": "Back to rasters"
+	},
+	{
+		"id": "upload",
+		"defaultMessage": "Upload data"
+	},
+	{
+		"id": "close",
+		"defaultMessage": "Back"
+	},
+	{
+		"id": "rasters.header_raster_name",
+		"defaultMessage": "Raster name"
+	},
+	{
+		"id": "rasters.header_raster_description",
+		"defaultMessage": "Description"
+	},
+	{
+		"id": "rasters.click_to_adapt_data",
+		"defaultMessage": "Data"
+	},
+	{
+		"id": "rasters.link_to_upload_data",
+		"defaultMessage": "Upload"
+	},
+	{
+		"id": "rasters.delete_rasters",
+		"defaultMessage": "Delete selected raster(s)"
 	},
 	{
 		"id": "rasters.new_raster",
@@ -568,6 +620,10 @@
 		"defaultMessage": "No rasters configured..."
 	},
 	{
+		"id": "rasters.number_of_rasters",
+		"defaultMessage": "{numberOfRasters, number} {numberOfRasters, plural, one {Raster} other {Rasters}}"
+	},
+	{
 		"id": "rasters.name_of_this_raster",
 		"defaultMessage": "Name of this Raster"
 	},
@@ -576,20 +632,20 @@
 		"defaultMessage": "The name of the raster will be used in e-mail and SMS alerts"
 	},
 	{
-		"id": "rasters.store_path",
-		"defaultMessage": "Store Path"
-	},
-	{
-		"id": "rasters.path_on_disk",
-		"defaultMessage": "Relative path of raster store. Should be unique within organisation. Multiple, comma-separated paths allowed."
-	},
-	{
 		"id": "rasters.description",
 		"defaultMessage": "Description"
 	},
 	{
 		"id": "rasters.please_describe_the_new_raster",
 		"defaultMessage": "Please describe the new Raster"
+	},
+	{
+		"id": "rasters.organisation",
+		"defaultMessage": "Organisation"
+	},
+	{
+		"id": "rasters.please_select_organisation",
+		"defaultMessage": "Please select the organisation for this raster"
 	},
 	{
 		"id": "rasters.aggregation_type",
@@ -614,6 +670,18 @@
 	{
 		"id": "rasters.please_select_colormap",
 		"defaultMessage": "Please select Colormap"
+	},
+	{
+		"id": "rasters.fill_colormap_min",
+		"defaultMessage": "Minimum"
+	},
+	{
+		"id": "rasters.fill_colormap_max",
+		"defaultMessage": "Maximum"
+	},
+	{
+		"id": "rasters.colormap_readonly_layers",
+		"defaultMessage": "Colormap is read-only because it contains multiple layers. Changing this is currently not supported."
 	},
 	{
 		"id": "rasters.supplier_id",
@@ -648,14 +716,6 @@
 		"defaultMessage": "No, the raster is not temporal"
 	},
 	{
-		"id": "rasters.temporal_raster_origin",
-		"defaultMessage": "Temporal Raster Origin"
-	},
-	{
-		"id": "rasters.temporal_raster_origin_description",
-		"defaultMessage": "First possible measurement off the temporal raster"
-	},
-	{
 		"id": "rasters.temporal_raster_frequency",
 		"defaultMessage": "Temporal Raster Frequency"
 	},
@@ -670,6 +730,126 @@
 	{
 		"id": "rasters.please complete the form before submitting",
 		"defaultMessage": "Please complete the form for submitting"
+	},
+	{
+		"id": "rasters.back_to_rasters",
+		"defaultMessage": "Back to Raster list"
+	},
+	{
+		"id": "rasters.back_to_metadata",
+		"defaultMessage": "Back to Metadata"
+	},
+	{
+		"id": "rasters.data_for",
+		"defaultMessage": "for raster"
+	},
+	{
+		"id": "rasters.are_you_sure_about_uploading_files",
+		"defaultMessage": "Are you sure about uploading the selected files?"
+	},
+	{
+		"id": "rasters.overwriting_data_cannot_be_undone",
+		"defaultMessage": "Please beware that the changes you are about to post to the database cannot be undone"
+	},
+	{
+		"id": "rasters.please_review_files_to_upload",
+		"defaultMessage": "Please only proceed if you carefully review all the files you are about to upload."
+	},
+	{
+		"id": "rasters.proceed_file_upload_by_typing_upload",
+		"defaultMessage": "Proceed by typing 'upload' in the field below"
+	},
+	{
+		"id": "rasters.back_to_raster_metadata",
+		"defaultMessage": "Back to Metadata"
+	},
+	{
+		"id": "rasters.following_files_upload_succes",
+		"defaultMessage": "Following files where succesfully uploaded"
+	},
+	{
+		"id": "rasters.click_to_url_upload_task",
+		"defaultMessage": "Show asynchronous task"
+	},
+	{
+		"id": "rasters.uploading_takes_additional_time_on_server",
+		"defaultMessage": "Please keep in mind that it might take a while before your changes are committed to the database."
+	},
+	{
+		"id": "rasters.check_url_for_progress_file_upload",
+		"defaultMessage": "The urls behind the files can show the progress for each file."
+	},
+	{
+		"id": "rasters.file_already_selected",
+		"defaultMessage": "A file with this name and size was already selected"
+	},
+	{
+		"id": "rasters.file_selection_not_tiff",
+		"defaultMessage": "Only .tif files are valid"
+	},
+	{
+		"id": "rasters.file_selection_failed_unknown_reason",
+		"defaultMessage": "Reason not known"
+	},
+	{
+		"id": "rasters.file_dropping",
+		"defaultMessage": "Drop files here..."
+	},
+	{
+		"id": "rasters.drop_file_here",
+		"defaultMessage": "Drop Files here"
+	},
+	{
+		"id": "rasters.no_file_selected",
+		"defaultMessage": "No file selected yet"
+	},
+	{
+		"id": "rasters.files_selected",
+		"defaultMessage": "Files Selected"
+	},
+	{
+		"id": "rasters.raster_upload_browse",
+		"defaultMessage": "Browse"
+	},
+	{
+		"id": "rasters.files_unable_to_select",
+		"defaultMessage": "Following files could not be selected"
+	},
+	{
+		"id": "rasters.upload_selected_files",
+		"defaultMessage": "Selected files"
+	},
+	{
+		"id": "rasters.selected_file_busy_uploading",
+		"defaultMessage": "File busy being uploaded"
+	},
+	{
+		"id": "rasters.selected_file_ready_to_send",
+		"defaultMessage": "file ready, click button to upload"
+	},
+	{
+		"id": "rasters.selected_file_succesfully uploaded",
+		"defaultMessage": "File succesfully uploaded to server"
+	},
+	{
+		"id": "rasters.selected_file_failed_upload",
+		"defaultMessage": "File could not be uploaded, click the button to try again"
+	},
+	{
+		"id": "rasters.selected_file_in queue",
+		"defaultMessage": "File waiting to be uploaded"
+	},
+	{
+		"id": "rasters.upload_selected_file",
+		"defaultMessage": "Save all files"
+	},
+	{
+		"id": "rasters.upload_abort_selected_file",
+		"defaultMessage": "Abort"
+	},
+	{
+		"id": "rasters.files_non_temporal_upload_multiple_files_not_allowed",
+		"defaultMessage": "For non-temporal rasters it is not possible to upload more than 1 file"
 	},
 	{
 		"id": "home.usermanagement",

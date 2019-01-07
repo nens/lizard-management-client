@@ -5,7 +5,6 @@ import { withRouter } from "react-router-dom";
 import CheckMark from "./CheckMark";
 import StepIndicator from "./StepIndicator";
 import { FormattedMessage } from "react-intl";
-import SelectBoxSimple from "./SelectBoxSimple.js";
 import SelectBoxSearch from "./SelectBoxSearch.js";
 
 import styles from "./GenericSelectBoxComponent.css";
@@ -13,19 +12,22 @@ import formStyles from "../styles/Forms.css";
 import buttonStyles from "../styles/Buttons.css";
 import inputStyles from "../styles/Input.css";
 
-class GenericSelectBoxComponent extends Component {
+class ColorMapComponent extends Component {
   setLocalStateFromProps(props) {
     // If this component is the "current step component", set the page focus to the components
     // input field:
-    if (props.step === props.currentStep && !this.props.formUpdate) {
-      const inputElem = document.getElementById(
-        this.props.titleComponent.props.id + "_input"
-      );
-      // inputElem.focus(); does not work outside setTimeout. Is this the right solution?
-      setTimeout(function() {
-        inputElem.focus();
-      }, 0);
-    }
+    // TODO: implement autofocus of inpput element for colormap
+    // not clear yet what we need to do with below solution.
+    // for colormaps this might work
+    // if (props.step === props.currentStep && !this.props.formUpdate) {
+    //   const inputElem = document.getElementById(
+    //     this.props.titleComponent.props.id + "_input"
+    //   );
+    //   // inputElem.focus(); does not work outside setTimeout. Is this the right solution?
+    //   setTimeout(function() {
+    //     // inputElem.focus();
+    //   }, 0);
+    // }
   }
   handleEnter(event) {
     if (this.props.validate(this.props.modelValue) && event.keyCode === 13) {
@@ -43,23 +45,22 @@ class GenericSelectBoxComponent extends Component {
     const {
       titleComponent, // <FormatText ... //>
       subtitleComponent, // <FormatText ... />
-      step, // which step of the GenericSelectBoxComponent it refers to
-      currentStep, // which step is currently active
+      minTitleComponent,
+      maxTitleComponent,
+      step, // int for denoting which step it this GenericSelectBoxComponent refers to
+      currentStep, // int for denoting which step is currently active
       setCurrentStep, // cb function for updating which step becomes active
       opened, // complete question and input fields become visible if set to true
       choices, // list of choices in select box. Depending on transformChoiceToDisplayValue,transformChoiceToDescription, transformChoiceToOption
       transformChoiceToDisplayValue, // optional parameter if choices are objects, which field contains the displayvalue, default item itself is displayvalue
-      transformChoiceToDescription, // now only possible if choicesSearchable == false
-      transformChoiceToInfo, // // now only possible if choicesSearchable == false
       isFetching, // is the component still waiting for data from server?
       modelValue, // string: e.g. the name of a raster
       updateModelValue, // cb function to *update* the value of e.g. a raster's name in the parent model
-      resetModelValue, // cb function to *reset* the value of e.g. a raster's name in the parent model
       validate, // function used to validate the props.modelValue. If validate returns true the props.modelValue passed to updateModelValue and checkmark is set.
-      choicesSearchable,
       placeholder,
       formUpdate,
-      readonly
+      readonly,
+      readOnlyReason
     } = this.props;
     const active = step === currentStep || (formUpdate && !readonly);
     const showCheckMark = validate(modelValue);
@@ -81,43 +82,85 @@ class GenericSelectBoxComponent extends Component {
             {showCheckMark ? <CheckMark /> : null}
           </h3>
           <div style={{ display: opened ? "block" : "none" }}>
-            <p className="text-muted">{subtitleComponent}</p>
+            {readOnlyReason ? (
+              <p className="text-muted">{readOnlyReason}</p>
+            ) : (
+              <p className="text-muted">{subtitleComponent}</p>
+            )}
             <div
               className={
                 formStyles.FormGroup + " " + inputStyles.PositionRelative
               }
             >
-              {choicesSearchable ? (
+              <div>
                 <SelectBoxSearch
                   choices={choices}
-                  choice={modelValue}
+                  choice={{ name: modelValue.colorMap }}
                   transformChoiceToDisplayValue={transformChoiceToDisplayValue}
                   isFetching={isFetching}
                   updateModelValue={e => {
-                    updateModelValue(e);
+                    updateModelValue({ colorMap: e.name });
                   }}
                   onKeyUp={e => this.handleEnter(e)}
                   inputId={titleComponent.props.id + "_input"}
                   placeholder={placeholder}
-                  validate={validate}
-                  resetModelValue={resetModelValue}
+                  validate={e => {
+                    return e.name !== "";
+                  }}
+                  resetModelValue={e => {
+                    updateModelValue({ colorMap: "" });
+                  }}
                   readonly={readonly}
                 />
-              ) : (
-                <SelectBoxSimple
-                  choices={choices}
-                  choice={modelValue}
-                  isFetching={isFetching}
-                  transformChoiceToDisplayValue={transformChoiceToDisplayValue}
-                  updateModelValue={updateModelValue}
-                  onKeyUp={e => this.handleEnter(e)}
-                  inputId={titleComponent.props.id + "_input"}
-                  placeholder={placeholder}
-                  // validate={validate}
-                  transformChoiceToDescription={transformChoiceToDescription}
-                  transformChoiceToInfo={transformChoiceToInfo}
+                <br />
+                <span className="text-muted">{minTitleComponent}</span>
+                <br />
+                {modelValue.max &&
+                modelValue.max !== "" &&
+                (modelValue.min === "" || !modelValue.min) ? (
+                  <span style={{ color: "red" }}>
+                    <FormattedMessage
+                      id="rasters.colormap_min_mandatory"
+                      defaultMessage="Mandatory if a maximum is given"
+                    />
+                  </span>
+                ) : null}
+
+                {parseFloat(modelValue.min) &&
+                parseFloat(modelValue.max) &&
+                parseFloat(modelValue.min) > parseFloat(modelValue.max) ? (
+                  <span style={{ color: "red" }}>
+                    <FormattedMessage
+                      id="rasters.colormap_max>min"
+                      defaultMessage="Max should be Greater then Min"
+                    />
+                  </span>
+                ) : null}
+                <input
+                  autoComplete="false"
+                  className={`${formStyles.FormControl} ${readonly
+                    ? inputStyles.ReadOnly
+                    : null}`}
+                  onChange={e => updateModelValue({ min: e.target.value })}
+                  value={modelValue.min}
+                  placeholder="optional minimum of range"
+                  readOnly={readonly}
+                  disabled={readonly}
                 />
-              )}
+                <br />
+                <span className="text-muted">{maxTitleComponent}</span>
+                <input
+                  autoComplete="false"
+                  className={`${formStyles.FormControl} ${readonly
+                    ? inputStyles.ReadOnly
+                    : null}`}
+                  value={modelValue.max}
+                  onChange={e => updateModelValue({ max: e.target.value })}
+                  placeholder="optional maximum of range"
+                  readOnly={readonly}
+                  disabled={readonly}
+                />
+              </div>
               {showNextButton ? (
                 <button
                   className={`${buttonStyles.Button} ${buttonStyles.Success}`}
@@ -148,8 +191,8 @@ const mapDispatchToProps = dispatch => {
   return {};
 };
 
-GenericSelectBoxComponent = withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(GenericSelectBoxComponent)
+ColorMapComponent = withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(ColorMapComponent)
 );
 
-export default GenericSelectBoxComponent;
+export default ColorMapComponent;

@@ -68,7 +68,7 @@ class GenericTextInputComponent extends Component {
       subtitleComponent, // <FormatText ... />
       placeholder,
       multiline, // boolean for which input elem to use: text OR textarea
-      step, // which step it the GenericTextInputComponent refers to
+      step, // which step of the GenericTextInputComponent it refers to
       currentStep, // which step is currently active
       setCurrentStep, // cb function for updating which step becomes active
       opened, // complete question and input fields become visible if set to true
@@ -171,10 +171,7 @@ const mapDispatchToProps = dispatch => {
 };
 
 GenericTextInputComponent = withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(GenericTextInputComponent)
+  connect(mapStateToProps, mapDispatchToProps)(GenericTextInputComponent)
 );
 
 export default GenericTextInputComponent;

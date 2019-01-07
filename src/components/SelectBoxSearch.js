@@ -7,6 +7,7 @@ import ClearInputButton from "../components/ClearInputButton.js";
 import styles from "./SelectBoxSearch.css";
 import formStyles from "../styles/Forms.css";
 import displayStyles from "../styles/Display.css";
+import inputStyles from "../styles/Input.css";
 
 class SelectBoxSearch extends Component {
   constructor(props) {
@@ -18,14 +19,7 @@ class SelectBoxSearch extends Component {
   componentDidMount() {
     this.setQuery(this.props);
   }
-  componentWillReceiveProps(newProps) {
-    if (newProps.validate()) {
-      this.setState({ query: newProps.choice });
-    }
-    // this.setQuery(newProps);
-    // if (newProps.selected.name)
-    //   this.setState({ query: newProps.selected.name });
-  }
+
   handleKeyUp(e) {
     if (e.key === "Escape") this.resetQuery();
   }
@@ -54,10 +48,12 @@ class SelectBoxSearch extends Component {
       onKeyUp,
       inputId,
       transformChoiceToDisplayValue,
-      validate
+      validate,
+      readonly
     } = this.props;
     const showOptions = choices.length > 0 && this.state.mustShowChoices;
-    const mustShowClearButton = validate(choice);
+    const mustShowClearButton =
+      (validate(choice) || this.state.query !== "") && !readonly;
 
     return (
       <div className={`${styles.SelectChoice} form-input`}>
@@ -66,22 +62,32 @@ class SelectBoxSearch extends Component {
           tabIndex="-1"
           type="text"
           autoComplete="false"
-          className={formStyles.FormControl}
+          className={
+            formStyles.FormControl +
+            " " +
+            (readonly ? " " + inputStyles.ReadOnly : null)
+          }
           placeholder={placeholder}
           onChange={this.handleInput}
           onKeyUp={event => {
             onKeyUp(event);
             this.handleKeyUp(event);
           }}
-          value={this.state.query}
-          onClick={() => this.setState({ mustShowChoices: true })}
+          value={
+            (!this.state.mustShowChoices &&
+              transformChoiceToDisplayValue(choice)) ||
+            this.state.query
+          }
+          onClick={() => !readonly && this.setState({ mustShowChoices: true })}
           //onFocus={() => this.setState({ mustShowChoices: true })}
           onBlur={() => this.setState({ mustShowChoices: false })}
+          readOnly={readonly}
+          disabled={readonly}
         />
         <div
-          className={`${styles.Spinner} ${
-            isFetching ? displayStyles.Block : displayStyles.None
-          }`}
+          className={`${styles.Spinner} ${isFetching && !readonly
+            ? displayStyles.Block
+            : displayStyles.None}`}
         >
           <MDSpinner size={18} />
         </div>
@@ -142,18 +148,16 @@ class SelectBoxSearch extends Component {
                   <div
                     tabIndex={i + 1}
                     key={i}
-                    className={`${styles.ResultRow} ${
-                      currentChoiceString === SelectedChoiceString
-                        ? styles.Active
-                        : styles.Inactive
-                    }`}
+                    className={`${styles.ResultRow} ${currentChoiceString ===
+                    SelectedChoiceString
+                      ? styles.Active
+                      : styles.Inactive}`}
                     onMouseDown={() => {
                       // User selected a choice from the filtered ones:
                       updateModelValue(choiceItem);
-                      // this.resetQuery();
                       this.setState({
                         mustShowChoices: false,
-                        query: currentChoiceString
+                        query: ""
                       });
                     }}
                   >

@@ -44,7 +44,7 @@ class GenericSelectBoxComponent extends Component {
       subtitleComponent, // <FormatText ... />
       yesCheckedComponent,
       noNotCheckedComponent,
-      step, // which step it this GenericSelectBoxComponent refers to
+      step, // which step of this GenericSelectBoxComponent it refers to
       currentStep, // which step is currently active
       setCurrentStep, // cb function for updating which step becomes active
       opened, // complete question and input fields become visible if set to true
@@ -67,7 +67,7 @@ class GenericSelectBoxComponent extends Component {
           indicator={step}
           active={active}
           handleClick={() => {
-            setCurrentStep(step);
+            !readonly && setCurrentStep(step);
           }}
         />
 
@@ -141,10 +141,7 @@ const mapDispatchToProps = dispatch => {
 };
 
 GenericSelectBoxComponent = withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(GenericSelectBoxComponent)
+  connect(mapStateToProps, mapDispatchToProps)(GenericSelectBoxComponent)
 );
 
 export default GenericSelectBoxComponent;

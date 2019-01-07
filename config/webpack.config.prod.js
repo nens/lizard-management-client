@@ -164,7 +164,9 @@ module.exports = {
             test: /\.css$/,
             exclude: [
               /node_modules\/input-moment\/dist\/input-moment.css$/,
-              /src\/components\/GenericDateComponentSymbols.css$/
+              /src\/components\/GenericDateComponentSymbols.css$/,
+              /node_modules\/react-datetime\/css\/react-datetime.css$/,
+              /src\/components\/ReactDateTime.css$/
             ],
             loader: ExtractTextPlugin.extract(
               Object.assign(
@@ -210,7 +212,9 @@ module.exports = {
           {
             test: [
               /node_modules\/input-moment\/dist\/input-moment.css$/,
-              /src\/components\/GenericDateComponentSymbols.css$/
+              /src\/components\/GenericDateComponentSymbols.css$/,
+              /node_modules\/react-datetime\/css\/react-datetime.css$/,
+              /src\/components\/ReactDateTime.css$/
             ],
             loader: ExtractTextPlugin.extract(
               Object.assign(

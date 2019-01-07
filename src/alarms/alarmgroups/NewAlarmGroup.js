@@ -34,7 +34,7 @@ class NewAlarmGroup extends Component {
         body: JSON.stringify({
           name: groupName,
           contacts: [],
-          organisation: organisation.unique_id
+          organisation: organisation.uuid
         })
       })
         .then(response => response.json())

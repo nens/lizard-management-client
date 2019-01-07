@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, injectIntl } from "react-intl";
 import Ink from "react-ink";
 import buttonStyles from "../styles/Buttons.css";
 import formStyles from "../styles/Forms.css";
@@ -14,7 +14,7 @@ class SearchBox extends Component {
   }
 
   render() {
-    const { searchTerm, handleSearch } = this.props;
+    const { searchTerm, handleSearch, intl } = this.props;
 
     return (
       <div
@@ -41,28 +41,44 @@ class SearchBox extends Component {
             style={{
               // make sure input field has same height as search button
               padding: "6px",
+              paddingLeft: "35px",
+              paddingRight: "25px"
+              // dit zijn de borders aan de searchbutton. Searchbutton is nu verborgen, maar zetten we later misschien terug of achter boolean
               // right corners will touch button, remove these rounded corners added by FormStyles
-              borderTopRightRadius: "0px",
-              borderBottomRightRadius: "0px"
+              // borderTopRightRadius: "0px",
+              // borderBottomRightRadius: "0px"
             }}
             onChange={e => {
               this.props.setSearchTerms(e.target.value);
             }}
             onKeyUp={e => this.handleEnter(e)}
+            title={intl.formatMessage({ id: "Search in name and description" })}
           />
 
           <i
             className={`${clearInputStyles.ClearInput} material-icons`}
-            style={{ right: "6px" }}
+            style={
+              this.props.searchTerms === ""
+                ? { right: "6px", display: "none" }
+                : { right: "6px" }
+            }
             onClick={() => {
-              this.props.setSearchTerms(this.props.searchTerms);
+              this.props.setSearchTerms("");
               this.props.handleSearch("");
             }}
           >
             clear
           </i>
+          <i
+            className={`${clearInputStyles.ClearInput} material-icons`}
+            style={{ left: "6px", fontSize: "30px", pointerEvents: "none" }}
+          >
+            search
+          </i>
         </div>
+        {/* button is currenlty not shown, but will later maybe be used again for server-side search */}
         <button
+          style={{ display: "none" }}
           type="button"
           className={`${buttonStyles.Button} ${buttonStyles.Success}`}
           onClick={e => handleSearch(this.props.searchTerms)}
@@ -75,4 +91,4 @@ class SearchBox extends Component {
   }
 }
 
-export default SearchBox;
+export default injectIntl(SearchBox);
