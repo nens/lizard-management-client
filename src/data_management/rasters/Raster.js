@@ -41,12 +41,21 @@ class Raster extends Component {
     const { page } = this.state;
     this.getRastersFromApi(page, this.state.searchTerms);
   }
+  componentWillReceiveProps(props) {
+    this.refreshRasterFilteringAndPaginationAndUpdateState(
+      this.state.rasters,
+      this.state.page,
+      this.state.searchTerms,
+      props.organisations.selected
+    );
+  }
 
-  filterSortRasters = (rasters, searchContains) => {
+  filterSortRasters = (rasters, searchContains, organisation) => {
     const filteredRasters = rasters.filter(
       e =>
-        e.name.toLowerCase().includes(searchContains.toLowerCase()) ||
-        e.description.toLowerCase().includes(searchContains.toLowerCase())
+        (e.name.toLowerCase().includes(searchContains.toLowerCase()) ||
+          e.description.toLowerCase().includes(searchContains.toLowerCase())) &&
+        e.organisation.unique_id.replace(/-/g, "") === organisation.uuid
     );
     const sortedFilteredRasters = filteredRasters.sort(
       (a, b) => a.last_modified > b.last_modified
@@ -65,9 +74,14 @@ class Raster extends Component {
   refreshRasterFilteringAndPaginationAndUpdateState = (
     rasters,
     page,
-    searchTerms
+    searchTerms,
+    organisation
   ) => {
-    const filteredSortedRasters = this.filterSortRasters(rasters, searchTerms);
+    const filteredSortedRasters = this.filterSortRasters(
+      rasters,
+      searchTerms,
+      organisation
+    );
     const paginatedRasters = this.paginateRasters(filteredSortedRasters, page);
     const checkboxes = this.createCheckboxDataFromRaster(paginatedRasters);
 
@@ -101,7 +115,8 @@ class Raster extends Component {
         this.refreshRasterFilteringAndPaginationAndUpdateState(
           rasters,
           page,
-          searchContains
+          searchContains,
+          this.props.organisations.selected
         );
       });
   };
@@ -364,14 +379,16 @@ class Raster extends Component {
                 this.refreshRasterFilteringAndPaginationAndUpdateState(
                   this.state.rasters,
                   1,
-                  searchTerms
+                  searchTerms,
+                  this.props.organisations.selected
                 )}
               searchTerms={this.state.searchTerms}
               setSearchTerms={searchTerms => {
                 this.refreshRasterFilteringAndPaginationAndUpdateState(
                   this.state.rasters,
                   1,
-                  searchTerms
+                  searchTerms,
+                  this.props.organisations.selected
                 );
               }}
             />
@@ -455,7 +472,8 @@ class Raster extends Component {
                 this.refreshRasterFilteringAndPaginationAndUpdateState(
                   this.state.rasters,
                   page,
-                  this.state.searchTerms
+                  this.state.searchTerms,
+                  this.props.organisations.selected
                 )}
               page={page}
               pages={Math.ceil(total / this.state.pageSize)}
@@ -469,7 +487,8 @@ class Raster extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    bootstrap: state.bootstrap
+    bootstrap: state.bootstrap,
+    organisations: state.organisations
   };
 };
 
