@@ -115,6 +115,7 @@ class RasterFormModel extends Component {
   resetSelectedOrganisation() {
     this.setState({ selectedOrganisation: { name: "", uuid: "" } });
   }
+
   validateNewRasterOrganisation(obj) {
     if (!obj) return false;
     const { uuid, name } = obj;
@@ -136,7 +137,11 @@ class RasterFormModel extends Component {
     this.setState({ description });
   }
   validateNewRasterDescription(str) {
-    return str.length > 1;
+    if (str && str.length > 1) {
+      return true;
+    } else {
+      return false;
+    }
   }
   setAggregationType(aggregationType) {
     this.setState({ aggregationType });
@@ -152,8 +157,13 @@ class RasterFormModel extends Component {
     this.setState({ observationType: null });
   }
   validateObservationType(observationType) {
-    return observationType && observationType.url && observationType.code;
+    if (observationType && observationType.url && observationType.code) {
+      return true;
+    } else {
+      return false;
+    }
   }
+
   // Options (contains colormaps)
   setStyleAndOptions(styleObj) {
     const oldStyle = Object.assign({}, this.state.styles);
@@ -175,14 +185,22 @@ class RasterFormModel extends Component {
     this.setSupplierId(null);
   }
   validateSupplierId(supplierId) {
-    return supplierId && supplierId.username;
+    if (supplierId && supplierId.username) {
+      return true;
+    } else {
+      return false;
+    }
   }
   // SupplierCode
   setSupplierCode(supplierCode) {
     this.setState({ supplierCode });
   }
   validateSupplierCode(supplierCode) {
-    return supplierCode && supplierCode.length > 1;
+    if (supplierCode && supplierCode.length > 1) {
+      return true;
+    } else {
+      return false;
+    }
   }
   // TemporalBool
   setTemporalBool(temporalBool) {
@@ -258,35 +276,6 @@ class RasterFormModel extends Component {
     }
   }
 
-  // if this function returns true, then the user should be able to submit the raster
-  validateAll() {
-    const normalFields =
-      this.validateNewRasterName(this.state.rasterName) &&
-      // organisation is currently taken from the organisation picker in the header, but we might change this
-      this.validateNewRasterOrganisation(this.state.selectedOrganisation) &&
-      //this.validateNewRasterStorePath(this.state.storePathName) &&
-      this.validateNewRasterDescription(this.state.description) &&
-      this.validateAggregationType(this.state.aggregationType) &&
-      this.validateObservationType(this.state.observationType) &&
-      // this is now done in validateStyleObj instead
-      // this.validateColorMap(this.state.colorMap) &&
-      validateStyleObj(this.state.styles) &&
-      this.validateSupplierId(this.state.supplierId) &&
-      this.validateSupplierCode(this.state.supplierCode) &&
-      this.validateTemporalBool(this.state.temporalBool);
-
-    const temporalFields =
-      !this.state.temporalBool ||
-      (this.state.temporalBool &&
-        this.validateTemporalIntervalAmount(
-          this.state.temporalIntervalDays,
-          this.state.temporalIntervalHours,
-          this.state.temporalIntervalMinutes,
-          this.state.temporalIntervalSeconds
-        ));
-    return normalFields && temporalFields;
-  }
-
   parseObservationTypeIdFromUrl(url) {
     // parse number from url: https://api.ddsc.nl/api/v1/observationtypes/16/ -> 16
     // remove last slash /
@@ -337,6 +326,108 @@ class RasterFormModel extends Component {
     return obj;
   }
 
+  // Returns an array of the steps that are not filled in or completed. Used later for displaying inactive/active button and updates about form completion
+  getInvalidSteps() {
+    var invalidFields = [];
+
+    if (!this.validateNewRasterName(this.state.rasterName)) {
+      invalidFields.push(1);
+    }
+    if (!this.validateNewRasterDescription(this.state.description)) {
+      invalidFields.push(2);
+    }
+    if (!this.validateNewRasterOrganisation(this.state.selectedOrganisation)) {
+      invalidFields.push(3);
+    }
+    if (!this.validateAggregationType(this.state.aggregationType)) {
+      invalidFields.push(4);
+    }
+    if (!this.validateObservationType(this.state.observationType)) {
+      invalidFields.push(5);
+    }
+    if (!validateStyleObj(this.state.styles)) {
+      invalidFields.push(6);
+    }
+    if (!this.validateSupplierId(this.state.supplierId)) {
+      invalidFields.push(7);
+    }
+    if (!this.validateSupplierCode(this.state.supplierCode)) {
+      invalidFields.push(8);
+    }
+    if (!this.validateTemporalBool(this.state.temporalBool)) {
+      invalidFields.push(9);
+    }
+    // if (!this.validateTemporalOrigin(this.state.temporalOrigin)) {
+    //   invalidFields.push(10);
+    // }
+    if (
+      !this.validateTemporalIntervalAmount(
+        this.state.temporalIntervalDays,
+        this.state.temporalIntervalHours,
+        this.state.temporalIntervalMinutes,
+        this.state.temporalIntervalSeconds
+      )
+    ) {
+      invalidFields.push(10);
+    }
+
+    return invalidFields;
+  }
+
+  validateAll() {
+    // Get invalid normal (first 9) and temporal (last 2) steps
+    var invalidSteps = this.getInvalidSteps();
+
+    // Filter arrays to get normal and temporal invalid steps
+    var normal = invalidSteps.filter(function(x) {
+      return x < 10;
+    });
+    var temporal = invalidSteps.filter(function(x) {
+      return x > 9;
+    });
+
+    // If temporal bool is not checked, validate first 9 steps, else validate all 11 steps
+    if (!this.state.temporalBool) {
+      if (normal.length === 0) {
+        return true;
+      }
+    } else if (this.state.temporalBool) {
+      if (temporal.length === 0 && normal.length === 0) {
+        return true;
+      }
+    } else {
+      return false;
+    }
+  }
+
+  // Create message for user telling which steps need to be completed
+  generateInvalidMessage(step) {
+    // Get invalid normal (first 9) and temporal (last 2) steps
+    var invalidSteps = this.getInvalidSteps();
+    // Filter arrays to get normal and temporal invalid steps
+    var normal = invalidSteps.filter(function(x) {
+      return x < 10;
+    });
+    var temporal = invalidSteps.filter(function(x) {
+      return x > 9;
+    });
+
+    // Return message based on either normal or temporal raster
+    if (this.state.temporalBool) {
+      return (
+        "Please complete steps " +
+        normal +
+        " " +
+        temporal +
+        " before submitting"
+      );
+    } else if (step <= 9) {
+      return "Please complete steps " + normal + " before submitting";
+    } else {
+      return "";
+    }
+  }
+
   setInitialState(props) {
     return {
       isFetching: false,
@@ -370,7 +461,7 @@ class RasterFormModel extends Component {
       },
       options: {},
       // colorMapMin: 0,
-      // colorMapMax: 100, // what are reasonable defaults?
+      // colorMapMax: 100, // what are reasonable defaults?6,7,8,9
       aggregationType: "", // choice: none | counts | curve | histogram | sum | average
       supplierId: "",
       supplierCode: "",
@@ -961,10 +1052,26 @@ class RasterFormModel extends Component {
                   </div>
                 ) : (
                   <div className={inputStyles.InputContainer}>
-                    <FormattedMessage
-                      id="rasters.please complete the form before submitting"
-                      defaultMessage="Please complete the form for submitting"
-                    />
+                    <button
+                      type="button"
+                      className={`${buttonStyles.Button} ${buttonStyles.Inactive}`}
+                      style={{
+                        marginTop: 10,
+                        color: "grey",
+                        cursor: "not-allowed"
+                      }}
+                    >
+                      <FormattedMessage
+                        id="rasters.submit"
+                        defaultMessage="Submit"
+                      />
+                    </button>
+                    <span
+                      className={`${inputStyles.SubmitSpan}`}
+                      style={{ paddingLeft: 20, verticalAlign: "middle" }}
+                    >
+                      {this.generateInvalidMessage(currentStep)}
+                    </span>
                   </div>
                 )}
               </div>
