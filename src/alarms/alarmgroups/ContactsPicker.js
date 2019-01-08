@@ -28,7 +28,7 @@ class ContactsPicker extends Component {
     window.addEventListener("resize", this.handleResize, false);
     document.addEventListener("keydown", this.hideContactsPicker, false);
 
-    const organisationId = this.props.selectedOrganisation.unique_id;
+    const organisationId = this.props.selectedOrganisation.uuid;
     const url = `/api/v3/contacts/?page_size=100000&organisation__unique_id=${organisationId}`;
     const opts = { credentials: "same-origin" };
 

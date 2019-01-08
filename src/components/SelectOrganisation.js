@@ -84,7 +84,7 @@ class SelectOrganisation extends Component {
                 if (this.state.query === "") {
                   // if nothing is typed show all results
                   return true;
-                  // } else if (this.props.selected.unique_id) {
+                  // } else if (this.props.selected.uuid) {
                   //   // if value is prefilled show all results
                   //   return true;
                 } else {

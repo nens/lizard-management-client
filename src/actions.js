@@ -77,7 +77,8 @@ export function fetchOrganisations() {
 
     dispatch({ type: REQUEST_ORGANISATIONS });
 
-    const url = "/api/v3/organisations/?page_size=100000";
+    const url =
+      "/api/v4/organisations/?role=supplier&role=admin&page_size=100000";
     const opts = { credentials: "same-origin" };
 
     fetch(url, opts)
@@ -143,6 +144,7 @@ export function fetchObservationTypes() {
             errorMessage,
             responseObj
           );
+          return Promise.reject(errorMessage);
         } else {
           return responseObj.json();
         }
@@ -172,8 +174,7 @@ export function fetchSupplierIds() {
         state.organisations
       );
     }
-
-    const url = `/api/v3/organisations/${selectOrganisation.unique_id}/users/`;
+    const url = `/api/v4/organisations/${selectOrganisation.uuid}/users/`;
     const opts = { credentials: "same-origin" };
 
     dispatch({ type: REQUEST_SUPPLIER_IDS });
@@ -184,6 +185,7 @@ export function fetchSupplierIds() {
           const errorMessage = `HTTP error ${responseObj.status} while fetching Supplier Ids: ${responseObj.statusText}`;
           dispatch({ type: RECEIVE_SUPPLIER_IDS_ERROR, errorMessage });
           console.error("[E]", errorMessage, responseObj);
+          return Promise.reject(errorMessage);
         } else {
           return responseObj.json();
         }
@@ -215,6 +217,7 @@ export function fetchColorMaps() {
           const errorMessage = `HTTP error ${responseObj.status} while fetching ColorMaps: ${responseObj.statusText}`;
           console.error(errorMessage, responseObj);
           dispatch({ type: RECEIVE_COLORMAPS_ERROR, errorMessage });
+          return Promise.reject(errorMessage);
         } else {
           return responseObj.json();
         }

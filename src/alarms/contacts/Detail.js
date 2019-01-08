@@ -98,7 +98,7 @@ class Detail extends Component {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          organisation: selectedOrganisation.unique_id,
+          organisation: selectedOrganisation.uuid,
           first_name: contact.first_name || "",
           last_name: contact.last_name || "",
           id: match.params.id,

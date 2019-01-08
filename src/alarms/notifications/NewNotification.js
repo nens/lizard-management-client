@@ -90,7 +90,7 @@ class NewNotification extends Component {
     this.goBackToStep = this.goBackToStep.bind(this);
   }
   componentDidMount() {
-    const organisationId = this.props.selectedOrganisation.unique_id;
+    const organisationId = this.props.selectedOrganisation.uuid;
 
     document.getElementById("alarmName").focus();
     document.addEventListener("keydown", this.hideConfigureThreshold, false);
@@ -127,7 +127,7 @@ class NewNotification extends Component {
   }
   handleActivateClick(e) {
     const { history, addNotification } = this.props;
-    const organisationId = this.props.selectedOrganisation.unique_id;
+    const organisationId = this.props.selectedOrganisation.uuid;
 
     const {
       alarmName,
@@ -171,7 +171,7 @@ class NewNotification extends Component {
   }
   handleRasterSearchInput(value) {
     const { selectedOrganisation } = this.props;
-    const organisationId = selectedOrganisation.unique_id;
+    const organisationId = selectedOrganisation.uuid;
 
     if (value === "") {
       this.setState({
