@@ -249,7 +249,7 @@ class Raster extends Component {
         </div>
       </div>
     );
-    const htmlRasterTable = this.state.paginatedRasters.map((raster, i) => {
+    const htmlRasterTableBody = this.state.paginatedRasters.map((raster, i) => {
       return (
         <Row key={i} alarm={raster}>
           <span className={"col-lg-6 col-md-6 col-sm-6 col-xs-6"}>
@@ -397,39 +397,185 @@ class Raster extends Component {
             </button>
           </div>
         </div>
-        {htmlRasterTableHeader}
-        <div className={gridStyles.Row}>
+        <div
+          style={{
+            display: "flex",
+            flexFlow: "row wrap",
+            textAlign: "left"
+          }}
+        >
           <div
-            className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
+            style={{
+              fontWeight: "bold",
+              textAlign: "center",
+              background: "tomato",
+              padding: "10px",
+              flex: "1 100%"
+            }}
           >
-            {isFetching ? (
-              <div
-                style={{
-                  position: "relative",
-                  top: 50,
-                  height: 300,
-                  bottom: 50,
-                  marginLeft: "50%"
-                }}
-              >
-                <MDSpinner size={24} />
-              </div>
-            ) : rasters.length > 0 ? (
-              htmlRasterTable
-            ) : (
-              <div className={styles.NoResults}>
-                <img src={alarmIcon} alt="Alarms" />
-                <h5>
-                  <FormattedMessage
-                    id="rasters.no_rasters"
-                    defaultMessage="No rasters configured..."
-                  />
-                </h5>
-              </div>
-            )}
+            Header
+          </div>
+          <div
+            style={{
+              background: "gold",
+              padding: "10px",
+              flex: "1 100%",
+              display: "flex"
+            }}
+          >
+            <div
+              style={{
+                background: "yellow",
+                flexBasis: "auto",
+                padding: "0px 10px 0px 10px",
+                order: 1,
+                display: "flex",
+                alignItems: "center"
+              }}
+            >
+              <input type="checkbox" />
+            </div>
+            <div
+              style={{
+                background: "orange",
+                flex: "2 0 0",
+                padding: "0px 10px 0px 10px",
+                order: 2
+              }}
+            >
+              Name
+            </div>
+            <div
+              style={{
+                background: "yellow",
+                flex: "2 0 0",
+                padding: "0px 10px 0px 10px",
+                order: 3
+              }}
+            >
+              Description
+            </div>
+            <div
+              style={{
+                background: "lime",
+                flexBasis: "auto",
+                padding: "0px 10px 0px 10px",
+                order: 4
+              }}
+            >
+              Upload
+            </div>
+          </div>
+          <div
+            style={{
+              background: "gold",
+              padding: "10px",
+              flex: "1 100%",
+              display: "flex"
+            }}
+          >
+            <div
+              style={{
+                background: "yellow",
+                flex: "1 0 0",
+                padding: "0px 10px 0px 0px",
+                order: 1
+              }}
+            >
+              <input type="checkbox" />
+            </div>
+            <div
+              style={{
+                background: "orange",
+                flex: "2 0 0",
+                padding: "0px 10px 0px 0px",
+                order: 2
+              }}
+            >
+              Name
+            </div>
+            <div
+              style={{
+                background: "yellow",
+                flex: "2 0 0",
+                padding: "0px 10px 0px 0px",
+                order: 3
+              }}
+            >
+              Description
+            </div>
+            <div
+              style={{
+                background: "lime",
+                flex: "1 0 0",
+                padding: "0px 10px 0px 0px",
+                order: 4
+              }}
+            >
+              Upload
+            </div>
+          </div>
+          <div
+            style={{
+              background: "gold",
+              padding: "10px",
+              flex: "1 100%",
+              display: "flex"
+            }}
+          >
+            <div
+              style={{
+                background: "yellow",
+                flex: "1 0 0",
+                padding: "0px 10px 0px 0px",
+                order: 1
+              }}
+            >
+              <input type="checkbox" />
+            </div>
+            <div
+              style={{
+                background: "orange",
+                flex: "2 0 0",
+                padding: "0px 10px 0px 0px",
+                order: 2
+              }}
+            >
+              Name
+            </div>
+            <div
+              style={{
+                background: "yellow",
+                flex: "2 0 0",
+                padding: "0px 10px 0px 0px",
+                order: 3
+              }}
+            >
+              Description
+            </div>
+            <div
+              style={{
+                background: "lime",
+                flex: "1 0 0",
+                padding: "0px 10px 0px 0px",
+                order: 4
+              }}
+            >
+              Upload
+            </div>
+          </div>
+          <div
+            style={{
+              fontWeight: "bold",
+              textAlign: "center",
+              background: "lightgreen",
+              padding: "10px",
+              flex: "1 100%"
+            }}
+          >
+            Footer
           </div>
         </div>
-        {htmlRasterTableFooter}
         <div
           className={gridStyles.Row}
           style={{
