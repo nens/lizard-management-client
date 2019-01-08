@@ -8,12 +8,10 @@ import Dropzone from "react-dropzone";
 import styles from "./UploadRasterData.css";
 import { FormattedMessage } from "react-intl";
 
-import formStyles from "../../styles/Forms.css";
 import buttonStyles from "../../styles/Buttons.css";
-import inputStyles from "../../styles/Input.css";
 import gridStyles from "../../styles/Grid.css";
 // // moment is required for datepicker
-import moment from "moment";
+import moment from "moment"; // do not remove, is needed for datepicker!
 import "moment/locale/nl";
 
 // import {InputMoment} from 'react-input-moment';
@@ -311,7 +309,7 @@ class UploadRasterDataMultipleModel extends Component {
             }}
           >
             <FormattedMessage
-              id="rasters.back_to_rasters"
+              id="rasters.back_to_raster_metadata"
               defaultMessage="Back to Metadata"
             />
           </button>
@@ -402,7 +400,7 @@ class UploadRasterDataMultipleModel extends Component {
             }}
           >
             <FormattedMessage
-              id="rasters.back_to_rasters"
+              id="rasters.back_to_raster_metadata"
               defaultMessage="Back to Metadata"
             />
           </button>
@@ -454,7 +452,7 @@ class UploadRasterDataMultipleModel extends Component {
                         <h4>
                           {this.state.acceptedFiles.length + " "}
                           <FormattedMessage
-                            id="rasters.no_file_selected"
+                            id="rasters.files_selected"
                             defaultMessage="Files Selected"
                           />
                         </h4>
