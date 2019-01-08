@@ -1,0 +1,45 @@
+/* raterTableHeader */
+.tableHeader {
+  font-weight: bold;
+  text-align: center;
+  background: tomato;
+  padding: 10px;
+  flex: 1 100%;
+}
+
+.tableBodyRow {
+  background: gold;
+  padding: 10px;
+  flex: 1 100%;
+  display: flex;
+}
+.tableBodyRowCheckbox {
+  background: yellow;
+  flex-basis: auto;
+  padding: 0px 10px 0px 10px;
+ display: flex;
+}
+.tableBodyRowName {
+  background: orange;
+  flex: 2 0 0;
+  padding: 0px 10px 0px 10px;
+}
+.tableBodyRowDescription {
+  background: yellow;
+  flex: 2 0 0;
+  padding: 0px 10px 0px 10px;
+}
+.tableBodyRowUpload {
+  background: lime;
+  flex-basis: auto;
+  padding: 0px 10px 0px 10px;
+}
+
+.tableFooter {
+  font-weight: bold;
+  text-align: center;
+  background: lightgreen;
+  padding: 10px;
+  flex: 1 100%;
+}
+

@@ -1,6 +1,7 @@
 import alarmIcon from "../../images/alarm@3x.svg";
 import buttonStyles from "../../styles/Buttons.css";
 import gridStyles from "../../styles/Grid.css";
+import rasterTableStyles from "../../styles/RasterTable.css";
 import Ink from "react-ink";
 import MDSpinner from "react-md-spinner";
 import PaginationBar from "./PaginationBar";
@@ -416,184 +417,45 @@ class Raster extends Component {
             </button>
           </div>
         </div>
-        <div
-          style={{
-            display: "flex",
-            flexFlow: "row wrap",
-            textAlign: "left"
-          }}
-        >
-          <div
-            style={{
-              fontWeight: "bold",
-              textAlign: "center",
-              background: "tomato",
-              padding: "10px",
-              flex: "1 100%"
-            }}
-          >
-            Header
-          </div>
-          <div
-            style={{
-              background: "gold",
-              padding: "10px",
-              flex: "1 100%",
-              display: "flex"
-            }}
-          >
-            <div
-              style={{
-                background: "yellow",
-                flexBasis: "auto",
-                padding: "0px 10px 0px 10px",
-                order: 1,
-                display: "flex",
-                alignItems: "center"
-              }}
-            >
+        <div>
+          <div className={`${rasterTableStyles.tableHeader}`}>Header</div>
+          <div className={`${rasterTableStyles.tableBodyRow}`}>
+            <div className={`${rasterTableStyles.tableBodyRowCheckbox}`}>
               <input type="checkbox" />
             </div>
-            <div
-              style={{
-                background: "orange",
-                flex: "2 0 0",
-                padding: "0px 10px 0px 10px",
-                order: 2
-              }}
-            >
-              Name
-            </div>
-            <div
-              style={{
-                background: "yellow",
-                flex: "2 0 0",
-                padding: "0px 10px 0px 10px",
-                order: 3
-              }}
-            >
+            <div className={`${rasterTableStyles.tableBodyRowName}`}>Name</div>
+            <div className={`${rasterTableStyles.tableBodyRowDescription}`}>
               Description
             </div>
-            <div
-              style={{
-                background: "lime",
-                flexBasis: "auto",
-                padding: "0px 10px 0px 10px",
-                order: 4
-              }}
-            >
+            <div className={`${rasterTableStyles.tableBodyRowUpload}`}>
               Upload
             </div>
           </div>
-          <div
-            style={{
-              background: "gold",
-              padding: "10px",
-              flex: "1 100%",
-              display: "flex"
-            }}
-          >
-            <div
-              style={{
-                background: "yellow",
-                flex: "1 0 0",
-                padding: "0px 10px 0px 0px",
-                order: 1
-              }}
-            >
+          <div className={`${rasterTableStyles.tableBodyRow}`}>
+            <div className={`${rasterTableStyles.tableBodyRowCheckbox}`}>
               <input type="checkbox" />
             </div>
-            <div
-              style={{
-                background: "orange",
-                flex: "2 0 0",
-                padding: "0px 10px 0px 0px",
-                order: 2
-              }}
-            >
-              Name
-            </div>
-            <div
-              style={{
-                background: "yellow",
-                flex: "2 0 0",
-                padding: "0px 10px 0px 0px",
-                order: 3
-              }}
-            >
+            <div className={`${rasterTableStyles.tableBodyRowName}`}>Name</div>
+            <div className={`${rasterTableStyles.tableBodyRowDescription}`}>
               Description
             </div>
-            <div
-              style={{
-                background: "lime",
-                flex: "1 0 0",
-                padding: "0px 10px 0px 0px",
-                order: 4
-              }}
-            >
+            <div className={`${rasterTableStyles.tableBodyRowUpload}`}>
               Upload
             </div>
           </div>
-          <div
-            style={{
-              background: "gold",
-              padding: "10px",
-              flex: "1 100%",
-              display: "flex"
-            }}
-          >
-            <div
-              style={{
-                background: "yellow",
-                flex: "1 0 0",
-                padding: "0px 10px 0px 0px",
-                order: 1
-              }}
-            >
+          <div className={`${rasterTableStyles.tableBodyRow}`}>
+            <div className={`${rasterTableStyles.tableBodyRowCheckbox}`}>
               <input type="checkbox" />
             </div>
-            <div
-              style={{
-                background: "orange",
-                flex: "2 0 0",
-                padding: "0px 10px 0px 0px",
-                order: 2
-              }}
-            >
-              Name
-            </div>
-            <div
-              style={{
-                background: "yellow",
-                flex: "2 0 0",
-                padding: "0px 10px 0px 0px",
-                order: 3
-              }}
-            >
+            <div className={`${rasterTableStyles.tableBodyRowName}`}>Name</div>
+            <div className={`${rasterTableStyles.tableBodyRowDescription}`}>
               Description
             </div>
-            <div
-              style={{
-                background: "lime",
-                flex: "1 0 0",
-                padding: "0px 10px 0px 0px",
-                order: 4
-              }}
-            >
+            <div className={`${rasterTableStyles.tableBodyRowUpload}`}>
               Upload
             </div>
           </div>
-          <div
-            style={{
-              fontWeight: "bold",
-              textAlign: "center",
-              background: "lightgreen",
-              padding: "10px",
-              flex: "1 100%"
-            }}
-          >
-            Footer
-          </div>
+          <div className={`${rasterTableStyles.tableFooter}`}>Footer</div>
         </div>
         <div
           className={gridStyles.Row}
