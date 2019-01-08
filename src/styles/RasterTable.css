@@ -1,44 +1,74 @@
 .tableHeader {
+  color: #858E9C;
   font-weight: bold;
-  text-align: center;
-  background: tomato;
   padding: 10px;
-  flex: 1 100%;
+  display: flex;
+  border-bottom: 2px solid #858E9C;
+}
+.tableHeaderRowCheckbox {
+  flex-basis: auto;
+  padding: 0px 10px 0px 10px;
+  display: flex;
+}
+.tableHeaderRowName {
+  flex: 2 0 0;
+  padding: 0px 10px 0px 10px;
+}
+.tableHeaderRowDescription {
+  flex: 2 0 0;
+  padding: 0px 10px 0px 10px;
+}
+.tableHeaderRowUpload {
+  flex-basis: auto;
+  padding: 0px 10px 0px 10px;
 }
 
 .tableBodyRow {
-  background: gold;
   padding: 10px;
   flex: 1 100%;
   display: flex;
+  border-bottom: 1px solid #D8D8D8;
 }
 .tableBodyRowCheckbox {
-  background: yellow;
   flex-basis: auto;
   padding: 0px 10px 0px 10px;
   display: flex;
 }
 .tableBodyRowName {
-  background: orange;
   flex: 2 0 0;
   padding: 0px 10px 0px 10px;
 }
 .tableBodyRowDescription {
-  background: yellow;
   flex: 2 0 0;
   padding: 0px 10px 0px 10px;
 }
 .tableBodyRowUpload {
-  background: lime;
   flex-basis: auto;
   padding: 0px 10px 0px 10px;
 }
 
 .tableFooter {
+  color: #858E9C;
   font-weight: bold;
-  text-align: center;
-  background: lightgreen;
   padding: 10px;
-  flex: 1 100%;
+  display: flex;
+  border-top: 1px solid #858E9C;
+}
+.tableFooterCheckbox {
+  flex-basis: auto;
+  padding: 0px 10px 0px 10px;
+  display: flex;
+}
+.tableFooterName {
+  flex: 2 0 0;
+  padding: 0px 10px 0px 10px;
+}
+.tableFooterDescription {
+  flex: 2 0 0;
+  padding: 0px 10px 0px 10px;
+}
+.tableFooterUpload {
+  flex-basis: auto;
+  padding: 0px 10px 0px 10px;
 }
 
