@@ -1,4 +1,3 @@
-/* raterTableHeader */
 .tableHeader {
   font-weight: bold;
   text-align: center;
@@ -17,7 +16,7 @@
   background: yellow;
   flex-basis: auto;
   padding: 0px 10px 0px 10px;
- display: flex;
+  display: flex;
 }
 .tableBodyRowName {
   background: orange;
