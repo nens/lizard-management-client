@@ -41,12 +41,29 @@ class Raster extends Component {
     const { page } = this.state;
     this.getRastersFromApi(page, this.state.searchTerms);
   }
+  componentWillReceiveProps(props) {
+    let page = 1;
+    if (
+      this.props.organisations.selected.uuid ===
+      props.organisations.selected.uuid
+    ) {
+      page = this.state.page;
+    }
 
-  filterSortRasters = (rasters, searchContains) => {
+    this.refreshRasterFilteringAndPaginationAndUpdateState(
+      this.state.rasters,
+      page,
+      this.state.searchTerms,
+      props.organisations.selected
+    );
+  }
+
+  filterSortRasters = (rasters, searchContains, organisation) => {
     const filteredRasters = rasters.filter(
       e =>
-        e.name.toLowerCase().includes(searchContains.toLowerCase()) ||
-        e.description.toLowerCase().includes(searchContains.toLowerCase())
+        (e.name.toLowerCase().includes(searchContains.toLowerCase()) ||
+          e.description.toLowerCase().includes(searchContains.toLowerCase())) &&
+        e.organisation.unique_id.replace(/-/g, "") === organisation.uuid
     );
     const sortedFilteredRasters = filteredRasters.sort(
       (a, b) => a.last_modified > b.last_modified
@@ -65,9 +82,14 @@ class Raster extends Component {
   refreshRasterFilteringAndPaginationAndUpdateState = (
     rasters,
     page,
-    searchTerms
+    searchTerms,
+    organisation
   ) => {
-    const filteredSortedRasters = this.filterSortRasters(rasters, searchTerms);
+    const filteredSortedRasters = this.filterSortRasters(
+      rasters,
+      searchTerms,
+      organisation
+    );
     const paginatedRasters = this.paginateRasters(filteredSortedRasters, page);
     const checkboxes = this.createCheckboxDataFromRaster(paginatedRasters);
 
@@ -83,7 +105,6 @@ class Raster extends Component {
       searchTerms: searchTerms
     });
   };
-
   getRastersFromApi = (page, searchContains) => {
     // const url = searchContains
     //   ? // ordering is done by filter
@@ -101,7 +122,8 @@ class Raster extends Component {
         this.refreshRasterFilteringAndPaginationAndUpdateState(
           rasters,
           page,
-          searchContains
+          searchContains,
+          this.props.organisations.selected
         );
       });
   };
@@ -162,12 +184,7 @@ class Raster extends Component {
         };
         fetch(url + toBeDeletedRasterUuidsArray[i] + "/", opts);
         // Refresh the page, so that the removed rasters are no longer visible
-        // fetch is a asynchrounous action. the following lines should only be executed on .then. todo fix this
-        // these lines are commented out because they also happen in getRastersFromApi
-        // this.setState({
-        //   checkAllCheckBoxes: false,
-        // });
-        // this.checkAllCheckBoxes(false);
+        // fetch is a asynchrounous action. the following line should only be executed on .then. todo fix this
         this.getRastersFromApi(this.state.page, this.state.searchTerms);
       }
     }
@@ -368,14 +385,16 @@ class Raster extends Component {
                 this.refreshRasterFilteringAndPaginationAndUpdateState(
                   this.state.rasters,
                   1,
-                  searchTerms
+                  searchTerms,
+                  this.props.organisations.selected
                 )}
               searchTerms={this.state.searchTerms}
               setSearchTerms={searchTerms => {
                 this.refreshRasterFilteringAndPaginationAndUpdateState(
                   this.state.rasters,
                   1,
-                  searchTerms
+                  searchTerms,
+                  this.props.organisations.selected
                 );
               }}
             />
@@ -456,11 +475,11 @@ class Raster extends Component {
           >
             <PaginationBar
               loadRastersOnPage={page =>
-                // this.getRastersFromApi(page, this.state.searchTerms)
                 this.refreshRasterFilteringAndPaginationAndUpdateState(
                   this.state.rasters,
                   page,
-                  this.state.searchTerms
+                  this.state.searchTerms,
+                  this.props.organisations.selected
                 )}
               page={page}
               pages={Math.ceil(total / this.state.pageSize)}
@@ -474,7 +493,8 @@ class Raster extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    bootstrap: state.bootstrap
+    bootstrap: state.bootstrap,
+    organisations: state.organisations
   };
 };
 

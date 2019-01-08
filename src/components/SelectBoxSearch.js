@@ -53,7 +53,7 @@ class SelectBoxSearch extends Component {
     } = this.props;
     const showOptions = choices.length > 0 && this.state.mustShowChoices;
     const mustShowClearButton =
-      (validate(choice) || this.state.query != "") && !readonly;
+      (validate(choice) || this.state.query !== "") && !readonly;
 
     return (
       <div className={`${styles.SelectChoice} form-input`}>

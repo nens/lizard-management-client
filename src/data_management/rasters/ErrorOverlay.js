@@ -83,16 +83,15 @@ class ErrorOverlay extends Component {
     ) {
       return (
         <FormattedMessage
-          id="raster.post_metadata_error_success"
+          id="raster.post_metadata_success"
           defaultMessage="Succes! Your raster meta-data was uploaded succesfully. You can add your data now, or do it later"
         />
       );
     } else if (this.props.errorMessage.status.toString().startsWith(4)) {
-      console.log("Correct errorMessage");
       return (
         <div>
           <FormattedMessage
-            id="raster.post_metadata_error"
+            id="raster.post_metadata_error_in_400"
             defaultMessage="Oops, something went wrong. Please check the form and your internet settings. Error code is: "
           />
           {JSON.stringify(this.props.errorMessage.status) +
@@ -103,7 +102,7 @@ class ErrorOverlay extends Component {
       return (
         <div>
           <FormattedMessage
-            id="raster.post_metadata_error_success"
+            id="raster.post_metadata_error_in_500"
             defaultMessage="Oops, something went wrong. Please contact support. Error code is: "
           />
           {JSON.stringify(this.props.errorMessage.status) +
@@ -116,12 +115,10 @@ class ErrorOverlay extends Component {
   render() {
     const { handleClose, isFetching } = this.props;
 
-    let message;
     let buttons;
     let defaultOptions;
 
     if (!isFetching) {
-      message = this.whichMessage();
       buttons = this.succesButtons();
       defaultOptions = {
         loop: false,
@@ -192,8 +189,6 @@ class ErrorOverlay extends Component {
                       className={`${buttonStyles.Button} ${buttonStyles.Success}`}
                       style={{ marginTop: 10 }}
                       onClick={e => {
-                        // handleClose /*HIER MOET DE LINK NAAR TOMS UPLOAD SCREEN*/
-                        console.log(this.props);
                         this.props.history.push(
                           "/data_management/rasters/" +
                             this.props.currentRaster.uuid +

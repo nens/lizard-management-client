@@ -55,7 +55,7 @@ class NewContact extends Component {
           last_name: lastName,
           email: email,
           phone_number: phoneNumber,
-          organisation: organisation.unique_id
+          organisation: organisation.uuid
         })
       })
         .then(response => {
