@@ -518,7 +518,10 @@ class RasterFormModel extends Component {
         })
       };
 
-      fetch(url + "uuid:" + this.props.currentRaster.uuid + "/", opts)
+      fetch(
+        url + "uuid:" + this.props.currentRaster.uuid.replace("-", "") + "/",
+        opts
+      )
         .then(responseParsed => {
           console.log("responseParsed put", responseParsed);
           this.handleResponse(responseParsed);
