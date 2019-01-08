@@ -88,16 +88,33 @@ class ErrorOverlay extends Component {
         />
       );
     } else if (this.props.errorMessage.status.toString().startsWith(4)) {
-      return (
-        <div>
-          <FormattedMessage
-            id="raster.post_metadata_error_in_400"
-            defaultMessage="Oops, something went wrong. Please check the form and your internet settings. Error code is: "
-          />
-          {JSON.stringify(this.props.errorMessage.status) +
-            JSON.stringify(this.props.errorMessage.statusText)}
-        </div>
-      );
+      if (
+        this.props.validationError.detail.non_field_errors[0] ===
+        "The fields supplier, supplier_code must make a unique set."
+      ) {
+        console.log("correct logging");
+        return (
+          <div>
+            <FormattedMessage
+              id="raster.post_validationdata_error"
+              defaultMessage="Make sure that the supplier ID and supplied code are unique. Error code is: "
+            />
+            {JSON.stringify(this.props.errorMessage.status) +
+              JSON.stringify(this.props.errorMessage.statusText)}
+          </div>
+        );
+      } else {
+        return (
+          <div>
+            <FormattedMessage
+              id="raster.post_metadata_error_in_400"
+              defaultMessage="Oops, something went wrong. Please check the form and your internet settings. Error code is: "
+            />
+            {JSON.stringify(this.props.errorMessage.status) +
+              JSON.stringify(this.props.errorMessage.statusText)}
+          </div>
+        );
+      }
     } else if (this.props.errorMessage.status.toString().startsWith(5)) {
       return (
         <div>

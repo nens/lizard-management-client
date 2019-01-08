@@ -534,8 +534,7 @@ class RasterFormModel extends Component {
 
   handleResponse(response) {
     this.setState({ modalErrorMessage: response });
-    this.setState({ isFetching: false });
-    this.setState({ handlingDone: true });
+    //this.setState({ isFetching: false });
   }
 
   handleClickCreateRaster() {
@@ -582,13 +581,14 @@ class RasterFormModel extends Component {
       };
 
       fetch(url, opts)
-        .then(responseParsed => {
-          this.handleResponse(responseParsed);
-          return responseParsed.json();
+        .then(response => {
+          this.handleResponse(response);
+          return response.json();
         })
         .then(parsedBody => {
           console.log("parsedBody", parsedBody);
           this.setState({ createdRaster: parsedBody });
+          this.setState({ isFetching: false });
         });
     } else {
       const opts = {
@@ -618,6 +618,7 @@ class RasterFormModel extends Component {
         .then(parsedBody => {
           console.log("parsedBody", parsedBody);
           this.setState({ createdRaster: parsedBody });
+          this.setState({ isFetching: false });
         });
     }
   }
@@ -646,8 +647,8 @@ class RasterFormModel extends Component {
             isFetching={this.state.isFetching}
             history={this.props.history}
             errorMessage={this.state.modalErrorMessage}
-            handleClose={() =>
-              this.setState({ handlingDone: false, openOverlay: false })}
+            validationError={this.state.createdRaster}
+            handleClose={() => this.setState({ openOverlay: false })}
             currentRaster={this.props.currentRaster || this.state.createdRaster}
           />
         ) : null}
