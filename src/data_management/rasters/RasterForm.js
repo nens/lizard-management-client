@@ -276,35 +276,6 @@ class RasterFormModel extends Component {
     }
   }
 
-  // if this function returns true, then the user should be able to submit the raster
-  validateAll() {
-    const normalFields =
-      this.validateNewRasterName(this.state.rasterName) &&
-      // organisation is currently taken from the organisation picker in the header, but we might change this
-      this.validateNewRasterOrganisation(this.state.selectedOrganisation) &&
-      //this.validateNewRasterStorePath(this.state.storePathName) &&
-      this.validateNewRasterDescription(this.state.description) &&
-      this.validateAggregationType(this.state.aggregationType) &&
-      this.validateObservationType(this.state.observationType) &&
-      // this is now done in validateStyleObj instead
-      // this.validateColorMap(this.state.colorMap) &&
-      validateStyleObj(this.state.styles) &&
-      this.validateSupplierId(this.state.supplierId) &&
-      this.validateSupplierCode(this.state.supplierCode) &&
-      this.validateTemporalBool(this.state.temporalBool);
-
-    const temporalFields =
-      !this.state.temporalBool ||
-      (this.state.temporalBool &&
-        this.validateTemporalIntervalAmount(
-          this.state.temporalIntervalDays,
-          this.state.temporalIntervalHours,
-          this.state.temporalIntervalMinutes,
-          this.state.temporalIntervalSeconds
-        ));
-    return normalFields && temporalFields;
-  }
-
   parseObservationTypeIdFromUrl(url) {
     // parse number from url: https://api.ddsc.nl/api/v1/observationtypes/16/ -> 16
     // remove last slash /
@@ -446,7 +417,7 @@ class RasterFormModel extends Component {
       return (
         "Please complete steps " +
         normal +
-        "," +
+        " " +
         temporal +
         " before submitting"
       );
@@ -1083,7 +1054,7 @@ class RasterFormModel extends Component {
                   <div className={inputStyles.InputContainer}>
                     <button
                       type="button"
-                      className={`${buttonStyles.Button} ${buttonStyles.Invalid}`}
+                      className={`${buttonStyles.Button} ${buttonStyles.Inactive}`}
                       style={{
                         marginTop: 10,
                         color: "grey",
