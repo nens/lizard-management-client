@@ -437,8 +437,8 @@ class RasterFormModel extends Component {
       currentStep: 1,
       rasterName: "",
       selectedOrganisation: {
-        name: "",
-        uuid: ""
+        name: this.props.organisations.selected.name, //"",
+        uuid: this.props.organisations.selected.uuid //""
       },
       storePathName: "",
       slug: "",
@@ -477,7 +477,7 @@ class RasterFormModel extends Component {
   currentRasterToState(currentRaster) {
     // is there the possibility that available supplier id is not yet retrieved from server?
     const selectedSupplierId = this.props.supplierIds.available.filter(
-      e => e.url === currentRaster.supplier
+      e => e.url.replace("v4", "v3") === currentRaster.supplier
     )[0];
     const intervalObj = this.getIntervalToDaysHoursMinutesSeconds(
       currentRaster.interval
@@ -499,7 +499,7 @@ class RasterFormModel extends Component {
       rasterName: currentRaster.name,
       selectedOrganisation: {
         name: currentRaster.organisation.name,
-        uuid: currentRaster.organisation.uuid
+        uuid: currentRaster.organisation.unique_id
       },
       storePathName:
         currentRaster.slug && currentRaster.slug.replace(/:/g, "/"),
@@ -566,7 +566,7 @@ class RasterFormModel extends Component {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: this.state.rasterName,
-          organisation: this.state.selectedOrganisation.uuid,
+          organisation: this.state.selectedOrganisation.uuid.replace(/-/g, ""),
           access_modifier: 200, // private to organisation
           observation_type: observationTypeId, //this.state.observationType,
           description: this.state.description,
@@ -597,7 +597,7 @@ class RasterFormModel extends Component {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: this.state.rasterName,
-          organisation: this.state.selectedOrganisation.uuid, // required
+          organisation: this.state.selectedOrganisation.uuid.replace(/-/g, ""), // required
           access_modifier: 200, // private to organisation // required
           observation_type: observationTypeId, // required
 
