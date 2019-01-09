@@ -294,7 +294,9 @@ class Raster extends Component {
                 // color: "#333"
               }}
             >
-              <img src={uploadIcon} />
+              <i class="material-icons" style={{ color: "#989898" }}>
+                cloud_upload
+              </i>
             </NavLink>
           </div>
         </div>
