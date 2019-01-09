@@ -5,49 +5,12 @@
   display: flex;
   border-bottom: 2px solid #858E9C;
 }
-.tableHeaderRowCheckbox {
-  flex-basis: auto;
-  padding: 0px 10px 0px 10px;
-  display: flex;
-  visibility: hidden;
-}
-.tableHeaderRowName {
-  flex: 2 0 0;
-  padding: 0px 10px 0px 10px;
-}
-.tableHeaderRowDescription {
-  flex: 2 0 0;
-  padding: 0px 10px 0px 10px;
-}
-.tableHeaderRowUpload {
-  flex-basis: auto;
-  padding: 0px 10px 0px 10px;
-}
-
-.tableBodyRow {
+.tableBody {
   padding: 10px;
   flex: 1 100%;
   display: flex;
   border-bottom: 1px solid #D8D8D8;
 }
-.tableBodyRowCheckbox {
-  flex-basis: auto;
-  padding: 0px 10px 0px 10px;
-  display: flex;
-}
-.tableBodyRowName {
-  flex: 2 0 0;
-  padding: 0px 10px 0px 10px;
-}
-.tableBodyRowDescription {
-  flex: 2 0 0;
-  padding: 0px 10px 0px 10px;
-}
-.tableBodyRowUpload {
-  flex-basis: auto;
-  padding: 0px 10px 0px 10px;
-}
-
 .tableFooter {
   color: #858E9C;
   font-weight: bold;
@@ -56,19 +19,25 @@
   border-top: 1px solid #858E9C;
   align-items: center;
 }
-.tableFooterCheckbox {
+
+.tableCheckbox {
+  flex-basis: auto;
   padding: 0px 10px 0px 10px;
   display: flex;
 }
-.tableFooterName {
+.tableName {
   flex: 2 0 0;
   padding: 0px 10px 0px 10px;
 }
-.tableFooterDescription {
+.tableDescription {
   flex: 2 0 0;
   padding: 0px 10px 0px 10px;
 }
-.tableFooterUpload {
+.tableUpload {
+  flex-basis: auto;
+  padding: 0px 10px 0px 10px;
+}
+.tableFooterDeleteRasters {
   padding: 0px 10px 0px 10px;
 }
 

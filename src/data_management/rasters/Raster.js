@@ -234,22 +234,25 @@ class Raster extends Component {
 
     const htmlRasterTableHeader = (
       <div className={`${rasterTableStyles.tableHeader}`}>
-        <div className={`${rasterTableStyles.tableHeaderRowCheckbox}`}>
-          <input type="checkbox" />
+        <div className={`${rasterTableStyles.tableCheckbox}`}>
+          <input
+            type="checkbox"
+            // Add the checkbox so that the styling of the columns of the
+            // table for rasters is consistent, but don't show the checkbox.
+            style={{ visibility: "hidden" }}
+          />
         </div>
-        <div className={`${rasterTableStyles.tableHeaderRowName}`}>Name</div>
-        <div className={`${rasterTableStyles.tableHeaderRowDescription}`}>
+        <div className={`${rasterTableStyles.tableName}`}>Name</div>
+        <div className={`${rasterTableStyles.tableDescription}`}>
           Description
         </div>
-        <div className={`${rasterTableStyles.tableHeaderRowUpload}`}>
-          Upload
-        </div>
+        <div className={`${rasterTableStyles.tableUpload}`}>Upload</div>
       </div>
     );
     const htmlRasterTableBody = this.state.paginatedRasters.map((raster, i) => {
       return (
-        <div className={`${rasterTableStyles.tableBodyRow}`}>
-          <div className={`${rasterTableStyles.tableBodyRowCheckbox}`}>
+        <div className={`${rasterTableStyles.tableBody}`}>
+          <div className={`${rasterTableStyles.tableCheckbox}`}>
             <input
               type="checkbox"
               // Make sure that you can still use the checkbox to click on,
@@ -263,7 +266,7 @@ class Raster extends Component {
               id={"checkbox_" + i}
             />
           </div>
-          <div className={`${rasterTableStyles.tableBodyRowName}`}>
+          <div className={`${rasterTableStyles.tableName}`}>
             <NavLink
               to={`/data_management/rasters/${raster.uuid}`}
               style={{
@@ -273,7 +276,7 @@ class Raster extends Component {
               {raster.name}
             </NavLink>
           </div>
-          <div className={`${rasterTableStyles.tableBodyRowDescription}`}>
+          <div className={`${rasterTableStyles.tableDescription}`}>
             <NavLink
               to={`/data_management/rasters/${raster.uuid}`}
               style={{
@@ -283,7 +286,7 @@ class Raster extends Component {
               {raster.description}
             </NavLink>
           </div>
-          <div className={`${rasterTableStyles.tableBodyRowUpload}`}>
+          <div className={`${rasterTableStyles.tableUpload}`}>
             <NavLink
               to={`/data_management/rasters/${raster.uuid}/data`}
               style={{
@@ -301,7 +304,7 @@ class Raster extends Component {
     });
     const htmlRasterTableFooter = (
       <div className={`${rasterTableStyles.tableFooter}`}>
-        <div className={`${rasterTableStyles.tableFooterCheckbox}`}>
+        <div className={`${rasterTableStyles.tableCheckbox}`}>
           <input
             type="checkbox"
             // Don't set id to checkbox_[i],
@@ -314,12 +317,12 @@ class Raster extends Component {
               this.checkAllCheckBoxes(!this.state.checkAllCheckBoxes)}
           />
         </div>
-        <div className={`${rasterTableStyles.tableFooterName}`}>
+        <div className={`${rasterTableStyles.tableName}`}>
           {this.state.checkAllCheckBoxes
             ? " Uncheck all checkboxes on this page"
             : " Check all checkboxes on this page"}
         </div>
-        <div className={`${rasterTableStyles.tableFooterUpload}`}>
+        <div className={`${rasterTableStyles.tableFooterDeleteRasters}`}>
           <button
             type="button"
             className={`${buttonStyles.Button} ${buttonStyles.Danger}`}
