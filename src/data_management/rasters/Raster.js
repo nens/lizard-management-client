@@ -1,6 +1,7 @@
 import alarmIcon from "../../images/alarm@3x.svg";
 import buttonStyles from "../../styles/Buttons.css";
 import gridStyles from "../../styles/Grid.css";
+import rasterTableStyles from "../../styles/RasterTable.css";
 import Ink from "react-ink";
 import MDSpinner from "react-md-spinner";
 import PaginationBar from "./PaginationBar";
@@ -105,7 +106,6 @@ class Raster extends Component {
       searchTerms: searchTerms
     });
   };
-
   getRastersFromApi = (page, searchContains) => {
     // const url = searchContains
     //   ? // ordering is done by filter
@@ -186,7 +186,6 @@ class Raster extends Component {
         fetch(url + toBeDeletedRasterUuidsArray[i] + "/", opts);
         // Refresh the page, so that the removed rasters are no longer visible
         // fetch is a asynchrounous action. the following line should only be executed on .then. todo fix this
-
         this.getRastersFromApi(this.state.page, this.state.searchTerms);
       }
     }
@@ -234,71 +233,50 @@ class Raster extends Component {
     const numberOfRasters = total;
 
     const htmlRasterTableHeader = (
-      <div
-        // className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${
-        //   gridStyles.colSm12
-        // } ${gridStyles.colLg8} ${gridStyles.colMd8} ${gridStyles.colSm8} ${gridStyles.colXs8}`}
-        className={`${gridStyles.Row} ${styles.RasterTableHeader}`}
-      >
-        <div
-          className={`${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs6}`}
-        >
-          <FormattedMessage
-            id="rasters.header_raster_name"
-            defaultMessage="Raster name"
+      <div className={`${rasterTableStyles.tableHeader}`}>
+        <div className={`${rasterTableStyles.tableCheckbox}`}>
+          <input
+            type="checkbox"
+            // Add the checkbox so that the styling of the columns of the
+            // table for rasters is consistent, but don't show the checkbox.
+            style={{ visibility: "hidden" }}
           />
         </div>
-        <div
-          className={`${gridStyles.colLg3} ${gridStyles.colMd3} ${gridStyles.colSm3} ${gridStyles.colXs3}`}
-          style={{ float: "right" }}
-        >
-          <FormattedMessage
-            id="rasters.header_raster_description"
-            defaultMessage="Description"
-          />
+        <div className={`${rasterTableStyles.tableName}`}>Name</div>
+        <div className={`${rasterTableStyles.tableDescription}`}>
+          Description
         </div>
-        <div
-          className={`${gridStyles.colLg3} ${gridStyles.colMd3} ${gridStyles.colSm3} ${gridStyles.colXs3}`}
-          style={{ float: "right", textAlign: "right" }}
-        >
-          <FormattedMessage
-            id="rasters.click_to_adapt_data"
-            defaultMessage="Data"
-          />
-        </div>
+        <div className={`${rasterTableStyles.tableUpload}`}>Upload</div>
       </div>
     );
-    const htmlRasterTable = this.state.paginatedRasters.map((raster, i) => {
+    const htmlRasterTableBody = this.state.paginatedRasters.map((raster, i) => {
       return (
-        <Row key={i} alarm={raster}>
-          <span className={"col-lg-6 col-md-6 col-sm-6 col-xs-6"}>
-            <label>
-              <input
-                type="checkbox"
-                // Make sure that you can still use the checkbox to click on,
-                // in combination with the check all checkbox.
-                onClick={this.clickRegularCheckbox}
-                checked={
-                  this.state.checkboxes[i]
-                    ? this.state.checkboxes[i].checked
-                    : false
-                }
-                id={"checkbox_" + i}
-              />
-              {
-                " " // empty space between checkbox and raster.name
+        <div className={`${rasterTableStyles.tableBody}`}>
+          <div className={`${rasterTableStyles.tableCheckbox}`}>
+            <input
+              type="checkbox"
+              // Make sure that you can still use the checkbox to click on,
+              // in combination with the check all checkbox.
+              onClick={this.clickRegularCheckbox}
+              checked={
+                this.state.checkboxes[i]
+                  ? this.state.checkboxes[i].checked
+                  : false
               }
-              <NavLink
-                to={`/data_management/rasters/${raster.uuid}`}
-                style={{
-                  color: "#333"
-                }}
-              >
-                {raster.name}
-              </NavLink>
-            </label>
-          </span>
-          <span className={"col-lg-3 col-md-3 col-sm-3 col-xs-3"}>
+              id={"checkbox_" + i}
+            />
+          </div>
+          <div className={`${rasterTableStyles.tableName}`}>
+            <NavLink
+              to={`/data_management/rasters/${raster.uuid}`}
+              style={{
+                color: "#333"
+              }}
+            >
+              {raster.name}
+            </NavLink>
+          </div>
+          <div className={`${rasterTableStyles.tableDescription}`}>
             <NavLink
               to={`/data_management/rasters/${raster.uuid}`}
               style={{
@@ -307,11 +285,8 @@ class Raster extends Component {
             >
               {raster.description}
             </NavLink>
-          </span>
-          <div
-            className={`${gridStyles.colLg3} ${gridStyles.colMd3} ${gridStyles.colSm3} ${gridStyles.colXs3}`}
-            style={{ float: "right", textAlign: "right" }}
-          >
+          </div>
+          <div className={`${rasterTableStyles.tableUpload}`}>
             <NavLink
               to={`/data_management/rasters/${raster.uuid}/data`}
               style={{
@@ -324,42 +299,35 @@ class Raster extends Component {
               />
             </NavLink>
           </div>
-        </Row>
+        </div>
       );
     });
-    const htmlRasterTableFooter = ( // line above instead of beneath div
-      // https://stackoverflow.com/questions/32174317/how-to-set-default-checked-in-checkbox-reactjs
-      <div
-        className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12} ${styles.RasterTableFooter}`}
-      >
-        <span
-          className={`${gridStyles.colLg1} ${gridStyles.colMd1} ${gridStyles.colSm1} ${gridStyles.colXs1}`}
-        >
-          <label>
-            <input
-              type="checkbox"
-              // Don't set id to checkbox_[i],
-              // otherwise the code will also try to find an accompanying uuid
-              // when going over the checked checkboxes and trying to find
-              // rasters to delete these rasters.
-              id="checkboxCheckAll"
-              checked={this.state.checkAllCheckBoxes}
-              onClick={e =>
-                this.checkAllCheckBoxes(!this.state.checkAllCheckBoxes)}
-            />
-            {this.state.checkAllCheckBoxes
-              ? " Uncheck all checkboxes on this page"
-              : " Check all checkboxes on this page"}
-          </label>
-        </span>
-        <span
-          className={`${gridStyles.colLg11} ${gridStyles.colMd11} ${gridStyles.colSm11} ${gridStyles.colXs11}`}
-        >
+    const htmlRasterTableFooter = (
+      <div className={`${rasterTableStyles.tableFooter}`}>
+        <div className={`${rasterTableStyles.tableCheckbox}`}>
+          <input
+            type="checkbox"
+            // Don't set id to checkbox_[i],
+            // otherwise the code will also try to find an accompanying uuid
+            // when going over the checked checkboxes and trying to find
+            // rasters to delete these rasters.
+            id="checkboxCheckAll"
+            checked={this.state.checkAllCheckBoxes}
+            onClick={e =>
+              this.checkAllCheckBoxes(!this.state.checkAllCheckBoxes)}
+          />
+        </div>
+        <div className={`${rasterTableStyles.tableName}`}>
+          {this.state.checkAllCheckBoxes
+            ? " Uncheck all checkboxes on this page"
+            : " Check all checkboxes on this page"}
+        </div>
+        <div className={`${rasterTableStyles.tableFooterDeleteRasters}`}>
           <button
             type="button"
-            style={{ float: "right" }}
             className={`${buttonStyles.Button} ${buttonStyles.Danger}`}
             onClick={this.handleDeleteRasterClick}
+            style={{ maxHeight: "36px" }}
           >
             <FormattedMessage
               id="rasters.delete_rasters"
@@ -367,7 +335,7 @@ class Raster extends Component {
             />
             <Ink />
           </button>
-        </span>
+        </div>
       </div>
     );
 
@@ -418,39 +386,11 @@ class Raster extends Component {
             </button>
           </div>
         </div>
-        {htmlRasterTableHeader}
-        <div className={gridStyles.Row}>
-          <div
-            className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
-          >
-            {isFetching ? (
-              <div
-                style={{
-                  position: "relative",
-                  top: 50,
-                  height: 300,
-                  bottom: 50,
-                  marginLeft: "50%"
-                }}
-              >
-                <MDSpinner size={24} />
-              </div>
-            ) : rasters.length > 0 ? (
-              htmlRasterTable
-            ) : (
-              <div className={styles.NoResults}>
-                <img src={alarmIcon} alt="Alarms" />
-                <h5>
-                  <FormattedMessage
-                    id="rasters.no_rasters"
-                    defaultMessage="No rasters configured..."
-                  />
-                </h5>
-              </div>
-            )}
-          </div>
+        <div>
+          {htmlRasterTableHeader}
+          {htmlRasterTableBody}
+          {htmlRasterTableFooter}
         </div>
-        {htmlRasterTableFooter}
         <div
           className={gridStyles.Row}
           style={{
