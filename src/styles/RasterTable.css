@@ -1,3 +1,9 @@
+.tableContainer{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 .tableHeader {
   color: #858E9C;
   font-weight: bold;
@@ -40,4 +46,3 @@
 .tableFooterDeleteRasters {
   padding: 0px 10px 0px 10px;
 }
-

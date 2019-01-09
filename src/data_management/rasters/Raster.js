@@ -14,6 +14,7 @@ import { FormattedMessage } from "react-intl";
 import { withRouter } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import SearchBox from "../../components/SearchBox";
+import uploadIcon from "../../images/outline-cloud_upload-24px.svg";
 
 class Raster extends Component {
   constructor(props) {
@@ -293,10 +294,7 @@ class Raster extends Component {
                 // color: "#333"
               }}
             >
-              <FormattedMessage
-                id="rasters.link_to_upload_data"
-                defaultMessage="Upload"
-              />
+              <img src={uploadIcon} />
             </NavLink>
           </div>
         </div>
@@ -340,7 +338,7 @@ class Raster extends Component {
     );
 
     return (
-      <div className={gridStyles.Container}>
+      <div className={rasterTableStyles.tableContainer}>
         <div
           className={gridStyles.Row}
           style={{
