@@ -33,41 +33,41 @@ class DataManagement extends Component {
             defaultMessage="Manage rasters"
           />
         )
-      },
-      {
-        key: 1,
-        handleClick: () => this.handleLink("data_management/assets"),
-        title: (
-          <FormattedMessage
-            id="data_management.assets"
-            defaultMessage="Assets"
-          />
-        ),
-        icon: templateIcon,
-        subTitle: (
-          <FormattedMessage
-            id="data_management.manage_assets"
-            defaultMessage="Manage assets"
-          />
-        )
-      },
-      {
-        key: 2,
-        handleClick: () => this.handleLink("data_management/time_series"),
-        title: (
-          <FormattedMessage
-            id="data_management.time_series"
-            defaultMessage="Time Series"
-          />
-        ),
-        icon: templateIcon,
-        subTitle: (
-          <FormattedMessage
-            id="data_management.manage_time_series"
-            defaultMessage="Manage Time Series"
-          />
-        )
       }
+      // {
+      //   key: 1,
+      //   handleClick: () => this.handleLink("data_management/assets"),
+      //   title: (
+      //     <FormattedMessage
+      //       id="data_management.assets"
+      //       defaultMessage="Assets"
+      //     />
+      //   ),
+      //   icon: templateIcon,
+      //   subTitle: (
+      //     <FormattedMessage
+      //       id="data_management.manage_assets"
+      //       defaultMessage="Manage assets"
+      //     />
+      //   )
+      // },
+      // {
+      //   key: 2,
+      //   handleClick: () => this.handleLink("data_management/time_series"),
+      //   title: (
+      //     <FormattedMessage
+      //       id="data_management.time_series"
+      //       defaultMessage="Time Series"
+      //     />
+      //   ),
+      //   icon: templateIcon,
+      //   subTitle: (
+      //     <FormattedMessage
+      //       id="data_management.manage_time_series"
+      //       defaultMessage="Manage Time Series"
+      //     />
+      //   )
+      // }
       // {
       //   key: 3,
       //   handleClick: () => this.handleLink("data_management/other_data"),
