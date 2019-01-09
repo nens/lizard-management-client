@@ -324,6 +324,7 @@ class Raster extends Component {
             type="button"
             className={`${buttonStyles.Button} ${buttonStyles.Danger}`}
             onClick={this.handleDeleteRasterClick}
+            style={{ maxHeight: "36px" }}
           >
             <FormattedMessage
               id="rasters.delete_rasters"

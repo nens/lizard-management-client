@@ -54,24 +54,21 @@
   padding: 10px;
   display: flex;
   border-top: 1px solid #858E9C;
-  /*align-items: baseline;*/
+  align-items: center;
 }
 .tableFooterCheckbox {
-  flex-basis: auto;
   padding: 0px 10px 0px 10px;
   display: flex;
 }
 .tableFooterName {
   flex: 2 0 0;
-  padding: 6px 10px 0px 10px;
+  padding: 0px 10px 0px 10px;
 }
 .tableFooterDescription {
   flex: 2 0 0;
   padding: 0px 10px 0px 10px;
 }
 .tableFooterUpload {
-  flex-basis: auto;
   padding: 0px 10px 0px 10px;
-  display: flex;
 }
 
