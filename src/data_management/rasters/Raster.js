@@ -30,7 +30,8 @@ class Raster extends Component {
       // Add checkbox array with id, raster and whether of not the checkbox
       // is checked, to be able to find the raster back from the checked checkboxes.
       checkboxes: [],
-      searchTerms: ""
+      searchTerms: "",
+      include3diScenarios: false
     };
     this.handleNewRasterClick = this.handleNewRasterClick.bind(this);
     this.handleDeleteRasterClick = this.handleDeleteRasterClick.bind(this);
@@ -40,7 +41,11 @@ class Raster extends Component {
   }
   componentDidMount() {
     const { page } = this.state;
-    this.getRastersFromApi(page, this.state.searchTerms);
+    this.getRastersFromApi(
+      page,
+      this.state.searchTerms,
+      this.state.include3diScenarios
+    );
   }
   componentWillReceiveProps(props) {
     let page = 1;
@@ -64,7 +69,9 @@ class Raster extends Component {
       e =>
         (e.name.toLowerCase().includes(searchContains.toLowerCase()) ||
           e.description.toLowerCase().includes(searchContains.toLowerCase())) &&
-        e.organisation.unique_id.replace(/-/g, "") === organisation.uuid
+        // use nested comparing based on uuid once api/v4 is finished
+        // e.organisation.unique_id.replace(/-/g, "") === organisation.uuid
+        e.organisation === organisation.url
     );
     const sortedFilteredRasters = filteredRasters.sort(
       (a, b) => a.last_modified > b.last_modified
@@ -106,13 +113,15 @@ class Raster extends Component {
       searchTerms: searchTerms
     });
   };
-  getRastersFromApi = (page, searchContains) => {
+  getRastersFromApi = (page, searchContains, include3diScenarios) => {
     // const url = searchContains
     //   ? // ordering is done by filter
     //     `/api/v3/rasters/?writable=true&page=${page}&name__icontains=${searchContains}` // &organisation__unique_id=${organisationId},
     //   : // ordering is done so latest rasters first
     //     `/api/v3/rasters/?writable=true&ordering=-last_modified&page=${page}`;
-    const url = "/api/v3/rasters/?writable=true&page_size=100000";
+    const url = include3diScenarios
+      ? "/api/v4/rasters/?writable=true&page_size=100000"
+      : "/api/v4/rasters/?writable=true&page_size=100000&scenario__isnull=true";
 
     fetch(url, {
       credentials: "same-origin"
@@ -186,7 +195,11 @@ class Raster extends Component {
         fetch(url + toBeDeletedRasterUuidsArray[i] + "/", opts);
         // Refresh the page, so that the removed rasters are no longer visible
         // fetch is a asynchrounous action. the following line should only be executed on .then. todo fix this
-        this.getRastersFromApi(this.state.page, this.state.searchTerms);
+        this.getRastersFromApi(
+          this.state.page,
+          this.state.searchTerms,
+          this.state.include3diScenarios
+        );
       }
     }
   }
@@ -385,6 +398,45 @@ class Raster extends Component {
               <Ink />
             </button>
           </div>
+        </div>
+        <div className={rasterTableStyles.tableUpload}>
+          {this.state.include3diScenarios ? (
+            <a>
+              <span
+                onClick={e => {
+                  this.getRastersFromApi(
+                    this.state.page,
+                    this.state.searchTerms,
+                    false // include 3di scenarios
+                  );
+                  this.setState({ include3diScenarios: false });
+                }}
+              >
+                <FormattedMessage
+                  id="rasters.hide_3di_results"
+                  defaultMessage="Hide 3di results"
+                />
+              </span>
+            </a>
+          ) : (
+            <a>
+              <span
+                onClick={e => {
+                  this.getRastersFromApi(
+                    this.state.page,
+                    this.state.searchTerms,
+                    true // include 3di scenarios
+                  );
+                  this.setState({ include3diScenarios: true });
+                }}
+              >
+                <FormattedMessage
+                  id="rasters.show_3di_results"
+                  defaultMessage="Show 3di results"
+                />
+              </span>
+            </a>
+          )}
         </div>
         <div>
           {htmlRasterTableHeader}
