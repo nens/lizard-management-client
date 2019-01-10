@@ -230,17 +230,24 @@ class Raster extends Component {
 
   render() {
     const { rasters, isFetching, total, page } = this.state;
+    const clickedCheckboxes = this.state.checkboxes.filter(e => e.checked)
+      .length;
 
     const numberOfRasters = total;
 
     const htmlRasterTableHeader = (
       <div className={`${rasterTableStyles.tableHeader}`}>
         <div className={`${rasterTableStyles.tableCheckbox}`}>
+          {/*Don't set id to checkbox_[i],
+             otherwise the code will also try to find an accompanying uuid
+            when going over the checked checkboxes and trying to find
+            rasters to delete these rasters. */}
           <input
             type="checkbox"
-            // Add the checkbox so that the styling of the columns of the
-            // table for rasters is consistent, but don't show the checkbox.
-            style={{ visibility: "hidden" }}
+            id="checkboxCheckAll"
+            checked={this.state.checkAllCheckBoxes}
+            onClick={e =>
+              this.checkAllCheckBoxes(!this.state.checkAllCheckBoxes)}
           />
         </div>
         <div className={`${rasterTableStyles.tableName}`}>Name</div>
@@ -288,12 +295,7 @@ class Raster extends Component {
             </NavLink>
           </div>
           <div className={`${rasterTableStyles.tableUpload}`}>
-            <NavLink
-              to={`/data_management/rasters/${raster.uuid}/data`}
-              style={{
-                // color: "#333"
-              }}
-            >
+            <NavLink to={`/data_management/rasters/${raster.uuid}/data`}>
               <i class="material-icons" style={{ color: "#989898" }}>
                 cloud_upload
               </i>
@@ -304,34 +306,44 @@ class Raster extends Component {
     });
     const htmlRasterTableFooter = (
       <div className={`${rasterTableStyles.tableFooter}`}>
-        <div className={`${rasterTableStyles.tableCheckbox}`}>
-          <input
-            type="checkbox"
-            // Don't set id to checkbox_[i],
-            // otherwise the code will also try to find an accompanying uuid
-            // when going over the checked checkboxes and trying to find
-            // rasters to delete these rasters.
-            id="checkboxCheckAll"
-            checked={this.state.checkAllCheckBoxes}
-            onClick={e =>
-              this.checkAllCheckBoxes(!this.state.checkAllCheckBoxes)}
+        <div className={`${rasterTableStyles.tableFooterLeftFiller}`} />
+        <div className={`${rasterTableStyles.tableInfoAndPagination}`}>
+          <PaginationBar
+            loadRastersOnPage={page =>
+              this.refreshRasterFilteringAndPaginationAndUpdateState(
+                this.state.rasters,
+                page,
+                this.state.searchTerms,
+                this.props.organisations.selected
+              )}
+            page={page}
+            pages={Math.ceil(total / this.state.pageSize)}
           />
-        </div>
-        <div className={`${rasterTableStyles.tableName}`}>
-          {this.state.checkAllCheckBoxes
-            ? " Uncheck all checkboxes on this page"
-            : " Check all checkboxes on this page"}
+          <div className={`${rasterTableStyles.tableFooterNumberOfRasters}`}>
+            <FormattedMessage
+              id="rasters.number_of_rasters"
+              defaultMessage={`{numberOfRasters, number} {numberOfRasters, plural,
+            one {Raster}
+            other {Rasters}}`}
+              values={{ numberOfRasters }}
+            />
+          </div>
         </div>
         <div className={`${rasterTableStyles.tableFooterDeleteRasters}`}>
           <button
             type="button"
             className={`${buttonStyles.Button} ${buttonStyles.Danger}`}
             onClick={this.handleDeleteRasterClick}
-            style={{ maxHeight: "36px" }}
+            style={{ maxHeight: "36px", width: "204px" }}
           >
             <FormattedMessage
               id="rasters.delete_rasters"
-              defaultMessage="Delete selected raster(s)"
+              defaultMessage={` Delete {clickedCheckboxes, number} {clickedCheckboxes, plural,
+                one {Raster}
+                other {Rasters}}`}
+              values={{
+                clickedCheckboxes
+              }}
             />
             <Ink />
           </button>
@@ -342,7 +354,7 @@ class Raster extends Component {
     return (
       <div className={rasterTableStyles.tableContainer}>
         <div
-          className={gridStyles.Row}
+          className={rasterTableStyles.tableHeaderTop}
           style={{
             padding: "0 0 30px 0"
           }}
@@ -390,43 +402,6 @@ class Raster extends Component {
           {htmlRasterTableHeader}
           {htmlRasterTableBody}
           {htmlRasterTableFooter}
-        </div>
-        <div
-          className={gridStyles.Row}
-          style={{
-            margin: "10px 0 0 0",
-            padding: "0px 0 0 0"
-          }}
-        >
-          <div
-            style={{
-              color: "#858E9C"
-            }}
-            className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${gridStyles.colSm4} ${gridStyles.colXs4}`}
-          >
-            <FormattedMessage
-              id="rasters.number_of_rasters"
-              defaultMessage={`{numberOfRasters, number} {numberOfRasters, plural,
-                one {Raster}
-                other {Rasters}}`}
-              values={{ numberOfRasters }}
-            />
-          </div>
-          <div
-            className={`${gridStyles.colLg8} ${gridStyles.colMd8} ${gridStyles.colSm8} ${gridStyles.colXs8}`}
-          >
-            <PaginationBar
-              loadRastersOnPage={page =>
-                this.refreshRasterFilteringAndPaginationAndUpdateState(
-                  this.state.rasters,
-                  page,
-                  this.state.searchTerms,
-                  this.props.organisations.selected
-                )}
-              page={page}
-              pages={Math.ceil(total / this.state.pageSize)}
-            />
-          </div>
         </div>
       </div>
     );
