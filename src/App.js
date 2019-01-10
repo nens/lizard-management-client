@@ -158,7 +158,7 @@ class App extends Component {
                       </a>
                     </div>
                     <div>
-                      <a href="https://demo.lizard.net/accounts/logout/">
+                      <a href="https://nxt3.staging.lizard.net">
                         <i className="fa fa-power-off" />
                         &nbsp;&nbsp;Logout
                       </a>
@@ -166,7 +166,7 @@ class App extends Component {
                   </div>
                   {/* Why is below html ? compare to master */}
                   {/* <div>
-                    <a href="https://demo.lizard.net/accounts/logout/">
+                    <a href="https://nxt3.staging.lizard.net">
                       <i className="fa fa-power-off" />&nbsp;&nbsp;Logout
                     </a>
                   </div> */}
