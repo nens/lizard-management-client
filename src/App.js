@@ -98,6 +98,15 @@ class App extends Component {
       const { showOrganisationSwitcher } = this.state;
       const breadcrumbs = this.computeBreadcrumb();
 
+      // Redirect for logging out.
+      // It takes the same base url as the current management client url.
+      let currentUrlBase = window.location.href.split("/management")[0];
+      // Redirect to staging for development
+      if (currentUrlBase.indexOf("localhost")) {
+        currentUrlBase = "https://nxt3.staging.lizard.net";
+      }
+      const newUrl = currentUrlBase + "/accounts/logout";
+
       return (
         <div className={styles.App}>
           <div className={`${styles.Primary}`}>
@@ -158,7 +167,7 @@ class App extends Component {
                       </a>
                     </div>
                     <div>
-                      <a href="https://nxt3.staging.lizard.net">
+                      <a href={newUrl}>
                         <i className="fa fa-power-off" />
                         &nbsp;&nbsp;Logout
                       </a>
