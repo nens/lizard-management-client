@@ -398,11 +398,17 @@ class Raster extends Component {
               <Ink />
             </button>
           </div>
-        </div>
-        <div className={rasterTableStyles.tableUpload}>
-          {this.state.include3diScenarios ? (
-            <a>
-              <span
+          <div
+            // className={rasterTableStyles.tableUpload}
+            className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${gridStyles.colSm4} ${gridStyles.colXs4}`}
+          >
+            {this.state.include3diScenarios ? (
+              <button
+                className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link}`}
+                style={{
+                  paddingLeft: 0,
+                  color: "#00a6ff"
+                }}
                 onClick={e => {
                   this.getRastersFromApi(
                     this.state.page,
@@ -416,11 +422,14 @@ class Raster extends Component {
                   id="rasters.hide_3di_results"
                   defaultMessage="Hide 3di results"
                 />
-              </span>
-            </a>
-          ) : (
-            <a>
-              <span
+              </button>
+            ) : (
+              <button
+                className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link}`}
+                style={{
+                  paddingLeft: 0,
+                  color: "#00a6ff"
+                }}
                 onClick={e => {
                   this.getRastersFromApi(
                     this.state.page,
@@ -434,10 +443,11 @@ class Raster extends Component {
                   id="rasters.show_3di_results"
                   defaultMessage="Show 3di results"
                 />
-              </span>
-            </a>
-          )}
+              </button>
+            )}
+          </div>
         </div>
+
         <div>
           {htmlRasterTableHeader}
           {htmlRasterTableBody}
