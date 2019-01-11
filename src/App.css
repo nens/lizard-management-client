@@ -133,7 +133,6 @@
   margin: 5px;
 }
 .TopNav div:last-child {
-  width: 150px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

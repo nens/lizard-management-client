@@ -1,0 +1,43 @@
+.tableHeader {
+  color: #858E9C;
+  font-weight: bold;
+  padding: 10px;
+  display: flex;
+  border-bottom: 2px solid #858E9C;
+}
+.tableBody {
+  padding: 10px;
+  flex: 1 100%;
+  display: flex;
+  border-bottom: 1px solid #D8D8D8;
+}
+.tableFooter {
+  color: #858E9C;
+  font-weight: bold;
+  padding: 10px;
+  display: flex;
+  border-top: 1px solid #858E9C;
+  align-items: center;
+}
+
+.tableCheckbox {
+  flex-basis: auto;
+  padding: 0px 10px 0px 10px;
+  display: flex;
+}
+.tableName {
+  flex: 2 0 0;
+  padding: 0px 10px 0px 10px;
+}
+.tableDescription {
+  flex: 2 0 0;
+  padding: 0px 10px 0px 10px;
+}
+.tableUpload {
+  flex-basis: auto;
+  padding: 0px 10px 0px 10px;
+}
+.tableFooterDeleteRasters {
+  padding: 0px 10px 0px 10px;
+}
+
