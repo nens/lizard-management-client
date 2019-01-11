@@ -175,7 +175,7 @@ class App extends Component {
                   </div>
                   {/* Why is below html ? compare to master */}
                   {/* <div>
-                    <a href="https://demo.staging.lizard.net/accounts/logout/">
+                    <a href="https://demo.lizard.net/accounts/logout/">
                       <i className="fa fa-power-off" />&nbsp;&nbsp;Logout
                     </a>
                   </div> */}
