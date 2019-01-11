@@ -640,33 +640,6 @@ class RasterFormModel extends Component {
       aggregationType
     } = this.state;
 
-    let uuidField;
-    if (this.state.uuid) {
-      uuidField = (
-        <div
-          style={{
-            marginTop: "10px",
-            marginBottom: "10px"
-          }}
-        >
-          <span
-            style={{
-              marginTop: "-10px",
-              marginLeft: "45px",
-              marginRight: "35px",
-              width: "40px",
-              textAlign: "center"
-            }}
-          >
-            <b>uuid</b>
-          </span>
-          <span>{this.state.uuid}</span>
-        </div>
-      );
-    } else {
-      uuidField = null;
-    }
-
     console.log(this.state.openOverlay);
     return (
       <div>
@@ -685,7 +658,6 @@ class RasterFormModel extends Component {
             <div
               className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
             >
-              {uuidField}
               <div id="steps" style={{ margin: "20px 0 0 20px" }}>
                 <GenericTextInputComponent
                   titleComponent={

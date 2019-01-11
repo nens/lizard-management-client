@@ -69,12 +69,16 @@ class App extends Component {
       : splitPathnames.map((sp, i) => {
           const to = `/${splitPathnames.slice(1, i + 1).join("/")}`;
           let title = sp.replace("_", " ");
+          let capitalization;
+          // Show the uuid as lowercase
           if (this.uuidRegex.test(sp)) {
-            title = "Detail";
+            capitalization = "lowercase";
+          } else {
+            capitalization = "capitalize";
           }
           return (
             <NavLink to={to} key={i}>
-              <span style={{ textTransform: "capitalize" }}>
+              <span style={{ textTransform: capitalization }}>
                 &nbsp;
                 {title}
                 {i === splitPathnames.length - 1 ? null : " /"}
