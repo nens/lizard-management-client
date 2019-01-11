@@ -105,6 +105,7 @@ class Raster extends Component {
       searchTerms: searchTerms
     });
   };
+
   getRastersFromApi = (page, searchContains) => {
     // const url = searchContains
     //   ? // ordering is done by filter
@@ -185,6 +186,7 @@ class Raster extends Component {
         fetch(url + toBeDeletedRasterUuidsArray[i] + "/", opts);
         // Refresh the page, so that the removed rasters are no longer visible
         // fetch is a asynchrounous action. the following line should only be executed on .then. todo fix this
+
         this.getRastersFromApi(this.state.page, this.state.searchTerms);
       }
     }

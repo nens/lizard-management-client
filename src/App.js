@@ -105,7 +105,7 @@ class App extends Component {
       if (currentUrlBase.indexOf("localhost")) {
         currentUrlBase = "https://nxt3.staging.lizard.net";
       }
-      const newUrl = currentUrlBase + "/accounts/logout";
+      const newUrl = currentUrlBase + "/accounts/logout/";
 
       return (
         <div className={styles.App}>
@@ -175,7 +175,7 @@ class App extends Component {
                   </div>
                   {/* Why is below html ? compare to master */}
                   {/* <div>
-                    <a href="https://nxt3.staging.lizard.net">
+                    <a href="https://demo.staging.lizard.net/accounts/logout/">
                       <i className="fa fa-power-off" />&nbsp;&nbsp;Logout
                     </a>
                   </div> */}
