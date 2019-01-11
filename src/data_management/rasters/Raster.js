@@ -68,8 +68,19 @@ class Raster extends Component {
   filterSortRasters = (rasters, searchContains, organisation) => {
     const filteredRasters = rasters.filter(
       e =>
-        (e.name.toLowerCase().includes(searchContains.toLowerCase()) ||
-          e.description.toLowerCase().includes(searchContains.toLowerCase())) &&
+        ((e.name || "").toLowerCase().includes(searchContains.toLowerCase()) ||
+          (e.description || "")
+            .toLowerCase()
+            .includes(searchContains.toLowerCase()) ||
+          (e.supplier_code || "")
+            .toLowerCase()
+            .includes(searchContains.toLowerCase()) ||
+          (e.observation_type || "")
+            .toLowerCase()
+            .includes(searchContains.toLowerCase()) ||
+          (e.uuid || "")
+            .toLowerCase()
+            .includes(searchContains.toLowerCase())) &&
         // use nested comparing based on uuid once api/v4 is finished
         // e.organisation.unique_id.replace(/-/g, "") === organisation.uuid
         e.organisation === organisation.url
@@ -115,11 +126,13 @@ class Raster extends Component {
     });
   };
   getRastersFromApi = (page, searchContains, include3diScenarios) => {
+    // searching/filtering/pagination is for now done clientside so server side search is commented out
     // const url = searchContains
     //   ? // ordering is done by filter
     //     `/api/v3/rasters/?writable=true&page=${page}&name__icontains=${searchContains}` // &organisation__unique_id=${organisationId},
     //   : // ordering is done so latest rasters first
     //     `/api/v3/rasters/?writable=true&ordering=-last_modified&page=${page}`;
+
     const url = include3diScenarios
       ? "/api/v4/rasters/?writable=true&page_size=100000"
       : "/api/v4/rasters/?writable=true&page_size=100000&scenario__isnull=true";
@@ -264,6 +277,10 @@ class Raster extends Component {
         <div className={`${rasterTableStyles.tableDescription}`}>
           Description
         </div>
+        <div className={`${rasterTableStyles.TableSupplier}`}>Supplier</div>
+        <div className={`${rasterTableStyles.TableObservationType}`}>
+          Observation type
+        </div>
         <div className={`${rasterTableStyles.tableUpload}`}>Upload</div>
       </div>
     );
@@ -271,8 +288,6 @@ class Raster extends Component {
     const htmlRasterTableBody = (
       <div
         style={{
-          // height: "30rem", // pagesize * lineheigth * 2 ?
-          // overflowY: "auto",
           position: "relative"
         }}
       >
@@ -281,7 +296,12 @@ class Raster extends Component {
             visibility: this.state.isFetching ? "hidden" : "visible"
           }}
         >
-          <Scrollbars autoHeight autoHeightMin={450} autoHeightMax={450}>
+          <Scrollbars
+            autoHeight
+            autoHeightMin={450}
+            autoHeightMax={450}
+            style={{ width: "100%" }}
+          >
             {this.state.paginatedRasters.map((raster, i) => {
               return (
                 <div className={`${rasterTableStyles.tableBody}`}>
@@ -319,12 +339,15 @@ class Raster extends Component {
                       {raster.description}
                     </NavLink>
                   </div>
+                  <div className={`${rasterTableStyles.TableSupplier}`}>
+                    {raster.supplier_code}
+                  </div>
+                  <div className={`${rasterTableStyles.TableObservationType}`}>
+                    {raster.observation_type}
+                  </div>
                   <div className={`${rasterTableStyles.tableUpload}`}>
                     <NavLink
                       to={`/data_management/rasters/${raster.uuid}/data`}
-                      style={{
-                        // color: "#333"
-                      }}
                     >
                       <FormattedMessage
                         id="rasters.link_to_upload_data"
@@ -464,7 +487,6 @@ class Raster extends Component {
             </button>
           </div>
           <div
-            // className={rasterTableStyles.tableUpload}
             className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${gridStyles.colSm4} ${gridStyles.colXs4}`}
           >
             {this.state.include3diScenarios ? (
@@ -484,8 +506,8 @@ class Raster extends Component {
                 }}
               >
                 <FormattedMessage
-                  id="rasters.hide_3di_results"
-                  defaultMessage="Hide 3di results"
+                  id="rasters.exclude_3di_results"
+                  defaultMessage="Exclude 3di results"
                 />
               </button>
             ) : (
@@ -505,8 +527,8 @@ class Raster extends Component {
                 }}
               >
                 <FormattedMessage
-                  id="rasters.show_3di_results"
-                  defaultMessage="Show 3di results"
+                  id="rasters.include_3di_results"
+                  defaultMessage="Include 3di results"
                 />
               </button>
             )}

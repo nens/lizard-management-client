@@ -33,6 +33,18 @@
   flex: 2 0 0;
   padding: 0px 10px 0px 10px;
 }
+.TableSupplier {
+  flex: 1 0 0;
+  padding: 0px 10px 0px 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.TableObservationType {
+  flex: 1 0 0;
+  padding: 0px 10px 0px 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .tableUpload {
   flex-basis: auto;
   padding: 0px 10px 0px 10px;
