@@ -1,9 +1,10 @@
-import alarmIcon from "../../images/alarm@3x.svg";
+import rasterIcon from "../../images/rasters@3x.svg";
 import buttonStyles from "../../styles/Buttons.css";
 import gridStyles from "../../styles/Grid.css";
 import rasterTableStyles from "../../styles/RasterTable.css";
 import Ink from "react-ink";
 import MDSpinner from "react-md-spinner";
+import { Scrollbars } from "react-custom-scrollbars";
 import PaginationBar from "./PaginationBar";
 import { Row } from "./Row";
 import React, { Component } from "react";
@@ -122,6 +123,10 @@ class Raster extends Component {
     const url = include3diScenarios
       ? "/api/v4/rasters/?writable=true&page_size=100000"
       : "/api/v4/rasters/?writable=true&page_size=100000&scenario__isnull=true";
+
+    this.setState({
+      isFetching: true
+    });
 
     fetch(url, {
       credentials: "same-origin"
@@ -262,59 +267,119 @@ class Raster extends Component {
         <div className={`${rasterTableStyles.tableUpload}`}>Upload</div>
       </div>
     );
-    const htmlRasterTableBody = this.state.paginatedRasters.map((raster, i) => {
-      return (
-        <div className={`${rasterTableStyles.tableBody}`}>
-          <div className={`${rasterTableStyles.tableCheckbox}`}>
-            <input
-              type="checkbox"
-              // Make sure that you can still use the checkbox to click on,
-              // in combination with the check all checkbox.
-              onClick={this.clickRegularCheckbox}
-              checked={
-                this.state.checkboxes[i]
-                  ? this.state.checkboxes[i].checked
-                  : false
-              }
-              id={"checkbox_" + i}
-            />
-          </div>
-          <div className={`${rasterTableStyles.tableName}`}>
-            <NavLink
-              to={`/data_management/rasters/${raster.uuid}`}
-              style={{
-                color: "#333"
-              }}
-            >
-              {raster.name}
-            </NavLink>
-          </div>
-          <div className={`${rasterTableStyles.tableDescription}`}>
-            <NavLink
-              to={`/data_management/rasters/${raster.uuid}`}
-              style={{
-                color: "#333"
-              }}
-            >
-              {raster.description}
-            </NavLink>
-          </div>
-          <div className={`${rasterTableStyles.tableUpload}`}>
-            <NavLink
-              to={`/data_management/rasters/${raster.uuid}/data`}
-              style={{
-                // color: "#333"
-              }}
-            >
-              <FormattedMessage
-                id="rasters.link_to_upload_data"
-                defaultMessage="Upload"
-              />
-            </NavLink>
-          </div>
+
+    const htmlRasterTableBody = (
+      <div
+        style={{
+          // height: "30rem", // pagesize * lineheigth * 2 ?
+          // overflowY: "auto",
+          position: "relative"
+        }}
+      >
+        <div
+          style={{
+            visibility: this.state.isFetching ? "hidden" : "visible"
+          }}
+        >
+          <Scrollbars autoHeight autoHeightMin={450} autoHeightMax={450}>
+            {this.state.paginatedRasters.map((raster, i) => {
+              return (
+                <div className={`${rasterTableStyles.tableBody}`}>
+                  <div className={`${rasterTableStyles.tableCheckbox}`}>
+                    <input
+                      type="checkbox"
+                      // Make sure that you can still use the checkbox to click on,
+                      // in combination with the check all checkbox.
+                      onClick={this.clickRegularCheckbox}
+                      checked={
+                        this.state.checkboxes[i]
+                          ? this.state.checkboxes[i].checked
+                          : false
+                      }
+                      id={"checkbox_" + i}
+                    />
+                  </div>
+                  <div className={`${rasterTableStyles.tableName}`}>
+                    <NavLink
+                      to={`/data_management/rasters/${raster.uuid}`}
+                      style={{
+                        color: "#333"
+                      }}
+                    >
+                      {raster.name}
+                    </NavLink>
+                  </div>
+                  <div className={`${rasterTableStyles.tableDescription}`}>
+                    <NavLink
+                      to={`/data_management/rasters/${raster.uuid}`}
+                      style={{
+                        color: "#333"
+                      }}
+                    >
+                      {raster.description}
+                    </NavLink>
+                  </div>
+                  <div className={`${rasterTableStyles.tableUpload}`}>
+                    <NavLink
+                      to={`/data_management/rasters/${raster.uuid}/data`}
+                      style={{
+                        // color: "#333"
+                      }}
+                    >
+                      <FormattedMessage
+                        id="rasters.link_to_upload_data"
+                        defaultMessage="Upload"
+                      />
+                    </NavLink>
+                  </div>
+                </div>
+              );
+            })}
+          </Scrollbars>
         </div>
-      );
-    });
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            bottom: 0,
+            right: 0,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            visibility: this.state.isFetching ? "visible" : "hidden"
+          }}
+        >
+          <MDSpinner />
+        </div>
+        <div
+          className={styles.NoResults}
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            bottom: 0,
+            right: 0,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            visibility:
+              this.state.isFetching === false && this.state.rasters.length === 0
+                ? "visible"
+                : "hidden"
+          }}
+        >
+          <img src={rasterIcon} alt="Alarms" />
+          <h5>
+            <FormattedMessage
+              id="rasters.no_rasters"
+              defaultMessage="No rasters found..."
+            />
+          </h5>
+        </div>
+      </div>
+    );
+
     const htmlRasterTableFooter = (
       <div className={`${rasterTableStyles.tableFooter}`}>
         <div className={`${rasterTableStyles.tableCheckbox}`}>
