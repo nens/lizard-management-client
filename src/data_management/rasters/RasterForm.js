@@ -435,7 +435,6 @@ class RasterFormModel extends Component {
       modalErrorMessage: "",
       createdRaster: null,
       currentStep: 1,
-      uuid: "",
       rasterName: "",
       selectedOrganisation: {
         name: this.props.organisations.selected.name, //"",
@@ -497,7 +496,6 @@ class RasterFormModel extends Component {
       isFetching: false,
       openOverlay: false,
       currentStep: 1,
-      uuid: currentRaster.uuid,
       rasterName: currentRaster.name,
       selectedOrganisation: {
         name: currentRaster.organisation.name,
