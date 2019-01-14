@@ -162,7 +162,8 @@ class App extends Component {
                       </a>
                     </div>
                     <div>
-                      <a href="https://demo.lizard.net/accounts/logout/">
+                      {/* Redirect for logging out.*/}
+                      <a href="/accounts/logout/">
                         <i className="fa fa-power-off" />
                         &nbsp;&nbsp;Logout
                       </a>

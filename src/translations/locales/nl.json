@@ -164,7 +164,7 @@
   "rasters.colormap_min_mandatory": "Verplicht wanneer het max veld in ingevuld",
   "rasters.colormap_readonly_layers": "Deze colormap bevat meerdere lagen. Het veranderen van een colormap met meerdere lagen is momenteel niet ondersteund.",
   "rasters.data_for": "voor raster",
-  "rasters.delete_rasters": "Verwijder geselecteerde rasters",
+  "rasters.delete_rasters": "Verwijder {clickedCheckboxes, number} {clickedCheckboxes, plural,one {Raster} other {Rasters}}",
   "rasters.description": "Beschrijving",
   "rasters.drop_file_here": "Sleep hier uw documenten",
   "rasters.file_already_selected": "Er bestaat al een raster met deze naam en file grootte",
