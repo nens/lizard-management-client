@@ -332,9 +332,14 @@ class Raster extends Component {
         <div className={`${rasterTableStyles.tableFooterDeleteRasters}`}>
           <button
             type="button"
-            className={`${buttonStyles.Button} ${buttonStyles.Danger}`}
+            className={
+              clickedCheckboxes > 0
+                ? `${buttonStyles.Button} ${buttonStyles.Danger}`
+                : `${buttonStyles.Button} ${buttonStyles.Inactive}`
+            }
             onClick={this.handleDeleteRasterClick}
             style={{ maxHeight: "36px", width: "204px" }}
+            disabled={clickedCheckboxes === 0 ? true : false}
           >
             <FormattedMessage
               id="rasters.delete_rasters"

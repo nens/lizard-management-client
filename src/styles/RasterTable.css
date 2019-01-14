@@ -26,6 +26,8 @@
 .tableFooter {
   color: #858E9C;
   font-weight: bold;
+  padding: 10px;
+  padding-right: 0px;
   display: flex;
   border-top: 1px solid #858E9C;
   align-items: center;
@@ -46,26 +48,29 @@
 }
 
 .tableCheckbox {
-  flex: 0.1 0 0;
-  flex-basis: auto;
+  flex: 0.1 0 auto;
+  padding: 0px 10px 0px 10px;
   flex-direction: column;
   justify-content: center;
   display: flex;
 }
 .tableName {
   flex: 2 0 0;
+  padding: 0px 10px 0px 10px;
   flex-direction: column;
   justify-content: center;
   display: flex;
 }
 .tableDescription {
   flex: 2 0 0;
+  padding: 0px 10px 0px 10px;
   flex-direction: column;
   justify-content: center;
   display: flex;
 }
 .tableUpload {
   display: flex;
+  padding: 0px 10px 0px 10px;
   flex: 0.5 0 0;
   justify-content: flex-end;
 }
@@ -78,6 +83,7 @@
   display: flex;
   flex: 1 0 0;
   justify-content: flex-end;
+  padding: 0px 0px 0px 10px;
 }
 
 .tableFooterNumberOfRasters{
