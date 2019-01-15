@@ -75,12 +75,8 @@ class App extends Component {
           // Show the uuid as lowercase
           if (this.uuidRegex.test(sp)) {
             styleNavLink = {
-              // flex: 1,
               minWidth: "0px",
-              // flexBasis: "20%",
               overflow: "hidden"
-              // width: "600px",
-              // border: "1px solid red"
             };
             styleSpan = {
               textTransform: "lowercase",
@@ -96,8 +92,6 @@ class App extends Component {
           return (
             <NavLink to={to} key={i} style={styleNavLink}>
               {" "}
-              {/*this.uuidRegex.test(sp) ? styleNavLink : null*/
-              /* style={{overflow: "hidden", textOverflow: "ellipsis", width: "100px", whiteSpace: "nowrap"}}*/}
               <span
                 style={styleSpan}
                 // Show 'uuid' upon hovering over uuid key, to make it apparent
@@ -213,16 +207,12 @@ class App extends Component {
                   <div
                     style={{
                       display: "flex",
-                      // flex: "0 0 auto"
                       flexDirection: "row",
                       flexWrap: "wrap",
                       overflowX: "hidden,"
                     }}
                   >
-                    <NavLink
-                      to="/"
-                      style={{ overflowX: "hidden" /*, minWidth: "0"*/ }}
-                    >
+                    <NavLink to="/" style={{ overflowX: "hidden" }}>
                       Lizard Management
                     </NavLink>
                     {breadcrumbs}
