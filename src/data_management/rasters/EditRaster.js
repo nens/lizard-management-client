@@ -17,7 +17,7 @@ class EditRasterModel extends Component {
     const { match } = this.props;
 
     (async () => {
-      const currentRaster = await fetch(`/api/v3/rasters/${match.params.id}/`, {
+      const currentRaster = await fetch(`/api/v4/rasters/${match.params.id}/`, {
         credentials: "same-origin"
       }).then(response => response.json());
 
