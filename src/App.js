@@ -78,7 +78,10 @@ class App extends Component {
           }
           return (
             <NavLink to={to} key={i}>
-              <span style={{ textTransform: capitalization }}>
+              <span
+                style={{ textTransform: capitalization }}
+                title={this.uuidRegex.test(sp) ? "uuid" : ""}
+              >
                 &nbsp;
                 {title}
                 {i === splitPathnames.length - 1 ? null : " /"}
