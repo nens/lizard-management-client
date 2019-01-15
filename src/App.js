@@ -70,16 +70,38 @@ class App extends Component {
           const to = `/${splitPathnames.slice(1, i + 1).join("/")}`;
           let title = sp.replace("_", " ");
           let capitalization;
+          let styleNavLink = {};
+          let styleSpan = {};
           // Show the uuid as lowercase
           if (this.uuidRegex.test(sp)) {
-            capitalization = "lowercase";
+            styleNavLink = {
+              // flex: 1,
+              minWidth: "0px",
+              // flexBasis: "20%",
+              overflow: "hidden"
+              // width: "600px",
+              // border: "1px solid red"
+            };
+            styleSpan = {
+              textTransform: "lowercase",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+              overflow: "hidden"
+            };
           } else {
-            capitalization = "capitalize";
+            styleSpan = {
+              textTransform: "capitalize"
+            };
           }
           return (
-            <NavLink to={to} key={i}>
+            <NavLink to={to} key={i} style={styleNavLink}>
+              {" "}
+              {/*this.uuidRegex.test(sp) ? styleNavLink : null*/
+              /* style={{overflow: "hidden", textOverflow: "ellipsis", width: "100px", whiteSpace: "nowrap"}}*/}
               <span
-                style={{ textTransform: capitalization }}
+                style={styleSpan}
+                // Show 'uuid' upon hovering over uuid key, to make it apparent
+                // for users that it is the uuid.
                 title={this.uuidRegex.test(sp) ? "uuid" : ""}
               >
                 &nbsp;
@@ -191,10 +213,18 @@ class App extends Component {
                   <div
                     style={{
                       display: "flex",
-                      flex: "0 0 auto"
+                      // flex: "0 0 auto"
+                      flexDirection: "row",
+                      flexWrap: "wrap",
+                      overflowX: "hidden,"
                     }}
                   >
-                    <NavLink to="/">Lizard Management</NavLink>
+                    <NavLink
+                      to="/"
+                      style={{ overflowX: "hidden" /*, minWidth: "0"*/ }}
+                    >
+                      Lizard Management
+                    </NavLink>
                     {breadcrumbs}
                   </div>
                 </div>
