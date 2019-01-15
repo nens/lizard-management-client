@@ -1,9 +1,10 @@
-import alarmIcon from "../../images/alarm@3x.svg";
+import rasterIcon from "../../images/rasters@3x.svg";
 import buttonStyles from "../../styles/Buttons.css";
 import gridStyles from "../../styles/Grid.css";
 import rasterTableStyles from "../../styles/RasterTable.css";
 import Ink from "react-ink";
 import MDSpinner from "react-md-spinner";
+import { Scrollbars } from "react-custom-scrollbars";
 import PaginationBar from "./PaginationBar";
 import { Row } from "./Row";
 import React, { Component } from "react";
@@ -31,7 +32,8 @@ class Raster extends Component {
       // Add checkbox array with id, raster and whether of not the checkbox
       // is checked, to be able to find the raster back from the checked checkboxes.
       checkboxes: [],
-      searchTerms: ""
+      searchTerms: "",
+      include3diScenarios: false
     };
     this.handleNewRasterClick = this.handleNewRasterClick.bind(this);
     this.handleDeleteRasterClick = this.handleDeleteRasterClick.bind(this);
@@ -41,7 +43,11 @@ class Raster extends Component {
   }
   componentDidMount() {
     const { page } = this.state;
-    this.getRastersFromApi(page, this.state.searchTerms);
+    this.getRastersFromApi(
+      page,
+      this.state.searchTerms,
+      this.state.include3diScenarios
+    );
   }
   componentWillReceiveProps(props) {
     let page = 1;
@@ -63,9 +69,22 @@ class Raster extends Component {
   filterSortRasters = (rasters, searchContains, organisation) => {
     const filteredRasters = rasters.filter(
       e =>
-        (e.name.toLowerCase().includes(searchContains.toLowerCase()) ||
-          e.description.toLowerCase().includes(searchContains.toLowerCase())) &&
-        e.organisation.unique_id.replace(/-/g, "") === organisation.uuid
+        ((e.name || "").toLowerCase().includes(searchContains.toLowerCase()) ||
+          (e.description || "")
+            .toLowerCase()
+            .includes(searchContains.toLowerCase()) ||
+          (e.supplier_code || "")
+            .toLowerCase()
+            .includes(searchContains.toLowerCase()) ||
+          (e.observation_type || "")
+            .toLowerCase()
+            .includes(searchContains.toLowerCase()) ||
+          (e.uuid || "")
+            .toLowerCase()
+            .includes(searchContains.toLowerCase())) &&
+        // use nested comparing based on uuid once api/v4 is finished
+        // e.organisation.unique_id.replace(/-/g, "") === organisation.uuid
+        e.organisation === organisation.url
     );
     const sortedFilteredRasters = filteredRasters.sort(
       (a, b) => a.last_modified > b.last_modified
@@ -107,13 +126,21 @@ class Raster extends Component {
       searchTerms: searchTerms
     });
   };
-  getRastersFromApi = (page, searchContains) => {
+  getRastersFromApi = (page, searchContains, include3diScenarios) => {
+    // searching/filtering/pagination is for now done clientside so server side search is commented out
     // const url = searchContains
     //   ? // ordering is done by filter
     //     `/api/v3/rasters/?writable=true&page=${page}&name__icontains=${searchContains}` // &organisation__unique_id=${organisationId},
     //   : // ordering is done so latest rasters first
     //     `/api/v3/rasters/?writable=true&ordering=-last_modified&page=${page}`;
-    const url = "/api/v3/rasters/?writable=true&page_size=100000";
+
+    const url = include3diScenarios
+      ? "/api/v4/rasters/?writable=true&page_size=100000"
+      : "/api/v4/rasters/?writable=true&page_size=100000&scenario__isnull=true";
+
+    this.setState({
+      isFetching: true
+    });
 
     fetch(url, {
       credentials: "same-origin"
@@ -187,7 +214,11 @@ class Raster extends Component {
         fetch(url + toBeDeletedRasterUuidsArray[i] + "/", opts);
         // Refresh the page, so that the removed rasters are no longer visible
         // fetch is a asynchrounous action. the following line should only be executed on .then. todo fix this
-        this.getRastersFromApi(this.state.page, this.state.searchTerms);
+        this.getRastersFromApi(
+          this.state.page,
+          this.state.searchTerms,
+          this.state.include3diScenarios
+        );
       }
     }
   }
@@ -254,56 +285,131 @@ class Raster extends Component {
         <div className={`${rasterTableStyles.tableDescription}`}>
           Description
         </div>
+        <div className={`${rasterTableStyles.TableSupplier}`}>Supplier</div>
+        <div className={`${rasterTableStyles.TableObservationType}`}>
+          Observation type
+        </div>
         <div className={`${rasterTableStyles.tableUpload}`}>Upload</div>
       </div>
     );
-    const htmlRasterTableBody = this.state.paginatedRasters.map((raster, i) => {
-      return (
-        <div className={`${rasterTableStyles.tableBody}`}>
-          <div className={`${rasterTableStyles.tableCheckbox}`}>
-            <input
-              type="checkbox"
-              // Make sure that you can still use the checkbox to click on,
-              // in combination with the check all checkbox.
-              onClick={this.clickRegularCheckbox}
-              checked={
-                this.state.checkboxes[i]
-                  ? this.state.checkboxes[i].checked
-                  : false
-              }
-              id={"checkbox_" + i}
-            />
-          </div>
-          <div className={`${rasterTableStyles.tableName}`}>
-            <NavLink
-              to={`/data_management/rasters/${raster.uuid}`}
-              style={{
-                color: "#333"
-              }}
-            >
-              {raster.name}
-            </NavLink>
-          </div>
-          <div className={`${rasterTableStyles.tableDescription}`}>
-            <NavLink
-              to={`/data_management/rasters/${raster.uuid}`}
-              style={{
-                color: "#333"
-              }}
-            >
-              {raster.description}
-            </NavLink>
-          </div>
-          <div className={`${rasterTableStyles.tableUpload}`}>
-            <NavLink to={`/data_management/rasters/${raster.uuid}/data`}>
-              <i class="material-icons" style={{ color: "#989898" }}>
-                cloud_upload
-              </i>
-            </NavLink>
-          </div>
+
+    const htmlRasterTableBody = (
+      <div
+        style={{
+          position: "relative"
+        }}
+      >
+        <div
+          style={{
+            visibility: this.state.isFetching ? "hidden" : "visible"
+          }}
+        >
+          <Scrollbars
+            autoHeight
+            autoHeightMin={450}
+            autoHeightMax={450}
+            style={{ width: "100%" }}
+          >
+            {this.state.paginatedRasters.map((raster, i) => {
+              return (
+                <div className={`${rasterTableStyles.tableBody}`}>
+                  <div className={`${rasterTableStyles.tableCheckbox}`}>
+                    <input
+                      type="checkbox"
+                      // Make sure that you can still use the checkbox to click on,
+                      // in combination with the check all checkbox.
+                      onClick={this.clickRegularCheckbox}
+                      checked={
+                        this.state.checkboxes[i]
+                          ? this.state.checkboxes[i].checked
+                          : false
+                      }
+                      id={"checkbox_" + i}
+                    />
+                  </div>
+                  <div className={`${rasterTableStyles.tableName}`}>
+                    <NavLink
+                      to={`/data_management/rasters/${raster.uuid}`}
+                      style={{
+                        color: "#333"
+                      }}
+                    >
+                      {raster.name}
+                    </NavLink>
+                  </div>
+                  <div className={`${rasterTableStyles.tableDescription}`}>
+                    <NavLink
+                      to={`/data_management/rasters/${raster.uuid}`}
+                      style={{
+                        color: "#333"
+                      }}
+                    >
+                      {raster.description}
+                    </NavLink>
+                  </div>
+                  <div className={`${rasterTableStyles.TableSupplier}`}>
+                    {raster.supplier_code}
+                  </div>
+                  <div className={`${rasterTableStyles.TableObservationType}`}>
+                    {raster.observation_type}
+                  </div>
+                  <div className={`${rasterTableStyles.tableUpload}`}>
+                    <NavLink
+                      to={`/data_management/rasters/${raster.uuid}/data`}
+                    >
+                      <i class="material-icons" style={{ color: "#989898" }}>
+                        cloud_upload
+                      </i>
+                    </NavLink>
+                  </div>
+                </div>
+              );
+            })}
+          </Scrollbars>
         </div>
-      );
-    });
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            bottom: 0,
+            right: 0,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            visibility: this.state.isFetching ? "visible" : "hidden"
+          }}
+        >
+          <MDSpinner />
+        </div>
+        <div
+          className={styles.NoResults}
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            bottom: 0,
+            right: 0,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            visibility:
+              this.state.isFetching === false && this.state.rasters.length === 0
+                ? "visible"
+                : "hidden"
+          }}
+        >
+          <img src={rasterIcon} alt="Alarms" />
+          <h5>
+            <FormattedMessage
+              id="rasters.no_rasters"
+              defaultMessage="No rasters found..."
+            />
+          </h5>
+        </div>
+      </div>
+    );
+
     const htmlRasterTableFooter = (
       <div className={`${rasterTableStyles.tableFooter}`}>
         <div className={`${rasterTableStyles.tableFooterLeftFiller}`} />
@@ -385,6 +491,49 @@ class Raster extends Component {
                 );
               }}
             />
+            {this.state.include3diScenarios ? (
+              <button
+                className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link}`}
+                style={{
+                  paddingLeft: 0,
+                  color: "#00a6ff"
+                }}
+                onClick={e => {
+                  this.getRastersFromApi(
+                    this.state.page,
+                    this.state.searchTerms,
+                    false // include 3di scenarios
+                  );
+                  this.setState({ include3diScenarios: false });
+                }}
+              >
+                <FormattedMessage
+                  id="rasters.exclude_3di_results"
+                  defaultMessage="Exclude 3di results"
+                />
+              </button>
+            ) : (
+              <button
+                className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link}`}
+                style={{
+                  paddingLeft: 0,
+                  color: "#00a6ff"
+                }}
+                onClick={e => {
+                  this.getRastersFromApi(
+                    this.state.page,
+                    this.state.searchTerms,
+                    true // include 3di scenarios
+                  );
+                  this.setState({ include3diScenarios: true });
+                }}
+              >
+                <FormattedMessage
+                  id="rasters.include_3di_results"
+                  defaultMessage="Include 3di results"
+                />
+              </button>
+            )}
           </div>
           <div
             className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${gridStyles.colSm4} ${gridStyles.colXs4}`}
@@ -403,6 +552,7 @@ class Raster extends Component {
             </button>
           </div>
         </div>
+
         <div>
           {htmlRasterTableHeader}
           {htmlRasterTableBody}
