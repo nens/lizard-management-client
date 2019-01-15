@@ -491,26 +491,6 @@ class Raster extends Component {
                 );
               }}
             />
-          </div>
-          <div
-            className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${gridStyles.colSm4} ${gridStyles.colXs4}`}
-          >
-            <button
-              type="button"
-              style={{ float: "right" }}
-              className={`${buttonStyles.Button} ${buttonStyles.Success}`}
-              onClick={this.handleNewRasterClick}
-            >
-              <FormattedMessage
-                id="rasters.new_raster"
-                defaultMessage="New raster"
-              />
-              <Ink />
-            </button>
-          </div>
-          <div
-            className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${gridStyles.colSm4} ${gridStyles.colXs4}`}
-          >
             {this.state.include3diScenarios ? (
               <button
                 className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link}`}
@@ -554,6 +534,22 @@ class Raster extends Component {
                 />
               </button>
             )}
+          </div>
+          <div
+            className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${gridStyles.colSm4} ${gridStyles.colXs4}`}
+          >
+            <button
+              type="button"
+              style={{ float: "right" }}
+              className={`${buttonStyles.Button} ${buttonStyles.Success}`}
+              onClick={this.handleNewRasterClick}
+            >
+              <FormattedMessage
+                id="rasters.new_raster"
+                defaultMessage="New raster"
+              />
+              <Ink />
+            </button>
           </div>
         </div>
 

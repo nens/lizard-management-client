@@ -66,22 +66,22 @@
 }
 .tableDescription {
   flex: 2 0 0;
-  min-width: 20%;
-  max-width: 30%;
+  /* min-width: 20%; */
+  /* max-width: 30%; */
   padding: 0px 10px 0px 10px;
 }
 .TableSupplier {
   flex: 1 0 0;
-  min-width: 20%;
-  max-width: 20%;
+  /* min-width: 20%; */
+  /* max-width: 20%; */
   padding: 0px 10px 0px 10px;
   /* overflow: hidden; */
   /* text-overflow: ellipsis; */
 }
 .TableObservationType {
   flex: 1 0 0;
-  min-width: 20%;
-  max-width: 20%;
+  /* min-width: 20%; */
+  /* max-width: 20%; */
   padding: 0px 10px 0px 10px;
   /* overflow: hidden; */
   /* text-overflow: ellipsis; */
