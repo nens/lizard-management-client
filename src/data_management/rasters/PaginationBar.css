@@ -10,6 +10,7 @@
 .PaginationBar div {
   font-size: 1.2em;
   margin: 0 10px 0 10px;
+  display: none;
 }
 .NavigatorBar {
   margin-top: 15px;
