@@ -429,6 +429,18 @@ class RasterFormModel extends Component {
   }
 
   setInitialState(props) {
+    let userName = props.bootstrap.bootstrap.user.username;
+    let supplierId = this.props.supplierIds.available.find(user => {
+      return user.username === userName;
+    });
+    // let supplierId = {  // haal dit op uit de this.props.supplierIds.available
+    //   id: 127,
+    //   username: "madeleine.vanwinkel",
+    //   url: "https://nxt3.staging.lizard.net/api/v4/users/127/",
+    //   first_name: "Madeleine",
+    //   last_name: "van Winkel",
+    //   email: "madeleine.vanwinkel@nelen-schuurmans.nl"
+    // };
     return {
       isFetching: false,
       openOverlay: false,
@@ -463,7 +475,7 @@ class RasterFormModel extends Component {
       // colorMapMin: 0,
       // colorMapMax: 100, // what are reasonable defaults?6,7,8,9
       aggregationType: "", // choice: none | counts | curve | histogram | sum | average
-      supplierId: "",
+      supplierId: supplierId,
       supplierCode: "",
       // observationType: {
       //   code: "",
@@ -638,7 +650,13 @@ class RasterFormModel extends Component {
       aggregationType
     } = this.state;
 
+    console.log("this.props.bootstrap", this.props.bootstrap);
+    console.log(
+      "this.props.bootstrap.bootstrap.user.username",
+      this.props.bootstrap.bootstrap.user.username
+    );
     console.log(this.state.openOverlay);
+    console.log("this.state.supplierId", this.state.supplierId);
     return (
       <div>
         {this.state.openOverlay ? (
