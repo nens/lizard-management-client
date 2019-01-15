@@ -76,15 +76,15 @@ class Raster extends Component {
           (e.supplier_code || "")
             .toLowerCase()
             .includes(searchContains.toLowerCase()) ||
-          (e.observation_type || "")
+          ((e.observation_type && e.observation_type.code) || "")
             .toLowerCase()
             .includes(searchContains.toLowerCase()) ||
           (e.uuid || "")
             .toLowerCase()
             .includes(searchContains.toLowerCase())) &&
-        // use nested comparing based on uuid once api/v4 is finished
-        // e.organisation.unique_id.replace(/-/g, "") === organisation.uuid
-        e.organisation === organisation.url
+        (e.organisation &&
+          e.organisation.uuid &&
+          e.organisation.uuid.replace(/-/g, "")) === organisation.uuid
     );
     const sortedFilteredRasters = filteredRasters.sort(
       (a, b) => a.last_modified > b.last_modified
@@ -351,7 +351,7 @@ class Raster extends Component {
                     {raster.supplier_code}
                   </div>
                   <div className={`${rasterTableStyles.TableObservationType}`}>
-                    {raster.observation_type}
+                    {raster.observation_type && raster.observation_type.code}
                   </div>
                   <div className={`${rasterTableStyles.tableUpload}`}>
                     <NavLink

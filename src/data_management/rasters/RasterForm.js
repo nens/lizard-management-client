@@ -453,22 +453,15 @@ class RasterFormModel extends Component {
       temporalIntervalMinutes: "00",
       temporalIntervalSeconds: "00",
       temporalOptimizer: true, // default true, not set by the user for first iteration
-      // TODO let colormap have min and max as below with styles
       styles: {
         colorMap: "",
         min: "",
         max: ""
       },
       options: {},
-      // colorMapMin: 0,
-      // colorMapMax: 100, // what are reasonable defaults?6,7,8,9
       aggregationType: "", // choice: none | counts | curve | histogram | sum | average
       supplierId: "",
       supplierCode: "",
-      // observationType: {
-      //   code: "",
-      //   url: ""
-      // },
       observationType: null,
       sharedWith: []
     };
@@ -477,7 +470,7 @@ class RasterFormModel extends Component {
   currentRasterToState(currentRaster) {
     // is there the possibility that available supplier id is not yet retrieved from server?
     const selectedSupplierId = this.props.supplierIds.available.filter(
-      e => e.url.replace("v4", "v3") === currentRaster.supplier
+      e => e.username === currentRaster.supplier
     )[0];
     const intervalObj = this.getIntervalToDaysHoursMinutesSeconds(
       currentRaster.interval
@@ -499,7 +492,7 @@ class RasterFormModel extends Component {
       rasterName: currentRaster.name,
       selectedOrganisation: {
         name: currentRaster.organisation.name,
-        uuid: currentRaster.organisation.unique_id
+        uuid: currentRaster.organisation.uuid.replace(/-/g, "")
       },
       storePathName:
         currentRaster.slug && currentRaster.slug.replace(/:/g, "/"),
@@ -521,7 +514,7 @@ class RasterFormModel extends Component {
       supplierId: selectedSupplierId,
       supplierCode: currentRaster.supplier_code,
       observationType: currentRaster.observation_type,
-      sharedWith: []
+      sharedWith: currentRaster.shared_with
     };
   }
 
@@ -541,7 +534,7 @@ class RasterFormModel extends Component {
   handleClickCreateRaster() {
     this.scrollToTop();
     this.setState({ isFetching: true, openOverlay: true });
-    const url = "/api/v3/rasters/";
+    const url = "/api/v4/rasters/";
     const observationTypeId =
       (this.state.observationType &&
         this.state.observationType.url &&
@@ -577,7 +570,8 @@ class RasterFormModel extends Component {
           rescalable: false,
           optimizer: false, // default
           aggregation_type: intAggregationType,
-          options: this.state.options
+          options: this.state.options,
+          shared_with: this.state.sharedWith
         })
       };
 
@@ -593,7 +587,7 @@ class RasterFormModel extends Component {
     } else {
       const opts = {
         credentials: "same-origin",
-        method: "PUT",
+        method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: this.state.rasterName,
@@ -605,7 +599,8 @@ class RasterFormModel extends Component {
           supplier: this.state.supplierId.username,
           supplier_code: this.state.supplierCode,
           aggregation_type: intAggregationType,
-          options: this.state.options
+          options: this.state.options,
+          shared_with: this.state.sharedWith
         })
       };
 
