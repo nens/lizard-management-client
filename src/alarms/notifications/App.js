@@ -47,7 +47,7 @@ class App extends Component {
 
   loadAlarmsOnPage(page, newProps) {
     const { selectedOrganisation } = newProps || this.props;
-    const organisationId = selectedOrganisation.unique_id;
+    const organisationId = selectedOrganisation.uuid;
     this.setState({ hasFiredFetch: true });
     fetch(
       `/api/v3/rasteralarms/?page=${page}&organisation__unique_id=${organisationId}`,

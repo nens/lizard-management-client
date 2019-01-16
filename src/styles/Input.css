@@ -11,3 +11,8 @@
   cursor: not-allowed;
   background-color: rgb(216, 216, 216);
 }
+
+.SubmitSpan {
+  font-weight: bold;
+  position: relative;
+}

@@ -4,7 +4,6 @@ import "./NewRaster.css";
 import React, { Component } from "react";
 import { addNotification } from "../../actions";
 import { connect } from "react-redux";
-import moment from "moment";
 import { withRouter } from "react-router-dom";
 import { FormattedMessage } from "react-intl";
 
@@ -18,14 +17,11 @@ import inputStyles from "../../styles/Input.css";
 import {
   calculateNewStyleAndOptions,
   optionsHasLayers,
-  createColorMapFromStylePlusOptions,
   getColorMapFromStyle,
   getColorMinFromStyle,
   getColorMaxFromStyle,
-  composeStyleString,
   getStyleFromOptions,
-  validateStyleObj,
-  styleMinMaxStrToValidString
+  validateStyleObj
 } from "../../utils/rasterOptionFunctions";
 import ErrorOverlay from "./ErrorOverlay.js";
 
@@ -95,9 +91,9 @@ class RasterFormModel extends Component {
     if (currentStep === 2) {
       this.setState({ sharedWithOrganisationsWasEverOpenedByUser: true });
     }
-    if (currentStep === 9) {
+    if (currentStep === 10) {
       this.setState({ temporalBoolComponentWasEverOpenedByUser: true });
-    } else if (currentStep === 10) {
+    } else if (currentStep === 11) {
       this.setState({ temporalIntervalWasEverOpenedByUser: true });
     }
     this.setState({ currentStep });
@@ -123,12 +119,13 @@ class RasterFormModel extends Component {
     this.setState({ selectedOrganisation });
   }
   resetSelectedOrganisation() {
-    this.setState({ selectedOrganisation: { name: "", unique_id: "" } });
+    this.setState({ selectedOrganisation: { name: "", uuid: "" } });
   }
+
   validateNewRasterOrganisation(obj) {
     if (!obj) return false;
-    const { unique_id, name } = obj;
-    return unique_id && name;
+    const { uuid, name } = obj;
+    return uuid && name;
   }
   // StorepathName
   setStorePathName(storePathName) {
@@ -146,7 +143,11 @@ class RasterFormModel extends Component {
     this.setState({ description });
   }
   validateNewRasterDescription(str) {
-    return str.length > 1;
+    if (str && str.length > 1) {
+      return true;
+    } else {
+      return false;
+    }
   }
   setAggregationType(aggregationType) {
     this.setState({ aggregationType });
@@ -162,8 +163,13 @@ class RasterFormModel extends Component {
     this.setState({ observationType: null });
   }
   validateObservationType(observationType) {
-    return observationType && observationType.url && observationType.code;
+    if (observationType && observationType.url && observationType.code) {
+      return true;
+    } else {
+      return false;
+    }
   }
+
   // Options (contains colormaps)
   setStyleAndOptions(styleObj) {
     const oldStyle = Object.assign({}, this.state.styles);
@@ -185,14 +191,22 @@ class RasterFormModel extends Component {
     this.setSupplierId(null);
   }
   validateSupplierId(supplierId) {
-    return supplierId && supplierId.username;
+    if (supplierId && supplierId.username) {
+      return true;
+    } else {
+      return false;
+    }
   }
   // SupplierCode
   setSupplierCode(supplierCode) {
     this.setState({ supplierCode });
   }
   validateSupplierCode(supplierCode) {
-    return supplierCode && supplierCode.length > 1;
+    if (supplierCode && supplierCode.length > 1) {
+      return true;
+    } else {
+      return false;
+    }
   }
   // TemporalBool
   setTemporalBool(temporalBool) {
@@ -268,36 +282,6 @@ class RasterFormModel extends Component {
     }
   }
 
-  // if this function returns true, then the user should be able to submit the raster
-  validateAll() {
-    const normalFields =
-      this.validateNewRasterName(this.state.rasterName) &&
-      // organisation is currently taken from the organisation picker in the header, but we might change this
-      this.validateNewRasterOrganisation(this.state.selectedOrganisation) &&
-      //this.validateNewRasterStorePath(this.state.storePathName) &&
-      this.validateNewRasterDescription(this.state.description) &&
-      this.validateAggregationType(this.state.aggregationType) &&
-      this.validateObservationType(this.state.observationType) &&
-      // this is now done in validateStyleObj instead
-      // this.validateColorMap(this.state.colorMap) &&
-      validateStyleObj(this.state.styles) &&
-      this.validateSupplierId(this.state.supplierId) &&
-      this.validateSupplierCode(this.state.supplierCode) &&
-      this.validateTemporalBool(this.state.temporalBool) &&
-      this.state.sharedWithOrganisationsWasEverOpenedByUser === true;
-
-    const temporalFields =
-      !this.state.temporalBool ||
-      (this.state.temporalBool &&
-        this.validateTemporalIntervalAmount(
-          this.state.temporalIntervalDays,
-          this.state.temporalIntervalHours,
-          this.state.temporalIntervalMinutes,
-          this.state.temporalIntervalSeconds
-        ));
-    return normalFields && temporalFields;
-  }
-
   parseObservationTypeIdFromUrl(url) {
     // parse number from url: https://api.ddsc.nl/api/v1/observationtypes/16/ -> 16
     // remove last slash /
@@ -348,6 +332,111 @@ class RasterFormModel extends Component {
     return obj;
   }
 
+  // Returns an array of the steps that are not filled in or completed. Used later for displaying inactive/active button and updates about form completion
+  getInvalidSteps() {
+    var invalidFields = [];
+
+    if (this.state.sharedWithOrganisationsWasEverOpenedByUser === false) {
+      invalidFields.push(1);
+    }
+    if (!this.validateNewRasterOrganisation(this.state.selectedOrganisation)) {
+      invalidFields.push(2);
+    }
+
+    if (!this.validateNewRasterName(this.state.rasterName)) {
+      invalidFields.push(3);
+    }
+    if (!this.validateNewRasterDescription(this.state.description)) {
+      invalidFields.push(4);
+    }
+
+    if (!this.validateAggregationType(this.state.aggregationType)) {
+      invalidFields.push(5);
+    }
+    if (!this.validateObservationType(this.state.observationType)) {
+      invalidFields.push(6);
+    }
+    if (!validateStyleObj(this.state.styles)) {
+      invalidFields.push(7);
+    }
+    if (!this.validateSupplierId(this.state.supplierId)) {
+      invalidFields.push(8);
+    }
+    if (!this.validateSupplierCode(this.state.supplierCode)) {
+      invalidFields.push(9);
+    }
+    if (!this.validateTemporalBool(this.state.temporalBool)) {
+      invalidFields.push(10);
+    }
+
+    if (
+      !this.validateTemporalIntervalAmount(
+        this.state.temporalIntervalDays,
+        this.state.temporalIntervalHours,
+        this.state.temporalIntervalMinutes,
+        this.state.temporalIntervalSeconds
+      )
+    ) {
+      invalidFields.push(11);
+    }
+
+    return invalidFields;
+  }
+
+  validateAll() {
+    // Get invalid normal (first 9) and temporal (last 2) steps
+    var invalidSteps = this.getInvalidSteps();
+
+    // Filter arrays to get normal and temporal invalid steps
+    var normal = invalidSteps.filter(function(x) {
+      return x < 11;
+    });
+    var temporal = invalidSteps.filter(function(x) {
+      return x > 10;
+    });
+
+    // If temporal bool is not checked, validate first 9 steps, else validate all 11 steps
+    if (!this.state.temporalBool) {
+      if (normal.length === 0) {
+        return true;
+      }
+    } else if (this.state.temporalBool) {
+      if (temporal.length === 0 && normal.length === 0) {
+        return true;
+      }
+    } else {
+      return false;
+    }
+  }
+
+  // Create message for user telling which steps need to be completed
+  generateInvalidMessage(step) {
+    // Get invalid normal (first 9) and temporal (last 2) steps
+    var invalidSteps = this.getInvalidSteps();
+    // Filter arrays to get normal and temporal invalid steps
+    var normal = invalidSteps.filter(function(x) {
+      return x < 10;
+    });
+    var temporal = invalidSteps.filter(function(x) {
+      return x > 9;
+    });
+
+    // Return message based on either normal or temporal raster
+    if (this.state.temporalBool) {
+      return (
+        "Please complete steps " +
+        normal +
+        " " +
+        temporal +
+        " before submitting"
+      );
+    } else if (step <= 9) {
+      return "Please complete steps " + normal + " before submitting";
+    } else {
+      return "";
+    }
+  }
+
   setInitialState(props) {
     return {
       isFetching: false,
@@ -357,10 +446,9 @@ class RasterFormModel extends Component {
       currentStep: 1,
       rasterName: "",
       selectedOrganisation: {
-        name: "",
-        unique_id: ""
+        name: this.props.organisations.selected.name, //"",
+        uuid: this.props.organisations.selected.uuid //""
       },
-      sharedWithOrganisations: [],
       storePathName: "",
       slug: "",
       description: "",
@@ -375,22 +463,15 @@ class RasterFormModel extends Component {
       temporalIntervalMinutes: "00",
       temporalIntervalSeconds: "00",
       temporalOptimizer: true, // default true, not set by the user for first iteration
-      // TODO let colormap have min and max as below with styles
       styles: {
         colorMap: "",
         min: "",
         max: ""
       },
       options: {},
-      // colorMapMin: 0,
-      // colorMapMax: 100, // what are reasonable defaults?
       aggregationType: "", // choice: none | counts | curve | histogram | sum | average
       supplierId: "",
       supplierCode: "",
-      // observationType: {
-      //   code: "",
-      //   url: ""
-      // },
       observationType: null,
       sharedWith: []
     };
@@ -399,7 +480,7 @@ class RasterFormModel extends Component {
   currentRasterToState(currentRaster) {
     // is there the possibility that available supplier id is not yet retrieved from server?
     const selectedSupplierId = this.props.supplierIds.available.filter(
-      e => e.url === currentRaster.supplier
+      e => e.username === currentRaster.supplier
     )[0];
     const intervalObj = this.getIntervalToDaysHoursMinutesSeconds(
       currentRaster.interval
@@ -421,9 +502,8 @@ class RasterFormModel extends Component {
       rasterName: currentRaster.name,
       selectedOrganisation: {
         name: currentRaster.organisation.name,
-        unique_id: currentRaster.organisation.unique_id
+        uuid: currentRaster.organisation.uuid.replace(/-/g, "")
       },
-      sharedWithOrganisations: currentRaster.sharedWithOrganisations,
       storePathName:
         currentRaster.slug && currentRaster.slug.replace(/:/g, "/"),
       slug: currentRaster.slug,
@@ -445,7 +525,7 @@ class RasterFormModel extends Component {
       supplierId: selectedSupplierId,
       supplierCode: currentRaster.supplier_code,
       observationType: currentRaster.observation_type,
-      sharedWith: []
+      sharedWith: currentRaster.shared_with
     };
   }
 
@@ -465,7 +545,7 @@ class RasterFormModel extends Component {
   handleClickCreateRaster() {
     this.scrollToTop();
     this.setState({ isFetching: true, openOverlay: true });
-    const url = "/api/v3/rasters/";
+    const url = "/api/v4/rasters/";
     const observationTypeId =
       (this.state.observationType &&
         this.state.observationType.url &&
@@ -490,7 +570,7 @@ class RasterFormModel extends Component {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: this.state.rasterName,
-          organisation: this.state.selectedOrganisation.unique_id,
+          organisation: this.state.selectedOrganisation.uuid.replace(/-/g, ""),
           access_modifier: 200, // private to organisation
           observation_type: observationTypeId, //this.state.observationType,
           description: this.state.description,
@@ -502,8 +582,7 @@ class RasterFormModel extends Component {
           optimizer: false, // default
           aggregation_type: intAggregationType,
           options: this.state.options,
-
-          sharedWithOrganisations: this.state.sharedWithOrganisations
+          shared_with: this.state.sharedWith.map(e => e.uuid)
         })
       };
 
@@ -519,11 +598,11 @@ class RasterFormModel extends Component {
     } else {
       const opts = {
         credentials: "same-origin",
-        method: "PUT",
+        method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: this.state.rasterName,
-          organisation: this.state.selectedOrganisation.unique_id, // required
+          organisation: this.state.selectedOrganisation.uuid.replace(/-/g, ""), // required
           access_modifier: 200, // private to organisation // required
           observation_type: observationTypeId, // required
 
@@ -532,8 +611,7 @@ class RasterFormModel extends Component {
           supplier_code: this.state.supplierCode,
           aggregation_type: intAggregationType,
           options: this.state.options,
-
-          sharedWithOrganisations: this.state.sharedWithOrganisations
+          shared_with: this.state.sharedWith.map(e => e.uuid)
         })
       };
 
@@ -584,7 +662,36 @@ class RasterFormModel extends Component {
               className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
             >
               <div id="steps" style={{ margin: "20px 0 0 20px" }}>
-                {/* <GenericStep
+                <GenericSelectBoxComponent
+                  titleComponent={
+                    <FormattedMessage
+                      id="rasters.organisation"
+                      defaultMessage="Organisation"
+                    />
+                  }
+                  subtitleComponent={
+                    <FormattedMessage
+                      id="rasters.please_select_organisation"
+                      defaultMessage="Please select the organisation for this raster"
+                    />
+                  }
+                  placeholder="click to select organisation"
+                  step={1} // int for denoting which step of the GenericTextInputComponent it refers to
+                  opened={this.props.currentRaster || currentStep === 1}
+                  formUpdate={!!this.props.currentRaster}
+                  readonly={false}
+                  currentStep={currentStep} // int for denoting which step is currently active
+                  setCurrentStep={this.setCurrentStep} // cb function for updating which step becomes active
+                  choices={this.props.organisations.available}
+                  transformChoiceToDisplayValue={e => (e && e.name) || ""} // optional parameter if choices are objects, which field contains the displayvalue, default item itself is displayvalue
+                  isFetching={this.props.organisations.isFetching}
+                  choicesSearchable={true}
+                  modelValue={this.state.selectedOrganisation} // string: e.g. the name of a raster
+                  updateModelValue={this.setSelectedOrganisation} // cb function to *update* the value of e.g. a raster's name in the parent model
+                  resetModelValue={() => this.resetSelectedOrganisation()} // cb function to *reset* the value of e.g. a raster's name in the parent model
+                  validate={this.validateNewRasterOrganisation} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
+                />
+                <GenericStep
                   titleComponent={
                     <FormattedMessage
                       id="rasters.shared_with_organisations"
@@ -598,33 +705,44 @@ class RasterFormModel extends Component {
                     />
                   }
                   step={2} // int for denoting which step of the GenericTextInputComponent it refers to
-                  opened={this.props.currentRaster || currentStep === 1}
+                  opened={this.props.currentRaster || currentStep === 2}
                   readonly={false}
                   currentStep={currentStep} // int for denoting which step is currently active
                   setCurrentStep={this.setCurrentStep} // cb function for updating which step becomes active
-                  showCheckMark={this.state.sharedWithOrganisationsWasEverOpenedByUser}
-                  showNextButton={true}
+                  showCheckMark={
+                    this.state.sharedWithOrganisationsWasEverOpenedByUser
+                  }
+                  showNextButton={!this.props.currentRaster}
                   fields={
                     <SlushBucket
-                      choices={this.props.organisations.available.map(e => e.name)}
-                      selected={this.state.sharedWithOrganisations.map(e => e.name)}
+                      choices={this.props.organisations.availableForRasterSharedWith.map(
+                        e => e.name
+                      )}
+                      selected={this.state.sharedWith.map(e => e.name)}
                       isFetching={this.props.organisations.isFetching}
                       placeholder={"search organisations"}
                       updateModelValue={selected => {
                         this.setState({
-                          sharedWithOrganisations: selected
-                            .map(selectedItem =>
-                              this.props.organisations.available.find(
-                                availableItem => availableItem.name === selectedItem
-                              )
-                            )
-                            .filter(e => e != true)
+                          sharedWith: selected
+                            .map(selectedItem => {
+                              const found = this.props.organisations.availableForRasterSharedWith.find(
+                                availableItem =>
+                                  availableItem.name === selectedItem
+                              );
+                              if (found) {
+                                let adaptebleFound = Object.assign({}, found);
+                                adaptebleFound.roles = undefined;
+                                return adaptebleFound;
+                              } else {
+                                return undefined;
+                              }
+                            })
+                            .filter(e => e !== undefined)
                         });
                       }}
                     />
-
                   }
-                /> */}
+                />
 
                 <GenericTextInputComponent
                   titleComponent={
@@ -641,8 +759,8 @@ class RasterFormModel extends Component {
                   }
                   placeholder="name of this raster"
                   multiline={false} // boolean for which input elem to use: text OR textarea
-                  step={1} // int for denoting which step of the GenericTextInputComponent it refers to
-                  opened={this.props.currentRaster || currentStep === 1}
+                  step={3} // int for denoting which step of the GenericTextInputComponent it refers to
+                  opened={this.props.currentRaster || currentStep === 3}
                   formUpdate={!!this.props.currentRaster}
                   readonly={false}
                   currentStep={currentStep} // int for denoting which step is currently active
@@ -693,11 +811,11 @@ class RasterFormModel extends Component {
                   }
                   placeholder="description here"
                   multiline={true} // boolean for which input elem to use: text OR textarea
-                  step={2} // int for denoting which step of the GenericTextInputComponent it refers to
+                  step={4} // int for denoting which step of the GenericTextInputComponent it refers to
                   opened={
                     this.props.currentRaster ||
                     this.props.currentRaster ||
-                    currentStep === 2
+                    currentStep === 4
                   }
                   formUpdate={!!this.props.currentRaster}
                   readonly={false}
@@ -708,35 +826,7 @@ class RasterFormModel extends Component {
                   resetModelValue={() => this.setDescription("")} // cb function to *reset* the value of e.g. a raster's name in the parent model
                   validate={this.validateNewRasterDescription} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
                 />
-                <GenericSelectBoxComponent
-                  titleComponent={
-                    <FormattedMessage
-                      id="rasters.organisation"
-                      defaultMessage="Organisation"
-                    />
-                  }
-                  subtitleComponent={
-                    <FormattedMessage
-                      id="rasters.please_select_organisation"
-                      defaultMessage="Please select the organisation for this raster"
-                    />
-                  }
-                  placeholder="click to select organisation"
-                  step={3} // int for denoting which step of the GenericTextInputComponent it refers to
-                  opened={this.props.currentRaster || currentStep === 3}
-                  formUpdate={!!this.props.currentRaster}
-                  readonly={false}
-                  currentStep={currentStep} // int for denoting which step is currently active
-                  setCurrentStep={this.setCurrentStep} // cb function for updating which step becomes active
-                  choices={this.props.organisations.available}
-                  transformChoiceToDisplayValue={e => (e && e.name) || ""} // optional parameter if choices are objects, which field contains the displayvalue, default item itself is displayvalue
-                  isFetching={this.props.organisations.isFetching}
-                  choicesSearchable={true}
-                  modelValue={this.state.selectedOrganisation} // string: e.g. the name of a raster
-                  updateModelValue={this.setSelectedOrganisation} // cb function to *update* the value of e.g. a raster's name in the parent model
-                  resetModelValue={() => this.resetSelectedOrganisation()} // cb function to *reset* the value of e.g. a raster's name in the parent model
-                  validate={this.validateNewRasterOrganisation} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
-                />
+
                 <GenericSelectBoxComponent
                   titleComponent={
                     <FormattedMessage
@@ -751,8 +841,8 @@ class RasterFormModel extends Component {
                     />
                   }
                   placeholder="click to select aggregation type"
-                  step={4} // int for denoting which step of the GenericTextInputComponent it refers to
-                  opened={this.props.currentRaster || currentStep === 4}
+                  step={5} // int for denoting which step of the GenericTextInputComponent it refers to
+                  opened={this.props.currentRaster || currentStep === 5}
                   formUpdate={!!this.props.currentRaster}
                   readonly={false}
                   currentStep={currentStep} // int for denoting which step is currently active
@@ -805,8 +895,8 @@ class RasterFormModel extends Component {
                     />
                   }
                   placeholder="click to select observation type"
-                  step={5} // int for denoting which step of the GenericTextInputComponent it refers to
-                  opened={this.props.currentRaster || currentStep === 5}
+                  step={6} // int for denoting which step of the GenericTextInputComponent it refers to
+                  opened={this.props.currentRaster || currentStep === 6}
                   formUpdate={!!this.props.currentRaster}
                   readonly={false}
                   currentStep={currentStep} // int for denoting which step is currently active
@@ -846,8 +936,8 @@ class RasterFormModel extends Component {
                     />
                   }
                   placeholder="click to select colormap"
-                  step={6} // int for denoting which step of the GenericTextInputComponent it refers to
-                  opened={this.props.currentRaster || currentStep === 6}
+                  step={7} // int for denoting which step of the GenericTextInputComponent it refers to
+                  opened={this.props.currentRaster || currentStep === 7}
                   formUpdate={!!this.props.currentRaster}
                   readonly={optionsHasLayers(this.state.options)}
                   readOnlyReason={
@@ -885,8 +975,8 @@ class RasterFormModel extends Component {
                     />
                   }
                   placeholder="click to select supplier name"
-                  step={7} // int for denoting which step of the GenericTextInputComponent it refers to
-                  opened={this.props.currentRaster || currentStep === 7}
+                  step={8} // int for denoting which step of the GenericTextInputComponent it refers to
+                  opened={this.props.currentRaster || currentStep === 8}
                   formUpdate={!!this.props.currentRaster}
                   readonly={false}
                   currentStep={currentStep} // int for denoting which step is currently active
@@ -915,8 +1005,8 @@ class RasterFormModel extends Component {
                   }
                   placeholder="type supplier code here"
                   multiline={false} // boolean for which input elem to use: text OR textarea
-                  step={8} // int for denoting which step of the GenericTextInputComponent it refers to
-                  opened={this.props.currentRaster || currentStep === 8}
+                  step={9} // int for denoting which step of the GenericTextInputComponent it refers to
+                  opened={this.props.currentRaster || currentStep === 9}
                   formUpdate={!!this.props.currentRaster}
                   readonly={false}
                   currentStep={currentStep} // int for denoting which step is currently active
@@ -933,8 +1023,8 @@ class RasterFormModel extends Component {
                       defaultMessage="Raster is Temporal"
                     />
                   }
-                  step={9} // int for denoting which step of the GenericTextInputComponent it refers to
-                  opened={this.props.currentRaster || currentStep === 9}
+                  step={10} // int for denoting which step of the GenericTextInputComponent it refers to
+                  opened={this.props.currentRaster || currentStep === 10}
                   formUpdate={!!this.props.currentRaster}
                   readonly={!!this.props.currentRaster}
                   currentStep={currentStep}
@@ -977,9 +1067,9 @@ class RasterFormModel extends Component {
                         />
                       }
                       multiline={false} // boolean for which input elem to use: text OR textarea
-                      step={10} // int for denoting which step of the GenericTextInputComponent it refers to
+                      step={11} // int for denoting which step of the GenericTextInputComponent it refers to
                       isLastItem={true}
-                      opened={this.props.currentRaster || currentStep === 10}
+                      opened={this.props.currentRaster || currentStep === 11}
                       formUpdate={!!this.props.currentRaster}
                       readonly={!!this.props.currentRaster}
                       currentStep={currentStep}
@@ -1021,10 +1111,26 @@ class RasterFormModel extends Component {
                   </div>
                 ) : (
                   <div className={inputStyles.InputContainer}>
-                    <FormattedMessage
-                      id="rasters.please complete the form before submitting"
-                      defaultMessage="Please complete the form for submitting"
-                    />
+                    <button
+                      type="button"
+                      className={`${buttonStyles.Button} ${buttonStyles.Inactive}`}
+                      style={{
+                        marginTop: 10,
+                        color: "grey",
+                        cursor: "not-allowed"
+                      }}
+                    >
+                      <FormattedMessage
+                        id="rasters.submit"
+                        defaultMessage="Submit"
+                      />
+                    </button>
+                    <span
+                      className={`${inputStyles.SubmitSpan}`}
+                      style={{ paddingLeft: 20, verticalAlign: "middle" }}
+                    >
+                      {this.generateInvalidMessage(currentStep)}
+                    </span>
                   </div>
                 )}
               </div>

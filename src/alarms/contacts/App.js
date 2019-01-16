@@ -59,7 +59,7 @@ class App extends Component {
   }
   loadContactsOnPage(page) {
     const { ordering } = this.state;
-    const organisationId = this.props.selectedOrganisation.unique_id;
+    const organisationId = this.props.selectedOrganisation.uuid;
     this.setState({
       isFetching: true
     });

@@ -29,10 +29,8 @@ function bootstrap(
 ) {
   switch (action.type) {
     case REQUEST_LIZARD_BOOTSTRAP:
-      // console.log("[A] REQUEST_LIZARD_BOOTSTRAP");
       return { ...state, isFetching: true };
     case RECEIVE_LIZARD_BOOTSTRAP:
-      // console.log("[A] RECEIVE_LIZARD_BOOTSTRAP");
       return {
         ...state,
         bootstrap: action.data,
@@ -47,7 +45,9 @@ function bootstrap(
 function organisations(
   state = {
     isFetching: false,
+    timesFetched: 0,
     available: [],
+    availableForRasterSharedWith: [],
     selected:
       JSON.parse(
         localStorage.getItem("lizard-management-current-organisation")
@@ -55,16 +55,42 @@ function organisations(
   },
   action
 ) {
+  // if there is already a selected organisation then this organisation must not have the unique_id field.
+  // if it has the unique_id field then empty the selected organisation
+  if (state.selected && state.selected.unique_id !== undefined) {
+    state.selected = null;
+  }
+  // the api v3 accepts no dashes in the uuid (this is called unique_id in api v3)
+  if (state.selected) {
+    state.selected.uuid = state.selected.uuid.replace(/-/g, "");
+  }
+
   switch (action.type) {
     case REQUEST_ORGANISATIONS:
-      // console.log("[A] REQUEST_ORGANISATIONS");
       return { ...state, isFetching: true };
     case RECEIVE_ORGANISATIONS:
-      // console.log("[A] RECEIVE_ORGANISATIONS", action);
-      return { ...state, available: action.data, isFetching: false };
+      return {
+        ...state,
+        available: action.data.filter(e => {
+          return (
+            e.roles.find(e => e === "admin") ||
+            e.roles.find(e => e === "supplier")
+          );
+        }),
+        availableForRasterSharedWith: action.data,
+        selected:
+          state.selected ||
+          action.data.find(e => e.roles.find(e2 => e2 === "admin")) ||
+          action.data.find(e => e.roles.find(e2 => e2 === "supplier")) ||
+          null,
+        isFetching: false,
+        timesFetched: state.timesFetched + 1
+      };
     case SELECT_ORGANISATION:
-      // console.log("[A] SELECT_ORGANISATION");
-      return { ...state, selected: action.organisation };
+      // the api v3 accepts no dashes in the uuid (this is called unique_id in api v3)
+      const selectedOrganisation = action.organisation;
+      selectedOrganisation.uuid = selectedOrganisation.uuid.replace(/-/g, "");
+      return { ...state, selected: selectedOrganisation };
     default:
       return state;
   }
@@ -73,6 +99,7 @@ function organisations(
 function observationTypes(
   state = {
     isFetching: false,
+    timesFetched: 0,
     hasError: false,
     errorMessage: "",
     available: []
@@ -81,24 +108,23 @@ function observationTypes(
 ) {
   switch (action.type) {
     case REQUEST_OBSERVATION_TYPES:
-      // console.log("[A] REQUEST_OBSERVATION_TYPES");
       return { ...state, isFetching: true };
     case RECEIVE_OBSERVATION_TYPES_SUCCESS:
-      // console.log("[A] RECEIVE_OBSERVATION_TYPES_SUCCESS; action =", action);
       return {
         ...state,
         available: action.data,
         isFetching: false,
-        hasError: false
+        hasError: false,
+        timesFetched: state.timesFetched + 1
       };
     case RECEIVE_OBSERVATION_TYPES_ERROR:
-      // console.log("[A] RECEIVE_OBSERVATION_TYPES_ERROR", action.errorMessage);
       return {
         ...state,
         available: [],
         isFetching: false,
         hasError: true,
-        errorMessage: action.errorMessage
+        errorMessage: action.errorMessage,
+        timesFetched: state.timesFetched + 1
       };
     default:
       return state;
@@ -108,6 +134,7 @@ function observationTypes(
 function supplierIds(
   state = {
     isFetching: false,
+    timesFetched: 0,
     hasError: false,
     errorMessage: "",
     available: []
@@ -116,24 +143,23 @@ function supplierIds(
 ) {
   switch (action.type) {
     case REQUEST_SUPPLIER_IDS:
-      // console.log("[A] REQUEST_SUPPLIER_IDS");
       return { ...state, isFetching: true };
     case RECEIVE_SUPPLIER_IDS_SUCCESS:
-      // console.log("[A] RECEIVE_SUPPLIER_IDS_SUCCESS; action =", action);
       return {
         ...state,
         available: action.data,
         isFetching: false,
-        hasError: false
+        hasError: false,
+        timesFetched: state.timesFetched + 1
       };
     case RECEIVE_SUPPLIER_IDS_ERROR:
-      // console.log("[A] RECEIVE_SUPPLIER_IDS_ERROR", action.errorMessage);
       return {
         ...state,
         available: [],
         isFetching: false,
         hasError: true,
-        errorMessage: action.errorMessage
+        errorMessage: action.errorMessage,
+        timesFetched: state.timesFetched + 1
       };
     default:
       return state;
@@ -143,6 +169,7 @@ function supplierIds(
 function colorMaps(
   state = {
     isFetching: false,
+    timesFetched: 0,
     hasError: false,
     errorMessage: "",
     available: []
@@ -151,24 +178,23 @@ function colorMaps(
 ) {
   switch (action.type) {
     case REQUEST_COLORMAPS:
-      // console.log("[A] REQUEST_COLORMAPS");
       return { ...state, isFetching: true };
     case RECEIVE_COLORMAPS_SUCCESS:
-      // console.log("[A] RECEIVE_COLORMAPS_SUCCESS; action =", action);
       return {
         ...state,
         available: action.data,
         isFetching: false,
-        hasError: false
+        hasError: false,
+        timesFetched: state.timesFetched + 1
       };
     case RECEIVE_COLORMAPS_ERROR:
-      // console.log("[A] RECEIVE_COLORMAPS_ERROR", action.errorMessage);
       return {
         ...state,
         available: [],
         isFetching: false,
         hasError: true,
-        errorMessage: action.errorMessage
+        errorMessage: action.errorMessage,
+        timesFetched: state.timesFetched + 1
       };
     default:
       return state;

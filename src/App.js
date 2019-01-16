@@ -69,12 +69,36 @@ class App extends Component {
       : splitPathnames.map((sp, i) => {
           const to = `/${splitPathnames.slice(1, i + 1).join("/")}`;
           let title = sp.replace("_", " ");
+          let styleNavLink = {};
+          let styleSpan = {};
+          // Show the uuid as lowercase
           if (this.uuidRegex.test(sp)) {
-            title = "Detail";
+            // Make sure that the whole uuid is visible
+            styleNavLink = {
+              minWidth: "0px",
+              overflow: "hidden"
+            };
+            styleSpan = {
+              // Show uuid in lowercase
+              textTransform: "lowercase",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+              overflow: "hidden"
+            };
+          } else {
+            styleSpan = {
+              textTransform: "capitalize"
+            };
           }
           return (
-            <NavLink to={to} key={i}>
-              <span style={{ textTransform: "capitalize" }}>
+            <NavLink to={to} key={i} style={styleNavLink}>
+              {" "}
+              <span
+                style={styleSpan}
+                // Show 'uuid' upon hovering over uuid key, to make it apparent
+                // for users that it is the uuid.
+                title={this.uuidRegex.test(sp) ? "uuid" : ""}
+              >
                 &nbsp;
                 {title}
                 {i === splitPathnames.length - 1 ? null : " /"}
@@ -158,7 +182,8 @@ class App extends Component {
                       </a>
                     </div>
                     <div>
-                      <a href="https://demo.lizard.net/accounts/logout/">
+                      {/* Redirect for logging out.*/}
+                      <a href="/accounts/logout/">
                         <i className="fa fa-power-off" />
                         &nbsp;&nbsp;Logout
                       </a>
@@ -183,10 +208,14 @@ class App extends Component {
                   <div
                     style={{
                       display: "flex",
-                      flex: "0 0 auto"
+                      flexDirection: "row",
+                      flexWrap: "wrap",
+                      overflowX: "hidden,"
                     }}
                   >
-                    <NavLink to="/">Lizard Management</NavLink>
+                    <NavLink to="/" style={{ overflowX: "hidden" }}>
+                      Lizard Management
+                    </NavLink>
                     {breadcrumbs}
                   </div>
                 </div>
@@ -285,19 +314,25 @@ const mapStateToProps = (state, ownProps) => {
 
     mustFetchOrganisations:
       state.organisations.available.length === 0 &&
-      !state.organisations.isFetching,
+      !state.organisations.isFetching &&
+      state.organisations.timesFetched < 1,
 
     selectedOrganisation: state.organisations.selected,
 
     mustFetchObservationTypes:
       state.observationTypes.available.length === 0 &&
-      !state.observationTypes.isFetching,
+      !state.observationTypes.isFetching &&
+      state.observationTypes.timesFetched < 1,
     mustFetchSupplierIds:
       state.organisations.selected &&
       state.supplierIds.available.length === 0 &&
-      !state.supplierIds.isFetching,
+      !state.supplierIds.isFetching &&
+      // !state.supplierIds.hasError &&
+      state.supplierIds.timesFetched < 1,
     mustFetchColorMaps:
-      state.colorMaps.available.length === 0 && !state.colorMaps.isFetching
+      state.colorMaps.available.length === 0 &&
+      !state.colorMaps.isFetching &&
+      state.colorMaps.timesFetched < 1
   };
 };
 

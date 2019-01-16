@@ -50,7 +50,7 @@ class GenericStep extends Component {
       showNextButton,
       fields
     } = this.props;
-    const active = step === currentStep;
+    const active = opened;
 
     return (
       <div>
