@@ -69,16 +69,17 @@ class App extends Component {
       : splitPathnames.map((sp, i) => {
           const to = `/${splitPathnames.slice(1, i + 1).join("/")}`;
           let title = sp.replace("_", " ");
-          let capitalization;
           let styleNavLink = {};
           let styleSpan = {};
           // Show the uuid as lowercase
           if (this.uuidRegex.test(sp)) {
+            // Make sure that the whole uuid is visible
             styleNavLink = {
               minWidth: "0px",
               overflow: "hidden"
             };
             styleSpan = {
+              // Show uuid in lowercase
               textTransform: "lowercase",
               whiteSpace: "nowrap",
               textOverflow: "ellipsis",
