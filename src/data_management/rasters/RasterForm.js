@@ -429,18 +429,13 @@ class RasterFormModel extends Component {
   }
 
   setInitialState(props) {
-    let userName = props.bootstrap.bootstrap.user.username;
-    let supplierId = this.props.supplierIds.available.find(user => {
-      return user.username === userName;
-    });
-    // let supplierId = {  // haal dit op uit de this.props.supplierIds.available
-    //   id: 127,
-    //   username: "madeleine.vanwinkel",
-    //   url: "https://nxt3.staging.lizard.net/api/v4/users/127/",
-    //   first_name: "Madeleine",
-    //   last_name: "van Winkel",
-    //   email: "madeleine.vanwinkel@nelen-schuurmans.nl"
-    // };
+    // If user is a supplier or admin
+    // let userName = props.bootstrap.bootstrap.user.username;
+    // let supplierId = this.props.supplierIds.available.find(user => {
+    //   return user.username === userName;
+    // });
+    // else
+    let supplierId = null;
     return {
       isFetching: false,
       openOverlay: false,
