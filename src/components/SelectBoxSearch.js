@@ -16,9 +16,9 @@ class SelectBoxSearch extends Component {
     this.handleInput = this.handleInput.bind(this);
     this.handleKeyUp = this.handleKeyUp.bind(this);
   }
-  componentDidMount() {
-    this.setQuery(this.props);
-  }
+  // componentDidMount() {
+  //   this.setQuery(this.props);
+  // }
 
   handleKeyUp(e) {
     if (e.key === "Escape") this.resetQuery();
@@ -27,13 +27,13 @@ class SelectBoxSearch extends Component {
     this.setState({ mustShowChoices: true, query: e.target.value });
     this.props.updateModelValue(e.target.value);
   }
-  setQuery(props) {
-    if (this.props.choice) {
-      this.setState({
-        query: this.props.transformChoiceToDisplayValue(this.props.choice)
-      });
-    }
-  }
+  // setQuery(props) {
+  //   if (this.props.choice) {
+  //     this.setState({
+  //       query: this.props.transformChoiceToDisplayValue(this.props.choice)
+  //     });
+  //   }
+  // }
   resetQuery() {
     this.setState({ mustShowChoices: false, query: "" });
   }
