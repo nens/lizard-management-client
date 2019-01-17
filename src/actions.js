@@ -78,7 +78,9 @@ export function fetchOrganisations() {
     dispatch({ type: REQUEST_ORGANISATIONS });
 
     const url =
-      "/api/v4/organisations/?role=supplier&role=admin&page_size=100000";
+      // we do the filtering for roles now client side
+      // "/api/v4/organisations/?role=supplier&role=admin&page_size=100000";
+      "/api/v4/organisations/?page_size=100000";
     const opts = { credentials: "same-origin" };
 
     fetch(url, opts)
