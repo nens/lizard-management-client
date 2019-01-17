@@ -718,6 +718,9 @@ class RasterFormModel extends Component {
                       choices={this.props.organisations.availableForRasterSharedWith.map(
                         e => e.name
                       )}
+                      readonly={
+                        false /*!this.props.organisations.selected.roles.includes('admin')*/
+                      }
                       selected={this.state.sharedWith.map(e => e.name)}
                       isFetching={this.props.organisations.isFetching}
                       placeholder={"search organisations"}

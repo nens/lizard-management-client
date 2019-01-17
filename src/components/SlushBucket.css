@@ -40,4 +40,7 @@
   border-bottom: 1px solid #ccc;
 }
   
+.SelectedRowReadonly {
+  background-color: #c9c9c9;;
+}
   

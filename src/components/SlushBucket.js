@@ -6,6 +6,7 @@ import ClearButton from "../components/ClearButton.js";
 
 import styles from "./SlushBucket.css";
 import formStyles from "../styles/Forms.css";
+import inputStyles from "../styles/Input.css";
 import displayStyles from "../styles/Display.css";
 
 class SlushBucket extends Component {
@@ -48,13 +49,19 @@ class SlushBucket extends Component {
             tabIndex="-1"
             type="text"
             autoComplete="false"
-            className={formStyles.FormControl}
+            className={
+              formStyles.FormControl +
+              " " +
+              (this.props.readonly ? inputStyles.ReadOnly : "")
+            }
             placeholder={placeholder}
             onChange={e => this.handleInput(e)}
             onKeyUp={event => {
               this.handleKeyUp(event);
             }}
             value={this.state.query}
+            disabled={this.props.readonly}
+            readOnly={this.props.readonly}
           />
           <div
             className={`${styles.Spinner} ${isFetching
@@ -68,6 +75,7 @@ class SlushBucket extends Component {
             style={{
               transform: "translateX(-33px)",
               display: "flex",
+              visibility: this.props.readonly ? "hidden" : "visible",
               alignItems: "center",
               visibility: this.state.query === "" ? "hidden" : "visible"
             }}
@@ -97,6 +105,9 @@ class SlushBucket extends Component {
             <Scrollbars autoHeight autoHeightMin={400} autoHeightMax={400}>
               {choices
                 .filter(choiceItem => {
+                  if (this.props.readonly) {
+                    return false;
+                  }
                   if (this.state.query === "") {
                     // if nothing is typed show all results
                     return true;
@@ -172,7 +183,9 @@ class SlushBucket extends Component {
                 .map((choiceItem, i) => {
                   return (
                     <div
-                      className={`${styles.SelectedRow}`}
+                      className={`${styles.SelectedRow} ${this.props.readonly
+                        ? styles.SelectedRowReadonly
+                        : ""}`}
                       style={{
                         display: "flex",
                         justifyContent: "space-between",
@@ -186,6 +199,9 @@ class SlushBucket extends Component {
                           updateModelValue(
                             selected.filter(e => e !== choiceItem)
                           );
+                        }}
+                        style={{
+                          visibility: this.props.readonly ? "hidden" : "visible"
                         }}
                       />
                     </div>
