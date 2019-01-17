@@ -7,10 +7,14 @@ class ClearButton extends Component {
       <div
         className={this.props.className}
         onClick={this.props.onClick}
-        style={{
-          display: "flex",
-          alignItems: "center"
-        }}
+        style={Object.assign(
+          {},
+          {
+            display: "flex",
+            alignItems: "center"
+          },
+          this.props.styles
+        )}
       >
         <i
           className={`${styles.ClearInput} 
