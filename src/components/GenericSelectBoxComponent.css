@@ -1,0 +1,13 @@
+.previewColorContainer{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  height: 80px;
+  padding: 10px 0 0 0;
+}
+
+.MinMaxValues{
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+}

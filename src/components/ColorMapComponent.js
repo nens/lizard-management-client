@@ -13,7 +13,14 @@ import buttonStyles from "../styles/Buttons.css";
 import inputStyles from "../styles/Input.css";
 
 class ColorMapComponent extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      previewColor: null
+    };
+  }
   setLocalStateFromProps(props) {
+    this.getRGBAGradient(props.modelValue);
     // If this component is the "current step component", set the page focus to the components
     // input field:
     // TODO: implement autofocus of inpput element for colormap
@@ -41,6 +48,27 @@ class ColorMapComponent extends Component {
   componentDidMount() {
     this.setLocalStateFromProps(this.props);
   }
+
+  getRGBAGradient(modelValue) {
+    if (modelValue.colorMap) {
+      fetch(
+        "/wms/?request=getlegend&style=" +
+          modelValue.colorMap +
+          "&steps=100&format=json",
+        {
+          credentials: "same-origin",
+          method: "GET",
+          headers: { "Content-Type": "application/json" }
+        }
+      )
+        .then(response => response.json())
+        .then(responseData => {
+          console.log(responseData);
+          this.setState({ previewColor: responseData });
+        });
+    }
+  }
+
   render() {
     const {
       titleComponent, // <FormatText ... //>
@@ -65,6 +93,16 @@ class ColorMapComponent extends Component {
     const active = step === currentStep || (formUpdate && !readonly);
     const showCheckMark = validate(modelValue);
     const showNextButton = validate(modelValue) && !formUpdate;
+
+    if (this.state.previewColor != null) {
+      var colors = this.state.previewColor.legend.map(obj => {
+        var color = {};
+        color = obj.color;
+        return <div style={{ width: "1%", backgroundColor: obj.color }} />;
+      });
+      var minValue = this.state.previewColor.limits[0];
+      var maxValue = this.state.previewColor.limits[1];
+    }
 
     return (
       <div className={styles.Step} id={"Step-" + step}>
@@ -93,6 +131,11 @@ class ColorMapComponent extends Component {
               }
             >
               <div>
+                <div className={styles.previewColorContainer}>{colors}</div>
+                <div className={styles.MinMaxValues}>
+                  <div>{minValue}</div>
+                  <div>{maxValue}</div>
+                </div>
                 <SelectBoxSearch
                   choices={choices}
                   choice={{ name: modelValue.colorMap }}
@@ -100,6 +143,11 @@ class ColorMapComponent extends Component {
                   isFetching={isFetching}
                   updateModelValue={e => {
                     updateModelValue({ colorMap: e.name });
+                    console.log(validate({ colorMap: e.name }));
+                    if (validate({ colorMap: e.name })) {
+                      console.log("inside the validate");
+                      this.getRGBAGradient({ colorMap: e.name });
+                    }
                   }}
                   onKeyUp={e => this.handleEnter(e)}
                   inputId={titleComponent.props.id + "_input"}
@@ -112,6 +160,7 @@ class ColorMapComponent extends Component {
                   }}
                   readonly={readonly}
                 />
+
                 <br />
                 <span className="text-muted">{minTitleComponent}</span>
                 <br />
