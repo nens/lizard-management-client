@@ -185,17 +185,23 @@ class RasterFormModel extends Component {
   }
   // SupplierId
   setSupplierId(supplierId) {
-    this.setState({ supplierId });
+    if (supplierId && supplierId.username === "none") {
+      this.setState({ supplierId: null });
+    } else {
+      this.setState({ supplierId });
+    }
   }
+
   resetSupplierId() {
     this.setSupplierId(null);
   }
   validateSupplierId(supplierId) {
-    if (supplierId && supplierId.username) {
-      return true;
-    } else {
-      return false;
-    }
+    // if (supplierId && supplierId.username) {
+    //   return true;
+    // } else {
+    //   return false;
+    // }
+    return true;
   }
   // SupplierCode
   setSupplierCode(supplierCode) {
@@ -438,6 +444,14 @@ class RasterFormModel extends Component {
   }
 
   setInitialState(props) {
+    // If user is a supplier or admin
+    // let userName = props.bootstrap.bootstrap.user.username;
+    // let supplierId = this.props.supplierIds.available.find(user => {
+    //   return user.username === userName;
+    // });
+    //
+    let supplierId = null;
+
     return {
       isFetching: false,
       openOverlay: false,
@@ -470,7 +484,7 @@ class RasterFormModel extends Component {
       },
       options: {},
       aggregationType: "", // choice: none | counts | curve | histogram | sum | average
-      supplierId: "",
+      supplierId: supplierId,
       supplierCode: "",
       observationType: null,
       sharedWith: []
@@ -977,7 +991,7 @@ class RasterFormModel extends Component {
                       defaultMessage="Please select Supplier Name"
                     />
                   }
-                  placeholder="click to select supplier name"
+                  placeholder="type to search supplier name"
                   step={8} // int for denoting which step of the GenericTextInputComponent it refers to
                   opened={this.props.currentRaster || currentStep === 8}
                   formUpdate={!!this.props.currentRaster}
@@ -985,7 +999,14 @@ class RasterFormModel extends Component {
                   currentStep={currentStep} // int for denoting which step is currently active
                   setCurrentStep={this.setCurrentStep} // cb function for updating which step becomes active
                   choices={this.props.supplierIds.available}
-                  transformChoiceToDisplayValue={e => (e && e.username) || ""} // optional parameter if choices are objects, which field contains the displayvalue, default item itself is displayvalue
+                  noneValue={{ username: "none", value: "null" }}
+                  transformChoiceToDisplayValue={e => {
+                    if (e === null) {
+                      return "none";
+                    } else {
+                      return (e && e.username) || "";
+                    }
+                  }} // optional parameter if choices are objects, which field contains the displayvalue, default item itself is displayvalue
                   isFetching={this.props.supplierIds.isFetching}
                   choicesSearchable={true}
                   modelValue={this.state.supplierId} // string: e.g. the name of a raster

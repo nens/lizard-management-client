@@ -102,6 +102,7 @@ class GenericSelectBoxComponent extends Component {
                   validate={validate}
                   resetModelValue={resetModelValue}
                   readonly={readonly}
+                  noneValue={this.props.noneValue}
                 />
               ) : (
                 <SelectBoxSimple
@@ -116,6 +117,7 @@ class GenericSelectBoxComponent extends Component {
                   // validate={validate}
                   transformChoiceToDescription={transformChoiceToDescription}
                   transformChoiceToInfo={transformChoiceToInfo}
+                  noneValue={this.props.noneValue}
                 />
               )}
               {showNextButton ? (

@@ -55,6 +55,10 @@ class SelectBoxSearch extends Component {
     const mustShowClearButton =
       (validate(choice) || this.state.query !== "") && !readonly;
 
+    const choicesWithNoneValue = this.props.noneValue
+      ? [this.props.noneValue].concat(choices)
+      : choices;
+
     return (
       <div className={`${styles.SelectChoice} form-input`}>
         <input
@@ -111,7 +115,7 @@ class SelectBoxSearch extends Component {
         >
           {/* <div className={styles.Results}> */}
           <Scrollbars autoHeight autoHeightMin={50} autoHeightMax={400}>
-            {choices
+            {choicesWithNoneValue
               .filter(choiceItem => {
                 if (this.state.query === "") {
                   // if nothing is typed show all results
