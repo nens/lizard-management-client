@@ -176,7 +176,7 @@ export function fetchSupplierIds() {
         state.organisations
       );
     }
-    const url = `/api/v4/organisations/${selectOrganisation.uuid}/users/`;
+    const url = `/api/v4/organisations/${selectOrganisation.uuid}/users/?role=supplier`;
     const opts = { credentials: "same-origin" };
 
     dispatch({ type: REQUEST_SUPPLIER_IDS });
