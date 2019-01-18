@@ -1002,11 +1002,7 @@ class RasterFormModel extends Component {
                   choices={this.props.supplierIds.available}
                   noneValue={{ username: "none", value: "null" }}
                   transformChoiceToDisplayValue={e => {
-                    if (e === null) {
-                      return "none";
-                    } else {
-                      return (e && e.username) || "";
-                    }
+                    return (e && e.username) || "";
                   }} // optional parameter if choices are objects, which field contains the displayvalue, default item itself is displayvalue
                   isFetching={this.props.supplierIds.isFetching}
                   choicesSearchable={true}
