@@ -147,7 +147,7 @@ function supplierIds(
     case RECEIVE_SUPPLIER_IDS_SUCCESS:
       return {
         ...state,
-        available: action.data,
+        available: action.data.results,
         isFetching: false,
         hasError: false,
         timesFetched: state.timesFetched + 1

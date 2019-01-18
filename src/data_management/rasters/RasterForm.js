@@ -494,9 +494,10 @@ class RasterFormModel extends Component {
 
   currentRasterToState(currentRaster) {
     // is there the possibility that available supplier id is not yet retrieved from server?
-    const selectedSupplierId = this.props.supplierIds.available.filter(
-      e => e.username === currentRaster.supplier
-    )[0];
+    const selectedSupplierId =
+      this.props.supplierIds.available.filter(
+        e => e.username === currentRaster.supplier
+      )[0] || null;
     const intervalObj = this.getIntervalToDaysHoursMinutesSeconds(
       currentRaster.interval
     );
@@ -562,10 +563,9 @@ class RasterFormModel extends Component {
     this.setState({ isFetching: true, openOverlay: true });
     const url = "/api/v4/rasters/";
     const observationTypeId =
-      (this.state.observationType &&
-        this.state.observationType.url &&
-        this.parseObservationTypeIdFromUrl(this.state.observationType.url)) ||
+      (this.state.observationType && this.state.observationType.code) ||
       undefined;
+
     const intAggregationType =
       (this.state.aggregationType &&
         this.aggregationTypeStringToInteger(this.state.aggregationType)) ||
@@ -622,7 +622,7 @@ class RasterFormModel extends Component {
           observation_type: observationTypeId, // required
 
           description: this.state.description,
-          supplier: this.state.supplierId.username,
+          supplier: this.state.supplierId && this.state.supplierId.username,
           supplier_code: this.state.supplierCode,
           aggregation_type: intAggregationType,
           options: this.state.options,
