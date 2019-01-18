@@ -1009,7 +1009,9 @@ class RasterFormModel extends Component {
                   }} // optional parameter if choices are objects, which field contains the displayvalue, default item itself is displayvalue
                   isFetching={this.props.supplierIds.isFetching}
                   choicesSearchable={true}
-                  modelValue={this.state.supplierId} // string: e.g. the name of a raster
+                  modelValue={
+                    this.state.supplierId || { username: "none", value: "null" }
+                  } // if the supplier_id is null then pass the noneValue for the selectbox component to show. The selectbox component is not aware that the real value is null
                   updateModelValue={this.setSupplierId} // cb function to *update* the value of e.g. a raster's name in the parent model
                   resetModelValue={this.resetSupplierId} // cb function to *reset* the value of e.g. a raster's name in the parent model
                   validate={this.validateSupplierId} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.

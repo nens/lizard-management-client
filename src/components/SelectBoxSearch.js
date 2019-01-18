@@ -55,7 +55,8 @@ class SelectBoxSearch extends Component {
     const mustShowClearButton =
       (validate(choice) || this.state.query !== "") &&
       !readonly &&
-      choice != null; // check for null because supplier id can be null but still be valid, but in this case clearbutton should not be shown
+      transformChoiceToDisplayValue(choice) !=
+        transformChoiceToDisplayValue(this.props.noneValue);
 
     const filteredSortedChoices = choices
       .filter(choiceItem => {
