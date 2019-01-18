@@ -196,12 +196,13 @@ class RasterFormModel extends Component {
     this.setSupplierId(null);
   }
   validateSupplierId(supplierId) {
-    // if (supplierId && supplierId.username) {
-    //   return true;
-    // } else {
-    //   return false;
-    // }
-    return true;
+    if (supplierId && supplierId.username) {
+      return true;
+    } else if (supplierId === null) {
+      return true;
+    } else {
+      return false;
+    }
   }
   // SupplierCode
   setSupplierCode(supplierCode) {
