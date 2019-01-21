@@ -304,12 +304,6 @@ class Raster extends Component {
             visibility: this.state.isFetching ? "hidden" : "visible"
           }}
         >
-          {/* <Scrollbars
-          //   autoHeight
-          //   autoHeightMin={450}
-          //   autoHeightMax={450}
-          //   style={{ width: "100%" }}
-          // >*/}
           {this.state.paginatedRasters.map((raster, i) => {
             return (
               <div className={`${rasterTableStyles.tableBody}`}>
@@ -363,7 +357,6 @@ class Raster extends Component {
               </div>
             );
           })}
-          {/*</Scrollbars>*/}
         </div>
         <div
           style={{
