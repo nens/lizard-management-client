@@ -304,68 +304,66 @@ class Raster extends Component {
             visibility: this.state.isFetching ? "hidden" : "visible"
           }}
         >
-          <Scrollbars
-            autoHeight
-            autoHeightMin={450}
-            autoHeightMax={450}
-            style={{ width: "100%" }}
-          >
-            {this.state.paginatedRasters.map((raster, i) => {
-              return (
-                <div className={`${rasterTableStyles.tableBody}`}>
-                  <div className={`${rasterTableStyles.tableCheckbox}`}>
-                    <input
-                      type="checkbox"
-                      // Make sure that you can still use the checkbox to click on,
-                      // in combination with the check all checkbox.
-                      onClick={this.clickRegularCheckbox}
-                      checked={
-                        this.state.checkboxes[i]
-                          ? this.state.checkboxes[i].checked
-                          : false
-                      }
-                      id={"checkbox_" + i}
-                    />
-                  </div>
-                  <div className={`${rasterTableStyles.tableName}`}>
-                    <NavLink
-                      to={`/data_management/rasters/${raster.uuid}`}
-                      style={{
-                        color: "#333"
-                      }}
-                    >
-                      {raster.name}
-                    </NavLink>
-                  </div>
-                  <div className={`${rasterTableStyles.tableDescription}`}>
-                    <NavLink
-                      to={`/data_management/rasters/${raster.uuid}`}
-                      style={{
-                        color: "#333"
-                      }}
-                    >
-                      {raster.description}
-                    </NavLink>
-                  </div>
-                  <div className={`${rasterTableStyles.TableSupplier}`}>
-                    {raster.supplier_code}
-                  </div>
-                  <div className={`${rasterTableStyles.TableObservationType}`}>
-                    {raster.observation_type && raster.observation_type.code}
-                  </div>
-                  <div className={`${rasterTableStyles.tableUpload}`}>
-                    <NavLink
-                      to={`/data_management/rasters/${raster.uuid}/data`}
-                    >
-                      <i class="material-icons" style={{ color: "#989898" }}>
-                        cloud_upload
-                      </i>
-                    </NavLink>
-                  </div>
+          {/* <Scrollbars
+          //   autoHeight
+          //   autoHeightMin={450}
+          //   autoHeightMax={450}
+          //   style={{ width: "100%" }}
+          // >*/}
+          {this.state.paginatedRasters.map((raster, i) => {
+            return (
+              <div className={`${rasterTableStyles.tableBody}`}>
+                <div className={`${rasterTableStyles.tableCheckbox}`}>
+                  <input
+                    type="checkbox"
+                    // Make sure that you can still use the checkbox to click on,
+                    // in combination with the check all checkbox.
+                    onClick={this.clickRegularCheckbox}
+                    checked={
+                      this.state.checkboxes[i]
+                        ? this.state.checkboxes[i].checked
+                        : false
+                    }
+                    id={"checkbox_" + i}
+                  />
                 </div>
-              );
-            })}
-          </Scrollbars>
+                <div className={`${rasterTableStyles.tableName}`}>
+                  <NavLink
+                    to={`/data_management/rasters/${raster.uuid}`}
+                    style={{
+                      color: "#333"
+                    }}
+                  >
+                    {raster.name}
+                  </NavLink>
+                </div>
+                <div className={`${rasterTableStyles.tableDescription}`}>
+                  <NavLink
+                    to={`/data_management/rasters/${raster.uuid}`}
+                    style={{
+                      color: "#333"
+                    }}
+                  >
+                    {raster.description}
+                  </NavLink>
+                </div>
+                <div className={`${rasterTableStyles.TableSupplier}`}>
+                  {raster.supplier_code}
+                </div>
+                <div className={`${rasterTableStyles.TableObservationType}`}>
+                  {raster.observation_type && raster.observation_type.code}
+                </div>
+                <div className={`${rasterTableStyles.tableUpload}`}>
+                  <NavLink to={`/data_management/rasters/${raster.uuid}/data`}>
+                    <i class="material-icons" style={{ color: "#989898" }}>
+                      cloud_upload
+                    </i>
+                  </NavLink>
+                </div>
+              </div>
+            );
+          })}
+          {/*</Scrollbars>*/}
         </div>
         <div
           style={{
@@ -554,9 +552,13 @@ class Raster extends Component {
         </div>
 
         <div>
-          {htmlRasterTableHeader}
-          {htmlRasterTableBody}
-          {htmlRasterTableFooter}
+          <div
+            style={{ width: "100%", overflowX: "auto", position: "relative" }}
+          >
+            {htmlRasterTableHeader}
+            {htmlRasterTableBody}
+          </div>
+          <div>{htmlRasterTableFooter}</div>
         </div>
       </div>
     );

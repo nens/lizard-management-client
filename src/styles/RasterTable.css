@@ -15,6 +15,10 @@
   padding: 10px;
   display: flex;
   border-bottom: 2px solid #858E9C;
+  /*justify-content: space-between;*/
+  width: 100%;
+  /*overflow-x: auto;*/
+  /*position: absolute;*/
 }
 .tableBody {
   padding: 10px;
@@ -22,6 +26,7 @@
   display: flex;
   border-bottom: 1px solid #D8D8D8;
   justify-content: space-between;
+  /*position: absolute;*/
 }
 .tableFooter {
   color: #858E9C;
@@ -32,6 +37,7 @@
   border-top: 1px solid #858E9C;
   align-items: center;
   justify-content: space-between;
+  /*position: absolute;*/
 }
 
 .tableFooterBelow{
