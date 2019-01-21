@@ -545,9 +545,7 @@ class Raster extends Component {
         </div>
 
         <div>
-          <div
-            style={{ width: "100%", overflowX: "auto", position: "relative" }}
-          >
+          <div style={{ width: "100%", overflowX: "auto" }}>
             {htmlRasterTableHeader}
             {htmlRasterTableBody}
           </div>
