@@ -63,7 +63,6 @@ class ColorMapComponent extends Component {
       )
         .then(response => response.json())
         .then(responseData => {
-          console.log(responseData);
           this.setState({ previewColor: responseData });
         });
     }
@@ -95,10 +94,13 @@ class ColorMapComponent extends Component {
     const showNextButton = validate(modelValue) && !formUpdate;
 
     if (this.state.previewColor != null) {
+      var colorWidth = 100 / this.state.previewColor.legend.length + "%";
       var colors = this.state.previewColor.legend.map(obj => {
         var color = {};
         color = obj.color;
-        return <div style={{ width: "1%", backgroundColor: obj.color }} />;
+        return (
+          <div style={{ width: colorWidth, backgroundColor: obj.color }} />
+        );
       });
       var minValue = this.state.previewColor.limits[0];
       var maxValue = this.state.previewColor.limits[1];
@@ -143,9 +145,7 @@ class ColorMapComponent extends Component {
                   isFetching={isFetching}
                   updateModelValue={e => {
                     updateModelValue({ colorMap: e.name });
-                    console.log(validate({ colorMap: e.name }));
                     if (validate({ colorMap: e.name })) {
-                      console.log("inside the validate");
                       this.getRGBAGradient({ colorMap: e.name });
                     }
                   }}
