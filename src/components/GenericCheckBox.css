@@ -31,11 +31,21 @@
   /* cursor: pointer; */
   color: rgba(0, 159, 134, 1);
 
-  -webkit-user-select: none; /* Safari */        
+  -webkit-user-select: none; /* Safari */
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* IE10+/Edge */
   user-select: none; /* Standard */
 }
+
+/*Edge browser renders the icon too big*/
+@supports (-ms-ime-align: auto) {
+  .CheckboxSpan span{
+    display: flex;
+    font-size: 60%;
+  }
+}
+
+
 .Checked {
   color: rgba(0, 159, 134, 1);
   animation-timing-function: ease-out;
@@ -68,7 +78,7 @@
 /* if user uncheckes the checkbox hover animation is confusing */
 /* .Container:hover .Hover { */
 .Hover {
-  display: inline-block;;
+  display: inline-block;
   background-color: #fff;
   border-color: #80bdff;
   outline: 0;
@@ -93,6 +103,3 @@
     color: rgba(0, 159, 134, 0)
   }
 }
-
-
-
