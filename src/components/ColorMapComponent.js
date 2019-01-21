@@ -94,13 +94,8 @@ class ColorMapComponent extends Component {
     const showNextButton = validate(modelValue) && !formUpdate;
 
     if (this.state.previewColor != null) {
-      var colorWidth = 100 / this.state.previewColor.legend.length + "%";
       var colors = this.state.previewColor.legend.map(obj => {
-        var color = {};
-        color = obj.color;
-        return (
-          <div style={{ width: colorWidth, backgroundColor: obj.color }} />
-        );
+        return <div style={{ flex: 1, backgroundColor: obj.color }} />;
       });
       var minValue = this.state.previewColor.limits[0];
       var maxValue = this.state.previewColor.limits[1];
