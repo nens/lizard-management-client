@@ -366,9 +366,16 @@ class Raster extends Component {
                     <NavLink
                       to={`/data_management/rasters/${raster.uuid}/data`}
                     >
-                      <i class="material-icons" style={{ color: "#989898" }}>
-                        cloud_upload
-                      </i>
+                      {" "}
+                      {raster.source !== null ? (
+                        <i class="material-icons" style={{ color: "#009F86" }}>
+                          cloud_upload
+                        </i>
+                      ) : (
+                        <i class="material-icons" style={{ color: "#989898" }}>
+                          cloud_upload
+                        </i>
+                      )}
                     </NavLink>
                   </div>
                 </div>
