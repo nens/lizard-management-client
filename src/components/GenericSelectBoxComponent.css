@@ -1,0 +1,32 @@
+.previewColorContainer{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  height: 60px;
+  padding: 10px 0 0 0;
+}
+
+.previewColorContainer:empty::before {
+  content: 'No preview available';
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  height: 60px;
+  padding: 10px 0 0 0;
+  opacity: 0.5;
+}
+
+
+
+.MinMaxValues{
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  height: auto;
+}
+
+
+.MinMaxValues span:empty::before {
+  content: '';
+  display: inline-block;
+}
