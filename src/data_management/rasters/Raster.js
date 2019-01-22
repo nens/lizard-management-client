@@ -86,10 +86,19 @@ class Raster extends Component {
           e.organisation.uuid &&
           e.organisation.uuid.replace(/-/g, "")) === organisation.uuid
     );
-    const sortedFilteredRasters = filteredRasters.sort(
-      (a, b) => a.last_modified > b.last_modified
-    );
-    return sortedFilteredRasters;
+
+    filteredRasters.sort((a, b) => {
+      if (a.last_modified === null) {
+        return 1;
+      } else if (b.last_modified === null) {
+        return -1;
+      } else if (a.last_modified > b.last_modified) {
+        return -1;
+      } else {
+        return 1;
+      }
+    });
+    return filteredRasters;
   };
 
   paginateRasters = (rasters, page) => {
