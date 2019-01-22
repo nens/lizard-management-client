@@ -226,12 +226,13 @@ class Raster extends Component {
       }
       Promise.all(fetches).then(() => {
         // Refresh the page, so that the removed rasters are no longer visible
-        // fetch is a asynchrounous action. the following line should only be executed on .then. todo fix this
         this.getRastersFromApi(
           this.state.page,
           this.state.searchTerms,
           this.state.include3diScenarios
         );
+        // TODO what should we do if one of the delete calls fails ?
+        // maybe notify user ?
       });
     }
   }
