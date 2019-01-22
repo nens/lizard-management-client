@@ -209,7 +209,9 @@ class Raster extends Component {
       )
     ) {
       const url = "/api/v3/rasters/"; // werkt nog niet op api/v4
-      for (var i = 0; i < toBeDeletedRasterUuidsArray.length; i++) {
+      // array to store all fetches to later resolve all promises
+      let fetches = [];
+      toBeDeletedRasterUuidsArray.forEach(rasterUuid => {
         const opts = {
           // Use PATCH request for deleting rasters, so that the rasters are
           // not permanently deleted
@@ -217,18 +219,37 @@ class Raster extends Component {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            access_modifier: "Deleted" // or 9999
+            access_modifier: "Deleted"
           })
         };
-        fetch(url + toBeDeletedRasterUuidsArray[i] + "/", opts);
+        fetches.push(fetch(url + rasterUuid + "/", opts));
+      });
+      Promise.all(fetches).then(values => {
         // Refresh the page, so that the removed rasters are no longer visible
-        // fetch is a asynchrounous action. the following line should only be executed on .then. todo fix this
         this.getRastersFromApi(
           this.state.page,
           this.state.searchTerms,
           this.state.include3diScenarios
         );
-      }
+
+        // TODO show user results of the delete
+        // the addNotification seems not to support translation and also may not be suitable for long text
+        // should we use modal instead ?
+        // const valuesWithRasters = values.map((el, ind)=> {return{
+        //   promise: el,
+        //   rasterUuid: this.state.rasters.find(e=> e.uuid === toBeDeletedRasterUuidsArray[ind])
+        // }});
+        // const failedDeletes = valuesWithRasters.filter(e => e.promise.ok === false);
+        // const succeededDeletes = valuesWithRasters.filter(e => e.promise.ok === true);
+        // // reduce to userpresentable string
+        // let deleteNotificationStr = '';
+        // if (succeededDeletes.length > 0) {
+        //   deleteNotificationStr += 'following rasters deleted'
+        // }
+        // // dispatch notification
+        // // is this notification evn working anywhere?
+        // this.props.addNotification("rasters deleted", 2000);
+      });
     }
   }
 
