@@ -82,7 +82,7 @@ class ColorMapComponent extends Component {
             {showCheckMark ? <CheckMark /> : null}
           </h3>
           <div style={{ display: opened ? "block" : "none" }}>
-            {readOnlyReason ? (
+            {readonly ? (
               <p className="text-muted">{readOnlyReason}</p>
             ) : (
               <p className="text-muted">{subtitleComponent}</p>
