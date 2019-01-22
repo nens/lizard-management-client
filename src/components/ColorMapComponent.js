@@ -130,8 +130,8 @@ class ColorMapComponent extends Component {
               <div>
                 <div className={styles.previewColorContainer}>{colors}</div>
                 <div className={styles.MinMaxValues}>
-                  <div>{minValue}</div>
-                  <div>{maxValue}</div>
+                  <span>{minValue}</span>
+                  <span>{maxValue}</span>
                 </div>
                 <SelectBoxSearch
                   choices={choices}
@@ -152,6 +152,7 @@ class ColorMapComponent extends Component {
                   }}
                   resetModelValue={e => {
                     updateModelValue({ colorMap: "" });
+                    this.setState({ previewColor: null });
                   }}
                   readonly={readonly}
                 />
@@ -181,6 +182,7 @@ class ColorMapComponent extends Component {
                   </span>
                 ) : null}
                 <input
+                  type="number"
                   autoComplete="false"
                   className={`${formStyles.FormControl} ${readonly
                     ? inputStyles.ReadOnly
@@ -194,6 +196,7 @@ class ColorMapComponent extends Component {
                 <br />
                 <span className="text-muted">{maxTitleComponent}</span>
                 <input
+                  type="number"
                   autoComplete="false"
                   className={`${formStyles.FormControl} ${readonly
                     ? inputStyles.ReadOnly
