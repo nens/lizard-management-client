@@ -209,6 +209,8 @@ class Raster extends Component {
       )
     ) {
       const url = "/api/v3/rasters/"; // werkt nog niet op api/v4
+      // array to store all fetches to later resolve all promises
+      let fetches = [];
       for (var i = 0; i < toBeDeletedRasterUuidsArray.length; i++) {
         const opts = {
           // Use PATCH request for deleting rasters, so that the rasters are
@@ -220,7 +222,9 @@ class Raster extends Component {
             access_modifier: "Deleted" // or 9999
           })
         };
-        fetch(url + toBeDeletedRasterUuidsArray[i] + "/", opts);
+        fetches.push(fetch(url + toBeDeletedRasterUuidsArray[i] + "/", opts));
+      }
+      Promise.all(fetches).then(() => {
         // Refresh the page, so that the removed rasters are no longer visible
         // fetch is a asynchrounous action. the following line should only be executed on .then. todo fix this
         this.getRastersFromApi(
@@ -228,7 +232,7 @@ class Raster extends Component {
           this.state.searchTerms,
           this.state.include3diScenarios
         );
-      }
+      });
     }
   }
 
