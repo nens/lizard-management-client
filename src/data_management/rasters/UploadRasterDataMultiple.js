@@ -660,13 +660,21 @@ class UploadRasterDataMultipleModel extends Component {
                     width: "100%",
                     flexFlow: "row nowrap",
                     justifyContent: "space-between",
-                    height: "60px",
+                    minHeight: "60px",
                     padding: "13px",
                     borderBottom: "1px solid #ccc",
                     borderTop: i === 0 ? "1px solid #ccc" : "0px solid #ccc"
                   }}
                 >
-                  <div style={{ flex: 2 }}>{e.file.name}</div>
+                  <div
+                    style={{
+                      flex: "2 0 0",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis"
+                    }}
+                  >
+                    {e.file.name}
+                  </div>
                   {this.props.currentRaster.temporal === true ? (
                     <div style={{ flex: 1 }}>
                       <Datetime
