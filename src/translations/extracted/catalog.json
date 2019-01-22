@@ -552,22 +552,6 @@
 		"defaultMessage": "Manage rasters"
 	},
 	{
-		"id": "data_management.assets",
-		"defaultMessage": "Assets"
-	},
-	{
-		"id": "data_management.manage_assets",
-		"defaultMessage": "Manage assets"
-	},
-	{
-		"id": "data_management.time_series",
-		"defaultMessage": "Time Series"
-	},
-	{
-		"id": "data_management.manage_time_series",
-		"defaultMessage": "Manage Time Series"
-	},
-	{
 		"id": "raster.post_metadata_success",
 		"defaultMessage": "Succes! Your raster meta-data was uploaded succesfully. You can add your data now, or do it later"
 	},
@@ -592,36 +576,44 @@
 		"defaultMessage": "Back"
 	},
 	{
-		"id": "rasters.header_raster_name",
-		"defaultMessage": "Raster name"
+		"id": "rasters.no_rasters",
+		"defaultMessage": "No rasters found..."
 	},
 	{
-		"id": "rasters.header_raster_description",
-		"defaultMessage": "Description"
-	},
-	{
-		"id": "rasters.click_to_adapt_data",
-		"defaultMessage": "Data"
-	},
-	{
-		"id": "rasters.link_to_upload_data",
-		"defaultMessage": "Upload"
+		"id": "rasters.number_of_rasters",
+		"defaultMessage": "{numberOfRasters, number} {numberOfRasters, plural, one {Raster} other {Rasters}}"
 	},
 	{
 		"id": "rasters.delete_rasters",
-		"defaultMessage": "Delete selected raster(s)"
+		"defaultMessage": "Delete {clickedCheckboxes, number} {clickedCheckboxes, plural, one {Raster} other {Rasters}}"
+	},
+	{
+		"id": "rasters.exclude_3di_results",
+		"defaultMessage": "Exclude 3di results"
+	},
+	{
+		"id": "rasters.include_3di_results",
+		"defaultMessage": "Include 3di results"
 	},
 	{
 		"id": "rasters.new_raster",
 		"defaultMessage": "New raster"
 	},
 	{
-		"id": "rasters.no_rasters",
-		"defaultMessage": "No rasters configured..."
+		"id": "rasters.organisation",
+		"defaultMessage": "Organisation"
 	},
 	{
-		"id": "rasters.number_of_rasters",
-		"defaultMessage": "{numberOfRasters, number} {numberOfRasters, plural, one {Raster} other {Rasters}}"
+		"id": "rasters.please_select_organisation",
+		"defaultMessage": "Please select the organisation for this raster"
+	},
+	{
+		"id": "rasters.shared_with_organisations",
+		"defaultMessage": "Shared with organisations"
+	},
+	{
+		"id": "rasters.which_organisations_would_you_like_to_share",
+		"defaultMessage": "The organisations you would like to share the raster with"
 	},
 	{
 		"id": "rasters.name_of_this_raster",
@@ -638,14 +630,6 @@
 	{
 		"id": "rasters.please_describe_the_new_raster",
 		"defaultMessage": "Please describe the new Raster"
-	},
-	{
-		"id": "rasters.organisation",
-		"defaultMessage": "Organisation"
-	},
-	{
-		"id": "rasters.please_select_organisation",
-		"defaultMessage": "Please select the organisation for this raster"
 	},
 	{
 		"id": "rasters.aggregation_type",
@@ -726,10 +710,6 @@
 	{
 		"id": "rasters.submit",
 		"defaultMessage": "Submit"
-	},
-	{
-		"id": "rasters.please complete the form before submitting",
-		"defaultMessage": "Please complete the form for submitting"
 	},
 	{
 		"id": "rasters.back_to_rasters",
@@ -825,7 +805,7 @@
 	},
 	{
 		"id": "rasters.selected_file_ready_to_send",
-		"defaultMessage": "file ready, click button to upload"
+		"defaultMessage": "file selected, ready to upload"
 	},
 	{
 		"id": "rasters.selected_file_succesfully uploaded",
@@ -833,7 +813,7 @@
 	},
 	{
 		"id": "rasters.selected_file_failed_upload",
-		"defaultMessage": "File could not be uploaded, click the button to try again"
+		"defaultMessage": "File could not be uploaded, maybe try once more"
 	},
 	{
 		"id": "rasters.selected_file_in queue",

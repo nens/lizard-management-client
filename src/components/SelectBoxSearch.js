@@ -16,9 +16,9 @@ class SelectBoxSearch extends Component {
     this.handleInput = this.handleInput.bind(this);
     this.handleKeyUp = this.handleKeyUp.bind(this);
   }
-  componentDidMount() {
-    this.setQuery(this.props);
-  }
+  // componentDidMount() {
+  //   this.setQuery(this.props);
+  // }
 
   handleKeyUp(e) {
     if (e.key === "Escape") this.resetQuery();
@@ -27,13 +27,13 @@ class SelectBoxSearch extends Component {
     this.setState({ mustShowChoices: true, query: e.target.value });
     this.props.updateModelValue(e.target.value);
   }
-  setQuery(props) {
-    if (this.props.choice) {
-      this.setState({
-        query: this.props.transformChoiceToDisplayValue(this.props.choice)
-      });
-    }
-  }
+  // setQuery(props) {
+  //   if (this.props.choice) {
+  //     this.setState({
+  //       query: this.props.transformChoiceToDisplayValue(this.props.choice)
+  //     });
+  //   }
+  // }
   resetQuery() {
     this.setState({ mustShowChoices: false, query: "" });
   }
@@ -53,7 +53,40 @@ class SelectBoxSearch extends Component {
     } = this.props;
     const showOptions = choices.length > 0 && this.state.mustShowChoices;
     const mustShowClearButton =
-      (validate(choice) || this.state.query !== "") && !readonly;
+      (validate(choice) || this.state.query !== "") &&
+      !readonly &&
+      transformChoiceToDisplayValue(choice) !=
+        transformChoiceToDisplayValue(this.props.noneValue);
+
+    const filteredSortedChoices = choices
+      .filter(choiceItem => {
+        if (this.state.query === "") {
+          // if nothing is typed show all results
+          return true;
+        } else {
+          // if user typed search string only show those that contain string
+          // TODO sort by search string ?
+          return transformChoiceToDisplayValue(choiceItem)
+            .toLowerCase()
+            .includes(this.state.query.toLowerCase());
+        }
+      })
+      .sort((choiceItemA, choiceItemB) => {
+        const nameA = transformChoiceToDisplayValue(choiceItemA);
+        const nameB = transformChoiceToDisplayValue(choiceItemB);
+        if (nameA < nameB) {
+          return -1;
+        }
+        if (nameA > nameB) {
+          return 1;
+        }
+        // names must be equal
+        return 0;
+      });
+
+    const choicesWithNoneValue = this.props.noneValue
+      ? [this.props.noneValue].concat(filteredSortedChoices)
+      : filteredSortedChoices;
 
     return (
       <div className={`${styles.SelectChoice} form-input`}>
@@ -111,60 +144,35 @@ class SelectBoxSearch extends Component {
         >
           {/* <div className={styles.Results}> */}
           <Scrollbars autoHeight autoHeightMin={50} autoHeightMax={400}>
-            {choices
-              .filter(choiceItem => {
-                if (this.state.query === "") {
-                  // if nothing is typed show all results
-                  return true;
-                } else {
-                  // if user typed search string only show those that contain string
-                  // TODO sort by search string ?
-                  return transformChoiceToDisplayValue(choiceItem)
-                    .toLowerCase()
-                    .includes(this.state.query.toLowerCase());
-                }
-              })
-              .sort((choiceItemA, choiceItemB) => {
-                const nameA = transformChoiceToDisplayValue(choiceItemA);
-                const nameB = transformChoiceToDisplayValue(choiceItemB);
-                if (nameA < nameB) {
-                  return -1;
-                }
-                if (nameA > nameB) {
-                  return 1;
-                }
-                // names must be equal
-                return 0;
-              })
-              .map((choiceItem, i) => {
-                const currentChoiceString = transformChoiceToDisplayValue(
-                  choiceItem
-                );
-                const SelectedChoiceString = transformChoiceToDisplayValue(
-                  choice
-                );
+            {choicesWithNoneValue.map((choiceItem, i) => {
+              const currentChoiceString = transformChoiceToDisplayValue(
+                choiceItem
+              );
+              const SelectedChoiceString = transformChoiceToDisplayValue(
+                choice
+              );
 
-                return (
-                  <div
-                    tabIndex={i + 1}
-                    key={i}
-                    className={`${styles.ResultRow} ${currentChoiceString ===
-                    SelectedChoiceString
-                      ? styles.Active
-                      : styles.Inactive}`}
-                    onMouseDown={() => {
-                      // User selected a choice from the filtered ones:
-                      updateModelValue(choiceItem);
-                      this.setState({
-                        mustShowChoices: false,
-                        query: ""
-                      });
-                    }}
-                  >
-                    {currentChoiceString}
-                  </div>
-                );
-              })}
+              return (
+                <div
+                  tabIndex={i + 1}
+                  key={i}
+                  className={`${styles.ResultRow} ${currentChoiceString ===
+                  SelectedChoiceString
+                    ? styles.Active
+                    : styles.Inactive}`}
+                  onMouseDown={() => {
+                    // User selected a choice from the filtered ones:
+                    updateModelValue(choiceItem);
+                    this.setState({
+                      mustShowChoices: false,
+                      query: ""
+                    });
+                  }}
+                >
+                  {currentChoiceString}
+                </div>
+              );
+            })}
           </Scrollbars>
         </div>
       </div>

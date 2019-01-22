@@ -47,6 +47,7 @@ function organisations(
     isFetching: false,
     timesFetched: 0,
     available: [],
+    availableForRasterSharedWith: [],
     selected:
       JSON.parse(
         localStorage.getItem("lizard-management-current-organisation")
@@ -70,7 +71,18 @@ function organisations(
     case RECEIVE_ORGANISATIONS:
       return {
         ...state,
-        available: action.data,
+        available: action.data.filter(e => {
+          return (
+            e.roles.find(e => e === "admin") ||
+            e.roles.find(e => e === "supplier")
+          );
+        }),
+        availableForRasterSharedWith: action.data,
+        selected:
+          state.selected ||
+          action.data.find(e => e.roles.find(e2 => e2 === "admin")) ||
+          action.data.find(e => e.roles.find(e2 => e2 === "supplier")) ||
+          null,
         isFetching: false,
         timesFetched: state.timesFetched + 1
       };
@@ -135,7 +147,7 @@ function supplierIds(
     case RECEIVE_SUPPLIER_IDS_SUCCESS:
       return {
         ...state,
-        available: action.data,
+        available: action.data.results,
         isFetching: false,
         hasError: false,
         timesFetched: state.timesFetched + 1
