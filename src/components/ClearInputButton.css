@@ -1,3 +1,7 @@
+::-ms-clear{
+    display: none;
+}
+
 .ClearInput {
     position: absolute;
     margin: 0;

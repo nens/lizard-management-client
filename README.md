@@ -49,6 +49,19 @@ These commit messages will be used to auto-generate `CHANGELOG.md`.
 
 Have a look at the [buck-trap README](https://github.com/nens/buck-trap/blob/master/README.md) for more information about the release procedure.
 
+View development server on multiple devices
+======================================
+
+1. In lizard-nxt, go to the settings folder and make a file and name it 'localsettings.py'. In this file, write:
+ALLOWED_HOSTS = ['localhost', 'YOUR_HOSTNAME']
+
+2. In this repository then, look for the 'start.js' file under 'scripts'. Change the line that contains:
+const HOST = process.env.HOST || '0.0.0.0', replace the HOST value with your IP address.
+
+3. On another device you can now open de browser and go to 'http://YOUR_HOSTNAME:3000/
+
+
+
 
 CSS
 ===
