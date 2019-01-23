@@ -1,6 +1,6 @@
 {
   "name": "lizard-management-client",
-  "version": "0.1.46",
+  "version": "0.1.47",
   "private": true,
   "repository": {
     "type": "git",
@@ -191,7 +191,7 @@
         "password": ""
       }
     },
-        "/wms/": {
+    "/wms/": {
       "target": "http://localhost:8000/",
       "changeOrigin": true,
       "ssl": false,
