@@ -91,9 +91,13 @@ export function fetchOrganisations() {
         dispatch({ type: RECEIVE_ORGANISATIONS, data });
 
         if (!organisation) {
-          // No organisation was chosen, select the first one, and let
+          // No organisation was chosen, select the first one that has admin role and else first one with suplier role, and let
           // the user know about this
-          const firstOrganisation = data[0];
+
+          const firstOrganisation =
+            data.find(e => e.roles.find(e2 => e2 === "admin")) ||
+            data.find(e => e.roles.find(e2 => e2 === "supplier")) ||
+            null;
 
           dispatch(selectOrganisation(firstOrganisation));
 

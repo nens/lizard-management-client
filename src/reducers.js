@@ -78,11 +78,6 @@ function organisations(
           );
         }),
         availableForRasterSharedWith: action.data,
-        selected:
-          state.selected ||
-          action.data.find(e => e.roles.find(e2 => e2 === "admin")) ||
-          action.data.find(e => e.roles.find(e2 => e2 === "supplier")) ||
-          null,
         isFetching: false,
         timesFetched: state.timesFetched + 1
       };
