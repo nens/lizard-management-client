@@ -605,7 +605,7 @@
 	},
 	{
 		"id": "rasters.please_select_organisation",
-		"defaultMessage": "Please select the organisation for this raster"
+		"defaultMessage": "Which organisation owns this raster?"
 	},
 	{
 		"id": "rasters.shared_with_organisations",
@@ -620,16 +620,12 @@
 		"defaultMessage": "Name of this Raster"
 	},
 	{
-		"id": "rasters.choose_descriptive_name",
-		"defaultMessage": "The name of the raster will be used in e-mail and SMS alerts"
-	},
-	{
 		"id": "rasters.description",
 		"defaultMessage": "Description"
 	},
 	{
 		"id": "rasters.please_describe_the_new_raster",
-		"defaultMessage": "Please describe the new Raster"
+		"defaultMessage": "Please add a clear description of this raster with reference to the data source"
 	},
 	{
 		"id": "rasters.aggregation_type",
@@ -637,7 +633,7 @@
 	},
 	{
 		"id": "rasters.please_select_type_of_aggregation",
-		"defaultMessage": "Please select type of aggregation"
+		"defaultMessage": "Please select type of spatial aggregation if necessary"
 	},
 	{
 		"id": "rasters.observation_type",
@@ -665,7 +661,7 @@
 	},
 	{
 		"id": "rasters.colormap_readonly_layers",
-		"defaultMessage": "Colormap is read-only because it contains multiple layers. Changing this is currently not supported."
+		"defaultMessage": "Please choose a colormap for your raster"
 	},
 	{
 		"id": "rasters.supplier_id",
@@ -681,31 +677,31 @@
 	},
 	{
 		"id": "rasters.unique_supplier_code",
-		"defaultMessage": "The combination supplier name and supplier code should be unique"
+		"defaultMessage": "Please choose a supplier code for your own administration"
 	},
 	{
 		"id": "rasters.raster_is_temporal",
-		"defaultMessage": "Raster is Temporal"
+		"defaultMessage": "Raster Serie"
 	},
 	{
 		"id": "rasters.check_if_raster_is_temporal",
-		"defaultMessage": "Check if Raster is a temporal raster: it changes over time"
+		"defaultMessage": "Are you creating a raster serie (a rasterstore that contains multiple rasters over time)?"
 	},
 	{
 		"id": "rasters.yes_the_raster_is_temporal",
-		"defaultMessage": "Yes, the raster is temporal"
+		"defaultMessage": "Yes, this is a raster serie"
 	},
 	{
 		"id": "rasters.no_the_raster_is_not_temporal",
-		"defaultMessage": "No, the raster is not temporal"
+		"defaultMessage": "No, this is not a raster serie"
 	},
 	{
 		"id": "rasters.temporal_raster_frequency",
-		"defaultMessage": "Temporal Raster Frequency"
+		"defaultMessage": "Raster Serie Interval"
 	},
 	{
 		"id": "rasters.temporal_raster_frequency_description",
-		"defaultMessage": "Frequency of temporal raster"
+		"defaultMessage": "Interval of raster serie"
 	},
 	{
 		"id": "rasters.submit",
