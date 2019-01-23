@@ -418,14 +418,18 @@ class RasterFormModel extends Component {
 
   // Create message for user telling which steps need to be completed
   generateInvalidMessage(step) {
+    if (this.validateAll()) {
+      return "";
+    }
+
     // Get invalid normal (first 9) and temporal (last 2) steps
     var invalidSteps = this.getInvalidSteps();
     // Filter arrays to get normal and temporal invalid steps
     var normal = invalidSteps.filter(function(x) {
-      return x < 10;
+      return x < 11;
     });
     var temporal = invalidSteps.filter(function(x) {
-      return x > 9;
+      return x > 10;
     });
 
     // Return message based on either normal or temporal raster
@@ -437,10 +441,8 @@ class RasterFormModel extends Component {
         temporal +
         " before submitting"
       );
-    } else if (step <= 9) {
-      return "Please complete steps " + normal + " before submitting";
     } else {
-      return "";
+      return "Please complete steps " + normal + " before submitting";
     }
   }
 
