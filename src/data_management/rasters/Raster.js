@@ -545,10 +545,15 @@ class Raster extends Component {
         </div>
 
         <div>
-          <div style={{ width: "100%", overflowX: "auto" }}>
+          <Scrollbars
+            autoHeight
+            autoHeightMin={450}
+            autoHeightMax={450}
+            style={{ width: "100%" }}
+          >
             {htmlRasterTableHeader}
             {htmlRasterTableBody}
-          </div>
+          </Scrollbars>
           <div>{htmlRasterTableFooter}</div>
         </div>
       </div>
