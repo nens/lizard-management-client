@@ -51,7 +51,7 @@
     "lodash.debounce": "^4.0.8",
     "lodash.find": "^4.6.0",
     "lottie-react-native": "^2.5.10",
-    "mime": "1.4.0",
+    "mime": ">=1.4.1",
     "mime-lookup": "^0.0.2",
     "moment": "^2.22.2",
     "node-mime": "^1.0.0",
