@@ -29,7 +29,7 @@ class App extends Component {
     const appIcons = [
       {
         key: 0,
-        handleClick: () => this.handleExternalLink("/"), //management/users/"),
+        handleClick: () => this.handleExternalLink("/management/users/"),
         title: (
           <FormattedMessage
             id="home.usermanagement"
@@ -46,7 +46,7 @@ class App extends Component {
       },
       {
         key: 1,
-        handleClick: () => this.handleExternalLink("/"), //management/scenarios/"),
+        handleClick: () => this.handleExternalLink("/management/scenarios/"),
         title: (
           <FormattedMessage
             id="home.scenarios"

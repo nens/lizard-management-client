@@ -171,6 +171,26 @@
     "extends": "react-app"
   },
   "proxy": {
+    "/management/users/": {
+      "target": "http://localhost:8000/",
+      "changeOrigin": true,
+      "ssl": false,
+      "secure": false,
+      "headers": {
+        "username": "",
+        "password": ""
+      }
+    },
+    "/management/scenarios/": {
+      "target": "http://localhost:8000/",
+      "changeOrigin": true,
+      "ssl": false,
+      "secure": false,
+      "headers": {
+        "username": "",
+        "password": ""
+      }
+    },
     "/bootstrap/lizard/": {
       "target": "http://localhost:8000/",
       "changeOrigin": true,
