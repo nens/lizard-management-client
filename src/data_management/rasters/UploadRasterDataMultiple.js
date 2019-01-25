@@ -67,11 +67,15 @@ class UploadRasterDataMultipleModel extends Component {
           defaultMessage="A file with this name and size was already selected"
         />
       );
-    } else if (!file.name.endsWith(".tif")) {
+    } else if (
+      !file.name.toLowerCase().endsWith(".tif") ||
+      !file.name.toLowerCase().endsWith(".tiff") ||
+      !file.name.toLowerCase().endsWith(".geotiff")
+    ) {
       return (
         <FormattedMessage
           id="rasters.file_selection_not_tiff"
-          defaultMessage="Only .tif files are valid"
+          defaultMessage="Only .tif .tiff or .geotiff files are valid"
         />
       );
     } else {
@@ -408,7 +412,7 @@ class UploadRasterDataMultipleModel extends Component {
   renderDropZone() {
     return (
       <div style={this.state.saveAllButtonBusy ? { visibility: "hidden" } : {}}>
-        <Dropzone onDrop={this.onDrop} accept="image/tiff">
+        <Dropzone onDrop={this.onDrop} accept={["image/tiff", ".geotiff"]}>
           {({ getRootProps, getInputProps, isDragActive }) => {
             return (
               <div

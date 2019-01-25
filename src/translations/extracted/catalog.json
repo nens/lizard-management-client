@@ -576,6 +576,22 @@
 		"defaultMessage": "Back"
 	},
 	{
+		"id": "rasters.raster_name",
+		"defaultMessage": "Name"
+	},
+	{
+		"id": "rasters.raster_description",
+		"defaultMessage": "Description"
+	},
+	{
+		"id": "rasters.raster_suppliercode",
+		"defaultMessage": "Supplier Code"
+	},
+	{
+		"id": "rasters.raster_observationtype",
+		"defaultMessage": "Observation type"
+	},
+	{
 		"id": "rasters.no_rasters",
 		"defaultMessage": "No rasters found..."
 	},
@@ -657,7 +673,7 @@
 	},
 	{
 		"id": "rasters.colormap_readonly_layers",
-		"defaultMessage": "Please choose a colormap for your raster"
+		"defaultMessage": "Readonly, because the style of this raster has multiple layers"
 	},
 	{
 		"id": "rasters.supplier_id",
@@ -757,7 +773,7 @@
 	},
 	{
 		"id": "rasters.file_selection_not_tiff",
-		"defaultMessage": "Only .tif files are valid"
+		"defaultMessage": "Only .tif .tiff or .geotiff files are valid"
 	},
 	{
 		"id": "rasters.file_selection_failed_unknown_reason",

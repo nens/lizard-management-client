@@ -311,13 +311,26 @@ class Raster extends Component {
               this.checkAllCheckBoxes(!this.state.checkAllCheckBoxes)}
           />
         </div>
-        <div className={`${rasterTableStyles.tableName}`}>Name</div>
-        <div className={`${rasterTableStyles.tableDescription}`}>
-          Description
+        <div className={`${rasterTableStyles.tableName}`}>
+          <FormattedMessage id="rasters.raster_name" defaultMessage="Name" />
         </div>
-        <div className={`${rasterTableStyles.TableSupplier}`}>Supplier</div>
+        <div className={`${rasterTableStyles.tableDescription}`}>
+          <FormattedMessage
+            id="rasters.raster_description"
+            defaultMessage="Description"
+          />
+        </div>
+        <div className={`${rasterTableStyles.TableSupplier}`}>
+          <FormattedMessage
+            id="rasters.raster_suppliercode"
+            defaultMessage="Supplier Code"
+          />
+        </div>
         <div className={`${rasterTableStyles.TableObservationType}`}>
-          Observation type
+          <FormattedMessage
+            id="rasters.raster_observationtype"
+            defaultMessage="Observation type"
+          />
         </div>
         <div className={`${rasterTableStyles.tableUpload}`}>Upload</div>
       </div>
