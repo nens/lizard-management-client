@@ -884,7 +884,7 @@ class RasterFormModel extends Component {
                     },
                     {
                       display: "average",
-                      description: "values inside the region are averaged"
+                      description: "values in the region are averaged"
                     }
                   ]}
                   transformChoiceToDisplayValue={item => item.display}
