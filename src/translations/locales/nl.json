@@ -150,7 +150,7 @@
   "rasters.back_to_metadata": "Terug naar metadata",
   "rasters.back_to_raster_metadata": "Terug naar metadata",
   "rasters.back_to_rasters": "Terug naar lijst met rasters",
-  "rasters.check_if_raster_is_temporal": "Selecteer indien u een rasterstore maakt met meerdere tijdsgerelateerde rasters",
+  "rasters.check_if_raster_is_temporal": "Selecteer indien u een raster maakt met meerdere tijdsgerelateerde rasters",
   "rasters.check_url_for_progress_file_upload": "Click op de link om de voortgang te zien.",
   "rasters.click_to_url_upload_task": "Toon asynchrone taak",
   "rasters.colormap": "Colormap",
