@@ -613,24 +613,28 @@ class RasterFormModel extends Component {
           this.setState({ createdRaster: parsedBody });
         });
     } else {
+      let body = {
+        name: this.state.rasterName,
+        organisation: this.state.selectedOrganisation.uuid.replace(/-/g, ""), // required
+        access_modifier: 200, // private to organisation // required
+        observation_type: observationTypeId, // required
+
+        description: this.state.description,
+        supplier: this.state.supplierId && this.state.supplierId.username,
+        supplier_code: this.state.supplierCode,
+        aggregation_type: intAggregationType,
+        shared_with: this.state.sharedWith.map(e => e.uuid)
+      };
+      if (!optionsHasLayers(this.state.options)) {
+        body.options = this.state.options;
+      }
       const opts = {
         credentials: "same-origin",
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: this.state.rasterName,
-          organisation: this.state.selectedOrganisation.uuid.replace(/-/g, ""), // required
-          access_modifier: 200, // private to organisation // required
-          observation_type: observationTypeId, // required
-
-          description: this.state.description,
-          supplier: this.state.supplierId && this.state.supplierId.username,
-          supplier_code: this.state.supplierCode,
-          aggregation_type: intAggregationType,
-          options: this.state.options,
-          shared_with: this.state.sharedWith.map(e => e.uuid)
-        })
+        body: JSON.stringify(body)
       };
+      // only add colormap in options if not multiple layers
 
       fetch(url + "uuid:" + this.props.currentRaster.uuid + "/", opts)
         .then(responseParsed => {
