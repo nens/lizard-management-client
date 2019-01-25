@@ -930,13 +930,7 @@ class RasterFormModel extends Component {
                       id="rasters.colormap"
                       defaultMessage="Colormap"
                     />
-                  } // <FormatText ... //>
-                  // subtitleComponent={
-                  //   <FormattedMessage
-                  //     id="rasters.please_select_colormap"
-                  //     defaultMessage="Please select Colormap"
-                  //   />
-                  // }
+                  }
                   minTitleComponent={
                     <FormattedMessage
                       id="rasters.fill_colormap_min"
@@ -1059,13 +1053,13 @@ class RasterFormModel extends Component {
                   yesCheckedComponent={
                     <FormattedMessage
                       id="rasters.yes_the_raster_is_temporal"
-                      defaultMessage="Yes, this is a raster serie"
+                      defaultMessage="Yes, this is a raster series"
                     />
                   }
                   noNotCheckedComponent={
                     <FormattedMessage
                       id="rasters.no_the_raster_is_not_temporal"
-                      defaultMessage="No, this is not a raster serie"
+                      defaultMessage="No, this is not a raster series"
                     />
                   }
                   validate={this.validateTemporalBool}
@@ -1076,13 +1070,13 @@ class RasterFormModel extends Component {
                       titleComponent={
                         <FormattedMessage
                           id="rasters.temporal_raster_frequency"
-                          defaultMessage="Raster Serie Interval"
+                          defaultMessage="Raster Series Interval"
                         />
                       }
                       subtitleComponent={
                         <FormattedMessage
                           id="rasters.temporal_raster_frequency_description"
-                          defaultMessage="Interval of raster serie"
+                          defaultMessage="Interval of raster series"
                         />
                       }
                       multiline={false} // boolean for which input elem to use: text OR textarea
