@@ -985,7 +985,7 @@ class RasterFormModel extends Component {
                   subtitleComponent={
                     <FormattedMessage
                       id="rasters.please_select_supplier_id"
-                      defaultMessage="Select a user that is allowed to change and delete this raster"
+                      defaultMessage="Select the user that is allowed to change and delete this raster"
                     />
                   }
                   placeholder="type to search supplier name"
