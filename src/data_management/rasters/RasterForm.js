@@ -951,7 +951,7 @@ class RasterFormModel extends Component {
                   readOnlyReason={
                     <FormattedMessage
                       id="rasters.colormap_readonly_layers"
-                      defaultMessage="Please choose a colormap for your raster"
+                      defaultMessage="Readonly, because the style of this raster has multiple layers"
                     />
                   }
                   currentStep={currentStep} // int for denoting which step is currently active

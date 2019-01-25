@@ -156,7 +156,7 @@
   "rasters.colormap": "Colormap",
   "rasters.colormap_max>min": "Max moet groter zijn dan Min",
   "rasters.colormap_min_mandatory": "Verplicht wanneer het max veld in ingevuld",
-  "rasters.colormap_readonly_layers": "Kies een color map voor uw raster",
+  "rasters.colormap_readonly_layers": "Niet schrijfbaar, omdat de style van dit raster meerdere lagen bevat",
   "rasters.data_for": "voor raster",
   "rasters.delete_rasters": "Verwijder {clickedCheckboxes, number} {clickedCheckboxes, plural,one {Raster} other {Rasters}}",
   "rasters.description": "Beschrijving",
