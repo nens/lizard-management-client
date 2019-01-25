@@ -384,6 +384,8 @@ class Raster extends Component {
                     {raster.observation_type && raster.observation_type.code}
                   </div>
                   <div className={`${rasterTableStyles.tableUpload}`}>
+                    {/* raster.source contains the metadata of the raster data */}
+                    {/* if source is null no data is yet uploaded to the raster */}
                     {raster.source === null ? (
                       <NavLink
                         to={`/data_management/rasters/${raster.uuid}/data`}
@@ -392,7 +394,8 @@ class Raster extends Component {
                           cloud_upload
                         </i>
                       </NavLink>
-                    ) : raster.source.name.split("_")[0] === "Optimizer" ||
+                    ) : // if raster.data.name contains "Optimizer OR "RasterStoreSource" then there is already data in the raster and the user is also allowed to update this
+                    raster.source.name.split("_")[0] === "Optimizer" ||
                     raster.source.name.split("_")[0] === "RasterStoreSource" ? (
                       <NavLink
                         to={`/data_management/rasters/${raster.uuid}/data`}
@@ -402,6 +405,7 @@ class Raster extends Component {
                         </i>
                       </NavLink>
                     ) : (
+                      // in any other cases there is data in the raster, but this is generated/calculated data. The user is not allowed to update it. The user should update the rasters that act as the source for the calculations instead
                       <i
                         class="material-icons"
                         style={{
