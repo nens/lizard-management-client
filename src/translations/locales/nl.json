@@ -187,7 +187,7 @@
   "rasters.please_review_files_to_upload": "Gaat u a.u.b alleen verder als u zeker weet dat u deze files wilt uploaden.",
   "rasters.please_select_colormap": "Selecteer de gewenste Colormap",
   "rasters.please_select_organisation": "Specificeer welke organisatie eigenaar is van het raster",
-  "rasters.please_select_supplier_id": "Selecteer een gebruiker die dit raster mag wijzigen en verwijderen",
+  "rasters.please_select_supplier_id": "Selecteer de gebruiker die dit raster mag wijzigen en verwijderen",
   "rasters.please_select_type_of_aggregation": "Specificeer hoe de data getoond wordt in de regioselectiemodus",
   "rasters.please_select_type_of_observation": "Specificeer de grootheid en eenheid van de data",
   "rasters.proceed_file_upload_by_typing_upload": "Ga verder door 'upload' in het onderstaande veld te typen",
