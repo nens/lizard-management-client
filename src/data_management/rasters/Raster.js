@@ -384,20 +384,35 @@ class Raster extends Component {
                     {raster.observation_type && raster.observation_type.code}
                   </div>
                   <div className={`${rasterTableStyles.tableUpload}`}>
-                    <NavLink
-                      to={`/data_management/rasters/${raster.uuid}/data`}
-                    >
-                      {" "}
-                      {raster.source !== null ? (
-                        <i class="material-icons" style={{ color: "#009F86" }}>
-                          cloud_upload
-                        </i>
-                      ) : (
+                    {raster.source === null ? (
+                      <NavLink
+                        to={`/data_management/rasters/${raster.uuid}/data`}
+                      >
                         <i class="material-icons" style={{ color: "#989898" }}>
                           cloud_upload
                         </i>
-                      )}
-                    </NavLink>
+                      </NavLink>
+                    ) : raster.source.name.split("_")[0] === "Optimizer" ||
+                    raster.source.name.split("_")[0] === "RasterStoreSource" ? (
+                      <NavLink
+                        to={`/data_management/rasters/${raster.uuid}/data`}
+                      >
+                        <i class="material-icons" style={{ color: "#009F86" }}>
+                          cloud_upload
+                        </i>
+                      </NavLink>
+                    ) : (
+                      <i
+                        class="material-icons"
+                        style={{
+                          color: "#989898",
+                          cursor: "not-allowed"
+                        }}
+                        title="Uploading data not allowed for derived rasters"
+                      >
+                        cloud_off
+                      </i>
+                    )}
                   </div>
                 </div>
               );
