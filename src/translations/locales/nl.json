@@ -189,7 +189,7 @@
   "rasters.please_select_organisation": "Specificeer welke organisatie eigenaar is van het raster",
   "rasters.please_select_supplier_id": "Selecteer een gebruiker die dit raster mag wijzigen en verwijderen",
   "rasters.please_select_type_of_aggregation": "Specificeer hoe de data getoond wordt in de regioselectiemodus",
-  "rasters.please_select_type_of_observation": "Specificeer de fysieke grootheid en eenheid van de data",
+  "rasters.please_select_type_of_observation": "Specificeer de grootheid en eenheid van de data",
   "rasters.proceed_file_upload_by_typing_upload": "Ga verder door 'upload' in het onderstaande veld te typen",
   "rasters.raster_is_temporal": "Raster Serie",
   "rasters.raster_upload_browse": "Zoek",
