@@ -605,7 +605,7 @@
 	},
 	{
 		"id": "rasters.please_select_organisation",
-		"defaultMessage": "Which organisation owns this raster?"
+		"defaultMessage": "Specify which organisation owns this raster"
 	},
 	{
 		"id": "rasters.shared_with_organisations",
@@ -613,7 +613,7 @@
 	},
 	{
 		"id": "rasters.which_organisations_would_you_like_to_share",
-		"defaultMessage": "The organisations you would like to share the raster with"
+		"defaultMessage": "Select other organisations that need read acces to this raster"
 	},
 	{
 		"id": "rasters.name_of_this_raster",
@@ -625,7 +625,7 @@
 	},
 	{
 		"id": "rasters.please_describe_the_new_raster",
-		"defaultMessage": "Please add a clear description of this raster with reference to the data source"
+		"defaultMessage": "Add a clear description of this raster with reference to the data source"
 	},
 	{
 		"id": "rasters.aggregation_type",
@@ -633,7 +633,7 @@
 	},
 	{
 		"id": "rasters.please_select_type_of_aggregation",
-		"defaultMessage": "Please select type of spatial aggregation if necessary"
+		"defaultMessage": "Specify how data should be displayed in region selection mode"
 	},
 	{
 		"id": "rasters.observation_type",
@@ -641,15 +641,11 @@
 	},
 	{
 		"id": "rasters.please_select_type_of_observation",
-		"defaultMessage": "Please select type of observation"
+		"defaultMessage": "Specify the physical quantity and unit of the data"
 	},
 	{
 		"id": "rasters.colormap",
 		"defaultMessage": "Colormap"
-	},
-	{
-		"id": "rasters.please_select_colormap",
-		"defaultMessage": "Please select Colormap"
 	},
 	{
 		"id": "rasters.fill_colormap_min",
@@ -669,7 +665,7 @@
 	},
 	{
 		"id": "rasters.please_select_supplier_id",
-		"defaultMessage": "Please select Supplier Name"
+		"defaultMessage": "Select the user that is allowed to change and delete this raster"
 	},
 	{
 		"id": "rasters.supplier_code",
@@ -677,31 +673,31 @@
 	},
 	{
 		"id": "rasters.unique_supplier_code",
-		"defaultMessage": "Please choose a supplier code for your own administration"
+		"defaultMessage": "Provide a code for your own administration"
 	},
 	{
 		"id": "rasters.raster_is_temporal",
-		"defaultMessage": "Raster Serie"
+		"defaultMessage": "Raster Series"
 	},
 	{
 		"id": "rasters.check_if_raster_is_temporal",
-		"defaultMessage": "Are you creating a raster serie (a rasterstore that contains multiple rasters over time)?"
+		"defaultMessage": "Select whether you are creating a raster that contains multiple rasters over time"
 	},
 	{
 		"id": "rasters.yes_the_raster_is_temporal",
-		"defaultMessage": "Yes, this is a raster serie"
+		"defaultMessage": "Yes, this is a raster series"
 	},
 	{
 		"id": "rasters.no_the_raster_is_not_temporal",
-		"defaultMessage": "No, this is not a raster serie"
+		"defaultMessage": "No, this is not a raster series"
 	},
 	{
 		"id": "rasters.temporal_raster_frequency",
-		"defaultMessage": "Raster Serie Interval"
+		"defaultMessage": "Raster Series Interval"
 	},
 	{
 		"id": "rasters.temporal_raster_frequency_description",
-		"defaultMessage": "Interval of raster serie"
+		"defaultMessage": "Interval of raster series"
 	},
 	{
 		"id": "rasters.submit",

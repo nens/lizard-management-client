@@ -689,7 +689,7 @@ class RasterFormModel extends Component {
                   subtitleComponent={
                     <FormattedMessage
                       id="rasters.please_select_organisation"
-                      defaultMessage="Which organisation owns this raster?"
+                      defaultMessage="Specify which organisation owns this raster"
                     />
                   }
                   placeholder="click to select organisation"
@@ -718,7 +718,7 @@ class RasterFormModel extends Component {
                   subtitleComponent={
                     <FormattedMessage
                       id="rasters.which_organisations_would_you_like_to_share"
-                      defaultMessage="The organisations you would like to share the raster with"
+                      defaultMessage="Select other organisations that need read acces to this raster"
                     />
                   }
                   step={2} // int for denoting which step of the GenericTextInputComponent it refers to
@@ -820,7 +820,7 @@ class RasterFormModel extends Component {
                   subtitleComponent={
                     <FormattedMessage
                       id="rasters.please_describe_the_new_raster"
-                      defaultMessage="Please add a clear description of this raster with reference to the data source"
+                      defaultMessage="Add a clear description of this raster with reference to the data source"
                     />
                   }
                   placeholder="Fill in your description here"
@@ -850,7 +850,7 @@ class RasterFormModel extends Component {
                   subtitleComponent={
                     <FormattedMessage
                       id="rasters.please_select_type_of_aggregation"
-                      defaultMessage="Please select type of spatial aggregation if necessary"
+                      defaultMessage="Specify how data should be displayed in region selection mode"
                     />
                   }
                   placeholder="click to select aggregation type"
@@ -863,27 +863,28 @@ class RasterFormModel extends Component {
                   choices={[
                     {
                       display: "none",
-                      description: ""
+                      description: "no aggregation"
                     },
                     {
                       display: "counts",
-                      description: "means percentage per category"
+                      description: "area per category"
                     },
                     {
                       display: "curve",
-                      description: "means percentile curve"
+                      description: "cumulative distribution"
                     },
-                    {
-                      display: "histogram",
-                      description: "means frequency per data band"
-                    },
+                    // histogram mag eruit is niet juist geimplementeerd
+                    // {
+                    //   display: "histogram",
+                    //   description: "means frequency per data band"
+                    // },
                     {
                       display: "sum",
-                      description: ""
+                      description: "values in the region are summed"
                     },
                     {
                       display: "average",
-                      description: ""
+                      description: "values in the region are averaged"
                     }
                   ]}
                   transformChoiceToDisplayValue={item => item.display}
@@ -904,7 +905,7 @@ class RasterFormModel extends Component {
                   subtitleComponent={
                     <FormattedMessage
                       id="rasters.please_select_type_of_observation"
-                      defaultMessage="Please select type of observation"
+                      defaultMessage="Specify the physical quantity and unit of the data"
                     />
                   }
                   placeholder="click to select observation type"
@@ -929,12 +930,6 @@ class RasterFormModel extends Component {
                       id="rasters.colormap"
                       defaultMessage="Colormap"
                     />
-                  } // <FormatText ... //>
-                  subtitleComponent={
-                    <FormattedMessage
-                      id="rasters.please_select_colormap"
-                      defaultMessage="Please select Colormap"
-                    />
                   }
                   minTitleComponent={
                     <FormattedMessage
@@ -956,7 +951,7 @@ class RasterFormModel extends Component {
                   readOnlyReason={
                     <FormattedMessage
                       id="rasters.colormap_readonly_layers"
-                      defaultMessage="Please choose a colormap for your raster"
+                      defaultMessage="Readonly, because the style of this raster has multiple layers"
                     />
                   }
                   currentStep={currentStep} // int for denoting which step is currently active
@@ -984,7 +979,7 @@ class RasterFormModel extends Component {
                   subtitleComponent={
                     <FormattedMessage
                       id="rasters.please_select_supplier_id"
-                      defaultMessage="Please select Supplier Name"
+                      defaultMessage="Select the user that is allowed to change and delete this raster"
                     />
                   }
                   placeholder="type to search supplier name"
@@ -1018,7 +1013,7 @@ class RasterFormModel extends Component {
                   subtitleComponent={
                     <FormattedMessage
                       id="rasters.unique_supplier_code"
-                      defaultMessage="Please choose a supplier code for your own administration"
+                      defaultMessage="Provide a code for your own administration"
                     />
                   }
                   placeholder="Fill in a supplier code here"
@@ -1038,7 +1033,7 @@ class RasterFormModel extends Component {
                   titleComponent={
                     <FormattedMessage
                       id="rasters.raster_is_temporal"
-                      defaultMessage="Raster Serie"
+                      defaultMessage="Raster Series"
                     />
                   }
                   step={10} // int for denoting which step of the GenericTextInputComponent it refers to
@@ -1051,20 +1046,20 @@ class RasterFormModel extends Component {
                   label={
                     <FormattedMessage
                       id="rasters.check_if_raster_is_temporal"
-                      defaultMessage="Are you creating a raster serie (a rasterstore that contains multiple rasters over time)?"
+                      defaultMessage="Select whether you are creating a raster that contains multiple rasters over time"
                     />
                   }
                   updateModelValue={this.setTemporalBool}
                   yesCheckedComponent={
                     <FormattedMessage
                       id="rasters.yes_the_raster_is_temporal"
-                      defaultMessage="Yes, this is a raster serie"
+                      defaultMessage="Yes, this is a raster series"
                     />
                   }
                   noNotCheckedComponent={
                     <FormattedMessage
                       id="rasters.no_the_raster_is_not_temporal"
-                      defaultMessage="No, this is not a raster serie"
+                      defaultMessage="No, this is not a raster series"
                     />
                   }
                   validate={this.validateTemporalBool}
@@ -1075,13 +1070,13 @@ class RasterFormModel extends Component {
                       titleComponent={
                         <FormattedMessage
                           id="rasters.temporal_raster_frequency"
-                          defaultMessage="Raster Serie Interval"
+                          defaultMessage="Raster Series Interval"
                         />
                       }
                       subtitleComponent={
                         <FormattedMessage
                           id="rasters.temporal_raster_frequency_description"
-                          defaultMessage="Interval of raster serie"
+                          defaultMessage="Interval of raster series"
                         />
                       }
                       multiline={false} // boolean for which input elem to use: text OR textarea
