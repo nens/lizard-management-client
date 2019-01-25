@@ -165,7 +165,7 @@
   "rasters.file_already_selected": "Er bestaat al een raster met deze naam en file grootte",
   "rasters.file_dropping": "Sleep hier uw documenten...",
   "rasters.file_selection_failed_unknown_reason": "Onbekende reden",
-  "rasters.file_selection_not_tiff": "Alleen .tif documenten zijn valide",
+  "rasters.file_selection_not_tiff": "Alleen .tif .tiff en .geotiff documenten zijn valide",
   "rasters.files_non_temporal_upload_multiple_files_not_allowed": "Voor niet-temporele rasters is het niet mogelijk meer dan een file te selecteren",
   "rasters.files_selected": "Geselecteerde documenten",
   "rasters.files_unable_to_select": "De volgende documenten konden niet worden geselecteerd",

@@ -315,7 +315,9 @@ class Raster extends Component {
         <div className={`${rasterTableStyles.tableDescription}`}>
           Description
         </div>
-        <div className={`${rasterTableStyles.TableSupplier}`}>Supplier</div>
+        <div className={`${rasterTableStyles.TableSupplier}`}>
+          Supplier Code
+        </div>
         <div className={`${rasterTableStyles.TableObservationType}`}>
           Observation type
         </div>
