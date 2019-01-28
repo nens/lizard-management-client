@@ -23,6 +23,10 @@
   border-bottom: 1px solid #D8D8D8;
   justify-content: space-between;
 }
+.tableBody:hover{
+  background-color: #a6ece0;
+  text-decoration: none;
+}
 .tableFooter {
   color: #858E9C;
   font-weight: bold;
