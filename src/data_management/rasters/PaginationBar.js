@@ -23,7 +23,7 @@ class PaginationBar extends Component {
   componentWillReceiveProps(newProps) {
     // if page changes from parent then update inputPage
     if (
-      newProps.page !== this.props.page && // why does this line not work
+      newProps.page !== this.props.page && // this check fails on first loading component and therefore I also add setstate(inputPage) to componentDidMount
       this.state.inputPage + "" !== newProps.page + ""
     ) {
       this.setState({ inputPage: newProps.page });
