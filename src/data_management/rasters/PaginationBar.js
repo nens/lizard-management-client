@@ -4,7 +4,30 @@ import styles from "./PaginationBar.css";
 class PaginationBar extends Component {
   constructor(props) {
     super(props);
-    this.state = { navigatorInError: false };
+    this.state = {
+      // inputPage is only send to parent if verified
+      // inputPage will in some situations that the page changes from outside this component be updated from parent in willReceiveProps
+      // inputPage is needed because in some situations the user chooses incorrect input.
+      // this incorrect input need to be shown to user, but not change the real data
+      // this is a recurring problem
+      // other solution would be to also expose a incorrect data to the parent, but this might leak implementation
+      inputPage: ""
+    };
+  }
+
+  componentDidMount() {
+    // on startup keep state in sync with props
+    this.setState({ inputPage: this.props.page });
+  }
+
+  componentWillReceiveProps(newProps) {
+    // if page changes from parent then update inputPage
+    if (
+      newProps.page !== this.props.page && // why does this line not work
+      this.state.inputPage + "" !== newProps.page + ""
+    ) {
+      this.setState({ inputPage: newProps.page });
+    }
   }
 
   // render all the page numbers of the list of links
@@ -33,6 +56,11 @@ class PaginationBar extends Component {
 
   // input field to fill in desired page
   renderNavigator(links, page, loadRastersOnPage) {
+    const navigatorInError = !(
+      parseInt(this.state.inputPage, 10) > 0 &&
+      parseInt(this.state.inputPage, 10) <= links.length
+    );
+
     return (
       <div>
         <span>Page: </span>
@@ -40,21 +68,19 @@ class PaginationBar extends Component {
           className={
             styles.FormControl +
             " " +
-            (this.state.navigatorInError ? styles.FormControlError : "")
+            (navigatorInError ? styles.FormControlError : "")
           }
-          placeholder={page}
+          value={this.state.inputPage}
           onChange={e => {
             // navigates to page
             const value = e.target.value;
+            this.setState({ inputPage: value });
             // only navigate if page is valid
             if (
               parseInt(value, 10) > 0 &&
               parseInt(value, 10) <= links.length
             ) {
               loadRastersOnPage(parseInt(value, 10));
-              this.setState({ navigatorInError: false });
-            } else {
-              this.setState({ navigatorInError: true });
             }
           }}
           maxLength={(links.length + "").length}
