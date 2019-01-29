@@ -185,7 +185,6 @@ class RasterFormModel extends Component {
   }
   // SupplierId
   setSupplierId(supplierId) {
-    console.log("this.state", this.state);
     if (supplierId && supplierId.username === "none") {
       this.setState({ supplierId: null });
       // User enters "none" or "" in the Select Box

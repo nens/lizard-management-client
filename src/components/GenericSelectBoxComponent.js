@@ -40,7 +40,6 @@ class GenericSelectBoxComponent extends Component {
     this.setLocalStateFromProps(this.props);
   }
   render() {
-    console.log("this.props", this.props);
     const {
       titleComponent, // <FormatText ... //>
       subtitleComponent, // <FormatText ... />
