@@ -203,7 +203,7 @@ class RasterFormModel extends Component {
       return true;
     } else if (supplierId === null) {
       return true;
-      // User enters "none" in Select Box or user deletes "none"
+      // User enters "none" or "" in the Select Box
     } else if (supplierId === "none" || supplierId === "") {
       return true;
     } else {
