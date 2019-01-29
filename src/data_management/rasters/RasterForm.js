@@ -189,7 +189,7 @@ class RasterFormModel extends Component {
     if (supplierId && supplierId.username === "none") {
       this.setState({ supplierId: null });
       // User enters "none" or "" in the Select Box
-    } else if (supplierId.toLowerCase() === "none" || supplierId === "") {
+    } else if (supplierId === "none" || supplierId === "") {
       this.setState({ supplierId: null });
     } else {
       this.setState({ supplierId });
