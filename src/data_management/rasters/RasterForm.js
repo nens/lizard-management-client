@@ -185,7 +185,11 @@ class RasterFormModel extends Component {
   }
   // SupplierId
   setSupplierId(supplierId) {
+    console.log("this.state", this.state);
     if (supplierId && supplierId.username === "none") {
+      this.setState({ supplierId: null });
+      // User enters "none" or "" in the Select Box
+    } else if (supplierId.toLowerCase() === "none" || supplierId === "") {
       this.setState({ supplierId: null });
     } else {
       this.setState({ supplierId });
@@ -199,6 +203,9 @@ class RasterFormModel extends Component {
     if (supplierId && supplierId.username) {
       return true;
     } else if (supplierId === null) {
+      return true;
+      // User enters "none" in Select Box or user deletes "none"
+    } else if (supplierId === "none" || supplierId === "") {
       return true;
     } else {
       return false;
@@ -1001,7 +1008,7 @@ class RasterFormModel extends Component {
                   isFetching={this.props.supplierIds.isFetching}
                   choicesSearchable={true}
                   modelValue={
-                    this.state.supplierId || { username: "none", value: "null" }
+                    this.state.supplierId || { username: "none", value: null }
                   } // if the supplier_id is null then pass the noneValue for the selectbox component to show. The selectbox component is not aware that the real value is null
                   updateModelValue={this.setSupplierId} // cb function to *update* the value of e.g. a raster's name in the parent model
                   resetModelValue={this.resetSupplierId} // cb function to *reset* the value of e.g. a raster's name in the parent model
