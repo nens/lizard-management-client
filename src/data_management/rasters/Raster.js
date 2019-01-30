@@ -355,86 +355,84 @@ class Raster extends Component {
           >
             {this.state.paginatedRasters.map((raster, i) => {
               return (
-                <NavLink
-                  to={`/data_management/rasters/${raster.uuid}`}
-                  style={{
-                    color: "#333",
-                    textDecoration: "none"
-                  }}
-                >
-                  <div className={`${rasterTableStyles.tableBody}`}>
-                    <div className={`${rasterTableStyles.tableCheckbox}`}>
-                      <input
-                        type="checkbox"
-                        // Make sure that you can still use the checkbox to click on,
-                        // in combination with the check all checkbox.
-                        onClick={this.clickRegularCheckbox}
-                        checked={
-                          this.state.checkboxes[i]
-                            ? this.state.checkboxes[i].checked
-                            : false
-                        }
-                        id={"checkbox_" + i}
-                      />
-                    </div>
-                    <div className={`${rasterTableStyles.tableName}`}>
-                      {raster.name}
-                    </div>
-                    <div className={`${rasterTableStyles.tableDescription}`}>
-                      {raster.description}
-                    </div>
-                    <div className={`${rasterTableStyles.TableSupplier}`}>
-                      {raster.supplier_code}
-                    </div>
-                    <div
-                      className={`${rasterTableStyles.TableObservationType}`}
-                    >
-                      {raster.observation_type && raster.observation_type.code}
-                    </div>
-                    <div className={`${rasterTableStyles.tableUpload}`}>
-                      {/* raster.source contains the metadata of the raster data */}
-                      {/* if source is null no data is yet uploaded to the raster */}
-                      {raster.source === null ? (
-                        <NavLink
-                          to={`/data_management/rasters/${raster.uuid}/data`}
-                        >
-                          <i
-                            class="material-icons"
-                            style={{ color: "#989898" }}
-                          >
-                            cloud_upload
-                          </i>
-                        </NavLink>
-                      ) : // if raster.data.name contains "Optimizer OR "RasterStoreSource" then there is already data in the raster and the user is also allowed to update this
-                      raster.source.name.split("_")[0] === "Optimizer" ||
-                      raster.source.name.split("_")[0] ===
-                        "RasterStoreSource" ? (
-                        <NavLink
-                          to={`/data_management/rasters/${raster.uuid}/data`}
-                        >
-                          <i
-                            class="material-icons"
-                            style={{ color: "#009F86" }}
-                          >
-                            cloud_upload
-                          </i>
-                        </NavLink>
-                      ) : (
-                        // in any other cases there is data in the raster, but this is generated/calculated data. The user is not allowed to update it. The user should update the rasters that act as the source for the calculations instead
-                        <i
-                          class="material-icons"
-                          style={{
-                            color: "#989898",
-                            cursor: "not-allowed"
-                          }}
-                          title="Uploading data not allowed for derived rasters"
-                        >
-                          cloud_off
+                <div className={`${rasterTableStyles.tableBody}`}>
+                  <NavLink
+                    to={`/data_management/rasters/${raster.uuid}`}
+                    className={`${rasterTableStyles.tableCheckbox}`}
+                  >
+                    <input
+                      type="checkbox"
+                      // Make sure that you can still use the checkbox to click on,
+                      // in combination with the check all checkbox.
+                      onClick={this.clickRegularCheckbox}
+                      checked={
+                        this.state.checkboxes[i]
+                          ? this.state.checkboxes[i].checked
+                          : false
+                      }
+                      id={"checkbox_" + i}
+                    />
+                  </NavLink>
+                  <NavLink
+                    to={`/data_management/rasters/${raster.uuid}`}
+                    className={`${rasterTableStyles.tableName}`}
+                  >
+                    {raster.name}
+                  </NavLink>
+                  <NavLink
+                    to={`/data_management/rasters/${raster.uuid}`}
+                    className={`${rasterTableStyles.tableDescription}`}
+                  >
+                    {raster.description}
+                  </NavLink>
+                  <NavLink
+                    to={`/data_management/rasters/${raster.uuid}`}
+                    className={`${rasterTableStyles.TableSupplier}`}
+                  >
+                    {raster.supplier_code}
+                  </NavLink>
+                  <NavLink
+                    to={`/data_management/rasters/${raster.uuid}`}
+                    className={`${rasterTableStyles.TableObservationType}`}
+                  >
+                    {raster.observation_type && raster.observation_type.code}
+                  </NavLink>
+                  <div className={`${rasterTableStyles.tableUpload}`}>
+                    {/* raster.source contains the metadata of the raster data */}
+                    {/* if source is null no data is yet uploaded to the raster */}
+                    {raster.source === null ? (
+                      <NavLink
+                        to={`/data_management/rasters/${raster.uuid}/data`}
+                      >
+                        <i class="material-icons" style={{ color: "#989898" }}>
+                          cloud_upload
                         </i>
-                      )}
-                    </div>
+                      </NavLink>
+                    ) : // if raster.data.name contains "Optimizer OR "RasterStoreSource" then there is already data in the raster and the user is also allowed to update this
+                    raster.source.name.split("_")[0] === "Optimizer" ||
+                    raster.source.name.split("_")[0] === "RasterStoreSource" ? (
+                      <NavLink
+                        to={`/data_management/rasters/${raster.uuid}/data`}
+                      >
+                        <i class="material-icons" style={{ color: "#009F86" }}>
+                          cloud_upload
+                        </i>
+                      </NavLink>
+                    ) : (
+                      // in any other cases there is data in the raster, but this is generated/calculated data. The user is not allowed to update it. The user should update the rasters that act as the source for the calculations instead
+                      <i
+                        class="material-icons"
+                        style={{
+                          color: "#989898",
+                          cursor: "not-allowed"
+                        }}
+                        title="Uploading data not allowed for derived rasters"
+                      >
+                        cloud_off
+                      </i>
+                    )}
                   </div>{" "}
-                </NavLink>
+                </div>
               );
             })}
           </Scrollbars>

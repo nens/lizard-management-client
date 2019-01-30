@@ -1,3 +1,14 @@
+/*
+  Make sure that the links in the rastertable get the same color of the parent
+*/
+a {
+  color: inherit;
+}
+a:hover {
+  text-decoration: none;
+  color: inherit;
+}
+
 .tableContainer{
   display: flex;
   flex-direction: column;
@@ -94,9 +105,6 @@
   padding: 0px 10px 0px 10px;
   overflow: hidden;
   text-overflow: ellipsis;
-  flex-direction: column;
-  justify-content: center;
-  display: flex;
 }
 .tableUpload {
   display: flex;
