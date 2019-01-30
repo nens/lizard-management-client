@@ -431,7 +431,7 @@ class Raster extends Component {
                         cloud_off
                       </i>
                     )}
-                  </div>{" "}
+                  </div>
                 </div>
               );
             })}
