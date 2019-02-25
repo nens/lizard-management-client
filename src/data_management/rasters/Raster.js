@@ -403,7 +403,11 @@ class Raster extends Component {
                       <NavLink
                         to={`/data_management/rasters/${raster.uuid}/data`}
                       >
-                        <i class="material-icons" style={{ color: "#989898" }}>
+                        <i
+                          class="material-icons"
+                          style={{ color: "#989898" }}
+                          title="No data uploaded yet"
+                        >
                           cloud_upload
                         </i>
                       </NavLink>
@@ -413,7 +417,11 @@ class Raster extends Component {
                       <NavLink
                         to={`/data_management/rasters/${raster.uuid}/data`}
                       >
-                        <i class="material-icons" style={{ color: "#009F86" }}>
+                        <i
+                          class="material-icons"
+                          style={{ color: "#009F86" }}
+                          title="Data is uploaded"
+                        >
                           cloud_upload
                         </i>
                       </NavLink>
