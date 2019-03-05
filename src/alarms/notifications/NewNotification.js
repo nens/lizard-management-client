@@ -4,10 +4,11 @@ import ConfigureRecipients from "./ConfigureRecipients";
 import ConfigureThreshold from "./ConfigureThreshold";
 import debounce from "lodash.debounce";
 import formStyles from "../../styles/Forms.css";
-import SelectBoxSimple from "../../components/SelectBoxSimple";
 import gridStyles from "../../styles/Grid.css";
 import GroupAndTemplateSelector from "./GroupAndTemplateSelect";
 import React, { Component } from "react";
+import SelectBoxSimple from "../../components/SelectBoxSimple";
+import SelectBoxSearch from "../../components/SelectBoxSearch";
 import SelectRaster from "../../components/SelectRaster";
 import SelectAsset from "../../components/SelectAsset";
 import StepIndicator from "../../components/StepIndicator";
@@ -54,6 +55,7 @@ class NewNotification extends Component {
       availableGroups: [],
       availableMessages: [],
       comparison: ">",
+      isFetching: false,
       loading: false,
       markerPosition: null,
       messages: [],
@@ -64,8 +66,10 @@ class NewNotification extends Component {
       showConfigureThreshold: false,
       sourceType: "",
       step: 1,
-      thresholds: []
+      thresholds: [],
+      timeseriesAsset: ""
     };
+    this.handleEnter = this.handleEnter.bind(this);
     this.handleInputNotificationName = this.handleInputNotificationName.bind(
       this
     );
@@ -80,6 +84,11 @@ class NewNotification extends Component {
       450
     );
     this.handleSetSourceType = this.handleSetSourceType.bind(this);
+    this.handleSetTimeseriesAsset = this.handleSetTimeseriesAsset.bind(this);
+    this.validateTimeseriesAsset = this.validateTimeseriesAsset.bind(this);
+    this.handleResetTimeseriesAsset = this.handleResetTimeseriesAsset.bind(
+      this
+    );
     this.handleSetRaster = this.handleSetRaster.bind(this);
     this.handleSetAsset = this.handleSetAsset.bind(this);
     this.handleMapClick = this.handleMapClick.bind(this);
@@ -114,6 +123,25 @@ class NewNotification extends Component {
       this.setState({
         showConfigureThreshold: false
       });
+    }
+  }
+  handleEnter(event) {
+    // werkt nog een beetje funky
+    if (this.state.step === 3) {
+      if (
+        this.validateTimeseriesAsset(this.state.timeseriesAsset) &&
+        event.keyCode === 13
+      ) {
+        // 13 is keycode 'enter' (works only when current input validates)
+        const currentStep = this.state.step;
+        this.setState({ step: currentStep + 1 });
+      }
+    } else {
+      if (event.keyCode === 13) {
+        // 13 is keycode 'enter' (works only when current input validates)
+        const currentStep = this.state.step;
+        this.setState({ step: currentStep + 1 });
+      }
     }
   }
   handleInputNotificationName(e) {
@@ -232,6 +260,19 @@ class NewNotification extends Component {
   }
   handleSetSourceType(sourceType) {
     this.setState({ sourceType });
+  }
+  handleSetTimeseriesAsset(timeseriesAsset) {
+    this.setState({ timeseriesAsset });
+  }
+  validateTimeseriesAsset(str) {
+    if (str && str.length > 1) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  handleResetTimeseriesAsset(timeseriesAsset) {
+    this.handleSetTimeseriesAsset("");
   }
   handleSetAsset(view) {
     this.setState({
@@ -522,37 +563,50 @@ class NewNotification extends Component {
                         className={`mt-0 ${step !== 3 ? "text-muted" : null}`}
                       >
                         <FormattedMessage
-                          id="notifications_app.raster_selection"
-                          defaultMessage="Raster selection"
+                          id="notifications_app.timeseries_selection"
+                          defaultMessage="Timeseries selection"
                         />
                       </h3>
                       {step === 3 ? (
                         <div>
                           <p className="text-muted">
                             <FormattedMessage
-                              id="notifications_app.which_temporal_raster_to_use"
-                              defaultMessage="Which temporal raster do you want to use?"
+                              id="notifications_app.select_timeserie_via_asset"
+                              defaultMessage="Select timeserie via asset."
                             />
                           </p>
                           <div className={formStyles.FormGroup}>
-                            <SelectRaster
-                              placeholderText="Type to search"
-                              results={rasters}
-                              loading={loading}
-                              onInput={this.handleRasterSearchInput}
-                              setRaster={this.handleSetRaster}
+                            <SelectBoxSearch
+                              choices={[
+                                "Asset1",
+                                "Asset2"
+                              ]} /* get assets from lizard api, search with search endpoint */
+                              choice={"Asset1"}
+                              transformChoiceToDisplayValue={e => e || ""}
+                              isFetching={this.state.isFetching}
+                              updateModelValue={this.handleSetTimeseriesAsset}
+                              onKeyUp={e => this.handleEnter(e) /* maken*/}
+                              inputId={
+                                "notifications_app.select_timeserie_via_asset" +
+                                "_input"
+                              }
+                              placeholder={"Click to select timeseries asset"}
+                              validate={this.validateTimeseriesAsset}
+                              resetModelValue={
+                                this.handleResetTimeseriesAsset /* maken */
+                              }
+                              readonly={false}
+                              noneValue={undefined}
                             />
-                            {this.state.name ? (
+                            {this.state.timeseriesAsset ? (
                               <button
                                 type="button"
                                 className={`${buttonStyles.Button} ${buttonStyles.Success}`}
                                 style={{ marginTop: 10 }}
                                 onClick={() => {
-                                  if (raster) {
-                                    this.setState({
-                                      step: 4
-                                    });
-                                  }
+                                  this.setState({
+                                    step: 4
+                                  });
                                 }}
                               >
                                 <FormattedMessage
@@ -577,6 +631,7 @@ class NewNotification extends Component {
                     />
                     <div
                       style={{
+                        width: "calc(100% - 90px)",
                         marginLeft: 90
                       }}
                     >
@@ -584,11 +639,73 @@ class NewNotification extends Component {
                         className={`mt-0 ${step !== 4 ? "text-muted" : null}`}
                       >
                         <FormattedMessage
+                          id="notifications_app.raster_selection"
+                          defaultMessage="Raster selection"
+                        />
+                      </h3>
+                      {step === 4 ? (
+                        <div>
+                          <p className="text-muted">
+                            <FormattedMessage
+                              id="notifications_app.which_temporal_raster_to_use"
+                              defaultMessage="Which temporal raster do you want to use?"
+                            />
+                          </p>
+                          <div className={formStyles.FormGroup}>
+                            <SelectRaster
+                              placeholderText="Type to search"
+                              results={rasters}
+                              loading={loading}
+                              onInput={this.handleRasterSearchInput}
+                              setRaster={this.handleSetRaster}
+                            />
+                            {this.state.name ? (
+                              <button
+                                type="button"
+                                className={`${buttonStyles.Button} ${buttonStyles.Success}`}
+                                style={{ marginTop: 10 }}
+                                onClick={() => {
+                                  if (raster) {
+                                    this.setState({
+                                      step: 5
+                                    });
+                                  }
+                                }}
+                              >
+                                <FormattedMessage
+                                  id="notifications_app.next_step"
+                                  defaultMessage="Next step"
+                                />
+                              </button>
+                            ) : null}
+                          </div>
+                        </div>
+                      ) : null}
+                    </div>
+                  </div>
+                </div>
+
+                <div className={styles.Step} id="Step">
+                  <div className="media">
+                    <StepIndicator
+                      indicator="5"
+                      active={step === 5}
+                      handleClick={() => this.goBackToStep(5)}
+                    />
+                    <div
+                      style={{
+                        marginLeft: 90
+                      }}
+                    >
+                      <h3
+                        className={`mt-0 ${step !== 5 ? "text-muted" : null}`}
+                      >
+                        <FormattedMessage
                           id="notifications_app.point_on_map"
                           defaultMessage="Point-on-map"
                         />
                       </h3>
-                      {step === 4 ? (
+                      {step === 5 ? (
                         <div>
                           <p className="text-muted">
                             <FormattedMessage
@@ -668,7 +785,7 @@ class NewNotification extends Component {
                               if (markerPosition) {
                                 this.loadTimeseriesData();
                                 this.setState({
-                                  step: 5
+                                  step: 6
                                 });
                               }
                             }}
@@ -684,7 +801,7 @@ class NewNotification extends Component {
                             style={{ marginLeft: 15, marginTop: 10 }}
                             onClick={() =>
                               this.setState({
-                                step: 3
+                                step: 6
                               })}
                           >
                             <FormattedMessage
@@ -701,9 +818,9 @@ class NewNotification extends Component {
                 <div className={styles.Step} id="Step">
                   <div className="media">
                     <StepIndicator
-                      indicator="5"
-                      active={step === 5}
-                      handleClick={() => this.goBackToStep(5)}
+                      indicator="6"
+                      active={step === 6}
+                      handleClick={() => this.goBackToStep(6)}
                     />
                     <div
                       style={{
@@ -711,14 +828,14 @@ class NewNotification extends Component {
                       }}
                     >
                       <h3
-                        className={`mt-0 ${step !== 5 ? "text-muted" : null}`}
+                        className={`mt-0 ${step !== 6 ? "text-muted" : null}`}
                       >
                         <FormattedMessage
                           id="notifications_app.newnotification_thresholds"
                           defaultMessage="Thresholds"
                         />
                       </h3>
-                      {step === 5 ? (
+                      {step === 6 ? (
                         <div>
                           <p className="text-muted">
                             <FormattedMessage
@@ -807,7 +924,7 @@ class NewNotification extends Component {
                             style={{ marginTop: 10 }}
                             onClick={() => {
                               this.setState({
-                                step: 6
+                                step: 7
                               });
                             }}
                           >
@@ -823,19 +940,19 @@ class NewNotification extends Component {
                 </div>
 
                 <div className="media">
-                  <StepIndicator indicator="6" active={step === 6} />
+                  <StepIndicator indicator="7" active={step === 7} />
                   <div
                     style={{
                       marginLeft: 90
                     }}
                   >
-                    <h3 className={`mt-0 ${step !== 6 ? "text-muted" : null}`}>
+                    <h3 className={`mt-0 ${step !== 7 ? "text-muted" : null}`}>
                       <FormattedMessage
                         id="notifications_app.recipients"
                         defaultMessage="Recipients"
                       />
                     </h3>
-                    {step === 6 ? (
+                    {step === 7 ? (
                       <div>
                         <p className="text-muted">
                           <FormattedMessage
