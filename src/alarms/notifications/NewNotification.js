@@ -48,9 +48,12 @@ async function fetchContactsAndMessages(organisationId) {
 
 async function fetchAssets(assetName) {
   try {
-    const assets = await fetch(`/api/v3/search/?q=${assetName}`, {
-      credentials: "same-origin"
-    })
+    const assets = await fetch(
+      `/api/v3/search/?q=${assetName}&page_size=100000`,
+      {
+        credentials: "same-origin"
+      }
+    )
       .then(response => response.json())
       .then(data => {
         console.log("NewNotification fetchAssets data.results", data.results);
