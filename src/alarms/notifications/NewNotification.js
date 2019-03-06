@@ -46,6 +46,22 @@ async function fetchContactsAndMessages(organisationId) {
   }
 }
 
+async function fetchAssets(assetName) {
+  try {
+    const assets = await fetch(`/api/v3/search/?q=${assetName}`, {
+      credentials: "same-origin"
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log("NewNotification fetchAssets data.results", data.results);
+        return data.results;
+      });
+    return assets;
+  } catch (e) {
+    throw new Error(e);
+  }
+}
+
 class NewNotification extends Component {
   constructor(props) {
     super(props);
@@ -67,7 +83,10 @@ class NewNotification extends Component {
       sourceType: "",
       step: 1,
       thresholds: [],
-      timeseriesAsset: ""
+      timeseriesAsset: "",
+      timeseriesAssets: [],
+      timeseriesNestedAsset: "",
+      timeseriesUuid: ""
     };
     this.handleEnter = this.handleEnter.bind(this);
     this.handleInputNotificationName = this.handleInputNotificationName.bind(
@@ -89,6 +108,18 @@ class NewNotification extends Component {
     this.handleResetTimeseriesAsset = this.handleResetTimeseriesAsset.bind(
       this
     );
+    this.handleSetTimeseriesNestedAsset = this.handleSetTimeseriesNestedAsset.bind(
+      this
+    );
+    this.validateTimeseriesNestedAsset = this.validateTimeseriesNestedAsset.bind(
+      this
+    );
+    this.handleResetTimeseriesNestedAsset = this.handleResetTimeseriesNestedAsset.bind(
+      this
+    );
+    this.handleSetTimeseriesUuid = this.handleSetTimeseriesUuid.bind(this);
+    this.validateTimeseriesUuid = this.validateTimeseriesUuid.bind(this);
+    this.handleResetTimeseriesUuid = this.handleResetTimeseriesUuid.bind(this);
     this.handleSetRaster = this.handleSetRaster.bind(this);
     this.handleSetAsset = this.handleSetAsset.bind(this);
     this.handleMapClick = this.handleMapClick.bind(this);
@@ -114,6 +145,18 @@ class NewNotification extends Component {
         availableMessages: data.messages
       });
     });
+    // fetchAssets(this.state.timeseriesAsset).then(data => {
+    //   console.log("NewNotification componentDidMount data", data);
+    //   // let assets = [];
+    //   // for (var i = 0; i < data.length; i++) {
+    //   //   console.log("NewNotification componentDidMount data[i].title", data[i].title);
+    //   //   assets.push(data[i].title);
+    //   // }
+    //   this.setState({
+    //     timeseriesAssets: data
+    //   });
+    //   console.log("NewNotification this.state.timeseriesAssets", this.state.timeseriesAssets);
+    // });
   }
   componentWillUnmount() {
     document.removeEventListener("keydown", this.hideConfigureThreshold, false);
@@ -261,8 +304,17 @@ class NewNotification extends Component {
   handleSetSourceType(sourceType) {
     this.setState({ sourceType });
   }
-  handleSetTimeseriesAsset(timeseriesAsset) {
-    this.setState({ timeseriesAsset });
+  handleSetTimeseriesAsset(assetName) {
+    fetchAssets(assetName).then(data => {
+      console.log("NewNotification handleSetTimeseriesAsset data", data);
+      let assets = [];
+      for (var i = 0; i < data.length; i++) {
+        assets.push(data[i].title);
+      }
+      this.setState({ timeseriesAssets: assets });
+    });
+    this.setState({ timeseriesAsset: assetName });
+    // choices of timeseries asset becomes timeseriesAssets
   }
   validateTimeseriesAsset(str) {
     if (str && str.length > 1) {
@@ -273,6 +325,32 @@ class NewNotification extends Component {
   }
   handleResetTimeseriesAsset(timeseriesAsset) {
     this.handleSetTimeseriesAsset("");
+  }
+  handleSetTimeseriesNestedAsset(timeseriesNestedAsset) {
+    this.setState({ timeseriesNestedAsset });
+  }
+  validateTimeseriesNestedAsset(str) {
+    if (str && str.length > 1) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  handleResetTimeseriesNestedAsset(timeseriesNestedAsset) {
+    this.handleSetTimeseriesNestedAsset("");
+  }
+  handleSetTimeseriesUuid(timeseriesUuid) {
+    this.setState({ timeseriesUuid: timeseriesUuid });
+  }
+  validateTimeseriesUuid(str) {
+    if (str && str.length > 1) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  handleResetTimeseriesUuid(timeseriesUuid) {
+    this.handleSetTimeseriesUuid("");
   }
   handleSetAsset(view) {
     this.setState({
@@ -577,28 +655,78 @@ class NewNotification extends Component {
                           </p>
                           <div className={formStyles.FormGroup}>
                             <SelectBoxSearch
-                              choices={[
-                                "Asset1",
-                                "Asset2"
-                              ]} /* get assets from lizard api, search with search endpoint */
-                              choice={"Asset1"}
+                              choices={
+                                this.state.timeseriesAssets
+                              } /* get assets from lizard api, search with search endpoint */
+                              choice={this.state.timeseriesAsset}
                               transformChoiceToDisplayValue={e => e || ""}
-                              isFetching={this.state.isFetching}
+                              isFetching={false}
                               updateModelValue={this.handleSetTimeseriesAsset}
-                              onKeyUp={e => this.handleEnter(e) /* maken*/}
+                              onKeyUp={e => {
+                                fetchAssets(this.state.timeseriesAssets);
+                                this.handleEnter(e); /* maken*/
+                              }}
                               inputId={
                                 "notifications_app.select_timeserie_via_asset" +
                                 "_input"
                               }
                               placeholder={"Click to select timeseries asset"}
                               validate={this.validateTimeseriesAsset}
+                              resetModelValue={this.handleResetTimeseriesAsset}
+                              readonly={false}
+                              noneValue={undefined}
+                            />{" "}
+                            <br />
+                            <SelectBoxSearch
+                              choices={[
+                                "NestedAsset1",
+                                "NestedAsset2"
+                              ]} /* get assets from lizard api, search with search endpoint */
+                              choice={this.state.timeseriesNestedAsset}
+                              transformChoiceToDisplayValue={e => e || ""}
+                              isFetching={false}
+                              updateModelValue={
+                                this.handleSetTimeseriesNestedAsset
+                              }
+                              onKeyUp={e => this.handleEnter(e) /* maken*/}
+                              inputId={
+                                "notifications_app.select_timeserie_via_nested_asset" +
+                                "_input"
+                              }
+                              placeholder={
+                                "Click to select timeseries nested asset"
+                              }
+                              validate={this.validateTimeseriesNestedAsset}
                               resetModelValue={
-                                this.handleResetTimeseriesAsset /* maken */
+                                this.handleResetTimeseriesNestedAsset
                               }
                               readonly={false}
                               noneValue={undefined}
+                            />{" "}
+                            <br />
+                            <SelectBoxSearch
+                              choices={[
+                                "TimeseriesUuid1",
+                                "TimeseriesUuid2"
+                              ]} /* get assets from lizard api, search with search endpoint */
+                              choice={this.state.timeseriesUuid}
+                              transformChoiceToDisplayValue={e => e || ""}
+                              isFetching={false}
+                              updateModelValue={this.handleSetTimeseriesUuid}
+                              onKeyUp={e => this.handleEnter(e) /* maken*/}
+                              inputId={
+                                "notifications_app.select_timeserie_via_uuid" +
+                                "_input"
+                              }
+                              placeholder={
+                                "Click to select timeseries uuid asset"
+                              }
+                              validate={this.validateTimeseriesUuid}
+                              resetModelValue={this.handleResetTimeseriesUuid}
+                              readonly={false}
+                              noneValue={undefined}
                             />
-                            {this.state.timeseriesAsset ? (
+                            {this.state.timeseriesUuid ? (
                               <button
                                 type="button"
                                 className={`${buttonStyles.Button} ${buttonStyles.Success}`}
