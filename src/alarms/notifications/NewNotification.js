@@ -95,6 +95,67 @@ async function fetchNestedAssets(assetType, assetId) {
   }
 }
 
+async function fetchTimeseriesUuidsFromAsset(assetType, assetId) {
+  try {
+    // Set page_size to 100000, same as in Raster.js
+    // get timeserie uuids from asset and his nested assets
+    // let assetType = "groundwaterstation";
+    // let assetId = 3235;
+    console.log(
+      "NewNotification fetchTimeseriesUuidsFromAsset assetType",
+      assetType
+    );
+    console.log(
+      "NewNotification fetchTimeseriesUuidsFromAsset assetId",
+      assetId
+    );
+    const uuids = await fetch(
+      `/api/v3/${assetType}s/${assetId}/?page_size=100000`,
+      {
+        credentials: "same-origin"
+      }
+    )
+      .then(response => response.json())
+      .then(data => {
+        console.log("NewNotification fetchTimeseriesUuidsFromAsset data", data);
+        console.log(
+          "NewNotification fetchTimeseriesUuidsFromAsset data.timeseries",
+          data.timeseries
+        );
+        // Timeseries asset
+        // let timeseriesUuid = [];
+        let assetTimeseriesUuids = data.timeseries;
+        let nestedAssetTimeseriesUuids = []; // get all timeseries of nested assets
+        if (data.filters) {
+          for (var i = 0; i < data.filters.length; i++) {
+            for (var i = 0; i < data.filters[i].timeseries.length; i++) {
+              let newUuid = data.filters[i].timeseries[i].uuid;
+              console.log(
+                "NewNotification fetchTimeseriesUuidsFromAsset newUuid",
+                newUuid
+              );
+              nestedAssetTimeseriesUuids.push(
+                data.filters[i].timeseries[i].uuid
+              );
+              console.log(
+                "NewNotification fetchTimeseriesUuidsFromAsset nestedAssetTimeseriesUuids",
+                nestedAssetTimeseriesUuids
+              );
+            }
+          }
+        }
+        let timeseriesUuid = assetTimeseriesUuids.concat(
+          nestedAssetTimeseriesUuids
+        );
+        return timeseriesUuid;
+      });
+    console.log("NewNotification fetchTimeseriesUuidsFromAsset uuids", uuids);
+    return uuids;
+  } catch (e) {
+    throw new Error(e);
+  }
+}
+
 class NewNotification extends Component {
   constructor(props) {
     super(props);
@@ -122,7 +183,8 @@ class NewNotification extends Component {
       timeseriesAssets: [],
       timeseriesNestedAsset: "",
       timeseriesNestedAssets: [],
-      timeseriesUuid: ""
+      timeseriesUuid: "",
+      timeseriesUuids: []
     };
     this.handleEnter = this.handleEnter.bind(this);
     this.handleInputNotificationName = this.handleInputNotificationName.bind(
@@ -355,6 +417,7 @@ class NewNotification extends Component {
       // choices of SelectBoxSearch for timeserie assets
       this.setState({ timeseriesAssets: assets });
       console.log("NewNotification handleSetTimeseriesAsset assets", assets);
+      // assetType and assetId needed for nestedAsset and uuids
       this.setState({ timeseriesAssetType: assetType });
       this.setState({ timeseriesAssetId: assetId });
       this.handleSetTimeseriesNestedAsset("");
@@ -418,6 +481,36 @@ class NewNotification extends Component {
   }
   handleSetTimeseriesUuid(timeseriesUuid) {
     this.setState({ timeseriesUuid: timeseriesUuid });
+    fetchTimeseriesUuidsFromAsset(
+      this.state.timeseriesAssetType,
+      this.state.timeseriesAssetId
+    ).then(data => {
+      console.log("NewNotification handleResetTimeseriesUuid uuid data", data);
+      this.setState({ timeseriesUuids: data });
+    });
+    // fetchNestedAssets(
+    //   this.state.timeseriesAssetType,
+    //   this.state.timeseriesAssetId
+    // ).then(data => {
+    //   console.log(
+    //     "NewNotification handleSetTimeseriesNestedAsset nestedAsset data",
+    //     data
+    //   );
+    //   let nestedAssets = [];
+    //   for (var i = 0; i < data.length; i++) {
+    //     if (data[i].code) {
+    //       nestedAssets.push(data[i].code);
+    //     }
+    //   }
+    //   // choices of SelectBoxSearch for timeserie nested assets
+    //   this.setState({ timeseriesNestedAssets: nestedAssets });
+    //   console.log(
+    //     "NewNotification handleSetTimeseriesNestedAsset nestedAssets",
+    //     nestedAssets
+    //   );
+    //   // choice of SelectBoxSearch for timeserie nested asset
+    //   this.setState({ timeseriesNestedAsset: timeseriesNestedAsset });
+    // });
   }
   validateTimeseriesUuid(str) {
     if (str && str.length > 1) {
@@ -753,9 +846,7 @@ class NewNotification extends Component {
                             />{" "}
                             <br />
                             <SelectBoxSearch
-                              choices={
-                                this.state.timeseriesNestedAssets
-                              } /* get assets from lizard api, search with search endpoint */
+                              choices={this.state.timeseriesNestedAssets}
                               choice={this.state.timeseriesNestedAsset}
                               transformChoiceToDisplayValue={e => e || ""}
                               isFetching={false}
@@ -763,7 +854,10 @@ class NewNotification extends Component {
                                 this.handleSetTimeseriesNestedAsset
                               }
                               onKeyUp={e => {
-                                fetchNestedAssets("groundwaterstation", 3235);
+                                fetchNestedAssets(
+                                  this.state.timeseriesAssetType,
+                                  this.state.timeseriesAssetId
+                                );
                                 this.handleEnter(e); /* maken*/
                               }}
                               inputId={
@@ -782,15 +876,18 @@ class NewNotification extends Component {
                             />{" "}
                             <br />
                             <SelectBoxSearch
-                              choices={[
-                                "TimeseriesUuid1",
-                                "TimeseriesUuid2"
-                              ]} /* get assets from lizard api, search with search endpoint */
+                              choices={this.state.timeseriesUuids}
                               choice={this.state.timeseriesUuid}
                               transformChoiceToDisplayValue={e => e || ""}
                               isFetching={false}
                               updateModelValue={this.handleSetTimeseriesUuid}
-                              onKeyUp={e => this.handleEnter(e) /* maken*/}
+                              onKeyUp={e => {
+                                fetchTimeseriesUuidsFromAsset(
+                                  this.state.timeseriesAssetType,
+                                  this.state.timeseriesAssetId
+                                );
+                                this.handleEnter(e); /* maken*/
+                              }}
                               inputId={
                                 "notifications_app.select_timeserie_via_uuid" +
                                 "_input"
