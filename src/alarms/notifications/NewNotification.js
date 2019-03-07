@@ -47,7 +47,9 @@ async function fetchContactsAndMessages(organisationId) {
 }
 
 async function fetchAssets(assetName) {
+  // Fetch asset from Lizard api with search endpoint
   try {
+    // Set page_size to 100000, same as in Raster.js
     const assets = await fetch(
       `/api/v3/search/?q=${assetName}&page_size=100000`,
       {
@@ -60,6 +62,34 @@ async function fetchAssets(assetName) {
         return data.results;
       });
     return assets;
+  } catch (e) {
+    throw new Error(e);
+  }
+}
+
+async function fetchNestedAssets(assetType, assetId) {
+  try {
+    // Set page_size to 100000, same as in Raster.js
+    let nestedAsset = "filters";
+    // let assetType = "groundwaterstation";
+    // let assetId = 3235;
+    const nestedAssets = await fetch(
+      `/api/v3/${assetType}s/${assetId}/?page_size=100000`,
+      {
+        credentials: "same-origin"
+      }
+    )
+      .then(response => response.json())
+      .then(data => {
+        console.log("NewNotification fetchNestedAssets data", data);
+        console.log(
+          "NewNotification fetchNestedAssets data.filters",
+          data.filters
+        );
+        return data["filters"];
+      });
+    console.log("NewNotification fetchNestedAssets nestedAssets", nestedAssets);
+    return nestedAssets;
   } catch (e) {
     throw new Error(e);
   }
@@ -89,6 +119,7 @@ class NewNotification extends Component {
       timeseriesAsset: "",
       timeseriesAssets: [],
       timeseriesNestedAsset: "",
+      timeseriesNestedAssets: [],
       timeseriesUuid: ""
     };
     this.handleEnter = this.handleEnter.bind(this);
@@ -309,15 +340,21 @@ class NewNotification extends Component {
   }
   handleSetTimeseriesAsset(assetName) {
     fetchAssets(assetName).then(data => {
-      console.log("NewNotification handleSetTimeseriesAsset data", data);
+      console.log(
+        "NewNotification handleSetTimeseriesAsset assetName data",
+        data
+      );
       let assets = [];
       for (var i = 0; i < data.length; i++) {
         assets.push(data[i].title);
       }
+      // choices of SelectBoxSearch for timeserie assets
       this.setState({ timeseriesAssets: assets });
+      console.log("NewNotification handleSetTimeseriesAsset assets", assets);
+      this.handleSetTimeseriesNestedAsset("");
     });
+    // choice of SelectBoxSearch for timeserie asset
     this.setState({ timeseriesAsset: assetName });
-    // choices of timeseries asset becomes timeseriesAssets
   }
   validateTimeseriesAsset(str) {
     if (str && str.length > 1) {
@@ -330,7 +367,33 @@ class NewNotification extends Component {
     this.handleSetTimeseriesAsset("");
   }
   handleSetTimeseriesNestedAsset(timeseriesNestedAsset) {
-    this.setState({ timeseriesNestedAsset });
+    // fetch nested asset if any by following asset and number
+    // filters as nested assets for groundwaterstations
+    // add all nested assets!
+    // this.setState({ timeseriesNestedAsset: "" });
+    // this.setState({ timeseriesNestedAssets: [] });
+    fetchNestedAssets("groundwaterstation", 3235).then(data => {
+      console.log(
+        "NewNotification handleSetTimeseriesNestedAsset nestedAsset data",
+        data
+      );
+      let nestedAssets = [];
+      for (var i = 0; i < data.length; i++) {
+        if (data[i].code) {
+          nestedAssets.push(data[i].code);
+        }
+      }
+      // choices of SelectBoxSearch for timeserie nested assets
+      this.setState({ timeseriesNestedAssets: nestedAssets });
+      console.log(
+        "NewNotification handleSetTimeseriesNestedAsset nestedAssets",
+        nestedAssets
+      );
+      // choice of SelectBoxSearch for timeserie nested asset
+      this.setState({ timeseriesNestedAsset: timeseriesNestedAsset });
+    });
+    // check for all nested assets in client
+    // Also set timeseries uuid
   }
   validateTimeseriesNestedAsset(str) {
     if (str && str.length > 1) {
@@ -658,9 +721,7 @@ class NewNotification extends Component {
                           </p>
                           <div className={formStyles.FormGroup}>
                             <SelectBoxSearch
-                              choices={
-                                this.state.timeseriesAssets
-                              } /* get assets from lizard api, search with search endpoint */
+                              choices={this.state.timeseriesAssets}
                               choice={this.state.timeseriesAsset}
                               transformChoiceToDisplayValue={e => e || ""}
                               isFetching={false}
@@ -681,17 +742,19 @@ class NewNotification extends Component {
                             />{" "}
                             <br />
                             <SelectBoxSearch
-                              choices={[
-                                "NestedAsset1",
-                                "NestedAsset2"
-                              ]} /* get assets from lizard api, search with search endpoint */
+                              choices={
+                                this.state.timeseriesNestedAssets
+                              } /* get assets from lizard api, search with search endpoint */
                               choice={this.state.timeseriesNestedAsset}
                               transformChoiceToDisplayValue={e => e || ""}
                               isFetching={false}
                               updateModelValue={
                                 this.handleSetTimeseriesNestedAsset
                               }
-                              onKeyUp={e => this.handleEnter(e) /* maken*/}
+                              onKeyUp={e => {
+                                fetchNestedAssets("groundwaterstation", 3235);
+                                this.handleEnter(e); /* maken*/
+                              }}
                               inputId={
                                 "notifications_app.select_timeserie_via_nested_asset" +
                                 "_input"
