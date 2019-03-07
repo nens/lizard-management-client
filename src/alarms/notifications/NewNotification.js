@@ -117,6 +117,8 @@ class NewNotification extends Component {
       step: 1,
       thresholds: [],
       timeseriesAsset: "",
+      timeseriesAssetType: "",
+      timeseriesAssetId: "",
       timeseriesAssets: [],
       timeseriesNestedAsset: "",
       timeseriesNestedAssets: [],
@@ -345,16 +347,22 @@ class NewNotification extends Component {
         data
       );
       let assets = [];
+      let assetType = data[0].entity_name;
+      let assetId = data[0].entity_id;
       for (var i = 0; i < data.length; i++) {
         assets.push(data[i].title);
       }
       // choices of SelectBoxSearch for timeserie assets
       this.setState({ timeseriesAssets: assets });
       console.log("NewNotification handleSetTimeseriesAsset assets", assets);
+      this.setState({ timeseriesAssetType: assetType });
+      this.setState({ timeseriesAssetId: assetId });
       this.handleSetTimeseriesNestedAsset("");
     });
     // choice of SelectBoxSearch for timeserie asset
     this.setState({ timeseriesAsset: assetName });
+    // this.setState({ timeseriesAssetType:  });  // nodig voor nestedAsset
+    // this.setState({ timeseriesAssetId:  });  // nodig voor nestedAsset
   }
   validateTimeseriesAsset(str) {
     if (str && str.length > 1) {
@@ -372,7 +380,10 @@ class NewNotification extends Component {
     // add all nested assets!
     // this.setState({ timeseriesNestedAsset: "" });
     // this.setState({ timeseriesNestedAssets: [] });
-    fetchNestedAssets("groundwaterstation", 3235).then(data => {
+    fetchNestedAssets(
+      this.state.timeseriesAssetType,
+      this.state.timeseriesAssetId
+    ).then(data => {
       console.log(
         "NewNotification handleSetTimeseriesNestedAsset nestedAsset data",
         data
