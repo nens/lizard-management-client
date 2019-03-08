@@ -169,7 +169,7 @@ class Detail extends Component {
               {contactgroup.contacts.map((contact, i) => {
                 const email = contact.user ? contact.user.email : contact.email;
                 return (
-                  <tr key={i}>
+                  <tr key={contact.id}>
                     <td>{email || "-"}</td>
                     <td>{contact.phone_number || "-"}</td>
                     <td>{contact.first_name || "-"}</td>
