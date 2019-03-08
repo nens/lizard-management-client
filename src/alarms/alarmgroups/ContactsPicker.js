@@ -189,7 +189,7 @@ class ContactsPicker extends Component {
 
                       return (
                         <div
-                          key={i}
+                          key={contact.id}
                           className={`${styles.ContactRow}`}
                           onClick={() => {
                             this.addContact(contact);
