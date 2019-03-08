@@ -97,7 +97,7 @@ class App extends Component {
     const alarmsTable = alarmRows.map((alarm, i) => {
       return (
         <AlarmRow
-          key={i}
+          key={alarm.uuid}
           alarm={alarm}
           loadAlarmsOnPage={this.loadAlarmsOnPage}
         />
