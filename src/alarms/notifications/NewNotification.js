@@ -379,16 +379,15 @@ class NewNotification extends Component {
     this.handleResetTimeseriesNestedAsset();
     this.handleResetTimeseriesUuid();
     fetchAssets(assetName).then(data => {
-      let assets = [];
-      let assetType = data[0].entity_name;
-      let assetId = data[0].entity_id;
-      for (var i = 0; i < data.length; i++) {
-        assets.push(data[i].title);
-      }
+      let assets = data.map(function(asset) {
+        return asset.title;
+      });
       // choices of SelectBoxSearch for timeserie assets
       this.setState({ timeseriesAssets: assets });
       // assetType and assetId needed for nestedAsset and uuids
+      let assetType = data[0].entity_name;
       this.setState({ timeseriesAssetType: assetType });
+      let assetId = data[0].entity_id;
       this.setState({ timeseriesAssetId: assetId });
     });
     // choice of SelectBoxSearch for timeserie asset
