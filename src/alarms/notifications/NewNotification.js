@@ -58,7 +58,6 @@ async function fetchAssets(assetName) {
     )
       .then(response => response.json())
       .then(data => {
-        console.log("NewNotification fetchAssets data.results", data.results);
         return data.results;
       });
     return assets;
@@ -79,23 +78,13 @@ async function fetchNestedAssets(assetType, assetId) {
       .then(response => response.json())
       .then(data => {
         let nestedAssetsList = [];
-        console.log("NewNotification fetchNestedAssets data", data);
         if (data.filters) {
-          console.log(
-            "NewNotification fetchNestedAssets data.filters",
-            data.filters
-          );
           nestedAssetsList = data.filters;
         } else if (data.pumps) {
-          console.log(
-            "NewNotification fetchNestedAssets data.pumps",
-            data.pumps
-          );
           nestedAssetsList = data.pumps;
         }
         return nestedAssetsList;
       });
-    console.log("NewNotification fetchNestedAssets nestedAssets", nestedAssets);
     return nestedAssets;
   } catch (e) {
     throw new Error(e);
@@ -106,16 +95,6 @@ async function fetchTimeseriesUuidsFromAsset(assetType, assetId) {
   try {
     // Set page_size to 100000, same as in Raster.js
     // get timeserie uuids from asset and his nested assets
-    // let assetType = "groundwaterstation";
-    // let assetId = 3235;
-    console.log(
-      "NewNotification fetchTimeseriesUuidsFromAsset assetType",
-      assetType
-    );
-    console.log(
-      "NewNotification fetchTimeseriesUuidsFromAsset assetId",
-      assetId
-    );
     const uuids = await fetch(
       `/api/v3/${assetType}s/${assetId}/?page_size=100000`,
       {
@@ -124,11 +103,6 @@ async function fetchTimeseriesUuidsFromAsset(assetType, assetId) {
     )
       .then(response => response.json())
       .then(data => {
-        console.log("NewNotification fetchTimeseriesUuidsFromAsset data", data);
-        console.log(
-          "NewNotification fetchTimeseriesUuidsFromAsset data.timeseries",
-          data.timeseries
-        );
         // Timeseries asset
         let timeseriesUuid = [];
         if (data.timeseries) {
@@ -139,15 +113,7 @@ async function fetchTimeseriesUuidsFromAsset(assetType, assetId) {
           for (var i = 0; i < data.filters.length; i++) {
             for (var i = 0; i < data.filters[i].timeseries.length; i++) {
               let newUuid = data.filters[i].timeseries[i].uuid;
-              console.log(
-                "NewNotification fetchTimeseriesUuidsFromAsset newUuid",
-                newUuid
-              );
               timeseriesUuid.push(data.filters[i].timeseries[i].uuid);
-              console.log(
-                "NewNotification fetchTimeseriesUuidsFromAsset nestedAssetTimeseriesUuids",
-                timeseriesUuid
-              );
             }
           }
         }
@@ -156,22 +122,12 @@ async function fetchTimeseriesUuidsFromAsset(assetType, assetId) {
           for (var i = 0; i < data.pumps.length; i++) {
             for (var i = 0; i < data.pumps[i].timeseries.length; i++) {
               let newUuid = data.pumps[i].timeseries[i].uuid;
-              console.log(
-                "NewNotification fetchTimeseriesUuidsFromAsset newUuid",
-                newUuid
-              );
               timeseriesUuid.push(data.pumps[i].timeseries[i].uuid);
-              console.log(
-                "NewNotification fetchTimeseriesUuidsFromAsset nestedAssetTimeseriesUuids",
-                timeseriesUuid
-              );
             }
           }
         }
-        // timeseriesUuid.concat(nestedAssetTimeseriesUuids);
         return timeseriesUuid;
       });
-    console.log("NewNotification fetchTimeseriesUuidsFromAsset uuids", uuids); // leeg voor phoenix
     return uuids;
   } catch (e) {
     throw new Error(e);
@@ -197,6 +153,16 @@ class NewNotification extends Component {
       rasters: [],
       showConfigureThreshold: false,
       sourceType: "",
+      sourceTypes: [
+        {
+          display: "Raster",
+          description: "Put an alarm on raster data"
+        },
+        {
+          display: "Timeseries",
+          description: "Put an alarm on timeseries data"
+        }
+      ],
       step: 1,
       thresholds: [],
       timeseriesAsset: "",
@@ -416,10 +382,6 @@ class NewNotification extends Component {
     this.handleResetTimeseriesNestedAsset();
     this.handleResetTimeseriesUuid();
     fetchAssets(assetName).then(data => {
-      console.log(
-        "NewNotification handleSetTimeseriesAsset assetName data",
-        data
-      );
       let assets = [];
       let assetType = data[0].entity_name;
       let assetId = data[0].entity_id;
@@ -428,11 +390,9 @@ class NewNotification extends Component {
       }
       // choices of SelectBoxSearch for timeserie assets
       this.setState({ timeseriesAssets: assets });
-      console.log("NewNotification handleSetTimeseriesAsset assets", assets);
       // assetType and assetId needed for nestedAsset and uuids
       this.setState({ timeseriesAssetType: assetType });
       this.setState({ timeseriesAssetId: assetId });
-      this.handleSetTimeseriesNestedAsset("");
     });
     // choice of SelectBoxSearch for timeserie asset
     this.setState({ timeseriesAsset: assetName });
@@ -459,32 +419,37 @@ class NewNotification extends Component {
     // add all nested assets!
     // this.setState({ timeseriesNestedAsset: "" });
     // this.setState({ timeseriesNestedAssets: [] });
+    console.log(
+      "NewNotification handleSetTimeseriesNestedAsset timeseriesNestedAsset",
+      timeseriesNestedAsset
+    );
     this.handleResetTimeseriesUuid();
     fetchNestedAssets(
       this.state.timeseriesAssetType,
       this.state.timeseriesAssetId
     ).then(data => {
-      console.log(
-        "NewNotification handleSetTimeseriesNestedAsset nestedAsset data",
-        data
-      );
+      console.log("NewNotification handleSetTimeseriesNestedAsset data", data);
       let nestedAssets = [];
-      for (var i = 0; i < data[0].length; i++) {
-        if (data[0][i].name) {
-          nestedAssets.push(data[0][i].name);
+      for (var i = 0; i < data.length; i++) {
+        if (data[i].name) {
+          nestedAssets.push(data[i].name);
           // } else if (data[i].code) {
           //   nestedAssets.push(data[i].code);  // of is entity_name beter?
-        } else if (data[0][i].code) {
-          nestedAssets.push(data[0][i].code);
+        } else if (data[i].code) {
+          nestedAssets.push(data[i].code);
         }
       }
       // choices of SelectBoxSearch for timeserie nested assets
-      this.setState({ timeseriesNestedAssets: nestedAssets });
       console.log(
         "NewNotification handleSetTimeseriesNestedAsset nestedAssets",
         nestedAssets
       );
+      this.setState({ timeseriesNestedAssets: nestedAssets });
       // choice of SelectBoxSearch for timeserie nested asset
+      console.log(
+        "NewNotification handleSetTimeseriesNestedAsset timeseriesNestedAsset",
+        timeseriesNestedAsset
+      );
       this.setState({ timeseriesNestedAsset: timeseriesNestedAsset });
     });
     // check for all nested assets in client
@@ -511,7 +476,6 @@ class NewNotification extends Component {
       this.state.timeseriesAssetId
     ).then(data => {
       let uuids = [];
-      console.log("NewNotification handleResetTimeseriesUuid uuid data", data);
       for (var i = 0; i < data.length; i++) {
         if (data[i].uuid) {
           uuids.push(data[i].uuid);
@@ -521,7 +485,6 @@ class NewNotification extends Component {
       }
       this.setState({ timeseriesUuids: uuids });
     });
-    console.log("this.state.timeseriesUuids", this.state.timeseriesUuids);
   }
   validateTimeseriesUuid(str) {
     if (str && str.length > 1) {
@@ -650,7 +613,6 @@ class NewNotification extends Component {
       timeseries,
       sourceType
     } = this.state;
-    console.log("NewNotification.js render this.props", this.props);
 
     return (
       <div>
@@ -758,16 +720,7 @@ class NewNotification extends Component {
                           </p>
                           <div className={formStyles.FormGroup}>
                             <SelectBoxSimple
-                              choices={[
-                                {
-                                  display: "Raster",
-                                  description: "Put an alarm on raster data"
-                                },
-                                {
-                                  display: "Timeseries",
-                                  description: "Put an alarm on timeseries data"
-                                }
-                              ]}
+                              choices={this.state.sourceTypes}
                               choice={this.state.sourceType.display}
                               isFetching={undefined}
                               transformChoiceToDisplayValue={e =>
