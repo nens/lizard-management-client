@@ -85,13 +85,13 @@ async function fetchNestedAssets(assetType, assetId) {
             "NewNotification fetchNestedAssets data.filters",
             data.filters
           );
-          nestedAssetsList.push(data.filters);
+          nestedAssetsList = data.filters;
         } else if (data.pumps) {
           console.log(
             "NewNotification fetchNestedAssets data.pumps",
             data.pumps
           );
-          nestedAssetsList.push(data.pumps);
+          nestedAssetsList = data.pumps;
         }
         return nestedAssetsList;
       });
@@ -132,8 +132,7 @@ async function fetchTimeseriesUuidsFromAsset(assetType, assetId) {
         // Timeseries asset
         let timeseriesUuid = [];
         if (data.timeseries) {
-          let assetTimeseriesUuids = data.timeseries;
-          timeseriesUuid.concat(assetTimeseriesUuids);
+          timeseriesUuid = data.timeseries;
         }
         // let nestedAssetTimeseriesUuids = []; // get all timeseries of nested assets
         if (data.filters) {
@@ -448,9 +447,11 @@ class NewNotification extends Component {
     }
   }
   handleResetTimeseriesAsset() {
-    this.handleResetTimeseriesUuid();
+    this.setState({
+      timeseriesAssets: [],
+      timeseriesAsset: ""
+    });
     this.handleResetTimeseriesNestedAsset();
-    this.handleSetTimeseriesAsset("");
   }
   handleSetTimeseriesNestedAsset(timeseriesNestedAsset) {
     // fetch nested asset if any by following asset and number
@@ -497,8 +498,11 @@ class NewNotification extends Component {
     }
   }
   handleResetTimeseriesNestedAsset() {
+    this.setState({
+      timeseriesNestedAssets: [],
+      timeseriesNestedAsset: ""
+    });
     this.handleResetTimeseriesUuid();
-    this.handleSetTimeseriesNestedAsset("");
   }
   handleSetTimeseriesUuid(timeseriesUuid) {
     this.setState({ timeseriesUuid: timeseriesUuid });
@@ -518,29 +522,6 @@ class NewNotification extends Component {
       this.setState({ timeseriesUuids: uuids });
     });
     console.log("this.state.timeseriesUuids", this.state.timeseriesUuids);
-    // fetchNestedAssets(
-    //   this.state.timeseriesAssetType,
-    //   this.state.timeseriesAssetId
-    // ).then(data => {
-    //   console.log(
-    //     "NewNotification handleSetTimeseriesNestedAsset nestedAsset data",
-    //     data
-    //   );
-    //   let nestedAssets = [];
-    //   for (var i = 0; i < data.length; i++) {
-    //     if (data[i].code) {
-    //       nestedAssets.push(data[i].code);
-    //     }
-    //   }
-    //   // choices of SelectBoxSearch for timeserie nested assets
-    //   this.setState({ timeseriesNestedAssets: nestedAssets });
-    //   console.log(
-    //     "NewNotification handleSetTimeseriesNestedAsset nestedAssets",
-    //     nestedAssets
-    //   );
-    //   // choice of SelectBoxSearch for timeserie nested asset
-    //   this.setState({ timeseriesNestedAsset: timeseriesNestedAsset });
-    // });
   }
   validateTimeseriesUuid(str) {
     if (str && str.length > 1) {
@@ -550,7 +531,10 @@ class NewNotification extends Component {
     }
   }
   handleResetTimeseriesUuid() {
-    this.handleSetTimeseriesUuid("");
+    this.setState({
+      timeseriesUuids: [],
+      timeseriesUuid: ""
+    });
   }
   handleSetAsset(view) {
     this.setState({
