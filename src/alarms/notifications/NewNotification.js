@@ -108,45 +108,20 @@ async function fetchTimeseriesUuidsFromAsset(assetType, assetId) {
         if (data.timeseries) {
           timeseriesUuid = data.timeseries;
         }
-        // let nestedAssetTimeseriesUuids = []; // get all timeseries of nested assets
         if (data.filters && data.filters[0] && data.filters[0].timeseries) {
           let dataFilterUuids = data.filters.map(function(dataFilter) {
-            console.log(
-              "NewNotification fetchTimeseriesUuidsFromAsset dataFilter",
-              dataFilter
-            );
             dataFilter.timeseries.forEach(function(dataFilterTimeserie) {
               timeseriesUuid.push(dataFilterTimeserie.uuid);
             });
-            // dataFilter.timeseries.map(function (dataFilterTimeserie) {
-            //   console.log("NewNotification fetchTimeseriesUuidsFromAsset dataFilterTimeserie.uuid", dataFilterTimeserie.uuid);
-            //   return dataFilterTimeserie.uuid;
-            // });
           });
-          console.log("dataFilterUuids", dataFilterUuids);
           timeseriesUuid.concat(dataFilterUuids);
-        } else if (data.pumps && data.pumps[0] && data.pumps[0].timeseries) {
+        }
+        if (data.pumps && data.pumps[0] && data.pumps[0].timeseries) {
           let dataPumpUuids = data.pumps.map(function(dataPump) {
-            console.log(
-              "NewNotification fetchTimeseriesUuidsFromAsset dataPump",
-              dataPump
-            );
             dataPump.timeseries.forEach(function(dataPumpTimeserie) {
               timeseriesUuid.push(dataPumpTimeserie.uuid);
             });
-            // dataFilter.timeseries.map(function (dataFilterTimeserie) {
-            //   console.log("NewNotification fetchTimeseriesUuidsFromAsset dataFilterTimeserie.uuid", dataFilterTimeserie.uuid);
-            //   return dataFilterTimeserie.uuid;
-            // });
           });
-          // console.log("dataPumpUuids", dataPumpUuids);
-          // timeseriesUuid.concat(dataPumpUuids);
-          // // for (var i = 0; i < data.pumps.length; i++) {
-          // //   for (var i = 0; i < data.pumps[i].timeseries.length; i++) {
-          // //     let newUuid = data.pumps[i].timeseries[i].uuid;
-          // //     timeseriesUuid.push(data.pumps[i].timeseries[i].uuid);
-          // //   }
-          // // }
         }
         return timeseriesUuid;
       });
