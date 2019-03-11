@@ -759,7 +759,15 @@ class NewNotification extends Component {
                         </p>
                         <div>
                           {messages.map((message, i) => {
+                            console.log(
+                              "GroupAndTemplateSelector message",
+                              message
+                            );
                             return (
+                              // message seems to have no unique key
+                              // I find here index to be a better alternative then either groupname or messagename which are both not unique
+                              // Anyway, GroupAndTemplateSelector contains state so we better think of another solution
+                              // https://stackoverflow.com/questions/48193609/react-list-with-no-keys
                               <GroupAndTemplateSelector
                                 key={i}
                                 idx={i}
