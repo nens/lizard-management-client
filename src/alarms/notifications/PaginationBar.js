@@ -16,12 +16,12 @@ class PaginationBar extends Component {
           {links.map((link, i) => {
             const linkPlusOne = link + 1;
             if (page === linkPlusOne) {
-              return <div key={i}>{linkPlusOne}</div>;
+              return <div key={linkPlusOne}>{linkPlusOne}</div>;
             }
             return (
               <div
                 style={{ cursor: "pointer", color: "#007bff" }}
-                key={i}
+                key={linkPlusOne}
                 onClick={() => {
                   loadAlarmsOnPage(linkPlusOne);
                 }}
