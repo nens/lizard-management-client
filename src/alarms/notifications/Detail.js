@@ -327,6 +327,9 @@ class Detail extends Component {
         unit = currentAlarm.observation_type.unit;
       } catch (e) {}
       return (
+        // threshold seems to have no unique key
+        // I find here index to be a better alternative then either value or warning level which are both not unique
+        // since this iteration does not contain its own state using key=index here will work.
         <div key={i} className={styles.ThresHoldsList}>
           <div>
             <i
