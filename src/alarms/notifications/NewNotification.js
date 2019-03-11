@@ -70,9 +70,6 @@ async function fetchAssets(assetName) {
 async function fetchNestedAssets(assetType, assetId) {
   try {
     // Set page_size to 100000, same as in Raster.js
-    let nestedAsset = "filters";
-    // let assetType = "groundwaterstation";
-    // let assetId = 3235;
     const nestedAssets = await fetch(
       `/api/v3/${assetType}s/${assetId}/?page_size=100000`,
       {
@@ -81,12 +78,22 @@ async function fetchNestedAssets(assetType, assetId) {
     )
       .then(response => response.json())
       .then(data => {
+        let nestedAssetsList = [];
         console.log("NewNotification fetchNestedAssets data", data);
-        console.log(
-          "NewNotification fetchNestedAssets data.filters",
-          data.filters
-        );
-        return data["filters"];
+        if (data.filters) {
+          console.log(
+            "NewNotification fetchNestedAssets data.filters",
+            data.filters
+          );
+          nestedAssetsList.push(data.filters);
+        } else if (data.pumps) {
+          console.log(
+            "NewNotification fetchNestedAssets data.pumps",
+            data.pumps
+          );
+          nestedAssetsList.push(data.pumps);
+        }
+        return nestedAssetsList;
       });
     console.log("NewNotification fetchNestedAssets nestedAssets", nestedAssets);
     return nestedAssets;
@@ -123,9 +130,12 @@ async function fetchTimeseriesUuidsFromAsset(assetType, assetId) {
           data.timeseries
         );
         // Timeseries asset
-        // let timeseriesUuid = [];
-        let assetTimeseriesUuids = data.timeseries;
-        let nestedAssetTimeseriesUuids = []; // get all timeseries of nested assets
+        let timeseriesUuid = [];
+        if (data.timeseries) {
+          let assetTimeseriesUuids = data.timeseries;
+          timeseriesUuid.concat(assetTimeseriesUuids);
+        }
+        // let nestedAssetTimeseriesUuids = []; // get all timeseries of nested assets
         if (data.filters) {
           for (var i = 0; i < data.filters.length; i++) {
             for (var i = 0; i < data.filters[i].timeseries.length; i++) {
@@ -134,22 +144,35 @@ async function fetchTimeseriesUuidsFromAsset(assetType, assetId) {
                 "NewNotification fetchTimeseriesUuidsFromAsset newUuid",
                 newUuid
               );
-              nestedAssetTimeseriesUuids.push(
-                data.filters[i].timeseries[i].uuid
-              );
+              timeseriesUuid.push(data.filters[i].timeseries[i].uuid);
               console.log(
                 "NewNotification fetchTimeseriesUuidsFromAsset nestedAssetTimeseriesUuids",
-                nestedAssetTimeseriesUuids
+                timeseriesUuid
               );
             }
           }
         }
-        let timeseriesUuid = assetTimeseriesUuids.concat(
-          nestedAssetTimeseriesUuids
-        );
+
+        if (data.filterspumps) {
+          for (var i = 0; i < data.pumps.length; i++) {
+            for (var i = 0; i < data.pumps[i].timeseries.length; i++) {
+              let newUuid = data.pumps[i].timeseries[i].uuid;
+              console.log(
+                "NewNotification fetchTimeseriesUuidsFromAsset newUuid",
+                newUuid
+              );
+              timeseriesUuid.push(data.pumps[i].timeseries[i].uuid);
+              console.log(
+                "NewNotification fetchTimeseriesUuidsFromAsset nestedAssetTimeseriesUuids",
+                timeseriesUuid
+              );
+            }
+          }
+        }
+        // timeseriesUuid.concat(nestedAssetTimeseriesUuids);
         return timeseriesUuid;
       });
-    console.log("NewNotification fetchTimeseriesUuidsFromAsset uuids", uuids);
+    console.log("NewNotification fetchTimeseriesUuidsFromAsset uuids", uuids); // leeg voor phoenix
     return uuids;
   } catch (e) {
     throw new Error(e);
@@ -243,18 +266,6 @@ class NewNotification extends Component {
         availableMessages: data.messages
       });
     });
-    // fetchAssets(this.state.timeseriesAsset).then(data => {
-    //   console.log("NewNotification componentDidMount data", data);
-    //   // let assets = [];
-    //   // for (var i = 0; i < data.length; i++) {
-    //   //   console.log("NewNotification componentDidMount data[i].title", data[i].title);
-    //   //   assets.push(data[i].title);
-    //   // }
-    //   this.setState({
-    //     timeseriesAssets: data
-    //   });
-    //   console.log("NewNotification this.state.timeseriesAssets", this.state.timeseriesAssets);
-    // });
   }
   componentWillUnmount() {
     document.removeEventListener("keydown", this.hideConfigureThreshold, false);
@@ -403,6 +414,8 @@ class NewNotification extends Component {
     this.setState({ sourceType });
   }
   handleSetTimeseriesAsset(assetName) {
+    this.handleResetTimeseriesNestedAsset();
+    this.handleResetTimeseriesUuid();
     fetchAssets(assetName).then(data => {
       console.log(
         "NewNotification handleSetTimeseriesAsset assetName data",
@@ -434,7 +447,9 @@ class NewNotification extends Component {
       return false;
     }
   }
-  handleResetTimeseriesAsset(timeseriesAsset) {
+  handleResetTimeseriesAsset() {
+    this.handleResetTimeseriesUuid();
+    this.handleResetTimeseriesNestedAsset();
     this.handleSetTimeseriesAsset("");
   }
   handleSetTimeseriesNestedAsset(timeseriesNestedAsset) {
@@ -443,6 +458,7 @@ class NewNotification extends Component {
     // add all nested assets!
     // this.setState({ timeseriesNestedAsset: "" });
     // this.setState({ timeseriesNestedAssets: [] });
+    this.handleResetTimeseriesUuid();
     fetchNestedAssets(
       this.state.timeseriesAssetType,
       this.state.timeseriesAssetId
@@ -452,9 +468,13 @@ class NewNotification extends Component {
         data
       );
       let nestedAssets = [];
-      for (var i = 0; i < data.length; i++) {
-        if (data[i].code) {
-          nestedAssets.push(data[i].code);
+      for (var i = 0; i < data[0].length; i++) {
+        if (data[0][i].name) {
+          nestedAssets.push(data[0][i].name);
+          // } else if (data[i].code) {
+          //   nestedAssets.push(data[i].code);  // of is entity_name beter?
+        } else if (data[0][i].code) {
+          nestedAssets.push(data[0][i].code);
         }
       }
       // choices of SelectBoxSearch for timeserie nested assets
@@ -476,7 +496,8 @@ class NewNotification extends Component {
       return false;
     }
   }
-  handleResetTimeseriesNestedAsset(timeseriesNestedAsset) {
+  handleResetTimeseriesNestedAsset() {
+    this.handleResetTimeseriesUuid();
     this.handleSetTimeseriesNestedAsset("");
   }
   handleSetTimeseriesUuid(timeseriesUuid) {
@@ -485,9 +506,18 @@ class NewNotification extends Component {
       this.state.timeseriesAssetType,
       this.state.timeseriesAssetId
     ).then(data => {
+      let uuids = [];
       console.log("NewNotification handleResetTimeseriesUuid uuid data", data);
-      this.setState({ timeseriesUuids: data });
+      for (var i = 0; i < data.length; i++) {
+        if (data[i].uuid) {
+          uuids.push(data[i].uuid);
+        } else {
+          uuids.push(data[i]);
+        }
+      }
+      this.setState({ timeseriesUuids: uuids });
     });
+    console.log("this.state.timeseriesUuids", this.state.timeseriesUuids);
     // fetchNestedAssets(
     //   this.state.timeseriesAssetType,
     //   this.state.timeseriesAssetId
@@ -519,7 +549,7 @@ class NewNotification extends Component {
       return false;
     }
   }
-  handleResetTimeseriesUuid(timeseriesUuid) {
+  handleResetTimeseriesUuid() {
     this.handleSetTimeseriesUuid("");
   }
   handleSetAsset(view) {
