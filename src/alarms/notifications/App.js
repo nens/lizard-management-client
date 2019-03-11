@@ -16,6 +16,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      timeSeriesOrRasters: "RASTERS",
       isFetchingRasterAlarms: true,
       isFetchingTimeseriesAlarms: true,
       alarms: [],
@@ -35,7 +36,7 @@ class App extends Component {
     this.loadAlarmsOnPage(page);
   }
 
-  loadAlarmsOnPage(page, newProps) {
+  loadAlarmsOnPage(page) {
     this.setState({
       isFetchingTimeseriesAlarms: true,
       isFetchingRasterAlarms: true,
@@ -43,12 +44,12 @@ class App extends Component {
       alarms: []
     });
 
-    this.loadRasterAlarms(page, newProps);
-    this.loadTimeseriesAlarms(page, newProps);
+    this.loadRasterAlarms(page);
+    this.loadTimeseriesAlarms(page);
   }
 
-  loadRasterAlarms(page, newProps) {
-    const { selectedOrganisation } = newProps || this.props;
+  loadRasterAlarms(page) {
+    const { selectedOrganisation } = this.props;
     const organisationId = selectedOrganisation.uuid;
     fetch(
       `/api/v3/rasteralarms/?page=${page}&organisation__unique_id=${organisationId}`,
@@ -69,11 +70,17 @@ class App extends Component {
           ),
           page: page
         });
+      })
+      .catch(error => {
+        console.error("Error:", error);
+        this.setState({
+          isFetchingRasterAlarms: false
+        });
       });
   }
 
-  loadTimeseriesAlarms(page, newProps) {
-    const { selectedOrganisation } = newProps || this.props;
+  loadTimeseriesAlarms(page) {
+    const { selectedOrganisation } = this.props;
     const organisationId = selectedOrganisation.uuid;
 
     fetch(
@@ -94,6 +101,12 @@ class App extends Component {
             })
           ),
           page: page
+        });
+      })
+      .catch(error => {
+        console.error("Error:", error);
+        this.setState({
+          isFetchingTimeseriesAlarms: false
         });
       });
   }
@@ -197,16 +210,7 @@ class App extends Component {
     }
 
     const alarmsTable = alarmRows.map((alarm, i) => {
-      return (
-        <AlarmRow
-          key={i}
-          alarm={alarm}
-          loadAlarmsOnPage={this.loadAlarmsOnPage}
-          activateAlarm={this.activateAlarm}
-          deActivateAlarm={this.deActivateAlarm}
-          removeAlarm={this.removeAlarm}
-        />
-      );
+      return <AlarmRow key={i} alarm={alarm} />;
     });
 
     return (
@@ -229,6 +233,50 @@ class App extends Component {
                 other {NOTIFICATIONS}}`}
               values={{ numberOfNotifications }}
             />
+            <div>
+              <div>
+                <input
+                  type="radio"
+                  name="alarm_type"
+                  value="raster_alarms"
+                  checked={this.state.timeSeriesOrRasters === "RASTERS"}
+                  onChange={e => {
+                    this.setState({
+                      timeSeriesOrRasters: "RASTERS",
+                      page: 1
+                    });
+                    this.loadAlarmsOnPage(1);
+                  }}
+                />
+                <label>
+                  <FormattedMessage
+                    id="notifications_app.raster_alarms"
+                    defaultMessage="Raster Alarms"
+                  />
+                </label>
+              </div>
+              <div>
+                <input
+                  type="radio"
+                  name="alarm_type"
+                  value="timeseries_alarms"
+                  checked={this.state.timeSeriesOrRasters === "TIMESERIES"}
+                  onChange={e => {
+                    this.setState({
+                      timeSeriesOrRasters: "TIMESERIES",
+                      page: 1
+                    });
+                    this.loadAlarmsOnPage(1);
+                  }}
+                />
+                <label>
+                  <FormattedMessage
+                    id="notifications_app.timeseries_alarms"
+                    defaultMessage="Timeseries Alarms"
+                  />
+                </label>
+              </div>
+            </div>
           </div>
           <div
             className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${gridStyles.colSm4} ${gridStyles.colXs4}`}
