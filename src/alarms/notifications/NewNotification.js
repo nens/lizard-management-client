@@ -419,16 +419,11 @@ class NewNotification extends Component {
     // add all nested assets!
     // this.setState({ timeseriesNestedAsset: "" });
     // this.setState({ timeseriesNestedAssets: [] });
-    console.log(
-      "NewNotification handleSetTimeseriesNestedAsset timeseriesNestedAsset",
-      timeseriesNestedAsset
-    );
     this.handleResetTimeseriesUuid();
     fetchNestedAssets(
       this.state.timeseriesAssetType,
       this.state.timeseriesAssetId
     ).then(data => {
-      console.log("NewNotification handleSetTimeseriesNestedAsset data", data);
       let nestedAssets = [];
       for (var i = 0; i < data.length; i++) {
         if (data[i].name) {
@@ -440,16 +435,8 @@ class NewNotification extends Component {
         }
       }
       // choices of SelectBoxSearch for timeserie nested assets
-      console.log(
-        "NewNotification handleSetTimeseriesNestedAsset nestedAssets",
-        nestedAssets
-      );
       this.setState({ timeseriesNestedAssets: nestedAssets });
       // choice of SelectBoxSearch for timeserie nested asset
-      console.log(
-        "NewNotification handleSetTimeseriesNestedAsset timeseriesNestedAsset",
-        timeseriesNestedAsset
-      );
       this.setState({ timeseriesNestedAsset: timeseriesNestedAsset });
     });
     // check for all nested assets in client
