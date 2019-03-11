@@ -109,6 +109,13 @@ async function fetchTimeseriesUuidsFromAsset(assetType, assetId) {
           timeseriesUuid = data.timeseries;
         }
         // let nestedAssetTimeseriesUuids = []; // get all timeseries of nested assets
+        // if (data.filters) {
+        //   data.filters.map(function (dataFilter) {
+        //     dataFilter.timeseries.forEach(function (dataFilterTimeserie) {
+        //       timeseriesUuid.push(dataFilterTimeserie.uuid);
+        //     });
+        //   });
+        // }
         if (data.filters) {
           for (var i = 0; i < data.filters.length; i++) {
             for (var i = 0; i < data.filters[i].timeseries.length; i++) {
@@ -118,7 +125,14 @@ async function fetchTimeseriesUuidsFromAsset(assetType, assetId) {
           }
         }
 
-        if (data.filterspumps) {
+        // if (data.pumps) {
+        //   data.pumps.map(function (dataPump) {
+        //     dataPump.timeseries.forEach(function (dataPumpTimeserie) {
+        //       timeseriesUuid.push(dataPumpTimeserie.uuid);
+        //     });
+        //   });
+        // }
+        if (data.pumps) {
           for (var i = 0; i < data.pumps.length; i++) {
             for (var i = 0; i < data.pumps[i].timeseries.length; i++) {
               let newUuid = data.pumps[i].timeseries[i].uuid;
