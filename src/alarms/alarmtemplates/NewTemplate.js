@@ -125,7 +125,7 @@ class NewTemplate extends Component {
       if (!parameter.templateType || parameter.templateType === templateType) {
         return (
           <tr
-            key={i}
+            key={parameter.parameter}
             onClick={() => {
               document
                 .getElementById("templatePreview")
