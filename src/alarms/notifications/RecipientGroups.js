@@ -160,7 +160,10 @@ class RecipientGroups extends Component {
         </div>
         {messages.map((message, i) => {
           return (
-            <div key={i} className={styles.RecipientGroup}>
+            <div
+              key={Math.floor(Math.random() * 100000)}
+              className={styles.RecipientGroup}
+            >
               <select
                 style={{ marginRight: 5 }}
                 value={message.contact_group.id}

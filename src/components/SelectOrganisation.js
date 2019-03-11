@@ -99,7 +99,7 @@ class SelectOrganisation extends Component {
                 return (
                   <div
                     tabIndex={i + 1}
-                    key={i}
+                    key={org.uuid}
                     className={styles.ResultRow}
                     onClick={() => {
                       // User selected an organisation from the filtered ones:

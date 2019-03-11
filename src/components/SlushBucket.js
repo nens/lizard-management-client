@@ -133,7 +133,7 @@ class SlushBucket extends Component {
                   return (
                     <div
                       tabIndex={i + 1}
-                      key={i}
+                      key={Math.floor(Math.random() * 100000)}
                       className={`${styles.ResultRow} ${this.props.selected.includes(
                         choiceItem
                       )

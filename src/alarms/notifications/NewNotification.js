@@ -665,10 +665,10 @@ class NewNotification extends Component {
                           <div className={styles.Thresholds}>
                             {thresholds.map((threshold, i) => {
                               return (
-                                // threshold seems to have no unique key
-                                // I find here index to be a better alternative then either value or warning level which are both not unique
-                                // since this iteration does not contain its own state using key=index here will work.
-                                <div key={i} className={styles.Threshold}>
+                                <div
+                                  key={Math.floor(Math.random() * 100000)}
+                                  className={styles.Threshold}
+                                >
                                   <i
                                     style={{
                                       position: "relative",
@@ -760,12 +760,8 @@ class NewNotification extends Component {
                         <div>
                           {messages.map((message, i) => {
                             return (
-                              // message seems to have no unique key
-                              // I find here index to be a better alternative then either groupname or messagename which are both not unique
-                              // Anyway, GroupAndTemplateSelector contains state so we better think of another solution
-                              // https://stackoverflow.com/questions/48193609/react-list-with-no-keys
                               <GroupAndTemplateSelector
-                                key={i}
+                                key={Math.floor(Math.random() * 100000)}
                                 idx={i}
                                 messageName={message.messageName}
                                 groupName={message.groupName}

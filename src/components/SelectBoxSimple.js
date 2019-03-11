@@ -70,7 +70,7 @@ class SelectBoxSimple extends Component {
                     justifyContent: "start"
                   }}
                   tabIndex={i + 1}
-                  key={i}
+                  key={Math.floor(Math.random() * 100000)}
                   className={`${styles.ResultRow} ${isSelected
                     ? styles.Active
                     : styles.Inactive}`}
