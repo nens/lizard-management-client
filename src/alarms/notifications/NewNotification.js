@@ -47,7 +47,7 @@ async function fetchContactsAndMessages(organisationId) {
 }
 
 async function fetchAssets(assetName) {
-  // Fetch asset from Lizard api with search endpoint
+  // Fetch assets from Lizard api with search endpoint.
   try {
     // Set page_size to 100000, same as in Raster.js
     const assets = await fetch(
@@ -67,6 +67,7 @@ async function fetchAssets(assetName) {
 }
 
 async function fetchNestedAssets(assetType, assetId) {
+  // Fetch nested assets from asset.
   try {
     // Set page_size to 100000, same as in Raster.js
     const nestedAssets = await fetch(
@@ -92,9 +93,9 @@ async function fetchNestedAssets(assetType, assetId) {
 }
 
 async function fetchTimeseriesUuidsFromAsset(assetType, assetId) {
+  // Get timeserie uuids from the asset and its nested assets.
   try {
     // Set page_size to 100000, same as in Raster.js
-    // get timeserie uuids from asset and his nested assets
     const uuids = await fetch(
       `/api/v3/${assetType}s/${assetId}/?page_size=100000`,
       {
@@ -103,11 +104,12 @@ async function fetchTimeseriesUuidsFromAsset(assetType, assetId) {
     )
       .then(response => response.json())
       .then(data => {
-        // Timeseries asset
         let timeseriesUuid = [];
+        // Check if the asset has timeseries.
         if (data.timeseries) {
           timeseriesUuid = data.timeseries;
         }
+        // Check if the asset has filters with timeseries.
         if (data.filters && data.filters[0] && data.filters[0].timeseries) {
           let dataFilterUuids = data.filters.map(function(dataFilter) {
             dataFilter.timeseries.forEach(function(dataFilterTimeserie) {
@@ -116,6 +118,7 @@ async function fetchTimeseriesUuidsFromAsset(assetType, assetId) {
           });
           timeseriesUuid.concat(dataFilterUuids);
         }
+        // Check if the asset has pumps with timeseries.
         if (data.pumps && data.pumps[0] && data.pumps[0].timeseries) {
           let dataPumpUuids = data.pumps.map(function(dataPump) {
             dataPump.timeseries.forEach(function(dataPumpTimeserie) {
@@ -240,7 +243,6 @@ class NewNotification extends Component {
     }
   }
   handleEnter(event) {
-    // werkt nog een beetje funky
     if (this.state.step === 3) {
       if (
         this.validateTimeseriesAsset(this.state.timeseriesAsset) &&
@@ -382,18 +384,16 @@ class NewNotification extends Component {
       let assets = data.map(function(asset) {
         return asset.title;
       });
-      // choices of SelectBoxSearch for timeserie assets
+      // Choices of SelectBoxSearch for timeserie assets.
       this.setState({ timeseriesAssets: assets });
-      // assetType and assetId needed for nestedAsset and uuids
+      // AssetType and assetId are needed for setting nestedAsset and uuids.
       let assetType = data[0].entity_name;
       this.setState({ timeseriesAssetType: assetType });
       let assetId = data[0].entity_id;
       this.setState({ timeseriesAssetId: assetId });
     });
-    // choice of SelectBoxSearch for timeserie asset
+    // Choice of SelectBoxSearch for current timeserie asset.
     this.setState({ timeseriesAsset: assetName });
-    // this.setState({ timeseriesAssetType:  });  // nodig voor nestedAsset
-    // this.setState({ timeseriesAssetId:  });  // nodig voor nestedAsset
   }
   validateTimeseriesAsset(str) {
     if (str && str.length > 1) {
@@ -407,14 +407,10 @@ class NewNotification extends Component {
       timeseriesAssets: [],
       timeseriesAsset: ""
     });
+    // Also reset timeseries nested assets.
     this.handleResetTimeseriesNestedAsset();
   }
   handleSetTimeseriesNestedAsset(timeseriesNestedAsset) {
-    // fetch nested asset if any by following asset and number
-    // filters as nested assets for groundwaterstations
-    // add all nested assets!
-    // this.setState({ timeseriesNestedAsset: "" });
-    // this.setState({ timeseriesNestedAssets: [] });
     this.handleResetTimeseriesUuid();
     fetchNestedAssets(
       this.state.timeseriesAssetType,
@@ -427,13 +423,11 @@ class NewNotification extends Component {
           return nestedAsset.code;
         }
       });
-      // choices of SelectBoxSearch for timeserie nested assets
+      // Choices of SelectBoxSearch for timeserie nested assets.
       this.setState({ timeseriesNestedAssets: nestedAssets });
-      // choice of SelectBoxSearch for timeserie nested asset
-      this.setState({ timeseriesNestedAsset: timeseriesNestedAsset });
     });
-    // check for all nested assets in client
-    // Also set timeseries uuid
+    // Choice of SelectBoxSearch for current timeserie nested asset.
+    this.setState({ timeseriesNestedAsset: timeseriesNestedAsset });
   }
   validateTimeseriesNestedAsset(str) {
     if (str && str.length > 1) {
@@ -447,10 +441,10 @@ class NewNotification extends Component {
       timeseriesNestedAssets: [],
       timeseriesNestedAsset: ""
     });
+    // Also reset timeseries uuids.
     this.handleResetTimeseriesUuid();
   }
   handleSetTimeseriesUuid(timeseriesUuid) {
-    this.setState({ timeseriesUuid: timeseriesUuid });
     fetchTimeseriesUuidsFromAsset(
       this.state.timeseriesAssetType,
       this.state.timeseriesAssetId
@@ -462,8 +456,11 @@ class NewNotification extends Component {
           return timeserie;
         }
       });
+      // Choices of SelectBoxSearch for timeserie uuids.
       this.setState({ timeseriesUuids: uuids });
     });
+    // Choice of SelectBoxSearch for current timeserie uuid.
+    this.setState({ timeseriesUuid: timeseriesUuid });
   }
   validateTimeseriesUuid(str) {
     if (str && str.length > 1) {
@@ -778,7 +775,7 @@ class NewNotification extends Component {
                               updateModelValue={this.handleSetTimeseriesAsset}
                               onKeyUp={e => {
                                 fetchAssets(this.state.timeseriesAssets);
-                                this.handleEnter(e); /* maken*/
+                                this.handleEnter(e);
                               }}
                               inputId={
                                 "notifications_app.select_timeserie_via_asset" +
@@ -804,7 +801,7 @@ class NewNotification extends Component {
                                   this.state.timeseriesAssetType,
                                   this.state.timeseriesAssetId
                                 );
-                                this.handleEnter(e); /* maken*/
+                                this.handleEnter(e);
                               }}
                               inputId={
                                 "notifications_app.select_timeserie_via_nested_asset" +
@@ -832,7 +829,7 @@ class NewNotification extends Component {
                                   this.state.timeseriesAssetType,
                                   this.state.timeseriesAssetId
                                 );
-                                this.handleEnter(e); /* maken*/
+                                this.handleEnter(e);
                               }}
                               inputId={
                                 "notifications_app.select_timeserie_via_uuid" +
