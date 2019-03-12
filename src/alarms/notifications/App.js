@@ -201,12 +201,6 @@ class App extends Component {
             name="alarm_type"
             value="raster_alarms"
             checked={timeSeriesOrRaster === "RASTERS"}
-            // onChange={e => {
-            //   this.setState({
-            //     timeSeriesOrRaster: "RASTERS",
-            //     page: 1
-            //   });
-            // }}
           />
           <label className={styles.ChoiceLabel}>
             <FormattedMessage
@@ -230,12 +224,6 @@ class App extends Component {
             name="alarm_type"
             value="timeseries_alarms"
             checked={timeSeriesOrRaster === "TIMESERIES"}
-            // onChange={e => {
-            //   this.setState({
-            //     timeSeriesOrRaster: "TIMESERIES",
-            //     page: 1
-            //   });
-            // }}
           />
           <label className={styles.ChoiceLabel}>
             <FormattedMessage
