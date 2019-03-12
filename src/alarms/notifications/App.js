@@ -11,6 +11,7 @@ import { addNotification } from "../../actions";
 import { connect } from "react-redux";
 import { FormattedMessage } from "react-intl";
 import { withRouter } from "react-router-dom";
+import classNames from "classnames";
 
 class App extends Component {
   constructor(props) {
@@ -181,41 +182,62 @@ class App extends Component {
 
   createRasterTimeseriesSwitchGUI(timeSeriesOrRaster) {
     return (
-      <div>
-        <div>
+      <div className={styles.ChoicesContainer}>
+        <div
+          className={classNames(
+            styles.ChoiceContainer,
+            styles.ChoiceContainerLeft
+          )}
+          onClick={e => {
+            this.setState({
+              timeSeriesOrRaster: "RASTERS",
+              page: 1
+            });
+          }}
+        >
           <input
+            className={styles.ChoiceRadio}
             type="radio"
             name="alarm_type"
             value="raster_alarms"
             checked={timeSeriesOrRaster === "RASTERS"}
-            onChange={e => {
-              this.setState({
-                timeSeriesOrRaster: "RASTERS",
-                page: 1
-              });
-            }}
+            // onChange={e => {
+            //   this.setState({
+            //     timeSeriesOrRaster: "RASTERS",
+            //     page: 1
+            //   });
+            // }}
           />
-          <label>
+          <label className={styles.ChoiceLabel}>
             <FormattedMessage
               id="notifications_app.raster_alarms"
               defaultMessage="Raster Alarms"
             />
           </label>
         </div>
-        <div>
+        <div
+          className={styles.ChoiceContainer}
+          onClick={e => {
+            this.setState({
+              timeSeriesOrRaster: "TIMESERIES",
+              page: 1
+            });
+          }}
+        >
           <input
+            className={styles.ChoiceRadio}
             type="radio"
             name="alarm_type"
             value="timeseries_alarms"
             checked={timeSeriesOrRaster === "TIMESERIES"}
-            onChange={e => {
-              this.setState({
-                timeSeriesOrRaster: "TIMESERIES",
-                page: 1
-              });
-            }}
+            // onChange={e => {
+            //   this.setState({
+            //     timeSeriesOrRaster: "TIMESERIES",
+            //     page: 1
+            //   });
+            // }}
           />
-          <label>
+          <label className={styles.ChoiceLabel}>
             <FormattedMessage
               id="notifications_app.timeseries_alarms"
               defaultMessage="Timeseries Alarms"
