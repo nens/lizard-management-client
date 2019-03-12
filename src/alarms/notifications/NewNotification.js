@@ -455,14 +455,13 @@ class NewNotification extends Component {
       this.state.timeseriesAssetType,
       this.state.timeseriesAssetId
     ).then(data => {
-      let uuids = [];
-      for (var i = 0; i < data.length; i++) {
-        if (data[i].uuid) {
-          uuids.push(data[i].uuid);
+      let uuids = data.map(function(timeserie) {
+        if (timeserie.uuid) {
+          return timeserie.uuid;
         } else {
-          uuids.push(data[i]);
+          return timeserie;
         }
-      }
+      });
       this.setState({ timeseriesUuids: uuids });
     });
   }
