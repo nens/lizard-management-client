@@ -170,10 +170,13 @@ class NewNotification extends Component {
       raster: null,
       rasters: [],
       showConfigureThreshold: false,
-      sourceType: "",
+      sourceType: {
+        display: "Rasters",
+        description: "Put an alarm on raster data"
+      },
       sourceTypes: [
         {
-          display: "Raster",
+          display: "Rasters",
           description: "Put an alarm on raster data"
         },
         {
@@ -795,7 +798,7 @@ class NewNotification extends Component {
                               // transformChoiceToInfo={e => (e && e.info) || ""}
                               noneValue={undefined}
                             />
-                            {this.state.sourceType ? (
+                            {this.state.sourceType.display === "Timeseries" ? (
                               <button
                                 type="button"
                                 className={`${buttonStyles.Button} ${buttonStyles.Success}`}
@@ -811,121 +814,7 @@ class NewNotification extends Component {
                                   defaultMessage="Next step"
                                 />
                               </button>
-                            ) : null}
-                          </div>
-                        </div>
-                      ) : null}
-                    </div>
-                  </div>
-                </div>
-
-                <div className={styles.Step} id="Step">
-                  <div className="media">
-                    <StepIndicator
-                      indicator="3"
-                      active={step === 3}
-                      handleClick={() => this.goBackToStep(3)}
-                    />
-                    <div
-                      style={{
-                        width: "calc(100% - 90px)",
-                        marginLeft: 90
-                      }}
-                    >
-                      <h3
-                        className={`mt-0 ${step !== 3 ? "text-muted" : null}`}
-                      >
-                        <FormattedMessage
-                          id="notifications_app.timeseries_selection"
-                          defaultMessage="Timeseries selection"
-                        />
-                      </h3>
-                      {step === 3 ? (
-                        <div>
-                          <p className="text-muted">
-                            <FormattedMessage
-                              id="notifications_app.select_timeserie_via_asset"
-                              defaultMessage="Select timeserie via asset."
-                            />
-                          </p>
-                          <div className={formStyles.FormGroup}>
-                            <SelectBoxSearch
-                              choices={this.state.timeseriesAssets}
-                              choice={this.state.timeseriesAsset}
-                              transformChoiceToDisplayValue={e => e || ""}
-                              isFetching={false}
-                              updateModelValue={this.handleSetTimeseriesAsset}
-                              onKeyUp={e => {
-                                fetchAssets(this.state.timeseriesAssets);
-                                this.handleEnter(e);
-                              }}
-                              inputId={
-                                "notifications_app.select_timeserie_via_asset" +
-                                "_input"
-                              }
-                              placeholder={"Click to select timeseries asset"}
-                              validate={this.validateTimeseriesAsset}
-                              resetModelValue={this.handleResetTimeseriesAsset}
-                              readonly={false}
-                              noneValue={undefined}
-                            />{" "}
-                            <br />
-                            <SelectBoxSearch
-                              choices={this.state.timeseriesNestedAssets}
-                              choice={this.state.timeseriesNestedAsset}
-                              transformChoiceToDisplayValue={e => e || ""}
-                              isFetching={false}
-                              updateModelValue={
-                                this.handleSetTimeseriesNestedAsset
-                              }
-                              onKeyUp={e => {
-                                this.fetchNestedAssets(
-                                  this.state.timeseriesAssetType,
-                                  this.state.timeseriesAssetId
-                                );
-                                this.handleEnter(e);
-                              }}
-                              inputId={
-                                "notifications_app.select_timeserie_via_nested_asset" +
-                                "_input"
-                              }
-                              placeholder={
-                                "Click to select timeseries nested asset"
-                              }
-                              validate={this.validateTimeseriesNestedAsset}
-                              resetModelValue={
-                                this.handleResetTimeseriesNestedAsset
-                              }
-                              readonly={false}
-                              noneValue={undefined}
-                            />{" "}
-                            <br />
-                            <SelectBoxSearch
-                              choices={this.state.timeseriesUuids}
-                              choice={this.state.timeseriesUuid}
-                              transformChoiceToDisplayValue={e => e || ""}
-                              isFetching={false}
-                              updateModelValue={this.handleSetTimeseriesUuid}
-                              onKeyUp={e => {
-                                fetchTimeseriesUuidsFromAsset(
-                                  this.state.timeseriesAssetType,
-                                  this.state.timeseriesAssetId
-                                );
-                                this.handleEnter(e);
-                              }}
-                              inputId={
-                                "notifications_app.select_timeserie_via_uuid" +
-                                "_input"
-                              }
-                              placeholder={
-                                "Click to select timeseries uuid asset"
-                              }
-                              validate={this.validateTimeseriesUuid}
-                              resetModelValue={this.handleResetTimeseriesUuid}
-                              readonly={false}
-                              noneValue={undefined}
-                            />
-                            {this.state.timeseriesUuid ? (
+                            ) : this.state.sourceType.display === "Rasters" ? (
                               <button
                                 type="button"
                                 className={`${buttonStyles.Button} ${buttonStyles.Success}`}
@@ -949,146 +838,282 @@ class NewNotification extends Component {
                   </div>
                 </div>
 
+                {this.state.sourceType.display === "Timeseries" ? (
+                  <div className={styles.Step} id="Step">
+                    <div className="media">
+                      <StepIndicator
+                        indicator="3"
+                        active={step === 3}
+                        handleClick={() => this.goBackToStep(3)}
+                      />
+                      <div
+                        style={{
+                          width: "calc(100% - 90px)",
+                          marginLeft: 90
+                        }}
+                      >
+                        <h3
+                          className={`mt-0 ${step !== 3 ? "text-muted" : null}`}
+                        >
+                          <FormattedMessage
+                            id="notifications_app.timeseries_selection"
+                            defaultMessage="Timeseries selection"
+                          />
+                        </h3>
+                        {step === 3 ? (
+                          <div>
+                            <p className="text-muted">
+                              <FormattedMessage
+                                id="notifications_app.select_timeserie_via_asset"
+                                defaultMessage="Select timeserie via asset."
+                              />
+                            </p>
+                            <div className={formStyles.FormGroup}>
+                              <SelectBoxSearch
+                                choices={this.state.timeseriesAssets}
+                                choice={this.state.timeseriesAsset}
+                                transformChoiceToDisplayValue={e => e || ""}
+                                isFetching={false}
+                                updateModelValue={this.handleSetTimeseriesAsset}
+                                onKeyUp={e => {
+                                  fetchAssets(this.state.timeseriesAssets);
+                                  this.handleEnter(e);
+                                }}
+                                inputId={
+                                  "notifications_app.select_timeserie_via_asset" +
+                                  "_input"
+                                }
+                                placeholder={"Click to select timeseries asset"}
+                                validate={this.validateTimeseriesAsset}
+                                resetModelValue={
+                                  this.handleResetTimeseriesAsset
+                                }
+                                readonly={false}
+                                noneValue={undefined}
+                              />{" "}
+                              <br />
+                              <SelectBoxSearch
+                                choices={this.state.timeseriesNestedAssets}
+                                choice={this.state.timeseriesNestedAsset}
+                                transformChoiceToDisplayValue={e => e || ""}
+                                isFetching={false}
+                                updateModelValue={
+                                  this.handleSetTimeseriesNestedAsset
+                                }
+                                onKeyUp={e => {
+                                  this.fetchNestedAssets(
+                                    this.state.timeseriesAssetType,
+                                    this.state.timeseriesAssetId
+                                  );
+                                  this.handleEnter(e);
+                                }}
+                                inputId={
+                                  "notifications_app.select_timeserie_via_nested_asset" +
+                                  "_input"
+                                }
+                                placeholder={
+                                  "Click to select timeseries nested asset"
+                                }
+                                validate={this.validateTimeseriesNestedAsset}
+                                resetModelValue={
+                                  this.handleResetTimeseriesNestedAsset
+                                }
+                                readonly={false}
+                                noneValue={undefined}
+                              />{" "}
+                              <br />
+                              <SelectBoxSearch
+                                choices={this.state.timeseriesUuids}
+                                choice={this.state.timeseriesUuid}
+                                transformChoiceToDisplayValue={e => e || ""}
+                                isFetching={false}
+                                updateModelValue={this.handleSetTimeseriesUuid}
+                                onKeyUp={e => {
+                                  fetchTimeseriesUuidsFromAsset(
+                                    this.state.timeseriesAssetType,
+                                    this.state.timeseriesAssetId
+                                  );
+                                  this.handleEnter(e);
+                                }}
+                                inputId={
+                                  "notifications_app.select_timeserie_via_uuid" +
+                                  "_input"
+                                }
+                                placeholder={
+                                  "Click to select timeseries uuid asset"
+                                }
+                                validate={this.validateTimeseriesUuid}
+                                resetModelValue={this.handleResetTimeseriesUuid}
+                                readonly={false}
+                                noneValue={undefined}
+                              />
+                              {this.state.timeseriesUuid ? (
+                                <button
+                                  type="button"
+                                  className={`${buttonStyles.Button} ${buttonStyles.Success}`}
+                                  style={{ marginTop: 10 }}
+                                  onClick={() => {
+                                    this.setState({
+                                      step: 5
+                                    });
+                                  }}
+                                >
+                                  <FormattedMessage
+                                    id="notifications_app.next_step"
+                                    defaultMessage="Next step"
+                                  />
+                                </button>
+                              ) : null}
+                            </div>
+                          </div>
+                        ) : null}
+                      </div>
+                    </div>
+                  </div>
+                ) : null}
+
+                {this.state.sourceType.display === "Rasters" ? (
+                  <div className={styles.Step} id="Step">
+                    <div className="media">
+                      <StepIndicator
+                        indicator="3"
+                        active={step === 4}
+                        handleClick={() => this.goBackToStep(4)}
+                      />
+                      <div
+                        style={{
+                          width: "calc(100% - 90px)",
+                          marginLeft: 90
+                        }}
+                      >
+                        <h3
+                          className={`mt-0 ${step !== 4 ? "text-muted" : null}`}
+                        >
+                          <FormattedMessage
+                            id="notifications_app.raster_selection"
+                            defaultMessage="Raster selection"
+                          />
+                        </h3>
+                        {step === 4 ? (
+                          <div>
+                            <p className="text-muted">
+                              <FormattedMessage
+                                id="notifications_app.which_temporal_raster_to_use"
+                                defaultMessage="Which temporal raster do you want to use?"
+                              />
+                            </p>
+                            <div className={formStyles.FormGroup}>
+                              <SelectRaster
+                                placeholderText="Type to search"
+                                results={rasters}
+                                loading={loading}
+                                onInput={this.handleRasterSearchInput}
+                                setRaster={this.handleSetRaster}
+                              />
+
+                              <br />
+
+                              <p className="text-muted">
+                                <FormattedMessage
+                                  id="notifications_app.set_the_location"
+                                  defaultMessage="Set the location of this alarm by placing a marker (tap/click on the map)"
+                                />
+                              </p>
+
+                              <SelectAsset
+                                placeholderText="Type to search"
+                                results={assets}
+                                loading={loading}
+                                onInput={this.handleAssetSearchInput}
+                                setAsset={this.handleSetAsset}
+                              />
+
+                              {raster && raster.spatial_bounds ? (
+                                <Map
+                                  onClick={this.handleMapClick}
+                                  bounds={[
+                                    [
+                                      raster.spatial_bounds.south,
+                                      raster.spatial_bounds.west
+                                    ],
+                                    [
+                                      raster.spatial_bounds.north,
+                                      raster.spatial_bounds.east
+                                    ]
+                                  ]}
+                                  className={styles.MapStyle}
+                                >
+                                  <TileLayer
+                                    // url="https://{s}.tiles.mapbox.com/v3/nelenschuurmans.iaa98k8k/{z}/{x}/{y}.png"
+                                    url="https://{s}.tiles.mapbox.com/v3/nelenschuurmans.5641a12c/{z}/{x}/{y}.png"
+                                    attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+                                  />
+                                  <WMSTileLayer
+                                    url={`/api/v3/wms/`}
+                                    styles={this.formatWMSStyles(
+                                      raster.options.styles
+                                    )}
+                                    layers={this.formatWMSLayers(
+                                      raster.wms_info.layer
+                                    )}
+                                    opacity={0.9}
+                                  />
+                                  <TileLayer
+                                    url="https://{s}.tiles.mapbox.com/v3/nelenschuurmans.0a5c8e74/{z}/{x}/{y}.png"
+                                    attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+                                  />
+                                  {markerPosition ? (
+                                    <Marker position={markerPosition} />
+                                  ) : null}
+                                </Map>
+                              ) : (
+                                <Map
+                                  onClick={this.handleMapClick}
+                                  center={position}
+                                  zoom={8}
+                                  className={styles.MapStyle}
+                                >
+                                  <TileLayer
+                                    url="https://b.tiles.mapbox.com/v3/nelenschuurmans.iaa98k8k/{z}/{x}/{y}.png"
+                                    attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+                                  />
+                                  {markerPosition ? (
+                                    <Marker position={markerPosition} />
+                                  ) : null}
+                                </Map>
+                              )}
+
+                              {this.state.name ? (
+                                <button
+                                  type="button"
+                                  className={`${buttonStyles.Button} ${buttonStyles.Success}`}
+                                  style={{ marginTop: 10 }}
+                                  onClick={() => {
+                                    if (raster) {
+                                      this.setState({
+                                        step: 5
+                                      });
+                                    }
+                                  }}
+                                >
+                                  <FormattedMessage
+                                    id="notifications_app.next_step"
+                                    defaultMessage="Next step"
+                                  />
+                                </button>
+                              ) : null}
+                            </div>
+                          </div>
+                        ) : null}
+                      </div>
+                    </div>
+                  </div>
+                ) : null}
+
                 <div className={styles.Step} id="Step">
                   <div className="media">
                     <StepIndicator
                       indicator="4"
-                      active={step === 4}
-                      handleClick={() => this.goBackToStep(4)}
-                    />
-                    <div
-                      style={{
-                        width: "calc(100% - 90px)",
-                        marginLeft: 90
-                      }}
-                    >
-                      <h3
-                        className={`mt-0 ${step !== 4 ? "text-muted" : null}`}
-                      >
-                        <FormattedMessage
-                          id="notifications_app.raster_selection"
-                          defaultMessage="Raster selection"
-                        />
-                      </h3>
-                      {step === 4 ? (
-                        <div>
-                          <p className="text-muted">
-                            <FormattedMessage
-                              id="notifications_app.which_temporal_raster_to_use"
-                              defaultMessage="Which temporal raster do you want to use?"
-                            />
-                          </p>
-                          <div className={formStyles.FormGroup}>
-                            <SelectRaster
-                              placeholderText="Type to search"
-                              results={rasters}
-                              loading={loading}
-                              onInput={this.handleRasterSearchInput}
-                              setRaster={this.handleSetRaster}
-                            />
-
-                            <br />
-
-                            <p className="text-muted">
-                              <FormattedMessage
-                                id="notifications_app.set_the_location"
-                                defaultMessage="Set the location of this alarm by placing a marker (tap/click on the map)"
-                              />
-                            </p>
-
-                            <SelectAsset
-                              placeholderText="Type to search"
-                              results={assets}
-                              loading={loading}
-                              onInput={this.handleAssetSearchInput}
-                              setAsset={this.handleSetAsset}
-                            />
-
-                            {raster && raster.spatial_bounds ? (
-                              <Map
-                                onClick={this.handleMapClick}
-                                bounds={[
-                                  [
-                                    raster.spatial_bounds.south,
-                                    raster.spatial_bounds.west
-                                  ],
-                                  [
-                                    raster.spatial_bounds.north,
-                                    raster.spatial_bounds.east
-                                  ]
-                                ]}
-                                className={styles.MapStyle}
-                              >
-                                <TileLayer
-                                  // url="https://{s}.tiles.mapbox.com/v3/nelenschuurmans.iaa98k8k/{z}/{x}/{y}.png"
-                                  url="https://{s}.tiles.mapbox.com/v3/nelenschuurmans.5641a12c/{z}/{x}/{y}.png"
-                                  attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-                                />
-                                <WMSTileLayer
-                                  url={`/api/v3/wms/`}
-                                  styles={this.formatWMSStyles(
-                                    raster.options.styles
-                                  )}
-                                  layers={this.formatWMSLayers(
-                                    raster.wms_info.layer
-                                  )}
-                                  opacity={0.9}
-                                />
-                                <TileLayer
-                                  url="https://{s}.tiles.mapbox.com/v3/nelenschuurmans.0a5c8e74/{z}/{x}/{y}.png"
-                                  attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-                                />
-                                {markerPosition ? (
-                                  <Marker position={markerPosition} />
-                                ) : null}
-                              </Map>
-                            ) : (
-                              <Map
-                                onClick={this.handleMapClick}
-                                center={position}
-                                zoom={8}
-                                className={styles.MapStyle}
-                              >
-                                <TileLayer
-                                  url="https://b.tiles.mapbox.com/v3/nelenschuurmans.iaa98k8k/{z}/{x}/{y}.png"
-                                  attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-                                />
-                                {markerPosition ? (
-                                  <Marker position={markerPosition} />
-                                ) : null}
-                              </Map>
-                            )}
-
-                            {this.state.name ? (
-                              <button
-                                type="button"
-                                className={`${buttonStyles.Button} ${buttonStyles.Success}`}
-                                style={{ marginTop: 10 }}
-                                onClick={() => {
-                                  if (raster) {
-                                    this.setState({
-                                      step: 5
-                                    });
-                                  }
-                                }}
-                              >
-                                <FormattedMessage
-                                  id="notifications_app.next_step"
-                                  defaultMessage="Next step"
-                                />
-                              </button>
-                            ) : null}
-                          </div>
-                        </div>
-                      ) : null}
-                    </div>
-                  </div>
-                </div>
-
-                <div className={styles.Step} id="Step">
-                  <div className="media">
-                    <StepIndicator
-                      indicator="5"
                       active={step === 5}
                       handleClick={() => this.goBackToStep(5)}
                     />
@@ -1210,7 +1235,7 @@ class NewNotification extends Component {
                 </div>
 
                 <div className="media">
-                  <StepIndicator indicator="6" active={step === 6} />
+                  <StepIndicator indicator="5" active={step === 6} />
                   <div
                     style={{
                       marginLeft: 90
