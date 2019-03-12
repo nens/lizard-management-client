@@ -986,6 +986,79 @@ class NewNotification extends Component {
                               onInput={this.handleRasterSearchInput}
                               setRaster={this.handleSetRaster}
                             />
+
+                            <br />
+
+                            <p className="text-muted">
+                              <FormattedMessage
+                                id="notifications_app.set_the_location"
+                                defaultMessage="Set the location of this alarm by placing a marker (tap/click on the map)"
+                              />
+                            </p>
+
+                            <SelectAsset
+                              placeholderText="Type to search"
+                              results={assets}
+                              loading={loading}
+                              onInput={this.handleAssetSearchInput}
+                              setAsset={this.handleSetAsset}
+                            />
+
+                            {raster && raster.spatial_bounds ? (
+                              <Map
+                                onClick={this.handleMapClick}
+                                bounds={[
+                                  [
+                                    raster.spatial_bounds.south,
+                                    raster.spatial_bounds.west
+                                  ],
+                                  [
+                                    raster.spatial_bounds.north,
+                                    raster.spatial_bounds.east
+                                  ]
+                                ]}
+                                className={styles.MapStyle}
+                              >
+                                <TileLayer
+                                  // url="https://{s}.tiles.mapbox.com/v3/nelenschuurmans.iaa98k8k/{z}/{x}/{y}.png"
+                                  url="https://{s}.tiles.mapbox.com/v3/nelenschuurmans.5641a12c/{z}/{x}/{y}.png"
+                                  attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+                                />
+                                <WMSTileLayer
+                                  url={`/api/v3/wms/`}
+                                  styles={this.formatWMSStyles(
+                                    raster.options.styles
+                                  )}
+                                  layers={this.formatWMSLayers(
+                                    raster.wms_info.layer
+                                  )}
+                                  opacity={0.9}
+                                />
+                                <TileLayer
+                                  url="https://{s}.tiles.mapbox.com/v3/nelenschuurmans.0a5c8e74/{z}/{x}/{y}.png"
+                                  attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+                                />
+                                {markerPosition ? (
+                                  <Marker position={markerPosition} />
+                                ) : null}
+                              </Map>
+                            ) : (
+                              <Map
+                                onClick={this.handleMapClick}
+                                center={position}
+                                zoom={8}
+                                className={styles.MapStyle}
+                              >
+                                <TileLayer
+                                  url="https://b.tiles.mapbox.com/v3/nelenschuurmans.iaa98k8k/{z}/{x}/{y}.png"
+                                  attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+                                />
+                                {markerPosition ? (
+                                  <Marker position={markerPosition} />
+                                ) : null}
+                              </Map>
+                            )}
+
                             {this.state.name ? (
                               <button
                                 type="button"
@@ -1028,141 +1101,11 @@ class NewNotification extends Component {
                         className={`mt-0 ${step !== 5 ? "text-muted" : null}`}
                       >
                         <FormattedMessage
-                          id="notifications_app.point_on_map"
-                          defaultMessage="Point-on-map"
-                        />
-                      </h3>
-                      {step === 5 ? (
-                        <div>
-                          <p className="text-muted">
-                            <FormattedMessage
-                              id="notifications_app.set_the_location"
-                              defaultMessage="Set the location of this alarm by placing a marker (tap/click on the map)"
-                            />
-                          </p>
-
-                          <SelectAsset
-                            placeholderText="Type to search"
-                            results={assets}
-                            loading={loading}
-                            onInput={this.handleAssetSearchInput}
-                            setAsset={this.handleSetAsset}
-                          />
-
-                          {raster.spatial_bounds ? (
-                            <Map
-                              onClick={this.handleMapClick}
-                              bounds={[
-                                [
-                                  raster.spatial_bounds.south,
-                                  raster.spatial_bounds.west
-                                ],
-                                [
-                                  raster.spatial_bounds.north,
-                                  raster.spatial_bounds.east
-                                ]
-                              ]}
-                              className={styles.MapStyle}
-                            >
-                              <TileLayer
-                                // url="https://{s}.tiles.mapbox.com/v3/nelenschuurmans.iaa98k8k/{z}/{x}/{y}.png"
-                                url="https://{s}.tiles.mapbox.com/v3/nelenschuurmans.5641a12c/{z}/{x}/{y}.png"
-                                attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-                              />
-                              <WMSTileLayer
-                                url={`/api/v3/wms/`}
-                                styles={this.formatWMSStyles(
-                                  raster.options.styles
-                                )}
-                                layers={this.formatWMSLayers(
-                                  raster.wms_info.layer
-                                )}
-                                opacity={0.9}
-                              />
-                              <TileLayer
-                                url="https://{s}.tiles.mapbox.com/v3/nelenschuurmans.0a5c8e74/{z}/{x}/{y}.png"
-                                attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-                              />
-                              {markerPosition ? (
-                                <Marker position={markerPosition} />
-                              ) : null}
-                            </Map>
-                          ) : (
-                            <Map
-                              onClick={this.handleMapClick}
-                              center={position}
-                              zoom={8}
-                              className={styles.MapStyle}
-                            >
-                              <TileLayer
-                                url="https://b.tiles.mapbox.com/v3/nelenschuurmans.iaa98k8k/{z}/{x}/{y}.png"
-                                attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-                              />
-                              {markerPosition ? (
-                                <Marker position={markerPosition} />
-                              ) : null}
-                            </Map>
-                          )}
-
-                          <button
-                            type="button"
-                            className={`${buttonStyles.Button} ${buttonStyles.Success}`}
-                            style={{ marginTop: 10 }}
-                            onClick={() => {
-                              if (markerPosition) {
-                                this.loadTimeseriesData();
-                                this.setState({
-                                  step: 6
-                                });
-                              }
-                            }}
-                          >
-                            <FormattedMessage
-                              id="notifications_app.next_step"
-                              defaultMessage="Next step"
-                            />
-                          </button>
-                          <button
-                            type="button"
-                            className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link}`}
-                            style={{ marginLeft: 15, marginTop: 10 }}
-                            onClick={() =>
-                              this.setState({
-                                step: 6
-                              })}
-                          >
-                            <FormattedMessage
-                              id="notifications_app.back"
-                              defaultMessage="Back"
-                            />
-                          </button>
-                        </div>
-                      ) : null}
-                    </div>
-                  </div>
-                </div>
-
-                <div className={styles.Step} id="Step">
-                  <div className="media">
-                    <StepIndicator
-                      indicator="6"
-                      active={step === 6}
-                      handleClick={() => this.goBackToStep(6)}
-                    />
-                    <div
-                      style={{
-                        marginLeft: 90
-                      }}
-                    >
-                      <h3
-                        className={`mt-0 ${step !== 6 ? "text-muted" : null}`}
-                      >
-                        <FormattedMessage
                           id="notifications_app.newnotification_thresholds"
                           defaultMessage="Thresholds"
                         />
                       </h3>
-                      {step === 6 ? (
+                      {step === 5 ? (
                         <div>
                           <p className="text-muted">
                             <FormattedMessage
@@ -1251,7 +1194,7 @@ class NewNotification extends Component {
                             style={{ marginTop: 10 }}
                             onClick={() => {
                               this.setState({
-                                step: 7
+                                step: 6
                               });
                             }}
                           >
@@ -1267,19 +1210,19 @@ class NewNotification extends Component {
                 </div>
 
                 <div className="media">
-                  <StepIndicator indicator="7" active={step === 7} />
+                  <StepIndicator indicator="6" active={step === 6} />
                   <div
                     style={{
                       marginLeft: 90
                     }}
                   >
-                    <h3 className={`mt-0 ${step !== 7 ? "text-muted" : null}`}>
+                    <h3 className={`mt-0 ${step !== 6 ? "text-muted" : null}`}>
                       <FormattedMessage
                         id="notifications_app.recipients"
                         defaultMessage="Recipients"
                       />
                     </h3>
-                    {step === 7 ? (
+                    {step === 6 ? (
                       <div>
                         <p className="text-muted">
                           <FormattedMessage
