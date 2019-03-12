@@ -16,9 +16,8 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      timeSeriesOrRasters: "RASTERS",
-      isFetchingRasterAlarms: true,
-      isFetchingTimeseriesAlarms: true,
+      timeSeriesOrRaster: "RASTERS", // other option: "TIMESERIES", decided by radiobutton
+      isFetching: true,
       alarms: [],
       total: 0,
       page: 1
@@ -32,27 +31,46 @@ class App extends Component {
     this.removeAlarm = this.removeAlarm.bind(this);
   }
   componentDidMount() {
-    const { page } = this.state;
-    this.loadAlarmsOnPage(page);
+    this.loadAlarmsOnPage(this.state, this.props);
   }
 
-  loadAlarmsOnPage(page) {
+  componentWillUpdate(nextProps, nextState) {
+    if (
+      nextProps.selectedOrganisation.uuid !==
+      this.props.selectedOrganisation.uuid
+    ) {
+      this.setState({
+        page: 1
+      });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (
+      this.state.timeSeriesOrRaster !== prevState.timeSeriesOrRaster ||
+      this.state.page !== prevState.page ||
+      this.props.selectedOrganisation.uuid !==
+        prevProps.selectedOrganisation.uuid
+    ) {
+      this.loadAlarmsOnPage(this.state, this.props);
+    }
+  }
+
+  loadAlarmsOnPage(state, props) {
     this.setState({
-      isFetchingTimeseriesAlarms: true,
-      isFetchingRasterAlarms: true,
-      total: 0,
-      alarms: []
+      isFetching: true
     });
 
-    this.loadRasterAlarms(page);
-    this.loadTimeseriesAlarms(page);
-  }
-
-  loadRasterAlarms(page) {
-    const { selectedOrganisation } = this.props;
-    const organisationId = selectedOrganisation.uuid;
+    let apiAlarmName = "";
+    if (state.timeSeriesOrRaster === "RASTERS") {
+      apiAlarmName = "rasteralarms";
+    } else {
+      // else if (state.timeSeriesOrRaster === "TIMESERIES")
+      apiAlarmName = "timeseriesalarms";
+    }
     fetch(
-      `/api/v3/rasteralarms/?page=${page}&organisation__unique_id=${organisationId}`,
+      `/api/v3/${apiAlarmName}/?page=${state.page}&organisation__unique_id=${props
+        .selectedOrganisation.uuid}`,
       {
         credentials: "same-origin"
       }
@@ -60,59 +78,18 @@ class App extends Component {
       .then(response => response.json())
       .then(data => {
         this.setState({
-          isFetchingRasterAlarms: false,
-          total: this.state.total + data.count,
-          alarms: this.state.alarms.concat(
-            data.results.map(e => {
-              e.type = "RasterAlarm";
-              return e;
-            })
-          ),
-          page: page
+          isFetching: false,
+          alarms: data.results,
+          total: data.count
         });
       })
       .catch(error => {
         console.error("Error:", error);
-        this.setState({
-          isFetchingRasterAlarms: false
-        });
-      });
-  }
-
-  loadTimeseriesAlarms(page) {
-    const { selectedOrganisation } = this.props;
-    const organisationId = selectedOrganisation.uuid;
-
-    fetch(
-      `/api/v3/timeseriesalarms/?page=${page}&organisation__unique_id=${organisationId}`,
-      {
-        credentials: "same-origin"
-      }
-    )
-      .then(response => response.json())
-      .then(data => {
-        this.setState({
-          isFetchingTimeseriesAlarms: false,
-          total: this.state.total + data.count,
-          alarms: this.state.alarms.concat(
-            data.results.map(e => {
-              e.type = "TimeseriesAlarm";
-              return e;
-            })
-          ),
-          page: page
-        });
-      })
-      .catch(error => {
-        console.error("Error:", error);
-        this.setState({
-          isFetchingTimeseriesAlarms: false
-        });
       });
   }
 
   urlFromAlarm(alarm) {
-    if (alarm.type === "TimeseriesAlarm")
+    if (alarm.url.includes("timeseriesalarms"))
       return `/api/v3/timeseriesalarms/${alarm.uuid}/`; //(alarm.type==='RasterAlarm')
     else return `/api/v3/rasteralarms/${alarm.uuid}/`;
   }
@@ -130,10 +107,7 @@ class App extends Component {
     })
       .then(response => response.json())
       .then(data => {
-        this.setState({
-          isActive: true
-        });
-        this.loadAlarmsOnPage(this.state.page);
+        this.loadAlarmsOnPage(this.state, this.props);
         addNotification(`Alarm activated`, 2000);
       });
   }
@@ -151,10 +125,7 @@ class App extends Component {
     })
       .then(response => response.json())
       .then(data => {
-        this.setState({
-          isActive: false
-        });
-        this.loadAlarmsOnPage(this.state.page);
+        this.loadAlarmsOnPage(this.state, this.props);
         addNotification(`Alarm deactivated`, 2000);
       });
   }
@@ -169,7 +140,7 @@ class App extends Component {
       body: JSON.stringify({})
     }).then(response => {
       if (response.status === 204) {
-        loadAlarmsOnPage(this.state.page);
+        this.loadAlarmsOnPage(this.state, this.props);
         addNotification(`Alarm removed`, 2000);
       }
     });
@@ -180,38 +151,84 @@ class App extends Component {
     history.push("notifications/new");
   }
 
+  createAlarmRows(alarms) {
+    return alarms
+      .slice()
+      .sort((a, b) => {
+        if (a.name < b.name) {
+          return -1;
+        }
+        if (a.name > b.name) {
+          return 1;
+        }
+        return 0;
+      })
+      .sort((a, b) => {
+        return a.active === b.active ? 0 : a.active ? -1 : 1;
+      })
+      .map((alarm, i) => {
+        return (
+          <AlarmRow
+            key={alarm.uuid}
+            alarm={alarm}
+            activateAlarm={this.activateAlarm}
+            deActivateAlarm={this.deActivateAlarm}
+            removeAlarm={this.removeAlarm}
+          />
+        );
+      });
+  }
+
+  createRasterTimeseriesSwitchGUI(timeSeriesOrRaster) {
+    return (
+      <div>
+        <div>
+          <input
+            type="radio"
+            name="alarm_type"
+            value="raster_alarms"
+            checked={timeSeriesOrRaster === "RASTERS"}
+            onChange={e => {
+              this.setState({
+                timeSeriesOrRaster: "RASTERS",
+                page: 1
+              });
+            }}
+          />
+          <label>
+            <FormattedMessage
+              id="notifications_app.raster_alarms"
+              defaultMessage="Raster Alarms"
+            />
+          </label>
+        </div>
+        <div>
+          <input
+            type="radio"
+            name="alarm_type"
+            value="timeseries_alarms"
+            checked={timeSeriesOrRaster === "TIMESERIES"}
+            onChange={e => {
+              this.setState({
+                timeSeriesOrRaster: "TIMESERIES",
+                page: 1
+              });
+            }}
+          />
+          <label>
+            <FormattedMessage
+              id="notifications_app.timeseries_alarms"
+              defaultMessage="Timeseries Alarms"
+            />
+          </label>
+        </div>
+      </div>
+    );
+  }
+
   render() {
-    const {
-      alarms,
-      isFetchingRasterAlarms,
-      isFetchingTimeseriesAlarms,
-      total,
-      page
-    } = this.state;
-
-    let numberOfNotifications = 0;
-    let alarmRows = [];
-    if (total && total > 0) {
-      numberOfNotifications = total;
-      alarmRows = alarms
-        .slice()
-        .sort((a, b) => {
-          if (a.name < b.name) {
-            return -1;
-          }
-          if (a.name > b.name) {
-            return 1;
-          }
-          return 0;
-        })
-        .sort((a, b) => {
-          return a.active === b.active ? 0 : a.active ? -1 : 1;
-        });
-    }
-
-    const alarmsTable = alarmRows.map((alarm, i) => {
-      return <AlarmRow key={i} alarm={alarm} />;
-    });
+    const numberOfNotifications = this.state.total;
+    const alarmsTable = this.createAlarmRows(this.state.alarms);
 
     return (
       <div className={gridStyles.Container}>
@@ -233,50 +250,9 @@ class App extends Component {
                 other {NOTIFICATIONS}}`}
               values={{ numberOfNotifications }}
             />
-            <div>
-              <div>
-                <input
-                  type="radio"
-                  name="alarm_type"
-                  value="raster_alarms"
-                  checked={this.state.timeSeriesOrRasters === "RASTERS"}
-                  onChange={e => {
-                    this.setState({
-                      timeSeriesOrRasters: "RASTERS",
-                      page: 1
-                    });
-                    this.loadAlarmsOnPage(1);
-                  }}
-                />
-                <label>
-                  <FormattedMessage
-                    id="notifications_app.raster_alarms"
-                    defaultMessage="Raster Alarms"
-                  />
-                </label>
-              </div>
-              <div>
-                <input
-                  type="radio"
-                  name="alarm_type"
-                  value="timeseries_alarms"
-                  checked={this.state.timeSeriesOrRasters === "TIMESERIES"}
-                  onChange={e => {
-                    this.setState({
-                      timeSeriesOrRasters: "TIMESERIES",
-                      page: 1
-                    });
-                    this.loadAlarmsOnPage(1);
-                  }}
-                />
-                <label>
-                  <FormattedMessage
-                    id="notifications_app.timeseries_alarms"
-                    defaultMessage="Timeseries Alarms"
-                  />
-                </label>
-              </div>
-            </div>
+            {this.createRasterTimeseriesSwitchGUI(
+              this.state.timeSeriesOrRaster
+            )}
           </div>
           <div
             className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${gridStyles.colSm4} ${gridStyles.colXs4}`}
@@ -299,7 +275,7 @@ class App extends Component {
           <div
             className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
           >
-            {isFetchingRasterAlarms || isFetchingTimeseriesAlarms ? (
+            {this.state.isFetching ? (
               <div
                 style={{
                   position: "relative",
@@ -311,7 +287,7 @@ class App extends Component {
               >
                 <MDSpinner size={24} />
               </div>
-            ) : alarmRows.length > 0 ? (
+            ) : this.state.total > 0 ? (
               alarmsTable
             ) : (
               <div className={styles.NoResults}>
@@ -331,9 +307,13 @@ class App extends Component {
             className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
           >
             <PaginationBar
-              loadAlarmsOnPage={this.loadAlarmsOnPage}
-              page={page}
-              pages={Math.ceil(total / 10)}
+              setPage={page => {
+                this.setState({
+                  page: page
+                });
+              }}
+              page={this.state.page}
+              pages={Math.ceil(this.state.total / 10)}
             />
           </div>
         </div>
@@ -343,7 +323,6 @@ class App extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  console.log("[F] mapStateToProps state.organisations ", state.organisations);
   return {
     selectedOrganisation: state.organisations.selected,
     isFetchingOrganisations: state.organisations.isFetching
