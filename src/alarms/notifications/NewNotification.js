@@ -420,16 +420,13 @@ class NewNotification extends Component {
       this.state.timeseriesAssetType,
       this.state.timeseriesAssetId
     ).then(data => {
-      let nestedAssets = [];
-      for (var i = 0; i < data.length; i++) {
-        if (data[i].name) {
-          nestedAssets.push(data[i].name);
-          // } else if (data[i].code) {
-          //   nestedAssets.push(data[i].code);  // of is entity_name beter?
-        } else if (data[i].code) {
-          nestedAssets.push(data[i].code);
+      let nestedAssets = data.map(function(nestedAsset) {
+        if (nestedAsset.name) {
+          return nestedAsset.name;
+        } else if (nestedAsset.code) {
+          return nestedAsset.code;
         }
-      }
+      });
       // choices of SelectBoxSearch for timeserie nested assets
       this.setState({ timeseriesNestedAssets: nestedAssets });
       // choice of SelectBoxSearch for timeserie nested asset
