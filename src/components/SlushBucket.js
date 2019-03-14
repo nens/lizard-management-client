@@ -133,7 +133,7 @@ class SlushBucket extends Component {
                   return (
                     <div
                       tabIndex={i + 1}
-                      key={Math.floor(Math.random() * 100000)}
+                      key={choiceItem + i}
                       className={`${styles.ResultRow} ${this.props.selected.includes(
                         choiceItem
                       )
@@ -151,7 +151,7 @@ class SlushBucket extends Component {
                           );
                         }
                       }}
-                      key={choiceItem}
+                      key={choiceItem + i}
                     >
                       {choiceItem}
                     </div>
@@ -191,7 +191,7 @@ class SlushBucket extends Component {
                         justifyContent: "space-between",
                         alignItems: "center"
                       }}
-                      key={choiceItem}
+                      key={choiceItem + i}
                     >
                       <div>{choiceItem}</div>
                       <ClearButton

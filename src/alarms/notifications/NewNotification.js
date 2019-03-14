@@ -761,7 +761,7 @@ class NewNotification extends Component {
                           {messages.map((message, i) => {
                             return (
                               <GroupAndTemplateSelector
-                                key={Math.floor(Math.random() * 100000)}
+                                key={message.messageName + i}
                                 idx={i}
                                 messageName={message.messageName}
                                 groupName={message.groupName}
