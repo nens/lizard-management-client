@@ -91,11 +91,7 @@ class App extends Component {
             };
           }
           return (
-            <NavLink
-              to={to}
-              key={Math.floor(Math.random() * 100000)}
-              style={styleNavLink}
-            >
+            <NavLink to={to} key={to} style={styleNavLink}>
               {" "}
               <span
                 style={styleSpan}

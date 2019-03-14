@@ -328,7 +328,7 @@ class Detail extends Component {
       } catch (e) {}
       return (
         <div
-          key={Math.floor(Math.random() * 100000)}
+          key={threshold.warning_level + i}
           className={styles.ThresHoldsList}
         >
           <div>
