@@ -91,7 +91,7 @@ class App extends Component {
             };
           }
           return (
-            <NavLink to={to} key={i} style={styleNavLink}>
+            <NavLink to={to} key={to} style={styleNavLink}>
               {" "}
               <span
                 style={styleSpan}

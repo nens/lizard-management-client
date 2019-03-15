@@ -126,7 +126,7 @@ class OrganisationSwitcher extends Component {
                   ? filteredOrganisations.map((organisation, i) => {
                       return (
                         <div
-                          key={i}
+                          key={organisation.uuid}
                           className={`${styles.OrganisationRow} ${selectedOrganisation &&
                           organisation.uuid === selectedOrganisation.uuid
                             ? styles.Active

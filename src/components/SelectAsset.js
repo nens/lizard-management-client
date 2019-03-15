@@ -86,7 +86,7 @@ class SelectAsset extends Component {
                 return (
                   <div
                     tabIndex={i + 1}
-                    key={i}
+                    key={result.id}
                     className={styles.ResultRow}
                     onClick={() => this.handleSelect(result)}
                     onKeyUp={e => {

@@ -308,7 +308,7 @@ class App extends Component {
                   // so show contact.user.first_name etcetera
                   if (contact.user) {
                     return (
-                      <tr key={i}>
+                      <tr key={contact.id}>
                         <td>
                           <NavLink
                             to={`/alarms/contacts/${contact.id}`}
@@ -344,7 +344,7 @@ class App extends Component {
                   } else {
                     // Otherwise, no Django User is linked, so show contact.first_name etc.
                     return (
-                      <tr key={i}>
+                      <tr key={contact.id}>
                         <td>
                           <NavLink
                             to={`/alarms/contacts/${contact.id}`}

@@ -166,7 +166,7 @@ class Detail extends Component {
       if (!parameter.templateType || parameter.templateType === template.type) {
         return (
           <tr
-            key={i}
+            key={parameter.parameter}
             onClick={() => {
               document
                 .getElementById("templatePreview")

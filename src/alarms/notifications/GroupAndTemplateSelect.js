@@ -72,7 +72,7 @@ class GroupAndTemplateSelect extends Component {
               />
               {availableGroups.map((group, i) => {
                 return (
-                  <option key={i} value={group.name}>
+                  <option key={group.id} value={group.name}>
                     {group.name}
                   </option>
                 );
@@ -94,7 +94,7 @@ class GroupAndTemplateSelect extends Component {
               />
               {availableMessages.map((message, i) => {
                 return (
-                  <option key={i} value={message.name}>
+                  <option key={message.id} value={message.name}>
                     {message.name}
                   </option>
                 );

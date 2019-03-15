@@ -146,7 +146,7 @@ class App extends Component {
                   {contactgroups.map((group, i) => {
                     const numberOfContacts = group.contacts.length;
                     return (
-                      <tr key={i} className={styles.GroupRow}>
+                      <tr key={group.id} className={styles.GroupRow}>
                         <td className={tableStyles.TdCol4}>
                           <NavLink to={`/alarms/groups/${group.id}`}>
                             {group.name}
