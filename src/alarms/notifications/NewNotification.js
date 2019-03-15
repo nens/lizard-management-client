@@ -170,27 +170,18 @@ class NewNotification extends Component {
       raster: null,
       rasters: [],
       showConfigureThreshold: false,
+      step: 1,
+      thresholds: [],
+
       sourceType: {
         display: "Rasters",
         description: "Put an alarm on raster data"
       },
-      sourceTypes: [
-        {
-          display: "Rasters",
-          description: "Put an alarm on raster data"
-        },
-        {
-          display: "Timeseries",
-          description: "Put an alarm on timeseries data"
-        }
-      ],
-      step: 1,
-      thresholds: [],
-      timeseriesAsset: "",
+      timeseriesAssetName: "",
       timeseriesAssetType: "",
       timeseriesAssetId: "",
       timeseriesAssets: [],
-      timeseriesNestedAsset: "",
+      timeseriesNestedAssetName: "",
       timeseriesNestedAssetType: "",
       timeseriesNestedAssetDict: {},
       timeseriesNestedAssets: [],
@@ -268,7 +259,7 @@ class NewNotification extends Component {
   handleEnter(event) {
     if (this.state.step === 3) {
       if (
-        this.validateTimeseriesAsset(this.state.timeseriesAsset) &&
+        this.validateTimeseriesAsset(this.state.timeseriesAssetName) &&
         event.keyCode === 13
       ) {
         // 13 is keycode 'enter' (works only when current input validates)
@@ -404,9 +395,14 @@ class NewNotification extends Component {
     this.handleResetTimeseriesNestedAsset();
     this.handleResetTimeseriesUuid();
     fetchAssets(assetName).then(data => {
+      console.log("NewNotification handleSetTimeseriesAsset data", data);
       let assets = data.map(function(asset) {
         return asset.title;
       });
+      let asset = data.filter(function(asset, assetName) {
+        return asset.title === assetName;
+      });
+      console.log("NewNotification handleSetTimeseriesAsset asset", asset);
       // Choices of SelectBoxSearch for timeserie assets.
       this.setState({ timeseriesAssets: assets });
       // AssetType and assetId are needed for setting nestedAsset and uuids.
@@ -416,7 +412,7 @@ class NewNotification extends Component {
       this.setState({ timeseriesAssetId: assetId });
     });
     // Choice of SelectBoxSearch for current timeserie asset.
-    this.setState({ timeseriesAsset: assetName });
+    this.setState({ timeseriesAssetName: assetName });
   }
   validateTimeseriesAsset(str) {
     if (str && str.length > 1) {
@@ -428,12 +424,12 @@ class NewNotification extends Component {
   handleResetTimeseriesAsset() {
     this.setState({
       timeseriesAssets: [],
-      timeseriesAsset: ""
+      timeseriesAssetName: ""
     });
     // Also reset timeseries nested assets.
     this.handleResetTimeseriesNestedAsset();
   }
-  handleSetTimeseriesNestedAsset(timeseriesNestedAsset) {
+  handleSetTimeseriesNestedAsset(timeseriesNestedAssetName) {
     this.handleResetTimeseriesUuid();
     this.fetchNestedAssets(
       this.state.timeseriesAssetType,
@@ -450,7 +446,7 @@ class NewNotification extends Component {
       this.setState({ timeseriesNestedAssets: nestedAssets });
     });
     // Choice of SelectBoxSearch for current timeserie nested asset.
-    this.setState({ timeseriesNestedAsset: timeseriesNestedAsset });
+    this.setState({ timeseriesNestedAssetName: timeseriesNestedAssetName });
   }
 
   async fetchNestedAssets(assetType, assetId) {
@@ -500,13 +496,13 @@ class NewNotification extends Component {
   handleResetTimeseriesNestedAsset() {
     this.setState({
       timeseriesNestedAssets: [],
-      timeseriesNestedAsset: ""
+      timeseriesNestedAssetName: ""
     });
     // Also reset timeseries uuids.
     this.handleResetTimeseriesUuid();
   }
   handleSetTimeseriesUuid(timeseriesUuid) {
-    if (this.state.timeseriesNestedAsset === "") {
+    if (this.state.timeseriesNestedAssetName === "") {
       fetchTimeseriesUuidsFromAsset(
         this.state.timeseriesAssetType,
         this.state.timeseriesAssetId
@@ -524,7 +520,7 @@ class NewNotification extends Component {
     } else {
       // Get nested asset id from nested asset code in nestedAssetDict
       let nestedAssetId = this.state.timeseriesNestedAssetDict[
-        this.state.timeseriesNestedAsset
+        this.state.timeseriesNestedAssetName
       ];
       this.setState({
         timeseriesNestedAssetId: nestedAssetId
@@ -781,7 +777,16 @@ class NewNotification extends Component {
                           </p>
                           <div className={formStyles.FormGroup}>
                             <SelectBoxSimple
-                              choices={this.state.sourceTypes}
+                              choices={[
+                                {
+                                  display: "Rasters",
+                                  description: "Put an alarm on raster data"
+                                },
+                                {
+                                  display: "Timeseries",
+                                  description: "Put an alarm on timeseries data"
+                                }
+                              ]}
                               choice={this.state.sourceType.display}
                               isFetching={undefined}
                               transformChoiceToDisplayValue={e =>
@@ -871,7 +876,7 @@ class NewNotification extends Component {
                             <div className={formStyles.FormGroup}>
                               <SelectBoxSearch
                                 choices={this.state.timeseriesAssets}
-                                choice={this.state.timeseriesAsset}
+                                choice={this.state.timeseriesAssetName}
                                 transformChoiceToDisplayValue={e => e || ""}
                                 isFetching={false}
                                 updateModelValue={this.handleSetTimeseriesAsset}
@@ -894,7 +899,7 @@ class NewNotification extends Component {
                               <br />
                               <SelectBoxSearch
                                 choices={this.state.timeseriesNestedAssets}
-                                choice={this.state.timeseriesNestedAsset}
+                                choice={this.state.timeseriesNestedAssetName}
                                 transformChoiceToDisplayValue={e => e || ""}
                                 isFetching={false}
                                 updateModelValue={
