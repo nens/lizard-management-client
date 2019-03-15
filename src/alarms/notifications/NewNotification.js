@@ -245,33 +245,44 @@ class NewNotification extends Component {
       comparison,
       messages,
       raster,
-      markerPosition
+      markerPosition,
+      timeseriesUuid
     } = this.state;
 
-    fetch("/api/v3/rasteralarms/", {
+    let url = "";
+    let body = {
+      name: alarmName,
+      active: true,
+      organisation: organisationId,
+      thresholds: thresholds,
+      comparison: comparison,
+      messages: messages.map(message => {
+        return {
+          contact_group: message.groupName,
+          message: message.messageName
+        };
+      })
+    };
+    if (this.state.sourceType === "Timeseries") {
+      url = "/api/v3/timeseriesalarms/";
+      body.timeseries = timeseriesUuid;
+    } else {
+      // this.state.sourceType === 'Raster'
+      url = "/api/v3/rasteralarms/";
+      body.intersection = {
+        raster: raster.uuid,
+        geometry: {
+          type: "Point",
+          coordinates: [markerPosition[1], markerPosition[0], 0.0]
+        }
+      };
+    }
+
+    fetch(url, {
       credentials: "same-origin",
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: alarmName,
-        active: true,
-        organisation: organisationId,
-        thresholds: thresholds,
-        comparison: comparison,
-        messages: messages.map(message => {
-          return {
-            contact_group: message.groupName,
-            message: message.messageName
-          };
-        }),
-        intersection: {
-          raster: raster.uuid,
-          geometry: {
-            type: "Point",
-            coordinates: [markerPosition[1], markerPosition[0], 0.0]
-          }
-        }
-      })
+      body: JSON.stringify({ body })
     })
       .then(response => response.json())
       .then(data => {
