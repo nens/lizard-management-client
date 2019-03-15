@@ -263,11 +263,11 @@ class NewNotification extends Component {
         };
       })
     };
-    if (this.state.sourceType === "Timeseries") {
+    if (this.state.sourceType.display === "Timeseries") {
       url = "/api/v3/timeseriesalarms/";
       body.timeseries = timeseriesUuid;
     } else {
-      // this.state.sourceType === 'Raster'
+      // this.state.sourceType.display === 'Raster'
       url = "/api/v3/rasteralarms/";
       body.intersection = {
         raster: raster.uuid,
@@ -282,7 +282,7 @@ class NewNotification extends Component {
       credentials: "same-origin",
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ body })
+      body: JSON.stringify(body)
     })
       .then(response => response.json())
       .then(data => {
@@ -794,8 +794,7 @@ class NewNotification extends Component {
                             <br />
                             <SelectBoxSearch
                               choices={[
-                                "TimeseriesUuid1",
-                                "TimeseriesUuid2"
+                                "d1b34efc-8722-4cd2-9650-cc145dae049e" // hardcoded uuid to verify post works for timeseries alarm. This will work for organisation Nelen & Schuurmans. This will be made dynamic in other pr
                               ]} /* get assets from lizard api, search with search endpoint */
                               choice={this.state.timeseriesUuid}
                               transformChoiceToDisplayValue={e => e || ""}
