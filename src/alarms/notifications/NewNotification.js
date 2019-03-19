@@ -46,92 +46,6 @@ async function fetchContactsAndMessages(organisationId) {
   }
 }
 
-// function createNestedAssetsDict(nestedAssetsList) {
-//   // Link nested asset "id" to its "code" to be able to fetch this nested
-//   // asset with fetchTimeseriesUuidsFromNestedAsset.
-//   let nestedAssetDict = {};
-//   nestedAssetsList.forEach(function(nestedAsset) {
-//     nestedAssetDict[nestedAsset.code] = nestedAsset.id;
-//   });
-//   return nestedAssetDict;
-// }
-
-// async function fetchTimeseriesUuidsFromAsset(assetType, assetId) {
-//   // Get timeserie uuids from the asset and its nested assets.
-//   try {
-//     // Set page_size to 100000, same as in Raster.js
-//     const uuids = await fetch(
-//       `/api/v3/${assetType}s/${assetId}/?page_size=100000`,
-//       {
-//         credentials: "same-origin"
-//       }
-//     )
-//       .then(response => response.json())
-//       .then(data => {
-//         let selectedTimeseriesUuid = [];
-//         // Check if the asset has timeseries.
-//         if (data.timeseries) {
-//           selectedTimeseriesUuid = data.timeseries;
-//         }
-//         // Check if the asset has filters with timeseries.
-//         if (data.filters && data.filters[0] && data.filters[0].timeseries) {
-//           let dataFilterUuids = data.filters.map(function(dataFilter) {
-//             dataFilter.timeseries.forEach(function(dataFilterTimeserie) {
-//               selectedTimeseriesUuid.push(dataFilterTimeserie.uuid);
-//             });
-//           });
-//           selectedTimeseriesUuid.concat(dataFilterUuids);
-//         }
-//         // Check if the asset has pumps with timeseries.
-//         if (data.pumps && data.pumps[0] && data.pumps[0].timeseries) {
-//           let dataPumpUuids = data.pumps.map(function(dataPump) {
-//             dataPump.timeseries.forEach(function(dataPumpTimeserie) {
-//               selectedTimeseriesUuid.push(dataPumpTimeserie.uuid);
-//             });
-//           });
-//         }
-//         return selectedTimeseriesUuid;
-//       });
-//     return uuids;
-//   } catch (e) {
-//     throw new Error(e);
-//   }
-// }
-
-// async function fetchTimeseriesUuidsFromNestedAsset(
-//   nestedAssetType,
-//   nestedAssetId
-// ) {
-//   // Get timeserie uuids from the nested assets.
-//   try {
-//     // Set page_size to 100000, same as in Raster.js
-//     const uuids = await fetch(
-//       `/api/v3/${nestedAssetType}s/${nestedAssetId}/?page_size=100000`,
-//       {
-//         credentials: "same-origin"
-//       }
-//     )
-//       .then(response => response.json())
-//       .then(data => {
-//         let nestedAssetData;
-//         if (data.results) {
-//           nestedAssetData = data.results;
-//         } else {
-//           nestedAssetData = data;
-//         }
-
-//         let fetchedTimeseriesUuidsFromAsset = [];
-//         nestedAssetData.timeseries.forEach(function(nestedAssetTimeserie) {
-//           fetchedTimeseriesUuidsFromAsset.push(nestedAssetTimeserie.uuid);
-//         });
-//         return fetchedTimeseriesUuidsFromAsset;
-//       });
-//     return uuids;
-//   } catch (e) {
-//     throw new Error(e);
-//   }
-// }
-
 class NewNotification extends Component {
   constructor(props) {
     super(props);
@@ -154,35 +68,13 @@ class NewNotification extends Component {
       thresholds: [],
 
       sourceType: {
-        //   display: "Rasters",  // rasters should be default?
-        //   description: "Put an alarm on raster data"
-        // },
-        // {
-        display: "Timeseries",
-        description: "Put an alarm on timeseries data"
+        display: "Rasters",
+        description: "Put an alarm on raster data"
       },
 
-      foundTimeseriesAssetsSearchEndpoint: [], // old -> new
-      selectedTimeseriesAssetFromSearchEndpoint: {}, // ->new
-      selectedTimeseriesAssetFromAssetEndpoint: {}, // ->new
-
-      // selectedTimeseriesAssetName: "",  // old
-      // selectedTimeseriesAssetType: "",  // old
-      // selectedTimeseriesAssetId: "",  // old
-
-      // fetchedTimeseriesNestedAssetsFromAssetEndpoint: [],  // old
-
-      // selectedTimeseriesNestedAssetName: "GGMN_filter_Phoenix3_1_1",  // old
-      // selectedTimeseriesNestedAssetType: "filters",  // old
-      // matchNestedAssetCodeToId: {  // old
-      //   GGMN_filter_Phoenix3_1_1: 24,
-      //   GGMN_filter_Phoenix3_1_2: 25
-      // },
-
-      // fetchedTimeseriesUuidsFromAsset: [  // old
-      //   "22450124-519f-4ca1-9ab4-0ae0648081f0",
-      //   "0b875633-33c5-4946-9948-bac09ae6e11f"
-      // ],
+      foundTimeseriesAssetsSearchEndpoint: [],
+      selectedTimeseriesAssetFromSearchEndpoint: {},
+      selectedTimeseriesAssetFromAssetEndpoint: {},
 
       selectedTimeseriesUuid: "22450124-519f-4ca1-9ab4-0ae0648081f0"
     };
@@ -209,18 +101,6 @@ class NewNotification extends Component {
     this.handleResetTimeseriesAsset = this.handleResetTimeseriesAsset.bind(
       this
     );
-    // this.handleSetTimeseriesNestedAsset = this.handleSetTimeseriesNestedAsset.bind(
-    //   this
-    // );
-    // this.validateTimeseriesNestedAsset = this.validateTimeseriesNestedAsset.bind(
-    //   this
-    // );
-    // this.handleResetTimeseriesNestedAsset = this.handleResetTimeseriesNestedAsset.bind(
-    //   this
-    // );
-    // this.handleSetTimeseriesUuid = this.handleSetTimeseriesUuid.bind(this);
-    // this.validateTimeseriesUuid = this.validateTimeseriesUuid.bind(this);
-    // this.handleResetTimeseriesUuid = this.handleResetTimeseriesUuid.bind(this);
     this.handleSetRaster = this.handleSetRaster.bind(this);
     this.handleSetAsset = this.handleSetAsset.bind(this);
     this.handleMapClick = this.handleMapClick.bind(this);
@@ -404,28 +284,17 @@ class NewNotification extends Component {
       )
         .then(response => response.json())
         .then(data => {
-          // this.setState({
-          //   foundTimeseriesAssetsSearchEndpoint: data.results,
-          // });
           return data.results;
         });
-      console.log("assets __", assets);
       return assets;
     } catch (e) {
       throw new Error(e);
     }
   }
-  // setTimeseriesAssetFromAssetEndpoint (assetId) {
-  //   // filter this.foundTimeseriesAssetsSearchEndpoint on selectedAsset
-  //   this.fetchAssetsFromSearchEndpoint()
-  // }
   async handleSetTimeseriesAsset(assetObj) {
-    console.log(assetObj);
-
     this.setState({
       selectedTimeseriesAssetFromSearchEndpoint: assetObj
     });
-
     try {
       // Set page_size to 100000, same as in Raster.js
       const asset = await fetch(
@@ -436,52 +305,14 @@ class NewNotification extends Component {
       )
         .then(response => response.json())
         .then(data => {
-          console.log("data __", data);
-
           return data;
         });
-      console.log("asset __", asset);
-
       this.setState({
         selectedTimeseriesAssetFromAssetEndpoint: asset
       });
     } catch (e) {
       throw new Error(e);
     }
-
-    // this.handleResetTimeseriesNestedAsset();
-    // this.handleResetTimeseriesUuid();
-    // this.fetchAssetsFromSearchEndpoint(assetName).then(data => {
-    //   console.log("NewNotification handleSetTimeseriesAsset data", data);
-    //   console.log("NewNotification handleSetTimeseriesAsset data[0]", data[0]);
-    //   // var selectedAsset = {};
-    //   // data.forEach(function (asset) {
-    //   //   // console.log("NewNotification handleSetTimeseriesAsset asset", asset);
-    //   //   if (asset.title === assetName) {
-    //   //     selectedAsset = asset;
-    //   //   }
-    //   // });
-    //   // var selectedAsset = data.filter(function (asset) {
-    //   //   console.log("NewNotification handleSetTimeseriesAsset asset.title", asset.title);
-    //   //   return (asset.title === assetName);
-    //   // });
-    //   // console.log("NewNotification handleSetTimeseriesAsset selectedAsset", selectedAsset);
-    //   // let assets = data.map(function(asset) {
-    //   //   return asset.title;
-    //   // });
-    //   this.setState({
-    //     // Choices of SelectBoxSearch for timeserie assets.
-    //     foundTimeseriesAssetsSearchEndpoint: data,  // oud was een lijstje van .title wordt een lijstje met dicts
-    //     selectedTimeseriesAssetFromSearchEndpoint: data[0]  // get from filter
-    //   });
-    //   // AssetType and assetId are needed for setting nestedAsset and uuids.
-    //   let assetType = data[0].entity_name;
-    //   this.setState({ selectedTimeseriesAssetType: assetType });
-    //   let assetId = data[0].entity_id;
-    //   this.setState({ selectedTimeseriesAssetId: assetId });
-    // });
-    // // Choice of SelectBoxSearch for current timeserie asset.
-    // this.setState({ selectedTimeseriesAssetName: assetName });
   }
   validateTimeseriesAsset(obj) {
     return obj.title && obj.entity_id && obj.entity_name;
@@ -492,136 +323,7 @@ class NewNotification extends Component {
       selectedTimeseriesAssetFromSearchEndpoint: {},
       selectedTimeseriesAssetName: ""
     });
-    // Also reset timeseries nested assets.
-    // this.handleResetTimeseriesNestedAsset();
   }
-  // handleSetTimeseriesNestedAsset(selectedTimeseriesNestedAssetName) {
-  //   this.handleResetTimeseriesUuid();
-  //   this.fetchNestedAssets(
-  //     this.state.selectedTimeseriesAssetType,
-  //     this.state.selectedTimeseriesAssetId
-  //   ).then(data => {
-  //     let nestedAssets = data.map(function(nestedAsset) {
-  //       if (nestedAsset.name) {
-  //         return nestedAsset.name;
-  //       } else if (nestedAsset.code) {
-  //         return nestedAsset.code;
-  //       }
-  //     });
-  //     // Choices of SelectBoxSearch for timeserie nested assets.
-  //     this.setState({ fetchedTimeseriesNestedAssetsFromAssetEndpoint: nestedAssets });
-  //   });
-  //   // Choice of SelectBoxSearch for current timeserie nested asset.
-  //   this.setState({ selectedTimeseriesNestedAssetName: selectedTimeseriesNestedAssetName });
-  // }
-
-  // async fetchNestedAssets(assetType, assetId) {
-  //   // Fetch nested assets from asset.
-  //   try {
-  //     // Set page_size to 100000, same as in Raster.js
-  //     const nestedAssets = await fetch(
-  //       `/api/v3/${assetType}s/${assetId}/?page_size=100000`,
-  //       {
-  //         credentials: "same-origin"
-  //       }
-  //     )
-  //       .then(response => response.json())
-  //       .then(data => {
-  //         let nestedAssetsList = [];
-  //         let nestedAssetDict = {};
-  //         if (data.filters) {
-  //           nestedAssetsList = data.filters;
-  //           this.setState({
-  //             selectedTimeseriesNestedAssetType: "filter"
-  //           });
-  //           nestedAssetDict = createNestedAssetsDict(nestedAssetsList);
-  //         } else if (data.pumps) {
-  //           nestedAssetsList = data.pumps;
-  //           this.setState({
-  //             selectedTimeseriesNestedAssetType: "pump"
-  //           });
-  //           nestedAssetDict = createNestedAssetsDict(nestedAssetsList);
-  //         }
-  //         this.setState({
-  //           matchNestedAssetCodeToId: nestedAssetDict
-  //         });
-  //         return nestedAssetsList;
-  //       });
-  //     return nestedAssets;
-  //   } catch (e) {
-  //     throw new Error(e);
-  //   }
-  // }
-  // validateTimeseriesNestedAsset(str) {
-  //   if (str && str.length > 1) {
-  //     return true;
-  //   } else {
-  //     return false;
-  //   }
-  // }
-  // handleResetTimeseriesNestedAsset() {
-  //   this.setState({
-  //     fetchedTimeseriesNestedAssetsFromAssetEndpoint: [],
-  //     selectedTimeseriesNestedAssetName: ""
-  //   });
-  //   // Also reset timeseries uuids.
-  //   this.handleResetTimeseriesUuid();
-  // }
-  // handleSetTimeseriesUuid(selectedTimeseriesUuid) {
-  //   if (this.state.selectedTimeseriesNestedAssetName === "") {
-  //     fetchTimeseriesUuidsFromAsset(
-  //       this.state.selectedTimeseriesAssetType,
-  //       this.state.selectedTimeseriesAssetId
-  //     ).then(data => {
-  //       let uuids = data.map(function(timeserie) {
-  //         if (timeserie.uuid) {
-  //           return timeserie.uuid;
-  //         } else {
-  //           return timeserie;
-  //         }
-  //       });
-  //       // Choices of SelectBoxSearch for timeserie uuids.
-  //       this.setState({ fetchedTimeseriesUuidsFromAsset: uuids });
-  //     });
-  //   } else {
-  //     // Get nested asset id from nested asset code in nestedAssetDict
-  //     let nestedAssetId = this.state.matchNestedAssetCodeToId[
-  //       this.state.selectedTimeseriesNestedAssetName
-  //     ];
-  //     this.setState({
-  //       timeseriesNestedAssetId: nestedAssetId
-  //     });
-  //     fetchTimeseriesUuidsFromNestedAsset(
-  //       this.state.selectedTimeseriesNestedAssetType,
-  //       nestedAssetId
-  //     ).then(data => {
-  //       let uuids = data.map(function(timeserie) {
-  //         if (timeserie.uuid) {
-  //           return timeserie.uuid;
-  //         } else {
-  //           return timeserie;
-  //         }
-  //       });
-  //       // Choices of SelectBoxSearch for timeserie uuids.
-  //       this.setState({ fetchedTimeseriesUuidsFromAsset: uuids });
-  //     });
-  //   }
-  //   // Choice of SelectBoxSearch for current timeserie uuid.
-  //   this.setState({ selectedTimeseriesUuid: selectedTimeseriesUuid });
-  // }
-  // validateTimeseriesUuid(str) {
-  //   if (str && str.length > 1) {
-  //     return true;
-  //   } else {
-  //     return false;
-  //   }
-  // }
-  // handleResetTimeseriesUuid() {
-  //   this.setState({
-  //     fetchedTimeseriesUuidsFromAsset: [],
-  //     selectedTimeseriesUuid: ""
-  //   });
-  // }
   handleSetAsset(view) {
     this.setState({
       markerPosition: [view[0], view[1]]
@@ -866,7 +568,6 @@ class NewNotification extends Component {
                               placeholder={"Click to select data source type"}
                               transformChoiceToDescription={e =>
                                 (e && e.description) || ""}
-                              // transformChoiceToInfo={e => (e && e.info) || ""}
                               noneValue={undefined}
                             />
                             {this.state.sourceType.display === "Timeseries" ? (
@@ -953,18 +654,13 @@ class NewNotification extends Component {
                                 isFetching={false}
                                 updateModelValue={this.handleSetTimeseriesAsset}
                                 onKeyUp={e => {
-                                  console.log("e.target.value", e.target.value);
                                   this.fetchAssetsFromSearchEndpoint(
                                     e.target.value
                                   ).then(data => {
-                                    console.log("assets", assets);
                                     this.setState({
                                       foundTimeseriesAssetsSearchEndpoint: data
                                     });
                                   });
-
-                                  // this.fetchAssetsFromSearchEndpoint(this.state.selectedTimeseriesAssetName); /*show assets in dropdown*/
-                                  // this.handleEnter(e);
                                 }}
                                 inputId={
                                   "notifications_app.select_timeserie_via_asset" +
