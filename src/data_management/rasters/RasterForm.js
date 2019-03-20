@@ -500,11 +500,7 @@ class RasterFormModel extends Component {
       supplierCode: "",
       observationType: null,
       sharedWith: [],
-      accesModifier: {
-        name: "private",
-        value: 200,
-        info: "all users can view this raster"
-      }
+      accesModifier: "Private"
     };
   }
 
@@ -558,7 +554,7 @@ class RasterFormModel extends Component {
       supplierCode: currentRaster.supplier_code,
       observationType: currentRaster.observation_type,
       sharedWith: currentRaster.shared_with,
-      accesModifier: { name: currentRaster.access_modifier }
+      accesModifier: currentRaster.access_modifier
     };
   }
 
@@ -603,7 +599,7 @@ class RasterFormModel extends Component {
         body: JSON.stringify({
           name: this.state.rasterName,
           organisation: this.state.selectedOrganisation.uuid.replace(/-/g, ""),
-          access_modifier: this.state.accesModifier.name,
+          access_modifier: this.state.accesModifier,
           observation_type: observationTypeId, //this.state.observationType,
           description: this.state.description,
           supplier: this.state.supplierId && this.state.supplierId.username,
@@ -631,7 +627,7 @@ class RasterFormModel extends Component {
       let body = {
         name: this.state.rasterName,
         organisation: this.state.selectedOrganisation.uuid.replace(/-/g, ""), // required
-        access_modifier: this.state.accesModifier.name,
+        access_modifier: this.state.accesModifier,
         observation_type: observationTypeId, // required
 
         description: this.state.description,
@@ -820,11 +816,11 @@ class RasterFormModel extends Component {
                           info: "All users can view"
                         }
                       ]}
-                      choice={this.state.accesModifier.name}
+                      choice={this.state.accesModifier}
                       isFetching={false}
                       transformChoiceToDisplayValue={e => e.name}
                       updateModelValue={e =>
-                        this.setState({ accesModifier: e })}
+                        this.setState({ accesModifier: e.name })}
                       onKeyUp={e =>
                         // for now do nothing
                         // commenting alltogether will crash the app
