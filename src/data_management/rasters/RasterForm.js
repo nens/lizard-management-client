@@ -501,7 +501,7 @@ class RasterFormModel extends Component {
       observationType: null,
       sharedWith: [],
       accesModifier: {
-        name: "public",
+        name: "private",
         value: 200,
         info: "all users can view this raster"
       }
@@ -558,7 +558,7 @@ class RasterFormModel extends Component {
       supplierCode: currentRaster.supplier_code,
       observationType: currentRaster.observation_type,
       sharedWith: currentRaster.shared_with,
-      accesModifier: { value: currentRaster.access_modifier }
+      accesModifier: { name: currentRaster.access_modifier }
     };
   }
 
@@ -603,7 +603,7 @@ class RasterFormModel extends Component {
         body: JSON.stringify({
           name: this.state.rasterName,
           organisation: this.state.selectedOrganisation.uuid.replace(/-/g, ""),
-          access_modifier: 200, // private to organisation
+          access_modifier: this.state.accesModifier.name,
           observation_type: observationTypeId, //this.state.observationType,
           description: this.state.description,
           supplier: this.state.supplierId && this.state.supplierId.username,
@@ -631,7 +631,7 @@ class RasterFormModel extends Component {
       let body = {
         name: this.state.rasterName,
         organisation: this.state.selectedOrganisation.uuid.replace(/-/g, ""), // required
-        access_modifier: 200, // private to organisation // required
+        access_modifier: this.state.accesModifier.name,
         observation_type: observationTypeId, // required
 
         description: this.state.description,
@@ -808,18 +808,15 @@ class RasterFormModel extends Component {
                     <SelectBoxSimple
                       choices={[
                         {
-                          name: "private",
-                          value: 200,
+                          name: "Private",
                           info: "Just the selected organisations can view"
                         },
                         {
-                          name: "common",
-                          value: 200,
+                          name: "Common",
                           info: "All logged in users can view"
                         },
                         {
-                          name: "public",
-                          value: 200,
+                          name: "Public",
                           info: "All users can view"
                         }
                       ]}
