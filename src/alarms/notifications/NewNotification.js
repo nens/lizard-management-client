@@ -78,7 +78,6 @@ class NewNotification extends Component {
 
       selectedTimeseriesUuid: "22450124-519f-4ca1-9ab4-0ae0648081f0"
     };
-    this.handleEnter = this.handleEnter.bind(this);
     this.handleInputNotificationName = this.handleInputNotificationName.bind(
       this
     );
@@ -135,24 +134,6 @@ class NewNotification extends Component {
       this.setState({
         showConfigureThreshold: false
       });
-    }
-  }
-  handleEnter(event) {
-    if (this.state.step === 3) {
-      if (
-        this.validateTimeseriesAsset(this.state.selectedTimeseriesAssetName) &&
-        event.keyCode === 13
-      ) {
-        // 13 is keycode 'enter' (works only when current input validates)
-        const currentStep = this.state.step;
-        this.setState({ step: currentStep + 1 });
-      }
-    } else {
-      if (event.keyCode === 13) {
-        // 13 is keycode 'enter' (works only when current input validates)
-        const currentStep = this.state.step;
-        this.setState({ step: currentStep + 1 });
-      }
     }
   }
   handleInputNotificationName(e) {
@@ -320,8 +301,7 @@ class NewNotification extends Component {
   handleResetTimeseriesAsset() {
     this.setState({
       foundTimeseriesAssetsSearchEndpoint: [],
-      selectedTimeseriesAssetFromSearchEndpoint: {},
-      selectedTimeseriesAssetName: ""
+      selectedTimeseriesAssetFromSearchEndpoint: {}
     });
   }
   handleSetAsset(view) {
@@ -560,7 +540,7 @@ class NewNotification extends Component {
                               transformChoiceToDisplayValue={e =>
                                 (e && e.display) || ""}
                               updateModelValue={this.handleSetSourceType}
-                              onKeyUp={e => this.handleEnter(e)}
+                              onKeyUp={null}
                               inputId={
                                 "notifications_app.source_type_selection" +
                                 "_input"
