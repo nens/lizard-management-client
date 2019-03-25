@@ -550,8 +550,8 @@ class NewNotification extends Component {
                                 (e && e.description) || ""}
                               noneValue={undefined}
                             />
-                            {this.state.sourceType.display === "Timeseries" ||
-                            this.state.sourceType.display === "Rasters" ? (
+                            {this.state.sourceType.display === "Rasters" ||
+                            this.state.sourceType.display === "Timeseries" ? (
                               <button
                                 type="button"
                                 className={`${buttonStyles.Button} ${buttonStyles.Success}`}
@@ -575,95 +575,7 @@ class NewNotification extends Component {
                   </div>
                 </div>
 
-                {this.state.sourceType.display === "Timeseries" ? (
-                  <div className={styles.Step} id="Step">
-                    <div className="media">
-                      <StepIndicator
-                        indicator="3"
-                        active={step === 3}
-                        handleClick={() => this.goBackToStep(3)}
-                      />
-                      <div
-                        style={{
-                          width: "calc(100% - 90px)",
-                          marginLeft: 90
-                        }}
-                      >
-                        <h3
-                          className={`mt-0 ${step !== 3 ? "text-muted" : null}`}
-                        >
-                          <FormattedMessage
-                            id="notifications_app.timeseries_selection"
-                            defaultMessage="Timeseries selection"
-                          />
-                        </h3>
-                        {step === 3 ? (
-                          <div>
-                            <p className="text-muted">
-                              <FormattedMessage
-                                id="notifications_app.select_timeserie_via_asset"
-                                defaultMessage="Select timeserie via asset."
-                              />
-                            </p>
-                            <div className={formStyles.FormGroup}>
-                              <SelectBoxSearch
-                                choices={
-                                  this.state.foundTimeseriesAssetsSearchEndpoint
-                                }
-                                choice={
-                                  this.state
-                                    .selectedTimeseriesAssetFromSearchEndpoint
-                                }
-                                transformChoiceToDisplayValue={e =>
-                                  (e && e.title) || ""}
-                                isFetching={false}
-                                updateModelValue={this.handleSetTimeseriesAsset}
-                                onKeyUp={e => {
-                                  this.fetchAssetsFromSearchEndpoint(
-                                    e.target.value
-                                  ).then(data => {
-                                    this.setState({
-                                      foundTimeseriesAssetsSearchEndpoint: data
-                                    });
-                                  });
-                                }}
-                                inputId={
-                                  "notifications_app.select_timeserie_via_asset" +
-                                  "_input"
-                                }
-                                placeholder={"Click to select timeseries asset"}
-                                validate={this.validateTimeseriesAsset}
-                                resetModelValue={
-                                  this.handleResetTimeseriesAsset
-                                }
-                                readonly={false}
-                                noneValue={undefined}
-                              />{" "}
-                              <br />
-                              {this.state.selectedTimeseriesUuid ? (
-                                <button
-                                  type="button"
-                                  className={`${buttonStyles.Button} ${buttonStyles.Success}`}
-                                  style={{ marginTop: 10 }}
-                                  onClick={() => {
-                                    this.setState({
-                                      step: 4
-                                    });
-                                  }}
-                                >
-                                  <FormattedMessage
-                                    id="notifications_app.next_step"
-                                    defaultMessage="Next step"
-                                  />
-                                </button>
-                              ) : null}
-                            </div>
-                          </div>
-                        ) : null}
-                      </div>
-                    </div>
-                  </div>
-                ) : this.state.sourceType.display === "Rasters" ? (
+                {this.state.sourceType.display === "Rasters" ? (
                   <div className={styles.Step} id="Step">
                     <div className="media">
                       <StepIndicator
@@ -785,6 +697,94 @@ class NewNotification extends Component {
                                         step: 4
                                       });
                                     }
+                                  }}
+                                >
+                                  <FormattedMessage
+                                    id="notifications_app.next_step"
+                                    defaultMessage="Next step"
+                                  />
+                                </button>
+                              ) : null}
+                            </div>
+                          </div>
+                        ) : null}
+                      </div>
+                    </div>
+                  </div>
+                ) : this.state.sourceType.display === "Timeseries" ? (
+                  <div className={styles.Step} id="Step">
+                    <div className="media">
+                      <StepIndicator
+                        indicator="3"
+                        active={step === 3}
+                        handleClick={() => this.goBackToStep(3)}
+                      />
+                      <div
+                        style={{
+                          width: "calc(100% - 90px)",
+                          marginLeft: 90
+                        }}
+                      >
+                        <h3
+                          className={`mt-0 ${step !== 3 ? "text-muted" : null}`}
+                        >
+                          <FormattedMessage
+                            id="notifications_app.timeseries_selection"
+                            defaultMessage="Timeseries selection"
+                          />
+                        </h3>
+                        {step === 3 ? (
+                          <div>
+                            <p className="text-muted">
+                              <FormattedMessage
+                                id="notifications_app.select_timeserie_via_asset"
+                                defaultMessage="Select timeserie via asset."
+                              />
+                            </p>
+                            <div className={formStyles.FormGroup}>
+                              <SelectBoxSearch
+                                choices={
+                                  this.state.foundTimeseriesAssetsSearchEndpoint
+                                }
+                                choice={
+                                  this.state
+                                    .selectedTimeseriesAssetFromSearchEndpoint
+                                }
+                                transformChoiceToDisplayValue={e =>
+                                  (e && e.title) || ""}
+                                isFetching={false}
+                                updateModelValue={this.handleSetTimeseriesAsset}
+                                onKeyUp={e => {
+                                  this.fetchAssetsFromSearchEndpoint(
+                                    e.target.value
+                                  ).then(data => {
+                                    this.setState({
+                                      foundTimeseriesAssetsSearchEndpoint: data
+                                    });
+                                  });
+                                }}
+                                inputId={
+                                  "notifications_app.select_timeserie_via_asset" +
+                                  "_input"
+                                }
+                                placeholder={"Click to select timeseries asset"}
+                                validate={this.validateTimeseriesAsset}
+                                resetModelValue={
+                                  this.handleResetTimeseriesAsset
+                                }
+                                readonly={false}
+                                noneValue={undefined}
+                              />{" "}
+                              <br />
+                              {this.state.selectedTimeseriesUuid ? (
+                                <button
+                                  type="button"
+                                  className={`${buttonStyles.Button} ${buttonStyles.Success}`}
+                                  style={{ marginTop: 10 }}
+                                  onClick={() => {
+                                    this.setState({
+                                      step: 4
+                                    });
                                   }}
                                 >
                                   <FormattedMessage
