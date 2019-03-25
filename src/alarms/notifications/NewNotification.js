@@ -550,23 +550,8 @@ class NewNotification extends Component {
                                 (e && e.description) || ""}
                               noneValue={undefined}
                             />
-                            {this.state.sourceType.display === "Timeseries" ? (
-                              <button
-                                type="button"
-                                className={`${buttonStyles.Button} ${buttonStyles.Success}`}
-                                style={{ marginTop: 10 }}
-                                onClick={() => {
-                                  this.setState({
-                                    step: 3
-                                  });
-                                }}
-                              >
-                                <FormattedMessage
-                                  id="notifications_app.next_step"
-                                  defaultMessage="Next step"
-                                />
-                              </button>
-                            ) : this.state.sourceType.display === "Rasters" ? (
+                            {this.state.sourceType.display === "Timeseries" ||
+                            this.state.sourceType.display === "Rasters" ? (
                               <button
                                 type="button"
                                 className={`${buttonStyles.Button} ${buttonStyles.Success}`}
