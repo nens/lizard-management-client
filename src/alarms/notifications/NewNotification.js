@@ -593,7 +593,7 @@ class NewNotification extends Component {
                                 style={{ marginTop: 10 }}
                                 onClick={() => {
                                   this.setState({
-                                    step: 4
+                                    step: 3
                                   });
                                 }}
                               >
@@ -682,7 +682,7 @@ class NewNotification extends Component {
                                   style={{ marginTop: 10 }}
                                   onClick={() => {
                                     this.setState({
-                                      step: 5
+                                      step: 4
                                     });
                                   }}
                                 >
@@ -698,15 +698,13 @@ class NewNotification extends Component {
                       </div>
                     </div>
                   </div>
-                ) : null}
-
-                {this.state.sourceType.display === "Rasters" ? (
+                ) : this.state.sourceType.display === "Rasters" ? (
                   <div className={styles.Step} id="Step">
                     <div className="media">
                       <StepIndicator
                         indicator="3"
-                        active={step === 4}
-                        handleClick={() => this.goBackToStep(4)}
+                        active={step === 3}
+                        handleClick={() => this.goBackToStep(3)}
                       />
                       <div
                         style={{
@@ -715,14 +713,14 @@ class NewNotification extends Component {
                         }}
                       >
                         <h3
-                          className={`mt-0 ${step !== 4 ? "text-muted" : null}`}
+                          className={`mt-0 ${step !== 3 ? "text-muted" : null}`}
                         >
                           <FormattedMessage
                             id="notifications_app.raster_selection"
                             defaultMessage="Raster selection"
                           />
                         </h3>
-                        {step === 4 ? (
+                        {step === 3 ? (
                           <div>
                             <p className="text-muted">
                               <FormattedMessage
@@ -819,7 +817,7 @@ class NewNotification extends Component {
                                   onClick={() => {
                                     if (raster) {
                                       this.setState({
-                                        step: 5
+                                        step: 4
                                       });
                                     }
                                   }}
@@ -842,8 +840,8 @@ class NewNotification extends Component {
                   <div className="media">
                     <StepIndicator
                       indicator="4"
-                      active={step === 5}
-                      handleClick={() => this.goBackToStep(5)}
+                      active={step === 4}
+                      handleClick={() => this.goBackToStep(4)}
                     />
                     <div
                       style={{
@@ -851,14 +849,14 @@ class NewNotification extends Component {
                       }}
                     >
                       <h3
-                        className={`mt-0 ${step !== 5 ? "text-muted" : null}`}
+                        className={`mt-0 ${step !== 4 ? "text-muted" : null}`}
                       >
                         <FormattedMessage
                           id="notifications_app.newnotification_thresholds"
                           defaultMessage="Thresholds"
                         />
                       </h3>
-                      {step === 5 ? (
+                      {step === 4 ? (
                         <div>
                           <p className="text-muted">
                             <FormattedMessage
@@ -947,7 +945,7 @@ class NewNotification extends Component {
                             style={{ marginTop: 10 }}
                             onClick={() => {
                               this.setState({
-                                step: 6
+                                step: 5
                               });
                             }}
                           >
@@ -963,19 +961,19 @@ class NewNotification extends Component {
                 </div>
 
                 <div className="media">
-                  <StepIndicator indicator="5" active={step === 6} />
+                  <StepIndicator indicator="5" active={step === 5} />
                   <div
                     style={{
                       marginLeft: 90
                     }}
                   >
-                    <h3 className={`mt-0 ${step !== 6 ? "text-muted" : null}`}>
+                    <h3 className={`mt-0 ${step !== 5 ? "text-muted" : null}`}>
                       <FormattedMessage
                         id="notifications_app.recipients"
                         defaultMessage="Recipients"
                       />
                     </h3>
-                    {step === 6 ? (
+                    {step === 5 ? (
                       <div>
                         <p className="text-muted">
                           <FormattedMessage
