@@ -574,10 +574,9 @@ class RasterFormModel extends Component {
       (this.state.observationType && this.state.observationType.code) ||
       undefined;
 
-    const intAggregationType =
-      (this.state.aggregationType &&
-        this.aggregationTypeStringToInteger(this.state.aggregationType)) ||
-      undefined;
+    const intAggregationType = this.state.aggregationType
+      ? this.aggregationTypeStringToInteger(this.state.aggregationType)
+      : undefined;
 
     const isoIntervalDuration = this.intervalToISODuration(
       this.state.temporalIntervalDays,
