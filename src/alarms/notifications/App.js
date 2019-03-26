@@ -12,20 +12,7 @@ import { connect } from "react-redux";
 import { FormattedMessage } from "react-intl";
 import { withRouter } from "react-router-dom";
 import classNames from "classnames";
-
-async function simpleAlarmNotificationFetch(url, body) {
-  const updatedAlarm = fetch(url, {
-    credentials: "same-origin",
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body)
-  })
-    .then(response => response.json())
-    .then(data => {
-      return data;
-    });
-  return updatedAlarm;
-}
+import { simpleJSONFetch } from "../../utils/simpleJSONFetch.js";
 
 class App extends Component {
   constructor(props) {
@@ -112,7 +99,7 @@ class App extends Component {
   activateAlarm(alarm) {
     const { addNotification } = this.props;
 
-    simpleAlarmNotificationFetch(this.urlFromAlarm(alarm), {
+    simpleJSONFetch(this.urlFromAlarm(alarm), "PATCH", {
       active: true
     }).then(data => {
       this.loadAlarmsOnPage(this.state, this.props);
@@ -123,7 +110,7 @@ class App extends Component {
   deActivateAlarm(alarm) {
     const { addNotification } = this.props;
 
-    simpleAlarmNotificationFetch(this.urlFromAlarm(alarm), {
+    simpleJSONFetch(this.urlFromAlarm(alarm), "PATCH", {
       active: false
     }).then(data => {
       this.loadAlarmsOnPage(this.state, this.props);
