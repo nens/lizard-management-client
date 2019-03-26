@@ -13,6 +13,20 @@ import { FormattedMessage } from "react-intl";
 import { withRouter } from "react-router-dom";
 import classNames from "classnames";
 
+async function simpleAlarmNotificationFetch(url, body) {
+  const updatedAlarm = fetch(url, {
+    credentials: "same-origin",
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body)
+  })
+    .then(response => response.json())
+    .then(data => {
+      return data;
+    });
+  return updatedAlarm;
+}
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -98,37 +112,23 @@ class App extends Component {
   activateAlarm(alarm) {
     const { addNotification } = this.props;
 
-    fetch(this.urlFromAlarm(alarm), {
-      credentials: "same-origin",
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        active: true
-      })
-    })
-      .then(response => response.json())
-      .then(data => {
-        this.loadAlarmsOnPage(this.state, this.props);
-        addNotification(`Alarm activated`, 2000);
-      });
+    simpleAlarmNotificationFetch(this.urlFromAlarm(alarm), {
+      active: true
+    }).then(data => {
+      this.loadAlarmsOnPage(this.state, this.props);
+      addNotification(`Alarm activated`, 2000);
+    });
   }
 
   deActivateAlarm(alarm) {
     const { addNotification } = this.props;
 
-    fetch(this.urlFromAlarm(alarm), {
-      credentials: "same-origin",
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        active: false
-      })
-    })
-      .then(response => response.json())
-      .then(data => {
-        this.loadAlarmsOnPage(this.state, this.props);
-        addNotification(`Alarm deactivated`, 2000);
-      });
+    simpleAlarmNotificationFetch(this.urlFromAlarm(alarm), {
+      active: false
+    }).then(data => {
+      this.loadAlarmsOnPage(this.state, this.props);
+      addNotification(`Alarm deactivated`, 2000);
+    });
   }
 
   removeAlarm(alarm) {
