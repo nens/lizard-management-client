@@ -782,7 +782,7 @@ class RasterFormModel extends Component {
                   titleComponent={
                     <FormattedMessage
                       id="rasters.public_private"
-                      defaultMessage="Who can read"
+                      defaultMessage="Who can view"
                     />
                   }
                   subtitleComponent={
@@ -796,9 +796,7 @@ class RasterFormModel extends Component {
                   readonly={false}
                   currentStep={currentStep} // int for denoting which step is currently active
                   setCurrentStep={this.setCurrentStep} // cb function for updating which step becomes active
-                  showCheckMark={
-                    this.state.sharedWithOrganisationsWasEverOpenedByUser
-                  }
+                  showCheckMark={true}
                   showNextButton={!this.props.currentRaster}
                   fields={
                     <SelectBoxSimple
@@ -821,18 +819,13 @@ class RasterFormModel extends Component {
                       transformChoiceToDisplayValue={e => e.name}
                       updateModelValue={e =>
                         this.setState({ accesModifier: e.name })}
-                      onKeyUp={e =>
-                        // for now do nothing
-                        // commenting alltogether will crash the app
-                        // TODO implement handle enter
-                        // this.handleEnter(e)
-                        e}
-                      // inputId={titleComponent.props.id + "_input"}
-                      // placeholder={placeholder}
-                      // validate={validate}
+                      onKeyUp={e => {
+                        if (e.keyCode === 13) {
+                          // 13 = key enter
+                          this.setCurrentStep(currentStep + 1);
+                        }
+                      }}
                       transformChoiceToDescription={e => e.info}
-                      // transformChoiceToInfo={e=> e.info}
-                      // noneValue={this.props.noneValue}
                     />
                   }
                 />
