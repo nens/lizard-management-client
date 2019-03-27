@@ -324,7 +324,7 @@ class NewNotification extends Component {
     });
   }
   validateTimeseriesNestedAsset(obj) {
-    return obj.name || obj.code;
+    return obj.code || obj.name;
   }
   handleResetTimeseriesNestedAsset() {
     this.setState({
