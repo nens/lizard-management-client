@@ -315,10 +315,9 @@ class NewNotification extends Component {
       // Reset asset(s)
       foundTimeseriesAssetsSearchEndpoint: [],
       selectedTimeseriesAssetFromSearchEndpoint: {},
-      selectedTimeseriesAssetFromAssetEndpoint: {},
-      // Reset nested asset(s)
-      selectedTimeseriesNestedAsset: {}
+      selectedTimeseriesAssetFromAssetEndpoint: {}
     });
+    this.handleResetTimeseriesNestedAsset();
   }
   async handleSetTimeseriesNestedAsset(nestedAssetObj) {
     this.setState({
