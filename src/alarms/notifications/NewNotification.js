@@ -18,6 +18,7 @@ import { connect } from "react-redux";
 import { FormattedMessage } from "react-intl";
 import { Map, Marker, TileLayer, WMSTileLayer } from "react-leaflet";
 import { withRouter } from "react-router-dom";
+import { postNewNotification } from "../../utils/postNewNotification.js";
 
 async function fetchContactsAndMessages(organisationId) {
   try {
@@ -148,49 +149,15 @@ class NewNotification extends Component {
       comparison: value
     });
   }
+
   handleActivateClick(e) {
     const { history, addNotification } = this.props;
     const organisationId = this.props.selectedOrganisation.uuid;
 
-    const {
-      alarmName,
-      thresholds,
-      comparison,
-      messages,
-      raster,
-      markerPosition
-    } = this.state;
-
-    fetch("/api/v3/rasteralarms/", {
-      credentials: "same-origin",
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: alarmName,
-        active: true,
-        organisation: organisationId,
-        thresholds: thresholds,
-        comparison: comparison,
-        messages: messages.map(message => {
-          return {
-            contact_group: message.groupName,
-            message: message.messageName
-          };
-        }),
-        intersection: {
-          raster: raster.uuid,
-          geometry: {
-            type: "Point",
-            coordinates: [markerPosition[1], markerPosition[0], 0.0]
-          }
-        }
-      })
-    })
-      .then(response => response.json())
-      .then(data => {
-        addNotification(`Alarm added and activated`, 2000);
-        history.push("/alarms/notifications");
-      });
+    postNewNotification(this.state, organisationId).then(data => {
+      addNotification(`Alarm added and activated`, 2000);
+      history.push("/alarms/notifications");
+    });
   }
   handleRasterSearchInput(value) {
     const { selectedOrganisation } = this.props;
