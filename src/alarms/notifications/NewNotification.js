@@ -68,8 +68,8 @@ class NewNotification extends Component {
       thresholds: [],
 
       sourceType: {
-        display: "Timeseries",
-        description: "Put an alarm on timeseries data"
+        display: "Rasters",
+        description: "Put an alarm on raster data"
       },
 
       foundTimeseriesAssetsSearchEndpoint: [],
