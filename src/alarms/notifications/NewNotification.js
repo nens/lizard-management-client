@@ -77,6 +77,8 @@ class NewNotification extends Component {
       selectedTimeseriesAssetFromSearchEndpoint: {},
       selectedTimeseriesAssetFromAssetEndpoint: {},
 
+      selectedTimeseriesNestedAsset: {},
+
       selectedTimeseriesUuid: "22450124-519f-4ca1-9ab4-0ae0648081f0"
     };
     this.handleInputNotificationName = this.handleInputNotificationName.bind(
@@ -99,6 +101,15 @@ class NewNotification extends Component {
     this.handleSetTimeseriesAsset = this.handleSetTimeseriesAsset.bind(this);
     this.validateTimeseriesAsset = this.validateTimeseriesAsset.bind(this);
     this.handleResetTimeseriesAsset = this.handleResetTimeseriesAsset.bind(
+      this
+    );
+    this.handleSetTimeseriesNestedAsset = this.handleSetTimeseriesNestedAsset.bind(
+      this
+    );
+    this.validateTimeseriesNestedAsset = this.validateTimeseriesNestedAsset.bind(
+      this
+    );
+    this.handleResetTimeseriesNestedAsset = this.handleResetTimeseriesNestedAsset.bind(
       this
     );
     this.handleSetRaster = this.handleSetRaster.bind(this);
@@ -240,6 +251,7 @@ class NewNotification extends Component {
     }
   }
   async handleSetTimeseriesAsset(assetObj) {
+    this.handleResetTimeseriesAsset();
     this.setState({
       selectedTimeseriesAssetFromSearchEndpoint: assetObj
     });
@@ -268,7 +280,22 @@ class NewNotification extends Component {
   handleResetTimeseriesAsset() {
     this.setState({
       foundTimeseriesAssetsSearchEndpoint: [],
-      selectedTimeseriesAssetFromSearchEndpoint: {}
+      selectedTimeseriesAssetFromSearchEndpoint: {},
+      selectedTimeseriesAssetFromAssetEndpoint: {}
+    });
+    this.handleResetTimeseriesNestedAsset();
+  }
+  async handleSetTimeseriesNestedAsset(nestedAssetObj) {
+    this.setState({
+      selectedTimeseriesNestedAsset: nestedAssetObj
+    });
+  }
+  validateTimeseriesNestedAsset(obj) {
+    return obj.code || obj.name;
+  }
+  handleResetTimeseriesNestedAsset() {
+    this.setState({
+      selectedTimeseriesNestedAsset: {}
     });
   }
   handleSetAsset(view) {
@@ -738,6 +765,41 @@ class NewNotification extends Component {
                                 validate={this.validateTimeseriesAsset}
                                 resetModelValue={
                                   this.handleResetTimeseriesAsset
+                                }
+                                readonly={false}
+                                noneValue={undefined}
+                              />{" "}
+                              <br />
+                              <SelectBoxSearch
+                                choices={
+                                  this.state
+                                    .selectedTimeseriesAssetFromAssetEndpoint
+                                    .pumps ||
+                                  this.state
+                                    .selectedTimeseriesAssetFromAssetEndpoint
+                                    .filters ||
+                                  []
+                                }
+                                choice={
+                                  this.state.selectedTimeseriesNestedAsset
+                                }
+                                transformChoiceToDisplayValue={e =>
+                                  (e && e.code) || (e && e.name) || ""}
+                                isFetching={false}
+                                updateModelValue={
+                                  this.handleSetTimeseriesNestedAsset
+                                }
+                                onKeyUp={e => {}}
+                                inputId={
+                                  "notifications_app.select_timeserie_via_nested_asset" +
+                                  "_input"
+                                }
+                                placeholder={
+                                  "Click to select timeseries nested asset"
+                                }
+                                validate={this.validateTimeseriesNestedAsset}
+                                resetModelValue={
+                                  this.handleResetTimeseriesNestedAsset
                                 }
                                 readonly={false}
                                 noneValue={undefined}
