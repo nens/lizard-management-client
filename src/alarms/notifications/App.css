@@ -12,3 +12,32 @@
   margin: 30px;
 }
 
+.ChoicesContainer{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.ChoiceContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid rgb(186, 186, 186);
+  cursor: pointer;
+}
+.ChoiceContainer:hover {
+  background-color: #a6ece0;
+}
+.ChoiceContainerLeft {
+  margin-right: 10px;
+}
+.ChoiceLabel {
+  margin: 0px;
+  padding-left: 4px;
+  cursor: pointer;
+}
+.ChoiceRadio {
+  cursor: pointer;
+}
+
