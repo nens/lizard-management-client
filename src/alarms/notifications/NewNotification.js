@@ -68,15 +68,14 @@ class NewNotification extends Component {
       thresholds: [],
 
       sourceType: {
-        display: "Rasters",
-        description: "Put an alarm on raster data"
+        display: "Timeseries",
+        description: "Put an alarm on timeseries data"
       },
 
       foundTimeseriesAssetsSearchEndpoint: [],
       selectedTimeseriesAssetFromSearchEndpoint: {},
       selectedTimeseriesAssetFromAssetEndpoint: {},
 
-      timeseriesNestedAssetsFromAsset: [],
       selectedTimeseriesNestedAsset: {},
 
       selectedTimeseriesUuid: "22450124-519f-4ca1-9ab4-0ae0648081f0"
@@ -318,7 +317,6 @@ class NewNotification extends Component {
       selectedTimeseriesAssetFromSearchEndpoint: {},
       selectedTimeseriesAssetFromAssetEndpoint: {},
       // Reset nested asset(s)
-      timeseriesNestedAssetsFromAsset: [],
       selectedTimeseriesNestedAsset: {}
     });
   }
@@ -332,7 +330,6 @@ class NewNotification extends Component {
   }
   handleResetTimeseriesNestedAsset() {
     this.setState({
-      timeseriesNestedAssetsFromAsset: [],
       selectedTimeseriesNestedAsset: {}
     });
   }
@@ -810,32 +807,24 @@ class NewNotification extends Component {
                               <br />
                               <SelectBoxSearch
                                 choices={
-                                  this.state.timeseriesNestedAssetsFromAsset
+                                  this.state
+                                    .selectedTimeseriesAssetFromAssetEndpoint
+                                    .pumps ||
+                                  this.state
+                                    .selectedTimeseriesAssetFromAssetEndpoint
+                                    .filters ||
+                                  []
                                 }
                                 choice={
                                   this.state.selectedTimeseriesNestedAsset
                                 }
                                 transformChoiceToDisplayValue={e =>
-                                  (e && e.name) || (e && e.code) || ""}
+                                  (e && e.code) || (e && e.name) || ""}
                                 isFetching={false}
                                 updateModelValue={
                                   this.handleSetTimeseriesNestedAsset
                                 }
-                                onKeyUp={e => {
-                                  let asset = this.state
-                                    .selectedTimeseriesAssetFromAssetEndpoint;
-                                  if (asset.filters) {
-                                    this.setState({
-                                      timeseriesNestedAssetsFromAsset:
-                                        asset.filters
-                                    });
-                                  } else if (asset.pumps) {
-                                    this.setState({
-                                      timeseriesNestedAssetsFromAsset:
-                                        asset.pumps
-                                    });
-                                  }
-                                }}
+                                onKeyUp={e => {}}
                                 inputId={
                                   "notifications_app.select_timeserie_via_nested_asset" +
                                   "_input"
