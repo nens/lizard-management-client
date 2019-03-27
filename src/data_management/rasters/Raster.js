@@ -208,7 +208,7 @@ class Raster extends Component {
           rasterNamesWithEnter
       )
     ) {
-      const url = "/api/v3/rasters/"; // werkt nog niet op api/v4
+      const url = "/api/v4/rasters/"; // werkt nog niet op api/v4
       // array to store all fetches to later resolve all promises
       let fetches = [];
       toBeDeletedRasterUuidsArray.forEach(rasterUuid => {
@@ -216,10 +216,10 @@ class Raster extends Component {
           // Use PATCH request for deleting rasters, so that the rasters are
           // not permanently deleted
           credentials: "same-origin",
-          method: "PATCH",
+          method: "DELETE",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            access_modifier: "Deleted"
+            // access_modifier: "Deleted"
           })
         };
         fetches.push(fetch(url + rasterUuid + "/", opts));
