@@ -71,15 +71,16 @@ class NewNotification extends Component {
         display: "Rasters",
         description: "Put an alarm on raster data"
       },
-
+      // Asset
       foundTimeseriesAssetsSearchEndpoint: [],
       selectedTimeseriesAssetFromSearchEndpoint: {},
       selectedTimeseriesAssetFromAssetEndpoint: {},
-
+      // Nested asset
       timeseriesNestedAssetsFromAsset: [],
       selectedTimeseriesNestedAsset: {},
-
-      selectedTimeseriesUuid: "22450124-519f-4ca1-9ab4-0ae0648081f0"
+      // Uuid
+      timeseriesFromAsset: [],
+      selectedTimeseries: {}
     };
     this.handleInputNotificationName = this.handleInputNotificationName.bind(
       this
@@ -112,6 +113,9 @@ class NewNotification extends Component {
     this.handleResetTimeseriesNestedAsset = this.handleResetTimeseriesNestedAsset.bind(
       this
     );
+    this.handleSetTimeseries = this.handleSetTimeseries.bind(this);
+    this.validateTimeseries = this.validateTimeseries.bind(this);
+    this.handleResetTimeseries = this.handleResetTimeseries.bind(this);
     this.handleSetRaster = this.handleSetRaster.bind(this);
     this.handleSetAsset = this.handleSetAsset.bind(this);
     this.handleMapClick = this.handleMapClick.bind(this);
@@ -319,10 +323,14 @@ class NewNotification extends Component {
       selectedTimeseriesAssetFromAssetEndpoint: {},
       // Reset nested asset(s)
       timeseriesNestedAssetsFromAsset: [],
-      selectedTimeseriesNestedAsset: {}
+      selectedTimeseriesNestedAsset: {},
+      // Reset timeserie(s)
+      timeseriesFromAsset: [],
+      selectedTimeseries: {}
     });
   }
   async handleSetTimeseriesNestedAsset(nestedAssetObj) {
+    this.handleResetTimeseriesNestedAsset();
     this.setState({
       selectedTimeseriesNestedAsset: nestedAssetObj
     });
@@ -332,8 +340,37 @@ class NewNotification extends Component {
   }
   handleResetTimeseriesNestedAsset() {
     this.setState({
+      // Reset nested asset(s)
       timeseriesNestedAssetsFromAsset: [],
-      selectedTimeseriesNestedAsset: {}
+      selectedTimeseriesNestedAsset: {},
+      // Reset timeserie(s)
+      timeseriesFromAsset: [],
+      selectedTimeseries: {}
+    });
+  }
+  async handleSetTimeseries(timeseriesObj) {
+    this.handleResetTimeseries();
+    console.log(
+      "handleSetTimeseries this.state.selectedTimeseriesAssetFromAssetEndpoint",
+      this.state.selectedTimeseriesAssetFromAssetEndpoint
+    );
+    console.log(
+      "handleSetTimeseries this.state.selectedTimeseriesAssetFromAssetEndpoint",
+      this.state.selectedTimeseriesAssetFromAssetEndpoint
+    );
+    console.log("handleSetTimeseries timeseriesObj", timeseriesObj); // object if choosen, string if not choosen
+    this.setState({
+      selectedTimeseries: timeseriesObj
+    });
+  }
+  validateTimeseries(obj) {
+    console.log("validateTimeseries obj", obj); // uuid string
+    return obj.length > 0;
+  }
+  handleResetTimeseries() {
+    this.setState({
+      timeseriesFromAsset: [],
+      selectedTimeseries: {}
     });
   }
   handleSetAsset(view) {
@@ -851,7 +888,51 @@ class NewNotification extends Component {
                                 noneValue={undefined}
                               />{" "}
                               <br />
-                              {this.state.selectedTimeseriesUuid ? (
+                              <SelectBoxSearch
+                                choices={this.state.timeseriesFromAsset}
+                                choice={this.state.selectedTimeseries}
+                                transformChoiceToDisplayValue={e =>
+                                  (e && e.uuid) || ""}
+                                isFetching={false}
+                                updateModelValue={this.handleSetTimeseries}
+                                onKeyUp={e => {
+                                  // Only show uuids from nested asset if nested asset is selected
+                                  console.log(
+                                    "this.state.selectedTimeseriesNestedAsset",
+                                    this.state.selectedTimeseriesNestedAsset
+                                  );
+                                  const nestedAsset = this.state
+                                    .selectedTimeseriesNestedAsset;
+                                  const asset = this.state
+                                    .selectedTimeseriesAssetFromAssetEndpoint;
+                                  if (Object.keys(nestedAsset).length !== 0) {
+                                    this.setState({
+                                      timeseriesFromAsset:
+                                        nestedAsset.timeseries
+                                    });
+                                  } else if (asset.timeseries.length > 0) {
+                                    console.log(
+                                      "this.state.selectedTimeseriesAssetFromAssetEndpoint",
+                                      this.state
+                                        .selectedTimeseriesAssetFromAssetEndpoint
+                                    );
+                                    this.setState({
+                                      timeseriesFromAsset: asset.timeseries // also add timeseries from nested assets!
+                                    });
+                                  }
+                                }}
+                                inputId={
+                                  "notifications_app.select_timeserie_via_uuid" +
+                                  "_input"
+                                }
+                                placeholder={"Click to select timeseries uuid"}
+                                validate={this.validateTimeseries}
+                                resetModelValue={this.handleResetTimeseries}
+                                readonly={false}
+                                noneValue={undefined}
+                              />{" "}
+                              <br />
+                              {this.state.selectedTimeseries ? (
                                 <button
                                   type="button"
                                   className={`${buttonStyles.Button} ${buttonStyles.Success}`}
