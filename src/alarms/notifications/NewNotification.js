@@ -312,7 +312,6 @@ class NewNotification extends Component {
   }
   handleResetTimeseriesAsset() {
     this.setState({
-      // Reset asset(s)
       foundTimeseriesAssetsSearchEndpoint: [],
       selectedTimeseriesAssetFromSearchEndpoint: {},
       selectedTimeseriesAssetFromAssetEndpoint: {}
