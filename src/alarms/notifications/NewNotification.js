@@ -69,10 +69,8 @@ class NewNotification extends Component {
       thresholds: [],
 
       sourceType: {
-        // display: "Rasters",  //should be default
-        // description: "Put an alarm on raster data"
-        display: "Timeseries", // default for testing timeseries
-        description: "Put an alarm on timeseries data"
+        display: "Rasters",
+        description: "Put an alarm on raster data"
       },
 
       foundTimeseriesAssetsSearchEndpoint: [],
@@ -81,7 +79,7 @@ class NewNotification extends Component {
 
       selectedTimeseriesNestedAsset: {},
 
-      selectedTimeseries: {}
+      selectedTimeseries: {} // selectedTimeseries.uuid is the timeseries uuid
     };
     this.handleInputNotificationName = this.handleInputNotificationName.bind(
       this
@@ -311,13 +309,13 @@ class NewNotification extends Component {
     });
   }
   getAllTimeseriesFromTimeseriesAsset(assetObj, nestedAssetObj) {
-    // Nested asset selected, show timeseries of nested asset
+    // Show timeseries of nested asset if a nested asset is selected.
     if (nestedAssetObj && nestedAssetObj.timeseries) {
       return nestedAssetObj.timeseries;
-      // No nested asset selected, show timeseries of asset
+      // Show timeseries of only the asset and not also the nested assets if
+      // an asset but no nested asset is selected.
     } else if (assetObj && assetObj.timeseries) {
       return assetObj.timeseries;
-      // Add default value
     } else {
       return [];
     }
@@ -845,7 +843,9 @@ class NewNotification extends Component {
                                 )}
                                 choice={this.state.selectedTimeseries}
                                 transformChoiceToDisplayValue={e =>
-                                  (e && e.uuid) || ""}
+                                  e && e.uuid && e.name
+                                    ? `name: ${e.name} - uuid: ${e.uuid}`
+                                    : ""}
                                 isFetching={false}
                                 updateModelValue={this.handleSetTimeseries}
                                 onKeyUp={e => {}}
