@@ -965,7 +965,10 @@ class NewNotification extends Component {
                           <div className={styles.Thresholds}>
                             {thresholds.map((threshold, i) => {
                               return (
-                                <div key={i} className={styles.Threshold}>
+                                <div
+                                  key={Math.floor(Math.random() * 100000)}
+                                  className={styles.Threshold}
+                                >
                                   <i
                                     style={{
                                       position: "relative",
@@ -1058,7 +1061,7 @@ class NewNotification extends Component {
                           {messages.map((message, i) => {
                             return (
                               <GroupAndTemplateSelector
-                                key={i}
+                                key={message.messageName + i}
                                 idx={i}
                                 messageName={message.messageName}
                                 groupName={message.groupName}

@@ -250,7 +250,7 @@ class App extends Component {
                   <tbody>
                     {filteredTemplates.map((template, i) => {
                       return (
-                        <tr key={i} className={styles.TemplateRow}>
+                        <tr key={template.id} className={styles.TemplateRow}>
                           <td className={tableStyles.TdCol8}>
                             <NavLink to={`/alarms/templates/${template.id}`}>
                               <strong>{template.name}</strong>{" "}

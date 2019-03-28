@@ -155,7 +155,7 @@ class SelectBoxSearch extends Component {
               return (
                 <div
                   tabIndex={i + 1}
-                  key={i}
+                  key={currentChoiceString + i}
                   className={`${styles.ResultRow} ${currentChoiceString ===
                   SelectedChoiceString
                     ? styles.Active

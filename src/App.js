@@ -91,7 +91,7 @@ class App extends Component {
             };
           }
           return (
-            <NavLink to={to} key={i} style={styleNavLink}>
+            <NavLink to={to} key={to} style={styleNavLink}>
               {" "}
               <span
                 style={styleSpan}
@@ -241,7 +241,7 @@ class App extends Component {
                   className={`${styles.FooterLeft} ${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs6}`}
                 >
                   <a
-                    href="https://www.lizard.net/handleidingen/log_in_instructies_lizard_6.01.pdf"
+                    href="http://docs.lizard.net/en/latest/introduction.html"
                     target="_blank"
                     rel="noopener noreferrer"
                   >

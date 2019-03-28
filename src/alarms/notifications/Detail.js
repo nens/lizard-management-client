@@ -327,7 +327,10 @@ class Detail extends Component {
         unit = currentAlarm.observation_type.unit;
       } catch (e) {}
       return (
-        <div key={i} className={styles.ThresHoldsList}>
+        <div
+          key={threshold.warning_level + i}
+          className={styles.ThresHoldsList}
+        >
           <div>
             <i
               style={{

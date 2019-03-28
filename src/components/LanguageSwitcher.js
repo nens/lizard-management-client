@@ -68,7 +68,7 @@ class LanguageSwitcherContainer extends Component {
             {languages.map((language, i) => {
               return (
                 <div
-                  key={i}
+                  key={language.code}
                   className={styles.ListItem}
                   onClick={() => this.handleSelect(language.code)}
                 >
