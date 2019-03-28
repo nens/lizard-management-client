@@ -310,6 +310,9 @@ class NewNotification extends Component {
       selectedTimeseries: timeseriesObj
     });
   }
+  getAllTimeseriesFromTimeseriesAsset(assetObj) {
+    return assetObj.timeseries || [];
+  }
   validateTimeseries(obj) {
     return obj.uuid;
   }
@@ -826,11 +829,10 @@ class NewNotification extends Component {
                               />{" "}
                               <br />
                               <SelectBoxSearch
-                                choices={
+                                choices={this.getAllTimeseriesFromTimeseriesAsset(
                                   this.state
                                     .selectedTimeseriesAssetFromAssetEndpoint
-                                    .timeseries || []
-                                }
+                                )}
                                 choice={this.state.selectedTimeseries}
                                 transformChoiceToDisplayValue={e =>
                                   (e && e.uuid) || ""}
