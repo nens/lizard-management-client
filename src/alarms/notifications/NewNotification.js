@@ -79,7 +79,7 @@ class NewNotification extends Component {
 
       selectedTimeseriesNestedAsset: {},
 
-      selectedTimeseriesUuid: "22450124-519f-4ca1-9ab4-0ae0648081f0"
+      selectedTimeseries: {} // selectedTimeseries.uuid is the timeseries uuid
     };
     this.handleInputNotificationName = this.handleInputNotificationName.bind(
       this
@@ -112,6 +112,9 @@ class NewNotification extends Component {
     this.handleResetTimeseriesNestedAsset = this.handleResetTimeseriesNestedAsset.bind(
       this
     );
+    this.handleSetTimeseries = this.handleSetTimeseries.bind(this);
+    this.validateTimeseries = this.validateTimeseries.bind(this);
+    this.handleResetTimeseries = this.handleResetTimeseries.bind(this);
     this.handleSetRaster = this.handleSetRaster.bind(this);
     this.handleSetAsset = this.handleSetAsset.bind(this);
     this.handleMapClick = this.handleMapClick.bind(this);
@@ -284,6 +287,7 @@ class NewNotification extends Component {
       selectedTimeseriesAssetFromAssetEndpoint: {}
     });
     this.handleResetTimeseriesNestedAsset();
+    this.handleResetTimeseries();
   }
   async handleSetTimeseriesNestedAsset(nestedAssetObj) {
     this.setState({
@@ -296,6 +300,32 @@ class NewNotification extends Component {
   handleResetTimeseriesNestedAsset() {
     this.setState({
       selectedTimeseriesNestedAsset: {}
+    });
+    this.handleResetTimeseries();
+  }
+  async handleSetTimeseries(timeseriesObj) {
+    this.setState({
+      selectedTimeseries: timeseriesObj
+    });
+  }
+  getAllTimeseriesFromTimeseriesAsset(assetObj, nestedAssetObj) {
+    // Show timeseries of nested asset if a nested asset is selected.
+    if (nestedAssetObj && nestedAssetObj.timeseries) {
+      return nestedAssetObj.timeseries;
+      // Show timeseries of only the asset and not also the nested assets if
+      // an asset but no nested asset is selected.
+    } else if (assetObj && assetObj.timeseries) {
+      return assetObj.timeseries;
+    } else {
+      return [];
+    }
+  }
+  validateTimeseries(obj) {
+    return obj && obj.uuid && obj.uuid.length > 0;
+  }
+  handleResetTimeseries() {
+    this.setState({
+      selectedTimeseries: {}
     });
   }
   handleSetAsset(view) {
@@ -805,7 +835,53 @@ class NewNotification extends Component {
                                 noneValue={undefined}
                               />{" "}
                               <br />
-                              {this.state.selectedTimeseriesUuid ? (
+                              <SelectBoxSearch
+                                choices={this.getAllTimeseriesFromTimeseriesAsset(
+                                  this.state
+                                    .selectedTimeseriesAssetFromAssetEndpoint,
+                                  this.state.selectedTimeseriesNestedAsset
+                                )}
+                                choice={this.state.selectedTimeseries}
+                                transformChoiceToDisplayValue={e => {
+                                  if (e) {
+                                    if (e.name && e.uuid) {
+                                      return `name: ${e.name} - uuid: ${e.uuid}`;
+                                    } else if (e.name) {
+                                      return `name: ${e.name}`;
+                                    } else if (e.uuid) {
+                                      return `uuid: ${e.uuid}`;
+                                    } else {
+                                      return "";
+                                    }
+                                  } else {
+                                    return "";
+                                  }
+                                }}
+                                isFetching={false}
+                                updateModelValue={e => {
+                                  if (typeof e === "string") {
+                                    // e is a string typed in by user
+                                    this.handleSetTimeseries({ uuid: e });
+                                  } else {
+                                    // e is a timeseries object coming from a selected option from the API
+                                    this.handleSetTimeseries(e);
+                                  }
+                                }}
+                                onKeyUp={e => {}}
+                                inputId={
+                                  "notifications_app.select_timeserie" +
+                                  "_input"
+                                }
+                                placeholder={"Click to select timeseries"}
+                                validate={this.validateTimeseries}
+                                resetModelValue={this.handleResetTimeseries}
+                                readonly={false}
+                                noneValue={undefined}
+                              />{" "}
+                              <br />
+                              {this.validateTimeseries(
+                                this.state.selectedTimeseries
+                              ) ? (
                                 <button
                                   type="button"
                                   className={`${buttonStyles.Button} ${buttonStyles.Success}`}
