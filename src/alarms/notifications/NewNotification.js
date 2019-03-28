@@ -69,8 +69,10 @@ class NewNotification extends Component {
       thresholds: [],
 
       sourceType: {
-        display: "Rasters",
-        description: "Put an alarm on raster data"
+        // display: "Rasters",  //should be default
+        // description: "Put an alarm on raster data"
+        display: "Timeseries", // default for testing timeseries
+        description: "Put an alarm on timeseries data"
       },
 
       foundTimeseriesAssetsSearchEndpoint: [],
@@ -79,7 +81,7 @@ class NewNotification extends Component {
 
       selectedTimeseriesNestedAsset: {},
 
-      selectedTimeseriesUuid: "22450124-519f-4ca1-9ab4-0ae0648081f0"
+      selectedTimeseries: {}
     };
     this.handleInputNotificationName = this.handleInputNotificationName.bind(
       this
@@ -112,6 +114,9 @@ class NewNotification extends Component {
     this.handleResetTimeseriesNestedAsset = this.handleResetTimeseriesNestedAsset.bind(
       this
     );
+    this.handleSetTimeseries = this.handleSetTimeseries.bind(this);
+    this.validateTimeseries = this.validateTimeseries.bind(this);
+    this.handleResetTimeseries = this.handleResetTimeseries.bind(this);
     this.handleSetRaster = this.handleSetRaster.bind(this);
     this.handleSetAsset = this.handleSetAsset.bind(this);
     this.handleMapClick = this.handleMapClick.bind(this);
@@ -284,6 +289,7 @@ class NewNotification extends Component {
       selectedTimeseriesAssetFromAssetEndpoint: {}
     });
     this.handleResetTimeseriesNestedAsset();
+    this.handleResetTimeseries();
   }
   async handleSetTimeseriesNestedAsset(nestedAssetObj) {
     this.setState({
@@ -296,6 +302,20 @@ class NewNotification extends Component {
   handleResetTimeseriesNestedAsset() {
     this.setState({
       selectedTimeseriesNestedAsset: {}
+    });
+    this.handleResetTimeseries();
+  }
+  async handleSetTimeseries(timeseriesObj) {
+    this.setState({
+      selectedTimeseries: timeseriesObj
+    });
+  }
+  validateTimeseries(obj) {
+    return obj.uuid;
+  }
+  handleResetTimeseries() {
+    this.setState({
+      selectedTimeseries: {}
     });
   }
   handleSetAsset(view) {
@@ -805,7 +825,30 @@ class NewNotification extends Component {
                                 noneValue={undefined}
                               />{" "}
                               <br />
-                              {this.state.selectedTimeseriesUuid ? (
+                              <SelectBoxSearch
+                                choices={
+                                  this.state
+                                    .selectedTimeseriesAssetFromAssetEndpoint
+                                    .timeseries || []
+                                }
+                                choice={this.state.selectedTimeseries}
+                                transformChoiceToDisplayValue={e =>
+                                  (e && e.uuid) || ""}
+                                isFetching={false}
+                                updateModelValue={this.handleSetTimeseries}
+                                onKeyUp={e => {}}
+                                inputId={
+                                  "notifications_app.select_timeserie" +
+                                  "_input"
+                                }
+                                placeholder={"Click to select timeseries"}
+                                validate={this.validateTimeseries}
+                                resetModelValue={this.handleResetTimeseries}
+                                readonly={false}
+                                noneValue={undefined}
+                              />{" "}
+                              <br />
+                              {this.state.selectedTimeseries ? (
                                 <button
                                   type="button"
                                   className={`${buttonStyles.Button} ${buttonStyles.Success}`}
