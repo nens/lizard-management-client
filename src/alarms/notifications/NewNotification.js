@@ -842,10 +842,21 @@ class NewNotification extends Component {
                                   this.state.selectedTimeseriesNestedAsset
                                 )}
                                 choice={this.state.selectedTimeseries}
-                                transformChoiceToDisplayValue={e =>
-                                  e && e.uuid && e.name
-                                    ? `name: ${e.name} - uuid: ${e.uuid}`
-                                    : ""}
+                                transformChoiceToDisplayValue={e => {
+                                  if (e) {
+                                    if (e.name && e.uuid) {
+                                      return `name: ${e.name} - uuid: ${e.uuid}`;
+                                    } else if (e.name) {
+                                      return `name: ${e.name}`;
+                                    } else if (e.uuid) {
+                                      return `uuid: ${e.uuid}`;
+                                    } else {
+                                      return "";
+                                    }
+                                  } else {
+                                    return "";
+                                  }
+                                }}
                                 isFetching={false}
                                 updateModelValue={e => {
                                   if (typeof e === "string") {
