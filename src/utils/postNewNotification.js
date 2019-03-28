@@ -6,7 +6,7 @@ export async function postNewNotification(state, organisationId) {
     messages,
     raster,
     markerPosition,
-    timeseriesUuid,
+    selectedTimeseries,
     sourceType
   } = state;
 
@@ -26,7 +26,7 @@ export async function postNewNotification(state, organisationId) {
   };
   if (sourceType.display === "Timeseries") {
     url = "/api/v3/timeseriesalarms/";
-    body.timeseries = timeseriesUuid;
+    body.timeseries = selectedTimeseries.uuid;
   } else {
     url = "/api/v3/rasteralarms/";
     body.intersection = {

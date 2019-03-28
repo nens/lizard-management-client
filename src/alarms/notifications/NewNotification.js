@@ -321,7 +321,7 @@ class NewNotification extends Component {
     }
   }
   validateTimeseries(obj) {
-    return obj.uuid;
+    return obj && obj.uuid && obj.uuid.length > 0;
   }
   handleResetTimeseries() {
     this.setState({
@@ -847,7 +847,15 @@ class NewNotification extends Component {
                                     ? `name: ${e.name} - uuid: ${e.uuid}`
                                     : ""}
                                 isFetching={false}
-                                updateModelValue={this.handleSetTimeseries}
+                                updateModelValue={e => {
+                                  if (typeof e === "string") {
+                                    // e is a string typed in by user
+                                    this.handleSetTimeseries({ uuid: e });
+                                  } else {
+                                    // e is a timeseries object coming from a selected option from the API
+                                    this.handleSetTimeseries(e);
+                                  }
+                                }}
                                 onKeyUp={e => {}}
                                 inputId={
                                   "notifications_app.select_timeserie" +
@@ -860,7 +868,9 @@ class NewNotification extends Component {
                                 noneValue={undefined}
                               />{" "}
                               <br />
-                              {this.state.selectedTimeseries ? (
+                              {this.validateTimeseries(
+                                this.state.selectedTimeseries
+                              ) ? (
                                 <button
                                   type="button"
                                   className={`${buttonStyles.Button} ${buttonStyles.Success}`}
