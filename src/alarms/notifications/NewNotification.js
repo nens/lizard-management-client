@@ -56,7 +56,6 @@ class NewNotification extends Component {
       availableGroups: [],
       availableMessages: [],
       comparison: ">",
-      isFetching: false,
       loading: false,
       markerPosition: null,
       messages: [],
@@ -560,7 +559,7 @@ class NewNotification extends Component {
                                 }
                               ]}
                               choice={this.state.sourceType.display}
-                              isFetching={undefined}
+                              isFetching={false}
                               transformChoiceToDisplayValue={e =>
                                 (e && e.display) || ""}
                               updateModelValue={this.handleSetSourceType}
