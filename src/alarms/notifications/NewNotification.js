@@ -257,6 +257,10 @@ class NewNotification extends Component {
     this.setState({
       selectedTimeseriesAssetFromSearchEndpoint: assetObj
     });
+    // do not fetch asset obj if selected asset is not validated
+    if (!this.validateTimeseriesAsset(assetObj)) {
+      return;
+    }
     try {
       // Set page_size to 100000, same as in Raster.js
       const asset = await fetch(
