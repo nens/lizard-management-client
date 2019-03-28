@@ -310,8 +310,17 @@ class NewNotification extends Component {
       selectedTimeseries: timeseriesObj
     });
   }
-  getAllTimeseriesFromTimeseriesAsset(assetObj) {
-    return assetObj.timeseries || [];
+  getAllTimeseriesFromTimeseriesAsset(assetObj, nestedAssetObj) {
+    // Nested asset selected, show timeseries of nested asset
+    if (nestedAssetObj && nestedAssetObj.timeseries) {
+      return nestedAssetObj.timeseries;
+      // No nested asset selected, show timeseries of asset
+    } else if (assetObj && assetObj.timeseries) {
+      return assetObj.timeseries;
+      // Add default value
+    } else {
+      return [];
+    }
   }
   validateTimeseries(obj) {
     return obj.uuid;
@@ -831,7 +840,8 @@ class NewNotification extends Component {
                               <SelectBoxSearch
                                 choices={this.getAllTimeseriesFromTimeseriesAsset(
                                   this.state
-                                    .selectedTimeseriesAssetFromAssetEndpoint
+                                    .selectedTimeseriesAssetFromAssetEndpoint,
+                                  this.state.selectedTimeseriesNestedAsset
                                 )}
                                 choice={this.state.selectedTimeseries}
                                 transformChoiceToDisplayValue={e =>
