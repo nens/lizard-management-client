@@ -312,6 +312,14 @@
 		"defaultMessage": "Remove"
 	},
 	{
+		"id": "notifications_app.raster_alarms",
+		"defaultMessage": "Raster Alarms"
+	},
+	{
+		"id": "notifications_app.timeseries_alarms",
+		"defaultMessage": "Timeseries Alarms"
+	},
+	{
 		"id": "notifications_app.number_of_notifications",
 		"defaultMessage": "{numberOfNotifications, number} {numberOfNotifications, plural, one {NOTIFICATION} other {NOTIFICATIONS}}"
 	},
@@ -436,6 +444,14 @@
 		"defaultMessage": "Next step"
 	},
 	{
+		"id": "notifications_app.source_type_selection",
+		"defaultMessage": "Source type selection"
+	},
+	{
+		"id": "notifications_app.whci_data_type",
+		"defaultMessage": "Which data type is the alarm for?"
+	},
+	{
 		"id": "notifications_app.raster_selection",
 		"defaultMessage": "Raster selection"
 	},
@@ -444,16 +460,16 @@
 		"defaultMessage": "Which temporal raster do you want to use?"
 	},
 	{
-		"id": "notifications_app.point_on_map",
-		"defaultMessage": "Point-on-map"
-	},
-	{
 		"id": "notifications_app.set_the_location",
 		"defaultMessage": "Set the location of this alarm by placing a marker (tap/click on the map)"
 	},
 	{
-		"id": "notifications_app.back",
-		"defaultMessage": "Back"
+		"id": "notifications_app.timeseries_selection",
+		"defaultMessage": "Timeseries selection"
+	},
+	{
+		"id": "notifications_app.select_timeserie_via_asset",
+		"defaultMessage": "Select timeserie via asset."
 	},
 	{
 		"id": "notifications_app.newnotification_thresholds",
@@ -630,6 +646,14 @@
 	{
 		"id": "rasters.which_organisations_would_you_like_to_share",
 		"defaultMessage": "Select other organisations that need read acces to this raster"
+	},
+	{
+		"id": "rasters.authorisation_type",
+		"defaultMessage": "Authorization type"
+	},
+	{
+		"id": "rasters.public_common_private",
+		"defaultMessage": "Specify who can view this raster"
 	},
 	{
 		"id": "rasters.name_of_this_raster",
