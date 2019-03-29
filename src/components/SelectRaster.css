@@ -10,10 +10,6 @@
   background-color: #fff;
   width: 100%;
   box-shadow: rgba(0, 0, 0, 0.3) 1px 1px 9px -1px;
-  z-index: 1002;
-}
-.Results:focus {
-  z-index: 1002;
 }
 .ResultRow {
   height: 50px;
