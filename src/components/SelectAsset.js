@@ -49,7 +49,7 @@ class SelectAsset extends Component {
     );
   }
   render() {
-    const { results, placeholderText, loading } = this.props;
+    const { results, placeholderText, loading, readOnly } = this.props;
     return (
       <div className={`${styles.SelectAsset} form-input`}>
         <input
@@ -62,6 +62,7 @@ class SelectAsset extends Component {
           onChange={this.handleInput}
           onKeyUp={this.handleKeyUp}
           value={this.state.input}
+          readOnly={readOnly}
           onFocus={() => this.setState({ showResults: true })}
         />
         {loading ? (

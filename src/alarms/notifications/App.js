@@ -11,12 +11,14 @@ import { addNotification } from "../../actions";
 import { connect } from "react-redux";
 import { FormattedMessage } from "react-intl";
 import { withRouter } from "react-router-dom";
+import classNames from "classnames";
+import { simpleJSONFetch } from "../../utils/simpleJSONFetch.js";
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      hasFiredFetch: false,
+      timeSeriesOrRaster: "RASTERS", // other option: "TIMESERIES", decided by radiobutton
       isFetching: true,
       alarms: [],
       total: 0,
@@ -26,31 +28,51 @@ class App extends Component {
       this
     );
     this.loadAlarmsOnPage = this.loadAlarmsOnPage.bind(this);
+    this.activateAlarm = this.activateAlarm.bind(this);
+    this.deActivateAlarm = this.deActivateAlarm.bind(this);
+    this.removeAlarm = this.removeAlarm.bind(this);
   }
   componentDidMount() {
-    const { page } = this.state;
-    this.loadAlarmsOnPage(page);
+    this.loadAlarmsOnPage(this.state, this.props);
   }
-  // componentWillReceiveProps(newProps) {
-  //   console.log("componentWillReceiveProps notifications app");
-  //   const { page, hasFiredFetch } = this.state;
-  //   const { isFetchingOrganisations, selectedOrganisation } = newProps;
-  //   console.log(
-  //     "isFetchingOrganisations",
-  //     isFetchingOrganisations,
-  //     selectedOrganisation
-  //   );
-  //   if ( !hasFiredFetch && selectedOrganisation) {
-  //     this.loadAlarmsOnPage(page, newProps);
-  //   }
-  // }
 
-  loadAlarmsOnPage(page, newProps) {
-    const { selectedOrganisation } = newProps || this.props;
-    const organisationId = selectedOrganisation.uuid;
-    this.setState({ hasFiredFetch: true });
+  componentWillUpdate(nextProps, nextState) {
+    if (
+      nextProps.selectedOrganisation.uuid !==
+      this.props.selectedOrganisation.uuid
+    ) {
+      this.setState({
+        page: 1
+      });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (
+      this.state.timeSeriesOrRaster !== prevState.timeSeriesOrRaster ||
+      this.state.page !== prevState.page ||
+      this.props.selectedOrganisation.uuid !==
+        prevProps.selectedOrganisation.uuid
+    ) {
+      this.loadAlarmsOnPage(this.state, this.props);
+    }
+  }
+
+  loadAlarmsOnPage(state, props) {
+    this.setState({
+      isFetching: true
+    });
+
+    let apiAlarmName = "";
+    if (state.timeSeriesOrRaster === "RASTERS") {
+      apiAlarmName = "rasteralarms";
+    } else {
+      // else if (state.timeSeriesOrRaster === "TIMESERIES")
+      apiAlarmName = "timeseriesalarms";
+    }
     fetch(
-      `/api/v3/rasteralarms/?page=${page}&organisation__unique_id=${organisationId}`,
+      `/api/v3/${apiAlarmName}/?page=${state.page}&organisation__unique_id=${props
+        .selectedOrganisation.uuid}`,
       {
         credentials: "same-origin"
       }
@@ -59,11 +81,57 @@ class App extends Component {
       .then(data => {
         this.setState({
           isFetching: false,
-          total: data.count,
           alarms: data.results,
-          page: page
+          total: data.count
         });
+      })
+      .catch(error => {
+        console.error("Error:", error);
       });
+  }
+
+  urlFromAlarm(alarm) {
+    if (alarm.url.includes("timeseriesalarms"))
+      return `/api/v3/timeseriesalarms/${alarm.uuid}/`; //(alarm.type==='RasterAlarm')
+    else return `/api/v3/rasteralarms/${alarm.uuid}/`;
+  }
+
+  activateAlarm(alarm) {
+    const { addNotification } = this.props;
+
+    simpleJSONFetch(this.urlFromAlarm(alarm), "PATCH", {
+      active: true
+    }).then(data => {
+      this.loadAlarmsOnPage(this.state, this.props);
+      addNotification(`Alarm activated`, 2000);
+    });
+  }
+
+  deActivateAlarm(alarm) {
+    const { addNotification } = this.props;
+
+    simpleJSONFetch(this.urlFromAlarm(alarm), "PATCH", {
+      active: false
+    }).then(data => {
+      this.loadAlarmsOnPage(this.state, this.props);
+      addNotification(`Alarm deactivated`, 2000);
+    });
+  }
+
+  removeAlarm(alarm) {
+    const { loadAlarmsOnPage, addNotification } = this.props;
+
+    fetch(this.urlFromAlarm(alarm), {
+      credentials: "same-origin",
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({})
+    }).then(response => {
+      if (response.status === 204) {
+        this.loadAlarmsOnPage(this.state, this.props);
+        addNotification(`Alarm removed`, 2000);
+      }
+    });
   }
 
   handleNewNotificationClick() {
@@ -71,38 +139,93 @@ class App extends Component {
     history.push("notifications/new");
   }
 
+  createAlarmRows(alarms) {
+    return alarms
+      .slice()
+      .sort((a, b) => {
+        if (a.name < b.name) {
+          return -1;
+        }
+        if (a.name > b.name) {
+          return 1;
+        }
+        return 0;
+      })
+      .sort((a, b) => {
+        return a.active === b.active ? 0 : a.active ? -1 : 1;
+      })
+      .map((alarm, i) => {
+        return (
+          <AlarmRow
+            key={alarm.uuid}
+            alarm={alarm}
+            activateAlarm={this.activateAlarm}
+            deActivateAlarm={this.deActivateAlarm}
+            removeAlarm={this.removeAlarm}
+          />
+        );
+      });
+  }
+
+  createRasterTimeseriesSwitchGUI(timeSeriesOrRaster) {
+    return (
+      <div className={styles.ChoicesContainer}>
+        <div
+          className={classNames(
+            styles.ChoiceContainer,
+            styles.ChoiceContainerLeft
+          )}
+          onClick={e => {
+            this.setState({
+              timeSeriesOrRaster: "RASTERS",
+              page: 1
+            });
+          }}
+        >
+          <input
+            className={styles.ChoiceRadio}
+            type="radio"
+            name="alarm_type"
+            value="raster_alarms"
+            checked={timeSeriesOrRaster === "RASTERS"}
+          />
+          <label className={styles.ChoiceLabel}>
+            <FormattedMessage
+              id="notifications_app.raster_alarms"
+              defaultMessage="Raster Alarms"
+            />
+          </label>
+        </div>
+        <div
+          className={styles.ChoiceContainer}
+          onClick={e => {
+            this.setState({
+              timeSeriesOrRaster: "TIMESERIES",
+              page: 1
+            });
+          }}
+        >
+          <input
+            className={styles.ChoiceRadio}
+            type="radio"
+            name="alarm_type"
+            value="timeseries_alarms"
+            checked={timeSeriesOrRaster === "TIMESERIES"}
+          />
+          <label className={styles.ChoiceLabel}>
+            <FormattedMessage
+              id="notifications_app.timeseries_alarms"
+              defaultMessage="Timeseries Alarms"
+            />
+          </label>
+        </div>
+      </div>
+    );
+  }
+
   render() {
-    const { alarms, isFetching, total, page } = this.state;
-
-    let numberOfNotifications = 0;
-    let alarmRows = [];
-    if (total && total > 0) {
-      numberOfNotifications = total;
-      alarmRows = alarms
-        .slice()
-        .sort((a, b) => {
-          if (a.name < b.name) {
-            return -1;
-          }
-          if (a.name > b.name) {
-            return 1;
-          }
-          return 0;
-        })
-        .sort((a, b) => {
-          return a.active === b.active ? 0 : a.active ? -1 : 1;
-        });
-    }
-
-    const alarmsTable = alarmRows.map((alarm, i) => {
-      return (
-        <AlarmRow
-          key={alarm.uuid}
-          alarm={alarm}
-          loadAlarmsOnPage={this.loadAlarmsOnPage}
-        />
-      );
-    });
+    const numberOfNotifications = this.state.total;
+    const alarmsTable = this.createAlarmRows(this.state.alarms);
 
     return (
       <div className={gridStyles.Container}>
@@ -124,6 +247,9 @@ class App extends Component {
                 other {NOTIFICATIONS}}`}
               values={{ numberOfNotifications }}
             />
+            {this.createRasterTimeseriesSwitchGUI(
+              this.state.timeSeriesOrRaster
+            )}
           </div>
           <div
             className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${gridStyles.colSm4} ${gridStyles.colXs4}`}
@@ -146,7 +272,7 @@ class App extends Component {
           <div
             className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
           >
-            {isFetching ? (
+            {this.state.isFetching ? (
               <div
                 style={{
                   position: "relative",
@@ -158,7 +284,7 @@ class App extends Component {
               >
                 <MDSpinner size={24} />
               </div>
-            ) : alarmRows.length > 0 ? (
+            ) : this.state.total > 0 ? (
               alarmsTable
             ) : (
               <div className={styles.NoResults}>
@@ -178,9 +304,13 @@ class App extends Component {
             className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
           >
             <PaginationBar
-              loadAlarmsOnPage={this.loadAlarmsOnPage}
-              page={page}
-              pages={Math.ceil(total / 10)}
+              setPage={page => {
+                this.setState({
+                  page: page
+                });
+              }}
+              page={this.state.page}
+              pages={Math.ceil(this.state.total / 10)}
             />
           </div>
         </div>
@@ -190,7 +320,6 @@ class App extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  console.log("[F] mapStateToProps state.organisations ", state.organisations);
   return {
     selectedOrganisation: state.organisations.selected,
     isFetchingOrganisations: state.organisations.isFetching

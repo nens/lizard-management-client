@@ -3,7 +3,7 @@ import styles from "./PaginationBar.css";
 
 class PaginationBar extends Component {
   render() {
-    const { pages, page, loadAlarmsOnPage } = this.props;
+    const { pages, page, setPage } = this.props;
 
     if (!page && !pages) {
       return null;
@@ -23,7 +23,7 @@ class PaginationBar extends Component {
                 style={{ cursor: "pointer", color: "#007bff" }}
                 key={linkPlusOne}
                 onClick={() => {
-                  loadAlarmsOnPage(linkPlusOne);
+                  setPage(linkPlusOne);
                 }}
               >
                 <a>{linkPlusOne}</a>

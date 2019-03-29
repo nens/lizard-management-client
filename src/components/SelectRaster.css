@@ -1,6 +1,13 @@
 .SelectRaster {
   position: relative;
-  z-index: 9999999;
+  /*
+  z-index has to be >1000 to be above the +/- zoom feature of the Leaflet map
+  in the new alarm notification page for rasters.
+  z-index has to be >1001 to make sure that the SelectRaster component is
+  always visible above the SelectAsset component (and SelectAsset is not
+  shown in the middle of the dropdown menu).
+  */
+  z-index: 1002;
 }
 .Results {
   position: absolute;

@@ -13,64 +13,6 @@ class AlarmRow extends Component {
       isFetching: true,
       isActive: props.alarm.active
     };
-    this.activateAlarm = this.activateAlarm.bind(this);
-    this.deActivateAlarm = this.deActivateAlarm.bind(this);
-  }
-
-  activateAlarm(uuid) {
-    const { addNotification } = this.props;
-
-    fetch(`/api/v3/rasteralarms/${uuid}/`, {
-      credentials: "same-origin",
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        active: true
-      })
-    })
-      .then(response => response.json())
-      .then(data => {
-        this.setState({
-          isActive: true
-        });
-        addNotification(`Alarm activated`, 2000);
-      });
-  }
-
-  deActivateAlarm(uuid) {
-    const { addNotification } = this.props;
-
-    fetch(`/api/v3/rasteralarms/${uuid}/`, {
-      credentials: "same-origin",
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        active: false
-      })
-    })
-      .then(response => response.json())
-      .then(data => {
-        this.setState({
-          isActive: false
-        });
-        addNotification(`Alarm deactivated`, 2000);
-      });
-  }
-
-  removeAlarm(uuid) {
-    const { loadAlarmsOnPage, addNotification } = this.props;
-
-    fetch(`/api/v3/rasteralarms/${uuid}/`, {
-      credentials: "same-origin",
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({})
-    }).then(response => {
-      if (response.status === 204) {
-        loadAlarmsOnPage(1);
-        addNotification(`Alarm removed`, 2000);
-      }
-    });
   }
 
   render() {
@@ -100,14 +42,27 @@ class AlarmRow extends Component {
           </div>
 
           <div>
-            <NavLink
-              to={`/alarms/notifications/${alarm.uuid}`}
-              style={{
-                color: "#333"
-              }}
-            >
-              {alarm.name}
-            </NavLink>
+            {alarm.url.includes("timeseriesalarms") ? (
+              <span
+                to={`/alarms/notifications/${alarm.uuid}`}
+                style={{
+                  color: "#333",
+                  cursor: "auto"
+                }}
+              >
+                {alarm.name}
+              </span>
+            ) : (
+              <NavLink
+                to={`/alarms/notifications/${alarm.uuid}`}
+                style={{
+                  color: "#333"
+                }}
+              >
+                {alarm.name}
+              </NavLink>
+            )}
+
             <br />
             <small className="text-muted">
               <FormattedMessage
@@ -135,8 +90,8 @@ class AlarmRow extends Component {
               className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link}`}
               onClick={() =>
                 isActive
-                  ? this.deActivateAlarm(alarm.uuid)
-                  : this.activateAlarm(alarm.uuid)}
+                  ? this.props.deActivateAlarm(alarm)
+                  : this.props.activateAlarm(alarm)}
             >
               {isActive ? (
                 <FormattedMessage
@@ -157,7 +112,7 @@ class AlarmRow extends Component {
               className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link}`}
               onClick={() => {
                 if (window.confirm("Are you sure?")) {
-                  this.removeAlarm(alarm.uuid);
+                  this.props.removeAlarm(alarm);
                 }
               }}
             >
