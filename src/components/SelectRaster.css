@@ -1,8 +1,12 @@
 .SelectRaster {
   position: relative;
-  /*has to be > 1000 to be above the +/- of a leaflet map in the new alarm
-  notifications for raster and > 1001 to make sure that the dropdown menu is
-  shown above the SelectAsset select box.*/
+  /*
+  z-index has to be >1000 to be above the +/- zoom feature of the Leaflet map
+  in the new alarm notification page for rasters.
+  z-index has to be >1001 to make sure that the SelectRaster component is
+  always visible above the SelectAsset component (and SelectAsset is not
+  shown in the middle of the dropdown menu).
+  */
   z-index: 1002;
 }
 .Results {
