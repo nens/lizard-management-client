@@ -651,11 +651,16 @@ class NewNotification extends Component {
                               </p>
 
                               <SelectAsset
-                                placeholderText="Type to search"
+                                placeholderText={
+                                  raster
+                                    ? "Type to search"
+                                    : "Please first select raster"
+                                }
                                 results={assets}
                                 loading={loading}
                                 onInput={this.handleAssetSearchInput}
                                 setAsset={this.handleSetAsset}
+                                readOnly={!raster ? true : false}
                               />
 
                               {raster && raster.spatial_bounds ? (

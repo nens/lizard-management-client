@@ -1,6 +1,10 @@
 .SelectAsset {
   position: relative;
-  z-index: 9999999;
+  /*
+  z-index has to be >1000 to be above the +/- zoom feature of the Leaflet map
+  in the new alarm notification page for rasters.
+  */
+  z-index: 1001;
 }
 .Results {
   position: absolute;
