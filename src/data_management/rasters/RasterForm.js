@@ -781,8 +781,8 @@ class RasterFormModel extends Component {
                 <GenericStep
                   titleComponent={
                     <FormattedMessage
-                      id="rasters.public_private"
-                      defaultMessage="Who can view"
+                      id="rasters.authorisation_type"
+                      defaultMessage="Authorization type"
                     />
                   }
                   subtitleComponent={
