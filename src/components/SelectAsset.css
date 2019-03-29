@@ -1,12 +1,20 @@
 .SelectAsset {
   position: relative;
-  z-index: 9999999;
+  z-index: 1001;
 }
 .Results {
   position: absolute;
   background-color: #fff;
   width: 100%;
   box-shadow: rgba(0, 0, 0, 0.3) 1px 1px 9px -1px;
+  z-index: 1001;
+}
+.Results:focus {
+  position: absolute;
+  background-color: #fff;
+  width: 100%;
+  box-shadow: rgba(0, 0, 0, 0.3) 1px 1px 9px -1px;
+  z-index: 1001;
 }
 .ResultRow {
   height: 50px;
