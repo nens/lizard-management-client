@@ -200,8 +200,11 @@ class UploadRasterDataMultipleModel extends Component {
 
     // convert acceptedFilesToobjectsWithDate
     const acceptedFilesData = newAcceptedFilesNonDuplicates.map(e => {
-      const dateStrFromFile = (e.name + "").split(".")[0];
-      const dateObjFromFile = new Date(dateStrFromFile);
+      const regex = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?/gm;
+      const dateStrFromFile = (e.name + "").match(regex);
+      const dateObjFromFile = dateStrFromFile
+        ? new Date(dateStrFromFile[0])
+        : new Date();
       const fileDateValid = this.isValidDateObj(dateObjFromFile);
       return {
         file: e,
