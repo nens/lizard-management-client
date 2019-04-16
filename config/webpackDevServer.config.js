@@ -12,6 +12,36 @@ const host = process.env.HOST || '0.0.0.0';
 
 const PROXY_SERVER = "https://nxt3.staging.lizard.net/"
 const PROXY_SETTING = {
+  "/management/users/": {
+    "target": PROXY_SERVER,
+    "changeOrigin": true,
+    "ssl": false,
+    "secure": false,
+    "headers": {
+      "username": "",
+      "password": ""
+    }
+  },
+  "/management/scenarios/": {
+    "target": PROXY_SERVER,
+    "changeOrigin": true,
+    "ssl": false,
+    "secure": false,
+    "headers": {
+      "username": "",
+      "password": ""
+    }
+  },
+  "/wms/": {
+    "target": PROXY_SERVER,
+    "changeOrigin": true,
+    "ssl": false,
+    "secure": false,
+    "headers": {
+      "username": "",
+      "password": ""
+    }
+  },
   "/bootstrap": {
     "target": PROXY_SERVER,
     "changeOrigin": true,

@@ -1,7 +1,22 @@
 {
   "name": "lizard-management-client",
-  "version": "0.1.0",
+  "version": "0.1.53",
   "private": true,
+  "repository": {
+    "type": "git",
+    "name": "nens/lizard-management-client",
+    "url": "https://github.com/nens/lizard-management-client.git"
+  },
+  "keywords": [
+    "lizard",
+    "water",
+    "management"
+  ],
+  "author": "Nelen & Schuurmans",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/nens/lizard-management-client/issues"
+  },
   "dependencies": {
     "@babel/core": "7.2.2",
     "@svgr/webpack": "4.1.0",
@@ -90,7 +105,7 @@
   "browserslist": [
     ">0.2%",
     "not dead",
-    "not ie <= 11",
+    "not ie <= 10",
     "not op_mini all"
   ],
   "jest": {
