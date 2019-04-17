@@ -75,7 +75,6 @@ class SlushBucket extends Component {
             style={{
               transform: "translateX(-33px)",
               display: "flex",
-              visibility: this.props.readonly ? "hidden" : "visible",
               alignItems: "center",
               visibility: this.state.query === "" ? "hidden" : "visible"
             }}
@@ -151,7 +150,6 @@ class SlushBucket extends Component {
                           );
                         }
                       }}
-                      key={choiceItem + i}
                     >
                       {choiceItem}
                     </div>

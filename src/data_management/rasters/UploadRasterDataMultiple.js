@@ -9,7 +9,7 @@ import styles from "./UploadRasterData.css";
 import { FormattedMessage } from "react-intl";
 
 import buttonStyles from "../../styles/Buttons.css";
-import gridStyles from "../../styles/Grid.css";
+
 // // moment is required for datepicker
 import moment from "moment"; // do not remove, is needed for datepicker!
 import "moment/locale/nl";
@@ -345,7 +345,11 @@ class UploadRasterDataMultipleModel extends Component {
               <div key={fileObj.file.name + fileObj.file.size}>
                 <div>{fileObj.file.name}</div>
                 <div>
-                  <a href={fileObj.url} target="_blank">
+                  <a
+                    href={fileObj.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     <FormattedMessage
                       id="rasters.click_to_url_upload_task"
                       defaultMessage="Show asynchronous task"
@@ -572,34 +576,6 @@ class UploadRasterDataMultipleModel extends Component {
                 </table>
               </Scrollbars>
             </div>
-
-            {/* {this.state.rejectedFiles.length > 1 ? (
-              <h3>
-                <FormattedMessage
-                  id="rasters.files_non_temporal_upload_multiple_files_not_allowed"
-                  defaultMessage="For non-temporal rasters it is not possible to upload more than 1 file"
-                />
-              </h3>
-            ) : null} */}
-            {/* {(this.state.rejectedFiles[0].name + "").indexOf(
-              ".tif",
-              (this.state.rejectedFiles[0].name + "").length - ".tiff".length
-            ) === -1 ? (
-              <h3>
-                <FormattedMessage
-                  id="rasters.file_selection_not_tiff"
-                  defaultMessage="Only .tiff files are valid"
-                />
-              </h3>
-            ) : null} */}
-            {/* {(
-              <h3>
-                <FormattedMessage
-                  id="rasters.file_selection_failed_unknown_reason"
-                  defaultMessage="Reason not known"
-                />
-              </h3>
-            )} */}
           </div>
         ) : null}
 
@@ -609,39 +585,6 @@ class UploadRasterDataMultipleModel extends Component {
           <div />
         ) : (
           <div>
-            {this.state.acceptedFiles.length > 0
-              ? // <button
-                //   className={`${buttonStyles.Button} ${buttonStyles.Success}`}
-                //   style={{ marginTop: 10 }}
-                //   onClick={e => {
-                //     var form = new FormData();
-                //     form.append("file", this.state.acceptedFiles[0].file);
-                //     const url =
-                //       "/api/v4/rasters/" + this.props.match.params.id + "/data/";
-                //     const opts = {
-                //       credentials: "same-origin",
-                //       method: "POST",
-                //       headers: {
-                //         mimeType: "multipart/form-data"
-                //       },
-                //       body: form
-                //     };
-
-                //     fetch(url, opts)
-                //       .then(responseObj => responseObj.json())
-                //       .then(responseData => {
-                //         console.log(responseData);
-                //         this.props.history.push("/data_management/rasters/");
-                //       });
-                //   }}
-                // >
-                //   <FormattedMessage
-                //     id="rasters.upload_selected_file"
-                //     defaultMessage="Save"
-                //   />
-                // </button>
-                null
-              : null}
             <br />
             <div
               style={{
@@ -718,81 +661,6 @@ class UploadRasterDataMultipleModel extends Component {
                       ) : null}
                     </div>
                   ) : null}
-                  {/* <div style={{ flex: 1 }}>
-                    <button
-                      style={
-                        (e.sendingState === "FAILED" ||
-                          e.sendingState === "NOT_SEND") &&
-                        this.isValidDateObj(e.dateTime)
-                          ? {}
-                          : { visibility: "hidden" }
-                      }
-                      className={`${buttonStyles.Button} ${buttonStyles.Success}`}
-                      onClick={eventClick => {
-                        let acceptedFiles = this.state.acceptedFiles;
-                        acceptedFiles[i].sendingState = "SEND";
-                        this.setState({ acceptedFiles: acceptedFiles });
-
-                        var form = new FormData();
-                        form.append("file", e.file);
-                        if (
-                          this.props.currentRaster.temporal === true
-                        ) {
-                          form.append("timestamp", e.dateTime.toISOString());
-                        }
-                        
-                        const url =
-                          "/api/v4/rasters/" +
-                          this.props.match.params.id +
-                          "/data/";
-                        const opts = {
-                          credentials: "same-origin",
-                          method: "POST",
-                          headers: {
-                            mimeType: "multipart/form-data"
-                          },
-                          body: form
-                        };
-
-                        fetch(url, opts)
-                          .then(responseObj => responseObj.json())
-                          .then(responseData => {
-                            console.log(
-                              "responseData post raster",
-                              responseData
-                            );
-                            // this.props.history.push("/data_management/rasters/");
-
-                            const newAcceptedFiles = this.state.acceptedFiles.map(
-                              oldE => {
-                                if (
-                                  e.file.size === oldE.file.size &&
-                                  e.file.name === oldE.file.name
-                                ) {
-                                  console.log("responseData", responseData);
-                                  if (responseData.status == 400) {
-                                    oldE.sendingState = "FAILED";
-                                    oldE.sendingMessage = responseData.detail;
-                                  } else {
-                                    oldE.sendingState = "SERVER_RECEIVED";
-                                  }
-                                  return oldE;
-                                } else {
-                                  return oldE;
-                                }
-                              }
-                            );
-
-                            this.setState({ acceptedFiles: newAcceptedFiles });
-                          });
-                      }}
-                    >
-                      <FormattedMessage
-                        id="rasters.upload_selected_file"
-                        defaultMessage="Save"
-                      />
-                    </button>
-                  </div> */}
                   <div style={{ flex: 2, marginLeft: "10px" }}>
                     {e.sendingState === "SEND" ? (
                       <div>
@@ -838,7 +706,11 @@ class UploadRasterDataMultipleModel extends Component {
                   </div>
                   <div style={{ flex: 1 }}>
                     {e.url ? (
-                      <a href={e.url} target="_blank">
+                      <a
+                        href={e.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
                         {" "}
                         <FormattedMessage
                           id="rasters.click_to_url_upload_task"
@@ -931,9 +803,6 @@ class UploadRasterDataMultipleModel extends Component {
             defaultMessage="Abort"
           />
         </button>
-        {/* <MDSpinner
-          style={this.state.saveAllButtonBusy ? {} : { display: "none" }}
-        /> */}
       </div>
     );
   }

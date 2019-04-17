@@ -3,7 +3,6 @@ import { FormattedMessage } from "react-intl";
 import AppIcon from "../components/AppIcon";
 import { withRouter } from "react-router-dom";
 import { Trail, animated } from "react-spring";
-import templateIcon from "../images/templates@3x.svg";
 import rasterIcon from "../images/rasters@3x.svg";
 
 class DataManagement extends Component {
@@ -34,57 +33,6 @@ class DataManagement extends Component {
           />
         )
       }
-      // {
-      //   key: 1,
-      //   handleClick: () => this.handleLink("data_management/assets"),
-      //   title: (
-      //     <FormattedMessage
-      //       id="data_management.assets"
-      //       defaultMessage="Assets"
-      //     />
-      //   ),
-      //   icon: templateIcon,
-      //   subTitle: (
-      //     <FormattedMessage
-      //       id="data_management.manage_assets"
-      //       defaultMessage="Manage assets"
-      //     />
-      //   )
-      // },
-      // {
-      //   key: 2,
-      //   handleClick: () => this.handleLink("data_management/time_series"),
-      //   title: (
-      //     <FormattedMessage
-      //       id="data_management.time_series"
-      //       defaultMessage="Time Series"
-      //     />
-      //   ),
-      //   icon: templateIcon,
-      //   subTitle: (
-      //     <FormattedMessage
-      //       id="data_management.manage_time_series"
-      //       defaultMessage="Manage Time Series"
-      //     />
-      //   )
-      // }
-      // {
-      //   key: 3,
-      //   handleClick: () => this.handleLink("data_management/other_data"),
-      //   title: (
-      //     <FormattedMessage
-      //       id="data_management.other_data"
-      //       defaultMessage="Other"
-      //     />
-      //   ),
-      //   icon: templateIcon,
-      //   subTitle: (
-      //     <FormattedMessage
-      //       id="data_management.manage_other_data"
-      //       defaultMessage="Manage other data"
-      //     />
-      //   )
-      // }
     ];
 
     return (

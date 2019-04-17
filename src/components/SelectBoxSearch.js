@@ -55,7 +55,7 @@ class SelectBoxSearch extends Component {
     const mustShowClearButton =
       (validate(choice) || this.state.query !== "") &&
       !readonly &&
-      transformChoiceToDisplayValue(choice) !=
+      transformChoiceToDisplayValue(choice) !==
         transformChoiceToDisplayValue(this.props.noneValue);
 
     const filteredSortedChoices = choices

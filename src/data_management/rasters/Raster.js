@@ -6,7 +6,6 @@ import Ink from "react-ink";
 import MDSpinner from "react-md-spinner";
 import { Scrollbars } from "react-custom-scrollbars";
 import PaginationBar from "./PaginationBar";
-import { Row } from "./Row";
 import React, { Component } from "react";
 import styles from "./App.css";
 import { addNotification } from "../../actions";
@@ -15,7 +14,7 @@ import { FormattedMessage } from "react-intl";
 import { withRouter } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import SearchBox from "../../components/SearchBox";
-import uploadIcon from "../../images/outline-cloud_upload-24px.svg";
+
 
 class Raster extends Component {
   constructor(props) {
@@ -290,7 +289,7 @@ class Raster extends Component {
   }
 
   render() {
-    const { rasters, isFetching, total, page } = this.state;
+    const { total, page } = this.state;
     const clickedCheckboxes = this.state.checkboxes.filter(e => e.checked)
       .length;
 

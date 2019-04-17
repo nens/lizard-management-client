@@ -411,15 +411,15 @@ class NewNotification extends Component {
     }
   }
   formatWMSStyles(rawStyles) {
-    /* 
-    Needed for compound WMS styling, i.e. 'rain' which has three seperate raster stores 
+    /*
+    Needed for compound WMS styling, i.e. 'rain' which has three seperate raster stores
     behind the screens.
     */
     return typeof rawStyles === typeof {} ? rawStyles[0][0] : rawStyles;
   }
   formatWMSLayers(rawLayerNames) {
-    /* 
-    Needed for compound WMS styling, i.e. 'rain' which has three seperate raster stores 
+    /*
+    Needed for compound WMS styling, i.e. 'rain' which has three seperate raster stores
     behind the screens.
     */
     return rawLayerNames.split(",")[0];
@@ -562,7 +562,7 @@ class NewNotification extends Component {
                                   description: "Put an alarm on timeseries data"
                                 }
                               ]}
-                              choice={this.state.sourceType.display}
+                              choice={sourceType.display}
                               isFetching={false}
                               transformChoiceToDisplayValue={e =>
                                 (e && e.display) || ""}
@@ -577,8 +577,8 @@ class NewNotification extends Component {
                                 (e && e.description) || ""}
                               noneValue={undefined}
                             />
-                            {this.state.sourceType.display === "Rasters" ||
-                            this.state.sourceType.display === "Timeseries" ? (
+                            {sourceType.display === "Rasters" ||
+                            sourceType.display === "Timeseries" ? (
                               <button
                                 type="button"
                                 className={`${buttonStyles.Button} ${buttonStyles.Success}`}
@@ -602,7 +602,7 @@ class NewNotification extends Component {
                   </div>
                 </div>
 
-                {this.state.sourceType.display === "Rasters" ? (
+                {sourceType.display === "Rasters" ? (
                   <div className={styles.Step} id="Step">
                     <div className="media">
                       <StepIndicator
@@ -743,7 +743,7 @@ class NewNotification extends Component {
                       </div>
                     </div>
                   </div>
-                ) : this.state.sourceType.display === "Timeseries" ? (
+                ) : sourceType.display === "Timeseries" ? (
                   <div className={styles.Step} id="Step">
                     <div className="media">
                       <StepIndicator
