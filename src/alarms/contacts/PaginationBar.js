@@ -26,7 +26,11 @@ class PaginationBar extends Component {
                   loadContactsOnPage(linkPlusOne);
                 }}
               >
-                <a>{linkPlusOne}</a>
+                <button
+                  className={styles.ButtonLink}
+                >
+                  {linkPlusOne}
+                </button>
               </div>
             );
           })}
