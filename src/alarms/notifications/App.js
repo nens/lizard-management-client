@@ -119,7 +119,7 @@ class App extends Component {
   }
 
   removeAlarm(alarm) {
-    const { loadAlarmsOnPage, addNotification } = this.props;
+    const { addNotification } = this.props;
 
     fetch(this.urlFromAlarm(alarm), {
       credentials: "same-origin",
@@ -242,7 +242,7 @@ class App extends Component {
           >
             <FormattedMessage
               id="notifications_app.number_of_notifications"
-              defaultMessage={`{numberOfNotifications, number} {numberOfNotifications, plural, 
+              defaultMessage={`{numberOfNotifications, number} {numberOfNotifications, plural,
                 one {NOTIFICATION}
                 other {NOTIFICATIONS}}`}
               values={{ numberOfNotifications }}

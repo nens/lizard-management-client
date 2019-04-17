@@ -6,7 +6,6 @@ import CheckMark from "./CheckMark";
 import StepIndicator from "./StepIndicator";
 import { FormattedMessage } from "react-intl";
 
-import styles from "./GenericStep.css";
 import formStyles from "../styles/Forms.css";
 import buttonStyles from "../styles/Buttons.css";
 import inputStyles from "../styles/Input.css";
@@ -42,7 +41,6 @@ class GenericStep extends Component {
       titleComponent, // <FormatText ... //>
       subtitleComponent, // <FormatText ... />
       step, // which step of this GenericSelectBoxComponent it refers to
-      currentStep, // which step is currently active
       setCurrentStep, // cb function for updating which step becomes active
       opened, // complete question and input fields become visible if set to true
       readonly,
@@ -77,7 +75,7 @@ class GenericStep extends Component {
             >
               {fields}
 
-              {/* add div to force next button to newline. 
+              {/* add div to force next button to newline.
               Probably should use styling instead */}
               <div />
 
