@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import styles from "./PaginationBar.css";
+import buttonStyles from "../../styles/Buttons.css";
 
 class PaginationBar extends Component {
   render() {
@@ -27,7 +28,7 @@ class PaginationBar extends Component {
                 }}
               >
                 <button
-                  className={styles.ButtonLink}
+                  className={buttonStyles.ButtonLink}
                 >
                   {linkPlusOne}
                 </button>

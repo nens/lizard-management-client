@@ -113,11 +113,6 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  /* below is to style button like <a/>  */
-  background:none; 
-  border:none; 
-  padding:0;
-  font: inherit;
 }
 
 .Profile {

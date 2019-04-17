@@ -20,6 +20,7 @@ import OrganisationSwitcher from "./components/OrganisationSwitcher";
 import Snackbar from "./components/Snackbar";
 import styles from "./App.css";
 import gridStyles from "./styles/Grid.css";
+import buttonStyles from "./styles/Buttons.css";
 import lizardIcon from "./images/lizard@3x.svg";
 import { withRouter } from "react-router-dom";
 
@@ -163,7 +164,7 @@ class App extends Component {
                     </div>
                     <div className={styles.OrganisationLinkContainer}>
                       <button
-                        className={styles.OrganisationLink}
+                        className={`${buttonStyles.ButtonLink} ${styles.OrganisationLink}`}
                         title={
                           selectedOrganisation
                             ? selectedOrganisation.name
