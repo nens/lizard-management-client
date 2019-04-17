@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import onClickOutside from "react-onclickoutside";
 import styles from "./LanguageSwitcher.css";
+import buttonStyles from "../styles/Buttons.css";
+
 
 class LanguageSwitcherContainer extends Component {
   constructor(props) {
@@ -51,7 +53,11 @@ class LanguageSwitcherContainer extends Component {
 
     return (
       <div>
-        <a href="" onClick={this.handleOpen}>
+        <button 
+          onClick={this.handleOpen}
+          className={buttonStyles.ButtonLink}
+          style={{color:"#009F86"}}
+        >
           <i
             style={{
               position: "relative",
@@ -62,7 +68,7 @@ class LanguageSwitcherContainer extends Component {
           >
             mode_comment
           </i>&nbsp;{selectedLanguage.language}
-        </a>
+        </button>
         {isOpen ? (
           <div className={styles.LanguageSwitcher}>
             {languages.map((language, i) => {

@@ -20,6 +20,7 @@ import OrganisationSwitcher from "./components/OrganisationSwitcher";
 import Snackbar from "./components/Snackbar";
 import styles from "./App.css";
 import gridStyles from "./styles/Grid.css";
+import buttonStyles from "./styles/Buttons.css";
 import lizardIcon from "./images/lizard@3x.svg";
 import { withRouter } from "react-router-dom";
 
@@ -162,8 +163,8 @@ class App extends Component {
                       </a>
                     </div>
                     <div className={styles.OrganisationLinkContainer}>
-                      <a
-                        className={styles.OrganisationLink}
+                      <button
+                        className={`${buttonStyles.ButtonLink} ${styles.OrganisationLink}`}
                         title={
                           selectedOrganisation
                             ? selectedOrganisation.name
@@ -179,7 +180,7 @@ class App extends Component {
                         {selectedOrganisation
                           ? selectedOrganisation.name
                           : "Select organisation"}
-                      </a>
+                      </button>
                     </div>
                     <div>
                       {/* Redirect for logging out.*/}

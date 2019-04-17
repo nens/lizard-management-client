@@ -11,6 +11,7 @@ import { FormattedMessage } from "react-intl";
 import buttonStyles from "../../styles/Buttons.css";
 
 // // moment is required for datepicker
+// eslint-disable-next-line
 import moment from "moment"; // do not remove, is needed for datepicker!
 import "moment/locale/nl";
 

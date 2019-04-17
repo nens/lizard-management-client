@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import styles from "./PaginationBar.css";
+import buttonStyles from "../../styles/Buttons.css";
+
 
 class PaginationBar extends Component {
   constructor(props) {
@@ -47,7 +49,11 @@ class PaginationBar extends Component {
               loadRastersOnPage && loadRastersOnPage(link);
             }}
           >
-            <a>{link}</a>
+            <button
+              className={buttonStyles.ButtonLink}
+            >
+              {link}
+            </button>
           </div>
         );
       }

@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import styles from "./PaginationBar.css";
+import buttonStyles from "../../styles/Buttons.css";
 
 class PaginationBar extends Component {
   render() {
@@ -26,7 +27,11 @@ class PaginationBar extends Component {
                   loadContactGroupsOnPage(linkPlusOne);
                 }}
               >
-                <a>{linkPlusOne}</a>
+                <button
+                  className={buttonStyles.ButtonLink}
+                >
+                  {linkPlusOne}
+                </button>
               </div>
             );
           })}
