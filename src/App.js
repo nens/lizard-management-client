@@ -162,7 +162,7 @@ class App extends Component {
                       </a>
                     </div>
                     <div className={styles.OrganisationLinkContainer}>
-                      <a
+                      <button
                         className={styles.OrganisationLink}
                         title={
                           selectedOrganisation
@@ -179,7 +179,7 @@ class App extends Component {
                         {selectedOrganisation
                           ? selectedOrganisation.name
                           : "Select organisation"}
-                      </a>
+                      </button>
                     </div>
                     <div>
                       {/* Redirect for logging out.*/}
