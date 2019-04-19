@@ -5,7 +5,10 @@
      <script src="https://use.fontawesome.com/43b6a67007.js"></script>
      <link href="https://use.fontawesome.com/43b6a67007.css" media="all" rel="stylesheet">
     <link rel="stylesheet" href="layout.css">
-    <!-- extra block for specific css references per Django template -->
+    <!-- extra block for specific css references per Django template
+      {% block extraheader %}
+      {% endblock extraheader %}
+    -->
     <title>Lizard management</title>
   </head>
   <body>
@@ -33,11 +36,20 @@
             </span>
           </span>
         </div>
-        <div class="headerBottom">
-          Bread crumbs
+        <div class="headerBottomWrapper">
+          <span class="headerBottomFiller">
+          </span>
+          <span class="headerBottom">
+            Bread crumbs
+          </span>
+          <span class="headerBottomFiller">
+          </span>
         </div>
       </header>
       <main>
+      <!-- extra block for main content
+        {% block container %}
+      -->
         <span class="headerTopFiller">
         </span>
         <span id="mainContent">
@@ -45,6 +57,9 @@
         </span>
         <span class="headerTopFiller">
         </span>
+      <!--
+        {% endblock container %}
+      -->
       </main>
       <footer>
         <span class="headerTopFiller">
