@@ -98,9 +98,7 @@
     "build": "node scripts/build.js",
     "test": "node scripts/test.js",
     "release": "release-it --verbose",
-    "i18n:extract": "NODE_ENV=production npx extract-messages --locales=nl,en -d --output src/translations/locales 'src/**/*.js' 'src/**/*.jsx' 'src/**/*.ts*'",
-    "i18n:update": "node translationRunner.js",
-    "i18n:extract-then-update": "node extract.js && node translationRunner.js"
+    "i18n:extract": "NODE_ENV=production npx extract-messages --locales=nl,en -d --output src/translations/locales 'src/**/*.js' 'src/**/*.jsx' 'src/**/*.ts*'"
   },
   "eslintConfig": {
     "extends": "react-app"
