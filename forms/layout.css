@@ -23,7 +23,7 @@ header {
 	align-items: center;
 }
 .header-top {
-	height: 55px;
+	height: 5.7vh;
 	background: #009F86;
 }
 .side-filler {
@@ -59,7 +59,7 @@ header {
 	padding-right: 5px;
 }
 .header-bottom {
-	height: 65px;
+	height: 6.8vh;
 	background: #2FCBAB;
 }
 .header-bottom-content {
@@ -82,7 +82,7 @@ main {
 footer {
 	display: flex;
 	align-items: center;
-	height: 120px;
+	height: 12.5vh;
 	background: #D8D8D8;
 	color: #009F86;
 }
@@ -102,8 +102,4 @@ footer {
 }
 #footer-right {
 	justify-content: right;
-}
-#footer-right-language, #footer-right-support {
-	padding-left: 5px;
-	padding-right: 5px;
 }
