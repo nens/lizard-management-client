@@ -49,15 +49,12 @@ header {
 	flex: 1 1 20em;
 }
 #headerTopLeft {
-	display: flex;
 	justify-content: left;
 }
 #headerTopCenter {
-	display: flex;
 	justify-content: center;
 }
 #topNavBar {
-	display: flex;
 	justify-content: right;
 }
 #topNavBarUser, #topNavBarLogin {
@@ -85,12 +82,13 @@ main {
 }
 
 footer {
-	height: 120px;
-	background: #D8D8D8;
-	color: #009F86;
 }
 #footerWrapper {
 	display: flex;
+	align-items: center; /*niet nodig*/
+	height: 120px;
+	background: #D8D8D8;
+	color: #009F86;
 }
 #footer {
 	display: flex;
