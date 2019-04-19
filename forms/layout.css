@@ -45,6 +45,7 @@ header {
 	display: flex;
 	flex-grow: 1;
 	flex: 1 1 20em;
+	align-items: center;
 }
 #header-top-left {
 	justify-content: left;
@@ -55,9 +56,13 @@ header {
 #header-top-right {
 	justify-content: right;
 }
-#header-top-right-user, #header-top-right-login {
+.button-padding {
+	padding: 5px;
+}
+.icons-medium {
 	padding-left: 5px;
 	padding-right: 5px;
+	font-size: 1rem;
 }
 .header-bottom {
 	height: 6.8vh;
@@ -98,10 +103,16 @@ footer {
 	display: flex;
 	flex-grow: 1;
 	flex: 1 1 20em;
+	align-items: center;
 }
 #footer-left {
 	justify-content: left;
 }
 #footer-right {
 	justify-content: right;
+}
+.icons-large {
+	padding-left: 5px;
+	padding-right: 5px;
+	font-size: 1.25rem;
 }

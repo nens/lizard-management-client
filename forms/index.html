@@ -2,8 +2,10 @@
 <html>
   <head>
     <link rel="icon" href="favicon.ico">
-     <script src="https://use.fontawesome.com/43b6a67007.js"></script>
-     <link href="https://use.fontawesome.com/43b6a67007.css" media="all" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+    <script src="https://use.fontawesome.com/43b6a67007.js"></script>
+    <link href="https://use.fontawesome.com/43b6a67007.css" media="all" rel="stylesheet">
     <link rel="stylesheet" href="layout.css">
     <!-- extra block for specific css references per Django template
       {% block extraheader %}
@@ -21,15 +23,15 @@
             <div id="header-top-left">
               Lizard logo
             </div>
-            <div id="header-top-center">
-              Organisation
+            <div id="header-top-center" class="button-padding">
+              <i class="fa fa-sort icons-medium"></i>Organisation
             </div>
             <div id="header-top-right">
-              <div id="header-top-right-user">
-                User
+              <div id="header-top-right-user" class="button-padding">
+                <i class="fa fa-user icons-medium"></i>User
               </div>
-              <div id="header-top-right-login">
-                Log in
+              <div id="header-top-right-login" class="button-padding">
+                <i class="fa fa-power-off icons-medium"></i>Log in
               </div>
             </div>
           </div>
@@ -65,11 +67,11 @@
         <div class="side-filler">
         </div>
         <div id="footer-content">
-          <div id="footer-left">
-            Documentation
+          <div id="footer-left" class="button-padding">
+            Documentation<i class="material-icons icons-large">local_library</i>
           </div>
-          <div id="footer-right">
-            Support
+          <div id="footer-right" class="button-padding">
+            <i class="material-icons icons-large">headset_mic</i>Support
           </div>
         </div>
         <div class="side-filler">
