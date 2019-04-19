@@ -15,9 +15,9 @@
     <div class="wrapper">
       <header>
         <div class="headerTopWrapper">
-          <span id="headerTop">
-            <span class="headerTopFiller">
-            </span>
+          <span class="sideFiller">
+          </span>
+          <span class="headerTop">
             <span id="headerTopLeft">
               Lizard logo
             </span>
@@ -32,17 +32,17 @@
                 Log in
               </span>
             </span>
-            <span class="headerTopFiller">
-            </span>
+          </span>
+          <span class="sideFiller">
           </span>
         </div>
         <div class="headerBottomWrapper">
-          <span class="headerBottomFiller">
+          <span class="sideFiller">
           </span>
           <span class="headerBottom">
             Bread crumbs
           </span>
-          <span class="headerBottomFiller">
+          <span class="sideFiller">
           </span>
         </div>
       </header>
@@ -50,33 +50,39 @@
       <!-- extra block for main content
         {% block container %}
       -->
-        <span class="headerTopFiller">
-        </span>
-        <span id="mainContent">
-          User table
-        </span>
-        <span class="headerTopFiller">
-        </span>
+        <div id="mainWrapper">
+          <span class="sideFiller">
+          </span>
+          <span id="mainContent">
+            User table
+          </span>
+          <span class="sideFiller">
+          </span>
+        </div>
       <!--
         {% endblock container %}
       -->
       </main>
       <footer>
-        <span class="headerTopFiller">
-        </span>
-        <span id="footerLeft">
-          Documentation
-        </span>
-        <span id="footerRight">
-          <span id="footerRightLanguage">
-            English
+        <div id="footerWrapper">
+          <span class="sideFiller">
           </span>
-          <span id="footerRightSupport">
-            Support
+          <span id="footer">
+            <span id="footerLeft">
+              Documentation
+            </span>
+            <span id="footerRight">
+              <span id="footerRightLanguage">
+                English
+              </span>
+              <span id="footerRightSupport">
+                Support
+              </span>
+            </span>
           </span>
-        </span>
-        <span class="headerTopFiller">
-        </span>
+          <span class="sideFiller">
+          </span>
+        </div>
       </footer>
     </div>
   </body>
