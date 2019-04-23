@@ -49,6 +49,12 @@ header {
 }
 #header-top-left {
 	justify-content: left;
+	align-items: start;
+}
+#header-top-left-lizard-logo {
+	position: absolute;
+	top: 0.275%;
+	height: 7.5%;
 }
 #header-top-center {
 	justify-content: center;
