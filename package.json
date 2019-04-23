@@ -162,6 +162,7 @@
   },
   "devDependencies": {
     "extract-react-intl-messages": "^1.0.1",
-    "release-it": "^10.4.2"
+    "release-it": "^10.4.2",
+    "webpack-cli": "^3.3.0"
   }
 }
