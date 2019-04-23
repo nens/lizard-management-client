@@ -388,7 +388,7 @@ module.exports = function(webpackEnv) {
             // of CSS.
             // By default we support CSS Modules with the extension .module.css
             {
-              test: /node_modules\/react-datetime\/css\/react-datetime.css$/,//cssRegex,
+              test: /node_modules\/react-datetime\/css\/react-datetime.css$/,
               exclude: cssModuleRegex,
               use: getStyleLoaders({
                 importLoaders: 1,
