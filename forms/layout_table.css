@@ -1,0 +1,158 @@
+html, body {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	height: 100%;
+	font-family: Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+
+.wrapper {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+}
+
+header, main, footer {
+	flex: 1 0 100%;
+}
+
+header {
+	color: white;
+}
+.header-top, .header-bottom {
+	display: flex;
+	align-items: center;
+}
+.header-top {
+	height: 5.7vh;
+	background: #009F86;
+}
+.side-filler {
+	display: flex;
+	flex-grow: 5;
+	flex-shrink: 1;
+}
+.header-top-content, .header-bottom-content {
+	display: flex;
+	flex-basis: 0;
+	flex-grow: 16;
+	flex-shrink: 1;
+}
+.header-top-content {
+	justify-content: center;
+}
+#header-top-left, #header-top-center, #header-top-right {
+	display: flex;
+	flex-grow: 1;
+	flex: 1 1 20em;
+	align-items: center;
+}
+#header-top-left {
+	justify-content: left;
+	align-items: start;
+}
+#header-top-left-lizard-logo {
+	position: absolute;
+	top: 0.275%;
+	height: 7.5%;
+}
+#header-top-center {
+	justify-content: center;
+}
+#header-top-right {
+	justify-content: right;
+}
+.button-padding {
+	padding: 10px;
+}
+.icon-medium {
+	padding-left: 5px;
+	padding-right: 5px;
+	font-size: 1rem;
+}
+.header-bottom {
+	height: 6.8vh;
+	background: #2FCBAB;
+	font-size: 1.2rem;
+}
+.header-bottom-content {
+	justify-content: left;
+}
+
+/*CSS specific for main for user table starts here*/
+main {
+	display: flex;
+	height: 75vh;
+}
+#main-content {
+	display: flex;
+	flex-basis: 0;
+	flex-grow: 16;
+	flex-shrink: 1;
+	padding-top: 40px;
+	flex-direction: row;
+	align-items: left;
+	flex-flow: row wrap;
+	align-content: flex-start;
+}
+#main-top-content, #main-center-content {
+	display: flex;
+	flex: 1 0 100%;
+	justify-content: space-between;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+#main-top-left {
+	flex-grow: 1;
+}
+.search-bar {
+	margin: auto;
+	background: #F3F3F3;
+}
+#main-top-right {
+	display: flex;
+	flex-grow: 2;
+	justify-content: flex-end;
+}
+.button {
+	padding: 10px;
+	font-size: 1rem;
+	white-space: nowrap;
+	text-transform: uppercase;
+	background: #2FCBAB;
+	color: white;
+	cursor: pointer;
+	box-shadow: 0 2px 4px 0 rgba(0,0,0,.5);
+}
+/*CSS specific for main for user table ends here*/
+
+footer {
+	display: flex;
+	align-items: center;
+	height: 12.5vh;
+	background: #D8D8D8;
+	color: #009F86;
+}
+#footer-content {
+	display: flex;
+	flex-basis: 0;
+	flex-grow: 16;
+	flex-shrink: 1;
+}
+#footer-left, #footer-right {
+	display: flex;
+	flex-grow: 1;
+	flex: 1 1 20em;
+	align-items: center;
+}
+#footer-left {
+	justify-content: left;
+}
+#footer-right {
+	justify-content: right;
+}
+.icon-large {
+	padding-left: 5px;
+	padding-right: 5px;
+	font-size: 1.25rem;
+}
