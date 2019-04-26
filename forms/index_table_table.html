@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="icon" href="favicon.ico">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+    <script src="https://use.fontawesome.com/43b6a67007.js"></script>
+    <link href="https://use.fontawesome.com/43b6a67007.css" media="all" rel="stylesheet">
+    <link rel="stylesheet" href="layout_table_table.css">
+    <!-- extra block for specific css references per Django template
+      {% block extraheader %}
+      {% endblock extraheader %}
+    -->
+    <title>Lizard management</title>
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <div class="header-top">
+          <div class="side-filler">
+          </div>
+          <div class="header-top-content">
+            <div id="header-top-left">
+              <img src="lizard.png" id="header-top-left-lizard-logo" alt="Lizard logo">
+            </div>
+            <div id="header-top-center" class="button-padding">
+              <i class="fa fa-sort icon-medium"></i>Organisation
+            </div>
+            <div id="header-top-right">
+              <div id="header-top-right-user" class="button-padding">
+                <i class="fa fa-user icon-medium"></i>User
+              </div>
+              <div id="header-top-right-login" class="button-padding">
+                <i class="fa fa-power-off icon-medium"></i>Log in
+              </div>
+            </div>
+          </div>
+          <div class="side-filler">
+          </div>
+        </div>
+        <div class="header-bottom">
+          <div class="side-filler">
+          </div>
+          <div class="header-bottom-content">
+            Lizard Management / User Management
+          </div>
+          <div class="side-filler">
+          </div>
+        </div>
+      </header>
+      <main>
+        <div class="side-filler">
+        </div>
+        <!-- extra block for main content
+          {% block mainContent %}
+        -->
+        <div id="main-content">
+          <div id="main-top-content">
+            <div id="main-top-left" class="search-bar button-padding">
+              <i class="fa fa-search icon-medium"></i>
+            </div>
+            <div id="main-top-right">
+              <span class="button">
+                NIEUWE GEBRUIKER
+              </span>
+            </div>
+          </div>
+          <div id="main-center-content">
+            <!-- table -->
+            <table>
+              <thead>
+                <th>User</th>
+                <th>Roles</th>
+                <th>Email</th>
+                <th></th>
+              </thead>
+
+              <!--{% for user in users %}-->
+              <tr>
+                <td>
+                  lirry.pinter (you)
+                </td>
+                <td>
+                  <span class="role role-user">U</span>
+                  <span class="role role-supplier">S</span>
+                  <span class="role role-admin">A</span>
+                  <span class="role role-manager">M</span>
+                  <span class="role role-add">+</span>
+                </td>
+                <td>
+                  gebruiker.een@gmail.com
+                </td>
+                <td class="text-center">
+                  <i class="fa fa-ellipsis-v icon-medium"></i>
+                </td>
+              </tr>
+              <!-- {% endfor %} -->
+              <!-- hard-coded users before using the for loop -->
+              <tr>
+                <td>
+                  emiel.verstegen
+                </td>
+                <td>
+                  <span class="role role-user">U</span>
+                  <span class="role role-supplier">S</span>
+                  <span class="role role-admin">A</span>
+                  <span class="role role-manager-none">M</span>
+                  <span class="role role-add">+</span>
+                </td>
+                <td>
+                  gebruiker.twee@gmail.com
+                </td>
+                <td class="text-center">
+                  <i class="fa fa-ellipsis-h icon-medium"></i>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  govert.termors
+                </td>
+                <td>
+                  <span class="role role-user-inactive">U</span>
+                  <span class="role role-supplier-inactive">S</span>
+                  <span class="role role-admin-inactive">A</span>
+                  <span class="role role-manager-inactive">M</span>
+                  <span class="role role-save">SAVE</span>
+                </td>
+                <td>
+                  gebruiker.drie@gmail.com
+                </td>
+                <td class="text-center">
+                  <i class="fa fa-ellipsis-h icon-medium"></i>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  tom.deboer
+                </td>
+                <td>
+                  <span class="role role-user-none">U</span>
+                  <span class="role role-supplier">S</span>
+                  <span class="role role-admin-none">A</span>
+                  <span class="role role-manager-none">M</span>
+                  <span class="role role-add">+</span>
+                </td>
+                <td>
+                  gebruiker.vier@gmail.com
+                </td>
+                <td class="text-center">
+                  <i class="fa fa-ellipsis-h icon-medium"></i>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  remco.gerlich
+                </td>
+                <td>
+                  <span class="role role-user">U</span>
+                  <span class="role role-supplier-none">S</span>
+                  <span class="role role-admin-none">A</span>
+                  <span class="role role-manager-none">M</span>
+                  <span class="role role-add">+</span>
+                </td>
+                <td>
+                  gebruiker.vijf@gmail.com
+                </td>
+                <td class="text-center">
+                  <i class="fa fa-ellipsis-h icon-medium"></i>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  casper.vdw
+                </td>
+                <td>
+                  <span class="role role-user-none">U</span>
+                  <span class="role role-supplier-none">S</span>
+                  <span class="role role-admin-none">A</span>
+                  <span class="role role-manager-none">M</span>
+                  <span class="role role-add">+</span>
+                </td>
+                <td>
+                  gebruiker.zes@gmail.com
+                </td>
+                <td class="text-center">
+                  <i class="fa fa-ellipsis-h icon-medium"></i>
+                </td>
+              </tr>
+              <!-- end hardcoded users before using the for loop -->
+            </table>
+            <!-- end table -->
+          </div>
+        </div>
+        <!--
+          {% endblock mainContent %}
+        -->
+        <div class="side-filler">
+        </div>
+      </main>
+      <footer>
+        <div class="side-filler">
+        </div>
+        <div id="footer-content">
+          <div id="footer-left" class="button-padding">
+            Documentation<i class="material-icons icon-large">local_library</i>
+          </div>
+          <div id="footer-right" class="button-padding">
+            <i class="material-icons icon-large">headset_mic</i>Support
+          </div>
+        </div>
+        <div class="side-filler">
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

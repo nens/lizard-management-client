@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="icon" href="favicon.ico">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+    <script src="https://use.fontawesome.com/43b6a67007.js"></script>
+    <link href="https://use.fontawesome.com/43b6a67007.css" media="all" rel="stylesheet">
+    <link rel="stylesheet" href="layout_table_flexbox.css">
+    <!-- extra block for specific css references per Django template
+      {% block extraheader %}
+      {% endblock extraheader %}
+    -->
+    <title>Lizard management</title>
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <div class="header-top">
+          <div class="side-filler">
+          </div>
+          <div class="header-top-content">
+            <div id="header-top-left">
+              <img src="lizard.png" id="header-top-left-lizard-logo" alt="Lizard logo">
+            </div>
+            <div id="header-top-center" class="button-padding">
+              <i class="fa fa-sort icon-medium"></i>Organisation
+            </div>
+            <div id="header-top-right">
+              <div id="header-top-right-user" class="button-padding">
+                <i class="fa fa-user icon-medium"></i>User
+              </div>
+              <div id="header-top-right-login" class="button-padding">
+                <i class="fa fa-power-off icon-medium"></i>Log in
+              </div>
+            </div>
+          </div>
+          <div class="side-filler">
+          </div>
+        </div>
+        <div class="header-bottom">
+          <div class="side-filler">
+          </div>
+          <div class="header-bottom-content">
+            Lizard Management / User Management
+          </div>
+          <div class="side-filler">
+          </div>
+        </div>
+      </header>
+      <main>
+        <div class="side-filler">
+        </div>
+        <!-- extra block for main content
+          {% block mainContent %}
+        -->
+        <div id="main-content">
+          <div id="main-top-content">
+            <div id="main-top-left" class="search-bar button-padding">
+              <i class="fa fa-search icon-medium"></i>
+            </div>
+            <div id="main-top-right">
+              <span class="button">
+                NIEUWE GEBRUIKER
+              </span>
+            </div>
+          </div>
+          <div id="main-center-content">
+            <!-- flexbox -->
+            <div id="user-table">
+              <div id="user-table-header">
+                <div class="user-table-user">
+                  User
+                </div>
+                <div class="user-table-role">
+                  Roles<sup><i class="fa fa-info-circle icon-medium"></i></sup>
+                </div>
+                <div class="user-table-mail">
+                  Email
+                </div>
+                <div class="user-table-menu-button">
+                  icon
+                </div>
+              </div>
+              <!--{% for user in users %}-->
+              <div class="user-table-row">
+                <div class="user-table-user">
+                  lirry.pinter (you)
+                </div>
+                <div class="user-table-role">
+                  <span class="role role-user">U</span>
+                  <span class="role role-supplier">S</span>
+                  <span class="role role-admin">A</span>
+                  <span class="role role-manager">M</span>
+                  <span class="role role-add">+</span>
+                </div>
+                <div class="user-table-mail">
+                  gebruiker.een@gmail.com
+                </div>
+                <div class="user-table-menu-button">
+                  <i class="fa fa-ellipsis-v icon-medium"></i>
+                </div>
+              </div>
+              <!-- {% endfor %} -->
+              <!-- this would be inside the for in Django-->
+              <div class="user-table-row">
+                <div class="user-table-user">
+                  emiel.verstegen
+                </div>
+                <div class="user-table-role">
+                  <span class="role role-user">U</span>
+                  <span class="role role-supplier">S</span>
+                  <span class="role role-admin">A</span>
+                  <span class="role role-manager-inactive">M</span>
+                  <span class="role role-add">+</span>
+                </div>
+                <div class="user-table-mail">
+                  gebruiker.twee@gmail.com
+                </div>
+                <div class="user-table-menu-button">
+                  <i class="fa fa-ellipsis-h icon-medium"></i>
+                </div>
+              </div>
+              <div class="user-table-row">
+                <div class="user-table-user">
+                  govert.termors
+                </div>
+                <div class="user-table-role">
+                  <span class="role role-user-inactive">U</span>
+                  <span class="role role-supplier-inactive">S</span>
+                  <span class="role role-admin-inactive">A</span>
+                  <span class="role role-manager-inactive">M</span>
+                  <span class="role role-save">SAVE</span>
+                </div>
+                <div class="user-table-mail">
+                  gebruiker.drie@gmail.com
+                </div>
+                <div class="user-table-menu-button">
+                  <i class="fa fa-ellipsis-h icon-medium"></i>
+                </div>
+              </div>
+              <div class="user-table-row">
+                <div class="user-table-user">
+                  tom.deboer
+                </div>
+                <div class="user-table-role">
+                  <span class="role role-user-none">U</span>
+                  <span class="role role-supplier">S</span>
+                  <span class="role role-admin-none">A</span>
+                  <span class="role role-manager-none">M</span>
+                  <span class="role role-add">+</span>
+                </div>
+                <div class="user-table-mail">
+                  gebruiker.vier@gmail.com
+                </div>
+                <div class="user-table-menu-button">
+                  <i class="fa fa-ellipsis-h icon-medium"></i>
+                </div>
+              </div>
+              <div class="user-table-row">
+                <div class="user-table-user">
+                  remco.gerlich
+                </div>
+                <div class="user-table-role">
+                  <span class="role role-user">U</span>
+                  <span class="role role-supplier-none">S</span>
+                  <span class="role role-admin-none">A</span>
+                  <span class="role role-manager-none">M</span>
+                  <span class="role role-add">+</span>
+                </div>
+                <div class="user-table-mail">
+                  gebruiker.vijf@gmail.com
+                </div>
+                <div class="user-table-menu-button">
+                  <i class="fa fa-ellipsis-h icon-medium"></i>
+                </div>
+              </div>
+              <div class="user-table-row">
+                <div class="user-table-user">
+                  casper.vdw
+                </div>
+                <div class="user-table-role">
+                  <span class="role role-user">U</span>
+                  <span class="role role-supplier-none">S</span>
+                  <span class="role role-admin-none">A</span>
+                  <span class="role role-manager-none">M</span>
+                  <span class="role role-add">+</span>
+                </div>
+                <div class="user-table-mail">
+                  gebruiker.zes@gmail.com
+                </div>
+                <div class="user-table-menu-button">
+                  <i class="fa fa-ellipsis-h icon-medium"></i>
+                </div>
+              </div>
+              <!-- {% endfor %} -->
+            </div>
+            <!-- end flexbox -->
+          </div>
+        </div>
+        <!--
+          {% endblock mainContent %}
+        -->
+        <div class="side-filler">
+        </div>
+      </main>
+      <footer>
+        <div class="side-filler">
+        </div>
+        <div id="footer-content">
+          <div id="footer-left" class="button-padding">
+            Documentation<i class="material-icons icon-large">local_library</i>
+          </div>
+          <div id="footer-right" class="button-padding">
+            <i class="material-icons icon-large">headset_mic</i>Support
+          </div>
+        </div>
+        <div class="side-filler">
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>
