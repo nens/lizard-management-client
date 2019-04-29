@@ -55,77 +55,113 @@
           {% block mainContent %}
         -->
         <div id="main-content">
-          <div class="question">
-            <div class="question-header">
-              <span class="question-header-number">
-                1
-              </span>
-              <span class="question-header-title">
-                Username
-              </span>
-            </div>
-            <div class="question-main">
-              <input type="text" name="username">
-            </div>
-          </div>
-          <div class="question">
-            <div class="question-header">
-              <span class="question-header-number">
-                2
-              </span>
-              <span class="question-header-title">
-                Email adress
-              </span>
-            </div>
-            <div class="question-main">
-              <input type="text" name="username">
-            </div>
-          </div>
-          <div class="question">
-            <div class="question-header">
-              <span class="question-header-number">
-                3
-              </span>
-              <span class="question-header-title">
-                First name
-              </span>
-            </div>
-            <div class="question-main">
-              <input type="text" name="username">
-            </div>
-          </div>
-          <div class="question">
-            <div class="question-header">
-              <span class="question-header-number">
-                4
-              </span>
-              <span class="question-header-title">
-                Last name
-              </span>
-            </div>
-            <div class="question-main">
-              <input type="text" name="username">
-            </div>
-          </div>
-          <div class="question">
-            <div class="question-header">
-              <span class="question-header-number">
-                5
-              </span>
-              <span class="question-header-title">
-                Roles
-              </span>
-            </div>
-            <div class="question-main">
-              <div>
-                <span class="role role-user-inactive margin-5px">U</span>
-                <span class="role role-supplier-inactive margin-5px">S</span>
-                <span class="role role-admin-inactive margin-5px margin-5px">A</span>
-                <span class="role role-manager-inactive margin-5px">M</span>
-                <a href="#" class="margin-5px" style="vertical-align:top;">need help?</a>
+          <!-- {% block question %} -->
+            <div class="question">
+              <div class="question-header">
+                <div class="question-header-number">
+                  <span class="question-header-number-span">
+                    1 <!-- Question number -->
+                  </span>
+                </div>
+                <div class="question-header-title">
+                  Username <!-- Question title -->
+                  <span class="checkmark">
+                    ✔ <!-- Question validates? -->
+                  </span>
+                </div>
+              </div>
+              <div class="question-main">
+                <div class="question-main-filler-left">
+                </div>
+                <div class="question-main-content">
+                  <input type="text" name="username" value="Lirry Pinter" class="form-input-text">
+                  <!-- question value goes in the input. Lirry Pinter is now shown as an example -->
+                </div>
               </div>
             </div>
-          </div>
+          <!-- {% endblock question %} -->
+          <!-- other questions are hardcoded below instead of by question block by lack of for loop -->
+            <div class="question">
+              <div class="question-header">
+                <div class="question-header-number">
+                  <span class="question-header-number-span-inactive">
+                    2
+                  </span>
+                </div>
+                <span class="question-header-title">
+                  Email address
+                </span>
+              </div>
+              <div class="question-main">
+                <div class="question-main-filler-left">
+                </div>
+                <div class="question-main-content">
+                  <input type="text" name="username" value="gebruiker.een@gmail.com" class="form-input-text">
+                </div>
+              </div>
+            </div>
+            <div class="question">
+              <div class="question-header">
+                <div class="question-header-number">
+                  <span class="question-header-number-span-inactive">
+                    3
+                  </span>
+                </div>
+                <span class="question-header-title">
+                  First name
+                </span>
+              </div>
+              <div class="question-main">
+                <div class="question-main-filler-left">
+                </div>
+                <div class="question-main-content">
+                  <input type="text" name="username" value="Lirry" class="form-input-text">
+                </div>
+              </div>
+            </div>
+            <div class="question">
+              <div class="question-header">
+                <div class="question-header-number">
+                  <span class="question-header-number-span-inactive">
+                    4
+                  </span>
+                </div>
+                <span class="question-header-title">
+                  Last name
+                </span>
+              </div>
+              <div class="question-main">
+                <div class="question-main-filler-left">
+                </div>
+                <div class="question-main-content">
+                  <input type="text" name="username" value="Pinter" class="form-input-text">
+                </div>
+              </div>
+            </div>
+            <div class="question">
+              <div class="question-header">
+                <div class="question-header-number">
+                  <span class="question-header-number-span-inactive">
+                    5
+                  </span>
+                </div>
+                <span class="question-header-title">
+                  Roles
+                </span>
+              </div>
+              <div class="question-main">
+                <div class="question-main-filler-left">
+                </div>
+                <div class="question-main-content">
+                  <span class="role role-user margin-5px">U</span>
+                  <span class="role role-supplier margin-5px">S</span>
+                  <span class="role role-admin-inactive margin-5px margin-5px">A</span>
+                  <span class="role role-manager-inactive margin-5px">M</span>
+                  <a href="#" class="margin-5px">need help?</a>
+                </div>
+              </div>
+            </div>
+          <!-- hardcoded questions stop here -->
         </div>
         <!--
           {% endblock mainContent %}
