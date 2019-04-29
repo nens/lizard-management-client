@@ -15,6 +15,11 @@ html, body {
 header, main, footer {
 	flex: 1 0 100%;
 }
+.side-filler {
+	display: flex;
+	flex-grow: 5;
+	flex-shrink: 1;
+}
 
 header {
 	color: white;
@@ -26,11 +31,6 @@ header {
 .header-top {
 	height: 5.7vh;
 	background: #009F86;
-}
-.side-filler {
-	display: flex;
-	flex-grow: 5;
-	flex-shrink: 1;
 }
 .header-top-content, .header-bottom-content {
 	display: flex;
@@ -61,22 +61,6 @@ header {
 }
 #header-top-right {
 	justify-content: right;
-}
-.button-padding {
-	padding: 10px;
-}
-.icon-medium {
-	padding-left: 5px;
-	padding-right: 5px;
-	font-size: 1rem;
-}
-.icon-large {
-	padding-left: 5px;
-	padding-right: 5px;
-	font-size: 1.25rem;
-}
-.icon-top {
-
 }
 .header-bottom {
 	height: 6.8vh;
@@ -123,38 +107,8 @@ main {
 	flex-grow: 2;
 	justify-content: flex-end;
 }
-.button {
-	padding: 10px;
-	font-size: 1rem;
-	white-space: nowrap;
-	text-transform: uppercase;
-	background: #2FCBAB;
-	color: white;
-	cursor: pointer;
-	box-shadow: 0 2px 4px 0 rgba(0,0,0,.5);
-}
 #main-center-content {
 	flex-flow: row wrap;
-}
-table {
-	width: 100%;
-	margin-bottom: 40px;
-	border-collapse: collapse;
-}
-thead {
-	height: 6vh;
-	background: #F3F3F3;
-	text-align: left;
-}
-th {
-	padding-left: 20px;
-}
-td {
-	padding-left: 20px;
-	border-bottom: 1px solid #D8D8D8;
-}
-.text-center {
-	text-align: center;
 }
 .role {
 	display: inline-block;
@@ -267,4 +221,53 @@ footer {
 }
 #footer-right {
 	justify-content: right;
+}
+
+/* Table, specific for the user table */
+table {
+	width: 100%;
+	margin-bottom: 40px;
+	border-collapse: collapse;
+}
+thead {
+	height: 6vh;
+	background: #F3F3F3;
+	text-align: left;
+}
+th {
+	padding-left: 20px;
+}
+td {
+	padding-left: 20px;
+	border-bottom: 1px solid #D8D8D8;
+}
+
+/* Buttons */
+.button {
+	padding: 10px;
+	font-size: 1rem;
+	white-space: nowrap;
+	text-transform: uppercase;
+	background: #2FCBAB;
+	color: white;
+	cursor: pointer;
+	box-shadow: 0 2px 4px 0 rgba(0,0,0,.5);
+}
+.button-padding {
+	padding: 10px;
+}
+
+/* Icons */
+.icon-medium {
+	padding-left: 5px;
+	padding-right: 5px;
+	font-size: 1rem;
+}
+.icon-large {
+	padding-left: 5px;
+	padding-right: 5px;
+	font-size: 1.25rem;
+}
+.text-center {
+	text-align: center;
 }
