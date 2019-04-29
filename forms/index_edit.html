@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="icon" href="favicon.ico">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+    <script src="https://use.fontawesome.com/43b6a67007.js"></script>
+    <link href="https://use.fontawesome.com/43b6a67007.css" media="all" rel="stylesheet">
+    <link rel="stylesheet" href="layout_edit.css">
+    <!-- extra block for specific css references per Django template
+      {% block extraheader %}
+      {% endblock extraheader %}
+    -->
+    <title>Lizard management</title>
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <div class="header-top">
+          <div class="side-filler">
+          </div>
+          <div class="header-top-content">
+            <div id="header-top-left">
+              <img src="lizard.png" id="header-top-left-lizard-logo" alt="Lizard logo">
+            </div>
+            <div id="header-top-center" class="button-padding">
+              <i class="fa fa-sort icon-medium"></i>Organisation
+            </div>
+            <div id="header-top-right">
+              <div id="header-top-right-user" class="button-padding">
+                <i class="fa fa-user icon-medium"></i>User
+              </div>
+              <div id="header-top-right-login" class="button-padding">
+                <i class="fa fa-power-off icon-medium"></i>Log in
+              </div>
+            </div>
+          </div>
+          <div class="side-filler">
+          </div>
+        </div>
+        <div class="header-bottom">
+          <div class="side-filler">
+          </div>
+          <div class="header-bottom-content">
+            Lizard Management / User Management
+          </div>
+          <div class="side-filler">
+          </div>
+        </div>
+      </header>
+      <main>
+        <div class="side-filler">
+        </div>
+        <!-- extra block for main content
+          {% block mainContent %}
+        -->
+        <div id="main-content">
+          <div class="question">
+            <div class="question-header">
+              <span class="question-header-number">
+                1
+              </span>
+              <span class="question-header-title">
+                Username
+              </span>
+            </div>
+            <div class="question-main">
+              <input type="text" name="username">
+            </div>
+          </div>
+          <div class="question">
+            <div class="question-header">
+              <span class="question-header-number">
+                2
+              </span>
+              <span class="question-header-title">
+                Email adress
+              </span>
+            </div>
+            <div class="question-main">
+              <input type="text" name="username">
+            </div>
+          </div>
+          <div class="question">
+            <div class="question-header">
+              <span class="question-header-number">
+                3
+              </span>
+              <span class="question-header-title">
+                First name
+              </span>
+            </div>
+            <div class="question-main">
+              <input type="text" name="username">
+            </div>
+          </div>
+          <div class="question">
+            <div class="question-header">
+              <span class="question-header-number">
+                4
+              </span>
+              <span class="question-header-title">
+                Last name
+              </span>
+            </div>
+            <div class="question-main">
+              <input type="text" name="username">
+            </div>
+          </div>
+          <div class="question">
+            <div class="question-header">
+              <span class="question-header-number">
+                5
+              </span>
+              <span class="question-header-title">
+                Roles
+              </span>
+            </div>
+            <div class="question-main">
+              <div>
+                <span class="role role-user-inactive margin-5px">U</span>
+                <span class="role role-supplier-inactive margin-5px">S</span>
+                <span class="role role-admin-inactive margin-5px margin-5px">A</span>
+                <span class="role role-manager-inactive margin-5px">M</span>
+                <a href="#" class="margin-5px" style="vertical-align:top;">need help?</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--
+          {% endblock mainContent %}
+        -->
+        <div class="side-filler">
+        </div>
+      </main>
+      <footer>
+        <div class="side-filler">
+        </div>
+        <div id="footer-content">
+          <div id="footer-left" class="button-padding">
+            Documentation<i class="material-icons icon-large">local_library</i>
+          </div>
+          <div id="footer-right" class="button-padding">
+            <i class="material-icons icon-large">headset_mic</i>Support
+          </div>
+        </div>
+        <div class="side-filler">
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>
