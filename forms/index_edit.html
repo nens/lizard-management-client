@@ -60,207 +60,208 @@
         <!-- extra block for main content
           {% block mainContent %}
         -->
-        <div id="main-content">
-          <!-- {% block question %} -->
-            <div class="question">
-              <div class="question-header">
-                <div class="question-header-number">
-                  <span class="question-header-number-span">
-                    1 <!-- Question number -->
-                  </span>
+          <div id="main-content">
+            <!-- {% block question %} -->
+              <div class="question">
+                <div class="question-header">
+                  <div class="question-header-number">
+                    <span class="question-header-number-span">
+                      1 <!-- Question number -->
+                    </span>
+                  </div>
+                  <div class="question-header-title">
+                    Username <!-- Question title -->
+                    <span class="checkmark">
+                      ✔ <!-- Question validates? -->
+                    </span>
+                  </div>
                 </div>
-                <div class="question-header-title">
-                  Username <!-- Question title -->
-                  <span class="checkmark">
-                    ✔ <!-- Question validates? -->
-                  </span>
-                </div>
-              </div>
-              <div class="question-main">
-                <div class="question-main-filler-left">
-                </div>
-                <div class="question-main-content">
-                  <input type="text" name="username" value="Lirry Pinter" class="form-input-text">
-                  <!-- question value goes in the input. Lirry Pinter is now shown as an example -->
-                </div>
-              </div>
-            </div>
-          <!-- {% endblock question %} -->
-          <!-- other questions are hardcoded below instead of by question block by lack of for loop -->
-            <div class="question">
-              <div class="question-header">
-                <div class="question-header-number">
-                  <span class="question-header-number-span-inactive">
-                    2
-                  </span>
-                </div>
-                <span class="question-header-title">
-                  Email address
-                </span>
-              </div>
-              <div class="question-main">
-                <div class="question-main-filler-left">
-                </div>
-                <div class="question-main-content">
-                  <input type="text" name="username" value="gebruiker.een@gmail.com" class="form-input-text">
-                </div>
-              </div>
-            </div>
-            <div class="question">
-              <div class="question-header">
-                <div class="question-header-number">
-                  <span class="question-header-number-span-inactive">
-                    3
-                  </span>
-                </div>
-                <span class="question-header-title">
-                  First name
-                </span>
-              </div>
-              <div class="question-main">
-                <div class="question-main-filler-left">
-                </div>
-                <div class="question-main-content">
-                  <input type="text" name="username" value="Lirry" class="form-input-text">
-                </div>
-              </div>
-            </div>
-            <div class="question">
-              <div class="question-header">
-                <div class="question-header-number">
-                  <span class="question-header-number-span-inactive">
-                    4
-                  </span>
-                </div>
-                <span class="question-header-title">
-                  Last name
-                </span>
-              </div>
-              <div class="question-main">
-                <div class="question-main-filler-left">
-                </div>
-                <div class="question-main-content">
-                  <input type="text" name="username" value="Pinter" class="form-input-text">
-                </div>
-              </div>
-            </div>
-            <div class="question">
-              <div class="question-header">
-                <div class="question-header-number">
-                  <span class="question-header-number-span-inactive">
-                    5
-                  </span>
-                </div>
-                <span class="question-header-title">
-                  Roles
-                </span>
-              </div>
-              <div class="question-main">
-                <div class="question-main-filler-left">
-                </div>
-                <div class="question-main-content">
-                  <span class="role role-user margin-5px">U</span>
-                  <span class="role role-supplier margin-5px">S</span>
-                  <span class="role role-admin-inactive margin-5px">A</span>
-                  <span class="role role-manager-inactive margin-5px">M</span>
-                  <button id="about-roles-button" class="margin-side-30px">
-                    Need help?
-                  </button>
-                  <!-- The Modal -->
-                  <div id="about-roles-modal" class="modal">
-                    <!-- Modal content -->
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <div class="modal-header-title">
-                          <h2>About roles</h2>
-                        </div>
-                      </div>
-                      <div class="modal-body">
-                        <div class="modal-body-content">
-                          <div class="modal-body-user-role">
-                            <div class="modal-body-user-role-role">
-                              <span class="role role-user margin-5px">U</span>
-                            </div>
-                            <div class="modal-body-user-role-description">
-                              <h2>User</h2>
-                              <p>
-                                <ul>
-                                  <li>
-                                    <span class="bold">Can</span> <span class="underlined">read</span> data
-                                  </li>
-                                  <li>
-                                    <span class="bold">Can't</span> <span class="underlined">write</span> or <span class="underlined">change</span> data
-                                  </li>
-                                </ul>
-                              </p>
-                            </div>
-                          </div>
-                          <div class="modal-body-user-role">
-                            <div class="modal-body-user-role-role">
-                              <span class="role role-supplier margin-5px">S</span>
-                            </div>
-                            <div class="modal-body-user-role-description">
-                              <h2>Supplier</h2>
-                              <p>
-                                <ul>
-                                  <li>
-                                    <span class="bold">Can</span> supply (<span class="underlined">write</span>) data
-                                  </li>
-                                  <li>
-                                    <span class="bold">Can't</span> <span class="underlined">read</span> or <span class="underlined">write</span> data that they did not supply
-                                  </li>
-                                </ul>
-                              </p>
-                            </div>
-                          </div>
-                          <div class="modal-body-user-role">
-                            <div class="modal-body-user-role-role">
-                              <span class="role role-admin margin-5px">A</span>
-                            </div>
-                            <div class="modal-body-user-role-description">
-                              <h2>Administrator</h2>
-                              <p>
-                                <ul>
-                                  <li>
-                                    <span class="bold">Can</span> <span class="underlined">read</span> and <span class="underlined">write</span> data
-                                  </li>
-                                  <li>
-                                    <span class="bold">Can't</span> add, <span class="underlined">change</span> or <span class="underlined">delete</span> users
-                                  </li>
-                                </ul>
-                              </p>
-                            </div>
-                          </div>
-                          <div class="modal-body-user-role">
-                            <div class="modal-body-user-role-role">
-                              <span class="role role-manager margin-5px">M</span>
-                            </div>
-                            <div class="modal-body-user-role-description">
-                              <h2>Manager</h2>
-                              <p>
-                                <ul>
-                                  <li>
-                                    <span class="bold">Can</span> <span class="underlined">add</span>, <span class="underlined">change</span> or <span class="underlined">delete</span> users
-                                  </li>
-                                  <li>
-                                    <span class="bold">Can't</span> <span class="underlined">read</span>, <span class="underlined">write</span> or <span class="underlined">change</span> users
-                                  </li>
-                                </ul>
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="modal-footer">
-                        <span class="close button">CLOSE</span>
-                      </div>
-                    </div>
+                <div class="question-main">
+                  <div class="question-main-filler-left">
+                  </div>
+                  <div class="question-main-content">
+                    <input type="text" name="username" value="Lirry Pinter" class="form-input-text">
+                    <!-- question value goes in the input. Lirry Pinter is now shown as an example -->
                   </div>
                 </div>
               </div>
-            </div>
-          <!-- hardcoded questions stop here -->
-        </div>
+            <!-- {% endblock question %} -->
+            <!-- other questions are hardcoded below instead of by question block by lack of for loop -->
+              <div class="question">
+                <div class="question-header">
+                  <div class="question-header-number">
+                    <span class="question-header-number-span-inactive">
+                      2
+                    </span>
+                  </div>
+                  <span class="question-header-title">
+                    Email address
+                  </span>
+                </div>
+                <div class="question-main">
+                  <div class="question-main-filler-left">
+                  </div>
+                  <div class="question-main-content">
+                    <input type="text" name="username" value="gebruiker.een@gmail.com" class="form-input-text">
+                  </div>
+                </div>
+              </div>
+              <div class="question">
+                <div class="question-header">
+                  <div class="question-header-number">
+                    <span class="question-header-number-span-inactive">
+                      3
+                    </span>
+                  </div>
+                  <span class="question-header-title">
+                    First name
+                  </span>
+                </div>
+                <div class="question-main">
+                  <div class="question-main-filler-left">
+                  </div>
+                  <div class="question-main-content">
+                    <input type="text" name="username" value="Lirry" class="form-input-text">
+                  </div>
+                </div>
+              </div>
+              <div class="question">
+                <div class="question-header">
+                  <div class="question-header-number">
+                    <span class="question-header-number-span-inactive">
+                      4
+                    </span>
+                  </div>
+                  <span class="question-header-title">
+                    Last name
+                  </span>
+                </div>
+                <div class="question-main">
+                  <div class="question-main-filler-left">
+                  </div>
+                  <div class="question-main-content">
+                    <input type="text" name="username" value="Pinter" class="form-input-text">
+                  </div>
+                </div>
+              </div>
+              <div class="question">
+                <div class="question-header">
+                  <div class="question-header-number">
+                    <span class="question-header-number-span-inactive">
+                      5
+                    </span>
+                  </div>
+                  <span class="question-header-title">
+                    Roles
+                  </span>
+                </div>
+                <div class="question-main">
+                  <div class="question-main-filler-left">
+                  </div>
+                  <div class="question-main-content">
+                    <span class="role role-user margin-5px">U</span>
+                    <span class="role role-supplier margin-5px">S</span>
+                    <span class="role role-admin-inactive margin-5px">A</span>
+                    <span class="role role-manager-inactive margin-5px">M</span>
+                    <button id="about-roles-button" class="margin-side-30px">
+                      Need help?
+                    </button>
+                    <!-- The Modal -->
+                      <div id="about-roles-modal" class="modal">
+                        <!-- Modal content -->
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <div class="modal-header-title">
+                              <h2>About roles</h2>
+                            </div>
+                          </div>
+                          <div class="modal-body">
+                            <div class="modal-body-content">
+                              <div class="modal-body-user-role">
+                                <div class="modal-body-user-role-role">
+                                  <span class="role role-user margin-5px">U</span>
+                                </div>
+                                <div class="modal-body-user-role-description">
+                                  <h2>User</h2>
+                                  <p>
+                                    <ul>
+                                      <li>
+                                        <span class="bold">Can</span> <span class="underlined">read</span> data
+                                      </li>
+                                      <li>
+                                        <span class="bold">Can't</span> <span class="underlined">write</span> or <span class="underlined">    change</span> data
+                                      </li>
+                                    </ul>
+                                  </p>
+                                </div>
+                              </div>
+                              <div class="modal-body-user-role">
+                                <div class="modal-body-user-role-role">
+                                  <span class="role role-supplier margin-5px">S</span>
+                                </div>
+                                <div class="modal-body-user-role-description">
+                                  <h2>Supplier</h2>
+                                  <p>
+                                    <ul>
+                                      <li>
+                                        <span class="bold">Can</span> supply (<span class="underlined">write</span>) data
+                                      </li>
+                                      <li>
+                                        <span class="bold">Can't</span> <span class="underlined">read</span> or <span class="underlined"><  write>  </write></span> data that they did not supply
+                                      </li>
+                                    </ul>
+                                  </p>
+                                </div>
+                              </div>
+                              <div class="modal-body-user-role">
+                                <div class="modal-body-user-role-role">
+                                  <span class="role role-admin margin-5px">A</span>
+                                </div>
+                                <div class="modal-body-user-role-description">
+                                  <h2>Administrator</h2>
+                                  <p>
+                                    <ul>
+                                      <li>
+                                        <span class="bold">Can</span> <span class="underlined">read</span> and <span class="underlined">  write</ span> data
+                                      </li>
+                                      <li>
+                                        <span class="bold">Can't</span> add, <span class="underlined">change</span> or <span class="  underlined" >delete</span> users
+                                      </li>
+                                    </ul>
+                                  </p>
+                                </div>
+                              </div>
+                              <div class="modal-body-user-role">
+                                <div class="modal-body-user-role-role">
+                                  <span class="role role-manager margin-5px">M</span>
+                                </div>
+                                <div class="modal-body-user-role-description">
+                                  <h2>Manager</h2>
+                                  <p>
+                                    <ul>
+                                      <li>
+                                        <span class="bold">Can</span> <span class="underlined">add</span>, <span class="underlined">  change</  span> or <span class="underlined">delete</span> users
+                                      </li>
+                                      <li>
+                                        <span class="bold">Can't</span> <span class="underlined">read</span>, <span class="underlined"> write</  span> or <span class="underlined">change</span> users
+                                      </li>
+                                    </ul>
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="modal-footer">
+                            <span class="close button">CLOSE</span>
+                          </div>
+                        </div>
+                      </div>
+                    <!-- Modal stops here -->
+                  </div>
+                </div>
+              </div>
+            <!-- hardcoded questions stop here -->
+          </div>
         <!--
           {% endblock mainContent %}
         -->
