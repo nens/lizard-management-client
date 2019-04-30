@@ -163,60 +163,73 @@
                   <span class="role role-supplier margin-5px">S</span>
                   <span class="role role-admin-inactive margin-5px">A</span>
                   <span class="role role-manager-inactive margin-5px">M</span>
-                  <button id="myBtn" class="margin-side-30px">
+                  <button id="about-roles-button" class="margin-side-30px">
                     Need help?
                   </button>
                   <!-- The Modal -->
-                  <div id="myModal" class="modal">
+                  <div id="about-roles-modal" class="modal">
                     <!-- Modal content -->
                     <div class="modal-content">
-                      <span class="close">&times;</span>
-                      <p>Some text in the Modal..</p>
-                      <p>Some text in the Modal..</p>
-                      <p>Some text in the Modal..</p>
-                      <p>Some text in the Modal..</p>
-                      <p>Some text in the Modal..</p>
-                      <p>Some text in the Modal..</p>
-                      <p>Some text in the Modal..</p>
-                      <p>Some text in the Modal..</p>
-                      <p>Some text in the Modal..</p>
-                      <p>Some text in the Modal..</p>
-                      <p>Some text in the Modal..</p>
-                      <p>Some text in the Modal..</p>
-                      <p>Some text in the Modal..</p>
-                      <p>Some text in the Modal..</p>
-                      <p>Some text in the Modal..</p>
-                      <p>Some text in the Modal..</p>
-                      <p>Some text in the Modal..</p>
-                      <p>Some text in the Modal..</p>
-                      <p>Some text in the Modal..</p>
-                      <p>Some text in the Modal..</p>
-                      <p>Some text in the Modal..</p>
-                      <p>Some text in the Modal..</p>
-                      <p>Some text in the Modal..</p>
-                      <p>Some text in the Modal..</p>
-                      <p>Some text in the Modal..</p>
-                      <p>Some text in the Modal..</p>
-                      <p>Some text in the Modal..</p>
-                      <p>Some text in the Modal..</p>
-                      <p>Some text in the Modal..</p>
-                      <p>Some text in the Modal..</p>
-                      <p>Some text in the Modal..</p>
-                      <p>Some text in the Modal..</p>
-                      <p>Some text in the Modal..</p>
-                      <p>Some text in the Modal..</p>
-                      <p>Some text in the Modal..</p>
-                      <p>Some text in the Modal..</p>
-                      <p>Some text in the Modal..</p>
-                      <p>Some text in the Modal..</p>
-                      <p>Some text in the Modal..</p>
-                      <p>Some text in the Modal..</p>
-                      <p>Some text in the Modal..</p>
-                      <p>Some text in the Modal..</p>
-                      <p>Some text in the Modal..</p>
-                      <p>Some text in the Modal..</p>
-                      <p>Some text in the Modal..</p>
-                      <p>Some text in the Modal..last</p>
+                      <div class="modal-header">
+                        <div class="modal-header-title">
+                          <h2>About roles</h2>
+                        </div>
+                      </div>
+                      <div class="modal-body">
+                        <div class="modal-body-content">
+                          <div class="modal-body-user-role">
+                            <div class="modal-body-user-role-role">
+                              <span class="role role-user margin-5px">U</span>
+                            </div>
+                            <div class="modal-body-user-role-description">
+                              <h2>User</h2>
+                              <p>
+                                - <strong>Can</strong> <u>read</u> data <br/>
+                                - <strong>Can't</strong> <u>write</u> or <u>change</u> data <br/>
+                              </p>
+                            </div>
+                          </div>
+                          <div class="modal-body-user-role">
+                            <div class="modal-body-user-role-role">
+                              <span class="role role-supplier margin-5px">S</span>
+                            </div>
+                            <div class="modal-body-user-role-description">
+                              <h2>Supplier</h2>
+                              <p>
+                              - <strong>Can</strong> supply (<u>write</u>) data <br/>
+                              - <strong>Can't</strong> <u>read</u> or <u>write</u> data that they did not supply <br/>
+                              </p>
+                            </div>
+                          </div>
+                          <div class="modal-body-user-role">
+                            <div class="modal-body-user-role-role">
+                              <span class="role role-admin margin-5px">A</span>
+                            </div>
+                            <div class="modal-body-user-role-description">
+                              <h2>Administrator</h2>
+                              <p>
+                              - <strong>Can</strong> <u>read</u> and <u>write</u> data <br/>
+                              - <strong>Can't</strong> add, <u>change</u> or <u>delete</u> users <br/>
+                              </p>
+                            </div>
+                          </div>
+                          <div class="modal-body-user-role">
+                            <div class="modal-body-user-role-role">
+                              <span class="role role-manager margin-5px">M</span>
+                            </div>
+                            <div class="modal-body-user-role-description">
+                              <h2>Manager</h2>
+                              <p>
+                              - <strong>Can</strong> <u>add</u>, <u>change</u> or <u>delete</u> users <br/>
+                              - <strong>Can't</strong> <u>read</u>, <u>write</u> or <u>change</u> users <br/>
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <span class="close button">CLOSE</span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -248,9 +261,9 @@
   </body>
   <script>
   // Get the modal
-  var modal = document.getElementById('myModal');
+  var modal = document.getElementById('about-roles-modal');
   // Get the button that opens the modal
-  var btn = document.getElementById("myBtn");
+  var btn = document.getElementById("about-roles-button");
   // Get the <span> element that closes the modal
   var span = document.getElementsByClassName("close")[0];
   // When the user clicks the button, open the modal 

@@ -308,19 +308,75 @@ footer {
 }
 /* Modal Content */
 .modal-content {
-	position: absolute;
+	position: relative;
 	background-color: #fefefe;
-	margin: auto;
+	/*margin: auto;*/
+	top: 25vh;
+	height: 45vh;
+	left: 20vw;
+	right: 20vw;
+	width: 60vw;
 	padding: 20px;
 	border: 1px solid #888;
-	top: 10vh;
+	overflow-y: auto;
+	font-size: 1rem;
+}
+.modal-header {
+	display: flex;
+	height: 25%;
+	align-items: center;
+	justify-content: center;
+}
+.modal-header-title {
+	display: flex;
+}
+.modal-body {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 55%;
+}
+.modal-body-content {
+	display: flex;
 	left: 10%;
+	right: 10%;
 	width: 80%;
-	height: 80vh;
+}
+.modal-body-user-role {
+	flex-shrink: 1;
+	flex-grow: 1;
+	flex-basis: 0;
+	margin: 10px;
+}
+.modal-body-user-role-role {
+	padding: 5px;
+	text-align: center;
+}
+.modal-body-user-role-description {
+	margin-top: 5px;
+	/*padding: 5px;*/
+	height: 70%;
+	background: #F3F3F3;
+	font-size: 0.8rem;
+	box-shadow: 0 2px 4px 0 rgba(0,0,0,.5);
 	overflow-y: auto;
 }
+.modal-body-user-role-description h2 {
+	font-size: 0.8rem;
+	text-align: center;
+}
+.modal-body-user-role-description p {
+	margin-left: 10%;
+	margin-right: 5%;
+}
+.modal-footer {
+	display: flex;
+	height: 20%;
+	justify-content: flex-end;
+	align-items: flex-end;
+}
 /* The Close Button */
-.close {
+/*.close {
 	color: #aaaaaa;
 	float: right;
 	font-size: 28px;
@@ -331,7 +387,7 @@ footer {
 	color: #000;
 	text-decoration: none;
 	cursor: pointer;
-}
+}*/
 
 /* Buttons */
 .button {
