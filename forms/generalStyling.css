@@ -1,0 +1,39 @@
+/* General */
+.text-center {
+	text-align: center;
+}
+.margin-5px {
+	margin: 5px;
+}
+.margin-side-30px {
+	margin-left: 30px;
+	margin-right: 30px;
+}
+.padding-10px {
+	padding: 10px;
+}
+.bold {
+	font-weight: bold;
+}
+.underlined {
+	text-decoration: underline;
+}
+
+/* Search bar */
+.search-bar {
+	margin: auto;
+	background: #F3F3F3;
+}
+
+/* Icons */
+.icon-medium {
+	padding-left: 5px;
+	padding-right: 5px;
+	font-size: 1rem;
+}
+.icon-large {
+	padding-left: 5px;
+	padding-right: 5px;
+	font-size: 1.25rem;
+}
+

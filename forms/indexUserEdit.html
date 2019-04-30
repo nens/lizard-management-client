@@ -6,13 +6,13 @@
       rel="stylesheet">
     <script src="https://use.fontawesome.com/43b6a67007.js"></script>
     <link href="https://use.fontawesome.com/43b6a67007.css" media="all" rel="stylesheet">
-    <link rel="stylesheet" href="layout_edit.css">
-    <!-- links for reference to Bootstrap (for Modal?) -->
- <!--    <link rel="stylesheet"  href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> -->
-<!--     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
-<!--     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/   popper.min.js" integrity="  sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"     crossorigin="anonymous"></script> -->
-<!--     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script> -->
-    <!-- end links for reference to Bootstrap -->
+    <link rel="stylesheet" href="layout.css">
+    <link rel="stylesheet" href="userEdit.css">
+    <link rel="stylesheet" href="modal.css">
+    <link rel="stylesheet" href="generalStyling.css">
+    <link rel="stylesheet" href="forms.css">
+    <link rel="stylesheet" href="buttons.css">
+    <link rel="stylesheet" href="roles.css">
     <!-- extra block for specific css references per Django template
       {% block extraheader %}
       {% endblock extraheader %}
@@ -29,14 +29,14 @@
             <div id="header-top-left">
               <img src="lizard.png" id="header-top-left-lizard-logo" alt="Lizard logo">
             </div>
-            <div id="header-top-center" class="button-padding">
+            <div id="header-top-center" class="padding-10px">
               <i class="fa fa-sort icon-medium"></i>Organisation
             </div>
             <div id="header-top-right">
-              <div id="header-top-right-user" class="button-padding">
+              <div id="header-top-right-user" class="padding-10px">
                 <i class="fa fa-user icon-medium"></i>User
               </div>
-              <div id="header-top-right-login" class="button-padding">
+              <div id="header-top-right-login" class="padding-10px">
                 <i class="fa fa-power-off icon-medium"></i>Log in
               </div>
             </div>
@@ -243,7 +243,7 @@
                                         <span class="bold">Can</span> <span class="underlined">add</span>, <span class="underlined">  change</  span> or <span class="underlined">delete</span> users
                                       </li>
                                       <li>
-                                        <span class="bold">Can't</span> <span class="underlined">read</span>, <span class="underlined"> write</  span> or <span class="underlined">change</span> users
+                                        <span class="bold">Can't</span> <span class="underlined">read</span>, <span class="underlined"> write</span> or <span class="underlined">change</span> users
                                       </li>
                                     </ul>
                                   </p>
@@ -260,6 +260,11 @@
                   </div>
                 </div>
               </div>
+              <div class="question-save">
+                <div class="question-main-filler-left">
+                </div>
+                <button class="button">SAVE</button>
+              </div>
             <!-- hardcoded questions stop here -->
           </div>
         <!--
@@ -272,10 +277,10 @@
         <div class="side-filler">
         </div>
         <div id="footer-content">
-          <div id="footer-left" class="button-padding">
+          <div id="footer-left" class="padding-10px">
             Documentation<i class="material-icons icon-large">local_library</i>
           </div>
-          <div id="footer-right" class="button-padding">
+          <div id="footer-right" class="padding-10px">
             <i class="material-icons icon-large">headset_mic</i>Support
           </div>
         </div>

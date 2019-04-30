@@ -7,13 +7,18 @@ html, body {
 }
 
 .wrapper {
-	min-height: 100%;
 	display: flex;
-	flex-direction: column;
+	flex-direction: row;
+	flex-wrap: wrap;
 }
 
 header, main, footer {
-	flex-shrink: 0;
+	flex: 1 0 100%;
+}
+.side-filler {
+	display: flex;
+	flex-grow: 5;
+	flex-shrink: 1;
 }
 
 header {
@@ -26,11 +31,6 @@ header {
 .header-top {
 	height: 5.7vh;
 	background: #009F86;
-}
-.side-filler {
-	display: flex;
-	flex-grow: 5;
-	flex-shrink: 1;
 }
 .header-top-content, .header-bottom-content {
 	display: flex;
@@ -62,14 +62,6 @@ header {
 #header-top-right {
 	justify-content: right;
 }
-.button-padding {
-	padding: 5px;
-}
-.icons-medium {
-	padding-left: 5px;
-	padding-right: 5px;
-	font-size: 1rem;
-}
 .header-bottom {
 	height: 6.8vh;
 	background: #2FCBAB;
@@ -80,16 +72,20 @@ header {
 }
 
 main {
-	flex-grow: 1;
 	display: flex;
+	height: 75vh;
+	color: black;
 }
 #main-content {
 	display: flex;
 	flex-basis: 0;
 	flex-grow: 16;
 	flex-shrink: 1;
-	justify-content: left;
-	padding-top: 10px;
+	padding-top: 40px;
+	flex-direction: row;
+	align-items: left;
+	flex-flow: row wrap;
+	align-content: flex-start;
 }
 
 footer {
@@ -116,9 +112,4 @@ footer {
 }
 #footer-right {
 	justify-content: right;
-}
-.icons-large {
-	padding-left: 5px;
-	padding-right: 5px;
-	font-size: 1.25rem;
 }

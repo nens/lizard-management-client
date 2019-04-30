@@ -1,0 +1,86 @@
+/* Role */
+.role {
+	display: inline-block;
+	height: 50px;
+	width: 50px;
+	line-height: 50px;
+	border-radius: 50%;
+	text-align: center;
+	font-size: 1.5rem;
+}
+.role-user {
+	background: #91D791;
+	color: white;
+}
+.role-user-inactive {
+	background: #D8F1D8;
+	color: white;
+}
+.role-user-none {
+	background: white;
+	color: white;
+}
+.role-supplier {
+	background: #8A79BA;
+	color: white;
+}
+.role-supplier-inactive {
+	background: #D6D0E7;
+	color: white;
+}
+.role-supplier-none {
+	background: white;
+	color: white;
+}
+.role-admin {
+	background: #FBE887;
+	color: white;
+}
+.role-admin-inactive {
+	background: #FEF7D5;
+	color: white;
+}
+.role-admin-none {
+	background: white;
+	color: white;
+}
+.role-manager {
+	background: #FC7878;
+	color: white;
+}
+.role-manager-inactive {
+	background: #FED0D0;
+	color: white;
+}
+.role-manager-none {
+	background: white;
+	color: white;
+}
+.role-add {
+	border: 2px dashed #A6A6A6;
+	background: white;
+	color: #A6A6A6;
+}
+.role-add-inactive {
+	border: 2px dashed #A6A6A6;
+	background: white;
+	color: white;
+}
+.role-add-none {
+	border: 2px dashed white;
+	background: white;
+	color: white;
+}
+.role-save {
+	vertical-align: top;/*moet beter kunnen, komt doordat de font-size van de save knop 1rem is ipv 1.5. Breedte van deze knop klopt ook niet.*/
+	height: 50px;
+	width: 54px;
+	line-height: 50px;
+	font-size: 1rem;
+	white-space: nowrap;
+	text-transform: uppercase;
+	background: #2FCBAB;
+	color: white;
+	cursor: pointer;
+	box-shadow: 0 2px 4px 0 rgba(0,0,0,.5);
+}
