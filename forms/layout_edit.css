@@ -384,10 +384,26 @@ footer {
 	font-size: 1rem;
 	white-space: nowrap;
 	text-transform: uppercase;
-	background: #2FCBAB;
+	background-color: #00cdab;
+	border-color: #00cdab;
 	color: white;
+	/*border-color: #2FCBAB;*/
 	cursor: pointer;
 	box-shadow: 0 2px 4px 0 rgba(0,0,0,.5);
+}
+.button:active {
+	background-color: #00a78b;
+	border-color: #009a80;
+	-webkit-box-shadow: 0 0 0 3px rgba(0, 205, 171, 0.5);
+			box-shadow: 0 0 0 3px rgba(0, 205, 171, 0.5);
+}
+.button:hover {
+	background-color: #00a78b;
+	border-color: #009a80;
+}
+.button:focus {
+	-webkit-box-shadow: 0 0 0 3px rgba(0, 205, 171, 0.5);
+			box-shadow: 0 0 0 3px rgba(0, 205, 171, 0.5);
 }
 .button-padding {
 	padding: 10px;
