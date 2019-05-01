@@ -1,0 +1,18 @@
+#main-top-content, #main-center-content {
+	display: flex;
+	flex: 1 0 100%;
+	justify-content: space-between;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+#main-top-left {
+	flex-grow: 1;
+}
+#main-top-right {
+	display: flex;
+	flex-grow: 2;
+	justify-content: flex-end;
+}
+#main-center-content {
+	flex-flow: row wrap;
+}
