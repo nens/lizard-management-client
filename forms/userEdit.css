@@ -57,3 +57,11 @@
 	flex-grow: 16;
 	margin-left: 10px;
 }
+
+.question-save {
+	flex: 1 0 100%;
+}
+.question-save .button {
+	margin-top: 7.5px;
+	margin-left: -15px;
+}
