@@ -13,6 +13,12 @@
 #main-top-left {
 	flex-grow: 1;
 }
+#main-top-left input[type="text"] {
+	position: relative;
+}
+input {
+	font-family: 'FontAwesome';/* This is for the placeholder */
+}
 #main-top-right {
 	display: flex;
 	flex-grow: 2;
