@@ -103,7 +103,9 @@ footer {
 #footer-left, #footer-right {
 	display: flex;
 	flex-grow: 1;
-	flex: 1 1 20em;
+	flex-grow: 1;
+	flex-shrink: 1;
+	flex-basis: 20em;
 	align-items: center;
 }
 #footer-left {
