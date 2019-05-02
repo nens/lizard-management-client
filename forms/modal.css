@@ -60,7 +60,7 @@
 .modal-body-user-role-description {
 	margin-top: 5px;
 	height: 70%;
-	background: #F3F3F3;
+	background-color: #F3F3F3;
 	font-size: 0.8rem;
 	box-shadow: 0 2px 4px 0 rgba(0,0,0,.5);
 	overflow-y: auto;

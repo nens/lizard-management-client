@@ -26,10 +26,10 @@
 	text-align: center;
 }
 .question-header-number-span {
-	background: #2FCBAB;
+	background-color: #2FCBAB;
 }
 .question-header-number-span-inactive {
-	background: #b9b9b9;
+	background-color: #b9b9b9;
 }
 .question-header-title {
 	display: flex;

@@ -9,66 +9,66 @@
 	font-size: 1.5rem;
 }
 .role-user {
-	background: #91D791;
+	background-color: #91D791;
 	color: white;
 }
 .role-user-inactive {
-	background: #D8F1D8;
+	background-color: #D8F1D8;
 	color: white;
 }
 .role-user-none {
-	background: white;
+	background-color: white;
 	color: white;
 }
 .role-supplier {
-	background: #8A79BA;
+	background-color: #8A79BA;
 	color: white;
 }
 .role-supplier-inactive {
-	background: #D6D0E7;
+	background-color: #D6D0E7;
 	color: white;
 }
 .role-supplier-none {
-	background: white;
+	background-color: white;
 	color: white;
 }
 .role-admin {
-	background: #FBE887;
+	background-color: #FBE887;
 	color: white;
 }
 .role-admin-inactive {
-	background: #FEF7D5;
+	background-color: #FEF7D5;
 	color: white;
 }
 .role-admin-none {
-	background: white;
+	background-color: white;
 	color: white;
 }
 .role-manager {
-	background: #FC7878;
+	background-color: #FC7878;
 	color: white;
 }
 .role-manager-inactive {
-	background: #FED0D0;
+	background-color: #FED0D0;
 	color: white;
 }
 .role-manager-none {
-	background: white;
+	background-color: white;
 	color: white;
 }
 .role-add {
 	border: 2px dashed #A6A6A6;
-	background: white;
+	background-color: white;
 	color: #A6A6A6;
 }
 .role-add-inactive {
 	border: 2px dashed #A6A6A6;
-	background: white;
+	background-color: white;
 	color: white;
 }
 .role-add-none {
 	border: 2px dashed white;
-	background: white;
+	background-color: white;
 	color: white;
 }
 .role-save {
@@ -79,7 +79,7 @@
 	font-size: 1rem;
 	white-space: nowrap;
 	text-transform: uppercase;
-	background: #2FCBAB;
+	background-color: #2FCBAB;
 	color: white;
 	cursor: pointer;
 	box-shadow: 0 2px 4px 0 rgba(0,0,0,.5);

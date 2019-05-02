@@ -30,7 +30,7 @@ header {
 }
 .header-top {
 	height: 5.7vh;
-	background: #009F86;
+	background-color: #009F86;
 }
 .header-top-content, .header-bottom-content {
 	display: flex;
@@ -64,7 +64,7 @@ header {
 }
 .header-bottom {
 	height: 6.8vh;
-	background: #2FCBAB;
+	background-color: #2FCBAB;
 	font-size: 1.2rem;
 }
 .header-bottom-content {
@@ -92,7 +92,7 @@ footer {
 	display: flex;
 	align-items: center;
 	height: 12.5vh;
-	background: #D8D8D8;
+	background-color: #D8D8D8;
 	color: #009F86;
 }
 #footer-content {
