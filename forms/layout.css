@@ -81,7 +81,6 @@ main {
 	flex-basis: 0;
 	flex-grow: 16;
 	flex-shrink: 1;
-	padding-top: 40px;
 	flex-direction: row;
 	align-items: left;
 	flex-flow: row wrap;

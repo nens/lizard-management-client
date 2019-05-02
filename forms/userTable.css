@@ -5,6 +5,9 @@
 	margin-top: 10px;
 	margin-bottom: 10px;
 }
+#main-top-content {
+	padding-top: 40px;
+}
 #main-top-left {
 	flex-grow: 1;
 }
