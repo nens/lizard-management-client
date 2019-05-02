@@ -5,71 +5,54 @@
 	width: 50px;
 	line-height: 50px;
 	border-radius: 50%;
-	text-align: center;
 	font-size: 1.5rem;
+	text-align: center;
+	color: white;
 }
-.role-user {
+.role-user.selected.not-editing,
+.role-user.selected.editing {
 	background-color: #91D791;
-	color: white;
 }
-.role-user-inactive {
+.role-user.not-selected.editing {
 	background-color: #D8F1D8;
-	color: white;
 }
-.role-user-none {
+.role-user.not-selected.not-editing {
 	background-color: white;
-	color: white;
 }
-.role-supplier {
+.role-supplier.selected.not-editing,
+.role-supplier.selected.editing {
 	background-color: #8A79BA;
-	color: white;
 }
-.role-supplier-inactive {
+.role-supplier.not-selected.editing {
 	background-color: #D6D0E7;
-	color: white;
 }
-.role-supplier-none {
+.role-supplier.not-selected.not-editing {
 	background-color: white;
-	color: white;
 }
-.role-admin {
+.role-admin.selected.not-editing,
+.role-admin.selected.editing {
 	background-color: #FBE887;
-	color: white;
 }
-.role-admin-inactive {
+.role-admin.not-selected.editing {
 	background-color: #FEF7D5;
-	color: white;
 }
-.role-admin-none {
+.role-admin.not-selected.not-editing {
 	background-color: white;
-	color: white;
 }
-.role-manager {
+.role-manager.selected.not-editing,
+.role-manager.selected.editing {
 	background-color: #FC7878;
-	color: white;
 }
-.role-manager-inactive {
+.role-manager.not-selected.editing {
 	background-color: #FED0D0;
-	color: white;
 }
-.role-manager-none {
+.role-manager.not-selected.not-editing {
 	background-color: white;
-	color: white;
 }
-.role-add {
+.role-edit {
 	border: 2px dashed #A6A6A6;
 	background-color: white;
 	color: #A6A6A6;
-}
-.role-add-inactive {
-	border: 2px dashed #A6A6A6;
-	background-color: white;
-	color: white;
-}
-.role-add-none {
-	border: 2px dashed white;
-	background-color: white;
-	color: white;
 }
 .role-save {
 	vertical-align: top;/*moet beter kunnen, komt doordat de font-size van de save knop 1rem is ipv 1.5. Breedte van deze knop klopt ook niet.*/
