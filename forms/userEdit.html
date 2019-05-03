@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="icon" href="favicon.ico">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+    <script src="https://use.fontawesome.com/43b6a67007.js"></script>
+    <link href="https://use.fontawesome.com/43b6a67007.css" media="all" rel="stylesheet">
+    <link rel="stylesheet" href="layout.css">
+    <link rel="stylesheet" href="generalStyling.css">
+    <!-- extra block for specific css references per Django template
+      {% block extraheader %} -->
+      <link rel="stylesheet" href="userEdit.css">
+      <link rel="stylesheet" href="modal.css">
+      <link rel="stylesheet" href="forms.css">
+      <link rel="stylesheet" href="buttons.css">
+      <link rel="stylesheet" href="roles.css">
+      <script src="modal.js"></script>
+    <!--  {% endblock extraheader %}
+    -->
+    <title>Lizard management</title>
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <div class="header-top">
+          <div class="side-filler">
+          </div>
+          <div class="header-top-content">
+            <div id="header-top-left">
+              <img src="lizard.png" id="header-top-left-lizard-logo" alt="Lizard logo">
+            </div>
+            <div id="header-top-center">
+              <i class="fa fa-sort icon-medium"></i>Organisation
+            </div>
+            <div id="header-top-right">
+              <div id="header-top-right-user">
+                <i class="fa fa-user icon-medium"></i>User
+              </div>
+              <div id="header-top-right-login">
+                <i class="fa fa-power-off icon-medium"></i>Log in
+              </div>
+            </div>
+          </div>
+          <div class="side-filler">
+          </div>
+        </div>
+        <div class="header-bottom">
+          <div class="side-filler">
+          </div>
+          <div class="header-bottom-content">
+            Lizard Management / User Management
+          </div>
+          <div class="side-filler">
+          </div>
+        </div>
+      </header>
+      <main>
+        <div class="side-filler">
+        </div>
+        <!-- extra block for main content
+          {% block mainContent %}
+        -->
+          <div id="main-content">
+            <!-- {% block question %} -->
+              <div class="question">
+                <div class="question-header">
+                  <div class="question-header-number">
+                    <span class="question-header-number-span">
+                      1 <!-- Question number -->
+                    </span>
+                  </div>
+                  <div class="question-header-title">
+                    Username <!-- Question title -->
+                    <span class="checkmark">
+                      ✔ <!-- Question validates? -->
+                    </span>
+                  </div>
+                </div>
+                <div class="question-main">
+                  <div class="question-main-filler-left">
+                  </div>
+                  <div class="question-main-content">
+                    <input type="text" name="username" value="Lirry Pinter" class="form-input-text">
+                    <!-- question value goes in the input. Lirry Pinter is now shown as an example -->
+                  </div>
+                </div>
+              </div>
+            <!-- {% endblock question %} -->
+            <!-- other questions are hardcoded below instead of by question block by lack of for loop -->
+              <div class="question">
+                <div class="question-header">
+                  <div class="question-header-number">
+                    <span class="question-header-number-span-inactive">
+                      2
+                    </span>
+                  </div>
+                  <span class="question-header-title">
+                    Email address
+                  </span>
+                </div>
+                <div class="question-main">
+                  <div class="question-main-filler-left">
+                  </div>
+                  <div class="question-main-content">
+                    <input type="text" name="username" value="gebruiker.een@gmail.com" class="form-input-text">
+                  </div>
+                </div>
+              </div>
+              <div class="question">
+                <div class="question-header">
+                  <div class="question-header-number">
+                    <span class="question-header-number-span-inactive">
+                      3
+                    </span>
+                  </div>
+                  <span class="question-header-title">
+                    First name
+                  </span>
+                </div>
+                <div class="question-main">
+                  <div class="question-main-filler-left">
+                  </div>
+                  <div class="question-main-content">
+                    <input type="text" name="username" value="Lirry" class="form-input-text">
+                  </div>
+                </div>
+              </div>
+              <div class="question">
+                <div class="question-header">
+                  <div class="question-header-number">
+                    <span class="question-header-number-span-inactive">
+                      4
+                    </span>
+                  </div>
+                  <span class="question-header-title">
+                    Last name
+                  </span>
+                </div>
+                <div class="question-main">
+                  <div class="question-main-filler-left">
+                  </div>
+                  <div class="question-main-content">
+                    <input type="text" name="username" value="Pinter" class="form-input-text">
+                  </div>
+                </div>
+              </div>
+              <div class="question">
+                <div class="question-header">
+                  <div class="question-header-number">
+                    <span class="question-header-number-span-inactive">
+                      5
+                    </span>
+                  </div>
+                  <span class="question-header-title">
+                    Roles
+                  </span>
+                </div>
+                <div class="question-main">
+                  <div class="question-main-filler-left">
+                  </div>
+                  <div class="question-main-content">
+                    <span class="role role-user selected not-editing margin-5px">U</span>
+                    <span class="role role-supplier selected not-editing margin-5px">S</span>
+                    <span class="role role-admin not-selected editing margin-5px">A</span>
+                    <span class="role role-manager not-selected editing margin-5px">M</span>
+                    <button id="js-open-modal-page-blocker-button" onclick="openModal()" class="margin-side-30px">
+                      Need help?
+                    </button>
+                    <!-- The Modal -->
+                      <div id="js-modal-page-blocker" onclick="closeModal()" class="modal-page-blocker not-shown">
+                        <!-- Modal content -->
+                        <div class="modal">
+                          <div class="modal-header">
+                            <div class="modal-header-title">
+                              <h2>About roles</h2>
+                            </div>
+                          </div>
+                          <div class="modal-body">
+                            <div class="modal-body-content">
+                              <div class="modal-body-user-role">
+                                <div class="modal-body-user-role-role">
+                                  <span class="role role-user selected not-editing margin-5px">U</span>
+                                </div>
+                                <div class="modal-body-user-role-description">
+                                  <h2>User</h2>
+                                  <p>
+                                    <ul>
+                                      <li>
+                                        <span class="bold">Can</span> <span class="underlined">read</span> data
+                                      </li>
+                                      <li>
+                                        <span class="bold">Can't</span> <span class="underlined">write</span> or <span class="underlined">    change</span> data
+                                      </li>
+                                    </ul>
+                                  </p>
+                                </div>
+                              </div>
+                              <div class="modal-body-user-role">
+                                <div class="modal-body-user-role-role">
+                                  <span class="role role-supplier selected not-editing margin-5px">S</span>
+                                </div>
+                                <div class="modal-body-user-role-description">
+                                  <h2>Supplier</h2>
+                                  <p>
+                                    <ul>
+                                      <li>
+                                        <span class="bold">Can</span> supply (<span class="underlined">write</span>) data
+                                      </li>
+                                      <li>
+                                        <span class="bold">Can't</span> <span class="underlined">read</span> or <span class="underlined"><  write>  </write></span> data that they did not supply
+                                      </li>
+                                    </ul>
+                                  </p>
+                                </div>
+                              </div>
+                              <div class="modal-body-user-role">
+                                <div class="modal-body-user-role-role">
+                                  <span class="role role-admin selected not-editing margin-5px">A</span>
+                                </div>
+                                <div class="modal-body-user-role-description">
+                                  <h2>Administrator</h2>
+                                  <p>
+                                    <ul>
+                                      <li>
+                                        <span class="bold">Can</span> <span class="underlined">read</span> and <span class="underlined">  write</ span> data
+                                      </li>
+                                      <li>
+                                        <span class="bold">Can't</span> add, <span class="underlined">change</span> or <span class="  underlined" >delete</span> users
+                                      </li>
+                                    </ul>
+                                  </p>
+                                </div>
+                              </div>
+                              <div class="modal-body-user-role">
+                                <div class="modal-body-user-role-role">
+                                  <span class="role role-manager selected not-editing margin-5px">M</span>
+                                </div>
+                                <div class="modal-body-user-role-description">
+                                  <h2>Manager</h2>
+                                  <p>
+                                    <ul>
+                                      <li>
+                                        <span class="bold">Can</span> <span class="underlined">add</span>, <span class="underlined">  change</  span> or <span class="underlined">delete</span> users
+                                      </li>
+                                      <li>
+                                        <span class="bold">Can't</span> <span class="underlined">read</span>, <span class="underlined"> write</span> or <span class="underlined">change</span> users
+                                      </li>
+                                    </ul>
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="modal-footer">
+                            <button id="js-close-modal-page-blocker-button" onclick="closeModal()" class="button button-shadow">CLOSE</button>
+                          </div>
+                        </div>
+                      </div>
+                    <!-- Modal stops here -->
+                  </div>
+                </div>
+              </div>
+              <div class="question-save">
+                <div class="question-header">
+                  <div class="question-header-number">
+                  </div>
+                  <span class="question-header-title">
+                  </span>
+                </div>
+                <div class="question-main">
+                  <div class="question-main-filler-left">
+                  </div>
+                  <div class="question-main-content">
+                    <a href="userTable.html">
+                      <button class="button button-shadow">SAVE</button>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            <!-- hardcoded questions stop here -->
+          </div>
+        <!--
+          {% endblock mainContent %}
+        -->
+        <div class="side-filler">
+        </div>
+      </main>
+      <footer>
+        <div class="side-filler">
+        </div>
+        <div id="footer-content">
+          <div id="footer-left">
+            Documentation<i class="material-icons icon-large">local_library</i>
+          </div>
+          <div id="footer-right">
+            <i class="material-icons icon-large">headset_mic</i>Support
+          </div>
+        </div>
+        <div class="side-filler">
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

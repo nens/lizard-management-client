@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="icon" href="favicon.ico">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+    <script src="https://use.fontawesome.com/43b6a67007.js"></script>
+    <link href="https://use.fontawesome.com/43b6a67007.css" media="all" rel="stylesheet">
+    <link rel="stylesheet" href="layout.css">
+    <link rel="stylesheet" href="generalStyling.css">
+    <!-- extra block for specific css references per Django template
+      {% block extraheader %} -->
+      <link rel="stylesheet" href="userTable.css">
+      <link rel="stylesheet" href="table.css">
+      <link rel="stylesheet" href="buttons.css">
+      <link rel="stylesheet" href="searchBox.css">
+      <link rel="stylesheet" href="roles.css">
+    <!-- {% endblock extraheader %}
+    -->
+    <title>Lizard management</title>
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <div class="header-top">
+          <div class="side-filler">
+          </div>
+          <div class="header-top-content">
+            <div id="header-top-left">
+              <img src="lizard.png" id="header-top-left-lizard-logo" alt="Lizard logo">
+            </div>
+            <div id="header-top-center">
+              <i class="fa fa-sort icon-medium"></i>Organisation
+            </div>
+            <div id="header-top-right">
+              <div id="header-top-right-user">
+                <i class="fa fa-user icon-medium"></i>User
+              </div>
+              <div id="header-top-right-login">
+                <i class="fa fa-power-off icon-medium"></i>Log in
+              </div>
+            </div>
+          </div>
+          <div class="side-filler">
+          </div>
+        </div>
+        <div class="header-bottom">
+          <div class="side-filler">
+          </div>
+          <div class="header-bottom-content">
+            Lizard Management / User Management
+          </div>
+          <div class="side-filler">
+          </div>
+        </div>
+      </header>
+      <main>
+        <div class="side-filler">
+        </div>
+        <!-- extra block for main content
+          {% block mainContent %}
+        -->
+        <div id="main-content">
+          <div id="main-top-content">
+            <div id="main-top-left">
+              <div class="search-box">
+                <i class="fa fa-search search-box-icon icon-large"></i>
+                <input type="text" name="">
+              </div>
+            </div>
+            <div id="main-top-right">
+              <a href="userEdit.html">
+                <button class="button button-shadow">
+                  NIEUWE GEBRUIKER
+                </button>
+              </a>
+            </div>
+          </div>
+          <div id="main-center-content">
+            <!-- table -->
+            <table>
+              <thead>
+                <th>User</th>
+                <th>Roles</th>
+                <th>Email</th>
+                <th></th>
+              </thead>
+
+              <!--{% for user in users %}-->
+              <tr>
+                <td>
+                  lirry.pinter (you)
+                </td>
+                <td>
+                  <span class="role role-user selected not-editing">U</span>
+                  <span class="role role-supplier selected not-editing">S</span>
+                  <span class="role role-admin selected not-editing">A</span>
+                  <span class="role role-manager selected not-editing">M</span>
+                  <span class="role role-edit">+</span>
+                </td>
+                <td>
+                  gebruiker.een@gmail.com
+                </td>
+                <td class="text-center">
+                  <a href="userEdit.html">
+                    <i class="fa fa-ellipsis-v icon-medium"></i>
+                  </a>
+                </td>
+              </tr>
+              <!-- {% endfor %} -->
+              <!-- hard-coded users before using the for loop -->
+              <tr>
+                <td>
+                  emiel.verstegen
+                </td>
+                <td>
+                  <span class="role role-user selected not-editing">U</span>
+                  <span class="role role-supplier selected not-editing">S</span>
+                  <span class="role role-admin selected not-editing">A</span>
+                  <span class="role role-manager not-selected not-editing">M</span>
+                  <span class="role role-edit">+</span>
+                </td>
+                <td>
+                  gebruiker.twee@gmail.com
+                </td>
+                <td class="text-center">
+                  <i class="fa fa-ellipsis-h icon-medium"></i>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  govert.termors
+                </td>
+                <td>
+                  <span class="role role-user not-selected editing">U</span>
+                  <span class="role role-supplier not-selected editing">S</span>
+                  <span class="role role-admin not-selected editing">A</span>
+                  <span class="role role-manager not-selected editing">M</span>
+                  <span class="role role-save button-shadow">SAVE</span>
+                </td>
+                <td>
+                  gebruiker.drie@gmail.com
+                </td>
+                <td class="text-center">
+                  <i class="fa fa-ellipsis-h icon-medium"></i>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  tom.deboer
+                </td>
+                <td>
+                  <span class="role role-user not-selected not-editing">U</span>
+                  <span class="role role-supplier selected not-editing">S</span>
+                  <span class="role role-admin not-selected not-editing">A</span>
+                  <span class="role role-manager not-selected not-editing">M</span>
+                  <span class="role role-edit">+</span>
+                </td>
+                <td>
+                  gebruiker.vier@gmail.com
+                </td>
+                <td class="text-center">
+                  <i class="fa fa-ellipsis-h icon-medium"></i>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  remco.gerlich
+                </td>
+                <td>
+                  <span class="role role-user selected not-editing">U</span>
+                  <span class="role role-supplier not-selected not-editing">S</span>
+                  <span class="role role-admin not-selected not-editing">A</span>
+                  <span class="role role-manager not-selected not-editing">M</span>
+                  <span class="role role-edit">+</span>
+                </td>
+                <td>
+                  gebruiker.vijf@gmail.com
+                </td>
+                <td class="text-center">
+                  <i class="fa fa-ellipsis-h icon-medium"></i>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  casper.vdw
+                </td>
+                <td>
+                  <span class="role role-user not-selected not-editing">U</span>
+                  <span class="role role-supplier not-selected not-editing">S</span>
+                  <span class="role role-admin not-selected not-editing">A</span>
+                  <span class="role role-manager not-selected not-editing">M</span>
+                  <span class="role role-edit">+</span>
+                </td>
+                <td>
+                  gebruiker.zes@gmail.com
+                </td>
+                <td class="text-center">
+                  <i class="fa fa-ellipsis-h icon-medium"></i>
+                </td>
+              </tr>
+              <!-- end hardcoded users before using the for loop -->
+            </table>
+            <!-- end table -->
+          </div>
+        </div>
+        <!--
+          {% endblock mainContent %}
+        -->
+        <div class="side-filler">
+        </div>
+      </main>
+      <footer>
+        <div class="side-filler">
+        </div>
+        <div id="footer-content">
+          <div id="footer-left">
+            Documentation<i class="material-icons icon-large">local_library</i>
+          </div>
+          <div id="footer-right">
+            <i class="material-icons icon-large">headset_mic</i>Support
+          </div>
+        </div>
+        <div class="side-filler">
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

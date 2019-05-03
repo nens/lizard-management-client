@@ -1,0 +1,30 @@
+/* Buttons */
+.button {
+	padding: 10px;
+	font-size: 1rem;
+	white-space: nowrap;
+	text-transform: uppercase;
+	background-color: #00cdab;
+	border-color: #00cdab;
+	color: white;
+	cursor: pointer;
+}
+.button:active {
+	background-color: #00a78b;
+	border-color: #009a80;
+}
+.button:hover {
+	background-color: #00a78b;
+	border-color: #009a80;
+}
+.button-shadow {
+	box-shadow: 0 2px 4px 0 rgba(0,0,0,.5);
+}
+.button-shadow:active {
+	-webkit-box-shadow: 0 0 0 3px rgba(0, 205, 171, 0.5);
+			box-shadow: 0 0 0 3px rgba(0, 205, 171, 0.5);
+}
+.button-shadow:focus {
+	-webkit-box-shadow: 0 0 0 3px rgba(0, 205, 171, 0.5);
+			box-shadow: 0 0 0 3px rgba(0, 205, 171, 0.5);
+}

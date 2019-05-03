@@ -7,13 +7,20 @@ html, body {
 }
 
 .wrapper {
-	min-height: 100%;
 	display: flex;
-	flex-direction: column;
+	flex-direction: row;
+	flex-wrap: wrap;
 }
 
 header, main, footer {
+	flex-grow: 1;
 	flex-shrink: 0;
+	flex-basis: 100%;
+}
+.side-filler {
+	display: flex;
+	flex-grow: 5;
+	flex-shrink: 1;
 }
 
 header {
@@ -25,12 +32,7 @@ header {
 }
 .header-top {
 	height: 5.7vh;
-	background: #009F86;
-}
-.side-filler {
-	display: flex;
-	flex-grow: 5;
-	flex-shrink: 1;
+	background-color: #009F86;
 }
 .header-top-content, .header-bottom-content {
 	display: flex;
@@ -44,7 +46,9 @@ header {
 #header-top-left, #header-top-center, #header-top-right {
 	display: flex;
 	flex-grow: 1;
-	flex: 1 1 20em;
+	flex-grow: 1;
+	flex-shrink: 1;
+	flex-basis: 20em;
 	align-items: center;
 }
 #header-top-left {
@@ -57,22 +61,21 @@ header {
 	height: 7.5%;
 }
 #header-top-center {
+	padding: 5px;
 	justify-content: center;
 }
 #header-top-right {
 	justify-content: right;
 }
-.button-padding {
+#header-top-right-user {
 	padding: 5px;
 }
-.icons-medium {
-	padding-left: 5px;
-	padding-right: 5px;
-	font-size: 1rem;
+#header-top-right-login {
+	padding: 5px;
 }
 .header-bottom {
 	height: 6.8vh;
-	background: #2FCBAB;
+	background-color: #2FCBAB;
 	font-size: 1.2rem;
 }
 .header-bottom-content {
@@ -80,23 +83,26 @@ header {
 }
 
 main {
-	flex-grow: 1;
 	display: flex;
+	height: 75vh;
+	color: black;
 }
 #main-content {
 	display: flex;
 	flex-basis: 0;
 	flex-grow: 16;
 	flex-shrink: 1;
-	justify-content: left;
-	padding-top: 10px;
+	flex-direction: row;
+	align-items: left;
+	flex-flow: row wrap;
+	align-content: flex-start;
 }
 
 footer {
 	display: flex;
 	align-items: center;
 	height: 12.5vh;
-	background: #D8D8D8;
+	background-color: #D8D8D8;
 	color: #009F86;
 }
 #footer-content {
@@ -108,17 +114,15 @@ footer {
 #footer-left, #footer-right {
 	display: flex;
 	flex-grow: 1;
-	flex: 1 1 20em;
+	flex-shrink: 1;
+	flex-basis: 20em;
 	align-items: center;
 }
 #footer-left {
+	padding: 5px;
 	justify-content: left;
 }
 #footer-right {
+	padding: 5px;
 	justify-content: right;
-}
-.icons-large {
-	padding-left: 5px;
-	padding-right: 5px;
-	font-size: 1.25rem;
 }
