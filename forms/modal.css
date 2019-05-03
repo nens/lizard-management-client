@@ -1,7 +1,6 @@
 /* Modal */
 /* The Modal (background) */
 .modal-page-blocker {
-	display: none;
 	position: fixed;
 	z-index: 1; /* Sit on top */
 	left: 0;

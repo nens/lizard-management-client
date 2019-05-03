@@ -61,10 +61,17 @@ header {
 	height: 7.5%;
 }
 #header-top-center {
+	padding: 5px;
 	justify-content: center;
 }
 #header-top-right {
 	justify-content: right;
+}
+#header-top-right-user {
+	padding: 5px;
+}
+#header-top-right-login {
+	padding: 5px;
 }
 .header-bottom {
 	height: 6.8vh;
@@ -112,8 +119,10 @@ footer {
 	align-items: center;
 }
 #footer-left {
+	padding: 5px;
 	justify-content: left;
 }
 #footer-right {
+	padding: 5px;
 	justify-content: right;
 }
