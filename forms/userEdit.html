@@ -15,6 +15,7 @@
       <link rel="stylesheet" href="forms.css">
       <link rel="stylesheet" href="buttons.css">
       <link rel="stylesheet" href="roles.css">
+      <script src="modal.js"></script>
     <!--  {% endblock extraheader %}
     -->
     <title>Lizard management</title>
@@ -163,11 +164,11 @@
                     <span class="role role-supplier selected not-editing margin-5px">S</span>
                     <span class="role role-admin not-selected editing margin-5px">A</span>
                     <span class="role role-manager not-selected editing margin-5px">M</span>
-                    <button id="about-roles-button" class="margin-side-30px">
+                    <button id="about-roles-button" onclick="openModal()" class="margin-side-30px">
                       Need help?
                     </button>
                     <!-- The Modal -->
-                      <div id="about-roles-modal" class="modal-page-blocker">
+                      <div id="about-roles-modal" onclick="closeModal()" class="modal-page-blocker">
                         <!-- Modal content -->
                         <div class="modal">
                           <div class="modal-header">
@@ -252,7 +253,7 @@
                             </div>
                           </div>
                           <div class="modal-footer">
-                            <button id="modal-close-button" class="button button-shadow">CLOSE</button>
+                            <button id="modal-close-button" onclick="closeModal()" class="button button-shadow">CLOSE</button>
                           </div>
                         </div>
                       </div>
@@ -301,26 +302,4 @@
       </footer>
     </div>
   </body>
-  <script>
-    // Get the modal
-    var modal = document.getElementById('about-roles-modal');
-    // Get the button that opens the modal
-    var buttonAboutRoles = document.getElementById("about-roles-button");
-    // Get the <span> element that closes the modal
-    var buttonModalClose = document.getElementById("modal-close-button");
-    // When the user clicks the button, open the modal
-    buttonAboutRoles.onclick = function() {
-      modal.style.display = "block";
-    }
-    // When the user clicks on <button> CLOSE, close the modal
-    buttonModalClose.onclick = function() {
-      modal.style.display = "none";
-    }
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function(event) {
-      if (event.target == modal) {
-        modal.style.display = "none";
-      }
-    }
-  </script>
 </html>
