@@ -8,13 +8,14 @@
     <link href="https://use.fontawesome.com/43b6a67007.css" media="all" rel="stylesheet">
     <link rel="stylesheet" href="layout.css">
     <link rel="stylesheet" href="generalStyling.css">
-    <link rel="stylesheet" href="userTable.css">
-    <link rel="stylesheet" href="buttons.css">
-    <link rel="stylesheet" href="roles.css">
-    <link rel="stylesheet" href="table.css">
     <!-- extra block for specific css references per Django template
-      {% block extraheader %}
-      {% endblock extraheader %}
+      {% block extraheader %} -->
+      <link rel="stylesheet" href="userTable.css">
+      <link rel="stylesheet" href="table.css">
+      <link rel="stylesheet" href="buttons.css">
+      <link rel="stylesheet" href="searchBox.css">
+      <link rel="stylesheet" href="roles.css">
+    <!-- {% endblock extraheader %}
     -->
     <title>Lizard management</title>
   </head>
@@ -62,7 +63,10 @@
         <div id="main-content">
           <div id="main-top-content">
             <div id="main-top-left">
-              <input type="text" class="search-bar padding-10px" name="" placeholder="&#61442">
+              <div class="search-box">
+                <i class="fa fa-search search-box-icon icon-large"></i>
+                <input type="text" name="">
+              </div>
             </div>
             <div id="main-top-right">
               <a href="userEdit.html">

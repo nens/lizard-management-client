@@ -1,29 +1,23 @@
+/* UserTable */
 #main-top-content, #main-center-content {
 	display: flex;
-	flex-grow: 1;
-	flex-shrink: 0;
 	flex-basis: 100%;
 	justify-content: space-between;
 	margin-top: 10px;
 	margin-bottom: 10px;
 }
 #main-top-content {
+	display: flex;
+	flex-direction: row;
+	align-items: flex-start;
 	padding-top: 40px;
 }
 #main-top-left {
-	flex-grow: 1;
-}
-#main-top-left input[type="text"] {
-	position: relative;
-}
-input {
-	font-family: 'FontAwesome';/* This is for the placeholder */
+	display: flex;
+	flex-direction: row;
+	align-items: flex-start;
 }
 #main-top-right {
 	display: flex;
-	flex-grow: 2;
 	justify-content: flex-end;
-}
-#main-center-content {
-	flex-flow: row wrap;
 }

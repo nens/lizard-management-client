@@ -19,12 +19,6 @@
 	text-decoration: underline;
 }
 
-/* Search bar */
-.search-bar {
-	margin: auto;
-	background-color: #F3F3F3;
-}
-
 /* Icons */
 .icon-medium {
 	padding-left: 5px;
@@ -36,4 +30,3 @@
 	padding-right: 5px;
 	font-size: 1.25rem;
 }
-
