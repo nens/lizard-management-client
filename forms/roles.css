@@ -67,3 +67,7 @@
 	cursor: pointer;
 	box-shadow: 0 2px 4px 0 rgba(0,0,0,.5);
 }
+
+/* roles as checkboxed with
+https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_custom_checkbox
+check if id.checked == true */
