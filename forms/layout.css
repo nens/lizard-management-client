@@ -27,6 +27,9 @@ header {
 	color: white;
 }
 header a {
+	padding-left: 5px;
+	padding-right: 5px;
+	color: white;
 	text-decoration: none;
 }
 .header-top, .header-bottom {
@@ -109,6 +112,8 @@ footer {
 	color: #009F86;
 }
 footer a {
+	padding-left: 5px;
+	padding-right: 5px;
 	text-decoration: none;
 	color: #009F86;
 }
