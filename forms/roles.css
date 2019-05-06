@@ -73,60 +73,44 @@ https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_custom_customCheck
 check if id.checked == true */
 /* The container */
 .container {
-  display: flex;
-  position: relative;
-  padding-left: 35px;
-  margin-bottom: 12px;
-  cursor: pointer;
-  font-size: 22px;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+	display: flex;
+	cursor: pointer;
+	font-size: 22px;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
 }
 /* Hide the browser's default customCheckmark */
 .container input {
-  position: absolute;
-  opacity: 0;
-  cursor: pointer;
-  height: 0;
-  width: 0;
+	position: absolute;
+	opacity: 0;
+	cursor: pointer;
+	height: 0;
+	width: 0;
 }
 /* Create a custom customCheckmark */
 .customCheckmark {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 25px;
-  width: 25px;
-  background-color: #eee;
+	background-color: #D8F1D8;
+	color: white;
+	height: 50px;
+	width: 50px;
+	line-height: 50px;
+	border-radius: 50%;
+	font-size: 1.5rem;
+	text-align: center;
 }
 /* On mouse-over, add a grey background color */
 .container:hover input ~ .customCheckmark {
-  background-color: #ccc;
+	background-color: green;
+	/*background-color: #ccc;*/
+}
+/* On mouse-over, add a grey background color */
+.container:hover input:checked ~ .customCheckmark {
+	background-color: #ccc;
+	/*background-color: green;*/
 }
 /* When the customCheckmark is checked, add a blue background */
 .container input:checked ~ .customCheckmark {
-  background-color: #2196F3;
+	background-color: #91D791;
 }
-/* Create the customCheckmark/indicator (hidden when not checked) */
-.customCheckmark:after {
-  content: "";
-  position: absolute;
-  display: none;
-}
-/* Show the customCheckmark when checked */
-.container input:checked ~ .customCheckmark:after {
-  display: block;
-}
-/* Style the customCheckmark/indicator */
-.container .customCheckmark:after {
-  left: 9px;
-  top: 5px;
-  width: 5px;
-  height: 10px;
-  border: solid white;
-  border-width: 0 3px 3px 0;
-  -webkit-transform: rotate(45deg);
-  -ms-transform: rotate(45deg);
-  transform: rotate(45deg);
