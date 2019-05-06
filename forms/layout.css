@@ -46,7 +46,7 @@ header a {
 .header-top-content {
 	justify-content: center;
 }
-#header-top-left, #header-top-center, #header-top-right {
+.header-top-left, .header-top-center, .header-top-right {
 	display: flex;
 	flex-grow: 1;
 	flex-grow: 1;
@@ -54,26 +54,26 @@ header a {
 	flex-basis: 20em;
 	align-items: center;
 }
-#header-top-left {
+.header-top-left {
 	justify-content: left;
 	align-items: start;
 }
-#header-top-left-lizard-logo {
+.header-top-left-lizard-logo {
 	position: absolute;
 	top: 0.275%;
 	height: 7.5%;
 }
-#header-top-center {
+.header-top-center {
 	padding: 5px;
 	justify-content: center;
 }
-#header-top-right {
+.header-top-right {
 	justify-content: right;
 }
-#header-top-right-user {
+.header-top-right-user {
 	padding: 5px;
 }
-#header-top-right-login {
+.header-top-right-login {
 	padding: 5px;
 }
 .header-bottom {
@@ -90,7 +90,7 @@ main {
 	height: 75vh;
 	color: black;
 }
-#main-content {
+.main-content {
 	display: flex;
 	flex-basis: 0;
 	flex-grow: 16;
@@ -112,24 +112,24 @@ footer a {
 	text-decoration: none;
 	color: #009F86;
 }
-#footer-content {
+.footer-content {
 	display: flex;
 	flex-basis: 0;
 	flex-grow: 16;
 	flex-shrink: 1;
 }
-#footer-left, #footer-right {
+.footer-left, .footer-right {
 	display: flex;
 	flex-grow: 1;
 	flex-shrink: 1;
 	flex-basis: 20em;
 	align-items: center;
 }
-#footer-left {
+.footer-left {
 	padding: 5px;
 	justify-content: left;
 }
-#footer-right {
+.footer-right {
 	padding: 5px;
 	justify-content: right;
 }

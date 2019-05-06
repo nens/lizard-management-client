@@ -1,23 +1,23 @@
 /* UserTable */
-#main-top-content, #main-center-content {
+.main-top-content, .main-center-content {
 	display: flex;
 	flex-basis: 100%;
 	justify-content: space-between;
 	margin-top: 10px;
 	margin-bottom: 10px;
 }
-#main-top-content {
+.main-top-content {
 	display: flex;
 	flex-direction: row;
 	align-items: flex-start;
 	padding-top: 40px;
 }
-#main-top-left {
+.main-top-left {
 	display: flex;
 	flex-direction: row;
 	align-items: flex-start;
 }
-#main-top-right {
+.main-top-right {
 	display: flex;
 	justify-content: flex-end;
 }
