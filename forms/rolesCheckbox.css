@@ -22,7 +22,6 @@ check if id.checked == true */
 }
 /* Create a custom role-content */
 .role-content {
-	background-color: #D8F1D8;
 	color: white;
 	height: 50px;
 	width: 50px;
@@ -31,17 +30,28 @@ check if id.checked == true */
 	font-size: 1.5rem;
 	text-align: center;
 }
-/* On mouse-over, add a grey background color */
-.role:hover input ~ .role-content {
-	background-color: green;
-	/*background-color: #ccc;*/
+.role-content.user-role {
+	background-color: #D8F1D8;
 }
-/* On mouse-over, add a grey background color */
-.role:hover input:checked ~ .role-content {
-	background-color: #ccc;
-	/*background-color: green;*/
+.role-content.supplier-role {
+	background-color: #D6D0E7;
+}
+.role-content.admin-role {
+	background-color: #FEF7D5;
+}
+.role-content.manager-role {
+	background-color: #FED0D0;
 }
 /* When the role-content is checked, add a blue background */
-.role input:checked ~ .role-content {
+.role input:checked ~ .user-role {
 	background-color: #91D791;
+}
+.role input:checked ~ .supplier-role {
+	background-color: #8A79BA;
+}
+.role input:checked ~ .admin-role {
+	background-color: #FBE887;
+}
+.role input:checked ~ .manager-role {
+	background-color: #FC7878;
 }

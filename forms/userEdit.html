@@ -163,19 +163,19 @@
                   <div class="question-main-content">
                     <label class="role">
                       <input type="checkbox" checked="checked">
-                      <span class="role-content">U</span>
+                      <span class="role-content user-role">U</span>
                     </label>
                     <label class="role">
                       <input type="checkbox" checked="checked">
-                      <span class="role-content">S</span>
+                      <span class="role-content supplier-role">S</span>
                     </label>
                     <label class="role">
                       <input type="checkbox" checked="checked">
-                      <span class="role-content">A</span>
+                      <span class="role-content admin-role">A</span>
                     </label>
                     <label class="role">
                       <input type="checkbox" checked="checked">
-                      <span class="role-content">M</span>
+                      <span class="role-content manager-role">M</span>
                     </label>
                     <button id="js-open-modal-page-blocker-button" onclick="openModal()" class="margin-side-30px">
                       Need help?
@@ -193,7 +193,10 @@
                             <div class="modal-body-content">
                               <div class="modal-body-user-role">
                                 <div class="modal-body-user-role-role">
-                                  <span class="role role-user selected not-editing margin-5px">U</span>
+                                  <label class="role">
+                                    <input type="checkbox" checked="checked" disabled>
+                                    <span class="role-content user-role" disabled>U</span>
+                                  </label>
                                 </div>
                                 <div class="modal-body-user-role-description">
                                   <h2>User</h2>
@@ -211,7 +214,10 @@
                               </div>
                               <div class="modal-body-user-role">
                                 <div class="modal-body-user-role-role">
-                                  <span class="role role-supplier selected not-editing margin-5px">S</span>
+                                  <label class="role">
+                                    <input type="checkbox" checked="checked" disabled>
+                                    <span class="role-content supplier-role">S</span>
+                                  </label>
                                 </div>
                                 <div class="modal-body-user-role-description">
                                   <h2>Supplier</h2>
@@ -229,7 +235,10 @@
                               </div>
                               <div class="modal-body-user-role">
                                 <div class="modal-body-user-role-role">
-                                  <span class="role role-admin selected not-editing margin-5px">A</span>
+                                  <label class="role">
+                                    <input type="checkbox" checked="checked" disabled>
+                                    <span class="role-content admin-role">A</span>
+                                  </label>
                                 </div>
                                 <div class="modal-body-user-role-description">
                                   <h2>Administrator</h2>
@@ -247,7 +256,10 @@
                               </div>
                               <div class="modal-body-user-role">
                                 <div class="modal-body-user-role-role">
-                                  <span class="role role-manager selected not-editing margin-5px">M</span>
+                                  <label class="role">
+                                    <input type="checkbox" checked="checked" disabled>
+                                    <span class="role-content manager-role">M</span>
+                                  </label>
                                 </div>
                                 <div class="modal-body-user-role-description">
                                   <h2>Manager</h2>
