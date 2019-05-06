@@ -20,6 +20,9 @@ check if id.checked == true */
 	height: 0;
 	width: 0;
 }
+input[type="checkbox"]:disabled {
+	cursor: default;
+}
 /* Create a custom role-content */
 .role-content {
 	color: white;
@@ -29,6 +32,9 @@ check if id.checked == true */
 	border-radius: 50%;
 	font-size: 1.5rem;
 	text-align: center;
+}
+.role-content.disabled {
+	cursor: default;
 }
 .role-content.user-role {
 	background-color: #D8F1D8;
