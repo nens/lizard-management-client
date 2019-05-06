@@ -68,6 +68,49 @@
 	box-shadow: 0 2px 4px 0 rgba(0,0,0,.5);
 }
 
-/* roles as checkboxed with
-https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_custom_checkbox
+/* roles as customCheckmarked with
+https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_custom_customCheckmark
 check if id.checked == true */
+/* The container */
+.container {
+	display: flex;
+	cursor: pointer;
+	font-size: 22px;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+/* Hide the browser's default customCheckmark */
+.container input {
+	position: absolute;
+	opacity: 0;
+	cursor: pointer;
+	height: 0;
+	width: 0;
+}
+/* Create a custom customCheckmark */
+.customCheckmark {
+	background-color: #D8F1D8;
+	color: white;
+	height: 50px;
+	width: 50px;
+	line-height: 50px;
+	border-radius: 50%;
+	font-size: 1.5rem;
+	text-align: center;
+}
+/* On mouse-over, add a grey background color */
+.container:hover input ~ .customCheckmark {
+	background-color: green;
+	/*background-color: #ccc;*/
+}
+/* On mouse-over, add a grey background color */
+.container:hover input:checked ~ .customCheckmark {
+	background-color: #ccc;
+	/*background-color: green;*/
+}
+/* When the customCheckmark is checked, add a blue background */
+.container input:checked ~ .customCheckmark {
+	background-color: #91D791;
+}
