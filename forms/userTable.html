@@ -15,6 +15,7 @@
       <link rel="stylesheet" href="buttons.css">
       <link rel="stylesheet" href="searchBox.css">
       <link rel="stylesheet" href="roles.css">
+      <script src="roles.js"></script>
     <!-- {% endblock extraheader %}
     -->
     <title>Lizard management</title>
@@ -92,11 +93,28 @@
                   lirry.pinter (you)
                 </td>
                 <td>
-                  <span class="role role-user selected not-editing">U</span>
-                  <span class="role role-supplier selected not-editing">S</span>
-                  <span class="role role-admin selected not-editing">A</span>
-                  <span class="role role-manager selected not-editing">M</span>
-                  <span class="role role-edit">+</span>
+                  <div class="role-container">
+                    <label class="role">
+                      <input type="checkbox" checked="checked" disabled>
+                      <span class="role-content user-role disabled">U</span>
+                    </label>
+                    <label class="role">
+                      <input type="checkbox" checked="checked" disabled>
+                      <span class="role-content supplier-role disabled">S</span>
+                    </label>
+                    <label class="role">
+                      <input type="checkbox" checked="checked" disabled>
+                      <span class="role-content admin-role disabled">A</span>
+                    </label>
+                    <label class="role">
+                      <input type="checkbox" checked="checked" disabled>
+                      <span class="role-content manager-role disabled">M</span>
+                    </label>
+                    <label class="role">
+                      <input type="checkbox">
+                      <span onclick="toggleEditRolesButton()" class="role-content edit-role">+</span>
+                    </label>
+                  </div>
                 </td>
                 <td>
                   gebruiker.een@gmail.com
@@ -114,11 +132,28 @@
                   emiel.verstegen
                 </td>
                 <td>
-                  <span class="role role-user selected not-editing">U</span>
-                  <span class="role role-supplier selected not-editing">S</span>
-                  <span class="role role-admin selected not-editing">A</span>
-                  <span class="role role-manager not-selected not-editing">M</span>
-                  <span class="role role-edit">+</span>
+                  <div class="role-container">
+                    <label class="role">
+                      <input type="checkbox" checked="checked" disabled>
+                      <span class="role-content user-role disabled">U</span>
+                    </label>
+                    <label class="role">
+                      <input type="checkbox" checked="checked" disabled>
+                      <span class="role-content supplier-role disabled">S</span>
+                    </label>
+                    <label class="role">
+                      <input type="checkbox" checked="checked" disabled>
+                      <span class="role-content admin-role disabled">A</span>
+                    </label>
+                    <label class="role">
+                      <input type="checkbox" disabled>
+                      <span class="role-content manager-role disabled not-checked">M</span>
+                    </label>
+                    <label class="role">
+                      <input type="checkbox">
+                      <span onclick="toggleEditRolesButton()" class="role-content edit-role">+</span>
+                    </label>
+                  </div>
                 </td>
                 <td>
                   gebruiker.twee@gmail.com
@@ -132,11 +167,28 @@
                   govert.termors
                 </td>
                 <td>
-                  <span class="role role-user not-selected editing">U</span>
-                  <span class="role role-supplier not-selected editing">S</span>
-                  <span class="role role-admin not-selected editing">A</span>
-                  <span class="role role-manager not-selected editing">M</span>
-                  <span class="role role-save button-shadow">SAVE</span>
+                  <div class="role-container">
+                    <label class="role">
+                      <input type="checkbox">
+                      <span class="role-content user-role">U</span>
+                    </label>
+                    <label class="role">
+                      <input type="checkbox">
+                      <span class="role-content supplier-role">S</span>
+                    </label>
+                    <label class="role">
+                      <input type="checkbox">
+                      <span class="role-content admin-role">A</span>
+                    </label>
+                    <label class="role">
+                      <input type="checkbox">
+                      <span class="role-content manager-role">M</span>
+                    </label>
+                    <label class="role">
+                      <input type="checkbox" checked="checked">
+                      <span onclick="toggleEditRolesButton()" class="role-content edit-role button-shadow">SAVE</span>
+                    </label>
+                  </div>
                 </td>
                 <td>
                   gebruiker.drie@gmail.com
@@ -150,11 +202,28 @@
                   tom.deboer
                 </td>
                 <td>
-                  <span class="role role-user not-selected not-editing">U</span>
-                  <span class="role role-supplier selected not-editing">S</span>
-                  <span class="role role-admin not-selected not-editing">A</span>
-                  <span class="role role-manager not-selected not-editing">M</span>
-                  <span class="role role-edit">+</span>
+                  <div class="role-container">
+                    <label class="role">
+                      <input type="checkbox" disabled>
+                      <span class="role-content user-role disabled not-checked">U</span>
+                    </label>
+                    <label class="role">
+                      <input type="checkbox" checked="checked" disabled>
+                      <span class="role-content supplier-role disabled">S</span>
+                    </label>
+                    <label class="role">
+                      <input type="checkbox" disabled>
+                      <span class="role-content admin-role disabled not-checked">A</span>
+                    </label>
+                    <label class="role">
+                      <input type="checkbox" disabled>
+                      <span class="role-content manager-role disabled not-checked">M</span>
+                    </label>
+                    <label class="role">
+                      <input type="checkbox">
+                      <span onclick="toggleEditRolesButton()" class="role-content edit-role">+</span>
+                    </label>
+                  </div>
                 </td>
                 <td>
                   gebruiker.vier@gmail.com
@@ -168,11 +237,28 @@
                   remco.gerlich
                 </td>
                 <td>
-                  <span class="role role-user selected not-editing">U</span>
-                  <span class="role role-supplier not-selected not-editing">S</span>
-                  <span class="role role-admin not-selected not-editing">A</span>
-                  <span class="role role-manager not-selected not-editing">M</span>
-                  <span class="role role-edit">+</span>
+                  <div class="role-container">
+                    <label class="role">
+                      <input type="checkbox" checked="checked" disabled>
+                      <span class="role-content user-role disabled">U</span>
+                    </label>
+                    <label class="role">
+                      <input type="checkbox" disabled>
+                      <span class="role-content supplier-role disabled not-checked">S</span>
+                    </label>
+                    <label class="role">
+                      <input type="checkbox" disabled>
+                      <span class="role-content admin-role disabled not-checked">A</span>
+                    </label>
+                    <label class="role">
+                      <input type="checkbox" disabled>
+                      <span class="role-content manager-role disabled not-checked">M</span>
+                    </label>
+                    <label class="role">
+                      <input type="checkbox">
+                      <span onclick="toggleEditRolesButton()" class="role-content edit-role">+</span>
+                    </label>
+                  </div>
                 </td>
                 <td>
                   gebruiker.vijf@gmail.com
@@ -186,11 +272,28 @@
                   casper.vdw
                 </td>
                 <td>
-                  <span class="role role-user not-selected not-editing">U</span>
-                  <span class="role role-supplier not-selected not-editing">S</span>
-                  <span class="role role-admin not-selected not-editing">A</span>
-                  <span class="role role-manager not-selected not-editing">M</span>
-                  <span class="role role-edit">+</span>
+                  <div class="role-container">
+                    <label class="role">
+                      <input type="checkbox" disabled>
+                      <span class="role-content user-role disabled not-checked">U</span>
+                    </label>
+                    <label class="role">
+                      <input type="checkbox" disabled>
+                      <span class="role-content supplier-role disabled not-checked">S</span>
+                    </label>
+                    <label class="role">
+                      <input type="checkbox" disabled>
+                      <span class="role-content admin-role disabled not-checked">A</span>
+                    </label>
+                    <label class="role">
+                      <input type="checkbox" disabled>
+                      <span class="role-content manager-role disabled not-checked">M</span>
+                    </label>
+                    <label class="role">
+                      <input type="checkbox">
+                      <span onclick="toggleEditRolesButton()" class="role-content edit-role">+</span>
+                    </label>
+                  </div>
                 </td>
                 <td>
                   gebruiker.zes@gmail.com
