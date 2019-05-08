@@ -1,4 +1,6 @@
 function enableRoleCheckboxes() {
+  // Prevent page from reloading
+  event.preventDefault();
   var userRoles = event.target.parentNode.children;
   // Add interaction of the custom checkboxes
   for (var i = 0; i < 4; i++) {
@@ -8,9 +10,12 @@ function enableRoleCheckboxes() {
   // Remove the edit button and show the save button
   event.target.classList.add("not-shown");
   event.target.parentNode.children[5].classList.remove("not-shown");
+  return false;
 }
 
 function disableRoleCheckboxes() {
+  // Prevent page from reloading
+  event.preventDefault();
   var userRoles = event.target.parentNode.children;
   // Remove interaction of the custom checkboxes and
   // add the not-checked class to the accompanying span if checkbox is clicked
@@ -26,4 +31,5 @@ function disableRoleCheckboxes() {
   // Remove the save button and show the edit button
   event.target.classList.add("not-shown");
   event.target.parentNode.children[4].classList.remove("not-shown");
+  return false;
 }

@@ -100,7 +100,7 @@ https://developer.mozilla.org/en-US/docs/Web/CSS/General_sibling_combinator */
 }
 
 /* The button for saving the user roles */
-button[type="submit"] {
+.button.save-role {
 	padding: 0;
 	margin: 5px;
 	text-transform: uppercase;
