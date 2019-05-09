@@ -6,25 +6,25 @@ function enableRoleCheckboxes() {
   var userRoleCheckbox =
     userRolesForm.elements["edit-user-roles-form-user-role"];
   userRoleCheckbox.disabled = false;
-  var userRoleSpan = userRoleCheckbox.nextElementSibling; // get span with sibling selector
+  var userRoleSpan = userRoleCheckbox.nextElementSibling;
   userRoleSpan.classList.remove("disabled");
   // Supplier role
   var supplierRoleCheckbox =
     userRolesForm.elements["edit-user-roles-form-supplier-role"];
   supplierRoleCheckbox.disabled = false;
-  var supplierRoleSpan = supplierRoleCheckbox.nextElementSibling; // get span with sibling selector
+  var supplierRoleSpan = supplierRoleCheckbox.nextElementSibling;
   supplierRoleSpan.classList.remove("disabled");
   // Admin role
   var adminRoleCheckbox =
     userRolesForm.elements["edit-user-roles-form-admin-role"];
   adminRoleCheckbox.disabled = false;
-  var adminRoleSpan = adminRoleCheckbox.nextElementSibling; // get span with sibling selector
+  var adminRoleSpan = adminRoleCheckbox.nextElementSibling;
   adminRoleSpan.classList.remove("disabled");
   // Manager role
   var managerRoleCheckbox =
     userRolesForm.elements["edit-user-roles-form-manager-role"];
   managerRoleCheckbox.disabled = false;
-  var managerRoleSpan = managerRoleCheckbox.nextElementSibling; // get span with sibling selector
+  var managerRoleSpan = managerRoleCheckbox.nextElementSibling;
   managerRoleSpan.classList.remove("disabled");
   // Remove the edit button and show the save button
   event.target.classList.add("not-shown");
