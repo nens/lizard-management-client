@@ -10,6 +10,8 @@
     <link href="https://use.fontawesome.com/43b6a67007.css" media="all" rel="stylesheet">
     <link rel="stylesheet" href="layout.css">
     <link rel="stylesheet" href="stylesheet.css">
+    <script src="dropdown.js"></script>
+    <link rel="stylesheet" href="dropdown.css">
     <!-- extra block for specific css references per Django template
       {% block extraheader %} -->
       <link rel="stylesheet" href="userTable.css">
@@ -22,7 +24,7 @@
     -->
     <title>Lizard management</title>
   </head>
-  <body>
+  <body onload="loadDropDown()">
     <div class="wrapper">
       <header>
         <div class="header-top">
@@ -35,7 +37,15 @@
               </a>
             </div>
             <div class="header-top-center">
-              <i class="fa fa-sort icon-medium"></i>Organisation
+              <div class="custom-select" style="width:200px;">
+                <select class="dropdown organisation">
+                  <option value="0">Select organisation:</option>
+                  <option value="1">Nelen &amp; Schuurmans</option>
+                  <option value="2">Deltares</option>
+                  <option value="3">HHNK</option>
+                  <option value="4">Hunze en Aas</option>
+                </select>
+              </div>
             </div>
             <div class="header-top-right">
               <a href="https://sso.lizard.net/edit_profile/" target="_blank" rel="noopener noreferrer" title="Lirry"> <!-- title becomes dependent on user name, instead of Lirry -->
