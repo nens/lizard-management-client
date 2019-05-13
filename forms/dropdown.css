@@ -1,12 +1,12 @@
 /* Custom select
 https://www.w3schools.com/howto/tryit.asp?filename=tryhow_custom_select */
 /*the container must be positioned relative:*/
-.custom-select {
+.organisation-select {
   position: relative;
   font-family: Arial;
 }
 
-.custom-select select {
+.organisation-select select {
   display: none; /*hide original SELECT element:*/
 }
 
