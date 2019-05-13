@@ -19,6 +19,8 @@ import {
   UPDATE_VIEWPORT_DIMENSIONS
 } from "./actions";
 
+import { formReducer } from "./forms/formReducer";
+
 function bootstrap(
   state = {
     bootstrap: {},
@@ -240,6 +242,22 @@ function viewport(
   }
 }
 
+// FORMS
+
+// We assume there is at most 1 form currently active. It is cleared up in
+// the constructor of the form.
+
+// The form is an object, with "names" of fields as keys. For each field we
+// are interested in:
+// - Its current value
+// - Whether it is validated or not
+// - If it's not, the error message
+//
+// There can be initial data in a form, but it is used by the
+// ManagementForm component and doesn't need to be stored in here as it doesn't
+// change during the lifetime of the component.
+
+
 const rootReducer = combineReducers({
   bootstrap,
   organisations,
@@ -247,7 +265,8 @@ const rootReducer = combineReducers({
   supplierIds,
   colorMaps,
   notifications,
-  viewport
+  viewport,
+  form: formReducer
 });
 
 export default rootReducer;

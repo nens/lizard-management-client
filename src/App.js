@@ -164,6 +164,7 @@ class App extends Component {
                     <div className={styles.OrganisationLinkContainer}>
                       <a
                         className={styles.OrganisationLink}
+                        href="#"
                         title={
                           selectedOrganisation
                             ? selectedOrganisation.name
