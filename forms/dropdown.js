@@ -32,6 +32,7 @@ function loadDropDown() {
               y[k].removeAttribute("class");
             }
             this.setAttribute("class", "same-as-selected");
+            changeOrganisationUrl(s, i);
             break;
           }
         }
@@ -75,4 +76,10 @@ function loadDropDown() {
   then close all select boxes:*/
   document.addEventListener("click", closeAllSelect);
 }
-window.onload = loadDropDown();
+
+function changeOrganisationUrl(s, i) {
+  // Link to a new page when clicking on another organisation
+  var organisation_option_value = s.options[i].value;
+  window.location.href =
+    "https://" + organisation_option_value + ".lizard.net/";
+}
