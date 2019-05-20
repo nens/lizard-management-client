@@ -174,15 +174,33 @@ class RasterFormModel extends Component {
   // Options (contains colormaps)
   setStyleAndOptions(styleObj) {
     const oldStyle = Object.assign({}, this.state.styles);
+    // oldStyle.rescalable = true;
     const oldOptions = Object.assign({}, this.state.options);
+    console.log("oldStyle:");  // = colorMap
+    console.log(oldStyle);
+    // console.log("oldOptions:");  // = colorMap
+    // console.log(oldOptions);
+    // console.log("styleObj:");  // = colorMap
+    // console.log(styleObj);
     const newStyleOptions = calculateNewStyleAndOptions(
       oldStyle,
       oldOptions,
       styleObj
     );
+    // console.log(this);
+    console.log("newStyleOptions:");
+    console.log(newStyleOptions);
+    if(newStyleOptions.styles.rescalable === true){
+      newStyleOptions.styles.rescalable = false;
+    } else {
+      newStyleOptions.styles.rescalable = true;
+    }
+    // console.log("newStyleOptions:");  // = colorMap
+    // console.log(newStyleOptions);
 
     this.setState({ options: newStyleOptions.options });
     this.setState({ styles: newStyleOptions.styles });
+    console.log(this.state);
   }
   // SupplierId
   setSupplierId(supplierId) {
@@ -492,7 +510,8 @@ class RasterFormModel extends Component {
       styles: {
         colorMap: "",
         min: "",
-        max: ""
+        max: "",
+        rescalable: false
       },
       options: {},
       aggregationType: "", // choice: none | counts | curve | histogram | sum | average
@@ -518,7 +537,8 @@ class RasterFormModel extends Component {
         getStyleFromOptions(currentRaster.options)
       ),
       min: getColorMinFromStyle(getStyleFromOptions(currentRaster.options)),
-      max: getColorMaxFromStyle(getStyleFromOptions(currentRaster.options))
+      max: getColorMaxFromStyle(getStyleFromOptions(currentRaster.options)),
+      rescalable: false //Todo: get current option
     };
 
     return {
@@ -590,6 +610,12 @@ class RasterFormModel extends Component {
       this.state.temporalIntervalSeconds
     );
 
+    console.log('this.state');
+    console.log(this.state);
+    console.log('this.state.styles');
+    console.log(this.state.styles);
+    console.log('this.state.styles.rescalable');
+    console.log(this.state.styles.rescalable);  //undefined
     if (!this.props.currentRaster) {
       const opts = {
         credentials: "same-origin",
@@ -605,7 +631,7 @@ class RasterFormModel extends Component {
           supplier_code: this.state.supplierCode,
           temporal: this.state.temporalBool,
           interval: isoIntervalDuration, //'P1D', // P1D is default, = ISO 8601 datetime for 1 day",
-          rescalable: false,
+          rescalable: this.state.styles.rescalable,
           optimizer: false, // default
           aggregation_type: intAggregationType,
           options: this.state.options,

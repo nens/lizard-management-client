@@ -6,6 +6,7 @@ import CheckMark from "./CheckMark";
 import StepIndicator from "./StepIndicator";
 import { FormattedMessage } from "react-intl";
 import SelectBoxSearch from "./SelectBoxSearch.js";
+import GenericCheckBox from "./GenericCheckBox.js";
 
 import styles from "./GenericSelectBoxComponent.css";
 import formStyles from "../styles/Forms.css";
@@ -89,6 +90,7 @@ class ColorMapComponent extends Component {
       readonly,
       readOnlyReason
     } = this.props;
+    console.log(modelValue);
     const active = step === currentStep || (formUpdate && !readonly);
     const showCheckMark = validate(modelValue);
     const showNextButton = validate(modelValue) && !formUpdate;
@@ -206,6 +208,20 @@ class ColorMapComponent extends Component {
                   placeholder="optional maximum of range"
                   readOnly={readonly}
                   disabled={readonly}
+                />
+                <br />
+                <GenericCheckBox
+                  titleComponent={"1"} // <FormatText ... //>
+                  modelValue={modelValue.rescalable}  // boolean, get value from form
+                  label={"Rescalable"} // text beside checkbox
+                  updateModelValue={e => {
+                    console.log(e);
+                    updateModelValue({ rescalable: e.rescalable });
+                  }}
+                  validate={e => {
+                    return e.rescalable === true || e.rescalable === false;
+                  }}
+                  readonly={readonly}
                 />
               </div>
               {showNextButton ? (
