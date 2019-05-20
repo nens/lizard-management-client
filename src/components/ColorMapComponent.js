@@ -95,7 +95,9 @@ class ColorMapComponent extends Component {
 
     if (this.state.previewColor != null) {
       var colors = this.state.previewColor.legend.map(obj => {
-        return <div style={{ flex: 1, backgroundColor: obj.color }} />;
+        // Add obj.value as key to make sure that the key of the divs are
+        // unique
+        return <div style={{ flex: 1, backgroundColor: obj.color }} key={obj.value} />;
       });
       var minValue = this.state.previewColor.limits[0];
       var maxValue = this.state.previewColor.limits[1];
