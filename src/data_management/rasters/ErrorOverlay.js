@@ -17,6 +17,7 @@ class ErrorOverlay extends Component {
       height: window.innerHeight,
       isStopped: false,
       isPaused: false
+      // errorMessage: this.props.errorMessage
     };
     this.handleResize = this.handleResize.bind(this);
     this.hideErrorOverlay = this.hideErrorOverlay.bind(this);
@@ -55,10 +56,16 @@ class ErrorOverlay extends Component {
       this.props.errorMessage.status === 201 ||
       this.props.errorMessage.status === 200
     ) {
+      console.log("animationSucces");
+      console.log(animationSucces);
       animationData = animationSucces;
     } else {
+      console.log("animationError");
+      console.log(animationError);
       animationData = animationError;
     }
+    console.log("animationData");
+    console.log(animationData);  // animationData.layers is defined when isFetching = true
     return animationData;
   }
 
@@ -113,23 +120,55 @@ class ErrorOverlay extends Component {
   }
 
   render() {
+    console.log("this.props");
+    console.log(this.props);
     const { handleClose, isFetching } = this.props;
 
     let buttons;
     let defaultOptions;
 
+    // let animationData = animationSucces;
+    // const defaultOptions = {
+    //   loop: true,
+    //   autoplay: true, 
+    //   animationData: animationData,
+    //   rendererSettings: {
+    //     preserveAspectRatio: 'xMidYMid slice'
+    //   }
+    // };
+    // console.log(this.props.errorMessage.status);  //200good 201good rest error
+    console.log("ErrorOverlay.js [F]render isFetching");
+    console.log(isFetching);
     if (!isFetching) {
       buttons = this.succesButtons();
       defaultOptions = {
         loop: false,
         autoplay: true,
-        animationData: this.whichAnimation(),
+        animationData: this.whichAnimation().default,
         rendererSettings: {
           preserveAspectRatio: "xMidYMid slice"
         }
       };
+    // } else {
+    //   buttons = this.succesButtons();
+    //   defaultOptions = {
+    //     loop: false,
+    //     autoplay: true,
+    //     animationData: this.whichAnimation(),
+    //     rendererSettings: {
+    //       preserveAspectRatio: "xMidYMid slice"
+    //     }
+    //   };
     }
 
+    // For trying to fix Lottie bug:
+    // loopt hij 5 keer overheen, 1e 2 keer is defaultOptions false
+    console.log("ErrorOverlay.js [F]render defaultOptions");
+    console.log(defaultOptions);
+    console.log("ErrorOverlay.js [F]render this.state.isStopped");
+    console.log(this.state.isStopped);
+    console.log("ErrorOverlay.js [F]render this.state.isPaused");
+    console.log(this.state.isPaused);
     return (
       <div className={styles.ErrorOverlayContainer}>
         <CSSTransition

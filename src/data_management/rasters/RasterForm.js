@@ -566,9 +566,20 @@ class RasterFormModel extends Component {
   }
 
   handleResponse(response) {
-    this.setState({ modalErrorMessage: response });
-    this.setState({ isFetching: false });
-    this.setState({ handlingDone: true });
+    console.log("[F] handleResponse");
+    console.log(response);  // only console.log that is shown in the console
+    this.setState({
+      modalErrorMessage: response,
+      isFetching: false,
+      handlingDone: true
+    });
+    console.log("exit handleResponse RasterForm.js");  // not shown
+    // this.setState({ modalErrorMessage: response });
+    // console.log("[F] handleResponse state modalErrorMessage set"); // function also does not get here or maybe it crashes because there are 3 different setStates?
+    // this.setState({ isFetching: false });
+    // console.log("[F] handleResponse state isFetching set");
+    // this.setState({ handlingDone: true });
+    // console.log("[F] handleResponse exit");  // function never gets here
   }
 
   handleClickCreateRaster() {
@@ -649,8 +660,10 @@ class RasterFormModel extends Component {
       fetch(url + "uuid:" + this.props.currentRaster.uuid + "/", opts)
         .then(responseParsed => {
           console.log("responseParsed put", responseParsed);
-          this.handleResponse(responseParsed);
-          return responseParsed.json();
+          this.handleResponse(responseParsed);  // something goes wrong here
+          console.log("RasterForm.js [F]handleClickCreateRaster responseParsed.json()");  //not shown in the console
+          console.log(responseParsed.json());
+          // return responseParsed.json();
         })
         .then(parsedBody => {
           console.log("parsedBody", parsedBody);
