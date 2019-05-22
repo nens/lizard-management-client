@@ -17,7 +17,6 @@ class ErrorOverlay extends Component {
       height: window.innerHeight,
       isStopped: false,
       isPaused: false
-      // errorMessage: this.props.errorMessage
     };
     this.handleResize = this.handleResize.bind(this);
     this.hideErrorOverlay = this.hideErrorOverlay.bind(this);
