@@ -574,12 +574,6 @@ class RasterFormModel extends Component {
       handlingDone: true
     });
     console.log("exit handleResponse RasterForm.js");  // not shown
-    // this.setState({ modalErrorMessage: response });
-    // console.log("[F] handleResponse state modalErrorMessage set"); // function also does not get here or maybe it crashes because there are 3 different setStates?
-    // this.setState({ isFetching: false });
-    // console.log("[F] handleResponse state isFetching set");
-    // this.setState({ handlingDone: true });
-    // console.log("[F] handleResponse exit");  // function never gets here
   }
 
   handleClickCreateRaster() {

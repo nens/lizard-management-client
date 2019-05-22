@@ -127,16 +127,6 @@ class ErrorOverlay extends Component {
     let buttons;
     let defaultOptions;
 
-    // let animationData = animationSucces;
-    // const defaultOptions = {
-    //   loop: true,
-    //   autoplay: true, 
-    //   animationData: animationData,
-    //   rendererSettings: {
-    //     preserveAspectRatio: 'xMidYMid slice'
-    //   }
-    // };
-    // console.log(this.props.errorMessage.status);  //200good 201good rest error
     console.log("ErrorOverlay.js [F]render isFetching");
     console.log(isFetching);
     if (!isFetching) {
@@ -149,20 +139,8 @@ class ErrorOverlay extends Component {
           preserveAspectRatio: "xMidYMid slice"
         }
       };
-    // } else {
-    //   buttons = this.succesButtons();
-    //   defaultOptions = {
-    //     loop: false,
-    //     autoplay: true,
-    //     animationData: this.whichAnimation(),
-    //     rendererSettings: {
-    //       preserveAspectRatio: "xMidYMid slice"
-    //     }
-    //   };
     }
 
-    // For trying to fix Lottie bug:
-    // loopt hij 5 keer overheen, 1e 2 keer is defaultOptions false
     console.log("ErrorOverlay.js [F]render defaultOptions");
     console.log(defaultOptions);
     console.log("ErrorOverlay.js [F]render this.state.isStopped");
