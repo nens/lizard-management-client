@@ -566,14 +566,11 @@ class RasterFormModel extends Component {
   }
 
   handleResponse(response) {
-    console.log("[F] handleResponse");
-    console.log(response);  // only console.log that is shown in the console
     this.setState({
       modalErrorMessage: response,
       isFetching: false,
       handlingDone: true
     });
-    console.log("exit handleResponse RasterForm.js");  // not shown
   }
 
   handleClickCreateRaster() {
@@ -654,9 +651,7 @@ class RasterFormModel extends Component {
       fetch(url + "uuid:" + this.props.currentRaster.uuid + "/", opts)
         .then(responseParsed => {
           console.log("responseParsed put", responseParsed);
-          this.handleResponse(responseParsed);  // something goes wrong here
-          console.log("RasterForm.js [F]handleClickCreateRaster responseParsed.json()");  //not shown in the console
-          console.log(responseParsed.json());
+          this.handleResponse(responseParsed);
           // return responseParsed.json();
         })
         .then(parsedBody => {

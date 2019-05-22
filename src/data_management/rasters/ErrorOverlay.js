@@ -56,16 +56,10 @@ class ErrorOverlay extends Component {
       this.props.errorMessage.status === 201 ||
       this.props.errorMessage.status === 200
     ) {
-      console.log("animationSucces");
-      console.log(animationSucces);
       animationData = animationSucces;
     } else {
-      console.log("animationError");
-      console.log(animationError);
       animationData = animationError;
     }
-    console.log("animationData");
-    console.log(animationData);  // animationData.layers is defined when isFetching = true
     return animationData;
   }
 
@@ -120,15 +114,11 @@ class ErrorOverlay extends Component {
   }
 
   render() {
-    console.log("this.props");
-    console.log(this.props);
     const { handleClose, isFetching } = this.props;
 
     let buttons;
     let defaultOptions;
 
-    console.log("ErrorOverlay.js [F]render isFetching");
-    console.log(isFetching);
     if (!isFetching) {
       buttons = this.succesButtons();
       defaultOptions = {
@@ -141,12 +131,6 @@ class ErrorOverlay extends Component {
       };
     }
 
-    console.log("ErrorOverlay.js [F]render defaultOptions");
-    console.log(defaultOptions);
-    console.log("ErrorOverlay.js [F]render this.state.isStopped");
-    console.log(this.state.isStopped);
-    console.log("ErrorOverlay.js [F]render this.state.isPaused");
-    console.log(this.state.isPaused);
     return (
       <div className={styles.ErrorOverlayContainer}>
         <CSSTransition
