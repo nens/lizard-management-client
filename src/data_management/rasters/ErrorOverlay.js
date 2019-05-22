@@ -123,6 +123,9 @@ class ErrorOverlay extends Component {
       defaultOptions = {
         loop: false,
         autoplay: true,
+        // Use this.whichAnimation().default instead of this.whichAnimation()
+        // for animationData, because the Lottie animation needs an
+        // animationData.layers.
         animationData: this.whichAnimation().default,
         rendererSettings: {
           preserveAspectRatio: "xMidYMid slice"
