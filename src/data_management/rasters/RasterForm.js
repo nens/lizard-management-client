@@ -652,7 +652,7 @@ class RasterFormModel extends Component {
         .then(responseParsed => {
           console.log("responseParsed put", responseParsed);
           this.handleResponse(responseParsed);
-          // return responseParsed.json();
+          return responseParsed.json();
         })
         .then(parsedBody => {
           console.log("parsedBody", parsedBody);
