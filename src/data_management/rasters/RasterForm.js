@@ -173,27 +173,31 @@ class RasterFormModel extends Component {
 
   // Options (contains colormaps)
   setStyleAndOptions(styleObj) {
-    const oldStyle = Object.assign({}, this.state.styles);
-    const oldOptions = Object.assign({}, this.state.options);
-    const newStyleOptions = calculateNewStyleAndOptions(
-      oldStyle,
-      oldOptions,
-      styleObj
-    );
 
-    // Checking and unchecking rescalable is not going well yet,
-    // so I toggle them this way.
-    if(newStyleOptions.styles.rescalable === true){
-      newStyleOptions.styles.rescalable = false;
+    // Check if people clicked in the checkbox for rescaling rasters
+    if ("rescalable" in styleObj) {
+      console.log(styleObj.rescalable);
+      let styles = this.state.styles;
+      styles.rescalable = styleObj.rescalable;
+      this.setState({
+        rescalable: styleObj.rescalable,
+        styles: styles
+      });
+
     } else {
-      newStyleOptions.styles.rescalable = true;
-    }
+      const oldStyle = Object.assign({}, this.state.styles);
+      const oldOptions = Object.assign({}, this.state.options);
+      const newStyleOptions = calculateNewStyleAndOptions(
+        oldStyle,
+        oldOptions,
+        styleObj
+      );
 
-    this.setState({
-      options: newStyleOptions.options,
-      styles: newStyleOptions.styles,
-      rescalable: newStyleOptions.styles.rescalable
-    });
+      this.setState({
+        options: newStyleOptions.options,
+        styles: newStyleOptions.styles
+      });
+    }
   }
   // SupplierId
   setSupplierId(supplierId) {
@@ -1043,7 +1047,10 @@ class RasterFormModel extends Component {
                   transformChoiceToDisplayValue={e => (e && e.name) || ""} // optional parameter if choices are objects, which field contains the displayvalue, default item itself is displayvalue
                   isFetching={this.props.colorMaps.isFetching}
                   choicesSearchable={true}
-                  modelValue={this.state.styles}
+                  modelValue={{
+                    styles: this.state.styles,
+                    rescalable: this.state.rescalable
+                  }}
                   updateModelValue={styles => {
                     this.setStyleAndOptions(styles);
                   }} // cb function to *update* the value of e.g. a raster's name in the parent model

@@ -21,7 +21,7 @@ class ColorMapComponent extends Component {
     };
   }
   setLocalStateFromProps(props) {
-    this.getRGBAGradient(props.modelValue);
+    this.getRGBAGradient(props.modelValue.styles);
     // If this component is the "current step component", set the page focus to the components
     // input field:
     // TODO: implement autofocus of inpput element for colormap
@@ -38,7 +38,7 @@ class ColorMapComponent extends Component {
     // }
   }
   handleEnter(event) {
-    if (this.props.validate(this.props.modelValue) && event.keyCode === 13) {
+    if (this.props.validate(this.props.modelValue.styles) && event.keyCode === 13) {
       // 13 is keycode 'enter' (works only when current input validates)
       this.props.setCurrentStep(this.props.step + 1);
     }
@@ -50,11 +50,11 @@ class ColorMapComponent extends Component {
     this.setLocalStateFromProps(this.props);
   }
 
-  getRGBAGradient(modelValue) {
-    if (modelValue.colorMap) {
+  getRGBAGradient(modelValueStyles) {
+    if (modelValueStyles.colorMap) {
       fetch(
         "/wms/?request=getlegend&style=" +
-          modelValue.colorMap +
+          modelValueStyles.colorMap +
           "&steps=100&format=json",
         {
           credentials: "same-origin",
@@ -96,7 +96,7 @@ class ColorMapComponent extends Component {
 
     if (this.state.previewColor != null) {
       var colors = this.state.previewColor.legend.map(obj => {
-        return <div style={{ flex: 1, backgroundColor: obj.color }} />;
+        return <div style={{ flex: 1, backgroundColor: obj.color }} key={obj.value} />;
       });
       var minValue = this.state.previewColor.limits[0];
       var maxValue = this.state.previewColor.limits[1];
@@ -136,7 +136,7 @@ class ColorMapComponent extends Component {
                 </div>
                 <SelectBoxSearch
                   choices={choices}
-                  choice={{ name: modelValue.colorMap }}
+                  choice={{ name: modelValue.styles.colorMap }}
                   transformChoiceToDisplayValue={transformChoiceToDisplayValue}
                   isFetching={isFetching}
                   updateModelValue={e => {
@@ -161,9 +161,9 @@ class ColorMapComponent extends Component {
                 <br />
                 <span className="text-muted">{minTitleComponent}</span>
                 <br />
-                {modelValue.max &&
-                modelValue.max !== "" &&
-                (modelValue.min === "" || !modelValue.min) ? (
+                {modelValue.styles.max &&
+                modelValue.styles.max !== "" &&
+                (modelValue.styles.min === "" || !modelValue.styles.min) ? (
                   <span style={{ color: "red" }}>
                     <FormattedMessage
                       id="rasters.colormap_min_mandatory"
@@ -172,9 +172,9 @@ class ColorMapComponent extends Component {
                   </span>
                 ) : null}
 
-                {parseFloat(modelValue.min) &&
-                parseFloat(modelValue.max) &&
-                parseFloat(modelValue.min) > parseFloat(modelValue.max) ? (
+                {parseFloat(modelValue.styles.min) &&
+                parseFloat(modelValue.styles.max) &&
+                parseFloat(modelValue.styles.min) > parseFloat(modelValue.styles.max) ? (
                   <span style={{ color: "red" }}>
                     <FormattedMessage
                       id="rasters.colormap_max>min"
@@ -189,7 +189,7 @@ class ColorMapComponent extends Component {
                     ? inputStyles.ReadOnly
                     : null}`}
                   onChange={e => updateModelValue({ min: e.target.value })}
-                  value={modelValue.min}
+                  value={modelValue.styles.min}
                   placeholder="optional minimum of range"
                   readOnly={readonly}
                   disabled={readonly}
@@ -202,7 +202,7 @@ class ColorMapComponent extends Component {
                   className={`${formStyles.FormControl} ${readonly
                     ? inputStyles.ReadOnly
                     : null}`}
-                  value={modelValue.max}
+                  value={modelValue.styles.max}
                   onChange={e => updateModelValue({ max: e.target.value })}
                   placeholder="optional maximum of range"
                   readOnly={readonly}
@@ -213,7 +213,11 @@ class ColorMapComponent extends Component {
                   modelValue={modelValue.rescalable}
                   label={"Rescalable"}
                   updateModelValue={e => {
-                    updateModelValue({ rescalable: e.rescalable });
+                    console.log(e);
+                    updateModelValue({ rescalable: !modelValue.rescalable });
+                    // this.setState({
+                    //   rescalable: !modelValue.rescalable
+                    // });
                   }}
                   readonly={readonly}
                 />
