@@ -181,6 +181,8 @@ class RasterFormModel extends Component {
       styleObj
     );
 
+    // Checking and unchecking rescalable is not going well yet,
+    // so I toggle them this way.
     if(newStyleOptions.styles.rescalable === true){
       newStyleOptions.styles.rescalable = false;
     } else {
