@@ -174,29 +174,19 @@ class RasterFormModel extends Component {
   // Options (contains colormaps)
   setStyleAndOptions(styleObj) {
     const oldStyle = Object.assign({}, this.state.styles);
-    // oldStyle.rescalable = true;
     const oldOptions = Object.assign({}, this.state.options);
-    console.log("oldStyle:");  // = colorMap
-    console.log(oldStyle);
-    // console.log("oldOptions:");  // = colorMap
-    // console.log(oldOptions);
-    // console.log("styleObj:");  // = colorMap
-    // console.log(styleObj);
+
     const newStyleOptions = calculateNewStyleAndOptions(
       oldStyle,
       oldOptions,
       styleObj
     );
-    // console.log(this);
-    console.log("newStyleOptions:");
-    console.log(newStyleOptions);
+
     if(newStyleOptions.styles.rescalable === true){
       newStyleOptions.styles.rescalable = false;
     } else {
       newStyleOptions.styles.rescalable = true;
     }
-    // console.log("newStyleOptions:");  // = colorMap
-    // console.log(newStyleOptions);
 
     this.setState({
       options: newStyleOptions.options,
@@ -616,12 +606,6 @@ class RasterFormModel extends Component {
       this.state.temporalIntervalSeconds
     );
 
-    console.log('this.state');
-    console.log(this.state);
-    console.log('this.state.styles');
-    console.log(this.state.styles);
-    console.log('this.state.styles.rescalable');
-    console.log(this.state.styles.rescalable);  //undefined
     if (!this.props.currentRaster) {
       const opts = {
         credentials: "same-origin",
@@ -644,8 +628,6 @@ class RasterFormModel extends Component {
           shared_with: this.state.sharedWith.map(e => e.uuid)
         })
       };
-      console.log("[F]render opts");
-      console.log(opts);
 
       fetch(url, opts)
         .then(responseParsed => {
@@ -709,8 +691,6 @@ class RasterFormModel extends Component {
       description,
       aggregationType
     } = this.state;
-    console.log("[F]render this.state");
-    console.log(this.state);
 
     return (
       <div>

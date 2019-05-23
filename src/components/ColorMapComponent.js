@@ -90,7 +90,6 @@ class ColorMapComponent extends Component {
       readonly,
       readOnlyReason
     } = this.props;
-    console.log(modelValue);
     const active = step === currentStep || (formUpdate && !readonly);
     const showCheckMark = validate(modelValue);
     const showNextButton = validate(modelValue) && !formUpdate;
@@ -214,7 +213,6 @@ class ColorMapComponent extends Component {
                   modelValue={modelValue.rescalable}  // boolean, get value from form
                   label={"Rescalable"} // text beside checkbox
                   updateModelValue={e => {
-                    console.log(e);
                     updateModelValue({ rescalable: e.rescalable });
                   }}
                   readonly={readonly}
