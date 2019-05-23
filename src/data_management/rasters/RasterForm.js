@@ -175,7 +175,6 @@ class RasterFormModel extends Component {
   setStyleAndOptions(styleObj) {
     const oldStyle = Object.assign({}, this.state.styles);
     const oldOptions = Object.assign({}, this.state.options);
-
     const newStyleOptions = calculateNewStyleAndOptions(
       oldStyle,
       oldOptions,
