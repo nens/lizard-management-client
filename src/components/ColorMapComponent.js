@@ -211,15 +211,11 @@ class ColorMapComponent extends Component {
                 />
                 <br />
                 <GenericCheckBox
-                  titleComponent={"1"} // <FormatText ... //>
                   modelValue={modelValue.rescalable}  // boolean, get value from form
                   label={"Rescalable"} // text beside checkbox
                   updateModelValue={e => {
                     console.log(e);
                     updateModelValue({ rescalable: e.rescalable });
-                  }}
-                  validate={e => {
-                    return e.rescalable === true || e.rescalable === false;
                   }}
                   readonly={readonly}
                 />

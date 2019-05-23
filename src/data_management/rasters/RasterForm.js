@@ -198,9 +198,11 @@ class RasterFormModel extends Component {
     // console.log("newStyleOptions:");  // = colorMap
     // console.log(newStyleOptions);
 
-    this.setState({ options: newStyleOptions.options });
-    this.setState({ styles: newStyleOptions.styles });
-    console.log(this.state);
+    this.setState({
+      options: newStyleOptions.options,
+      styles: newStyleOptions.styles,
+      rescalable: newStyleOptions.styles.rescalable
+    });
   }
   // SupplierId
   setSupplierId(supplierId) {
@@ -519,7 +521,8 @@ class RasterFormModel extends Component {
       supplierCode: "",
       observationType: null,
       sharedWith: [],
-      accesModifier: "Private"
+      accesModifier: "Private",
+      rescalable: false
     };
   }
 
@@ -538,7 +541,9 @@ class RasterFormModel extends Component {
       ),
       min: getColorMinFromStyle(getStyleFromOptions(currentRaster.options)),
       max: getColorMaxFromStyle(getStyleFromOptions(currentRaster.options)),
-      rescalable: false //Todo: get current option
+      // Get rescalable from currentRaster but set it into styles,
+      // so that it can be combined into 1 Colormaps component.
+      rescalable: currentRaster.rescalable
     };
 
     return {
@@ -574,7 +579,8 @@ class RasterFormModel extends Component {
       supplierCode: currentRaster.supplier_code,
       observationType: currentRaster.observation_type,
       sharedWith: currentRaster.shared_with,
-      accesModifier: currentRaster.access_modifier
+      accesModifier: currentRaster.access_modifier,
+      rescalable: currentRaster.rescalable
     };
   }
 
@@ -638,6 +644,8 @@ class RasterFormModel extends Component {
           shared_with: this.state.sharedWith.map(e => e.uuid)
         })
       };
+      console.log("[F]render opts");
+      console.log(opts);
 
       fetch(url, opts)
         .then(responseParsed => {
@@ -659,7 +667,8 @@ class RasterFormModel extends Component {
         supplier: this.state.supplierId && this.state.supplierId.username,
         supplier_code: this.state.supplierCode,
         aggregation_type: intAggregationType,
-        shared_with: this.state.sharedWith.map(e => e.uuid)
+        shared_with: this.state.sharedWith.map(e => e.uuid),
+        rescalable: this.state.styles.rescalable
       };
       if (!optionsHasLayers(this.state.options)) {
         body.options = this.state.options;
@@ -700,6 +709,8 @@ class RasterFormModel extends Component {
       description,
       aggregationType
     } = this.state;
+    console.log("[F]render this.state");
+    console.log(this.state);
 
     return (
       <div>
