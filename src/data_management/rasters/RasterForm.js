@@ -586,9 +586,11 @@ class RasterFormModel extends Component {
   }
 
   handleResponse(response) {
-    this.setState({ modalErrorMessage: response });
-    this.setState({ isFetching: false });
-    this.setState({ handlingDone: true });
+    this.setState({
+      modalErrorMessage: response,
+      isFetching: false,
+      handlingDone: true
+    });
   }
 
   handleClickCreateRaster() {
