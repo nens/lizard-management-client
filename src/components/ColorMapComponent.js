@@ -213,11 +213,7 @@ class ColorMapComponent extends Component {
                   modelValue={modelValue.rescalable}
                   label={"Rescalable"}
                   updateModelValue={e => {
-                    console.log(e);
                     updateModelValue({ rescalable: !modelValue.rescalable });
-                    // this.setState({
-                    //   rescalable: !modelValue.rescalable
-                    // });
                   }}
                   readonly={readonly}
                 />

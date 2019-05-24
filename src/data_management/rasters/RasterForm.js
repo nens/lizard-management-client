@@ -176,7 +176,6 @@ class RasterFormModel extends Component {
 
     // Check if people clicked in the checkbox for rescaling rasters
     if ("rescalable" in styleObj) {
-      console.log(styleObj.rescalable);
       let styles = this.state.styles;
       styles.rescalable = styleObj.rescalable;
       this.setState({
