@@ -4,65 +4,66 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 
 import formStyles from "../styles/Forms.css";
-import WithStep from "./WithStep";
 
 interface TextInputProps {
   name: string,
   value: string,
   placeHolder?: string,
-  index?: number,
+  step: number,
   validators?: Function[],
   formValues: {[key: string]: any},
   validated: boolean,
-  valueChanged: Function
+  handleEnter: (e: any) => void,
+  valueChanged: Function,
+  wizardStyle: boolean
 };
 
-class TextInput extends Component<TextInputProps, {}> {
-  onChange(value: string): void {
-    const {
-      name,
-      validators,
-      formValues,
-      valueChanged
-    } = this.props;
-
-    let validated = true;
-
-    if (validators) {
-      validators.forEach(validator => {
-        if (validator(value, formValues)) {
-          validated = false;
-        }
-      });
-    }
-
-    valueChanged(name, value, validated);
-  }
-
+export default class TextInput extends Component<TextInputProps, {}> {
   render() {
     const {
       name,
       placeHolder,
-      index,
       value,
       validated,
-      valueChanged
+      valueChanged,
+      handleEnter
     } = this.props;
 
     return (
-      <WithStep step={index} title={name}>
-        <input
-          type="text"
-          autoComplete="false"
-          className={formStyles.FormControl}
-          placeholder={placeHolder}
-          onChange={e => this.onChange(e.target.value)}
-          value={value}
-          // onKeyUp={e => this.handleEnter(e)}
-        />
-      </WithStep>
+      <input
+        name={name}
+        id={`textinput-${name}`}
+        type="text"
+        autoComplete="false"
+        className={formStyles.FormControl}
+        placeholder={placeHolder}
+        onChange={e => this.props.valueChanged(e.target.value)}
+        value={value}
+        onKeyUp={handleEnter}
+      />
     );
   }
-}
 
-export default connect()(TextInput);
+  setFocus() {
+    if (this.props.wizardStyle) {
+      // In wizard style mode, only one form field is visible at a time
+      // and it should receive focus.
+      const inputElem = document.getElementById(`textinput-${this.props.name}`);
+
+      if (inputElem) {
+        console.log('Updating...');
+        setTimeout(function() {
+          inputElem.focus();
+        }, 0);
+      }
+    }
+  }
+
+  componentWillReceiveProps() {
+    this.setFocus();
+  }
+
+  componentDidMount() {
+    this.setFocus();
+  }
+}
