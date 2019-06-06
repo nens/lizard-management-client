@@ -171,10 +171,6 @@ export function validateStyleObj(style) {
   } else {
     return false;
   }
-
-  if (style.rescalable !== true || style.rescalable !== false) {
-    return false;
-  }
 }
 
 // the form will not invalidate:
