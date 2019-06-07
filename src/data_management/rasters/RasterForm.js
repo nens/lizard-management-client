@@ -173,16 +173,32 @@ class RasterFormModel extends Component {
 
   // Options (contains colormaps)
   setStyleAndOptions(styleObj) {
-    const oldStyle = Object.assign({}, this.state.styles);
-    const oldOptions = Object.assign({}, this.state.options);
-    const newStyleOptions = calculateNewStyleAndOptions(
-      oldStyle,
-      oldOptions,
-      styleObj
-    );
 
-    this.setState({ options: newStyleOptions.options });
-    this.setState({ styles: newStyleOptions.styles });
+    // Check if people clicked in the checkbox for rescaling rasters.
+    // In that case, change this.state.rescalable
+    if ("rescalable" in styleObj) {
+      this.setState({
+        rescalable: !this.state.rescalable,
+      });
+      return;
+
+    // Otherwise, the styles and options should be changed.
+    } else {
+      const oldStyle = Object.assign({}, this.state.styles);
+      const oldOptions = Object.assign({}, this.state.options);
+      const newStyleOptions = calculateNewStyleAndOptions(
+        oldStyle,
+        oldOptions,
+        styleObj
+      );
+
+      this.setState({
+        options: newStyleOptions.options,
+        styles: newStyleOptions.styles
+      });
+
+      return;
+    }
   }
   // SupplierId
   setSupplierId(supplierId) {
@@ -357,7 +373,7 @@ class RasterFormModel extends Component {
       invalidFields.push(2);
     }
 
-    // validate acces modifier for now always is true
+    // validate access modifier for now always is true
 
     if (!this.validateNewRasterName(this.state.rasterName)) {
       invalidFields.push(4);
@@ -492,7 +508,8 @@ class RasterFormModel extends Component {
       styles: {
         colorMap: "",
         min: "",
-        max: ""
+        max: "",
+        rescalable: false
       },
       options: {},
       aggregationType: "", // choice: none | counts | curve | histogram | sum | average
@@ -500,7 +517,8 @@ class RasterFormModel extends Component {
       supplierCode: "",
       observationType: null,
       sharedWith: [],
-      accesModifier: "Private"
+      accessModifier: "Private",
+      rescalable: false  // styles.rescalable
     };
   }
 
@@ -518,7 +536,10 @@ class RasterFormModel extends Component {
         getStyleFromOptions(currentRaster.options)
       ),
       min: getColorMinFromStyle(getStyleFromOptions(currentRaster.options)),
-      max: getColorMaxFromStyle(getStyleFromOptions(currentRaster.options))
+      max: getColorMaxFromStyle(getStyleFromOptions(currentRaster.options)),
+      // Get rescalable from currentRaster but set it into styles,
+      // so that it can be combined into 1 Colormaps component.
+      rescalable: currentRaster.rescalable
     };
 
     return {
@@ -554,7 +575,8 @@ class RasterFormModel extends Component {
       supplierCode: currentRaster.supplier_code,
       observationType: currentRaster.observation_type,
       sharedWith: currentRaster.shared_with,
-      accesModifier: currentRaster.access_modifier
+      accessModifier: currentRaster.access_modifier,
+      rescalable: currentRaster.rescalable
     };
   }
 
@@ -600,14 +622,14 @@ class RasterFormModel extends Component {
         body: JSON.stringify({
           name: this.state.rasterName,
           organisation: this.state.selectedOrganisation.uuid.replace(/-/g, ""),
-          access_modifier: this.state.accesModifier,
+          access_modifier: this.state.accessModifier,
           observation_type: observationTypeId, //this.state.observationType,
           description: this.state.description,
           supplier: this.state.supplierId && this.state.supplierId.username,
           supplier_code: this.state.supplierCode,
           temporal: this.state.temporalBool,
           interval: isoIntervalDuration, //'P1D', // P1D is default, = ISO 8601 datetime for 1 day",
-          rescalable: false,
+          rescalable: this.state.rescalable,
           optimizer: false, // default
           aggregation_type: intAggregationType,
           options: this.state.options,
@@ -628,14 +650,15 @@ class RasterFormModel extends Component {
       let body = {
         name: this.state.rasterName,
         organisation: this.state.selectedOrganisation.uuid.replace(/-/g, ""), // required
-        access_modifier: this.state.accesModifier,
+        access_modifier: this.state.accessModifier,
         observation_type: observationTypeId, // required
 
         description: this.state.description,
         supplier: this.state.supplierId && this.state.supplierId.username,
         supplier_code: this.state.supplierCode,
         aggregation_type: intAggregationType,
-        shared_with: this.state.sharedWith.map(e => e.uuid)
+        shared_with: this.state.sharedWith.map(e => e.uuid),
+        rescalable: this.state.rescalable
       };
       if (!optionsHasLayers(this.state.options)) {
         body.options = this.state.options;
@@ -815,11 +838,11 @@ class RasterFormModel extends Component {
                           info: "All users can view"
                         }
                       ]}
-                      choice={this.state.accesModifier}
+                      choice={this.state.accessModifier}
                       isFetching={false}
                       transformChoiceToDisplayValue={e => e.name}
                       updateModelValue={e =>
-                        this.setState({ accesModifier: e.name })}
+                        this.setState({ accessModifier: e.name })}
                       onKeyUp={e => {
                         if (e.keyCode === 13) {
                           // 13 = key enter
@@ -1027,8 +1050,11 @@ class RasterFormModel extends Component {
                   transformChoiceToDisplayValue={e => (e && e.name) || ""} // optional parameter if choices are objects, which field contains the displayvalue, default item itself is displayvalue
                   isFetching={this.props.colorMaps.isFetching}
                   choicesSearchable={true}
-                  modelValue={this.state.styles}
-                  updateModelValue={styles => {
+                  modelValue={{
+                    styles: this.state.styles,
+                    rescalable: this.state.rescalable
+                  }}
+                  updateModelValue={(styles) => {
                     this.setStyleAndOptions(styles);
                   }} // cb function to *update* the value of e.g. a raster's name in the parent model
                   // resetModelValue={() => this.setColorMap("")} // cb function to *reset* the value of e.g. a raster's name in the parent model
