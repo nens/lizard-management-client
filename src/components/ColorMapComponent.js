@@ -82,7 +82,9 @@ class ColorMapComponent extends Component {
       choices, // list of choices in select box. Depending on transformChoiceToDisplayValue,transformChoiceToDescription, transformChoiceToOption
       transformChoiceToDisplayValue, // optional parameter if choices are objects, which field contains the displayvalue, default item itself is displayvalue
       isFetching, // is the component still waiting for data from server?
-      modelValue, // string: e.g. the name of a raster
+      // modelValue contains the styles (modelValue.styles) and the
+      // rescalability (modelValue.rescalable) of a raster
+      modelValue, // dict of options for the colormap and rescalability of a raster
       updateModelValue, // cb function to *update* the value of e.g. a raster's name in the parent model
       validate, // function used to validate the props.modelValue. If validate returns true the props.modelValue passed to updateModelValue and checkmark is set.
       placeholder,
