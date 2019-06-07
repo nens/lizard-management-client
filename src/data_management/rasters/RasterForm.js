@@ -373,7 +373,7 @@ class RasterFormModel extends Component {
       invalidFields.push(2);
     }
 
-    // validate acces modifier for now always is true
+    // validate access modifier for now always is true
 
     if (!this.validateNewRasterName(this.state.rasterName)) {
       invalidFields.push(4);
@@ -517,7 +517,7 @@ class RasterFormModel extends Component {
       supplierCode: "",
       observationType: null,
       sharedWith: [],
-      accesModifier: "Private",
+      accessModifier: "Private",
       rescalable: false  // styles.rescalable
     };
   }
@@ -575,7 +575,7 @@ class RasterFormModel extends Component {
       supplierCode: currentRaster.supplier_code,
       observationType: currentRaster.observation_type,
       sharedWith: currentRaster.shared_with,
-      accesModifier: currentRaster.access_modifier,
+      accessModifier: currentRaster.access_modifier,
       rescalable: currentRaster.rescalable
     };
   }
@@ -622,7 +622,7 @@ class RasterFormModel extends Component {
         body: JSON.stringify({
           name: this.state.rasterName,
           organisation: this.state.selectedOrganisation.uuid.replace(/-/g, ""),
-          access_modifier: this.state.accesModifier,
+          access_modifier: this.state.accessModifier,
           observation_type: observationTypeId, //this.state.observationType,
           description: this.state.description,
           supplier: this.state.supplierId && this.state.supplierId.username,
@@ -650,7 +650,7 @@ class RasterFormModel extends Component {
       let body = {
         name: this.state.rasterName,
         organisation: this.state.selectedOrganisation.uuid.replace(/-/g, ""), // required
-        access_modifier: this.state.accesModifier,
+        access_modifier: this.state.accessModifier,
         observation_type: observationTypeId, // required
 
         description: this.state.description,
@@ -838,11 +838,11 @@ class RasterFormModel extends Component {
                           info: "All users can view"
                         }
                       ]}
-                      choice={this.state.accesModifier}
+                      choice={this.state.accessModifier}
                       isFetching={false}
                       transformChoiceToDisplayValue={e => e.name}
                       updateModelValue={e =>
-                        this.setState({ accesModifier: e.name })}
+                        this.setState({ accessModifier: e.name })}
                       onKeyUp={e => {
                         if (e.keyCode === 13) {
                           // 13 = key enter
