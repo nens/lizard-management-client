@@ -173,15 +173,15 @@ class RasterFormModel extends Component {
 
   // Options (contains colormaps)
   setStyleAndOptions(styleObj) {
+    console.log("will become:", styleObj);
+    console.log("state is currently:", this.state);
 
     // Check if people clicked in the checkbox for rescaling rasters
     if ("rescalable" in styleObj) {
-      let styles = this.state.styles;
-      styles.rescalable = styleObj.rescalable;
       this.setState({
-        rescalable: styleObj.rescalable,
-        styles: styles
+        rescalable: !this.state.rescalable,
       });
+      return;
 
     } else {
       const oldStyle = Object.assign({}, this.state.styles);
@@ -196,6 +196,8 @@ class RasterFormModel extends Component {
         options: newStyleOptions.options,
         styles: newStyleOptions.styles
       });
+
+      return;
     }
   }
   // SupplierId
@@ -516,7 +518,7 @@ class RasterFormModel extends Component {
       observationType: null,
       sharedWith: [],
       accesModifier: "Private",
-      rescalable: false
+      rescalable: false  // styles.rescalable
     };
   }
 
@@ -611,6 +613,7 @@ class RasterFormModel extends Component {
       this.state.temporalIntervalMinutes,
       this.state.temporalIntervalSeconds
     );
+    console.log(this.state);
 
     if (!this.props.currentRaster) {
       const opts = {
@@ -627,7 +630,7 @@ class RasterFormModel extends Component {
           supplier_code: this.state.supplierCode,
           temporal: this.state.temporalBool,
           interval: isoIntervalDuration, //'P1D', // P1D is default, = ISO 8601 datetime for 1 day",
-          rescalable: this.state.styles.rescalable,
+          rescalable: this.state.rescalable,
           optimizer: false, // default
           aggregation_type: intAggregationType,
           options: this.state.options,
@@ -656,7 +659,7 @@ class RasterFormModel extends Component {
         supplier_code: this.state.supplierCode,
         aggregation_type: intAggregationType,
         shared_with: this.state.sharedWith.map(e => e.uuid),
-        rescalable: this.state.styles.rescalable
+        rescalable: this.state.rescalable
       };
       if (!optionsHasLayers(this.state.options)) {
         body.options = this.state.options;
@@ -1052,7 +1055,7 @@ class RasterFormModel extends Component {
                     styles: this.state.styles,
                     rescalable: this.state.rescalable
                   }}
-                  updateModelValue={styles => {
+                  updateModelValue={(styles) => {
                     this.setStyleAndOptions(styles);
                   }} // cb function to *update* the value of e.g. a raster's name in the parent model
                   // resetModelValue={() => this.setColorMap("")} // cb function to *reset* the value of e.g. a raster's name in the parent model
