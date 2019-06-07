@@ -173,16 +173,16 @@ class RasterFormModel extends Component {
 
   // Options (contains colormaps)
   setStyleAndOptions(styleObj) {
-    console.log("will become:", styleObj);
-    console.log("state is currently:", this.state);
 
-    // Check if people clicked in the checkbox for rescaling rasters
+    // Check if people clicked in the checkbox for rescaling rasters.
+    // In that case, change this.state.rescalable
     if ("rescalable" in styleObj) {
       this.setState({
         rescalable: !this.state.rescalable,
       });
       return;
 
+    // Otherwise, the styles and options should be changed.
     } else {
       const oldStyle = Object.assign({}, this.state.styles);
       const oldOptions = Object.assign({}, this.state.options);
@@ -613,7 +613,6 @@ class RasterFormModel extends Component {
       this.state.temporalIntervalMinutes,
       this.state.temporalIntervalSeconds
     );
-    console.log(this.state);
 
     if (!this.props.currentRaster) {
       const opts = {
