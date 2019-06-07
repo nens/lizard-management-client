@@ -84,7 +84,7 @@ class ColorMapComponent extends Component {
       isFetching, // is the component still waiting for data from server?
       // modelValue contains the styles (modelValue.styles) and the
       // rescalability (modelValue.rescalable) of a raster
-      modelValue, // dict of options for the colormap and rescalability of a raster
+      modelValue, // dict of options for the colormap and the rescalability of the raster
       updateModelValue, // cb function to *update* the value of e.g. a raster's name in the parent model
       validate, // function used to validate the props.modelValue. If validate returns true the props.modelValue passed to updateModelValue and checkmark is set.
       placeholder,
