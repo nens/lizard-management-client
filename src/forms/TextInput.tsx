@@ -53,7 +53,6 @@ export default class TextInput extends Component<TextInputProps, {}> {
       const inputElem = document.getElementById(`textinput-${this.props.name}`);
 
       if (inputElem) {
-        console.log('Updating...');
         setTimeout(function() {
           inputElem.focus();
         }, 0);

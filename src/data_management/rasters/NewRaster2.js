@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import ManagementForm from "../../forms/ManagementForm";
 import TextInput from "../../forms/TextInput";
 import SelectBox from "../../forms/SelectBox";
+import CheckBox from "../../forms/CheckBox";
 
 import {
   nonEmptyString,
@@ -22,7 +23,13 @@ const onSubmitExample = (validatedData) => {
 class NewRaster2 extends Component {
   render() {
     return (
-      <ManagementForm onSubmit={onSubmitExample}>
+      <ManagementForm onSubmit={onSubmitExample} wizardStyle>
+        <CheckBox
+          name="checkcheck"
+          title="Testing a checkbox"
+          label="Check this if you want to see a nice checkmark"
+          initial={true}
+        />
         <SelectBox
           name="organisation"
           title="Organisation"
