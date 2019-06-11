@@ -75,6 +75,7 @@ type formValues = {
 
 interface FieldProps {
   name: string,
+  title?: string,
   initial?: any,
   subtitle?: string,
   validators?: Function[],
@@ -123,11 +124,20 @@ class ManagementForm extends Component<ManagementFormProps, ManagementFormState>
 
     const children = this.childrenAsArray();
 
+    // allNames: a list of names. Used to remember what order the fields are in.
     const allNames: string[] = [];
+
+    // The current value of each field.
     const formValues: {[key: string]: any} = {};
+
+    // A list of validator functions for each field.
     const formValidators: {[key: string]: Function[]} = {};
+
+    // A list of disabler functions (or booleans) for each field.
     const formDisablers: {[key: string]: Function | boolean} = {};
 
+    // Get values from the Field components' props to fill the
+    // aforementioned variables.
     children.forEach(child => {
       const {name, initial, validators, disabled} = child.props;
 
@@ -137,14 +147,18 @@ class ManagementForm extends Component<ManagementFormProps, ManagementFormState>
       allNames.push(name);
     });
 
+    // Initial calculation of validation values. Errors contains an array
+    // of error message for each field (empty if there are no errors).
+    // Validated has a boolean for each field that is true if there are
+    // no errors.
     const errors = this.calculateValidated(
       allNames, formValues, formValidators);
-
     const validated: {[key: string]: boolean} = {};
     allNames.forEach(name => {
       validated[name] = errors[name].length === 0;
     });
 
+    // A disabled boolean for each field.
     const disabled = this.calculateDisabled(
       allNames, formValues, formDisablers);
 
@@ -156,8 +170,12 @@ class ManagementForm extends Component<ManagementFormProps, ManagementFormState>
       formErrors: errors,
       formDisablers: formDisablers,
       formDisabled: disabled,
+      // The following are for wizardStyle only
+      // Currently opened field
       currentFieldIndex: 0,
+      // The highest field that was opened (show checkmarks up to here)
       highestFieldSoFar: 0,
+      // The highest field we tried to move past (show errors up to here)
       triedToMovePastField: -1
     };
   }
@@ -400,6 +418,7 @@ class ManagementForm extends Component<ManagementFormProps, ManagementFormState>
         {this.childrenAsArray().map(
           (child, idx) => {
             const name: string = child.props.name;
+            const title: string = child.props.title || name;
             const subtitle: string = child.props.subtitle || '';
             const validated = formValidated[name];
             const disabled = formDisabled[name];
@@ -411,7 +430,6 @@ class ManagementForm extends Component<ManagementFormProps, ManagementFormState>
                 value: formValues[name],
                 validated: validated,
                 valueChanged: (value: any) => this.valueChanged(name, value),
-                formValues: this.state.formValues,
                 wizardStyle: wizardStyle,
                 handleEnter: (e: any) => this.handleEnter(idx, e)
               });
@@ -419,15 +437,16 @@ class ManagementForm extends Component<ManagementFormProps, ManagementFormState>
             if (disabled) {
               return (
                 <DisabledStep
+                  key={"formfield"+idx}
                   step={idx+1}
-                  title={name}
+                  title={title}
                 />
               );
             } else if (wizardStyle) {
               return (
                 <WithStep
                   step={idx+1}
-                  title={name}
+                  title={title}
                   subtitle={subtitle}
                   key={"formfield"+idx}
                   opened={idx === currentFieldIndex}
@@ -446,7 +465,7 @@ class ManagementForm extends Component<ManagementFormProps, ManagementFormState>
               return (
                 <WithStep
                   step={idx+1}
-                  title={name}
+                  title={title}
                   subtitle={subtitle}
                   key={"formfield"+idx}
                   showCheck={true}

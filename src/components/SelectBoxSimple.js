@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import { Scrollbars } from "react-custom-scrollbars";
+import Scrollbars from "react-custom-scrollbars";
 //import ClearInputButton from "../components/ClearInputButton.js";
 import displayStyles from "../styles/Display.css";
 

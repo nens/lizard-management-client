@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import styles from "./ClearInputButton.css";
 
 interface ClearInputButtonProps {
-  className: string,
+  className?: string,
+  icon?: string
   onClick: (e: any) => void
 };
 
@@ -15,7 +16,7 @@ export default class ClearInputButton extends Component<ClearInputButtonProps, {
             styles.ClearInputTopRight
           } material-icons`}
         >
-          clear
+          {this.props.icon || "clear"}
         </i>
       </div>
     );

@@ -5,6 +5,13 @@
 // A Validator returns either an error message or false (if no errors)
 type validatorResult = string | false;
 
+export const required = (errorMessage:string) => (value: any): validatorResult => {
+  if (value === null) {
+    return errorMessage;
+  }
+  return false;
+}
+
 export const nonEmptyString = (str: string): validatorResult => {
   if (typeof str !== 'string') {
     return "Please enter a string.";
