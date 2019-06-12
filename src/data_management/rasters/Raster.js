@@ -185,117 +185,75 @@ class Raster extends Component {
   }
 
   handleDeleteRasterClick() {
-    var toBeDeletedRasterNamesArray = [];
-    var toBeDeletedRasterUuidsArray = [];
-
-    this.state.checkboxes.forEach(function(checkbox) {
-      // Make sure that the checkbox is checked
-      if (checkbox.checked) {
-        toBeDeletedRasterNamesArray.push(checkbox.raster.name);
-        toBeDeletedRasterUuidsArray.push(checkbox.raster.uuid);
-      }
-    });
-
-    // Show the raster names underneath each other in the confirm popup
-    let rasterNamesWithEnter = "";
-    toBeDeletedRasterNamesArray.forEach(function(rasterName) {
-      rasterNamesWithEnter += rasterName + " \n ";
-    });
-
     if (
       window.confirm(
         "Are you sure you want to delete the next raster(s)? \n  \n " +
-          rasterNamesWithEnter
+        this.state.checkboxes.filter(checkbox => checkbox.checked).map(checkbox=>checkbox.raster.name).join(" \n")
       )
     ) {
-      const url = "/api/v4/rasters/";
-      // array to store all fetches to later resolve all promises
-      let fetches = [];
-      toBeDeletedRasterUuidsArray.forEach(rasterUuid => {
-        const opts = {
-          // not permanently deleted, this will be implemented in backend
-          credentials: "same-origin",
-          method: "DELETE",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({})
-        };
-        fetches.push(fetch(url + rasterUuid + "/", opts));
-      });
-      Promise.all(fetches).then(values => {
-        // Refresh the page, so that the removed rasters are no longer visible
-        this.getRastersFromApi(
-          this.state.page,
-          this.state.searchTerms,
-          this.state.include3diScenarios
-        );
-
-        // TODO show user results of the delete
-        // the addNotification seems not to support translation and also may not be suitable for long text
-        // should we use modal instead ?
-        // const valuesWithRasters = values.map((el, ind)=> {return{
-        //   promise: el,
-        //   rasterUuid: this.state.rasters.find(e=> e.uuid === toBeDeletedRasterUuidsArray[ind])
-        // }});
-        // const failedDeletes = valuesWithRasters.filter(e => e.promise.ok === false);
-        // const succeededDeletes = valuesWithRasters.filter(e => e.promise.ok === true);
-        // // reduce to userpresentable string
-        // let deleteNotificationStr = '';
-        // if (succeededDeletes.length > 0) {
-        //   deleteNotificationStr += 'following rasters deleted'
-        // }
-        // // dispatch notification
-        // // is this notification evn working anywhere?
-        // this.props.addNotification("rasters deleted", 2000);
-      });
+      const checkedUuids = this.state.checkboxes.filter(checkbox => checkbox.checked).map(checkbox=>checkbox.raster.uuid);
+      const opts = {
+        // not permanently deleted, this will be implemented in backend
+        credentials: "same-origin",
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({})
+      };
+      this.fetchRasterUuidsWithOptions(checkedUuids, opts);
     }
   }
 
   handleFlushDataRasterClick() {
-    var toBeDeletedRasterNamesArray = [];
-    var toBeDeletedRasterUuidsArray = [];
-
-    this.state.checkboxes.forEach(function(checkbox) {
-      // Make sure that the checkbox is checked
-      if (checkbox.checked) {
-        toBeDeletedRasterNamesArray.push(checkbox.raster.name);
-        toBeDeletedRasterUuidsArray.push(checkbox.raster.uuid);
-      }
-    });
-
-    // Show the raster names underneath each other in the confirm popup
-    let rasterNamesWithEnter = "";
-    toBeDeletedRasterNamesArray.forEach(function(rasterName) {
-      rasterNamesWithEnter += rasterName + " \n ";
-    });
-
     if (
       window.confirm(
         "Are you sure you want to remove all data in the next raster(s)? \n  \n " +
-          rasterNamesWithEnter
+        this.state.checkboxes.filter(checkbox => checkbox.checked).map(checkbox=>checkbox.raster.name).join(" \n")
       )
     ) {
-      const url = "/api/v4/rasters/";
-      // array to store all fetches to later resolve all promises
-      let fetches = [];
-      toBeDeletedRasterUuidsArray.forEach(rasterUuid => {
-        const opts = {
-          // not permanently deleted, this will be implemented in backend
-          credentials: "same-origin",
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({"source": null} )
-        };
-        fetches.push(fetch(url + rasterUuid + "/", opts));
-      });
-      Promise.all(fetches).then(values => {
-        // Refresh the page, so that the removed rasters are no longer visible
-        this.getRastersFromApi(
-          this.state.page,
-          this.state.searchTerms,
-          this.state.include3diScenarios
-        );
-      });
+      const checkedUuids = this.state.checkboxes.filter(checkbox => checkbox.checked).map(checkbox=>checkbox.raster.uuid);
+      const opts = {
+        // not permanently deleted, this will be implemented in backend
+        credentials: "same-origin",
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({"source": null} )
+      };
+      this.fetchRasterUuidsWithOptions(checkedUuids, opts);
     }
+  }
+
+  fetchRasterUuidsWithOptions(uuids, fetchOptions) {
+    const url = "/api/v4/rasters/";
+    // array to store all fetches to later resolve all promises
+    const fetches = uuids.map (rasterUuid => {
+      return (fetch(url + rasterUuid + "/", fetchOptions));
+    });
+    Promise.all(fetches).then(values => {
+      // Refresh the page, so that the removed rasters are no longer visible
+      this.getRastersFromApi(
+        this.state.page,
+        this.state.searchTerms,
+        this.state.include3diScenarios
+      );
+    });
+    // TODO show user results of the fetch
+    // this function should probably be changed to a async function and then the calling function should do the notification
+    // the addNotification seems not to support translation and also may not be suitable for long text
+    // should we use modal instead ?
+    // const valuesWithRasters = values.map((el, ind)=> {return{
+    //   promise: el,
+    //   rasterUuid: this.state.rasters.find(e=> e.uuid === toBeDeletedRasterUuidsArray[ind])
+    // }});
+    // const failedDeletes = valuesWithRasters.filter(e => e.promise.ok === false);
+    // const succeededDeletes = valuesWithRasters.filter(e => e.promise.ok === true);
+    // // reduce to userpresentable string
+    // let deleteNotificationStr = '';
+    // if (succeededDeletes.length > 0) {
+    //   deleteNotificationStr += 'following rasters deleted'
+    // }
+    // // dispatch notification
+    // // is this notification evn working anywhere?
+    // this.props.addNotification("rasters deleted", 2000);
   }
 
   clickRegularCheckbox(e) {
