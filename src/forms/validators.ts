@@ -3,7 +3,7 @@
 // Sometimes they take arguments and return validators
 
 // A Validator returns either an error message or false (if no errors)
-type validatorResult = string | false;
+export type validatorResult = string | false;
 
 export const required = (errorMessage:string) => (value: any): validatorResult => {
   if (value === null) {
@@ -35,4 +35,4 @@ export const testRegex = (regex: RegExp, error: string) => (str: string): valida
     return error;
   }
   return false;
-}
+};

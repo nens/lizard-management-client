@@ -11,11 +11,11 @@ import formStyles from "../styles/Forms.css";
 
 type displayStringsT = {[key: string]: string};
 type choiceT = [string|number, string] | [string|number, string, string]
-type choicesT = choiceT[];
+export type choicesT = choiceT[];
 
 interface SelectBoxProps {
   name: string,
-  value: string,
+  value: string | null,
   choices: choicesT,
   placeHolder?: string,
   validators?: Function[],
@@ -103,7 +103,7 @@ export default class SelectBox extends Component<SelectBoxProps, SelectBoxState>
           autoComplete="false"
           className={formStyles.FormControl}
           placeholder={placeHolder}
-          value={displayStrings[value] || ""}
+          value={value ? (displayStrings[value] || "") : ""}
           onClick={() => this.toggleChoices()}
           onKeyUp={this.handleKeyUp}
           onChange={() => {}}
