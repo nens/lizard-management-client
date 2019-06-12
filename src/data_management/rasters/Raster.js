@@ -36,6 +36,7 @@ class Raster extends Component {
     };
     this.handleNewRasterClick = this.handleNewRasterClick.bind(this);
     this.handleDeleteRasterClick = this.handleDeleteRasterClick.bind(this);
+    this.handleFlushDataRasterClick = this.handleFlushDataRasterClick.bind(this);
     this.checkAllCheckBoxes = this.checkAllCheckBoxes.bind(this);
     this.clickRegularCheckbox = this.clickRegularCheckbox.bind(this);
     this.handleNewRasterClick = this.handleNewRasterClick.bind(this);
@@ -245,6 +246,54 @@ class Raster extends Component {
         // // dispatch notification
         // // is this notification evn working anywhere?
         // this.props.addNotification("rasters deleted", 2000);
+      });
+    }
+  }
+
+  handleFlushDataRasterClick() {
+    var toBeDeletedRasterNamesArray = [];
+    var toBeDeletedRasterUuidsArray = [];
+
+    this.state.checkboxes.forEach(function(checkbox) {
+      // Make sure that the checkbox is checked
+      if (checkbox.checked) {
+        toBeDeletedRasterNamesArray.push(checkbox.raster.name);
+        toBeDeletedRasterUuidsArray.push(checkbox.raster.uuid);
+      }
+    });
+
+    // Show the raster names underneath each other in the confirm popup
+    let rasterNamesWithEnter = "";
+    toBeDeletedRasterNamesArray.forEach(function(rasterName) {
+      rasterNamesWithEnter += rasterName + " \n ";
+    });
+
+    if (
+      window.confirm(
+        "Are you sure you want to remove all data in the next raster(s)? \n  \n " +
+          rasterNamesWithEnter
+      )
+    ) {
+      const url = "/api/v4/rasters/";
+      // array to store all fetches to later resolve all promises
+      let fetches = [];
+      toBeDeletedRasterUuidsArray.forEach(rasterUuid => {
+        const opts = {
+          // not permanently deleted, this will be implemented in backend
+          credentials: "same-origin",
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({"source": null} )
+        };
+        fetches.push(fetch(url + rasterUuid + "/", opts));
+      });
+      Promise.all(fetches).then(values => {
+        // Refresh the page, so that the removed rasters are no longer visible
+        this.getRastersFromApi(
+          this.state.page,
+          this.state.searchTerms,
+          this.state.include3diScenarios
+        );
       });
     }
   }
@@ -509,6 +558,28 @@ class Raster extends Component {
           </div>
         </div>
         <div className={`${rasterTableStyles.tableFooterDeleteRasters}`}>
+        <button
+            type="button"
+            className={
+              clickedCheckboxes > 0
+                ? `${buttonStyles.Button} ${buttonStyles.Danger}`
+                : `${buttonStyles.Button} ${buttonStyles.Inactive}`
+            }
+            onClick={this.handleFlushDataRasterClick}
+            style={{ maxHeight: "36px", width: "204px",marginRight: "10px" }}
+            disabled={clickedCheckboxes === 0 ? true : false}
+          >
+            <FormattedMessage
+              id="rasters.flush_data_rasters"
+              defaultMessage={` Flush Data {clickedCheckboxes, number} {clickedCheckboxes, plural,
+                one {Raster}
+                other {Rasters}}`}
+              values={{
+                clickedCheckboxes
+              }}
+            />
+            <Ink />
+          </button>
           <button
             type="button"
             className={
