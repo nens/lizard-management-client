@@ -2,6 +2,7 @@ import React, { Component } from "react";
 
 import ManagementForm from "../../forms/ManagementForm";
 import ColorMapInput, { colorMapValidator } from "../../forms/ColorMapInput";
+import DurationField, { durationValidator } from "../../forms/DurationField";
 import TextInput from "../../forms/TextInput";
 import SelectBox from "../../forms/SelectBox";
 import CheckBox from "../../forms/CheckBox";
@@ -25,6 +26,11 @@ class NewRaster2 extends Component {
   render() {
     return (
       <ManagementForm onSubmit={onSubmitExample} wizardStyle>
+        <DurationField
+          name="duration"
+          title="Your duration here"
+          validators={[durationValidator(true)]}
+        />
         <ColorMapInput
           name="colormap"
           title="Choose a color map"
