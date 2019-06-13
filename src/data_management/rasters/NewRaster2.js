@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 
 import ManagementForm from "../../forms/ManagementForm";
+import ColorMapInput, { colorMapValidator } from "../../forms/ColorMapInput";
+import DurationField, { durationValidator } from "../../forms/DurationField";
 import TextInput from "../../forms/TextInput";
 import SelectBox from "../../forms/SelectBox";
 import CheckBox from "../../forms/CheckBox";
@@ -37,6 +39,20 @@ class NewRaster2 extends Component {
           isFetching={false}
           placeholder={"search organisations"}
           initial={[]}
+        />
+        <DurationField
+          name="duration"
+          title="Your duration here"
+          validators={[durationValidator(true)]}
+        />
+        <ColorMapInput
+          name="colormap"
+          title="Choose a color map"
+          colorMaps={[
+            ["autumn", "Herfst"],
+            ["Blues", "Blauwen"],
+            ["jet", "Everybody loves jet"]
+          ]}
         />
         <CheckBox
           name="checkcheck"
