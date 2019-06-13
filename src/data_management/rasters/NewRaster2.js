@@ -59,9 +59,9 @@ class NewRaster2 extends Component {
           name="sharedWithOrganisation"
           title="Shared With Organisation"
           choices={[
-            ["abc", "Display string", "An example of an organisation"],
-            ["nens", "Nelen & Schuurmans", "We work here"],
-            ["home", "Thuis"],
+            { value: "abc", display: "aBc" },
+            { value: "nens", display: "nEns" },
+            { value: "home", display: "hOmbre" },
           ]}
           readonly={false}
           isFetching={false}

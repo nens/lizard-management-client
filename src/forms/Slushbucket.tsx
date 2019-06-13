@@ -9,6 +9,8 @@ import formStyles from "../styles/Forms.css";
 import inputStyles from "../styles/Input.css";
 import displayStyles from "../styles/Display.css";
 
+type choiceT = {value: string, display: string}; //[string|number, string]
+export type choicesT = [choiceT];
 
 interface Props {
   title: string,
@@ -17,7 +19,7 @@ interface Props {
   readonly: boolean | undefined,
   isFetching: boolean | undefined,
   value: string[],
-  choices: string[],
+  choices: choicesT,
   validators?: Function[],
   validated: boolean,
   valueChanged: Function,
@@ -73,7 +75,7 @@ export default class SlushBucket extends Component<Props, State> {
           }}
         >
           <input
-            // tabIndex="-1"
+            tabIndex={-1}
             type="text"
             autoComplete="false"
             className={
@@ -141,44 +143,35 @@ export default class SlushBucket extends Component<Props, State> {
                     // if user typed search string only show those that contain string
                     // TODO sort by search string ?
                     return choiceItem
+                      .display
                       .toLowerCase()
                       .includes(this.state.searchString.toLowerCase());
                   }
-                })
-                .sort((nameA, nameB) => {
-                  if (nameA < nameB) {
-                    return -1;
-                  }
-                  if (nameA > nameB) {
-                    return 1;
-                  }
-                  // names must be equal
-                  return 0;
                 })
                 .map((choiceItem, i) => {
                   return (
                     <div
                       tabIndex={i + 1}
-                      key={choiceItem + i}
+                      key={choiceItem.value + '_' + i}
                       className={`${styles.ResultRow} ${selected.includes(
-                        choiceItem
+                        choiceItem.value
                       )
                         ? styles.Active
                         : ""}`}
                       onMouseDown={() => {
                         if (
-                          selected.filter(e => e === choiceItem).length === 0
+                          selected.filter(e => e === choiceItem.value).length === 0
                         ) {
-                          selected.push(choiceItem);
+                          selected.push(choiceItem.value);
                           updateModelValue(selected);
                         } else {
                           updateModelValue(
-                            selected.filter(e => e !== choiceItem)
+                            selected.filter(e => e !== choiceItem.value)
                           );
                         }
                       }}
                     >
-                      {choiceItem}
+                      {choiceItem.display}
                     </div>
                   );
                 })}
@@ -195,17 +188,20 @@ export default class SlushBucket extends Component<Props, State> {
             </div>
             <Scrollbars autoHeight autoHeightMin={400} autoHeightMax={400}>
               {selected
+                .map((selectedItem) => {
+                  // lookup complete { value, display} object in choices array
+                  return choices.filter(choice => choice.value === selectedItem)[0];
+                })
                 .sort((nameA, nameB) => {
-                  if (nameA < nameB) {
+                  if (nameA.display < nameB.display) {
                     return -1;
                   }
-                  if (nameA > nameB) {
+                  if (nameA.display > nameB.display) {
                     return 1;
                   }
-                  // names must be equal
                   return 0;
                 })
-                .map((choiceItem, i) => {
+                .map((choiceItem,i) => {
                   return (
                     <div
                       className={`${styles.SelectedRow} ${this.props.readonly
@@ -216,13 +212,13 @@ export default class SlushBucket extends Component<Props, State> {
                         justifyContent: "space-between",
                         alignItems: "center"
                       }}
-                      key={choiceItem + i}
+                      key={choiceItem.value + '_' + i}
                     >
-                      <div>{choiceItem}</div>
+                      <div>{choiceItem.display}</div>
                       <ClearButton
                         onClick={() => {
                           updateModelValue(
-                            selected.filter(e => e !== choiceItem)
+                            selected.filter(e => e !== choiceItem.value)
                           );
                         }}
                         style={{
