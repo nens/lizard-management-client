@@ -9,8 +9,10 @@ import formStyles from "../styles/Forms.css";
 import inputStyles from "../styles/Input.css";
 import displayStyles from "../styles/Display.css";
 
-type choiceT = {value: string, display: string}; //[string|number, string]
+type choiceT = {value: string | number, display: string};
 export type choicesT = [choiceT];
+type valueItemT = string | number
+type valueT = [valueItemT];
 
 interface Props {
   title: string,
@@ -18,7 +20,7 @@ interface Props {
   placeholder: string,
   readonly: boolean | undefined,
   isFetching: boolean | undefined,
-  value: string[],
+  value: valueT,
   choices: choicesT,
   validators?: Function[],
   validated: boolean,
@@ -38,8 +40,6 @@ export default class SlushBucket extends Component<Props, State> {
     };
     this.handleKeyUp = this.handleKeyUp.bind(this);
   }
-
-///////////////////////////////////////////////////////////////
 
   handleKeyUp(e: any): void {
     if (e.key === "Escape") this.resetSearchString();

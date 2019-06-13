@@ -25,36 +25,6 @@ class NewRaster2 extends Component {
   render() {
     return (
       <ManagementForm onSubmit={onSubmitExample} wizardStyle>
-        {/* <SlushBucket
-          choices={this.props.organisations.availableForRasterSharedWith.map(
-            e => e.name
-          )}
-          readonly={
-            false 
-          }
-          selected={this.state.sharedWith.map(e => e.name)}
-          isFetching={this.props.organisations.isFetching}
-          placeholder={"search organisations"}
-          updateModelValue={selected => {
-            this.setState({
-              sharedWith: selected
-                .map(selectedItem => {
-                  const found = this.props.organisations.availableForRasterSharedWith.find(
-                    availableItem =>
-                      availableItem.name === selectedItem
-                  );
-                  if (found) {
-                    let adaptebleFound = Object.assign({}, found);
-                    adaptebleFound.roles = undefined;
-                    return adaptebleFound;
-                  } else {
-                    return undefined;
-                  }
-                })
-                .filter(e => e !== undefined)
-            });
-          }}
-        /> */}
         <Slushbucket
           name="sharedWithOrganisation"
           title="Shared With Organisation"
