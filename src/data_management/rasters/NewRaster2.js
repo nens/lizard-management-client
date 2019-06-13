@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 
 import ManagementForm from "../../forms/ManagementForm";
-import ColorMapInput, { colorMapValidator } from "../../forms/ColorMapInput";
 import TextInput from "../../forms/TextInput";
 import SelectBox from "../../forms/SelectBox";
 import CheckBox from "../../forms/CheckBox";
+import Slushbucket from "../../forms/Slushbucket";
 
 import {
   nonEmptyString,
@@ -25,15 +25,48 @@ class NewRaster2 extends Component {
   render() {
     return (
       <ManagementForm onSubmit={onSubmitExample} wizardStyle>
-        <ColorMapInput
-          name="colormap"
-          title="Choose a color map"
-          colorMaps={[
-            ["autumn", "Herfst"],
-            ["Blues", "Blauwen"],
-            ["jet", "Everybody loves jet"]
+        {/* <SlushBucket
+          choices={this.props.organisations.availableForRasterSharedWith.map(
+            e => e.name
+          )}
+          readonly={
+            false 
+          }
+          selected={this.state.sharedWith.map(e => e.name)}
+          isFetching={this.props.organisations.isFetching}
+          placeholder={"search organisations"}
+          updateModelValue={selected => {
+            this.setState({
+              sharedWith: selected
+                .map(selectedItem => {
+                  const found = this.props.organisations.availableForRasterSharedWith.find(
+                    availableItem =>
+                      availableItem.name === selectedItem
+                  );
+                  if (found) {
+                    let adaptebleFound = Object.assign({}, found);
+                    adaptebleFound.roles = undefined;
+                    return adaptebleFound;
+                  } else {
+                    return undefined;
+                  }
+                })
+                .filter(e => e !== undefined)
+            });
+          }}
+        /> */}
+        <Slushbucket
+          name="sharedWithOrganisation"
+          title="Shared With Organisation"
+          choices={[
+            ["abc", "Display string", "An example of an organisation"],
+            ["nens", "Nelen & Schuurmans", "We work here"],
+            ["home", "Thuis"],
           ]}
-          validators={[colorMapValidator(true)]}
+          readonly={false}
+          isFetching={false}
+          placeholder={"search organisations"}
+          initial={[]}
         />
         <CheckBox
           name="checkcheck"
