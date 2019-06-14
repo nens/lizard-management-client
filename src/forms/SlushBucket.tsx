@@ -61,7 +61,6 @@ export default class SlushBucket extends Component<Props, State> {
     } = this.props;
 
     const selected = value;
-    const updateModelValue = valueChanged;
 
     return (
       <div className={`${styles.SelectChoice} form-input`}>
@@ -152,10 +151,10 @@ export default class SlushBucket extends Component<Props, State> {
                         if (
                           selected.filter(item => item === choiceItem.value).length === 0
                         ) {
-                          selected.push(choiceItem.value);
-                          updateModelValue(selected);
+                          const updatedSelected = selected.concat([choiceItem.value]);
+                          valueChanged(updatedSelected);
                         } else {
-                          updateModelValue(
+                          valueChanged(
                             selected.filter(e => e !== choiceItem.value)
                           );
                         }
@@ -207,7 +206,7 @@ export default class SlushBucket extends Component<Props, State> {
                       <div>{choiceItem.display}</div>
                       <ClearButton
                         onClick={() => {
-                          updateModelValue(
+                          valueChanged(
                             selected.filter(e => e !== choiceItem.value)
                           );
                         }}
