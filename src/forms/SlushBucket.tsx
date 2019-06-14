@@ -181,15 +181,6 @@ export default class SlushBucket extends Component<Props, State> {
                   // lookup complete { value, display} object in choices array
                   return choices.filter(choice => choice.value === selectedItem)[0];
                 })
-                .sort((nameA, nameB) => {
-                  if (nameA.display < nameB.display) {
-                    return -1;
-                  }
-                  if (nameA.display > nameB.display) {
-                    return 1;
-                  }
-                  return 0;
-                })
                 .map((choiceItem,i) => {
                   return (
                     <div
