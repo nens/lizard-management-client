@@ -60,7 +60,7 @@ export default class SlushBucket extends Component<Props, State> {
       valueChanged
     } = this.props;
 
-    const selected = value;
+    const selected = value || [];
 
     return (
       <div className={`${styles.SelectChoice} form-input`}>

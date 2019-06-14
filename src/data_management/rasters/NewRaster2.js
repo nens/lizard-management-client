@@ -37,7 +37,6 @@ class NewRaster2 extends Component {
           ]}
           readonly={false}
           placeholder={"search organisations"}
-          initial={[]}
         />
         <DurationField
           name="duration"
