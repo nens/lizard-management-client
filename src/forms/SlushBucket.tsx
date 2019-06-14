@@ -150,7 +150,7 @@ export default class SlushBucket extends Component<Props, State> {
                         : ""}`}
                       onMouseDown={() => {
                         if (
-                          selected.filter(e => e === choiceItem.value).length === 0
+                          selected.filter(item => item === choiceItem.value).length === 0
                         ) {
                           selected.push(choiceItem.value);
                           updateModelValue(selected);
