@@ -36,7 +36,6 @@ class NewRaster2 extends Component {
             { value: "home", display: "hOmbre" },
           ]}
           readonly={false}
-          isFetching={false}
           placeholder={"search organisations"}
           initial={[]}
         />

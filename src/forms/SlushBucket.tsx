@@ -19,7 +19,6 @@ interface Props {
   name: string,
   placeholder: string,
   readonly: boolean | undefined,
-  isFetching: boolean | undefined,
   value: valueT,
   choices: choicesT,
   validators?: Function[],
@@ -57,7 +56,6 @@ export default class SlushBucket extends Component<Props, State> {
     const {
       choices,
       value,
-      isFetching,
       placeholder,
       valueChanged
     } = this.props;
@@ -92,14 +90,6 @@ export default class SlushBucket extends Component<Props, State> {
             disabled={this.props.readonly}
             readOnly={this.props.readonly}
           />
-          <div
-            className={`${styles.Spinner} ${isFetching
-              ? displayStyles.Block
-              : displayStyles.None}`}
-          >
-            <MDSpinner size={18} />
-          </div>
-
           <div
             style={{
               transform: "translateX(-33px)",
