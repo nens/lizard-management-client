@@ -137,30 +137,30 @@ export default class SlushBucket extends Component<Props, State> {
                       .includes(this.state.searchString.toLowerCase());
                   }
                 })
-                .map((choiceItem, i) => {
+                .map(({value, display}, i) => {
                   return (
                     <div
                       tabIndex={i + 1}
-                      key={choiceItem.value + '_' + i}
+                      key={value + '_' + i}
                       className={`${styles.ResultRow} ${selected.includes(
-                        choiceItem.value
+                        value
                       )
                         ? styles.Active
                         : ""}`}
                       onMouseDown={() => {
                         if (
-                          selected.filter(item => item === choiceItem.value).length === 0
+                          selected.filter(item => item === value).length === 0
                         ) {
-                          const updatedSelected = selected.concat([choiceItem.value]);
+                          const updatedSelected = selected.concat([value]);
                           valueChanged(updatedSelected);
                         } else {
                           valueChanged(
-                            selected.filter(e => e !== choiceItem.value)
+                            selected.filter(e => e !== value)
                           );
                         }
                       }}
                     >
-                      {choiceItem.display}
+                      {display}
                     </div>
                   );
                 })}
