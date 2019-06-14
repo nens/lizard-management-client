@@ -6,7 +6,7 @@ import DurationField, { durationValidator } from "../../forms/DurationField";
 import TextInput from "../../forms/TextInput";
 import SelectBox from "../../forms/SelectBox";
 import CheckBox from "../../forms/CheckBox";
-import Slushbucket from "../../forms/Slushbucket";
+import SlushBucket from "../../forms/SlushBucket";
 
 import {
   nonEmptyString,
@@ -27,7 +27,7 @@ class NewRaster2 extends Component {
   render() {
     return (
       <ManagementForm onSubmit={onSubmitExample} wizardStyle>
-        <Slushbucket
+        <SlushBucket
           name="sharedWithOrganisation"
           title="Shared With Organisation"
           choices={[
