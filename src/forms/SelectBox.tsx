@@ -17,7 +17,7 @@ interface SelectBoxProps {
   name: string,
   value: string | null,
   choices: choicesT,
-  placeHolder?: string,
+  placeholder?: string,
   validators?: Function[],
   validated: boolean,
   handleEnter: (e: any) => void,
@@ -84,7 +84,7 @@ export default class SelectBox extends Component<SelectBoxProps, SelectBoxState>
       value,
       name,
       valueChanged,
-      placeHolder,
+      placeholder,
       showSearchField
     } = this.props;
     const {
@@ -102,7 +102,7 @@ export default class SelectBox extends Component<SelectBoxProps, SelectBoxState>
           type="text"
           autoComplete="false"
           className={formStyles.FormControl}
-          placeholder={placeHolder}
+          placeholder={placeholder}
           value={value ? (displayStrings[value] || "") : ""}
           onClick={() => this.toggleChoices()}
           onKeyUp={this.handleKeyUp}

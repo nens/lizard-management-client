@@ -9,7 +9,7 @@ import formStyles from "../styles/Forms.css";
 interface TextInputProps {
   name: string,
   value: string,
-  placeHolder?: string,
+  placeholder?: string,
   validators?: Function[],
   validated: boolean,
   handleEnter: (e: any) => void,
@@ -21,7 +21,7 @@ export default class TextInput extends Component<TextInputProps, {}> {
   render() {
     const {
       name,
-      placeHolder,
+      placeholder,
       value,
       validated,
       valueChanged,
@@ -36,7 +36,7 @@ export default class TextInput extends Component<TextInputProps, {}> {
           type="text"
           autoComplete="false"
           className={formStyles.FormControl}
-          placeholder={placeHolder}
+          placeholder={placeholder}
           onChange={e => this.props.valueChanged(e.target.value)}
           value={value || ""}
           onKeyUp={handleEnter}

@@ -17,7 +17,7 @@ type ColorMapType = {
 };
 
 interface ColorMapProps {
-  placeHolder?: string,
+  placeholder?: string,
   validators?: Function[],
   name: string,
   value: ColorMapType | null,
@@ -175,7 +175,7 @@ class ColorMapInput extends Component<ColorMapProps, ColorMapState> {
       value,
       valueChanged,
       validated,
-      placeHolder,
+      placeholder,
       wizardStyle
     } = this.props;
 
@@ -207,7 +207,7 @@ class ColorMapInput extends Component<ColorMapProps, ColorMapState> {
           handleEnter={() => {}}
           wizardStyle={false}
           valueChanged={this.colorMapChanged.bind(this)}
-          placeHolder="Choose a color map"
+          placeholder="Choose a color map"
           showSearchField={true}
         />
 

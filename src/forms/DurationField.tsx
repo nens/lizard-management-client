@@ -9,7 +9,7 @@ import inputStyles from "../styles/Input.css";
 interface DurationFieldProps {
   name: string,
   value: string,
-  placeHolder?: string,
+  placeholder?: string,
   validators?: Function[],
   validated: boolean,
   handleEnter: (e: any) => void,
@@ -122,7 +122,7 @@ export default class DurationField extends Component<DurationFieldProps, {}> {
   render() {
     const {
       name,
-      placeHolder,
+      placeholder,
       value,
       validated,
       valueChanged,
