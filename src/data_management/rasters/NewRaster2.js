@@ -6,6 +6,7 @@ import DurationField, { durationValidator } from "../../forms/DurationField";
 import TextInput from "../../forms/TextInput";
 import SelectBox from "../../forms/SelectBox";
 import CheckBox from "../../forms/CheckBox";
+import SlushBucket from "../../forms/SlushBucket";
 
 import {
   nonEmptyString,
@@ -26,6 +27,17 @@ class NewRaster2 extends Component {
   render() {
     return (
       <ManagementForm onSubmit={onSubmitExample} wizardStyle>
+        <SlushBucket
+          name="sharedWithOrganisation"
+          title="Shared With Organisation"
+          choices={[
+            { value: "abc", display: "aBc" },
+            { value: "nens", display: "nEns" },
+            { value: "home", display: "hOmbre" },
+          ]}
+          readonly={false}
+          placeholder={"search organisations"}
+        />
         <DurationField
           name="duration"
           title="Your duration here"
@@ -39,7 +51,6 @@ class NewRaster2 extends Component {
             ["Blues", "Blauwen"],
             ["jet", "Everybody loves jet"]
           ]}
-          validators={[colorMapValidator(true)]}
         />
         <CheckBox
           name="checkcheck"
