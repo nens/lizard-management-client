@@ -106,6 +106,10 @@ class NewRaster2 extends Component {
           initial="whee"
           validators={[testRegex(/hmm/, 'Please enter a string containing "hmm".')]}
         />
+        <TextInput
+          name="test4"
+          disabled={true}
+          />
       </ManagementForm>
     );
   }
