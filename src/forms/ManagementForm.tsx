@@ -83,6 +83,7 @@ interface FieldProps {
 }
 
 interface ManagementFormProps {
+  initial?: formValues,
   wizardStyle?: boolean,
   children: Component<FieldProps, any>[],
   onSubmit: (validatedData: formValues) => void
@@ -136,12 +137,19 @@ class ManagementForm extends Component<ManagementFormProps, ManagementFormState>
     // A list of disabler functions (or booleans) for each field.
     const formDisablers: {[key: string]: Function | boolean} = {};
 
+    const formInitial = this.props.initial || {};
+
     // Get values from the Field components' props to fill the
     // aforementioned variables.
     children.forEach(child => {
-      const {name, initial, validators, disabled} = child.props;
+      const {name, validators, disabled} = child.props;
 
-      formValues[name] = initial || null;
+      const initial = (
+        'initial' in child.props ? child.props.initial :
+        name in formInitial ? formInitial[name] :
+        null);
+
+      formValues[name] = initial;
       formValidators[name] = validators || [];
       formDisablers[name] = disabled || false;
       allNames.push(name);
@@ -481,6 +489,7 @@ class ManagementForm extends Component<ManagementFormProps, ManagementFormState>
           })}
         {!wizardStyle || this.isLastStep() ?
          <SubmitButton notValidatedSteps={this.notValidatedSteps()} submit={this.submit.bind(this)} /> : null}
+        {JSON.stringify(this.state.formValues, null, 2)}
       </div>
     );
   }

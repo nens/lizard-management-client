@@ -26,15 +26,19 @@ const onSubmitExample = (validatedData) => {
 class NewRaster2 extends Component {
   render() {
     return (
-      <ManagementForm onSubmit={onSubmitExample} wizardStyle>
-        <SlushBucket
-          name="sharedWithOrganisation"
-          title="Shared With Organisation"
-          choices={[
-            { value: "abc", display: "aBc" },
-            { value: "nens", display: "nEns" },
-            { value: "home", display: "hOmbre" },
-          ]}
+      <ManagementForm onSubmit={onSubmitExample} wizardStyle
+      initial={{
+        first: "This initial was set through the form"
+      }}
+      >
+      <SlushBucket
+      name="sharedWithOrganisation"
+      title="Shared With Organisation"
+      choices={[
+        { value: "abc", display: "aBc" },
+        { value: "nens", display: "nEns" },
+        { value: "home", display: "hOmbre" },
+      ]}
           readonly={false}
           placeholder={"search organisations"}
         />
@@ -74,7 +78,6 @@ class NewRaster2 extends Component {
           name="first"
           title="The first field"
           placeholder="Enter a test"
-          initial="whee"
         />
         <TextInput
           name="test"
