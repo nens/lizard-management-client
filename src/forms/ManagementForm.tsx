@@ -283,6 +283,16 @@ class ManagementForm extends Component<ManagementFormProps, ManagementFormState>
     });
   }
 
+  lastStep(): number {
+    // Return the index of the last *enabled* step.
+
+    let indexOfLastStep = this.state.allNames.length - 1;
+    while (this.state.formDisabled[this.state.allNames[indexOfLastStep]]) {
+      indexOfLastStep--;
+    }
+    return indexOfLastStep;
+  }
+
   tryToGoToStep(to: number) {
     // Going to an earlier step always succeeds immediately,
     // unless the to: step is disabled; then nothing happens.
@@ -292,44 +302,35 @@ class ManagementForm extends Component<ManagementFormProps, ManagementFormState>
     // list or the goal is reached.
     const from = this.state.currentFieldIndex;
     const names = this.state.allNames;
+    const lastStep = this.lastStep();
 
-    console.log('Trying to move from ', from, ' to ', to);
+    if (to > lastStep) {
+      to = lastStep;
+    }
 
     if (to <= from) {
-      if (!this.state.formDisabled[names[to]]) {
+      if (to !== from && !this.state.formDisabled[names[to]]) {
         this.setState({currentFieldIndex: to});
       }
       return;
     }
 
-    // Adapt to so that it is at the most the last non-disabled field
-    if (to >= (names.length - 1)) {
-      to = (names.length - 1);
-      while (this.state.formDisabled[names[to]]) to--;
-    }
-    console.log('Hmm', to, from);
-    if (to <= from) return;
+    // True now: from < to <= lastStep, if to != lastStep then there is at least
+    // one enabled field after to
 
     // Now we move step by step.
     let current = from;
     let triedToMovePastField = this.state.triedToMovePastField;
 
-    console.log('Here', current, to, from);
-    while (to > current || this.state.formDisabled[names[current]]) {
-      console.log('Current is...', current);
-      // Skip disabled fields
-      if (this.state.formDisabled[names[current]]) {
-        current++;
-        console.log('Disabled, updated to', current);
-        continue;
-      }
-
-      // At the next enabled field, check if it validates
-      if (!this.state.formValidated[names[current]]) {
-        // As we failed validation here, show error message!
-        triedToMovePastField = current;
+    while (current < to || this.state.formDisabled[names[current]]) {
+      const name = names[current];
+      // Don't move on if the field doesn't validate
+      if (!this.state.formDisabled[name] && !this.state.formValidated[name]) {
+        triedToMovePastField = current; // Show error messages up to here
         break;
       }
+
+      // Move on.
       current++;
     }
 
@@ -339,10 +340,6 @@ class ManagementForm extends Component<ManagementFormProps, ManagementFormState>
       highestFieldSoFar,
       triedToMovePastField
     });
-  }
-
-  isLastStep(): boolean {
-    return this.state.currentFieldIndex >= (this.state.allNames.length - 1);
   }
 
   notValidatedSteps(): number[] {
@@ -455,7 +452,7 @@ class ManagementForm extends Component<ManagementFormProps, ManagementFormState>
                   nextStep={() => this.tryToGoToStep(idx + 1)}
                   selectStep={() => this.tryToGoToStep(idx)}
                   wizardStyle={true}
-                  isLastStep={idx+1 === this.state.allNames.length}
+                  isLastStep={idx >= this.lastStep()}
                   validated={validated}
                   errors={errors}>
                   {childWithExtraFields}
@@ -479,7 +476,7 @@ class ManagementForm extends Component<ManagementFormProps, ManagementFormState>
               );
             }
           })}
-        {!wizardStyle || this.isLastStep() ?
+        {!wizardStyle || currentFieldIndex >= this.lastStep() ?
          <SubmitButton notValidatedSteps={this.notValidatedSteps()} submit={this.submit.bind(this)} /> : null}
       </div>
     );
