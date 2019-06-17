@@ -1,12 +1,11 @@
-// The main Form class
-
+// Multi-line version of TextArea
 import React, { Component } from "react";
 
 import ClearInputButton from "./ClearInputButton";
 
 import formStyles from "../styles/Forms.css";
 
-interface TextInputProps {
+interface TextAreaProps {
   name: string,
   value: string,
   placeholder?: string,
@@ -18,7 +17,7 @@ interface TextInputProps {
   readOnly?: boolean
 };
 
-export default class TextInput extends Component<TextInputProps, {}> {
+export default class TextArea extends Component<TextAreaProps, {}> {
   render() {
     const {
       name,
@@ -26,22 +25,20 @@ export default class TextInput extends Component<TextInputProps, {}> {
       value,
       validated,
       valueChanged,
-      handleEnter,
-      readOnly
+      readOnly,
+      handleEnter
     } = this.props;
 
     return (
       <div>
-        <input
+        <textarea
           name={name}
           id={`textinput-${name}`}
-          type="text"
           autoComplete="false"
           className={formStyles.FormControl}
           placeholder={placeholder}
           onChange={e => this.props.valueChanged(e.target.value)}
           value={value || ""}
-          onKeyUp={handleEnter}
           readOnly={!!readOnly}
           disabled={!!readOnly}
         />
