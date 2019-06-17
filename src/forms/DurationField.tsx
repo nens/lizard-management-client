@@ -30,7 +30,7 @@ const fromISOValue = (value: string): durationObject => {
 
   if (value) {
     const match = value.match(isoRegex);
-    console.log('matching ', value, ' with ', isoRegex, ' result ', match);
+
     if (match) {
       return {
         days: parseFloat(match[1]) || 0,

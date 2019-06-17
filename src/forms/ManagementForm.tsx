@@ -500,7 +500,6 @@ class ManagementForm extends Component<ManagementFormProps, ManagementFormState>
         })}
         {!wizardStyle || this.isLastStep() ?
          <SubmitButton notValidatedSteps={this.notValidatedSteps()} submit={this.submit.bind(this)} /> : null}
-        {JSON.stringify(this.state.formValues, null, 2)}
       </div>
     );
   }
