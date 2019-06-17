@@ -76,6 +76,7 @@ type formValues = {
 interface FieldProps {
   name: string,
   title?: string,
+  readOnly?: true,
   initial?: any,
   subtitle?: string,
   validators?: Function[],
@@ -83,7 +84,9 @@ interface FieldProps {
 }
 
 interface ManagementFormProps {
+  initial?: formValues,
   wizardStyle?: boolean,
+  readOnly?: boolean,
   children: Component<FieldProps, any>[],
   onSubmit: (validatedData: formValues) => void
 };
@@ -136,12 +139,19 @@ class ManagementForm extends Component<ManagementFormProps, ManagementFormState>
     // A list of disabler functions (or booleans) for each field.
     const formDisablers: {[key: string]: Function | boolean} = {};
 
+    const formInitial = this.props.initial || {};
+
     // Get values from the Field components' props to fill the
     // aforementioned variables.
     children.forEach(child => {
-      const {name, initial, validators, disabled} = child.props;
+      const {name, validators, disabled} = child.props;
 
-      formValues[name] = initial || null;
+      const initial = (
+        'initial' in child.props ? child.props.initial :
+        name in formInitial ? formInitial[name] :
+        null);
+
+      formValues[name] = initial;
       formValidators[name] = validators || [];
       formDisablers[name] = disabled || false;
       allNames.push(name);
@@ -408,38 +418,46 @@ class ManagementForm extends Component<ManagementFormProps, ManagementFormState>
       highestFieldSoFar,
       triedToMovePastField
     } = this.state;
-    const { wizardStyle } = this.props;
+    const { wizardStyle, readOnly } = this.props;
 
     return (
       <div>
-        {this.childrenAsArray().map(
-          (child, idx) => {
-            const name: string = child.props.name;
-            const title: string = child.props.title || name;
-            const subtitle: string = child.props.subtitle || '';
-            const validated = formValidated[name];
-            const disabled = formDisabled[name];
-            const errors = formErrors[name];
+      {this.childrenAsArray().map(
+        (child, idx) => {
+          const name: string = child.props.name;
+          const title: string = child.props.title || name;
+          const subtitle: string = child.props.subtitle || '';
+          const validated = formValidated[name];
+          const disabled = formDisabled[name];
+          const errors = formErrors[name];
 
+          if (disabled) {
+            return (
+              <DisabledStep
+                key={"formfield"+idx}
+                step={idx+1}
+                title={title}
+              />
+            );
+          } else {
+            const extraFields: {[key: string]: any} = {
+              value: formValues[name],
+              validated: validated,
+              valueChanged: (value: any) => this.valueChanged(name, value),
+              wizardStyle: wizardStyle,
+              handleEnter: (e: any) => this.handleEnter(idx, e)
+            };
+            if (readOnly) {
+              // If the whole form is readOnly, send this prop to
+              // all children.
+              extraFields.readOnly = true;
+            }
             const childWithExtraFields = React.cloneElement(
               (child as unknown) as ReactElement,
-              {
-                value: formValues[name],
-                validated: validated,
-                valueChanged: (value: any) => this.valueChanged(name, value),
-                wizardStyle: wizardStyle,
-                handleEnter: (e: any) => this.handleEnter(idx, e)
-              });
+              extraFields
+            );
 
-            if (disabled) {
-              return (
-                <DisabledStep
-                  key={"formfield"+idx}
-                  step={idx+1}
-                  title={title}
-                />
-              );
-            } else if (wizardStyle) {
+            if (wizardStyle) {
               return (
                 <WithStep
                   step={idx+1}
@@ -475,7 +493,8 @@ class ManagementForm extends Component<ManagementFormProps, ManagementFormState>
                 </WithStep>
               );
             }
-          })}
+          }
+        })}
         {!wizardStyle || currentFieldIndex >= this.lastStep() ?
          <SubmitButton notValidatedSteps={this.notValidatedSteps()} submit={this.submit.bind(this)} /> : null}
       </div>

@@ -18,7 +18,7 @@ interface Props {
   title: string,
   name: string,
   placeholder: string,
-  readonly: boolean | undefined,
+  readOnly: boolean | undefined,
   value: valueT,
   choices: choicesT,
   validators?: Function[],
@@ -78,7 +78,7 @@ export default class SlushBucket extends Component<Props, State> {
             className={
               formStyles.FormControl +
               " " +
-              (this.props.readonly ? inputStyles.ReadOnly : "")
+              (this.props.readOnly ? inputStyles.ReadOnly : "")
             }
             placeholder={placeholder}
             onChange={e => this.handleInput(e)}
@@ -86,8 +86,8 @@ export default class SlushBucket extends Component<Props, State> {
               this.handleKeyUp(event);
             }}
             value={this.state.searchString}
-            disabled={this.props.readonly}
-            readOnly={this.props.readonly}
+            disabled={this.props.readOnly}
+            readOnly={this.props.readOnly}
           />
           <div
             style={{
@@ -122,7 +122,7 @@ export default class SlushBucket extends Component<Props, State> {
             <Scrollbars autoHeight autoHeightMin={400} autoHeightMax={400}>
               {choices
                 .filter(choiceItem => {
-                  if (this.props.readonly) {
+                  if (this.props.readOnly) {
                     return false;
                   }
                   if (this.state.searchString === "") {
@@ -184,7 +184,7 @@ export default class SlushBucket extends Component<Props, State> {
                 .map((choiceItem,i) => {
                   return (
                     <div
-                      className={`${styles.SelectedRow} ${this.props.readonly
+                      className={`${styles.SelectedRow} ${this.props.readOnly
                         ? styles.SelectedRowReadonly
                         : ""}`}
                       style={{
@@ -202,7 +202,7 @@ export default class SlushBucket extends Component<Props, State> {
                           );
                         }}
                         style={{
-                          visibility: this.props.readonly ? "hidden" : "visible"
+                          visibility: this.props.readOnly ? "hidden" : "visible"
                         }}
                       />
                     </div>
