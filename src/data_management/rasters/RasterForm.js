@@ -1058,8 +1058,8 @@ class RasterFormModel extends Component {
                     this.setStyleAndOptions(styles);
                   }} // cb function to *update* the value of e.g. a raster's name in the parent model
                   // resetModelValue={() => this.setColorMap("")} // cb function to *reset* the value of e.g. a raster's name in the parent model
-                  validate={styles => {
-                    return styles && validateStyleObj(styles);
+                  validate={stylesPlusRescalable => {
+                    return stylesPlusRescalable.styles && validateStyleObj(stylesPlusRescalable.styles);
                   }} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
                 />
                 <GenericSelectBoxComponent
