@@ -202,10 +202,27 @@ class UploadRasterDataMultipleModel extends Component {
     // convert acceptedFilesToobjectsWithDate
     const acceptedFilesData = newAcceptedFilesNonDuplicates.map(e => {
       const regex = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?/gm;
+      const regexUTC = /\d{8}T(\d{4}|\d{6})?/gm;
       const dateStrFromFile = (e.name + "").match(regex);
-      const dateObjFromFile = dateStrFromFile
-        ? new Date(dateStrFromFile[0])
-        : new Date();
+      
+      //If user upload a file with file name in UTC format without the dash (-) sign then match it with regexUTC
+      const dateStrFromUTCFile = (e.name + "").match(regexUTC);
+      //Use moment.js to re-format the date string from YYYYMMDDTHHMM to YYYY-MM-DDTHH:MM
+      const dateStrReformatted = dateStrFromUTCFile && moment(dateStrFromUTCFile[0]).format("YYYY-MM-DDTHH:mm")
+
+      let dateObjFromFile;
+      if (dateStrFromFile) {
+        dateObjFromFile = new Date(dateStrFromFile[0])
+      } else if (dateStrReformatted) {
+        dateObjFromFile = new Date(dateStrReformatted)
+      } else {
+        dateObjFromFile = new Date()
+      };
+
+      // const dateObjFromFile = dateStrFromFile
+      //   ? new Date(dateStrFromFile[0])
+      //   : new Date();
+
       const fileDateValid = this.isValidDateObj(dateObjFromFile);
       return {
         file: e,
