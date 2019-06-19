@@ -178,6 +178,37 @@ class RasterFormModel extends Component {
           colorMaps={this.props.colorMaps.available.map(colM=>
             [colM.name, colM.name, colM.description]
           )}
+          validators={[function(value, allValues){
+            if (!value || !value.colorMap) {
+              return "Colormap must be selected"
+            }
+            
+            if (isFilled(value.min) &&  !isFilled(value.max)) {
+              return "If Min is filled, then Max is mandatory";
+            }
+            if (!isFilled(value.min) &&  isFilled(value.max)) {
+              return "If Max is filled, then Min is mandatory";
+            }
+
+            if ((isFilled(value.min) && isNaN(value.min)) ||  (isFilled(value.max) && isNaN(value.max))) {
+              return "Min and Max need to be numbers";
+            }
+
+            if (value && (value.min > value.max)) {
+              return "Max must be larger then Min";
+            }
+            return false;
+
+            function isFilled (minOrMax) {
+              if (minOrMax === 0) {
+                return true;
+              } else if (minOrMax) {
+                return true;
+              } else {
+                return false;
+              }
+            }
+          }]}
         />
         <SelectBox
           name="supplierName"
