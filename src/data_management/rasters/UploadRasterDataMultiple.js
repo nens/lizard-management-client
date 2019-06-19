@@ -219,10 +219,6 @@ class UploadRasterDataMultipleModel extends Component {
         dateObjFromFile = new Date()
       };
 
-      // const dateObjFromFile = dateStrFromFile
-      //   ? new Date(dateStrFromFile[0])
-      //   : new Date();
-
       const fileDateValid = this.isValidDateObj(dateObjFromFile);
       return {
         file: e,
@@ -487,6 +483,7 @@ class UploadRasterDataMultipleModel extends Component {
                     <button
                       className={`${buttonStyles.Button} ${buttonStyles.Success}`}
                       style={{ marginTop: 10 }}
+                      title="Timestamp filename format could be YYYY-MM-DDTHH:MM(:SS) or YYYYMMDDTHHMM(SS) with name prefixed or postfixed"
                     >
                       <FormattedMessage
                         id="rasters.raster_upload_browse"
