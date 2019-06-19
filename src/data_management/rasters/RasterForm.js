@@ -72,11 +72,6 @@ class RasterFormModel extends Component {
           name="selectedOrganisation"
           title="Organisation"
           placeholder="Choose an organisation"
-          // choices={[
-          //   ["abc", "Display string", "An example of an organisation"],
-          //   ["nens", "Nelen & Schuurmans", "We work here"],
-          //   ["home", "Thuis"],
-          // ]}
           choices={this.props.organisations.available.map(organisation=>
             [organisation.uuid, organisation.name]
           )}
@@ -129,7 +124,6 @@ class RasterFormModel extends Component {
           name="description"
           placeholder="Fill in your description here"
           subtitle="Add a clear description of this raster with reference to the data source."
-          // initial="whee"
           validators={[minLength(1)]}
         />
         <SelectBox
@@ -206,9 +200,7 @@ class RasterFormModel extends Component {
         <CheckBox
           name="temporal"
           title="Raster Series"
-          // subtitle="Select whether you are creating a raster that contains multiple rasters over time"
           label="Select whether you are creating a raster that contains multiple rasters over time"
-          // initial={true}
         />
         <DurationField
           name="duration"
@@ -216,95 +208,12 @@ class RasterFormModel extends Component {
           subtitle="Interval of raster series"
           validators={[durationValidator(true)]}
         />
-        {/* <SlushBucket
-          name="sharedWithOrganisation"
-          title="Shared With Organisation"
-          choices={[
-            { value: "abc", display: "aBc" },
-            { value: "nens", display: "nEns" },
-            { value: "home", display: "hOmbre" },
-          ]}
-          readOnly={false}
-          placeholder={"search organisations"}
-        />
-        <DurationField
-          name="duration"
-          title="Your duration here"
-          validators={[durationValidator(true)]}
-        />
-        <ColorMapInput
-          name="colormap"
-          title="Choose a color map"
-          colorMaps={[
-            ["autumn", "Herfst"],
-            ["Blues", "Blauwen"],
-            ["jet", "Everybody loves jet"]
-          ]}
-        />
-        <CheckBox
-          name="checkcheck"
-          title="Testing a checkbox"
-          label="Check this if you want to see a nice checkmark"
-          initial={true}
-        />
-        <SelectBox
-          name="organisation"
-          title="Organisation"
-          placeholder="Choose an organisation"
-          choices={[
-            ["abc", "Display string", "An example of an organisation"],
-            ["nens", "Nelen & Schuurmans", "We work here"],
-            ["home", "Thuis"],
-          ]}
-          validators={[required("Please select an organisation.")]}
-          showSearchField={true}
-        />
-        <TextInput
-          name="first"
-          title="The first field"
-          placeholder="Enter a test"
-        />
-        <TextInput
-          name="test"
-          title="A validator test"
-          subtitle="This is the subtitle. Enter at least 5 characters."
-          placeholder="Enter a test"
-          validators={[minLength(5)]}
-        />
-        <TextInput
-          name="maybedisabled"
-          placeholder="Enter a test"
-          validators={[nonEmptyString]}
-          disabled={(formValues) => formValues.test !== 'temporal' }
-        />
-        <TextInput
-          name="test2"
-          placeholder="Enter a test"
-          initial="whee"
-          validators={[nonEmptyString]}
-        />
-        <TextInput
-          name="test3"
-          placeholder="Enter a test"
-          subtitle="Hmm."
-          initial="whee"
-          validators={[testRegex(/hmm/, 'Please enter a string containing "hmm".')]}
-        />
-        <TextInput
-          name="test4"
-          disabled={true}
-          /> */}
-
-
       </ManagementForm>
     );
   }
 }
 
-// export { NewRaster2 };
-
-
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state) => {
   return {
     organisations: state.organisations,
     bootstrap: state.bootstrap,
@@ -314,7 +223,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = (dispatch) => {
   return {
     addNotification: (message, timeout) => {
       dispatch(addNotification(message, timeout));
