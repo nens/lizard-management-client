@@ -133,27 +133,27 @@ class RasterFormModel extends Component {
           placeholder="click to select aggregation type"
           choices={[
             [
-              0,
+              "0",
               "none",
               "no aggregation"
             ],
             [
-              1,
+              "1",
               "counts",
               "area per category"
             ],
             [
-              2,
+              "2",
               "curve",
               "cumulative distribution"
             ],
             [
-              4,
+              "4",
               "sum",
               "values in the region are summed"
             ],
             [
-              5,
+              "5",
               "average",
               "values in the region are averaged"
             ]
