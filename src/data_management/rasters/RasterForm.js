@@ -55,11 +55,11 @@ import {
 // Realistically we would fire off some Redux actions or change React routes,
 // something to cause the data to be submitted and the form to be not shown
 // anymore.
-const onSubmitExample = (validatedData) => {
-  console.log("Submitted data: ", validatedData);
+const onSubmitExample = (validatedData, currentRaster) => {
+  console.log("Submitted data: ", validatedData, currentRaster);
 
   const url = "/api/v4/rasters/";
-  // if (!this.props.currentRaster) {
+   if (!currentRaster) {
     const opts = {
       credentials: "same-origin",
       method: "POST",
@@ -91,41 +91,45 @@ const onSubmitExample = (validatedData) => {
         console.log("parsedBody", parsedBody);
         this.setState({ createdRaster: parsedBody });
       });
-  // } else {
-  //   let body = {
-  //     name: this.state.rasterName,
-  //     organisation: this.state.selectedOrganisation.uuid.replace(/-/g, ""), // required
-  //     access_modifier: this.state.accesModifier,
-  //     observation_type: observationTypeId, // required
+  } else {
+    let body = {
+      name: validatedData.rasterName,
+      organisation: validatedData.selectedOrganisation.replace(/-/g, ""),
+      access_modifier: validatedData.accesModifier,
+      observation_type: validatedData.observationType, // observationTypeId, //this.state.observationType,
+      description: validatedData.description,
+      supplier: validatedData.supplierName,
+      supplier_code: validatedData.supplierCode,
+      // temporal: validatedData.temporal,
+      // interval: validatedData.duration, //isoIntervalDuration, //'P1D', // P1D is default, = ISO 8601 datetime for 1 day",
+      // // rescalable: false,
+      // optimizer: false, // default
+      aggregation_type: validatedData.aggregationType,//intAggregationType,
+      // // options: validatedData.colormap,//this.state.options,
+      shared_with: validatedData.sharedWithOrganisations.map(orgUuid => orgUuid.replace(/-/g, ""))
+    };
+    // if (!optionsHasLayers(this.state.options)) {
+    //   body.options = this.state.options;
+    // }
+    const opts = {
+      credentials: "same-origin",
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body)
+    };
+    // only add colormap in options if not multiple layers
 
-  //     description: this.state.description,
-  //     supplier: this.state.supplierId && this.state.supplierId.username,
-  //     supplier_code: this.state.supplierCode,
-  //     aggregation_type: intAggregationType,
-  //     shared_with: this.state.sharedWith.map(e => e.uuid)
-  //   };
-  //   if (!optionsHasLayers(this.state.options)) {
-  //     body.options = this.state.options;
-  //   }
-  //   const opts = {
-  //     credentials: "same-origin",
-  //     method: "PATCH",
-  //     headers: { "Content-Type": "application/json" },
-  //     body: JSON.stringify(body)
-  //   };
-  //   // only add colormap in options if not multiple layers
-
-  //   fetch(url + "uuid:" + this.props.currentRaster.uuid + "/", opts)
-  //     .then(responseParsed => {
-  //       console.log("responseParsed put", responseParsed);
-  //       this.handleResponse(responseParsed);
-  //       return responseParsed.json();
-  //     })
-  //     .then(parsedBody => {
-  //       console.log("parsedBody", parsedBody);
-  //       this.setState({ createdRaster: parsedBody });
-  //     });
-  // }
+    fetch(url + "uuid:" + currentRaster.uuid + "/", opts)
+      .then(responseParsed => {
+        console.log("responseParsed put", responseParsed);
+        this.handleResponse(responseParsed);
+        return responseParsed.json();
+      })
+      .then(parsedBody => {
+        console.log("parsedBody", parsedBody);
+        this.setState({ createdRaster: parsedBody });
+      });
+  }
 };
 
 class RasterFormModel extends Component {
@@ -140,7 +144,7 @@ class RasterFormModel extends Component {
     console.log('currentRaster', currentRaster)
 
     return (
-      <ManagementForm onSubmit={onSubmitExample}
+      <ManagementForm onSubmit={formData => onSubmitExample(formData, currentRaster)}
                       initial={{
                         first: "This initial was set through the form"
                       }}
@@ -364,6 +368,7 @@ class RasterFormModel extends Component {
           name="temporal"
           title="Raster Series"
           label="Select whether you are creating a raster that contains multiple rasters over time"
+          readOnly={currentRaster}
           initial = {
             currentRaster && 
             currentRaster.temporal
@@ -374,6 +379,7 @@ class RasterFormModel extends Component {
           title="Raster Series Interval"
           subtitle="Interval of raster series"
           validators={[durationValidator(true)]}
+          readOnly={currentRaster}
           initial = {
             currentRaster && 
             currentRaster.interval &&
