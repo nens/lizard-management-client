@@ -26,9 +26,16 @@ class EditRasterModel extends Component {
   }
 
   render() {
-    if (this.state.currentRaster)
+    if (
+      this.state.currentRaster &&
+      this.props.organisations.isFetching === false &&
+      this.props.observationTypes.isFetching === false &&
+      this.props.colorMaps.isFetching === false &&
+      this.props.supplierIds.isFetching === false
+    ) {
       return <RasterForm currentRaster={this.state.currentRaster} />;
-    else
+    }
+    else {
       return (
         <div
           style={{
@@ -42,9 +49,19 @@ class EditRasterModel extends Component {
           <MDSpinner size={24} />
         </div>
       );
+    }
   }
 }
 
-const EditRaster = withRouter(connect()(EditRasterModel));
+const mapStateToProps = (state) => {
+  return {
+    organisations: state.organisations,
+    observationTypes: state.observationTypes,
+    colorMaps: state.colorMaps,
+    supplierIds: state.supplierIds
+  };
+};
+
+const EditRaster = withRouter(connect(mapStateToProps)(EditRasterModel));
 
 export { EditRaster };

@@ -56,10 +56,88 @@ import {
 // anymore.
 const onSubmitExample = (validatedData) => {
   console.log("Submitted data: ", validatedData);
+
+  const url = "/api/v4/rasters/";
+  // if (!this.props.currentRaster) {
+    const opts = {
+      credentials: "same-origin",
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: validatedData.rasterName,
+        organisation: validatedData.selectedOrganisation.replace(/-/g, ""),
+        access_modifier: validatedData.accesModifier,
+        observation_type: validatedData.observationType, // observationTypeId, //this.state.observationType,
+        description: validatedData.description,
+        supplier: validatedData.username,
+        supplier_code: validatedData.supplierCode,
+        temporal: validatedData.temporalBool,
+        interval: validatedData.duration, //isoIntervalDuration, //'P1D', // P1D is default, = ISO 8601 datetime for 1 day",
+        rescalable: false,
+        optimizer: false, // default
+        aggregation_type: validatedData.aggregationType,//intAggregationType,
+        options: validatedData.colormap,//this.state.options,
+        shared_with: validatedData.sharedWithOrganisations.map(orgUuid => orgUuid.replace(/-/g, ""))
+      })
+    };
+
+    fetch(url, opts)
+      .then(responseParsed => {
+        this.handleResponse(responseParsed);
+        return responseParsed.json();
+      })
+      .then(parsedBody => {
+        console.log("parsedBody", parsedBody);
+        this.setState({ createdRaster: parsedBody });
+      });
+  // } else {
+  //   let body = {
+  //     name: this.state.rasterName,
+  //     organisation: this.state.selectedOrganisation.uuid.replace(/-/g, ""), // required
+  //     access_modifier: this.state.accesModifier,
+  //     observation_type: observationTypeId, // required
+
+  //     description: this.state.description,
+  //     supplier: this.state.supplierId && this.state.supplierId.username,
+  //     supplier_code: this.state.supplierCode,
+  //     aggregation_type: intAggregationType,
+  //     shared_with: this.state.sharedWith.map(e => e.uuid)
+  //   };
+  //   if (!optionsHasLayers(this.state.options)) {
+  //     body.options = this.state.options;
+  //   }
+  //   const opts = {
+  //     credentials: "same-origin",
+  //     method: "PATCH",
+  //     headers: { "Content-Type": "application/json" },
+  //     body: JSON.stringify(body)
+  //   };
+  //   // only add colormap in options if not multiple layers
+
+  //   fetch(url + "uuid:" + this.props.currentRaster.uuid + "/", opts)
+  //     .then(responseParsed => {
+  //       console.log("responseParsed put", responseParsed);
+  //       this.handleResponse(responseParsed);
+  //       return responseParsed.json();
+  //     })
+  //     .then(parsedBody => {
+  //       console.log("parsedBody", parsedBody);
+  //       this.setState({ createdRaster: parsedBody });
+  //     });
+  // }
 };
 
 class RasterFormModel extends Component {
+
+  
+
+
   render() {
+
+    const {currentRaster} = this.props;
+
+    console.log('currentRaster', currentRaster)
+
     return (
       <ManagementForm onSubmit={onSubmitExample}
                       initial={{
@@ -73,22 +151,35 @@ class RasterFormModel extends Component {
           title="Organisation"
           placeholder="Choose an organisation"
           choices={this.props.organisations.available.map(organisation=>
-            [organisation.uuid, organisation.name]
+            [organisation.uuid.replace(/-/g, ""), organisation.name]
           )}
           validators={[required("Please select an organisation.")]}
           showSearchField={true}
+          initial ={
+            currentRaster && 
+            currentRaster.organisation && 
+            currentRaster.organisation.uuid &&
+            currentRaster.organisation.uuid.replace(/-/g, "")
+          }
         />
         <SlushBucket
-          name="sharedWithOrganisation"
+          name="sharedWithOrganisations"
           title="Shared With Organisation"
           choices={this.props.organisations.availableForRasterSharedWith.map(e =>{
             return {
               display: e.name, 
-              value : e.uuid
+              value : e.uuid.replace(/-/g, "")
             }
           })}
           readOnly={false}
           placeholder={"search organisations"}
+          initial={
+            currentRaster && 
+            currentRaster.shared_with && 
+            currentRaster.shared_with.map((orgUuid) => {
+              return orgUuid.uuid.replace(/-/g, "")
+            })
+          }
         />
         <SelectBox
           name="accesModifier"
