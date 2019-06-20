@@ -30,6 +30,7 @@ import ErrorOverlay from "./ErrorOverlay.js";
 // import SlushBucket from "../../components/SlushBucket";
 // import SelectBoxSimple from "../../components/SelectBoxSimple.js";
 import "../../forms/validators";
+import {toISOValue, durationObject} from "../../utils/isoUtils"
 
 
 
@@ -375,7 +376,14 @@ class RasterFormModel extends Component {
           validators={[durationValidator(true)]}
           initial = {
             currentRaster && 
-            currentRaster.interval
+            currentRaster.interval &&
+            // "2 03:04:05" 
+            toISOValue({ 
+              days: currentRaster.interval.split(" ")[0], 
+              hours: currentRaster.interval.split(" ")[1].split(":")[0], 
+              minutes: currentRaster.interval.split(" ")[1].split(":")[1], 
+              seconds: currentRaster.interval.split(" ")[1].split(":")[2] 
+            })
           }
         />
       </ManagementForm>

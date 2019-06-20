@@ -6,6 +6,8 @@ import styles from "./DurationField.css";
 import formStyles from "../styles/Forms.css";
 import inputStyles from "../styles/Input.css";
 
+import {toISOValue, durationObject} from "../utils/isoUtils"
+
 interface DurationFieldProps {
   name: string,
   value: string,
@@ -17,12 +19,7 @@ interface DurationFieldProps {
   wizardStyle: boolean
 };
 
-interface durationObject {
-  days: number,
-  hours: number,
-  minutes: number,
-  seconds: number
-}
+
 
 const fromISOValue = (value: string): durationObject => {
   // Translate a string of the form 'P1DT10H20M50S' to an object.
@@ -49,22 +46,7 @@ const fromISOValue = (value: string): durationObject => {
   }
 }
 
-const toISOValue = (duration: durationObject): string | null => {
-  let { days, hours, minutes, seconds } = duration;
 
-  // Tiny hack: as we translate 'null' to all 0s, we do it the other
-  // way around too.
-  if (!days && !hours && !minutes && !seconds) {
-    return null;
-  }
-
-  return (
-    'P' + days + 'DT' +
-     (hours < 10 ? "0" : "") + hours + 'H' +
-     (minutes < 10 ? "0" : "") + minutes + 'M' +
-     (seconds < 10 ? "0" : "") + seconds + 'S'
-  );
-};
 
 const validPerField = (value: string) => {
   const duration = fromISOValue(value);
