@@ -41,12 +41,3 @@ function closeEditUserPopup() {
   var showMoreUserOptions = showLessUserOptions.previousElementSibling;
   showMoreUserOptions.classList.remove("not-shown");
 }
-
-function toggleNameUser() {
-  var userName = event.target.nextElementSibling;
-  if (userName.classList.contains("not-shown")) {
-    userName.classList.remove("not-shown");
-  } else {
-    userName.classList.add("not-shown");
-  }
-}
