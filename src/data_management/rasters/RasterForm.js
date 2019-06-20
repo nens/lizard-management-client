@@ -69,9 +69,9 @@ const onSubmitExample = (validatedData) => {
         access_modifier: validatedData.accesModifier,
         observation_type: validatedData.observationType, // observationTypeId, //this.state.observationType,
         description: validatedData.description,
-        supplier: validatedData.username,
+        supplier: validatedData.supplierName,
         supplier_code: validatedData.supplierCode,
-        temporal: validatedData.temporalBool,
+        temporal: validatedData.temporal,
         interval: validatedData.duration, //isoIntervalDuration, //'P1D', // P1D is default, = ISO 8601 datetime for 1 day",
         rescalable: false,
         optimizer: false, // default
@@ -143,7 +143,7 @@ class RasterFormModel extends Component {
                       initial={{
                         first: "This initial was set through the form"
                       }}
-                      wizardStyle
+                      wizardStyle={this.props.wizardStyle}
       >
 
         <SelectBox
@@ -202,7 +202,13 @@ class RasterFormModel extends Component {
             ] 
           ]}
           validators={[required("Please select an acces modifier.")]}
-          initial={"Private"}
+          initial ={
+            (
+              currentRaster && 
+              currentRaster.access_modifier
+            ) ||
+            "Private" 
+          }
           showSearchField={false}
         />
         <TextInput
@@ -210,12 +216,20 @@ class RasterFormModel extends Component {
           title="Name of this Raster"
           placeholder="Name of this Raster"
           validators={[minLength(5)]}
+          initial = {
+            currentRaster && 
+              currentRaster.name
+          }
         />
         <TextArea
           name="description"
           placeholder="Fill in your description here"
           subtitle="Add a clear description of this raster with reference to the data source."
           validators={[minLength(1)]}
+          initial = {
+            currentRaster && 
+              currentRaster.description
+          }
         />
         <SelectBox
           name="aggregationType"
@@ -224,33 +238,37 @@ class RasterFormModel extends Component {
           placeholder="click to select aggregation type"
           choices={[
             [
-              "0",
+              "none",
               "none",
               "no aggregation"
             ],
             [
-              "1",
+              "counts",
               "counts",
               "area per category"
             ],
             [
-              "2",
+              "curve",
               "curve",
               "cumulative distribution"
             ],
             [
-              "4",
+              "sum",
               "sum",
               "values in the region are summed"
             ],
             [
-              "5",
+              "average",
               "average",
               "values in the region are averaged"
             ]
           ]}
           validators={[required("Please select an aggregation type.")]}
           showSearchField={false}
+          initial = {
+            currentRaster && 
+            currentRaster.aggregation_type
+          }
         />
         <SelectBox
           name="observationType"
@@ -262,6 +280,11 @@ class RasterFormModel extends Component {
           )}
           validators={[required("Please select an observation type.")]}
           showSearchField={true}
+          initial = {
+            currentRaster && 
+            currentRaster.observation_type && 
+            currentRaster.observation_type.code
+          }
         />
         <ColorMapInput
           name="colormap"
@@ -300,6 +323,15 @@ class RasterFormModel extends Component {
               }
             }
           }]}
+          initial = {
+            currentRaster && 
+            currentRaster.options && 
+            { 
+              colorMap: currentRaster.options.colorMap,
+              min: currentRaster.options.min,
+              max: currentRaster.options.max,
+            }
+          }
         />
         <SelectBox
           name="supplierName"
@@ -311,6 +343,10 @@ class RasterFormModel extends Component {
           )}
           validators={[required("Please select a Supplier Name.")]}
           showSearchField={true}
+          initial = {
+            currentRaster && 
+            currentRaster.supplier
+          }
         />
         <TextInput
           name="supplierCode"
@@ -318,17 +354,29 @@ class RasterFormModel extends Component {
           placeholder="Fill in a supplier code here"
           subtitle="Provide a code for your own administration."
           validators={[minLength(1)]}
+          initial = {
+            currentRaster && 
+            currentRaster.supplier_code
+          }
         />
         <CheckBox
           name="temporal"
           title="Raster Series"
           label="Select whether you are creating a raster that contains multiple rasters over time"
+          initial = {
+            currentRaster && 
+            currentRaster.temporal
+          }
         />
         <DurationField
           name="duration"
           title="Raster Series Interval"
           subtitle="Interval of raster series"
           validators={[durationValidator(true)]}
+          initial = {
+            currentRaster && 
+            currentRaster.interval
+          }
         />
       </ManagementForm>
     );

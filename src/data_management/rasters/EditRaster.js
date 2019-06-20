@@ -33,7 +33,10 @@ class EditRasterModel extends Component {
       this.props.colorMaps.isFetching === false &&
       this.props.supplierIds.isFetching === false
     ) {
-      return <RasterForm currentRaster={this.state.currentRaster} />;
+      return <RasterForm 
+        currentRaster={this.state.currentRaster}
+        wizardStyle={false} 
+      />;
     }
     else {
       return (

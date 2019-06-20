@@ -13,7 +13,9 @@ class NewRasterModel extends Component {
       this.props.colorMaps.isFetching === false &&
       this.props.supplierIds.isFetching === false
     ) {
-      return <RasterForm />;
+      return <RasterForm 
+                wizardStyle={true}
+            />;
     } else {
       return <div
         style={{
