@@ -34,11 +34,19 @@ function dontShowEditUserPopup() {
 }
 
 function closeEditUserPopup() {
-  console.log(event.target);
   var userOptions = event.target.parent;
   userOptions.classList.add("not-shown");
   var showLessUserOptions = userOptions.previousElementSibling;
   showLessUserOptions.classList.add("not-shown");
   var showMoreUserOptions = showLessUserOptions.previousElementSibling;
   showMoreUserOptions.classList.remove("not-shown");
+}
+
+function toggleNameUser() {
+  var userName = event.target.nextElementSibling;
+  if (userName.classList.contains("not-shown")) {
+    userName.classList.remove("not-shown");
+  } else {
+    userName.classList.add("not-shown");
+  }
 }
