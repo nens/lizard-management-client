@@ -174,7 +174,7 @@ export function validateStyleObj(style) {
     if (style.max === "" || !style.max) {
       return {
         validated:false,
-        errorMessage: "If a minu=imum is chosen, please also choose a maximum."
+        errorMessage: "If a minimum is chosen, please also choose a maximum."
       };
     }
   }

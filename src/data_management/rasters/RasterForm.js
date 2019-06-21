@@ -401,6 +401,7 @@ class RasterFormModel extends Component {
         />
         <DurationField
           name="duration"
+          disabled={(formValues) => formValues.temporal === false }
           title="Raster Series Interval"
           subtitle="Interval of raster series"
           validators={[durationValidator(true)]}
