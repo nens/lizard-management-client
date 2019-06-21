@@ -293,22 +293,30 @@ class ColorMapInput extends Component<ColorMapProps, ColorMapState> {
         <input
           type="number"
           autoComplete="false"
-          className={formStyles.FormControl}
           onChange={e => this.valueChanged('min', this.toFloat(e.target.value))}
           // value={(value && typeof value.min === "number" ) ? value.min : ""}
           value={(colorMapType && colorMapType.min) || ""}
           placeholder="optional minimum of range"
+          className={`${formStyles.FormControl} ${readonly
+            ? inputStyles.ReadOnly
+            : null}`}
+          readOnly={readonly}
+          disabled={readonly}
         />
         <br />
         <span className="text-muted">Maximum of color map range</span>
         <input
           type="number"
           autoComplete="false"
-          className={formStyles.FormControl}
           // value={(value && typeof value.max === "number" ) ? value.max : ""}
           value={(colorMapType && colorMapType.max) || ""}
           onChange={e => this.valueChanged('max', this.toFloat(e.target.value))}
           placeholder="optional maximum of range"
+          className={`${formStyles.FormControl} ${readonly
+            ? inputStyles.ReadOnly
+            : null}`}
+          readOnly={readonly}
+          disabled={readonly}
         />
       </div>
     );
