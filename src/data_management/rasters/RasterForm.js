@@ -393,7 +393,7 @@ class RasterFormModel extends Component {
           name="temporal"
           title="Raster Series"
           label="Select whether you are creating a raster that contains multiple rasters over time"
-          readOnly={currentRaster}
+          readonly={currentRaster}
           initial = {
             currentRaster && 
             currentRaster.temporal
