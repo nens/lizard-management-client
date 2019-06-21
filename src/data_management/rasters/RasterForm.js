@@ -404,7 +404,7 @@ class RasterFormModel extends Component {
           disabled={(formValues) => formValues.temporal === false }
           title="Raster Series Interval"
           subtitle="Interval of raster series"
-          validators={[durationValidator(true)]}
+          validators={currentRaster?[]:[durationValidator(true)]}
           readOnly={currentRaster}
           initial = {
             currentRaster && 

@@ -16,7 +16,8 @@ interface DurationFieldProps {
   validated: boolean,
   handleEnter: (e: any) => void,
   valueChanged: Function,
-  wizardStyle: boolean
+  wizardStyle: boolean,
+  readOnly: boolean,
 };
 
 
@@ -108,7 +109,8 @@ export default class DurationField extends Component<DurationFieldProps, {}> {
       value,
       validated,
       valueChanged,
-      handleEnter
+      handleEnter,
+      readOnly
     } = this.props;
 
     const duration = fromISOValue(value);
@@ -148,12 +150,15 @@ export default class DurationField extends Component<DurationFieldProps, {}> {
             formStyles.FormControl +
                        " " +
                        styles.TextAlignRight +
-                         (!daysValid ? " " + styles.Invalid : "")
+                         (!daysValid ? " " + styles.Invalid : "") +
+                         (readOnly ? " " + inputStyles.ReadOnly : "")
             }
             maxLength={3}
             size={4}
             onChange={e => this.updateValue('days', e.target.value)}
             value={days}
+            readOnly={readOnly}
+            disabled={readOnly}
           />
         </div>
         <div
@@ -171,12 +176,15 @@ export default class DurationField extends Component<DurationFieldProps, {}> {
             formStyles.FormControl +
                        " " +
                        styles.TextAlignRight +
-                         (!hoursValid ? " " + styles.Invalid : "")
+                         (!hoursValid ? " " + styles.Invalid : "") +
+                         (readOnly ? " " + inputStyles.ReadOnly : "")
             }
             maxLength={2}
             size={2}
             onChange={e => this.updateValue('hours', e.target.value)}
             value={hours}
+            readOnly={readOnly}
+            disabled={readOnly}
           />
         </div>
         <div className={styles.DurationInputHourSecondSeperator}>:</div>
@@ -189,12 +197,15 @@ export default class DurationField extends Component<DurationFieldProps, {}> {
             autoComplete="false"
             className={
             formStyles.FormControl +
-                         (!minutesValid ? " " + styles.Invalid : "")
+                         (!minutesValid ? " " + styles.Invalid : "") +
+                         (readOnly ? " " + inputStyles.ReadOnly : "")
             }
             maxLength={2}
             size={2}
             onChange={e => this.updateValue('minutes', e.target.value)}
             value={minutes}
+            readOnly={readOnly}
+            disabled={readOnly}
           />
         </div>
         <div
@@ -212,12 +223,15 @@ export default class DurationField extends Component<DurationFieldProps, {}> {
             autoComplete="false"
             className={
             formStyles.FormControl +
-                         (!secondsValid ? " " + styles.Invalid : "")
+                         (!secondsValid ? " " + styles.Invalid : "") +
+                         (readOnly ? " " + inputStyles.ReadOnly : "")
             }
             maxLength={2}
             size={4}
             onChange={e => this.updateValue('seconds', e.target.value)}
             value={seconds}
+            readOnly={readOnly}
+            disabled={readOnly}
           />
         </div>
         <div />
