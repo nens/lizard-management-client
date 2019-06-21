@@ -56,6 +56,7 @@ export function calculateNewStyleAndOptions(
       min: oldMin,
       max: newStyleSignal.max
     };
+    console.log('oldMin', oldMin, newStyleSignal.max)
     styleString = composeStyleString(
       oldColor,
       styleMinMaxStrToValidString(oldMin),
@@ -124,14 +125,24 @@ export function getColorMaxFromStyle(style) {
 export function composeStyleString(color, min, max) {
   let str = "";
   str += color;
-  if (min && min !== "") {
-    str += ":" + min;
-
-    // we can only add max if min is also added
-    if (max && max !== "") {
-      str += ":" + max;
+  if (min || max) {
+    str += ":"
+    if (min) {
+      str += min
+    }
+    str += ":"
+    if (max) {
+      str += max
     }
   }
+  // if (min && min !== "") {
+  //   str += ":" + min;
+
+  //   // we can only add max if min is also added
+  //   if (max && max !== "") {
+  //     str += ":" + max;
+  //   }
+  // }
 
   return str;
 }
@@ -154,7 +165,17 @@ export function getStyleFromOptions(options) {
 export function validateStyleObj(style) {
   if (style.max && style.max !== "") {
     if (style.min === "" || !style.min) {
-      return false;
+      return {
+        validated:false,
+        errorMessage: "If a maximum is chosen, please also choose a minimum."
+      };
+    }
+  } else if (style.min && style.min !== "") {
+    if (style.max === "" || !style.max) {
+      return {
+        validated:false,
+        errorMessage: "If a minu=imum is chosen, please also choose a maximum."
+      };
     }
   }
 
@@ -163,13 +184,21 @@ export function validateStyleObj(style) {
     parseFloat(style.max) &&
     parseFloat(style.min) > parseFloat(style.max)
   ) {
-    return false;
+    return {
+      validated:false,
+      errorMessage: "Minimum must be smaller than maximum."
+    };
   }
 
   if (style.colorMap && style.colorMap !== "") {
-    return true;
+    return {
+      validated:true,
+    };
   } else {
-    return false;
+    return {
+      validated:false,
+      errorMessage: "Please choose a color map."
+    };
   }
 }
 
@@ -179,9 +208,26 @@ export function validateStyleObj(style) {
 export function styleMinMaxStrToValidString(str) {
   if (str === ".") {
     return "";
-  } else if (str.slice(-1) === ".") {
+  } else if ((str+'').slice(-1) === ".") {
     return str + "0";
   } else {
-    return str;
+    return str+'';
   }
 }
+
+// type ColorMapType = {
+//   colorMap: string | null,
+//   min?: number,
+//   max?: number
+// };
+
+export function colorMapTypeFromOptions (options) {
+  return {
+    colorMap : getColorMapFromStyle(
+      getStyleFromOptions(options)
+    ),
+    min : getColorMinFromStyle(getStyleFromOptions(options)),
+    max : getColorMaxFromStyle(getStyleFromOptions(options)),
+  }
+}
+

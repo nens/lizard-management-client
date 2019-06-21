@@ -30,7 +30,7 @@ import ErrorOverlay from "./ErrorOverlay.js";
 // import SlushBucket from "../../components/SlushBucket";
 // import SelectBoxSimple from "../../components/SelectBoxSimple.js";
 import "../../forms/validators";
-import {toISOValue, durationObject} from "../../utils/isoUtils"
+import {toISOValue, rasterIntervalStringServerToDurationObject} from "../../utils/isoUtils"
 
 
 
@@ -45,26 +45,72 @@ import CheckBox from "../../forms/CheckBox";
 import SlushBucket from "../../forms/SlushBucket";
 
 import {
-  nonEmptyString,
+  // nonEmptyString,
   minLength,
-  testRegex,
+  // testRegex,
   required
 } from "../../forms/validators";
 
-// For example
-// Realistically we would fire off some Redux actions or change React routes,
-// something to cause the data to be submitted and the form to be not shown
-// anymore.
-const onSubmitExample = (validatedData, currentRaster) => {
-  console.log("Submitted data: ", validatedData, currentRaster);
 
-  const url = "/api/v4/rasters/";
-   if (!currentRaster) {
-    const opts = {
-      credentials: "same-origin",
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
+
+
+class RasterFormModel extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      isFetching: false,
+      openOverlay: false,
+      modalErrorMessage: "",
+      createdRaster: null,
+    }
+  }
+
+  handleResponse(response) {
+    this.setState({ modalErrorMessage: response });
+    this.setState({ isFetching: false });
+    this.setState({ handlingDone: true });
+  }
+
+  
+  onSubmitExample = (validatedData, currentRaster) => {
+    console.log("Submitted data: ", validatedData, currentRaster);
+  
+    const url = "/api/v4/rasters/";
+     if (!currentRaster) {
+      const opts = {
+        credentials: "same-origin",
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: validatedData.rasterName,
+          organisation: validatedData.selectedOrganisation.replace(/-/g, ""),
+          access_modifier: validatedData.accesModifier,
+          observation_type: validatedData.observationType, // observationTypeId, //this.state.observationType,
+          description: validatedData.description,
+          supplier: validatedData.supplierName,
+          supplier_code: validatedData.supplierCode,
+          temporal: validatedData.temporal,
+          interval: validatedData.duration, //isoIntervalDuration, //'P1D', // P1D is default, = ISO 8601 datetime for 1 day",
+          rescalable: false,
+          optimizer: false, // default
+          aggregation_type: validatedData.aggregationType,//intAggregationType,
+          options: validatedData.colormap,//this.state.options,
+          shared_with: validatedData.sharedWithOrganisations.map(orgUuid => orgUuid.replace(/-/g, ""))
+        })
+      };
+  
+      fetch(url, opts)
+        .then(responseParsed => {
+          this.handleResponse(responseParsed);
+          return responseParsed.json();
+        })
+        .then(parsedBody => {
+          console.log("parsedBody", parsedBody);
+          this.setState({ createdRaster: parsedBody });
+        });
+    } else {
+      let body = {
         name: validatedData.rasterName,
         organisation: validatedData.selectedOrganisation.replace(/-/g, ""),
         access_modifier: validatedData.accesModifier,
@@ -72,70 +118,37 @@ const onSubmitExample = (validatedData, currentRaster) => {
         description: validatedData.description,
         supplier: validatedData.supplierName,
         supplier_code: validatedData.supplierCode,
-        temporal: validatedData.temporal,
-        interval: validatedData.duration, //isoIntervalDuration, //'P1D', // P1D is default, = ISO 8601 datetime for 1 day",
-        rescalable: false,
-        optimizer: false, // default
+        // temporal: validatedData.temporal,
+        // interval: validatedData.duration, //isoIntervalDuration, //'P1D', // P1D is default, = ISO 8601 datetime for 1 day",
+        // // rescalable: false,
+        // optimizer: false, // default
         aggregation_type: validatedData.aggregationType,//intAggregationType,
         options: validatedData.colormap,//this.state.options,
         shared_with: validatedData.sharedWithOrganisations.map(orgUuid => orgUuid.replace(/-/g, ""))
-      })
-    };
-
-    fetch(url, opts)
-      .then(responseParsed => {
-        this.handleResponse(responseParsed);
-        return responseParsed.json();
-      })
-      .then(parsedBody => {
-        console.log("parsedBody", parsedBody);
-        this.setState({ createdRaster: parsedBody });
-      });
-  } else {
-    let body = {
-      name: validatedData.rasterName,
-      organisation: validatedData.selectedOrganisation.replace(/-/g, ""),
-      access_modifier: validatedData.accesModifier,
-      observation_type: validatedData.observationType, // observationTypeId, //this.state.observationType,
-      description: validatedData.description,
-      supplier: validatedData.supplierName,
-      supplier_code: validatedData.supplierCode,
-      // temporal: validatedData.temporal,
-      // interval: validatedData.duration, //isoIntervalDuration, //'P1D', // P1D is default, = ISO 8601 datetime for 1 day",
-      // // rescalable: false,
-      // optimizer: false, // default
-      aggregation_type: validatedData.aggregationType,//intAggregationType,
-      // // options: validatedData.colormap,//this.state.options,
-      shared_with: validatedData.sharedWithOrganisations.map(orgUuid => orgUuid.replace(/-/g, ""))
-    };
-    // if (!optionsHasLayers(this.state.options)) {
-    //   body.options = this.state.options;
-    // }
-    const opts = {
-      credentials: "same-origin",
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body)
-    };
-    // only add colormap in options if not multiple layers
-
-    fetch(url + "uuid:" + currentRaster.uuid + "/", opts)
-      .then(responseParsed => {
-        console.log("responseParsed put", responseParsed);
-        this.handleResponse(responseParsed);
-        return responseParsed.json();
-      })
-      .then(parsedBody => {
-        console.log("parsedBody", parsedBody);
-        this.setState({ createdRaster: parsedBody });
-      });
-  }
-};
-
-class RasterFormModel extends Component {
-
+      };
+      // if (!optionsHasLayers(this.state.options)) {
+      //   body.options = this.state.options;
+      // }
+      const opts = {
+        credentials: "same-origin",
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+      };
+      // only add colormap in options if not multiple layers
   
-
+      fetch(url + "uuid:" + currentRaster.uuid + "/", opts)
+        .then(responseParsed => {
+          console.log("responseParsed put", responseParsed);
+          this.handleResponse(responseParsed);
+          return responseParsed.json();
+        })
+        .then(parsedBody => {
+          console.log("parsedBody", parsedBody);
+          this.setState({ createdRaster: parsedBody });
+        });
+    }
+  };
 
   render() {
 
@@ -144,7 +157,18 @@ class RasterFormModel extends Component {
     console.log('currentRaster', currentRaster)
 
     return (
-      <ManagementForm onSubmit={formData => onSubmitExample(formData, currentRaster)}
+      <div>
+      {this.state.openOverlay ? (
+        <ErrorOverlay
+          isFetching={this.state.isFetching}
+          history={this.props.history}
+          errorMessage={this.state.modalErrorMessage}
+          handleClose={() =>
+            this.setState({ handlingDone: false, openOverlay: false })}
+          currentRaster={this.props.currentRaster || this.state.createdRaster}
+        />
+      ) : null}
+      <ManagementForm onSubmit={formData => this.onSubmitExample(formData, currentRaster)}
                       initial={{
                         first: "This initial was set through the form"
                       }}
@@ -297,45 +321,46 @@ class RasterFormModel extends Component {
           colorMaps={this.props.colorMaps.available.map(colM=>
             [colM.name, colM.name, colM.description]
           )}
-          validators={[function(value, allValues){
-            if (!value || !value.colorMap) {
-              return "Colormap must be selected"
-            }
+          // validators={[function(value, allValues){
+          //   if (!value || !value.colorMap) {
+          //     return "Colormap must be selected"
+          //   }
             
-            if (isFilled(value.min) &&  !isFilled(value.max)) {
-              return "If Min is filled, then Max is mandatory";
-            }
-            if (!isFilled(value.min) &&  isFilled(value.max)) {
-              return "If Max is filled, then Min is mandatory";
-            }
+          //   if (isFilled(value.min) &&  !isFilled(value.max)) {
+          //     return "If Min is filled, then Max is mandatory";
+          //   }
+          //   if (!isFilled(value.min) &&  isFilled(value.max)) {
+          //     return "If Max is filled, then Min is mandatory";
+          //   }
 
-            if ((isFilled(value.min) && isNaN(value.min)) ||  (isFilled(value.max) && isNaN(value.max))) {
-              return "Min and Max need to be numbers";
-            }
+          //   if ((isFilled(value.min) && isNaN(value.min)) ||  (isFilled(value.max) && isNaN(value.max))) {
+          //     return "Min and Max need to be numbers";
+          //   }
 
-            if (value && (value.min > value.max)) {
-              return "Max must be larger then Min";
-            }
-            return false;
+          //   if (value && (value.min > value.max)) {
+          //     return "Max must be larger then Min";
+          //   }
+          //   return false;
 
-            function isFilled (minOrMax) {
-              if (minOrMax === 0) {
-                return true;
-              } else if (minOrMax) {
-                return true;
-              } else {
-                return false;
-              }
-            }
-          }]}
+          //   function isFilled (minOrMax) {
+          //     if (minOrMax === 0) {
+          //       return true;
+          //     } else if (minOrMax) {
+          //       return true;
+          //     } else {
+          //       return false;
+          //     }
+          //   }
+          // }]}
+          validators={[colorMapValidator(true)]}
           initial = {
             currentRaster && 
-            currentRaster.options && 
-            { 
-              colorMap: currentRaster.options.colorMap,
-              min: currentRaster.options.min,
-              max: currentRaster.options.max,
-            }
+            currentRaster.options //&& 
+            // { 
+            //   colorMap: currentRaster.options.colorMap,
+            //   min: currentRaster.options.min,
+            //   max: currentRaster.options.max,
+            // }
           }
         />
         <SelectBox
@@ -383,16 +408,11 @@ class RasterFormModel extends Component {
           initial = {
             currentRaster && 
             currentRaster.interval &&
-            // "2 03:04:05" 
-            toISOValue({ 
-              days: currentRaster.interval.split(" ")[0], 
-              hours: currentRaster.interval.split(" ")[1].split(":")[0], 
-              minutes: currentRaster.interval.split(" ")[1].split(":")[1], 
-              seconds: currentRaster.interval.split(" ")[1].split(":")[2] 
-            })
+            toISOValue(rasterIntervalStringServerToDurationObject(currentRaster.interval))
           }
         />
       </ManagementForm>
+      </div>
     );
   }
 }

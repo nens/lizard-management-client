@@ -8,6 +8,7 @@ import ClearInputButton from "./ClearInputButton";
 import displayStyles from "../styles/Display.css";
 import styles from "./SelectBox.css";
 import formStyles from "../styles/Forms.css";
+import inputStyles from "../styles/Input.css";
 
 type displayStringsT = {[key: string]: string};
 type choiceT = [string|number, string] | [string|number, string, string]
@@ -24,6 +25,7 @@ interface SelectBoxProps {
   valueChanged: Function,
   wizardStyle: boolean
   showSearchField?: boolean
+  readonly?: boolean
 };
 
 interface SelectBoxState {
@@ -85,7 +87,8 @@ export default class SelectBox extends Component<SelectBoxProps, SelectBoxState>
       name,
       valueChanged,
       placeholder,
-      showSearchField
+      showSearchField,
+      readonly
     } = this.props;
     const {
       showChoices,
@@ -101,20 +104,31 @@ export default class SelectBox extends Component<SelectBoxProps, SelectBoxState>
           tabIndex={-1}
           type="text"
           autoComplete="false"
-          className={formStyles.FormControl}
+          className={
+            formStyles.FormControl +
+            " " +
+            (readonly ? " " + inputStyles.ReadOnly : null)
+          }
           placeholder={placeholder}
           value={value ? (displayStrings[value] || "") : ""}
-          onClick={() => this.toggleChoices()}
-          onKeyUp={this.handleKeyUp}
+          onClick={() => !readonly &&  this.toggleChoices()}
+          onKeyUp={par => !readonly && this.handleKeyUp(par)}
           onChange={() => {}}
+          readOnly={readonly}
+          disabled={readonly}
         />
-        {value !== null ? (
-          <ClearInputButton onClick={() => this.clearInput()}/>
-        ) : (
-          <ClearInputButton
-            icon="arrow_drop_down"
-            onClick={() => this.toggleChoices()}/>
-        )}
+        { 
+        !readonly ?
+          value !== null ? (
+            <ClearInputButton onClick={() => this.clearInput()}/>
+            ) : (
+            <ClearInputButton
+              icon="arrow_drop_down"
+              onClick={() => this.toggleChoices()}/>
+          )
+        :
+        null
+        }
       {showChoices ? (
         <div className={styles.Results}>
 
