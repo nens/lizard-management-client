@@ -67,10 +67,6 @@ header a {
 	top: 0.275%;
 	height: 7.5%;
 }
-.header-top-center {
-	padding: 5px;
-	justify-content: center;
-}
 .header-top-right {
 	justify-content: right;
 }
