@@ -1,39 +1,13 @@
 import React, { Component } from "react";
 
-// import gridStyles from "../../styles/Grid.css";
-// import buttonStyles from "../../styles/Buttons.css";
-// import "./NewRaster.css";
-// import React, { Component } from "react";
 import { addNotification } from "../../actions";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { FormattedMessage } from "react-intl";
-
-// import GenericTextInputComponent from "../../components/GenericTextInputComponent";
-// import GenericSelectBoxComponent from "../../components/GenericSelectBoxComponent";
-// import GenericCheckBoxComponent from "../../components/GenericCheckBoxComponent";
-// import ColorMapComponent from "../../components/ColorMapComponent";
-// import GenericStep from "../../components/GenericStep";
-// import DurationComponent from "../../components/DurationComponent";
-// import inputStyles from "../../styles/Input.css";
-import {
-  calculateNewStyleAndOptions,
-  optionsHasLayers,
-  getColorMapFromStyle,
-  getColorMinFromStyle,
-  getColorMaxFromStyle,
-  getStyleFromOptions,
-  validateStyleObj
-} from "../../utils/rasterOptionFunctions";
 import ErrorOverlay from "./ErrorOverlay.js";
 
-// import SlushBucket from "../../components/SlushBucket";
-// import SelectBoxSimple from "../../components/SelectBoxSimple.js";
 import "../../forms/validators";
 import {toISOValue, rasterIntervalStringServerToDurationObject} from "../../utils/isoUtils"
-
-
-
 
 import ManagementForm from "../../forms/ManagementForm";
 import ColorMapInput, { colorMapValidator } from "../../forms/ColorMapInput";
