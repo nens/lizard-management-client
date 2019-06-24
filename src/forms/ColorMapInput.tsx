@@ -52,41 +52,19 @@ interface ColorMapState {
 };
 
 export const colorMapValidator = (required: boolean) =>
-  // (colorMap: ColorMapType | null): validatorResult => {
   (options: any | null): validatorResult => {
-    const colorMap = colorMapTypeFromOptions(options);
 
-    console.log('colorMapValidator colorMap', colorMap);
+    const initiatedOptions = options || {}
+    const colorMap = colorMapTypeFromOptions(initiatedOptions);
+
+
 
     const result = validateStyleObj(colorMap);
-    console.log('result result', result);
     if (result.validated === true) {
       return false;
     } else {
       return result.errorMessage + '';
     }
-    // if (!colorMap || !(colorMap.colorMap)) {
-    //   if (required) {
-    //     return "Please choose a color map.";
-    //   } else {
-    //     return false;
-    //   }
-    // }
-
-    // if (typeof colorMap.min === 'number' || typeof colorMap.max === 'number') {
-    //   if (typeof colorMap.min !== 'number') {
-    //     return "If a maximum is chosen, please also choose a minimum.";
-    //   }
-    //   if (typeof colorMap.max !== 'number') {
-    //     return "If a minimum is chosen, please also choose a maximum.";
-    //   }
-    //   if (colorMap.min >= colorMap.max) {
-    //     return "Minimum must be smaller than maximum.";
-    //   }
-    //   return false;
-    // }
-
-    // return false;
 };
 
 class ColorMapInput extends Component<ColorMapProps, ColorMapState> {
@@ -95,10 +73,15 @@ class ColorMapInput extends Component<ColorMapProps, ColorMapState> {
     this.state = {
       previewColor: null
     };
+    if (this.props.value === undefined || this.props.value === null) {
+      console.log('ColorMapInput constructor')
+      props.valueChanged({})
+    }
   }
 
   setLocalStateFromProps(props: ColorMapProps) {
-    this.getRGBAGradient(colorMapTypeFromOptions(props.value));
+    const initiatedValue = props.value || {};
+    this.getRGBAGradient(colorMapTypeFromOptions(initiatedValue));
   }
 
   componentWillReceiveProps(newProps: ColorMapProps) {
@@ -108,12 +91,10 @@ class ColorMapInput extends Component<ColorMapProps, ColorMapState> {
     this.setLocalStateFromProps(this.props);
   }
 
-  // getRGBAGradient(value: ColorMapType | null) {
   getRGBAGradient(value: any | null) {
     if (value && value.colorMap) {
       let style = value.colorMap;
 
-      // if (typeof value.min === 'number' && typeof value.max === 'number') {
       if (value.min && value.max) {
         style = `${style}:${value.min}:${value.max}`;
       }
@@ -139,36 +120,16 @@ class ColorMapInput extends Component<ColorMapProps, ColorMapState> {
 
 
   colorMapChanged(colorMap: string) {
-    // let newValue;
-
-    // if (this.props.value && this.props.value.colorMap === colorMap) {
-    //   // No change.
-    //   return;
-    // }
-
-    // if (this.props.value) {
-    //   newValue = {
-    //     colorMap: colorMap,
-    //     min: this.props.value.min,
-    //     max: this.props.value.max
-    //   };
-    // } else {
-    //   newValue = {
-    //     colorMap: colorMap
-    //   };
-    // }
-
-    // this.props.valueChanged(newValue);
+    
     if (colorMap === null) {
       colorMap = '';
     }
+    const initializedOptions = this.props.value || {};
     const newStyleOptions = calculateNewStyleAndOptions(
-      colorMapTypeFromOptions(this.props.value),
+      colorMapTypeFromOptions(initializedOptions),
       this.props.value,
       {colorMap: colorMap}
     );
-    // const newOptions = createColorMapFromStylePlusOptions();
-    console.log('newStyleOptions', newStyleOptions, colorMap)
     this.props.valueChanged(newStyleOptions.options);
   }
 
@@ -177,25 +138,6 @@ class ColorMapInput extends Component<ColorMapProps, ColorMapState> {
 
     if (field !== 'min' && field !== 'max') return;
 
-    // if (this.props.value && this.props.value[field] === value) {
-    //   // No change.
-    //   return;
-    // }
-
-    // if (this.props.value) {
-    //   newValue = {
-    //     ...this.props.value,
-    //     [field]: value
-    //   };
-    // } else {
-    //   newValue = {
-    //     colorMap: null,
-    //     [field]: value
-    //   };
-    // }
-
-    // this.props.valueChanged(newValue);
-    // this.props.valueChanged(newValue);
     if (value === null) {
       newValue = '';
     } else {
@@ -219,9 +161,6 @@ class ColorMapInput extends Component<ColorMapProps, ColorMapState> {
       );
     }
 
-    
-    // const newOptions = createColorMapFromStylePlusOptions();
-    console.log('newStyleOptions', newStyleOptions, field, value)
     this.props.valueChanged(newStyleOptions.options);
   }
 
@@ -246,12 +185,10 @@ class ColorMapInput extends Component<ColorMapProps, ColorMapState> {
       wizardStyle,
     } = this.props;
 
-    console.log('value' , value);
-    const readonly = optionsHasLayers(value);
     
-    const colorMapType = colorMapTypeFromOptions(value);
-
-    // console.log('colorMap', colorMap, min, max)
+    const initiatedValue = value || {}; 
+    const readonly = optionsHasLayers(initiatedValue);
+    const colorMapType = colorMapTypeFromOptions(initiatedValue);
 
     let colors = null, minValue = null, maxValue = null;
     if (this.state.previewColor != null) {
