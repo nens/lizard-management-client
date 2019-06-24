@@ -128,8 +128,6 @@ class RasterFormModel extends Component {
 
     const {currentRaster} = this.props;
 
-    console.log('currentRaster', currentRaster)
-
     return (
       <div>
       {this.state.openOverlay ? (
@@ -159,10 +157,12 @@ class RasterFormModel extends Component {
           validators={[required("Please select an organisation.")]}
           showSearchField={true}
           initial ={
-            currentRaster && 
-            currentRaster.organisation && 
-            currentRaster.organisation.uuid &&
-            currentRaster.organisation.uuid.replace(/-/g, "")
+            (
+              currentRaster && 
+              currentRaster.organisation && 
+              currentRaster.organisation.uuid &&
+              currentRaster.organisation.uuid.replace(/-/g, "")
+            ) || null
           }
         />
         <SlushBucket
@@ -269,8 +269,10 @@ class RasterFormModel extends Component {
           validators={[required("Please select an aggregation type.")]}
           showSearchField={false}
           initial = {
+            (
             currentRaster && 
             currentRaster.aggregation_type
+            ) || null
           }
         />
         <SelectBox
@@ -284,9 +286,11 @@ class RasterFormModel extends Component {
           validators={[required("Please select an observation type.")]}
           showSearchField={true}
           initial = {
+            (
             currentRaster && 
             currentRaster.observation_type && 
             currentRaster.observation_type.code
+            ) || null 
           }
         />
         <ColorMapInput
@@ -295,61 +299,28 @@ class RasterFormModel extends Component {
           colorMaps={this.props.colorMaps.available.map(colM=>
             [colM.name, colM.name, colM.description]
           )}
-          // validators={[function(value, allValues){
-          //   if (!value || !value.colorMap) {
-          //     return "Colormap must be selected"
-          //   }
-            
-          //   if (isFilled(value.min) &&  !isFilled(value.max)) {
-          //     return "If Min is filled, then Max is mandatory";
-          //   }
-          //   if (!isFilled(value.min) &&  isFilled(value.max)) {
-          //     return "If Max is filled, then Min is mandatory";
-          //   }
-
-          //   if ((isFilled(value.min) && isNaN(value.min)) ||  (isFilled(value.max) && isNaN(value.max))) {
-          //     return "Min and Max need to be numbers";
-          //   }
-
-          //   if (value && (value.min > value.max)) {
-          //     return "Max must be larger then Min";
-          //   }
-          //   return false;
-
-          //   function isFilled (minOrMax) {
-          //     if (minOrMax === 0) {
-          //       return true;
-          //     } else if (minOrMax) {
-          //       return true;
-          //     } else {
-          //       return false;
-          //     }
-          //   }
-          // }]}
           validators={[colorMapValidator(true)]}
           initial = {
             currentRaster && 
-            currentRaster.options //&& 
-            // { 
-            //   colorMap: currentRaster.options.colorMap,
-            //   min: currentRaster.options.min,
-            //   max: currentRaster.options.max,
-            // }
+            currentRaster.options 
           }
         />
         <SelectBox
           name="supplierName"
           title="Supplier Name"
-          subTitle="Select the user that is allowed to change and delete this raster"
+          subTitle="Optional: select the user that is allowed to change and delete this raster"
           placeholder="click to select supplier name"
           choices={this.props.supplierIds.available.map(obsT=>
             [obsT.username, obsT.username]
           )}
-          validators={[required("Please select a Supplier Name.")]}
+          // validators={[required("Please select a Supplier Name.")]}
+          validators={[]}
           showSearchField={true}
           initial = {
+            (
             currentRaster && 
             currentRaster.supplier
+            ) || null
           }
         />
         <TextInput
