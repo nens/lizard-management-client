@@ -152,6 +152,7 @@ class RasterFormModel extends Component {
         <SelectBox
           name="selectedOrganisation"
           title="Organisation"
+          subtitle="Specify which organisation owns this raster"
           placeholder="Choose an organisation"
           choices={this.props.organisations.available.map(organisation=>
             [organisation.uuid.replace(/-/g, ""), organisation.name]
@@ -170,6 +171,7 @@ class RasterFormModel extends Component {
         <SlushBucket
           name="sharedWithOrganisations"
           title="Shared With Organisation"
+          subtitle="Select other organisations that need read acces to this raster"
           choices={this.props.organisations.availableForRasterSharedWith.map(e =>{
             return {
               display: e.name, 
@@ -192,6 +194,7 @@ class RasterFormModel extends Component {
         <SelectBox
           name="accesModifier"
           title="Authorization type"
+          subtitle="Specify who can view this raster"
           choices={[
             [
               "Private",
@@ -242,7 +245,7 @@ class RasterFormModel extends Component {
         <SelectBox
           name="aggregationType"
           title="Aggregation Type"
-          subTitle="Specify how data should be displayed in region selection mode"
+          subtitle="Specify how data should be displayed in region selection mode"
           placeholder="click to select aggregation type"
           choices={[
             [
@@ -283,7 +286,7 @@ class RasterFormModel extends Component {
         <SelectBox
           name="observationType"
           title="Observation Type"
-          subTitle="Specify the physical quantity and unit of the data"
+          subtitle="Specify the physical quantity and unit of the data"
           placeholder="click to select observation type"
           choices={this.props.observationTypes.available.map(obsT=>
             [obsT.code, obsT.code]
@@ -313,7 +316,7 @@ class RasterFormModel extends Component {
         <SelectBox
           name="supplierName"
           title="Supplier Name"
-          subTitle="Optional: select the user that is allowed to change and delete this raster"
+          subtitle="Optional: select the user that is allowed to change and delete this raster"
           placeholder="click to select supplier name"
           choices={this.props.supplierIds.available.map(obsT=>
             [obsT.username, obsT.username]
