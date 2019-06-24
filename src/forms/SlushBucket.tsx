@@ -38,6 +38,10 @@ export default class SlushBucket extends Component<Props, State> {
       searchString: ""
     };
     this.handleKeyUp = this.handleKeyUp.bind(this);
+
+    if (this.props.value === undefined || this.props.value === null) {
+      props.valueChanged([])
+    }
   }
 
   handleKeyUp(e: any): void {
