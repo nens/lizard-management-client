@@ -47,8 +47,10 @@ class RasterFormModel extends Component {
   }
 
   
-  onSubmitExample = (validatedData, currentRaster) => {
+  onSubmit = (validatedData, currentRaster) => {
     console.log("Submitted data: ", validatedData, currentRaster);
+
+    this.setState({ isFetching: true, openOverlay: true });
   
     const url = "/api/v4/rasters/";
      if (!currentRaster) {
@@ -140,7 +142,7 @@ class RasterFormModel extends Component {
           currentRaster={this.props.currentRaster || this.state.createdRaster}
         />
       ) : null}
-      <ManagementForm onSubmit={formData => this.onSubmitExample(formData, currentRaster)}
+      <ManagementForm onSubmit={formData => this.onSubmit(formData, currentRaster)}
                       initial={{
                         first: "This initial was set through the form"
                       }}
