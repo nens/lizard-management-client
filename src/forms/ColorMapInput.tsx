@@ -2,15 +2,14 @@
 // {"styles": "transparent", "HEIGHT": 512, "ZINDEX": 20, "WIDTH": 1024, "effects": "radar:0:0.008", "TRANSPARENT": false}
 import React, { Component } from "react";
 
-import CheckMark from "./CheckMark";
 import SelectBox, { choicesT } from "./SelectBox";
 
 import { validatorResult } from "./validators";
 
 import styles from "./ColorMapInput.css";
 import formStyles from "../styles/Forms.css";
-import buttonStyles from "../styles/Buttons.css";
 import inputStyles from "../styles/Input.css";
+import CheckBox from "./CheckBox";
 
 import {
   calculateNewStyleAndOptions,
@@ -255,6 +254,18 @@ class ColorMapInput extends Component<ColorMapProps, ColorMapState> {
           readOnly={readonly}
           disabled={readonly}
         />
+        <br/>
+        <CheckBox
+          name="rescalable"
+          label="Rescalable"
+          readonly={false}
+          value= {false}
+          validated={true}
+          handleEnter={((e: any) => false)}
+          valueChanged={((e: any) => false)}
+          wizardStyle={false}
+        />
+        
       </div>
     );
   }
