@@ -53,8 +53,11 @@ interface ColorMapState {
 export const colorMapValidator = (required: boolean) =>
   (options: any | null): validatorResult => {
 
-    const initiatedOptions = options || {}
-    const colorMap = colorMapTypeFromOptions(initiatedOptions);
+    const initiatedOptions = options || {
+      options: {},
+      rescalable: false,
+    }
+    const colorMap = colorMapTypeFromOptions(initiatedOptions.options);
 
 
 
@@ -74,13 +77,19 @@ class ColorMapInput extends Component<ColorMapProps, ColorMapState> {
     };
     if (this.props.value === undefined || this.props.value === null) {
       console.log('ColorMapInput constructor')
-      props.valueChanged({})
+      props.valueChanged({
+        options: {},
+        rescalable: false,
+      })
     }
   }
 
   setLocalStateFromProps(props: ColorMapProps) {
-    const initiatedValue = props.value || {};
-    this.getRGBAGradient(colorMapTypeFromOptions(initiatedValue));
+    const initiatedValue = props.value || {
+      options: {},
+      rescalable: false,
+    };
+    this.getRGBAGradient(colorMapTypeFromOptions(initiatedValue.options));
   }
 
   componentWillReceiveProps(newProps: ColorMapProps) {
@@ -123,13 +132,26 @@ class ColorMapInput extends Component<ColorMapProps, ColorMapState> {
     if (colorMap === null) {
       colorMap = '';
     }
-    const initializedOptions = this.props.value || {};
+    const initializedOptions = this.props.value || {
+      options: {},
+      rescalable: false,
+    };
     const newStyleOptions = calculateNewStyleAndOptions(
-      colorMapTypeFromOptions(initializedOptions),
-      this.props.value,
+      colorMapTypeFromOptions(initializedOptions.options),
+      initializedOptions.options,
       {colorMap: colorMap}
     );
-    this.props.valueChanged(newStyleOptions.options);
+    this.props.valueChanged({
+      options: newStyleOptions.options,
+      rescalable: this.props.value.rescalable
+    });
+  }
+
+  rescalableChanged(rescalable: boolean) {
+    this.props.valueChanged({
+      options: this.props.value.options,
+      rescalable: rescalable
+    });
   }
 
   valueChanged(field: string, value: number | null) {
@@ -146,21 +168,24 @@ class ColorMapInput extends Component<ColorMapProps, ColorMapState> {
     let newStyleOptions;
     if (field === 'min') {
       newStyleOptions = calculateNewStyleAndOptions(
-        colorMapTypeFromOptions(this.props.value),
-        this.props.value,
+        colorMapTypeFromOptions(this.props.value.options),
+        this.props.value.options,
         {min: newValue}
       );
     } 
     else {
     // if (field === 'max') {
       newStyleOptions = calculateNewStyleAndOptions(
-        colorMapTypeFromOptions(this.props.value),
-        this.props.value,
+        colorMapTypeFromOptions(this.props.value.options),
+        this.props.value.options,
         {max: newValue}
       );
     }
 
-    this.props.valueChanged(newStyleOptions.options);
+    this.props.valueChanged({
+      options: newStyleOptions.options,
+      rescalable: this.props.value.rescalable
+    });
   }
 
   toFloat(value: string): number | null {
@@ -185,9 +210,12 @@ class ColorMapInput extends Component<ColorMapProps, ColorMapState> {
     } = this.props;
 
     
-    const initiatedValue = value || {}; 
-    const readonly = optionsHasLayers(initiatedValue);
-    const colorMapType = colorMapTypeFromOptions(initiatedValue);
+    const initiatedValue = value || {
+      options: {},
+      rescalable: false,
+    }; 
+    const readonly = optionsHasLayers(initiatedValue.options);
+    const colorMapType = colorMapTypeFromOptions(initiatedValue.options);
 
     let colors = null, minValue = null, maxValue = null;
     if (this.state.previewColor != null) {
@@ -259,10 +287,10 @@ class ColorMapInput extends Component<ColorMapProps, ColorMapState> {
           name="rescalable"
           label="Rescalable"
           readonly={false}
-          value= {false}
+          value= {initiatedValue.rescalable}
           validated={true}
           handleEnter={((e: any) => false)}
-          valueChanged={((e: any) => false)}
+          valueChanged={((bool: boolean) => this.rescalableChanged(bool))}
           wizardStyle={false}
         />
         

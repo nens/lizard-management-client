@@ -179,12 +179,15 @@ class RasterFormModel extends Component {
           readOnly={false}
           placeholder={"search organisations"}
           initial={
+            (
             currentRaster && 
             currentRaster.shared_with && 
             currentRaster.shared_with.map((orgUuid) => {
               return orgUuid.uuid.replace(/-/g, "")
             })
+            ) || [] // passing this empty array is somehow required. Somehow only if I also have the colormapInput component.
           }
+          validators={[]}
         />
         <SelectBox
           name="accesModifier"
