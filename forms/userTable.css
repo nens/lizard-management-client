@@ -20,3 +20,41 @@
 	display: flex;
 	justify-content: flex-end;
 }
+
+#table-container {
+	display: grid;
+	grid-template-rows: 100px 100px 100px;
+	grid-template-columns: 20% 35% 35% 10%;
+}
+.item {
+	display: grid;
+	justify-content: center;
+	box-sizing: border-box;
+	border: 1px solid black;
+	align-items: center;
+}
+
+table {
+	/*table-layout: fixed;*/
+}
+
+thead {
+	/*position: relative;*/
+	/*display: block;*/
+/*	width: 100%;*/
+}
+thead tr {
+	/*position: relative;*/
+	/*display: block;*/
+	/*width: 33%;*/
+}
+
+tbody {
+/*	display: block;
+	overflow-y: auto;
+	height: 50vh;
+	width: 100%;*/
+}
+tbody tr {
+	/*width: 33%;*/
+}
