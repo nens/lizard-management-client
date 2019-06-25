@@ -3,14 +3,13 @@
 	display: flex;
 	flex-basis: 100%;
 	justify-content: space-between;
-	margin-top: 10px;
-	margin-bottom: 10px;
 }
 .main-top-content {
 	display: flex;
 	flex-direction: row;
 	align-items: flex-start;
-	padding-top: 40px;
+	padding-top: 25px;
+	padding-bottom: 55px;
 }
 .main-top-left {
 	display: flex;

@@ -20,6 +20,7 @@
       <link rel="stylesheet" href="searchBox.css">
       <link rel="stylesheet" href="roles.css">
       <script src="roles.js"></script>
+      <script src="userTable.js"></script>
     <!-- {% endblock extraheader %}
     -->
     <title>Lizard management</title>
@@ -36,7 +37,12 @@
                 <img src="lizard.png" class="header-top-left-lizard-logo" alt="Lizard logo">
               </a>
             </div>
-            <div class="header-top-center">
+            <div class="header-top-right">
+              <a href="https://sso.lizard.net/edit_profile/" target="_blank" rel="noopener noreferrer" title="Lirry"> <!-- title becomes dependent on user name, instead of Lirry -->
+                <div class="header-top-right-user">
+                  <i class="fa fa-user icon-medium"></i>Lirry <!-- text within i becomes dependent on user name, instead of Lirry -->
+                </div>
+              </a>
               <div class="organisation-select" style="width:200px;">
                 <select class="dropdown organisation">
                   <option value="0">Select organisation:</option>
@@ -46,13 +52,6 @@
                   <option value="4">Hunze en Aas</option>
                 </select>
               </div>
-            </div>
-            <div class="header-top-right">
-              <a href="https://sso.lizard.net/edit_profile/" target="_blank" rel="noopener noreferrer" title="Lirry"> <!-- title becomes dependent on user name, instead of Lirry -->
-                <div class="header-top-right-user">
-                  <i class="fa fa-user icon-medium"></i>Lirry <!-- text within i becomes dependent on user name, instead of Lirry -->
-                </div>
-              </a>
               <a href="https://nxt3.staging.lizard.net/accounts/logout/"> <!-- Should become /accounts/logout/ -->
                 <div class="header-top-right-logout">
                   <i class="fa fa-power-off icon-medium"></i>Log out
@@ -83,7 +82,7 @@
           <div class="main-top-content">
             <div class="main-top-left">
               <div class="search-box">
-                <i class="fa fa-search search-box-icon icon-large"></i>
+                <i class="material-icons search-box-icon icon-large">search</i>
                 <input type="text" name="">
               </div>
             </div>
@@ -108,7 +107,7 @@
               <!--{% for user in users %}-->
               <tr>
                 <td>
-                  lirry.pinter (you)
+                  <span title="Lirry Pinter">lirry.pinter (you)</span>
                 </td>
                 <td>
                   <form name="edit-user-roles-form">
@@ -147,7 +146,7 @@
               <!-- hard-coded users before using the for loop -->
               <tr>
                 <td>
-                  emiel.verstegen
+                  <span title="Emiel Verstegen">emiel.verstegen</span>
                 </td>
                 <td>
                   <form>
@@ -184,7 +183,7 @@
               </tr>
               <tr>
                 <td>
-                  govert.termors
+                  <span title="Govert Termors">govert.termors</span>
                 </td>
                 <td>
                   <form>
@@ -221,7 +220,7 @@
               </tr>
               <tr>
                 <td>
-                  tom.deboer
+                  <span title="Tom de Boer">tom.deboer</span>
                 </td>
                 <td>
                   <form>
@@ -258,7 +257,7 @@
               </tr>
               <tr>
                 <td>
-                  remco.gerlich
+                  <span title="Remco Gerlich">remco.gerlich</span>
                 </td>
                 <td>
                   <form>
@@ -295,7 +294,229 @@
               </tr>
               <tr>
                 <td>
-                  casper.vdw
+                  <span title="Casper van der Wel">casper.vdw</span>
+                </td>
+                <td>
+                  <form>
+                    <div class="role-container">
+                      <label class="role">
+                        <input type="checkbox" name="edit-user-roles-form-user-role" disabled>
+                        <span class="role-content user-role disabled not-checked">U</span>
+                      </label>
+                      <label class="role">
+                        <input type="checkbox" name="edit-user-roles-form-supplier-role" disabled>
+                        <span class="role-content supplier-role disabled not-checked">S</span>
+                      </label>
+                      <label class="role">
+                        <input type="checkbox" name="edit-user-roles-form-admin-role" disabled>
+                        <span class="role-content admin-role disabled not-checked">A</span>
+                      </label>
+                      <label class="role">
+                        <input type="checkbox" name="edit-user-roles-form-manager-role" disabled>
+                        <span class="role-content manager-role disabled not-checked">M</span>
+                      </label>
+                      <button onclick="enableRoleCheckboxes()" class="button role-content edit-role">+</button>
+                      <button type="submit" onclick="disableRoleCheckboxes()" class="button role-content save-role button-shadow not-shown">SAVE</button>
+                    </div>
+                  </form>
+                </td>
+                <td>
+                  gebruiker.zes@gmail.com
+                </td>
+                <td class="text-center">
+                  <a href="userEdit.html">
+                    <i class="fa fa-ellipsis-h icon-medium"></i>
+                  </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <span title="Casper van der Wel">casper.vdw</span>
+                </td>
+                <td>
+                  <form>
+                    <div class="role-container">
+                      <label class="role">
+                        <input type="checkbox" name="edit-user-roles-form-user-role" disabled>
+                        <span class="role-content user-role disabled not-checked">U</span>
+                      </label>
+                      <label class="role">
+                        <input type="checkbox" name="edit-user-roles-form-supplier-role" disabled>
+                        <span class="role-content supplier-role disabled not-checked">S</span>
+                      </label>
+                      <label class="role">
+                        <input type="checkbox" name="edit-user-roles-form-admin-role" disabled>
+                        <span class="role-content admin-role disabled not-checked">A</span>
+                      </label>
+                      <label class="role">
+                        <input type="checkbox" name="edit-user-roles-form-manager-role" disabled>
+                        <span class="role-content manager-role disabled not-checked">M</span>
+                      </label>
+                      <button onclick="enableRoleCheckboxes()" class="button role-content edit-role">+</button>
+                      <button type="submit" onclick="disableRoleCheckboxes()" class="button role-content save-role button-shadow not-shown">SAVE</button>
+                    </div>
+                  </form>
+                </td>
+                <td>
+                  gebruiker.zes@gmail.com
+                </td>
+                <td class="text-center">
+                  <a href="userEdit.html">
+                    <i class="fa fa-ellipsis-h icon-medium"></i>
+                  </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <span title="Casper van der Wel">casper.vdw</span>
+                </td>
+                <td>
+                  <form>
+                    <div class="role-container">
+                      <label class="role">
+                        <input type="checkbox" name="edit-user-roles-form-user-role" disabled>
+                        <span class="role-content user-role disabled not-checked">U</span>
+                      </label>
+                      <label class="role">
+                        <input type="checkbox" name="edit-user-roles-form-supplier-role" disabled>
+                        <span class="role-content supplier-role disabled not-checked">S</span>
+                      </label>
+                      <label class="role">
+                        <input type="checkbox" name="edit-user-roles-form-admin-role" disabled>
+                        <span class="role-content admin-role disabled not-checked">A</span>
+                      </label>
+                      <label class="role">
+                        <input type="checkbox" name="edit-user-roles-form-manager-role" disabled>
+                        <span class="role-content manager-role disabled not-checked">M</span>
+                      </label>
+                      <button onclick="enableRoleCheckboxes()" class="button role-content edit-role">+</button>
+                      <button type="submit" onclick="disableRoleCheckboxes()" class="button role-content save-role button-shadow not-shown">SAVE</button>
+                    </div>
+                  </form>
+                </td>
+                <td>
+                  gebruiker.zes@gmail.com
+                </td>
+                <td class="text-center">
+                  <a href="userEdit.html">
+                    <i class="fa fa-ellipsis-h icon-medium"></i>
+                  </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <span title="Casper van der Wel">casper.vdw</span>
+                </td>
+                <td>
+                  <form>
+                    <div class="role-container">
+                      <label class="role">
+                        <input type="checkbox" name="edit-user-roles-form-user-role" disabled>
+                        <span class="role-content user-role disabled not-checked">U</span>
+                      </label>
+                      <label class="role">
+                        <input type="checkbox" name="edit-user-roles-form-supplier-role" disabled>
+                        <span class="role-content supplier-role disabled not-checked">S</span>
+                      </label>
+                      <label class="role">
+                        <input type="checkbox" name="edit-user-roles-form-admin-role" disabled>
+                        <span class="role-content admin-role disabled not-checked">A</span>
+                      </label>
+                      <label class="role">
+                        <input type="checkbox" name="edit-user-roles-form-manager-role" disabled>
+                        <span class="role-content manager-role disabled not-checked">M</span>
+                      </label>
+                      <button onclick="enableRoleCheckboxes()" class="button role-content edit-role">+</button>
+                      <button type="submit" onclick="disableRoleCheckboxes()" class="button role-content save-role button-shadow not-shown">SAVE</button>
+                    </div>
+                  </form>
+                </td>
+                <td>
+                  gebruiker.zes@gmail.com
+                </td>
+                <td class="text-center">
+                  <a href="userEdit.html">
+                    <i class="fa fa-ellipsis-h icon-medium"></i>
+                  </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <span title="Casper van der Wel">casper.vdw</span>
+                </td>
+                <td>
+                  <form>
+                    <div class="role-container">
+                      <label class="role">
+                        <input type="checkbox" name="edit-user-roles-form-user-role" disabled>
+                        <span class="role-content user-role disabled not-checked">U</span>
+                      </label>
+                      <label class="role">
+                        <input type="checkbox" name="edit-user-roles-form-supplier-role" disabled>
+                        <span class="role-content supplier-role disabled not-checked">S</span>
+                      </label>
+                      <label class="role">
+                        <input type="checkbox" name="edit-user-roles-form-admin-role" disabled>
+                        <span class="role-content admin-role disabled not-checked">A</span>
+                      </label>
+                      <label class="role">
+                        <input type="checkbox" name="edit-user-roles-form-manager-role" disabled>
+                        <span class="role-content manager-role disabled not-checked">M</span>
+                      </label>
+                      <button onclick="enableRoleCheckboxes()" class="button role-content edit-role">+</button>
+                      <button type="submit" onclick="disableRoleCheckboxes()" class="button role-content save-role button-shadow not-shown">SAVE</button>
+                    </div>
+                  </form>
+                </td>
+                <td>
+                  gebruiker.zes@gmail.com
+                </td>
+                <td class="text-center">
+                  <a href="userEdit.html">
+                    <i class="fa fa-ellipsis-h icon-medium"></i>
+                  </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <span title="Casper van der Wel">casper.vdw</span>
+                </td>
+                <td>
+                  <form>
+                    <div class="role-container">
+                      <label class="role">
+                        <input type="checkbox" name="edit-user-roles-form-user-role" disabled>
+                        <span class="role-content user-role disabled not-checked">U</span>
+                      </label>
+                      <label class="role">
+                        <input type="checkbox" name="edit-user-roles-form-supplier-role" disabled>
+                        <span class="role-content supplier-role disabled not-checked">S</span>
+                      </label>
+                      <label class="role">
+                        <input type="checkbox" name="edit-user-roles-form-admin-role" disabled>
+                        <span class="role-content admin-role disabled not-checked">A</span>
+                      </label>
+                      <label class="role">
+                        <input type="checkbox" name="edit-user-roles-form-manager-role" disabled>
+                        <span class="role-content manager-role disabled not-checked">M</span>
+                      </label>
+                      <button onclick="enableRoleCheckboxes()" class="button role-content edit-role">+</button>
+                      <button type="submit" onclick="disableRoleCheckboxes()" class="button role-content save-role button-shadow not-shown">SAVE</button>
+                    </div>
+                  </form>
+                </td>
+                <td>
+                  gebruiker.zes@gmail.com
+                </td>
+                <td class="text-center">
+                  <a href="userEdit.html">
+                    <i class="fa fa-ellipsis-h icon-medium"></i>
+                  </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <span title="Casper van der Wel">casper.vdw</span>
                 </td>
                 <td>
                   <form>

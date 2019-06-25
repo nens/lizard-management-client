@@ -34,7 +34,6 @@ function dontShowEditUserPopup() {
 }
 
 function closeEditUserPopup() {
-  console.log(event.target);
   var userOptions = event.target.parent;
   userOptions.classList.add("not-shown");
   var showLessUserOptions = userOptions.previousElementSibling;

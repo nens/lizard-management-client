@@ -1,21 +1,25 @@
 /* Buttons */
 .button {
-	padding: 10px;
-	font-size: 1rem;
-	white-space: nowrap;
-	text-transform: uppercase;
+	padding: .5rem .75rem;
+	border: 0 solid transparent;
+	border-radius: 0;
+	line-height: 1.25;
 	background-color: #00cdab;
-	border-color: #00cdab;
 	color: white;
+	font-size: 1rem;
+	text-transform: uppercase;
+	text-align: center;
+	white-space: nowrap;
 	cursor: pointer;
+	transition: all .15s ease-in-out;
 }
 .button:active {
 	background-color: #00a78b;
-	border-color: #009a80;
+	border-color: #00a78b;
 }
 .button:hover {
 	background-color: #00a78b;
-	border-color: #009a80;
+	border-color: #00a78b;
 }
 .button-shadow {
 	box-shadow: 0 2px 4px 0 rgba(0,0,0,.5);

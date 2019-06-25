@@ -30,6 +30,8 @@
 }
 .search-box-icon {
 	position: absolute;
-	margin: 6px;
+	margin: 0;
+	font-size: 30px;
 	color: #989898;
+	pointer-events: none;
 }
