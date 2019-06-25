@@ -19,13 +19,10 @@ import CheckBox from "../../forms/CheckBox";
 import SlushBucket from "../../forms/SlushBucket";
 
 import {
-  // nonEmptyString,
   minLength,
-  // testRegex,
   required
 } from "../../forms/validators";
-
-
+import { optionsHasLayers} from "../../utils/rasterOptionFunctions";
 
 
 class RasterFormModel extends Component {
@@ -48,7 +45,6 @@ class RasterFormModel extends Component {
 
   
   onSubmit = (validatedData, currentRaster) => {
-    console.log("Submitted data: ", validatedData, currentRaster);
 
     this.setState({ isFetching: true, openOverlay: true });
   
@@ -68,10 +64,10 @@ class RasterFormModel extends Component {
           supplier_code: validatedData.supplierCode,
           temporal: validatedData.temporal,
           interval: validatedData.duration, //isoIntervalDuration, //'P1D', // P1D is default, = ISO 8601 datetime for 1 day",
-          rescalable: false,
+          rescalable: validatedData.colormap.rescalable,
           optimizer: false, // default
-          aggregation_type: validatedData.aggregationType,//intAggregationType,
-          options: validatedData.colormap,//this.state.options,
+          aggregation_type: validatedData.aggregationType, 
+          options: validatedData.colormap.options,
           shared_with: validatedData.sharedWithOrganisations.map(orgUuid => orgUuid.replace(/-/g, ""))
         })
       };
@@ -94,24 +90,22 @@ class RasterFormModel extends Component {
         description: validatedData.description,
         supplier: validatedData.supplierName,
         supplier_code: validatedData.supplierCode,
-        // temporal: validatedData.temporal,
-        // interval: validatedData.duration, //isoIntervalDuration, //'P1D', // P1D is default, = ISO 8601 datetime for 1 day",
-        // // rescalable: false,
-        // optimizer: false, // default
         aggregation_type: validatedData.aggregationType,//intAggregationType,
-        options: validatedData.colormap,//this.state.options,
-        shared_with: validatedData.sharedWithOrganisations.map(orgUuid => orgUuid.replace(/-/g, ""))
+        shared_with: validatedData.sharedWithOrganisations.map(orgUuid => orgUuid.replace(/-/g, "")),
+        rescalable: validatedData.colormap.rescalable,
+        
       };
-      // if (!optionsHasLayers(this.state.options)) {
-      //   body.options = this.state.options;
-      // }
+      // only add colormap in options if not multiple layers
+      if (!optionsHasLayers(validatedData.colormap.options)) {
+        body.options = validatedData.colormap.options;
+      }
       const opts = {
         credentials: "same-origin",
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body)
       };
-      // only add colormap in options if not multiple layers
+      
   
       fetch(url + "uuid:" + currentRaster.uuid + "/", opts)
         .then(responseParsed => {
@@ -143,9 +137,6 @@ class RasterFormModel extends Component {
         />
       ) : null}
       <ManagementForm onSubmit={formData => this.onSubmit(formData, currentRaster)}
-                      initial={{
-                        first: "This initial was set through the form"
-                      }}
                       wizardStyle={this.props.wizardStyle}
       >
 
@@ -310,7 +301,11 @@ class RasterFormModel extends Component {
           validators={[colorMapValidator(true)]}
           initial = {
             currentRaster && 
-            currentRaster.options 
+            { 
+              options: currentRaster.options,
+              rescalable: currentRaster.rescalable
+            }
+
           }
         />
         <SelectBox
@@ -348,13 +343,15 @@ class RasterFormModel extends Component {
           label="Select whether you are creating a raster that contains multiple rasters over time"
           readonly={currentRaster}
           initial = {
+            (
             currentRaster && 
             currentRaster.temporal
+            ) || false
           }
         />
         <DurationField
           name="duration"
-          disabled={(formValues) => formValues.temporal === false }
+          disabled={(formValues) => formValues.temporal == false }
           title="Raster Series Interval"
           subtitle="Interval of raster series"
           validators={currentRaster?[]:[durationValidator(true)]}

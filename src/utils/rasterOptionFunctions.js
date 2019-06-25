@@ -135,14 +135,6 @@ export function composeStyleString(color, min, max) {
       str += max
     }
   }
-  // if (min && min !== "") {
-  //   str += ":" + min;
-
-  //   // we can only add max if min is also added
-  //   if (max && max !== "") {
-  //     str += ":" + max;
-  //   }
-  // }
 
   return str;
 }

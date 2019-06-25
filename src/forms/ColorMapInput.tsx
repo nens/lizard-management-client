@@ -76,7 +76,6 @@ class ColorMapInput extends Component<ColorMapProps, ColorMapState> {
       previewColor: null
     };
     if (this.props.value === undefined || this.props.value === null) {
-      console.log('ColorMapInput constructor')
       props.valueChanged({
         options: {},
         rescalable: false,
@@ -173,8 +172,7 @@ class ColorMapInput extends Component<ColorMapProps, ColorMapState> {
         {min: newValue}
       );
     } 
-    else {
-    // if (field === 'max') {
+    else { //  (field === 'max') {
       newStyleOptions = calculateNewStyleAndOptions(
         colorMapTypeFromOptions(this.props.value.options),
         this.props.value.options,
@@ -258,7 +256,6 @@ class ColorMapInput extends Component<ColorMapProps, ColorMapState> {
           type="number"
           autoComplete="false"
           onChange={e => this.valueChanged('min', this.toFloat(e.target.value))}
-          // value={(value && typeof value.min === "number" ) ? value.min : ""}
           value={(colorMapType && colorMapType.min) || ""}
           placeholder="optional minimum of range"
           className={`${formStyles.FormControl} ${readonly
@@ -272,7 +269,6 @@ class ColorMapInput extends Component<ColorMapProps, ColorMapState> {
         <input
           type="number"
           autoComplete="false"
-          // value={(value && typeof value.max === "number" ) ? value.max : ""}
           value={(colorMapType && colorMapType.max) || ""}
           onChange={e => this.valueChanged('max', this.toFloat(e.target.value))}
           placeholder="optional maximum of range"
