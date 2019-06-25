@@ -1,3 +1,6 @@
+// IMPORTANT. DO NOT REVIEW. THIS IS THE OLD RASTERFORM
+
+
 import gridStyles from "../../styles/Grid.css";
 import buttonStyles from "../../styles/Buttons.css";
 import "./NewRaster.css";
