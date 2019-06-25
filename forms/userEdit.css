@@ -64,12 +64,6 @@
 	margin-left: 10px;
 }
 
-.a-regular-link {
-	text-decoration: underline;
-	color: blue;
-	cursor: pointer;
-}
-
 .question-save {
 	flex-grow: 1;
 	flex-shrink: 0;

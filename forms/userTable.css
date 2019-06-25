@@ -9,7 +9,6 @@
 	flex-direction: row;
 	align-items: flex-start;
 	padding-top: 25px;
-	padding-bottom: 55px;
 }
 .main-top-left {
 	display: flex;
@@ -19,4 +18,11 @@
 .main-top-right {
 	display: flex;
 	justify-content: flex-end;
+}
+
+.main-help {
+	/* Needed because of the search icon in the search bar */
+	margin-left: -29px;
+	padding-top: 6px;
+	padding-bottom: 40px;
 }

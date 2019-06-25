@@ -18,6 +18,11 @@
 .not-shown {
 	display: none;
 }
+.a-regular-link {
+	text-decoration: underline;
+	color: blue;
+	cursor: pointer;
+}
 
 /* Icons */
 .icon-medium {
