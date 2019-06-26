@@ -80,6 +80,6 @@
 .modal-footer {
 	display: flex;
 	height: 20%;
-	justify-content: space-between;
+	justify-content: flex-end;
 	align-items: flex-end;
 }

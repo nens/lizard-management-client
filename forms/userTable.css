@@ -20,3 +20,7 @@
 	display: flex;
 	justify-content: flex-end;
 }
+
+.modal-body-user-role-description {
+	font-weight: normal;
+}
