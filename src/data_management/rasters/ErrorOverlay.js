@@ -55,9 +55,9 @@ class ErrorOverlay extends Component {
       this.props.errorMessage.status === 201 ||
       this.props.errorMessage.status === 200
     ) {
-      animationData = animationSucces;
+      animationData = animationSucces.default;
     } else {
-      animationData = animationError;
+      animationData = animationError.default;
     }
     return animationData;
   }

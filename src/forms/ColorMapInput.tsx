@@ -1,26 +1,39 @@
+// {"styles": "Blues:0.0:2.0"}
+// {"styles": "transparent", "HEIGHT": 512, "ZINDEX": 20, "WIDTH": 1024, "effects": "radar:0:0.008", "TRANSPARENT": false}
 import React, { Component } from "react";
 
-import CheckMark from "./CheckMark";
 import SelectBox, { choicesT } from "./SelectBox";
 
 import { validatorResult } from "./validators";
 
 import styles from "./ColorMapInput.css";
 import formStyles from "../styles/Forms.css";
-import buttonStyles from "../styles/Buttons.css";
 import inputStyles from "../styles/Input.css";
+import CheckBox from "./CheckBox";
 
-type ColorMapType = {
-  colorMap: string | null,
-  min?: number,
-  max?: number
-};
+import {
+  calculateNewStyleAndOptions,
+  optionsHasLayers,
+  getColorMapFromStyle,
+  getColorMinFromStyle,
+  getColorMaxFromStyle,
+  getStyleFromOptions,
+  validateStyleObj,
+  colorMapTypeFromOptions
+} from "../utils/rasterOptionFunctions";
+
+// type ColorMapType = {
+//   colorMap: string | null,
+//   min?: number,
+//   max?: number
+// };
 
 interface ColorMapProps {
   placeholder?: string,
   validators?: Function[],
   name: string,
-  value: ColorMapType | null,
+  value: any,
+  // value: ColorMapType | null,
   colorMaps: choicesT,
   validated: boolean,
   handleEnter: (e: any) => void,
@@ -38,29 +51,22 @@ interface ColorMapState {
 };
 
 export const colorMapValidator = (required: boolean) =>
-  (colorMap: ColorMapType | null): validatorResult => {
-  if (!colorMap || !(colorMap.colorMap)) {
-    if (required) {
-      return "Please choose a color map.";
-    } else {
+  (options: any | null): validatorResult => {
+
+    const initiatedOptions = options || {
+      options: {},
+      rescalable: false,
+    }
+    const colorMap = colorMapTypeFromOptions(initiatedOptions.options);
+
+
+
+    const result = validateStyleObj(colorMap);
+    if (result.validated === true) {
       return false;
+    } else {
+      return result.errorMessage + '';
     }
-  }
-
-  if (typeof colorMap.min === 'number' || typeof colorMap.max === 'number') {
-    if (typeof colorMap.min !== 'number') {
-      return "If a maximum is chosen, please also choose a minimum.";
-    }
-    if (typeof colorMap.max !== 'number') {
-      return "If a minimum is chosen, please also choose a maximum.";
-    }
-    if (colorMap.min >= colorMap.max) {
-      return "Minimum must be smaller than maximum.";
-    }
-    return false;
-  }
-
-  return false;
 };
 
 class ColorMapInput extends Component<ColorMapProps, ColorMapState> {
@@ -69,10 +75,20 @@ class ColorMapInput extends Component<ColorMapProps, ColorMapState> {
     this.state = {
       previewColor: null
     };
+    if (this.props.value === undefined || this.props.value === null) {
+      props.valueChanged({
+        options: {},
+        rescalable: false,
+      })
+    }
   }
 
   setLocalStateFromProps(props: ColorMapProps) {
-    this.getRGBAGradient(props.value);
+    const initiatedValue = props.value || {
+      options: {},
+      rescalable: false,
+    };
+    this.getRGBAGradient(colorMapTypeFromOptions(initiatedValue.options));
   }
 
   componentWillReceiveProps(newProps: ColorMapProps) {
@@ -82,11 +98,11 @@ class ColorMapInput extends Component<ColorMapProps, ColorMapState> {
     this.setLocalStateFromProps(this.props);
   }
 
-  getRGBAGradient(value: ColorMapType | null) {
+  getRGBAGradient(value: any | null) {
     if (value && value.colorMap) {
       let style = value.colorMap;
 
-      if (typeof value.min === 'number' && typeof value.max === 'number') {
+      if (value.min && value.max) {
         style = `${style}:${value.min}:${value.max}`;
       }
 
@@ -111,26 +127,30 @@ class ColorMapInput extends Component<ColorMapProps, ColorMapState> {
 
 
   colorMapChanged(colorMap: string) {
-    let newValue;
-
-    if (this.props.value && this.props.value.colorMap === colorMap) {
-      // No change.
-      return;
+    
+    if (colorMap === null) {
+      colorMap = '';
     }
+    const initializedOptions = this.props.value || {
+      options: {},
+      rescalable: false,
+    };
+    const newStyleOptions = calculateNewStyleAndOptions(
+      colorMapTypeFromOptions(initializedOptions.options),
+      initializedOptions.options,
+      {colorMap: colorMap}
+    );
+    this.props.valueChanged({
+      options: newStyleOptions.options,
+      rescalable: this.props.value.rescalable
+    });
+  }
 
-    if (this.props.value) {
-      newValue = {
-        colorMap: colorMap,
-        min: this.props.value.min,
-        max: this.props.value.max
-      };
-    } else {
-      newValue = {
-        colorMap: colorMap
-      };
-    }
-
-    this.props.valueChanged(newValue);
+  rescalableChanged(rescalable: boolean) {
+    this.props.valueChanged({
+      options: this.props.value.options,
+      rescalable: rescalable
+    });
   }
 
   valueChanged(field: string, value: number | null) {
@@ -138,24 +158,32 @@ class ColorMapInput extends Component<ColorMapProps, ColorMapState> {
 
     if (field !== 'min' && field !== 'max') return;
 
-    if (this.props.value && this.props.value[field] === value) {
-      // No change.
-      return;
-    }
-
-    if (this.props.value) {
-      newValue = {
-        ...this.props.value,
-        [field]: value
-      };
+    if (value === null) {
+      newValue = '';
     } else {
-      newValue = {
-        colorMap: null,
-        [field]: value
-      };
+      newValue = value
     }
 
-    this.props.valueChanged(newValue);
+    let newStyleOptions;
+    if (field === 'min') {
+      newStyleOptions = calculateNewStyleAndOptions(
+        colorMapTypeFromOptions(this.props.value.options),
+        this.props.value.options,
+        {min: newValue}
+      );
+    } 
+    else { //  (field === 'max') {
+      newStyleOptions = calculateNewStyleAndOptions(
+        colorMapTypeFromOptions(this.props.value.options),
+        this.props.value.options,
+        {max: newValue}
+      );
+    }
+
+    this.props.valueChanged({
+      options: newStyleOptions.options,
+      rescalable: this.props.value.rescalable
+    });
   }
 
   toFloat(value: string): number | null {
@@ -176,8 +204,16 @@ class ColorMapInput extends Component<ColorMapProps, ColorMapState> {
       valueChanged,
       validated,
       placeholder,
-      wizardStyle
+      wizardStyle,
     } = this.props;
+
+    
+    const initiatedValue = value || {
+      options: {},
+      rescalable: false,
+    }; 
+    const readonly = optionsHasLayers(initiatedValue.options);
+    const colorMapType = colorMapTypeFromOptions(initiatedValue.options);
 
     let colors = null, minValue = null, maxValue = null;
     if (this.state.previewColor != null) {
@@ -201,7 +237,8 @@ class ColorMapInput extends Component<ColorMapProps, ColorMapState> {
         </div>
         <SelectBox
           choices={colorMaps}
-          value={value ? value.colorMap : null}
+          // value={value ? value.colorMap : null}
+          value={(colorMapType && colorMapType.colorMap) || null}
           name={name + '_colorMapselect'}
           validated={true}
           handleEnter={() => {}}
@@ -209,6 +246,7 @@ class ColorMapInput extends Component<ColorMapProps, ColorMapState> {
           valueChanged={this.colorMapChanged.bind(this)}
           placeholder="Choose a color map"
           showSearchField={true}
+          readonly={readonly}
         />
 
         <br />
@@ -217,21 +255,41 @@ class ColorMapInput extends Component<ColorMapProps, ColorMapState> {
         <input
           type="number"
           autoComplete="false"
-          className={formStyles.FormControl}
           onChange={e => this.valueChanged('min', this.toFloat(e.target.value))}
-          value={(value && typeof value.min === "number" ) ? value.min : ""}
+          value={(colorMapType && colorMapType.min) || ""}
           placeholder="optional minimum of range"
+          className={`${formStyles.FormControl} ${readonly
+            ? inputStyles.ReadOnly
+            : null}`}
+          readOnly={readonly}
+          disabled={readonly}
         />
         <br />
         <span className="text-muted">Maximum of color map range</span>
         <input
           type="number"
           autoComplete="false"
-          className={formStyles.FormControl}
-          value={(value && typeof value.max === "number" ) ? value.max : ""}
+          value={(colorMapType && colorMapType.max) || ""}
           onChange={e => this.valueChanged('max', this.toFloat(e.target.value))}
           placeholder="optional maximum of range"
+          className={`${formStyles.FormControl} ${readonly
+            ? inputStyles.ReadOnly
+            : null}`}
+          readOnly={readonly}
+          disabled={readonly}
         />
+        <br/>
+        <CheckBox
+          name="rescalable"
+          label="Rescalable"
+          readonly={false}
+          value= {initiatedValue.rescalable}
+          validated={true}
+          handleEnter={((e: any) => false)}
+          valueChanged={((bool: boolean) => this.rescalableChanged(bool))}
+          wizardStyle={false}
+        />
+        
       </div>
     );
   }
