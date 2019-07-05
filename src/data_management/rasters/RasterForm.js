@@ -57,7 +57,7 @@ class RasterFormModel extends Component {
         body: JSON.stringify({
           name: validatedData.rasterName,
           organisation: validatedData.selectedOrganisation.replace(/-/g, ""),
-          access_modifier: validatedData.accesModifier,
+          access_modifier: validatedData.accessModifier,
           observation_type: validatedData.observationType, // observationTypeId, //this.state.observationType,
           description: validatedData.description,
           supplier: validatedData.supplierName,
@@ -85,7 +85,7 @@ class RasterFormModel extends Component {
       let body = {
         name: validatedData.rasterName,
         organisation: validatedData.selectedOrganisation.replace(/-/g, ""),
-        access_modifier: validatedData.accesModifier,
+        access_modifier: validatedData.accessModifier,
         observation_type: validatedData.observationType, // observationTypeId, //this.state.observationType,
         description: validatedData.description,
         supplier: validatedData.supplierName,
@@ -183,7 +183,7 @@ class RasterFormModel extends Component {
           validators={[]}
         />
         <SelectBox
-          name="accesModifier"
+          name="accessModifier"
           title="Authorization type"
           subtitle="Specify who can view this raster"
           choices={[
