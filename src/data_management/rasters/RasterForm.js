@@ -68,7 +68,7 @@ class RasterFormModel extends Component {
           optimizer: false, // default
           aggregation_type: validatedData.aggregationType, 
           options: validatedData.colormap.options,
-          shared_with: validatedData.sharedWithOrganisations.map(orgUuid => orgUuid.replace(/-/g, ""))
+          shared_with: validatedData.sharedWithOrganisations,
         })
       };
   
@@ -91,7 +91,7 @@ class RasterFormModel extends Component {
         supplier: validatedData.supplierName,
         supplier_code: validatedData.supplierCode,
         aggregation_type: validatedData.aggregationType,//intAggregationType,
-        shared_with: validatedData.sharedWithOrganisations.map(orgUuid => orgUuid.replace(/-/g, "")),
+        shared_with: validatedData.sharedWithOrganisations,
         rescalable: validatedData.colormap.rescalable,
         
       };
@@ -146,7 +146,7 @@ class RasterFormModel extends Component {
           subtitle="Specify which organisation owns this raster"
           placeholder="Choose an organisation"
           choices={this.props.organisations.available.map(organisation=>
-            [organisation.uuid.replace(/-/g, ""), organisation.name]
+            [organisation.uuid, organisation.name]
           )}
           validators={[required("Please select an organisation.")]}
           showSearchField={true}
@@ -155,7 +155,7 @@ class RasterFormModel extends Component {
               currentRaster && 
               currentRaster.organisation && 
               currentRaster.organisation.uuid &&
-              currentRaster.organisation.uuid.replace(/-/g, "")
+              currentRaster.organisation.uuid
             ) || null
           }
         />
@@ -166,7 +166,7 @@ class RasterFormModel extends Component {
           choices={this.props.organisations.availableForRasterSharedWith.map(e =>{
             return {
               display: e.name, 
-              value : e.uuid.replace(/-/g, "")
+              value : e.uuid
             }
           })}
           readOnly={false}
@@ -176,7 +176,7 @@ class RasterFormModel extends Component {
             currentRaster && 
             currentRaster.shared_with && 
             currentRaster.shared_with.map((orgUuid) => {
-              return orgUuid.uuid.replace(/-/g, "")
+              return orgUuid.uuid
             })
             ) || [] // passing this empty array is somehow required. Somehow only if I also have the colormapInput component.
           }
