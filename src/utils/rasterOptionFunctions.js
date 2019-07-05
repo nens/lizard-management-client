@@ -127,10 +127,12 @@ export function composeStyleString(color, min, max) {
   str += color;
   if (min || max) {
     str += ":"
+    // this even works if min is 0, because it is a string
     if (min) {
       str += min
     }
     str += ":"
+    // this even works if max is 0, because it is a string
     if (max) {
       str += max
     }
