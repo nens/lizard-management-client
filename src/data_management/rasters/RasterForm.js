@@ -279,9 +279,26 @@ class RasterFormModel extends Component {
           title="Observation Type"
           subtitle="Specify the physical quantity and unit of the data"
           placeholder="click to select observation type"
-          choices={this.props.observationTypes.available.map(obsT=>
-            [obsT.code, obsT.code]
-          )}
+          choices={this.props.observationTypes.available.map(obsT=>{
+
+            let parameterString = obsT.parameter + '';
+            if (obsT.unit || obsT.reference_frame) {
+              parameterString += ' ('
+              if (obsT.unit) {
+                parameterString += obsT.unit;
+              }
+              if (obsT.unit && obsT.reference_frame) {
+                parameterString += ' ';
+              }
+              if (obsT.reference_frame) {
+                parameterString += obsT.reference_frame;
+              }
+              parameterString += ')'
+            }
+
+            return [obsT.code, obsT.code, parameterString]
+
+          })}
           validators={[required("Please select an observation type.")]}
           showSearchField={true}
           initial = {
