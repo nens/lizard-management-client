@@ -203,7 +203,7 @@ class RasterFormModel extends Component {
               "All users can view"
             ] 
           ]}
-          validators={[required("Please select an acces modifier.")]}
+          validators={[required("Please select an access modifier.")]}
           initial ={
             (
               currentRaster && 
