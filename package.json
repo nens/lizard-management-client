@@ -1,6 +1,6 @@
 {
   "name": "lizard-management-client",
-  "version": "0.1.53",
+  "version": "0.1.63",
   "private": true,
   "repository": {
     "type": "git",
@@ -17,6 +17,7 @@
   "bugs": {
     "url": "https://github.com/nens/lizard-management-client/issues"
   },
+  "homepage": "/management",
   "dependencies": {
     "@babel/core": "7.2.2",
     "@svgr/webpack": "4.1.0",
@@ -99,8 +100,9 @@
   },
   "scripts": {
     "start": "node scripts/start.js",
-    "build": "node scripts/build.js",
+    "build": "rm -rf dist/*.zip && node scripts/build.js && scripts/makedist.sh",
     "test": "node scripts/test.js",
+    "release": "release-it --verbose",
     "i18n:extract": "NODE_ENV=production npx extract-messages --locales=nl,en -d --output src/translations/locales 'src/**/*.js' 'src/**/*.jsx' 'src/**/*.ts*'"
   },
   "eslintConfig": {
@@ -163,6 +165,8 @@
     ]
   },
   "devDependencies": {
-    "extract-react-intl-messages": "^1.0.1"
+    "extract-react-intl-messages": "^1.0.1",
+    "release-it": "^10.4.2",
+    "webpack-cli": "^3.3.0"
   }
 }
