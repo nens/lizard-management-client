@@ -163,9 +163,8 @@ class App extends Component {
                       </a>
                     </div>
                     <div className={styles.OrganisationLinkContainer}>
-                      <a
-                        className={styles.OrganisationLink}
-                        href="#"
+                      <button
+                        className={`${buttonStyles.ButtonLink} ${styles.OrganisationLink}`}
                         title={
                           selectedOrganisation
                             ? selectedOrganisation.name

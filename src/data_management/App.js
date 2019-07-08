@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { DataManagement as DataManagementHome } from "./DataManagement";
 import { Raster as RasterApp } from "./rasters/Raster";
 import { NewRaster } from "./rasters/NewRaster";
-import { NewRaster2 } from "./rasters/NewRaster2";
 import { EditRaster } from "./rasters/EditRaster";
 import { UploadRasterData } from "./rasters/UploadRasterData";
 
@@ -33,11 +32,6 @@ class App extends Component {
             exact
             path="/data_management/rasters/new"
             component={NewRaster}
-          />
-          <Route
-            exact
-            path="/data_management/rasters/new2"
-            component={NewRaster2}
           />
           <Route
             exact

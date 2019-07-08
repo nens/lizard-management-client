@@ -62,7 +62,7 @@ function organisations(
   }
   // the api v3 accepts no dashes in the uuid (this is called unique_id in api v3)
   if (state.selected) {
-    state.selected.uuid = state.selected.uuid;
+    state.selected.uuid = state.selected.uuid.replace(/-/g, "");
   }
 
   switch (action.type) {
@@ -84,7 +84,7 @@ function organisations(
     case SELECT_ORGANISATION:
       // the api v3 accepts no dashes in the uuid (this is called unique_id in api v3)
       const selectedOrganisation = action.organisation;
-      selectedOrganisation.uuid = selectedOrganisation.uuid;
+      selectedOrganisation.uuid = selectedOrganisation.uuid.replace(/-/g, "");
       return { ...state, selected: selectedOrganisation };
     default:
       return state;
