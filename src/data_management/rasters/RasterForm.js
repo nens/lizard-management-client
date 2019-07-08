@@ -1,589 +1,39 @@
-import gridStyles from "../../styles/Grid.css";
-import buttonStyles from "../../styles/Buttons.css";
-import "./NewRaster.css";
 import React, { Component } from "react";
+
 import { addNotification } from "../../actions";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { FormattedMessage } from "react-intl";
-
-import GenericTextInputComponent from "../../components/GenericTextInputComponent";
-import GenericSelectBoxComponent from "../../components/GenericSelectBoxComponent";
-import GenericCheckBoxComponent from "../../components/GenericCheckBoxComponent";
-import ColorMapComponent from "../../components/ColorMapComponent";
-import GenericStep from "../../components/GenericStep";
-import DurationComponent from "../../components/DurationComponent";
-import inputStyles from "../../styles/Input.css";
-import {
-  calculateNewStyleAndOptions,
-  optionsHasLayers,
-  getColorMapFromStyle,
-  getColorMinFromStyle,
-  getColorMaxFromStyle,
-  getStyleFromOptions,
-  validateStyleObj
-} from "../../utils/rasterOptionFunctions";
 import ErrorOverlay from "./ErrorOverlay.js";
 
-import SlushBucket from "../../components/SlushBucket";
-import SelectBoxSimple from "../../components/SelectBoxSimple.js";
+import "../../forms/validators";
+import {toISOValue, rasterIntervalStringServerToDurationObject} from "../../utils/isoUtils"
 
-// ! important, these old component may later be used! Ther corresponding files already exist
-// import bindReactFunctions from "../../utils/BindReactFunctions.js"; // currently not working. Probably needs a list with functions in which case this is probably only overcomplicating things
-// import GenericWizardStep from "../../components/GenericWizardStep"; // working but is expected to create tons of overhead binding to the right objects functions
+import ManagementForm from "../../forms/ManagementForm";
+import ColorMapInput, { colorMapValidator } from "../../forms/ColorMapInput";
+import DurationField, { durationValidator } from "../../forms/DurationField";
+import TextInput from "../../forms/TextInput";
+import TextArea from "../../forms/TextArea";
+import SelectBox from "../../forms/SelectBox";
+import CheckBox from "../../forms/CheckBox";
+import SlushBucket from "../../forms/SlushBucket";
+
+import {
+  minLength,
+  required
+} from "../../forms/validators";
+import { optionsHasLayers} from "../../utils/rasterOptionFunctions";
+
 
 class RasterFormModel extends Component {
+
   constructor(props) {
     super(props);
-    if (this.props.currentRaster) {
-      this.state = this.currentRasterToState(this.props.currentRaster);
-    } else {
-      this.state = this.setInitialState(props);
-    }
-
-    this.scrollToTop = this.scrollToTop.bind(this);
-    this.handleResponse = this.handleResponse.bind(this);
-    this.setCurrentStep = this.setCurrentStep.bind(this);
-    this.setRasterName = this.setRasterName.bind(this);
-    this.resetRasterName = this.resetRasterName.bind(this);
-    this.setSelectedOrganisation = this.setSelectedOrganisation.bind(this);
-    this.resetSelectedOrganisation = this.resetSelectedOrganisation.bind(this);
-    this.setStorePathName = this.setStorePathName.bind(this);
-    this.setDescription = this.setDescription.bind(this);
-    this.handleKeyDown = this.handleKeyDown.bind(this);
-    this.validateNewRasterName = this.validateNewRasterName.bind(this);
-    this.validateNewRasterOrganisation = this.validateNewRasterOrganisation.bind(
-      this
-    );
-    this.validateNewRasterStorePath = this.validateNewRasterStorePath.bind(
-      this
-    );
-    this.validateNewRasterDescription = this.validateNewRasterDescription.bind(
-      this
-    );
-    this.setAggregationType = this.setAggregationType.bind(this);
-    this.validateAggregationType = this.validateAggregationType.bind(this);
-    this.setObservationType = this.setObservationType.bind(this);
-    this.validateObservationType = this.validateObservationType.bind(this);
-    this.setStyleAndOptions = this.setStyleAndOptions.bind(this);
-    this.setSupplierId = this.setSupplierId.bind(this);
-    this.resetSupplierId = this.resetSupplierId.bind(this);
-    this.validateSupplierId = this.validateSupplierId.bind(this);
-    this.setSupplierCode = this.setSupplierCode.bind(this);
-    this.validateSupplierCode = this.validateSupplierCode.bind(this);
-    this.setTemporalBool = this.setTemporalBool.bind(this);
-    this.validateTemporalBool = this.validateTemporalBool.bind(this);
-    this.setTemporalIntervalAmount = this.setTemporalIntervalAmount.bind(this);
-    this.validateTemporalIntervalAmount = this.validateTemporalIntervalAmount.bind(
-      this
-    );
-    this.handleClickCreateRaster = this.handleClickCreateRaster.bind(this);
-    this.setTemporalIntervalDays = this.setTemporalIntervalDays.bind(this);
-    this.setTemporalIntervalHours = this.setTemporalIntervalHours.bind(this);
-    this.setTemporalIntervalMinutes = this.setTemporalIntervalMinutes.bind(
-      this
-    );
-    this.setTemporalIntervalSeconds = this.setTemporalIntervalSeconds.bind(
-      this
-    );
-  }
-  setCurrentStep(currentStep) {
-    // The steps "raster is temporal" (9) and "temporal interval" (10) need to be flagged if they are opened once.
-    if (currentStep === 2) {
-      this.setState({ sharedWithOrganisationsWasEverOpenedByUser: true });
-    }
-    if (currentStep === 10) {
-      this.setState({ temporalBoolComponentWasEverOpenedByUser: true });
-    } else if (currentStep === 11) {
-      this.setState({ temporalIntervalWasEverOpenedByUser: true });
-    }
-    this.setState({ currentStep });
-  }
-  goBackToStep(toStep) {
-    if (toStep < this.state.currentStep) {
-      this.setState({ currentStep: toStep });
-    }
-  }
-
-  // RasterName
-  setRasterName(rasterName) {
-    this.setState({ rasterName });
-  }
-  resetRasterName() {
-    this.setState({ rasterName: "" });
-  }
-  validateNewRasterName(str) {
-    return str.length > 1;
-  }
-  // Organisation
-  setSelectedOrganisation(selectedOrganisation) {
-    this.setState({ selectedOrganisation });
-  }
-  resetSelectedOrganisation() {
-    this.setState({ selectedOrganisation: { name: "", uuid: "" } });
-  }
-
-  validateNewRasterOrganisation(obj) {
-    if (!obj) return false;
-    const { uuid, name } = obj;
-    return uuid && name;
-  }
-  // StorepathName
-  setStorePathName(storePathName) {
-    this.setState({ storePathName, slug: storePathName.replace(/\//g, ":") });
-  }
-  // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
-  validateNewRasterStorePath(storePathName) {
-    // one or more alphanumerical or "-" or "_" plus one "/" , this hole combination one or more time
-    // after this again one or more alphanumerical or "-" or "_"
-    const reg = /^([-_a-zA-Z0-9]+\/)+[-_a-zA-Z0-9]+$/g;
-    return reg.test(storePathName);
-  }
-  // Description
-  setDescription(description) {
-    this.setState({ description });
-  }
-  validateNewRasterDescription(str) {
-    if (str && str.length > 1) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-  setAggregationType(aggregationType) {
-    this.setState({ aggregationType });
-  }
-  validateAggregationType(aggragationType) {
-    return aggragationType !== "";
-  }
-  // ObservationType
-  setObservationType(observationType) {
-    this.setState({ observationType });
-  }
-  resetObservationType() {
-    this.setState({ observationType: null });
-  }
-  validateObservationType(observationType) {
-    if (observationType && observationType.url && observationType.code) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  // Options (contains colormaps)
-  setStyleAndOptions(styleObj) {
-
-    // Check if people clicked in the checkbox for rescaling rasters.
-    // In that case, change this.state.rescalable
-    if ("rescalable" in styleObj) {
-      this.setState({
-        rescalable: !this.state.rescalable,
-      });
-      return;
-
-    // Otherwise, the styles and options should be changed.
-    } else {
-      const oldStyle = Object.assign({}, this.state.styles);
-      const oldOptions = Object.assign({}, this.state.options);
-      const newStyleOptions = calculateNewStyleAndOptions(
-        oldStyle,
-        oldOptions,
-        styleObj
-      );
-
-      this.setState({
-        options: newStyleOptions.options,
-        styles: newStyleOptions.styles
-      });
-
-      return;
-    }
-  }
-  // SupplierId
-  setSupplierId(supplierId) {
-    if (supplierId && supplierId.username === "none") {
-      this.setState({ supplierId: null });
-      // User enters "none" or "" in the Select Box
-    } else if (supplierId === "none" || supplierId === "") {
-      this.setState({ supplierId: null });
-    } else {
-      this.setState({ supplierId });
-    }
-  }
-
-  resetSupplierId() {
-    this.setSupplierId(null);
-  }
-  validateSupplierId(supplierId) {
-    if (supplierId && supplierId.username) {
-      return true;
-    } else if (supplierId === null) {
-      return true;
-      // User enters "none" or "" in the Select Box
-    } else if (supplierId === "none" || supplierId === "") {
-      return true;
-    } else {
-      return false;
-    }
-  }
-  // SupplierCode
-  setSupplierCode(supplierCode) {
-    this.setState({ supplierCode });
-  }
-  validateSupplierCode(supplierCode) {
-    if (supplierCode && supplierCode.length > 1) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-  // TemporalBool
-  setTemporalBool(temporalBool) {
-    this.setState({ temporalBool });
-  }
-  validateTemporalBool(temporalBool) {
-    return this.state.temporalBoolComponentWasEverOpenedByUser;
-  }
-  // TemporalInterval
-  setTemporalIntervalAmount(temporalIntervalAmount) {
-    this.setState({ temporalIntervalAmount });
-  }
-  validateTemporalIntervalAmount(days, hours, minutes, seconds) {
-    // positive non-zero integers (also not starting with zero)
-    // return /^[1-9][0-9]*$/.test(temporalIntervalAmount);
-    return (
-      this.validateDaysTemporalInterval(days) &&
-      this.validateHoursTemporalInterval(hours) &&
-      this.validateMinutesTemporalInterval(minutes) &&
-      this.validateSecondsTemporalInterval(seconds) &&
-      this.validateIfNotZero(days, hours, minutes, seconds) &&
-      this.state.temporalIntervalWasEverOpenedByUser
-    );
-  }
-  // return /^[1-9][0-9]*$/.test(temporalIntervalAmount);
-  validateDaysTemporalInterval(days) {
-    return /^[0-9]{1,3}$/.test(days) && parseInt(days, 10) < 365;
-  }
-  validateHoursTemporalInterval(hours) {
-    // return /^[0-9][0-9]$/.test(hours) && parseInt(hours) < 24;
-    return /^[0-9]{1,2}$/.test(hours) && parseInt(hours, 10) < 24;
-  }
-  validateMinutesTemporalInterval(minutes) {
-    // return /^[0-9][0-9]$/.test(minutes) && parseInt(minutes) < 60;
-    return /^[0-9]{1,2}$/.test(minutes) && parseInt(minutes, 10) < 60;
-  }
-  validateSecondsTemporalInterval(seconds) {
-    // return /^[0-9][0-9]$/.test(seconds) && parseInt(seconds) < 60;
-    return /^[0-9]{1,2}$/.test(seconds) && parseInt(seconds, 10) < 60;
-  }
-
-  // Validate if the user did not fill in '0' for every field
-  validateIfNotZero(days, hours, minutes, seconds) {
-    if (
-      parseInt(days, 10) === 0 &&
-      parseInt(hours, 10) === 0 &&
-      parseInt(minutes, 10) === 0 &&
-      parseInt(seconds, 10) === 0
-    ) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-
-  // temporal interval Days Hours Minutes Seconds
-  setTemporalIntervalDays(temporalIntervalDays) {
-    this.setState({ temporalIntervalDays });
-  }
-  setTemporalIntervalHours(temporalIntervalHours) {
-    this.setState({ temporalIntervalHours });
-  }
-  setTemporalIntervalMinutes(temporalIntervalMinutes) {
-    this.setState({ temporalIntervalMinutes });
-  }
-  setTemporalIntervalSeconds(temporalIntervalSeconds) {
-    this.setState({ temporalIntervalSeconds });
-  }
-
-  handleKeyDown(event) {
-    if (event.key === "Enter") {
-      this.setState({ currentStep: this.state.currentStep + 1 });
-    }
-  }
-
-  parseObservationTypeIdFromUrl(url) {
-    // parse number from url: https://api.ddsc.nl/api/v1/observationtypes/16/ -> 16
-    // remove last slash /
-    const trimmedUrl = url.slice(0, -1);
-    // get last item after splitted on slash /
-    const urlInteger = trimmedUrl.split("/").pop();
-    return urlInteger;
-  }
-
-  aggregationTypeStringToInteger(str) {
-    if (str === "none") return 0;
-    if (str === "counts") return 1;
-    if (str === "curve") return 2;
-    if (str === "histogram") return 3;
-    if (str === "sum") return 4;
-    if (str === "average") return 5;
-    return 0; // default
-  }
-
-  intervalToISODuration(days, hours, minutes, seconds) {
-    if (hours[0] === "0") hours = hours[1];
-    if (minutes[0] === "0") minutes = minutes[1];
-    if (seconds[0] === "0") seconds = seconds[1];
-    return `P${days}DT${hours}H${minutes}M${seconds}S`;
-    //example: 4DT12H30M5S
-    // https://www.digi.com/resources/documentation/digidocs/90001437-13/reference/r_iso_8601_duration_format.htm
-  }
-
-  // converts strings like:
-  // '1 00:00:00'
-  // '05:00:00'
-  // to {days:10, hours:'01', minutes:'09', seconds:'51'}
-  getIntervalToDaysHoursMinutesSeconds(str) {
-    if (!str) {
-      return { days: 0, hours: 0, minutes: 0, seconds: 0 };
-    }
-    const splitColon = str.split(":");
-    const splitSpace = splitColon[0].split(" ");
-    let obj = {
-      days: 0,
-      hours: splitSpace[splitSpace.length - 1],
-      minutes: splitColon[1],
-      seconds: splitColon[2]
-    };
-    if (splitSpace.length === 2) {
-      obj.days = parseInt(splitSpace[0], 10);
-    }
-    return obj;
-  }
-
-  // Returns an array of the steps that are not filled in or completed. Used later for displaying inactive/active button and updates about form completion
-  getInvalidSteps() {
-    var invalidFields = [];
-
-    if (this.state.sharedWithOrganisationsWasEverOpenedByUser === false) {
-      invalidFields.push(1);
-    }
-    if (!this.validateNewRasterOrganisation(this.state.selectedOrganisation)) {
-      invalidFields.push(2);
-    }
-
-    // validate access modifier for now always is true
-
-    if (!this.validateNewRasterName(this.state.rasterName)) {
-      invalidFields.push(4);
-    }
-    if (!this.validateNewRasterDescription(this.state.description)) {
-      invalidFields.push(5);
-    }
-
-    if (!this.validateAggregationType(this.state.aggregationType)) {
-      invalidFields.push(6);
-    }
-    if (!this.validateObservationType(this.state.observationType)) {
-      invalidFields.push(7);
-    }
-    if (!validateStyleObj(this.state.styles)) {
-      invalidFields.push(8);
-    }
-    if (!this.validateSupplierId(this.state.supplierId)) {
-      invalidFields.push(9);
-    }
-    if (!this.validateSupplierCode(this.state.supplierCode)) {
-      invalidFields.push(10);
-    }
-    if (!this.validateTemporalBool(this.state.temporalBool)) {
-      invalidFields.push(11);
-    }
-
-    if (
-      !this.validateTemporalIntervalAmount(
-        this.state.temporalIntervalDays,
-        this.state.temporalIntervalHours,
-        this.state.temporalIntervalMinutes,
-        this.state.temporalIntervalSeconds
-      )
-    ) {
-      invalidFields.push(12);
-    }
-
-    return invalidFields;
-  }
-
-  validateAll() {
-    // Get invalid normal (first 9) and temporal (last 2) steps
-    var invalidSteps = this.getInvalidSteps();
-
-    // Filter arrays to get normal and temporal invalid steps
-    var normal = invalidSteps.filter(function(x) {
-      return x < 12;
-    });
-    var temporal = invalidSteps.filter(function(x) {
-      return x > 11;
-    });
-
-    // If temporal bool is not checked, validate first 9 steps, else validate all 11 steps
-    if (!this.state.temporalBool) {
-      if (normal.length === 0) {
-        return true;
-      }
-    } else if (this.state.temporalBool) {
-      if (temporal.length === 0 && normal.length === 0) {
-        return true;
-      }
-    } else {
-      return false;
-    }
-  }
-
-  // Create message for user telling which steps need to be completed
-  generateInvalidMessage(step) {
-    if (this.validateAll()) {
-      return "";
-    }
-
-    // Get invalid normal (first 9) and temporal (last 2) steps
-    var invalidSteps = this.getInvalidSteps();
-    // Filter arrays to get normal and temporal invalid steps
-    var normal = invalidSteps.filter(function(x) {
-      return x < 12;
-    });
-    var temporal = invalidSteps.filter(function(x) {
-      return x > 11;
-    });
-
-    // Return message based on either normal or temporal raster
-    if (this.state.temporalBool) {
-      return (
-        "Please complete steps " +
-        normal +
-        " " +
-        temporal +
-        " before submitting"
-      );
-    } else {
-      return "Please complete steps " + normal + " before submitting";
-    }
-  }
-
-  setInitialState(props) {
-    // If user is a supplier or admin
-    // let userName = props.bootstrap.bootstrap.user.username;
-    // let supplierId = this.props.supplierIds.available.find(user => {
-    //   return user.username === userName;
-    // });
-    //
-    let supplierId = null;
-
-    return {
+    this.state = {
       isFetching: false,
       openOverlay: false,
       modalErrorMessage: "",
       createdRaster: null,
-      currentStep: 1,
-      rasterName: "",
-      selectedOrganisation: {
-        name: this.props.organisations.selected.name, //"",
-        uuid: this.props.organisations.selected.uuid //""
-      },
-      storePathName: "",
-      slug: "",
-      description: "",
-      temporalBool: false,
-      sharedWithOrganisationsWasEverOpenedByUser: false,
-      temporalBoolComponentWasEverOpenedByUser: false, // a checkbbox is always valid, but we should only mark it as valid if the user has actualy opened the question
-      temporalIntervalUnit: "seconds", // for now assume seconds// one of [seconds minutes hours days weeks] no months years because those are not a static amount of seconds..
-      temporalIntervalAmount: "", //60*60, //minutes times seconds = hour // positive integer. amount of temporalIntervalUnit
-      temporalIntervalWasEverOpenedByUser: false,
-      temporalIntervalDays: 1,
-      temporalIntervalHours: "00",
-      temporalIntervalMinutes: "00",
-      temporalIntervalSeconds: "00",
-      temporalOptimizer: true, // default true, not set by the user for first iteration
-      styles: {
-        colorMap: "",
-        min: "",
-        max: "",
-        rescalable: false
-      },
-      options: {},
-      aggregationType: "", // choice: none | counts | curve | histogram | sum | average
-      supplierId: supplierId,
-      supplierCode: "",
-      observationType: null,
-      sharedWith: [],
-      accessModifier: "Private",
-      rescalable: false  // styles.rescalable
-    };
-  }
-
-  currentRasterToState(currentRaster) {
-    // is there the possibility that available supplier id is not yet retrieved from server?
-    const selectedSupplierId =
-      this.props.supplierIds.available.filter(
-        e => e.username === currentRaster.supplier
-      )[0] || null;
-    const intervalObj = this.getIntervalToDaysHoursMinutesSeconds(
-      currentRaster.interval
-    );
-    const styles = {
-      colorMap: getColorMapFromStyle(
-        getStyleFromOptions(currentRaster.options)
-      ),
-      min: getColorMinFromStyle(getStyleFromOptions(currentRaster.options)),
-      max: getColorMaxFromStyle(getStyleFromOptions(currentRaster.options)),
-      // Get rescalable from currentRaster but set it into styles,
-      // so that it can be combined into 1 Colormaps component.
-      rescalable: currentRaster.rescalable
-    };
-
-    return {
-      modalErrorMessage: "",
-      createdRaster: null,
-      isFetching: false,
-      openOverlay: false,
-      currentStep: 1,
-      rasterName: currentRaster.name,
-      selectedOrganisation: {
-        name: currentRaster.organisation.name,
-        uuid: currentRaster.organisation.uuid.replace(/-/g, "")
-      },
-      storePathName:
-        currentRaster.slug && currentRaster.slug.replace(/:/g, "/"),
-      slug: currentRaster.slug,
-      description: currentRaster.description,
-      temporalBool: currentRaster.temporal,
-      sharedWithOrganisationsWasEverOpenedByUser: true,
-      temporalBoolComponentWasEverOpenedByUser: true, // a checkbbox is always valid, but we should only mark it as valid if the user has actualy opened the question
-      temporalIntervalUnit: "seconds", // for now assume seconds// one of [seconds minutes hours days weeks] no months years because those are not a static amount of seconds..
-      temporalIntervalAmount: "", //60*60, //minutes times seconds = hour // positive integer. amount of temporalIntervalUnit
-      temporalIntervalWasEverOpenedByUser: true,
-      temporalIntervalDays: intervalObj.days,
-      temporalIntervalHours: intervalObj.hours,
-      temporalIntervalMinutes: intervalObj.minutes,
-      temporalIntervalSeconds: intervalObj.seconds,
-      temporalOptimizer: true, // default true, not set by the user for first iteration
-      styles: styles,
-      options: currentRaster.options,
-      aggregationType: currentRaster.aggregation_type, // choice: none | counts | curve | histogram | sum | average
-      supplierId: selectedSupplierId,
-      supplierCode: currentRaster.supplier_code,
-      observationType: currentRaster.observation_type,
-      sharedWith: currentRaster.shared_with,
-      accessModifier: currentRaster.access_modifier,
-      rescalable: currentRaster.rescalable
-    };
-  }
-
-  // If a screen is too long for the overlay, make sure to scroll to top
-  scrollToTop() {
-    if (window.pageYOffset > 0) {
-      window.scroll(0, 0);
     }
   }
 
@@ -595,48 +45,35 @@ class RasterFormModel extends Component {
     });
   }
 
-  handleClickCreateRaster() {
-    this.scrollToTop();
+  
+  onSubmit = (validatedData, currentRaster) => {
+
     this.setState({ isFetching: true, openOverlay: true });
+  
     const url = "/api/v4/rasters/";
-    const observationTypeId =
-      (this.state.observationType && this.state.observationType.code) ||
-      undefined;
-
-    const intAggregationType = this.state.aggregationType
-      ? this.aggregationTypeStringToInteger(this.state.aggregationType)
-      : undefined;
-
-    const isoIntervalDuration = this.intervalToISODuration(
-      this.state.temporalIntervalDays,
-      this.state.temporalIntervalHours,
-      this.state.temporalIntervalMinutes,
-      this.state.temporalIntervalSeconds
-    );
-
-    if (!this.props.currentRaster) {
+     if (!currentRaster) {
       const opts = {
         credentials: "same-origin",
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: this.state.rasterName,
-          organisation: this.state.selectedOrganisation.uuid.replace(/-/g, ""),
-          access_modifier: this.state.accessModifier,
-          observation_type: observationTypeId, //this.state.observationType,
-          description: this.state.description,
-          supplier: this.state.supplierId && this.state.supplierId.username,
-          supplier_code: this.state.supplierCode,
-          temporal: this.state.temporalBool,
-          interval: isoIntervalDuration, //'P1D', // P1D is default, = ISO 8601 datetime for 1 day",
-          rescalable: this.state.rescalable,
+          name: validatedData.rasterName,
+          organisation: validatedData.selectedOrganisation.replace(/-/g, ""),
+          access_modifier: validatedData.accessModifier,
+          observation_type: validatedData.observationType, // observationTypeId, //this.state.observationType,
+          description: validatedData.description,
+          supplier: validatedData.supplierName,
+          supplier_code: validatedData.supplierCode,
+          temporal: validatedData.temporal,
+          interval: validatedData.duration, //isoIntervalDuration, //'P1D', // P1D is default, = ISO 8601 datetime for 1 day",
+          rescalable: validatedData.colormap.rescalable,
           optimizer: false, // default
-          aggregation_type: intAggregationType,
-          options: this.state.options,
-          shared_with: this.state.sharedWith.map(e => e.uuid)
+          aggregation_type: validatedData.aggregationType, 
+          options: validatedData.colormap.options,
+          shared_with: validatedData.sharedWithOrganisations,
         })
       };
-
+  
       fetch(url, opts)
         .then(responseParsed => {
           this.handleResponse(responseParsed);
@@ -648,20 +85,21 @@ class RasterFormModel extends Component {
         });
     } else {
       let body = {
-        name: this.state.rasterName,
-        organisation: this.state.selectedOrganisation.uuid.replace(/-/g, ""), // required
-        access_modifier: this.state.accessModifier,
-        observation_type: observationTypeId, // required
-
-        description: this.state.description,
-        supplier: this.state.supplierId && this.state.supplierId.username,
-        supplier_code: this.state.supplierCode,
-        aggregation_type: intAggregationType,
-        shared_with: this.state.sharedWith.map(e => e.uuid),
-        rescalable: this.state.rescalable
+        name: validatedData.rasterName,
+        organisation: validatedData.selectedOrganisation.replace(/-/g, ""),
+        access_modifier: validatedData.accessModifier,
+        observation_type: validatedData.observationType, // observationTypeId, //this.state.observationType,
+        description: validatedData.description,
+        supplier: validatedData.supplierName,
+        supplier_code: validatedData.supplierCode,
+        aggregation_type: validatedData.aggregationType,//intAggregationType,
+        shared_with: validatedData.sharedWithOrganisations,
+        rescalable: validatedData.colormap.rescalable,
+        
       };
-      if (!optionsHasLayers(this.state.options)) {
-        body.options = this.state.options;
+      // only add colormap in options if not multiple layers
+      if (!optionsHasLayers(validatedData.colormap.options)) {
+        body.options = validatedData.colormap.options;
       }
       const opts = {
         credentials: "same-origin",
@@ -669,9 +107,9 @@ class RasterFormModel extends Component {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body)
       };
-      // only add colormap in options if not multiple layers
-
-      fetch(url + "uuid:" + this.props.currentRaster.uuid + "/", opts)
+      
+  
+      fetch(url + "uuid:" + currentRaster.uuid + "/", opts)
         .then(responseParsed => {
           console.log("responseParsed put", responseParsed);
           this.handleResponse(responseParsed);
@@ -682,573 +120,274 @@ class RasterFormModel extends Component {
           this.setState({ createdRaster: parsedBody });
         });
     }
-  }
-
-  componentDidMount() {
-    // commented out because this component does not have an easy way to validate,
-    // therefore it does not know if going to the next step should be required
-    // document.addEventListener("keydown", this.handleKeyDown, false);
-    // but currently a problem with event listeners on checkbox and date field
-    // therefore maybe better to add eventlistener here
-  }
+  };
 
   render() {
-    const {
-      rasterName,
-      currentStep,
-      description,
-      aggregationType
-    } = this.state;
+
+    const {currentRaster} = this.props;
 
     return (
       <div>
-        {this.state.openOverlay ? (
-          <ErrorOverlay
-            isFetching={this.state.isFetching}
-            history={this.props.history}
-            errorMessage={this.state.modalErrorMessage}
-            handleClose={() =>
-              this.setState({ handlingDone: false, openOverlay: false })}
-            currentRaster={this.props.currentRaster || this.state.createdRaster}
-          />
-        ) : null}
-        <div className={gridStyles.Container}>
-          <div className={`${gridStyles.Row}`}>
-            <div
-              className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
-            >
-              <div id="steps" style={{ margin: "20px 0 0 20px" }}>
-                <GenericSelectBoxComponent
-                  titleComponent={
-                    <FormattedMessage
-                      id="rasters.organisation"
-                      defaultMessage="Organisation"
-                    />
-                  }
-                  subtitleComponent={
-                    <FormattedMessage
-                      id="rasters.please_select_organisation"
-                      defaultMessage="Specify which organisation owns this raster"
-                    />
-                  }
-                  placeholder="click to select organisation"
-                  step={1} // int for denoting which step of the GenericTextInputComponent it refers to
-                  opened={this.props.currentRaster || currentStep === 1}
-                  formUpdate={!!this.props.currentRaster}
-                  readonly={false}
-                  currentStep={currentStep} // int for denoting which step is currently active
-                  setCurrentStep={this.setCurrentStep} // cb function for updating which step becomes active
-                  choices={this.props.organisations.available}
-                  transformChoiceToDisplayValue={e => (e && e.name) || ""} // optional parameter if choices are objects, which field contains the displayvalue, default item itself is displayvalue
-                  isFetching={this.props.organisations.isFetching}
-                  choicesSearchable={true}
-                  modelValue={this.state.selectedOrganisation} // string: e.g. the name of a raster
-                  updateModelValue={this.setSelectedOrganisation} // cb function to *update* the value of e.g. a raster's name in the parent model
-                  resetModelValue={() => this.resetSelectedOrganisation()} // cb function to *reset* the value of e.g. a raster's name in the parent model
-                  validate={this.validateNewRasterOrganisation} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
-                />
-                <GenericStep
-                  titleComponent={
-                    <FormattedMessage
-                      id="rasters.shared_with_organisations"
-                      defaultMessage="Shared with organisations"
-                    />
-                  }
-                  subtitleComponent={
-                    <FormattedMessage
-                      id="rasters.which_organisations_would_you_like_to_share"
-                      defaultMessage="Select other organisations that need read acces to this raster"
-                    />
-                  }
-                  step={2} // int for denoting which step of the GenericTextInputComponent it refers to
-                  opened={this.props.currentRaster || currentStep === 2}
-                  readonly={false}
-                  currentStep={currentStep} // int for denoting which step is currently active
-                  setCurrentStep={this.setCurrentStep} // cb function for updating which step becomes active
-                  showCheckMark={
-                    this.state.sharedWithOrganisationsWasEverOpenedByUser
-                  }
-                  showNextButton={!this.props.currentRaster}
-                  fields={
-                    <SlushBucket
-                      choices={this.props.organisations.availableForRasterSharedWith.map(
-                        e => e.name
-                      )}
-                      readonly={
-                        false /*!this.props.organisations.selected.roles.includes('admin')*/
-                      }
-                      selected={this.state.sharedWith.map(e => e.name)}
-                      isFetching={this.props.organisations.isFetching}
-                      placeholder={"search organisations"}
-                      updateModelValue={selected => {
-                        this.setState({
-                          sharedWith: selected
-                            .map(selectedItem => {
-                              const found = this.props.organisations.availableForRasterSharedWith.find(
-                                availableItem =>
-                                  availableItem.name === selectedItem
-                              );
-                              if (found) {
-                                let adaptebleFound = Object.assign({}, found);
-                                adaptebleFound.roles = undefined;
-                                return adaptebleFound;
-                              } else {
-                                return undefined;
-                              }
-                            })
-                            .filter(e => e !== undefined)
-                        });
-                      }}
-                    />
-                  }
-                />
-                <GenericStep
-                  titleComponent={
-                    <FormattedMessage
-                      id="rasters.authorisation_type"
-                      defaultMessage="Authorization type"
-                    />
-                  }
-                  subtitleComponent={
-                    <FormattedMessage
-                      id="rasters.public_common_private"
-                      defaultMessage="Specify who can view this raster"
-                    />
-                  }
-                  step={3} // int for denoting which step of the GenericTextInputComponent it refers to
-                  opened={this.props.currentRaster || currentStep === 3}
-                  readonly={false}
-                  currentStep={currentStep} // int for denoting which step is currently active
-                  setCurrentStep={this.setCurrentStep} // cb function for updating which step becomes active
-                  showCheckMark={true}
-                  showNextButton={!this.props.currentRaster}
-                  fields={
-                    <SelectBoxSimple
-                      choices={[
-                        {
-                          name: "Private",
-                          info: "Just the selected organisations can view"
-                        },
-                        {
-                          name: "Common",
-                          info: "All logged in users can view"
-                        },
-                        {
-                          name: "Public",
-                          info: "All users can view"
-                        }
-                      ]}
-                      choice={this.state.accessModifier}
-                      isFetching={false}
-                      transformChoiceToDisplayValue={e => e.name}
-                      updateModelValue={e =>
-                        this.setState({ accessModifier: e.name })}
-                      onKeyUp={e => {
-                        if (e.keyCode === 13) {
-                          // 13 = key enter
-                          this.setCurrentStep(currentStep + 1);
-                        }
-                      }}
-                      transformChoiceToDescription={e => e.info}
-                    />
-                  }
-                />
+      {this.state.openOverlay ? (
+        <ErrorOverlay
+          isFetching={this.state.isFetching}
+          history={this.props.history}
+          errorMessage={this.state.modalErrorMessage}
+          handleClose={() =>
+            this.setState({ handlingDone: false, openOverlay: false })}
+          currentRaster={this.props.currentRaster || this.state.createdRaster}
+        />
+      ) : null}
+      <ManagementForm onSubmit={formData => this.onSubmit(formData, currentRaster)}
+                      wizardStyle={this.props.wizardStyle}
+      >
 
-                <GenericTextInputComponent
-                  titleComponent={
-                    <FormattedMessage
-                      id="rasters.name_of_this_raster"
-                      defaultMessage="Name of this Raster"
-                    />
-                  }
-                  placeholder="name of this raster"
-                  multiline={false} // boolean for which input elem to use: text OR textarea
-                  step={4} // int for denoting which step of the GenericTextInputComponent it refers to
-                  opened={this.props.currentRaster || currentStep === 4}
-                  formUpdate={!!this.props.currentRaster}
-                  readonly={false}
-                  currentStep={currentStep} // int for denoting which step is currently active
-                  setCurrentStep={this.setCurrentStep} // cb function for updating which step becomes active
-                  modelValue={rasterName} // string: e.g. the name of a raster
-                  updateModelValue={this.setRasterName} // cb function to *update* the value of e.g. a raster's name in the parent model
-                  resetModelValue={this.resetRasterName} // cb function to *reset* the value of e.g. a raster's name in the parent model
-                  validate={this.validateNewRasterName} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
-                />
-                {/* <GenericTextInputComponent
-                  titleComponent={
-                    <FormattedMessage
-                      id="rasters.store_path"
-                      defaultMessage="Store Path"
-                    />
-                  } // <FormatText ... //>
-                  subtitleComponent={
-                    <FormattedMessage
-                      id="rasters.path_on_disk"
-                      defaultMessage="Relative path of raster store. Should be unique within organisation. Multiple, comma-separated paths allowed."
-                    />
-                  }
-                  placeholder="path/to/store"
-                  multiline={false} // boolean for which input elem to use: text OR textarea
-                  step={2} // int for denoting which step of the GenericTextInputComponent it refers to
-                  opened={this.props.currentRaster || currentStep === 2}
-                  formUpdate={!!this.props.currentRaster}
-                  readonly={!!this.props.currentRaster}
-                  currentStep={currentStep} // int for denoting which step is currently active
-                  setCurrentStep={this.setCurrentStep} // cb function for updating which step becomes active
-                  modelValue={storePathName} // string: e.g. the name of a raster
-                  updateModelValue={this.setStorePathName} // cb function to *update* the value of e.g. a raster's name in the parent model
-                  resetModelValue={() => this.setStorePathName("")} // cb function to *reset* the value of e.g. a raster's name in the parent model
-                  validate={this.validateNewRasterStorePath}
-                /> */}
-                <GenericTextInputComponent
-                  titleComponent={
-                    <FormattedMessage
-                      id="rasters.description"
-                      defaultMessage="Description"
-                    />
-                  } // <FormatText ... //>
-                  subtitleComponent={
-                    <FormattedMessage
-                      id="rasters.please_describe_the_new_raster"
-                      defaultMessage="Add a clear description of this raster with reference to the data source"
-                    />
-                  }
-                  placeholder="Fill in your description here"
-                  multiline={true} // boolean for which input elem to use: text OR textarea
-                  step={5} // int for denoting which step of the GenericTextInputComponent it refers to
-                  opened={
-                    this.props.currentRaster ||
-                    this.props.currentRaster ||
-                    currentStep === 5
-                  }
-                  formUpdate={!!this.props.currentRaster}
-                  readonly={false}
-                  currentStep={currentStep} // int for denoting which step is currently active
-                  setCurrentStep={this.setCurrentStep} // cb function for updating which step becomes active
-                  modelValue={description} // string: e.g. the name of a raster
-                  updateModelValue={this.setDescription} // cb function to *update* the value of e.g. a raster's name in the parent model
-                  resetModelValue={() => this.setDescription("")} // cb function to *reset* the value of e.g. a raster's name in the parent model
-                  validate={this.validateNewRasterDescription} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
-                />
-                <GenericSelectBoxComponent
-                  titleComponent={
-                    <FormattedMessage
-                      id="rasters.aggregation_type"
-                      defaultMessage="Aggregation Type"
-                    />
-                  }
-                  subtitleComponent={
-                    <FormattedMessage
-                      id="rasters.please_select_type_of_aggregation"
-                      defaultMessage="Specify how data should be displayed in region selection mode"
-                    />
-                  }
-                  placeholder="click to select aggregation type"
-                  step={6} // int for denoting which step of the GenericTextInputComponent it refers to
-                  opened={this.props.currentRaster || currentStep === 6}
-                  formUpdate={!!this.props.currentRaster}
-                  readonly={false}
-                  currentStep={currentStep} // int for denoting which step is currently active
-                  setCurrentStep={this.setCurrentStep} // cb function for updating which step becomes active
-                  choices={[
-                    {
-                      display: "none",
-                      description: "no aggregation"
-                    },
-                    {
-                      display: "counts",
-                      description: "area per category"
-                    },
-                    {
-                      display: "curve",
-                      description: "cumulative distribution"
-                    },
-                    // histogram mag eruit is niet juist geimplementeerd
-                    // {
-                    //   display: "histogram",
-                    //   description: "means frequency per data band"
-                    // },
-                    {
-                      display: "sum",
-                      description: "values in the region are summed"
-                    },
-                    {
-                      display: "average",
-                      description: "values in the region are averaged"
-                    }
-                  ]}
-                  transformChoiceToDisplayValue={item => item.display}
-                  transformChoiceToDescription={item => item.description}
-                  modelValue={aggregationType} // string: e.g. the name of a raster
-                  updateModelValue={item =>
-                    this.setAggregationType(item.display)} // cb function to *update* the value of e.g. a raster's name in the parent model
-                  resetModelValue={() => this.setAggregationType("")} // cb function to *reset* the value of e.g. a raster's name in the parent model
-                  validate={this.validateAggregationType} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
-                />
-                <GenericSelectBoxComponent
-                  titleComponent={
-                    <FormattedMessage
-                      id="rasters.observation_type"
-                      defaultMessage="Observation Type"
-                    />
-                  }
-                  subtitleComponent={
-                    <FormattedMessage
-                      id="rasters.please_select_type_of_observation"
-                      defaultMessage="Specify the physical quantity and unit of the data"
-                    />
-                  }
-                  placeholder="click to select observation type"
-                  step={7} // int for denoting which step of the GenericTextInputComponent it refers to
-                  opened={this.props.currentRaster || currentStep === 7}
-                  formUpdate={!!this.props.currentRaster}
-                  readonly={false}
-                  currentStep={currentStep} // int for denoting which step is currently active
-                  setCurrentStep={this.setCurrentStep} // cb function for updating which step becomes active
-                  choices={this.props.observationTypes.available}
-                  transformChoiceToDisplayValue={e => (e && e.code) || ""} // optional parameter if choices are objects, which field contains the displayvalue, default item itself is displayvalue
-                  isFetching={this.props.observationTypes.isFetching}
-                  choicesSearchable={true}
-                  modelValue={this.state.observationType} // string: e.g. the name of a raster
-                  updateModelValue={this.setObservationType} // cb function to *update* the value of e.g. a raster's name in the parent model
-                  resetModelValue={() => this.setObservationType({ code: "" })} // cb function to *reset* the value of e.g. a raster's name in the parent model
-                  validate={this.validateObservationType} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
-                />
-                <ColorMapComponent
-                  titleComponent={
-                    <FormattedMessage
-                      id="rasters.colormap"
-                      defaultMessage="Colormap"
-                    />
-                  }
-                  minTitleComponent={
-                    <FormattedMessage
-                      id="rasters.fill_colormap_min"
-                      defaultMessage="Minimum"
-                    />
-                  }
-                  maxTitleComponent={
-                    <FormattedMessage
-                      id="rasters.fill_colormap_max"
-                      defaultMessage="Maximum"
-                    />
-                  }
-                  placeholder="click to select colormap"
-                  step={8} // int for denoting which step of the GenericTextInputComponent it refers to
-                  opened={this.props.currentRaster || currentStep === 8}
-                  formUpdate={!!this.props.currentRaster}
-                  readonly={optionsHasLayers(this.state.options)}
-                  readOnlyReason={
-                    <FormattedMessage
-                      id="rasters.colormap_readonly_layers"
-                      defaultMessage="Readonly, because the style of this raster has multiple layers"
-                    />
-                  }
-                  currentStep={currentStep} // int for denoting which step is currently active
-                  setCurrentStep={this.setCurrentStep} // cb function for updating which step becomes active
-                  choices={this.props.colorMaps.available}
-                  transformChoiceToDisplayValue={e => (e && e.name) || ""} // optional parameter if choices are objects, which field contains the displayvalue, default item itself is displayvalue
-                  isFetching={this.props.colorMaps.isFetching}
-                  choicesSearchable={true}
-                  modelValue={{
-                    styles: this.state.styles,
-                    rescalable: this.state.rescalable
-                  }}
-                  updateModelValue={(styles) => {
-                    this.setStyleAndOptions(styles);
-                  }} // cb function to *update* the value of e.g. a raster's name in the parent model
-                  // resetModelValue={() => this.setColorMap("")} // cb function to *reset* the value of e.g. a raster's name in the parent model
-                  validate={stylesPlusRescalable => {
-                    return stylesPlusRescalable.styles && validateStyleObj(stylesPlusRescalable.styles);
-                  }} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
-                />
-                <GenericSelectBoxComponent
-                  titleComponent={
-                    <FormattedMessage
-                      id="rasters.supplier_id"
-                      defaultMessage="Supplier Name"
-                    />
-                  }
-                  subtitleComponent={
-                    <FormattedMessage
-                      id="rasters.please_select_supplier_id"
-                      defaultMessage="Select the user that is allowed to change and delete this raster"
-                    />
-                  }
-                  placeholder="type to search supplier name"
-                  step={9} // int for denoting which step of the GenericTextInputComponent it refers to
-                  opened={this.props.currentRaster || currentStep === 9}
-                  formUpdate={!!this.props.currentRaster}
-                  readonly={false}
-                  currentStep={currentStep} // int for denoting which step is currently active
-                  setCurrentStep={this.setCurrentStep} // cb function for updating which step becomes active
-                  choices={this.props.supplierIds.available}
-                  noneValue={{ username: "none", value: "null" }}
-                  transformChoiceToDisplayValue={e => {
-                    return (e && e.username) || "";
-                  }} // optional parameter if choices are objects, which field contains the displayvalue, default item itself is displayvalue
-                  isFetching={this.props.supplierIds.isFetching}
-                  choicesSearchable={true}
-                  modelValue={
-                    this.state.supplierId || { username: "none", value: null }
-                  } // if the supplier_id is null then pass the noneValue for the selectbox component to show. The selectbox component is not aware that the real value is null
-                  updateModelValue={this.setSupplierId} // cb function to *update* the value of e.g. a raster's name in the parent model
-                  resetModelValue={this.resetSupplierId} // cb function to *reset* the value of e.g. a raster's name in the parent model
-                  validate={this.validateSupplierId} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
-                />
-                <GenericTextInputComponent
-                  titleComponent={
-                    <FormattedMessage
-                      id="rasters.supplier_code"
-                      defaultMessage="Supplier Code"
-                    />
-                  } // <FormatText ... //>
-                  subtitleComponent={
-                    <FormattedMessage
-                      id="rasters.unique_supplier_code"
-                      defaultMessage="Provide a code for your own administration"
-                    />
-                  }
-                  placeholder="Fill in a supplier code here"
-                  multiline={false} // boolean for which input elem to use: text OR textarea
-                  step={10} // int for denoting which step of the GenericTextInputComponent it refers to
-                  opened={this.props.currentRaster || currentStep === 10}
-                  formUpdate={!!this.props.currentRaster}
-                  readonly={false}
-                  currentStep={currentStep} // int for denoting which step is currently active
-                  setCurrentStep={this.setCurrentStep} // cb function for updating which step becomes active
-                  modelValue={this.state.supplierCode} // string: e.g. the name of a raster
-                  updateModelValue={this.setSupplierCode} // cb function to *update* the value of e.g. a raster's name in the parent model
-                  resetModelValue={() => this.setSupplierCode("")} // cb function to *reset* the value of e.g. a raster's name in the parent model
-                  validate={this.validateSupplierCode} // cb function to validate the value of e.g. a raster's name in both the parent model as the child compoennt itself.
-                />
-                <GenericCheckBoxComponent
-                  titleComponent={
-                    <FormattedMessage
-                      id="rasters.raster_is_temporal"
-                      defaultMessage="Raster Series"
-                    />
-                  }
-                  step={11} // int for denoting which step of the GenericTextInputComponent it refers to
-                  opened={this.props.currentRaster || currentStep === 11}
-                  formUpdate={!!this.props.currentRaster}
-                  readonly={!!this.props.currentRaster}
-                  currentStep={currentStep}
-                  setCurrentStep={this.setCurrentStep}
-                  modelValue={this.state.temporalBool}
-                  label={
-                    <FormattedMessage
-                      id="rasters.check_if_raster_is_temporal"
-                      defaultMessage="Select whether you are creating a raster that contains multiple rasters over time"
-                    />
-                  }
-                  updateModelValue={this.setTemporalBool}
-                  yesCheckedComponent={
-                    <FormattedMessage
-                      id="rasters.yes_the_raster_is_temporal"
-                      defaultMessage="Yes, this is a raster series"
-                    />
-                  }
-                  noNotCheckedComponent={
-                    <FormattedMessage
-                      id="rasters.no_the_raster_is_not_temporal"
-                      defaultMessage="No, this is not a raster series"
-                    />
-                  }
-                  validate={this.validateTemporalBool}
-                />
-                {this.state.temporalBool ? (
-                  <div>
-                    <DurationComponent
-                      titleComponent={
-                        <FormattedMessage
-                          id="rasters.temporal_raster_frequency"
-                          defaultMessage="Raster Series Interval"
-                        />
-                      }
-                      subtitleComponent={
-                        <FormattedMessage
-                          id="rasters.temporal_raster_frequency_description"
-                          defaultMessage="Interval of raster series"
-                        />
-                      }
-                      multiline={false} // boolean for which input elem to use: text OR textarea
-                      step={12} // int for denoting which step of the GenericTextInputComponent it refers to
-                      isLastItem={true}
-                      opened={this.props.currentRaster || currentStep === 12}
-                      formUpdate={!!this.props.currentRaster}
-                      readonly={!!this.props.currentRaster}
-                      currentStep={currentStep}
-                      setCurrentStep={this.setCurrentStep}
-                      //modelValue={this.state.temporalIntervalAmount} // for now always in seconds
-                      modelValueDays={this.state.temporalIntervalDays}
-                      modelValueHours={this.state.temporalIntervalHours}
-                      modelValueMinutes={this.state.temporalIntervalMinutes}
-                      modelValueSeconds={this.state.temporalIntervalSeconds}
-                      updateModelValue={this.setTemporalIntervalAmount}
-                      //resetModelValue={() => this.setTemporalIntervalAmount("")}
-                      updateModelValueDays={this.setTemporalIntervalDays}
-                      updateModelValueHours={this.setTemporalIntervalHours}
-                      updateModelValueMinutes={this.setTemporalIntervalMinutes}
-                      updateModelValueSeconds={this.setTemporalIntervalSeconds}
-                      validate={this.validateTemporalIntervalAmount}
-                      validateDays={this.validateDaysTemporalInterval}
-                      validateHours={this.validateHoursTemporalInterval}
-                      validateMinutes={this.validateMinutesTemporalInterval}
-                      validateSeconds={this.validateSecondsTemporalInterval}
-                    />
-                  </div>
-                ) : null}
-                {this.validateAll() ? (
-                  <div className={inputStyles.InputContainer}>
-                    <button
-                      type="button"
-                      className={`${buttonStyles.Button} ${buttonStyles.Success}`}
-                      style={{ marginTop: 10 }}
-                      onClick={() => {
-                        this.handleClickCreateRaster();
-                      }}
-                    >
-                      <FormattedMessage
-                        id="rasters.submit"
-                        defaultMessage="Submit"
-                      />
-                    </button>
-                  </div>
-                ) : (
-                  <div className={inputStyles.InputContainer}>
-                    <button
-                      type="button"
-                      className={`${buttonStyles.Button} ${buttonStyles.Inactive}`}
-                      style={{
-                        marginTop: 10,
-                        color: "grey",
-                        cursor: "not-allowed"
-                      }}
-                    >
-                      <FormattedMessage
-                        id="rasters.submit"
-                        defaultMessage="Submit"
-                      />
-                    </button>
-                    <span
-                      className={`${inputStyles.SubmitSpan}`}
-                      style={{ paddingLeft: 20, verticalAlign: "middle" }}
-                    >
-                      {this.generateInvalidMessage(currentStep)}
-                    </span>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
+        <SelectBox
+          name="selectedOrganisation"
+          title="Organisation"
+          subtitle="Specify which organisation owns this raster"
+          placeholder="Choose an organisation"
+          choices={this.props.organisations.available.map(organisation=>
+            [organisation.uuid, organisation.name]
+          )}
+          validators={[required("Please select an organisation.")]}
+          showSearchField={true}
+          initial ={
+            (
+              currentRaster && 
+              currentRaster.organisation && 
+              currentRaster.organisation.uuid &&
+              currentRaster.organisation.uuid
+            ) || null
+          }
+        />
+        <SlushBucket
+          name="sharedWithOrganisations"
+          title="Shared With Organisation"
+          subtitle="Select other organisations that need read acces to this raster"
+          choices={this.props.organisations.availableForRasterSharedWith.map(e =>{
+            return {
+              display: e.name, 
+              value : e.uuid
+            }
+          })}
+          readOnly={false}
+          placeholder={"search organisations"}
+          initial={
+            (
+            currentRaster && 
+            currentRaster.shared_with && 
+            currentRaster.shared_with.map((orgUuid) => {
+              return orgUuid.uuid
+            })
+            ) || [] // passing this empty array is somehow required. Somehow only if I also have the colormapInput component.
+          }
+          validators={[]}
+        />
+        <SelectBox
+          name="accessModifier"
+          title="Authorization type"
+          subtitle="Specify who can view this raster"
+          choices={[
+            [
+              "Private",
+              "Private",
+              "Just the selected organisations can view"
+            ],
+            [
+              "Common",
+              "Common",
+              "All logged in users can view"
+            ],
+            [
+              "Public",
+              "Public",
+              "All users can view"
+            ] 
+          ]}
+          validators={[required("Please select an access modifier.")]}
+          initial ={
+            (
+              currentRaster && 
+              currentRaster.access_modifier
+            ) ||
+            "Private" 
+          }
+          showSearchField={false}
+        />
+        <TextInput
+          name="rasterName"
+          title="Name of this Raster"
+          placeholder="Name of this Raster"
+          validators={[minLength(5)]}
+          initial = {
+            currentRaster && 
+              currentRaster.name
+          }
+        />
+        <TextArea
+          name="description"
+          placeholder="Fill in your description here"
+          subtitle="Add a clear description of this raster with reference to the data source."
+          validators={[minLength(1)]}
+          initial = {
+            currentRaster && 
+              currentRaster.description
+          }
+        />
+        <SelectBox
+          name="aggregationType"
+          title="Aggregation Type"
+          subtitle="Specify how data should be displayed in region selection mode"
+          placeholder="click to select aggregation type"
+          choices={[
+            [
+              "none",
+              "none",
+              "no aggregation"
+            ],
+            [
+              "counts",
+              "counts",
+              "area per category"
+            ],
+            [
+              "curve",
+              "curve",
+              "cumulative distribution"
+            ],
+            [
+              "sum",
+              "sum",
+              "values in the region are summed"
+            ],
+            [
+              "average",
+              "average",
+              "values in the region are averaged"
+            ]
+          ]}
+          validators={[required("Please select an aggregation type.")]}
+          showSearchField={false}
+          initial = {
+            (
+            currentRaster && 
+            currentRaster.aggregation_type
+            ) || null
+          }
+        />
+        <SelectBox
+          name="observationType"
+          title="Observation Type"
+          subtitle="Specify the physical quantity and unit of the data"
+          placeholder="click to select observation type"
+          choices={this.props.observationTypes.available.map(obsT=>{
+
+            let parameterString = obsT.parameter + '';
+            if (obsT.unit || obsT.reference_frame) {
+              parameterString += ' ('
+              if (obsT.unit) {
+                parameterString += obsT.unit;
+              }
+              if (obsT.unit && obsT.reference_frame) {
+                parameterString += ' ';
+              }
+              if (obsT.reference_frame) {
+                parameterString += obsT.reference_frame;
+              }
+              parameterString += ')'
+            }
+
+            return [obsT.code, obsT.code, parameterString]
+
+          })}
+          validators={[required("Please select an observation type.")]}
+          showSearchField={true}
+          initial = {
+            (
+            currentRaster && 
+            currentRaster.observation_type && 
+            currentRaster.observation_type.code
+            ) || null 
+          }
+        />
+        <ColorMapInput
+          name="colormap"
+          title="Choose a color map"
+          colorMaps={this.props.colorMaps.available.map(colM=>
+            [colM.name, colM.name, colM.description]
+          )}
+          validators={[colorMapValidator(true)]}
+          initial = {
+            currentRaster && 
+            { 
+              options: currentRaster.options,
+              rescalable: currentRaster.rescalable
+            }
+
+          }
+        />
+        <SelectBox
+          name="supplierName"
+          title="Supplier Name"
+          subtitle="Optional: select the user that is allowed to change and delete this raster"
+          placeholder="click to select supplier name"
+          choices={this.props.supplierIds.available.map(obsT=>
+            [obsT.username, obsT.username]
+          )}
+          // validators={[required("Please select a Supplier Name.")]}
+          validators={[]}
+          showSearchField={true}
+          initial = {
+            (
+            currentRaster && 
+            currentRaster.supplier
+            ) || null
+          }
+        />
+        <TextInput
+          name="supplierCode"
+          title="Supplier Code"
+          placeholder="Fill in a supplier code here"
+          subtitle="Provide a code for your own administration."
+          validators={[minLength(1)]}
+          initial = {
+            currentRaster && 
+            currentRaster.supplier_code
+          }
+        />
+        <CheckBox
+          name="temporal"
+          title="Raster Series"
+          label="Select whether you are creating a raster that contains multiple rasters over time"
+          readonly={currentRaster}
+          initial = {
+            (
+            currentRaster && 
+            currentRaster.temporal
+            ) || false
+          }
+        />
+        <DurationField
+          name="duration"
+          disabled={(formValues) => formValues.temporal == false }
+          title="Raster Series Interval"
+          subtitle="Interval of raster series"
+          validators={currentRaster?[]:[durationValidator(true)]}
+          readOnly={currentRaster}
+          initial = {
+            currentRaster && 
+            currentRaster.interval &&
+            toISOValue(rasterIntervalStringServerToDurationObject(currentRaster.interval))
+          }
+        />
+      </ManagementForm>
       </div>
     );
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state) => {
   return {
     organisations: state.organisations,
     bootstrap: state.bootstrap,
@@ -1258,7 +397,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = (dispatch) => {
   return {
     addNotification: (message, timeout) => {
       dispatch(addNotification(message, timeout));
