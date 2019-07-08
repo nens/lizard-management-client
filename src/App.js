@@ -181,7 +181,7 @@ class App extends Component {
                         {selectedOrganisation
                           ? selectedOrganisation.name
                           : "Select organisation"}
-                      </button>
+                      </a>
                     </div>
                     <div>
                       {/* Redirect for logging out.*/}
