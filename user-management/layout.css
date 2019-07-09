@@ -12,67 +12,53 @@ html, body {
     flex-direction: row;
     justify-content: space-between;
 	flex-wrap: wrap;
-	height: 100%;
+    height: 100%;
+    width: 100%;
 }
 
-header, main, footer {
-	flex-grow: 1;
-	flex-shrink: 0;
-	flex-basis: 100%;
+.side-filler {
+	display: flex;
+	flex-grow: 5;
+	flex-shrink: 1;
 }
 
 header {
-	color: white;
+    color: white;
+    height: 12.5%;
+    width: 100%;
 }
 header a {
-	padding-left: 5px;
 	padding-right: 5px;
 	color: white;
 	text-decoration: none;
 }
 .header-top, .header-bottom {
 	display: flex;
-	align-items: center;
+    align-items: center;
+    justify-content: space-between;
 }
 .header-top {
-	height: 5.7vh;
+    height: 5.7vh;
+    padding: 0 15%;
 	background-color: #009F86;
 }
-.header-top-content {
-	justify-content: center;
-}
-.header-top-left, .header-top-center, .header-top-right {
-	display: flex;
-	flex-shrink: 1;
-	flex-basis: 20em;
-	align-items: center;
-}
-.header-top-left {
-	justify-content: left;
-	align-items: start;
-}
-.header-top-left-lizard-logo {
-	position: absolute;
-	top: 0.275%;
-	height: 7.5%;
-}
 .header-top-right {
-    justify-content: right;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     height: 100%;
 }
-.header-top-right-user {
-	padding: 5px;
-}
-.header-top-right-logout {
-	padding: 5px;
+.header-top-left-lizard-logo {
+    position: absolute;
+    padding: 0;
+	top: 0.275%;
+    height: 7.5%;
 }
 .header-bottom {
-	height: 6.8vh;
+    height: 6.8vh;
+    padding: 0 15%;
 	background-color: #2FCBAB;
 	font-size: 1.2rem;
-}
-.header-bottom-content {
-	justify-content: left;
 }
 
 main {
@@ -93,50 +79,31 @@ main {
 }
 
 footer {
-	display: flex;
-	align-items: center;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 15%;
     height: 80px;
-    width: 100%;
 	background-color: #D8D8D8;
     color: #009F86;
     
     position: fixed;
+    right: 0;
+    left: 0;
     bottom: 0;
 }
 footer a {
 	padding-left: 5px;
 	padding-right: 5px;
 	text-decoration: none;
-	color: #009F86;
-}
-.footer-content {
-	display: flex;
-	flex-basis: 0;
-	flex-grow: 16;
-	flex-shrink: 1;
-}
-.footer-left, .footer-right {
-	display: flex;
-	flex-grow: 1;
-	flex-shrink: 1;
-	flex-basis: 20em;
-	align-items: center;
-}
-.footer-left {
-	padding: 5px;
-	justify-content: left;
-}
-.footer-right {
-	padding: 5px;
-	justify-content: right;
+    color: #009F86;
 }
 
-
-
-/* HOAN */
 /*Organisation selection*/
 .organisation {
-    width: 200px;
+    width: 160px;
     height: 100%;
     font-size: inherit;
 }
@@ -156,6 +123,9 @@ footer a {
     cursor: pointer;
     padding: 0px;
     text-align: left;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 .organisation button i {
@@ -169,7 +139,7 @@ footer a {
     position: fixed;
     top: 0;
     left: 0;
-    background-color: rgba(105, 99, 99, 0.8);
+    background-color: hsla(210, 11%, 15%, 0.49);
     z-index: 9999;
     opacity: 0;
     visibility: hidden;
@@ -181,18 +151,14 @@ footer a {
     visibility: visible;
 }
 
-.organisation-switcher-screen:target .organisation-switcher {
-    opacity: 1;
-}
-
 .organisation-switcher {
     width: 75%;
     min-height: 70%;
     color: #333;
     border: 1px solid #bebebe;
     background-color: #fff;
-    box-shadow: 0 20px 20px rgba(12, 12, 12, 0.4);
-    opacity: 0;
+    box-shadow: 0 2px 6px 5px rgba(0, 0, 0, 0.3);
+    opacity: 1;
     padding: 40px;
 
     position: relative;
@@ -225,6 +191,7 @@ footer a {
     background-clip: padding-box;
     border: 1px solid #ced4da;
     border-radius: 2.5px;
+    transition: all ease-in-out .15s;
 }
 
 .organisation-switcher_form input:focus {
@@ -274,6 +241,8 @@ footer a {
 
 .user-profile_content {
     padding-left: 10px;
+    display: flex;
+    align-items: center;
 }
 
 .user-profile:hover {
@@ -293,6 +262,7 @@ footer a {
     box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
 
     z-index: 1;
+    flex-direction: column;
 }
 
 .user-profile_dropdown a {
@@ -303,9 +273,4 @@ footer a {
 
 .user-profile_dropdown a:hover {
     background-color: #e5e5e5;
-}
-
-.user-profile_dropdown-show {
-    display: flex;
-    flex-direction: column;
 }

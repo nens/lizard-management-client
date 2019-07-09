@@ -32,13 +32,13 @@
                     <div class="organisation">
                         <button class="orgainsation_button" onclick="openOrganisationSwitcher()">
                             <i class="fa fa-sort"></i>
-                            &nbsp;&nbsp;Nelen &amp; Schuurmans
+                            &nbsp;Nelen &amp; Schuurmans
                         </button>
                     </div>
-                    <div class="user-profile" onclick="openDropdown()">
+                    <div class="user-profile" onclick="openDropdown()" id="user-profile">
                         <div class="user-profile_content">
                             <i class="fa fa-user icon-medium"></i>
-                            &nbsp;&nbsp;Lirry
+                            &nbsp;Lirry
                         </div>
                         <div class="user-profile_dropdown" id="user-profile_dropdown">
                             <a href="https://sso.lizard.net/edit_profile/" target="_blank" rel="noopener noreferrer">
@@ -62,19 +62,20 @@
             <div class="organisation-switcher-screen" id="switcher">
                 <div class="organisation-switcher">
                     <h3>Switch organisation</h3>
-                    <br/>
+                    <br />
                     <div class="organisation-switcher_form">
                         <input type="text" id="organisationName" type="text" class="organisation-switcher_form-input"
-                            placeholder="Type here to filter the list of organisations...">
+                            placeholder="Type here to filter the list of organisations..."
+                            onchange="handleInput()">
                     </div>
                     <div class="organisation-list">
-                        <div class="organisation-row">
+                        <div class="organisation-row" onclick="handleOnOrganisationClick()">
                             <i class="material-icons">group</i>
                             <div class="organisation-name">
                                 Nelen &amp; Schuurmans
                             </div>
                         </div>
-                        <div class="organisation-row">
+                        <div class="organisation-row" onclick="handleOnOrganisationClick()">
                             <i class="material-icons">group</i>
                             <div class="organisation-name">
                                 Deltares
@@ -100,22 +101,12 @@
             </div>
         </main>
         <footer>
-            <div class="side-filler">
-            </div>
-            <div class="footer-content">
-                <div class="footer-left">
-                    <a href="http://docs.lizard.net/en/latest/introduction.html">
-                        Documentation<i class="material-icons icon-large">local_library</i>
-                    </a>
-                </div>
-                <div class="footer-right">
-                    <a href="https://nelen-schuurmans.topdesk.net/tas/public/ssp/">
-                        <i class="material-icons icon-large">headset_mic</i>Support
-                    </a>
-                </div>
-            </div>
-            <div class="side-filler">
-            </div>
+            <a href="http://docs.lizard.net/en/latest/introduction.html">
+                Documentation<i class="material-icons icon-large">local_library</i>
+            </a>
+            <a href="https://nelen-schuurmans.topdesk.net/tas/public/ssp/">
+                <i class="material-icons icon-large">headset_mic</i>Support
+            </a>
         </footer>
 
     </div>
