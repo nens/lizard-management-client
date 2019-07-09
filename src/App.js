@@ -28,12 +28,21 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      showOrganisationSwitcher: false
+      showOrganisationSwitcher: false,
+      showProfileList: false
     };
     this.uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
     this.updateOnlineStatus = this.updateOnlineStatus.bind(this);
     this.updateViewportDimensions = this.updateViewportDimensions.bind(this);
   }
+  //Click the user-profile button open the dropdown
+  //Click anywhere outside of the user-profile modal will close the modal
+  onUserProfileClick = (e) => {
+    return e.target.id === "user-profile" ? 
+      this.setState({ showProfileList: !this.state.showProfileList }) : 
+      this.setState({ showProfileList: false });
+  }
+
   componentDidMount() {
     window.addEventListener("online", e => this.updateOnlineStatus(e));
     window.addEventListener("offline", e => this.updateOnlineStatus(e));
@@ -68,46 +77,67 @@ class App extends Component {
     return pathname === "/"
       ? null
       : splitPathnames.map((sp, i) => {
-          const to = `/${splitPathnames.slice(1, i + 1).join("/")}`;
-          let title = sp.replace("_", " ");
-          let styleNavLink = {};
-          let styleSpan = {};
-          // Show the uuid as lowercase
-          if (this.uuidRegex.test(sp)) {
-            // Make sure that the whole uuid is visible
-            styleNavLink = {
-              minWidth: "0px",
-              overflow: "hidden"
-            };
-            styleSpan = {
-              // Show uuid in lowercase
-              textTransform: "lowercase",
-              whiteSpace: "nowrap",
-              textOverflow: "ellipsis",
-              overflow: "hidden"
-            };
-          } else {
-            styleSpan = {
-              textTransform: "capitalize"
-            };
-          }
-          return (
-            <NavLink to={to} key={to} style={styleNavLink}>
-              {" "}
-              <span
-                style={styleSpan}
-                // Show 'uuid' upon hovering over uuid key, to make it apparent
-                // for users that it is the uuid.
-                title={this.uuidRegex.test(sp) ? "uuid" : ""}
-              >
-                &nbsp;
+        const to = `/${splitPathnames.slice(1, i + 1).join("/")}`;
+        let title = sp.replace("_", " ");
+        let styleNavLink = {};
+        let styleSpan = {};
+        // Show the uuid as lowercase
+        if (this.uuidRegex.test(sp)) {
+          // Make sure that the whole uuid is visible
+          styleNavLink = {
+            minWidth: "0px",
+            overflow: "hidden"
+          };
+          styleSpan = {
+            // Show uuid in lowercase
+            textTransform: "lowercase",
+            whiteSpace: "nowrap",
+            textOverflow: "ellipsis",
+            overflow: "hidden"
+          };
+        } else {
+          styleSpan = {
+            textTransform: "capitalize"
+          };
+        }
+        return (
+          <NavLink to={to} key={to} style={styleNavLink}>
+            {" "}
+            <span
+              style={styleSpan}
+              // Show 'uuid' upon hovering over uuid key, to make it apparent
+              // for users that it is the uuid.
+              title={this.uuidRegex.test(sp) ? "uuid" : ""}
+            >
+              &nbsp;
                 {title}
-                {i === splitPathnames.length - 1 ? null : " /"}
-              </span>
-            </NavLink>
-          );
-        });
+              {i === splitPathnames.length - 1 ? null : " /"}
+            </span>
+          </NavLink>
+        );
+      });
   }
+  renderProfileList() {
+    return (
+      <div
+        className={styles.DropdownMenu}
+        onMouseLeave={() => this.setState({showProfileList: false})}
+      >
+        <a href="/accounts/login/?next=/edit_profile/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <i className="fa fa-pencil" />
+          &nbsp;&nbsp;Edit Profile
+        </a>
+        <a href="/accounts/logout/" >
+          <i className="fa fa-power-off" />
+          &nbsp;&nbsp;Logout
+        </a>
+      </div>
+    );
+  };
+
   render() {
     if (!this.props.isAuthenticated) {
       return (
@@ -124,7 +154,7 @@ class App extends Component {
       const breadcrumbs = this.computeBreadcrumb();
 
       return (
-        <div className={styles.App}>
+        <div className={styles.App} onClick={this.onUserProfileClick}>
           <div className={`${styles.Primary}`}>
             <div className={gridStyles.Container}>
               <div className={gridStyles.Row}>
@@ -148,55 +178,43 @@ class App extends Component {
                         <i className={`material-icons ${styles.AppIcon}`}>
                           apps
                         </i>
-                        Apps
+                        Appsgst
                       </a>
                     </div>
-                    <div className={styles.Profile}>
-                      <a
-                        href="https://sso.lizard.net/edit_profile/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        title={`${firstName}`}
-                      >
-                        <i className="fa fa-user" style={{ paddingRight: 8 }} />
-                        {firstName}
-                      </a>
-                    </div>
-                    <div className={styles.OrganisationLinkContainer}>
-                      <a
-                        className={styles.OrganisationLink}
-                        href="#"
+                    <div
+                      className={styles.OrganisationLinkContainer}
+                      onClick={() =>
+                        this.setState({
+                          showOrganisationSwitcher: true
+                        })
+                      }
+                    >
+                      <button
+                        className={`${buttonStyles.ButtonLink} ${styles.OrganisationLink}`}
                         title={
                           selectedOrganisation
                             ? selectedOrganisation.name
                             : "Select organisation"
                         }
-                        onClick={() =>
-                          this.setState({
-                            showOrganisationSwitcher: true
-                          })}
                       >
                         <i className="fa fa-sort" />
                         &nbsp;&nbsp;
                         {selectedOrganisation
                           ? selectedOrganisation.name
                           : "Select organisation"}
-                      </a>
+                      </button>
                     </div>
-                    <div>
-                      {/* Redirect for logging out.*/}
-                      <a href="/accounts/logout/">
-                        <i className="fa fa-power-off" />
-                        &nbsp;&nbsp;Logout
-                      </a>
+                    <div
+                      className={styles.Profile}
+                      id="user-profile"
+                    >
+                      <div style={{ paddingLeft: 6 }} id="user-profile">
+                        <i className="fa fa-user" style={{ paddingRight: 8 }} id="user-profile"/>
+                        {firstName}
+                      </div>
+                      {this.state.showProfileList && this.renderProfileList()}
                     </div>
                   </div>
-                  {/* Why is below html ? compare to master */}
-                  {/* <div>
-                    <a href="https://demo.lizard.net/accounts/logout/">
-                      <i className="fa fa-power-off" />&nbsp;&nbsp;Logout
-                    </a>
-                  </div> */}
                 </div>
               </div>
             </div>
