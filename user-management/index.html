@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <link rel="icon" href="favicon.ico">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://use.fontawesome.com/43b6a67007.js"></script>
+    <link href="https://use.fontawesome.com/43b6a67007.css" media="all" rel="stylesheet">
+    <link rel="stylesheet" href="layout.css">
+    <link rel="stylesheet" href="stylesheet.css">
+    <script src="script.js"></script>
+    <link rel="stylesheet" href="dropdown.css">
+    <!-- extra block for specific css references per Django template
+      {% block extraheader %}
+      {% endblock extraheader %}
+    -->
+    <title>Lizard management</title>
+</head>
+
+<body>
+    <div class="wrapper">
+        <header>
+            <div class="header-top">
+                <div class="header-top-left">
+                    <a href="/management/">
+                        <img src="lizard.png" class="header-top-left-lizard-logo" alt="Lizard logo">
+                    </a>
+                </div>
+                <div class="header-top-right">
+                    <div class="organisation">
+                        <button class="orgainsation_button" onclick="openOrganisationSwitcher()">
+                            <i class="fa fa-sort"></i>
+                            &nbsp;&nbsp;Nelen &amp; Schuurmans
+                        </button>
+                    </div>
+                    <div class="user-profile" onclick="openDropdown()">
+                        <div class="user-profile_content">
+                            <i class="fa fa-user icon-medium"></i>
+                            &nbsp;&nbsp;Lirry
+                        </div>
+                        <div class="user-profile_dropdown" id="user-profile_dropdown">
+                            <a href="https://sso.lizard.net/edit_profile/" target="_blank" rel="noopener noreferrer">
+                                <i class="fa fa-pencil"></i>
+                                &nbsp;&nbsp;Edit Profile
+                            </a>
+                            <a href="/accounts/logout/">
+                                <i class="fa fa-power-off"></i>
+                                &nbsp;&nbsp;Logout
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="header-bottom">
+                <div class="header-bottom-content">
+                    <a href="https://nxt3.staging.lizard.net/management/#/">Lizard Management</a> /
+                    <a href="https://nxt3.staging.lizard.net/management/users/">User Management</a>
+                </div>
+            </div>
+            <div class="organisation-switcher-screen" id="switcher">
+                <div class="organisation-switcher">
+                    <h3>Switch organisation</h3>
+                    <br/>
+                    <div class="organisation-switcher_form">
+                        <input type="text" id="organisationName" type="text" class="organisation-switcher_form-input"
+                            placeholder="Type here to filter the list of organisations...">
+                    </div>
+                    <div class="organisation-list">
+                        <div class="organisation-row">
+                            <i class="material-icons">group</i>
+                            <div class="organisation-name">
+                                Nelen &amp; Schuurmans
+                            </div>
+                        </div>
+                        <div class="organisation-row">
+                            <i class="material-icons">group</i>
+                            <div class="organisation-name">
+                                Deltares
+                            </div>
+                        </div>
+                    </div>
+                    <a href="#" class="organisation-switcher_close">&times;</a>
+                </div>
+            </div>
+        </header>
+        <main>
+            <div class="side-filler">
+            </div>
+            <!-- extra block for main content
+          {% block mainContent %}
+        -->
+            <div class="main-content">
+            </div>
+            <!--
+          {% endblock mainContent %}
+        -->
+            <div class="side-filler">
+            </div>
+        </main>
+        <footer>
+            <div class="side-filler">
+            </div>
+            <div class="footer-content">
+                <div class="footer-left">
+                    <a href="http://docs.lizard.net/en/latest/introduction.html">
+                        Documentation<i class="material-icons icon-large">local_library</i>
+                    </a>
+                </div>
+                <div class="footer-right">
+                    <a href="https://nelen-schuurmans.topdesk.net/tas/public/ssp/">
+                        <i class="material-icons icon-large">headset_mic</i>Support
+                    </a>
+                </div>
+            </div>
+            <div class="side-filler">
+            </div>
+        </footer>
+
+    </div>
+
+</body>
+
+</html>
