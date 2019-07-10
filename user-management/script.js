@@ -20,8 +20,3 @@ const openOrganisationSwitcher = () => {
 const handleOnOrganisationClick = () => {
     window.location.href = "#"
 };
-
-const handleInput = () => {
-    const x = document.getElementById("organisationName").value;
-    console.log(x)
-};
