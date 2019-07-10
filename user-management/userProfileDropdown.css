@@ -1,0 +1,48 @@
+/*User Profile Dropdown*/
+.user-profile {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    height: 100%;
+    width: 160px;
+    position: relative;
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+}
+
+.user-profile_content {
+    padding-left: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.user-profile:hover {
+    background-color: rgb(3, 139, 119);
+}
+
+.user-profile_dropdown {
+    font-size: 14px;
+    display: none;
+    position: absolute;
+    top: 100%;
+    width: 100%;
+    overflow: hidden;
+
+    border: 1px solid rgba(0, 0, 0, .15);
+    background-color: #fafafa;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+
+    z-index: 1;
+    flex-direction: column;
+}
+
+.user-profile_dropdown a {
+    text-decoration: none;
+    color: #333;
+    padding: 10px 10px;
+}
+
+.user-profile_dropdown a:hover {
+    background-color: #e5e5e5;
+}
