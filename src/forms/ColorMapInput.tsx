@@ -1,6 +1,7 @@
 // {"styles": "Blues:0.0:2.0"}
 // {"styles": "transparent", "HEIGHT": 512, "ZINDEX": 20, "WIDTH": 1024, "effects": "radar:0:0.008", "TRANSPARENT": false}
 import React, { Component } from "react";
+import { FormattedMessage, injectIntl, InjectedIntlProps } from "react-intl";
 
 import SelectBox, { choicesT } from "./SelectBox";
 
@@ -69,8 +70,8 @@ export const colorMapValidator = (required: boolean) =>
     }
 };
 
-class ColorMapInput extends Component<ColorMapProps, ColorMapState> {
-  constructor(props: ColorMapProps) {
+class ColorMapInput extends Component<ColorMapProps & InjectedIntlProps, ColorMapState> {
+  constructor(props: ColorMapProps & InjectedIntlProps) {
     super(props);
     this.state = {
       previewColor: null
@@ -205,6 +206,7 @@ class ColorMapInput extends Component<ColorMapProps, ColorMapState> {
       validated,
       placeholder,
       wizardStyle,
+      intl
     } = this.props;
 
     
@@ -224,9 +226,16 @@ class ColorMapInput extends Component<ColorMapProps, ColorMapState> {
       maxValue = this.state.previewColor.limits[1];
     } else {
       colors = (
-        <span style={{opacity: 0.5}}>No preview available</span>
+        <span style={{opacity: 0.5}}>
+          <FormattedMessage id="color_map.initial_message" />
+        </span>
       );
     }
+
+    //Format message for placeholder in the input form for translation
+    const placeholderColorMapSelection = intl.formatMessage({ id: "placeholder_color_map_selection" })
+    const placeholderMinimumColorRange = intl.formatMessage({ id: "placeholder_minimum_color_range" })
+    const placeholderMaximumColorRange = intl.formatMessage({ id: "placeholder_maximum_color_range" })
 
     return (
       <div>
@@ -244,20 +253,22 @@ class ColorMapInput extends Component<ColorMapProps, ColorMapState> {
           handleEnter={() => {}}
           wizardStyle={false}
           valueChanged={this.colorMapChanged.bind(this)}
-          placeholder="Choose a color map"
+          placeholder={placeholderColorMapSelection}
           showSearchField={true}
           readonly={readonly}
         />
 
         <br />
-        <span className="text-muted">Minimum of color map range</span>
+        <span className="text-muted">
+          <FormattedMessage id="color_map.minimum_color_range" />
+        </span>
         <br />
         <input
           type="number"
           autoComplete="false"
           onChange={e => this.valueChanged('min', this.toFloat(e.target.value))}
           value={(colorMapType && colorMapType.min) || ""}
-          placeholder="optional minimum of range"
+          placeholder={placeholderMinimumColorRange}
           className={`${formStyles.FormControl} ${readonly
             ? inputStyles.ReadOnly
             : null}`}
@@ -265,13 +276,15 @@ class ColorMapInput extends Component<ColorMapProps, ColorMapState> {
           disabled={readonly}
         />
         <br />
-        <span className="text-muted">Maximum of color map range</span>
+        <span className="text-muted">
+        <FormattedMessage id="color_map.maximum_color_range" />
+        </span>
         <input
           type="number"
           autoComplete="false"
           value={(colorMapType && colorMapType.max) || ""}
           onChange={e => this.valueChanged('max', this.toFloat(e.target.value))}
-          placeholder="optional maximum of range"
+          placeholder={placeholderMaximumColorRange}
           className={`${formStyles.FormControl} ${readonly
             ? inputStyles.ReadOnly
             : null}`}
@@ -281,7 +294,7 @@ class ColorMapInput extends Component<ColorMapProps, ColorMapState> {
         <br/>
         <CheckBox
           name="rescalable"
-          label="Rescalable"
+          label={<FormattedMessage id="color_map.rescalable" />}
           readonly={false}
           value= {initiatedValue.rescalable}
           validated={true}
@@ -295,4 +308,4 @@ class ColorMapInput extends Component<ColorMapProps, ColorMapState> {
   }
 }
 
-export default ColorMapInput;
+export default injectIntl(ColorMapInput);

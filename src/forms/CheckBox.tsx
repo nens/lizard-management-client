@@ -4,7 +4,7 @@ import styles from "./CheckBox.css";
 import inputStyles from "../styles/Input.css";
 
 interface CheckBoxProps {
-  label: string,
+  label: {},
   readonly: boolean,
   name: string,
   value: boolean,
