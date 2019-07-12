@@ -48,13 +48,13 @@ export default class SubmitButton extends Component<SubmitButtonProps, {}> {
               defaultMessage="Submit"
             />
           </button>
-          {/* <span
+          <span
             className={`${inputStyles.SubmitSpan}`}
             style={{ paddingLeft: 20, verticalAlign: "middle" }}
           >
             {`Please complete step${notValidatedSteps.length === 1 ? "": "s"} ` +
              notValidatedSteps + " before submitting."}
-          </span> */}
+          </span>
         </div>
       )
     }

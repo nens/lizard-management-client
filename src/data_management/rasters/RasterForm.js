@@ -375,6 +375,11 @@ class RasterFormModel extends Component {
           subtitle="Interval of raster series"
           validators={currentRaster?[]:[durationValidator(true)]}
           readOnly={currentRaster}
+          initial = {
+            currentRaster && 
+            currentRaster.interval &&
+            toISOValue(rasterIntervalStringServerToDurationObject(currentRaster.interval))
+          }
         />
       </ManagementForm>
       </div>
