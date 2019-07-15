@@ -466,22 +466,6 @@ class WmsLayer extends Component {
               }}
             />
           </div>
-          <div
-            className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${gridStyles.colSm4} ${gridStyles.colXs4}`}
-          >
-            <button
-              type="button"
-              style={{ float: "right" }}
-              className={`${buttonStyles.Button} ${buttonStyles.Success}`}
-              onClick={this.handleNewWmsLayerClick}
-            >
-              <FormattedMessage
-                id="wms.new_wms_layer"
-                defaultMessage="New wms layer"
-              />
-              <Ink />
-            </button>
-          </div>
         </div>
 
         <div>
