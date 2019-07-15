@@ -84,7 +84,7 @@ class Raster extends Component {
             .includes(searchContains.toLowerCase())) &&
         (e.organisation &&
           e.organisation.uuid &&
-          e.organisation.uuid) === organisation.uuid
+          e.organisation.uuid.replace(/-/g, "")) === organisation.uuid
     );
 
     filteredRasters.sort((a, b) => {
