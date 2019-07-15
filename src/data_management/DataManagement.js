@@ -4,7 +4,7 @@ import AppIcon from "../components/AppIcon";
 import { withRouter } from "react-router-dom";
 import { Trail, animated } from "react-spring";
 import rasterIcon from "../images/rasters@3x.svg";
-import wmsIcon from "../images/wms-fake.png";
+import wmsIcon from "../images/rasters@3x.svg"; // ToDo: new image for wmsIcon
 
 class DataManagement extends Component {
   handleLink(destination) {

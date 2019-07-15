@@ -1,4 +1,4 @@
-import rasterIcon from "../../images/rasters@3x.svg";
+import wmsIcon from "../../images/rasters@3x.svg";
 import buttonStyles from "../../styles/Buttons.css";
 import gridStyles from "../../styles/Grid.css";
 import wmsLayerTableStyles from "../../styles/RasterWmsTable.css";
@@ -369,7 +369,7 @@ class WmsLayer extends Component {
                 : "hidden"
           }}
         >
-          <img src={rasterIcon} alt="Alarms" />
+          <img src={wmsIcon} alt="Alarms" />
           <h5>
             <FormattedMessage
               id="wms.no_wms_layers"
