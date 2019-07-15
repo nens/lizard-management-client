@@ -297,18 +297,6 @@ class WmsLayer extends Component {
             defaultMessage="Description"
           />
         </div>
-        <div className={`${wmsLayerTableStyles.TableSupplier}`}>
-          <FormattedMessage
-            id="wmsLayers.wms_layer_suppliercode"
-            defaultMessage="Supplier Code"
-          />
-        </div>
-        <div className={`${wmsLayerTableStyles.TableObservationType}`}>
-          <FormattedMessage
-            id="wmsLayers.wms_layer_observationtype"
-            defaultMessage="Observation type"
-          />
-        </div>
       </div>
     );
 
@@ -365,12 +353,6 @@ class WmsLayer extends Component {
                     >
                       {wmsLayer.description}
                     </NavLink>
-                  </div>
-                  <div className={`${wmsLayerTableStyles.TableSupplier}`}>
-                    {wmsLayer.supplier_code}
-                  </div>
-                  <div className={`${wmsLayerTableStyles.TableObservationType}`}>
-                    {wmsLayer.observation_type && wmsLayer.observation_type.code}
                   </div>
                 </div>
               );
