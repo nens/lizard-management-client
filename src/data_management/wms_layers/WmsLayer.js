@@ -57,30 +57,20 @@ class WmsLayer extends Component {
     this.refreshWmsLayerFilteringAndPaginationAndUpdateState(
       this.state.wmsLayers,
       page,
-      this.state.searchTerms,
-      props.organisations.selected
+      this.state.searchTerms
     );
   }
 
-  filterSortWmsLayers = (wmsLayers, searchContains, organisation) => {
+  filterSortWmsLayers = (wmsLayers, searchContains) => {
     const filteredWmsLayers = wmsLayers.filter(
       e =>
         ((e.name || "").toLowerCase().includes(searchContains.toLowerCase()) ||
           (e.description || "")
             .toLowerCase()
             .includes(searchContains.toLowerCase()) ||
-          (e.supplier_code || "")
-            .toLowerCase()
-            .includes(searchContains.toLowerCase()) ||
-          ((e.observation_type && e.observation_type.code) || "")
-            .toLowerCase()
-            .includes(searchContains.toLowerCase()) ||
           (e.uuid || "")
             .toLowerCase()
-            .includes(searchContains.toLowerCase())) &&
-        (e.organisation &&
-          e.organisation.uuid &&
-          e.organisation.uuid) === organisation.uuid
+            .includes(searchContains.toLowerCase()))
     );
 
     filteredWmsLayers.sort((a, b) => {
@@ -108,13 +98,11 @@ class WmsLayer extends Component {
   refreshWmsLayerFilteringAndPaginationAndUpdateState = (
     wmsLayers,
     page,
-    searchTerms,
-    organisation
+    searchTerms
   ) => {
     const filteredSortedWmsLayers = this.filterSortWmsLayers(
       wmsLayers,
-      searchTerms,
-      organisation
+      searchTerms
     );
     const paginatedWmsLayers = this.paginateWmsLayers(filteredSortedWmsLayers, page);
     const checkboxes = this.createCheckboxDataFromWmsLayer(paginatedWmsLayers);
@@ -133,13 +121,8 @@ class WmsLayer extends Component {
   };
   getWmsLayersFromApi = (page, searchContains) => {
     // searching/filtering/pagination is for now done clientside so server side search is commented out
-    // const url = searchContains
-    //   ? // ordering is done by filter
-    //     `/api/v3/wmsLayers/?writable=true&page=${page}&name__icontains=${searchContains}` // &organisation__unique_id=${organisationId},
-    //   : // ordering is done so latest wmsLayers first
-    //     `/api/v3/wmsLayers/?writable=true&ordering=-last_modified&page=${page}`;
 
-    const url =  "/api/v3/wmsLayers/?page_size=100000";
+    const url =  "/api/v3/wmslayers/?page_size=100000";
 
     this.setState({
       isFetching: true
@@ -150,12 +133,12 @@ class WmsLayer extends Component {
     })
       .then(response => response.json())
       .then(data => {
+        console.log(data.results);  // Is right
         const wmsLayers = data.results;
         this.refreshWmsLayerFilteringAndPaginationAndUpdateState(
           wmsLayers,
           page,
-          searchContains,
-          this.props.organisations.selected
+          searchContains
         );
       });
   };
@@ -175,7 +158,7 @@ class WmsLayer extends Component {
 
   handleNewWmsLayerClick() {
     const { history } = this.props;
-    history.push("/data_management/wms/new");
+    history.push("/data_management/wms_layers/new");
   }
 
   handleDeleteWmsLayerClick() {
@@ -198,7 +181,7 @@ class WmsLayer extends Component {
   }
 
   fetchWmsLayerUuidsWithOptions(uuids, fetchOptions) {
-    const url = "/api/v3/wmsLayers/";
+    const url = "/api/v3/wmslayers/";
     // array to store all fetches to later resolve all promises
     const fetches = uuids.map (wmsLayerUuid => {
       return (fetch(url + wmsLayerUuid + "/", fetchOptions));
@@ -336,7 +319,7 @@ class WmsLayer extends Component {
                   </div>
                   <div className={`${wmsLayerTableStyles.tableName}`}>
                     <NavLink
-                      to={`/data_management/wmsLayers/${wmsLayer.uuid}`}
+                      to={`/data_management/wms_layers/${wmsLayer.uuid}`}
                       style={{
                         color: "#333"
                       }}
@@ -346,7 +329,7 @@ class WmsLayer extends Component {
                   </div>
                   <div className={`${wmsLayerTableStyles.tableDescription}`}>
                     <NavLink
-                      to={`/data_management/wmsLayers/${wmsLayer.uuid}`}
+                      to={`/data_management/wms_layers/${wmsLayer.uuid}`}
                       style={{
                         color: "#333"
                       }}
@@ -411,8 +394,7 @@ class WmsLayer extends Component {
               this.refreshWmsLayerFilteringAndPaginationAndUpdateState(
                 this.state.wmsLayers,
                 page,
-                this.state.searchTerms,
-                this.props.organisations.selected
+                this.state.searchTerms
               )}
             page={page}
             pages={Math.ceil(total / this.state.pageSize)}
@@ -470,16 +452,14 @@ class WmsLayer extends Component {
                 this.refreshWmsLayerFilteringAndPaginationAndUpdateState(
                   this.state.wmsLayers,
                   1,
-                  searchTerms,
-                  this.props.organisations.selected
+                  searchTerms
                 )}
               searchTerms={this.state.searchTerms}
               setSearchTerms={searchTerms => {
                 this.refreshWmsLayerFilteringAndPaginationAndUpdateState(
                   this.state.wmsLayers,
                   1,
-                  searchTerms,
-                  this.props.organisations.selected
+                  searchTerms
                 );
               }}
             />
