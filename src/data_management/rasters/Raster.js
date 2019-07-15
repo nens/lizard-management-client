@@ -39,7 +39,6 @@ class Raster extends Component {
     this.handleFlushDataRasterClick = this.handleFlushDataRasterClick.bind(this);
     this.checkAllCheckBoxes = this.checkAllCheckBoxes.bind(this);
     this.clickRegularCheckbox = this.clickRegularCheckbox.bind(this);
-    this.handleNewRasterClick = this.handleNewRasterClick.bind(this);
   }
   componentDidMount() {
     const { page } = this.state;
