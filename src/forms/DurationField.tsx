@@ -74,7 +74,7 @@ const validPerField = (value: string) => {
 };
 
 export const durationValidator = (required: boolean) => (value: string | null) => {
-  if (value === null) {
+  if (!value) {
     if (required) {
       return "Please enter a duration.";
     } else {
