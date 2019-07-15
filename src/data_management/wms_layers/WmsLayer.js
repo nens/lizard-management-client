@@ -33,7 +33,6 @@ class WmsLayer extends Component {
       checkboxes: [],
       searchTerms: "",
     };
-    this.handleNewWmsLayerClick = this.handleNewWmsLayerClick.bind(this);
     this.handleDeleteWmsLayerClick = this.handleDeleteWmsLayerClick.bind(this);
     this.checkAllCheckBoxes = this.checkAllCheckBoxes.bind(this);
     this.clickRegularCheckbox = this.clickRegularCheckbox.bind(this);
@@ -153,11 +152,6 @@ class WmsLayer extends Component {
       checkboxes.push(newDict);
     }
     return checkboxes;
-  }
-
-  handleNewWmsLayerClick() {
-    const { history } = this.props;
-    history.push("/data_management/wms_layers/new");
   }
 
   handleDeleteWmsLayerClick() {
