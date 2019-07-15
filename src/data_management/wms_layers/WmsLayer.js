@@ -1,7 +1,7 @@
 import rasterIcon from "../../images/rasters@3x.svg";
 import buttonStyles from "../../styles/Buttons.css";
 import gridStyles from "../../styles/Grid.css";
-import wmsLayerTableStyles from "../../styles/RasterTable.css";
+import wmsLayerTableStyles from "../../styles/WmsLayerTable.css";
 import Ink from "react-ink";
 import MDSpinner from "react-md-spinner";
 import { Scrollbars } from "react-custom-scrollbars";
@@ -317,7 +317,9 @@ class WmsLayer extends Component {
                       id={"checkbox_" + i}
                     />
                   </div>
-                  <div className={`${wmsLayerTableStyles.tableName}`}>
+                  <div
+                    className={`${wmsLayerTableStyles.tableName}`}
+                  >
                     <NavLink
                       to={`/data_management/wms_layers/${wmsLayer.uuid}`}
                       style={{
@@ -334,7 +336,7 @@ class WmsLayer extends Component {
                         color: "#333"
                       }}
                     >
-                      {wmsLayer.description}
+                      {"blabla"}
                     </NavLink>
                   </div>
                 </div>
@@ -409,7 +411,7 @@ class WmsLayer extends Component {
             />
           </div>
         </div>
-        <div className={`${wmsLayerTableStyles.tableFooterDeleteRasters}`}>
+        <div className={`${wmsLayerTableStyles.tableFooterDeleteWmsLayers}`}>
           <button
             type="button"
             className={
