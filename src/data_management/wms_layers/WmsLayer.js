@@ -336,7 +336,7 @@ class WmsLayer extends Component {
                         color: "#333"
                       }}
                     >
-                      {"blabla"}
+                      {wmsLayer.description}
                     </NavLink>
                   </div>
                 </div>
