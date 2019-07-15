@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import { addNotification } from "../../actions";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, injectIntl } from "react-intl";
 import ErrorOverlay from "./ErrorOverlay.js";
 
 import "../../forms/validators";
@@ -124,7 +124,17 @@ class RasterFormModel extends Component {
 
   render() {
 
-    const {currentRaster} = this.props;
+    const { currentRaster, intl } = this.props;
+
+    //Format message for placeholder in the input form for translation
+    const placeholderOrganisationSelection = intl.formatMessage({ id: "placeholder_organisation_selection" });
+    const placeholderOrganisationSearch = intl.formatMessage({ id: "placeholder_organisation_search" });
+    const placeholderRasterName = intl.formatMessage({ id: "placeholder_raster_name" });
+    const placeholderDescription = intl.formatMessage({ id: "placeholder_description" });
+    const placeholderAggregation = intl.formatMessage({ id: "placeholder_aggregation" });
+    const placeholderObservation = intl.formatMessage({ id: "placeholder_observation" });
+    const placeholderSupplierName = intl.formatMessage({ id: "placeholder_supplier_name" });
+    const placeholderSupplierCode = intl.formatMessage({ id: "placeholder_supplier_code" });
 
     return (
       <div>
@@ -144,9 +154,9 @@ class RasterFormModel extends Component {
 
         <SelectBox
           name="selectedOrganisation"
-          title="Organisation"
-          subtitle="Specify which organisation owns this raster"
-          placeholder="Choose an organisation"
+          title={<FormattedMessage id="raster_form.organisation" />}
+          subtitle={<FormattedMessage id="raster_form.organisation_subtitle"  />}
+          placeholder={placeholderOrganisationSelection}
           choices={this.props.organisations.available.map(organisation=>
             [organisation.uuid, organisation.name]
           )}
@@ -163,8 +173,8 @@ class RasterFormModel extends Component {
         />
         <SlushBucket
           name="sharedWithOrganisations"
-          title="Shared With Organisation"
-          subtitle="Select other organisations that need read acces to this raster"
+          title={<FormattedMessage id="raster_form.sharedOrganisation" />}
+          subtitle={<FormattedMessage id="raster_form.sharedOrganisation_subtitle" />}
           choices={this.props.organisations.availableForRasterSharedWith.map(e =>{
             return {
               display: e.name, 
@@ -172,7 +182,7 @@ class RasterFormModel extends Component {
             }
           })}
           readOnly={false}
-          placeholder={"search organisations"}
+          placeholder={placeholderOrganisationSearch}
           initial={
             (
             currentRaster && 
@@ -186,23 +196,23 @@ class RasterFormModel extends Component {
         />
         <SelectBox
           name="accessModifier"
-          title="Authorization type"
-          subtitle="Specify who can view this raster"
+          title={<FormattedMessage id="raster_form.authorization" />}
+          subtitle={<FormattedMessage id="raster_form.authorization_subtitle" />}
           choices={[
             [
               "Private",
               "Private",
-              "Just the selected organisations can view"
+              <FormattedMessage id="raster_form.authorization_private_message" />
             ],
             [
               "Common",
               "Common",
-              "All logged in users can view"
+              <FormattedMessage id="raster_form.authorization_common_message" />
             ],
             [
               "Public",
               "Public",
-              "All users can view"
+              <FormattedMessage id="raster_form.authorization_public_message" />
             ] 
           ]}
           validators={[required("Please select an access modifier.")]}
@@ -217,8 +227,8 @@ class RasterFormModel extends Component {
         />
         <TextInput
           name="rasterName"
-          title="Name of this Raster"
-          placeholder="Name of this Raster"
+          title={<FormattedMessage id="raster_form.rasterName" />}
+          placeholder={placeholderRasterName}
           validators={[minLength(5)]}
           initial = {
             currentRaster && 
@@ -227,8 +237,9 @@ class RasterFormModel extends Component {
         />
         <TextArea
           name="description"
-          placeholder="Fill in your description here"
-          subtitle="Add a clear description of this raster with reference to the data source."
+          title={<FormattedMessage id="raster_form.description" />}
+          subtitle={<FormattedMessage id="raster_form.description_subtitle" />}
+          placeholder={placeholderDescription}
           validators={[minLength(1)]}
           initial = {
             currentRaster && 
@@ -237,34 +248,34 @@ class RasterFormModel extends Component {
         />
         <SelectBox
           name="aggregationType"
-          title="Aggregation Type"
-          subtitle="Specify how data should be displayed in region selection mode"
-          placeholder="click to select aggregation type"
+          title={<FormattedMessage id="raster_form.aggregation" />}
+          subtitle={<FormattedMessage id="raster_form.aggregation_subtitle" />}
+          placeholder={placeholderAggregation}
           choices={[
             [
               "none",
               "none",
-              "no aggregation"
+              <FormattedMessage id="raster_form.aggregation_type_none" />
             ],
             [
               "counts",
               "counts",
-              "area per category"
+              <FormattedMessage id="raster_form.aggregation_type_counts" />
             ],
             [
               "curve",
               "curve",
-              "cumulative distribution"
+              <FormattedMessage id="raster_form.aggregation_type_curve" />
             ],
             [
               "sum",
               "sum",
-              "values in the region are summed"
+              <FormattedMessage id="raster_form.aggregation_type_sum" />
             ],
             [
               "average",
               "average",
-              "values in the region are averaged"
+              <FormattedMessage id="raster_form.aggregation_type_average" />
             ]
           ]}
           validators={[required("Please select an aggregation type.")]}
@@ -278,9 +289,9 @@ class RasterFormModel extends Component {
         />
         <SelectBox
           name="observationType"
-          title="Observation Type"
-          subtitle="Specify the physical quantity and unit of the data"
-          placeholder="click to select observation type"
+          title={<FormattedMessage id="raster_form.observation" />}
+          subtitle={<FormattedMessage id="raster_form.observation_subtitle" />}
+          placeholder={placeholderObservation}
           choices={this.props.observationTypes.available.map(obsT=>{
 
             let parameterString = obsT.parameter + '';
@@ -313,7 +324,7 @@ class RasterFormModel extends Component {
         />
         <ColorMapInput
           name="colormap"
-          title="Choose a color map"
+          title={<FormattedMessage id="raster_form.colormap" />}
           colorMaps={this.props.colorMaps.available.map(colM=>
             [colM.name, colM.name, colM.description]
           )}
@@ -329,9 +340,9 @@ class RasterFormModel extends Component {
         />
         <SelectBox
           name="supplierName"
-          title="Supplier Name"
-          subtitle="Optional: select the user that is allowed to change and delete this raster"
-          placeholder="click to select supplier name"
+          title={<FormattedMessage id="raster_form.supplierName" />}
+          subtitle={<FormattedMessage id="raster_form.supplierName_subtitle" />}
+          placeholder={placeholderSupplierName}
           choices={this.props.supplierIds.available.map(obsT=>
             [obsT.username, obsT.username]
           )}
@@ -347,9 +358,9 @@ class RasterFormModel extends Component {
         />
         <TextInput
           name="supplierCode"
-          title="Supplier Code"
-          placeholder="Fill in a supplier code here"
-          subtitle="Provide a code for your own administration."
+          title={<FormattedMessage id="raster_form.supplierCode" />}
+          subtitle={<FormattedMessage id="raster_form.supplierCode_subtitle" />}
+          placeholder={placeholderSupplierCode}
           validators={[minLength(1)]}
           initial = {
             currentRaster && 
@@ -358,8 +369,8 @@ class RasterFormModel extends Component {
         />
         <CheckBox
           name="temporal"
-          title="Raster Series"
-          label="Select whether you are creating a raster that contains multiple rasters over time"
+          title={<FormattedMessage id="raster_form.rasterSeries" />}
+          label={<FormattedMessage id="raster_form.rasterSeries_label" />}
           readonly={currentRaster}
           initial = {
             (
@@ -371,8 +382,8 @@ class RasterFormModel extends Component {
         <DurationField
           name="duration"
           disabled={(formValues) => formValues.temporal == false }
-          title="Raster Series Interval"
-          subtitle="Interval of raster series"
+          title={<FormattedMessage id="raster_form.duration" />}
+          subtitle={<FormattedMessage id="raster_form.duration_subtitle" />}
           validators={currentRaster?[]:[durationValidator(true)]}
           readOnly={currentRaster}
           initial = {
@@ -406,7 +417,7 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 const RasterForm = withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(RasterFormModel)
+  connect(mapStateToProps, mapDispatchToProps)(injectIntl(RasterFormModel))
 );
 
 export { RasterForm };

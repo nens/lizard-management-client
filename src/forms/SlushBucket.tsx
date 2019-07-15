@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { FormattedMessage } from "react-intl";
 
 import MDSpinner from "react-md-spinner";
 import Scrollbars from "react-custom-scrollbars";
@@ -121,7 +122,7 @@ export default class SlushBucket extends Component<Props, State> {
             }}
           >
             <div className={`${styles.SelectedRow}`}>
-              <b>Available</b>
+              <b><FormattedMessage id="available" /></b>
             </div>
             <Scrollbars autoHeight autoHeightMin={400} autoHeightMax={400}>
               {choices
@@ -177,7 +178,7 @@ export default class SlushBucket extends Component<Props, State> {
             }}
           >
             <div className={`${styles.SelectedRow}`}>
-              <b>Selected</b>
+              <b><FormattedMessage id="selected" /></b>
             </div>
             <Scrollbars autoHeight autoHeightMin={400} autoHeightMax={400}>
               {selected

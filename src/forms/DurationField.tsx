@@ -1,6 +1,7 @@
 // The main Form class
 
 import React, { Component } from "react";
+import { FormattedMessage } from "react-intl";
 
 import styles from "./DurationField.css";
 import formStyles from "../styles/Forms.css";
@@ -140,7 +141,7 @@ export default class DurationField extends Component<DurationFieldProps, {}> {
                      styles.TextAlignRight
           }
         >
-          <label>Days</label>
+          <label><FormattedMessage id="duration.days" /></label>
           <input
             id={name + "days_input"}
             tabIndex={-2}
@@ -166,7 +167,7 @@ export default class DurationField extends Component<DurationFieldProps, {}> {
           styles.DurationInputFields + " " + styles.TextAlignRight
           }
         >
-          <label>Hours</label>
+          <label><FormattedMessage id="duration.hours" /></label>
           <input
             id={name + "hours_input"}
             tabIndex={-2}
@@ -189,7 +190,7 @@ export default class DurationField extends Component<DurationFieldProps, {}> {
         </div>
         <div className={styles.DurationInputHourSecondSeperator}>:</div>
         <div className={styles.DurationInputFields}>
-          <label>Mins</label>
+          <label><FormattedMessage id="duration.mins" /></label>
           <input
             id={name + "minutes_input"}
             tabIndex={-2}
@@ -215,7 +216,7 @@ export default class DurationField extends Component<DurationFieldProps, {}> {
                      styles.DurationInputFieldSeconds
           }
         >
-          <label>Seconds</label>
+          <label><FormattedMessage id="duration.seconds" /></label>
           <input
             id={name + "seconds_input"}
             tabIndex={-2}
