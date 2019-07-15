@@ -309,7 +309,6 @@ class WmsLayer extends Component {
             defaultMessage="Observation type"
           />
         </div>
-        <div className={`${wmsLayerTableStyles.tableUpload}`}>Upload</div>
       </div>
     );
 
@@ -372,50 +371,6 @@ class WmsLayer extends Component {
                   </div>
                   <div className={`${wmsLayerTableStyles.TableObservationType}`}>
                     {wmsLayer.observation_type && wmsLayer.observation_type.code}
-                  </div>
-                  <div className={`${wmsLayerTableStyles.tableUpload}`}>
-                    {/* wmsLayer.source contains the metadata of the wmsLayer data */}
-                    {/* if source is null no data is yet uploaded to the wmsLayer */}
-                    {wmsLayer.source === null ? (
-                      <NavLink
-                        to={`/data_management/wmsLayers/${wmsLayer.uuid}/data`}
-                      >
-                        <i
-                          class="material-icons"
-                          style={{ color: "#989898" }}
-                          title="No data uploaded yet"
-                        >
-                          cloud_upload
-                        </i>
-                      </NavLink>
-                    ) : // if wmsLayer.data.name contains "Optimizer OR "WmsLayerStoreSource" then there is already data in the wmsLayer and the user is also allowed to update this
-                    // this was the case for rasters, but is this actually also in wms layers?
-                    wmsLayer.source.name.split("_")[0] === "Optimizer" ||
-                    wmsLayer.source.name.split("_")[0] === "WmsLayerStoreSource" ? (
-                      <NavLink
-                        to={`/data_management/wms_layers/${wmsLayer.uuid}/data`}
-                      >
-                        <i
-                          class="material-icons"
-                          style={{ color: "#009F86" }}
-                          title="Data is uploaded"
-                        >
-                          cloud_upload
-                        </i>
-                      </NavLink>
-                    ) : (
-                      // in any other cases there is data in the wmsLayer, but this is generated/calculated data. The user is not allowed to update it. The user should update the wmsLayers that act as the source for the calculations instead
-                      <i
-                        class="material-icons"
-                        style={{
-                          color: "#989898",
-                          cursor: "not-allowed"
-                        }}
-                        title="Uploading data not allowed for derived wms layers"
-                      >
-                        cloud_off
-                      </i>
-                    )}
                   </div>
                 </div>
               );
