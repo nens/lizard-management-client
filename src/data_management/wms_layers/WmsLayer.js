@@ -133,7 +133,6 @@ class WmsLayer extends Component {
     })
       .then(response => response.json())
       .then(data => {
-        console.log(data.results);  // Is right
         const wmsLayers = data.results;
         this.refreshWmsLayerFilteringAndPaginationAndUpdateState(
           wmsLayers,
