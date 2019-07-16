@@ -138,7 +138,6 @@ class WmsLayerFormModel extends Component {
         <TextArea
           name="description"
           title={<FormattedMessage id="Description" />}
-          subtitle={<FormattedMessage id="wms_layer_form.description_subtitle" />}
           placeholder={placeholderDescription}
           initial = {
             currentWmsLayer &&
@@ -193,7 +192,6 @@ class WmsLayerFormModel extends Component {
         <TextArea
           name="wmsLayerOptions"
           title={<FormattedMessage id="Options" />}
-          subtitle={<FormattedMessage id="wms_layer_form.description_subtitle" />}
           placeholder={placeholderOptions}
           initial = {
             currentWmsLayer &&
