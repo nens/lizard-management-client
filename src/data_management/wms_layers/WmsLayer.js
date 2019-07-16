@@ -121,7 +121,7 @@ class WmsLayer extends Component {
   getWmsLayersFromApi = (page, searchContains) => {
     // searching/filtering/pagination is for now done clientside so server side search is commented out
 
-    const url =  "/api/v3/wmslayers/?page_size=100000";
+    const url = "/api/v3/wmslayers/?page_size=100000";
 
     this.setState({
       isFetching: true
