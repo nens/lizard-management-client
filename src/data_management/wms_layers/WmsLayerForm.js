@@ -107,7 +107,7 @@ class WmsLayerFormModel extends Component {
     const placeholderMaxZoom = intl.formatMessage({ id: "placeholder_max_zoom" });
     const placeholderUrl = intl.formatMessage({ id: "placeholder_url" });
     const placeholderTiled = intl.formatMessage({ id: "placeholder_tiled" });
-    const placeholderOptions = intl.formatMessage({ id: "placeholder_options" });
+    const placeholderOptions = intl.formatMessage({ id: "{'transparent': 'True'}" });
     const placeholderLegendUrl = intl.formatMessage({ id: "placeholder_legend_url" });
     const placeholderGetFeatureInfoUrl = intl.formatMessage({ id: "placeholder_get_feature_info_url" });
 
@@ -169,7 +169,7 @@ class WmsLayerFormModel extends Component {
           placeholder={placeholderMinZoom}
           initial = {
             currentWmsLayer &&
-              currentWmsLayer.min_zoom
+              currentWmsLayer.min_zoom.toString()
           }
         />
         <TextInput
@@ -178,7 +178,7 @@ class WmsLayerFormModel extends Component {
           placeholder={placeholderMaxZoom}
           initial = {
             currentWmsLayer &&
-              currentWmsLayer.max_zoom
+              currentWmsLayer.max_zoom.toString()
           }
         />
         <TextInput
