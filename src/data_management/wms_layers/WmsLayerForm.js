@@ -146,6 +146,15 @@ class WmsLayerFormModel extends Component {
           }
         />
         <TextInput
+          name="wmsLayerUrl"
+          title={<FormattedMessage id="Url" />}
+          placeholder={placeholderUrl}
+          initial = {
+            currentWmsLayer &&
+              currentWmsLayer.url
+          }
+        />
+        <TextInput
           name="wmsLayerSlug"
           title={<FormattedMessage id="Slug" />}
           placeholder={placeholderSlug}
@@ -155,12 +164,12 @@ class WmsLayerFormModel extends Component {
           }
         />
         <TextInput
-          name="wmsLayerGetFeatureInfo"
-          title={<FormattedMessage id="GetFeatureInfo" />}
-          placeholder={placeholderGetFeatureInfo}
+          name="wmsLayerTiled"
+          title={<FormattedMessage id="Tiled" />}
+          placeholder={placeholderTiled}
           initial = {
             currentWmsLayer &&
-              currentWmsLayer.get_feature_info
+              currentWmsLayer.tiled
           }
         />
         <TextInput
@@ -181,24 +190,6 @@ class WmsLayerFormModel extends Component {
               currentWmsLayer.max_zoom.toString()
           }
         />
-        <TextInput
-          name="wmsLayerUrl"
-          title={<FormattedMessage id="Url" />}
-          placeholder={placeholderUrl}
-          initial = {
-            currentWmsLayer &&
-              currentWmsLayer.url
-          }
-        />
-        <TextInput
-          name="wmsLayerTiled"
-          title={<FormattedMessage id="Tiled" />}
-          placeholder={placeholderTiled}
-          initial = {
-            currentWmsLayer &&
-              currentWmsLayer.tiled
-          }
-        />
         <TextArea
           name="wmsLayerOptions"
           title={<FormattedMessage id="Options" />}
@@ -210,12 +201,12 @@ class WmsLayerFormModel extends Component {
           }
         />
         <TextInput
-          name="wmsLayerLegendUrl"
-          title={<FormattedMessage id="Legend Url" />}
-          placeholder={placeholderLegendUrl}
+          name="wmsLayerGetFeatureInfo"
+          title={<FormattedMessage id="GetFeatureInfo" />}
+          placeholder={placeholderGetFeatureInfo}
           initial = {
             currentWmsLayer &&
-              currentWmsLayer.legend_url
+              currentWmsLayer.get_feature_info
           }
         />
         <TextInput
@@ -225,6 +216,15 @@ class WmsLayerFormModel extends Component {
           initial = {
             currentWmsLayer &&
               currentWmsLayer.get_feature_info_url
+          }
+        />
+        <TextInput
+          name="wmsLayerLegendUrl"
+          title={<FormattedMessage id="Legend Url" />}
+          placeholder={placeholderLegendUrl}
+          initial = {
+            currentWmsLayer &&
+              currentWmsLayer.legend_url
           }
         />
       </ManagementForm>
