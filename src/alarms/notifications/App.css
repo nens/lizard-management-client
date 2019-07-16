@@ -23,11 +23,13 @@
   justify-content: center;
   align-items: center;
   padding: 10px;
-  border: 1px solid rgb(186, 186, 186);
+  color: #fff;
+  background-color: #00cdab;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
   cursor: pointer;
 }
 .ChoiceContainer:hover {
-  background-color: #a6ece0;
+  background-color: #00a78b;
 }
 .ChoiceContainerLeft {
   margin-right: 10px;
