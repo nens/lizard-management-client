@@ -43,6 +43,57 @@ class WmsLayerFormModel extends Component {
     });
   }
 
+  onSubmit = (validatedData, currentWmsLayer) => {
+
+    this.setState({ isFetching: true, openOverlay: true });
+
+    const url = "/api/v3/wmslayers/";
+     if (!currentWmsLayer) {
+      const opts = {
+        credentials: "same-origin",
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: validatedData.wmsLayerName,
+          description: validatedData.description,
+          options: validatedData.colormap.options,
+        })
+      };
+
+      fetch(url, opts)
+        .then(responseParsed => {
+          this.handleResponse(responseParsed);
+          return responseParsed.json();
+        })
+        .then(parsedBody => {
+          console.log("parsedBody", parsedBody);
+          this.setState({ createdRaster: parsedBody });
+        });
+    } else {
+      let body = {
+        name: validatedData.rasterName,
+        description: validatedData.description,
+      };
+      const opts = {
+        credentials: "same-origin",
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+      };
+
+      fetch(url + "uuid:" + currentWmsLayer.uuid + "/", opts)
+        .then(responseParsed => {
+          console.log("responseParsed put", responseParsed);
+          this.handleResponse(responseParsed);
+          return responseParsed.json();
+        })
+        .then(parsedBody => {
+          console.log("parsedBody", parsedBody);
+          this.setState({ createdRaster: parsedBody });
+        });
+    }
+  };
+
   render() {
 
     const { currentWmsLayer, intl } = this.props;
@@ -72,130 +123,109 @@ class WmsLayerFormModel extends Component {
           currentWmsLayer={this.props.currentWmsLayer || this.state.createdWmsLayer}
         />
       ) : null}
-      <ManagementForm wizardStyle={this.props.wizardStyle}
+      <ManagementForm  onSubmit={formData => this.onSubmit(formData, currentWmsLayer)}
+                       wizardStyle={this.props.wizardStyle}
       >
         <TextInput
           name="wmsLayerName"
           title={<FormattedMessage id="Wms layer name" />}
           placeholder={placeholderWmsLayerName}
-          validators={[minLength(5)]}
           initial = {
             currentWmsLayer &&
               currentWmsLayer.name
           }
-          readOnly = {true}
         />
         <TextArea
           name="description"
           title={<FormattedMessage id="Description" />}
           subtitle={<FormattedMessage id="wms_layer_form.description_subtitle" />}
           placeholder={placeholderDescription}
-          validators={[minLength(1)]}
           initial = {
             currentWmsLayer &&
               currentWmsLayer.description
           }
-          readOnly = {true}
         />
         <TextInput
           name="wmsLayerSlug"
           title={<FormattedMessage id="Slug" />}
           placeholder={placeholderSlug}
-          validators={[minLength(5)]}
           initial = {
             currentWmsLayer &&
               currentWmsLayer.slug
           }
-          readOnly = {true}
         />
         <TextInput
           name="wmsLayerGetFeatureInfo"
           title={<FormattedMessage id="GetFeatureInfo" />}
           placeholder={placeholderGetFeatureInfo}
-          validators={[minLength(1)]}
           initial = {
             currentWmsLayer &&
               currentWmsLayer.get_feature_info
           }
-          readOnly = {true}
         />
         <TextInput
           name="wmsLayerMinZoom"
           title={<FormattedMessage id="Min zoom" />}
           placeholder={placeholderMinZoom}
-          validators={[minLength(1)]}
           initial = {
             currentWmsLayer &&
               currentWmsLayer.min_zoom
           }
-          readOnly = {true}
         />
         <TextInput
           name="wmsLayerMaxZoom"
           title={<FormattedMessage id="Max zoom" />}
           placeholder={placeholderMaxZoom}
-          validators={[minLength(1)]}
           initial = {
             currentWmsLayer &&
               currentWmsLayer.max_zoom
           }
-          readOnly = {true}
         />
         <TextInput
           name="wmsLayerUrl"
           title={<FormattedMessage id="Url" />}
           placeholder={placeholderUrl}
-          validators={[minLength(1)]}
           initial = {
             currentWmsLayer &&
               currentWmsLayer.url
           }
-          readOnly = {true}
         />
         <TextInput
           name="wmsLayerTiled"
           title={<FormattedMessage id="Tiled" />}
           placeholder={placeholderTiled}
-          validators={[minLength(1)]}
           initial = {
             currentWmsLayer &&
               currentWmsLayer.tiled
           }
-          readOnly = {true}
         />
         <TextArea
           name="wmsLayerOptions"
           title={<FormattedMessage id="Options" />}
           subtitle={<FormattedMessage id="wms_layer_form.description_subtitle" />}
           placeholder={placeholderOptions}
-          validators={[minLength(1)]}
           initial = {
             currentWmsLayer &&
               currentWmsLayer.options
           }
-          readOnly = {true}
         />
         <TextInput
           name="wmsLayerLegendUrl"
           title={<FormattedMessage id="Legend Url" />}
           placeholder={placeholderLegendUrl}
-          validators={[minLength(1)]}
           initial = {
             currentWmsLayer &&
               currentWmsLayer.legend_url
           }
-          readOnly = {true}
         />
         <TextInput
           name="wmsLayerGetFeatureInfoUrl"
           title={<FormattedMessage id="GetFeatureInfo url" />}
           placeholder={placeholderGetFeatureInfoUrl}
-          validators={[minLength(1)]}
           initial = {
             currentWmsLayer &&
               currentWmsLayer.get_feature_info_url
           }
-          readOnly = {true}
         />
       </ManagementForm>
       </div>

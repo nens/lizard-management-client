@@ -33,6 +33,7 @@ class WmsLayer extends Component {
       checkboxes: [],
       searchTerms: "",
     };
+    this.handleNewWmsLayerClick = this.handleNewWmsLayerClick.bind(this);
     this.handleDeleteWmsLayerClick = this.handleDeleteWmsLayerClick.bind(this);
     this.checkAllCheckBoxes = this.checkAllCheckBoxes.bind(this);
     this.clickRegularCheckbox = this.clickRegularCheckbox.bind(this);
@@ -140,6 +141,11 @@ class WmsLayer extends Component {
         );
       });
   };
+
+  handleNewWmsLayerClick() {
+    const { history } = this.props;
+    history.push("/data_management/wms_layers/new");
+  }
 
   createCheckboxDataFromWmsLayer(wmsLayerList) {
     let checkboxes = [];
@@ -458,6 +464,22 @@ class WmsLayer extends Component {
                 );
               }}
             />
+          </div>
+          <div
+            className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${gridStyles.colSm4} ${gridStyles.colXs4}`}
+          >
+            <button
+              type="button"
+              style={{ float: "right" }}
+              className={`${buttonStyles.Button} ${buttonStyles.Success}`}
+              onClick={this.handleNewWmsLayerClick}
+            >
+              <FormattedMessage
+                id="wms_layers.new_wms_layer"
+                defaultMessage="New wms layer"
+              />
+              <Ink />
+            </button>
           </div>
         </div>
 
