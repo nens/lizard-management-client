@@ -206,7 +206,7 @@ class WmsLayerFormModel extends Component {
           placeholder={placeholderOptions}
           initial = {
             currentWmsLayer &&
-              currentWmsLayer.options
+              JSON.stringify(currentWmsLayer.options)
           }
         />
         <TextInput
