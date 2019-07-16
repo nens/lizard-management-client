@@ -50,6 +50,15 @@ class WmsLayerFormModel extends Component {
     //Format message for placeholder in the input form for translation
     const placeholderWmsLayerName = intl.formatMessage({ id: "placeholder_wms_layer_name" });
     const placeholderDescription = intl.formatMessage({ id: "placeholder_description" });
+    const placeholderSlug = intl.formatMessage({ id: "placeholder_slug" });
+    const placeholderGetFeatureInfo = intl.formatMessage({ id: "placeholder_get_feature_info" });
+    const placeholderMinZoom = intl.formatMessage({ id: "placeholder_min_zoom" });
+    const placeholderMaxZoom = intl.formatMessage({ id: "placeholder_max_zoom" });
+    const placeholderUrl = intl.formatMessage({ id: "placeholder_url" });
+    const placeholderTiled = intl.formatMessage({ id: "placeholder_tiled" });
+    const placeholderOptions = intl.formatMessage({ id: "placeholder_options" });
+    const placeholderLegendUrl = intl.formatMessage({ id: "placeholder_legend_url" });
+    const placeholderGetFeatureInfoUrl = intl.formatMessage({ id: "placeholder_get_feature_info_url" });
 
     return (
       <div>
@@ -67,24 +76,124 @@ class WmsLayerFormModel extends Component {
       >
         <TextInput
           name="wmsLayerName"
-          title={<FormattedMessage id="wms_layer_form.wmsLayerName" />}
+          title={<FormattedMessage id="Wms layer name" />}
           placeholder={placeholderWmsLayerName}
           validators={[minLength(5)]}
           initial = {
-            currentWmsLayer && 
+            currentWmsLayer &&
               currentWmsLayer.name
           }
           readOnly = {true}
         />
         <TextArea
           name="description"
-          title={<FormattedMessage id="wms_layer_form.description" />}
+          title={<FormattedMessage id="Description" />}
           subtitle={<FormattedMessage id="wms_layer_form.description_subtitle" />}
           placeholder={placeholderDescription}
           validators={[minLength(1)]}
           initial = {
-            currentWmsLayer && 
+            currentWmsLayer &&
               currentWmsLayer.description
+          }
+          readOnly = {true}
+        />
+        <TextInput
+          name="wmsLayerSlug"
+          title={<FormattedMessage id="Slug" />}
+          placeholder={placeholderSlug}
+          validators={[minLength(5)]}
+          initial = {
+            currentWmsLayer &&
+              currentWmsLayer.slug
+          }
+          readOnly = {true}
+        />
+        <TextInput
+          name="wmsLayerGetFeatureInfo"
+          title={<FormattedMessage id="GetFeatureInfo" />}
+          placeholder={placeholderGetFeatureInfo}
+          validators={[minLength(1)]}
+          initial = {
+            currentWmsLayer &&
+              currentWmsLayer.get_feature_info
+          }
+          readOnly = {true}
+        />
+        <TextInput
+          name="wmsLayerMinZoom"
+          title={<FormattedMessage id="Min zoom" />}
+          placeholder={placeholderMinZoom}
+          validators={[minLength(1)]}
+          initial = {
+            currentWmsLayer &&
+              currentWmsLayer.min_zoom
+          }
+          readOnly = {true}
+        />
+        <TextInput
+          name="wmsLayerMaxZoom"
+          title={<FormattedMessage id="Max zoom" />}
+          placeholder={placeholderMaxZoom}
+          validators={[minLength(1)]}
+          initial = {
+            currentWmsLayer &&
+              currentWmsLayer.max_zoom
+          }
+          readOnly = {true}
+        />
+        <TextInput
+          name="wmsLayerUrl"
+          title={<FormattedMessage id="Url" />}
+          placeholder={placeholderUrl}
+          validators={[minLength(1)]}
+          initial = {
+            currentWmsLayer &&
+              currentWmsLayer.url
+          }
+          readOnly = {true}
+        />
+        <TextInput
+          name="wmsLayerTiled"
+          title={<FormattedMessage id="Tiled" />}
+          placeholder={placeholderTiled}
+          validators={[minLength(1)]}
+          initial = {
+            currentWmsLayer &&
+              currentWmsLayer.tiled
+          }
+          readOnly = {true}
+        />
+        <TextArea
+          name="wmsLayerOptions"
+          title={<FormattedMessage id="Options" />}
+          subtitle={<FormattedMessage id="wms_layer_form.description_subtitle" />}
+          placeholder={placeholderOptions}
+          validators={[minLength(1)]}
+          initial = {
+            currentWmsLayer &&
+              currentWmsLayer.options
+          }
+          readOnly = {true}
+        />
+        <TextInput
+          name="wmsLayerLegendUrl"
+          title={<FormattedMessage id="Legend Url" />}
+          placeholder={placeholderLegendUrl}
+          validators={[minLength(1)]}
+          initial = {
+            currentWmsLayer &&
+              currentWmsLayer.legend_url
+          }
+          readOnly = {true}
+        />
+        <TextInput
+          name="wmsLayerGetFeatureInfoUrl"
+          title={<FormattedMessage id="GetFeatureInfo url" />}
+          placeholder={placeholderGetFeatureInfoUrl}
+          validators={[minLength(1)]}
+          initial = {
+            currentWmsLayer &&
+              currentWmsLayer.get_feature_info_url
           }
           readOnly = {true}
         />
