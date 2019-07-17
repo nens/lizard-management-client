@@ -107,6 +107,7 @@
   "notifications_app.is_active": "ACTIVE",
   "notifications_app.is_inactive": "INACTIVE",
   "notifications_app.map": "Map",
+  "notifications_app.timeseries": "Timeseries name",
   "notifications_app.name_of_alarm": "Name of this alarm",
   "notifications_app.name_will_be_used_in_alerts": "The name of the raster will be used in e-mail and SMS alerts",
   "notifications_app.new_notification": "New notification",

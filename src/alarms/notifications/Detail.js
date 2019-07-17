@@ -323,8 +323,9 @@ class Detail extends Component {
       return null;
     }
 
+    console.log(currentAlarm)
+
     const thresholds = currentAlarm.thresholds.map((threshold, i) => {
-      console.log(currentAlarm)
       let alarmName = "";
       let unit = "";
       try {
@@ -523,20 +524,30 @@ class Detail extends Component {
             >
               <h3>
                 {" "}
-                <FormattedMessage
-                  id="notifications_app.map"
-                  defaultMessage="Map"
-                />
-              </h3>
-              {map || (
-                <p>
-                  {" "}
+                {this.props.alarmType === "RASTERS" ? 
                   <FormattedMessage
-                    id="notifications_app.not_available"
-                    defaultMessage="Not available"
+                    id="notifications_app.map"
+                    defaultMessage="Map"
+                  /> : 
+                  <FormattedMessage
+                    id="notifications_app.timeseries"
+                    defaultMessage="Timeseries name"
                   />
-                </p>
-              )}
+                }
+                
+              </h3>
+              {this.props.alarmType === "TIMESERIES" ? 
+                  <p>{currentAlarm.timeseries.name}</p> :
+                  map || (
+                    <p>
+                      {" "}
+                      <FormattedMessage
+                        id="notifications_app.not_available"
+                        defaultMessage="Not available"
+                      />
+                    </p>
+                  )
+              }
               <hr />
               <h3>
                 {" "}

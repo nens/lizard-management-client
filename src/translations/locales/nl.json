@@ -111,6 +111,7 @@
   "notifications_app.is_active": "ACTIEF",
   "notifications_app.is_inactive": "INACTIEF",
   "notifications_app.map": "Kaart",
+  "notifications_app.timeseries": "Naam van dit timeseries alarm",
   "notifications_app.name_of_alarm": "Naam van dit alarm",
   "notifications_app.name_will_be_used_in_alerts": "De naam van het raster zal worden gebruikt in de e-mail en SMS alarmberichten",
   "notifications_app.new_notification": "Nieuwe notificatie",
