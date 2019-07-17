@@ -108,9 +108,13 @@ class Detail extends Component {
 
   fetchAlarmAndRasterDetails(rasterUuid) {
     (async () => {
-      const rasteralarm = await fetch(`/api/v3/rasteralarms/${rasterUuid}/`, {
-        credentials: "same-origin"
-      }).then(response => response.json());
+      const rasteralarm = this.props.alarmType === "RASTERS" ? 
+        await fetch(`/api/v3/rasteralarms/${rasterUuid}/`, {
+          credentials: "same-origin"
+        }).then(response => response.json()) :
+        await fetch(`/api/v3/timeseriesalarms/${rasterUuid}/`, {
+          credentials: "same-origin"
+        }).then(response => response.json());
 
       let rasterdetail = null;
       let timeseriesdetail = null;
@@ -280,6 +284,7 @@ class Detail extends Component {
   }
 
   render() {
+    console.log(this.props.alarmType)
     const {
       availableGroups,
       availableMessages,
@@ -613,7 +618,8 @@ class Detail extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    selectedOrganisation: state.organisations.selected
+    selectedOrganisation: state.organisations.selected,
+    alarmType: state.alarmType
   };
 };
 
