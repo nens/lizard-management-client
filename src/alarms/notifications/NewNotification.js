@@ -799,7 +799,7 @@ class NewNotification extends Component {
                                   "notifications_app.select_timeserie_via_asset" +
                                   "_input"
                                 }
-                                placeholder={"Click to select timeseries asset"}
+                                placeholder={"Select the object in which the timeseries is measured and the alarm is added to"}
                                 validate={this.validateTimeseriesAsset}
                                 resetModelValue={
                                   this.handleResetTimeseriesAsset
@@ -833,7 +833,7 @@ class NewNotification extends Component {
                                   "_input"
                                 }
                                 placeholder={
-                                  "Click to select timeseries nested asset"
+                                  "Select a sub-object if necessary (i.e. pump A from pumping station B or filter A from the groundwater measuring station B)"
                                 }
                                 validate={this.validateTimeseriesNestedAsset}
                                 resetModelValue={
@@ -880,7 +880,7 @@ class NewNotification extends Component {
                                   "notifications_app.select_timeserie" +
                                   "_input"
                                 }
-                                placeholder={"Click to select timeseries"}
+                                placeholder={"Select the timeseries in which the alarm will be added to"}
                                 validate={this.validateTimeseries}
                                 resetModelValue={this.handleResetTimeseries}
                                 readonly={false}
