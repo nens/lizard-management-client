@@ -323,8 +323,6 @@ class Detail extends Component {
       return null;
     }
 
-    console.log(currentAlarm)
-
     const thresholds = currentAlarm.thresholds.map((threshold, i) => {
       let alarmName = "";
       let unit = "";
