@@ -108,13 +108,19 @@ class Detail extends Component {
 
   fetchAlarmAndRasterDetails(rasterUuid) {
     (async () => {
-      const alarm = this.props.alarmType === "RASTERS" ? 
+      let alarm = this.props.alarmType === "RASTERS" ? 
         await fetch(`/api/v3/rasteralarms/${rasterUuid}/`, {
           credentials: "same-origin"
         }).then(response => response.json()) :
         await fetch(`/api/v3/timeseriesalarms/${rasterUuid}/`, {
           credentials: "same-origin"
         }).then(response => response.json());
+      if (!alarm.thresholds) {
+        alarm = await fetch(`/api/v3/timeseriesalarms/${rasterUuid}/`, {
+          credentials: "same-origin"
+        }).then(response => response.json());
+      }
+      
 
       let rasterdetail = null;
       let timeseriesdetail = null;
