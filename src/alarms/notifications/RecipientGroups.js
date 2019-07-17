@@ -49,7 +49,7 @@ class RecipientGroups extends Component {
       return false;
     });
 
-    fetch(`/api/v3/rasteralarms/${currentAlarm.uuid}/`, {
+    fetch(`${this.props.alarmType === "RASTERS" ? `/api/v3/rasteralarms/${currentAlarm.uuid}/` : `/api/v3/timeseriesalarms/${currentAlarm.uuid}/`}`, {
       credentials: "same-origin",
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -230,7 +230,9 @@ class RecipientGroups extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  return {};
+  return {
+    alarmType: state.alarmType
+  };
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
