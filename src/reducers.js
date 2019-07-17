@@ -241,7 +241,7 @@ function viewport(
   }
 }
 
-function alarmType(state = "RASTER", action) {
+function alarmType(state = "RASTERS", action) {
   switch (action.type) {
     case UPDATE_ALARM_TYPE:
       return action.alarmType;
