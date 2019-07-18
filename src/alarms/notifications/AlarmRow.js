@@ -42,26 +42,14 @@ class AlarmRow extends Component {
           </div>
 
           <div>
-            {alarm.url.includes("timeseriesalarms") ? (
-              <span
-                to={`/alarms/notifications/${alarm.uuid}`}
-                style={{
-                  color: "#333",
-                  cursor: "auto"
-                }}
-              >
-                {alarm.name}
-              </span>
-            ) : (
-              <NavLink
-                to={`/alarms/notifications/${alarm.uuid}`}
-                style={{
-                  color: "#333"
-                }}
-              >
-                {alarm.name}
-              </NavLink>
-            )}
+            <NavLink
+              to={`/alarms/notifications/${alarm.uuid}`}
+              style={{
+                color: "#333"
+              }}
+            >
+              {alarm.name}
+            </NavLink>
 
             <br />
             <small className="text-muted">

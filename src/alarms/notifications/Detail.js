@@ -8,7 +8,7 @@ import React, { Component } from "react";
 import RecipientGroups from "./RecipientGroups";
 import styles from "./Detail.css";
 import ThresholdChart from "./ThresholdChart";
-import { addNotification } from "../../actions";
+import { addNotification, updateAlarmType } from "../../actions";
 import { connect } from "react-redux";
 import { Map, Marker, TileLayer, WMSTileLayer } from "react-leaflet";
 import { withRouter } from "react-router-dom";
@@ -49,7 +49,7 @@ class Detail extends Component {
       hasError: false,
       loadingComplete: false,
       messages: [],
-      rasteralarm: null,
+      alarm: null,
       rasterdetail: null,
       showConfigureThreshold: false,
       timeseriesdetail: null
@@ -108,24 +108,34 @@ class Detail extends Component {
 
   fetchAlarmAndRasterDetails(rasterUuid) {
     (async () => {
-      const rasteralarm = await fetch(`/api/v3/rasteralarms/${rasterUuid}/`, {
-        credentials: "same-origin"
-      }).then(response => response.json());
+      let alarm = this.props.alarmType === "RASTERS" ? 
+        await fetch(`/api/v3/rasteralarms/${rasterUuid}/`, {
+          credentials: "same-origin"
+        }).then(response => response.json()) :
+        await fetch(`/api/v3/timeseriesalarms/${rasterUuid}/`, {
+          credentials: "same-origin"
+        }).then(response => response.json());
+      if (!alarm.thresholds) {
+        this.props.updateAlarmType("TIMESERIES")
+        alarm = await fetch(`/api/v3/timeseriesalarms/${rasterUuid}/`, {
+          credentials: "same-origin"
+        }).then(response => response.json());
+      }
 
       let rasterdetail = null;
       let timeseriesdetail = null;
 
-      if (rasteralarm.intersection) {
+      if (alarm.intersection) {
         // MARK: Hack to get relative URL
         const parser = document.createElement("a");
-        parser.href = rasteralarm.intersection.raster;
+        parser.href = alarm.intersection.raster;
         rasterdetail = await fetch(parser.pathname, {
           credentials: "same-origin"
         }).then(response => response.json());
       }
 
-      if (rasteralarm.intersection) {
-        const markerPosition = rasteralarm.intersection.geometry.coordinates;
+      if (alarm.intersection) {
+        const markerPosition = alarm.intersection.geometry.coordinates;
         timeseriesdetail = await fetch(
           `/api/v3/raster-aggregates/?agg=curve&geom=POINT+(${markerPosition[1]}+${markerPosition[0]})&rasters=${rasterdetail.uuid}&srs=EPSG:4326&start=2008-01-01T12:00:00&stop=2017-12-31T18:00:00&window=2635200000`,
           {
@@ -135,7 +145,7 @@ class Detail extends Component {
       }
 
       this.setState({
-        rasteralarm,
+        alarm,
         rasterdetail,
         timeseriesdetail,
         loadingComplete: true
@@ -153,17 +163,17 @@ class Detail extends Component {
 
   handleAddThreshold(value, warning_level) {
     const { addNotification } = this.props;
-    const { rasteralarm } = this.state;
+    const { alarm } = this.state;
 
     const updatedThresholds = [
-      ...rasteralarm.thresholds,
+      ...alarm.thresholds,
       {
         value: value,
         warning_level: warning_level
       }
     ];
 
-    fetch(`/api/v3/rasteralarms/${rasteralarm.uuid}/`, {
+    fetch(`${this.props.alarmType === "RASTERS" ? `/api/v3/rasteralarms/${alarm.uuid}/` : `/api/v3/timeseriesalarms/${alarm.uuid}/`}`, {
       credentials: "same-origin",
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -175,8 +185,8 @@ class Detail extends Component {
       .then(data => {
         this.setState({
           ...this.state,
-          rasteralarm: {
-            ...this.state.rasteralarm,
+          alarm: {
+            ...this.state.alarm,
             thresholds: updatedThresholds
           }
         });
@@ -190,7 +200,7 @@ class Detail extends Component {
   activateAlarm(uuid) {
     const { addNotification } = this.props;
 
-    fetch(`/api/v3/rasteralarms/${uuid}/`, {
+    fetch(`${this.props.alarmType === "RASTERS" ? `/api/v3/rasteralarms/${uuid}/` : `/api/v3/timeseriesalarms/${uuid}/`}`, {
       credentials: "same-origin",
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -201,7 +211,7 @@ class Detail extends Component {
       .then(response => response.json())
       .then(data => {
         this.setState({
-          rasteralarm: { ...this.state.rasteralarm, active: true }
+          alarm: { ...this.state.alarm, active: true }
         });
         addNotification(`Alarm "${data.name}" activated`, 2000);
       });
@@ -210,7 +220,7 @@ class Detail extends Component {
   deActivateAlarm(uuid) {
     const { addNotification } = this.props;
 
-    fetch(`/api/v3/rasteralarms/${uuid}/`, {
+    fetch(`${this.props.alarmType === "RASTERS" ? `/api/v3/rasteralarms/${uuid}/` : `/api/v3/timeseriesalarms/${uuid}/`}`, {
       credentials: "same-origin",
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -221,7 +231,7 @@ class Detail extends Component {
       .then(response => response.json())
       .then(data => {
         this.setState({
-          rasteralarm: { ...this.state.rasteralarm, active: false }
+          alarm: { ...this.state.alarm, active: false }
         });
         addNotification(`Alarm "${data.name}" deactivated`, 2000);
       });
@@ -229,7 +239,7 @@ class Detail extends Component {
 
   removeAlarm(uuid) {
     const { history, addNotification } = this.props;
-    fetch(`/api/v3/rasteralarms/${uuid}/`, {
+    fetch(`${this.props.alarmType === "RASTERS" ? `/api/v3/rasteralarms/${uuid}/` : `/api/v3/timeseriesalarms/${uuid}/`}`, {
       credentials: "same-origin",
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
@@ -245,7 +255,7 @@ class Detail extends Component {
   removeThresholdByIdx(uuid, idx) {
     const { addNotification } = this.props;
     (async () => {
-      const thresholds = await fetch(`/api/v3/rasteralarms/${uuid}`, {
+      const thresholds = await fetch(`${this.props.alarmType === "RASTERS" ? `/api/v3/rasteralarms/${uuid}/` : `/api/v3/timeseriesalarms/${uuid}/`}`, {
         credentials: "same-origin",
         method: "GET",
         headers: { "Content-Type": "application/json" }
@@ -258,7 +268,7 @@ class Detail extends Component {
         ...thresholds.slice(idx + 1)
       ];
 
-      fetch(`/api/v3/rasteralarms/${uuid}/`, {
+      fetch(`${this.props.alarmType === "RASTERS" ? `/api/v3/rasteralarms/${uuid}/` : `/api/v3/timeseriesalarms/${uuid}/`}`, {
         credentials: "same-origin",
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -270,8 +280,8 @@ class Detail extends Component {
         .then(data => {
           addNotification(`Threshold removed from alarm`, 2000);
           this.setState({
-            rasteralarm: {
-              ...this.state.rasteralarm,
+            alarm: {
+              ...this.state.alarm,
               thresholds: sliced_thresholds
             }
           });
@@ -285,7 +295,7 @@ class Detail extends Component {
       availableMessages,
       hasError,
       loadingComplete,
-      rasteralarm,
+      alarm,
       rasterdetail,
       showConfigureThreshold,
       timeseriesdetail
@@ -311,7 +321,7 @@ class Detail extends Component {
       );
     }
 
-    const currentAlarm = rasteralarm;
+    const currentAlarm = alarm;
     currentAlarm.rasterdetail = rasterdetail;
     currentAlarm.timeseriesdetail = timeseriesdetail;
 
@@ -518,20 +528,30 @@ class Detail extends Component {
             >
               <h3>
                 {" "}
-                <FormattedMessage
-                  id="notifications_app.map"
-                  defaultMessage="Map"
-                />
-              </h3>
-              {map || (
-                <p>
-                  {" "}
+                {this.props.alarmType === "RASTERS" ? 
                   <FormattedMessage
-                    id="notifications_app.not_available"
-                    defaultMessage="Not available"
+                    id="notifications_app.map"
+                    defaultMessage="Map"
+                  /> : 
+                  <FormattedMessage
+                    id="notifications_app.timeseries"
+                    defaultMessage="Timeseries name"
                   />
-                </p>
-              )}
+                }
+                
+              </h3>
+              {this.props.alarmType === "TIMESERIES" ? 
+                  <p>{currentAlarm.timeseries.name}</p> :
+                  map || (
+                    <p>
+                      {" "}
+                      <FormattedMessage
+                        id="notifications_app.not_available"
+                        defaultMessage="Not available"
+                      />
+                    </p>
+                  )
+              }
               <hr />
               <h3>
                 {" "}
@@ -613,7 +633,8 @@ class Detail extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    selectedOrganisation: state.organisations.selected
+    selectedOrganisation: state.organisations.selected,
+    alarmType: state.alarmType
   };
 };
 
@@ -621,6 +642,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     addNotification: (message, timeout) => {
       dispatch(addNotification(message, timeout));
+    },
+    updateAlarmType: (alarmType) => {
+      dispatch(updateAlarmType(alarmType));
     }
   };
 };

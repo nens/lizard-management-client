@@ -245,3 +245,13 @@ export function updateViewportDimensions(width, height) {
     height
   };
 }
+
+// MARK: Alarm Type update with Raster or Timeseries
+export const UPDATE_ALARM_TYPE = "UPDATE_ALARM_TYPE";
+
+export function updateAlarmType(alarmType) {
+  return {
+    type: UPDATE_ALARM_TYPE,
+    alarmType
+  };
+}

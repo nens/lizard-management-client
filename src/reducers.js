@@ -16,7 +16,8 @@ import {
   RECEIVE_COLORMAPS_ERROR,
   SHOW_NOTIFICATION,
   DISMISS_NOTIFICATION,
-  UPDATE_VIEWPORT_DIMENSIONS
+  UPDATE_VIEWPORT_DIMENSIONS,
+  UPDATE_ALARM_TYPE
 } from "./actions";
 
 function bootstrap(
@@ -240,6 +241,15 @@ function viewport(
   }
 }
 
+function alarmType(state = "RASTERS", action) {
+  switch (action.type) {
+    case UPDATE_ALARM_TYPE:
+      return action.alarmType;
+    default:
+      return state;
+  }
+}
+
 const rootReducer = combineReducers({
   bootstrap,
   organisations,
@@ -247,7 +257,8 @@ const rootReducer = combineReducers({
   supplierIds,
   colorMaps,
   notifications,
-  viewport
+  viewport, 
+  alarmType
 });
 
 export default rootReducer;
