@@ -8,7 +8,7 @@ import React, { Component } from "react";
 import RecipientGroups from "./RecipientGroups";
 import styles from "./Detail.css";
 import ThresholdChart from "./ThresholdChart";
-import { addNotification } from "../../actions";
+import { addNotification, updateAlarmType } from "../../actions";
 import { connect } from "react-redux";
 import { Map, Marker, TileLayer, WMSTileLayer } from "react-leaflet";
 import { withRouter } from "react-router-dom";
@@ -116,11 +116,11 @@ class Detail extends Component {
           credentials: "same-origin"
         }).then(response => response.json());
       if (!alarm.thresholds) {
+        this.props.updateAlarmType("TIMESERIES")
         alarm = await fetch(`/api/v3/timeseriesalarms/${rasterUuid}/`, {
           credentials: "same-origin"
         }).then(response => response.json());
       }
-      
 
       let rasterdetail = null;
       let timeseriesdetail = null;
@@ -620,7 +620,7 @@ class Detail extends Component {
             <ConfigureThreshold
               handleAddThreshold={this.handleAddThreshold}
               raster={currentAlarm.rasterdetail}
-              timeseries={currentAlarm.timeseriesdetail}
+              timeseries={currentAlarm.timeseriesdetail.data}
               handleClose={() =>
                 this.setState({ showConfigureThreshold: false })}
             />
@@ -642,6 +642,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     addNotification: (message, timeout) => {
       dispatch(addNotification(message, timeout));
+    },
+    updateAlarmType: (alarmType) => {
+      dispatch(updateAlarmType(alarmType));
     }
   };
 };
