@@ -103,7 +103,7 @@
     "build": "rm -rf dist/*.zip && node scripts/build.js && scripts/makedist.sh",
     "test": "node scripts/test.js",
     "release": "release-it --verbose",
-    "i18n:extract": "NODE_ENV=production npx extract-messages --locales=nl,en -d --output src/translations/locales 'src/**/*.js' 'src/**/*.jsx' 'src/**/*.ts*'"
+    "i18n:extract": "NODE_ENV=production npx extract-messages --flat --locales=nl,en -d --output src/translations/locales 'src/**/*.js' 'src/**/*.jsx' 'src/**/*.ts*'"
   },
   "eslintConfig": {
     "extends": "react-app"
