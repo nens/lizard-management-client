@@ -68,6 +68,7 @@
   "contacts_app.first_name_1": "Voornaam",
   "contacts_app.first_name_2": "Voornaam",
   "contacts_app.first_name_3": "Voornaam",
+  "contacts_app.following_fields_didnot_validate": "De volgende velden zijn niet correct:",
   "contacts_app.last_name": "Achternaam",
   "contacts_app.last_name_1": "Achternaam",
   "contacts_app.last_name_2": "Achternaam",
