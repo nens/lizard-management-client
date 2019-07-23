@@ -22,8 +22,6 @@ class Raster extends Component {
     this.state = {
       isFetching: true,
       rasters: [],
-      filteredSortedRasters: [],
-      paginatedRasters: [],
       total: 0,
       page: 1,
       pageSize: 10,
@@ -43,7 +41,7 @@ class Raster extends Component {
   }
   componentDidMount() {
     const { page } = this.state;
-    this.getRastersFromApi(
+    this.fetchRastersFromApi(
       page,
       this.state.searchTerms,
       this.state.include3diScenarios
@@ -58,6 +56,11 @@ class Raster extends Component {
       page = this.state.page;
     }
 
+    // this.fetchRastersFromApi(
+    //   page,
+    //   this.state.searchTerms,
+    //   this.state.include3diScenarios
+    // );
     this.refreshRasterFilteringAndPaginationAndUpdateState(
       this.state.rasters,
       page,
@@ -66,86 +69,28 @@ class Raster extends Component {
     );
   }
 
-  filterSortRasters = (rasters, searchContains, organisation) => {
-    const filteredRasters = rasters.filter(
-      e =>
-        ((e.name || "").toLowerCase().includes(searchContains.toLowerCase()) ||
-          (e.description || "")
-            .toLowerCase()
-            .includes(searchContains.toLowerCase()) ||
-          (e.supplier_code || "")
-            .toLowerCase()
-            .includes(searchContains.toLowerCase()) ||
-          ((e.observation_type && e.observation_type.code) || "")
-            .toLowerCase()
-            .includes(searchContains.toLowerCase()) ||
-          (e.uuid || "")
-            .toLowerCase()
-            .includes(searchContains.toLowerCase())) &&
-        (e.organisation &&
-          e.organisation.uuid &&
-          e.organisation.uuid.replace(/-/g, "")) === organisation.uuid
-    );
-
-    filteredRasters.sort((a, b) => {
-      if (a.last_modified === null) {
-        return 1;
-      } else if (b.last_modified === null) {
-        return -1;
-      } else if (a.last_modified > b.last_modified) {
-        return -1;
-      } else {
-        return 1;
-      }
-    });
-    return filteredRasters;
-  };
-
-  paginateRasters = (rasters, page) => {
-    const paginatedRasters = rasters.slice(
-      this.state.pageSize * (page - 1),
-      this.state.pageSize * page
-    );
-    return paginatedRasters;
-  };
-
   refreshRasterFilteringAndPaginationAndUpdateState = (
     rasters,
     page,
     searchTerms,
     organisation
   ) => {
-    const filteredSortedRasters = this.filterSortRasters(
-      rasters,
-      searchTerms,
-      organisation
-    );
-    const paginatedRasters = this.paginateRasters(filteredSortedRasters, page);
-    const checkboxes = this.createCheckboxDataFromRaster(paginatedRasters);
+    const checkboxes = this.createCheckboxDataFromRaster(rasters);
 
     this.setState({
       isFetching: false,
-      total: filteredSortedRasters.length,
       rasters: rasters,
-      filteredSortedRasters: filteredSortedRasters,
-      paginatedRasters: paginatedRasters,
       page: page,
       checkAllCheckBoxes: false,
       checkboxes: checkboxes,
       searchTerms: searchTerms
     });
   };
-  getRastersFromApi = (page, searchContains, include3diScenarios) => {
-    // searching/filtering/pagination is for now done clientside so server side search is commented out
-    // const url = searchContains
-    //   ? // ordering is done by filter
-    //     `/api/v3/rasters/?writable=true&page=${page}&name__icontains=${searchContains}` // &organisation__unique_id=${organisationId},
-    //   : // ordering is done so latest rasters first
-    //     `/api/v3/rasters/?writable=true&ordering=-last_modified&page=${page}`;
-
+  fetchRastersFromApi(page, searchContains, include3diScenarios) {
+    // get rasters from api
     const url = include3diScenarios
-      ? "/api/v4/rasters/?writable=true&page_size=100000"
-      : "/api/v4/rasters/?writable=true&page_size=100000&scenario__isnull=true";
+    ? `/api/v4/rasters/?writable=true&page_size=${this.state.pageSize}&page=${page}&name__icontains=${searchContains}`
+    : `/api/v4/rasters/?writable=true&page_size=${this.state.pageSize}&page=${page}&name__icontains=${searchContains}&scenario__isnull=true`;
 
     this.setState({
       isFetching: true
@@ -156,15 +101,27 @@ class Raster extends Component {
     })
       .then(response => response.json())
       .then(data => {
+        console.log(data);
         const rasters = data.results;
-        this.refreshRasterFilteringAndPaginationAndUpdateState(
-          rasters,
-          page,
-          searchContains,
-          this.props.organisations.selected
-        );
+        console.log(rasters);
+        this.showRastersInTable(rasters, this.state.page, this.state.searchTerms);
+        this.setState({
+          isFetching: false,
+          total: data.count
+        });
       });
-  };
+  }
+  showRastersInTable(rasters, page, searchTerms) {
+    const checkboxes = this.createCheckboxDataFromRaster(rasters);
+
+    this.setState({
+      rasters: rasters,
+      page: page,
+      checkAllCheckBoxes: false,
+      checkboxes: checkboxes,
+      searchTerms: searchTerms
+    });
+  }
 
   createCheckboxDataFromRaster(rasterList) {
     let checkboxes = [];
@@ -230,7 +187,7 @@ class Raster extends Component {
     });
     Promise.all(fetches).then(values => {
       // Refresh the page, so that the removed rasters are no longer visible
-      this.getRastersFromApi(
+      this.fetchRastersFromApi(
         this.state.page,
         this.state.searchTerms,
         this.state.include3diScenarios
@@ -356,7 +313,7 @@ class Raster extends Component {
             autoHeightMax={450}
             style={{ width: "100%" }}
           >
-            {this.state.paginatedRasters.map((raster, i) => {
+            {this.state.rasters.map((raster, i) => {
               return (
                 <div className={`${rasterTableStyles.tableBody}`}>
                   <div className={`${rasterTableStyles.tableCheckbox}`}>
@@ -496,14 +453,13 @@ class Raster extends Component {
         <div className={`${rasterTableStyles.tableInfoAndPagination}`}>
           <PaginationBar
             loadRastersOnPage={page =>
-              this.refreshRasterFilteringAndPaginationAndUpdateState(
-                this.state.rasters,
+              this.fetchRastersFromApi(
                 page,
                 this.state.searchTerms,
-                this.props.organisations.selected
+                this.state.include3diScenarios
               )}
-            page={page}
-            pages={Math.ceil(total / this.state.pageSize)}
+            page={this.state.page}
+            pages={Math.ceil(this.state.total / this.state.pageSize)}
           />
           <div className={`${rasterTableStyles.tableFooterNumberOfRasters}`}>
             <FormattedMessage
@@ -576,21 +532,17 @@ class Raster extends Component {
             className={`${gridStyles.colLg8} ${gridStyles.colMd8} ${gridStyles.colSm8} ${gridStyles.colXs8}`}
           >
             <SearchBox
-              handleSearch={searchTerms =>
-                this.refreshRasterFilteringAndPaginationAndUpdateState(
-                  this.state.rasters,
-                  1,
+              handleSearch={searchTerms => {
+                this.setState({page: 1}); // Reset Pagination Bar to 1 st page
+                this.fetchRastersFromApi(
+                  this.state.page,
                   searchTerms,
-                  this.props.organisations.selected
-                )}
+                  this.state.include3diScenarios
+                );
+              }}
               searchTerms={this.state.searchTerms}
               setSearchTerms={searchTerms => {
-                this.refreshRasterFilteringAndPaginationAndUpdateState(
-                  this.state.rasters,
-                  1,
-                  searchTerms,
-                  this.props.organisations.selected
-                );
+                this.setState({searchTerms: searchTerms});
               }}
             />
             {this.state.include3diScenarios ? (
@@ -601,7 +553,7 @@ class Raster extends Component {
                   color: "#00a6ff"
                 }}
                 onClick={e => {
-                  this.getRastersFromApi(
+                  this.fetchRastersFromApi(
                     this.state.page,
                     this.state.searchTerms,
                     false // include 3di scenarios
@@ -622,7 +574,7 @@ class Raster extends Component {
                   color: "#00a6ff"
                 }}
                 onClick={e => {
-                  this.getRastersFromApi(
+                  this.fetchRastersFromApi(
                     this.state.page,
                     this.state.searchTerms,
                     true // include 3di scenarios
