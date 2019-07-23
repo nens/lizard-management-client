@@ -89,8 +89,8 @@ class Raster extends Component {
   fetchRastersFromApi(page, searchContains, include3diScenarios) {
     // get rasters from api
     const url = include3diScenarios
-    ? `/api/v4/rasters/?writable=true&page_size=${this.state.pageSize}&page=${page}&name__icontains=${searchContains}`
-    : `/api/v4/rasters/?writable=true&page_size=${this.state.pageSize}&page=${page}&name__icontains=${searchContains}&scenario__isnull=true`;
+    ? `/api/v4/rasters/?writable=true&page_size=${this.state.pageSize}&page=${page}&name__icontains=${searchContains}&organisation__uuid=${this.props.organisations.selected.uuid}`
+    : `/api/v4/rasters/?writable=true&page_size=${this.state.pageSize}&page=${page}&name__icontains=${searchContains}&organisation__uuid=${this.props.organisations.selected.uuid}&scenario__isnull=true`;
 
     this.setState({
       isFetching: true
