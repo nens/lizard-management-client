@@ -67,6 +67,7 @@
   "contacts_app.first_name_1": "First name",
   "contacts_app.first_name_2": "First name",
   "contacts_app.first_name_3": "First name",
+  "contacts_app.following_fields_didnot_validate": "These fields are invalid:",
   "contacts_app.last_name": "Last name",
   "contacts_app.last_name_1": "Last name",
   "contacts_app.last_name_2": "Last name",
