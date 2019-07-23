@@ -547,7 +547,7 @@ class Raster extends Component {
                 }}
                 onClick={e => {
                   this.fetchRastersFromApi(
-                    this.state.page,
+                    1, // Reset PaginationBar to page 1
                     this.state.searchTerms,
                     false // include 3di scenarios
                   );
@@ -559,7 +559,6 @@ class Raster extends Component {
                   defaultMessage="Exclude 3di results"
                 />
               </button>
-              // Reset PaginationBar to page 1
             ) : (
               <button
                 className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link}`}
@@ -569,7 +568,7 @@ class Raster extends Component {
                 }}
                 onClick={e => {
                   this.fetchRastersFromApi(
-                    this.state.page,
+                    1, // Reset PaginationBar to page 1
                     this.state.searchTerms,
                     true // include 3di scenarios
                   );
@@ -581,7 +580,6 @@ class Raster extends Component {
                   defaultMessage="Include 3di results"
                 />
               </button>
-              // Reset PaginationBar to page 1
             )}
           </div>
           <div
