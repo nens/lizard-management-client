@@ -47,11 +47,11 @@ class NewContact extends Component {
     let errorMessage = fieldsDidnotValidateTranslation;
     let showErrorMessage = false;
 
-    if ( firstName.length == 0 ) {
+    if ( firstName.length === 0 ) {
       errorMessage += "- " + firstNameTranslation;
       showErrorMessage = true;
     }
-    if (lastName.length == 0 ) {
+    if (lastName.length === 0 ) {
       errorMessage += "- " + lastNameTranslation;
       showErrorMessage = true;
     }
@@ -100,6 +100,8 @@ class NewContact extends Component {
       <div className={gridStyles.Container}>
         <div
           style={{display:"none"}}
+          // this div is needed so the translation extracter can extract the string in this div
+          // this div will thus never be visible
         >
           <FormattedMessage
             id="contacts_app.following_fields_didnot_validate"
