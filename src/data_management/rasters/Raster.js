@@ -104,23 +104,17 @@ class Raster extends Component {
         console.log(data);
         const rasters = data.results;
         console.log(rasters);
-        this.showRastersInTable(rasters, this.state.page, this.state.searchTerms);
+        const checkboxes = this.createCheckboxDataFromRaster(rasters);
         this.setState({
+          rasters: rasters,
+          page: page,
+          checkAllCheckBoxes: false,
+          checkboxes: checkboxes,
+          searchTerms: this.state.searchTerms,
           isFetching: false,
           total: data.count
         });
       });
-  }
-  showRastersInTable(rasters, page, searchTerms) {
-    const checkboxes = this.createCheckboxDataFromRaster(rasters);
-
-    this.setState({
-      rasters: rasters,
-      page: page,
-      checkAllCheckBoxes: false,
-      checkboxes: checkboxes,
-      searchTerms: searchTerms
-    });
   }
 
   createCheckboxDataFromRaster(rasterList) {
@@ -533,9 +527,8 @@ class Raster extends Component {
           >
             <SearchBox
               handleSearch={searchTerms => {
-                this.setState({page: 1}); // Reset Pagination Bar to 1 st page
                 this.fetchRastersFromApi(
-                  this.state.page,
+                  1,
                   searchTerms,
                   this.state.include3diScenarios
                 );
@@ -566,6 +559,7 @@ class Raster extends Component {
                   defaultMessage="Exclude 3di results"
                 />
               </button>
+              // Reset PaginationBar to page 1
             ) : (
               <button
                 className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link}`}
@@ -587,6 +581,7 @@ class Raster extends Component {
                   defaultMessage="Include 3di results"
                 />
               </button>
+              // Reset PaginationBar to page 1
             )}
           </div>
           <div
