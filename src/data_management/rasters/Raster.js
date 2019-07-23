@@ -55,39 +55,9 @@ class Raster extends Component {
     ) {
       page = this.state.page;
     }
-
-    // this.fetchRastersFromApi(
-    //   page,
-    //   this.state.searchTerms,
-    //   this.state.include3diScenarios
-    // );
-    this.refreshRasterFilteringAndPaginationAndUpdateState(
-      this.state.rasters,
-      page,
-      this.state.searchTerms,
-      props.organisations.selected
-    );
   }
 
-  refreshRasterFilteringAndPaginationAndUpdateState = (
-    rasters,
-    page,
-    searchTerms,
-    organisation
-  ) => {
-    const checkboxes = this.createCheckboxDataFromRaster(rasters);
-
-    this.setState({
-      isFetching: false,
-      rasters: rasters,
-      page: page,
-      checkAllCheckBoxes: false,
-      checkboxes: checkboxes,
-      searchTerms: searchTerms
-    });
-  };
   fetchRastersFromApi(page, searchContains, include3diScenarios) {
-    // get rasters from api
     const url = include3diScenarios
     ? `/api/v4/rasters/?writable=true&page_size=${this.state.pageSize}&page=${page}&name__icontains=${searchContains}&organisation__uuid=${this.props.organisations.selected.uuid}`
     : `/api/v4/rasters/?writable=true&page_size=${this.state.pageSize}&page=${page}&name__icontains=${searchContains}&organisation__uuid=${this.props.organisations.selected.uuid}&scenario__isnull=true`;
@@ -108,7 +78,7 @@ class Raster extends Component {
           page: page,
           checkAllCheckBoxes: false,
           checkboxes: checkboxes,
-          searchTerms: this.state.searchTerms,
+          searchTerms: searchContains,
           isFetching: false,
           total: data.count
         });
