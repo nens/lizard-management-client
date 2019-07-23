@@ -101,9 +101,7 @@ class Raster extends Component {
     })
       .then(response => response.json())
       .then(data => {
-        console.log(data);
         const rasters = data.results;
-        console.log(rasters);
         const checkboxes = this.createCheckboxDataFromRaster(rasters);
         this.setState({
           rasters: rasters,
