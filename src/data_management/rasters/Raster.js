@@ -1,6 +1,6 @@
 import rasterIcon from "../../images/rasters@3x.svg";
 import buttonStyles from "../../styles/Buttons.css";
-import gridStyles from "../../styles/Grid.css";
+import gridStyles from "../../styles/Grid.css";  //Remove no longer used gridStyles
 import rasterTableStyles from "../../styles/RasterTable.css";
 import Ink from "react-ink";
 import MDSpinner from "react-md-spinner";
@@ -486,88 +486,84 @@ class Raster extends Component {
     return (
       <div className={rasterTableStyles.tableContainer}>
         <div
-          className={rasterTableStyles.tableHeaderTop}
+          className={rasterTableStyles.tableSearch}
           style={{
             padding: "0 0 30px 0"
           }}
         >
-          <div
-            className={`${gridStyles.colLg5} ${gridStyles.colMd5} ${gridStyles.colSm5} ${gridStyles.colXs5}`}
-          >
-            <SearchBox
-              handleSearch={searchTerms => {}} // No longer use handleSearch but use a search button.
-              searchTerms={this.state.searchTerms}
-              setSearchTerms={searchTerms => {
-                this.setState({searchTerms: searchTerms});
-              }}
-            />
-            {this.state.include3diScenarios ? (
-              <button
-                className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link}`}
-                style={{
-                  paddingLeft: 0,
-                  color: "#00a6ff"
+          <div>
+            <div className={rasterTableStyles.tableSearchTop}>
+              <SearchBox
+                handleSearch={searchTerms => {}} // No longer use handleSearch but use a search button.
+                // Bit more explanation why
+                searchTerms={this.state.searchTerms}
+                setSearchTerms={searchTerms => {
+                  this.setState({searchTerms: searchTerms});
                 }}
-                onClick={e => {
-                  this.fetchRastersFromApi(
-                    1, // Reset PaginationBar to page 1
-                    this.state.searchTerms,
-                    false // include 3di scenarios
-                  );
-                }}
-              >
-                <FormattedMessage
-                  id="rasters.exclude_3di_results"
-                  defaultMessage="Exclude 3di results"
-                />
-              </button>
-            ) : (
-              <button
-                className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link}`}
-                style={{
-                  paddingLeft: 0,
-                  color: "#00a6ff"
-                }}
-                onClick={e => {
-                  this.fetchRastersFromApi(
-                    1, // Reset PaginationBar to page 1
-                    this.state.searchTerms,
-                    true // include 3di scenarios
-                  );
-                }}
-              >
-                <FormattedMessage
-                  id="rasters.include_3di_results"
-                  defaultMessage="Include 3di results"
-                />
-              </button>
-            )}
-          </div>
-          <div
-            className={`${gridStyles.colLg1} ${gridStyles.colMd1} ${gridStyles.colSm1} ${gridStyles.colXs1}`}
-          >
-            <button
-              className={`${buttonStyles.Button} ${buttonStyles.Success}`}
-              onClick={e => {
-                this.fetchRastersFromApi(
-                  1, // Reset PaginationBar to page 1
-                  this.state.searchTerms,
-                  this.state.include3diScenarios
-                );
-              }}
-            >
-              <FormattedMessage
-                id="rasters.search_button"
-                defaultMessage="SEARCH"
               />
-            </button>
+              <button
+                className={`${buttonStyles.Button} ${buttonStyles.Success}`}
+                onClick={e => {
+                  this.fetchRastersFromApi(
+                    1, // Reset PaginationBar to page 1
+                    this.state.searchTerms,
+                    this.state.include3diScenarios
+                  );
+                }}
+              >
+                <FormattedMessage
+                  id="rasters.search_button"
+                  defaultMessage="SEARCH"
+                />
+              </button>
+            </div>
+            <div>
+              {this.state.include3diScenarios ? (
+                <button
+                  className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link}`}
+                  style={{
+                    paddingLeft: 0,
+                    color: "#00a6ff"
+                  }}
+                  onClick={e => {
+                    this.fetchRastersFromApi(
+                      1, // Reset PaginationBar to page 1
+                      this.state.searchTerms,
+                      false // include 3di scenarios
+                    );
+                  }}
+                >
+                  <FormattedMessage
+                    id="rasters.exclude_3di_results"
+                    defaultMessage="Exclude 3di results"
+                  />
+                </button>
+              ) : (
+                <button
+                  className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link}`}
+                  style={{
+                    paddingLeft: 0,
+                    color: "#00a6ff"
+                  }}
+                  onClick={e => {
+                    this.fetchRastersFromApi(
+                      1, // Reset PaginationBar to page 1
+                      this.state.searchTerms,
+                      true // include 3di scenarios
+                    );
+                  }}
+                >
+                  <FormattedMessage
+                    id="rasters.include_3di_results"
+                    defaultMessage="Include 3di results"
+                  />
+                </button>
+              )}
+            </div>
           </div>
-          <div
-            className={`${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs6}`}
-          >
+          <div>
             <button
               type="button"
-              style={{ float: "right" }}
               className={`${buttonStyles.Button} ${buttonStyles.Success}`}
               onClick={this.handleNewRasterClick}
             >
