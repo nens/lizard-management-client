@@ -493,8 +493,16 @@ class Raster extends Component {
           <div>
             <div className={rasterTableStyles.tableSearchTop}>
               <SearchBox
-                handleSearch={searchTerms => {}} // No longer use handleSearch but use a search button.
-                // Bit more explanation why
+                handleSearch={searchTerms => {}}
+                // No longer use handleSearch, but use a search button
+                // instead.
+                // Users had to press Enter in order to fetch results of the
+                // search. If users don't press enter, this.state.searchTerms
+                // would get out of sync with the typed searchTerm.
+                // This out of sync searchTerm created bugs in combination
+                // with the PaginationBar.
+                // Fetching onKeyPress (without having to press Enter), could
+                // result in a lot of api requests.
                 searchTerms={this.state.searchTerms}
                 setSearchTerms={searchTerms => {
                   this.setState({searchTerms: searchTerms});
