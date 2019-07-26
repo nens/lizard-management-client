@@ -80,7 +80,8 @@ class Raster extends Component {
           checkboxes: checkboxes,
           searchTerms: searchContains,
           isFetching: false,
-          total: data.count
+          total: data.count,
+          include3diScenarios: include3diScenarios
         });
       });
   }
@@ -491,16 +492,10 @@ class Raster extends Component {
           }}
         >
           <div
-            className={`${gridStyles.colLg8} ${gridStyles.colMd8} ${gridStyles.colSm8} ${gridStyles.colXs8}`}
+            className={`${gridStyles.colLg5} ${gridStyles.colMd5} ${gridStyles.colSm5} ${gridStyles.colXs5}`}
           >
             <SearchBox
-              handleSearch={searchTerms => {
-                this.fetchRastersFromApi(
-                  1,
-                  searchTerms,
-                  this.state.include3diScenarios
-                );
-              }}
+              handleSearch={searchTerms => {}} // No longer use handleSearch but use a search button.
               searchTerms={this.state.searchTerms}
               setSearchTerms={searchTerms => {
                 this.setState({searchTerms: searchTerms});
@@ -519,7 +514,6 @@ class Raster extends Component {
                     this.state.searchTerms,
                     false // include 3di scenarios
                   );
-                  this.setState({ include3diScenarios: false });
                 }}
               >
                 <FormattedMessage
@@ -540,7 +534,6 @@ class Raster extends Component {
                     this.state.searchTerms,
                     true // include 3di scenarios
                   );
-                  this.setState({ include3diScenarios: true });
                 }}
               >
                 <FormattedMessage
@@ -551,7 +544,26 @@ class Raster extends Component {
             )}
           </div>
           <div
-            className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${gridStyles.colSm4} ${gridStyles.colXs4}`}
+            className={`${gridStyles.colLg1} ${gridStyles.colMd1} ${gridStyles.colSm1} ${gridStyles.colXs1}`}
+          >
+            <button
+              className={`${buttonStyles.Button} ${buttonStyles.Success}`}
+              onClick={e => {
+                this.fetchRastersFromApi(
+                  1, // Reset PaginationBar to page 1
+                  this.state.searchTerms,
+                  this.state.include3diScenarios
+                );
+              }}
+            >
+              <FormattedMessage
+                id="rasters.search_button"
+                defaultMessage="SEARCH"
+              />
+            </button>
+          </div>
+          <div
+            className={`${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs6}`}
           >
             <button
               type="button"
