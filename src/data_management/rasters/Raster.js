@@ -1,6 +1,5 @@
 import rasterIcon from "../../images/rasters@3x.svg";
 import buttonStyles from "../../styles/Buttons.css";
-import gridStyles from "../../styles/Grid.css";  //Remove no longer used gridStyles
 import rasterTableStyles from "../../styles/RasterTable.css";
 import Ink from "react-ink";
 import MDSpinner from "react-md-spinner";
