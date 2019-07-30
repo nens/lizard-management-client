@@ -58,8 +58,8 @@ class Raster extends Component {
 
   fetchRastersFromApi(page, searchContains, include3diScenarios) {
     const url = include3diScenarios
-    ? `/api/v4/rasters/?writable=true&page_size=${this.state.pageSize}&page=${page}&name__icontains=${searchContains}&organisation__uuid=${this.props.organisations.selected.uuid}`
-    : `/api/v4/rasters/?writable=true&page_size=${this.state.pageSize}&page=${page}&name__icontains=${searchContains}&organisation__uuid=${this.props.organisations.selected.uuid}&scenario__isnull=true`;
+    ? `/api/v4/rasters/?writable=true&page_size=${this.state.pageSize}&page=${page}&name__icontains=${searchContains}&ordering=last_modified&organisation__uuid=${this.props.organisations.selected.uuid}`
+    : `/api/v4/rasters/?writable=true&page_size=${this.state.pageSize}&page=${page}&name__icontains=${searchContains}&ordering=last_modified&organisation__uuid=${this.props.organisations.selected.uuid}&scenario__isnull=true`;
 
     this.setState({
       isFetching: true
@@ -419,7 +419,8 @@ class Raster extends Component {
                 page,
                 this.state.searchTerms,
                 this.state.include3diScenarios
-              )}
+              )
+            }
             page={this.state.page}
             pages={Math.ceil(this.state.total / this.state.pageSize)}
           />
