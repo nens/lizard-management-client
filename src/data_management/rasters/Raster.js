@@ -494,36 +494,18 @@ class Raster extends Component {
           <div>
             <div className={rasterTableStyles.tableSearchTop}>
               <SearchBox
-                handleSearch={searchTerms => {}}
-                // No longer use handleSearch, but use a search button
-                // instead.
-                // Users had to press Enter in order to fetch results of the
-                // search. If users don't press enter, this.state.searchTerms
-                // would get out of sync with the typed searchTerm.
-                // This out of sync searchTerm created bugs in combination
-                // with the PaginationBar.
-                // Fetching onKeyPress (without having to press Enter), could
-                // result in a lot of api requests.
+                handleSearch={searchTerms => {
+                  this.fetchRastersFromApi(
+                    1, // Reset PaginationBar to page 1
+                    searchTerms,
+                    this.state.include3diScenarios
+                  );
+                }}
                 searchTerms={this.state.searchTerms}
                 setSearchTerms={searchTerms => {
                   this.setState({searchTerms: searchTerms});
                 }}
               />
-              <button
-                className={`${buttonStyles.Button} ${buttonStyles.Success}`}
-                onClick={e => {
-                  this.fetchRastersFromApi(
-                    1, // Reset PaginationBar to page 1
-                    this.state.searchTerms,
-                    this.state.include3diScenarios
-                  );
-                }}
-              >
-                <FormattedMessage
-                  id="rasters.search_button"
-                  defaultMessage="SEARCH"
-                />
-              </button>
             </div>
             <div>
               {this.state.include3diScenarios ? (
