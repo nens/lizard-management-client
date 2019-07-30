@@ -505,6 +505,15 @@ class Raster extends Component {
                 setSearchTerms={searchTerms => {
                   this.setState({searchTerms: searchTerms});
                 }}
+                onMouseLeave={searchTerms => {
+                  // if (searchTerms !== this.state.searchTerms) {
+                    this.fetchRastersFromApi(
+                      1, // Reset PaginationBar to page 1
+                      this.state.searchTerms,
+                      this.state.include3diScenarios
+                    )
+                  // }
+                }}
               />
             </div>
             <div>
