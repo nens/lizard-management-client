@@ -14,7 +14,7 @@ class SearchBox extends Component {
   }
 
   render() {
-    const { searchTerm, handleSearch, intl, onMouseLeave } = this.props;
+    const { searchTerm, handleSearch, intl, onBlur } = this.props;
 
     return (
       <div
@@ -53,7 +53,7 @@ class SearchBox extends Component {
             }}
             onKeyUp={e => this.handleEnter(e)}
             title={intl.formatMessage({ id: "Search in name and description" })}
-            onMouseLeave={onMouseLeave}
+            onBlur={onBlur}
           />
 
           <i
