@@ -123,7 +123,7 @@ class App extends Component {
         className={styles.DropdownMenu}
         onMouseLeave={() => this.setState({showProfileList: false})}
       >
-        <a href="/accounts/login/?next=/edit_profile/"
+        <a href="https://sso.lizard.net/edit_profile/"
           target="_blank"
           rel="noopener noreferrer"
         >
