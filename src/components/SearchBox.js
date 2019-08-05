@@ -36,7 +36,7 @@ class SearchBox extends Component {
           <input
             type="text"
             placeholder={searchTerm}
-            value={this.props.searchTerms}
+            value={searchTerm}
             className={formStyles.FormControl}
             style={{
               // make sure input field has same height as search button
@@ -82,7 +82,7 @@ class SearchBox extends Component {
           style={{ display: "none" }}
           type="button"
           className={`${buttonStyles.Button} ${buttonStyles.Success}`}
-          onClick={e => handleSearch(this.props.searchTerms)}
+          onClick={e => handleSearch(searchTerm)}
         >
           <FormattedMessage id="search" defaultMessage="Search" />
           <Ink />
