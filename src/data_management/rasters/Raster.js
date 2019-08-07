@@ -63,9 +63,9 @@ class Raster extends Component {
   }
   componentWillUpdate(nextProps, nextState) {
     if (nextState.searchedTerms !== this.state.searchedTerms) {
-      this.handleUpdatePage(1);
+      this.handleUpdatePage(1);  //slower if searchTerms does not give any result?
       this.fetchRastersFromApi(
-        1,
+        this.state.page,
         nextState.searchedTerms,
         this.state.include3diScenarios
       );
@@ -110,7 +110,7 @@ class Raster extends Component {
   handleUpdateSearchedTermsClear() {
     this.setState({
       searchTerms: "",
-      searchedTerms: this.state.searchTerms,
+      searchedTerms: "",
       page: 1 // Reset PaginationBar to page 1
     });
   }
@@ -557,7 +557,7 @@ class Raster extends Component {
                   this.handleUpdateSearchedTermsOnBlur(searchTerms);
                 }}
                 handleSearchClear={searchTerms => {
-                  this.handleUpdateSearchedTermsClear(searchTerms);
+                  this.handleUpdateSearchedTermsClear();
                 }}
                 searchTerms={this.state.searchTerms}
                 searchedTerms={this.state.searchedTerms}
