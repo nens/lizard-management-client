@@ -10,7 +10,6 @@ class SearchBox extends Component {
   handleEnter(event) {
     if (event.keyCode === 13) {
       // 13 is keycode 'enter' (works only when current input validates)
-      console.log(this.props.searchTerms);
       this.props.handleSearch(this.props.searchTerms);
     }
   }
@@ -56,23 +55,8 @@ class SearchBox extends Component {
             onKeyUp={e => this.handleEnter(e)}
             title={intl.formatMessage({ id: "Search in name and description" })}
             onBlur={e => {
-              console.log(this.props.searchTerms);
               this.props.handleSearch(this.props.searchTerms);
             }}
-            // onBlur={e => {
-            //   console.log("onBlur in searchBox");
-            //   // console.log("setSearchTerms", searchedTerms);
-            //   // this.handleUpdateSearchedTerms(searchedTerms);
-            //   console.log(this.props.searchTerms);
-            //   // console.log(this.props.searchedTerms);
-            //   // console.log(); // searchedTerms in state?
-            //   this.props.handleSearch(this.props.searchTerms);// searchedTerms?
-            // }}
-              // onBlur // werkt niet
-              // onBlur(searchTerm) // werkt niet, infinite loop met als er ook iets in de onBlur bij rasters.js staat
-              //   console.log(searchTerm);  // object
-              //   this.handleUpdateSearchTerms(searchTerm);
-            // }
           />
 
           <i

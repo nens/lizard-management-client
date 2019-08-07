@@ -124,14 +124,12 @@ class Raster extends Component {
       .then(response => response.json())
       .then(data => {
         const rasters = data.results;
-        // console.log(rasters);
         const checkboxes = this.createCheckboxDataFromRaster(rasters);
         this.setState({
           rasters: rasters,
           checkAllCheckBoxes: false,
           checkboxes: checkboxes,
           isFetching: false,
-          // searchedTerms: searchContains,
           total: data.count,
         });
       });
@@ -328,8 +326,6 @@ class Raster extends Component {
             style={{ width: "100%" }}
           >
             {this.state.rasters.map((raster, i) => {
-              // console.log(i);
-              // console.log(raster);
               return (
                 <div className={`${rasterTableStyles.tableBody}`}>
                   <div className={`${rasterTableStyles.tableCheckbox}`}>
@@ -543,7 +539,6 @@ class Raster extends Component {
             <div className={rasterTableStyles.tableSearchTop}>
               <SearchBox
                 handleSearch={searchTerms => {
-                  console.log(searchTerms);
                   this.handleUpdateSearchedTerms(searchTerms);
                 }}
                 searchTerms={this.state.searchTerms}
@@ -551,22 +546,6 @@ class Raster extends Component {
                 setSearchTerms={searchTerms => {
                   this.handleUpdateSearchTerms(searchTerms);
                 }}
-                // onBlur={searchTerms => {
-                //   // if (searchTerms !== this.state.searchTerms) {
-                //     this.fetchRastersFromApi(
-                //       1, // Reset PaginationBar to page 1
-                //       this.state.searchTerms,
-                //       this.state.include3diScenarios
-                //     )
-                //   // }
-                // }}
-                // onBlur={searchedTerms => {
-                //   // mag leeg zijn, moet anders callback zijn(?)
-                //   // null, werkt niet
-                //   // console.log("I'm in the raster onBlur")  // wordt niet getoond
-                //   // console.log(this.state.searchTerms);  // object
-                //   // this.handleUpdateSearchTerms(this.state.searchTerms);
-                // }}
               />
             </div>
             <div>
