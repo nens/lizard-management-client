@@ -63,7 +63,7 @@ class Raster extends Component {
   }
   componentWillUpdate(nextProps, nextState) {
     if (nextState.searchedTerms !== this.state.searchedTerms) {
-      this.handleUpdatePage(1);  //slower if searchTerms does not give any result?
+      this.handleUpdatePage(1);
       this.fetchRastersFromApi(
         this.state.page,
         nextState.searchedTerms,
