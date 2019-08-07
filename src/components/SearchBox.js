@@ -6,15 +6,30 @@ import formStyles from "../styles/Forms.css";
 import clearInputStyles from "./ClearInputButton.css";
 
 class SearchBox extends Component {
+  // constructor(props) {
+  //   super(props);
+  //   this.state = {
+  //     searchedTerms: "",
+  //   }
+  // }
+  // componentDidMount() {
+  //   this.setState({
+  //     searchedTerms: this.props.searchedTerms
+  //   });
+  // }
+
   handleEnter(event) {
     if (event.keyCode === 13) {
       // 13 is keycode 'enter' (works only when current input validates)
-      this.props.handleSearch(this.props.searchTerms);
+      console.log(this.props.searchTerms);
+      // console.log(this.props.searchedTerms);
+      // console.log(); // searchedTerms in state?
+      this.props.handleSearch(this.props.searchTerms);// searchedTerms?
     }
   }
 
   render() {
-    const { searchTerm, handleSearch, intl, onBlur } = this.props;
+    const { searchTerms, handleSearch, intl } = this.props;  // handleEnter toevoegen om ervoor te zorgen dat het in de parent bruikbaar is
 
     return (
       <div
@@ -35,8 +50,8 @@ class SearchBox extends Component {
         >
           <input
             type="text"
-            placeholder={searchTerm}
-            value={searchTerm}
+            placeholder={searchTerms}
+            value={searchTerms}
             className={formStyles.FormControl}
             style={{
               // make sure input field has same height as search button
@@ -53,7 +68,20 @@ class SearchBox extends Component {
             }}
             onKeyUp={e => this.handleEnter(e)}
             title={intl.formatMessage({ id: "Search in name and description" })}
-            onBlur={onBlur}
+            // onBlur={e => {
+            //   console.log("onBlur in searchBox");
+            //   // console.log("setSearchTerms", searchedTerms);
+            //   // this.handleUpdateSearchedTerms(searchedTerms);
+            //   console.log(this.props.searchTerms);
+            //   // console.log(this.props.searchedTerms);
+            //   // console.log(); // searchedTerms in state?
+            //   this.props.handleSearch(this.props.searchTerms);// searchedTerms?
+            // }}
+              // onBlur // werkt niet
+              // onBlur(searchTerm) // werkt niet, infinite loop met als er ook iets in de onBlur bij rasters.js staat
+              //   console.log(searchTerm);  // object
+              //   this.handleUpdateSearchTerms(searchTerm);
+            // }
           />
 
           <i
@@ -65,6 +93,7 @@ class SearchBox extends Component {
             }
             onClick={() => {
               this.props.setSearchTerms("");
+              // this.props.setSearchedTerms("");
               this.props.handleSearch("");
             }}
           >
@@ -82,7 +111,7 @@ class SearchBox extends Component {
           style={{ display: "none" }}
           type="button"
           className={`${buttonStyles.Button} ${buttonStyles.Success}`}
-          onClick={e => handleSearch(searchTerm)}
+          onClick={e => handleSearch(searchTerms)}
         >
           <FormattedMessage id="search" defaultMessage="Search" />
           <Ink />

@@ -29,6 +29,7 @@ class Raster extends Component {
       // is checked, to be able to find the raster back from the checked checkboxes.
       checkboxes: [],
       searchTerms: "",
+      searchedTerms: "",
       include3diScenarios: false
     };
     this.handleNewRasterClick = this.handleNewRasterClick.bind(this);
@@ -38,6 +39,7 @@ class Raster extends Component {
     this.clickRegularCheckbox = this.clickRegularCheckbox.bind(this);
     this.handleUpdatePage = this.handleUpdatePage.bind(this);
     this.handleUpdateSearchTerms = this.handleUpdateSearchTerms.bind(this);
+    this.handleUpdateSearchedTerms = this.handleUpdateSearchedTerms.bind(this);
     this.handleUpdateInclude3diResults = this.handleUpdateInclude3diResults.bind(this);
   }
 
@@ -58,22 +60,22 @@ class Raster extends Component {
     }
   }
   componentWillUpdate(nextProps, nextState) {
-    if (nextState.searchTerms !== this.state.searchTerms) {
+    if (nextState.searchedTerms !== this.state.searchedTerms) {
       this.fetchRastersFromApi(
         nextState.page,
-        nextState.searchTerms,
+        nextState.searchedTerms,
         this.state.include3diScenarios
       );
     } else if (nextState.include3diScenarios !== this.state.include3diScenarios) {
       this.fetchRastersFromApi(
         nextState.page,
-        this.state.searchTerms,
+        this.state.searchedTerms,
         nextState.include3diScenarios
       );
     } else if (nextState.page !== this.state.page) {
       this.fetchRastersFromApi(
         nextState.page,
-        this.state.searchTerms,
+        this.state.searchedTerms,
         this.state.include3diScenarios
       );
     }
@@ -88,8 +90,17 @@ class Raster extends Component {
 
   handleUpdateSearchTerms(searchTerms) {
     this.setState({
+      // isFetching: true,
+      searchTerms: searchTerms,
+      // page: 1 // Reset PaginationBar to page 1
+    });
+  }
+
+  handleUpdateSearchedTerms(searchTerms) {
+    this.setState({
       isFetching: true,
       searchTerms: searchTerms,
+      searchedTerms: searchTerms,
       page: 1 // Reset PaginationBar to page 1
     });
   }
@@ -113,13 +124,14 @@ class Raster extends Component {
       .then(response => response.json())
       .then(data => {
         const rasters = data.results;
-        console.log(rasters);
+        // console.log(rasters);
         const checkboxes = this.createCheckboxDataFromRaster(rasters);
         this.setState({
           rasters: rasters,
           checkAllCheckBoxes: false,
           checkboxes: checkboxes,
           isFetching: false,
+          // searchedTerms: searchContains,
           total: data.count,
         });
       });
@@ -316,8 +328,8 @@ class Raster extends Component {
             style={{ width: "100%" }}
           >
             {this.state.rasters.map((raster, i) => {
-              console.log(i);
-              console.log(raster);
+              // console.log(i);
+              // console.log(raster);
               return (
                 <div className={`${rasterTableStyles.tableBody}`}>
                   <div className={`${rasterTableStyles.tableCheckbox}`}>
@@ -531,14 +543,21 @@ class Raster extends Component {
             <div className={rasterTableStyles.tableSearchTop}>
               <SearchBox
                 handleSearch={searchTerms => {
-                  console.log(searchTerms);
-                  this.handleUpdateSearchTerms(searchTerms);
+                  console.log('handleSearch in');
+                  console.log(searchTerms);  // undefined
+                  console.log('we have a searchTerms', searchTerms);
+                  // this.setState({
+                  //   searchedTerms: searchTerms
+                  // });
+                  this.handleUpdateSearchedTerms(searchTerms);
                 }}
                 searchTerms={this.state.searchTerms}
+                searchedTerms={this.state.searchedTerms}
                 setSearchTerms={searchTerms => {
-                  console.log(searchTerms);
-                  this.setState({searchTerms: searchTerms});
-                  // this.handleUpdateSearchTerms(searchTerms)
+                  console.log("setSearchTerms", searchTerms);
+                  // console.log(searchTerms);
+                  // this.setState({searchTerms: searchTerms});
+                  this.handleUpdateSearchTerms(searchTerms);
                 }}
                 // onBlur={searchTerms => {
                 //   // if (searchTerms !== this.state.searchTerms) {
@@ -549,10 +568,13 @@ class Raster extends Component {
                 //     )
                 //   // }
                 // }}
-                onBlur={searchTerms => {
-                  console.log(this.state.searchTerms);  // object
-                  this.handleUpdateSearchTerms(this.state.searchTerms);
-                }}
+                // onBlur={searchedTerms => {
+                //   // mag leeg zijn, moet anders callback zijn(?)
+                //   // null, werkt niet
+                //   // console.log("I'm in the raster onBlur")  // wordt niet getoond
+                //   // console.log(this.state.searchTerms);  // object
+                //   // this.handleUpdateSearchTerms(this.state.searchTerms);
+                // }}
               />
             </div>
             <div>
