@@ -63,7 +63,7 @@ class Raster extends Component {
   }
   componentWillUpdate(nextProps, nextState) {
     if (nextState.searchedTerms !== this.state.searchedTerms) {
-      // set page to 1 also update state
+      this.handleUpdatePage(1);
       this.fetchRastersFromApi(
         1,
         nextState.searchedTerms,
@@ -83,23 +83,18 @@ class Raster extends Component {
       );
     }
   }
-  // updatePageAndSearchedTerms(callback) {
-  //   this.handleUpdatePage(1);
-  // }
 
   handleUpdatePage(page) {
     this.setState({
       page: page
     });
   }
-
   handleUpdateSearchTerms(searchTerms) {
     this.setState({
       searchTerms: searchTerms,
       // page: 1 // Reset PaginationBar to page 1
     });
   }
-
   handleUpdateSearchedTermsEnter() {
     this.setState({
       searchedTerms: this.state.searchTerms,
@@ -119,7 +114,6 @@ class Raster extends Component {
       page: 1 // Reset PaginationBar to page 1
     });
   }
-
   handleUpdateInclude3diResults(include3diScenarios) {
     this.setState({
       include3diScenarios: include3diScenarios,
