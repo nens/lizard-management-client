@@ -55,6 +55,10 @@ class SearchBox extends Component {
             }}
             onKeyUp={e => this.handleEnter(e)}
             title={intl.formatMessage({ id: "Search in name and description" })}
+            onBlur={e => {
+              console.log(this.props.searchTerms);
+              this.props.handleSearch(this.props.searchTerms);
+            }}
             // onBlur={e => {
             //   console.log("onBlur in searchBox");
             //   // console.log("setSearchTerms", searchedTerms);

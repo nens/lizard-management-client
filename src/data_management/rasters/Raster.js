@@ -83,14 +83,12 @@ class Raster extends Component {
 
   handleUpdatePage(page) {
     this.setState({
-      isFetching: true,
       page: page
     });
   }
 
   handleUpdateSearchTerms(searchTerms) {
     this.setState({
-      // isFetching: true,
       searchTerms: searchTerms,
       // page: 1 // Reset PaginationBar to page 1
     });
@@ -98,7 +96,6 @@ class Raster extends Component {
 
   handleUpdateSearchedTerms(searchTerms) {
     this.setState({
-      isFetching: true,
       searchTerms: searchTerms,
       searchedTerms: searchTerms,
       page: 1 // Reset PaginationBar to page 1
@@ -107,7 +104,6 @@ class Raster extends Component {
 
   handleUpdateInclude3diResults(include3diScenarios) {
     this.setState({
-      isFetching: true,
       include3diScenarios: include3diScenarios,
       page: 1 // Reset PaginationBar to page 1
     });
@@ -117,6 +113,10 @@ class Raster extends Component {
     const url = include3diScenarios
     ? `/api/v4/rasters/?writable=true&page_size=${this.state.pageSize}&page=${page}&name__icontains=${searchContains}&ordering=last_modified&organisation__uuid=${this.props.organisations.selected.uuid}`
     : `/api/v4/rasters/?writable=true&page_size=${this.state.pageSize}&page=${page}&name__icontains=${searchContains}&ordering=last_modified&organisation__uuid=${this.props.organisations.selected.uuid}&scenario__isnull=true`;
+
+    this.setState({
+      isFetching: true
+    });
 
     fetch(url, {
       credentials: "same-origin"
@@ -543,6 +543,7 @@ class Raster extends Component {
             <div className={rasterTableStyles.tableSearchTop}>
               <SearchBox
                 handleSearch={searchTerms => {
+                  console.log(searchTerms);
                   this.handleUpdateSearchedTerms(searchTerms);
                 }}
                 searchTerms={this.state.searchTerms}
