@@ -6,30 +6,17 @@ import formStyles from "../styles/Forms.css";
 import clearInputStyles from "./ClearInputButton.css";
 
 class SearchBox extends Component {
-  // constructor(props) {
-  //   super(props);
-  //   this.state = {
-  //     searchedTerms: "",
-  //   }
-  // }
-  // componentDidMount() {
-  //   this.setState({
-  //     searchedTerms: this.props.searchedTerms
-  //   });
-  // }
 
   handleEnter(event) {
     if (event.keyCode === 13) {
       // 13 is keycode 'enter' (works only when current input validates)
       console.log(this.props.searchTerms);
-      // console.log(this.props.searchedTerms);
-      // console.log(); // searchedTerms in state?
-      this.props.handleSearch(this.props.searchTerms);// searchedTerms?
+      this.props.handleSearch(this.props.searchTerms);
     }
   }
 
   render() {
-    const { searchTerms, handleSearch, intl } = this.props;  // handleEnter toevoegen om ervoor te zorgen dat het in de parent bruikbaar is
+    const { searchTerms, handleSearch, intl } = this.props;
 
     return (
       <div
@@ -93,7 +80,6 @@ class SearchBox extends Component {
             }
             onClick={() => {
               this.props.setSearchTerms("");
-              // this.props.setSearchedTerms("");
               this.props.handleSearch("");
             }}
           >

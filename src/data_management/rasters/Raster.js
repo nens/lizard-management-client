@@ -543,20 +543,11 @@ class Raster extends Component {
             <div className={rasterTableStyles.tableSearchTop}>
               <SearchBox
                 handleSearch={searchTerms => {
-                  console.log('handleSearch in');
-                  console.log(searchTerms);  // undefined
-                  console.log('we have a searchTerms', searchTerms);
-                  // this.setState({
-                  //   searchedTerms: searchTerms
-                  // });
                   this.handleUpdateSearchedTerms(searchTerms);
                 }}
                 searchTerms={this.state.searchTerms}
                 searchedTerms={this.state.searchedTerms}
                 setSearchTerms={searchTerms => {
-                  console.log("setSearchTerms", searchTerms);
-                  // console.log(searchTerms);
-                  // this.setState({searchTerms: searchTerms});
                   this.handleUpdateSearchTerms(searchTerms);
                 }}
                 // onBlur={searchTerms => {
