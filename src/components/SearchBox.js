@@ -10,12 +10,12 @@ class SearchBox extends Component {
   handleEnter(event) {
     if (event.keyCode === 13) {
       // 13 is keycode 'enter' (works only when current input validates)
-      this.props.handleSearch(this.props.searchTerms);
+      this.props.handleSearchEnter(this.props.searchTerms);
     }
   }
 
   render() {
-    const { searchTerms, handleSearch, intl } = this.props;
+    const { searchTerms, handleSearchEnter, handleSearchOnBlur, handleSearchClear, intl } = this.props;
 
     return (
       <div
@@ -55,7 +55,7 @@ class SearchBox extends Component {
             onKeyUp={e => this.handleEnter(e)}
             title={intl.formatMessage({ id: "Search in name and description" })}
             onBlur={e => {
-              this.props.handleSearch(this.props.searchTerms);
+              this.props.handleSearchOnBlur(this.props.searchTerms);
             }}
           />
 
@@ -67,8 +67,7 @@ class SearchBox extends Component {
                 : { right: "6px" }
             }
             onClick={() => {
-              this.props.setSearchTerms("");
-              this.props.handleSearch("");
+              this.props.handleSearchClear("");
             }}
           >
             clear
@@ -85,7 +84,7 @@ class SearchBox extends Component {
           style={{ display: "none" }}
           type="button"
           className={`${buttonStyles.Button} ${buttonStyles.Success}`}
-          onClick={e => handleSearch(searchTerms)}
+          onClick={e => handleSearchEnter(searchTerms)}
         >
           <FormattedMessage id="search" defaultMessage="Search" />
           <Ink />

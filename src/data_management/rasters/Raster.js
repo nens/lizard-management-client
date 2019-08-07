@@ -39,7 +39,9 @@ class Raster extends Component {
     this.clickRegularCheckbox = this.clickRegularCheckbox.bind(this);
     this.handleUpdatePage = this.handleUpdatePage.bind(this);
     this.handleUpdateSearchTerms = this.handleUpdateSearchTerms.bind(this);
-    this.handleUpdateSearchedTerms = this.handleUpdateSearchedTerms.bind(this);
+    this.handleUpdateSearchedTermsEnter = this.handleUpdateSearchedTermsEnter.bind(this);
+    this.handleUpdateSearchedTermsOnBlur = this.handleUpdateSearchedTermsOnBlur.bind(this);
+    this.handleUpdateSearchedTermsClear = this.handleUpdateSearchedTermsClear.bind(this);
     this.handleUpdateInclude3diResults = this.handleUpdateInclude3diResults.bind(this);
   }
 
@@ -61,8 +63,9 @@ class Raster extends Component {
   }
   componentWillUpdate(nextProps, nextState) {
     if (nextState.searchedTerms !== this.state.searchedTerms) {
+      // set page to 1 also update state
       this.fetchRastersFromApi(
-        nextState.page,
+        1,
         nextState.searchedTerms,
         this.state.include3diScenarios
       );
@@ -80,6 +83,9 @@ class Raster extends Component {
       );
     }
   }
+  // updatePageAndSearchedTerms(callback) {
+  //   this.handleUpdatePage(1);
+  // }
 
   handleUpdatePage(page) {
     this.setState({
@@ -94,10 +100,22 @@ class Raster extends Component {
     });
   }
 
-  handleUpdateSearchedTerms(searchTerms) {
+  handleUpdateSearchedTermsEnter() {
     this.setState({
-      searchTerms: searchTerms,
-      searchedTerms: searchTerms,
+      searchedTerms: this.state.searchTerms,
+      page: 1 // Reset PaginationBar to page 1
+    });
+  }
+  handleUpdateSearchedTermsOnBlur() {
+    this.setState({
+      searchedTerms: this.state.searchTerms,
+      // page: 1 // Reset PaginationBar to page 1
+    });
+  }
+  handleUpdateSearchedTermsClear() {
+    this.setState({
+      searchTerms: "",
+      searchedTerms: this.state.searchTerms,
       page: 1 // Reset PaginationBar to page 1
     });
   }
@@ -538,8 +556,14 @@ class Raster extends Component {
           <div>
             <div className={rasterTableStyles.tableSearchTop}>
               <SearchBox
-                handleSearch={searchTerms => {
-                  this.handleUpdateSearchedTerms(searchTerms);
+                handleSearchEnter={searchTerms => {
+                  this.handleUpdateSearchedTermsEnter(searchTerms);
+                }}
+                handleSearchOnBlur={searchTerms => {
+                  this.handleUpdateSearchedTermsOnBlur(searchTerms);
+                }}
+                handleSearchClear={searchTerms => {
+                  this.handleUpdateSearchedTermsClear(searchTerms);
                 }}
                 searchTerms={this.state.searchTerms}
                 searchedTerms={this.state.searchedTerms}
