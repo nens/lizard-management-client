@@ -143,7 +143,7 @@ class Scenarios extends Component {
                             />
                         </div>
                         <button
-                            className={`${scenartioStyle.DeleteButton} ${buttonStyles.Button} ${buttonStyles.Danger}`}
+                            className={`${scenartioStyle.DeleteButton} ${buttonStyles.Button} ${buttonStyles.Inactive}`}
                             style={{ maxHeight: "36px" }}
                         >
                             Delete
