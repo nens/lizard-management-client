@@ -36,9 +36,6 @@ class Scenarios extends Component {
     };
 
     render() {
-
-        if (this.state.isFetching) return <h1>Loading</h1>
-
         const scenarios = this.state.scenarios;
 
         const scenarioTableHeader = () => {
@@ -59,7 +56,10 @@ class Scenarios extends Component {
         const scenarioTableBody = (scenarios) => {
             return scenarios.map(scenario =>
                 (
-                    <div className={scenartioStyle.tableRow} key={scenario.uuid}>
+                    <div
+                        className={scenartioStyle.tableRow} key={scenario.uuid}
+                        style={{ visibility: this.state.isFetching ? "hidden" : "visible" }}
+                    >
                         <div className={scenartioStyle.tableCheckbox}>
                             <input type="checkbox" />
                         </div>
@@ -89,13 +89,13 @@ class Scenarios extends Component {
             <div className={scenartioStyle.Layout}>
                 <div className={scenartioStyle.SideBar}>
                     <div className={scenartioStyle.Sum}>
-                        <img 
+                        <img
                             className={scenartioStyle.DatabaseIcon}
-                            src={require("../../images/database.svg")} 
+                            src={require("../../images/database.svg")}
                             alt="database"
                         />
                         <div className={scenartioStyle.SumText}>
-                            <span className={scenartioStyle.TotalStorage}>Total storage</span><br/>
+                            <span className={scenartioStyle.TotalStorage}>Total storage</span><br />
                             <span className={scenartioStyle.TotalNumber}>20.1</span>
                             <span className={scenartioStyle.Gb}>Gb</span>
                         </div>
@@ -114,16 +114,26 @@ class Scenarios extends Component {
                             style={{ width: "100%" }}
                         >
                             {scenarioTableBody(scenarios)}
+                            <div
+                                style={{
+                                    position: "absolute",
+                                    top: "45%",
+                                    left: "45%",
+                                    visibility: this.state.isFetching ? "visible" : "hidden"
+                                }}
+                            >
+                                <MDSpinner />
+                            </div>
                         </Scrollbars>
                     </div>
                     <div className={scenartioStyle.Footer}>
                         <div className={scenartioStyle.Pagination}>
-                            <PaginationBar 
+                            <PaginationBar
                                 page={3}
                                 pages={5}
                             />
                         </div>
-                        <button 
+                        <button
                             className={`${scenartioStyle.DeleteButton} ${buttonStyles.Button} ${buttonStyles.Danger}`}
                             style={{ maxHeight: "36px" }}
                         >
