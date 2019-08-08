@@ -81,6 +81,7 @@
     text-overflow: ellipsis;
     color: #818181;
     border-bottom: 0.5px solid #D8D8D8;
+    padding: 10px 0;
 }
 
 .tableRow * {
