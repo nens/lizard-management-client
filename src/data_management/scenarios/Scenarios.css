@@ -3,12 +3,45 @@
     justify-content: space-between;
 }
 
-.Sum {
+.SideBar {
     width: 20%;
-
     display: flex;
-    justify-content: center;
-    padding-top: 10%;
+    justify-content: flex-start;
+    padding-top: 6%;
+}
+
+.Sum {
+    width: 85%;
+    height: 20%;
+    display: flex;
+    justify-content: space-around;
+    background-color: #f8f8f8;
+    box-shadow: 0 6px 6px rgba(0, 0, 0, .175);
+    border-radius: 8px;
+}
+
+.SumText {
+    width: 50%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: auto 0;
+}
+
+.DatabaseIcon {
+    width: 30%;
+}
+
+.TotalStorage {
+    font-weight: 300;
+}
+
+.TotalNumber {
+    font-size: 31px;
+    font-weight: 500;
+}
+
+.Gb {
+    font-weight: 500;
 }
 
 .Main {
@@ -17,6 +50,10 @@
 
 .Search {
     height: 70px;
+}
+
+.Table {
+    border-bottom: 1px solid #707070;
 }
 
 .tableHeader {
@@ -34,7 +71,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     color: #818181;
-    border-bottom: 0.5px solid #707070;
+    border-bottom: 0.5px solid #D8D8D8;
 }
 
 .tableRow * {
@@ -84,4 +121,5 @@
 
 .DeleteButton {
     flex: 1;
+    margin: auto 0;
 }

@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import MDSpinner from "react-md-spinner";
 import { Scrollbars } from "react-custom-scrollbars";
+import SearchBox from "../../components/SearchBox";
+import PaginationBar from "./../rasters/PaginationBar";
+import buttonStyles from "../../styles/Buttons.css";
 import scenartioStyle from './Scenarios.css';
 
 class Scenarios extends Component {
@@ -84,12 +87,23 @@ class Scenarios extends Component {
 
         return (
             <div className={scenartioStyle.Layout}>
-                <div className={scenartioStyle.Sum}>
-                    This is the SUM
+                <div className={scenartioStyle.SideBar}>
+                    <div className={scenartioStyle.Sum}>
+                        <img 
+                            className={scenartioStyle.DatabaseIcon}
+                            src={require("../../images/database.svg")} 
+                            alt="database"
+                        />
+                        <div className={scenartioStyle.SumText}>
+                            <span className={scenartioStyle.TotalStorage}>Total storage</span><br/>
+                            <span className={scenartioStyle.TotalNumber}>20.1</span>
+                            <span className={scenartioStyle.Gb}>Gb</span>
+                        </div>
+                    </div>
                 </div>
                 <div className={scenartioStyle.Main}>
                     <div className={scenartioStyle.Search}>
-                        Search box
+                        <SearchBox />
                     </div>
                     <div className={scenartioStyle.Table}>
                         {scenarioTableHeader()}
@@ -103,8 +117,18 @@ class Scenarios extends Component {
                         </Scrollbars>
                     </div>
                     <div className={scenartioStyle.Footer}>
-                        <div className={scenartioStyle.Pagination}>Pagination</div>
-                        <button className={scenartioStyle.DeleteButton}>Delete</button>
+                        <div className={scenartioStyle.Pagination}>
+                            <PaginationBar 
+                                page={3}
+                                pages={5}
+                            />
+                        </div>
+                        <button 
+                            className={`${scenartioStyle.DeleteButton} ${buttonStyles.Button} ${buttonStyles.Danger}`}
+                            style={{ maxHeight: "36px" }}
+                        >
+                            Delete
+                        </button>
                     </div>
                 </div>
             </div>
