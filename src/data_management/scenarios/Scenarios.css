@@ -1,0 +1,87 @@
+.Layout {
+    display: flex;
+    justify-content: space-between;
+}
+
+.Sum {
+    width: 20%;
+
+    display: flex;
+    justify-content: center;
+    padding-top: 10%;
+}
+
+.Main {
+    width: 80%;
+}
+
+.Search {
+    height: 70px;
+}
+
+.tableHeader {
+    display: flex;
+    align-items: center;
+    height: 50px;
+    color: #818181;
+    font-size: 18px;
+    font-weight: 500;
+    border-bottom: 3px solid #707070;
+}
+
+.tableRow {
+    display: flex;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #818181;
+    border-bottom: 0.5px solid #707070;
+}
+
+.tableRow * {
+    overflow: inherit;
+    text-overflow: inherit;
+}
+
+.tableRow div {
+    padding-right: 20px;
+}
+
+.tableCheckbox {
+    flex: 1;
+    padding: 0 4px;
+}
+
+.tableScenario {
+    flex: 4;
+}
+
+.tableModel {
+    flex: 4;
+}
+
+.tableUser {
+    flex: 3;
+}
+
+.tableDate {
+    flex: 3;
+}
+
+.tableSize {
+    flex: 2;
+}
+
+.Footer {
+    height: 70px;
+    display: flex;
+}
+
+.Pagination {
+    flex: 6;
+    display: flex;
+    justify-content: center;
+}
+
+.DeleteButton {
+    flex: 1;
+}
