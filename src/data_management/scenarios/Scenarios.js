@@ -38,6 +38,17 @@ class Scenarios extends Component {
     render() {
         const scenarios = this.state.scenarios;
 
+        //Method to convert UTC string to local date format of DD/MM/YYYY
+        const convertUTCtoDate = (utc) => {
+            return new Date(utc).toLocaleDateString();
+        };
+
+        //Method to convert bytes to Gb with [Gb = bytes/(1024^3)]
+        const convertBytesToGb = (b) => {
+            //Covert to Gb and round it to 2 decimal points
+            return (Math.round(b / Math.pow(1024, 3) * 100) / 100);
+        };
+
         const scenarioTableHeader = () => {
             return (
                 <div className={scenartioStyle.tableHeader}>
@@ -73,12 +84,10 @@ class Scenarios extends Component {
                             {scenario.username}
                         </div>
                         <div className={scenartioStyle.tableDate}>
-                            {/*Get the Date in local format of DD/MM/YYYY*/}
-                            {new Date(scenario.created).toLocaleDateString()}
+                            {convertUTCtoDate(scenario.created)}
                         </div>
                         <div className={scenartioStyle.tableSize}>
-                            {/*Convert bytes to Gb with [gb = bytes/(1024^3)] and round it to 2 decimal point*/}
-                            {Math.round(scenario.total_size / Math.pow(1024, 3) * 100) / 100} Gb
+                            {convertBytesToGb(scenario.total_size)} Gb
                         </div>
                     </div>
                 )
