@@ -2,18 +2,21 @@ import React, { Component } from 'react';
 import MDSpinner from "react-md-spinner";
 import { Scrollbars } from "react-custom-scrollbars";
 import SearchBox from "../../components/SearchBox";
-import PaginationBar from "./../rasters/PaginationBar";
+import PaginationBar from "./PaginationBar";
 import buttonStyles from "../../styles/Buttons.css";
 import scenartioStyle from './Scenarios.css';
 
 class Scenarios extends Component {
     state = {
         isFetching: true,
-        scenarios: []
+        scenarios: [],
+        total: 0,
+        page: 1,
+        pageSize: 10,
     };
 
-    getScenariosFromApi = () => {
-        const url = "/api/v3/scenarios";
+    fetchScenariosFromApi = (page) => {
+        const url = `/api/v3/scenarios/?writable=true&page_size=${this.state.pageSize}&page=${page}`;
 
         this.setState({
             isFetching: true
@@ -26,17 +29,32 @@ class Scenarios extends Component {
             .then(data => {
                 this.setState({
                     scenarios: data.results,
-                    isFetching: false
+                    isFetching: false,
+                    total: data.count
                 });
             });
     };
 
     componentDidMount() {
-        this.getScenariosFromApi();
+        this.fetchScenariosFromApi(this.state.page);
+    };
+
+    componentWillUpdate(nextProps, nextState) {
+        if (nextState.page !== this.state.page) {
+            this.fetchScenariosFromApi(
+                nextState.page
+            );
+        };
+    };
+
+    handleUpdatePage(page) {
+        this.setState({
+            page: page
+        });
     };
 
     render() {
-        const scenarios = this.state.scenarios;
+        const { scenarios, total, page, pageSize, isFetching } = this.state;
 
         //Method to convert UTC string to local date format of DD/MM/YYYY
         const convertUTCtoDate = (utc) => {
@@ -69,7 +87,7 @@ class Scenarios extends Component {
                 (
                     <div
                         className={scenartioStyle.tableRow} key={scenario.uuid}
-                        style={{ visibility: this.state.isFetching ? "hidden" : "visible" }}
+                        style={{ visibility: isFetching ? "hidden" : "visible" }}
                     >
                         <div className={scenartioStyle.tableCheckbox}>
                             <input type="checkbox" />
@@ -128,7 +146,7 @@ class Scenarios extends Component {
                                     position: "absolute",
                                     top: "45%",
                                     left: "45%",
-                                    visibility: this.state.isFetching ? "visible" : "hidden"
+                                    visibility: isFetching ? "visible" : "hidden"
                                 }}
                             >
                                 <MDSpinner />
@@ -138,8 +156,9 @@ class Scenarios extends Component {
                     <div className={scenartioStyle.Footer}>
                         <div className={scenartioStyle.Pagination}>
                             <PaginationBar
-                                page={3}
-                                pages={5}
+                                loadScenariosOnPage={page => this.handleUpdatePage(page)}
+                                page={page}
+                                pages={Math.ceil(total / pageSize)}
                             />
                         </div>
                         <button
