@@ -52,15 +52,6 @@ class Raster extends Component {
       this.state.include3diScenarios
     );
   }
-  componentWillReceiveProps(props) {
-    let page = 1;
-    if (
-      this.props.organisations.selected.uuid ===
-      props.organisations.selected.uuid
-    ) {
-      page = this.state.page;
-    }
-  }
   componentWillUpdate(nextProps, nextState) {
     if (nextState.searchedTerms !== this.state.searchedTerms) {
       this.handleUpdatePage(1);
