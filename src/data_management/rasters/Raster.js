@@ -551,7 +551,7 @@ class Raster extends Component {
             <div className={rasterTableStyles.tableSearchTop}>
               <SearchBox
                 handleSearchEnter={searchTerms => {
-                  this.handleUpdateSearchedTermsEnter(searchTerms);
+                  this.handleUpdateSearchedTermsEnter();
                 }}
                 handleSearchOnBlur={searchTerms => {
                   this.handleUpdateSearchedTermsOnBlur(searchTerms);

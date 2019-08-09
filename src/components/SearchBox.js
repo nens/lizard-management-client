@@ -10,7 +10,7 @@ class SearchBox extends Component {
   handleEnter(event) {
     if (event.keyCode === 13) {
       // 13 is keycode 'enter' (works only when current input validates)
-      this.props.handleSearchEnter(this.props.searchTerms);
+      this.props.handleSearchEnter();
     }
   }
 
@@ -84,7 +84,7 @@ class SearchBox extends Component {
           style={{ display: "none" }}
           type="button"
           className={`${buttonStyles.Button} ${buttonStyles.Success}`}
-          onClick={e => handleSearchEnter(searchTerms)}
+          onClick={e => handleSearchEnter()}
         >
           <FormattedMessage id="search" defaultMessage="Search" />
           <Ink />
