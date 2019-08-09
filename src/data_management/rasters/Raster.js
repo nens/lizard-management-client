@@ -551,7 +551,6 @@ class Raster extends Component {
                   this.handleUpdateSearchedTermsClear();
                 }}
                 searchTerms={this.state.searchTerms}
-                searchedTerms={this.state.searchedTerms}
                 setSearchTerms={searchTerms => {
                   this.handleUpdateSearchTerms(searchTerms);
                 }}
