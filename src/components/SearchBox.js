@@ -57,13 +57,16 @@ class SearchBox extends Component {
             onBlur={e => {
               // Don't trigger onBlur if you click on the clear button of the
               // searchbox.
-              if (!e.relatedTarget) {
+              if (e.relatedTarget && e.relatedTarget.id === "searchBoxClearButton") {
+                return;
+              } else {
                 this.props.handleSearchOnBlur();
               }
             }}
           />
 
           <i
+            id="searchBoxClearButton"
             className={`${clearInputStyles.ClearInput} material-icons`}
             style={
               this.props.searchTerms === ""
