@@ -67,7 +67,7 @@ class SearchBox extends Component {
                 : { right: "6px" }
             }
             onClick={() => {
-              this.props.handleSearchClear("");
+              this.props.handleSearchClear();
             }}
           >
             clear
