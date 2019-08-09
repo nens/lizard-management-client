@@ -83,7 +83,6 @@ class Raster extends Component {
   handleUpdateSearchTerms(searchTerms) {
     this.setState({
       searchTerms: searchTerms,
-      // page: 1 // Reset PaginationBar to page 1
     });
   }
   handleUpdateSearchedTermsEnter() {
@@ -95,7 +94,6 @@ class Raster extends Component {
   handleUpdateSearchedTermsOnBlur() {
     this.setState({
       searchedTerms: this.state.searchTerms,
-      // page: 1 // Reset PaginationBar to page 1
     });
   }
   handleUpdateSearchedTermsClear() {
