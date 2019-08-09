@@ -13,10 +13,12 @@ class Scenarios extends Component {
         total: 0,
         page: 1,
         pageSize: 10,
+        searchTerms: "",
+        searchedTerms: "",
     };
 
-    fetchScenariosFromApi = (page) => {
-        const url = `/api/v3/scenarios/?writable=true&page_size=${this.state.pageSize}&page=${page}`;
+    fetchScenariosFromApi = (page, searchContains) => {
+        const url = `/api/v3/scenarios/?writable=true&page_size=${this.state.pageSize}&page=${page}&name__icontains=${searchContains}`;
 
         this.setState({
             isFetching: true
@@ -35,22 +37,57 @@ class Scenarios extends Component {
             });
     };
 
-    componentDidMount() {
-        this.fetchScenariosFromApi(this.state.page);
-    };
-
-    componentWillUpdate(nextProps, nextState) {
-        if (nextState.page !== this.state.page) {
-            this.fetchScenariosFromApi(
-                nextState.page
-            );
-        };
-    };
-
     handleUpdatePage(page) {
         this.setState({
             page: page
         });
+    };
+    handleUpdateSearchTerms(searchTerms) {
+        this.setState({
+            searchTerms: searchTerms,
+            // page: 1 // Reset PaginationBar to page 1
+        });
+    };
+    handleUpdateSearchedTermsEnter() {
+        this.setState({
+            searchedTerms: this.state.searchTerms,
+            page: 1 // Reset PaginationBar to page 1
+        });
+    };
+    handleUpdateSearchedTermsOnBlur() {
+        this.setState({
+            searchedTerms: this.state.searchTerms,
+            // page: 1 // Reset PaginationBar to page 1
+        });
+    };
+    handleUpdateSearchedTermsClear() {
+        this.setState({
+            searchTerms: "",
+            searchedTerms: "",
+            page: 1 // Reset PaginationBar to page 1
+        });
+    };
+
+    componentDidMount() {
+        this.fetchScenariosFromApi(
+            this.state.page,
+            this.state.searchTerms
+        );
+    };
+
+    componentWillUpdate(nextProps, nextState) {
+        if (nextState.searchedTerms !== this.state.searchedTerms) {
+            this.handleUpdatePage(1);
+            this.fetchScenariosFromApi(
+                this.state.page,
+                nextState.searchedTerms
+            );
+        } else if (nextState.page !== this.state.page) {
+            this.fetchScenariosFromApi(
+                nextState.page,
+                this.state.searchedTerms
+            );
+        };
     };
 
     render() {
@@ -130,7 +167,21 @@ class Scenarios extends Component {
                 </div>
                 <div className={scenartioStyle.Main}>
                     <div className={scenartioStyle.Search}>
-                        <SearchBox />
+                        <SearchBox
+                            handleSearchEnter={searchTerms => {
+                                this.handleUpdateSearchedTermsEnter();
+                            }}
+                            handleSearchOnBlur={searchTerms => {
+                                this.handleUpdateSearchedTermsOnBlur();
+                            }}
+                            handleSearchClear={searchTerms => {
+                                this.handleUpdateSearchedTermsClear();
+                            }}
+                            searchTerms={this.state.searchTerms}
+                            setSearchTerms={searchTerms => {
+                                this.handleUpdateSearchTerms(searchTerms);
+                            }}
+                        />
                     </div>
                     <div className={scenartioStyle.Table}>
                         {scenarioTableHeader()}
