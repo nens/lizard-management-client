@@ -554,7 +554,7 @@ class Raster extends Component {
                   this.handleUpdateSearchedTermsEnter();
                 }}
                 handleSearchOnBlur={searchTerms => {
-                  this.handleUpdateSearchedTermsOnBlur(searchTerms);
+                  this.handleUpdateSearchedTermsOnBlur();
                 }}
                 handleSearchClear={searchTerms => {
                   this.handleUpdateSearchedTermsClear();
