@@ -55,7 +55,11 @@ class SearchBox extends Component {
             onKeyUp={e => this.handleEnter(e)}
             title={intl.formatMessage({ id: "Search in name and description" })}
             onBlur={e => {
-              this.props.handleSearchOnBlur();
+              // Don't trigger onBlur if you click on the clear button of the
+              // searchbox.
+              if (!e.relatedTarget) {
+                this.props.handleSearchOnBlur();
+              }
             }}
           />
 
@@ -69,6 +73,7 @@ class SearchBox extends Component {
             onClick={() => {
               this.props.handleSearchClear();
             }}
+            tabIndex={0}
           >
             clear
           </i>
