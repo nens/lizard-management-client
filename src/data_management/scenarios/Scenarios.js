@@ -183,27 +183,34 @@ class Scenarios extends Component {
                             }}
                         />
                     </div>
-                    <div className={scenartioStyle.Table}>
-                        {scenarioTableHeader()}
-                        <Scrollbars
-                            autoHeight
-                            autoHeightMin={500}
-                            autoHeightMax={500}
-                            style={{ width: "100%" }}
-                        >
-                            {scenarioTableBody(scenarios)}
-                            <div
-                                style={{
-                                    position: "absolute",
-                                    top: "45%",
-                                    left: "45%",
-                                    visibility: isFetching ? "visible" : "hidden"
-                                }}
+                    <Scrollbars
+                        autoHeight
+                        autoHeightMin={551}
+                        //Hide vertical scrollbar of this component to use the vertical scrollbar of the table body only
+                        renderTrackVertical={props => <div {...props} style={{display: 'none'}} className="track-vertical"/>}
+                    >
+                        <div className={scenartioStyle.Table}>
+                            {scenarioTableHeader()}
+                            <Scrollbars
+                                autoHeight
+                                autoHeightMin={500}
+                                autoHeightMax={500}
+                                style={{ minWidth: "500px" }}
                             >
-                                <MDSpinner />
-                            </div>
-                        </Scrollbars>
-                    </div>
+                                {scenarioTableBody(scenarios)}
+                                <div
+                                    style={{
+                                        position: "absolute",
+                                        top: "45%",
+                                        left: "45%",
+                                        visibility: this.state.isFetching ? "visible" : "hidden"
+                                    }}
+                                >
+                                    <MDSpinner />
+                                </div>
+                            </Scrollbars>
+                        </div>
+                    </Scrollbars>
                     <div className={scenartioStyle.Footer}>
                         <div className={scenartioStyle.Pagination}>
                             <PaginationBar

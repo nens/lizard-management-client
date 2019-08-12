@@ -57,6 +57,7 @@
 }
 
 .tableHeader {
+    min-width: 500px;
     display: flex;
     align-items: center;
     height: 50px;
@@ -68,6 +69,8 @@
 
 .tableHeader div {
     margin-right: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .tableHeader div:first-child {
