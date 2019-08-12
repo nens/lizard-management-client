@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import MDSpinner from "react-md-spinner";
 import { Scrollbars } from "react-custom-scrollbars";
+import { FormattedMessage, injectIntl } from "react-intl";
 import SearchBox from "../../components/SearchBox";
 import PaginationBar from "./../rasters/PaginationBar";
 import buttonStyles from "../../styles/Buttons.css";
@@ -55,11 +56,21 @@ class Scenarios extends Component {
                     <div className={scenartioStyle.tableCheckbox}>
                         <input type="checkbox" />
                     </div>
-                    <div className={scenartioStyle.tableScenario}>Scenario</div>
-                    <div className={scenartioStyle.tableModel}>Model</div>
-                    <div className={scenartioStyle.tableUser}>User</div>
-                    <div className={scenartioStyle.tableDate}>Date</div>
-                    <div className={scenartioStyle.tableSize}>Size</div>
+                    <div className={scenartioStyle.tableScenario}>
+                        <FormattedMessage id="scenario.scenario" defaultMessage="Scenario" />
+                    </div>
+                    <div className={scenartioStyle.tableModel}>
+                        <FormattedMessage id="scenario.model" defaultMessage="Model" />
+                    </div>
+                    <div className={scenartioStyle.tableUser}>
+                        <FormattedMessage id="scenario.user" defaultMessage="User" />
+                    </div>
+                    <div className={scenartioStyle.tableDate}>
+                        <FormattedMessage id="scenario.date" defaultMessage="Date" />
+                    </div>
+                    <div className={scenartioStyle.tableSize}>
+                        <FormattedMessage id="scenario.size" defaultMessage="Size" />
+                    </div>
                 </div>
             );
         };
@@ -104,7 +115,10 @@ class Scenarios extends Component {
                             alt="database"
                         />
                         <div className={scenartioStyle.SumText}>
-                            <span className={scenartioStyle.TotalStorage}>Total storage</span><br />
+                            <span className={scenartioStyle.TotalStorage}>
+                                <FormattedMessage id="scenario.total_storage" defaultMessage="Total Storage" />
+                            </span>
+                            <br />
                             <span className={scenartioStyle.TotalNumber}>20.1</span>
                             <span className={scenartioStyle.Gb}>Gb</span>
                         </div>
@@ -151,7 +165,7 @@ class Scenarios extends Component {
                             className={`${scenartioStyle.DeleteButton} ${buttonStyles.Button} ${buttonStyles.Inactive}`}
                             style={{ maxHeight: "36px" }}
                         >
-                            Delete
+                            <FormattedMessage id="scenario.delete_scenario" defaultMessage="Delete Selection" />
                         </button>
                     </div>
                 </div>
