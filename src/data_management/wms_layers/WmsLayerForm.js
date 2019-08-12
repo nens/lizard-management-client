@@ -177,8 +177,9 @@ class WmsLayerFormModel extends Component {
           title={<FormattedMessage id="wms_layer_form.min_zoom" />}
           placeholder={placeholderMinZoom}
           initial = {
-            currentWmsLayer &&
-              currentWmsLayer.min_zoom.toString()
+            (currentWmsLayer &&
+            currentWmsLayer.min_zoom && 
+              currentWmsLayer.min_zoom.toString()) || null
           }
         />
         <TextInput
@@ -186,8 +187,9 @@ class WmsLayerFormModel extends Component {
           title={<FormattedMessage id="wms_layer_form.max_zoom" />}
           placeholder={placeholderMaxZoom}
           initial = {
-            currentWmsLayer &&
-              currentWmsLayer.max_zoom.toString()
+            (currentWmsLayer &&
+              currentWmsLayer.max_zoom && 
+                currentWmsLayer.max_zoom.toString()) || null
           }
         />
         <TextArea
