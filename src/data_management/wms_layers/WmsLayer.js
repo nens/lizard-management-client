@@ -122,7 +122,7 @@ class WmsLayer extends Component {
   getWmsLayersFromApi = (page, searchContains) => {
     // searching/filtering/pagination is for now done clientside so server side search is commented out
 
-    const url = "/api/v3/wmslayers/?page_size=100000";
+    const url = "/api/v4/wmslayers/?page_size=100000";
 
     this.setState({
       isFetching: true
@@ -180,7 +180,7 @@ class WmsLayer extends Component {
   }
 
   fetchWmsLayerUuidsWithOptions(uuids, fetchOptions) {
-    const url = "/api/v3/wmslayers/";
+    const url = "/api/v4/wmslayers/";
     // array to store all fetches to later resolve all promises
     const fetches = uuids.map (wmsLayerUuid => {
       return (fetch(url + wmsLayerUuid + "/", fetchOptions));

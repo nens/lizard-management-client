@@ -47,7 +47,7 @@ class WmsLayerFormModel extends Component {
 
     this.setState({ isFetching: true, openOverlay: true });
 
-    const url = "/api/v3/wmslayers/";
+    const url = "/api/v4/wmslayers/";
      if (!currentWmsLayer) {
       const opts = {
         credentials: "same-origin",
@@ -163,7 +163,7 @@ class WmsLayerFormModel extends Component {
               currentWmsLayer.slug
           }
         />
-        <TextInput
+        {/* <TextInput
           name="wmsLayerTiled"
           title={<FormattedMessage id="wms_layer_form.tiled" />}
           placeholder={placeholderTiled}
@@ -171,7 +171,7 @@ class WmsLayerFormModel extends Component {
             currentWmsLayer &&
               currentWmsLayer.tiled
           }
-        />
+        /> */}
         <TextInput
           name="wmsLayerMinZoom"
           title={<FormattedMessage id="wms_layer_form.min_zoom" />}
