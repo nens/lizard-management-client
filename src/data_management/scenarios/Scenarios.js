@@ -117,6 +117,8 @@ class Scenarios extends Component {
                     <Scrollbars
                         autoHeight
                         autoHeightMin={551}
+                        //Hide vertical scrollbar of this component to use the vertical scrollbar of the table body only
+                        renderTrackVertical={props => <div {...props} style={{display: 'none'}} className="track-vertical"/>}
                     >
                         <div className={scenartioStyle.Table}>
                             {scenarioTableHeader()}
