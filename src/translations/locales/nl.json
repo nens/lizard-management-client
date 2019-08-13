@@ -281,5 +281,12 @@
   "placeholder_maximum_color_range": "Optioneel maximaal bereik",
   "placeholder_timeseries_selection_via_asset": "Selecteer het object waarop de tijdserie wordt gemeten en waarop je het alarm wilt toevoegen",
   "placeholder_timeseries_selection_via_nested_asset": "Selecteer eventueel een sub-object (Bijvoorbeeld een pomp A van gemaal B of filter A van het grondwater meetstation B)",
-  "placeholder_timeseries_selection": "Selecteer de tijdserie waarop je het alarm wilt toevoegen"
+  "placeholder_timeseries_selection": "Selecteer de tijdserie waarop je het alarm wilt toevoegen",
+  "scenario.date": "Datum",
+  "scenario.delete_scenario": "Verwijder Selectie",
+  "scenario.model": "Model",
+  "scenario.scenario": "Scenario",
+  "scenario.size": "Grootte",
+  "scenario.total_storage": "Totale Opslag",
+  "scenario.user": "Gebruiker"
 }
