@@ -100,13 +100,15 @@ class WmsLayer extends Component {
     page,
     searchTerms
   ) => {
+    console.log('refreshWmsLayerFilteringAndPaginationAndUpdateState', searchTerms)
     const filteredSortedWmsLayers = this.filterSortWmsLayers(
       wmsLayers,
       searchTerms
     );
     const paginatedWmsLayers = this.paginateWmsLayers(filteredSortedWmsLayers, page);
     const checkboxes = this.createCheckboxDataFromWmsLayer(paginatedWmsLayers);
-
+    
+    console.log('refreshWmsLayerFilteringAndPaginationAndUpdateState 2 ', searchTerms)
     this.setState({
       isFetching: false,
       total: filteredSortedWmsLayers.length,
@@ -449,12 +451,13 @@ class WmsLayer extends Component {
             className={`${gridStyles.colLg8} ${gridStyles.colMd8} ${gridStyles.colSm8} ${gridStyles.colXs8}`}
           >
             <SearchBox
-              handleSearch={searchTerms =>
+              handleSearch={searchTerms =>{
                 this.refreshWmsLayerFilteringAndPaginationAndUpdateState(
                   this.state.wmsLayers,
                   1,
                   searchTerms
-                )}
+                )
+              }}
               searchTerms={this.state.searchTerms}
               setSearchTerms={searchTerms => {
                 this.refreshWmsLayerFilteringAndPaginationAndUpdateState(
