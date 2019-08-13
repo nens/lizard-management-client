@@ -146,6 +146,7 @@
   margin: 5px;
 }
 .TopNav div:last-child {
+  overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
