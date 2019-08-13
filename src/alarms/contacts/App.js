@@ -35,6 +35,15 @@ class App extends Component {
     const { page } = this.state;
     this.loadContactsOnPage(page);
   }
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.selectedOrganisation &&
+      prevProps.selectedOrganisation.uuid !== this.props.selectedOrganisation.uuid
+    ) {
+      const { page } = this.state;
+      this.loadContactsOnPage(page);
+    }
+  }
   handleNewContactClick(e) {
     this.props.history.push("contacts/new");
   }

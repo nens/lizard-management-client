@@ -34,6 +34,15 @@ class App extends Component {
     const { page } = this.state;
     this.loadContactGroupsOnPage(page);
   }
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.selectedOrganisation &&
+      prevProps.selectedOrganisation.uuid !== this.props.selectedOrganisation.uuid
+    ) {
+      const { page } = this.state;
+      this.loadContactGroupsOnPage(page);
+    }
+  }
 
   loadContactGroupsOnPage(page) {
     const { selectedOrganisation } = this.props;

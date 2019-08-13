@@ -7,7 +7,7 @@ import PaginationBar from "./PaginationBar";
 import { AlarmRow } from "./AlarmRow";
 import React, { Component } from "react";
 import styles from "./App.css";
-import { addNotification } from "../../actions";
+import { addNotification, updateAlarmType } from "../../actions";
 import { connect } from "react-redux";
 import { FormattedMessage } from "react-intl";
 import { withRouter } from "react-router-dom";
@@ -18,7 +18,6 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      timeSeriesOrRaster: "RASTERS", // other option: "TIMESERIES", decided by radiobutton
       isFetching: true,
       alarms: [],
       total: 0,
@@ -49,10 +48,10 @@ class App extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (
-      this.state.timeSeriesOrRaster !== prevState.timeSeriesOrRaster ||
       this.state.page !== prevState.page ||
       this.props.selectedOrganisation.uuid !==
-        prevProps.selectedOrganisation.uuid
+        prevProps.selectedOrganisation.uuid ||
+      this.props.alarmType !== prevProps.alarmType
     ) {
       this.loadAlarmsOnPage(this.state, this.props);
     }
@@ -64,10 +63,10 @@ class App extends Component {
     });
 
     let apiAlarmName = "";
-    if (state.timeSeriesOrRaster === "RASTERS") {
+    if (props.alarmType === "RASTERS") {
       apiAlarmName = "rasteralarms";
     } else {
-      // else if (state.timeSeriesOrRaster === "TIMESERIES")
+      // else if (props.alarmType === "TIMESERIES")
       apiAlarmName = "timeseriesalarms";
     }
     fetch(
@@ -167,7 +166,9 @@ class App extends Component {
       });
   }
 
-  createRasterTimeseriesSwitchGUI(timeSeriesOrRaster) {
+  createRasterTimeseriesSwitchGUI(alarmType) {
+    const { updateAlarmType } = this.props;
+
     return (
       <div className={styles.ChoicesContainer}>
         <div
@@ -177,9 +178,9 @@ class App extends Component {
           )}
           onClick={e => {
             this.setState({
-              timeSeriesOrRaster: "RASTERS",
               page: 1
             });
+            updateAlarmType("RASTERS")
           }}
         >
           <input
@@ -187,7 +188,7 @@ class App extends Component {
             type="radio"
             name="alarm_type"
             value="raster_alarms"
-            checked={timeSeriesOrRaster === "RASTERS"}
+            checked={alarmType === "RASTERS"}
           />
           <label className={styles.ChoiceLabel}>
             <FormattedMessage
@@ -200,9 +201,9 @@ class App extends Component {
           className={styles.ChoiceContainer}
           onClick={e => {
             this.setState({
-              timeSeriesOrRaster: "TIMESERIES",
               page: 1
             });
+            updateAlarmType("TIMESERIES")
           }}
         >
           <input
@@ -210,7 +211,7 @@ class App extends Component {
             type="radio"
             name="alarm_type"
             value="timeseries_alarms"
-            checked={timeSeriesOrRaster === "TIMESERIES"}
+            checked={alarmType === "TIMESERIES"}
           />
           <label className={styles.ChoiceLabel}>
             <FormattedMessage
@@ -248,7 +249,7 @@ class App extends Component {
               values={{ numberOfNotifications }}
             />
             {this.createRasterTimeseriesSwitchGUI(
-              this.state.timeSeriesOrRaster
+              this.props.alarmType
             )}
           </div>
           <div
@@ -322,7 +323,8 @@ class App extends Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     selectedOrganisation: state.organisations.selected,
-    isFetchingOrganisations: state.organisations.isFetching
+    isFetchingOrganisations: state.organisations.isFetching,
+    alarmType: state.alarmType
   };
 };
 
@@ -330,6 +332,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     addNotification: (message, timeout) => {
       dispatch(addNotification(message, timeout));
+    },
+    updateAlarmType: (alarmType) => {
+      dispatch(updateAlarmType(alarmType));
     }
   };
 };
