@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import MDSpinner from "react-md-spinner";
 import { Scrollbars } from "react-custom-scrollbars";
-import { FormattedMessage, injectIntl } from "react-intl";
+import { FormattedMessage } from "react-intl";
 import SearchBox from "../../components/SearchBox";
 import PaginationBar from "./../rasters/PaginationBar";
 import buttonStyles from "../../styles/Buttons.css";
