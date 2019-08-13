@@ -517,50 +517,52 @@ class Raster extends Component {
           </div>
         </div>
         <div className={`${rasterTableStyles.tableFooterDeleteRasters}`}>
-        <button
-            type="button"
-            className={
-              clickedCheckboxes > 0
-                ? `${buttonStyles.Button} ${buttonStyles.Danger}`
-                : `${buttonStyles.Button} ${buttonStyles.Inactive}`
-            }
-            onClick={this.handleFlushDataRasterClick}
-            style={{ maxHeight: "36px", width: "204px",marginRight: "10px" }}
-            disabled={clickedCheckboxes === 0 ? true : false}
-          >
-            <FormattedMessage
-              id="rasters.flush_data_rasters"
-              defaultMessage={` Flush Data {clickedCheckboxes, number} {clickedCheckboxes, plural,
-                one {Raster}
-                other {Rasters}}`}
-              values={{
-                clickedCheckboxes
-              }}
-            />
-            <Ink />
-          </button>
-          <button
-            type="button"
-            className={
-              clickedCheckboxes > 0
-                ? `${buttonStyles.Button} ${buttonStyles.Danger}`
-                : `${buttonStyles.Button} ${buttonStyles.Inactive}`
-            }
-            onClick={this.handleDeleteRasterClick}
-            style={{ maxHeight: "36px", width: "204px" }}
-            disabled={clickedCheckboxes === 0 ? true : false}
-          >
-            <FormattedMessage
-              id="rasters.delete_rasters"
-              defaultMessage={` Delete {clickedCheckboxes, number} {clickedCheckboxes, plural,
-                one {Raster}
-                other {Rasters}}`}
-              values={{
-                clickedCheckboxes
-              }}
-            />
-            <Ink />
-          </button>
+          <div>
+            <button
+              type="button"
+              className={
+                clickedCheckboxes > 0
+                  ? `${buttonStyles.Button} ${buttonStyles.Danger}`
+                  : `${buttonStyles.Button} ${buttonStyles.Inactive}`
+              }
+              onClick={this.handleFlushDataRasterClick}
+              style={{ maxHeight: "36px", width: "204px",marginRight: "10px" }}
+              disabled={clickedCheckboxes === 0 ? true : false}
+            >
+              <FormattedMessage
+                id="rasters.flush_data_rasters"
+                defaultMessage={` Flush Data {clickedCheckboxes, number} {clickedCheckboxes, plural,
+                  one {Raster}
+                  other {Rasters}}`}
+                values={{
+                  clickedCheckboxes
+                }}
+              />
+              <Ink />
+            </button>
+            <button
+              type="button"
+              className={
+                clickedCheckboxes > 0
+                  ? `${buttonStyles.Button} ${buttonStyles.Danger}`
+                  : `${buttonStyles.Button} ${buttonStyles.Inactive}`
+              }
+              onClick={this.handleDeleteRasterClick}
+              style={{ maxHeight: "36px", width: "204px" }}
+              disabled={clickedCheckboxes === 0 ? true : false}
+            >
+              <FormattedMessage
+                id="rasters.delete_rasters"
+                defaultMessage={` Delete {clickedCheckboxes, number} {clickedCheckboxes, plural,
+                  one {Raster}
+                  other {Rasters}}`}
+                values={{
+                  clickedCheckboxes
+                }}
+              />
+              <Ink />
+            </button>
+          </div>
         </div>
       </div>
     );

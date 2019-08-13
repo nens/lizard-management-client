@@ -97,15 +97,21 @@
 
 .tableFooterLeftFiller{
   display: flex;
-  flex: 1 0 0;
+  flex: 2 0 0;
 }
 .tableFooterDeleteRasters {
-  display: flex;
-  flex: 1 0 0;
+  /* display: flex; */
+  flex: 2 0 0;
   justify-content: flex-end;
   padding: 0px 0px 0px 10px;
 }
-
+.tableFooterDeleteRasters div {
+  float: right;
+  margin-bottom: -5px;
+}
+.tableFooterDeleteRasters button {
+  margin-bottom: 5px;
+}
 .tableFooterNumberOfRasters{
   font-weight: normal;
 }
