@@ -87,7 +87,6 @@ class Raster extends Component {
     );
   }
 
-
   handleUpdatePage(page) {
     this.setState({
       page: page
