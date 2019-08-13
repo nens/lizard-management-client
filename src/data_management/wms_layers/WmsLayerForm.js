@@ -4,7 +4,7 @@ import { addNotification } from "../../actions";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { FormattedMessage, injectIntl } from "react-intl";
-import ErrorOverlay from "../rasters/ErrorOverlay.js";
+import ErrorOverlay from "./ErrorOverlay.js";
 
 import "../../forms/validators";
 
@@ -67,9 +67,6 @@ class WmsLayerFormModel extends Component {
           legend_url: validatedData.wmsLayerLegendUrl,
         })
       };
-
-      // get_feature_info_url	
-      // 
 
       fetch(url, opts)
         .then(responseParsed => {
@@ -223,7 +220,7 @@ class WmsLayerFormModel extends Component {
           placeholder={placeholderMinZoom}
           initial = {
             (currentWmsLayer &&
-            currentWmsLayer.min_zoom && 
+            (currentWmsLayer.min_zoom || currentWmsLayer.min_zoom === 0) && 
               currentWmsLayer.min_zoom.toString()) || null
           }
           validators={[minLength(1)]}
@@ -234,7 +231,7 @@ class WmsLayerFormModel extends Component {
           placeholder={placeholderMaxZoom}
           initial = {
             (currentWmsLayer &&
-              currentWmsLayer.max_zoom && 
+              (currentWmsLayer.max_zoom || currentWmsLayer.max_zoom === 0) && 
                 currentWmsLayer.max_zoom.toString()) || null
           }
           validators={[minLength(1)]}
