@@ -54,9 +54,8 @@ class Raster extends Component {
   }
   componentWillUpdate(nextProps, nextState) {
     if (nextState.searchedTerms !== this.state.searchedTerms) {
-      this.handleUpdatePage(1);
-      this.fetchRastersFromApi(
-        this.state.page,
+      this.updatePageAndFetchRastersFromApi(
+        1,
         nextState.searchedTerms,
         this.state.include3diScenarios
       );
@@ -74,6 +73,16 @@ class Raster extends Component {
       );
     }
   }
+
+  async updatePageAndFetchRastersFromApi(page, searchedTerms, include3diScenarios) {
+    await this.handleUpdatePage(page);
+    this.fetchRastersFromApi(
+      this.state.page,
+      searchedTerms,
+      include3diScenarios
+    );
+  }
+
 
   handleUpdatePage(page) {
     this.setState({
