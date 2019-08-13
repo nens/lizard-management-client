@@ -54,11 +54,22 @@ class WmsLayerFormModel extends Component {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          organisation: validatedData.selectedOrganisation,
           name: validatedData.wmsLayerName,
           description: validatedData.description,
-          options: validatedData.colormap.options,
+          url: validatedData.wmsLayerUrl,
+          slug: validatedData.wmsLayerSlug,
+          min_zoom: validatedData.wmsLayerMinZoom,
+          max_zoom: validatedData.wmsLayerMaxZoom,
+          options: validatedData.wmsLayerOptions,
+          get_feature_info: validatedData.wmsLayerGetFeatureInfo,
+          get_feature_info_url: validatedData.wmsLayerGetFeatureInfoUrl,
+          legend_url: validatedData.wmsLayerLegendUrl,
         })
       };
+
+      // get_feature_info_url	
+      // 
 
       fetch(url, opts)
         .then(responseParsed => {
@@ -71,8 +82,17 @@ class WmsLayerFormModel extends Component {
         });
     } else {
       let body = {
-        name: validatedData.rasterName,
+        organisation: validatedData.selectedOrganisation,
+        name: validatedData.wmsLayerName,
         description: validatedData.description,
+        url: validatedData.wmsLayerUrl,
+        slug: validatedData.wmsLayerSlug,
+        min_zoom: validatedData.wmsLayerMinZoom,
+        max_zoom: validatedData.wmsLayerMaxZoom,
+        options: validatedData.wmsLayerOptions,
+        get_feature_info: validatedData.wmsLayerGetFeatureInfo,
+        get_feature_info_url: validatedData.wmsLayerGetFeatureInfoUrl,
+        legend_url: validatedData.wmsLayerLegendUrl,
       };
       const opts = {
         credentials: "same-origin",
@@ -110,6 +130,7 @@ class WmsLayerFormModel extends Component {
     const placeholderOptions = intl.formatMessage({ id: "placeholder_options" });
     const placeholderLegendUrl = intl.formatMessage({ id: "placeholder_legend_url" });
     const placeholderGetFeatureInfoUrl = intl.formatMessage({ id: "placeholder_get_feature_info_url" });
+    const placeholderOrganisationSelection = intl.formatMessage({ id: "placeholder_organisation_selection" });
 
     return (
       <div>
@@ -126,6 +147,25 @@ class WmsLayerFormModel extends Component {
       <ManagementForm  onSubmit={formData => this.onSubmit(formData, currentWmsLayer)}
                        wizardStyle={this.props.wizardStyle}
       >
+        <SelectBox
+          name="selectedOrganisation"
+          title={<FormattedMessage id="wms_layer_form.organisation" />}
+          subtitle={<FormattedMessage id="raster_form.organisation_subtitle"  />}
+          placeholder={placeholderOrganisationSelection}
+          choices={this.props.organisations.available.map(organisation=>
+            [organisation.uuid, organisation.name]
+          )}
+          validators={[required("Please select an organisation.")]}
+          showSearchField={true}
+          initial ={
+            (
+              currentWmsLayer && 
+              currentWmsLayer.organisation && 
+              currentWmsLayer.organisation.uuid &&
+              currentWmsLayer.organisation.uuid
+            ) || null
+          }
+        />
         <TextInput
           name="wmsLayerName"
           title={<FormattedMessage id="wms_layer_form.wmsLayerName" />}
@@ -134,6 +174,7 @@ class WmsLayerFormModel extends Component {
             currentWmsLayer &&
               currentWmsLayer.name
           }
+          validators={[minLength(5)]}
         />
         <TextArea
           name="description"
@@ -144,6 +185,7 @@ class WmsLayerFormModel extends Component {
             currentWmsLayer &&
               currentWmsLayer.description
           }
+          validators={[minLength(1)]}
         />
         <TextInput
           name="wmsLayerUrl"
@@ -153,6 +195,7 @@ class WmsLayerFormModel extends Component {
             currentWmsLayer &&
               currentWmsLayer.url
           }
+          validators={[minLength(1)]}
         />
         <TextInput
           name="wmsLayerSlug"
@@ -162,7 +205,9 @@ class WmsLayerFormModel extends Component {
             currentWmsLayer &&
               currentWmsLayer.slug
           }
+          validators={[minLength(1)]}
         />
+        {/* According to my (Tom) understanding this field is no longer needed */}
         {/* <TextInput
           name="wmsLayerTiled"
           title={<FormattedMessage id="wms_layer_form.tiled" />}
@@ -181,6 +226,7 @@ class WmsLayerFormModel extends Component {
             currentWmsLayer.min_zoom && 
               currentWmsLayer.min_zoom.toString()) || null
           }
+          validators={[minLength(1)]}
         />
         <TextInput
           name="wmsLayerMaxZoom"
@@ -191,6 +237,7 @@ class WmsLayerFormModel extends Component {
               currentWmsLayer.max_zoom && 
                 currentWmsLayer.max_zoom.toString()) || null
           }
+          validators={[minLength(1)]}
         />
         <TextArea
           name="wmsLayerOptions"
@@ -200,6 +247,7 @@ class WmsLayerFormModel extends Component {
             currentWmsLayer &&
               JSON.stringify(currentWmsLayer.options)
           }
+          validators={[minLength(1)]}
         />
         <TextInput
           name="wmsLayerGetFeatureInfo"
@@ -209,6 +257,7 @@ class WmsLayerFormModel extends Component {
             currentWmsLayer &&
               currentWmsLayer.get_feature_info
           }
+          validators={[minLength(1)]}
         />
         <TextInput
           name="wmsLayerGetFeatureInfoUrl"
@@ -218,6 +267,7 @@ class WmsLayerFormModel extends Component {
             currentWmsLayer &&
               currentWmsLayer.get_feature_info_url
           }
+          validators={[minLength(1)]}
         />
         <TextInput
           name="wmsLayerLegendUrl"
@@ -227,6 +277,7 @@ class WmsLayerFormModel extends Component {
             currentWmsLayer &&
               currentWmsLayer.legend_url
           }
+          validators={[minLength(1)]}
         />
       </ManagementForm>
       </div>
