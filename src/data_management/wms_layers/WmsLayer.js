@@ -45,23 +45,27 @@ class WmsLayer extends Component {
       this.state.searchTerms
     );
   }
-  componentWillReceiveProps(props) {
-    let page = 1;
+  
+  componentWillUpdate(nextProps, nextState) {
+    
     if (
-      this.props.organisations.selected.uuid ===
-      props.organisations.selected.uuid
+      this.props.organisations.selected.uuid !==
+      nextProps.organisations.selected.uuid
     ) {
-      page = this.state.page;
+      let page = 1;
+      console.log('componentWillReceiveProps');
+      this.refreshWmsLayerFilteringAndPaginationAndUpdateState(
+        nextState.wmsLayers,
+        page,
+        nextState.searchTerms,
+        nextProps.organisations.selected.uuid,
+      );
     }
 
-    this.refreshWmsLayerFilteringAndPaginationAndUpdateState(
-      this.state.wmsLayers,
-      page,
-      this.state.searchTerms
-    );
+    
   }
 
-  filterSortWmsLayers = (wmsLayers, searchContains) => {
+  filterSortWmsLayers = (wmsLayers, searchContains, selectedOrganisationUuid) => {
     const filteredWmsLayers = wmsLayers.filter(
       e =>
         ((e.name || "").toLowerCase().includes(searchContains.toLowerCase()) ||
@@ -71,6 +75,8 @@ class WmsLayer extends Component {
           (e.uuid || "")
             .toLowerCase()
             .includes(searchContains.toLowerCase()))
+          &&
+            (e.organisation.uuid.split('-').join('')) === selectedOrganisationUuid
     );
 
     filteredWmsLayers.sort((a, b) => {
@@ -98,12 +104,14 @@ class WmsLayer extends Component {
   refreshWmsLayerFilteringAndPaginationAndUpdateState = (
     wmsLayers,
     page,
-    searchTerms
+    searchTerms,
+    selectedOrganisationUuid
   ) => {
     console.log('refreshWmsLayerFilteringAndPaginationAndUpdateState', searchTerms)
     const filteredSortedWmsLayers = this.filterSortWmsLayers(
       wmsLayers,
-      searchTerms
+      searchTerms,
+      selectedOrganisationUuid
     );
     const paginatedWmsLayers = this.paginateWmsLayers(filteredSortedWmsLayers, page);
     const checkboxes = this.createCheckboxDataFromWmsLayer(paginatedWmsLayers);
@@ -139,7 +147,8 @@ class WmsLayer extends Component {
         this.refreshWmsLayerFilteringAndPaginationAndUpdateState(
           wmsLayers,
           page,
-          searchContains
+          searchContains,
+          this.props.organisations.selected.uuid
         );
       });
   };
@@ -303,7 +312,10 @@ class WmsLayer extends Component {
           >
             {this.state.paginatedWmsLayers.map((wmsLayer, i) => {
               return (
-                <div className={`${wmsLayerTableStyles.tableBody}`}>
+                <div 
+                  className={`${wmsLayerTableStyles.tableBody}`}
+                  key={wmsLayer.uuid}
+                >
                   <div className={`${wmsLayerTableStyles.tableCheckbox}`}>
                     <input
                       type="checkbox"
@@ -393,12 +405,15 @@ class WmsLayer extends Component {
         <div className={`${wmsLayerTableStyles.tableFooterLeftFiller}`} />
         <div className={`${wmsLayerTableStyles.tableInfoAndPagination}`}>
           <PaginationBar
-            loadWmsLayersOnPage={page =>
+            loadWmsLayersOnPage={page => {
+              console.log('PaginationBar')
               this.refreshWmsLayerFilteringAndPaginationAndUpdateState(
                 this.state.wmsLayers,
                 page,
-                this.state.searchTerms
-              )}
+                this.state.searchTerms,
+                this.props.organisations.selected.uuid
+              )
+            }}
             page={page}
             pages={Math.ceil(total / this.state.pageSize)}
           />
@@ -452,18 +467,22 @@ class WmsLayer extends Component {
           >
             <SearchBox
               handleSearch={searchTerms =>{
+                console.log('handleSearch');
                 this.refreshWmsLayerFilteringAndPaginationAndUpdateState(
                   this.state.wmsLayers,
                   1,
-                  searchTerms
+                  searchTerms,
+                  this.props.organisations.selected.uuid
                 )
               }}
               searchTerms={this.state.searchTerms}
               setSearchTerms={searchTerms => {
+                console.log('setSearchTerms');
                 this.refreshWmsLayerFilteringAndPaginationAndUpdateState(
                   this.state.wmsLayers,
                   1,
-                  searchTerms
+                  searchTerms,
+                  this.props.organisations.selected.uuid
                 );
               }}
             />

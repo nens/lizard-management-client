@@ -201,6 +201,7 @@
   "placeholder_options": "{'transparent': 'True'}",
   "placeholder_legend_url": "Url for the legend",
   "placeholder_get_feature_info_url": "Url for the get feature info",
+  "search_in_name_and_description": "Search in name and description",
   "wms_layer_form.wmsLayerName": "WMS name",
   "wms_layer_form.description": "Description",
   "wms_layer_form.description_subtitle": "Add a clear description for this wms",

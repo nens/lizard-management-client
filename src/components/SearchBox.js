@@ -52,7 +52,7 @@ class SearchBox extends Component {
               this.props.setSearchTerms(e.target.value);
             }}
             onKeyUp={e => this.handleEnter(e)}
-            title={intl.formatMessage({ id: "Search in name and description" })}
+            title={intl.formatMessage({ id: "search_in_name_and_description" })}
           />
 
           <i

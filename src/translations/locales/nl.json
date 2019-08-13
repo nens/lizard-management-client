@@ -289,6 +289,7 @@
   "placeholder_options": "{'transparent': 'True'}",
   "placeholder_legend_url": "Url voor de legenda",
   "placeholder_get_feature_info_url": "Url voor de get feature info",
+  "search_in_name_and_description": "Zoek in naam en description",
   "wms_layer_form.wmsLayerName": "WMS name",
   "wms_layer_form.description": "Beschrijving",
   "wms_layer_form.description_subtitle": "Voeg een duidelijke beschrijving toe voor de WMS",
