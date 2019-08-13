@@ -74,12 +74,16 @@ class Raster extends Component {
     }
   }
 
-  async updatePageAndFetchRastersFromApi(page, searchedTerms, include3diScenarios) {
-    await this.handleUpdatePage(page);
-    this.fetchRastersFromApi(
-      this.state.page,
-      searchedTerms,
-      include3diScenarios
+  updatePageAndFetchRastersFromApi(page, searchedTerms, include3diScenarios) {
+    this.setState(
+      {
+        page: page
+      },
+      this.fetchRastersFromApi(
+        page,
+        searchedTerms,
+        include3diScenarios
+      )
     );
   }
 
