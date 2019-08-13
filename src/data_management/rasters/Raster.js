@@ -354,7 +354,8 @@ class Raster extends Component {
             autoHeight
             autoHeightMin={450}
             autoHeightMax={450}
-            style={{ width: "100%" }}
+            style={{ minWidth: 800 }}
+            renderTrackHorizontal={props => <div {...props} style={{display: 'none'}} className="track-horizontal"/>}
           >
             {this.state.paginatedRasters.map((raster, i) => {
               return (
@@ -656,8 +657,15 @@ class Raster extends Component {
         </div>
 
         <div>
-          {htmlRasterTableHeader}
-          {htmlRasterTableBody}
+          <Scrollbars
+            autoHeight
+            autoHeightMax={500}
+            autoHeightMin={500}
+            renderTrackVertical={props => <div {...props} style={{display: 'none'}} className="track-vertical"/>}
+          >
+            {htmlRasterTableHeader}
+            {htmlRasterTableBody}
+          </Scrollbars>
           {htmlRasterTableFooter}
         </div>
       </div>
