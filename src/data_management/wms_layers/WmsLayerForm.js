@@ -102,6 +102,16 @@ class WmsLayerFormModel extends Component {
     }
   }
 
+  optionsValidator = (value) => {
+    try{
+      JSON.parse(value);
+      return false;
+    } catch (error) {
+      console.log(error);
+      return this.props.intl.formatMessage({ id: "wms_layer_form.options_must_be_json" }); 
+    }
+  }
+
   handleResponse(response) {
     this.setState({
       modalErrorMessage: response,
@@ -338,7 +348,7 @@ class WmsLayerFormModel extends Component {
             currentWmsLayer &&
               JSON.stringify(currentWmsLayer.options)
           }
-          validators={[minLength(1)]}
+          validators={[this.optionsValidator]}
         />
         <CheckBox
           name="wmsLayerGetFeatureInfo"
@@ -366,7 +376,6 @@ class WmsLayerFormModel extends Component {
             currentWmsLayer &&
               currentWmsLayer.legend_url
           }
-          validators={[minLength(1)]}
         />
       </ManagementForm>
       </div>

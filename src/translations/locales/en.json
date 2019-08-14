@@ -208,6 +208,7 @@
   "wms_layer_form.description": "Description",
   "wms_layer_form.description_subtitle": "Add a clear description for this wms",
   "wms_layer_form.isrequired_if_getfeatureinfo_is_true":"This field is required if previous field is checked",
+  "wms_layer_form.options_must_be_json": "Options must be valid JSON",
   "wms_layer_form.organisation": "Organisation",
   "wms_layer_form.url": "Url",
   "wms_layer_form.slug": "Slug",
