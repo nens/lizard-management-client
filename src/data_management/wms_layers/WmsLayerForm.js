@@ -65,6 +65,7 @@ class WmsLayerFormModel extends Component {
           get_feature_info: validatedData.wmsLayerGetFeatureInfo,
           get_feature_info_url: validatedData.wmsLayerGetFeatureInfoUrl,
           legend_url: validatedData.wmsLayerLegendUrl,
+          shared_with: validatedData.sharedWithOrganisations,
         })
       };
 
@@ -90,6 +91,7 @@ class WmsLayerFormModel extends Component {
         get_feature_info: validatedData.wmsLayerGetFeatureInfo,
         get_feature_info_url: validatedData.wmsLayerGetFeatureInfoUrl,
         legend_url: validatedData.wmsLayerLegendUrl,
+        shared_with: validatedData.sharedWithOrganisations,
       };
       const opts = {
         credentials: "same-origin",
@@ -129,6 +131,8 @@ class WmsLayerFormModel extends Component {
     const placeholderGetFeatureInfoUrl = intl.formatMessage({ id: "placeholder_get_feature_info_url" });
     const placeholderOrganisationSelection = intl.formatMessage({ id: "placeholder_organisation_selection" });
 
+    const placeholderOrganisationSearch = intl.formatMessage({ id: "placeholder_organisation_search" });
+
     return (
       <div>
       {this.state.openOverlay ? (
@@ -162,6 +166,29 @@ class WmsLayerFormModel extends Component {
               currentWmsLayer.organisation.uuid
             ) || null
           }
+        />
+        <SlushBucket
+          name="sharedWithOrganisations"
+          title={<FormattedMessage id="raster_form.sharedOrganisation" />}
+          subtitle={<FormattedMessage id="raster_form.sharedOrganisation_subtitle" />}
+          choices={this.props.organisations.availableForRasterSharedWith.map(e =>{
+            return {
+              display: e.name, 
+              value : e.uuid
+            }
+          })}
+          readOnly={false}
+          placeholder={placeholderOrganisationSearch}
+          initial={
+            (
+            currentWmsLayer && 
+            currentWmsLayer.shared_with && 
+            currentWmsLayer.shared_with.map((orgUuid) => {
+              return orgUuid.uuid
+            })
+            ) || [] // passing this empty array is somehow required. Somehow only if I also have the colormapInput component.
+          }
+          validators={[]}
         />
         <TextInput
           name="wmsLayerName"

@@ -205,6 +205,7 @@
   "wms_layer_form.wmsLayerName": "WMS name",
   "wms_layer_form.description": "Description",
   "wms_layer_form.description_subtitle": "Add a clear description for this wms",
+  "wms_layer_form.organisation": "Organisation",
   "wms_layer_form.url": "Url",
   "wms_layer_form.slug": "Slug",
   "wms_layer_form.tiled": "Tiled?",
