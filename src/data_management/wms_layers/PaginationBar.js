@@ -33,8 +33,8 @@ class PaginationBar extends Component {
   }
 
   // render all the page numbers of the list of links
-  // par=loadRastersOnPage is optional
-  renderLinks(links, page, loadRastersOnPage) {
+  // par=loadWmsLayersOnPage is optional
+  renderLinks(links, page, loadWmsLayersOnPage) {
     return links.map(link => {
       if (page === link) {
         return <div key={link}>{link}</div>;
@@ -46,7 +46,7 @@ class PaginationBar extends Component {
             style={{ cursor: "pointer", color: "#007bff" }}
             key={link}
             onClick={() => {
-              loadRastersOnPage && loadRastersOnPage(link);
+              loadWmsLayersOnPage && loadWmsLayersOnPage(link);
             }}
           >
             <button
@@ -61,7 +61,7 @@ class PaginationBar extends Component {
   }
 
   // input field to fill in desired page
-  renderNavigator(links, page, loadRastersOnPage) {
+  renderNavigator(links, page, loadWmsLayersOnPage) {
     const navigatorInError = !(
       parseInt(this.state.inputPage, 10) > 0 &&
       parseInt(this.state.inputPage, 10) <= links.length
@@ -86,7 +86,7 @@ class PaginationBar extends Component {
               parseInt(value, 10) > 0 &&
               parseInt(value, 10) <= links.length
             ) {
-              loadRastersOnPage(parseInt(value, 10));
+              loadWmsLayersOnPage(parseInt(value, 10));
             }
           }}
           maxLength={(links.length + "").length}
@@ -98,7 +98,7 @@ class PaginationBar extends Component {
   }
 
   render() {
-    const { pages, page, loadRastersOnPage } = this.props;
+    const { pages, page, loadWmsLayersOnPage } = this.props;
 
     if (!page && !pages) {
       return null;
@@ -144,13 +144,13 @@ class PaginationBar extends Component {
               {this.renderLinks(
                 linksFromStartToCurrentPage,
                 page,
-                loadRastersOnPage
+                loadWmsLayersOnPage
               )}
               {this.renderLinks(["..."], page)}
-              {this.renderLinks(linksEnd, page, loadRastersOnPage)}
+              {this.renderLinks(linksEnd, page, loadWmsLayersOnPage)}
             </div>
             <div className={styles.NavigatorBar}>
-              {this.renderNavigator(links, page, loadRastersOnPage)}
+              {this.renderNavigator(links, page, loadWmsLayersOnPage)}
             </div>
           </div>
         );
@@ -163,16 +163,16 @@ class PaginationBar extends Component {
         return (
           <div>
             <div className={styles.PaginationBar}>
-              {this.renderLinks(linksStart, page, loadRastersOnPage)}
+              {this.renderLinks(linksStart, page, loadWmsLayersOnPage)}
               {this.renderLinks(["..."], page)}
               {this.renderLinks(
                 linksFromCurrentPageToEnd,
                 page,
-                loadRastersOnPage
+                loadWmsLayersOnPage
               )}
             </div>
             <div className={styles.NavigatorBar}>
-              {this.renderNavigator(links, page, loadRastersOnPage)}
+              {this.renderNavigator(links, page, loadWmsLayersOnPage)}
             </div>
           </div>
         );
@@ -182,14 +182,14 @@ class PaginationBar extends Component {
         return (
           <div>
             <div className={styles.PaginationBar}>
-              {this.renderLinks(linksStart, page, loadRastersOnPage)}
+              {this.renderLinks(linksStart, page, loadWmsLayersOnPage)}
               {this.renderLinks(["..."], page)}
-              {this.renderLinks(linksCenter, page, loadRastersOnPage)}
+              {this.renderLinks(linksCenter, page, loadWmsLayersOnPage)}
               {this.renderLinks(["..."], page)}
-              {this.renderLinks(linksEnd, page, loadRastersOnPage)}
+              {this.renderLinks(linksEnd, page, loadWmsLayersOnPage)}
             </div>
             <div className={styles.NavigatorBar}>
-              {this.renderNavigator(links, page, loadRastersOnPage)}
+              {this.renderNavigator(links, page, loadWmsLayersOnPage)}
             </div>
           </div>
         );
@@ -199,10 +199,10 @@ class PaginationBar extends Component {
         return (
           <div>
             <div className={styles.PaginationBar}>
-              {this.renderLinks(links, page, loadRastersOnPage)}
+              {this.renderLinks(links, page, loadWmsLayersOnPage)}
             </div>
             <div className={styles.NavigatorBar}>
-              {this.renderNavigator(links, page, loadRastersOnPage)}
+              {this.renderNavigator(links, page, loadWmsLayersOnPage)}
             </div>
           </div>
         );

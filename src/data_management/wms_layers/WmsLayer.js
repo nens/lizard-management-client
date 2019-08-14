@@ -5,7 +5,7 @@ import wmsLayerTableStyles from "../../styles/RasterWmsTable.css";
 import Ink from "react-ink";
 import MDSpinner from "react-md-spinner";
 import { Scrollbars } from "react-custom-scrollbars";
-import PaginationBar from "../rasters/PaginationBar";
+import PaginationBar from "./PaginationBar";
 import React, { Component } from "react";
 import styles from "../rasters/App.css";
 import { addNotification } from "../../actions";
@@ -53,7 +53,6 @@ class WmsLayer extends Component {
       nextProps.organisations.selected.uuid
     ) {
       let page = 1;
-      console.log('componentWillReceiveProps');
       this.refreshWmsLayerFilteringAndPaginationAndUpdateState(
         nextState.wmsLayers,
         page,
@@ -108,7 +107,6 @@ class WmsLayer extends Component {
     searchTerms,
     selectedOrganisationUuid
   ) => {
-    console.log('refreshWmsLayerFilteringAndPaginationAndUpdateState', searchTerms)
     const filteredSortedWmsLayers = this.filterSortWmsLayers(
       wmsLayers,
       searchTerms,
@@ -117,7 +115,6 @@ class WmsLayer extends Component {
     const paginatedWmsLayers = this.paginateWmsLayers(filteredSortedWmsLayers, page);
     const checkboxes = this.createCheckboxDataFromWmsLayer(paginatedWmsLayers);
     
-    console.log('refreshWmsLayerFilteringAndPaginationAndUpdateState 2 ', searchTerms)
     this.setState({
       isFetching: false,
       total: filteredSortedWmsLayers.length,
@@ -407,7 +404,6 @@ class WmsLayer extends Component {
         <div className={`${wmsLayerTableStyles.tableInfoAndPagination}`}>
           <PaginationBar
             loadWmsLayersOnPage={page => {
-              console.log('PaginationBar')
               this.refreshWmsLayerFilteringAndPaginationAndUpdateState(
                 this.state.wmsLayers,
                 page,
@@ -468,7 +464,6 @@ class WmsLayer extends Component {
           >
             <SearchBox
               handleSearch={searchTerms =>{
-                console.log('handleSearch');
                 this.refreshWmsLayerFilteringAndPaginationAndUpdateState(
                   this.state.wmsLayers,
                   1,
@@ -478,7 +473,6 @@ class WmsLayer extends Component {
               }}
               searchTerms={this.state.searchTerms}
               setSearchTerms={searchTerms => {
-                console.log('setSearchTerms');
                 this.refreshWmsLayerFilteringAndPaginationAndUpdateState(
                   this.state.wmsLayers,
                   1,
