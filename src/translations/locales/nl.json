@@ -291,6 +291,8 @@
   "placeholder_get_feature_info_url": "Url voor de get feature info",
   "search_in_name_and_description": "Zoek in naam en description",
   "wms_layer_form.wmsLayerName": "WMS name",
+  "wms_layer_form.choose_between_0_31": "Kies waarde tussen 0 en 31",
+  "wms_layer_form.choose_maxzoom_greater_minzoom": "Kies een 'Maximum zoom level' groter dan het 'Minimum zoom level'",
   "wms_layer_form.description": "Beschrijving",
   "wms_layer_form.description_subtitle": "Voeg een duidelijke beschrijving toe voor de WMS",
   "wms_layer_form.organisation": "Organisatie",

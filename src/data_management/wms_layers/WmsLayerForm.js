@@ -12,6 +12,7 @@ import ManagementForm from "../../forms/ManagementForm";
 import ColorMapInput, { colorMapValidator } from "../../forms/ColorMapInput";
 import DurationField, { durationValidator } from "../../forms/DurationField";
 import TextInput from "../../forms/TextInput";
+import IntegerInput from "../../forms/IntegerInput";
 import TextArea from "../../forms/TextArea";
 import SelectBox from "../../forms/SelectBox";
 import CheckBox from "../../forms/CheckBox";
@@ -23,6 +24,7 @@ import {
 } from "../../forms/validators";
 
 
+
 class WmsLayerFormModel extends Component {
 
   constructor(props) {
@@ -32,6 +34,61 @@ class WmsLayerFormModel extends Component {
       openOverlay: false,
       modalErrorMessage: "",
       createdWmsLayer: null,
+    }
+  }
+
+  minZoomValidator = (value, allValues) => {
+    // field is optional so empty string or null is valid
+    // const maxZoom = 
+    //   ( allValues.wmsLayerMaxZoom === "" || allValues.wmsLayerMaxZoom === null || allValues.wmsLayerMaxZoom === undefined)?
+    //   31
+    //   :
+    //   allValues.wmsLayerMaxZoom
+  
+    if (value==="" || null) {
+      return false;
+    } else if (
+      parseInt(value) >= 0 &&
+      parseInt(value) <= 31 //&&
+      //parseInt(value) <= maxZoom 
+    ) {
+      return false;
+    // this can not yet be checked because validator does not receive field after current field
+    // } else if (
+    //   parseInt(value) >= 0 &&
+    //   parseInt(value) <= 31 &&
+    //   parseInt(value) > maxZoom
+    // ) {
+    //   return 'Choose "min zoom" smaller then "max zoom"';
+    } else {
+      return this.props.intl.formatMessage({ id: "wms_layer_form.choose_between_0_31" }); // "Choose a value between 0 and 31"
+    }
+  }
+  
+  maxZoomValidator = (value, allValues) => {
+    // field is optional so empty string or null is valid
+    const minZoom = 
+      ( allValues.wmsLayerMinZoom === "" || allValues.wmsLayerMinZoom === null || allValues.wmsLayerMinZoom === undefined)?
+      0
+      :
+      allValues.wmsLayerMinZoom
+  
+    if (value==="" || null) {
+      return false;
+    } else if (
+      parseInt(value) >= 0 &&
+      parseInt(value) <= 31 &&
+      parseInt(value) >= minZoom 
+    ) {
+      return false;
+    } else if (
+      parseInt(value) >= 0 &&
+      parseInt(value) <= 31 &&
+      parseInt(value) < minZoom
+    ) {
+      return this.props.intl.formatMessage({ id: "wms_layer_form.choose_maxzoom_greater_minzoom" }); //'Choose "max zoom" greater then "min zoom"';
+    } else {
+      return this.props.intl.formatMessage({ id: "wms_layer_form.choose_between_0_31" }); // "Choose a value between 0 and 31"
     }
   }
 
@@ -241,7 +298,7 @@ class WmsLayerFormModel extends Component {
               currentWmsLayer.tiled
           }
         /> */}
-        <TextInput
+        <IntegerInput
           name="wmsLayerMinZoom"
           title={<FormattedMessage id="wms_layer_form.min_zoom" />}
           placeholder={placeholderMinZoom}
@@ -250,9 +307,9 @@ class WmsLayerFormModel extends Component {
             (currentWmsLayer.min_zoom || currentWmsLayer.min_zoom === 0) && 
               currentWmsLayer.min_zoom.toString()) || null
           }
-          validators={[minLength(1)]}
+          validators={[this.minZoomValidator]}
         />
-        <TextInput
+        <IntegerInput
           name="wmsLayerMaxZoom"
           title={<FormattedMessage id="wms_layer_form.max_zoom" />}
           placeholder={placeholderMaxZoom}
@@ -261,7 +318,7 @@ class WmsLayerFormModel extends Component {
               (currentWmsLayer.max_zoom || currentWmsLayer.max_zoom === 0) && 
                 currentWmsLayer.max_zoom.toString()) || null
           }
-          validators={[minLength(1)]}
+          validators={[this.maxZoomValidator]}
         />
         <TextArea
           name="wmsLayerOptions"
