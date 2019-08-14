@@ -4,9 +4,14 @@
   justify-content: center;
 }
 
-.tableHeaderTop{
+.tableSearch{
   display: flex;
+  flex-direction: row;
   justify-content: space-between;
+}
+.tableSearchTop {
+  display: flex;
+  flex-direction: row;
 }
 
 .tableHeader {
