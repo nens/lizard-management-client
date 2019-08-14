@@ -295,6 +295,7 @@
   "wms_layer_form.choose_maxzoom_greater_minzoom": "Kies een 'Maximum zoom level' groter dan het 'Minimum zoom level'",
   "wms_layer_form.description": "Beschrijving",
   "wms_layer_form.description_subtitle": "Voeg een duidelijke beschrijving toe voor de WMS",
+  "wms_layer_form.isrequired_if_getfeatureinfo_is_true":"Dit veld is verplicht als de checkbox hierboven is aangevinkt",
   "wms_layer_form.organisation": "Organisatie",
   "wms_layer_form.url": "Url",
   "wms_layer_form.slug": "Slug",

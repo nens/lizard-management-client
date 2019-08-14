@@ -92,6 +92,19 @@ class WmsLayerFormModel extends Component {
     }
   }
 
+  getFeatureInfoUrlValidator = (value, allValues) => {
+    if (allValues.wmsLayerGetFeatureInfo !== true) {
+      console.log('test 1111111');
+      return false;
+    } else if (value.length > 0) {
+      console.log('test 22222222');
+      return false;
+    } else {
+      console.log('test 33333333333333');
+      return this.props.intl.formatMessage({ id: "wms_layer_form.isrequired_if_getfeatureinfo_is_true" }); 
+    }
+  }
+
   handleResponse(response) {
     this.setState({
       modalErrorMessage: response,
@@ -330,15 +343,13 @@ class WmsLayerFormModel extends Component {
           }
           validators={[minLength(1)]}
         />
-        <TextInput
+        <CheckBox
           name="wmsLayerGetFeatureInfo"
           title={<FormattedMessage id="wms_layer_form.get_feature_info" />}
-          placeholder={placeholderGetFeatureInfo}
           initial = {
-            currentWmsLayer &&
-              currentWmsLayer.get_feature_info
+            (currentWmsLayer &&
+              currentWmsLayer.get_feature_info) || false
           }
-          validators={[minLength(1)]}
         />
         <TextInput
           name="wmsLayerGetFeatureInfoUrl"
@@ -348,7 +359,7 @@ class WmsLayerFormModel extends Component {
             currentWmsLayer &&
               currentWmsLayer.get_feature_info_url
           }
-          validators={[minLength(1)]}
+          validators={[this.getFeatureInfoUrlValidator]}
         />
         <TextInput
           name="wmsLayerLegendUrl"
