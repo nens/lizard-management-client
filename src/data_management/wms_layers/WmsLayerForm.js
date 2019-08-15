@@ -95,10 +95,10 @@ class WmsLayerFormModel extends Component {
   getFeatureInfoUrlValidator = (value, allValues) => {
     if (allValues.wmsLayerGetFeatureInfo !== true) {
       return false;
-    } else if (value.length > 0) {
-      return false;
-    } else {
+    } else if (value === null || value.length === 0) {
       return this.props.intl.formatMessage({ id: "wms_layer_form.isrequired_if_getfeatureinfo_is_true" }); 
+    } else {
+      return false;
     }
   }
 
