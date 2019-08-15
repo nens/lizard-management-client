@@ -143,6 +143,7 @@ class WmsLayerFormModel extends Component {
           get_feature_info_url: validatedData.wmsLayerGetFeatureInfoUrl,
           legend_url: validatedData.wmsLayerLegendUrl,
           shared_with: validatedData.sharedWithOrganisations,
+          access_modifier: validatedData.accessModifier,
         })
       };
 
@@ -169,6 +170,7 @@ class WmsLayerFormModel extends Component {
         get_feature_info_url: validatedData.wmsLayerGetFeatureInfoUrl,
         legend_url: validatedData.wmsLayerLegendUrl,
         shared_with: validatedData.sharedWithOrganisations,
+        access_modifier: validatedData.accessModifier,
       };
       const opts = {
         credentials: "same-origin",
@@ -228,7 +230,7 @@ class WmsLayerFormModel extends Component {
         <SelectBox
           name="selectedOrganisation"
           title={<FormattedMessage id="wms_layer_form.organisation" />}
-          subtitle={<FormattedMessage id="raster_form.organisation_subtitle"  />}
+          subtitle={<FormattedMessage id="wms_layer_form.organisation_subtitle"  />}
           placeholder={placeholderOrganisationSelection}
           choices={this.props.organisations.available.map(organisation=>
             [organisation.uuid, organisation.name]
@@ -247,7 +249,7 @@ class WmsLayerFormModel extends Component {
         <SlushBucket
           name="sharedWithOrganisations"
           title={<FormattedMessage id="raster_form.sharedOrganisation" />}
-          subtitle={<FormattedMessage id="raster_form.sharedOrganisation_subtitle" />}
+          subtitle={<FormattedMessage id="wms_layer_form.sharedOrganisation_subtitle" />}
           choices={this.props.organisations.availableForRasterSharedWith.map(e =>{
             return {
               display: e.name, 
@@ -266,6 +268,37 @@ class WmsLayerFormModel extends Component {
             ) || [] // passing this empty array is somehow required. Somehow only if I also have the colormapInput component.
           }
           validators={[]}
+        />
+        <SelectBox
+          name="accessModifier"
+          title={<FormattedMessage id="raster_form.authorization" />}
+          subtitle={<FormattedMessage id="wms_layer_form.authorization_subtitle" />}
+          choices={[
+            [
+              "Private",
+              "Private",
+              <FormattedMessage id="raster_form.authorization_private_message" />
+            ],
+            [
+              "Common",
+              "Common",
+              <FormattedMessage id="raster_form.authorization_common_message" />
+            ],
+            [
+              "Public",
+              "Public",
+              <FormattedMessage id="raster_form.authorization_public_message" />
+            ] 
+          ]}
+          validators={[required(this.props.intl.formatMessage({ id: "wms_layer_form.please_select_accesmodifier" }))]}
+          initial ={
+            (
+              currentWmsLayer && 
+              currentWmsLayer.access_modifier
+            ) ||
+            "Private" 
+          }
+          showSearchField={false}
         />
         <TextInput
           name="wmsLayerName"
