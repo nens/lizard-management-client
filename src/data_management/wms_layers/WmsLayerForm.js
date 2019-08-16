@@ -133,7 +133,6 @@ class WmsLayerFormModel extends Component {
           return responseParsed.json();
         })
         .then(parsedBody => {
-          console.log("parsedBody", parsedBody);
           this.setState({ createdRaster: parsedBody });
         });
     } else {
@@ -143,8 +142,6 @@ class WmsLayerFormModel extends Component {
         description: validatedData.description,
         url: validatedData.wmsLayerUrl,
         slug: validatedData.wmsLayerSlug,
-        // min_zoom: validatedData.wmsLayerMinZoom === ''? null: validatedData.wmsLayerMinZoom,
-        // max_zoom: validatedData.wmsLayerMaxZoom === ''? null: validatedData.wmsLayerMaxZoom,
         min_zoom: validatedData.wmsLayerMinZoom,
         max_zoom: validatedData.wmsLayerMaxZoom,
         options: validatedData.wmsLayerOptions,
@@ -163,12 +160,10 @@ class WmsLayerFormModel extends Component {
 
       fetch(url + "uuid:" + currentWmsLayer.uuid + "/", opts)
         .then(responseParsed => {
-          console.log("responseParsed put", responseParsed);
           this.handleResponse(responseParsed);
           return responseParsed.json();
         })
         .then(parsedBody => {
-          console.log("parsedBody", parsedBody);
           this.setState({ createdRaster: parsedBody });
         });
     }
