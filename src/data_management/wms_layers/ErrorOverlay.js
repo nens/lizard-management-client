@@ -83,7 +83,7 @@ class ErrorOverlay extends Component {
     ) {
       return (
         <FormattedMessage
-          id="raster.post_metadata_success"
+          id="wms_layer_form.post_success"
           defaultMessage="Succes! Your raster meta-data was uploaded succesfully. You can add your data now, or do it later"
         />
       );

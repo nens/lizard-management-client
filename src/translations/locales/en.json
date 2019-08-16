@@ -214,6 +214,7 @@
   "wms_layer_form.organisation": "Organisation",
   "wms_layer_form.organisation_subtitle": "Specify which organisation owns this wmslayer",
   "wms_layer_form.please_select_accesmodifier": "Please select an access modifier",
+  "wms_layer_form.post_success": "Succes! The wms layer was saved.",
   "wms_layer_form.url": "Url",
   "wms_layer_form.sharedOrganisation_subtitle":"Select other organisations that need read access to this wmslayer",
   "wms_layer_form.slug": "Slug",

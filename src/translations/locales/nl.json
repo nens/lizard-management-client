@@ -302,6 +302,7 @@
   "wms_layer_form.organisation": "Organisatie",
   "wms_layer_form.organisation_subtitle": "Geef aan welke organisatie eigenaar is van deze wmslayer",
   "wms_layer_form.please_select_accesmodifier": "Selecteer een acces modifier",
+  "wms_layer_form.post_success": "Succes! De wms laag is opgeslagen",
   "wms_layer_form.url": "Url",
   "wms_layer_form.slug": "Slug",
   "wms_layer_form.tiled": "Getegeld?",
