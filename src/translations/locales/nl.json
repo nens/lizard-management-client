@@ -295,6 +295,8 @@
   "wms_layer_form.choose_maxzoom_greater_minzoom": "Kies een 'Maximum zoom level' groter dan het 'Minimum zoom level'",
   "wms_layer_form.description": "Beschrijving",
   "wms_layer_form.description_subtitle": "Voeg een duidelijke beschrijving toe voor de WMS",
+  "wms_layer_form.integer_from_0_till_31": "Kies een integer tussen 0 en 31",
+  "wms_layer_form.integer_from_0_till_31_more_then_minzoom": "Kies een integer tussen 0 en 31 groter dan of gelijk aan 'minimum zoom level'",
   "wms_layer_form.isrequired_if_getfeatureinfo_is_true":"Dit veld is verplicht als de checkbox hierboven is aangevinkt",
   "wms_layer_form.options_must_be_json": "Opties moet valide JSON zijn",
   "wms_layer_form.organisation": "Organisatie",

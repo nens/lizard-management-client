@@ -38,44 +38,24 @@ class WmsLayerFormModel extends Component {
   }
 
   minZoomValidator = (value, allValues) => {
-    // field is optional so empty string or null is valid
-    // const maxZoom = 
-    //   ( allValues.wmsLayerMaxZoom === "" || allValues.wmsLayerMaxZoom === null || allValues.wmsLayerMaxZoom === undefined)?
-    //   31
-    //   :
-    //   allValues.wmsLayerMaxZoom
-  
-    if (value==="" || value=== null) {
-      return false;
-    } else if (
+    if (
       parseInt(value) >= 0 &&
       parseInt(value) <= 31 //&&
-      //parseInt(value) <= maxZoom 
     ) {
       return false;
-    // this can not yet be checked because validator does not receive field after current field
-    // } else if (
-    //   parseInt(value) >= 0 &&
-    //   parseInt(value) <= 31 &&
-    //   parseInt(value) > maxZoom
-    // ) {
-    //   return 'Choose "min zoom" smaller then "max zoom"';
     } else {
       return this.props.intl.formatMessage({ id: "wms_layer_form.choose_between_0_31" }); // "Choose a value between 0 and 31"
     }
   }
   
   maxZoomValidator = (value, allValues) => {
-    // field is optional so empty string or null is valid
     const minZoom = 
       ( allValues.wmsLayerMinZoom === "" || allValues.wmsLayerMinZoom === null || allValues.wmsLayerMinZoom === undefined)?
       0
       :
       allValues.wmsLayerMinZoom
   
-    if (value==="" || value===null) {
-      return false;
-    } else if (
+    if (
       parseInt(value) >= 0 &&
       parseInt(value) <= 31 &&
       parseInt(value) >= minZoom 
@@ -136,10 +116,8 @@ class WmsLayerFormModel extends Component {
           description: validatedData.description,
           url: validatedData.wmsLayerUrl,
           slug: validatedData.wmsLayerSlug,
-          // min_zoom: validatedData.wmsLayerMinZoom === ''? null: validatedData.wmsLayerMinZoom,
-          // max_zoom: validatedData.wmsLayerMaxZoom === ''? null: validatedData.wmsLayerMaxZoom,
-          // min_zoom: validatedData.wmsLayerMinZoom,
-          // max_zoom: validatedData.wmsLayerMaxZoom,
+          min_zoom: validatedData.wmsLayerMinZoom,
+          max_zoom: validatedData.wmsLayerMaxZoom,
           options: validatedData.wmsLayerOptions,
           get_feature_info: validatedData.wmsLayerGetFeatureInfo,
           get_feature_info_url: validatedData.wmsLayerGetFeatureInfoUrl,
@@ -357,22 +335,23 @@ class WmsLayerFormModel extends Component {
         <IntegerInput
           name="wmsLayerMinZoom"
           title={<FormattedMessage id="wms_layer_form.min_zoom" />}
-          placeholder={placeholderMinZoom}
+          subtitle={<FormattedMessage id="wms_layer_form.integer_from_0_till_31" />}
           initial = {
             (currentWmsLayer &&
             (currentWmsLayer.min_zoom || currentWmsLayer.min_zoom === 0) && 
-              currentWmsLayer.min_zoom.toString()) || null
+              currentWmsLayer.min_zoom.toString()) || '0'
           }
           validators={[this.minZoomValidator]}
         />
         <IntegerInput
           name="wmsLayerMaxZoom"
           title={<FormattedMessage id="wms_layer_form.max_zoom" />}
+          subtitle={<FormattedMessage id="wms_layer_form.integer_from_0_till_31_more_then_minzoom" />}
           placeholder={placeholderMaxZoom}
           initial = {
             (currentWmsLayer &&
               (currentWmsLayer.max_zoom || currentWmsLayer.max_zoom === 0) && 
-                currentWmsLayer.max_zoom.toString()) || null
+                currentWmsLayer.max_zoom.toString()) || 31
           }
           validators={[this.maxZoomValidator]}
         />
