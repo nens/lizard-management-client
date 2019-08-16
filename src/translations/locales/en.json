@@ -198,7 +198,6 @@
   "placeholder_max_zoom": "Maximum zoom level",
   "placeholder_url": "Url",
   "placeholder_tiled": "Is the WMS tiled?",
-  "placeholder_options": "{'transparent': 'True'}",
   "placeholder_legend_url": "Url for the legend",
   "placeholder_get_feature_info_url": "Url for the get feature info",
   "search_in_name_and_description": "Search in name and description",

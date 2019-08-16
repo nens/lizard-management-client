@@ -286,7 +286,6 @@
   "placeholder_max_zoom": "Maximum zoom level",
   "placeholder_url": "Url",
   "placeholder_tiled": "Is de WMS getiled?",
-  "placeholder_options": "{'transparent': 'True'}",
   "placeholder_legend_url": "Url voor de legenda",
   "placeholder_get_feature_info_url": "Url voor de get feature info",
   "search_in_name_and_description": "Zoek in naam en description",

@@ -211,8 +211,14 @@ class ErrorOverlay extends Component {
                       type="button"
                       className={`${buttonStyles.Button} ${buttonStyles.Success}`}
                       style={{ marginTop: 10 }}
-                      onClick={() =>
-                        this.props.history.push("/data_management/wms_layers")}
+                      onClick={() => {
+                        if (this.props.errorMessage.status.toString().startsWith(4)) {
+                          this.props.handleClose();
+                        } else {
+                          this.props.history.push("/data_management/wms_layers")
+                        }
+                      }}
+                        
                     >
                       <FormattedMessage id="close" defaultMessage="Back" />
                     </button>

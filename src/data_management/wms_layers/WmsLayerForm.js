@@ -45,7 +45,7 @@ class WmsLayerFormModel extends Component {
     //   :
     //   allValues.wmsLayerMaxZoom
   
-    if (value==="" || null) {
+    if (value==="" || value=== null) {
       return false;
     } else if (
       parseInt(value) >= 0 &&
@@ -73,7 +73,7 @@ class WmsLayerFormModel extends Component {
       :
       allValues.wmsLayerMinZoom
   
-    if (value==="" || null) {
+    if (value==="" || value===null) {
       return false;
     } else if (
       parseInt(value) >= 0 &&
@@ -95,7 +95,7 @@ class WmsLayerFormModel extends Component {
   getFeatureInfoUrlValidator = (value, allValues) => {
     if (allValues.wmsLayerGetFeatureInfo !== true) {
       return false;
-    } else if (value === null || value.length === 0) {
+    } else if (value === null || value === undefined || value.length === 0) {
       return this.props.intl.formatMessage({ id: "wms_layer_form.isrequired_if_getfeatureinfo_is_true" }); 
     } else {
       return false;
@@ -136,8 +136,10 @@ class WmsLayerFormModel extends Component {
           description: validatedData.description,
           url: validatedData.wmsLayerUrl,
           slug: validatedData.wmsLayerSlug,
-          min_zoom: validatedData.wmsLayerMinZoom,
-          max_zoom: validatedData.wmsLayerMaxZoom,
+          // min_zoom: validatedData.wmsLayerMinZoom === ''? null: validatedData.wmsLayerMinZoom,
+          // max_zoom: validatedData.wmsLayerMaxZoom === ''? null: validatedData.wmsLayerMaxZoom,
+          // min_zoom: validatedData.wmsLayerMinZoom,
+          // max_zoom: validatedData.wmsLayerMaxZoom,
           options: validatedData.wmsLayerOptions,
           get_feature_info: validatedData.wmsLayerGetFeatureInfo,
           get_feature_info_url: validatedData.wmsLayerGetFeatureInfoUrl,
@@ -163,6 +165,8 @@ class WmsLayerFormModel extends Component {
         description: validatedData.description,
         url: validatedData.wmsLayerUrl,
         slug: validatedData.wmsLayerSlug,
+        // min_zoom: validatedData.wmsLayerMinZoom === ''? null: validatedData.wmsLayerMinZoom,
+        // max_zoom: validatedData.wmsLayerMaxZoom === ''? null: validatedData.wmsLayerMaxZoom,
         min_zoom: validatedData.wmsLayerMinZoom,
         max_zoom: validatedData.wmsLayerMaxZoom,
         options: validatedData.wmsLayerOptions,
@@ -205,7 +209,6 @@ class WmsLayerFormModel extends Component {
     const placeholderMaxZoom = intl.formatMessage({ id: "placeholder_max_zoom" });
     const placeholderUrl = intl.formatMessage({ id: "placeholder_url" });
     const placeholderTiled = intl.formatMessage({ id: "placeholder_tiled" });
-    const placeholderOptions = intl.formatMessage({ id: "placeholder_options" });
     const placeholderLegendUrl = intl.formatMessage({ id: "placeholder_legend_url" });
     const placeholderGetFeatureInfoUrl = intl.formatMessage({ id: "placeholder_get_feature_info_url" });
     const placeholderOrganisationSelection = intl.formatMessage({ id: "placeholder_organisation_selection" });
@@ -376,10 +379,10 @@ class WmsLayerFormModel extends Component {
         <TextArea
           name="wmsLayerOptions"
           title={<FormattedMessage id="wms_layer_form.options" />}
-          placeholder={placeholderOptions}
+          subtitle={<FormattedMessage id="wms_layer_form.options_must_be_json" />}
           initial = {
-            currentWmsLayer &&
-              JSON.stringify(currentWmsLayer.options)
+            (currentWmsLayer &&
+              JSON.stringify(currentWmsLayer.options)) || '{"transparent": "True"}'
           }
           validators={[this.optionsValidator]}
         />

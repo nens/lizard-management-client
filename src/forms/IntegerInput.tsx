@@ -43,7 +43,7 @@ export default class IntegerInput extends Component<IntegerInputProps, {}> {
         valueChanged={(e: any) => {
           console.log('integer input ' + e);
           var reg = /^\d+$/;
-          if (reg.test(e) || e === '') {
+          if (reg.test(e) || e === '' || e === null) {
             valueChanged(e);
           }
         }}
