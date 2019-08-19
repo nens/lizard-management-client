@@ -104,10 +104,15 @@ This client has l10n/i18n support via react-intl.
 English is the default/fallback language.
 Dutch is the only planned supported other language for now.
 
-To extract translation tags to the i18n catalog: `$ yarn run i18n:extract`.
-To update the language catalogs: `$ yarn run i18n:update`
+Below is described how to automaticly extract translations.
+Currently this does not find the translations that are passed as formatted messages in attributes of react components,
+nor does it find messages translated with intl.formatMessage({ id: "<key>" });
+Even worse, it deletes existing translations that were made that way.
+Therefore we do not currently use below command, but keep translations in sync manually.
 
-To execute both subsequently, run: `$ yarn run i18n:extract-then-update`.
+To extract translation tags to the i18n catalog (this thus wrongly removes some translations and should not be used untill this problem is resolved): `$ yarn run i18n:extract`.
+
+
 
 See `src/translations/locales/[language].json`. (where language is 'nl', for now)
 

@@ -15,7 +15,7 @@ import StepIndicator from "../../components/StepIndicator";
 import styles from "./NewNotification.css";
 import { addNotification } from "../../actions";
 import { connect } from "react-redux";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, injectIntl } from "react-intl";
 import { Map, Marker, TileLayer, WMSTileLayer } from "react-leaflet";
 import { withRouter } from "react-router-dom";
 import { postNewNotification } from "../../utils/postNewNotification.js";
@@ -446,6 +446,11 @@ class NewNotification extends Component {
       sourceType
     } = this.state;
 
+    //Format message for placeholder in the input form for translation
+    const placeholderTimeseriesSelectionViaAsset = this.props.intl.formatMessage({ id: "placeholder_timeseries_selection_via_asset" });
+    const placeholderTimeseriesSelectionViaNestedAsset = this.props.intl.formatMessage({ id: "placeholder_timeseries_selection_via_nested_asset" });
+    const placeholderTimeseriesSelection = this.props.intl.formatMessage({ id: "placeholder_timeseries_selection" });
+
     return (
       <div>
         <div className={gridStyles.Container}>
@@ -799,7 +804,7 @@ class NewNotification extends Component {
                                   "notifications_app.select_timeserie_via_asset" +
                                   "_input"
                                 }
-                                placeholder={"Click to select timeseries asset"}
+                                placeholder={placeholderTimeseriesSelectionViaAsset}
                                 validate={this.validateTimeseriesAsset}
                                 resetModelValue={
                                   this.handleResetTimeseriesAsset
@@ -832,9 +837,7 @@ class NewNotification extends Component {
                                   "notifications_app.select_timeserie_via_nested_asset" +
                                   "_input"
                                 }
-                                placeholder={
-                                  "Click to select timeseries nested asset"
-                                }
+                                placeholder={placeholderTimeseriesSelectionViaNestedAsset}
                                 validate={this.validateTimeseriesNestedAsset}
                                 resetModelValue={
                                   this.handleResetTimeseriesNestedAsset
@@ -880,7 +883,7 @@ class NewNotification extends Component {
                                   "notifications_app.select_timeserie" +
                                   "_input"
                                 }
-                                placeholder={"Click to select timeseries"}
+                                placeholder={placeholderTimeseriesSelection}
                                 validate={this.validateTimeseries}
                                 resetModelValue={this.handleResetTimeseries}
                                 readonly={false}
@@ -1149,7 +1152,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 };
 
 const App = withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(NewNotification)
+  connect(mapStateToProps, mapDispatchToProps)(injectIntl(NewNotification))
 );
 
 export { App };

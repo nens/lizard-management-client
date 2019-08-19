@@ -68,6 +68,7 @@
   "contacts_app.first_name_1": "Voornaam",
   "contacts_app.first_name_2": "Voornaam",
   "contacts_app.first_name_3": "Voornaam",
+  "contacts_app.following_fields_didnot_validate": "De volgende velden zijn niet correct:",
   "contacts_app.last_name": "Achternaam",
   "contacts_app.last_name_1": "Achternaam",
   "contacts_app.last_name_2": "Achternaam",
@@ -111,6 +112,7 @@
   "notifications_app.is_active": "ACTIEF",
   "notifications_app.is_inactive": "INACTIEF",
   "notifications_app.map": "Kaart",
+  "notifications_app.timeseries": "Naam van dit timeseries alarm",
   "notifications_app.name_of_alarm": "Naam van dit alarm",
   "notifications_app.name_will_be_used_in_alerts": "De naam van het raster zal worden gebruikt in de e-mail en SMS alarmberichten",
   "notifications_app.new_notification": "Nieuwe notificatie",
@@ -298,5 +300,8 @@
   "wms_layer_form.options": "Options",
   "wms_layer_form.get_feature_info": "GetFeatureInfo",
   "wms_layer_form.get_feature_info_url": "GetFeatureInfo url",
-  "wms_layer_form.legend_url": "Legenda url"
+  "wms_layer_form.legend_url": "Legenda url",
+  "placeholder_timeseries_selection_via_asset": "Selecteer het object waarop de tijdserie wordt gemeten en waarop je het alarm wilt toevoegen",
+  "placeholder_timeseries_selection_via_nested_asset": "Selecteer eventueel een sub-object (Bijvoorbeeld een pomp A van gemaal B of filter A van het grondwater meetstation B)",
+  "placeholder_timeseries_selection": "Selecteer de tijdserie waarop je het alarm wilt toevoegen"
 }

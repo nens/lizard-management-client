@@ -20,10 +20,8 @@ class Raster extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isFetching: true,
+      isFetching: false,
       rasters: [],
-      filteredSortedRasters: [],
-      paginatedRasters: [],
       total: 0,
       page: 1,
       pageSize: 10,
@@ -32,6 +30,7 @@ class Raster extends Component {
       // is checked, to be able to find the raster back from the checked checkboxes.
       checkboxes: [],
       searchTerms: "",
+      searchedTerms: "",
       include3diScenarios: false
     };
     this.handleNewRasterClick = this.handleNewRasterClick.bind(this);
@@ -39,112 +38,95 @@ class Raster extends Component {
     this.handleFlushDataRasterClick = this.handleFlushDataRasterClick.bind(this);
     this.checkAllCheckBoxes = this.checkAllCheckBoxes.bind(this);
     this.clickRegularCheckbox = this.clickRegularCheckbox.bind(this);
+    this.handleUpdatePage = this.handleUpdatePage.bind(this);
+    this.handleUpdateSearchTerms = this.handleUpdateSearchTerms.bind(this);
+    this.handleUpdateSearchedTermsEnter = this.handleUpdateSearchedTermsEnter.bind(this);
+    this.handleUpdateSearchedTermsOnBlur = this.handleUpdateSearchedTermsOnBlur.bind(this);
+    this.handleUpdateSearchedTermsClear = this.handleUpdateSearchedTermsClear.bind(this);
+    this.handleUpdateInclude3diResults = this.handleUpdateInclude3diResults.bind(this);
   }
+
   componentDidMount() {
-    const { page } = this.state;
-    this.getRastersFromApi(
-      page,
+    this.fetchRastersFromApi(
+      this.state.page,
       this.state.searchTerms,
       this.state.include3diScenarios
     );
   }
-  componentWillReceiveProps(props) {
-    let page = 1;
-    if (
-      this.props.organisations.selected.uuid ===
-      props.organisations.selected.uuid
-    ) {
-      page = this.state.page;
+  componentWillUpdate(nextProps, nextState) {
+    if (nextState.searchedTerms !== this.state.searchedTerms) {
+      this.updatePageAndFetchRastersFromApi(
+        1,
+        nextState.searchedTerms,
+        this.state.include3diScenarios
+      );
+    } else if (nextState.include3diScenarios !== this.state.include3diScenarios) {
+      this.fetchRastersFromApi(
+        nextState.page,
+        this.state.searchedTerms,
+        nextState.include3diScenarios
+      );
+    } else if (nextState.page !== this.state.page) {
+      this.fetchRastersFromApi(
+        nextState.page,
+        this.state.searchedTerms,
+        this.state.include3diScenarios
+      );
     }
+  }
 
-    this.refreshRasterFilteringAndPaginationAndUpdateState(
-      this.state.rasters,
-      page,
-      this.state.searchTerms,
-      props.organisations.selected
+  updatePageAndFetchRastersFromApi(page, searchedTerms, include3diScenarios) {
+    this.setState(
+      {
+        page: page
+      },
+      this.fetchRastersFromApi(
+        page,
+        searchedTerms,
+        include3diScenarios
+      )
     );
   }
 
-  filterSortRasters = (rasters, searchContains, organisation) => {
-    const filteredRasters = rasters.filter(
-      e =>
-        ((e.name || "").toLowerCase().includes(searchContains.toLowerCase()) ||
-          (e.description || "")
-            .toLowerCase()
-            .includes(searchContains.toLowerCase()) ||
-          (e.supplier_code || "")
-            .toLowerCase()
-            .includes(searchContains.toLowerCase()) ||
-          ((e.observation_type && e.observation_type.code) || "")
-            .toLowerCase()
-            .includes(searchContains.toLowerCase()) ||
-          (e.uuid || "")
-            .toLowerCase()
-            .includes(searchContains.toLowerCase())) &&
-        (e.organisation &&
-          e.organisation.uuid &&
-          e.organisation.uuid.replace(/-/g, "")) === organisation.uuid
-    );
-
-    filteredRasters.sort((a, b) => {
-      if (a.last_modified === null) {
-        return 1;
-      } else if (b.last_modified === null) {
-        return -1;
-      } else if (a.last_modified > b.last_modified) {
-        return -1;
-      } else {
-        return 1;
-      }
-    });
-    return filteredRasters;
-  };
-
-  paginateRasters = (rasters, page) => {
-    const paginatedRasters = rasters.slice(
-      this.state.pageSize * (page - 1),
-      this.state.pageSize * page
-    );
-    return paginatedRasters;
-  };
-
-  refreshRasterFilteringAndPaginationAndUpdateState = (
-    rasters,
-    page,
-    searchTerms,
-    organisation
-  ) => {
-    const filteredSortedRasters = this.filterSortRasters(
-      rasters,
-      searchTerms,
-      organisation
-    );
-    const paginatedRasters = this.paginateRasters(filteredSortedRasters, page);
-    const checkboxes = this.createCheckboxDataFromRaster(paginatedRasters);
-
+  handleUpdatePage(page) {
     this.setState({
-      isFetching: false,
-      total: filteredSortedRasters.length,
-      rasters: rasters,
-      filteredSortedRasters: filteredSortedRasters,
-      paginatedRasters: paginatedRasters,
-      page: page,
-      checkAllCheckBoxes: false,
-      checkboxes: checkboxes,
-      searchTerms: searchTerms
+      page: page
     });
-  };
-  getRastersFromApi = (page, searchContains, include3diScenarios) => {
-    // searching/filtering/pagination is for now done clientside so server side search is commented out
-    // const url = searchContains
-    //   ? // ordering is done by filter
-    //     `/api/v3/rasters/?writable=true&page=${page}&name__icontains=${searchContains}` // &organisation__unique_id=${organisationId},
-    //   : // ordering is done so latest rasters first
-    //     `/api/v3/rasters/?writable=true&ordering=-last_modified&page=${page}`;
+  }
+  handleUpdateSearchTerms(searchTerms) {
+    this.setState({
+      searchTerms: searchTerms,
+    });
+  }
+  handleUpdateSearchedTermsEnter() {
+    this.setState({
+      searchedTerms: this.state.searchTerms,
+      page: 1 // Reset PaginationBar to page 1
+    });
+  }
+  handleUpdateSearchedTermsOnBlur() {
+    this.setState({
+      searchedTerms: this.state.searchTerms,
+    });
+  }
+  handleUpdateSearchedTermsClear() {
+    this.setState({
+      searchTerms: "",
+      searchedTerms: "",
+      page: 1 // Reset PaginationBar to page 1
+    });
+  }
+  handleUpdateInclude3diResults(include3diScenarios) {
+    this.setState({
+      include3diScenarios: include3diScenarios,
+      page: 1 // Reset PaginationBar to page 1
+    });
+  }
 
+  fetchRastersFromApi(page, searchContains, include3diScenarios) {
     const url = include3diScenarios
-      ? "/api/v4/rasters/?writable=true&page_size=100000"
-      : "/api/v4/rasters/?writable=true&page_size=100000&scenario__isnull=true";
+    ? `/api/v4/rasters/?writable=true&page_size=${this.state.pageSize}&page=${page}&name__icontains=${searchContains}&ordering=last_modified&organisation__uuid=${this.props.organisations.selected.uuid}`
+    : `/api/v4/rasters/?writable=true&page_size=${this.state.pageSize}&page=${page}&name__icontains=${searchContains}&ordering=last_modified&organisation__uuid=${this.props.organisations.selected.uuid}&scenario__isnull=true`;
 
     this.setState({
       isFetching: true
@@ -156,14 +138,16 @@ class Raster extends Component {
       .then(response => response.json())
       .then(data => {
         const rasters = data.results;
-        this.refreshRasterFilteringAndPaginationAndUpdateState(
-          rasters,
-          page,
-          searchContains,
-          this.props.organisations.selected
-        );
+        const checkboxes = this.createCheckboxDataFromRaster(rasters);
+        this.setState({
+          rasters: rasters,
+          checkAllCheckBoxes: false,
+          checkboxes: checkboxes,
+          isFetching: false,
+          total: data.count,
+        });
       });
-  };
+  }
 
   createCheckboxDataFromRaster(rasterList) {
     let checkboxes = [];
@@ -229,7 +213,7 @@ class Raster extends Component {
     });
     Promise.all(fetches).then(values => {
       // Refresh the page, so that the removed rasters are no longer visible
-      this.getRastersFromApi(
+      this.fetchRastersFromApi(
         this.state.page,
         this.state.searchTerms,
         this.state.include3diScenarios
@@ -353,9 +337,10 @@ class Raster extends Component {
             autoHeight
             autoHeightMin={450}
             autoHeightMax={450}
-            style={{ width: "100%" }}
+            style={{ minWidth: 800 }}
+            renderTrackHorizontal={props => <div {...props} style={{display: 'none'}} className="track-horizontal"/>}
           >
-            {this.state.paginatedRasters.map((raster, i) => {
+            {this.state.rasters.map((raster, i) => {
               return (
                 <div className={`${rasterTableStyles.tableBody}`}>
                   <div className={`${rasterTableStyles.tableCheckbox}`}>
@@ -494,15 +479,9 @@ class Raster extends Component {
         <div className={`${rasterTableStyles.tableFooterLeftFiller}`} />
         <div className={`${rasterTableStyles.tableInfoAndPagination}`}>
           <PaginationBar
-            loadRastersOnPage={page =>
-              this.refreshRasterFilteringAndPaginationAndUpdateState(
-                this.state.rasters,
-                page,
-                this.state.searchTerms,
-                this.props.organisations.selected
-              )}
-            page={page}
-            pages={Math.ceil(total / this.state.pageSize)}
+            loadRastersOnPage={page => this.handleUpdatePage(page)}
+            page={this.state.page}
+            pages={Math.ceil(this.state.total / this.state.pageSize)}
           />
           <div className={`${rasterTableStyles.tableFooterNumberOfRasters}`}>
             <FormattedMessage
@@ -515,50 +494,52 @@ class Raster extends Component {
           </div>
         </div>
         <div className={`${rasterTableStyles.tableFooterDeleteRasters}`}>
-        <button
-            type="button"
-            className={
-              clickedCheckboxes > 0
-                ? `${buttonStyles.Button} ${buttonStyles.Danger}`
-                : `${buttonStyles.Button} ${buttonStyles.Inactive}`
-            }
-            onClick={this.handleFlushDataRasterClick}
-            style={{ maxHeight: "36px", width: "204px",marginRight: "10px" }}
-            disabled={clickedCheckboxes === 0 ? true : false}
-          >
-            <FormattedMessage
-              id="rasters.flush_data_rasters"
-              defaultMessage={` Flush Data {clickedCheckboxes, number} {clickedCheckboxes, plural,
-                one {Raster}
-                other {Rasters}}`}
-              values={{
-                clickedCheckboxes
-              }}
-            />
-            <Ink />
-          </button>
-          <button
-            type="button"
-            className={
-              clickedCheckboxes > 0
-                ? `${buttonStyles.Button} ${buttonStyles.Danger}`
-                : `${buttonStyles.Button} ${buttonStyles.Inactive}`
-            }
-            onClick={this.handleDeleteRasterClick}
-            style={{ maxHeight: "36px", width: "204px" }}
-            disabled={clickedCheckboxes === 0 ? true : false}
-          >
-            <FormattedMessage
-              id="rasters.delete_rasters"
-              defaultMessage={` Delete {clickedCheckboxes, number} {clickedCheckboxes, plural,
-                one {Raster}
-                other {Rasters}}`}
-              values={{
-                clickedCheckboxes
-              }}
-            />
-            <Ink />
-          </button>
+          <div>
+            <button
+              type="button"
+              className={
+                clickedCheckboxes > 0
+                  ? `${buttonStyles.Button} ${buttonStyles.Danger}`
+                  : `${buttonStyles.Button} ${buttonStyles.Inactive}`
+              }
+              onClick={this.handleFlushDataRasterClick}
+              style={{ maxHeight: "36px", width: "204px",marginRight: "10px" }}
+              disabled={clickedCheckboxes === 0 ? true : false}
+            >
+              <FormattedMessage
+                id="rasters.flush_data_rasters"
+                defaultMessage={` Flush Data {clickedCheckboxes, number} {clickedCheckboxes, plural,
+                  one {Raster}
+                  other {Rasters}}`}
+                values={{
+                  clickedCheckboxes
+                }}
+              />
+              <Ink />
+            </button>
+            <button
+              type="button"
+              className={
+                clickedCheckboxes > 0
+                  ? `${buttonStyles.Button} ${buttonStyles.Danger}`
+                  : `${buttonStyles.Button} ${buttonStyles.Inactive}`
+              }
+              onClick={this.handleDeleteRasterClick}
+              style={{ maxHeight: "36px", width: "204px" }}
+              disabled={clickedCheckboxes === 0 ? true : false}
+            >
+              <FormattedMessage
+                id="rasters.delete_rasters"
+                defaultMessage={` Delete {clickedCheckboxes, number} {clickedCheckboxes, plural,
+                  one {Raster}
+                  other {Rasters}}`}
+                values={{
+                  clickedCheckboxes
+                }}
+              />
+              <Ink />
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -566,82 +547,68 @@ class Raster extends Component {
     return (
       <div className={rasterTableStyles.tableContainer}>
         <div
-          className={rasterTableStyles.tableHeaderTop}
+          className={rasterTableStyles.tableSearch}
           style={{
             padding: "0 0 30px 0"
           }}
         >
-          <div
-            className={`${gridStyles.colLg8} ${gridStyles.colMd8} ${gridStyles.colSm8} ${gridStyles.colXs8}`}
-          >
-            <SearchBox
-              handleSearch={searchTerms =>
-                this.refreshRasterFilteringAndPaginationAndUpdateState(
-                  this.state.rasters,
-                  1,
-                  searchTerms,
-                  this.props.organisations.selected
-                )}
-              searchTerms={this.state.searchTerms}
-              setSearchTerms={searchTerms => {
-                this.refreshRasterFilteringAndPaginationAndUpdateState(
-                  this.state.rasters,
-                  1,
-                  searchTerms,
-                  this.props.organisations.selected
-                );
-              }}
-            />
-            {this.state.include3diScenarios ? (
-              <button
-                className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link}`}
-                style={{
-                  paddingLeft: 0,
-                  color: "#00a6ff"
+          <div>
+            <div className={rasterTableStyles.tableSearchTop}>
+              <SearchBox
+                handleSearchEnter={searchTerms => {
+                  this.handleUpdateSearchedTermsEnter();
                 }}
-                onClick={e => {
-                  this.getRastersFromApi(
-                    this.state.page,
-                    this.state.searchTerms,
-                    false // include 3di scenarios
-                  );
-                  this.setState({ include3diScenarios: false });
+                handleSearchOnBlur={searchTerms => {
+                  this.handleUpdateSearchedTermsOnBlur();
                 }}
-              >
-                <FormattedMessage
-                  id="rasters.exclude_3di_results"
-                  defaultMessage="Exclude 3di results"
-                />
-              </button>
-            ) : (
-              <button
-                className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link}`}
-                style={{
-                  paddingLeft: 0,
-                  color: "#00a6ff"
+                handleSearchClear={searchTerms => {
+                  this.handleUpdateSearchedTermsClear();
                 }}
-                onClick={e => {
-                  this.getRastersFromApi(
-                    this.state.page,
-                    this.state.searchTerms,
-                    true // include 3di scenarios
-                  );
-                  this.setState({ include3diScenarios: true });
+                searchTerms={this.state.searchTerms}
+                setSearchTerms={searchTerms => {
+                  this.handleUpdateSearchTerms(searchTerms);
                 }}
-              >
-                <FormattedMessage
-                  id="rasters.include_3di_results"
-                  defaultMessage="Include 3di results"
-                />
-              </button>
-            )}
+              />
+            </div>
+            <div>
+              {this.state.include3diScenarios ? (
+                <button
+                  className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link}`}
+                  style={{
+                    paddingLeft: 0,
+                    color: "#00a6ff"
+                  }}
+                  onClick={e => {
+                    this.handleUpdateInclude3diResults(false)
+                  }}
+                >
+                  <FormattedMessage
+                    id="rasters.exclude_3di_results"
+                    defaultMessage="Exclude 3di results"
+                  />
+                </button>
+              ) : (
+                <button
+                  className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link}`}
+                  style={{
+                    paddingLeft: 0,
+                    color: "#00a6ff"
+                  }}
+                  onClick={e => {
+                    this.handleUpdateInclude3diResults(true)
+                  }}
+                >
+                  <FormattedMessage
+                    id="rasters.include_3di_results"
+                    defaultMessage="Include 3di results"
+                  />
+                </button>
+              )}
+            </div>
           </div>
-          <div
-            className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${gridStyles.colSm4} ${gridStyles.colXs4}`}
-          >
+          <div>
             <button
               type="button"
-              style={{ float: "right" }}
               className={`${buttonStyles.Button} ${buttonStyles.Success}`}
               onClick={this.handleNewRasterClick}
             >
@@ -655,8 +622,15 @@ class Raster extends Component {
         </div>
 
         <div>
-          {htmlRasterTableHeader}
-          {htmlRasterTableBody}
+          <Scrollbars
+            autoHeight
+            autoHeightMax={500}
+            autoHeightMin={500}
+            renderTrackVertical={props => <div {...props} style={{display: 'none'}} className="track-vertical"/>}
+          >
+            {htmlRasterTableHeader}
+            {htmlRasterTableBody}
+          </Scrollbars>
           {htmlRasterTableFooter}
         </div>
       </div>

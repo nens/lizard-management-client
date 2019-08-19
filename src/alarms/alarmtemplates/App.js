@@ -35,6 +35,15 @@ class App extends Component {
   componentDidMount() {
     this.loadTemplatesOnPage(1);
   }
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.selectedOrganisation &&
+      prevProps.selectedOrganisation.uuid !== this.props.selectedOrganisation.uuid
+    ) {
+      const { page } = this.state;
+      this.loadTemplatesOnPage(page);
+    }
+  }
   handleDeleteTemplate(template) {
     const { addNotification } = this.props;
     const sure = window.confirm("Are you sure?");
