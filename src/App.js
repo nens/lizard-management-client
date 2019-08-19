@@ -245,7 +245,10 @@ class App extends Component {
           <div className={gridStyles.Container + " " + styles.AppContent}>
             <div className={gridStyles.Row}>
               <div
-                style={{ margin: "25px 0 25px 0" }}
+                style={{ 
+                  margin: "25px 0 25px 0",
+                  width: "100%" 
+                }}
                 className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
               >
                 <Route exact path="/" component={Home} />

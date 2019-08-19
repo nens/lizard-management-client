@@ -6,15 +6,16 @@ import formStyles from "../styles/Forms.css";
 import clearInputStyles from "./ClearInputButton.css";
 
 class SearchBox extends Component {
+
   handleEnter(event) {
     if (event.keyCode === 13) {
       // 13 is keycode 'enter' (works only when current input validates)
-      this.props.handleSearch(this.props.searchTerms);
+      this.props.handleSearchEnter();
     }
   }
 
   render() {
-    const { searchTerm, handleSearch, intl } = this.props;
+    const { searchTerms, handleSearchEnter, handleSearchOnBlur, handleSearchClear, intl } = this.props;
 
     return (
       <div
@@ -35,8 +36,8 @@ class SearchBox extends Component {
         >
           <input
             type="text"
-            placeholder={searchTerm}
-            value={this.props.searchTerms}
+            placeholder={searchTerms}
+            value={searchTerms}
             className={formStyles.FormControl}
             style={{
               // make sure input field has same height as search button
@@ -52,10 +53,20 @@ class SearchBox extends Component {
               this.props.setSearchTerms(e.target.value);
             }}
             onKeyUp={e => this.handleEnter(e)}
-            title={intl.formatMessage({ id: "search_in_name_and_description" })}
+            title={intl.formatMessage({ id: "Search in name and description" })}
+            onBlur={e => {
+              // Don't trigger onBlur if you click on the clear button of the
+              // searchbox.
+              if (e.relatedTarget && e.relatedTarget.id === "searchBoxClearButton") {
+                return;
+              } else {
+                this.props.handleSearchOnBlur();
+              }
+            }}
           />
 
           <i
+            id="searchBoxClearButton"
             className={`${clearInputStyles.ClearInput} material-icons`}
             style={
               this.props.searchTerms === ""
@@ -63,10 +74,15 @@ class SearchBox extends Component {
                 : { right: "6px" }
             }
             onClick={() => {
-              console.log('onclear searchbox clicked');
-              this.props.setSearchTerms("");
-              this.props.handleSearch("");
+              // merge conflict should fix !
+              // commented out is old situation for wms layers
+              // console.log('onclear searchbox clicked');
+              // this.props.setSearchTerms("");
+              // this.props.handleSearch("");
+              // below is desired situation
+              this.props.handleSearchClear();
             }}
+            tabIndex={0}
           >
             clear
           </i>
@@ -82,7 +98,7 @@ class SearchBox extends Component {
           style={{ display: "none" }}
           type="button"
           className={`${buttonStyles.Button} ${buttonStyles.Success}`}
-          onClick={e => handleSearch(this.props.searchTerms)}
+          onClick={e => handleSearchEnter()}
         >
           <FormattedMessage id="search" defaultMessage="Search" />
           <Ink />
