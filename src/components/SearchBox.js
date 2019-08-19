@@ -74,6 +74,12 @@ class SearchBox extends Component {
                 : { right: "6px" }
             }
             onClick={() => {
+              // merge conflict should fix !
+              // commented out is old situation for wms layers
+              // console.log('onclear searchbox clicked');
+              // this.props.setSearchTerms("");
+              // this.props.handleSearch("");
+              // below is desired situation
               this.props.handleSearchClear();
             }}
             tabIndex={0}

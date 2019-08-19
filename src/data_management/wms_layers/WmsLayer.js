@@ -5,7 +5,7 @@ import wmsLayerTableStyles from "../../styles/RasterWmsTable.css";
 import Ink from "react-ink";
 import MDSpinner from "react-md-spinner";
 import { Scrollbars } from "react-custom-scrollbars";
-import PaginationBar from "../rasters/PaginationBar";
+import PaginationBar from "./PaginationBar";
 import React, { Component } from "react";
 import styles from "../rasters/App.css";
 import { addNotification } from "../../actions";
@@ -45,23 +45,26 @@ class WmsLayer extends Component {
       this.state.searchTerms
     );
   }
-  componentWillReceiveProps(props) {
-    let page = 1;
+  
+  componentWillUpdate(nextProps, nextState) {
+    
     if (
-      this.props.organisations.selected.uuid ===
-      props.organisations.selected.uuid
+      this.props.organisations.selected.uuid !==
+      nextProps.organisations.selected.uuid
     ) {
-      page = this.state.page;
+      let page = 1;
+      this.refreshWmsLayerFilteringAndPaginationAndUpdateState(
+        nextState.wmsLayers,
+        page,
+        nextState.searchTerms,
+        nextProps.organisations.selected.uuid,
+      );
     }
 
-    this.refreshWmsLayerFilteringAndPaginationAndUpdateState(
-      this.state.wmsLayers,
-      page,
-      this.state.searchTerms
-    );
+    
   }
 
-  filterSortWmsLayers = (wmsLayers, searchContains) => {
+  filterSortWmsLayers = (wmsLayers, searchContains, selectedOrganisationUuid) => {
     const filteredWmsLayers = wmsLayers.filter(
       e =>
         ((e.name || "").toLowerCase().includes(searchContains.toLowerCase()) ||
@@ -71,6 +74,9 @@ class WmsLayer extends Component {
           (e.uuid || "")
             .toLowerCase()
             .includes(searchContains.toLowerCase()))
+          &&
+            // also sort on organisation, but remove slash from organisation uuid
+            (e.organisation.uuid.split('-').join('')) === selectedOrganisationUuid
     );
 
     filteredWmsLayers.sort((a, b) => {
@@ -98,15 +104,17 @@ class WmsLayer extends Component {
   refreshWmsLayerFilteringAndPaginationAndUpdateState = (
     wmsLayers,
     page,
-    searchTerms
+    searchTerms,
+    selectedOrganisationUuid
   ) => {
     const filteredSortedWmsLayers = this.filterSortWmsLayers(
       wmsLayers,
-      searchTerms
+      searchTerms,
+      selectedOrganisationUuid
     );
     const paginatedWmsLayers = this.paginateWmsLayers(filteredSortedWmsLayers, page);
     const checkboxes = this.createCheckboxDataFromWmsLayer(paginatedWmsLayers);
-
+    
     this.setState({
       isFetching: false,
       total: filteredSortedWmsLayers.length,
@@ -122,7 +130,7 @@ class WmsLayer extends Component {
   getWmsLayersFromApi = (page, searchContains) => {
     // searching/filtering/pagination is for now done clientside so server side search is commented out
 
-    const url = "/api/v3/wmslayers/?page_size=100000";
+    const url = "/api/v4/wmslayers/?page_size=100000";
 
     this.setState({
       isFetching: true
@@ -137,7 +145,8 @@ class WmsLayer extends Component {
         this.refreshWmsLayerFilteringAndPaginationAndUpdateState(
           wmsLayers,
           page,
-          searchContains
+          searchContains,
+          this.props.organisations.selected.uuid
         );
       });
   };
@@ -180,7 +189,7 @@ class WmsLayer extends Component {
   }
 
   fetchWmsLayerUuidsWithOptions(uuids, fetchOptions) {
-    const url = "/api/v3/wmslayers/";
+    const url = "/api/v4/wmslayers/";
     // array to store all fetches to later resolve all promises
     const fetches = uuids.map (wmsLayerUuid => {
       return (fetch(url + wmsLayerUuid + "/", fetchOptions));
@@ -301,7 +310,10 @@ class WmsLayer extends Component {
           >
             {this.state.paginatedWmsLayers.map((wmsLayer, i) => {
               return (
-                <div className={`${wmsLayerTableStyles.tableBody}`}>
+                <div 
+                  className={`${wmsLayerTableStyles.tableBody}`}
+                  key={wmsLayer.uuid}
+                >
                   <div className={`${wmsLayerTableStyles.tableCheckbox}`}>
                     <input
                       type="checkbox"
@@ -391,12 +403,14 @@ class WmsLayer extends Component {
         <div className={`${wmsLayerTableStyles.tableFooterLeftFiller}`} />
         <div className={`${wmsLayerTableStyles.tableInfoAndPagination}`}>
           <PaginationBar
-            loadWmsLayersOnPage={page =>
+            loadWmsLayersOnPage={page => {
               this.refreshWmsLayerFilteringAndPaginationAndUpdateState(
                 this.state.wmsLayers,
                 page,
-                this.state.searchTerms
-              )}
+                this.state.searchTerms,
+                this.props.organisations.selected.uuid
+              )
+            }}
             page={page}
             pages={Math.ceil(total / this.state.pageSize)}
           />
@@ -449,18 +463,29 @@ class WmsLayer extends Component {
             className={`${gridStyles.colLg8} ${gridStyles.colMd8} ${gridStyles.colSm8} ${gridStyles.colXs8}`}
           >
             <SearchBox
-              handleSearch={searchTerms =>
+              handleSearch={searchTerms =>{
                 this.refreshWmsLayerFilteringAndPaginationAndUpdateState(
                   this.state.wmsLayers,
                   1,
-                  searchTerms
-                )}
+                  searchTerms,
+                  this.props.organisations.selected.uuid
+                )
+              }}
               searchTerms={this.state.searchTerms}
               setSearchTerms={searchTerms => {
                 this.refreshWmsLayerFilteringAndPaginationAndUpdateState(
                   this.state.wmsLayers,
                   1,
-                  searchTerms
+                  searchTerms,
+                  this.props.organisations.selected.uuid
+                );
+              }}
+              handleSearchClear={()=>{
+                this.refreshWmsLayerFilteringAndPaginationAndUpdateState(
+                  this.state.wmsLayers,
+                  1,
+                  "",
+                  this.props.organisations.selected.uuid
                 );
               }}
             />

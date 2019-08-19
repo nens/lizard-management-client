@@ -5,7 +5,8 @@ import { WmsLayer as WmsLayerApp } from "./wms_layers/WmsLayer";
 import { NewRaster } from "./rasters/NewRaster";
 import { NewRaster2 } from "./rasters/NewRaster2";
 import { EditRaster } from "./rasters/EditRaster";
-import { ViewWmsLayer } from "./wms_layers/ViewWmsLayer";
+import { EditWmsLayer } from "./wms_layers/EditWmsLayer";
+import { NewWmsLayer } from "./wms_layers/NewWmsLayer";
 import { UploadRasterData } from "./rasters/UploadRasterData";
 
 import { Route, Switch, withRouter } from "react-router-dom";
@@ -54,8 +55,13 @@ class App extends Component {
           />
           <Route
             exact
+            path="/data_management/wms_layers/new"
+            component={NewWmsLayer}
+          />
+          <Route
+            exact
             path="/data_management/wms_layers/:id"
-            component={ViewWmsLayer}
+            component={EditWmsLayer}
           />
         </Switch>
       </div>

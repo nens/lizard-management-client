@@ -4,7 +4,7 @@ import { addNotification } from "../../actions";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { FormattedMessage, injectIntl } from "react-intl";
-import ErrorOverlay from "../rasters/ErrorOverlay.js";
+import ErrorOverlay from "./ErrorOverlay.js";
 
 import "../../forms/validators";
 
@@ -12,6 +12,7 @@ import ManagementForm from "../../forms/ManagementForm";
 import ColorMapInput, { colorMapValidator } from "../../forms/ColorMapInput";
 import DurationField, { durationValidator } from "../../forms/DurationField";
 import TextInput from "../../forms/TextInput";
+import IntegerInput from "../../forms/IntegerInput";
 import TextArea from "../../forms/TextArea";
 import SelectBox from "../../forms/SelectBox";
 import CheckBox from "../../forms/CheckBox";
@@ -23,6 +24,7 @@ import {
 } from "../../forms/validators";
 
 
+
 class WmsLayerFormModel extends Component {
 
   constructor(props) {
@@ -32,6 +34,61 @@ class WmsLayerFormModel extends Component {
       openOverlay: false,
       modalErrorMessage: "",
       createdWmsLayer: null,
+    }
+  }
+
+  minZoomValidator = (value, allValues) => {
+    if (
+      parseInt(value) >= 0 &&
+      parseInt(value) <= 31 //&&
+    ) {
+      return false;
+    } else {
+      return this.props.intl.formatMessage({ id: "wms_layer_form.choose_between_0_31" }); // "Choose a value between 0 and 31"
+    }
+  }
+  
+  maxZoomValidator = (value, allValues) => {
+    const minZoom = 
+      ( allValues.wmsLayerMinZoom === "" || allValues.wmsLayerMinZoom === null || allValues.wmsLayerMinZoom === undefined)?
+      0
+      :
+      allValues.wmsLayerMinZoom
+  
+    if (
+      parseInt(value) >= 0 &&
+      parseInt(value) <= 31 &&
+      parseInt(value) >= minZoom 
+    ) {
+      return false;
+    } else if (
+      parseInt(value) >= 0 &&
+      parseInt(value) <= 31 &&
+      parseInt(value) < minZoom
+    ) {
+      return this.props.intl.formatMessage({ id: "wms_layer_form.choose_maxzoom_greater_minzoom" }); //'Choose "max zoom" greater then "min zoom"';
+    } else {
+      return this.props.intl.formatMessage({ id: "wms_layer_form.choose_between_0_31" }); // "Choose a value between 0 and 31"
+    }
+  }
+
+  getFeatureInfoUrlValidator = (value, allValues) => {
+    if (allValues.wmsLayerGetFeatureInfo !== true) {
+      return false;
+    } else if (value === null || value === undefined || value.length === 0) {
+      return this.props.intl.formatMessage({ id: "wms_layer_form.isrequired_if_getfeatureinfo_is_true" }); 
+    } else {
+      return false;
+    }
+  }
+
+  optionsValidator = (value) => {
+    try{
+      JSON.parse(value);
+      return false;
+    } catch (error) {
+      console.log(error);
+      return this.props.intl.formatMessage({ id: "wms_layer_form.options_must_be_json" }); 
     }
   }
 
@@ -47,16 +104,27 @@ class WmsLayerFormModel extends Component {
 
     this.setState({ isFetching: true, openOverlay: true });
 
-    const url = "/api/v3/wmslayers/";
+    const url = "/api/v4/wmslayers/";
      if (!currentWmsLayer) {
       const opts = {
         credentials: "same-origin",
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          organisation: validatedData.selectedOrganisation,
           name: validatedData.wmsLayerName,
           description: validatedData.description,
-          options: validatedData.colormap.options,
+          url: validatedData.wmsLayerUrl,
+          slug: validatedData.wmsLayerSlug,
+          min_zoom: validatedData.wmsLayerMinZoom,
+          max_zoom: validatedData.wmsLayerMaxZoom,
+          options: validatedData.wmsLayerOptions,
+          get_feature_info: validatedData.wmsLayerGetFeatureInfo,
+          get_feature_info_url: validatedData.wmsLayerGetFeatureInfoUrl,
+          legend_url: validatedData.wmsLayerLegendUrl,
+          shared_with: validatedData.sharedWithOrganisations,
+          access_modifier: validatedData.accessModifier,
+          supplier: validatedData.supplierName,
         })
       };
 
@@ -66,13 +134,24 @@ class WmsLayerFormModel extends Component {
           return responseParsed.json();
         })
         .then(parsedBody => {
-          console.log("parsedBody", parsedBody);
-          this.setState({ createdRaster: parsedBody });
+          this.setState({ createdWmsLayer: parsedBody });
         });
     } else {
       let body = {
-        name: validatedData.rasterName,
+        organisation: validatedData.selectedOrganisation,
+        name: validatedData.wmsLayerName,
         description: validatedData.description,
+        url: validatedData.wmsLayerUrl,
+        slug: validatedData.wmsLayerSlug,
+        min_zoom: validatedData.wmsLayerMinZoom,
+        max_zoom: validatedData.wmsLayerMaxZoom,
+        options: validatedData.wmsLayerOptions,
+        get_feature_info: validatedData.wmsLayerGetFeatureInfo,
+        get_feature_info_url: validatedData.wmsLayerGetFeatureInfoUrl,
+        legend_url: validatedData.wmsLayerLegendUrl,
+        shared_with: validatedData.sharedWithOrganisations,
+        access_modifier: validatedData.accessModifier,
+        supplier: validatedData.supplierName,
       };
       const opts = {
         credentials: "same-origin",
@@ -83,13 +162,11 @@ class WmsLayerFormModel extends Component {
 
       fetch(url + "uuid:" + currentWmsLayer.uuid + "/", opts)
         .then(responseParsed => {
-          console.log("responseParsed put", responseParsed);
           this.handleResponse(responseParsed);
           return responseParsed.json();
         })
         .then(parsedBody => {
-          console.log("parsedBody", parsedBody);
-          this.setState({ createdRaster: parsedBody });
+          this.setState({ createdWmsLayer: parsedBody });
         });
     }
   };
@@ -107,9 +184,12 @@ class WmsLayerFormModel extends Component {
     const placeholderMaxZoom = intl.formatMessage({ id: "placeholder_max_zoom" });
     const placeholderUrl = intl.formatMessage({ id: "placeholder_url" });
     const placeholderTiled = intl.formatMessage({ id: "placeholder_tiled" });
-    const placeholderOptions = intl.formatMessage({ id: "placeholder_options" });
     const placeholderLegendUrl = intl.formatMessage({ id: "placeholder_legend_url" });
     const placeholderGetFeatureInfoUrl = intl.formatMessage({ id: "placeholder_get_feature_info_url" });
+    const placeholderOrganisationSelection = intl.formatMessage({ id: "placeholder_organisation_selection" });
+
+    const placeholderOrganisationSearch = intl.formatMessage({ id: "placeholder_organisation_search" });
+    const placeholderSupplierName = intl.formatMessage({ id: "placeholder_supplier_name" });
 
     return (
       <div>
@@ -126,6 +206,97 @@ class WmsLayerFormModel extends Component {
       <ManagementForm  onSubmit={formData => this.onSubmit(formData, currentWmsLayer)}
                        wizardStyle={this.props.wizardStyle}
       >
+        <SelectBox
+          name="selectedOrganisation"
+          title={<FormattedMessage id="wms_layer_form.organisation" />}
+          subtitle={<FormattedMessage id="wms_layer_form.organisation_subtitle"  />}
+          placeholder={placeholderOrganisationSelection}
+          choices={this.props.organisations.available.map(organisation=>
+            [organisation.uuid, organisation.name]
+          )}
+          validators={[required("Please select an organisation.")]}
+          showSearchField={true}
+          initial ={
+            (
+              currentWmsLayer && 
+              currentWmsLayer.organisation && 
+              currentWmsLayer.organisation.uuid &&
+              currentWmsLayer.organisation.uuid
+            ) || null
+          }
+        />
+        <SlushBucket
+          name="sharedWithOrganisations"
+          title={<FormattedMessage id="raster_form.sharedOrganisation" />}
+          subtitle={<FormattedMessage id="wms_layer_form.sharedOrganisation_subtitle" />}
+          choices={this.props.organisations.availableForRasterSharedWith.map(e =>{
+            return {
+              display: e.name, 
+              value : e.uuid
+            }
+          })}
+          readOnly={false}
+          placeholder={placeholderOrganisationSearch}
+          initial={
+            (
+            currentWmsLayer && 
+            currentWmsLayer.shared_with && 
+            currentWmsLayer.shared_with.map((orgUuid) => {
+              return orgUuid.uuid
+            })
+            ) || [] // passing this empty array is somehow required. Somehow only if I also have the colormapInput component.
+          }
+          validators={[]}
+        />
+        <SelectBox
+          name="accessModifier"
+          title={<FormattedMessage id="raster_form.authorization" />}
+          subtitle={<FormattedMessage id="wms_layer_form.authorization_subtitle" />}
+          choices={[
+            [
+              "Private",
+              "Private",
+              <FormattedMessage id="raster_form.authorization_private_message" />
+            ],
+            [
+              "Common",
+              "Common",
+              <FormattedMessage id="raster_form.authorization_common_message" />
+            ],
+            [
+              "Public",
+              "Public",
+              <FormattedMessage id="raster_form.authorization_public_message" />
+            ] 
+          ]}
+          validators={[required(this.props.intl.formatMessage({ id: "wms_layer_form.please_select_accesmodifier" }))]}
+          initial ={
+            (
+              currentWmsLayer && 
+              currentWmsLayer.access_modifier
+            ) ||
+            "Private" 
+          }
+          showSearchField={false}
+        />
+        <SelectBox
+          name="supplierName"
+          title={<FormattedMessage id="raster_form.supplierName" />}
+          subtitle={<FormattedMessage id="wms_layer_form.supplierName_subtitle" />}
+          placeholder={placeholderSupplierName}
+          choices={this.props.supplierIds.available.map(obsT=>
+            [obsT.username, obsT.username]
+          )}
+          // validators={[required("Please select a Supplier Name.")]}
+          validators={[]}
+          showSearchField={true}
+          initial = {
+            (
+            currentWmsLayer && 
+            currentWmsLayer.supplier
+            ) || null
+          }
+        />
         <TextInput
           name="wmsLayerName"
           title={<FormattedMessage id="wms_layer_form.wmsLayerName" />}
@@ -134,6 +305,7 @@ class WmsLayerFormModel extends Component {
             currentWmsLayer &&
               currentWmsLayer.name
           }
+          validators={[minLength(5)]}
         />
         <TextArea
           name="description"
@@ -144,6 +316,7 @@ class WmsLayerFormModel extends Component {
             currentWmsLayer &&
               currentWmsLayer.description
           }
+          validators={[minLength(1)]}
         />
         <TextInput
           name="wmsLayerUrl"
@@ -153,6 +326,7 @@ class WmsLayerFormModel extends Component {
             currentWmsLayer &&
               currentWmsLayer.url
           }
+          validators={[minLength(1)]}
         />
         <TextInput
           name="wmsLayerSlug"
@@ -162,8 +336,10 @@ class WmsLayerFormModel extends Component {
             currentWmsLayer &&
               currentWmsLayer.slug
           }
+          validators={[minLength(1)]}
         />
-        <TextInput
+        {/* According to my (Tom) understanding this field is no longer needed */}
+        {/* <TextInput
           name="wmsLayerTiled"
           title={<FormattedMessage id="wms_layer_form.tiled" />}
           placeholder={placeholderTiled}
@@ -171,41 +347,46 @@ class WmsLayerFormModel extends Component {
             currentWmsLayer &&
               currentWmsLayer.tiled
           }
-        />
-        <TextInput
+        /> */}
+        <IntegerInput
           name="wmsLayerMinZoom"
           title={<FormattedMessage id="wms_layer_form.min_zoom" />}
-          placeholder={placeholderMinZoom}
+          subtitle={<FormattedMessage id="wms_layer_form.integer_from_0_till_31" />}
           initial = {
-            currentWmsLayer &&
-              currentWmsLayer.min_zoom.toString()
+            (currentWmsLayer &&
+            (currentWmsLayer.min_zoom || currentWmsLayer.min_zoom === 0) && 
+              currentWmsLayer.min_zoom.toString()) || '0'
           }
+          validators={[this.minZoomValidator]}
         />
-        <TextInput
+        <IntegerInput
           name="wmsLayerMaxZoom"
           title={<FormattedMessage id="wms_layer_form.max_zoom" />}
+          subtitle={<FormattedMessage id="wms_layer_form.integer_from_0_till_31_more_then_minzoom" />}
           placeholder={placeholderMaxZoom}
           initial = {
-            currentWmsLayer &&
-              currentWmsLayer.max_zoom.toString()
+            (currentWmsLayer &&
+              (currentWmsLayer.max_zoom || currentWmsLayer.max_zoom === 0) && 
+                currentWmsLayer.max_zoom.toString()) || 31
           }
+          validators={[this.maxZoomValidator]}
         />
         <TextArea
           name="wmsLayerOptions"
           title={<FormattedMessage id="wms_layer_form.options" />}
-          placeholder={placeholderOptions}
+          subtitle={<FormattedMessage id="wms_layer_form.options_must_be_json" />}
           initial = {
-            currentWmsLayer &&
-              JSON.stringify(currentWmsLayer.options)
+            (currentWmsLayer &&
+              JSON.stringify(currentWmsLayer.options)) || '{"transparent": "True"}'
           }
+          validators={[this.optionsValidator]}
         />
-        <TextInput
+        <CheckBox
           name="wmsLayerGetFeatureInfo"
           title={<FormattedMessage id="wms_layer_form.get_feature_info" />}
-          placeholder={placeholderGetFeatureInfo}
           initial = {
-            currentWmsLayer &&
-              currentWmsLayer.get_feature_info
+            (currentWmsLayer &&
+              currentWmsLayer.get_feature_info) || false
           }
         />
         <TextInput
@@ -216,6 +397,7 @@ class WmsLayerFormModel extends Component {
             currentWmsLayer &&
               currentWmsLayer.get_feature_info_url
           }
+          validators={[this.getFeatureInfoUrlValidator]}
         />
         <TextInput
           name="wmsLayerLegendUrl"

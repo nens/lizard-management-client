@@ -5,7 +5,7 @@ import MDSpinner from "react-md-spinner";
 
 import { WmsLayerForm } from "./WmsLayerForm";
 
-class ViewWmsLayerModel extends Component {
+class EditWmsLayerModel extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -17,7 +17,7 @@ class ViewWmsLayerModel extends Component {
     const { match } = this.props;
 
     (async () => {
-      const currentWmsLayer = await fetch(`/api/v3/wmslayers/${match.params.id}/`, {
+      const currentWmsLayer = await fetch(`/api/v4/wmslayers/${match.params.id}/`, {
         credentials: "same-origin"
       }).then(response => response.json());
 
@@ -27,7 +27,11 @@ class ViewWmsLayerModel extends Component {
 
   render() {
     if (
-      this.state.currentWmsLayer
+      this.state.currentWmsLayer &&
+      this.props.organisations.isFetching === false &&
+      this.props.observationTypes.isFetching === false &&
+      this.props.colorMaps.isFetching === false &&
+      this.props.supplierIds.isFetching === false
     ) {
       return <WmsLayerForm 
         currentWmsLayer={this.state.currentWmsLayer}
@@ -54,9 +58,13 @@ class ViewWmsLayerModel extends Component {
 
 const mapStateToProps = (state) => {
   return {
+    organisations: state.organisations,
+    observationTypes: state.observationTypes,
+    colorMaps: state.colorMaps,
+    supplierIds: state.supplierIds
   };
 };
 
-const ViewWmsLayer = withRouter(connect(mapStateToProps)(ViewWmsLayerModel));
+const EditWmsLayer = withRouter(connect(mapStateToProps)(EditWmsLayerModel));
 
-export { ViewWmsLayer };
+export { EditWmsLayer };
