@@ -124,6 +124,7 @@ class WmsLayerFormModel extends Component {
           legend_url: validatedData.wmsLayerLegendUrl,
           shared_with: validatedData.sharedWithOrganisations,
           access_modifier: validatedData.accessModifier,
+          supplier: validatedData.supplierName,
         })
       };
 
@@ -150,6 +151,7 @@ class WmsLayerFormModel extends Component {
         legend_url: validatedData.wmsLayerLegendUrl,
         shared_with: validatedData.sharedWithOrganisations,
         access_modifier: validatedData.accessModifier,
+        supplier: validatedData.supplierName,
       };
       const opts = {
         credentials: "same-origin",
@@ -187,6 +189,7 @@ class WmsLayerFormModel extends Component {
     const placeholderOrganisationSelection = intl.formatMessage({ id: "placeholder_organisation_selection" });
 
     const placeholderOrganisationSearch = intl.formatMessage({ id: "placeholder_organisation_search" });
+    const placeholderSupplierName = intl.formatMessage({ id: "placeholder_supplier_name" });
 
     return (
       <div>
@@ -275,6 +278,24 @@ class WmsLayerFormModel extends Component {
             "Private" 
           }
           showSearchField={false}
+        />
+        <SelectBox
+          name="supplierName"
+          title={<FormattedMessage id="raster_form.supplierName" />}
+          subtitle={<FormattedMessage id="wms_layer_form.supplierName_subtitle" />}
+          placeholder={placeholderSupplierName}
+          choices={this.props.supplierIds.available.map(obsT=>
+            [obsT.username, obsT.username]
+          )}
+          // validators={[required("Please select a Supplier Name.")]}
+          validators={[]}
+          showSearchField={true}
+          initial = {
+            (
+            currentWmsLayer && 
+            currentWmsLayer.supplier
+            ) || null
+          }
         />
         <TextInput
           name="wmsLayerName"

@@ -313,6 +313,7 @@
   "wms_layer_form.get_feature_info_url": "GetFeatureInfo url",
   "wms_layer_form.legend_url": "Legenda url",
   "wms_layer_form.sharedOrganisation_subtitle":"Selecteer andere organisaties die leestoegang tot deze wmslayer nodig hebben",
+  "wms_layer_form.supplierName_subtitle": "Optioneel: selecteer de gebruiker die deze wmslayer mag wijzigen en verwijderen",
   "placeholder_timeseries_selection_via_asset": "Selecteer het object waarop de tijdserie wordt gemeten en waarop je het alarm wilt toevoegen",
   "placeholder_timeseries_selection_via_nested_asset": "Selecteer eventueel een sub-object (Bijvoorbeeld een pomp A van gemaal B of filter A van het grondwater meetstation B)",
   "placeholder_timeseries_selection": "Selecteer de tijdserie waarop je het alarm wilt toevoegen"
