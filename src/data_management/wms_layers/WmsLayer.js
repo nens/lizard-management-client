@@ -480,6 +480,14 @@ class WmsLayer extends Component {
                   this.props.organisations.selected.uuid
                 );
               }}
+              handleSearchClear={()=>{
+                this.refreshWmsLayerFilteringAndPaginationAndUpdateState(
+                  this.state.wmsLayers,
+                  1,
+                  "",
+                  this.props.organisations.selected.uuid
+                );
+              }}
             />
           </div>
           <div
