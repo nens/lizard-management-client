@@ -64,10 +64,11 @@ class ErrorOverlay extends Component {
 
   // Different buttons based on succes or fail of a request
   succesButtons() {
+    console.log('this.props.errorMessage', this.props.errorMessage, this.props.currentWmsLayer);
     if (
       (this.props.errorMessage.status === 201 ||
         this.props.errorMessage.status === 200) &&
-      this.props.currentRaster
+      this.props.currentWmsLayer
     ) {
       return true;
     } else {
@@ -84,7 +85,7 @@ class ErrorOverlay extends Component {
       return (
         <FormattedMessage
           id="wms_layer_form.post_success"
-          defaultMessage="Succes! Your raster meta-data was uploaded succesfully. You can add your data now, or do it later"
+          defaultMessage="Succes! Your wmslayer was uploaded succesfully."
         />
       );
     } else if (this.props.errorMessage.status.toString().startsWith(4)) {
@@ -123,10 +124,7 @@ class ErrorOverlay extends Component {
       defaultOptions = {
         loop: false,
         autoplay: true,
-        // Use this.whichAnimation().default instead of this.whichAnimation()
-        // for animationData, because the Lottie animation needs an
-        // animationData.layers.
-        animationData: this.whichAnimation().default,
+        animationData: this.whichAnimation(),
         rendererSettings: {
           preserveAspectRatio: "xMidYMid slice"
         }
@@ -178,31 +176,13 @@ class ErrorOverlay extends Component {
                     <button
                       type="button"
                       className={`${buttonStyles.Button} ${buttonStyles.Success}`}
-                      style={{ marginTop: 10, marginRight: 10 }}
-                      onClick={() =>
-                        this.props.history.push("/data_management/rasters")}
-                    >
-                      <FormattedMessage
-                        id="rasterscreen"
-                        defaultMessage="Back to rasters"
-                      />
-                    </button>
-                    <button
-                      type="button"
-                      className={`${buttonStyles.Button} ${buttonStyles.Success}`}
                       style={{ marginTop: 10 }}
-                      onClick={e => {
-                        this.props.history.push(
-                          "/data_management/rasters/" +
-                            this.props.currentRaster.uuid +
-                            "/data"
-                        );
+                      onClick={() => {
+                          this.props.history.push("/data_management/wms_layers")
                       }}
+                        
                     >
-                      <FormattedMessage
-                        id="upload"
-                        defaultMessage="Upload data"
-                      />
+                      <FormattedMessage id="close" defaultMessage="Back" />
                     </button>
                   </div>
                 ) : (
@@ -212,11 +192,11 @@ class ErrorOverlay extends Component {
                       className={`${buttonStyles.Button} ${buttonStyles.Success}`}
                       style={{ marginTop: 10 }}
                       onClick={() => {
-                        if (this.props.errorMessage.status.toString().startsWith(4)) {
+                        // if (this.props.errorMessage.status.toString().startsWith(4)) {
                           this.props.handleClose();
-                        } else {
-                          this.props.history.push("/data_management/wms_layers")
-                        }
+                        // } else {
+                        //   this.props.history.push("/data_management/wms_layers")
+                        // }
                       }}
                         
                     >

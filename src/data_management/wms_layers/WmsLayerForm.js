@@ -133,7 +133,7 @@ class WmsLayerFormModel extends Component {
           return responseParsed.json();
         })
         .then(parsedBody => {
-          this.setState({ createdRaster: parsedBody });
+          this.setState({ createdWmsLayer: parsedBody });
         });
     } else {
       let body = {
@@ -164,7 +164,7 @@ class WmsLayerFormModel extends Component {
           return responseParsed.json();
         })
         .then(parsedBody => {
-          this.setState({ createdRaster: parsedBody });
+          this.setState({ createdWmsLayer: parsedBody });
         });
     }
   };
