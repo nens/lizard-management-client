@@ -187,7 +187,7 @@ class Scenarios extends Component {
                         autoHeight
                         autoHeightMin={551}
                         //Hide vertical scrollbar of this component to use the vertical scrollbar of the table body only
-                        renderTrackVertical={props => <div {...props} style={{display: 'none'}} className="track-vertical"/>}
+                        renderTrackVertical={props => <div {...props} style={{ display: 'none' }} className="track-vertical" />}
                     >
                         <div className={scenartioStyle.Table}>
                             {scenarioTableHeader()}
@@ -218,6 +218,9 @@ class Scenarios extends Component {
                                 page={page}
                                 pages={Math.ceil(total / pageSize)}
                             />
+                            <div className={scenartioStyle.numberOfScenarios}>
+                                {total} Scenarios
+                            </div>
                         </div>
                         <button
                             className={`${scenartioStyle.DeleteButton} ${buttonStyles.Button} ${buttonStyles.Inactive}`}
