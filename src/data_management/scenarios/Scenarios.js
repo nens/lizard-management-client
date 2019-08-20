@@ -151,8 +151,7 @@ class Scenarios extends Component {
     };
 
     render() {
-        console.log(this.state.checkboxes)
-        const { scenarios, total, page, pageSize, isFetching } = this.state;
+        const { scenarios, total, page, pageSize, isFetching, checkboxes } = this.state;
 
         //Method to convert UTC string to local date format of DD/MM/YYYY
         const convertUTCtoDate = (utc) => {
@@ -190,8 +189,8 @@ class Scenarios extends Component {
                         <div className={scenartioStyle.tableCheckbox}>
                             <input
                                 type="checkbox"
-                                onClick={() => this.handleClickOnCheckbox(scenario.uuid)}
-                                checked={this.state.checkboxes.filter(id => id === scenario.uuid).length === 0 ? false : true}
+                                onChange={() => this.handleClickOnCheckbox(scenario.uuid)}
+                                checked={checkboxes.filter(id => id === scenario.uuid).length === 0 ? false : true}
                                 id={scenario.uuid}
                             />
                         </div>
@@ -290,14 +289,14 @@ class Scenarios extends Component {
                         </div>
                         <button
                             className={
-                                this.state.checkboxes.length > 0 ?
+                                checkboxes.length > 0 ?
                                     `${scenartioStyle.DeleteButton} ${buttonStyles.Button} ${buttonStyles.Danger}`
                                     :
                                     `${scenartioStyle.DeleteButton} ${buttonStyles.Button} ${buttonStyles.Inactive}`
                             }
                             onClick={() => this.handleDeleteScenario(scenarios)}
                             style={{ maxHeight: "36px" }}
-                            disabled={this.state.checkboxes.length === 0 ? true : false}
+                            disabled={checkboxes.length === 0 ? true : false}
                         >
                             Delete
                         </button>
