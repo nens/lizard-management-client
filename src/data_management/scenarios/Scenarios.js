@@ -15,6 +15,7 @@ class Scenarios extends Component {
         pageSize: 10,
         searchTerms: "",
         searchedTerms: "",
+        checkboxes: []
     };
 
     fetchScenariosFromApi = (page, searchContains) => {
@@ -35,6 +36,21 @@ class Scenarios extends Component {
                     total: data.count
                 });
             });
+    };
+
+    fetchScenarioUuidsWithOptions(uuids, fetchOptions) {
+        const url = "/api/v3/scenarios/"
+        //Array to store all fetches to later resolve all promises
+        const fetches = uuids.map(scenarioUuid => {
+            return (fetch(url + scenarioUuid + "/", fetchOptions));
+        });
+        Promise.all(fetches).then(values => {
+            //Refresh the page so that the removed scenarios are no longer visible
+            this.fetchScenariosFromApi(
+                this.state.page,
+                this.state.searchTerms
+            );
+        });
     };
 
     handleUpdatePage(page) {
@@ -68,6 +84,50 @@ class Scenarios extends Component {
         });
     };
 
+    handleClickOnCheckbox = (scenarioUuid) => {
+        //Check if the scenario has already been selected or not
+        const selectedUuid = this.state.checkboxes.filter(id => id === scenarioUuid)
+
+        //If not yet selected then add this new uuid into the basket
+        if (selectedUuid.length === 0) {
+            this.setState({
+                checkboxes: [...this.state.checkboxes, scenarioUuid]
+            });
+        } else {
+            //If already selected then remove this uuid from the basket
+            this.setState({
+                checkboxes: this.state.checkboxes.filter(id => id !== scenarioUuid)
+            });
+        };
+    };
+
+    handleDeleteScenario(scenarios) {
+        if (
+            window.confirm(
+                "Are you sure you want to delete the next scenario(s)? \n  \n "
+                +
+                this.state.checkboxes.map(uuid => scenarios
+                    .filter(scenario => scenario.uuid === uuid)
+                    .map(scenario => scenario.name)
+                ).join(" \n")
+            )
+        ) {
+            const checkedUuids = this.state.checkboxes;
+            const opts = {
+                //Not permanently deleted, this will be implemented in backend
+                credentials: "same-origin",
+                method: "DELETE",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({})
+            };
+            this.fetchScenarioUuidsWithOptions(checkedUuids, opts);
+            //Remove all items from the checkboxes after the deletion
+            this.setState({
+                checkboxes: []
+            });
+        };
+    };
+
     componentDidMount() {
         this.fetchScenariosFromApi(
             this.state.page,
@@ -91,6 +151,7 @@ class Scenarios extends Component {
     };
 
     render() {
+        console.log(this.state.checkboxes)
         const { scenarios, total, page, pageSize, isFetching } = this.state;
 
         //Method to convert UTC string to local date format of DD/MM/YYYY
@@ -127,7 +188,12 @@ class Scenarios extends Component {
                         style={{ visibility: isFetching ? "hidden" : "visible" }}
                     >
                         <div className={scenartioStyle.tableCheckbox}>
-                            <input type="checkbox" />
+                            <input
+                                type="checkbox"
+                                onClick={() => this.handleClickOnCheckbox(scenario.uuid)}
+                                checked={this.state.checkboxes.filter(id => id === scenario.uuid).length === 0 ? false : true}
+                                id={scenario.uuid}
+                            />
                         </div>
                         <div className={scenartioStyle.tableScenario}>
                             {scenario.name}
@@ -223,8 +289,15 @@ class Scenarios extends Component {
                             </div>
                         </div>
                         <button
-                            className={`${scenartioStyle.DeleteButton} ${buttonStyles.Button} ${buttonStyles.Inactive}`}
+                            className={
+                                this.state.checkboxes.length > 0 ?
+                                    `${scenartioStyle.DeleteButton} ${buttonStyles.Button} ${buttonStyles.Danger}`
+                                    :
+                                    `${scenartioStyle.DeleteButton} ${buttonStyles.Button} ${buttonStyles.Inactive}`
+                            }
+                            onClick={() => this.handleDeleteScenario(scenarios)}
                             style={{ maxHeight: "36px" }}
+                            disabled={this.state.checkboxes.length === 0 ? true : false}
                         >
                             Delete
                         </button>
