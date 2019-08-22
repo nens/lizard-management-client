@@ -298,7 +298,7 @@ class Scenarios extends Component {
                             style={{ maxHeight: "36px" }}
                             disabled={checkboxes.length === 0 ? true : false}
                         >
-                            Delete
+                            Delete {checkboxes.length === 0 ? null : `(${checkboxes.length})`}
                         </button>
                     </div>
                 </div>
