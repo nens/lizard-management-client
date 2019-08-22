@@ -60,6 +60,7 @@ class PaginationBar extends Component {
                                 </span>
                             )
                         }
+                        return null;
                     })}
                 </div>
                 <button

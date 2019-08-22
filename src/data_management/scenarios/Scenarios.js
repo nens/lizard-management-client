@@ -195,7 +195,7 @@ class Scenarios extends Component {
                         <input 
                             type="checkbox"
                             onChange={() => this.handleAllCheckboxes(scenarios)}
-                            checked={checkboxes.length === scenarios.length ? true : false}
+                            checked={(checkboxes.length === scenarios.length && checkboxes.length !== 0) ? true : false}
                         />
                     </div>
                     <div className={scenartioStyle.tableScenario}>Scenario</div>
