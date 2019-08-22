@@ -214,9 +214,9 @@ class Scenarios extends Component {
                     <div className={scenartioStyle.Footer}>
                         <div className={scenartioStyle.Pagination}>
                             <PaginationBar
-                                loadScenariosOnPage={page => this.handleUpdatePage(page)}
-                                page={page}
-                                pages={Math.ceil(total / pageSize)}
+                                loadItemsOnPage={page => this.handleUpdatePage(page)}
+                                currentPage={page}
+                                totalPages={Math.ceil(total / pageSize)}
                             />
                             <div className={scenartioStyle.numberOfScenarios}>
                                 {total} Scenarios
