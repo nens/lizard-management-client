@@ -2,7 +2,7 @@
     font-size: 18px;
     margin: 0 auto;
     color: #8D8D8D;
-    width: 20%;
+    min-width: 180px;
     display: flex;
     justify-content: space-between;
 }
