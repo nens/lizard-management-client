@@ -33,7 +33,8 @@ class Scenarios extends Component {
                 this.setState({
                     scenarios: data.results,
                     isFetching: false,
-                    total: data.count
+                    total: data.count,
+                    checkboxes: []
                 });
             });
     };
@@ -67,33 +68,28 @@ class Scenarios extends Component {
 
     handleUpdatePage(page) {
         this.setState({
-            page: page,
-            checkboxes: []
+            page: page
         });
     };
     handleUpdateSearchTerms(searchTerms) {
         this.setState({
-            searchTerms: searchTerms,
-            // page: 1 // Reset PaginationBar to page 1
+            searchTerms: searchTerms
         });
     };
     handleUpdateSearchedTermsEnter() {
         this.setState({
-            searchedTerms: this.state.searchTerms,
-            page: 1 // Reset PaginationBar to page 1
+            searchedTerms: this.state.searchTerms
         });
     };
     handleUpdateSearchedTermsOnBlur() {
         this.setState({
-            searchedTerms: this.state.searchTerms,
-            // page: 1 // Reset PaginationBar to page 1
+            searchedTerms: this.state.searchTerms
         });
     };
     handleUpdateSearchedTermsClear() {
         this.setState({
             searchTerms: "",
-            searchedTerms: "",
-            page: 1 // Reset PaginationBar to page 1
+            searchedTerms: ""
         });
     };
 
