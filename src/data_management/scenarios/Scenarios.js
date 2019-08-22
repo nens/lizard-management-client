@@ -53,6 +53,18 @@ class Scenarios extends Component {
         });
     };
 
+    updatePageAndFetchScenariosFromApi(page, searchedTerms) {
+        this.setState(
+            {
+                page: page
+            },
+            this.fetchScenariosFromApi(
+                page,
+                searchedTerms
+            )
+        );
+    }
+
     handleUpdatePage(page) {
         this.setState({
             page: page
@@ -137,9 +149,8 @@ class Scenarios extends Component {
 
     componentWillUpdate(nextProps, nextState) {
         if (nextState.searchedTerms !== this.state.searchedTerms) {
-            this.handleUpdatePage(1);
-            this.fetchScenariosFromApi(
-                this.state.page,
+            this.updatePageAndFetchScenariosFromApi(
+                1,
                 nextState.searchedTerms
             );
         } else if (nextState.page !== this.state.page) {
