@@ -67,7 +67,8 @@ class Scenarios extends Component {
 
     handleUpdatePage(page) {
         this.setState({
-            page: page
+            page: page,
+            checkboxes: []
         });
     };
     handleUpdateSearchTerms(searchTerms) {
