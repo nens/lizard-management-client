@@ -114,6 +114,18 @@ class Scenarios extends Component {
         };
     };
 
+    handleAllCheckboxes = (scenarios) => {
+        if (this.state.checkboxes.length < this.state.pageSize) {
+            this.setState({
+                checkboxes: scenarios.map(scenario => scenario.uuid)
+            })
+        } else {
+            this.setState({
+                checkboxes: []
+            })
+        };
+    }
+
     handleDeleteScenario(scenarios) {
         if (
             window.confirm(
@@ -180,7 +192,11 @@ class Scenarios extends Component {
             return (
                 <div className={scenartioStyle.tableHeader}>
                     <div className={scenartioStyle.tableCheckbox}>
-                        <input type="checkbox" />
+                        <input 
+                            type="checkbox"
+                            onChange={() => this.handleAllCheckboxes(scenarios)}
+                            checked={checkboxes.length === pageSize ? true : false}
+                        />
                     </div>
                     <div className={scenartioStyle.tableScenario}>Scenario</div>
                     <div className={scenartioStyle.tableModel}>Model</div>
@@ -245,19 +261,11 @@ class Scenarios extends Component {
                 <div className={scenartioStyle.Main}>
                     <div className={scenartioStyle.Search}>
                         <SearchBox
-                            handleSearchEnter={searchTerms => {
-                                this.handleUpdateSearchedTermsEnter();
-                            }}
-                            handleSearchOnBlur={searchTerms => {
-                                this.handleUpdateSearchedTermsOnBlur();
-                            }}
-                            handleSearchClear={searchTerms => {
-                                this.handleUpdateSearchedTermsClear();
-                            }}
+                            handleSearchEnter={() => this.handleUpdateSearchedTermsEnter()}
+                            handleSearchOnBlur={() => this.handleUpdateSearchedTermsOnBlur()}
+                            handleSearchClear={() => this.handleUpdateSearchedTermsClear()}
                             searchTerms={this.state.searchTerms}
-                            setSearchTerms={searchTerms => {
-                                this.handleUpdateSearchTerms(searchTerms);
-                            }}
+                            setSearchTerms={searchTerms => this.handleUpdateSearchTerms(searchTerms)}
                         />
                     </div>
                     <Scrollbars
@@ -280,7 +288,7 @@ class Scenarios extends Component {
                                         position: "absolute",
                                         top: "45%",
                                         left: "45%",
-                                        visibility: this.state.isFetching ? "visible" : "hidden"
+                                        visibility: isFetching ? "visible" : "hidden"
                                     }}
                                 >
                                     <MDSpinner />
