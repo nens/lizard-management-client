@@ -115,7 +115,7 @@ class Scenarios extends Component {
     };
 
     handleAllCheckboxes = (scenarios) => {
-        if (this.state.checkboxes.length < this.state.pageSize) {
+        if (this.state.checkboxes.length < scenarios.length) {
             this.setState({
                 checkboxes: scenarios.map(scenario => scenario.uuid)
             })
@@ -195,7 +195,7 @@ class Scenarios extends Component {
                         <input 
                             type="checkbox"
                             onChange={() => this.handleAllCheckboxes(scenarios)}
-                            checked={checkboxes.length === pageSize ? true : false}
+                            checked={checkboxes.length === scenarios.length ? true : false}
                         />
                     </div>
                     <div className={scenartioStyle.tableScenario}>Scenario</div>
