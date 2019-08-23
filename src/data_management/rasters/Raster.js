@@ -529,13 +529,9 @@ class Raster extends Component {
             >
               <FormattedMessage
                 id="rasters.delete_rasters"
-                defaultMessage={` Delete {clickedCheckboxes, number} {
-                  clickedCheckboxes, plural,
-                  zero {Raster}
+                defaultMessage={` Delete {clickedCheckboxes, number} {clickedCheckboxes, plural,
                   one {Raster}
-                  other {Rasters}
-                }`
-                }
+                  other {Rasters}}`}
                 values={{
                   clickedCheckboxes
                 }}
