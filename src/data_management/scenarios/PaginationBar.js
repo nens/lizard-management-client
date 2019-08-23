@@ -2,29 +2,6 @@ import React, { Component } from "react";
 import styles from "./PaginationBar.css";
 
 class PaginationBar extends Component {
-    state = {
-        inputPage: ""
-    }
-
-    componentDidMount() {
-        //On startup keep state in sync with props
-        this.setState({
-            inputPage: this.props.page
-        });
-    }
-
-    componentWillReceiveProps(newProps) {
-        //if page changes from parent then update inputPage
-        if (
-            newProps.currentPage !== this.props.currentPage &&
-            this.state.inputPage + "" !== newProps.currentPage + ""
-        ) {
-            this.setState({
-                inputPage: newProps.currentPage
-            });
-        };
-    }
-
     render() {
         const { currentPage, totalPages, loadItemsOnPage } = this.props;
 
