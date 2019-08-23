@@ -195,7 +195,7 @@
   "placeholder_timeseries_selection_via_nested_asset": "Select a sub-object if necessary (i.e. pump A from pumping station B or filter A from the groundwater measuring station B)",
   "placeholder_timeseries_selection": "Select the timeseries which the alarm will be added to",
   "scenario.date": "Date",
-  "scenario.delete_scenario": "Delete Selection",
+  "scenario.delete_scenario": "Delete ({clickedCheckboxes, number})",
   "scenario.model": "Model",
   "scenario.scenario": "Scenario",
   "scenario.size": "Size",

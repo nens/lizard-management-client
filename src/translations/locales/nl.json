@@ -283,7 +283,7 @@
   "placeholder_timeseries_selection_via_nested_asset": "Selecteer eventueel een sub-object (Bijvoorbeeld een pomp A van gemaal B of filter A van het grondwater meetstation B)",
   "placeholder_timeseries_selection": "Selecteer de tijdserie waarop je het alarm wilt toevoegen",
   "scenario.date": "Datum",
-  "scenario.delete_scenario": "Verwijder Selectie",
+  "scenario.delete_scenario": "Verwijder ({clickedCheckboxes, number})",
   "scenario.model": "Model",
   "scenario.scenario": "Scenario",
   "scenario.size": "Grootte",

@@ -135,6 +135,13 @@
     flex: 6;
     display: flex;
     justify-content: center;
+    flex-direction: column;
+}
+
+.numberOfScenarios {
+    display: flex;
+    justify-content: center;
+    color: #818181;
 }
 
 .DeleteButton {

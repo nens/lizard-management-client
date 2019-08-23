@@ -3,18 +3,24 @@ import MDSpinner from "react-md-spinner";
 import { Scrollbars } from "react-custom-scrollbars";
 import { FormattedMessage } from "react-intl";
 import SearchBox from "../../components/SearchBox";
-import PaginationBar from "./../rasters/PaginationBar";
+import PaginationBar from "./PaginationBar";
 import buttonStyles from "../../styles/Buttons.css";
 import scenartioStyle from './Scenarios.css';
 
 class Scenarios extends Component {
     state = {
         isFetching: true,
-        scenarios: []
+        scenarios: [],
+        total: 0,
+        page: 1,
+        pageSize: 10,
+        searchTerms: "",
+        searchedTerms: "",
+        checkboxes: []
     };
 
-    getScenariosFromApi = () => {
-        const url = "/api/v3/scenarios";
+    fetchScenariosFromApi = (page, searchContains) => {
+        const url = `/api/v3/scenarios/?writable=true&page_size=${this.state.pageSize}&page=${page}&name__icontains=${searchContains}`;
 
         this.setState({
             isFetching: true
@@ -27,17 +33,146 @@ class Scenarios extends Component {
             .then(data => {
                 this.setState({
                     scenarios: data.results,
-                    isFetching: false
+                    isFetching: false,
+                    total: data.count,
+                    checkboxes: []
                 });
             });
     };
 
+    fetchScenarioUuidsWithOptions(uuids, fetchOptions) {
+        const url = "/api/v3/scenarios/"
+        //Array to store all fetches to later resolve all promises
+        const fetches = uuids.map(scenarioUuid => {
+            return (fetch(url + scenarioUuid + "/", fetchOptions));
+        });
+        Promise.all(fetches).then(values => {
+            //Refresh the page so that the removed scenarios are no longer visible
+            this.fetchScenariosFromApi(
+                this.state.page,
+                this.state.searchTerms
+            );
+        });
+    };
+
+    updatePageAndFetchScenariosFromApi(page, searchedTerms) {
+        this.setState(
+            {
+                page: page
+            },
+            this.fetchScenariosFromApi(
+                page,
+                searchedTerms
+            )
+        );
+    }
+
+    handleUpdatePage(page) {
+        this.setState({
+            page: page
+        });
+    };
+    handleUpdateSearchTerms(searchTerms) {
+        this.setState({
+            searchTerms: searchTerms
+        });
+    };
+    handleUpdateSearchedTermsEnter() {
+        this.setState({
+            searchedTerms: this.state.searchTerms
+        });
+    };
+    handleUpdateSearchedTermsOnBlur() {
+        this.setState({
+            searchedTerms: this.state.searchTerms
+        });
+    };
+    handleUpdateSearchedTermsClear() {
+        this.setState({
+            searchTerms: "",
+            searchedTerms: ""
+        });
+    };
+
+    handleClickOnCheckbox = (scenarioUuid) => {
+        //Check if the scenario has already been selected or not
+        const selectedUuid = this.state.checkboxes.filter(id => id === scenarioUuid)
+
+        //If not yet selected then add this new uuid into the basket
+        if (selectedUuid.length === 0) {
+            this.setState({
+                checkboxes: [...this.state.checkboxes, scenarioUuid]
+            });
+        } else {
+            //If already selected then remove this uuid from the basket
+            this.setState({
+                checkboxes: this.state.checkboxes.filter(id => id !== scenarioUuid)
+            });
+        };
+    };
+
+    handleAllCheckboxes = (scenarios) => {
+        if (this.state.checkboxes.length < scenarios.length) {
+            this.setState({
+                checkboxes: scenarios.map(scenario => scenario.uuid)
+            })
+        } else {
+            this.setState({
+                checkboxes: []
+            })
+        };
+    }
+
+    handleDeleteScenario(scenarios) {
+        if (
+            window.confirm(
+                "Are you sure you want to delete the next scenario(s)? \n  \n "
+                +
+                this.state.checkboxes.map(uuid => scenarios
+                    .filter(scenario => scenario.uuid === uuid)
+                    .map(scenario => scenario.name)
+                ).join(" \n")
+            )
+        ) {
+            const checkedUuids = this.state.checkboxes;
+            const opts = {
+                //Not permanently deleted, this will be implemented in backend
+                credentials: "same-origin",
+                method: "DELETE",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({})
+            };
+            this.fetchScenarioUuidsWithOptions(checkedUuids, opts);
+            //Remove all items from the checkboxes after the deletion
+            this.setState({
+                checkboxes: []
+            });
+        };
+    };
+
     componentDidMount() {
-        this.getScenariosFromApi();
+        this.fetchScenariosFromApi(
+            this.state.page,
+            this.state.searchTerms
+        );
+    };
+
+    componentWillUpdate(nextProps, nextState) {
+        if (nextState.searchedTerms !== this.state.searchedTerms) {
+            this.updatePageAndFetchScenariosFromApi(
+                1,
+                nextState.searchedTerms
+            );
+        } else if (nextState.page !== this.state.page) {
+            this.fetchScenariosFromApi(
+                nextState.page,
+                this.state.searchedTerms
+            );
+        };
     };
 
     render() {
-        const scenarios = this.state.scenarios;
+        const { scenarios, total, page, pageSize, isFetching, checkboxes } = this.state;
 
         //Method to convert UTC string to local date format of DD/MM/YYYY
         const convertUTCtoDate = (utc) => {
@@ -54,7 +189,11 @@ class Scenarios extends Component {
             return (
                 <div className={scenartioStyle.tableHeader}>
                     <div className={scenartioStyle.tableCheckbox}>
-                        <input type="checkbox" />
+                        <input 
+                            type="checkbox"
+                            onChange={() => this.handleAllCheckboxes(scenarios)}
+                            checked={(checkboxes.length === scenarios.length && checkboxes.length !== 0) ? true : false}
+                        />
                     </div>
                     <div className={scenartioStyle.tableScenario}>
                         <FormattedMessage id="scenario.scenario" defaultMessage="Scenario" />
@@ -80,10 +219,15 @@ class Scenarios extends Component {
                 (
                     <div
                         className={scenartioStyle.tableRow} key={scenario.uuid}
-                        style={{ visibility: this.state.isFetching ? "hidden" : "visible" }}
+                        style={{ visibility: isFetching ? "hidden" : "visible" }}
                     >
                         <div className={scenartioStyle.tableCheckbox}>
-                            <input type="checkbox" />
+                            <input
+                                type="checkbox"
+                                onChange={() => this.handleClickOnCheckbox(scenario.uuid)}
+                                checked={checkboxes.filter(id => id === scenario.uuid).length === 0 ? false : true}
+                                id={scenario.uuid}
+                            />
                         </div>
                         <div className={scenartioStyle.tableScenario}>
                             {scenario.name}
@@ -126,13 +270,19 @@ class Scenarios extends Component {
                 </div>
                 <div className={scenartioStyle.Main}>
                     <div className={scenartioStyle.Search}>
-                        <SearchBox />
+                        <SearchBox
+                            handleSearchEnter={() => this.handleUpdateSearchedTermsEnter()}
+                            handleSearchOnBlur={() => this.handleUpdateSearchedTermsOnBlur()}
+                            handleSearchClear={() => this.handleUpdateSearchedTermsClear()}
+                            searchTerms={this.state.searchTerms}
+                            setSearchTerms={searchTerms => this.handleUpdateSearchTerms(searchTerms)}
+                        />
                     </div>
                     <Scrollbars
                         autoHeight
                         autoHeightMin={551}
                         //Hide vertical scrollbar of this component to use the vertical scrollbar of the table body only
-                        renderTrackVertical={props => <div {...props} style={{display: 'none'}} className="track-vertical"/>}
+                        renderTrackVertical={props => <div {...props} style={{ display: 'none' }} className="track-vertical" />}
                     >
                         <div className={scenartioStyle.Table}>
                             {scenarioTableHeader()}
@@ -148,7 +298,7 @@ class Scenarios extends Component {
                                         position: "absolute",
                                         top: "45%",
                                         left: "45%",
-                                        visibility: this.state.isFetching ? "visible" : "hidden"
+                                        visibility: isFetching ? "visible" : "hidden"
                                     }}
                                 >
                                     <MDSpinner />
@@ -159,15 +309,36 @@ class Scenarios extends Component {
                     <div className={scenartioStyle.Footer}>
                         <div className={scenartioStyle.Pagination}>
                             <PaginationBar
-                                page={3}
-                                pages={5}
+                                loadItemsOnPage={page => this.handleUpdatePage(page)}
+                                currentPage={page}
+                                totalPages={Math.ceil(total / pageSize)}
                             />
+                            <div className={scenartioStyle.numberOfScenarios}>
+                                {Math.ceil(total / pageSize)} Pages ({total} Scenarios) 
+                            </div>
                         </div>
                         <button
-                            className={`${scenartioStyle.DeleteButton} ${buttonStyles.Button} ${buttonStyles.Inactive}`}
+                            className={
+                                checkboxes.length > 0 ?
+                                    `${scenartioStyle.DeleteButton} ${buttonStyles.Button} ${buttonStyles.Danger}`
+                                    :
+                                    `${scenartioStyle.DeleteButton} ${buttonStyles.Button} ${buttonStyles.Inactive}`
+                            }
+                            onClick={() => this.handleDeleteScenario(scenarios)}
                             style={{ maxHeight: "36px" }}
+                            disabled={checkboxes.length === 0 ? true : false}
                         >
-                            <FormattedMessage id="scenario.delete_scenario" defaultMessage="Delete Selection" />
+                            <FormattedMessage 
+                                id="scenario.delete_scenario" 
+                                defaultMessage={
+                                    checkboxes.length === 0 
+                                    ? "Delete" 
+                                    : `Delete ({clickedCheckboxes, number})`
+                                }
+                                values={{
+                                    clickedCheckboxes: checkboxes.length
+                                }}
+                            />
                         </button>
                     </div>
                 </div>
