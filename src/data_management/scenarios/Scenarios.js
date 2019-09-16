@@ -16,11 +16,12 @@ class Scenarios extends Component {
         pageSize: 10,
         searchTerms: "",
         searchedTerms: "",
+        ordering: "",
         checkboxes: []
     };
 
-    fetchScenariosFromApi = (page, searchContains) => {
-        const url = `/api/v4/scenarios/?writable=true&page_size=${this.state.pageSize}&page=${page}&name__icontains=${searchContains}`;
+    fetchScenariosFromApi = (page, searchContains, ordering) => {
+        const url = `/api/v4/scenarios/?writable=true&page_size=${this.state.pageSize}&page=${page}&name__icontains=${searchContains}&ordering=${ordering}`;
 
         this.setState({
             isFetching: true
@@ -55,14 +56,15 @@ class Scenarios extends Component {
         });
     };
 
-    updatePageAndFetchScenariosFromApi(page, searchedTerms) {
+    updatePageAndFetchScenariosFromApi(page, searchedTerms, ordering) {
         this.setState(
             {
                 page: page
             },
             this.fetchScenariosFromApi(
                 page,
-                searchedTerms
+                searchedTerms,
+                ordering
             )
         );
     }
@@ -150,10 +152,23 @@ class Scenarios extends Component {
         };
     };
 
+    handleOrdering(orderingName) {
+        if (orderingName !== this.state.ordering) {
+            this.setState({
+                ordering: orderingName
+            });
+        } else {
+            this.setState({
+                ordering: `-${orderingName}`
+            });
+        };
+    };
+
     componentDidMount() {
         this.fetchScenariosFromApi(
             this.state.page,
-            this.state.searchTerms
+            this.state.searchTerms,
+            this.state.ordering
         );
     };
 
@@ -161,12 +176,23 @@ class Scenarios extends Component {
         if (nextState.searchedTerms !== this.state.searchedTerms) {
             this.updatePageAndFetchScenariosFromApi(
                 1,
-                nextState.searchedTerms
+                nextState.searchedTerms,
+                this.state.ordering
             );
         } else if (nextState.page !== this.state.page) {
             this.fetchScenariosFromApi(
                 nextState.page,
-                this.state.searchedTerms
+                this.state.searchedTerms,
+                this.state.ordering
+            );
+        } else if (nextState.ordering !== this.state.ordering) {
+            this.setState({
+                page: 1
+            });
+            this.fetchScenariosFromApi(
+                this.state.page,
+                this.state.searchTerms,
+                nextState.ordering
             );
         };
     };
@@ -197,18 +223,23 @@ class Scenarios extends Component {
                     </div>
                     <div className={scenartioStyle.tableScenario}>
                         <FormattedMessage id="scenario.scenario" defaultMessage="Scenario" />
+                        <i className="fa fa-sort" onClick={() => this.handleOrdering("name")} />
                     </div>
                     <div className={scenartioStyle.tableModel}>
                         <FormattedMessage id="scenario.model" defaultMessage="Model" />
+                        <i className="fa fa-sort" onClick={() => this.handleOrdering("model_name")} />
                     </div>
                     <div className={scenartioStyle.tableUser}>
                         <FormattedMessage id="scenario.user" defaultMessage="User" />
+                        <i className="fa fa-sort" onClick={() => this.handleOrdering("username")} />
                     </div>
                     <div className={scenartioStyle.tableDate}>
                         <FormattedMessage id="scenario.date" defaultMessage="Date" />
+                        <i className="fa fa-sort" onClick={() => this.handleOrdering("created")} />
                     </div>
                     <div className={scenartioStyle.tableSize}>
                         <FormattedMessage id="scenario.size" defaultMessage="Size" />
+                        <i className="fa fa-sort" onClick={() => this.handleOrdering("total_size")} />
                     </div>
                 </div>
             );
