@@ -20,7 +20,7 @@ class Scenarios extends Component {
     };
 
     fetchScenariosFromApi = (page, searchContains) => {
-        const url = `/api/v3/scenarios/?writable=true&page_size=${this.state.pageSize}&page=${page}&name__icontains=${searchContains}`;
+        const url = `/api/v4/scenarios/?writable=true&page_size=${this.state.pageSize}&page=${page}&name__icontains=${searchContains}`;
 
         this.setState({
             isFetching: true
@@ -41,7 +41,7 @@ class Scenarios extends Component {
     };
 
     fetchScenarioUuidsWithOptions(uuids, fetchOptions) {
-        const url = "/api/v3/scenarios/"
+        const url = "/api/v4/scenarios/"
         //Array to store all fetches to later resolve all promises
         const fetches = uuids.map(scenarioUuid => {
             return (fetch(url + scenarioUuid + "/", fetchOptions));
