@@ -179,20 +179,17 @@ class Scenarios extends Component {
                 nextState.searchedTerms,
                 this.state.ordering
             );
+        } else if (nextState.ordering !== this.state.ordering) {
+            this.updatePageAndFetchScenariosFromApi(
+                1,
+                this.state.searchTerms,
+                nextState.ordering
+            );
         } else if (nextState.page !== this.state.page) {
             this.fetchScenariosFromApi(
                 nextState.page,
                 this.state.searchedTerms,
                 this.state.ordering
-            );
-        } else if (nextState.ordering !== this.state.ordering) {
-            this.setState({
-                page: 1
-            });
-            this.fetchScenariosFromApi(
-                this.state.page,
-                this.state.searchTerms,
-                nextState.ordering
             );
         };
     };
