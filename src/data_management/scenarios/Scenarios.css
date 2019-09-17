@@ -78,6 +78,11 @@
     justify-content: center;
 }
 
+.tableHeader div i {
+    cursor: pointer;
+    margin-left: 5px;
+}
+
 .tableRow {
     display: flex;
     overflow: hidden;
