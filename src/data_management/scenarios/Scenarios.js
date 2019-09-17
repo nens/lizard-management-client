@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 import MDSpinner from "react-md-spinner";
 import { Scrollbars } from "react-custom-scrollbars";
 import { FormattedMessage } from "react-intl";
@@ -20,8 +22,11 @@ class Scenarios extends Component {
         checkboxes: []
     };
 
-    fetchScenariosFromApi = (page, searchContains, ordering) => {
-        const url = `/api/v4/scenarios/?writable=true&page_size=${this.state.pageSize}&page=${page}&name__icontains=${searchContains}&ordering=${ordering}`;
+    fetchScenariosFromApi = (organisationUUID, page, searchContains, ordering) => {
+        //Use short UUID of organisation instead of the full UUID due to backend technical problem
+        //This should be fixed in the future
+        const shortUUID = organisationUUID.substr(0, 7);
+        const url = `/api/v4/scenarios/?writable=true&page_size=${this.state.pageSize}&organisation__uuid=${shortUUID}&page=${page}&name__icontains=${searchContains}&ordering=${ordering}`;
 
         this.setState({
             isFetching: true
@@ -50,18 +55,21 @@ class Scenarios extends Component {
         Promise.all(fetches).then(values => {
             //Refresh the page so that the removed scenarios are no longer visible
             this.fetchScenariosFromApi(
+                this.props.selectedOrganisation.uuid,
                 this.state.page,
-                this.state.searchTerms
+                this.state.searchTerms,
+                this.state.ordering
             );
         });
     };
 
-    updatePageAndFetchScenariosFromApi(page, searchedTerms, ordering) {
+    updatePageAndFetchScenariosFromApi(organisationUUID, page, searchedTerms, ordering) {
         this.setState(
             {
                 page: page
             },
             this.fetchScenariosFromApi(
+                organisationUUID,
                 page,
                 searchedTerms,
                 ordering
@@ -166,6 +174,7 @@ class Scenarios extends Component {
 
     componentDidMount() {
         this.fetchScenariosFromApi(
+            this.props.selectedOrganisation.uuid,
             this.state.page,
             this.state.searchTerms,
             this.state.ordering
@@ -173,20 +182,31 @@ class Scenarios extends Component {
     };
 
     componentWillUpdate(nextProps, nextState) {
+        if (nextProps.selectedOrganisation.uuid !== this.props.selectedOrganisation.uuid) {
+            this.updatePageAndFetchScenariosFromApi(
+                nextProps.selectedOrganisation.uuid,
+                1,
+                this.state.searchTerms,
+                this.state.ordering
+            );
+        };
         if (nextState.searchedTerms !== this.state.searchedTerms) {
             this.updatePageAndFetchScenariosFromApi(
+                this.props.selectedOrganisation.uuid,
                 1,
                 nextState.searchedTerms,
                 this.state.ordering
             );
         } else if (nextState.ordering !== this.state.ordering) {
             this.updatePageAndFetchScenariosFromApi(
+                this.props.selectedOrganisation.uuid,
                 1,
                 this.state.searchTerms,
                 nextState.ordering
             );
         } else if (nextState.page !== this.state.page) {
             this.fetchScenariosFromApi(
+                this.props.selectedOrganisation.uuid,
                 nextState.page,
                 this.state.searchedTerms,
                 this.state.ordering
@@ -374,5 +394,11 @@ class Scenarios extends Component {
         )
     };
 };
+
+const mapStateToProps = (state) => ({
+    selectedOrganisation: state.organisations.selected,
+});
+
+Scenarios = withRouter(connect(mapStateToProps)(Scenarios));
 
 export { Scenarios };
