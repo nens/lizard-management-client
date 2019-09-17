@@ -19,7 +19,8 @@ class Scenarios extends Component {
         searchTerms: "",
         searchedTerms: "",
         ordering: "",
-        checkboxes: []
+        checkboxes: [],
+        usage: 0
     };
 
     fetchScenariosFromApi = (organisationUUID, page, searchContains, ordering) => {
@@ -60,6 +61,19 @@ class Scenarios extends Component {
                 this.state.searchTerms,
                 this.state.ordering
             );
+        });
+    };
+
+    fetchScenariosUsageFromAPI = (organisationUUID) => {
+        const url = `/api/v4/organisations/${organisationUUID}/usage`;
+        fetch(url, {
+            credentials: "same-origin"
+        })
+        .then(response => response.json())
+        .then(data => {
+            this.setState({
+                usage: data.scenario_total_size
+            });
         });
     };
 
@@ -179,6 +193,7 @@ class Scenarios extends Component {
             this.state.searchTerms,
             this.state.ordering
         );
+        this.fetchScenariosUsageFromAPI(this.props.selectedOrganisation.uuid);
     };
 
     componentWillUpdate(nextProps, nextState) {
@@ -189,6 +204,7 @@ class Scenarios extends Component {
                 this.state.searchTerms,
                 this.state.ordering
             );
+            this.fetchScenariosUsageFromAPI(nextProps.selectedOrganisation.uuid);
         };
         if (nextState.searchedTerms !== this.state.searchedTerms) {
             this.updatePageAndFetchScenariosFromApi(
@@ -215,7 +231,7 @@ class Scenarios extends Component {
     };
 
     render() {
-        const { scenarios, total, page, pageSize, isFetching, checkboxes } = this.state;
+        const { scenarios, total, page, pageSize, isFetching, checkboxes, usage } = this.state;
 
         //Method to convert UTC string to local date format of DD/MM/YYYY
         const convertUTCtoDate = (utc) => {
@@ -311,8 +327,8 @@ class Scenarios extends Component {
                                 <FormattedMessage id="scenario.total_storage" defaultMessage="Total Storage" />
                             </span>
                             <br />
-                            <span className={scenartioStyle.TotalNumber}>20.1</span>
-                            <span className={scenartioStyle.Gb}>Gb</span>
+                            <span className={scenartioStyle.TotalNumber}>{convertBytesToGb(usage)}</span>
+                            <span className={scenartioStyle.Gb}> Gb</span>
                         </div>
                     </div>
                 </div>
