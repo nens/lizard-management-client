@@ -292,7 +292,7 @@ class Raster extends Component {
             type="checkbox"
             id="checkboxCheckAll"
             checked={this.state.checkAllCheckBoxes}
-            onClick={e =>
+            onChange={e =>
               this.checkAllCheckBoxes(!this.state.checkAllCheckBoxes)}
           />
         </div>
@@ -347,7 +347,7 @@ class Raster extends Component {
                       type="checkbox"
                       // Make sure that you can still use the checkbox to click on,
                       // in combination with the check all checkbox.
-                      onClick={this.clickRegularCheckbox}
+                      onChange={this.clickRegularCheckbox}
                       checked={
                         this.state.checkboxes[i]
                           ? this.state.checkboxes[i].checked
