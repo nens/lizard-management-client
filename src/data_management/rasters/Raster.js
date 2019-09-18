@@ -341,7 +341,7 @@ class Raster extends Component {
           >
             {this.state.rasters.map((raster, i) => {
               return (
-                <div className={`${rasterTableStyles.tableBody}`}>
+                <div className={`${rasterTableStyles.tableBody}`} key={raster.uuid}>
                   <div className={`${rasterTableStyles.tableCheckbox}`}>
                     <input
                       type="checkbox"
