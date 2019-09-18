@@ -60,7 +60,7 @@ class SearchBox extends Component {
               if (e.relatedTarget && e.relatedTarget.id === "searchBoxClearButton") {
                 return;
               } else {
-                this.props.handleSearchOnBlur();
+                handleSearchOnBlur();
               }
             }}
           />
@@ -74,7 +74,7 @@ class SearchBox extends Component {
                 : { right: "6px" }
             }
             onClick={() => {
-              this.props.handleSearchClear();
+              handleSearchClear();
             }}
             tabIndex={0}
           >

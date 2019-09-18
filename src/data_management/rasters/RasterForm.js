@@ -381,7 +381,7 @@ class RasterFormModel extends Component {
         />
         <DurationField
           name="duration"
-          disabled={(formValues) => formValues.temporal == false }
+          disabled={(formValues) => formValues.temporal === false }
           title={<FormattedMessage id="raster_form.duration" />}
           subtitle={<FormattedMessage id="raster_form.duration_subtitle" />}
           validators={currentRaster?[]:[durationValidator(true)]}

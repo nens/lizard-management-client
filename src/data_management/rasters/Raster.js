@@ -275,7 +275,7 @@ class Raster extends Component {
   }
 
   render() {
-    const { total, page } = this.state;
+    const { total } = this.state;
     const clickedCheckboxes = this.state.checkboxes.filter(e => e.checked)
       .length;
 
