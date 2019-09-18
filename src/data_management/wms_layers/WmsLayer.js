@@ -488,6 +488,10 @@ class WmsLayer extends Component {
                   this.props.organisations.selected.uuid
                 );
               }}
+              // searching/filtering/pagination is for now done clientside so search on enter and on blur is not doing anything
+              // but we still need to pass them as props to SearchBox to avoid type errors
+              handleSearchEnter={() => null}
+              handleSearchOnBlur={() => null}
             />
           </div>
           <div
