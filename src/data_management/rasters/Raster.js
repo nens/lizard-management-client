@@ -390,7 +390,7 @@ class Raster extends Component {
                         to={`/data_management/rasters/${raster.uuid}/data`}
                       >
                         <i
-                          class="material-icons"
+                          className="material-icons"
                           style={{ color: "#989898" }}
                           title="No data uploaded yet"
                         >
@@ -404,7 +404,7 @@ class Raster extends Component {
                         to={`/data_management/rasters/${raster.uuid}/data`}
                       >
                         <i
-                          class="material-icons"
+                          className="material-icons"
                           style={{ color: "#009F86" }}
                           title="Data is uploaded"
                         >
@@ -414,7 +414,7 @@ class Raster extends Component {
                     ) : (
                       // in any other cases there is data in the raster, but this is generated/calculated data. The user is not allowed to update it. The user should update the rasters that act as the source for the calculations instead
                       <i
-                        class="material-icons"
+                        className="material-icons"
                         style={{
                           color: "#989898",
                           cursor: "not-allowed"
