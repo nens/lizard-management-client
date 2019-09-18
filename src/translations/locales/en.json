@@ -172,6 +172,7 @@
   "raster_form.rasterSeries_label": "Select whether you are creating a raster that contains multiple rasters over time",
   "raster_form.duration": "Raster Series Interval",
   "raster_form.duration_subtitle": "Interval of raster series",
+  "searchbox.title": "Search in name and description",
   "color_map.initial_message": "No Preview available",
   "color_map.minimum_color_range": "Minimum of color map range",
   "color_map.maximum_color_range": "Maximum of color map range",
