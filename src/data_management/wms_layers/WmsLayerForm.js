@@ -9,8 +9,6 @@ import ErrorOverlay from "./ErrorOverlay.js";
 import "../../forms/validators";
 
 import ManagementForm from "../../forms/ManagementForm";
-import ColorMapInput, { colorMapValidator } from "../../forms/ColorMapInput";
-import DurationField, { durationValidator } from "../../forms/DurationField";
 import TextInput from "../../forms/TextInput";
 import IntegerInput from "../../forms/IntegerInput";
 import TextArea from "../../forms/TextArea";
@@ -179,11 +177,11 @@ class WmsLayerFormModel extends Component {
     const placeholderWmsLayerName = intl.formatMessage({ id: "placeholder_wms_layer_name" });
     const placeholderDescription = intl.formatMessage({ id: "placeholder_description" });
     const placeholderSlug = intl.formatMessage({ id: "placeholder_slug" });
-    const placeholderGetFeatureInfo = intl.formatMessage({ id: "placeholder_get_feature_info" });
-    const placeholderMinZoom = intl.formatMessage({ id: "placeholder_min_zoom" });
+    // const placeholderGetFeatureInfo = intl.formatMessage({ id: "placeholder_get_feature_info" });
+    // const placeholderMinZoom = intl.formatMessage({ id: "placeholder_min_zoom" });
     const placeholderMaxZoom = intl.formatMessage({ id: "placeholder_max_zoom" });
     const placeholderUrl = intl.formatMessage({ id: "placeholder_url" });
-    const placeholderTiled = intl.formatMessage({ id: "placeholder_tiled" });
+    // const placeholderTiled = intl.formatMessage({ id: "placeholder_tiled" });
     const placeholderLegendUrl = intl.formatMessage({ id: "placeholder_legend_url" });
     const placeholderGetFeatureInfoUrl = intl.formatMessage({ id: "placeholder_get_feature_info_url" });
     const placeholderOrganisationSelection = intl.formatMessage({ id: "placeholder_organisation_selection" });
