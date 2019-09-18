@@ -114,7 +114,7 @@ class WmsLayerFormModel extends Component {
           organisation: validatedData.selectedOrganisation,
           name: validatedData.wmsLayerName,
           description: validatedData.description,
-          url: validatedData.wmsLayerUrl,
+          wms_url: validatedData.wmsLayerUrl,
           slug: validatedData.wmsLayerSlug,
           min_zoom: validatedData.wmsLayerMinZoom,
           max_zoom: validatedData.wmsLayerMaxZoom,
@@ -141,7 +141,7 @@ class WmsLayerFormModel extends Component {
         organisation: validatedData.selectedOrganisation,
         name: validatedData.wmsLayerName,
         description: validatedData.description,
-        url: validatedData.wmsLayerUrl,
+        wms_url: validatedData.wmsLayerUrl,
         slug: validatedData.wmsLayerSlug,
         min_zoom: validatedData.wmsLayerMinZoom,
         max_zoom: validatedData.wmsLayerMaxZoom,
@@ -324,7 +324,7 @@ class WmsLayerFormModel extends Component {
           placeholder={placeholderUrl}
           initial = {
             currentWmsLayer &&
-              currentWmsLayer.url
+              currentWmsLayer.wms_url
           }
           validators={[minLength(1)]}
         />
