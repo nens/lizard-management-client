@@ -4,6 +4,7 @@ import AppIcon from "../components/AppIcon";
 import { withRouter } from "react-router-dom";
 import { Trail, animated } from "react-spring";
 import rasterIcon from "../images/rasters@3x.svg";
+import threediIcon from "../images/3di@3x.svg";
 
 class DataManagement extends Component {
   handleLink(destination) {
@@ -30,6 +31,23 @@ class DataManagement extends Component {
           <FormattedMessage
             id="data_management.manage_rasters"
             defaultMessage="Manage rasters"
+          />
+        )
+      },
+      {
+        key: 1,
+        handleClick: () => this.handleLink("data_management/scenarios/"),
+        title: (
+          <FormattedMessage
+            id="home.scenarios"
+            defaultMessage="3Di Scenarios"
+          />
+        ),
+        icon: threediIcon,
+        subTitle: (
+          <FormattedMessage
+            id="home.scenario_management"
+            defaultMessage="Scenario management"
           />
         )
       }

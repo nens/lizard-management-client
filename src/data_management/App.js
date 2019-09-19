@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { DataManagement as DataManagementHome } from "./DataManagement";
 import { Raster as RasterApp } from "./rasters/Raster";
+import { Scenarios as ScenariosApp } from "./scenarios/Scenarios";
 import { NewRaster } from "./rasters/NewRaster";
 import { NewRaster2 } from "./rasters/NewRaster2";
 import { EditRaster } from "./rasters/EditRaster";
@@ -28,6 +29,7 @@ class App extends Component {
       <div>
         <Route exact path="/data_management" component={DataManagementHome} />
         <Route exact path="/data_management/rasters" component={RasterApp} />
+        <Route exact path="/data_management/scenarios" component={ScenariosApp} />
         <Switch>
           <Route
             exact
