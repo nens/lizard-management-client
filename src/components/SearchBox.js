@@ -53,14 +53,14 @@ class SearchBox extends Component {
               this.props.setSearchTerms(e.target.value);
             }}
             onKeyUp={e => this.handleEnter(e)}
-            title={intl.formatMessage({ id: "Search in name and description" })}
+            title={intl.formatMessage({ id: "searchbox.title" })}
             onBlur={e => {
               // Don't trigger onBlur if you click on the clear button of the
               // searchbox.
               if (e.relatedTarget && e.relatedTarget.id === "searchBoxClearButton") {
                 return;
               } else {
-                this.props.handleSearchOnBlur();
+                handleSearchOnBlur();
               }
             }}
           />
@@ -74,13 +74,7 @@ class SearchBox extends Component {
                 : { right: "6px" }
             }
             onClick={() => {
-              // merge conflict should fix !
-              // commented out is old situation for wms layers
-              // console.log('onclear searchbox clicked');
-              // this.props.setSearchTerms("");
-              // this.props.handleSearch("");
-              // below is desired situation
-              this.props.handleSearchClear();
+              handleSearchClear();
             }}
             tabIndex={0}
           >

@@ -1,0 +1,155 @@
+.Layout {
+    display: flex;
+    justify-content: space-between;
+}
+
+.SideBar {
+    width: 20%;
+    display: flex;
+    justify-content: flex-start;
+    padding-top: 6%;
+}
+
+.Sum {
+    width: 85%;
+    height: 20%;
+    display: flex;
+    justify-content: space-around;
+    background-color: #f8f8f8;
+    box-shadow: 0 6px 6px rgba(0, 0, 0, .175);
+    border-radius: 8px;
+}
+
+.SumText {
+    width: 50%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: auto 0;
+}
+
+.DatabaseIcon {
+    width: 30%;
+}
+
+.TotalStorage {
+    font-weight: 300;
+}
+
+.TotalNumber {
+    font-size: 31px;
+    font-weight: 500;
+}
+
+.Gb {
+    font-weight: 500;
+}
+
+.Main {
+    width: 80%;
+}
+
+.Search {
+    height: 70px;
+}
+
+.Table {
+    border-bottom: 1px solid #707070;
+}
+
+.tableHeader {
+    min-width: 500px;
+    display: flex;
+    align-items: center;
+    height: 50px;
+    color: #818181;
+    font-size: 18px;
+    font-weight: 500;
+    border-bottom: 3px solid #707070;
+}
+
+.tableHeader div {
+    margin-right: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tableHeader div:first-child {
+    display: flex;
+    justify-content: center;
+}
+
+.tableHeader div i {
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+.tableRow {
+    display: flex;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #818181;
+    border-bottom: 0.5px solid #D8D8D8;
+    padding: 10px 0;
+}
+
+.tableRow * {
+    overflow: inherit;
+    text-overflow: inherit;
+}
+
+.tableRow div {
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+}
+
+.tableRow div:first-child {
+    justify-content: center;
+}
+
+.tableCheckbox {
+    flex: 1;
+}
+
+.tableScenario {
+    flex: 4;
+}
+
+.tableModel {
+    flex: 4;
+}
+
+.tableUser {
+    flex: 3;
+}
+
+.tableDate {
+    flex: 3;
+}
+
+.tableSize {
+    flex: 2;
+}
+
+.Footer {
+    height: 70px;
+    display: flex;
+}
+
+.Pagination {
+    flex: 6;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.numberOfScenarios {
+    display: flex;
+    justify-content: center;
+    color: #818181;
+}
+
+.DeleteButton {
+    flex: 1;
+    margin: auto 0;
+}

@@ -1,6 +1,5 @@
 import rasterIcon from "../../images/rasters@3x.svg";
 import buttonStyles from "../../styles/Buttons.css";
-import gridStyles from "../../styles/Grid.css";
 import rasterTableStyles from "../../styles/RasterWmsTable.css";
 import Ink from "react-ink";
 import MDSpinner from "react-md-spinner";
@@ -276,7 +275,7 @@ class Raster extends Component {
   }
 
   render() {
-    const { total, page } = this.state;
+    const { total } = this.state;
     const clickedCheckboxes = this.state.checkboxes.filter(e => e.checked)
       .length;
 
@@ -293,7 +292,7 @@ class Raster extends Component {
             type="checkbox"
             id="checkboxCheckAll"
             checked={this.state.checkAllCheckBoxes}
-            onClick={e =>
+            onChange={e =>
               this.checkAllCheckBoxes(!this.state.checkAllCheckBoxes)}
           />
         </div>
@@ -342,13 +341,13 @@ class Raster extends Component {
           >
             {this.state.rasters.map((raster, i) => {
               return (
-                <div className={`${rasterTableStyles.tableBody}`}>
+                <div className={`${rasterTableStyles.tableBody}`} key={raster.uuid}>
                   <div className={`${rasterTableStyles.tableCheckbox}`}>
                     <input
                       type="checkbox"
                       // Make sure that you can still use the checkbox to click on,
                       // in combination with the check all checkbox.
-                      onClick={this.clickRegularCheckbox}
+                      onChange={this.clickRegularCheckbox}
                       checked={
                         this.state.checkboxes[i]
                           ? this.state.checkboxes[i].checked
@@ -391,7 +390,7 @@ class Raster extends Component {
                         to={`/data_management/rasters/${raster.uuid}/data`}
                       >
                         <i
-                          class="material-icons"
+                          className="material-icons"
                           style={{ color: "#989898" }}
                           title="No data uploaded yet"
                         >
@@ -405,7 +404,7 @@ class Raster extends Component {
                         to={`/data_management/rasters/${raster.uuid}/data`}
                       >
                         <i
-                          class="material-icons"
+                          className="material-icons"
                           style={{ color: "#009F86" }}
                           title="Data is uploaded"
                         >
@@ -415,7 +414,7 @@ class Raster extends Component {
                     ) : (
                       // in any other cases there is data in the raster, but this is generated/calculated data. The user is not allowed to update it. The user should update the rasters that act as the source for the calculations instead
                       <i
-                        class="material-icons"
+                        className="material-icons"
                         style={{
                           color: "#989898",
                           cursor: "not-allowed"

@@ -6,7 +6,6 @@ import { withRouter } from "react-router-dom";
 import { Trail, animated } from "react-spring";
 
 import alarmIcon from "../images/alarm@3x.svg";
-import threediIcon from "../images/3di@3x.svg";
 import userManagementIcon from "../images/usermanagement.svg";
 import templateIcon from "../images/templates@3x.svg";
 
@@ -46,23 +45,6 @@ class App extends Component {
       },
       {
         key: 1,
-        handleClick: () => this.handleExternalLink("/management/scenarios/"),
-        title: (
-          <FormattedMessage
-            id="home.scenarios"
-            defaultMessage="3Di Scenarios"
-          />
-        ),
-        icon: threediIcon,
-        subTitle: (
-          <FormattedMessage
-            id="home.scenario_management"
-            defaultMessage="Scenario management"
-          />
-        )
-      },
-      {
-        key: 2,
         handleClick: () => this.handleLink("/alarms"),
         title: <FormattedMessage id="home.alarms" defaultMessage="Alarms" />,
         icon: alarmIcon,
@@ -74,7 +56,7 @@ class App extends Component {
         )
       },
       {
-        key: 3,
+        key: 2,
         handleClick: () => this.handleLink("/data_management"),
         title: (
           <FormattedMessage
