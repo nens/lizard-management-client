@@ -9,8 +9,6 @@ import ErrorOverlay from "./ErrorOverlay.js";
 import "../../forms/validators";
 
 import ManagementForm from "../../forms/ManagementForm";
-import ColorMapInput, { colorMapValidator } from "../../forms/ColorMapInput";
-import DurationField, { durationValidator } from "../../forms/DurationField";
 import TextInput from "../../forms/TextInput";
 import IntegerInput from "../../forms/IntegerInput";
 import TextArea from "../../forms/TextArea";
@@ -114,7 +112,7 @@ class WmsLayerFormModel extends Component {
           organisation: validatedData.selectedOrganisation,
           name: validatedData.wmsLayerName,
           description: validatedData.description,
-          url: validatedData.wmsLayerUrl,
+          wms_url: validatedData.wmsLayerUrl,
           slug: validatedData.wmsLayerSlug,
           min_zoom: validatedData.wmsLayerMinZoom,
           max_zoom: validatedData.wmsLayerMaxZoom,
@@ -141,7 +139,7 @@ class WmsLayerFormModel extends Component {
         organisation: validatedData.selectedOrganisation,
         name: validatedData.wmsLayerName,
         description: validatedData.description,
-        url: validatedData.wmsLayerUrl,
+        wms_url: validatedData.wmsLayerUrl,
         slug: validatedData.wmsLayerSlug,
         min_zoom: validatedData.wmsLayerMinZoom,
         max_zoom: validatedData.wmsLayerMaxZoom,
@@ -179,11 +177,10 @@ class WmsLayerFormModel extends Component {
     const placeholderWmsLayerName = intl.formatMessage({ id: "placeholder_wms_layer_name" });
     const placeholderDescription = intl.formatMessage({ id: "placeholder_description" });
     const placeholderSlug = intl.formatMessage({ id: "placeholder_slug" });
-    const placeholderGetFeatureInfo = intl.formatMessage({ id: "placeholder_get_feature_info" });
     const placeholderMinZoom = intl.formatMessage({ id: "placeholder_min_zoom" });
     const placeholderMaxZoom = intl.formatMessage({ id: "placeholder_max_zoom" });
     const placeholderUrl = intl.formatMessage({ id: "placeholder_url" });
-    const placeholderTiled = intl.formatMessage({ id: "placeholder_tiled" });
+    // const placeholderTiled = intl.formatMessage({ id: "placeholder_tiled" });
     const placeholderLegendUrl = intl.formatMessage({ id: "placeholder_legend_url" });
     const placeholderGetFeatureInfoUrl = intl.formatMessage({ id: "placeholder_get_feature_info_url" });
     const placeholderOrganisationSelection = intl.formatMessage({ id: "placeholder_organisation_selection" });
@@ -324,7 +321,7 @@ class WmsLayerFormModel extends Component {
           placeholder={placeholderUrl}
           initial = {
             currentWmsLayer &&
-              currentWmsLayer.url
+              currentWmsLayer.wms_url
           }
           validators={[minLength(1)]}
         />
@@ -352,6 +349,7 @@ class WmsLayerFormModel extends Component {
           name="wmsLayerMinZoom"
           title={<FormattedMessage id="wms_layer_form.min_zoom" />}
           subtitle={<FormattedMessage id="wms_layer_form.integer_from_0_till_31" />}
+          placeholder={placeholderMinZoom}
           initial = {
             (currentWmsLayer &&
             (currentWmsLayer.min_zoom || currentWmsLayer.min_zoom === 0) && 

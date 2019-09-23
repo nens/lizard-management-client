@@ -114,7 +114,7 @@ class ErrorOverlay extends Component {
   }
 
   render() {
-    const { handleClose, isFetching } = this.props;
+    const { isFetching } = this.props;
 
     let buttons;
     let defaultOptions;
