@@ -1,6 +1,6 @@
 import rasterIcon from "../../images/rasters@3x.svg";
 import buttonStyles from "../../styles/Buttons.css";
-import rasterTableStyles from "../../styles/RasterTable.css";
+import rasterTableStyles from "../../styles/RasterWmsTable.css";
 import Ink from "react-ink";
 import MDSpinner from "react-md-spinner";
 import { Scrollbars } from "react-custom-scrollbars";

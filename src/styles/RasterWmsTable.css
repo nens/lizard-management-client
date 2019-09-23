@@ -21,6 +21,7 @@
   padding: 10px;
   display: flex;
   border-bottom: 2px solid #858E9C;
+  justify-content: space-between;
 }
 .tableBody {
   min-width: 800px;

@@ -4,6 +4,7 @@ import AppIcon from "../components/AppIcon";
 import { withRouter } from "react-router-dom";
 import { Trail, animated } from "react-spring";
 import rasterIcon from "../images/rasters@3x.svg";
+import wmsIcon from "../images/rasters@3x.svg"; // ToDo: new image for wmsIcon
 import threediIcon from "../images/3di@3x.svg";
 
 class DataManagement extends Component {
@@ -36,6 +37,23 @@ class DataManagement extends Component {
       },
       {
         key: 1,
+        handleClick: () => this.handleLink("data_management/wms_layers"),
+        title: (
+          <FormattedMessage
+            id="data_management.wms_layers"
+            defaultMessage="Wms layers"
+          />
+        ),
+        icon: wmsIcon,
+        subTitle: (
+          <FormattedMessage
+            id="data_management.manage_wms_layers"
+            defaultMessage="Manage wms layers"
+          />
+        )
+      },
+      {
+        key: 2,
         handleClick: () => this.handleLink("data_management/scenarios/"),
         title: (
           <FormattedMessage
