@@ -177,8 +177,7 @@ class WmsLayerFormModel extends Component {
     const placeholderWmsLayerName = intl.formatMessage({ id: "placeholder_wms_layer_name" });
     const placeholderDescription = intl.formatMessage({ id: "placeholder_description" });
     const placeholderSlug = intl.formatMessage({ id: "placeholder_slug" });
-    // const placeholderGetFeatureInfo = intl.formatMessage({ id: "placeholder_get_feature_info" });
-    // const placeholderMinZoom = intl.formatMessage({ id: "placeholder_min_zoom" });
+    const placeholderMinZoom = intl.formatMessage({ id: "placeholder_min_zoom" });
     const placeholderMaxZoom = intl.formatMessage({ id: "placeholder_max_zoom" });
     const placeholderUrl = intl.formatMessage({ id: "placeholder_url" });
     // const placeholderTiled = intl.formatMessage({ id: "placeholder_tiled" });
@@ -350,6 +349,7 @@ class WmsLayerFormModel extends Component {
           name="wmsLayerMinZoom"
           title={<FormattedMessage id="wms_layer_form.min_zoom" />}
           subtitle={<FormattedMessage id="wms_layer_form.integer_from_0_till_31" />}
+          placeholder={placeholderMinZoom}
           initial = {
             (currentWmsLayer &&
             (currentWmsLayer.min_zoom || currentWmsLayer.min_zoom === 0) && 
