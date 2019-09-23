@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
 import ManagementForm from "../../forms/ManagementForm";
-import ColorMapInput, { colorMapValidator } from "../../forms/ColorMapInput";
+import ColorMapInput from "../../forms/ColorMapInput";
 import DurationField, { durationValidator } from "../../forms/DurationField";
 import TextInput from "../../forms/TextInput";
 import SelectBox from "../../forms/SelectBox";

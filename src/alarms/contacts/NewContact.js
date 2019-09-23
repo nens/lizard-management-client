@@ -226,8 +226,6 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const App = withRouter(connect(mapStateToProps, null)
-(injectIntl(NewContact))
-);
+const App = withRouter(connect(mapStateToProps, null)(injectIntl(NewContact)));
 
 export { App };
