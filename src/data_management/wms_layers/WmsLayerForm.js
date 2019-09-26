@@ -171,7 +171,7 @@ class WmsLayerFormModel extends Component {
 
   render() {
 
-    const { currentWmsLayer, intl } = this.props;
+    const { currentWmsLayer, intl, organisations } = this.props;
 
     //Format message for placeholder in the input form for translation
     const placeholderWmsLayerName = intl.formatMessage({ id: "placeholder_wms_layer_name" });
@@ -218,8 +218,8 @@ class WmsLayerFormModel extends Component {
               currentWmsLayer && 
               currentWmsLayer.organisation && 
               currentWmsLayer.organisation.uuid &&
-              currentWmsLayer.organisation.uuid
-            ) || null
+              currentWmsLayer.organisation.uuid.replace(/-/g, "") //pass in organisation uuid without dashes
+            ) || organisations.selected.uuid
           }
         />
         <SlushBucket
@@ -239,7 +239,7 @@ class WmsLayerFormModel extends Component {
             currentWmsLayer && 
             currentWmsLayer.shared_with && 
             currentWmsLayer.shared_with.map((orgUuid) => {
-              return orgUuid.uuid
+              return orgUuid.uuid.replace(/-/g, "") //pass in organisation uuid without dashes
             })
             ) || [] // passing this empty array is somehow required. Somehow only if I also have the colormapInput component.
           }
