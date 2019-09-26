@@ -18,6 +18,7 @@ import SlushBucket from "../../forms/SlushBucket";
 
 import {
   minLength,
+  maxLength,
   required
 } from "../../forms/validators";
 
@@ -302,7 +303,7 @@ class WmsLayerFormModel extends Component {
             currentWmsLayer &&
               currentWmsLayer.name
           }
-          validators={[minLength(5)]}
+          validators={[minLength(5), maxLength(80)]}
         />
         <TextArea
           name="description"

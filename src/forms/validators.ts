@@ -30,6 +30,13 @@ export const minLength = (length: number) => (s: string): validatorResult => {
   return false;
 };
 
+export const maxLength = (length: number) => (s: string): validatorResult => {
+  if (!s || s.length > length) {
+    return `Please enter no more than ${length} characters.`;
+  }
+  return false;
+};
+
 export const testRegex = (regex: RegExp, error: string) => (str: string): validatorResult => {
   if (!str || !regex.test(str)) {
     return error;
