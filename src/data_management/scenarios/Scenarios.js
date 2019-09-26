@@ -65,7 +65,7 @@ class Scenarios extends Component {
     };
 
     fetchScenariosUsageFromAPI = (organisationUUID) => {
-        const url = `/api/v4/organisations/${organisationUUID}/usage`;
+        const url = `/api/v4/organisations/${organisationUUID}/usage/`;
         fetch(url, {
             credentials: "same-origin"
         })
