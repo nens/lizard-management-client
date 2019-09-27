@@ -167,7 +167,7 @@ class RasterFormModel extends Component {
               currentRaster && 
               currentRaster.organisation && 
               currentRaster.organisation.uuid &&
-              currentRaster.organisation.uuid
+              currentRaster.organisation.uuid.replace(/-/g, "")
             ) || null
           }
         />
@@ -188,7 +188,7 @@ class RasterFormModel extends Component {
             currentRaster && 
             currentRaster.shared_with && 
             currentRaster.shared_with.map((orgUuid) => {
-              return orgUuid.uuid
+              return orgUuid.uuid.replace(/-/g, "")
             })
             ) || [] // passing this empty array is somehow required. Somehow only if I also have the colormapInput component.
           }

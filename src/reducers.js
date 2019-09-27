@@ -72,13 +72,27 @@ function organisations(
     case RECEIVE_ORGANISATIONS:
       return {
         ...state,
-        available: action.data.filter(e => {
-          return (
-            e.roles.find(e => e === "admin") ||
-            e.roles.find(e => e === "supplier")
-          );
+        available: action.data
+          .filter(e => {
+            return (
+              e.roles.find(e => e === "admin") ||
+              e.roles.find(e => e === "supplier")
+            );
+          })
+          .map(organisation => {
+            //use organisation uuid without dashes only
+            return {
+              ...organisation,
+              uuid: organisation.uuid.replace(/-/g, "")
+            };
+          }),
+        availableForRasterSharedWith: action.data.map(organisation => {
+          //use organisation uuid without dashes only
+          return {
+            ...organisation,
+            uuid: organisation.uuid.replace(/-/g, "")
+          };
         }),
-        availableForRasterSharedWith: action.data,
         isFetching: false,
         timesFetched: state.timesFetched + 1
       };
@@ -257,7 +271,7 @@ const rootReducer = combineReducers({
   supplierIds,
   colorMaps,
   notifications,
-  viewport, 
+  viewport,
   alarmType
 });
 
