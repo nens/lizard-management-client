@@ -41,14 +41,14 @@ class DataManagement extends Component {
         title: (
           <FormattedMessage
             id="data_management.wms_layers"
-            defaultMessage="Wms layers"
+            defaultMessage="WMS layers"
           />
         ),
         icon: wmsIcon,
         subTitle: (
           <FormattedMessage
             id="data_management.manage_wms_layers"
-            defaultMessage="Manage wms layers"
+            defaultMessage="Manage WMS layers"
           />
         )
       },

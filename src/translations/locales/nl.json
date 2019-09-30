@@ -84,6 +84,8 @@
   "contacts_new.update_contact": "Contact aanpassen",
   "data_management.manage_rasters": "Beheer rasters",
   "data_management.rasters": "Rasters",
+  "data_management.manage_wms_layers": "Beheer WMS lagen",
+  "data_management.wms_layers": "WMS lagen",
   "home.alarm_management": "Alarmenbeheer",
   "home.alarms": "Alarmen",
   "home.data_administration": "Gegevensbeheer",
