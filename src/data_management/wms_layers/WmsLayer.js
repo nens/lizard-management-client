@@ -280,11 +280,11 @@ class WmsLayer extends Component {
           />
         </div>
         <div className={`${wmsLayerTableStyles.tableName}`}>
-          <FormattedMessage id="wmsLayers.wms_layer_name" defaultMessage="Name" />
+          <FormattedMessage id="wms_layers.wms_layer_name" defaultMessage="Name" />
         </div>
         <div className={`${wmsLayerTableStyles.tableDescription}`}>
           <FormattedMessage
-            id="wmsLayers.wms_layer_description"
+            id="wms_layers.wms_layer_description"
             defaultMessage="Description"
           />
         </div>
@@ -390,7 +390,7 @@ class WmsLayer extends Component {
           <img src={wmsIcon} alt="Alarms" />
           <h5>
             <FormattedMessage
-              id="wms.no_wms_layers"
+              id="wms_layers.no_wms_layers"
               defaultMessage="No wms layers found..."
             />
           </h5>
@@ -416,7 +416,7 @@ class WmsLayer extends Component {
           />
           <div className={`${wmsLayerTableStyles.tableFooternumberOfWmsLayers}`}>
             <FormattedMessage
-              id="wms_layer.number_of_wms_layers"
+              id="wms_layers.number_of_wms_layers"
               defaultMessage={`{numberOfWmsLayers, number} {numberOfWmsLayers, plural,
             one {Wms layer}
             other {Wms layers}}`}
@@ -437,10 +437,8 @@ class WmsLayer extends Component {
             disabled={clickedCheckboxes === 0 ? true : false}
           >
             <FormattedMessage
-              id="wms.delete_wms_layers"
-              defaultMessage={` Delete {clickedCheckboxes, number} {clickedCheckboxes, plural,
-                one {Wms layer}
-                other {Wms layers}}`}
+              id="wms_layers.delete_wms_layers"
+              defaultMessage={` Delete {clickedCheckboxes, number} WMS`}
               values={{
                 clickedCheckboxes
               }}
