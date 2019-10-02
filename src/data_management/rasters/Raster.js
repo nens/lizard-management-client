@@ -49,32 +49,45 @@ class Raster extends Component {
     this.fetchRastersFromApi(
       this.state.page,
       this.state.searchTerms,
-      this.state.include3diScenarios
+      this.state.include3diScenarios,
+      this.props.organisations.selected
     );
   }
   componentWillUpdate(nextProps, nextState) {
+    if (nextProps.organisations.selected.uuid !== this.props.organisations.selected.uuid) {
+      this.updatePageAndFetchRastersFromApi(
+        1,
+        this.state.searchedTerms,
+        this.state.include3diScenarios,
+        nextProps.organisations.selected
+      )
+    }
+
     if (nextState.searchedTerms !== this.state.searchedTerms) {
       this.updatePageAndFetchRastersFromApi(
         1,
         nextState.searchedTerms,
-        this.state.include3diScenarios
+        this.state.include3diScenarios,
+        this.props.organisations.selected
       );
     } else if (nextState.include3diScenarios !== this.state.include3diScenarios) {
       this.fetchRastersFromApi(
         nextState.page,
         this.state.searchedTerms,
-        nextState.include3diScenarios
+        nextState.include3diScenarios,
+        this.props.organisations.selected
       );
     } else if (nextState.page !== this.state.page) {
       this.fetchRastersFromApi(
         nextState.page,
         this.state.searchedTerms,
-        this.state.include3diScenarios
+        this.state.include3diScenarios,
+        this.props.organisations.selected
       );
     }
   }
 
-  updatePageAndFetchRastersFromApi(page, searchedTerms, include3diScenarios) {
+  updatePageAndFetchRastersFromApi(page, searchedTerms, include3diScenarios, organisation) {
     this.setState(
       {
         page: page
@@ -82,7 +95,8 @@ class Raster extends Component {
       this.fetchRastersFromApi(
         page,
         searchedTerms,
-        include3diScenarios
+        include3diScenarios,
+        organisation
       )
     );
   }
@@ -122,10 +136,10 @@ class Raster extends Component {
     });
   }
 
-  fetchRastersFromApi(page, searchContains, include3diScenarios) {
+  fetchRastersFromApi(page, searchContains, include3diScenarios, organisation) {
     const url = include3diScenarios
-    ? `/api/v4/rasters/?writable=true&page_size=${this.state.pageSize}&page=${page}&name__icontains=${searchContains}&ordering=last_modified&organisation__uuid=${this.props.organisations.selected.uuid}`
-    : `/api/v4/rasters/?writable=true&page_size=${this.state.pageSize}&page=${page}&name__icontains=${searchContains}&ordering=last_modified&organisation__uuid=${this.props.organisations.selected.uuid}&scenario__isnull=true`;
+    ? `/api/v4/rasters/?writable=true&page_size=${this.state.pageSize}&page=${page}&name__icontains=${searchContains}&ordering=last_modified&organisation__uuid=${organisation.uuid}`
+    : `/api/v4/rasters/?writable=true&page_size=${this.state.pageSize}&page=${page}&name__icontains=${searchContains}&ordering=last_modified&organisation__uuid=${organisation.uuid}&scenario__isnull=true`;
 
     this.setState({
       isFetching: true
@@ -215,7 +229,8 @@ class Raster extends Component {
       this.fetchRastersFromApi(
         this.state.page,
         this.state.searchTerms,
-        this.state.include3diScenarios
+        this.state.include3diScenarios,
+        this.props.organisations.selected
       );
     });
     // TODO show user results of the fetch
