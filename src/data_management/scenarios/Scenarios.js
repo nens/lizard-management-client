@@ -24,10 +24,7 @@ class Scenarios extends Component {
     };
 
     fetchScenariosFromApi = (organisationUUID, page, searchContains, ordering) => {
-        //Use short UUID of organisation instead of the full UUID due to backend technical problem
-        //This should be fixed in the future
-        const shortUUID = organisationUUID.substr(0, 7);
-        const url = `/api/v4/scenarios/?writable=true&page_size=${this.state.pageSize}&organisation__uuid=${shortUUID}&page=${page}&name__icontains=${searchContains}&ordering=${ordering}`;
+        const url = `/api/v4/scenarios/?writable=true&page_size=${this.state.pageSize}&organisation__uuid=${organisationUUID}&page=${page}&name__icontains=${searchContains}&ordering=${ordering}`;
 
         this.setState({
             isFetching: true
