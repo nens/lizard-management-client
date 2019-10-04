@@ -108,6 +108,7 @@
   height: 100%;
   display: flex;
   align-items: center;
+  padding-left: 5px;
   cursor: pointer;
 }
 .OrganisationLink {
