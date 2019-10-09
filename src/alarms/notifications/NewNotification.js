@@ -173,9 +173,6 @@ class NewNotification extends Component {
     });
   }
   handleRasterSearchInput(value) {
-    const { selectedOrganisation } = this.props;
-    // const organisationId = selectedOrganisation.uuid;  // only show rasters of organisation of user
-
     if (value === "") {
       this.setState({
         rasters: []
@@ -186,7 +183,6 @@ class NewNotification extends Component {
       loading: true
     });
     return fetch(
-      // `/api/v4/rasters/?organisation__uuid=${organisationId}&page_size=0&name__icontains=${value}`,  // only show rasters of organisation of user
       `/api/v4/rasters/?page_size=0&name__icontains=${value}`,  // show all raster the user has access to
       {
         credentials: "same-origin"
