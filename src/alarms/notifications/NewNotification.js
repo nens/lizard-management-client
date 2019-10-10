@@ -183,7 +183,7 @@ class NewNotification extends Component {
       loading: true
     });
     return fetch(
-      `/api/v4/rasters/?page_size=0&name__icontains=${value}`,  // show all raster the user has access to
+      `/api/v3/rasters/?page_size=0&name__icontains=${value}`,  // show all raster the user has access to
       {
         credentials: "same-origin"
       }
