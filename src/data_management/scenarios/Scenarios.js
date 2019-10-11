@@ -58,6 +58,8 @@ class Scenarios extends Component {
                 this.state.searchTerms,
                 this.state.ordering
             );
+            // Update the scenario usage when a scenario is deleted.
+            this.fetchScenariosUsageFromAPI(this.props.selectedOrganisation.uuid);
         });
     };
 
@@ -164,7 +166,6 @@ class Scenarios extends Component {
                 body: JSON.stringify({})
             };
             this.fetchScenarioUuidsWithOptions(checkedUuids, opts);
-            this.fetchScenariosUsageFromAPI(this.props.selectedOrganisation.uuid);
             //Remove all items from the checkboxes after the deletion
             this.setState({
                 checkboxes: []
