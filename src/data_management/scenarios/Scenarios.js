@@ -164,6 +164,7 @@ class Scenarios extends Component {
                 body: JSON.stringify({})
             };
             this.fetchScenarioUuidsWithOptions(checkedUuids, opts);
+            this.fetchScenariosUsageFromAPI(this.props.selectedOrganisation.uuid);
             //Remove all items from the checkboxes after the deletion
             this.setState({
                 checkboxes: []
