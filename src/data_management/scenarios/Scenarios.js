@@ -58,6 +58,8 @@ class Scenarios extends Component {
                 this.state.searchTerms,
                 this.state.ordering
             );
+            // Update the scenario usage when a scenario is deleted.
+            this.fetchScenariosUsageFromAPI(this.props.selectedOrganisation.uuid);
         });
     };
 
