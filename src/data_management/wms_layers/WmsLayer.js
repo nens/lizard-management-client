@@ -76,7 +76,7 @@ class WmsLayer extends Component {
             .includes(searchContains.toLowerCase()))
           &&
             // also sort on organisation, but remove slash from organisation uuid
-            (e.organisation.uuid.split('-').join('')) === selectedOrganisationUuid
+            (e.organisation && e.organisation.uuid.split('-').join('')) === selectedOrganisationUuid
     );
 
     filteredWmsLayers.sort((a, b) => {
