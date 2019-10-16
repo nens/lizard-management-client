@@ -12,6 +12,7 @@ import SelectBoxSearch from "../../components/SelectBoxSearch";
 import SelectRaster from "../../components/SelectRaster";
 import SelectAsset from "../../components/SelectAsset";
 import StepIndicator from "../../components/StepIndicator";
+import ThresholdChart from "./ThresholdChart";
 import styles from "./NewNotification.css";
 import { addNotification } from "../../actions";
 import { connect } from "react-redux";
@@ -66,6 +67,10 @@ class NewNotification extends Component {
       showConfigureThreshold: false,
       step: 1,
       thresholds: [],
+      thresholdValue: "",
+      thresholdName: "",
+      snooze_sign_on: "",
+      snooze_sign_off: "",
 
       sourceType: {
         display: "Rasters",
@@ -125,6 +130,10 @@ class NewNotification extends Component {
       this
     );
     this.goBackToStep = this.goBackToStep.bind(this);
+    this.handleChangeThresholdValue = this.handleChangeThresholdValue.bind(this);
+    this.handleChangeThresholdName = this.handleChangeThresholdName.bind(this);
+    this.handleSnoozeSignOn = this.handleSnoozeSignOn.bind(this);
+    this.handleSnoozeSignOff = this.handleSnoozeSignOff.bind(this);
   }
   componentDidMount() {
     const organisationId = this.props.selectedOrganisation.uuid;
@@ -392,9 +401,9 @@ class NewNotification extends Component {
     }));
   }
   handleAddGroupAndTemplate(object) {
-    const { idx, groupName, messageName } = object;
+    const { idx, contact_group, message } = object;
     const messages = this.state.messages.slice();
-    messages[idx] = { groupName, messageName };
+    messages[idx] = { contact_group, message };
     this.setState({
       messages: messages
     });
@@ -406,6 +415,26 @@ class NewNotification extends Component {
         step: toStep
       });
     }
+  }
+  handleChangeThresholdValue(e) {
+    this.setState({
+      thresholdValue: parseFloat(e.target.value)
+    });
+  }
+  handleChangeThresholdName(e) {
+    this.setState({
+      thresholdName: e.target.value
+    });
+  }
+  handleSnoozeSignOn(e) {
+    this.setState({
+      snooze_sign_on: parseFloat(e.target.value)
+    });
+  }
+  handleSnoozeSignOff(e) {
+    this.setState({
+      snooze_sign_off: parseFloat(e.target.value)
+    });
   }
   formatWMSStyles(rawStyles) {
     /*
@@ -439,9 +468,21 @@ class NewNotification extends Component {
       showConfigureThreshold,
       step,
       thresholds,
+      thresholdValue,
+      thresholdName,
+      snooze_sign_on,
+      snooze_sign_off,
       timeseries,
       sourceType
     } = this.state;
+
+    // console.log('value', thresholdValue)
+    // console.log('name', thresholdName)
+    // console.log('thresholds', thresholds)
+    // console.log('snooze', snooze_sign_on, snooze_sign_off)
+    // console.log('messages', messages)
+    // console.log('available messages', availableMessages)
+    // console.log('available group', availableGroups)
 
     //Format message for placeholder in the input form for translation
     const placeholderTimeseriesSelectionViaAsset = this.props.intl.formatMessage({ id: "placeholder_timeseries_selection_via_asset" });
@@ -936,12 +977,6 @@ class NewNotification extends Component {
                       </h3>
                       {step === 4 ? (
                         <div>
-                          <p className="text-muted">
-                            <FormattedMessage
-                              id="notifications_app.this_alarm_will_be_triggered"
-                              defaultMessage="This alarm will be triggered whenever a threshold is exceeded."
-                            />
-                          </p>
                           <div className={formStyles.FormGroup}>
                             <label htmlFor="comparison">
                               <FormattedMessage
@@ -949,7 +984,19 @@ class NewNotification extends Component {
                                 defaultMessage="Comparison"
                               />
                             </label>
-                            <select
+                            <div>
+                              <button
+                                onClick={() => this.setState({ comparison: ">" })}
+                              >
+                                higher than &gt;
+                              </button>
+                              <button
+                                onClick={() => this.setState({ comparison: "<" })}
+                              >
+                                lower than &lt;
+                              </button>
+                            </div>
+                            {/* <select
                               onChange={e =>
                                 this.handleChangeComparison(e.target.value)}
                               value={this.state.comparison}
@@ -958,13 +1005,64 @@ class NewNotification extends Component {
                             >
                               <option value=">">&gt;</option>
                               <option value="<">&lt;</option>
-                            </select>
-                            <small className="form-text text-muted">
-                              <FormattedMessage
-                                id="notifications_app.comparison_for_all_alarm_thresholds"
-                                defaultMessage="Comparison for all alarm thresholds, either < or >"
+                            </select> */}
+                          </div>
+
+                          <div>
+                            <div>
+                              <label htmlFor="value">
+                                Value
+                              </label>
+                              <input
+                                type="number"
+                                id="val"
+                                value={thresholdValue}
+                                onChange={this.handleChangeThresholdValue}
                               />
-                            </small>
+                            </div>
+                            <div>
+                              <label htmlFor="warning_label">
+                                Name
+                              </label>
+                              <input
+                                type="text"
+                                id="warning_label"
+                                value={thresholdName}
+                                onChange={this.handleChangeThresholdName}
+                              />
+                            </div>
+                            {raster && timeseries ? (
+                              <ThresholdChart
+                                timeseries={timeseries}
+                                value={thresholdValue}
+                                parameter={
+                                  raster.observation_type
+                                    ? raster.observation_type.parameter
+                                    : null
+                                }
+                                unit={
+                                  raster.observation_type
+                                    ? raster.observation_type.unit
+                                    : null
+                                }
+                                code={
+                                  raster.observation_type
+                                    ? raster.observation_type.code
+                                    : null
+                                }
+                              />
+                            ) : null}
+                            <button
+                              onClick={() => {
+                                this.handleAddThreshold(thresholdValue, thresholdName);
+                                this.setState({
+                                  thresholdValue: "",
+                                  thresholdName: ""
+                                });
+                              }}
+                            >
+                              Add threshold
+                            </button>
                           </div>
 
                           <div className={styles.Thresholds}>
@@ -1014,12 +1112,7 @@ class NewNotification extends Component {
                               );
                             })}
                           </div>
-
-                          <AddButton
-                            handleClick={() =>
-                              this.setState({ showConfigureThreshold: true })}
-                            title="Add threshold"
-                          />
+                          
                           <button
                             type="button"
                             className={`${buttonStyles.Button} ${buttonStyles.Success}`}
@@ -1040,7 +1133,7 @@ class NewNotification extends Component {
                     </div>
                   </div>
                 </div>
-
+                
                 <div className="media">
                   <StepIndicator indicator="5" active={step === 5} />
                   <div
@@ -1050,11 +1143,66 @@ class NewNotification extends Component {
                   >
                     <h3 className={`mt-0 ${step !== 5 ? "text-muted" : null}`}>
                       <FormattedMessage
+                        id="notifications_app.snoozing"
+                        defaultMessage="Snoozing"
+                      />
+                    </h3>
+                    {step === 5 ? (
+                      <div>
+                        <div>
+                          <span>Snooze alarm after</span>
+                          <input
+                            type="number"
+                            id="snooze_sign_on"
+                            value={snooze_sign_on}
+                            onChange={this.handleSnoozeSignOn}
+                          />
+                          <span>times</span>
+                        </div>
+                        <div>
+                          <span>Snooze "No further impact" after</span>
+                          <input
+                            type="number"
+                            id="snooze_sign_off"
+                            value={snooze_sign_off}
+                            onChange={this.handleSnoozeSignOff}
+                          />
+                          <span>times</span>
+                        </div>
+                        <button
+                          type="button"
+                          className={`${buttonStyles.Button} ${buttonStyles.Success}`}
+                          style={{ marginTop: 10 }}
+                          onClick={() => {
+                            this.setState({
+                              step: 6
+                            });
+                          }}
+                        >
+                          <FormattedMessage
+                            id="notifications_app.next_step"
+                            defaultMessage="Next step"
+                          />
+                        </button>
+                      </div>
+                    ) : null}
+                  </div>
+                </div>
+
+                <div className="media">
+                  <StepIndicator indicator="6" active={step === 6} />
+                  <div
+                    style={{
+                      marginLeft: 90
+                    }}
+                  >
+                    <h3 className={`mt-0 ${step !== 6 ? "text-muted" : null}`}>
+                      <FormattedMessage
                         id="notifications_app.recipients"
                         defaultMessage="Recipients"
                       />
                     </h3>
-                    {step === 5 ? (
+                    {step === 6 ? (
                       <div>
                         <p className="text-muted">
                           <FormattedMessage
@@ -1066,10 +1214,10 @@ class NewNotification extends Component {
                           {messages.map((message, i) => {
                             return (
                               <GroupAndTemplateSelector
-                                key={message.messageName + i}
+                                key={message.message + i}
                                 idx={i}
-                                messageName={message.messageName}
-                                groupName={message.groupName}
+                                message={message.message}
+                                contact_group={message.contact_group}
                                 availableGroups={availableGroups}
                                 availableMessages={availableMessages}
                                 addGroupAndTemplate={
@@ -1086,8 +1234,8 @@ class NewNotification extends Component {
                           handleClick={() => {
                             const messages = this.state.messages.slice();
                             messages.push({
-                              messageName: null,
-                              groupName: null
+                              message: null,
+                              contact_group: null
                             });
                             this.setState({
                               messages
