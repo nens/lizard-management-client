@@ -970,7 +970,7 @@ class NewNotification extends Component {
                       }}
                     >
                       <h3
-                        // className={`mt-0 ${step !== 4 ? "text-muted" : null}`}
+                        className={`mt-0 ${step !== 4 ? "text-muted" : null}`}
                       >
                         <FormattedMessage
                           id="notifications_app.newnotification_thresholds"
@@ -1009,6 +1009,7 @@ class NewNotification extends Component {
                                   type="number"
                                   id="value"
                                   value={thresholdValue}
+                                  className={formStyles.FormControlSmall}
                                   onChange={this.handleChangeThresholdValue}
                                 />
                               </div>
@@ -1044,6 +1045,7 @@ class NewNotification extends Component {
                                   type="text"
                                   id="warning_label"
                                   value={thresholdName}
+                                  className={formStyles.FormControlSmall}
                                   onChange={this.handleChangeThresholdName}
                                 />
                               </div>
