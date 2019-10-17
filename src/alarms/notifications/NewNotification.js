@@ -1230,9 +1230,16 @@ class NewNotification extends Component {
                         />
                         <button
                           type="button"
-                          className={`${buttonStyles.Button} ${buttonStyles.Success}`}
+                          className={
+                            messages[0] && messages[0].message && messages[0].contact_group ?
+                              `${buttonStyles.Button} ${buttonStyles.Success}`
+                              :
+                              `${buttonStyles.Button} ${buttonStyles.Inactive}`
+                          }
                           style={{ marginTop: 10 }}
-                          onClick={this.handleActivateClick}
+                          onClick={
+                            messages[0] && messages[0].message && messages[0].contact_group ? this.handleActivateClick : null
+                          }
                         >
                           <FormattedMessage
                             id="notifications_app.activate"
