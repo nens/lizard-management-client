@@ -142,7 +142,7 @@
   "notifications_app.something_wrong": "Er ging iets mis...",
   "notifications_app.source_type_selection": "Source type selectie",
   "notifications_app.this_alarm_will_be_triggered": "Dit alarm zal afgaan wanneer de drempelwaarde wordt overschreden.",
-  "notifications_app.thresholds": "Drempelwaardes",
+  "notifications_app.thresholds": "Alarm drempelwaardes",
   "notifications_app.timeseries_alarms": "Timeseries Alarmen",
   "notifications_app.timeseries_selection": "Timeseries selectie",
   "notifications_app.value": "waarde",
