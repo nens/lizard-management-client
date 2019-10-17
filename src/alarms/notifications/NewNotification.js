@@ -591,7 +591,7 @@ class NewNotification extends Component {
                         <div>
                           <p className="text-muted">
                             <FormattedMessage
-                              id="notifications_app.whci_data_type"
+                              id="notifications_app.which_data_type"
                               defaultMessage="Which data type is the alarm for?"
                             />
                           </p>
