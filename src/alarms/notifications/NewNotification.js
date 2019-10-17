@@ -56,7 +56,7 @@ class NewNotification extends Component {
       alarmName: "",
       availableGroups: [],
       availableMessages: [],
-      comparison: ">",
+      comparison: null,
       loading: false,
       markerPosition: null,
       messages: [],
@@ -69,8 +69,8 @@ class NewNotification extends Component {
       thresholds: [],
       thresholdValue: "",
       thresholdName: "",
-      snooze_sign_on: "",
-      snooze_sign_off: "",
+      snooze_sign_on: null,
+      snooze_sign_off: null,
 
       sourceType: {
         display: "Rasters",
@@ -389,7 +389,9 @@ class NewNotification extends Component {
     const thresholds = this.state.thresholds.slice();
     thresholds.push({ value: value, warning_level: warning_level });
     this.setState({
-      thresholds
+      thresholds,
+      thresholdValue: "",
+      thresholdName: ""
     });
   }
   removeFromGroupAndTemplate(idx) {
@@ -968,68 +970,83 @@ class NewNotification extends Component {
                       }}
                     >
                       <h3
-                        className={`mt-0 ${step !== 4 ? "text-muted" : null}`}
+                        // className={`mt-0 ${step !== 4 ? "text-muted" : null}`}
                       >
                         <FormattedMessage
                           id="notifications_app.newnotification_thresholds"
-                          defaultMessage="Thresholds"
+                          defaultMessage="Alarm thresholds"
                         />
                       </h3>
                       {step === 4 ? (
                         <div>
-                          <div className={formStyles.FormGroup}>
-                            <label htmlFor="comparison">
+                          <div className={styles.AddThreshold}>
+                            <label htmlFor="comparison" className={styles.Comparision}>
                               <FormattedMessage
                                 id="notifications_app.comparison"
                                 defaultMessage="Comparison"
                               />
                             </label>
-                            <div>
-                              <button
-                                onClick={() => this.setState({ comparison: ">" })}
-                              >
-                                higher than &gt;
-                              </button>
-                              <button
-                                onClick={() => this.setState({ comparison: "<" })}
-                              >
-                                lower than &lt;
-                              </button>
-                            </div>
-                            {/* <select
-                              onChange={e =>
-                                this.handleChangeComparison(e.target.value)}
-                              value={this.state.comparison}
-                              className={`${formStyles.FormControl} ${formStyles.Large}`}
-                              id="comparison"
-                            >
-                              <option value=">">&gt;</option>
-                              <option value="<">&lt;</option>
-                            </select> */}
-                          </div>
-
-                          <div>
-                            <div>
-                              <label htmlFor="value">
-                                Value
-                              </label>
-                              <input
-                                type="number"
-                                id="val"
-                                value={thresholdValue}
-                                onChange={this.handleChangeThresholdValue}
-                              />
-                            </div>
-                            <div>
-                              <label htmlFor="warning_label">
-                                Name
-                              </label>
-                              <input
-                                type="text"
-                                id="warning_label"
-                                value={thresholdName}
-                                onChange={this.handleChangeThresholdName}
-                              />
+                            <div className={styles.ThresholdInput}>
+                              <div className={styles.ThresholdValueInput}>
+                                <button
+                                  className={
+                                    this.state.comparison === ">" ?
+                                      `${styles.SelectedButton}`
+                                      :
+                                      `${styles.SelectedButton} ${styles.UnselectedButton}`
+                                  }
+                                  onClick={() => this.setState({ comparison: ">" })}
+                                >
+                                  higher than &gt;
+                                </button>
+                                <label htmlFor="value">
+                                  Value
+                                </label>
+                                <div className={styles.ThresholdValues}>
+                                  {thresholds.map((threshold, i) => <div key={i}>{comparison} {threshold.value}</div>)}
+                                </div>
+                                <input
+                                  type="number"
+                                  id="value"
+                                  value={thresholdValue}
+                                  onChange={this.handleChangeThresholdValue}
+                                />
+                              </div>
+                              <div className={styles.ThresholdNameInput}>
+                                <button
+                                  className={
+                                    this.state.comparison === "<" ?
+                                      `${styles.SelectedButton}`
+                                      :
+                                      `${styles.SelectedButton} ${styles.UnselectedButton}`
+                                  }
+                                  onClick={() => this.setState({ comparison: "<" })}
+                                >
+                                  lower than &lt;
+                                </button>
+                                <label htmlFor="warning_label">
+                                  Name
+                                </label>
+                                <div className={styles.ThresholdNames}>
+                                  {thresholds.map((threshold, i) => (
+                                    <div key={i}>
+                                      <span>{threshold.warning_level}</span>
+                                      <span 
+                                        className={styles.ThresholdDelete}
+                                        onClick={() => thresholds.splice(i, 1)}
+                                      >
+                                        &#10007;
+                                      </span>
+                                    </div>
+                                  ))}
+                                </div>
+                                <input
+                                  type="text"
+                                  id="warning_label"
+                                  value={thresholdName}
+                                  onChange={this.handleChangeThresholdName}
+                                />
+                              </div>
                             </div>
                             {raster && timeseries ? (
                               <ThresholdChart
@@ -1053,70 +1070,28 @@ class NewNotification extends Component {
                               />
                             ) : null}
                             <button
+                              className={
+                                comparison && thresholdValue && thresholdName ?
+                                  `${styles.AddThresholdButton}`
+                                  :
+                                  `${styles.AddThresholdButton} ${styles.InactiveAddThresholdButton}`
+                              }
                               onClick={() => {
-                                this.handleAddThreshold(thresholdValue, thresholdName);
-                                this.setState({
-                                  thresholdValue: "",
-                                  thresholdName: ""
-                                });
+                                return comparison && thresholdValue && thresholdName ? this.handleAddThreshold(
+                                  thresholdValue, thresholdName
+                                ) : null
                               }}
                             >
-                              Add threshold
+                              {this.state.comparison ? "ADD THRESHOLD" : "NEW THRESHOLD"}
                             </button>
                           </div>
-
-                          <div className={styles.Thresholds}>
-                            {thresholds.map((threshold, i) => {
-                              return (
-                                <div
-                                  key={Math.floor(Math.random() * 100000)}
-                                  className={styles.Threshold}
-                                >
-                                  <i
-                                    style={{
-                                      position: "relative",
-                                      top: 3,
-                                      left: 2
-                                    }}
-                                    className="material-icons"
-                                  >
-                                    access_time
-                                  </i>&nbsp;
-                                  <span
-                                    style={{
-                                      marginLeft: 10,
-                                      top: -1,
-                                      position: "relative"
-                                    }}
-                                  >
-                                    <FormattedMessage
-                                      id="notifications_app.alarm_when_value"
-                                      defaultMessage="Alarm when value"
-                                    />{" "}
-                                    {comparison} {threshold.value}
-                                  </span>
-                                  <button
-                                    type="button"
-                                    className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link} ${gridStyles.FloatRight}`}
-                                    onClick={() =>
-                                      console.error(
-                                        "Remove still has to be implemented..."
-                                      )}
-                                  >
-                                    <FormattedMessage
-                                      id="notifications_app.newnotification_remove"
-                                      defaultMessage="Remove"
-                                    />
-                                  </button>
-                                </div>
-                              );
-                            })}
-                          </div>
-                          
                           <button
                             type="button"
                             className={`${buttonStyles.Button} ${buttonStyles.Success}`}
-                            style={{ marginTop: 10 }}
+                            style={{ 
+                              marginTop: 10,
+                              display: thresholds.length > 0 ? null : "none"
+                            }}
                             onClick={() => {
                               this.setState({
                                 step: 5
