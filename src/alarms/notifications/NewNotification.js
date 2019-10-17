@@ -69,8 +69,8 @@ class NewNotification extends Component {
       thresholds: [],
       thresholdValue: "",
       thresholdName: "",
-      snooze_sign_on: null,
-      snooze_sign_off: null,
+      snooze_sign_on: 1,
+      snooze_sign_off: 1,
 
       sourceType: {
         display: "Rasters",
@@ -1123,13 +1123,14 @@ class NewNotification extends Component {
                       />
                     </h3>
                     {step === 5 ? (
-                      <div>
+                      <div className={styles.Snoozing}>
                         <div>
                           <span>Snooze alarm after</span>
                           <input
                             type="number"
                             id="snooze_sign_on"
                             value={snooze_sign_on}
+                            className={formStyles.FormControlSmall}
                             onChange={this.handleSnoozeSignOn}
                           />
                           <span>times</span>
@@ -1140,6 +1141,7 @@ class NewNotification extends Component {
                             type="number"
                             id="snooze_sign_off"
                             value={snooze_sign_off}
+                            className={formStyles.FormControlSmall}
                             onChange={this.handleSnoozeSignOff}
                           />
                           <span>times</span>
@@ -1150,7 +1152,9 @@ class NewNotification extends Component {
                           style={{ marginTop: 10 }}
                           onClick={() => {
                             this.setState({
-                              step: 6
+                              step: 6,
+                              snooze_sign_on: 1,
+                              snooze_sign_off: 1
                             });
                           }}
                         >

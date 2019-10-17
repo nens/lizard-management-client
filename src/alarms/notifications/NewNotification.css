@@ -87,6 +87,14 @@
   color: #51A789;
 }
 
+.Snoozing input {
+  display: inline-block;
+  width: 60px;
+  margin: 10px;
+}
+
+/* Buttons */
+
 .AddThresholdButton {
   /* max-width: 400px; */
   cursor: pointer;
