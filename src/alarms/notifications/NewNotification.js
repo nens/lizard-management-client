@@ -1130,6 +1130,7 @@ class NewNotification extends Component {
                           <span>Snooze alarm after</span>
                           <input
                             type="number"
+                            min="1"
                             id="snooze_sign_on"
                             value={snooze_sign_on}
                             className={formStyles.FormControlSmall}
@@ -1141,6 +1142,7 @@ class NewNotification extends Component {
                           <span>Snooze "No further impact" after</span>
                           <input
                             type="number"
+                            min="1"
                             id="snooze_sign_off"
                             value={snooze_sign_off}
                             className={formStyles.FormControlSmall}
@@ -1154,9 +1156,7 @@ class NewNotification extends Component {
                           style={{ marginTop: 10 }}
                           onClick={() => {
                             this.setState({
-                              step: 6,
-                              snooze_sign_on: 1,
-                              snooze_sign_off: 1
+                              step: 6
                             });
                           }}
                         >
