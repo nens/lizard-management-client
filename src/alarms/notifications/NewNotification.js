@@ -24,7 +24,7 @@ import { postNewNotification } from "../../utils/postNewNotification.js";
 async function fetchContactsAndMessages(organisationId) {
   try {
     const groups = await fetch(
-      `/api/v3/contactgroups/?organisation__unique_id=${organisationId}`,
+      `/api/v4/contactgroups/?organisation__unique_id=${organisationId}`,
       {
         credentials: "same-origin"
       }
@@ -32,7 +32,7 @@ async function fetchContactsAndMessages(organisationId) {
       .then(response => response.json())
       .then(data => data.results);
     const messages = await fetch(
-      `/api/v3/messages/?organisation__unique_id=${organisationId}`,
+      `/api/v4/messages/?organisation__unique_id=${organisationId}`,
       {
         credentials: "same-origin"
       }
