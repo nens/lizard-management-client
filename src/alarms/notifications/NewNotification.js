@@ -1112,7 +1112,11 @@ class NewNotification extends Component {
                 </div>
                 
                 <div className="media">
-                  <StepIndicator indicator="5" active={step === 5} />
+                  <StepIndicator
+                    indicator="5"
+                    active={step === 5}
+                    handleClick={() => this.goBackToStep(5)}
+                  />
                   <div
                     style={{
                       marginLeft: 90
@@ -1136,7 +1140,7 @@ class NewNotification extends Component {
                             className={formStyles.FormControlSmall}
                             onChange={this.handleSnoozeSignOn}
                           />
-                          <span>times</span>
+                          <span>{snooze_sign_on > 1 ? "times" : "time"}</span>
                         </div>
                         <div>
                           <span>Snooze "No further impact" after</span>
@@ -1148,7 +1152,7 @@ class NewNotification extends Component {
                             className={formStyles.FormControlSmall}
                             onChange={this.handleSnoozeSignOff}
                           />
-                          <span>times</span>
+                          <span>{snooze_sign_off > 1 ? "times" : "time"}</span>
                         </div>
                         <button
                           type="button"
