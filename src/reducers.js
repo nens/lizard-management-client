@@ -73,6 +73,13 @@ function organisations(
       return {
         ...state,
         available: action.data
+          .filter(e => {
+            return (
+              e.roles.find(e => e === "admin") ||
+              e.roles.find(e => e === "supplier") ||
+              e.roles.find(e => e === "user")
+            );
+          })
           .map(organisation => {
             //use organisation uuid without dashes only
             return {
