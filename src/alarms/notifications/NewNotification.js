@@ -403,9 +403,9 @@ class NewNotification extends Component {
     }));
   }
   handleAddGroupAndTemplate(object) {
-    const { idx, contact_group, message } = object;
+    const { idx, groupName, messageName } = object;
     const messages = this.state.messages.slice();
-    messages[idx] = { contact_group, message };
+    messages[idx] = { groupName, messageName };
     this.setState({
       messages: messages
     });
@@ -1199,10 +1199,10 @@ class NewNotification extends Component {
                           {messages.map((message, i) => {
                             return (
                               <GroupAndTemplateSelector
-                                key={message.message + i}
+                                key={message.messageName + i}
                                 idx={i}
-                                message={message.message}
-                                contact_group={message.contact_group}
+                                messageName={message.messageName}
+                                groupName={message.groupName}
                                 availableGroups={availableGroups}
                                 availableMessages={availableMessages}
                                 addGroupAndTemplate={
@@ -1219,8 +1219,8 @@ class NewNotification extends Component {
                           handleClick={() => {
                             const messages = this.state.messages.slice();
                             messages.push({
-                              message: null,
-                              contact_group: null
+                              messageName: null,
+                              groupName: null
                             });
                             this.setState({
                               messages
@@ -1231,14 +1231,14 @@ class NewNotification extends Component {
                         <button
                           type="button"
                           className={
-                            messages[0] && messages[0].message && messages[0].contact_group ?
+                            messages[0] && messages[0].messageName && messages[0].groupName ?
                               `${buttonStyles.Button} ${buttonStyles.Success}`
                               :
                               `${buttonStyles.Button} ${buttonStyles.Inactive}`
                           }
                           style={{ marginTop: 10 }}
                           onClick={
-                            messages[0] && messages[0].message && messages[0].contact_group ? this.handleActivateClick : null
+                            messages[0] && messages[0].messageName && messages[0].groupName ? this.handleActivateClick : null
                           }
                         >
                           <FormattedMessage
