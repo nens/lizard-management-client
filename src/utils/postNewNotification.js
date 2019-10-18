@@ -7,7 +7,9 @@ export async function postNewNotification(state, organisationId) {
     raster,
     markerPosition,
     selectedTimeseries,
-    sourceType
+    sourceType,
+    snooze_sign_on,
+    snooze_sign_off
   } = state;
 
   let url = "";
@@ -22,7 +24,9 @@ export async function postNewNotification(state, organisationId) {
         contact_group: message.groupName,
         message: message.messageName
       };
-    })
+    }),
+    snooze_sign_on,
+    snooze_sign_off
   };
   if (sourceType.display === "Timeseries") {
     url = "/api/v3/timeseriesalarms/";
@@ -36,6 +40,11 @@ export async function postNewNotification(state, organisationId) {
         coordinates: [markerPosition[1], markerPosition[0], 0.0]
       }
     };
+    // body.raster = raster.uuid;
+    // body.geometry = {
+    //   type: "Point",
+    //   coordinates: [markerPosition[1], markerPosition[0], 0.0]
+    // }
   }
 
   const addedAlarm = await fetch(url, {

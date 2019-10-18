@@ -1050,6 +1050,21 @@ class NewNotification extends Component {
                                 />
                               </div>
                             </div>
+                            <button
+                              className={
+                                comparison && thresholdValue && thresholdName ?
+                                  `${styles.AddThresholdButton}`
+                                  :
+                                  `${styles.AddThresholdButton} ${styles.InactiveAddThresholdButton}`
+                              }
+                              onClick={() => {
+                                return comparison && thresholdValue && thresholdName ? this.handleAddThreshold(
+                                  thresholdValue, thresholdName
+                                ) : null
+                              }}
+                            >
+                              {this.state.comparison ? "ADD THRESHOLD" : "NEW THRESHOLD"}
+                            </button>
                             {raster && timeseries ? (
                               <ThresholdChart
                                 timeseries={timeseries}
@@ -1071,21 +1086,6 @@ class NewNotification extends Component {
                                 }
                               />
                             ) : null}
-                            <button
-                              className={
-                                comparison && thresholdValue && thresholdName ?
-                                  `${styles.AddThresholdButton}`
-                                  :
-                                  `${styles.AddThresholdButton} ${styles.InactiveAddThresholdButton}`
-                              }
-                              onClick={() => {
-                                return comparison && thresholdValue && thresholdName ? this.handleAddThreshold(
-                                  thresholdValue, thresholdName
-                                ) : null
-                              }}
-                            >
-                              {this.state.comparison ? "ADD THRESHOLD" : "NEW THRESHOLD"}
-                            </button>
                           </div>
                           <button
                             type="button"
