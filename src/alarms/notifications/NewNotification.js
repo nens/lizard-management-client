@@ -951,6 +951,11 @@ class NewNotification extends Component {
                           id="notifications_app.newnotification_thresholds"
                           defaultMessage="Alarm thresholds"
                         />
+                        &nbsp;&nbsp;
+                        <i
+                          className={`fa ${step === 4 ? "fa-info-circle" : "inactive-icon"}`}
+                          title="Add new thresholds with value and name of the threshold"
+                        />
                       </h3>
                       {step === 4 ? (
                         <div>
@@ -1102,6 +1107,12 @@ class NewNotification extends Component {
                         id="notifications_app.snoozing"
                         defaultMessage="Snoozing"
                       />
+                      &nbsp;&nbsp;
+                      <i
+                        className={`fa ${step === 5 ? "fa-info-circle" : "inactive-icon"}`}
+                        title="Do you want to snooze the alarm after several warnings ? Then set it under snooze alarm.
+                              If you want to set to no further impact then set it under snooze no further impact"
+                      />
                     </h3>
                     {step === 5 ? (
                       <div className={styles.Snoozing}>
@@ -1160,6 +1171,12 @@ class NewNotification extends Component {
                       <FormattedMessage
                         id="notifications_app.recipients"
                         defaultMessage="Recipients"
+                      />
+                      &nbsp;&nbsp;
+                      <i
+                        className={`fa ${step === 6 ? "fa-info-circle" : "inactive-icon"}`}
+                        title="Add the recipient groups of the warning and warning messages to send. You can create
+                              new recipient groups and message templates in the main alarm management screen"
                       />
                     </h3>
                     {step === 6 ? (

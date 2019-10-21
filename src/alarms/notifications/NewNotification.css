@@ -76,6 +76,11 @@
   margin: 10px;
 }
 
+/* Info icons */
+h3 i {
+  color: #00cdab;
+}
+
 /* Buttons */
 
 .AddThresholdButton {
