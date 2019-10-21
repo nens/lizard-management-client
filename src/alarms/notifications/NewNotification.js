@@ -1,7 +1,5 @@
 import AddButton from "../../components/AddButton";
 import buttonStyles from "../../styles/Buttons.css";
-import ConfigureRecipients from "./ConfigureRecipients";
-import ConfigureThreshold from "./ConfigureThreshold";
 import debounce from "lodash.debounce";
 import formStyles from "../../styles/Forms.css";
 import gridStyles from "../../styles/Grid.css";
@@ -64,7 +62,6 @@ class NewNotification extends Component {
       numberOfRecipientGroups: 0,
       raster: null,
       rasters: [],
-      showConfigureThreshold: false,
       step: 1,
       thresholds: [],
       thresholdValue: "",
@@ -88,7 +85,6 @@ class NewNotification extends Component {
     this.handleInputNotificationName = this.handleInputNotificationName.bind(
       this
     );
-    this.hideConfigureThreshold = this.hideConfigureThreshold.bind(this);
     this.handleActivateClick = this.handleActivateClick.bind(this);
     this.handleRasterSearchInput = debounce(
       this.handleRasterSearchInput.bind(this),
@@ -139,7 +135,6 @@ class NewNotification extends Component {
     const organisationId = this.props.selectedOrganisation.uuid;
 
     document.getElementById("alarmName").focus();
-    document.addEventListener("keydown", this.hideConfigureThreshold, false);
 
     // TODO: Pass the organisation__unique_id here:
     fetchContactsAndMessages(organisationId).then(data => {
@@ -148,16 +143,6 @@ class NewNotification extends Component {
         availableMessages: data.messages
       });
     });
-  }
-  componentWillUnmount() {
-    document.removeEventListener("keydown", this.hideConfigureThreshold, false);
-  }
-  hideConfigureThreshold(e) {
-    if (e.key === "Escape") {
-      this.setState({
-        showConfigureThreshold: false
-      });
-    }
   }
   handleInputNotificationName(e) {
     if (e.key === "Enter" && this.state.name) {
@@ -466,8 +451,6 @@ class NewNotification extends Component {
       raster,
       rasters,
       loading,
-      showConfigureRecipients,
-      showConfigureThreshold,
       step,
       thresholds,
       thresholdValue,
@@ -477,7 +460,7 @@ class NewNotification extends Component {
       timeseries,
       sourceType
     } = this.state;
-    
+
     //Format message for placeholder in the input form for translation
     const placeholderTimeseriesSelectionViaAsset = this.props.intl.formatMessage({ id: "placeholder_timeseries_selection_via_asset" });
     const placeholderTimeseriesSelectionViaNestedAsset = this.props.intl.formatMessage({ id: "placeholder_timeseries_selection_via_nested_asset" });
@@ -1246,21 +1229,6 @@ class NewNotification extends Component {
             </div>
           </div>
         </div>
-        {showConfigureThreshold ? (
-          <ConfigureThreshold
-            // TODO: Pass value and warning_level to reinstantiate this component on click??
-            handleAddThreshold={this.handleAddThreshold}
-            raster={raster}
-            timeseries={timeseries}
-            handleClose={() => this.setState({ showConfigureThreshold: false })}
-          />
-        ) : null}
-        {showConfigureRecipients ? (
-          <ConfigureRecipients
-            handleClose={() =>
-              this.setState({ showConfigureRecipients: false })}
-          />
-        ) : null}
       </div>
     );
   }
