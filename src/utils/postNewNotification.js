@@ -21,30 +21,23 @@ export async function postNewNotification(state, organisationId) {
     comparison: comparison,
     messages: messages.map(message => {
       return {
-        contact_group: message.groupName,
-        message: message.messageName
+        contact_group: message.groupId,
+        message: message.messageId
       };
     }),
     snooze_sign_on,
     snooze_sign_off
   };
   if (sourceType.display === "Timeseries") {
-    url = "/api/v3/timeseriesalarms/";
+    url = "/api/v4/timeseriesalarms/";
     body.timeseries = selectedTimeseries.uuid;
   } else {
-    url = "/api/v3/rasteralarms/";
-    body.intersection = {
-      raster: raster.uuid,
-      geometry: {
-        type: "Point",
-        coordinates: [markerPosition[1], markerPosition[0], 0.0]
-      }
-    };
-    // body.raster = raster.uuid;
-    // body.geometry = {
-    //   type: "Point",
-    //   coordinates: [markerPosition[1], markerPosition[0], 0.0]
-    // }
+    url = "/api/v4/rasteralarms/";
+    body.raster = raster.uuid;
+    body.geometry = {
+      type: "Point",
+      coordinates: [markerPosition[1], markerPosition[0], 0.0]
+    }
   }
 
   const addedAlarm = await fetch(url, {

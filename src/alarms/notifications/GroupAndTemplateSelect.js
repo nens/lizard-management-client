@@ -9,8 +9,8 @@ class GroupAndTemplateSelect extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedGroupName: null,
-      selectedMessageName: null
+      selectedGroupId: null,
+      selectedMessageId: null
     };
     this.selectGroup = this.selectGroup.bind(this);
     this.selectMessage = this.selectMessage.bind(this);
@@ -18,14 +18,14 @@ class GroupAndTemplateSelect extends Component {
   selectGroup(e) {
     this.setState(
       {
-        selectedGroupName: e.target.value
+        selectedGroupId: parseFloat(e.target.value)
       },
       () => {
-        if (this.state.selectedMessageName && this.state.selectedGroupName) {
+        if (this.state.selectedMessageId && this.state.selectedGroupId) {
           this.props.addGroupAndTemplate({
             idx: this.props.idx,
-            groupName: this.state.selectedGroupName,
-            messageName: this.state.selectedMessageName
+            groupId: this.state.selectedGroupId,
+            messageId: this.state.selectedMessageId
           });
         }
       }
@@ -34,14 +34,14 @@ class GroupAndTemplateSelect extends Component {
   selectMessage(e) {
     this.setState(
       {
-        selectedMessageName: e.target.value
+        selectedMessageId: parseFloat(e.target.value)
       },
       () => {
-        if (this.state.selectedMessageName && this.state.selectedGroupName) {
+        if (this.state.selectedMessageId && this.state.selectedGroupId) {
           this.props.addGroupAndTemplate({
             idx: this.props.idx,
-            groupName: this.state.selectedGroupName,
-            messageName: this.state.selectedMessageName
+            groupId: this.state.selectedGroupId,
+            messageId: this.state.selectedMessageId
           });
         }
       }
@@ -65,12 +65,12 @@ class GroupAndTemplateSelect extends Component {
               className={formStyles.FormControl}
               onChange={this.selectGroup}
             >
-              <option value={this.props.groupName}>
-                {this.props.groupName ? this.props.groupName : "Select a group"}
+              <option value={this.props.groupId}>
+                {this.props.groupId ? this.props.groupId : "Select a group"}
               </option>
               {availableGroups.map((group, i) => {
                 return (
-                  <option key={group.id} value={group.name}>
+                  <option key={group.id} value={group.id}>
                     {group.name}
                   </option>
                 );
@@ -85,12 +85,12 @@ class GroupAndTemplateSelect extends Component {
               className={formStyles.FormControl}
               onChange={this.selectMessage}
             >
-              <option value={this.props.messageName}>
-                {this.props.messageName ? this.props.messageName : "Select a template"}
+              <option value={this.props.messageId}>
+                {this.props.messageId ? this.props.messageId : "Select a template"}
               </option>
               {availableMessages.map((message, i) => {
                 return (
-                  <option key={message.id} value={message.name}>
+                  <option key={message.id} value={message.id}>
                     {message.name}
                   </option>
                 );

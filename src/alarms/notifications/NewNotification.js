@@ -403,9 +403,9 @@ class NewNotification extends Component {
     }));
   }
   handleAddGroupAndTemplate(object) {
-    const { idx, groupName, messageName } = object;
+    const { idx, groupId, messageId } = object;
     const messages = this.state.messages.slice();
-    messages[idx] = { groupName, messageName };
+    messages[idx] = { groupId, messageId };
     this.setState({
       messages: messages
     });
@@ -477,15 +477,7 @@ class NewNotification extends Component {
       timeseries,
       sourceType
     } = this.state;
-
-    // console.log('value', thresholdValue)
-    // console.log('name', thresholdName)
-    // console.log('thresholds', thresholds)
-    // console.log('snooze', snooze_sign_on, snooze_sign_off)
-    // console.log('messages', messages)
-    // console.log('available messages', availableMessages)
-    // console.log('available group', availableGroups)
-
+    
     //Format message for placeholder in the input form for translation
     const placeholderTimeseriesSelectionViaAsset = this.props.intl.formatMessage({ id: "placeholder_timeseries_selection_via_asset" });
     const placeholderTimeseriesSelectionViaNestedAsset = this.props.intl.formatMessage({ id: "placeholder_timeseries_selection_via_nested_asset" });
@@ -1199,10 +1191,10 @@ class NewNotification extends Component {
                           {messages.map((message, i) => {
                             return (
                               <GroupAndTemplateSelector
-                                key={message.messageName + i}
+                                key={message.messageId + i}
                                 idx={i}
-                                messageName={message.messageName}
-                                groupName={message.groupName}
+                                messageId={message.messageId}
+                                groupId={message.groupId}
                                 availableGroups={availableGroups}
                                 availableMessages={availableMessages}
                                 addGroupAndTemplate={
@@ -1219,8 +1211,8 @@ class NewNotification extends Component {
                           handleClick={() => {
                             const messages = this.state.messages.slice();
                             messages.push({
-                              messageName: null,
-                              groupName: null
+                              messageId: null,
+                              groupId: null
                             });
                             this.setState({
                               messages
@@ -1231,14 +1223,14 @@ class NewNotification extends Component {
                         <button
                           type="button"
                           className={
-                            messages[0] && messages[0].messageName && messages[0].groupName ?
+                            messages[0] && messages[0].messageId && messages[0].groupId ?
                               `${buttonStyles.Button} ${buttonStyles.Success}`
                               :
                               `${buttonStyles.Button} ${buttonStyles.Inactive}`
                           }
                           style={{ marginTop: 10 }}
                           onClick={
-                            messages[0] && messages[0].messageName && messages[0].groupName ? this.handleActivateClick : null
+                            messages[0] && messages[0].messageId && messages[0].groupId ? this.handleActivateClick : null
                           }
                         >
                           <FormattedMessage
