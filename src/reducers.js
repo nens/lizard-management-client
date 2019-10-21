@@ -77,7 +77,7 @@ function organisations(
             return (
               e.roles.find(e => e === "admin") ||
               e.roles.find(e => e === "supplier") ||
-              e.roles.find(e => e === "user")
+              e.roles.find(e => e === "manager")
             );
           })
           .map(organisation => {
