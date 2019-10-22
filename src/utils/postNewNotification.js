@@ -9,7 +9,9 @@ export async function postNewNotification(state, organisationId) {
     selectedTimeseries,
     sourceType,
     snooze_sign_on,
-    snooze_sign_off
+    snooze_sign_off,
+    relative_start,
+    relative_end
   } = state;
 
   let url = "";
@@ -26,7 +28,9 @@ export async function postNewNotification(state, organisationId) {
       };
     }),
     snooze_sign_on,
-    snooze_sign_off
+    snooze_sign_off,
+    relative_start: relative_start === "" ? null : relative_start,
+    relative_end: relative_end === "" ? null : relative_end
   };
   if (sourceType.display === "Timeseries") {
     url = "/api/v4/timeseriesalarms/";

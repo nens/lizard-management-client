@@ -68,6 +68,9 @@ class NewNotification extends Component {
       thresholdName: "",
       snooze_sign_on: 1,
       snooze_sign_off: 1,
+      showRelativeTimeSelection: false,
+      relative_start: "",
+      relative_end: "",
 
       sourceType: {
         display: "Rasters",
@@ -130,6 +133,9 @@ class NewNotification extends Component {
     this.handleChangeThresholdName = this.handleChangeThresholdName.bind(this);
     this.handleSnoozeSignOn = this.handleSnoozeSignOn.bind(this);
     this.handleSnoozeSignOff = this.handleSnoozeSignOff.bind(this);
+    this.handleRelativeStart = this.handleRelativeStart.bind(this);
+    this.handleRelativeEnd = this.handleRelativeEnd.bind(this);
+    this.toggleRelativeField = this.toggleRelativeField.bind(this);
   }
   componentDidMount() {
     const organisationId = this.props.selectedOrganisation.uuid;
@@ -423,6 +429,24 @@ class NewNotification extends Component {
       snooze_sign_off: parseFloat(e.target.value)
     });
   }
+  handleRelativeStart(e) {
+    this.setState({
+      relative_start: e.target.value
+    });
+  }
+  handleRelativeEnd(e) {
+    this.setState({
+      relative_end: e.target.value
+    });
+  }
+  toggleRelativeField() {
+    const { showRelativeTimeSelection, relative_start, relative_end } = this.state;
+    this.setState({
+      showRelativeTimeSelection: !showRelativeTimeSelection,
+      relative_start: showRelativeTimeSelection ? relative_start : "",
+      relative_end: showRelativeTimeSelection ? relative_end : ""
+    });
+  }
   formatWMSStyles(rawStyles) {
     /*
     Needed for compound WMS styling, i.e. 'rain' which has three seperate raster stores
@@ -457,6 +481,9 @@ class NewNotification extends Component {
       thresholdName,
       snooze_sign_on,
       snooze_sign_off,
+      showRelativeTimeSelection,
+      relative_start,
+      relative_end,
       timeseries,
       sourceType
     } = this.state;
@@ -948,16 +975,99 @@ class NewNotification extends Component {
                         className={`mt-0 ${step !== 4 ? "text-muted" : null}`}
                       >
                         <FormattedMessage
+                          id="notifications_app.newnotification_relativeTime"
+                          defaultMessage="Start and end time selection"
+                        />
+                        &nbsp;&nbsp;
+                        <i
+                          className={`fa ${step === 4 ? "fa-info-circle" : "inactive-icon"}`}
+                          title="How to configure the relative start and relative end time?"
+                        />
+                      </h3>
+                      {step === 4 ? (
+                        <div className={styles.RelativeTimeSelection}>
+                          <div>
+                            <input
+                              type="checkbox"
+                              checked={showRelativeTimeSelection}
+                              onChange={this.toggleRelativeField}
+                            />
+                            <label>Select whether you want to configure relative start and relative end of the alarm</label>
+                          </div>
+                          <div
+                            style={{
+                              display: `${showRelativeTimeSelection ? "block" : "none"}`
+                            }}
+                          >
+                            <i>Please set the relative start and end time in the following format: <b>DD HH:MM:SS</b></i>
+                            <div>
+                              <span>Select relative start time:</span>
+                              <input
+                                type="text"
+                                id="relative_start"
+                                value={relative_start}
+                                className={formStyles.FormControlSmall}
+                                onChange={this.handleRelativeStart}
+                              />
+                            </div>
+                            <div>
+                              <span>Select relative end time:</span>&nbsp;&nbsp;
+                              <input
+                                type="text"
+                                id="relative_end"
+                                value={relative_end}
+                                className={formStyles.FormControlSmall}
+                                onChange={this.handleRelativeEnd}
+                              />
+                            </div>
+                          </div>
+                          <button
+                            type="button"
+                            className={`${buttonStyles.Button} ${buttonStyles.Success}`}
+                            style={{ marginTop: 10 }}
+                            onClick={() => {
+                              this.setState({
+                                step: 5
+                              });
+                            }}
+                          >
+                            <FormattedMessage
+                              id="notifications_app.next_step"
+                              defaultMessage="Next step"
+                            />
+                          </button>
+                        </div>
+                      ) : null}
+                    </div>
+                  </div>
+                </div>
+
+                <div className={styles.Step} id="Step">
+                  <div className="media">
+                    <StepIndicator
+                      indicator="5"
+                      active={step === 5}
+                      handleClick={() => this.goBackToStep(5)}
+                    />
+                    <div
+                      style={{
+                        marginLeft: 90
+                      }}
+                    >
+                      <h3
+                        className={`mt-0 ${step !== 5 ? "text-muted" : null}`}
+                      >
+                        <FormattedMessage
                           id="notifications_app.newnotification_thresholds"
                           defaultMessage="Alarm thresholds"
                         />
                         &nbsp;&nbsp;
                         <i
-                          className={`fa ${step === 4 ? "fa-info-circle" : "inactive-icon"}`}
+                          className={`fa ${step === 5 ? "fa-info-circle" : "inactive-icon"}`}
                           title="Add new thresholds with value and name of the threshold"
                         />
                       </h3>
-                      {step === 4 ? (
+                      {step === 5 ? (
                         <div>
                           <div className={styles.AddThreshold}>
                             <label htmlFor="comparison" className={styles.Comparision}>
@@ -1076,7 +1186,7 @@ class NewNotification extends Component {
                             }}
                             onClick={() => {
                               this.setState({
-                                step: 5
+                                step: 6
                               });
                             }}
                           >
@@ -1093,28 +1203,28 @@ class NewNotification extends Component {
                 
                 <div className="media">
                   <StepIndicator
-                    indicator="5"
-                    active={step === 5}
-                    handleClick={() => this.goBackToStep(5)}
+                    indicator="6"
+                    active={step === 6}
+                    handleClick={() => this.goBackToStep(6)}
                   />
                   <div
                     style={{
                       marginLeft: 90
                     }}
                   >
-                    <h3 className={`mt-0 ${step !== 5 ? "text-muted" : null}`}>
+                    <h3 className={`mt-0 ${step !== 6 ? "text-muted" : null}`}>
                       <FormattedMessage
                         id="notifications_app.snoozing"
                         defaultMessage="Snoozing"
                       />
                       &nbsp;&nbsp;
                       <i
-                        className={`fa ${step === 5 ? "fa-info-circle" : "inactive-icon"}`}
+                        className={`fa ${step === 6 ? "fa-info-circle" : "inactive-icon"}`}
                         title="Do you want to snooze the alarm after several warnings ? Then set it under snooze alarm.
                               If you want to set to no further impact then set it under snooze no further impact"
                       />
                     </h3>
-                    {step === 5 ? (
+                    {step === 6 ? (
                       <div className={styles.Snoozing}>
                         <div>
                           <span>Snooze alarm after</span>
@@ -1146,7 +1256,7 @@ class NewNotification extends Component {
                           style={{ marginTop: 10 }}
                           onClick={() => {
                             this.setState({
-                              step: 6
+                              step: 7
                             });
                           }}
                         >
@@ -1161,25 +1271,25 @@ class NewNotification extends Component {
                 </div>
 
                 <div className="media">
-                  <StepIndicator indicator="6" active={step === 6} />
+                  <StepIndicator indicator="7" active={step === 7} />
                   <div
                     style={{
                       marginLeft: 90
                     }}
                   >
-                    <h3 className={`mt-0 ${step !== 6 ? "text-muted" : null}`}>
+                    <h3 className={`mt-0 ${step !== 7 ? "text-muted" : null}`}>
                       <FormattedMessage
                         id="notifications_app.recipients"
                         defaultMessage="Recipients"
                       />
                       &nbsp;&nbsp;
                       <i
-                        className={`fa ${step === 6 ? "fa-info-circle" : "inactive-icon"}`}
+                        className={`fa ${step === 7 ? "fa-info-circle" : "inactive-icon"}`}
                         title="Add the recipient groups of the warning and warning messages to send. You can create
                               new recipient groups and message templates in the main alarm management screen"
                       />
                     </h3>
-                    {step === 6 ? (
+                    {step === 7 ? (
                       <div>
                         <p className="text-muted">
                           <FormattedMessage

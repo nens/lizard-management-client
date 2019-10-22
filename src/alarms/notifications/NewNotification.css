@@ -76,6 +76,16 @@
   margin: 10px;
 }
 
+.RelativeTimeSelection input[type="text"] {
+  display: inline-block;
+  width: 160px;
+  margin: 10px;
+}
+
+.RelativeTimeSelection input[type="checkbox"] {
+  margin: 20px 10px 20px 0;
+}
+
 /* Info icons */
 h3 i {
   color: #00cdab;
