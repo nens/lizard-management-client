@@ -10,6 +10,7 @@ import ErrorOverlay from "../../data_management/rasters/ErrorOverlay.js";
 
 import ManagementForm from "../../forms/ManagementForm";
 import TextInput from "../../forms/TextInput";
+import { minLength } from "../../forms/validators";
 
 class NewNotification extends Component {
   constructor(props) {
@@ -53,11 +54,15 @@ class NewNotification extends Component {
           />
         ) : null}
         <ManagementForm
-
+          wizardStyle={this.props.wizardStyle}
         >
           <TextInput
           name="notificationName"
           title="Name of this alarm"
+          subtitle="The name of the raster will be used in e-mail and SMS alerts"
+          placeholder="Name of this alarm"
+          validators={[minLength(1)]}
+          initial={currentNotification && currentNotification.name}
           />
           <TextInput
           name="typeSelection"
