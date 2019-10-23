@@ -12,6 +12,7 @@ import ManagementForm from "../../forms/ManagementForm";
 import TextInput from "../../forms/TextInput";
 import { minLength, required } from "../../forms/validators";
 import SelectBox from "../../forms/SelectBox";
+import TimeseriesSelection from "../../forms/TimeseriesSelection";
 
 class NotificationFormModel extends Component {
   constructor(props) {
@@ -95,9 +96,10 @@ class NotificationFormModel extends Component {
           name="rasterSelection"
           title="Raster selection"
           />
-          <TextInput
-          name="timeseriesSelection"
-          title="Timeseries selection"
+          <TimeseriesSelection
+            name="timeseriesSelection"
+            title="Timeseries selection"
+            subtitle="Select timeseries via asset"
           />
           <TextInput
           name="relativeStart"
