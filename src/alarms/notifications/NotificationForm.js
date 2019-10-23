@@ -15,6 +15,7 @@ import SelectBox from "../../forms/SelectBox";
 import TimeseriesSelection from "../../forms/TimeseriesSelection";
 import ThresholdsSelection from "../../forms/ThresholdsSelection";
 import Snoozing from "../../forms/Snoozing";
+import Recipients from "../../forms/Recipients";
 
 class NotificationFormModel extends Component {
   constructor(props) {
@@ -120,9 +121,11 @@ class NotificationFormModel extends Component {
             name="snoozing"
             title="Snoozing"
           />
-          <TextInput
-          name="recipients"
-          title="Recipients"
+          <Recipients
+            name="recipients"
+            title="Recipients"
+            subtitle="When an alarm is triggered, these groups of recipients will be notified."
+            selectedOrganisation={this.props.selectedOrganisation}
           />
         </ManagementForm>
       </div>
