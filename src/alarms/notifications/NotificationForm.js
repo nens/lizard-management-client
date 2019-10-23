@@ -13,6 +13,7 @@ import TextInput from "../../forms/TextInput";
 import { minLength, required } from "../../forms/validators";
 import SelectBox from "../../forms/SelectBox";
 import TimeseriesSelection from "../../forms/TimeseriesSelection";
+import ThresholdsSelection from "../../forms/ThresholdsSelection";
 
 class NotificationFormModel extends Component {
   constructor(props) {
@@ -109,9 +110,10 @@ class NotificationFormModel extends Component {
           name="relativeEnd"
           title="Relative end"
           />
-          <TextInput
-          name="thresholds"
-          title="Alarm thresholds"
+          <ThresholdsSelection
+            name="thresholds"
+            title="Alarm thresholds"
+            subtitle="The alarm will be triggered whenever a threshold is exceeded."
           />
           <TextInput
           name="snoozing"
