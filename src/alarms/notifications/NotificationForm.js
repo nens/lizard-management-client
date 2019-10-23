@@ -10,7 +10,8 @@ import ErrorOverlay from "../../data_management/rasters/ErrorOverlay.js";
 
 import ManagementForm from "../../forms/ManagementForm";
 import TextInput from "../../forms/TextInput";
-import { minLength } from "../../forms/validators";
+import { minLength, required } from "../../forms/validators";
+import SelectBox from "../../forms/SelectBox";
 
 class NotificationFormModel extends Component {
   constructor(props) {
@@ -57,16 +58,38 @@ class NotificationFormModel extends Component {
           wizardStyle={this.props.wizardStyle}
         >
           <TextInput
-          name="notificationName"
-          title="Name of this alarm"
-          subtitle="The name of the raster will be used in e-mail and SMS alerts"
-          placeholder="Name of this alarm"
-          validators={[minLength(1)]}
-          initial={currentNotification && currentNotification.name}
+            name="notificationName"
+            title="Name of this alarm"
+            subtitle="The name of the raster will be used in e-mail and SMS alerts"
+            placeholder="Name of this alarm"
+            validators={[minLength(1)]}
+            initial={currentNotification && currentNotification.name}
           />
-          <TextInput
-          name="typeSelection"
-          title="Source type selection"
+          <SelectBox
+            name="typeSelection"
+            title="Source type selection"
+            subtitle="Which data type is the alarm for?"
+            choices={[
+                [
+                    "Rasters",
+                    "Rasters",
+                    "Put an alarm on raster data"
+                ],
+                [
+                    "Timeseries",
+                    "Timeseries",
+                    "Put an alarm on Timeseries data"
+                ]
+            ]}
+            validators={[required("Please select a data type for the alarm.")]}
+            showSearchField={false}
+            initial={
+                (
+                    currentNotification &&
+                    currentNotification.sourceType &&
+                    currentNotification.sourceType.display
+                ) || "Rasters"
+            }
           />
           <TextInput
           name="rasterSelection"
