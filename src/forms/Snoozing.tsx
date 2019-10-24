@@ -14,19 +14,20 @@ interface MyProps {
     validated: boolean,
     handleEnter: (e: any) => void,
     valueChanged: Function,
+    valuesChanged: Function,
     wizardStyle: boolean,
     readOnly?: boolean
 };
 
 class SnoozingInput extends Component<MyProps & InjectedIntlProps> {
     handleSnoozeSignOn = (e: any) => {
-        this.props.valueChanged({
+        this.props.valuesChanged({
             snooze_sign_on: parseFloat(e.target.value),
             snooze_sign_off: this.props.value.snooze_sign_off
         });
     }
     handleSnoozeSignOff = (e: any) => {
-        this.props.valueChanged({
+        this.props.valuesChanged({
             snooze_sign_on: this.props.value.snooze_sign_on,
             snooze_sign_off: parseFloat(e.target.value)
         });
@@ -34,7 +35,7 @@ class SnoozingInput extends Component<MyProps & InjectedIntlProps> {
 
     componentDidMount() {
         if (!this.props.value) {
-            this.props.valueChanged({
+            this.props.valuesChanged({
                 snooze_sign_on: 1,
                 snooze_sign_off: 1
             });

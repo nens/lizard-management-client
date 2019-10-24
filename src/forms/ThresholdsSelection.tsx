@@ -20,6 +20,7 @@ interface MyProps {
     validated: boolean,
     handleEnter: (e: any) => void,
     valueChanged: Function,
+    valuesChanged: Function,
     wizardStyle: boolean,
     readOnly?: boolean
 };
@@ -35,7 +36,7 @@ class ThresholdsSelectionInput extends Component<MyProps & InjectedIntlProps, My
         thresholdName: "",
     }
     handleAddThreshold(value: any, name: string) {
-        this.props.valueChanged({
+        this.props.valuesChanged({
             comparison: this.props.value.comparison,
             thresholds: [
                 ...this.props.value.thresholds,
@@ -63,7 +64,7 @@ class ThresholdsSelectionInput extends Component<MyProps & InjectedIntlProps, My
 
     componentDidMount() {
         if (this.props.value === undefined || this.props.value === null) {
-            this.props.valueChanged({
+            this.props.valuesChanged({
                 comparison: "",
                 thresholds: []
             });
@@ -78,7 +79,7 @@ class ThresholdsSelectionInput extends Component<MyProps & InjectedIntlProps, My
 
         const {
             value,
-            valueChanged
+            valuesChanged
         } = this.props;
 
         if (!value) return <div/>;
@@ -103,7 +104,7 @@ class ThresholdsSelectionInput extends Component<MyProps & InjectedIntlProps, My
                                         :
                                         `${styles.SelectedButton} ${styles.UnselectedButton}`
                                 }
-                                onClick={() => valueChanged({
+                                onClick={() => valuesChanged({
                                         comparison: ">",
                                         thresholds: thresholds
                                     })
@@ -133,7 +134,7 @@ class ThresholdsSelectionInput extends Component<MyProps & InjectedIntlProps, My
                                         :
                                         `${styles.SelectedButton} ${styles.UnselectedButton}`
                                 }
-                                onClick={() => valueChanged({
+                                onClick={() => valuesChanged({
                                         comparison: "<",
                                         thresholds: thresholds
                                     })
