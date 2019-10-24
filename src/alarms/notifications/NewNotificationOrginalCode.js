@@ -1122,7 +1122,7 @@ class NewNotification extends Component {
                                   {thresholds.map((threshold, i) => (
                                     <div key={i}>
                                       <span>{threshold.warning_level}</span>
-                                      <span 
+                                      <span
                                         className={styles.ThresholdDelete}
                                         onClick={() => thresholds.splice(i, 1)}
                                       >
@@ -1180,7 +1180,7 @@ class NewNotification extends Component {
                           <button
                             type="button"
                             className={`${buttonStyles.Button} ${buttonStyles.Success}`}
-                            style={{ 
+                            style={{
                               marginTop: 10,
                               display: thresholds.length > 0 ? null : "none"
                             }}
@@ -1200,7 +1200,7 @@ class NewNotification extends Component {
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="media">
                   <StepIndicator
                     indicator="6"

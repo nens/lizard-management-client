@@ -454,6 +454,7 @@ class ManagementForm extends Component<ManagementFormProps, ManagementFormState>
         (child, idx) => {
           const name: string = child.props.name;
           const title: string = child.props.title || name;
+          const opened: boolean = !wizardStyle || (idx === currentFieldIndex);
           const subtitle: string = child.props.subtitle || '';
           const validated = formValidated[name];
           const disabled = formDisabled[name];
@@ -473,6 +474,7 @@ class ManagementForm extends Component<ManagementFormProps, ManagementFormState>
               validated: validated,
               valueChanged: (value: any) => this.valueChanged(name, value),
               valuesChanged: (value: any) => this.valuesChanged(name, value),
+              opened: opened,
               wizardStyle: wizardStyle,
               handleEnter: (e: any) => this.handleEnter(idx, e)
             };
@@ -493,7 +495,7 @@ class ManagementForm extends Component<ManagementFormProps, ManagementFormState>
                   title={title}
                   subtitle={subtitle}
                   key={"formfield"+idx}
-                  opened={idx === currentFieldIndex}
+                  opened={opened}
                   showCheck={idx <= highestFieldSoFar}
                   showErrors={idx <= triedToMovePastField}
                   nextStep={() => this.tryToGoToStep(idx + 1)}

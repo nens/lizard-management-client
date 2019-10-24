@@ -4,8 +4,7 @@ import React, { Component } from "react";
 import { addNotification } from "../../actions";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { FormattedMessage, injectIntl } from "react-intl";
-import { Map, Marker, TileLayer, WMSTileLayer } from "react-leaflet";
+import { injectIntl } from "react-intl";
 import ErrorOverlay from "../../data_management/rasters/ErrorOverlay.js";
 
 import ManagementForm from "../../forms/ManagementForm";
@@ -17,6 +16,7 @@ import ThresholdsSelection from "../../forms/ThresholdsSelection";
 import Snoozing from "../../forms/Snoozing";
 import Recipients from "../../forms/Recipients";
 import RelativeField, { durationValidator } from "../../forms/RelativeField";
+import RasterPointSelection, { rasterAndPointChosen } from "../../forms/RasterPointSelection";
 
 class NotificationFormModel extends Component {
   constructor(props) {
@@ -39,12 +39,9 @@ class NotificationFormModel extends Component {
 
   onSubmit = (validatedData, currentNotification, alarmType) => {
     this.setState({ isFetching: true, openOverlay: true });
-
-    const url = `/api/v4/${alarmType}`;
   }
-  
+
   render() {
-    const position = [52.1858, 5.2677];
     const { currentNotification } = this.props;
 
     return (
@@ -96,9 +93,10 @@ class NotificationFormModel extends Component {
                 ) || "Rasters"
             }
           />
-          <TextInput
-          name="rasterSelection"
-          title="Raster selection"
+          <RasterPointSelection
+            name="rasterSelection"
+            title="Raster selection"
+            validators={[rasterAndPointChosen]}
           />
           <TimeseriesSelection
             name="timeseriesSelection"

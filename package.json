@@ -27,6 +27,7 @@
     "@types/react-custom-scrollbars": "^4.0.5",
     "@types/react-dom": "16.8.4",
     "@types/react-intl": "^2.3.17",
+    "@types/react-leaflet": "^2.5.0",
     "@types/react-redux": "^7.0.7",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "9.0.0",
