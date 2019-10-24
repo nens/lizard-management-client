@@ -6,13 +6,23 @@ import GroupAndTemplateSelect from "../alarms/notifications/GroupAndTemplateSele
 interface MyProps {
     selectedOrganisation: {
         uuid: string
-    }
+    },
+    name: string,
+    value: {
+        messages: Message[]
+    },
+    placeholder?: string,
+    validators?: Function[],
+    validated: boolean,
+    handleEnter: (e: any) => void,
+    valueChanged: Function,
+    wizardStyle: boolean,
+    readOnly?: boolean
 };
 
 interface MyState {
     availableGroups: [],
-    availableMessages: [],
-    messages: Message[]
+    availableMessages: []
 };
 
 interface Message {
@@ -50,24 +60,21 @@ async function fetchContactsAndMessages(organisationId: string) {
 class RecipientsInput extends Component<MyProps & InjectedIntlProps, MyState> {
     state: MyState = {
         availableGroups: [],
-        availableMessages: [],
-        messages: []
+        availableMessages: []
     }
     handleAddGroupAndTemplate = (object: any) => {
         const { idx, groupId, messageId } = object;
-        const messages = this.state.messages.slice();
+        const messages = [...this.props.value.messages];
         messages[idx] = { groupId, messageId };
-        this.setState({
+        this.props.valueChanged({
             messages: messages
         });
     }
     removeFromGroupAndTemplate = (idx: number) => {
-      this.setState(prevState => ({
-        messages: [
-          ...prevState.messages.slice(0, idx),
-          ...prevState.messages.slice(idx + 1)
-        ]
-      }));
+      const messages = [...this.props.value.messages];
+      this.props.valueChanged({
+        messages: messages.filter((message, i) => i !== idx)
+      })
     }
     componentDidMount() {
         const organisationId = this.props.selectedOrganisation.uuid;
@@ -77,14 +84,24 @@ class RecipientsInput extends Component<MyProps & InjectedIntlProps, MyState> {
                 availableMessages: data.messages
             });
         });
+        if (!this.props.value) {
+            this.props.valueChanged({
+                messages: []
+            });
+        };
     }
 
     render() {
         const {
             availableGroups,
-            availableMessages,
-            messages
+            availableMessages
         } = this.state;
+
+        if (!this.props.value) return <div/>;
+
+        const {
+            messages
+        } = this.props.value;
 
         return (
             <div>
@@ -106,13 +123,11 @@ class RecipientsInput extends Component<MyProps & InjectedIntlProps, MyState> {
                 </div>
                 <AddButton
                     handleClick={() => {
-                        const messages = this.state.messages.slice();
-                        messages.push({
-                            messageId: null,
-                            groupId: null
-                        });
-                        this.setState({
-                            messages
+                        this.props.valueChanged({
+                            messages: [...messages, {
+                                messageId: null,
+                                groupId: null
+                            }]
                         });
                     }}
                     title="Add recipients"
