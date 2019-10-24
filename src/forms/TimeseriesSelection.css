@@ -1,0 +1,28 @@
+.AddButton {
+  border: 1px solid #979797;
+  width: 180px;
+  height: 30px;
+  position: relative;
+  overflow: hidden;
+  background-image: linear-gradient(
+    0deg,
+    rgba(216, 216, 216, 0.23) 0%,
+    rgba(195, 195, 195, 0.36) 77%,
+    #eeeeee 100%
+  );
+  cursor: pointer;
+  font-weight: 400;
+  font-size: 14px;
+}
+
+.AddButton:hover {
+    background-color: lightgrey;
+}
+
+.AddButton:focus {
+    outline: none;
+}
+
+.AddButton:active {
+    transform: translateY(2px);
+}

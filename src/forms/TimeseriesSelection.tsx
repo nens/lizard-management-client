@@ -1,9 +1,26 @@
 import React, { Component } from "react";
 import { FormattedMessage, injectIntl, InjectedIntlProps } from "react-intl";
 import SelectBoxSearch from "../components/SelectBoxSearch";
+import styles from "./TimeseriesSelection.css";
 
 interface Timeseries {
-    uuid: string,
+    uuid: string | null,
+};
+
+interface MyProps {
+    selectedOrganisation: {
+        uuid: string
+    },
+    name: string,
+    value: string,
+    placeholder?: string,
+    validators?: Function[],
+    validated: boolean,
+    handleEnter: (e: any) => void,
+    valueChanged: Function,
+    valuesChanged: Function,
+    wizardStyle: boolean,
+    readOnly?: boolean
 };
 
 interface MyState {
@@ -18,17 +35,19 @@ interface MyState {
         name?: string,
         timeseries?: []
     },
-    selectedTimeseries: {},
+    selectedTimeseries: Timeseries,
     foundTimeseriesAssetsSearchEndpoint: [],
     selectedTimeseriesAssetFromSearchEndpoint: {},
     selectedTimeseriesAssetFromAssetEndpoint: any,
 };
 
-class TimeseriesSelectionInput extends Component<InjectedIntlProps, MyState> {
+class TimeseriesSelectionInput extends Component<MyProps & InjectedIntlProps, MyState> {
     state: MyState = {
         selectedAsset: {},
         selectedTimeseriesNestedAsset: {},
-        selectedTimeseries: {},
+        selectedTimeseries: {
+            uuid: null
+        },
         foundTimeseriesAssetsSearchEndpoint: [],
         selectedTimeseriesAssetFromSearchEndpoint: {},
         selectedTimeseriesAssetFromAssetEndpoint: {},
@@ -129,13 +148,20 @@ class TimeseriesSelectionInput extends Component<InjectedIntlProps, MyState> {
     }
     handleResetTimeseries = () => {
         this.setState({
-            selectedTimeseries: {}
+            selectedTimeseries: {
+                uuid: null
+            }
         });
     }
 
     render() {
         const {
-
+            selectedAsset,
+            selectedTimeseriesNestedAsset,
+            selectedTimeseries,
+            foundTimeseriesAssetsSearchEndpoint,
+            selectedTimeseriesAssetFromSearchEndpoint,
+            selectedTimeseriesAssetFromAssetEndpoint,
         } = this.state;
 
         //Format message for placeholder in the input form for translation
@@ -147,10 +173,10 @@ class TimeseriesSelectionInput extends Component<InjectedIntlProps, MyState> {
             <div>
                 <SelectBoxSearch
                     choices={
-                        this.state.foundTimeseriesAssetsSearchEndpoint
+                        foundTimeseriesAssetsSearchEndpoint
                     }
                     choice={
-                        this.state.selectedTimeseriesAssetFromSearchEndpoint
+                        selectedTimeseriesAssetFromSearchEndpoint
                     }
                     transformChoiceToDisplayValue={(e: any) =>
                         (e && e.title) || ""}
@@ -180,11 +206,11 @@ class TimeseriesSelectionInput extends Component<InjectedIntlProps, MyState> {
                 <br />
                 <SelectBoxSearch
                     choices={
-                        this.state.selectedTimeseriesAssetFromAssetEndpoint.pumps ||
-                        this.state.selectedTimeseriesAssetFromAssetEndpoint.filters ||
+                        selectedTimeseriesAssetFromAssetEndpoint.pumps ||
+                        selectedTimeseriesAssetFromAssetEndpoint.filters ||
                         []
                     }
-                    choice={this.state.selectedTimeseriesNestedAsset}
+                    choice={selectedTimeseriesNestedAsset}
                     transformChoiceToDisplayValue={(e: any) =>
                         (e && e.code) || (e && e.name) || ""}
                     isFetching={false}
@@ -203,10 +229,10 @@ class TimeseriesSelectionInput extends Component<InjectedIntlProps, MyState> {
                 <br />
                 <SelectBoxSearch
                     choices={this.getAllTimeseriesFromTimeseriesAsset(
-                        this.state.selectedTimeseriesAssetFromAssetEndpoint,
-                        this.state.selectedTimeseriesNestedAsset
+                        selectedTimeseriesAssetFromAssetEndpoint,
+                        selectedTimeseriesNestedAsset
                     )}
-                    choice={this.state.selectedTimeseries}
+                    choice={selectedTimeseries}
                     transformChoiceToDisplayValue={(e: any) => {
                         if (e) {
                             if (e.name && e.uuid) {
@@ -243,6 +269,16 @@ class TimeseriesSelectionInput extends Component<InjectedIntlProps, MyState> {
                     readonly={false}
                     noneValue={undefined}
                 />{" "}
+                <br/>
+                <button
+                    className={styles.AddButton}
+                    style={{
+                        display: selectedTimeseries.uuid ? "block" : "none"
+                    }}
+                    onClick={() => this.props.valuesChanged(selectedTimeseries.uuid)}
+                >
+                    Add timeseries
+                </button>
             </div>
         )
     }
