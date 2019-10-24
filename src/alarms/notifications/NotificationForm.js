@@ -17,6 +17,7 @@ import ThresholdsSelection from "../../forms/ThresholdsSelection";
 import Snoozing from "../../forms/Snoozing";
 import Recipients from "../../forms/Recipients";
 import RelativeField, { durationValidator } from "../../forms/RelativeField";
+import SelectDataBox from "../../forms/SelectDataBox";
 
 class NotificationFormModel extends Component {
   constructor(props) {
@@ -26,6 +27,7 @@ class NotificationFormModel extends Component {
       openOverlay: false,
       modalErrorMessage: "",
       createdNotification: null,
+      dataType: "Rasters"
     };
   }
 
@@ -37,10 +39,112 @@ class NotificationFormModel extends Component {
     });
   }
 
-  onSubmit = (validatedData, currentNotification, alarmType) => {
+  updateDataType = (dataType) => {
+    if (dataType === "Rasters") {
+      this.setState({
+        dataType: "Rasters"
+      });
+    } else {
+      this.setState({
+        dataType: "Timeseries"
+      });
+    };
+  }
+
+  onSubmit = (validatedData, currentNotification, dataType) => {
+    console.log(validatedData)
     this.setState({ isFetching: true, openOverlay: true });
 
-    const url = `/api/v4/${alarmType}`;
+    const url = dataType === "Rasters" ? (
+      "/api/v4/rasteralarms/"
+    ) : (
+      "/api/v4/timeseriesalarms"
+    );
+
+    const {
+      notificationName,
+      rasterSelection,
+      timeseriesSelection,
+      relativeStart,
+      relativeEnd,
+      thresholds,
+      snoozing,
+      recipients
+    } = validatedData
+
+    if (!currentNotification) {
+      const opts = {
+        credentials: "same-origin",
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: validatedData.notificationName,
+          active: true,
+          organisation: this.props.selectedOrganisation.uuid,
+          raster: rasterSelection,
+          timeseries: timeseriesSelection,
+          relative_start: relativeStart,
+          relative_end: relativeEnd,
+          comparison: thresholds.comparison,
+          thresholds: thresholds.thresholds,
+          snooze_sign_on: snoozing.snooze_sign_on,
+          snooze_sign_off: snoozing.snooze_sign_off,
+          messages: recipients.map(recipient => {
+            return {
+              contact_group: recipient.groupId,
+              message: recipient.messageId
+            };
+          })
+        })
+      };
+
+      fetch(url, opts)
+      .then(responseParsed => {
+        this.handleResponse(responseParsed);
+        return responseParsed.json();
+      })
+      .then(parsedBody => {
+        console.log("parsedBody", parsedBody);
+        this.setState({ createdNotification: parsedBody });
+      });
+    } else {
+      let body = {
+        name: validatedData.notificationName,
+        active: true,
+        organisation: this.props.selectedOrganisation.uuid,
+        raster: rasterSelection,
+        timeseries: timeseriesSelection,
+        relative_start: relativeStart,
+        relative_end: relativeEnd,
+        comparison: thresholds.comparison,
+        thresholds: thresholds.thresholds,
+        snooze_sign_on: snoozing.snooze_sign_on,
+        snooze_sign_off: snoozing.snooze_sign_off,
+        messages: recipients.map(recipient => {
+          return {
+            contact_group: recipient.groupId,
+            message: recipient.messageId
+          };
+        })
+      };
+      const opts = {
+        credentials: "same-origin",
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+      };
+
+      fetch(url + "uuid:" + currentNotification.uuid + "/", opts)
+      .then(responseParsed => {
+        console.log("responseParsed put", responseParsed);
+        this.handleResponse(responseParsed);
+        return responseParsed.json();
+      })
+      .then(parsedBody => {
+        console.log("parsedBody", parsedBody);
+        this.setState({ createdRaster: parsedBody });
+      });
+    }
   }
   
   render() {
@@ -60,6 +164,7 @@ class NotificationFormModel extends Component {
           />
         ) : null}
         <ManagementForm
+          onSubmit={formData => console.log(formData)}
           wizardStyle={this.props.wizardStyle}
         >
           <TextInput
@@ -67,10 +172,10 @@ class NotificationFormModel extends Component {
             title="Name of this alarm"
             subtitle="The name of the raster will be used in e-mail and SMS alerts"
             placeholder="Name of this alarm"
-            validators={[minLength(1)]}
+            // validators={[minLength(1)]}
             initial={currentNotification && currentNotification.name}
           />
-          <SelectBox
+          <SelectDataBox
             name="typeSelection"
             title="Source type selection"
             subtitle="Which data type is the alarm for?"
@@ -95,6 +200,8 @@ class NotificationFormModel extends Component {
                     currentNotification.sourceType.display
                 ) || "Rasters"
             }
+            dataType={this.state.dataType}
+            updateDataType={this.updateDataType}
           />
           <TextInput
           name="rasterSelection"
