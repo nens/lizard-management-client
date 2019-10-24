@@ -16,7 +16,7 @@ import TimeseriesSelection from "../../forms/TimeseriesSelection";
 import ThresholdsSelection from "../../forms/ThresholdsSelection";
 import Snoozing from "../../forms/Snoozing";
 import Recipients from "../../forms/Recipients";
-import DurationField, { durationValidator } from "../../forms/DurationField";
+import RelativeField, { durationValidator } from "../../forms/RelativeField";
 
 class NotificationFormModel extends Component {
   constructor(props) {
@@ -105,13 +105,13 @@ class NotificationFormModel extends Component {
             title="Timeseries selection"
             subtitle="Select timeseries via asset"
           />
-          <DurationField
+          <RelativeField
             name="relativeStart"
             title="Relative start"
             subtitle="Optional: Select the relative start of the simulation period"
             validators={[durationValidator()]}
           />
-          <DurationField
+          <RelativeField
             name="relativeEnd"
             title="Relative end"
             subtitle="Optional: Select the relative end of the simulation period"
