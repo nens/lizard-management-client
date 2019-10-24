@@ -9,25 +9,43 @@ interface Threshold {
     name: string
 };
 
+interface MyProps {
+    name: string,
+    value: {
+        comparison: string,
+        thresholds: Threshold[]
+    },
+    placeholder?: string,
+    validators?: Function[],
+    validated: boolean,
+    handleEnter: (e: any) => void,
+    valueChanged: Function,
+    wizardStyle: boolean,
+    readOnly?: boolean
+};
+
 interface MyState {
-    comparison: string | null,
-    thresholds: Threshold[],
     thresholdValue: number,
     thresholdName: string,
 };
 
-class ThresholdsSelectionInput extends Component<InjectedIntlProps, MyState> {
+class ThresholdsSelectionInput extends Component<MyProps & InjectedIntlProps, MyState> {
     state: MyState = {
-        comparison: null,
-        thresholds: [],
         thresholdValue: 0,
         thresholdName: "",
     }
     handleAddThreshold(value: any, name: string) {
-        const thresholds = this.state.thresholds.slice();
-        thresholds.push({ value: value, name: name });
+        this.props.valueChanged({
+            comparison: this.props.value.comparison,
+            thresholds: [
+                ...this.props.value.thresholds,
+                {
+                    value,
+                    name
+                }
+            ]
+        })
         this.setState({
-            thresholds,
             thresholdValue: 0,
             thresholdName: ""
         });
@@ -43,13 +61,29 @@ class ThresholdsSelectionInput extends Component<InjectedIntlProps, MyState> {
         });
     }
 
+    componentDidMount() {
+        if (this.props.value === undefined || this.props.value === null) {
+            this.props.valueChanged({
+                comparison: "",
+                thresholds: []
+            });
+        };
+    }
+
     render() {
         const {
-            comparison,
-            thresholds,
             thresholdName,
             thresholdValue
         } = this.state;
+
+        const {
+            value,
+            valueChanged
+        } = this.props;
+
+        if (!value) return <div/>;
+
+        const { comparison, thresholds } = value;
 
         return (
             <div>
@@ -64,12 +98,16 @@ class ThresholdsSelectionInput extends Component<InjectedIntlProps, MyState> {
                         <div className={styles.ThresholdValueInput}>
                             <button
                                 className={
-                                    this.state.comparison === ">" ?
+                                    comparison === ">" ?
                                         `${styles.SelectedButton}`
                                         :
                                         `${styles.SelectedButton} ${styles.UnselectedButton}`
                                 }
-                                onClick={() => this.setState({ comparison: ">" })}
+                                onClick={() => valueChanged({
+                                        comparison: ">",
+                                        thresholds: thresholds
+                                    })
+                                }
                             >
                                 higher than &gt;
                             </button>
@@ -90,12 +128,16 @@ class ThresholdsSelectionInput extends Component<InjectedIntlProps, MyState> {
                         <div className={styles.ThresholdNameInput}>
                             <button
                                 className={
-                                    this.state.comparison === "<" ?
+                                    comparison === "<" ?
                                         `${styles.SelectedButton}`
                                         :
                                         `${styles.SelectedButton} ${styles.UnselectedButton}`
                                 }
-                                onClick={() => this.setState({ comparison: "<" })}
+                                onClick={() => valueChanged({
+                                        comparison: "<",
+                                        thresholds: thresholds
+                                    })
+                                }
                             >
                                 lower than &lt;
                             </button>
@@ -137,7 +179,7 @@ class ThresholdsSelectionInput extends Component<InjectedIntlProps, MyState> {
                             ) : null
                         }}
                     >
-                        {this.state.comparison ? "ADD THRESHOLD" : "NEW THRESHOLD"}
+                        {comparison !== "" ? "ADD THRESHOLD" : "NEW THRESHOLD"}
                     </button>
                 </div>
             </div>
