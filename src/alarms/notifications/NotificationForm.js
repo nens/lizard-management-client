@@ -170,7 +170,7 @@ class NotificationFormModel extends Component {
             initial={
               (
                 currentNotification &&
-                currentNotification.typeSelection
+                (currentNotification.raster ? "Rasters" : "Timeseries")
               ) || "Rasters"
             }
           />
@@ -179,6 +179,19 @@ class NotificationFormModel extends Component {
             title="Raster selection"
             validators={[rasterAndPointChosen]}
             disabled={(formValues) => formValues.typeSelection === "Timeseries"}
+            initial={
+              (
+                currentNotification &&
+                currentNotification.raster &&
+                currentNotification.geometry && {
+                  raster: currentNotification.raster,
+                  point: {
+                    lat: currentNotification.geometry.coordinates[1],
+                    lon: currentNotification.geometry.coordinates[0]
+                  }
+                }
+              ) || null
+            }
           />
           <TimeseriesSelection
             name="timeseriesSelection"
@@ -192,12 +205,24 @@ class NotificationFormModel extends Component {
             title="Relative start"
             subtitle="Optional: Select the relative start of the simulation period"
             validators={[durationValidator()]}
+            initial={
+              (
+                currentNotification &&
+                currentNotification.relative_start
+              ) || null
+            }
           />
           <RelativeField
             name="relativeEnd"
             title="Relative end"
             subtitle="Optional: Select the relative end of the simulation period"
             validators={[durationValidator()]}
+            initial={
+              (
+                currentNotification &&
+                currentNotification.relative_end
+              ) || null
+            }
           />
           <ThresholdsSelection
             name="thresholds"
@@ -206,7 +231,10 @@ class NotificationFormModel extends Component {
             initial={
               (
                 currentNotification &&
-                currentNotification.thresholds
+                {
+                  comparison: currentNotification.comparison,
+                  thresholds: currentNotification.thresholds
+                }
               ) || {
                 comparison: ">",
                 thresholds: []
@@ -219,7 +247,10 @@ class NotificationFormModel extends Component {
             initial={
               (
                 currentNotification &&
-                currentNotification.snoozing
+                {
+                  snooze_sign_on: currentNotification.snooze_sign_on,
+                  snooze_sign_off: currentNotification.snooze_sign_off
+                }
               ) || {
                 snooze_sign_on: 1,
                 snooze_sign_off: 1
@@ -234,7 +265,9 @@ class NotificationFormModel extends Component {
             initial={
               (
                 currentNotification &&
-                currentNotification.recipients
+                {
+                  messages: currentNotification.messages
+                }
               ) || {
                 messages: []
               }
