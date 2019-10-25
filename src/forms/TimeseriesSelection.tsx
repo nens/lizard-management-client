@@ -1,9 +1,22 @@
 import React, { Component } from "react";
 import { FormattedMessage, injectIntl, InjectedIntlProps } from "react-intl";
 import SelectBoxSearch from "../components/SelectBoxSearch";
+import SelectTimeseriesSearch from "../components/SelectTimeseriesSearch";
 
 interface Timeseries {
     uuid: string,
+};
+
+interface MyProps {
+    name: string,
+    value: string,
+    placeholder?: string,
+    validators?: Function[],
+    validated: boolean,
+    handleEnter: (e: any) => void,
+    valueChanged: Function,
+    wizardStyle: boolean,
+    readOnly?: boolean
 };
 
 interface MyState {
@@ -24,7 +37,7 @@ interface MyState {
     selectedTimeseriesAssetFromAssetEndpoint: any,
 };
 
-class TimeseriesSelectionInput extends Component<InjectedIntlProps, MyState> {
+class TimeseriesSelectionInput extends Component<MyProps & InjectedIntlProps, MyState> {
     state: MyState = {
         selectedAsset: {},
         selectedTimeseriesNestedAsset: {},
@@ -201,7 +214,7 @@ class TimeseriesSelectionInput extends Component<InjectedIntlProps, MyState> {
                     noneValue={undefined}
                 />{" "}
                 <br />
-                <SelectBoxSearch
+                <SelectTimeseriesSearch
                     choices={this.getAllTimeseriesFromTimeseriesAsset(
                         this.state.selectedTimeseriesAssetFromAssetEndpoint,
                         this.state.selectedTimeseriesNestedAsset
@@ -242,6 +255,7 @@ class TimeseriesSelectionInput extends Component<InjectedIntlProps, MyState> {
                     resetModelValue={this.handleResetTimeseries}
                     readonly={false}
                     noneValue={undefined}
+                    valueChanged={this.props.valueChanged}
                 />{" "}
             </div>
         )
