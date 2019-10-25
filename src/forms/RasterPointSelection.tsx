@@ -3,7 +3,7 @@
 // Value is a data structure of the form
 
 // {
-//  "raster": <uuid>,
+//  "raster": <url>,
 //  "point": {"lat": <lat>, "lng": lng}
 // }
 
@@ -26,6 +26,7 @@ interface Bounds {
 
 interface Raster {
   uuid: string,
+  url: string,
   name: string,
   spatial_bounds: Bounds
   // And other fields we don't tell TS about as we don't use them here...
@@ -70,7 +71,7 @@ export default class RasterPointSelection
   constructor(props: RasterPointSelectionProps) {
     super(props);
 
-    // As the state kept by the form only keeps the UUID, and we need some
+    // As the state kept by the form only keeps the URL, and we need some
     // more fields from the API, this field keeps track of the raster object
     // itself and needs to keep them in sync.
     this.state = {
@@ -82,9 +83,9 @@ export default class RasterPointSelection
     if (this.props.value && this.props.value.raster &&
         this.state.raster === null) {
       // We are apparently in an edit-form as we have a
-      // raster-uuid but no whole raster in the state. We need
+      // raster-url but no whole raster in the state. We need
       // to get it from the API.
-      fetch(`/api/v3/rasters/${this.props.value.raster}/`, {
+      fetch(this.props.value.raster, {
         credentials: "same-origin"
       })
         .then(response => response.json())
@@ -112,7 +113,7 @@ export default class RasterPointSelection
     } else if (!value || !value.point) {
         // Just set raster, value is empty
         this.props.valueChanged({
-          raster: raster.uuid,
+          raster: raster.url,
           point: null
         });
     } else {
@@ -125,12 +126,12 @@ export default class RasterPointSelection
       );
       if (inBounds) {
         this.props.valueChanged({
-          raster: raster.uuid,
+          raster: raster.url,
           point: value.point
         });
       } else {
         this.props.valueChanged({
-          raster: raster.uuid,
+          raster: raster.url,
           point: null
         });
       }
