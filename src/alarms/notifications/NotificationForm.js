@@ -209,7 +209,7 @@ class NotificationFormModel extends Component {
                 currentNotification &&
                 currentNotification.thresholds
               ) || {
-                comparison: null,
+                comparison: ">",
                 thresholds: []
               }
             }
