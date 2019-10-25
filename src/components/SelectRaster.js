@@ -90,6 +90,15 @@ class SelectRaster extends Component {
     );
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.raster !== this.props.raster && this.props.raster) {
+      this.setState({
+        input: this.props.raster.name,
+        uuid: this.props.raster.uuid
+      });
+    };
+  }
+
   render() {
     const { rasters, loading, input, showResults } = this.state;
     return (

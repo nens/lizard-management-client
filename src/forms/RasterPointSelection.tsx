@@ -38,7 +38,7 @@ interface Location {
 }
 
 interface RasterPointSelectionT {
-  raster: Raster | null,
+  raster: string,
   point:  Location | null
 }
 
@@ -85,7 +85,8 @@ export default class RasterPointSelection
       // We are apparently in an edit-form as we have a
       // raster-url but no whole raster in the state. We need
       // to get it from the API.
-      fetch(this.props.value.raster, {
+      const url = this.props.value.raster.replace("https://nxt3.staging.lizard.net" || "https://demo.lizard.net", "")
+      fetch(url, {
         credentials: "same-origin"
       })
         .then(response => response.json())
