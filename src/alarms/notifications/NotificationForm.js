@@ -14,7 +14,7 @@ import SelectBox from "../../forms/SelectBox";
 import TimeseriesSelection, { timeseriesChosen } from "../../forms/TimeseriesSelection";
 import ThresholdsSelection from "../../forms/ThresholdsSelection";
 import Snoozing from "../../forms/Snoozing";
-import Recipients from "../../forms/Recipients";
+import Recipients, { recipeintsValidator } from "../../forms/Recipients";
 import RelativeField, { durationValidator } from "../../forms/RelativeField";
 import RasterPointSelection, { rasterAndPointChosen } from "../../forms/RasterPointSelection";
 
@@ -294,6 +294,7 @@ class NotificationFormModel extends Component {
             title="Recipients"
             subtitle="When an alarm is triggered, these groups of recipients will be notified."
             selectedOrganisation={this.props.selectedOrganisation}
+            validators={[recipeintsValidator]}
             initial={
               (
                 currentNotification &&

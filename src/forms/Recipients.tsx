@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { FormattedMessage, injectIntl, InjectedIntlProps } from "react-intl";
 import AddButton from "../components/AddButton";
 import GroupAndTemplateSelect from "../alarms/notifications/GroupAndTemplateSelect";
+import { validatorResult } from "./validators";
 
 interface MyProps {
     selectedOrganisation: {
@@ -28,7 +29,7 @@ interface MyState {
 interface Message {
     messageId: number | null,
     groupId: number | null
-}
+};
 
 async function fetchContactsAndMessages(organisationId: string) {
     try {
@@ -54,8 +55,19 @@ async function fetchContactsAndMessages(organisationId: string) {
         };
     } catch (e) {
         throw new Error(e);
-    }
-}
+    };
+};
+
+// Validator for this component
+export const recipeintsValidator = (value: {messages: Message[]}): validatorResult => {
+    const { messages } = value;
+    if (
+        messages.find(message => message.messageId === null || message.groupId === null)
+    ) {
+        return "Please select recipient group and message template for all fields"
+    };
+    return false;
+};
 
 class RecipientsInput extends Component<MyProps & InjectedIntlProps, MyState> {
     state: MyState = {
