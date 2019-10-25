@@ -3,7 +3,7 @@
 // Value is a data structure of the form
 
 // {
-//  "raster": <url>,
+//  "raster": <uuid>,
 //  "point": {"lat": <lat>, "lng": lng}
 // }
 
@@ -26,7 +26,6 @@ interface Bounds {
 
 interface Raster {
   uuid: string,
-  url: string,
   name: string,
   spatial_bounds: Bounds
   // And other fields we don't tell TS about as we don't use them here...
@@ -38,7 +37,7 @@ interface Location {
 }
 
 interface RasterPointSelectionT {
-  raster: string,
+  raster: Raster | null,
   point:  Location | null
 }
 
@@ -71,7 +70,7 @@ export default class RasterPointSelection
   constructor(props: RasterPointSelectionProps) {
     super(props);
 
-    // As the state kept by the form only keeps the URL, and we need some
+    // As the state kept by the form only keeps the UUID, and we need some
     // more fields from the API, this field keeps track of the raster object
     // itself and needs to keep them in sync.
     this.state = {
@@ -83,14 +82,9 @@ export default class RasterPointSelection
     if (this.props.value && this.props.value.raster &&
         this.state.raster === null) {
       // We are apparently in an edit-form as we have a
-      // raster-url but no whole raster in the state. We need
+      // raster-uuid but no whole raster in the state. We need
       // to get it from the API.
-      const url = this.props.value.raster.replace(
-        "https://nxt3.staging.lizard.net" ||
-        "https://demo.lizard.net",
-        ""
-      );
-      fetch(url, {
+      fetch(`/api/v3/rasters/${this.props.value.raster}/`, {
         credentials: "same-origin"
       })
         .then(response => response.json())
@@ -118,7 +112,7 @@ export default class RasterPointSelection
     } else if (!value || !value.point) {
         // Just set raster, value is empty
         this.props.valueChanged({
-          raster: raster.url,
+          raster: raster.uuid,
           point: null
         });
     } else {
@@ -131,12 +125,12 @@ export default class RasterPointSelection
       );
       if (inBounds) {
         this.props.valueChanged({
-          raster: raster.url,
+          raster: raster.uuid,
           point: value.point
         });
       } else {
         this.props.valueChanged({
-          raster: raster.url,
+          raster: raster.uuid,
           point: null
         });
       }
