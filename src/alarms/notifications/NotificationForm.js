@@ -217,6 +217,12 @@ class NotificationFormModel extends Component {
             subtitle="Select timeseries via asset"
             validators={[timeseriesChosen]}
             disabled={(formValues) => formValues.typeSelection === "Rasters"}
+            initial={
+              (
+                currentNotification &&
+                currentNotification.timeseries
+              ) || null
+            }
           />
           <RelativeField
             name="relativeStart"

@@ -159,11 +159,17 @@ class TimeseriesSelectionInput extends Component<MyProps & InjectedIntlProps, My
         });
     }
 
+    componentDidMount() {
+        if (this.props.value) {
+            this.setState({
+                selectedTimeseries: {
+                    uuid: this.props.value
+                }
+            });
+        };
+    }
+
     render() {
-        const {
-
-        } = this.state;
-
         //Format message for placeholder in the input form for translation
         const placeholderTimeseriesSelectionViaAsset = this.props.intl.formatMessage({ id: "placeholder_timeseries_selection_via_asset" });
         const placeholderTimeseriesSelectionViaNestedAsset = this.props.intl.formatMessage({ id: "placeholder_timeseries_selection_via_nested_asset" });
