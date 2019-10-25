@@ -170,8 +170,7 @@ class NotificationFormModel extends Component {
             initial={
               (
                 currentNotification &&
-                currentNotification.sourceType &&
-                currentNotification.sourceType.display
+                currentNotification.typeSelection
               ) || "Rasters"
             }
           />
