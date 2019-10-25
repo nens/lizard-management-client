@@ -143,7 +143,7 @@ class SelectRaster extends Component {
                       }
                     }}
                   >
-                    {raster.name}
+                    {raster.name} (UUID: {raster.uuid})
                   </div>
                 );
               })}
