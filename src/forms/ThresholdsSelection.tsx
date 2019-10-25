@@ -6,7 +6,7 @@ import styles from './ThresholdsSelection.css';
 
 interface Threshold {
     value: number,
-    name: string
+    warning_level: string
 };
 
 interface MyProps {
@@ -34,14 +34,14 @@ class ThresholdsSelectionInput extends Component<MyProps & InjectedIntlProps, My
         thresholdValue: 0,
         thresholdName: "",
     }
-    handleAddThreshold(value: any, name: string) {
+    handleAddThreshold(value: any, warning_level: string) {
         this.props.valueChanged({
             comparison: this.props.value.comparison,
             thresholds: [
                 ...this.props.value.thresholds,
                 {
                     value,
-                    name
+                    warning_level
                 }
             ]
         })
@@ -138,7 +138,7 @@ class ThresholdsSelectionInput extends Component<MyProps & InjectedIntlProps, My
                             <div className={styles.ThresholdNames}>
                                 {thresholds.map((threshold, i) => (
                                     <div key={i}>
-                                        <span>{threshold.name}</span>
+                                        <span>{threshold.warning_level}</span>
                                         <span
                                             className={styles.ThresholdDelete}
                                             onClick={() => thresholds.splice(i, 1)}
