@@ -97,11 +97,13 @@ class NotificationFormModel extends Component {
             name="rasterSelection"
             title="Raster selection"
             validators={[rasterAndPointChosen]}
+            disabled={(formValues) => formValues.typeSelection === "Timeseries"}
           />
           <TimeseriesSelection
             name="timeseriesSelection"
             title="Timeseries selection"
             subtitle="Select timeseries via asset"
+            disabled={(formValues) => formValues.typeSelection === "Rasters"}
           />
           <RelativeField
             name="relativeStart"
