@@ -20,7 +20,6 @@ interface MyProps {
     validated: boolean,
     handleEnter: (e: any) => void,
     valueChanged: Function,
-    valuesChanged: Function,
     wizardStyle: boolean,
     readOnly?: boolean
 };
@@ -36,7 +35,7 @@ class ThresholdsSelectionInput extends Component<MyProps & InjectedIntlProps, My
         thresholdName: "",
     }
     handleAddThreshold(value: any, name: string) {
-        this.props.valuesChanged({
+        this.props.valueChanged({
             comparison: this.props.value.comparison,
             thresholds: [
                 ...this.props.value.thresholds,
@@ -62,15 +61,6 @@ class ThresholdsSelectionInput extends Component<MyProps & InjectedIntlProps, My
         });
     }
 
-    componentDidMount() {
-        if (this.props.value === undefined || this.props.value === null) {
-            this.props.valuesChanged({
-                comparison: "",
-                thresholds: []
-            });
-        };
-    }
-
     render() {
         const {
             thresholdName,
@@ -79,7 +69,7 @@ class ThresholdsSelectionInput extends Component<MyProps & InjectedIntlProps, My
 
         const {
             value,
-            valuesChanged
+            valueChanged
         } = this.props;
 
         if (!value) return <div/>;
@@ -104,7 +94,7 @@ class ThresholdsSelectionInput extends Component<MyProps & InjectedIntlProps, My
                                         :
                                         `${styles.SelectedButton} ${styles.UnselectedButton}`
                                 }
-                                onClick={() => valuesChanged({
+                                onClick={() => valueChanged({
                                         comparison: ">",
                                         thresholds: thresholds
                                     })
@@ -134,7 +124,7 @@ class ThresholdsSelectionInput extends Component<MyProps & InjectedIntlProps, My
                                         :
                                         `${styles.SelectedButton} ${styles.UnselectedButton}`
                                 }
-                                onClick={() => valuesChanged({
+                                onClick={() => valueChanged({
                                         comparison: "<",
                                         thresholds: thresholds
                                     })
@@ -180,7 +170,7 @@ class ThresholdsSelectionInput extends Component<MyProps & InjectedIntlProps, My
                             ) : null
                         }}
                     >
-                        {comparison !== "" ? "ADD THRESHOLD" : "NEW THRESHOLD"}
+                        {!comparison ? "NEW THRESHOLD" : "ADD THRESHOLD"}
                     </button>
                 </div>
             </div>

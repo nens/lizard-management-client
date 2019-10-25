@@ -119,16 +119,42 @@ class NotificationFormModel extends Component {
             name="thresholds"
             title="Alarm thresholds"
             subtitle="The alarm will be triggered whenever a threshold is exceeded."
+            initial={
+              (
+                currentNotification &&
+                currentNotification.thresholds
+              ) || {
+                comparison: null,
+                thresholds: []
+              }
+            }
           />
           <Snoozing
             name="snoozing"
             title="Snoozing"
+            initial={
+              (
+                currentNotification &&
+                currentNotification.snoozing
+              ) || {
+                snooze_sign_on: 1,
+                snooze_sign_off: 1
+              }
+            }
           />
           <Recipients
             name="recipients"
             title="Recipients"
             subtitle="When an alarm is triggered, these groups of recipients will be notified."
             selectedOrganisation={this.props.selectedOrganisation}
+            initial={
+              (
+                currentNotification &&
+                currentNotification.recipients
+              ) || {
+                messages: []
+              }
+            }
           />
         </ManagementForm>
       </div>

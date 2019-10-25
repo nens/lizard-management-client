@@ -16,7 +16,6 @@ interface MyProps {
     validated: boolean,
     handleEnter: (e: any) => void,
     valueChanged: Function,
-    valuesChanged: Function,
     wizardStyle: boolean,
     readOnly?: boolean
 };
@@ -67,13 +66,13 @@ class RecipientsInput extends Component<MyProps & InjectedIntlProps, MyState> {
         const { idx, groupId, messageId } = object;
         const messages = [...this.props.value.messages];
         messages[idx] = { groupId, messageId };
-        this.props.valuesChanged({
+        this.props.valueChanged({
             messages: messages
         });
     }
     removeFromGroupAndTemplate = (idx: number) => {
       const messages = [...this.props.value.messages];
-      this.props.valuesChanged({
+      this.props.valueChanged({
         messages: messages.filter((message, i) => i !== idx)
       })
     }
@@ -85,11 +84,6 @@ class RecipientsInput extends Component<MyProps & InjectedIntlProps, MyState> {
                 availableMessages: data.messages
             });
         });
-        if (!this.props.value) {
-            this.props.valuesChanged({
-                messages: []
-            });
-        };
     }
 
     render() {
@@ -124,7 +118,7 @@ class RecipientsInput extends Component<MyProps & InjectedIntlProps, MyState> {
                 </div>
                 <AddButton
                     handleClick={() => {
-                        this.props.valuesChanged({
+                        this.props.valueChanged({
                             messages: [...messages, {
                                 messageId: null,
                                 groupId: null
