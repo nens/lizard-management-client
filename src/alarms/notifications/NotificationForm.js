@@ -130,6 +130,22 @@ class NotificationFormModel extends Component {
       );
       return uuid.replace("/", "")
     };
+    if (url.includes("/api/v4/messages/")) {
+      const id = url.replace(
+        "https://nxt3.staging.lizard.net/api/v4/messages/" ||
+        "https://demo.lizard.net/api/v4/messages/",
+        ""
+      );
+      return id.replace("/", "")
+    };
+    if (url.includes("/api/v4/contactgroups/")) {
+      const id = url.replace(
+        "https://nxt3.staging.lizard.net/api/v4/contactgroups/" ||
+        "https://demo.lizard.net/api/v4/contactgroups/",
+        ""
+      );
+      return id.replace("/", "")
+    };
   }
 
   render() {
@@ -283,6 +299,12 @@ class NotificationFormModel extends Component {
                 currentNotification &&
                 {
                   messages: currentNotification.messages
+                    .map(message => {
+                      return {
+                        messageId: this.updateUrlToUuid(message.message),
+                        groupdId: this.updateUrlToUuid(message.contact_group)
+                      }
+                    })
                 }
               ) || {
                 messages: []
