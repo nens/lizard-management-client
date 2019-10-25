@@ -2,6 +2,9 @@ import React, { Component } from "react";
 import { FormattedMessage, injectIntl, InjectedIntlProps } from "react-intl";
 import SelectBoxSearch from "../components/SelectBoxSearch";
 import SelectTimeseriesSearch from "../components/SelectTimeseriesSearch";
+import { validatorResult } from "./validators";
+
+// Type
 
 interface Timeseries {
     uuid: string,
@@ -36,6 +39,16 @@ interface MyState {
     selectedTimeseriesAssetFromSearchEndpoint: {},
     selectedTimeseriesAssetFromAssetEndpoint: any,
 };
+
+// Validator for this component
+
+export const timeseriesChosen = (value: Timeseries['uuid'] | null): validatorResult => {
+    if (value === null) {
+        return "Please select a timeseries"
+    }
+    return false;
+};
+
 
 class TimeseriesSelectionInput extends Component<MyProps & InjectedIntlProps, MyState> {
     state: MyState = {

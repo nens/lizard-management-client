@@ -11,7 +11,7 @@ import ManagementForm from "../../forms/ManagementForm";
 import TextInput from "../../forms/TextInput";
 import { minLength, required } from "../../forms/validators";
 import SelectBox from "../../forms/SelectBox";
-import TimeseriesSelection from "../../forms/TimeseriesSelection";
+import TimeseriesSelection, { timeseriesChosen } from "../../forms/TimeseriesSelection";
 import ThresholdsSelection from "../../forms/ThresholdsSelection";
 import Snoozing from "../../forms/Snoozing";
 import Recipients from "../../forms/Recipients";
@@ -103,6 +103,7 @@ class NotificationFormModel extends Component {
             name="timeseriesSelection"
             title="Timeseries selection"
             subtitle="Select timeseries via asset"
+            validators={[timeseriesChosen]}
             disabled={(formValues) => formValues.typeSelection === "Rasters"}
           />
           <RelativeField
