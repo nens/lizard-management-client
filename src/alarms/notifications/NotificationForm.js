@@ -136,7 +136,7 @@ class NotificationFormModel extends Component {
         "https://demo.lizard.net/api/v4/messages/",
         ""
       );
-      return id.replace("/", "")
+      return parseFloat(id.replace("/", ""))
     };
     if (url.includes("/api/v4/contactgroups/")) {
       const id = url.replace(
@@ -144,7 +144,7 @@ class NotificationFormModel extends Component {
         "https://demo.lizard.net/api/v4/contactgroups/",
         ""
       );
-      return id.replace("/", "")
+      return parseFloat(id.replace("/", ""))
     };
   }
 
@@ -302,7 +302,7 @@ class NotificationFormModel extends Component {
                     .map(message => {
                       return {
                         messageId: this.updateUrlToUuid(message.message),
-                        groupdId: this.updateUrlToUuid(message.contact_group)
+                        groupId: this.updateUrlToUuid(message.contact_group)
                       }
                     })
                 }
