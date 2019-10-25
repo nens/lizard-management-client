@@ -37,9 +37,90 @@ class NotificationFormModel extends Component {
     });
   }
 
-  onSubmit = (validatedData, currentNotification, alarmType) => {
+  onSubmit = (validatedData, currentNotification) => {
     this.setState({ isFetching: true, openOverlay: true });
-  }
+
+    const {
+      notificationName,
+      typeSelection,
+      rasterSelection,
+      timeseriesSelection,
+      relativeStart,
+      relativeEnd,
+      thresholds,
+      snoozing,
+      recipients
+    } = validatedData;
+
+    let url = "";
+    let body = {
+      name: notificationName,
+      active: true,
+      organisation: this.props.selectedOrganisation.uuid,
+      relative_start: relativeStart,
+      relative_end: relativeEnd,
+      comparison: thresholds.comparison,
+      thresholds: thresholds.thresholds,
+      snooze_sign_on: snoozing.snooze_sign_on,
+      snooze_sign_off: snoozing.snooze_sign_off,
+      messages: recipients.messages.map(message => {
+        return {
+          contact_group: message.groupId,
+          message: message.messageId
+        };
+      }),
+    };
+    if (typeSelection === "Rasters") {
+      const { raster, point } = rasterSelection;
+      url = "/api/v4/rasteralarms/"
+      body.raster = raster;
+      body.geometry = {
+        type: "Point",
+        coordinates: [point.lon, point.lat, 0.0]
+      }
+    } else {
+      url = "/api/v4/timeseriesalarms/";
+      body.timeseries = timeseriesSelection;
+    }
+
+    if (!currentNotification) {
+      const opts = {
+        credentials: "same-origin",
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      };
+
+      fetch(url, opts)
+        .then(responseParsed => {
+          this.handleResponse(responseParsed);
+          return responseParsed.json();
+        })
+        .then(parsedBody => {
+          console.log("parsedBody", parsedBody);
+          this.setState({ createdRaster: parsedBody });
+        });
+    } else {
+      const opts = {
+        credentials: "same-origin",
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+      };
+      const uuid = typeSelection === "Rasters" ? rasterSelection.raster : timeseriesSelection;
+
+      fetch(url + "uuid:" + uuid + "/", opts)
+        .then(responseParsed => {
+          console.log("responseParsed put", responseParsed);
+          this.handleResponse(responseParsed);
+          return responseParsed.json();
+        })
+        .then(parsedBody => {
+          console.log("parsedBody", parsedBody);
+          this.setState({ createdRaster: parsedBody });
+        });
+    };
+  };
 
   render() {
     const { currentNotification } = this.props;
@@ -57,6 +138,7 @@ class NotificationFormModel extends Component {
           />
         ) : null}
         <ManagementForm
+          onSubmit={formData => this.onSubmit(formData, currentNotification)}
           wizardStyle={this.props.wizardStyle}
         >
           <TextInput
@@ -72,25 +154,25 @@ class NotificationFormModel extends Component {
             title="Source type selection"
             subtitle="Which data type is the alarm for?"
             choices={[
-                [
-                    "Rasters",
-                    "Rasters",
-                    "Put an alarm on raster data"
-                ],
-                [
-                    "Timeseries",
-                    "Timeseries",
-                    "Put an alarm on Timeseries data"
-                ]
+              [
+                "Rasters",
+                "Rasters",
+                "Put an alarm on raster data"
+              ],
+              [
+                "Timeseries",
+                "Timeseries",
+                "Put an alarm on Timeseries data"
+              ]
             ]}
             validators={[required("Please select a data type for the alarm.")]}
             showSearchField={false}
             initial={
-                (
-                    currentNotification &&
-                    currentNotification.sourceType &&
-                    currentNotification.sourceType.display
-                ) || "Rasters"
+              (
+                currentNotification &&
+                currentNotification.sourceType &&
+                currentNotification.sourceType.display
+              ) || "Rasters"
             }
           />
           <RasterPointSelection
