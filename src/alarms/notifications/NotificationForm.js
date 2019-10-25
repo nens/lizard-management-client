@@ -121,25 +121,6 @@ class NotificationFormModel extends Component {
     };
   };
 
-  updateUrlToUuid = (url) => {
-    if (url.includes("/api/v4/rasters/")) {
-      const uuid = url.replace(
-        "https://nxt3.staging.lizard.net/api/v4/rasters/" ||
-        "https://demo.lizard.net/api/v4/rasters/",
-        ""
-      );
-      return uuid.replace("/", "")
-    };
-    if (url.includes("/api/v4/timeseries/")) {
-      const uuid = url.replace(
-        "https://nxt3.staging.lizard.net/api/v4/timeseries/" ||
-        "https://demo.lizard.net/api/v4/timeseries/",
-        ""
-      );
-      return uuid.replace("/", "")
-    };
-  }
-
   render() {
     const { currentNotification } = this.props;
 
@@ -202,7 +183,7 @@ class NotificationFormModel extends Component {
                 currentNotification &&
                 currentNotification.raster &&
                 currentNotification.geometry && {
-                  raster: this.updateUrlToUuid(currentNotification.raster),
+                  raster: currentNotification.raster,
                   point: {
                     lat: currentNotification.geometry.coordinates[1],
                     lon: currentNotification.geometry.coordinates[0]
