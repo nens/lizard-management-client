@@ -161,10 +161,15 @@ class TimeseriesSelectionInput extends Component<MyProps & InjectedIntlProps, My
 
     componentDidMount() {
         if (this.props.value) {
-            this.setState({
-                selectedTimeseries: {
-                    uuid: this.props.value
-                }
+            // We are apparently in an edit-form as we have a
+            // timeseries-uuid but no selected Timeseries in the state.
+            // We need to get it from the API.
+            fetch(`/api/v3/timeseries/${this.props.value}/`, {
+                credentials: "same-origin"
+            })
+            .then(response => response.json())
+            .then(json => {
+                this.setState({selectedTimeseries: json});
             });
         };
     }
