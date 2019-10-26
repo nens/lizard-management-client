@@ -98,7 +98,7 @@ class NotificationFormModel extends Component {
         })
         .then(parsedBody => {
           console.log("parsedBody", parsedBody);
-          this.setState({ createdRaster: parsedBody });
+          this.setState({ createdNotification: parsedBody });
         });
     } else {
       const opts = {
@@ -116,7 +116,7 @@ class NotificationFormModel extends Component {
         })
         .then(parsedBody => {
           console.log("parsedBody", parsedBody);
-          this.setState({ createdRaster: parsedBody });
+          this.setState({ createdNotification: parsedBody });
         });
     };
   };
