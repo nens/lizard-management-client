@@ -71,39 +71,10 @@ function organisations(
       return { ...state, isFetching: true };
     case RECEIVE_ORGANISATIONS:
     {
-
-      const availableOrganisations = action.data
-        .filter(e => {
-          return (
-            e.roles.find(e => e === "manager") ||
-            e.roles.find(e => e === "admin") ||
-            e.roles.find(e => e === "supplier") 
-            // ||
-            // e.roles.find(e => e === "user")
-          );
-        })
-        .map(organisation => {
-          //use organisation uuid without dashes only
-          return {
-            ...organisation,
-            uuid: organisation.uuid.replace(/-/g, "")
-          };
-        });
-      let selectedOrganisation = state.selected;
-      if (availableOrganisations.map(orga=>orga.uuid).indexOf(selectedOrganisation.uuid) === -1) {
-        selectedOrganisation = availableOrganisations[0];
-      }
       return {
         ...state,
-        available: availableOrganisations,
-        selected: selectedOrganisation,
-        availableForRasterSharedWith: action.data.map(organisation => {
-          //use organisation uuid without dashes only
-          return {
-            ...organisation,
-            uuid: organisation.uuid.replace(/-/g, "")
-          };
-        }),
+        available: action.available,
+        availableForRasterSharedWith: action.all,
         isFetching: false,
         timesFetched: state.timesFetched + 1
       };

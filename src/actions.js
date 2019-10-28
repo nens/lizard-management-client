@@ -87,8 +87,50 @@ export function fetchOrganisations() {
       .then(responseObj => responseObj.json())
       .then(responseData => {
         const data = responseData.results;
+        const allOrganisations = data.map(organisation => {
+          //use organisation uuid without dashes only
+          return {
+            ...organisation,
+            uuid: organisation.uuid.replace(/-/g, "")
+          };
+        })
+        const availableOrganisations = allOrganisations.filter(e => {
+          return (
+            e.roles.find(e => e === "manager") ||
+            e.roles.find(e => e === "admin") ||
+            e.roles.find(e => e === "supplier") 
+            // users with only role "user" are no longer allowed in the management page. 
+            // ||
+            // e.roles.find(e => e === "user")
+          );
+        })
 
-        dispatch({ type: RECEIVE_ORGANISATIONS, data });
+        if (availableOrganisations.length === 0) {
+          // TODO show nice message to user that no organisations are found
+          alert("Dear user, \nYou seem not to be in any organisations that can acces the management pages. \nTherefore you are redirected to demo.lizard.net");
+          window.location = "https://demo.lizard.net";
+        }
+
+        dispatch({ type: RECEIVE_ORGANISATIONS, all:allOrganisations, available: availableOrganisations});
+
+        if (
+          !organisation ||
+          availableOrganisations.map(orga=>orga.uuid).indexOf(organisation.uuid) === -1
+        ) {
+          const selectedOrganisation = availableOrganisations[0]
+          dispatch(selectOrganisation(selectedOrganisation));
+          dispatch(
+            addNotification(
+              `Organisation "${selectedOrganisation.name}" selected`,
+              2000
+            )
+          );
+          localStorage.setItem(
+            "lizard-management-current-organisation",
+            JSON.stringify(selectedOrganisation)
+          );
+        }
+        
 
         if (!organisation) {
           // No organisation was chosen, select the first one that has admin role and else first one with suplier role, and let
