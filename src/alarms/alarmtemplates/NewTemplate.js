@@ -60,8 +60,6 @@ class NewTemplate extends Component {
   }
   updateTemplateTextWithParameter(templateText, text) {  // do this at specific position
     // var newTemplateText = templateText + text;
-    console.log(templateText);
-    console.log(text);
     var newTemplateText = "";
     var element = document.getElementById("templatePreview");
 
@@ -71,20 +69,15 @@ class NewTemplate extends Component {
       var sel = document.selection.createRange();
       sel.text = text;
     } else if (element.selectionStart || element.selectionStart === 0) {
-      console.log("[F] insertAtCaret No IE", text);
       // Others
       var startPos = element.selectionStart;
       var endPos = element.selectionEnd;
-      console.log(startPos);  //6
-      console.log(endPos);  //6
       newTemplateText = templateText.substring(0, startPos) + text +
         templateText.substring(endPos);  // hier gaat iets fout
-      console.log(newTemplateText);
     } else {
       newTemplateText = templateText + text;
     }
 
-    console.log(newTemplateText);
     this.setState({
       templateText: newTemplateText
     });
@@ -137,7 +130,6 @@ class NewTemplate extends Component {
           <tr
             key={parameter.parameter}
             onClick={() => {
-              console.log(templateText); //aasdsd
               this.updateTemplateTextWithParameter(templateText, parameter.parameter);  // do this at specific position
             }}
           >
@@ -278,7 +270,6 @@ class NewTemplate extends Component {
               rows="12"
               value={templateText}
               onChange={e =>
-                // console.log(templateText)
                 this.setState({
                   templateText: e.target.value
                 })}
