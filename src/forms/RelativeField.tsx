@@ -8,6 +8,7 @@ import formStyles from "../styles/Forms.css";
 import inputStyles from "../styles/Input.css";
 
 import {toISOValue, durationObject} from "../utils/isoUtils"
+import { convertDurationObjToSeconds } from "../utils/dateUtils";
 
 interface RelativeFieldProps {
   name: string,
@@ -19,6 +20,14 @@ interface RelativeFieldProps {
   valueChanged: Function,
   wizardStyle: boolean,
   readOnly: boolean,
+};
+
+interface FormValues {
+  // Only interested in form values for relative fields.
+  relativeStartSelection: "Before" | "After",
+  relativeStart: string | null,
+  relativeEndSelection: "Before" | "After",
+  relativeEnd: string | null
 };
 
 
@@ -88,6 +97,41 @@ export const durationValidator = (required: boolean) => (value: string | null) =
   } else {
     return false;
   }
+};
+
+export const relativeEndValidator = (fieldValue: string, formValues: FormValues) => {
+  const relativeEnd = fieldValue;
+  const {
+    relativeStartSelection,
+    relativeEndSelection,
+    relativeStart
+  } = formValues;
+
+  // Convert relative start and end to seconds.
+  let relativeStartInSeconds;
+  let relativeEndInSeconds;
+
+  if (relativeStart) {
+    relativeStartInSeconds = convertDurationObjToSeconds(fromISOValue(relativeStart));
+
+    if (relativeStartSelection === "Before") relativeStartInSeconds = -relativeStartInSeconds;
+  };
+
+  if (relativeEnd) {
+    relativeEndInSeconds = convertDurationObjToSeconds(fromISOValue(relativeEnd));
+
+    if (relativeEndSelection === "Before") relativeEndInSeconds = -relativeEndInSeconds;
+  };
+  // Compare and ensure relative end is always after relative start.
+  if (
+    relativeStartInSeconds &&
+    relativeEndInSeconds &&
+    relativeStartInSeconds > relativeEndInSeconds
+  ) {
+    return "Relative end can only be after relative start"
+  } else {
+    return false;
+  };
 };
 
 export default class RelativeField extends Component<RelativeFieldProps, {}> {

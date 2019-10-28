@@ -15,7 +15,7 @@ import TimeseriesSelection, { timeseriesChosen } from "../../forms/TimeseriesSel
 import ThresholdsSelection from "../../forms/ThresholdsSelection";
 import Snoozing from "../../forms/Snoozing";
 import Recipients, { recipeintsValidator } from "../../forms/Recipients";
-import RelativeField, { durationValidator, fromISOValue } from "../../forms/RelativeField";
+import RelativeField, { durationValidator, fromISOValue, relativeEndValidator } from "../../forms/RelativeField";
 import RasterPointSelection, { rasterAndPointChosen } from "../../forms/RasterPointSelection";
 import { toISOValue, rasterIntervalStringServerToDurationObject } from "../../utils/isoUtils";
 import { convertNegativeDuration, convertDurationObjToSeconds } from "../../utils/dateUtils";
@@ -333,7 +333,10 @@ class NotificationFormModel extends Component {
             name="relativeEnd"
             title="Relative end"
             subtitle="Optional: Select the relative end of the simulation period"
-            validators={[durationValidator()]}
+            validators={[
+              durationValidator(),
+              (fieldValue, formValues) => relativeEndValidator(fieldValue, formValues)
+            ]}
             initial={
               (
                 currentNotification &&
