@@ -293,34 +293,6 @@ class ManagementForm extends Component<ManagementFormProps, ManagementFormState>
     });
   }
 
-  valuesChanged(name: string, value: any): void {
-    // This function is passed to children so they can update their value.
-    // The updated value of the field is updated directly
-    // This method is to prevent value of the field being overwritten
-    // if there are several fields in the form which are updating
-    // field values at once (in componentDidMount())
-    this.state.formValues[`${name}`] = value;
-
-    // As validation can depend on values of other fields, we re-calculate
-    // all validations.
-    const newErrors = this.calculateValidated(
-      this.state.allNames, this.state.formValues, this.state.formValidators);
-    const newValidated: {[key: string]: boolean} = {};
-    this.state.allNames.forEach(name => {
-      newValidated[name] = newErrors[name].length === 0;
-    });
-
-    const newDisabled = this.calculateDisabled(
-      this.state.allNames, this.state.formValues, this.state.formDisablers);
-
-    this.setState({
-      formValues: this.state.formValues,
-      formValidated: newValidated,
-      formErrors: newErrors,
-      formDisabled: newDisabled
-    });
-  }
-
   lastStep(): number {
     // Return the index of the last *enabled* step.
 
@@ -473,7 +445,6 @@ class ManagementForm extends Component<ManagementFormProps, ManagementFormState>
               value: formValues[name],
               validated: validated,
               valueChanged: (value: any) => this.valueChanged(name, value),
-              valuesChanged: (value: any) => this.valuesChanged(name, value),
               opened: opened,
               wizardStyle: wizardStyle,
               handleEnter: (e: any) => this.handleEnter(idx, e)
