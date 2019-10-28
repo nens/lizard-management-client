@@ -5,7 +5,7 @@ import { addNotification } from "../../actions";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { injectIntl } from "react-intl";
-import ErrorOverlay from "../../data_management/rasters/ErrorOverlay.js";
+import ErrorOverlay from "./ErrorOverlay.js";
 
 import ManagementForm from "../../forms/ManagementForm";
 import TextInput from "../../forms/TextInput";
