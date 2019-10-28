@@ -53,7 +53,7 @@ class NewTemplate extends Component {
     this.handleClickCreateTemplateButton = this.handleClickCreateTemplateButton.bind(
       this
     );
-    this.updateTemplateText = this.updateTemplateText.bind(this);
+    this.updateTemplateTextWithParameter = this.updateTemplateTextWithParameter.bind(this);
   }
   componentDidMount() {
     try {
@@ -91,7 +91,7 @@ class NewTemplate extends Component {
         history.push("/alarms/templates/");
       });
   }
-  updateTemplateText(templateText, text) {  // do this at specific position
+  updateTemplateTextWithParameter(templateText, text) {  // do this at specific position
     // var newTemplateText = templateText + text;
     console.log(templateText);
     console.log(text);
@@ -174,7 +174,7 @@ class NewTemplate extends Component {
               //   .getElementById("templatePreview")
               //   .insertAtCaret(parameter.parameter);
               console.log(templateText); //aasdsd
-              this.updateTemplateText(templateText, parameter.parameter);  // do this at specific position
+              this.updateTemplateTextWithParameter(templateText, parameter.parameter);  // do this at specific position
             }}
           >
             <td>{parameter.parameter}</td>
