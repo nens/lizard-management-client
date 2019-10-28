@@ -103,7 +103,7 @@ class NewTemplate extends Component {
 
     const availableParameters = [
       {
-        parameter: "[[var:{{from}}]]",
+        parameter: "[[var:from]]", // [[var:{{from}}]]
         description: "Name of the sender",
         templateType: "email"
       },
