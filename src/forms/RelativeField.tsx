@@ -23,7 +23,7 @@ interface RelativeFieldProps {
 
 
 
-const fromISOValue = (value: string): durationObject => {
+export const fromISOValue = (value: string): durationObject => {
   // Translate a string of the form 'P1DT10H20M50S' to an object.
   const isoRegex = /^P(\d*)DT(\d*)H(\d*)M(\d*)S$/;
 
