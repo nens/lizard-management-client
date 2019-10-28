@@ -58,8 +58,7 @@ class NewTemplate extends Component {
         history.push("/alarms/templates/");
       });
   }
-  updateTemplateTextWithParameter(templateText, text) {  // do this at specific position
-    // var newTemplateText = templateText + text;
+  updateTemplateTextWithParameter(templateText, text) {
     var newTemplateText = "";
     var element = document.getElementById("templatePreview");
 
@@ -73,7 +72,7 @@ class NewTemplate extends Component {
       var startPos = element.selectionStart;
       var endPos = element.selectionEnd;
       newTemplateText = templateText.substring(0, startPos) + text +
-        templateText.substring(endPos);  // hier gaat iets fout
+        templateText.substring(endPos);
     } else {
       newTemplateText = templateText + text;
     }
@@ -83,11 +82,11 @@ class NewTemplate extends Component {
     });
   }
   render() {
-    const { templateType, templateText, isFetching } = this.state; // isFetching staat niet in state?
+    const { templateType, templateText, isFetching } = this.state;
 
     const availableParameters = [
       {
-        parameter: "[[var:from]]", // [[var:{{from}}]]
+        parameter: "[[var:from]]",
         description: "Name of the sender",
         templateType: "email"
       },
@@ -130,7 +129,7 @@ class NewTemplate extends Component {
           <tr
             key={parameter.parameter}
             onClick={() => {
-              this.updateTemplateTextWithParameter(templateText, parameter.parameter);  // do this at specific position
+              this.updateTemplateTextWithParameter(templateText, parameter.parameter);
             }}
           >
             <td>{parameter.parameter}</td>

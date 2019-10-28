@@ -83,8 +83,7 @@ class Detail extends Component {
       alert("Please provide a template text");
     }
   }
-  updateTemplateTextWithParameter(templateText, text) {  // do this at specific position
-    // var newTemplateText = templateText + text;
+  updateTemplateTextWithParameter(templateText, text) {
     var newTemplateText = "";
     var element = document.getElementById("templatePreview");
 
@@ -98,7 +97,7 @@ class Detail extends Component {
       var startPos = element.selectionStart;
       var endPos = element.selectionEnd;
       newTemplateText = templateText.substring(0, startPos) + text +
-        templateText.substring(endPos);  // hier gaat iets fout
+        templateText.substring(endPos);
     } else {
       newTemplateText = templateText + text;
     }
@@ -173,7 +172,7 @@ class Detail extends Component {
           <tr
             key={parameter.parameter}
             onClick={() => {
-              this.updateTemplateTextWithParameter(template.text, parameter.parameter);  // do this at specific position
+              this.updateTemplateTextWithParameter(template.text, parameter.parameter);
             }}
           >
             <td>{parameter.parameter}</td>
