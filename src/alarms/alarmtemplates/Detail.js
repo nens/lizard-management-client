@@ -12,37 +12,38 @@ import buttonStyles from "../../styles/Buttons.css";
 import formStyles from "../../styles/Forms.css";
 import { withRouter } from "react-router-dom";
 
-HTMLTextAreaElement.prototype.insertAtCaret = function(text) {
-  text = text || "";
-  if (document.selection) {
-    // IE
-    this.focus();
-    var sel = document.selection.createRange();
-    sel.text = text;
-  } else if (this.selectionStart || this.selectionStart === 0) {
-    // Others
-    var startPos = this.selectionStart;
-    var endPos = this.selectionEnd;
-    this.value =
-      this.value.substring(0, startPos) +
-      text +
-      this.value.substring(endPos, this.value.length);
-    this.selectionStart = startPos + text.length;
-    this.selectionEnd = startPos + text.length;
-  } else {
-    this.value += text;
-  }
-};
+// HTMLTextAreaElement.prototype.insertAtCaret = function(text) {
+//   text = text || "";
+//   if (document.selection) {
+//     // IE
+//     this.focus();
+//     var sel = document.selection.createRange();
+//     sel.text = text;
+//   } else if (this.selectionStart || this.selectionStart === 0) {
+//     // Others
+//     var startPos = this.selectionStart;
+//     var endPos = this.selectionEnd;
+//     this.value =
+//       this.value.substring(0, startPos) +
+//       text +
+//       this.value.substring(endPos, this.value.length);
+//     this.selectionStart = startPos + text.length;
+//     this.selectionEnd = startPos + text.length;
+//   } else {
+//     this.value += text;
+//   }
+// };
 
 class Detail extends Component {
   constructor(props) {
     super(props);
     this.state = {
       template: null,
-      isFetching: true
+      isFetching: true,
     };
     this.handleSaveTemplate = this.handleSaveTemplate.bind(this);
     this.handleDeleteTemplate = this.handleDeleteTemplate.bind(this);
+    this.updateTemplateTextWithParameter = this.updateTemplateTextWithParameter.bind(this);
   }
   componentDidMount() {
     const { match, history } = this.props;
@@ -103,6 +104,39 @@ class Detail extends Component {
     } else {
       alert("Please provide a template text");
     }
+  }
+  updateTemplateTextWithParameter(templateText, text) {  // do this at specific position
+    // var newTemplateText = templateText + text;
+    console.log(templateText);
+    console.log(text);
+    var newTemplateText = "";
+    var element = document.getElementById("templatePreview");
+
+    if (document.selection) {
+      // IE
+      element.focus();
+      var sel = document.selection.createRange();
+      sel.text = text;
+    } else if (element.selectionStart || element.selectionStart === 0) {
+      console.log("[F] insertAtCaret No IE", text);
+      // Others
+      var startPos = element.selectionStart;
+      var endPos = element.selectionEnd;
+      console.log(startPos);  //6
+      console.log(endPos);  //6
+      newTemplateText = templateText.substring(0, startPos) + text +
+        templateText.substring(endPos);  // hier gaat iets fout
+      console.log(newTemplateText);
+    } else {
+      newTemplateText = templateText + text;
+    }
+
+    console.log(newTemplateText);
+    var newTemplate = this.state.template;
+    newTemplate.text = newTemplateText;
+    this.setState({
+      template: newTemplate
+    });
   }
   render() {
     const { template, isFetching } = this.state;
@@ -168,9 +202,11 @@ class Detail extends Component {
           <tr
             key={parameter.parameter}
             onClick={() => {
-              document
-                .getElementById("templatePreview")
-                .insertAtCaret(parameter.parameter);
+              // document
+              //   .getElementById("templatePreview")
+              //   .insertAtCaret(parameter.parameter);
+              console.log(template.text); //aasdsd
+              this.updateTemplateTextWithParameter(template.text, parameter.parameter);  // do this at specific position
             }}
           >
             <td>{parameter.parameter}</td>
