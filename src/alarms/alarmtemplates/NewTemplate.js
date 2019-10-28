@@ -10,6 +10,39 @@ import buttonStyles from "../../styles/Buttons.css";
 import formStyles from "../../styles/Forms.css";
 import { withRouter } from "react-router-dom";
 
+// HTMLTextAreaElement.prototype.insertAtCaret = function(text) {
+//   // Is this still needed? <- yes, because you want the text at a certain place in the text
+//   console.log("[F] insertAtCaret", text); // [[var:{{from}}]]
+//   text = text || "";  // parameter
+//   if (document.selection) {
+//     // IE
+//     this.focus();
+//     var sel = document.selection.createRange();
+//     sel.text = text;
+//   } else if (this.selectionStart || this.selectionStart === 0) {
+//     console.log("[F] insertAtCaret No IE", text);
+//     // Others
+//     var startPos = this.selectionStart;
+//     var endPos = this.selectionEnd;
+//     console.log(startPos);  //6
+//     console.log(endPos);  //6
+//     this.value =
+//       this.value.substring(0, startPos) +
+//       text +
+//       this.value.substring(endPos, this.value.length);
+//     console.log(this.value);  //  aasdsd[[var:{{from}}]]
+//     this.selectionStart = startPos + text.length;
+//     console.log(this.selectionStart); // 22
+//     this.selectionEnd = startPos + text.length;
+//     console.log(this.selectionEnd); // 22
+//     // this.setState({
+//     //   templateText: this.value
+//     // });
+//   } else {
+//     this.value += text;
+//   }
+// };
+
 class NewTemplate extends Component {
   constructor(props) {
     super(props);
@@ -58,8 +91,32 @@ class NewTemplate extends Component {
         history.push("/alarms/templates/");
       });
   }
-  updateTemplateText(templateText, text) {
-    var newTemplateText = templateText + text;
+  updateTemplateText(templateText, text) {  // do this at specific position
+    // var newTemplateText = templateText + text;
+    console.log(templateText);
+    console.log(text);
+    var newTemplateText = "";
+    var element = document.getElementById("templatePreview");
+
+    if (document.selection) {
+      // IE
+      element.focus();
+      var sel = document.selection.createRange();
+      sel.text = text;
+    } else if (element.selectionStart || element.selectionStart === 0) {
+      console.log("[F] insertAtCaret No IE", text);
+      // Others
+      var startPos = element.selectionStart;
+      var endPos = element.selectionEnd;
+      console.log(startPos);  //6
+      console.log(endPos);  //6
+      newTemplateText = templateText.substring(0, startPos) + text +
+        templateText.substring(endPos);  // hier gaat iets fout
+      console.log(newTemplateText);
+    } else {
+      newTemplateText = templateText + text;
+    }
+
     console.log(newTemplateText);
     this.setState({
       templateText: newTemplateText
@@ -113,8 +170,11 @@ class NewTemplate extends Component {
           <tr
             key={parameter.parameter}
             onClick={() => {
+              // document
+              //   .getElementById("templatePreview")
+              //   .insertAtCaret(parameter.parameter);
               console.log(templateText); //aasdsd
-              this.updateTemplateText(templateText, parameter.parameter);
+              this.updateTemplateText(templateText, parameter.parameter);  // do this at specific position
             }}
           >
             <td>{parameter.parameter}</td>
