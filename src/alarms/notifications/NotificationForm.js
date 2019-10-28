@@ -17,7 +17,8 @@ import Snoozing from "../../forms/Snoozing";
 import Recipients, { recipeintsValidator } from "../../forms/Recipients";
 import RelativeField, { durationValidator, fromISOValue } from "../../forms/RelativeField";
 import RasterPointSelection, { rasterAndPointChosen } from "../../forms/RasterPointSelection";
-import { toISOValue, rasterIntervalStringServerToDurationObject, convertNegativeDuration } from "../../utils/isoUtils";
+import { toISOValue, rasterIntervalStringServerToDurationObject } from "../../utils/isoUtils";
+import { convertNegativeDuration, convertDurationObjToSeconds } from "../../utils/dateUtils";
 
 class NotificationFormModel extends Component {
   constructor(props) {
@@ -63,8 +64,8 @@ class NotificationFormModel extends Component {
     let relativeEndInSeconds;
 
     if (relativeStart) {
-      const { days, hours, minutes, seconds } = fromISOValue(relativeStart);
-      relativeStartInSeconds = days*86400 + hours*3600 + minutes*60 + seconds;
+      const durationObject = fromISOValue(relativeStart);
+      relativeStartInSeconds = convertDurationObjToSeconds(durationObject);
 
       if (relativeStartSelection === "Before") relativeStartInSeconds = -relativeStartInSeconds 
     } else {
@@ -72,8 +73,8 @@ class NotificationFormModel extends Component {
     };
 
     if (relativeEnd) {
-      const { days, hours, minutes, seconds } = fromISOValue(relativeEnd);
-      relativeEndInSeconds = days*86400 + hours*3600 + minutes*60 + seconds;
+      const durationObject = fromISOValue(relativeEnd);
+      relativeEndInSeconds = convertDurationObjToSeconds(durationObject);
 
       if (relativeEndSelection === "Before") relativeEndInSeconds = -relativeEndInSeconds 
     } else {
