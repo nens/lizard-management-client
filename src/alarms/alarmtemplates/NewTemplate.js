@@ -11,6 +11,7 @@ import formStyles from "../../styles/Forms.css";
 import { withRouter } from "react-router-dom";
 
 HTMLTextAreaElement.prototype.insertAtCaret = function(text) {
+  // Is this still needed?
   console.log("[F] insertAtCaret", text); // [[var:{{from}}]]
   text = text || "";  // parameter
   if (document.selection) {
