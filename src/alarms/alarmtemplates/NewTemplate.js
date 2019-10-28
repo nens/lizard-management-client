@@ -11,22 +11,32 @@ import formStyles from "../../styles/Forms.css";
 import { withRouter } from "react-router-dom";
 
 HTMLTextAreaElement.prototype.insertAtCaret = function(text) {
-  text = text || "";
+  console.log("[F] insertAtCaret", text); // [[var:{{from}}]]
+  text = text || "";  // parameter
   if (document.selection) {
     // IE
     this.focus();
     var sel = document.selection.createRange();
     sel.text = text;
   } else if (this.selectionStart || this.selectionStart === 0) {
+    console.log("[F] insertAtCaret No IE", text);
     // Others
     var startPos = this.selectionStart;
     var endPos = this.selectionEnd;
+    console.log(startPos);  //6
+    console.log(endPos);  //6
     this.value =
       this.value.substring(0, startPos) +
       text +
       this.value.substring(endPos, this.value.length);
+    console.log(this.value);  //  aasdsd[[var:{{from}}]]
     this.selectionStart = startPos + text.length;
+    console.log(this.selectionStart); // 22
     this.selectionEnd = startPos + text.length;
+    console.log(this.selectionEnd); // 22
+    // this.setState({
+    //   templateText: this.value
+    // });
   } else {
     this.value += text;
   }
@@ -42,6 +52,7 @@ class NewTemplate extends Component {
     this.handleClickCreateTemplateButton = this.handleClickCreateTemplateButton.bind(
       this
     );
+    this.updateTemplateText = this.updateTemplateText.bind(this);
   }
   componentDidMount() {
     try {
@@ -79,12 +90,19 @@ class NewTemplate extends Component {
         history.push("/alarms/templates/");
       });
   }
+  updateTemplateText(templateText, text) {
+    var newTemplateText = templateText + text;
+    console.log(newTemplateText);
+    this.setState({
+      templateText: newTemplateText
+    });
+  }
   render() {
-    const { templateType, templateText, isFetching } = this.state;
+    const { templateType, templateText, isFetching } = this.state; // isFetching staat niet in state?
 
     const availableParameters = [
       {
-        parameter: "[[var:from]]",
+        parameter: "[[var:{{from}}]]",
         description: "Name of the sender",
         templateType: "email"
       },
@@ -130,6 +148,8 @@ class NewTemplate extends Component {
               document
                 .getElementById("templatePreview")
                 .insertAtCaret(parameter.parameter);
+              console.log(templateText); //aasdsd
+              this.updateTemplateText(templateText, parameter.parameter);
             }}
           >
             <td>{parameter.parameter}</td>
@@ -269,6 +289,7 @@ class NewTemplate extends Component {
               rows="12"
               value={templateText}
               onChange={e =>
+                // console.log(templateText)
                 this.setState({
                   templateText: e.target.value
                 })}
