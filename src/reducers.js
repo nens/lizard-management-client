@@ -70,24 +70,33 @@ function organisations(
     case REQUEST_ORGANISATIONS:
       return { ...state, isFetching: true };
     case RECEIVE_ORGANISATIONS:
+    {
+
+      const availableOrganisations = action.data
+        .filter(e => {
+          return (
+            e.roles.find(e => e === "manager") ||
+            e.roles.find(e => e === "admin") ||
+            e.roles.find(e => e === "supplier") 
+            // ||
+            // e.roles.find(e => e === "user")
+          );
+        })
+        .map(organisation => {
+          //use organisation uuid without dashes only
+          return {
+            ...organisation,
+            uuid: organisation.uuid.replace(/-/g, "")
+          };
+        });
+      let selectedOrganisation = state.selected;
+      if (availableOrganisations.map(orga=>orga.uuid).indexOf(selectedOrganisation.uuid) === -1) {
+        selectedOrganisation = availableOrganisations[0];
+      }
       return {
         ...state,
-        available: action.data
-          .filter(e => {
-            return (
-              e.roles.find(e => e === "manager") ||
-              e.roles.find(e => e === "admin") ||
-              e.roles.find(e => e === "supplier") ||
-              e.roles.find(e => e === "user")
-            );
-          })
-          .map(organisation => {
-            //use organisation uuid without dashes only
-            return {
-              ...organisation,
-              uuid: organisation.uuid.replace(/-/g, "")
-            };
-          }),
+        available: availableOrganisations,
+        selected: selectedOrganisation,
         availableForRasterSharedWith: action.data.map(organisation => {
           //use organisation uuid without dashes only
           return {
@@ -98,6 +107,7 @@ function organisations(
         isFetching: false,
         timesFetched: state.timesFetched + 1
       };
+    }
     case SELECT_ORGANISATION:
       // the api v3 accepts no dashes in the uuid (this is called unique_id in api v3)
       const selectedOrganisation = action.organisation;
