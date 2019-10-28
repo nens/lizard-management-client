@@ -17,7 +17,7 @@ class Detail extends Component {
     super(props);
     this.state = {
       template: null,
-      isFetching: true,
+      isFetching: true
     };
     this.handleSaveTemplate = this.handleSaveTemplate.bind(this);
     this.handleDeleteTemplate = this.handleDeleteTemplate.bind(this);
