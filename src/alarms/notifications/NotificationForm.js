@@ -17,6 +17,7 @@ import Snoozing from "../../forms/Snoozing";
 import Recipients, { recipeintsValidator } from "../../forms/Recipients";
 import RelativeField, { durationValidator } from "../../forms/RelativeField";
 import RasterPointSelection, { rasterAndPointChosen } from "../../forms/RasterPointSelection";
+import { toISOValue, rasterIntervalStringServerToDurationObject } from "../../utils/isoUtils";
 
 class NotificationFormModel extends Component {
   constructor(props) {
@@ -240,7 +241,8 @@ class NotificationFormModel extends Component {
             initial={
               (
                 currentNotification &&
-                currentNotification.relative_start
+                currentNotification.relative_start &&
+                toISOValue(rasterIntervalStringServerToDurationObject(currentNotification.relative_start))
               ) || null
             }
           />
@@ -252,7 +254,8 @@ class NotificationFormModel extends Component {
             initial={
               (
                 currentNotification &&
-                currentNotification.relative_end
+                currentNotification.relative_end &&
+                toISOValue(rasterIntervalStringServerToDurationObject(currentNotification.relative_end))
               ) || null
             }
           />
