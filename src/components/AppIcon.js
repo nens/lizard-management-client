@@ -6,13 +6,13 @@ import { withRouter } from "react-router-dom";
 
 class AppIcon extends Component {
   render() {
-    const { src, title, subTitle, handleClick } = this.props;
+    const { src, title, subTitle, handleClick, readonly } = this.props;
     return (
-      <div className={styles.AppIcon} onClick={handleClick}>
+      <div className={`${styles.AppIcon} ${readonly ? styles.Disabled: null}`} onClick={!readonly && handleClick} title={readonly ? "This feature is readonly since you do not have one of the following roles for the selected organisation: "  : null }>
         <img src={src} alt={title} className={styles.Img} />
         <p className={styles.Title}>{title}</p>
         <p className={styles.SubTitle}>{subTitle}</p>
-        <Ink />
+        { !readonly ? <Ink/> : null }
       </div>
     );
   }

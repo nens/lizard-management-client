@@ -139,6 +139,7 @@ class App extends Component {
   };
 
   render() {
+    console.log('root app is called ');
     if (!this.props.isAuthenticated) {
       return (
         <div className={styles.MDSpinner}>

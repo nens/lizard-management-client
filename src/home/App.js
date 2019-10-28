@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import { FormattedMessage } from "react-intl";
 import styles from "./App.css";
 import AppIcon from "../components/AppIcon";
@@ -25,8 +26,10 @@ class App extends Component {
   }
 
   render() {
+    console.log('homescreen when is it called');
     const appIcons = [
       {
+        requiredRoles: ["manager"],
         key: 0,
         handleClick: () => this.handleExternalLink("/management/users/"),
         title: (
@@ -44,6 +47,7 @@ class App extends Component {
         )
       },
       {
+        requiredRoles: ["admin"],
         key: 1,
         handleClick: () => this.handleLink("/alarms"),
         title: <FormattedMessage id="home.alarms" defaultMessage="Alarms" />,
@@ -56,6 +60,7 @@ class App extends Component {
         )
       },
       {
+        requiredRoles: ["admin", "supplier"],
         key: 2,
         handleClick: () => this.handleLink("/data_management"),
         title: (
@@ -73,6 +78,25 @@ class App extends Component {
         )
       }
     ];
+    const currentOrganisationRoles = this.props.selectedOrganisation.roles;
+    const appIconsWithReadOnlyInfo = appIcons.map(appIcon=>{
+      const requiredRoles = appIcon.requiredRoles;
+      const requiredRolesFound = requiredRoles.map(requiredRole=>{
+        return currentOrganisationRoles.indexOf(requiredRole) !== -1;
+      })
+      if ( requiredRolesFound.includes(true) ) {
+        return {
+          ...appIcon,
+          readonly: false,
+        }
+      } else {
+        return {
+          ...appIcon,
+          readonly: true,
+        }
+        
+      }
+    });
     return (
       <div>
         <div className="container">
@@ -84,7 +108,7 @@ class App extends Component {
                 to={{ opacity: 1, x: 0 }}
                 keys={appIcons.map(item => item.key)}
               >
-                {appIcons.map((appIcon, i) => ({ x, opacity }) => (
+                {appIconsWithReadOnlyInfo.map((appIcon, i) => ({ x, opacity }) => (
                   <animated.div
                     style={{
                       opacity,
@@ -95,8 +119,12 @@ class App extends Component {
                       handleClick={appIcon.handleClick}
                       key={+new Date()}
                       src={appIcon.icon}
-                      title={appIcon.title}
+                      title={ appIcon.title}
                       subTitle={appIcon.subTitle}
+                      readonly={appIcon.readonly}
+                      readOnlyMessage={
+                        {}
+                      }
                     />
                   </animated.div>
                 ))}
@@ -109,6 +137,32 @@ class App extends Component {
   }
 }
 
-App = withRouter(App);
+const mapStateToProps = (state, ownProps) => {
+  return {
+    selectedOrganisation: state.organisations.selected,
+    // organisations: state.organisations.available,
+    // isFetching: state.organisations.isFetching
+  };
+};
+
+// App = withRouter(App);
+App = withRouter(connect(mapStateToProps, null)(
+    App
+  ));
 
 export { App };
+
+
+
+// const mapDispatchToProps = (dispatch, ownProps) => {
+//   return {
+//     selectOrganisation: organisation => {
+//       dispatch(selectOrganisation(organisation));
+//       dispatch(fetchSupplierIds());
+//     }
+//   };
+// };
+
+// export {App as  connect(mapStateToProps, null)(
+//   App
+// )}
