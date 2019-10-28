@@ -12,28 +12,6 @@ import buttonStyles from "../../styles/Buttons.css";
 import formStyles from "../../styles/Forms.css";
 import { withRouter } from "react-router-dom";
 
-// HTMLTextAreaElement.prototype.insertAtCaret = function(text) {
-//   text = text || "";
-//   if (document.selection) {
-//     // IE
-//     this.focus();
-//     var sel = document.selection.createRange();
-//     sel.text = text;
-//   } else if (this.selectionStart || this.selectionStart === 0) {
-//     // Others
-//     var startPos = this.selectionStart;
-//     var endPos = this.selectionEnd;
-//     this.value =
-//       this.value.substring(0, startPos) +
-//       text +
-//       this.value.substring(endPos, this.value.length);
-//     this.selectionStart = startPos + text.length;
-//     this.selectionEnd = startPos + text.length;
-//   } else {
-//     this.value += text;
-//   }
-// };
-
 class Detail extends Component {
   constructor(props) {
     super(props);
@@ -202,9 +180,6 @@ class Detail extends Component {
           <tr
             key={parameter.parameter}
             onClick={() => {
-              // document
-              //   .getElementById("templatePreview")
-              //   .insertAtCaret(parameter.parameter);
               console.log(template.text); //aasdsd
               this.updateTemplateTextWithParameter(template.text, parameter.parameter);  // do this at specific position
             }}
