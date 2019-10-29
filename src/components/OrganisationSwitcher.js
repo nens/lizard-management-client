@@ -7,6 +7,8 @@ import { connect } from "react-redux";
 import { fetchSupplierIds, selectOrganisation } from "../actions";
 import { FormattedMessage } from "react-intl";
 import { Scrollbars } from "react-custom-scrollbars";
+import doArraysHaveEqualElement from '../utils/doArraysHaveEqualElement';
+import {appIcons} from '../home/HomeAppIconConfig';
 
 class OrganisationSwitcher extends Component {
   constructor(props) {
@@ -70,6 +72,12 @@ class OrganisationSwitcher extends Component {
         })
       : organisations;
 
+    const currentHomeAppIcon = appIcons.find(icon => {
+      return window.location.href.includes(icon.linksTo.path)
+    });
+    console.log('___ currentHomeAppIcon', currentHomeAppIcon);
+        
+
     return (
       <div className={styles.OrganisationSwitcherContainer}>
         <CSSTransition
@@ -124,6 +132,7 @@ class OrganisationSwitcher extends Component {
               >
                 {filteredOrganisations
                   ? filteredOrganisations.map((organisation, i) => {
+                      const hasRequiredRoles = !currentHomeAppIcon || doArraysHaveEqualElement(organisation.roles, currentHomeAppIcon.requiredRoles);
                       return (
                         <div
                           key={organisation.uuid}
@@ -139,6 +148,9 @@ class OrganisationSwitcher extends Component {
                           <i className="material-icons">group</i>
                           <div className={styles.OrganisationName}>
                             {organisation.name}
+                          </div>
+                          <div className={styles.OrganisationAuthorised}>
+                          {!hasRequiredRoles? "! Organisation not authorized to visit current page !"  : null}
                           </div>
                         </div>
                       );

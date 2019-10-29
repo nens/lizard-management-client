@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, injectIntl } from "react-intl";
 import { App as Home } from "./home/App";
 import { App as AlarmsApp } from "./alarms/App";
 import { App as DataManagementApp } from "./data_management/App";
@@ -147,7 +147,8 @@ class App extends Component {
       return window.location.href.includes(icon.linksTo.path)
     });
     if (currentHomeAppIcon && !doArraysHaveEqualElement(this.props.selectedOrganisation.roles, currentHomeAppIcon.requiredRoles)) {
-      alert('You do not have the rights to acces this data under the selected orgaanisation. \nYou will be redirected');
+      const redirectMessage = this.props.intl.formatMessage({ id: "authorization.redirected_based_onrole", defaultMessage: "You do not have the rights to acces this data under the selected organisation. \nYou will be redirected" });
+      alert(redirectMessage);
       window.location = '/management/';
     }
     if (!this.props.isAuthenticated) {
@@ -385,4 +386,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   };
 };
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(injectIntl(App)));

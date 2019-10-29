@@ -13,7 +13,7 @@ class AppIcon extends Component {
     return (
       <div 
         className={`${styles.AppIcon} ${readonly ? styles.Disabled: null}`} 
-        onClick={!readonly && handleClick} 
+        onClick={!readonly ? handleClick : undefined} 
         title={
           readonly && requiredRoles.length === 1  
           ? 
