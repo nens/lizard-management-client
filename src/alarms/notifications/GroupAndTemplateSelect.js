@@ -50,12 +50,12 @@ class GroupAndTemplateSelect extends Component {
   getMessageName(messages, messageId) {
     if (messages.length === 0) return null;
     const selectedMessage = messages.find(message => message.id === messageId);
-    return selectedMessage.name;
+    return selectedMessage ? selectedMessage.name : "Select a template";
   }
   getGroupName(groups, groupId) {
     if (groups.length === 0) return null;
     const selectedGroup = groups.find(group => group.id === groupId);
-    return selectedGroup.name;
+    return selectedGroup ? selectedGroup.name : "Select a group";
   }
   render() {
     const {

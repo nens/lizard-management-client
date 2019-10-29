@@ -59,7 +59,7 @@ async function fetchContactsAndMessages(organisationId: string) {
 };
 
 // Validator for this component
-export const recipeintsValidator = (value: {messages: Message[]}): validatorResult => {
+export const recipientsValidator = (value: {messages: Message[]}): validatorResult => {
     const { messages } = value;
     if (
         messages.find(message => message.messageId === null || message.groupId === null)

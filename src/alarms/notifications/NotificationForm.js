@@ -14,7 +14,7 @@ import SelectBox from "../../forms/SelectBox";
 import TimeseriesSelection, { timeseriesChosen } from "../../forms/TimeseriesSelection";
 import ThresholdsSelection from "../../forms/ThresholdsSelection";
 import Snoozing from "../../forms/Snoozing";
-import Recipients, { recipeintsValidator } from "../../forms/Recipients";
+import Recipients, { recipientsValidator } from "../../forms/Recipients";
 import RelativeField, { durationValidator, fromISOValue, relativeEndValidator } from "../../forms/RelativeField";
 import RasterPointSelection, { rasterAndPointChosen } from "../../forms/RasterPointSelection";
 import { toISOValue, rasterIntervalStringServerToDurationObject } from "../../utils/isoUtils";
@@ -127,7 +127,6 @@ class NotificationFormModel extends Component {
           return responseParsed.json();
         })
         .then(parsedBody => {
-          console.log("parsedBody", parsedBody);
           this.setState({ createdNotification: parsedBody });
         });
     } else {
@@ -140,12 +139,10 @@ class NotificationFormModel extends Component {
       const alarmUuid = this.props.match.params.id;
       fetch(url + alarmUuid + "/", opts)
         .then(responseParsed => {
-          console.log("responseParsed put", responseParsed);
           this.handleResponse(responseParsed);
           return responseParsed.json();
         })
         .then(parsedBody => {
-          console.log("parsedBody", parsedBody);
           this.setState({ createdNotification: parsedBody });
         });
     };
@@ -383,7 +380,7 @@ class NotificationFormModel extends Component {
             title="Recipients"
             subtitle="When an alarm is triggered, these groups of recipients will be notified."
             selectedOrganisation={this.props.selectedOrganisation}
-            validators={[recipeintsValidator]}
+            validators={[recipientsValidator]}
             initial={
               (
                 currentNotification &&
