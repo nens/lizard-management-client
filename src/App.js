@@ -144,10 +144,7 @@ class App extends Component {
 
   render() {
     const currentHomeAppIcon = appIcons.find(icon => {
-      const url = window.location.href;
-      if (url.includes(icon.linksTo.path)) {
-        return true;
-      }
+      return window.location.href.includes(icon.linksTo.path)
     });
     if (currentHomeAppIcon && !doArraysHaveEqualElement(this.props.selectedOrganisation.roles, currentHomeAppIcon.requiredRoles)) {
       alert('You do not have the rights to acces this data under the selected orgaanisation. \nYou will be redirected');
