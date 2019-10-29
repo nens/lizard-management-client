@@ -1,33 +1,27 @@
 import React, { Component } from "react";
-import Scrollbars from "react-custom-scrollbars";
-
 import ClearInputButton from "./ClearInputButton";
-
-import displayStyles from "../styles/Display.css";
 import styles from "./SelectBox.css";
 import formStyles from "../styles/Forms.css";
-import inputStyles from "../styles/Input.css";
 
 interface MyProps {
-    updateDurationSign: Function
+    currentSelection: "Before" | "After" | null,
+    updateCurrentSelection: Function
 }
 
 interface MyState {
-    showChoices: boolean,
-    value: number | null
+    showChoices: boolean
 }
 
-type ChoiceT = [number, string, string];
+type ChoiceT = [string, string];
 
 export default class SelectBoxForRelativeFields extends Component<MyProps, MyState> {
     state: MyState = {
-        showChoices: false,
-        value: null
+        showChoices: false
     }
 
     choices: ChoiceT[] = [
-        [0, "Before", "Set the start/end of the simulation period from the past"],
-        [1, "After", "Set the start/end of the simulation period from now or future"]
+        ["Before", "Set the start/end of the simulation period from the past"],
+        ["After", "Set the start/end of the simulation period from now or future"]
     ]
 
     toggleChoices = (): void => {
@@ -43,24 +37,24 @@ export default class SelectBoxForRelativeFields extends Component<MyProps, MySta
     }
 
     clearInput = (): void => {
-        // Clear input and close choices
         this.setState({
-            showChoices: false,
-            value: null
+            showChoices: false
         });
-        this.props.updateDurationSign(null);
+        this.props.updateCurrentSelection(null);
     }
 
     render() {
         const {
-            showChoices,
-            value
+            showChoices
         } = this.state;
 
         const { choices } = this;
 
-        const { updateDurationSign } = this.props;
-        
+        const {
+            currentSelection,
+            updateCurrentSelection
+        } = this.props;
+
         return (
             <div className={`${styles.SelectGeneralClass} form-input`}>
                 <input
@@ -70,66 +64,60 @@ export default class SelectBoxForRelativeFields extends Component<MyProps, MySta
                     type="text"
                     autoComplete="false"
                     className={formStyles.FormControl}
-                    value={value !== null ? choices[value][1] : ""}
+                    value={currentSelection !== null ? currentSelection : ""}
                     onClick={() => this.toggleChoices()}
                     onKeyUp={par => this.handleKeyUp(par)}
-                    // onChange={() => {updateDurationSign}}
-                    // readOnly={true}
-                    // disabled={true}
+                    onChange={() => {}}
                 />
                 {
-                    value !== null ? (
-                        <ClearInputButton onClick={() => this.clearInput()}/>
+                    currentSelection !== null ? (
+                        <ClearInputButton onClick={() => this.clearInput()} />
                     ) : (
-                        <ClearInputButton
-                            icon="arrow_drop_down"
-                            onClick={() => this.toggleChoices()}
-                        />
-                    )
+                            <ClearInputButton
+                                icon="arrow_drop_down"
+                                onClick={() => this.toggleChoices()}
+                            />
+                        )
                 }
                 {showChoices ? (
                     <div className={styles.Results}>
-                        <Scrollbars autoHeight autoHeightMin={50} autoHeightMax={400}>
-                            {choices.map((choice, i) => {
-                                const choiceValue = choice[0];
-                                const choiceDisplay = choice[1];
-                                const choiceDescription = choice[2];
-                                const isSelected = choiceValue === value;
-                                return (
+                        {choices.map((choice, i) => {
+                            const choiceDisplay = choice[0];
+                            const choiceDescription = choice[1];
+                            const isSelected = choiceDisplay === currentSelection;
+                            return (
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        flexDirection: "row",
+                                        justifyContent: "start"
+                                    }}
+                                    tabIndex={i + 1}
+                                    key={i}
+                                    className={`${styles.ResultRow} ${isSelected
+                                        ? styles.Active
+                                        : styles.Inactive}`}
+                                    onMouseDown={e => {
+                                        this.setState({
+                                            showChoices: false
+                                        });
+                                        updateCurrentSelection(choiceDisplay)
+                                    }}
+                                >
+                                    <div style={{ flex: "1" }}>{choiceDisplay}</div>
                                     <div
                                         style={{
-                                            display: "flex",
-                                            flexDirection: "row",
-                                            justifyContent: "start"
-                                        }}
-                                        tabIndex={i + 1}
-                                        key={"" + choiceValue + i}
-                                        className={`${styles.ResultRow} ${isSelected
-                                            ? styles.Active
-                                            : styles.Inactive}`}
-                                        onMouseDown={e => {
-                                            this.setState({
-                                                showChoices: false,
-                                                value: choiceValue
-                                            });
-                                            updateDurationSign(choiceDisplay)
+                                            flex: "2",
+                                            textOverflow: "ellipsis",
+                                            overflow: "hidden",
+                                            whiteSpace: "nowrap"
                                         }}
                                     >
-                                        <div style={{ flex: "1" }}>{choiceDisplay}</div>
-                                        <div
-                                            style={{
-                                                flex: "2",
-                                                textOverflow: "ellipsis",
-                                                overflow: "hidden",
-                                                whiteSpace: "nowrap"
-                                            }}
-                                        >
-                                            <i>{choiceDescription}</i>
-                                        </div>
+                                        <i>{choiceDescription}</i>
                                     </div>
-                                );
-                            })}
-                        </Scrollbars>
+                                </div>
+                            );
+                        })}
                     </div>
                 ) : null}
             </div>

@@ -1,5 +1,3 @@
-// The main Form class
-
 import React, { Component } from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -7,9 +5,10 @@ import styles from "./DurationField.css";
 import formStyles from "../styles/Forms.css";
 import inputStyles from "../styles/Input.css";
 
-import {toISOValue, durationObject} from "../utils/isoUtils"
 import { convertDurationObjToSeconds, convertSecondsToDurationObject } from "../utils/dateUtils";
 import SelectBoxForRelativeFields from "./SelectBoxForRelativeFields";
+
+// Type
 
 interface RelativeFieldProps {
   name: string,
@@ -24,45 +23,16 @@ interface RelativeFieldProps {
 };
 
 interface RelativeFieldState {
-  isNegativeDuration: boolean | null
+  currentSelection: "Before" | "After" | null
 };
 
 interface FormValues {
   // Only interested in form values for relative fields.
-  relativeStartSelection: "Before" | "After",
-  relativeStart: string | null,
-  relativeEndSelection: "Before" | "After",
-  relativeEnd: string | null
+  relativeStart: number | null,
+  relativeEnd: number | null
 };
 
-
-
-// export const fromISOValue = (value: string): durationObject => {
-//   // Translate a string of the form 'P1DT10H20M50S' to an object.
-//   const isoRegex = /^P(\d*)DT(\d*)H(\d*)M(\d*)S$/;
-
-//   if (value) {
-//     const match = value.match(isoRegex);
-
-//     if (match) {
-//       return {
-//         days: parseFloat(match[1]) || 0,
-//         hours: parseFloat(match[2]) || 0,
-//         minutes: parseFloat(match[3]) || 0,
-//         seconds: parseFloat(match[4]) || 0,
-//       }
-//     }
-//   }
-
-//   return {
-//     days: 0,
-//     hours: 0,
-//     minutes: 0,
-//     seconds: 0,
-//   }
-// }
-
-
+// Validators
 
 const validPerField = (value: number) => {
   const duration = convertSecondsToDurationObject(value);
@@ -104,67 +74,46 @@ export const durationValidator = (required: boolean) => (value: number | null) =
   }
 };
 
-// export const relativeEndValidator = (fieldValue: string, formValues: FormValues) => {
-//   const relativeEnd = fieldValue;
-//   const {
-//     relativeStartSelection,
-//     relativeEndSelection,
-//     relativeStart
-//   } = formValues;
+export const relativeEndValidator = (fieldValue: number | null, formValues: FormValues) => {
+  const { relativeStart } = formValues;
+  const relativeEnd = fieldValue;
 
-  // Convert relative start and end to seconds.
-  // let relativeStartInSeconds;
-  // let relativeEndInSeconds;
-
-  // if (relativeStart) {
-  //   relativeStartInSeconds = convertDurationObjToSeconds(fromISOValue(relativeStart));
-
-  //   if (relativeStartSelection === "Before") relativeStartInSeconds = -relativeStartInSeconds;
-  // };
-
-  // if (relativeEnd) {
-  //   relativeEndInSeconds = convertDurationObjToSeconds(fromISOValue(relativeEnd));
-
-  //   if (relativeEndSelection === "Before") relativeEndInSeconds = -relativeEndInSeconds;
-  // };
-  // // Compare and ensure relative end is always after relative start.
-  // if (
-  //   relativeStartInSeconds &&
-  //   relativeEndInSeconds &&
-  //   relativeStartInSeconds > relativeEndInSeconds
-  // ) {
-  //   return "Relative end can only be after relative start"
-  // } else {
-  //   return false;
-  // };
-// };
+  if (
+    relativeStart &&
+    relativeEnd &&
+    relativeStart > relativeEnd
+  ) {
+    return "Relative end must be relatively after relative start"
+  } else {
+    return false
+  };
+};
 
 export default class RelativeField extends Component<RelativeFieldProps, RelativeFieldState> {
-  constructor(props: RelativeFieldProps) {
-    super(props);
-    console.log(props)
+  state = {
+    currentSelection: null
+  };
+  updateCurrentSelection = (input: RelativeFieldState['currentSelection']) => {
+    const { value, valueChanged } = this.props;
 
-    this.state = {
-      isNegativeDuration: null
-    };
-  }
-
-  updateDurationSign = (input: string) => {
     if (input === "Before") {
       this.setState({
-        isNegativeDuration: true
+        currentSelection: "Before"
       });
+      valueChanged(-Math.abs(value));
     } else if (input === "After") {
       this.setState({
-        isNegativeDuration: false
+        currentSelection: "After"
       });
+      valueChanged(Math.abs(value));
     } else {
+      // input === null
       this.setState({
-        isNegativeDuration: null
-      })
+        currentSelection: null
+      });
+      valueChanged(null);
     };
-  }
-  
+  }  
   updateValue(key: string, value: string) {
     const duration = convertSecondsToDurationObject(this.props.value);
     const newValue = parseFloat(value) || 0;
@@ -176,49 +125,33 @@ export default class RelativeField extends Component<RelativeFieldProps, Relativ
 
     let durationInSeconds = convertDurationObjToSeconds(newDuration);
 
-    if (this.state.isNegativeDuration) durationInSeconds = -durationInSeconds;
-
-    // console.log(durationInSeconds)
-    // console.log(convertSecondsToDurationObject(durationInSeconds))
+    if (this.state.currentSelection === "Before") durationInSeconds = -durationInSeconds;
 
     this.props.valueChanged(durationInSeconds);
   }
-
   componentDidMount() {
     const value = this.props.value;
+    
     if (value && value < 0) {
       this.setState({
-        isNegativeDuration: true
+        currentSelection: "Before"
       });
     } else if (value && value >= 0) {
       this.setState({
-        isNegativeDuration: false
+        currentSelection: "After"
       });
     };
   }
-
-  shouldComponentUpdate(prevProps: RelativeFieldProps, prevState: RelativeFieldState) {
-    if (prevState.isNegativeDuration !== this.state.isNegativeDuration) {
-      return true;
-    } else {
-      return false;
-    };
-  }
-
   render() {
     const {
       name,
-      placeholder,
       value,
-      validated,
-      valueChanged,
-      handleEnter,
       readOnly
     } = this.props;
-    console.log(value)
 
-    const { isNegativeDuration } = this.state;
-    console.log(isNegativeDuration)
+    const {
+      currentSelection
+    } = this.state;
 
     const duration = convertSecondsToDurationObject(value);
     const {
@@ -232,14 +165,13 @@ export default class RelativeField extends Component<RelativeFieldProps, Relativ
       daysValid, hoursValid, minutesValid, secondsValid
     } = validPerField(value);
 
-    // console.log(isNegativeDuration);
-
     return (
       <div>
         <div>
           <p>Choose relative field duration relatively to current moment (now)?</p>
           <SelectBoxForRelativeFields
-            updateDurationSign={this.updateDurationSign}
+            updateCurrentSelection={this.updateCurrentSelection}
+            currentSelection={currentSelection}
           />
         </div>
         <div
@@ -247,16 +179,16 @@ export default class RelativeField extends Component<RelativeFieldProps, Relativ
             formStyles.FormGroup + " " + inputStyles.PositionRelative
           }
           style={{
-            display: isNegativeDuration === null ? "none" : "block"
+            display: currentSelection ? "block" : "none"
           }}
         >
           <div
             className={
-            styles.DurationInputFields +
-                       " " +
-                       styles.DurationInputFieldDays +
-                       " " +
-                       styles.TextAlignRight
+              styles.DurationInputFields +
+              " " +
+              styles.DurationInputFieldDays +
+              " " +
+              styles.TextAlignRight
             }
           >
             <label><FormattedMessage id="duration.days" /></label>
@@ -266,11 +198,11 @@ export default class RelativeField extends Component<RelativeFieldProps, Relativ
               type="text"
               autoComplete="false"
               className={
-              formStyles.FormControl +
-                         " " +
-                         styles.TextAlignRight +
-                           (!daysValid ? " " + styles.Invalid : "") +
-                           (readOnly ? " " + inputStyles.ReadOnly : "")
+                formStyles.FormControl +
+                " " +
+                styles.TextAlignRight +
+                (!daysValid ? " " + styles.Invalid : "") +
+                (readOnly ? " " + inputStyles.ReadOnly : "")
               }
               maxLength={3}
               size={4}
@@ -292,11 +224,11 @@ export default class RelativeField extends Component<RelativeFieldProps, Relativ
               type="text"
               autoComplete="false"
               className={
-              formStyles.FormControl +
-                         " " +
-                         styles.TextAlignRight +
-                           (!hoursValid ? " " + styles.Invalid : "") +
-                           (readOnly ? " " + inputStyles.ReadOnly : "")
+                formStyles.FormControl +
+                " " +
+                styles.TextAlignRight +
+                (!hoursValid ? " " + styles.Invalid : "") +
+                (readOnly ? " " + inputStyles.ReadOnly : "")
               }
               maxLength={2}
               size={2}
@@ -315,9 +247,9 @@ export default class RelativeField extends Component<RelativeFieldProps, Relativ
               type="text"
               autoComplete="false"
               className={
-              formStyles.FormControl +
-                           (!minutesValid ? " " + styles.Invalid : "") +
-                           (readOnly ? " " + inputStyles.ReadOnly : "")
+                formStyles.FormControl +
+                (!minutesValid ? " " + styles.Invalid : "") +
+                (readOnly ? " " + inputStyles.ReadOnly : "")
               }
               maxLength={2}
               size={2}
@@ -329,9 +261,9 @@ export default class RelativeField extends Component<RelativeFieldProps, Relativ
           </div>
           <div
             className={
-            styles.DurationInputFields +
-                       " " +
-                       styles.DurationInputFieldSeconds
+              styles.DurationInputFields +
+              " " +
+              styles.DurationInputFieldSeconds
             }
           >
             <label><FormattedMessage id="duration.seconds" /></label>
@@ -341,9 +273,9 @@ export default class RelativeField extends Component<RelativeFieldProps, Relativ
               type="text"
               autoComplete="false"
               className={
-              formStyles.FormControl +
-                           (!secondsValid ? " " + styles.Invalid : "") +
-                           (readOnly ? " " + inputStyles.ReadOnly : "")
+                formStyles.FormControl +
+                (!secondsValid ? " " + styles.Invalid : "") +
+                (readOnly ? " " + inputStyles.ReadOnly : "")
               }
               maxLength={2}
               size={4}
