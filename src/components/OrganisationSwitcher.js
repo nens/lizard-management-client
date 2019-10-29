@@ -5,10 +5,11 @@ import React, { Component } from "react";
 import styles from "./OrganisationSwitcher.css";
 import { connect } from "react-redux";
 import { fetchSupplierIds, selectOrganisation } from "../actions";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, injectIntl } from "react-intl";
 import { Scrollbars } from "react-custom-scrollbars";
 import doArraysHaveEqualElement from '../utils/doArraysHaveEqualElement';
 import {appIcons} from '../home/HomeAppIconConfig';
+
 
 class OrganisationSwitcher extends Component {
   constructor(props) {
@@ -75,7 +76,8 @@ class OrganisationSwitcher extends Component {
     const currentHomeAppIcon = appIcons.find(icon => {
       return window.location.href.includes(icon.linksTo.path)
     });
-    console.log('___ currentHomeAppIcon', currentHomeAppIcon);
+    const authorisationText = this.props.intl.formatMessage({ id: "authorization.organisation_not_allowed_current_page", defaultMessage: "! Organisation not authorized to visit current page !" });
+
         
 
     return (
@@ -150,7 +152,7 @@ class OrganisationSwitcher extends Component {
                             {organisation.name}
                           </div>
                           <div className={styles.OrganisationAuthorised}>
-                          {!hasRequiredRoles? "! Organisation not authorized to visit current page !"  : null}
+                          {!hasRequiredRoles? authorisationText  : null}
                           </div>
                         </div>
                       );
@@ -183,5 +185,5 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(
-  OrganisationSwitcher
+  injectIntl(OrganisationSwitcher)
 );
