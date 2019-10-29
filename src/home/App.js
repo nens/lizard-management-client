@@ -122,9 +122,7 @@ class App extends Component {
                       title={ appIcon.title}
                       subTitle={appIcon.subTitle}
                       readonly={appIcon.readonly}
-                      readOnlyMessage={
-                        {}
-                      }
+                      requiredRoles={appIcon.requiredRoles}
                     />
                   </animated.div>
                 ))}

@@ -140,6 +140,9 @@ class App extends Component {
 
   render() {
     console.log('root app is called ');
+    if (false) {
+      window.location = '/management/'
+    }
     if (!this.props.isAuthenticated) {
       return (
         <div className={styles.MDSpinner}>
