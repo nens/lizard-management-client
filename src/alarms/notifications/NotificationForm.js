@@ -4,7 +4,7 @@ import React, { Component } from "react";
 import { addNotification } from "../../actions";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { injectIntl } from "react-intl";
+import { FormattedMessage, injectIntl } from "react-intl";
 import ErrorOverlay from "./ErrorOverlay.js";
 
 import ManagementForm from "../../forms/ManagementForm";
@@ -179,7 +179,7 @@ class NotificationFormModel extends Component {
   }
 
   render() {
-    const { currentNotification } = this.props;
+    const { currentNotification, intl } = this.props;
 
     return (
       <div>
@@ -199,26 +199,26 @@ class NotificationFormModel extends Component {
         >
           <TextInput
             name="notificationName"
-            title="Name of this alarm"
-            subtitle="The name of the raster will be used in e-mail and SMS alerts"
+            title={<FormattedMessage id="notifications_app.name_of_alarm" />}
+            subtitle={<FormattedMessage id="notifications_app.name_of_alarm" />}
             placeholder="Name of this alarm"
             validators={[minLength(1)]}
             initial={currentNotification && currentNotification.name}
           />
           <SelectBox
             name="typeSelection"
-            title="Source type selection"
-            subtitle="Which data type is the alarm for?"
+            title={<FormattedMessage id="notifications_app.source_type_selection" />}
+            subtitle={<FormattedMessage id="notifications_app.which_data_type" />}
             choices={[
               [
                 "Rasters",
                 "Rasters",
-                "Put an alarm on raster data"
+                <FormattedMessage id="notifications_app.raster_alarm_selection" />
               ],
               [
                 "Timeseries",
                 "Timeseries",
-                "Put an alarm on Timeseries data"
+                <FormattedMessage id="notifications_app.timeseries_alarm_selection" />
               ]
             ]}
             validators={[required("Please select a data type for the alarm.")]}
@@ -232,7 +232,7 @@ class NotificationFormModel extends Component {
           />
           <RasterPointSelection
             name="rasterSelection"
-            title="Raster selection"
+            title={<FormattedMessage id="notifications_app.raster_selection" />}
             validators={[rasterAndPointChosen]}
             disabled={(formValues) => formValues.typeSelection === "Timeseries"}
             initial={
@@ -251,8 +251,8 @@ class NotificationFormModel extends Component {
           />
           <TimeseriesSelection
             name="timeseriesSelection"
-            title="Timeseries selection"
-            subtitle="Select timeseries via asset"
+            title={<FormattedMessage id="notifications_app.timeseries_selection" />}
+            subtitle={<FormattedMessage id="notifications_app.select_timeserie_via_asset" />}
             validators={[timeseriesChosen]}
             disabled={(formValues) => formValues.typeSelection === "Rasters"}
             initial={
@@ -264,18 +264,18 @@ class NotificationFormModel extends Component {
           />
           <SelectBox
             name="relativeStartSelection"
-            title="Relative start selection"
-            subtitle="Choose relative start before or after now?"
+            title={<FormattedMessage id="notifications_app.relative_start_selection" />}
+            subtitle={<FormattedMessage id="notifications_app.relative_start_selection_subtitle" />}
             choices={[
               [
                 "Before",
                 "Before",
-                "Set the start of the simulation period from the past"
+                <FormattedMessage id="notifications_app.relative_start_before" />
               ],
               [
                 "After",
                 "After",
-                "Set the start of the simulation period from now or future"
+                <FormattedMessage id="notifications_app.relative_start_after" />
               ]
             ]}
             validators={[required("Please select an option.")]}
@@ -291,8 +291,8 @@ class NotificationFormModel extends Component {
           />
           <RelativeField
             name="relativeStart"
-            title="Relative start"
-            subtitle="Optional: Select the relative start of the simulation period"
+            title={<FormattedMessage id="notifications_app.relative_start" />}
+            subtitle={<FormattedMessage id="notifications_app.relative_start_subtitle" />}
             validators={[durationValidator()]}
             initial={
               (
@@ -304,18 +304,18 @@ class NotificationFormModel extends Component {
           />
           <SelectBox
             name="relativeEndSelection"
-            title="Relative end selection"
-            subtitle="Choose relative end before or after now?"
+            title={<FormattedMessage id="notifications_app.relative_end_selection" />}
+            subtitle={<FormattedMessage id="notifications_app.relative_end_selection_subtitle" />}
             choices={[
               [
                 "Before",
                 "Before",
-                "Set the end of the simulation period from the past"
+                <FormattedMessage id="notifications_app.relative_end_before" />
               ],
               [
                 "After",
                 "After",
-                "Set the end of the simulation period from now or future"
+                <FormattedMessage id="notifications_app.relative_end_after" />
               ]
             ]}
             validators={[required("Please select an option.")]}
@@ -331,8 +331,8 @@ class NotificationFormModel extends Component {
           />
           <RelativeField
             name="relativeEnd"
-            title="Relative end"
-            subtitle="Optional: Select the relative end of the simulation period"
+            title={<FormattedMessage id="notifications_app.relative_end" />}
+            subtitle={<FormattedMessage id="notifications_app.relative_end_subtitle" />}
             validators={[
               durationValidator(),
               (fieldValue, formValues) => relativeEndValidator(fieldValue, formValues)
@@ -347,8 +347,8 @@ class NotificationFormModel extends Component {
           />
           <ThresholdsSelection
             name="thresholds"
-            title="Alarm thresholds"
-            subtitle="The alarm will be triggered whenever a threshold is exceeded."
+            title={<FormattedMessage id="notifications_app.newnotification_thresholds" />}
+            subtitle={<FormattedMessage id="notifications_app.this_alarm_will_be_triggered" />}
             initial={
               (
                 currentNotification &&
@@ -380,8 +380,8 @@ class NotificationFormModel extends Component {
           />
           <Recipients
             name="recipients"
-            title="Recipients"
-            subtitle="When an alarm is triggered, these groups of recipients will be notified."
+            title={<FormattedMessage id="notifications_app.recipients" />}
+            subtitle={<FormattedMessage id="notifications_app.when_an_alarm_is_triggered" />}
             selectedOrganisation={this.props.selectedOrganisation}
             validators={[recipeintsValidator]}
             initial={
