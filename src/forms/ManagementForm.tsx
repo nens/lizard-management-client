@@ -273,8 +273,6 @@ class ManagementForm extends Component<ManagementFormProps, ManagementFormState>
       [name]: value
     };
 
-    console.log(newValues.relativeStart)
-
     // As validation can depend on values of other fields, we re-calculate
     // all validations.
     const newErrors = this.calculateValidated(
