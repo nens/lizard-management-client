@@ -23,6 +23,8 @@ import gridStyles from "./styles/Grid.css";
 import buttonStyles from "./styles/Buttons.css";
 import lizardIcon from "./images/lizard@3x.svg";
 import { withRouter } from "react-router-dom";
+import {appIcons} from './home/HomeAppIconConfig';
+
 
 class App extends Component {
   constructor(props) {
@@ -140,9 +142,16 @@ class App extends Component {
 
   render() {
     console.log('root app is called ');
-    if (false) {
-      window.location = '/management/'
-    }
+    // const currentHomeAppIcon = appIcons.find(icon => {
+    //   const url = window.location.href;
+    //   if (url.includes(icon.linksTo.path)) {
+    //     return true;
+    //   }
+    // });
+    // // const 
+    // if (false) {
+    //   window.location = '/management/'
+    // }
     if (!this.props.isAuthenticated) {
       return (
         <div className={styles.MDSpinner}>

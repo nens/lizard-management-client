@@ -1,14 +1,12 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { FormattedMessage } from "react-intl";
 import styles from "./App.css";
 import AppIcon from "../components/AppIcon";
 import { withRouter } from "react-router-dom";
 import { Trail, animated } from "react-spring";
+import doArraysHaveEqualElement from '../utils/doArraysHaveEqualElement';
 
-import alarmIcon from "../images/alarm@3x.svg";
-import userManagementIcon from "../images/usermanagement.svg";
-import templateIcon from "../images/templates@3x.svg";
+import {appIcons} from './HomeAppIconConfig';
 
 class App extends Component {
   constructor(props) {
@@ -17,7 +15,7 @@ class App extends Component {
     this.handleExternalLink = this.handleExternalLink.bind(this);
   }
 
-  handleLink(destination) {
+  handleInternalLink(destination) {
     this.props.history.push(destination);
   }
 
@@ -25,76 +23,20 @@ class App extends Component {
     window.location.href = destination;
   }
 
+  handleLink (linksToObject) {
+    if (linksToObject.external === true) {
+      this.handleExternalLink(linksToObject.path);
+    } else {
+      this.handleInternalLink(linksToObject.path);
+    }
+  }
+
   render() {
-    console.log('homescreen when is it called');
-    const appIcons = [
-      {
-        requiredRoles: ["manager"],
-        key: 0,
-        handleClick: () => this.handleExternalLink("/management/users/"),
-        title: (
-          <FormattedMessage
-            id="home.usermanagement"
-            defaultMessage="User management"
-          />
-        ),
-        icon: userManagementIcon,
-        subTitle: (
-          <FormattedMessage
-            id="home.sso_management"
-            defaultMessage="Single sign-on account management"
-          />
-        )
-      },
-      {
-        requiredRoles: ["admin"],
-        key: 1,
-        handleClick: () => this.handleLink("/alarms"),
-        title: <FormattedMessage id="home.alarms" defaultMessage="Alarms" />,
-        icon: alarmIcon,
-        subTitle: (
-          <FormattedMessage
-            id="home.alarm_management"
-            defaultMessage="Alarm management"
-          />
-        )
-      },
-      {
-        requiredRoles: ["admin", "supplier"],
-        key: 2,
-        handleClick: () => this.handleLink("/data_management"),
-        title: (
-          <FormattedMessage
-            id="home.data_management"
-            defaultMessage="Data Management"
-          />
-        ),
-        icon: templateIcon,
-        subTitle: (
-          <FormattedMessage
-            id="home.data_administration"
-            defaultMessage="Data administration"
-          />
-        )
-      }
-    ];
     const currentOrganisationRoles = this.props.selectedOrganisation.roles;
     const appIconsWithReadOnlyInfo = appIcons.map(appIcon=>{
-      const requiredRoles = appIcon.requiredRoles;
-      const requiredRolesFound = requiredRoles.map(requiredRole=>{
-        return currentOrganisationRoles.indexOf(requiredRole) !== -1;
-      })
-      if ( requiredRolesFound.includes(true) ) {
-        return {
-          ...appIcon,
-          readonly: false,
-        }
-      } else {
-        return {
-          ...appIcon,
-          readonly: true,
-        }
-        
+      return {
+        ...appIcon,
+        readonly: !doArraysHaveEqualElement(appIcon.requiredRoles, currentOrganisationRoles),
       }
     });
     return (
@@ -116,7 +58,7 @@ class App extends Component {
                     }}
                   >
                     <AppIcon
-                      handleClick={appIcon.handleClick}
+                      handleClick={()=>{ this.handleLink(appIcon.linksTo)}}
                       key={+new Date()}
                       src={appIcon.icon}
                       title={ appIcon.title}
