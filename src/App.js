@@ -24,6 +24,8 @@ import buttonStyles from "./styles/Buttons.css";
 import lizardIcon from "./images/lizard@3x.svg";
 import { withRouter } from "react-router-dom";
 import {appIcons} from './home/HomeAppIconConfig';
+import doArraysHaveEqualElement from './utils/doArraysHaveEqualElement';
+
 
 
 class App extends Component {
@@ -141,17 +143,16 @@ class App extends Component {
   };
 
   render() {
-    console.log('root app is called ');
-    // const currentHomeAppIcon = appIcons.find(icon => {
-    //   const url = window.location.href;
-    //   if (url.includes(icon.linksTo.path)) {
-    //     return true;
-    //   }
-    // });
-    // // const 
-    // if (false) {
-    //   window.location = '/management/'
-    // }
+    const currentHomeAppIcon = appIcons.find(icon => {
+      const url = window.location.href;
+      if (url.includes(icon.linksTo.path)) {
+        return true;
+      }
+    });
+    if (currentHomeAppIcon && !doArraysHaveEqualElement(this.props.selectedOrganisation.roles, currentHomeAppIcon.requiredRoles)) {
+      alert('You do not have the rights to acces this data under the selected orgaanisation. \nYou will be redirected');
+      window.location = '/management/';
+    }
     if (!this.props.isAuthenticated) {
       return (
         <div className={styles.MDSpinner}>
