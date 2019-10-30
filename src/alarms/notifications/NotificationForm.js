@@ -235,7 +235,8 @@ class NotificationFormModel extends Component {
           <RelativeField
             name="relativeStart"
             title="Relative start"
-            subtitle="Optional: Select the relative start of the simulation period"
+            subtitle="Optional: Select the relative start of the simulation period.
+                      Not selecting will set relative start to the start of the simulation."
             validators={[durationValidator()]}
             initial={
               (
@@ -248,7 +249,8 @@ class NotificationFormModel extends Component {
           <RelativeField
             name="relativeEnd"
             title="Relative end"
-            subtitle="Optional: Select the relative end of the simulation period"
+            subtitle="Optional: Select the relative end of the simulation period.
+                      Not selecting will set relative end to the end of the simulation."
             validators={[
               durationValidator(),
               (fieldValue, formValues) => relativeEndValidator(fieldValue, formValues)

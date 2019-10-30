@@ -168,12 +168,13 @@ export default class RelativeField extends Component<RelativeFieldProps, Relativ
     return (
       <div>
         <div>
-          <p>Choose relative field duration relatively to current moment (now)?</p>
+          <p>Select relative field as of Before or After current moment?</p>
           <SelectBoxForRelativeFields
             updateCurrentSelection={this.updateCurrentSelection}
             currentSelection={currentSelection}
           />
         </div>
+        <br/>
         <div
           className={
             formStyles.FormGroup + " " + inputStyles.PositionRelative
