@@ -49,10 +49,19 @@ function organisations(
     timesFetched: 0,
     available: [],
     availableForRasterSharedWith: [],
-    selected:
-      JSON.parse(
-        localStorage.getItem("lizard-management-current-organisation")
-      ) || null
+    selected: (function () {
+      const localStorageResult = localStorage.getItem("lizard-management-current-organisation");
+      if (!localStorageResult) {
+        return null;
+      }
+      let result;
+      try {
+        result = JSON.parse(localStorageResult);
+      } catch(e) {
+          return null;
+      }
+      return result;
+    }()),
   },
   action
 ) {
@@ -82,7 +91,10 @@ function organisations(
     case SELECT_ORGANISATION:
       // the api v3 accepts no dashes in the uuid (this is called unique_id in api v3)
       const selectedOrganisation = action.organisation;
-      selectedOrganisation.uuid = selectedOrganisation.uuid.replace(/-/g, "");
+      if (selectedOrganisation) {
+        selectedOrganisation.uuid = selectedOrganisation.uuid.replace(/-/g, "");
+      }
+      
       return { ...state, selected: selectedOrganisation };
     default:
       return state;

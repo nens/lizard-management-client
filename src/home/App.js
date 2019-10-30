@@ -32,7 +32,7 @@ class App extends Component {
   }
 
   render() {
-    const currentOrganisationRoles = this.props.selectedOrganisation.roles;
+    const currentOrganisationRoles = (this.props.selectedOrganisation && this.props.selectedOrganisation.roles) || [];
     const appIconsWithReadOnlyInfo = appIcons.map(appIcon=>{
       return {
         ...appIcon,

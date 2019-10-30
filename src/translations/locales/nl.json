@@ -60,6 +60,7 @@
   "authorization.requires_roles": "Een van de volgende rollen is nodig: ",
   "authorization.requires_role": "vereist rol: ",
   "authorization.organisation_not_allowed_current_page": "! Organisatie kan huidige pagina niet bezoeken !",
+  "authorization.no_roles_message": "Beste gebruiker, \nU hebt momenteel geen rollen om deze pagina te bezoeken. \nWe sturen u dus terug naar de hoofdpagina.",
   "close": "Terug",
   "components.switch_org": "Wissel van organisatie",
   "components_snackbar.dismiss": "OK",

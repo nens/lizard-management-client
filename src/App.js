@@ -143,13 +143,26 @@ class App extends Component {
   };
 
   render() {
+
+    if ( 
+      this.props.availableOrganisations.length === 0 && 
+      this.props.isFetchingOrganisations === false &&
+      this.props.timesFetchedOrganisations > 0
+    ) {
+      const norolesMessage = this.props.intl.formatMessage({ id: "authorization.no_roles_message", defaultMessage: "Dear user, \nYou seem not to be in any organisations that can acces the management pages. \nTherefore you are redirected to the mainpage" });
+      alert(norolesMessage);
+      // should redirect to demo.lizard.net on prod
+      window.location = "/";
+    }
+
     const currentHomeAppIcon = appIcons.find(icon => {
       return window.location.href.includes(icon.linksTo.path)
     });
     if (currentHomeAppIcon && !doArraysHaveEqualElement(this.props.selectedOrganisation.roles, currentHomeAppIcon.requiredRoles)) {
       const redirectMessage = this.props.intl.formatMessage({ id: "authorization.redirected_based_onrole", defaultMessage: "You do not have the rights to acces this data under the selected organisation. \nYou will be redirected" });
       alert(redirectMessage);
-      this.props.history.push("/");
+      // should redirect to demo.lizard.net/management on prod
+      this.props.history.push("/management");
     }
     if (!this.props.isAuthenticated) {
       return (
@@ -353,6 +366,9 @@ const mapStateToProps = (state, ownProps) => {
       state.organisations.timesFetched < 1,
 
     selectedOrganisation: state.organisations.selected,
+    availableOrganisations: state.organisations.available,
+    isFetchingOrganisations: state.organisations.isFetching,
+    timesFetchedOrganisations: state.organisations.timesFetched,
 
     mustFetchObservationTypes:
       state.observationTypes.available.length === 0 &&
