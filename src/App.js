@@ -162,7 +162,7 @@ class App extends Component {
       const redirectMessage = this.props.intl.formatMessage({ id: "authorization.redirected_based_onrole", defaultMessage: "You do not have the rights to acces this data under the selected organisation. \nYou will be redirected" });
       alert(redirectMessage);
       // should redirect to demo.lizard.net/management on prod
-      this.props.history.push("/management");
+      this.props.history.push("/");
     }
     if (!this.props.isAuthenticated) {
       return (
