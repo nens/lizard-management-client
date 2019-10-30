@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { FormattedMessage, injectIntl, InjectedIntlProps } from "react-intl";
-import SelectBoxSearch from "../components/SelectBoxSearch";
 import formStyles from "../styles/Forms.css";
 import styles from './ThresholdsSelection.css';
 
@@ -100,10 +99,17 @@ class ThresholdsSelectionInput extends Component<MyProps & InjectedIntlProps, My
                                     })
                                 }
                             >
-                                higher than &gt;
+                                <FormattedMessage
+                                    id="notifications_app.higher_than"
+                                    defaultMessage="higher than"
+                                />
+                                &nbsp;&gt;
                             </button>
                             <label htmlFor="value">
-                                Value
+                                <FormattedMessage
+                                    id="notifications_app.threshold_value"
+                                    defaultMessage="Value"
+                                />
                             </label>
                             <div className={styles.ThresholdValues}>
                                 {thresholds.map((threshold, i) => <div key={i}>{comparison} {threshold.value}</div>)}
@@ -130,10 +136,17 @@ class ThresholdsSelectionInput extends Component<MyProps & InjectedIntlProps, My
                                     })
                                 }
                             >
-                                lower than &lt;
+                                <FormattedMessage
+                                    id="notifications_app.lower_than"
+                                    defaultMessage="lower than"
+                                />
+                                &nbsp;&lt;
                             </button>
                             <label htmlFor="warning_label">
-                                Name
+                                <FormattedMessage
+                                    id="notifications_app.threshold_name"
+                                    defaultMessage="Name"
+                                />
                             </label>
                             <div className={styles.ThresholdNames}>
                                 {thresholds.map((threshold, i) => (
@@ -170,7 +183,10 @@ class ThresholdsSelectionInput extends Component<MyProps & InjectedIntlProps, My
                             ) : null
                         }}
                     >
-                        {!comparison ? "NEW THRESHOLD" : "ADD THRESHOLD"}
+                        <FormattedMessage
+                            id="notifications_app.add_thresholds"
+                            defaultMessage="Add threshold"
+                        />
                     </button>
                 </div>
             </div>
