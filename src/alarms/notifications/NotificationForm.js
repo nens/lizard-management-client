@@ -15,10 +15,10 @@ import TimeseriesSelection, { timeseriesChosen } from "../../forms/TimeseriesSel
 import ThresholdsSelection from "../../forms/ThresholdsSelection";
 import Snoozing from "../../forms/Snoozing";
 import Recipients, { recipientsValidator } from "../../forms/Recipients";
-import RelativeField, { durationValidator, fromISOValue, relativeEndValidator } from "../../forms/RelativeField";
+import RelativeField, { durationValidator, relativeEndValidator } from "../../forms/RelativeField";
 import RasterPointSelection, { rasterAndPointChosen } from "../../forms/RasterPointSelection";
-import { toISOValue, rasterIntervalStringServerToDurationObject } from "../../utils/isoUtils";
-import { convertNegativeDuration, convertDurationObjToSeconds } from "../../utils/dateUtils";
+import { rasterIntervalStringServerToDurationObject } from "../../utils/isoUtils";
+import { convertDurationObjToSeconds } from "../../utils/dateUtils";
 
 class NotificationFormModel extends Component {
   constructor(props) {
@@ -47,47 +47,20 @@ class NotificationFormModel extends Component {
       typeSelection,
       rasterSelection,
       timeseriesSelection,
-      relativeStartSelection,
       relativeStart,
-      relativeEndSelection,
       relativeEnd,
       thresholds,
       snoozing,
       recipients
     } = validatedData;
 
-    // Convert relative start and relative end in format of 'P1DT10H20M50S'
-    // to an object and then calculate them in seconds
-    // Send values of relative start and relative end in seconds in the API request
-
-    let relativeStartInSeconds;
-    let relativeEndInSeconds;
-
-    if (relativeStart) {
-      const durationObject = fromISOValue(relativeStart);
-      relativeStartInSeconds = convertDurationObjToSeconds(durationObject);
-
-      if (relativeStartSelection === "Before") relativeStartInSeconds = -relativeStartInSeconds 
-    } else {
-      relativeStartInSeconds = null;
-    };
-
-    if (relativeEnd) {
-      const durationObject = fromISOValue(relativeEnd);
-      relativeEndInSeconds = convertDurationObjToSeconds(durationObject);
-
-      if (relativeEndSelection === "Before") relativeEndInSeconds = -relativeEndInSeconds 
-    } else {
-      relativeEndInSeconds = null;
-    };
-
     let url = "";
     let body = {
       name: notificationName,
       active: true,
       organisation: this.props.selectedOrganisation.uuid,
-      relative_start: relativeStartInSeconds,
-      relative_end: relativeEndInSeconds,
+      relative_start: relativeStart,
+      relative_end: relativeEnd,
       comparison: thresholds.comparison,
       thresholds: thresholds.thresholds,
       snooze_sign_on: snoozing.snooze_sign_on,
@@ -259,77 +232,25 @@ class NotificationFormModel extends Component {
               ) || null
             }
           />
-          <SelectBox
-            name="relativeStartSelection"
-            title="Relative start selection"
-            subtitle="Choose relative start before or after now?"
-            choices={[
-              [
-                "Before",
-                "Before",
-                "Set the start of the simulation period from the past"
-              ],
-              [
-                "After",
-                "After",
-                "Set the start of the simulation period from now or future"
-              ]
-            ]}
-            validators={[required("Please select an option.")]}
-            showSearchField={false}
-            initial={
-              (
-                currentNotification &&
-                currentNotification.relative_start &&
-                currentNotification.relative_start.includes("-") &&
-                "Before"
-              ) || "After"
-            }
-          />
           <RelativeField
             name="relativeStart"
             title="Relative start"
-            subtitle="Optional: Select the relative start of the simulation period"
+            subtitle="Optional: Select the relative start of the simulation period.
+                      Not selecting will set relative start to the start of the simulation."
             validators={[durationValidator()]}
             initial={
               (
                 currentNotification &&
                 currentNotification.relative_start &&
-                convertNegativeDuration(toISOValue(rasterIntervalStringServerToDurationObject(currentNotification.relative_start)))
+                `${convertDurationObjToSeconds(rasterIntervalStringServerToDurationObject(currentNotification.relative_start))}`
               ) || null
-            }
-          />
-          <SelectBox
-            name="relativeEndSelection"
-            title="Relative end selection"
-            subtitle="Choose relative end before or after now?"
-            choices={[
-              [
-                "Before",
-                "Before",
-                "Set the end of the simulation period from the past"
-              ],
-              [
-                "After",
-                "After",
-                "Set the end of the simulation period from now or future"
-              ]
-            ]}
-            validators={[required("Please select an option.")]}
-            showSearchField={false}
-            initial={
-              (
-                currentNotification &&
-                currentNotification.relative_end &&
-                currentNotification.relative_end.includes("-") &&
-                "Before"
-              ) || "After"
             }
           />
           <RelativeField
             name="relativeEnd"
             title="Relative end"
-            subtitle="Optional: Select the relative end of the simulation period"
+            subtitle="Optional: Select the relative end of the simulation period.
+                      Not selecting will set relative end to the end of the simulation."
             validators={[
               durationValidator(),
               (fieldValue, formValues) => relativeEndValidator(fieldValue, formValues)
@@ -338,7 +259,7 @@ class NotificationFormModel extends Component {
               (
                 currentNotification &&
                 currentNotification.relative_end &&
-                convertNegativeDuration(toISOValue(rasterIntervalStringServerToDurationObject(currentNotification.relative_end)))
+                `${convertDurationObjToSeconds(rasterIntervalStringServerToDurationObject(currentNotification.relative_end))}`
               ) || null
             }
           />
