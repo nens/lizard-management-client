@@ -12,7 +12,6 @@ import { App as EditNotificationApp } from "./notifications/EditNotification";
 import { Detail as AlarmGroupsDetail } from "./alarmgroups/Detail";
 import { Detail as AlarmTemplatesDetail } from "./alarmtemplates/Detail";
 import { Detail as ContactDetail } from "./contacts/Detail";
-// import { Detail as NotificationsDetail } from "./notifications/Detail";
 import { Route, Switch, withRouter } from "react-router-dom";
 
 class App extends Component {
