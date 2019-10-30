@@ -149,7 +149,7 @@ class App extends Component {
     if (currentHomeAppIcon && !doArraysHaveEqualElement(this.props.selectedOrganisation.roles, currentHomeAppIcon.requiredRoles)) {
       const redirectMessage = this.props.intl.formatMessage({ id: "authorization.redirected_based_onrole", defaultMessage: "You do not have the rights to acces this data under the selected organisation. \nYou will be redirected" });
       alert(redirectMessage);
-      window.location = '/management/';
+      this.props.history.push("/");
     }
     if (!this.props.isAuthenticated) {
       return (

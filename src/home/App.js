@@ -77,32 +77,14 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state) => {
   return {
     selectedOrganisation: state.organisations.selected,
-    // organisations: state.organisations.available,
-    // isFetching: state.organisations.isFetching
   };
 };
 
-// App = withRouter(App);
 App = withRouter(connect(mapStateToProps, null)(
-    App
-  ));
+  App
+));
 
 export { App };
-
-
-
-// const mapDispatchToProps = (dispatch, ownProps) => {
-//   return {
-//     selectOrganisation: organisation => {
-//       dispatch(selectOrganisation(organisation));
-//       dispatch(fetchSupplierIds());
-//     }
-//   };
-// };
-
-// export {App as  connect(mapStateToProps, null)(
-//   App
-// )}
