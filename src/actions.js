@@ -105,12 +105,6 @@ export function fetchOrganisations() {
           );
         })
 
-        // if (availableOrganisations.length === 0) {
-        //   // TODO show nice message to user that no organisations are found
-        //   alert("Dear user, \nYou seem not to be in any organisations that can acces the management pages. \nTherefore you are redirected to demo.lizard.net");
-        //   window.location = "https://demo.lizard.net";
-        // }
-
         dispatch({ type: RECEIVE_ORGANISATIONS, all:allOrganisations, available: availableOrganisations});
 
         if (
