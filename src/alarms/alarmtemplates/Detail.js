@@ -21,7 +21,7 @@ class Detail extends Component {
     };
     this.handleSaveTemplate = this.handleSaveTemplate.bind(this);
     this.handleDeleteTemplate = this.handleDeleteTemplate.bind(this);
-    this.updateTemplateTextWithParameter = this.updateTemplateTextWithParameter.bind(this);
+    this.insertTextInTemplateText = this.insertTextInTemplateText.bind(this);
   }
   componentDidMount() {
     const { match, history } = this.props;
@@ -83,23 +83,15 @@ class Detail extends Component {
       alert("Please provide a template text");
     }
   }
-  updateTemplateTextWithParameter(templateText, text) {
+  insertTextInTemplateText(templateText, addedText) {
     var newTemplateText = "";
     var element = document.getElementById("templatePreview");
 
-    if (document.selection) {
-      // IE
-      element.focus();
-      var sel = document.selection.createRange();
-      sel.text = text;
-    } else if (element.selectionStart || element.selectionStart === 0) {
-      // Others
-      var startPos = element.selectionStart;
-      var endPos = element.selectionEnd;
-      newTemplateText = templateText.substring(0, startPos) + text +
-        templateText.substring(endPos);
+    if (element.selectionStart || element.selectionStart === 0) {
+      newTemplateText = templateText.substring(0, element.selectionStart) +
+        addedText + templateText.substring(element.selectionEnd);
     } else {
-      newTemplateText = templateText + text;
+      newTemplateText = templateText + addedText;
     }
 
     var newTemplate = this.state.template;
@@ -172,7 +164,7 @@ class Detail extends Component {
           <tr
             key={parameter.parameter}
             onClick={() => {
-              this.updateTemplateTextWithParameter(template.text, parameter.parameter);
+              this.insertTextInTemplateText(template.text, parameter.parameter);
             }}
           >
             <td>{parameter.parameter}</td>
