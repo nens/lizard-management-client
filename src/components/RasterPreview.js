@@ -16,7 +16,7 @@
 // That same location should be passed in as the 'location' prop.
 
 import React, { Component } from "react";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, injectIntl } from "react-intl";
 import { Map, Marker, TileLayer, WMSTileLayer } from "react-leaflet";
 import SelectAsset from "../components/SelectAsset";
 import styles from "./RasterPreview.css";
@@ -25,7 +25,7 @@ import styles from "./RasterPreview.css";
 const DEFAULT_POSITION = [52.1858, 5.2677];
 
 
-export default class RasterPreview extends Component {
+class RasterPreview extends Component {
   handleMapClick(e) {
     if (!this.props.setLocation) {
       return; // No map clicks if no setLocation
@@ -54,6 +54,7 @@ export default class RasterPreview extends Component {
 
   render() {
     const { raster, location, setLocation } = this.props;
+    const placeholderAssetSelection = this.props.intl.formatMessage({ id: "notification_apps.placeholder_asset_selection" });
 
     const marker = (
       location ? [location.lat, location.lon] : DEFAULT_POSITION);
@@ -94,7 +95,7 @@ export default class RasterPreview extends Component {
 
         {chooseLocation ? (
           <SelectAsset
-            placeholderText={"Type to search an asset"}
+            placeholderText={placeholderAssetSelection}
             setAsset={this.handleSetAsset}
             spatialBounds={raster ? raster.spatial_bounds : null}
             setLocation={setLocation}
@@ -129,3 +130,5 @@ export default class RasterPreview extends Component {
     );
   }
 }
+
+export default injectIntl(RasterPreview);

@@ -181,6 +181,9 @@ class NotificationFormModel extends Component {
   render() {
     const { currentNotification, intl } = this.props;
 
+    //Format message for placeholder in the input form for translation
+    const placeholderNotificationName = intl.formatMessage({ id: "notifications_app.name_of_alarm" })
+
     return (
       <div>
         {this.state.openOverlay ? (
@@ -201,7 +204,7 @@ class NotificationFormModel extends Component {
             name="notificationName"
             title={<FormattedMessage id="notifications_app.name_of_alarm" />}
             subtitle={<FormattedMessage id="notifications_app.name_of_alarm" />}
-            placeholder="Name of this alarm"
+            placeholder={placeholderNotificationName}
             validators={[minLength(1)]}
             initial={currentNotification && currentNotification.name}
           />

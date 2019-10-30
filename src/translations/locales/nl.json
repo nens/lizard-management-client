@@ -131,6 +131,8 @@
   "notifications_app.number_of_notifications": "{numberOfNotifications, number} {numberOfNotifications, plural, one {NOTIFICATIE} other {NOTIFICATIES}}",
   "notifications_app.number_of_recipients": "{numberOfRecipients, number} {numberOfRecipients, plural, one {ontvanger} other {ontvangers}}",
   "notifications_app.number_of_thresholds": "{numberOfThresholds, number} {numberOfThresholds, plural, one {drempelwaarde} other {drempelwaardes}}",
+  "notification_apps.placeholder_asset_selection": "Typ om te zoeken naar een asset",
+  "notification_apps.placeholder_raster_selection": "Typ om te zoeken",
   "notifications_app.raster_alarms": "Raster Alarmen",
   "notifications_app.raster_alarm_selection": "Zet een alarm op raster gegevens",
   "notifications_app.raster_selection": "Raster selecteren",

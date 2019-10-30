@@ -125,6 +125,8 @@
   "notifications_app.number_of_notifications": "{numberOfNotifications, number} {numberOfNotifications, plural, one {NOTIFICATION} other {NOTIFICATIONS}}",
   "notifications_app.number_of_recipients": "{numberOfRecipients, number} {numberOfRecipients, plural, one {recipient} other {recipients}}",
   "notifications_app.number_of_thresholds": "{numberOfThresholds, number} {numberOfThresholds, plural, one {threshold} other {thresholds}}",
+  "notification_apps.placeholder_asset_selection": "Type to search an asset",
+  "notification_apps.placeholder_raster_selection": "Type to search",
   "notifications_app.point_on_map": "Point-on-map",
   "notifications_app.raster_alarm_selection": "Put an alarm on raster data",
   "notifications_app.raster_selection": "Raster selection",
