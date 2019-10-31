@@ -79,8 +79,8 @@ export const relativeEndValidator = (fieldValue: number | null, formValues: Form
   const relativeEnd = fieldValue;
 
   if (
-    relativeStart &&
-    relativeEnd &&
+    (relativeStart !== null) &&
+    (relativeEnd !== null) &&
     relativeStart > relativeEnd
   ) {
     return "Relative end must be relatively after relative start"
