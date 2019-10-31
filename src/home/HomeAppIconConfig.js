@@ -33,7 +33,9 @@ const appIcons = [
       external: false,
       path: "/alarms"
     },
-    title: <FormattedMessage id="home.alarms" defaultMessage="Alarms" />,
+    title: (
+      <FormattedMessage id="home.alarms" defaultMessage="Alarms" />
+    ),
     icon: alarmIcon,
     subTitle: (
       <FormattedMessage

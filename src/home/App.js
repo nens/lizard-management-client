@@ -61,7 +61,7 @@ class App extends Component {
                       handleClick={()=>{ this.handleLink(appIcon.linksTo)}}
                       key={+new Date()}
                       src={appIcon.icon}
-                      title={ appIcon.title}
+                      title={appIcon.title}
                       subTitle={appIcon.subTitle}
                       readonly={appIcon.readonly}
                       requiredRoles={appIcon.requiredRoles}
