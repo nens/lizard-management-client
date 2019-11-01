@@ -28,8 +28,8 @@ interface RelativeFieldState {
 
 interface FormValues {
   // Only interested in form values for relative fields.
-  relativeStart: number | null,
-  relativeEnd: number | null
+  relativeStart: string | number | null,
+  relativeEnd: string | number | null
 };
 
 // Validators
@@ -74,9 +74,9 @@ export const durationValidator = (required: boolean) => (value: number | null) =
   }
 };
 
-export const relativeEndValidator = (fieldValue: number | null, formValues: FormValues) => {
-  const { relativeStart } = formValues;
-  const relativeEnd = fieldValue;
+export const relativeEndValidator = (fieldValue: string | number | null, formValues: FormValues) => {
+  const relativeStart = formValues.relativeStart && Number(formValues.relativeStart);
+  const relativeEnd = fieldValue && Number(fieldValue);
 
   if (
     (relativeStart !== null) &&
@@ -130,7 +130,7 @@ export default class RelativeField extends Component<RelativeFieldProps, Relativ
     this.props.valueChanged(durationInSeconds);
   }
   componentDidMount() {
-    const value = this.props.value;
+    const value = Number(this.props.value);
     
     if (value && value < 0) {
       this.setState({
