@@ -28,8 +28,8 @@ interface RelativeFieldState {
 
 interface FormValues {
   // Only interested in form values for relative fields.
-  relativeStart: string | number | null,
-  relativeEnd: string | number | null
+  relativeStart: number | null,
+  relativeEnd: number | null
 };
 
 // Validators
@@ -58,7 +58,7 @@ const validPerField = (value: number) => {
 };
 
 export const durationValidator = (required: boolean) => (value: number | null) => {
-  if (!value) {
+  if (value === null) {
     if (required) {
       return "Please enter a duration.";
     } else {
@@ -74,9 +74,9 @@ export const durationValidator = (required: boolean) => (value: number | null) =
   }
 };
 
-export const relativeEndValidator = (fieldValue: string | number | null, formValues: FormValues) => {
-  const relativeStart = formValues.relativeStart && Number(formValues.relativeStart);
-  const relativeEnd = fieldValue && Number(fieldValue);
+export const relativeEndValidator = (fieldValue: number | null, formValues: FormValues) => {
+  const { relativeStart } = formValues;
+  const relativeEnd = fieldValue;
 
   if (
     (relativeStart !== null) &&
@@ -130,13 +130,13 @@ export default class RelativeField extends Component<RelativeFieldProps, Relativ
     this.props.valueChanged(durationInSeconds);
   }
   componentDidMount() {
-    const value = Number(this.props.value);
+    const value = this.props.value;
     
-    if (this.props.value && value < 0) {
+    if (value !== null && value < 0) {
       this.setState({
         currentSelection: "Before"
       });
-    } else if (this.props.value && value >= 0) {
+    } else if (value !== null && value >= 0) {
       this.setState({
         currentSelection: "After"
       });

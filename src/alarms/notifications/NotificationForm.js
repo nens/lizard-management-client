@@ -59,8 +59,8 @@ class NotificationFormModel extends Component {
       name: notificationName,
       active: true,
       organisation: this.props.selectedOrganisation.uuid,
-      relative_start: relativeStart && parseFloat(relativeStart),
-      relative_end: relativeEnd && parseFloat(relativeEnd),
+      relative_start: relativeStart,
+      relative_end: relativeEnd,
       comparison: thresholds.comparison,
       thresholds: thresholds.thresholds,
       snooze_sign_on: snoozing.snooze_sign_on,
@@ -239,11 +239,9 @@ class NotificationFormModel extends Component {
                       Not selecting will set relative start to the start of the simulation."
             validators={[durationValidator()]}
             initial={
-              (
-                currentNotification &&
-                currentNotification.relative_start &&
-                `${convertDurationObjToSeconds(rasterIntervalStringServerToDurationObject(currentNotification.relative_start))}`
-              ) || null
+              (currentNotification && currentNotification.relative_start !== null) ? (
+                convertDurationObjToSeconds(rasterIntervalStringServerToDurationObject(currentNotification.relative_start))
+              ) : null
             }
           />
           <RelativeField
@@ -256,11 +254,9 @@ class NotificationFormModel extends Component {
               (fieldValue, formValues) => relativeEndValidator(fieldValue, formValues)
             ]}
             initial={
-              (
-                currentNotification &&
-                currentNotification.relative_end &&
-                `${convertDurationObjToSeconds(rasterIntervalStringServerToDurationObject(currentNotification.relative_end))}`
-              ) || null
+              (currentNotification && currentNotification.relative_end !== null) ? (
+                convertDurationObjToSeconds(rasterIntervalStringServerToDurationObject(currentNotification.relative_end))
+              ) : null
             }
           />
           <ThresholdsSelection
