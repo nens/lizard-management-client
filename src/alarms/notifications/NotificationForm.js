@@ -14,11 +14,11 @@ import SelectBox from "../../forms/SelectBox";
 import TimeseriesSelection, { timeseriesChosen } from "../../forms/TimeseriesSelection";
 import ThresholdsSelection from "../../forms/ThresholdsSelection";
 import Snoozing from "../../forms/Snoozing";
-import Recipients, { recipeintsValidator } from "../../forms/Recipients";
-import RelativeField, { durationValidator, fromISOValue, relativeEndValidator } from "../../forms/RelativeField";
+import Recipients, { recipientsValidator } from "../../forms/Recipients";
+import RelativeField, { durationValidator, relativeEndValidator } from "../../forms/RelativeField";
 import RasterPointSelection, { rasterAndPointChosen } from "../../forms/RasterPointSelection";
-import { toISOValue, rasterIntervalStringServerToDurationObject } from "../../utils/isoUtils";
-import { convertNegativeDuration, convertDurationObjToSeconds } from "../../utils/dateUtils";
+import { rasterIntervalStringServerToDurationObject } from "../../utils/isoUtils";
+import { convertDurationObjToSeconds } from "../../utils/dateUtils";
 
 class NotificationFormModel extends Component {
   constructor(props) {
@@ -47,47 +47,20 @@ class NotificationFormModel extends Component {
       typeSelection,
       rasterSelection,
       timeseriesSelection,
-      relativeStartSelection,
       relativeStart,
-      relativeEndSelection,
       relativeEnd,
       thresholds,
       snoozing,
       recipients
     } = validatedData;
 
-    // Convert relative start and relative end in format of 'P1DT10H20M50S'
-    // to an object and then calculate them in seconds
-    // Send values of relative start and relative end in seconds in the API request
-
-    let relativeStartInSeconds;
-    let relativeEndInSeconds;
-
-    if (relativeStart) {
-      const durationObject = fromISOValue(relativeStart);
-      relativeStartInSeconds = convertDurationObjToSeconds(durationObject);
-
-      if (relativeStartSelection === "Before") relativeStartInSeconds = -relativeStartInSeconds 
-    } else {
-      relativeStartInSeconds = null;
-    };
-
-    if (relativeEnd) {
-      const durationObject = fromISOValue(relativeEnd);
-      relativeEndInSeconds = convertDurationObjToSeconds(durationObject);
-
-      if (relativeEndSelection === "Before") relativeEndInSeconds = -relativeEndInSeconds 
-    } else {
-      relativeEndInSeconds = null;
-    };
-
     let url = "";
     let body = {
       name: notificationName,
       active: true,
       organisation: this.props.selectedOrganisation.uuid,
-      relative_start: relativeStartInSeconds,
-      relative_end: relativeEndInSeconds,
+      relative_start: relativeStart,
+      relative_end: relativeEnd,
       comparison: thresholds.comparison,
       thresholds: thresholds.thresholds,
       snooze_sign_on: snoozing.snooze_sign_on,
@@ -127,7 +100,6 @@ class NotificationFormModel extends Component {
           return responseParsed.json();
         })
         .then(parsedBody => {
-          console.log("parsedBody", parsedBody);
           this.setState({ createdNotification: parsedBody });
         });
     } else {
@@ -140,12 +112,10 @@ class NotificationFormModel extends Component {
       const alarmUuid = this.props.match.params.id;
       fetch(url + alarmUuid + "/", opts)
         .then(responseParsed => {
-          console.log("responseParsed put", responseParsed);
           this.handleResponse(responseParsed);
           return responseParsed.json();
         })
         .then(parsedBody => {
-          console.log("parsedBody", parsedBody);
           this.setState({ createdNotification: parsedBody });
         });
     };
@@ -265,87 +235,31 @@ class NotificationFormModel extends Component {
               ) || null
             }
           />
-          <SelectBox
-            name="relativeStartSelection"
-            title={<FormattedMessage id="notifications_app.relative_start_selection" />}
-            subtitle={<FormattedMessage id="notifications_app.relative_start_selection_subtitle" />}
-            choices={[
-              [
-                "Before",
-                "Before",
-                <FormattedMessage id="notifications_app.relative_start_before" />
-              ],
-              [
-                "After",
-                "After",
-                <FormattedMessage id="notifications_app.relative_start_after" />
-              ]
-            ]}
-            validators={[required("Please select an option.")]}
-            showSearchField={false}
-            initial={
-              (
-                currentNotification &&
-                currentNotification.relative_start &&
-                currentNotification.relative_start.includes("-") &&
-                "Before"
-              ) || "After"
-            }
-          />
           <RelativeField
             name="relativeStart"
-            title={<FormattedMessage id="notifications_app.relative_start" />}
-            subtitle={<FormattedMessage id="notifications_app.relative_start_subtitle" />}
+            title="Relative start"
+            subtitle="Optional: Select the relative start of the simulation period.
+                      Not selecting will set relative start to the start of the simulation."
             validators={[durationValidator()]}
             initial={
-              (
-                currentNotification &&
-                currentNotification.relative_start &&
-                convertNegativeDuration(toISOValue(rasterIntervalStringServerToDurationObject(currentNotification.relative_start)))
-              ) || null
-            }
-          />
-          <SelectBox
-            name="relativeEndSelection"
-            title={<FormattedMessage id="notifications_app.relative_end_selection" />}
-            subtitle={<FormattedMessage id="notifications_app.relative_end_selection_subtitle" />}
-            choices={[
-              [
-                "Before",
-                "Before",
-                <FormattedMessage id="notifications_app.relative_end_before" />
-              ],
-              [
-                "After",
-                "After",
-                <FormattedMessage id="notifications_app.relative_end_after" />
-              ]
-            ]}
-            validators={[required("Please select an option.")]}
-            showSearchField={false}
-            initial={
-              (
-                currentNotification &&
-                currentNotification.relative_end &&
-                currentNotification.relative_end.includes("-") &&
-                "Before"
-              ) || "After"
+              (currentNotification && currentNotification.relative_start !== null) ? (
+                convertDurationObjToSeconds(rasterIntervalStringServerToDurationObject(currentNotification.relative_start))
+              ) : null
             }
           />
           <RelativeField
             name="relativeEnd"
-            title={<FormattedMessage id="notifications_app.relative_end" />}
-            subtitle={<FormattedMessage id="notifications_app.relative_end_subtitle" />}
+            title="Relative end"
+            subtitle="Optional: Select the relative end of the simulation period.
+                      Not selecting will set relative end to the end of the simulation."
             validators={[
               durationValidator(),
               (fieldValue, formValues) => relativeEndValidator(fieldValue, formValues)
             ]}
             initial={
-              (
-                currentNotification &&
-                currentNotification.relative_end &&
-                convertNegativeDuration(toISOValue(rasterIntervalStringServerToDurationObject(currentNotification.relative_end)))
-              ) || null
+              (currentNotification && currentNotification.relative_end !== null) ? (
+                convertDurationObjToSeconds(rasterIntervalStringServerToDurationObject(currentNotification.relative_end))
+              ) : null
             }
           />
           <ThresholdsSelection
@@ -386,7 +300,7 @@ class NotificationFormModel extends Component {
             title={<FormattedMessage id="notifications_app.recipients" />}
             subtitle={<FormattedMessage id="notifications_app.when_an_alarm_is_triggered" />}
             selectedOrganisation={this.props.selectedOrganisation}
-            validators={[recipeintsValidator]}
+            validators={[recipientsValidator]}
             initial={
               (
                 currentNotification &&

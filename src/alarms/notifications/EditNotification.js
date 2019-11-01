@@ -5,22 +5,23 @@ import MDSpinner from "react-md-spinner";
 
 import { NotificationForm } from "./NotificationForm";
 
+// Component's props include match and alarmType
+// "match" props comes from react-router-dom and contains
+// id of the alarm from the URL
+// "alarmType" comes from Redux store and can be "RASTERS" or "TIMESERIES"
+
 class EditNotificationModel extends Component {
     constructor(props) {
         super(props);
         this.state = {
             currentNotification: null
         };
-    }
-
-    componentDidMount() {
-        const { match, alarmType } = this.props;
-
+        const { match, alarmType } = props;
         (async () => {
             const url = (alarmType === "RASTERS") ? (
                 `/api/v4/rasteralarms/${match.params.id}/`
             ) : (
-                `api/v4/timeseriesalarms/${match.params.id}/`
+                `/api/v4/timeseriesalarms/${match.params.id}/`
             )
 
             const currentNotification = await fetch(url, {
@@ -33,8 +34,7 @@ class EditNotificationModel extends Component {
 
     render() {
         if (
-            this.state.currentNotification &&
-            this.props.organisations.isFetching === false
+            this.state.currentNotification
         ) {
             return <NotificationForm
                 currentNotification={this.state.currentNotification}
@@ -59,7 +59,6 @@ class EditNotificationModel extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        organisations: state.organisations,
         alarmType: state.alarmType
     };
 };

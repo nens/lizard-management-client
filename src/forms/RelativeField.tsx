@@ -1,5 +1,3 @@
-// The main Form class
-
 import React, { Component } from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -7,12 +5,14 @@ import styles from "./DurationField.css";
 import formStyles from "../styles/Forms.css";
 import inputStyles from "../styles/Input.css";
 
-import {toISOValue, durationObject} from "../utils/isoUtils"
-import { convertDurationObjToSeconds } from "../utils/dateUtils";
+import { convertDurationObjToSeconds, convertSecondsToDurationObject } from "../utils/dateUtils";
+import SelectBoxForRelativeFields from "./SelectBoxForRelativeFields";
+
+// Type
 
 interface RelativeFieldProps {
   name: string,
-  value: string,
+  value: number,
   placeholder?: string,
   validators?: Function[],
   validated: boolean,
@@ -22,45 +22,20 @@ interface RelativeFieldProps {
   readOnly: boolean,
 };
 
-interface FormValues {
-  // Only interested in form values for relative fields.
-  relativeStartSelection: "Before" | "After",
-  relativeStart: string | null,
-  relativeEndSelection: "Before" | "After",
-  relativeEnd: string | null
+interface RelativeFieldState {
+  currentSelection: "Before" | "After" | null
 };
 
+interface FormValues {
+  // Only interested in form values for relative fields.
+  relativeStart: number | null,
+  relativeEnd: number | null
+};
 
+// Validators
 
-export const fromISOValue = (value: string): durationObject => {
-  // Translate a string of the form 'P1DT10H20M50S' to an object.
-  const isoRegex = /^P(\d*)DT(\d*)H(\d*)M(\d*)S$/;
-
-  if (value) {
-    const match = value.match(isoRegex);
-
-    if (match) {
-      return {
-        days: parseFloat(match[1]) || 0,
-        hours: parseFloat(match[2]) || 0,
-        minutes: parseFloat(match[3]) || 0,
-        seconds: parseFloat(match[4]) || 0,
-      }
-    }
-  }
-
-  return {
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-  }
-}
-
-
-
-const validPerField = (value: string) => {
-  const duration = fromISOValue(value);
+const validPerField = (value: number) => {
+  const duration = convertSecondsToDurationObject(value);
   const {
     days,
     hours,
@@ -82,8 +57,8 @@ const validPerField = (value: string) => {
   }
 };
 
-export const durationValidator = (required: boolean) => (value: string | null) => {
-  if (!value) {
+export const durationValidator = (required: boolean) => (value: number | null) => {
+  if (value === null) {
     if (required) {
       return "Please enter a duration.";
     } else {
@@ -99,44 +74,48 @@ export const durationValidator = (required: boolean) => (value: string | null) =
   }
 };
 
-export const relativeEndValidator = (fieldValue: string, formValues: FormValues) => {
+export const relativeEndValidator = (fieldValue: number | null, formValues: FormValues) => {
+  const { relativeStart } = formValues;
   const relativeEnd = fieldValue;
-  const {
-    relativeStartSelection,
-    relativeEndSelection,
-    relativeStart
-  } = formValues;
 
-  // Convert relative start and end to seconds.
-  let relativeStartInSeconds;
-  let relativeEndInSeconds;
-
-  if (relativeStart) {
-    relativeStartInSeconds = convertDurationObjToSeconds(fromISOValue(relativeStart));
-
-    if (relativeStartSelection === "Before") relativeStartInSeconds = -relativeStartInSeconds;
-  };
-
-  if (relativeEnd) {
-    relativeEndInSeconds = convertDurationObjToSeconds(fromISOValue(relativeEnd));
-
-    if (relativeEndSelection === "Before") relativeEndInSeconds = -relativeEndInSeconds;
-  };
-  // Compare and ensure relative end is always after relative start.
   if (
-    relativeStartInSeconds &&
-    relativeEndInSeconds &&
-    relativeStartInSeconds > relativeEndInSeconds
+    (relativeStart !== null) &&
+    (relativeEnd !== null) &&
+    relativeStart > relativeEnd
   ) {
-    return "Relative end can only be after relative start"
+    return "Relative end must be relatively after relative start"
   } else {
-    return false;
+    return false
   };
 };
 
-export default class RelativeField extends Component<RelativeFieldProps, {}> {
+export default class RelativeField extends Component<RelativeFieldProps, RelativeFieldState> {
+  state = {
+    currentSelection: null
+  };
+  updateCurrentSelection = (input: RelativeFieldState['currentSelection']) => {
+    const { value, valueChanged } = this.props;
+
+    if (input === "Before") {
+      this.setState({
+        currentSelection: "Before"
+      });
+      valueChanged(-Math.abs(value));
+    } else if (input === "After") {
+      this.setState({
+        currentSelection: "After"
+      });
+      valueChanged(Math.abs(value));
+    } else {
+      // input === null
+      this.setState({
+        currentSelection: null
+      });
+      valueChanged(null);
+    };
+  }  
   updateValue(key: string, value: string) {
-    const duration = fromISOValue(this.props.value);
+    const duration = convertSecondsToDurationObject(this.props.value);
     const newValue = parseFloat(value) || 0;
 
     const newDuration = {
@@ -144,21 +123,37 @@ export default class RelativeField extends Component<RelativeFieldProps, {}> {
       [key]: newValue
     };
 
-    this.props.valueChanged(toISOValue(newDuration));
-  }
+    let durationInSeconds = convertDurationObjToSeconds(newDuration);
 
+    if (this.state.currentSelection === "Before") durationInSeconds = -durationInSeconds;
+
+    this.props.valueChanged(durationInSeconds);
+  }
+  componentDidMount() {
+    const value = this.props.value;
+    
+    if (value !== null && value < 0) {
+      this.setState({
+        currentSelection: "Before"
+      });
+    } else if (value !== null && value >= 0) {
+      this.setState({
+        currentSelection: "After"
+      });
+    };
+  }
   render() {
     const {
       name,
-      placeholder,
       value,
-      validated,
-      valueChanged,
-      handleEnter,
       readOnly
     } = this.props;
 
-    const duration = fromISOValue(value);
+    const {
+      currentSelection
+    } = this.state;
+
+    const duration = convertSecondsToDurationObject(value);
     const {
       days,
       hours,
@@ -171,115 +166,128 @@ export default class RelativeField extends Component<RelativeFieldProps, {}> {
     } = validPerField(value);
 
     return (
-      <div
-        className={
-        formStyles.FormGroup + " " + inputStyles.PositionRelative
-        }
-      >
+      <div>
+        <div>
+          <p>Select relative field as of Before or After current moment?</p>
+          <SelectBoxForRelativeFields
+            updateCurrentSelection={this.updateCurrentSelection}
+            currentSelection={currentSelection}
+          />
+        </div>
+        <br/>
         <div
           className={
-          styles.DurationInputFields +
-                     " " +
-                     styles.DurationInputFieldDays +
-                     " " +
-                     styles.TextAlignRight
+            formStyles.FormGroup + " " + inputStyles.PositionRelative
           }
+          style={{
+            display: currentSelection ? "block" : "none"
+          }}
         >
-          <label><FormattedMessage id="duration.days" /></label>
-          <input
-            id={name + "days_input"}
-            tabIndex={-2}
-            type="text"
-            autoComplete="false"
+          <div
             className={
-            formStyles.FormControl +
-                       " " +
-                       styles.TextAlignRight +
-                         (!daysValid ? " " + styles.Invalid : "") +
-                         (readOnly ? " " + inputStyles.ReadOnly : "")
+              styles.DurationInputFields +
+              " " +
+              styles.DurationInputFieldDays +
+              " " +
+              styles.TextAlignRight
             }
-            maxLength={3}
-            size={4}
-            onChange={e => this.updateValue('days', e.target.value)}
-            value={days}
-            readOnly={readOnly}
-            disabled={readOnly}
-          />
-        </div>
-        <div
-          className={
-          styles.DurationInputFields + " " + styles.TextAlignRight
-          }
-        >
-          <label><FormattedMessage id="duration.hours" /></label>
-          <input
-            id={name + "hours_input"}
-            tabIndex={-2}
-            type="text"
-            autoComplete="false"
+          >
+            <label><FormattedMessage id="duration.days" /></label>
+            <input
+              id={name + "days_input"}
+              tabIndex={-2}
+              type="text"
+              autoComplete="false"
+              className={
+                formStyles.FormControl +
+                " " +
+                styles.TextAlignRight +
+                (!daysValid ? " " + styles.Invalid : "") +
+                (readOnly ? " " + inputStyles.ReadOnly : "")
+              }
+              maxLength={3}
+              size={4}
+              onChange={e => this.updateValue('days', e.target.value)}
+              value={days}
+              readOnly={readOnly}
+              disabled={readOnly}
+            />
+          </div>
+          <div
             className={
-            formStyles.FormControl +
-                       " " +
-                       styles.TextAlignRight +
-                         (!hoursValid ? " " + styles.Invalid : "") +
-                         (readOnly ? " " + inputStyles.ReadOnly : "")
+            styles.DurationInputFields + " " + styles.TextAlignRight
             }
-            maxLength={2}
-            size={2}
-            onChange={e => this.updateValue('hours', e.target.value)}
-            value={hours}
-            readOnly={readOnly}
-            disabled={readOnly}
-          />
-        </div>
-        <div className={styles.DurationInputHourSecondSeperator}>:</div>
-        <div className={styles.DurationInputFields}>
-          <label><FormattedMessage id="duration.mins" /></label>
-          <input
-            id={name + "minutes_input"}
-            tabIndex={-2}
-            type="text"
-            autoComplete="false"
+          >
+            <label><FormattedMessage id="duration.hours" /></label>
+            <input
+              id={name + "hours_input"}
+              tabIndex={-2}
+              type="text"
+              autoComplete="false"
+              className={
+                formStyles.FormControl +
+                " " +
+                styles.TextAlignRight +
+                (!hoursValid ? " " + styles.Invalid : "") +
+                (readOnly ? " " + inputStyles.ReadOnly : "")
+              }
+              maxLength={2}
+              size={2}
+              onChange={e => this.updateValue('hours', e.target.value)}
+              value={hours}
+              readOnly={readOnly}
+              disabled={readOnly}
+            />
+          </div>
+          <div className={styles.DurationInputHourSecondSeperator}>:</div>
+          <div className={styles.DurationInputFields}>
+            <label><FormattedMessage id="duration.mins" /></label>
+            <input
+              id={name + "minutes_input"}
+              tabIndex={-2}
+              type="text"
+              autoComplete="false"
+              className={
+                formStyles.FormControl +
+                (!minutesValid ? " " + styles.Invalid : "") +
+                (readOnly ? " " + inputStyles.ReadOnly : "")
+              }
+              maxLength={2}
+              size={2}
+              onChange={e => this.updateValue('minutes', e.target.value)}
+              value={minutes}
+              readOnly={readOnly}
+              disabled={readOnly}
+            />
+          </div>
+          <div
             className={
-            formStyles.FormControl +
-                         (!minutesValid ? " " + styles.Invalid : "") +
-                         (readOnly ? " " + inputStyles.ReadOnly : "")
+              styles.DurationInputFields +
+              " " +
+              styles.DurationInputFieldSeconds
             }
-            maxLength={2}
-            size={2}
-            onChange={e => this.updateValue('minutes', e.target.value)}
-            value={minutes}
-            readOnly={readOnly}
-            disabled={readOnly}
-          />
+          >
+            <label><FormattedMessage id="duration.seconds" /></label>
+            <input
+              id={name + "seconds_input"}
+              tabIndex={-2}
+              type="text"
+              autoComplete="false"
+              className={
+                formStyles.FormControl +
+                (!secondsValid ? " " + styles.Invalid : "") +
+                (readOnly ? " " + inputStyles.ReadOnly : "")
+              }
+              maxLength={2}
+              size={4}
+              onChange={e => this.updateValue('seconds', e.target.value)}
+              value={seconds}
+              readOnly={readOnly}
+              disabled={readOnly}
+            />
+          </div>
+          <div />
         </div>
-        <div
-          className={
-          styles.DurationInputFields +
-                     " " +
-                     styles.DurationInputFieldSeconds
-          }
-        >
-          <label><FormattedMessage id="duration.seconds" /></label>
-          <input
-            id={name + "seconds_input"}
-            tabIndex={-2}
-            type="text"
-            autoComplete="false"
-            className={
-            formStyles.FormControl +
-                         (!secondsValid ? " " + styles.Invalid : "") +
-                         (readOnly ? " " + inputStyles.ReadOnly : "")
-            }
-            maxLength={2}
-            size={4}
-            onChange={e => this.updateValue('seconds', e.target.value)}
-            value={seconds}
-            readOnly={readOnly}
-            disabled={readOnly}
-          />
-        </div>
-        <div />
       </div>
     );
   }
