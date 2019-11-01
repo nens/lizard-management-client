@@ -132,11 +132,11 @@ export default class RelativeField extends Component<RelativeFieldProps, Relativ
   componentDidMount() {
     const value = Number(this.props.value);
     
-    if (value && value < 0) {
+    if (this.props.value && value < 0) {
       this.setState({
         currentSelection: "Before"
       });
-    } else if (value && value >= 0) {
+    } else if (this.props.value && value >= 0) {
       this.setState({
         currentSelection: "After"
       });
