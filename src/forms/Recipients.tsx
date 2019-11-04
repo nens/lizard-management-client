@@ -34,7 +34,7 @@ interface Message {
 async function fetchContactsAndMessages(organisationId: string) {
     try {
         const groups = await fetch(
-            `/api/v4/contactgroups/?organisation__unique_id=${organisationId}&page_size=10000`,
+            `/api/v4/contactgroups/?organisation__uuid=${organisationId}&page_size=10000`,
             {
                 credentials: "same-origin"
             }
@@ -42,7 +42,7 @@ async function fetchContactsAndMessages(organisationId: string) {
             .then(response => response.json())
             .then(data => data.results);
         const messages = await fetch(
-            `/api/v4/messages/?organisation__unique_id=${organisationId}&page_size=10000`,
+            `/api/v4/messages/?organisation__uuid=${organisationId}&page_size=10000`,
             {
                 credentials: "same-origin"
             }

@@ -70,7 +70,7 @@ class App extends Component {
       apiAlarmName = "timeseriesalarms";
     }
     fetch(
-      `/api/v4/${apiAlarmName}/?page=${state.page}&organisation__unique_id=${props
+      `/api/v4/${apiAlarmName}/?page=${state.page}&organisation__uuid=${props
         .selectedOrganisation.uuid}`,
       {
         credentials: "same-origin"
