@@ -100,7 +100,7 @@
   "notifications_app.activate": "Activeer",
   "notifications_app.activate_alarm": "Activeer",
   "notifications_app.add_recipients": "Ontvangers toevoegen",
-  "notifications_app.add_thresholds": "Drempel toevoegen",
+  "notifications_app.add_thresholds": "Drempel opslaan",
   "notifications_app.alarm_when_value": "Alarmeer wanneer de waarde",
   "notifications_app.apply": "Toepassen",
   "notifications_app.chart": "Grafiek",

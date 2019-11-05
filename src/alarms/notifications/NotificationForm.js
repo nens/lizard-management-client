@@ -12,7 +12,7 @@ import TextInput from "../../forms/TextInput";
 import { minLength, required } from "../../forms/validators";
 import SelectBox from "../../forms/SelectBox";
 import TimeseriesSelection, { timeseriesChosen } from "../../forms/TimeseriesSelection";
-import ThresholdsSelection from "../../forms/ThresholdsSelection";
+import ThresholdsSelection, { thresholdSelection } from "../../forms/ThresholdsSelection";
 import Snoozing from "../../forms/Snoozing";
 import Recipients, { recipientsValidator } from "../../forms/Recipients";
 import RelativeField, { durationValidator, relativeEndValidator } from "../../forms/RelativeField";
@@ -264,6 +264,9 @@ class NotificationFormModel extends Component {
             name="thresholds"
             title={<FormattedMessage id="notifications_app.newnotification_thresholds" />}
             subtitle={<FormattedMessage id="notifications_app.this_alarm_will_be_triggered" />}
+            validators={[
+              (fieldValue) => thresholdSelection(fieldValue.thresholds)
+            ]}
             initial={
               (
                 currentNotification &&

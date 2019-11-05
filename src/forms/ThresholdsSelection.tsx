@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { FormattedMessage, injectIntl, InjectedIntlProps } from "react-intl";
 import formStyles from "../styles/Forms.css";
 import styles from './ThresholdsSelection.css';
+import { validatorResult } from "./validators";
 
 interface Threshold {
     value: number,
@@ -28,6 +29,15 @@ interface MyState {
     thresholdName: string,
 };
 
+// Validator for this component
+
+ export const thresholdSelection = (value: Threshold[]): validatorResult => {
+    if (value.length === 0) {
+        return "Please add at least one threshold to the alarm"
+    }
+    return false;
+};
+
 class ThresholdsSelectionInput extends Component<MyProps & InjectedIntlProps, MyState> {
     state: MyState = {
         thresholdValue: 0,
@@ -47,6 +57,12 @@ class ThresholdsSelectionInput extends Component<MyProps & InjectedIntlProps, My
         this.setState({
             thresholdValue: 0,
             thresholdName: ""
+        });
+    }
+    handleRemoveThreshold = (index: number) => {
+        this.props.valueChanged({
+            comparison: this.props.value.comparison,
+            thresholds: this.props.value.thresholds.filter((threshold, i) => i !== index)
         });
     }
     handleChangeThresholdValue = (e: any) => {
@@ -154,7 +170,7 @@ class ThresholdsSelectionInput extends Component<MyProps & InjectedIntlProps, My
                                         <span>{threshold.warning_level}</span>
                                         <span
                                             className={styles.ThresholdDelete}
-                                            onClick={() => thresholds.splice(i, 1)}
+                                            onClick={() => this.handleRemoveThreshold(i)}
                                         >
                                             &#10007;
                                       </span>
@@ -185,7 +201,7 @@ class ThresholdsSelectionInput extends Component<MyProps & InjectedIntlProps, My
                     >
                         <FormattedMessage
                             id="notifications_app.add_thresholds"
-                            defaultMessage="Add threshold"
+                            defaultMessage="Save threshold"
                         />
                     </button>
                 </div>
