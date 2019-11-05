@@ -93,7 +93,7 @@
   "notifications_app.activate": "Activate",
   "notifications_app.activate_alarm": "Activate",
   "notifications_app.add_recipients": "Add recipients",
-  "notifications_app.add_thresholds": "Add threshold",
+  "notifications_app.add_thresholds": "Save threshold",
   "notifications_app.alarm_when_value": "Alarm when value",
   "notifications_app.apply": "Apply",
   "notifications_app.back": "Back",
