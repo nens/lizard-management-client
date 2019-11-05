@@ -113,7 +113,7 @@
   "notifications_app.name_will_be_used_in_alerts": "The name of the raster will be used in e-mail and SMS alerts",
   "notifications_app.new_notification": "New notification",
   "notifications_app.newnotification_remove": "Remove",
-  "notifications_app.newnotification_thresholds": "Thresholds",
+  "notifications_app.newnotification_thresholds": "Alarm thresholds",
   "notifications_app.next_step": "Next step",
   "notifications_app.no_data_to_plot": "No data to plot",
   "notifications_app.no_notifications": "No notifications configured...",

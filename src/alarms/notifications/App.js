@@ -70,7 +70,7 @@ class App extends Component {
       apiAlarmName = "timeseriesalarms";
     }
     fetch(
-      `/api/v3/${apiAlarmName}/?page=${state.page}&organisation__unique_id=${props
+      `/api/v4/${apiAlarmName}/?page=${state.page}&organisation__uuid=${props
         .selectedOrganisation.uuid}`,
       {
         credentials: "same-origin"
@@ -91,8 +91,8 @@ class App extends Component {
 
   urlFromAlarm(alarm) {
     if (alarm.url.includes("timeseriesalarms"))
-      return `/api/v3/timeseriesalarms/${alarm.uuid}/`; //(alarm.type==='RasterAlarm')
-    else return `/api/v3/rasteralarms/${alarm.uuid}/`;
+      return `/api/v4/timeseriesalarms/${alarm.uuid}/`; //(alarm.type==='RasterAlarm')
+    else return `/api/v4/rasteralarms/${alarm.uuid}/`;
   }
 
   activateAlarm(alarm) {

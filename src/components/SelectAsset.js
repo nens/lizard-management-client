@@ -1,3 +1,4 @@
+import debounce from "lodash.debounce";
 import React, { Component } from "react";
 import MDSpinner from "react-md-spinner";
 import styles from "./SelectAsset.css";
@@ -10,19 +11,58 @@ class SelectAsset extends Component {
     this.state = {
       input: "",
       uuid: null,
-      showResults: true
+      showAssets: true,
+      assets: null,
+      loading: false
     };
     this.handleInput = this.handleInput.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
     this.handleKeyUp = this.handleKeyUp.bind(this);
+    this.handleAssetSearchInput = debounce(
+      this.handleAssetSearchInput.bind(this),
+      450
+    );
   }
-  componentDidMount() {}
+
+  handleAssetSearchInput(value) {
+    if (value === "") {
+      this.setState({
+        assets: []
+      });
+      return;
+    }
+    this.setState({
+      loading: true
+    });
+
+    const NUMBER_OF_RESULTS = 50;
+
+    let url = `/api/v3/search/?page_size=${NUMBER_OF_RESULTS}&q=${value}`;
+
+    if (this.props.spatialBounds) {
+      const { west, east, north, south } = this.props.spatialBounds;
+      url += `&in_bbox=${west},${south},${east},${north}`;
+    }
+
+    return fetch(
+      url,
+      {credentials: "same-origin"}
+    )
+      .then(response => response.json())
+      .then(json => {
+        this.setState({
+          loading: false,
+          assets: json
+        });
+      });
+  }
+
   handleKeyUp(e) {
     if (e.key === "Escape") {
-      this.props.onInput("");
+      this.handleAssetSearchInput("");
       this.setState({
         input: "",
-        showResults: false
+        showAssets: false
       });
     }
   }
@@ -30,26 +70,33 @@ class SelectAsset extends Component {
     if (e.target.value === this.state.input) {
       return false;
     }
-    this.props.onInput(e.target.value);
+    this.handleAssetSearchInput(e.target.value);
     this.setState({
       input: e.target.value,
-      showResults: true
+      showAssets: true
     });
   }
-  handleSelect(result) {
+  handleSelect(asset) {
     this.setState(
       {
-        input: `${result.title}, ${result.description} (${result.description})`,
-        id: result.id,
-        showResults: false
+        input: `${asset.title} (${asset.description})`,
+        id: asset.id,
+        showAssets: false
       },
       () => {
-        this.props.setAsset(result.view);
+        if (asset && asset.view && asset.view.length >= 2) {
+          this.props.setLocation({
+            lat: asset.view[0],
+            lon: asset.view[1]
+          });
+        }
       }
     );
   }
   render() {
-    const { results, placeholderText, loading, readOnly } = this.props;
+    const { placeholderText } = this.props;
+    const { assets, loading } = this.state;
+
     return (
       <div className={`${styles.SelectAsset} form-input`}>
         <input
@@ -62,8 +109,7 @@ class SelectAsset extends Component {
           onChange={this.handleInput}
           onKeyUp={this.handleKeyUp}
           value={this.state.input}
-          readOnly={readOnly}
-          onFocus={() => this.setState({ showResults: true })}
+          onFocus={() => this.setState({ showAssets: true })}
         />
         {loading ? (
           <div
@@ -77,13 +123,13 @@ class SelectAsset extends Component {
           </div>
         ) : null}
 
-        {results &&
-        results.results &&
-        results.results.length > 0 &&
-        this.state.showResults ? (
-          <div className={styles.Results}>
+        {assets &&
+        assets.results &&
+        assets.results.length > 0 &&
+        this.state.showAssets ? (
+          <div className={styles.Assets}>
             <Scrollbars autoHeight autoHeightMin={100} autoHeightMax={400}>
-              {results.results.map((result, i) => {
+              {assets.results.map((result, i) => {
                 return (
                   <div
                     tabIndex={i + 1}
@@ -96,7 +142,7 @@ class SelectAsset extends Component {
                       }
                     }}
                   >
-                    {result.title}, {result.description} ({result.description})
+                    {result.title} ({result.description})
                   </div>
                 );
               })}

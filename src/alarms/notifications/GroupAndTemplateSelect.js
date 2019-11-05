@@ -9,8 +9,8 @@ class GroupAndTemplateSelect extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedGroupName: null,
-      selectedMessageName: null
+      selectedGroupId: null,
+      selectedMessageId: null
     };
     this.selectGroup = this.selectGroup.bind(this);
     this.selectMessage = this.selectMessage.bind(this);
@@ -18,14 +18,14 @@ class GroupAndTemplateSelect extends Component {
   selectGroup(e) {
     this.setState(
       {
-        selectedGroupName: e.target.value
+        selectedGroupId: parseFloat(e.target.value)
       },
       () => {
-        if (this.state.selectedMessageName && this.state.selectedGroupName) {
+        if (this.state.selectedMessageId && this.state.selectedGroupId) {
           this.props.addGroupAndTemplate({
             idx: this.props.idx,
-            groupName: this.state.selectedGroupName,
-            messageName: this.state.selectedMessageName
+            groupId: this.state.selectedGroupId,
+            messageId: this.state.selectedMessageId
           });
         }
       }
@@ -34,25 +34,37 @@ class GroupAndTemplateSelect extends Component {
   selectMessage(e) {
     this.setState(
       {
-        selectedMessageName: e.target.value
+        selectedMessageId: parseFloat(e.target.value)
       },
       () => {
-        if (this.state.selectedMessageName && this.state.selectedGroupName) {
+        if (this.state.selectedMessageId && this.state.selectedGroupId) {
           this.props.addGroupAndTemplate({
             idx: this.props.idx,
-            groupName: this.state.selectedGroupName,
-            messageName: this.state.selectedMessageName
+            groupId: this.state.selectedGroupId,
+            messageId: this.state.selectedMessageId
           });
         }
       }
     );
+  }
+  getMessageName(messages, messageId) {
+    if (messages.length === 0) return null;
+    const selectedMessage = messages.find(message => message.id === messageId);
+    return selectedMessage ? selectedMessage.name : "Select a template";
+  }
+  getGroupName(groups, groupId) {
+    if (groups.length === 0) return null;
+    const selectedGroup = groups.find(group => group.id === groupId);
+    return selectedGroup ? selectedGroup.name : "Select a group";
   }
   render() {
     const {
       availableGroups,
       availableMessages,
       removeFromGroupAndTemplate,
-      idx
+      idx,
+      groupId,
+      messageId
     } = this.props;
     return (
       <div className={styles.GroupAndTemplateSelector}>
@@ -65,14 +77,12 @@ class GroupAndTemplateSelect extends Component {
               className={formStyles.FormControl}
               onChange={this.selectGroup}
             >
-              <FormattedMessage
-                id="notifications_app.select_a_group"
-                defaultMessage="Select a group"
-                tagName="option"
-              />
+              <option value={groupId}>
+                {groupId ? this.getGroupName(availableGroups, groupId) : "Select a group"}
+              </option>
               {availableGroups.map((group, i) => {
                 return (
-                  <option key={group.id} value={group.name}>
+                  <option key={group.id} value={group.id}>
                     {group.name}
                   </option>
                 );
@@ -87,14 +97,12 @@ class GroupAndTemplateSelect extends Component {
               className={formStyles.FormControl}
               onChange={this.selectMessage}
             >
-              <FormattedMessage
-                id="notifications_app.select_a_template"
-                defaultMessage="Select a template"
-                tagName="option"
-              />
+              <option value={messageId}>
+                {messageId ? this.getMessageName(availableMessages, messageId) : "Select a template"}
+              </option>
               {availableMessages.map((message, i) => {
                 return (
-                  <option key={message.id} value={message.name}>
+                  <option key={message.id} value={message.id}>
                     {message.name}
                   </option>
                 );

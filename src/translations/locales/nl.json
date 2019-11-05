@@ -119,7 +119,7 @@
   "notifications_app.name_will_be_used_in_alerts": "De naam van het raster zal worden gebruikt in de e-mail en SMS alarmberichten",
   "notifications_app.new_notification": "Nieuwe notificatie",
   "notifications_app.newnotification_remove": "Verwijder",
-  "notifications_app.newnotification_thresholds": "Drempelwaardes",
+  "notifications_app.newnotification_thresholds": "Alarm drempelwaardes",
   "notifications_app.next_step": "Volgende stap",
   "notifications_app.no_data_to_plot": "Geen data om te plotten",
   "notifications_app.no_notifications": "Geen alarmnotificaties geconfigureerd...",
