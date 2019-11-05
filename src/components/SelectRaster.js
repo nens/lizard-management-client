@@ -1,5 +1,6 @@
 import debounce from "lodash.debounce";
 import React, { Component } from "react";
+import { injectIntl } from "react-intl";
 import MDSpinner from "react-md-spinner";
 import styles from "./SelectRaster.css";
 import formStyles from "../styles/Forms.css";
@@ -101,6 +102,7 @@ class SelectRaster extends Component {
 
   render() {
     const { rasters, loading, input, showResults } = this.state;
+    const placeholderRasterSelection = this.props.intl.formatMessage({ id: "notification_apps.placeholder_raster_selection" });
     return (
       <div className={`${styles.SelectRaster} form-input`}>
         <input
@@ -109,7 +111,7 @@ class SelectRaster extends Component {
           type="text"
           autoComplete="false"
           className={formStyles.FormControl}
-          placeholder="Type to search"
+          placeholder={placeholderRasterSelection}
           onChange={this.handleInput}
           onKeyUp={this.handleKeyUp}
           value={input}
@@ -155,4 +157,4 @@ class SelectRaster extends Component {
   }
 }
 
-export default SelectRaster;
+export default injectIntl(SelectRaster);

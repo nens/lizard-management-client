@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { FormattedMessage } from "react-intl";
 import ClearInputButton from "./ClearInputButton";
 import styles from "./SelectBox.css";
 import formStyles from "../styles/Forms.css";
@@ -12,7 +13,7 @@ interface MyState {
     showChoices: boolean
 }
 
-type ChoiceT = [string, string];
+type ChoiceT = [string, any];
 
 export default class SelectBoxForRelativeFields extends Component<MyProps, MyState> {
     state: MyState = {
@@ -20,8 +21,8 @@ export default class SelectBoxForRelativeFields extends Component<MyProps, MySta
     }
 
     choices: ChoiceT[] = [
-        ["Before", "Set the start/end of the simulation period from the past"],
-        ["After", "Set the start/end of the simulation period from now or future"]
+        ["Before", <FormattedMessage id="notifications_app.relative_field_before" />],
+        ["After", <FormattedMessage id="notifications_app.relative_field_after" />]
     ]
 
     toggleChoices = (): void => {

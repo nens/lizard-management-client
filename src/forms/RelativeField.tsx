@@ -168,7 +168,12 @@ export default class RelativeField extends Component<RelativeFieldProps, Relativ
     return (
       <div>
         <div>
-          <p>Select relative field as of Before or After current moment?</p>
+          <p>
+            <FormattedMessage
+              id="notifications_app.relative_field_before_or_after"
+              defaultMessage="Select relative field as of Before or After current moment?"
+            />
+          </p>
           <SelectBoxForRelativeFields
             updateCurrentSelection={this.updateCurrentSelection}
             currentSelection={currentSelection}

@@ -137,7 +137,7 @@ class RecipientsInput extends Component<MyProps & InjectedIntlProps, MyState> {
                             }]
                         });
                     }}
-                    title="Add recipients"
+                    title={<FormattedMessage id="notifications_app.add_recipients" />}
                 />
             </div >
         )

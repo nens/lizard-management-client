@@ -47,7 +47,12 @@ class SnoozingInput extends Component<MyProps & InjectedIntlProps> {
         return (
             <div className={styles.Snoozing}>
                 <div>
-                    <span>Snooze alarm after</span>
+                    <span>
+                        <FormattedMessage 
+                            id="notifications_app.snooze_alarm_after"
+                            defaultMessage="Snooze alarm after"
+                        />
+                    </span>
                     <input
                         type="number"
                         min="1"
@@ -56,10 +61,23 @@ class SnoozingInput extends Component<MyProps & InjectedIntlProps> {
                         className={formStyles.FormControlSmall}
                         onChange={this.handleSnoozeSignOn}
                     />
-                    <span>{snooze_sign_on > 1 ? "times" : "time"}</span>
+                    <span>
+                        <FormattedMessage
+                            id="notifications_app.snoozing_tijd_sign_on"
+                            defaultMessage={`{snooze_sign_on, plural, one {time} other {times}}`}
+                            values={{
+                                snooze_sign_on
+                            }}
+                        />
+                    </span>
                 </div>
                 <div>
-                    <span>Snooze "No further impact" after</span>
+                    <span>
+                        <FormattedMessage 
+                            id="notifications_app.snooze_no_further_impact"
+                            defaultMessage='Snooze "No further impact" after'
+                        />
+                    </span>
                     <input
                         type="number"
                         min="1"
@@ -68,7 +86,15 @@ class SnoozingInput extends Component<MyProps & InjectedIntlProps> {
                         className={formStyles.FormControlSmall}
                         onChange={this.handleSnoozeSignOff}
                     />
-                    <span>{snooze_sign_off > 1 ? "times" : "time"}</span>
+                    <span>
+                        <FormattedMessage
+                            id="notifications_app.snoozing_tijd_sign_off"
+                            defaultMessage={`{snooze_sign_off, plural, one {time} other {times}}`}
+                            values={{
+                                snooze_sign_off
+                            }}
+                        />
+                    </span>
                 </div>
             </div>
         )
