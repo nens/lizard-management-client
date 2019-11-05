@@ -47,12 +47,24 @@ class GroupAndTemplateSelect extends Component {
       }
     );
   }
+  getMessageName(messages, messageId) {
+    if (messages.length === 0) return null;
+    const selectedMessage = messages.find(message => message.id === messageId);
+    return selectedMessage ? selectedMessage.name : "Select a template";
+  }
+  getGroupName(groups, groupId) {
+    if (groups.length === 0) return null;
+    const selectedGroup = groups.find(group => group.id === groupId);
+    return selectedGroup ? selectedGroup.name : "Select a group";
+  }
   render() {
     const {
       availableGroups,
       availableMessages,
       removeFromGroupAndTemplate,
-      idx
+      idx,
+      groupId,
+      messageId
     } = this.props;
     return (
       <div className={styles.GroupAndTemplateSelector}>
@@ -65,8 +77,8 @@ class GroupAndTemplateSelect extends Component {
               className={formStyles.FormControl}
               onChange={this.selectGroup}
             >
-              <option value={this.props.groupId}>
-                {this.props.groupId ? this.props.groupId : "Select a group"}
+              <option value={groupId}>
+                {groupId ? this.getGroupName(availableGroups, groupId) : "Select a group"}
               </option>
               {availableGroups.map((group, i) => {
                 return (
@@ -85,8 +97,8 @@ class GroupAndTemplateSelect extends Component {
               className={formStyles.FormControl}
               onChange={this.selectMessage}
             >
-              <option value={this.props.messageId}>
-                {this.props.messageId ? this.props.messageId : "Select a template"}
+              <option value={messageId}>
+                {messageId ? this.getMessageName(availableMessages, messageId) : "Select a template"}
               </option>
               {availableMessages.map((message, i) => {
                 return (

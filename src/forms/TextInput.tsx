@@ -1,4 +1,4 @@
-// The main Form class
+// A normal text input
 
 import React, { Component } from "react";
 

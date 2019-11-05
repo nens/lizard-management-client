@@ -8,10 +8,10 @@ import { App as NewContactApp } from "./contacts/NewContact";
 import { App as NewNotificationApp } from "./notifications/NewNotification";
 import { App as NewTemplateApp } from "./alarmtemplates/NewTemplate";
 import { App as NotificationsApp } from "./notifications/App";
+import { App as EditNotificationApp } from "./notifications/EditNotification";
 import { Detail as AlarmGroupsDetail } from "./alarmgroups/Detail";
 import { Detail as AlarmTemplatesDetail } from "./alarmtemplates/Detail";
 import { Detail as ContactDetail } from "./contacts/Detail";
-import { Detail as NotificationsDetail } from "./notifications/Detail";
 import { Route, Switch, withRouter } from "react-router-dom";
 
 class App extends Component {
@@ -47,7 +47,7 @@ class App extends Component {
           <Route
             exact
             path="/alarms/notifications/:id"
-            component={NotificationsDetail}
+            component={EditNotificationApp}
           />
         </Switch>
         <Route exact path="/alarms/groups" component={AlarmGroupsApp} />

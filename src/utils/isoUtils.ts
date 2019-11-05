@@ -5,7 +5,7 @@ export const toISOValue = (duration: durationObject): string | null => {
   // way around too.
   if (!days && !hours && !minutes && !seconds) {
     return null;
-  }
+  };
 
   return (
     'P' + days + 'DT' +
@@ -30,14 +30,12 @@ export const rasterIntervalStringServerToDurationObject = (str: string): duratio
       minutes: parseInt(str.split(":")[1]) ,
       seconds: parseInt(str.split(":")[2]),
     };  
-  }
-  
-  
-}
+  }; 
+};
 
 export interface durationObject {
   days: number,
   hours: number,
   minutes: number,
   seconds: number
-}
+};

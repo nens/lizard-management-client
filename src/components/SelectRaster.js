@@ -1,3 +1,4 @@
+import debounce from "lodash.debounce";
 import React, { Component } from "react";
 import MDSpinner from "react-md-spinner";
 import styles from "./SelectRaster.css";
@@ -10,18 +11,26 @@ class SelectRaster extends Component {
     this.state = {
       input: "",
       uuid: null,
-      showResults: true
+      showResults: true,
+      rasters: [],
+      loading: false
     };
     this.handleInput = this.handleInput.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
     this.handleKeyUp = this.handleKeyUp.bind(this);
+    this.handleRasterSearchInput = debounce(
+      this.handleRasterSearchInput.bind(this),
+      450
+    );
   }
-  componentDidMount() {}
+
   handleKeyUp(e) {
     if (e.key === "Escape") {
-      this.props.onInput("");
+      this.handleRasterSearchInput("");
       this.setState({
         input: "",
+        uuid: null,
+        loading: false,
         showResults: false
       });
     }
@@ -30,11 +39,37 @@ class SelectRaster extends Component {
     if (e.target.value === this.state.input) {
       return false;
     }
-    this.props.onInput(e.target.value);
+    this.handleRasterSearchInput(e.target.value);
     this.setState({
       input: e.target.value,
       showResults: true
     });
+  }
+  handleRasterSearchInput(value) {
+    if (value === "") {
+      this.setState({
+        rasters: []
+      });
+      this.props.setRaster(null);
+      return;
+    }
+    this.setState({
+      loading: true
+    });
+    return fetch(
+      // show all temporal rasters the user has access to
+      `/api/v3/rasters/?page_size=0&name__icontains=${value}&first_value_timestamp__isnull=false`,
+      {
+        credentials: "same-origin"
+      }
+    )
+      .then(response => response.json())
+      .then(json => {
+        this.setState({
+          loading: false,
+          rasters: json
+        });
+      });
   }
   handleSelect(result) {
     this.setState(
@@ -54,8 +89,18 @@ class SelectRaster extends Component {
       }
     );
   }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.raster !== this.props.raster && this.props.raster) {
+      this.setState({
+        input: this.props.raster.name,
+        uuid: this.props.raster.uuid
+      });
+    };
+  }
+
   render() {
-    const { results, placeholderText, loading } = this.props;
+    const { rasters, loading, input, showResults } = this.state;
     return (
       <div className={`${styles.SelectRaster} form-input`}>
         <input
@@ -64,10 +109,10 @@ class SelectRaster extends Component {
           type="text"
           autoComplete="false"
           className={formStyles.FormControl}
-          placeholder={placeholderText}
+          placeholder="Type to search"
           onChange={this.handleInput}
           onKeyUp={this.handleKeyUp}
-          value={this.state.input}
+          value={input}
           onFocus={() => this.setState({ showResults: true })}
         />
         {loading ? (
@@ -82,23 +127,23 @@ class SelectRaster extends Component {
           </div>
         ) : null}
 
-        {results.length > 0 && this.state.showResults ? (
+        {rasters.length > 0 && showResults ? (
           <div className={styles.Results}>
             <Scrollbars autoHeight autoHeightMin={100} autoHeightMax={400}>
-              {results.map((result, i) => {
+              {rasters.map((raster, i) => {
                 return (
                   <div
                     tabIndex={i + 1}
-                    key={result.uuid}
+                    key={raster.uuid}
                     className={styles.ResultRow}
-                    onClick={() => this.handleSelect(result)}
+                    onClick={() => this.handleSelect(raster)}
                     onKeyUp={e => {
                       if (e.key === "Enter") {
-                        this.handleSelect(result);
+                        this.handleSelect(raster);
                       }
                     }}
                   >
-                    {result.name}
+                    {raster.name} (UUID: {raster.uuid})
                   </div>
                 );
               })}
