@@ -173,7 +173,7 @@ class NotificationFormModel extends Component {
           <TextInput
             name="notificationName"
             title={<FormattedMessage id="notifications_app.name_of_alarm" />}
-            subtitle={<FormattedMessage id="notifications_app.name_of_alarm" />}
+            subtitle={<FormattedMessage id="notifications_app.name_of_alarm_helptext" />}
             placeholder={placeholderNotificationName}
             validators={[minLength(1)]}
             initial={currentNotification && currentNotification.name}
