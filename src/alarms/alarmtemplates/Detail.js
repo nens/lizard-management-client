@@ -12,28 +12,6 @@ import buttonStyles from "../../styles/Buttons.css";
 import formStyles from "../../styles/Forms.css";
 import { withRouter } from "react-router-dom";
 
-HTMLTextAreaElement.prototype.insertAtCaret = function(text) {
-  text = text || "";
-  if (document.selection) {
-    // IE
-    this.focus();
-    var sel = document.selection.createRange();
-    sel.text = text;
-  } else if (this.selectionStart || this.selectionStart === 0) {
-    // Others
-    var startPos = this.selectionStart;
-    var endPos = this.selectionEnd;
-    this.value =
-      this.value.substring(0, startPos) +
-      text +
-      this.value.substring(endPos, this.value.length);
-    this.selectionStart = startPos + text.length;
-    this.selectionEnd = startPos + text.length;
-  } else {
-    this.value += text;
-  }
-};
-
 class Detail extends Component {
   constructor(props) {
     super(props);
@@ -43,6 +21,7 @@ class Detail extends Component {
     };
     this.handleSaveTemplate = this.handleSaveTemplate.bind(this);
     this.handleDeleteTemplate = this.handleDeleteTemplate.bind(this);
+    this.insertTextInTemplateText = this.insertTextInTemplateText.bind(this);
   }
   componentDidMount() {
     const { match, history } = this.props;
@@ -103,6 +82,23 @@ class Detail extends Component {
     } else {
       alert("Please provide a template text");
     }
+  }
+  insertTextInTemplateText(templateText, addedText) {
+    var newTemplateText = "";
+    var element = document.getElementById("templatePreview");
+
+    if (element.selectionStart || element.selectionStart === 0) {
+      newTemplateText = templateText.substring(0, element.selectionStart) +
+        addedText + templateText.substring(element.selectionEnd);
+    } else {
+      newTemplateText = templateText + addedText;
+    }
+
+    var newTemplate = this.state.template;
+    newTemplate.text = newTemplateText;
+    this.setState({
+      template: newTemplate
+    });
   }
   render() {
     const { template, isFetching } = this.state;
@@ -168,9 +164,7 @@ class Detail extends Component {
           <tr
             key={parameter.parameter}
             onClick={() => {
-              document
-                .getElementById("templatePreview")
-                .insertAtCaret(parameter.parameter);
+              this.insertTextInTemplateText(template.text, parameter.parameter);
             }}
           >
             <td>{parameter.parameter}</td>

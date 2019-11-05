@@ -172,13 +172,13 @@ class ThresholdsSelectionInput extends Component<MyProps & InjectedIntlProps, My
                     </div>
                     <button
                         className={
-                            comparison && thresholdValue && thresholdName ?
+                            comparison && thresholdValue !== null && thresholdName ?
                                 `${styles.AddThresholdButton}`
                                 :
                                 `${styles.AddThresholdButton} ${styles.InactiveAddThresholdButton}`
                         }
                         onClick={() => {
-                            return comparison && thresholdValue && thresholdName ? this.handleAddThreshold(
+                            return comparison && thresholdValue !== null && thresholdName ? this.handleAddThreshold(
                                 thresholdValue, thresholdName
                             ) : null
                         }}
