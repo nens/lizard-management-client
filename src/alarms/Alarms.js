@@ -5,7 +5,7 @@ import { withRouter } from "react-router-dom";
 import { Trail, animated } from "react-spring";
 import alarmIcon from "../images/alarm@3x.svg";
 import groupsIcon from "../images/groups@3x.svg";
-import templatesIcon from "../images/templates@3x.svg";
+import templatesIcon from "../images/TemplatesIcon2-81px.svg";
 
 class Alarms extends Component {
   handleLink(destination) {
