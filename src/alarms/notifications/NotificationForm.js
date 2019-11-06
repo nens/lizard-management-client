@@ -121,31 +121,30 @@ class NotificationFormModel extends Component {
     };
   };
 
-  updateUrlToUuid = (url) => {
-    if (url.includes("/api/v4/rasters/")) {
-      const uuid = url.replace(
-        "https://nxt3.staging.lizard.net/api/v4/rasters/" ||
-        "https://demo.lizard.net/api/v4/rasters/",
-        ""
-      );
-      return uuid.replace("/", "")
-    };
-    if (url.includes("/api/v4/messages/")) {
-      const id = url.replace(
-        "https://nxt3.staging.lizard.net/api/v4/messages/" ||
-        "https://demo.lizard.net/api/v4/messages/",
-        ""
-      );
-      return parseFloat(id.replace("/", ""))
-    };
-    if (url.includes("/api/v4/contactgroups/")) {
-      const id = url.replace(
-        "https://nxt3.staging.lizard.net/api/v4/contactgroups/" ||
-        "https://demo.lizard.net/api/v4/contactgroups/",
-        ""
-      );
-      return parseFloat(id.replace("/", ""))
-    };
+  getUuidFromRasterUrl = (url) => {
+    // The UUID is the last part of the URL
+    if (!url) return null;
+    if (url.charAt(url.length -1) !== '/') {
+      // Make sure it ends with '/'
+      url += '/';
+    }
+    const urlParts = url.split('/');
+    // Parts is at least length 2 because we know there is a / in the string
+    // Return next to last element
+    return urlParts[urlParts.length - 2];
+  }
+
+  getIdNumberFromUrl = (url) => {
+    // The UUID is the last part of the URL
+    if (!url) return null;
+    if (url.charAt(url.length -1) !== '/') {
+      // Make sure it ends with '/'
+      url += '/';
+    }
+    const urlParts = url.split('/');
+    // Parts is at least length 2 because we know there is a / in the string
+    // Return next to last element, parsed as float
+    return parseFloat(urlParts[urlParts.length - 2]);
   }
 
   render() {
@@ -197,10 +196,10 @@ class NotificationFormModel extends Component {
             validators={[required("Please select a data type for the alarm.")]}
             showSearchField={false}
             initial={
-              (
-                currentNotification &&
-                (currentNotification.raster ? "Rasters" : "Timeseries")
-              ) || "Rasters"
+            (
+              currentNotification &&
+              (currentNotification.raster ? "Rasters" : "Timeseries")
+            ) || "Rasters"
             }
           />
           <RasterPointSelection
@@ -209,17 +208,17 @@ class NotificationFormModel extends Component {
             validators={[rasterAndPointChosen]}
             disabled={(formValues) => formValues.typeSelection === "Timeseries"}
             initial={
-              (
-                currentNotification &&
-                currentNotification.raster &&
-                currentNotification.geometry && {
-                  raster: this.updateUrlToUuid(currentNotification.raster),
-                  point: {
-                    lat: currentNotification.geometry.coordinates[1],
-                    lon: currentNotification.geometry.coordinates[0]
-                  }
+            (
+              currentNotification &&
+              currentNotification.raster &&
+              currentNotification.geometry && {
+                raster: this.getUuidFromRasterUrl(currentNotification.raster),
+                point: {
+                  lat: currentNotification.geometry.coordinates[1],
+                  lon: currentNotification.geometry.coordinates[0]
                 }
-              ) || null
+              }
+            ) || null
             }
           />
           <TimeseriesSelection
@@ -229,10 +228,10 @@ class NotificationFormModel extends Component {
             validators={[timeseriesChosen]}
             disabled={(formValues) => formValues.typeSelection === "Rasters"}
             initial={
-              (
-                currentNotification &&
-                currentNotification.timeseries
-              ) || null
+            (
+              currentNotification &&
+              currentNotification.timeseries
+            ) || null
             }
           />
           <RelativeField
@@ -303,20 +302,20 @@ class NotificationFormModel extends Component {
             selectedOrganisation={this.props.selectedOrganisation}
             validators={[recipientsValidator]}
             initial={
-              (
-                currentNotification &&
-                {
-                  messages: currentNotification.messages
-                    .map(message => {
-                      return {
-                        messageId: this.updateUrlToUuid(message.message),
-                        groupId: this.updateUrlToUuid(message.contact_group)
-                      }
-                    })
-                }
-              ) || {
-                messages: []
+            (
+              currentNotification &&
+              {
+                messages: currentNotification.messages
+                                             .map(message => {
+                                               return {
+                                                 messageId: this.getIdNumberFromUrl(message.message),
+                                                 groupId: this.getIdNumberFromUrl(message.contact_group)
+                                               }
+                                             })
               }
+            ) || {
+              messages: []
+            }
             }
           />
         </ManagementForm>
