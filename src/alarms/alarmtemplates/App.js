@@ -11,7 +11,7 @@ import gridStyles from "../../styles/Grid.css";
 import tableStyles from "../../styles/Table.css";
 import buttonStyles from "../../styles/Buttons.css";
 import { withRouter, NavLink } from "react-router-dom";
-import templatesIcon from "../../images/templates@3x.svg";
+import templatesIcon from "../../images/data_management@3x.svg";
 
 class App extends Component {
   constructor(props) {

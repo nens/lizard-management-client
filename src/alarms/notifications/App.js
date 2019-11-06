@@ -1,4 +1,4 @@
-import alarmIcon from "../../images/alarm@3x.svg";
+import alarmIcon from "../../images/AlarmsIcon_65px.svg";
 import buttonStyles from "../../styles/Buttons.css";
 import gridStyles from "../../styles/Grid.css";
 import Ink from "react-ink";

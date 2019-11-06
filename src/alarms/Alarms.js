@@ -3,9 +3,10 @@ import { FormattedMessage } from "react-intl";
 import AppIcon from "../components/AppIcon";
 import { withRouter } from "react-router-dom";
 import { Trail, animated } from "react-spring";
-import alarmIcon from "../images/alarm@3x.svg";
-import groupsIcon from "../images/groups@3x.svg";
-import templatesIcon from "../images/TemplatesIcon2-81px.svg";
+import alarmIcon from "../images/AlarmsIcon_65px.svg";
+import groupsIcon from "../images/groups_65px.svg";
+import contactsIcon from "../images/Contactsicon2_65px.svg";
+import templatesIcon from "../images/TemplatesIcon2_65px.svg";
 
 class Alarms extends Component {
   handleLink(destination) {
@@ -58,7 +59,7 @@ class Alarms extends Component {
             defaultMessage="Contacts"
           />
         ),
-        icon: groupsIcon,
+        icon: contactsIcon,
         subTitle: (
           <FormattedMessage
             id="alarms.contacts_management"

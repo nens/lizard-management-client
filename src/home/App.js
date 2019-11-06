@@ -5,9 +5,9 @@ import AppIcon from "../components/AppIcon";
 import { withRouter } from "react-router-dom";
 import { Trail, animated } from "react-spring";
 
-import alarmIcon from "../images/alarm@3x.svg";
-import userManagementIcon from "../images/usermanagement.svg";
-import templateIcon from "../images/templates@3x.svg";
+import alarmIcon from "../images/AlarmsIcon_65px.svg";
+import userManagementIcon from "../images/groups_65px.svg";
+import templateIcon from "../images/data_management@3x.svg";
 
 class App extends Component {
   constructor(props) {
