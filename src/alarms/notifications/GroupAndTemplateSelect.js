@@ -57,6 +57,12 @@ class GroupAndTemplateSelect extends Component {
     const selectedGroup = groups.find(group => group.id === groupId);
     return selectedGroup ? selectedGroup.name : "Select a group";
   }
+  componentDidMount() {
+    this.setState({
+      selectedGroupId: this.props.groupId,
+      selectedMessageId: this.props.messageId
+    });
+  }
   render() {
     const {
       availableGroups,
