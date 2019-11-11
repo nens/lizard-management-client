@@ -3,9 +3,9 @@ import { FormattedMessage } from "react-intl";
 import AppIcon from "../components/AppIcon";
 import { withRouter } from "react-router-dom";
 import { Trail, animated } from "react-spring";
-import rasterIcon from "../images/rasters@3x.svg";
-import wmsIcon from "../images/rasters@3x.svg"; // ToDo: new image for wmsIcon
-import threediIcon from "../images/3di@3x.svg";
+import rasterIcon from "../images/rasters.svg";//"../images/rasters@3x.svg";
+import wmsIcon from "../images/wmslayers.svg";//"../images/rasters@3x.svg";
+import threediIcon from "../images/3di-scenarios.svg";//"../images/3di@3x.svg";
 
 class DataManagement extends Component {
   handleLink(destination) {
@@ -21,53 +21,17 @@ class DataManagement extends Component {
       {
         key: 0,
         handleClick: () => this.handleLink("data_management/rasters"),
-        title: (
-          <FormattedMessage
-            id="data_management.rasters"
-            defaultMessage="Rasters"
-          />
-        ),
-        icon: rasterIcon,
-        subTitle: (
-          <FormattedMessage
-            id="data_management.manage_rasters"
-            defaultMessage="Manage rasters"
-          />
-        )
+        bgImage: rasterIcon
       },
       {
         key: 1,
         handleClick: () => this.handleLink("data_management/wms_layers"),
-        title: (
-          <FormattedMessage
-            id="data_management.wms_layers"
-            defaultMessage="WMS layers"
-          />
-        ),
-        icon: wmsIcon,
-        subTitle: (
-          <FormattedMessage
-            id="data_management.manage_wms_layers"
-            defaultMessage="Manage WMS layers"
-          />
-        )
+        bgImage: wmsIcon
       },
       {
         key: 2,
         handleClick: () => this.handleLink("data_management/scenarios/"),
-        title: (
-          <FormattedMessage
-            id="home.scenarios"
-            defaultMessage="3Di Scenarios"
-          />
-        ),
-        icon: threediIcon,
-        subTitle: (
-          <FormattedMessage
-            id="home.scenario_management"
-            defaultMessage="Scenario management"
-          />
-        )
+        bgImage: threediIcon
       }
     ];
 
@@ -91,9 +55,7 @@ class DataManagement extends Component {
                   <AppIcon
                     handleClick={appIcon.handleClick}
                     key={+new Date()}
-                    src={appIcon.icon}
-                    title={appIcon.title}
-                    subTitle={appIcon.subTitle}
+                    bgImage={appIcon.bgImage}
                   />
                 </animated.div>
               ))}

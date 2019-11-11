@@ -5,9 +5,9 @@ import AppIcon from "../components/AppIcon";
 import { withRouter } from "react-router-dom";
 import { Trail, animated } from "react-spring";
 
-import alarmIcon from "../images/AlarmsIcon_65px.svg";
-import userManagementIcon from "../images/groups_65px.svg";
-import templateIcon from "../images/data_management@3x.svg";
+import alarmIcon from "../images/alarms.svg";//"../images/AlarmsIcon_65px.svg;"
+import userManagementIcon from "../images/usermanagement.svg";//"../images/groups_65px.svg";
+import templateIcon from "../images/datamanagement.svg";//"../images/data_management@3x.svg";
 
 class App extends Component {
   constructor(props) {
@@ -29,48 +29,17 @@ class App extends Component {
       {
         key: 0,
         handleClick: () => this.handleExternalLink("/management/users/"),
-        title: (
-          <FormattedMessage
-            id="home.usermanagement"
-            defaultMessage="User management"
-          />
-        ),
-        icon: userManagementIcon,
-        subTitle: (
-          <FormattedMessage
-            id="home.sso_management"
-            defaultMessage="Single sign-on account management"
-          />
-        )
+        bgImage: userManagementIcon
       },
       {
         key: 1,
         handleClick: () => this.handleLink("/alarms"),
-        title: <FormattedMessage id="home.alarms" defaultMessage="Alarms" />,
-        icon: alarmIcon,
-        subTitle: (
-          <FormattedMessage
-            id="home.alarm_management"
-            defaultMessage="Alarm management"
-          />
-        )
+        bgImage: alarmIcon
       },
       {
         key: 2,
         handleClick: () => this.handleLink("/data_management"),
-        title: (
-          <FormattedMessage
-            id="home.data_management"
-            defaultMessage="Data Management"
-          />
-        ),
-        icon: templateIcon,
-        subTitle: (
-          <FormattedMessage
-            id="home.data_administration"
-            defaultMessage="Data administration"
-          />
-        )
+        bgImage: templateIcon
       }
     ];
     return (
@@ -94,9 +63,7 @@ class App extends Component {
                     <AppIcon
                       handleClick={appIcon.handleClick}
                       key={+new Date()}
-                      src={appIcon.icon}
-                      title={appIcon.title}
-                      subTitle={appIcon.subTitle}
+                      bgImage={appIcon.bgImage}
                     />
                   </animated.div>
                 ))}
