@@ -1,6 +1,7 @@
 {
   "available": "Beschikbaar",
   "selected": "Gekozen",
+  "go_back": "Ga Terug",
   "alarmgroup.send_message": "Bericht verzenden",
   "alarmgroups_app.characters_left": "tekens resterend",
   "alarmgroups_app.delete_group": "Verwijder groep",

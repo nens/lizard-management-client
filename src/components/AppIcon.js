@@ -6,9 +6,10 @@ import { withRouter } from "react-router-dom";
 
 class AppIcon extends Component {
   render() {
-    const { bgImage, handleClick } = this.props;
+    const { title, bgImage, handleClick } = this.props;
     return (
       <div className={styles.AppIcon} style={{backgroundImage: `url(${bgImage})`}} onClick={handleClick}>
+        <p className={styles.Title}>{title}</p>
         <Ink />
       </div>
     );

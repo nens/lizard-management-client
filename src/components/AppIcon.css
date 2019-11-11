@@ -2,7 +2,7 @@
   position: relative;
   width: 229px;
   height: 229px;
-  margin: 17.5px;
+  margin: 22.5px;
   cursor: pointer;
   float: left;
   border-radius: 2px;
@@ -21,13 +21,16 @@
 }
 .Title {
   position: absolute;
-  top: 120px;
+  top: 152px;
+  width: 100%;
   padding-left: 10px;
   padding-right: 10px;
-  font-size: 18px;
-  width: 100%;
-  text-align: center;
   color: #333;
+  font-family: Montserrat;
+  font-size: 17px;
+  font-color: #FFFFFF;
+  text-transform: uppercase;
+  text-align: center;
   text-decoration: none;
 }
 .SubTitle {

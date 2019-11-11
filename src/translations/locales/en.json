@@ -1,6 +1,7 @@
 {
   "available": "Available",
   "selected": "Selected",
+  "go_back": "Go Back",
   "alarmgroup.send_message": "Send message",
   "alarmgroups_app.characters_left": "characters left",
   "alarmgroups_app.delete_group": "Delete group",

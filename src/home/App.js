@@ -6,7 +6,7 @@ import { withRouter } from "react-router-dom";
 import { Trail, animated } from "react-spring";
 
 import alarmIcon from "../images/alarms.svg";//"../images/AlarmsIcon_65px.svg;"
-import userManagementIcon from "../images/usermanagement.svg";//"../images/groups_65px.svg";
+import userManagementIcon from "../images/usermanagement.svg";//"../images/usermanagement-8-165px.svg";//"../images/groups_65px.svg";
 import templateIcon from "../images/datamanagement.svg";//"../images/data_management@3x.svg";
 
 class App extends Component {
@@ -29,16 +29,31 @@ class App extends Component {
       {
         key: 0,
         handleClick: () => this.handleExternalLink("/management/users/"),
+        title: (
+          <FormattedMessage
+            id="home.usermanagement"
+            defaultMessage="User management"
+          />
+        ),
         bgImage: userManagementIcon
       },
       {
         key: 1,
         handleClick: () => this.handleLink("/alarms"),
+        title: (
+          <FormattedMessage id="home.alarms" defaultMessage="Alarms"/>
+        ),
         bgImage: alarmIcon
       },
       {
         key: 2,
         handleClick: () => this.handleLink("/data_management"),
+        title: (
+          <FormattedMessage
+            id="home.data_management"
+            defaultMessage="Data Management"
+          />
+        ),
         bgImage: templateIcon
       }
     ];
@@ -63,6 +78,7 @@ class App extends Component {
                     <AppIcon
                       handleClick={appIcon.handleClick}
                       key={+new Date()}
+                      title={appIcon.title}
                       bgImage={appIcon.bgImage}
                     />
                   </animated.div>

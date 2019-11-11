@@ -23,26 +23,56 @@ class Alarms extends Component {
       { 
         key: 0,
         handleClick: () => this.handleLink("alarms/notifications"),
+        title: (
+          <FormattedMessage
+            id="alarms.notifications"
+            defaultMessage="Notifications"
+          />
+        ),
         bgImage: alarmIcon
       },
       {
         key: 1,
         handleClick: () => this.handleLink("alarms/groups"),
+        title: (
+          <FormattedMessage
+            id="alarms.recipient_management"
+            defaultMessage="Recipient management"
+          />
+        ),
         bgImage: groupsIcon
       },
       {
         key: 2,
         handleClick: () => this.handleLink("alarms/contacts"),
+        title: (
+          <FormattedMessage
+            id="alarms.alarms_contacts"
+            defaultMessage="Contacts"
+          />
+        ),
         bgImage: contactsIcon
       },
       {
         key: 3,
         handleClick: () => this.handleLink("alarms/templates"),
+        title: (
+          <FormattedMessage
+            id="alarms.alarms_templates"
+            defaultMessage="Templates"
+          />
+        ),
         bgImage: templatesIcon
       },
       {
         key: 4,
         handleClick: () => this.handleLink(""),
+        title: (
+          <FormattedMessage
+            id="go_back" // add translation@!
+            defaultMessage="Go Back"
+          />
+        ),
         bgImage: backArrowIcon
       }
     ];
@@ -67,6 +97,7 @@ class Alarms extends Component {
                   <AppIcon
                     handleClick={appIcon.handleClick}
                     key={+new Date()}
+                    title={appIcon.title}
                     bgImage={appIcon.bgImage}
                   />
                 </animated.div>

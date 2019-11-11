@@ -22,21 +22,45 @@ class DataManagement extends Component {
       {
         key: 0,
         handleClick: () => this.handleLink("data_management/rasters"),
+        title: (
+          <FormattedMessage
+            id="data_management.rasters"
+            defaultMessage="Rasters"
+          />
+        ),
         bgImage: rasterIcon
       },
       {
         key: 1,
         handleClick: () => this.handleLink("data_management/wms_layers"),
+        title: (
+          <FormattedMessage
+            id="data_management.wms_layers"
+            defaultMessage="WMS layers"
+          />
+        ),
         bgImage: wmsIcon
       },
       {
         key: 2,
         handleClick: () => this.handleLink("data_management/scenarios/"),
+        title: (
+          <FormattedMessage
+            id="home.scenarios"
+            defaultMessage="3Di Scenarios"
+          />
+        ),
         bgImage: threediIcon
       },
       {
         key: 3,
         handleClick: () => this.handleLink(""),
+        title: (
+          <FormattedMessage
+            id="go_back" // add translation@!
+            defaultMessage="Go Back"
+          />
+        ),
         bgImage: backArrowIcon
       }
     ];
@@ -61,6 +85,7 @@ class DataManagement extends Component {
                   <AppIcon
                     handleClick={appIcon.handleClick}
                     key={+new Date()}
+                    title={appIcon.title}
                     bgImage={appIcon.bgImage}
                   />
                 </animated.div>
