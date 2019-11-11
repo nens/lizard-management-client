@@ -7,6 +7,7 @@ import alarmIcon from "../images/alarms.svg";//"../images/AlarmsIcon_65px.svg";
 import groupsIcon from "../images/groups.svg";//"../images/groups_65px.svg";
 import contactsIcon from "../images/contacts.svg";//"../images/Contactsicon2_65px.svg";
 import templatesIcon from "../images/templates.svg";//"../images/TemplatesIcon2_65px.svg";
+import backArrowIcon from "../images/back-arrow.svg";
 
 class Alarms extends Component {
   handleLink(destination) {
@@ -38,6 +39,11 @@ class Alarms extends Component {
         key: 3,
         handleClick: () => this.handleLink("alarms/templates"),
         bgImage: templatesIcon
+      },
+      {
+        key: 4,
+        handleClick: () => this.handleLink(""),
+        bgImage: backArrowIcon
       }
     ];
 

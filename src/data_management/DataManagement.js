@@ -6,6 +6,7 @@ import { Trail, animated } from "react-spring";
 import rasterIcon from "../images/rasters.svg";//"../images/rasters@3x.svg";
 import wmsIcon from "../images/wmslayers.svg";//"../images/rasters@3x.svg";
 import threediIcon from "../images/3di-scenarios.svg";//"../images/3di@3x.svg";
+import backArrowIcon from "../images/back-arrow.svg";
 
 class DataManagement extends Component {
   handleLink(destination) {
@@ -32,6 +33,11 @@ class DataManagement extends Component {
         key: 2,
         handleClick: () => this.handleLink("data_management/scenarios/"),
         bgImage: threediIcon
+      },
+      {
+        key: 3,
+        handleClick: () => this.handleLink(""),
+        bgImage: backArrowIcon
       }
     ];
 
