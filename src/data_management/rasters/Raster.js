@@ -374,9 +374,7 @@ class Raster extends Component {
                   <div className={`${rasterTableStyles.tableName}`}>
                     <NavLink
                       to={`/data_management/rasters/${raster.uuid}`}
-                      style={{
-                        color: "#333"
-                      }}
+                      style={{ color: "#333" }}
                     >
                       {raster.name}
                     </NavLink>
@@ -384,9 +382,7 @@ class Raster extends Component {
                   <div className={`${rasterTableStyles.tableDescription}`}>
                     <NavLink
                       to={`/data_management/rasters/${raster.uuid}`}
-                      style={{
-                        color: "#333"
-                      }}
+                      style={{ color: "#333" }}
                     >
                       {raster.description}
                     </NavLink>
@@ -522,7 +518,7 @@ class Raster extends Component {
             >
               <FormattedMessage
                 id="rasters.flush_data_rasters"
-                defaultMessage={` Flush Data {clickedCheckboxes, number} {clickedCheckboxes, plural,
+                defaultMessage={` Flush {clickedCheckboxes, number} {clickedCheckboxes, plural,
                   one {Raster}
                   other {Rasters}}`}
                 values={{
