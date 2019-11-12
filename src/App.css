@@ -31,9 +31,7 @@
 
 .Footer {
   background-color: #D8D8D8;
-  /* position: absolute;
-  width: 100%;
-  bottom: 0px; */
+  text-transform: uppercase;
 }
 .Footer a {
   color: #009F86;
