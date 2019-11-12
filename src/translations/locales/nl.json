@@ -28,7 +28,7 @@
   "alarms.contacts_management": "Contactenbeheer",
   "alarms.manage_notifications": "Alarmberichten beheren",
   "alarms.notifications": "Notificaties",
-  "alarms.recipient_management": "Ontvangers beheren",
+  "alarms.recipients": "Ontvangers",
   "alarmtemplates_app.activate": "ACTIVEREN",
   "alarmtemplates_app.active": "ACTIEF",
   "alarmtemplates_app.deactivate": "DEACTIVEREN",
