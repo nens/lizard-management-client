@@ -101,7 +101,7 @@ class App extends Component {
           };
         }
         return (
-          <NavLink to={to} key={to} style={styleNavLink}>
+          <NavLink to={to} key={to} style={styleNavLink} className={styles.Breadcrumbs}>
             {" "}
             <span
               style={styleSpan}
@@ -234,7 +234,7 @@ class App extends Component {
                     }}
                   >
                     <NavLink to="/" style={{ overflowX: "hidden" }}>
-                      Lizard Management
+                      Management
                     </NavLink>
                     {breadcrumbs}
                   </div>
@@ -288,8 +288,8 @@ class App extends Component {
                       <LanguageSwitcher
                         locale={preferredLocale}
                         languages={[
-                          { code: "nl", language: "Nederlands" },
-                          { code: "en", language: "English" }
+                          { code: "nl", language: "NEDERLANDS" },
+                          { code: "en", language: "ENGLISH" }
                         ]}
                       />
                     </div>
