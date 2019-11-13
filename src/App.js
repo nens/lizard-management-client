@@ -178,7 +178,7 @@ class App extends Component {
                         <i className={`material-icons ${styles.AppIcon}`}>
                           apps
                         </i>
-                        Appsgst
+                        Apps
                       </a>
                     </div>
                     <div
