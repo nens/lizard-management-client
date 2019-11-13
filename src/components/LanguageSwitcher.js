@@ -67,7 +67,7 @@ class LanguageSwitcherContainer extends Component {
             className="material-icons"
           >
             mode_comment
-          </i>&nbsp;{selectedLanguage.language}
+          </i>&nbsp;{selectedLanguage.language.toUpperCase()}
         </button>
         {isOpen ? (
           <div className={styles.LanguageSwitcher}>
