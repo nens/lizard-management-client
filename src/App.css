@@ -102,7 +102,7 @@
   border-radius: 2px;
 }
 .OrganisationLinkContainer {
-  width: 160px;
+  width: 260px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -114,7 +114,7 @@
 }
 .OrganisationLink {
   color: #fff !important;
-  max-width: 150px;
+  max-width: 250px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
