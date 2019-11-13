@@ -3,9 +3,12 @@ import { FormattedMessage } from "react-intl";
 import AppIcon from "../components/AppIcon";
 import { withRouter } from "react-router-dom";
 import { Trail, animated } from "react-spring";
-import alarmIcon from "../images/alarm@3x.svg";
-import groupsIcon from "../images/groups@3x.svg";
-import templatesIcon from "../images/templates@3x.svg";
+
+import alarmIcon from "../images/alarms.svg";
+import groupsIcon from "../images/groups.svg";
+import contactsIcon from "../images/contacts.svg";
+import templatesIcon from "../images/templates.svg";
+import backArrowIcon from "../images/back-arrow.svg";
 
 class Alarms extends Component {
   handleLink(destination) {
@@ -27,27 +30,18 @@ class Alarms extends Component {
             defaultMessage="Notifications"
           />
         ),
-        icon: alarmIcon,
-        subTitle: (
-          <FormattedMessage
-            id="alarms.manage_notifications"
-            defaultMessage="Manage notifications"
-          />
-        )
+        bgImage: alarmIcon
       },
       {
         key: 1,
         handleClick: () => this.handleLink("alarms/groups"),
         title: (
-          <FormattedMessage id="alarms.alarms_groups" defaultMessage="Groups" />
-        ),
-        icon: groupsIcon,
-        subTitle: (
           <FormattedMessage
-            id="alarms.recipient_management"
-            defaultMessage="Recipient management"
+            id="alarms.recipients"
+            defaultMessage="Recipients"
           />
-        )
+        ),
+        bgImage: groupsIcon
       },
       {
         key: 2,
@@ -58,13 +52,7 @@ class Alarms extends Component {
             defaultMessage="Contacts"
           />
         ),
-        icon: groupsIcon,
-        subTitle: (
-          <FormattedMessage
-            id="alarms.contacts_management"
-            defaultMessage="Contacts management"
-          />
-        )
+        bgImage: groupsIcon
       },
       {
         key: 3,
@@ -75,13 +63,18 @@ class Alarms extends Component {
             defaultMessage="Templates"
           />
         ),
-        icon: templatesIcon,
-        subTitle: (
+        bgImage: templatesIcon
+      },
+      {
+        key: 4,
+        handleClick: () => this.handleLink(""),
+        title: (
           <FormattedMessage
-            id="alarms.alarms_template_management"
-            defaultMessage="Alarm template management"
+            id="go_back"
+            defaultMessage="Go Back"
           />
-        )
+        ),
+        bgImage: backArrowIcon
       }
     ];
 
@@ -105,9 +98,8 @@ class Alarms extends Component {
                   <AppIcon
                     handleClick={appIcon.handleClick}
                     key={+new Date()}
-                    src={appIcon.icon}
                     title={appIcon.title}
-                    subTitle={appIcon.subTitle}
+                    bgImage={appIcon.bgImage}
                   />
                 </animated.div>
               ))}

@@ -5,9 +5,9 @@ import AppIcon from "../components/AppIcon";
 import { withRouter } from "react-router-dom";
 import { Trail, animated } from "react-spring";
 
-import alarmIcon from "../images/alarm@3x.svg";
+import alarmIcon from "../images/alarms.svg";
 import userManagementIcon from "../images/usermanagement.svg";
-import templateIcon from "../images/templates@3x.svg";
+import templateIcon from "../images/datamanagement.svg";
 
 class App extends Component {
   constructor(props) {
@@ -31,29 +31,17 @@ class App extends Component {
         handleClick: () => this.handleExternalLink("/management/users/"),
         title: (
           <FormattedMessage
-            id="home.usermanagement"
-            defaultMessage="User management"
+            id="home.users"
+            defaultMessage="Users"
           />
         ),
-        icon: userManagementIcon,
-        subTitle: (
-          <FormattedMessage
-            id="home.sso_management"
-            defaultMessage="Single sign-on account management"
-          />
-        )
+        bgImage: userManagementIcon
       },
       {
         key: 1,
         handleClick: () => this.handleLink("/alarms"),
         title: <FormattedMessage id="home.alarms" defaultMessage="Alarms" />,
-        icon: alarmIcon,
-        subTitle: (
-          <FormattedMessage
-            id="home.alarm_management"
-            defaultMessage="Alarm management"
-          />
-        )
+        bgImage: alarmIcon
       },
       {
         key: 2,
@@ -64,13 +52,7 @@ class App extends Component {
             defaultMessage="Data Management"
           />
         ),
-        icon: templateIcon,
-        subTitle: (
-          <FormattedMessage
-            id="home.data_administration"
-            defaultMessage="Data administration"
-          />
-        )
+        bgImage: templateIcon
       }
     ];
     return (
@@ -94,9 +76,8 @@ class App extends Component {
                     <AppIcon
                       handleClick={appIcon.handleClick}
                       key={+new Date()}
-                      src={appIcon.icon}
                       title={appIcon.title}
-                      subTitle={appIcon.subTitle}
+                      bgImage={appIcon.bgImage}
                     />
                   </animated.div>
                 ))}
