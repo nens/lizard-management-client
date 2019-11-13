@@ -1,4 +1,4 @@
-.AppIcon {
+.AppTile {
   position: relative;
   width: 229px;
   height: 219px;
@@ -8,7 +8,7 @@
   border-radius: 10px;
 }
 @media only screen and (max-width: 700px) {
-  .AppIcon {
+  .AppTile {
     transform: scale(.85);
   }
 }

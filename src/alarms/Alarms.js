@@ -1,14 +1,14 @@
 import React, { Component } from "react";
 import { FormattedMessage } from "react-intl";
-import AppIcon from "../components/AppIcon";
+import AppTile from "../components/AppTile";
 import { withRouter } from "react-router-dom";
 import { Trail, animated } from "react-spring";
 
-import alarmIcon from "../images/alarms.svg";
-import groupsIcon from "../images/groups.svg";
-import contactsIcon from "../images/contacts.svg";
-import templatesIcon from "../images/templates.svg";
-import backArrowIcon from "../images/back-arrow.svg";
+import alarmsTileImage from "../images/alarmsTileImage.svg";
+import groupsTileImage from "../images/groupsTileImage.svg";
+import contactsTileImage from "../images/contactsTileImage.svg";
+import templatesTileImage from "../images/templatesTileImage.svg";
+import backArrowTileImage from "../images/backArrowTileImage.svg";
 
 class Alarms extends Component {
   handleLink(destination) {
@@ -20,7 +20,7 @@ class Alarms extends Component {
   }
 
   render() {
-    const appIcons = [
+    const appTiles = [
       { 
         key: 0,
         handleClick: () => this.handleLink("alarms/notifications"),
@@ -30,7 +30,7 @@ class Alarms extends Component {
             defaultMessage="Notifications"
           />
         ),
-        bgImage: alarmIcon
+        bgImage: alarmsTileImage
       },
       {
         key: 1,
@@ -41,7 +41,7 @@ class Alarms extends Component {
             defaultMessage="Recipients"
           />
         ),
-        bgImage: groupsIcon
+        bgImage: groupsTileImage
       },
       {
         key: 2,
@@ -52,7 +52,7 @@ class Alarms extends Component {
             defaultMessage="Contacts"
           />
         ),
-        bgImage: groupsIcon
+        bgImage: contactsTileImage
       },
       {
         key: 3,
@@ -63,7 +63,7 @@ class Alarms extends Component {
             defaultMessage="Templates"
           />
         ),
-        bgImage: templatesIcon
+        bgImage: templatesTileImage
       },
       {
         key: 4,
@@ -74,7 +74,7 @@ class Alarms extends Component {
             defaultMessage="Go Back"
           />
         ),
-        bgImage: backArrowIcon
+        bgImage: backArrowTileImage
       }
     ];
 
@@ -86,20 +86,20 @@ class Alarms extends Component {
               native
               from={{ opacity: 0, x: -5 }}
               to={{ opacity: 1, x: 0 }}
-              keys={appIcons.map(item => item.key)}
+              keys={appTiles.map(item => item.key)}
             >
-              {appIcons.map((appIcon, i) => ({ x, opacity }) => (
+              {appTiles.map((appTile, i) => ({ x, opacity }) => (
                 <animated.div
                   style={{
                     opacity,
                     transform: x.interpolate(x => `translate3d(${x}%,0,0)`)
                   }}
                 >
-                  <AppIcon
-                    handleClick={appIcon.handleClick}
+                  <AppTile
+                    handleClick={appTile.handleClick}
                     key={+new Date()}
-                    title={appIcon.title}
-                    bgImage={appIcon.bgImage}
+                    title={appTile.title}
+                    bgImage={appTile.bgImage}
                   />
                 </animated.div>
               ))}

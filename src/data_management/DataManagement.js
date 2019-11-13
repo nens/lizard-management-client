@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import { FormattedMessage } from "react-intl";
-import AppIcon from "../components/AppIcon";
+import AppTile from "../components/AppTile";
 import { withRouter } from "react-router-dom";
 import { Trail, animated } from "react-spring";
 
-import rasterIcon from "../images/rasters.svg";
-import wmsIcon from "../images/wmslayers.svg";
-import threediIcon from "../images/3di-scenarios.svg";
-import backArrowIcon from "../images/back-arrow.svg";
+import rasterTileImage from "../images/rastersTileImage.svg";
+import wmsTileImage from "../images/wmslayersTileImage.svg";
+import threediTileImage from "../images/3diScenariosTileImage.svg";
+import backArrowTileImage from "../images/backArrowTileImage.svg";
 
 class DataManagement extends Component {
   handleLink(destination) {
@@ -19,7 +19,7 @@ class DataManagement extends Component {
   }
 
   render() {
-    const appIcons = [
+    const appTiles = [
       {
         key: 0,
         handleClick: () => this.handleLink("data_management/rasters"),
@@ -29,7 +29,7 @@ class DataManagement extends Component {
             defaultMessage="Rasters"
           />
         ),
-        bgImage: rasterIcon
+        bgImage: rasterTileImage
       },
       {
         key: 1,
@@ -40,7 +40,7 @@ class DataManagement extends Component {
             defaultMessage="WMS layers"
           />
         ),
-        bgImage: wmsIcon
+        bgImage: wmsTileImage
       },
       {
         key: 2,
@@ -51,7 +51,7 @@ class DataManagement extends Component {
             defaultMessage="3Di Scenarios"
           />
         ),
-        bgImage: threediIcon
+        bgImage: threediTileImage
       },
       {
         key: 3,
@@ -62,7 +62,7 @@ class DataManagement extends Component {
             defaultMessage="Go Back"
           />
         ),
-        bgImage: backArrowIcon
+        bgImage: backArrowTileImage
       }
     ];
 
@@ -74,20 +74,20 @@ class DataManagement extends Component {
               native
               from={{ opacity: 0, x: -5 }}
               to={{ opacity: 1, x: 0 }}
-              keys={appIcons.map(item => item.key)}
+              keys={appTiles.map(item => item.key)}
             >
-              {appIcons.map((appIcon, i) => ({ x, opacity }) => (
+              {appTiles.map((appTile, i) => ({ x, opacity }) => (
                 <animated.div
                   style={{
                     opacity,
                     transform: x.interpolate(x => `translate3d(${x}%,0,0)`)
                   }}
                 >
-                  <AppIcon
-                    handleClick={appIcon.handleClick}
+                  <AppTile
+                    handleClick={appTile.handleClick}
                     key={+new Date()}
-                    title={appIcon.title}
-                    bgImage={appIcon.bgImage}
+                    title={appTile.title}
+                    bgImage={appTile.bgImage}
                   />
                 </animated.div>
               ))}

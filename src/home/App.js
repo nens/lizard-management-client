@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import { FormattedMessage } from "react-intl";
 import styles from "./App.css";
-import AppIcon from "../components/AppIcon";
+import AppTile from "../components/AppTile";
 import { withRouter } from "react-router-dom";
 import { Trail, animated } from "react-spring";
 
-import alarmIcon from "../images/alarms.svg";
-import userManagementIcon from "../images/usermanagement.svg";
-import templateIcon from "../images/datamanagement.svg";
+import alarmTileImage from "../images/alarmsTileImage.svg";
+import userManagementTileImage from "../images/userManagementTileImage.svg";
+import templateTileImage from "../images/dataManagementTileImage.svg";
 
 class App extends Component {
   constructor(props) {
@@ -25,7 +25,7 @@ class App extends Component {
   }
 
   render() {
-    const appIcons = [
+    const appTiles = [
       {
         key: 0,
         handleClick: () => this.handleExternalLink("/management/users/"),
@@ -35,13 +35,13 @@ class App extends Component {
             defaultMessage="Users"
           />
         ),
-        bgImage: userManagementIcon
+        bgImage: userManagementTileImage
       },
       {
         key: 1,
         handleClick: () => this.handleLink("/alarms"),
         title: <FormattedMessage id="home.alarms" defaultMessage="Alarms" />,
-        bgImage: alarmIcon
+        bgImage: alarmTileImage
       },
       {
         key: 2,
@@ -52,7 +52,7 @@ class App extends Component {
             defaultMessage="Data Management"
           />
         ),
-        bgImage: templateIcon
+        bgImage: templateTileImage
       }
     ];
     return (
@@ -64,20 +64,20 @@ class App extends Component {
                 native
                 from={{ opacity: 0, x: -5 }}
                 to={{ opacity: 1, x: 0 }}
-                keys={appIcons.map(item => item.key)}
+                keys={appTiles.map(item => item.key)}
               >
-                {appIcons.map((appIcon, i) => ({ x, opacity }) => (
+                {appTiles.map((appTile, i) => ({ x, opacity }) => (
                   <animated.div
                     style={{
                       opacity,
                       transform: x.interpolate(x => `translate3d(${x}%,0,0)`)
                     }}
                   >
-                    <AppIcon
-                      handleClick={appIcon.handleClick}
+                    <AppTile
+                      handleClick={appTile.handleClick}
                       key={+new Date()}
-                      title={appIcon.title}
-                      bgImage={appIcon.bgImage}
+                      title={appTile.title}
+                      bgImage={appTile.bgImage}
                     />
                   </animated.div>
                 ))}
