@@ -39,12 +39,6 @@ class App extends Component {
       },
       {
         key: 1,
-        handleClick: () => this.handleLink("/alarms"),
-        title: <FormattedMessage id="home.alarms" defaultMessage="Alarms" />,
-        bgImage: alarmTileImage
-      },
-      {
-        key: 2,
         handleClick: () => this.handleLink("/data_management"),
         title: (
           <FormattedMessage
@@ -53,6 +47,12 @@ class App extends Component {
           />
         ),
         bgImage: dataManagementTileImage
+      },
+      {
+        key: 2,
+        handleClick: () => this.handleLink("/alarms"),
+        title: <FormattedMessage id="home.alarms" defaultMessage="Alarms" />,
+        bgImage: alarmTileImage
       }
     ];
     return (
