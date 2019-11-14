@@ -7,7 +7,7 @@ import { Trail, animated } from "react-spring";
 
 import alarmTileImage from "../images/alarmsTileImage.svg";
 import userManagementTileImage from "../images/userManagementTileImage.svg";
-import templateTileImage from "../images/dataManagementTileImage.svg";
+import dataManagementTileImage from "../images/dataManagementTileImage.svg";
 
 class App extends Component {
   constructor(props) {
@@ -52,7 +52,7 @@ class App extends Component {
             defaultMessage="Data Management"
           />
         ),
-        bgImage: templateTileImage
+        bgImage: dataManagementTileImage
       }
     ];
     return (
