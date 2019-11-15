@@ -518,7 +518,7 @@ class Raster extends Component {
             >
               <FormattedMessage
                 id="rasters.flush_data_rasters"
-                defaultMessage={` Flush Data {clickedCheckboxes, number} {clickedCheckboxes, plural,
+                defaultMessage={` Flush {clickedCheckboxes, number} {clickedCheckboxes, plural,
                   one {Raster}
                   other {Rasters}}`}
                 values={{
