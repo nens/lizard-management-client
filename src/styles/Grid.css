@@ -24,6 +24,21 @@
     width: 1170px;
   }
 }
+@media (min-width: 1400px) {
+  .Container {
+    width: 1330px;
+  }
+}
+@media (min-width: 1600px) {
+  .Container {
+    width: 1460px;
+  }
+}
+@media (min-width: 1900px) {
+  .Container {
+    width: 1720px;
+  }
+}
 .Row {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
