@@ -632,13 +632,13 @@ class Raster extends Component {
         </div>
 
         <div>
+          {htmlRasterTableHeader}
           <Scrollbars
             autoHeight
             autoHeightMax={500}
             autoHeightMin={500}
             renderTrackVertical={props => <div {...props} style={{display: 'none'}} className="track-vertical"/>}
           >
-            {htmlRasterTableHeader}
             {htmlRasterTableBody}
           </Scrollbars>
           {htmlRasterTableFooter}
