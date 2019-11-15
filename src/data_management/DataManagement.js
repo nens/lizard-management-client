@@ -1,11 +1,13 @@
 import React, { Component } from "react";
 import { FormattedMessage } from "react-intl";
-import AppIcon from "../components/AppIcon";
+import AppTile from "../components/AppTile";
 import { withRouter } from "react-router-dom";
 import { Trail, animated } from "react-spring";
-import rasterIcon from "../images/rasters@3x.svg";
-import wmsIcon from "../images/rasters@3x.svg"; // ToDo: new image for wmsIcon
-import threediIcon from "../images/3di@3x.svg";
+
+import rasterTileImage from "../images/rastersTileImage.svg";
+import wmsTileImage from "../images/wmslayersTileImage.svg";
+import threediTileImage from "../images/3diScenariosTileImage.svg";
+import backArrowTileImage from "../images/backArrowTileImage.svg";
 
 class DataManagement extends Component {
   handleLink(destination) {
@@ -17,7 +19,7 @@ class DataManagement extends Component {
   }
 
   render() {
-    const appIcons = [
+    const appTiles = [
       {
         key: 0,
         handleClick: () => this.handleLink("data_management/rasters"),
@@ -27,13 +29,7 @@ class DataManagement extends Component {
             defaultMessage="Rasters"
           />
         ),
-        icon: rasterIcon,
-        subTitle: (
-          <FormattedMessage
-            id="data_management.manage_rasters"
-            defaultMessage="Manage rasters"
-          />
-        )
+        bgImage: rasterTileImage
       },
       {
         key: 1,
@@ -44,13 +40,7 @@ class DataManagement extends Component {
             defaultMessage="WMS layers"
           />
         ),
-        icon: wmsIcon,
-        subTitle: (
-          <FormattedMessage
-            id="data_management.manage_wms_layers"
-            defaultMessage="Manage WMS layers"
-          />
-        )
+        bgImage: wmsTileImage
       },
       {
         key: 2,
@@ -61,13 +51,18 @@ class DataManagement extends Component {
             defaultMessage="3Di Scenarios"
           />
         ),
-        icon: threediIcon,
-        subTitle: (
+        bgImage: threediTileImage
+      },
+      {
+        key: 3,
+        handleClick: () => this.handleLink(""),
+        title: (
           <FormattedMessage
-            id="home.scenario_management"
-            defaultMessage="Scenario management"
+            id="go_back"
+            defaultMessage="Go Back"
           />
-        )
+        ),
+        bgImage: backArrowTileImage
       }
     ];
 
@@ -79,21 +74,20 @@ class DataManagement extends Component {
               native
               from={{ opacity: 0, x: -5 }}
               to={{ opacity: 1, x: 0 }}
-              keys={appIcons.map(item => item.key)}
+              keys={appTiles.map(item => item.key)}
             >
-              {appIcons.map((appIcon, i) => ({ x, opacity }) => (
+              {appTiles.map((appTile, i) => ({ x, opacity }) => (
                 <animated.div
                   style={{
                     opacity,
                     transform: x.interpolate(x => `translate3d(${x}%,0,0)`)
                   }}
                 >
-                  <AppIcon
-                    handleClick={appIcon.handleClick}
+                  <AppTile
+                    handleClick={appTile.handleClick}
                     key={+new Date()}
-                    src={appIcon.icon}
-                    title={appIcon.title}
-                    subTitle={appIcon.subTitle}
+                    title={appTile.title}
+                    bgImage={appTile.bgImage}
                   />
                 </animated.div>
               ))}

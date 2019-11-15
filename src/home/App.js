@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import { FormattedMessage } from "react-intl";
 import styles from "./App.css";
-import AppIcon from "../components/AppIcon";
+import AppTile from "../components/AppTile";
 import { withRouter } from "react-router-dom";
 import { Trail, animated } from "react-spring";
 
-import alarmIcon from "../images/alarm@3x.svg";
-import userManagementIcon from "../images/usermanagement.svg";
-import templateIcon from "../images/templates@3x.svg";
+import alarmTileImage from "../images/alarmsTileImage.svg";
+import userManagementTileImage from "../images/userManagementTileImage.svg";
+import dataManagementTileImage from "../images/dataManagementTileImage.svg";
 
 class App extends Component {
   constructor(props) {
@@ -25,38 +25,20 @@ class App extends Component {
   }
 
   render() {
-    const appIcons = [
+    const appTiles = [
       {
         key: 0,
         handleClick: () => this.handleExternalLink("/management/users/"),
         title: (
           <FormattedMessage
-            id="home.usermanagement"
-            defaultMessage="User management"
+            id="home.users"
+            defaultMessage="Users"
           />
         ),
-        icon: userManagementIcon,
-        subTitle: (
-          <FormattedMessage
-            id="home.sso_management"
-            defaultMessage="Single sign-on account management"
-          />
-        )
+        bgImage: userManagementTileImage
       },
       {
         key: 1,
-        handleClick: () => this.handleLink("/alarms"),
-        title: <FormattedMessage id="home.alarms" defaultMessage="Alarms" />,
-        icon: alarmIcon,
-        subTitle: (
-          <FormattedMessage
-            id="home.alarm_management"
-            defaultMessage="Alarm management"
-          />
-        )
-      },
-      {
-        key: 2,
         handleClick: () => this.handleLink("/data_management"),
         title: (
           <FormattedMessage
@@ -64,13 +46,13 @@ class App extends Component {
             defaultMessage="Data Management"
           />
         ),
-        icon: templateIcon,
-        subTitle: (
-          <FormattedMessage
-            id="home.data_administration"
-            defaultMessage="Data administration"
-          />
-        )
+        bgImage: dataManagementTileImage
+      },
+      {
+        key: 2,
+        handleClick: () => this.handleLink("/alarms"),
+        title: <FormattedMessage id="home.alarms" defaultMessage="Alarms" />,
+        bgImage: alarmTileImage
       }
     ];
     return (
@@ -82,21 +64,20 @@ class App extends Component {
                 native
                 from={{ opacity: 0, x: -5 }}
                 to={{ opacity: 1, x: 0 }}
-                keys={appIcons.map(item => item.key)}
+                keys={appTiles.map(item => item.key)}
               >
-                {appIcons.map((appIcon, i) => ({ x, opacity }) => (
+                {appTiles.map((appTile, i) => ({ x, opacity }) => (
                   <animated.div
                     style={{
                       opacity,
                       transform: x.interpolate(x => `translate3d(${x}%,0,0)`)
                     }}
                   >
-                    <AppIcon
-                      handleClick={appIcon.handleClick}
+                    <AppTile
+                      handleClick={appTile.handleClick}
                       key={+new Date()}
-                      src={appIcon.icon}
-                      title={appIcon.title}
-                      subTitle={appIcon.subTitle}
+                      title={appTile.title}
+                      bgImage={appTile.bgImage}
                     />
                   </animated.div>
                 ))}
