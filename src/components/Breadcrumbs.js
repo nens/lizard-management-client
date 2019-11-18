@@ -40,7 +40,6 @@ class Breadcrumbs extends Component {
             textTransform: "uppercase"
           };
         }
-        console.log("still there");
         return (
           <NavLink to={to} key={to} style={styleNavLink}>
             {" "}
