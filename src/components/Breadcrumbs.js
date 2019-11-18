@@ -13,9 +13,7 @@ class Breadcrumbs extends Component {
   }
   computeBreadcrumb() {
     const { pathname } = this.props.location;
-    console.log(pathname);
     const splitPathnames = pathname.slice().split("/");
-    console.log(splitPathnames);
     return pathname === "/"
       ? null
       : splitPathnames.map((sp, i) => {
@@ -61,10 +59,7 @@ class Breadcrumbs extends Component {
       });
   }
   render() {
-    console.log(this.props.location);
-    // const { location } = this.props.location;
     const breadcrumbs = this.computeBreadcrumb();
-    // console.log(breadcrumbs);
     return (
       <div
         className={`${styles.BreadcrumbsContainer} ${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}

@@ -177,6 +177,7 @@ class App extends Component {
             <div className={gridStyles.Container}>
               <div className={gridStyles.Row}>
                 <Breadcrumbs
+                  // The same location is needed to calculate the breadcrumbs.
                   location= {this.props.location}
                 />
               </div>
