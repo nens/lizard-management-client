@@ -1,7 +1,5 @@
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
-// import onClickOutside from "react-onclickoutside";
-// import styles from "./Breadcrumbs.css";
 import styles from "./Breadcrumbs.css";
 import gridStyles from "./../styles/Grid.css";
 
