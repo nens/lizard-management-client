@@ -75,9 +75,7 @@ class Breadcrumbs extends Component {
           <NavLink to="/" style={{ overflowX: "hidden" }}>
             Management
           </NavLink>
-          <div style={{textTransform: "uppercase"}}>
-            {breadcrumbs}
-          </div>
+          {breadcrumbs}
         </div>
       </div>
     );
