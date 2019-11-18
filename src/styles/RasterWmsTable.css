@@ -15,6 +15,8 @@
 }
 
 .tableHeader {
+  display: flex;
+  align-items: center;
   min-width: 800px;
   color: #858E9C;
   font-weight: bold;
