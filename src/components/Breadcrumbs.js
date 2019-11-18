@@ -19,32 +19,11 @@ class Breadcrumbs extends Component {
       : splitPathnames.map((sp, i) => {
         const to = `/${splitPathnames.slice(1, i + 1).join("/")}`;
         let title = sp.replace("_", " ");
-        let styleNavLink = {};
-        let styleSpan = {};
-        // Show the uuid as lowercase
-        if (this.uuidRegex && this.uuidRegex.test(sp)) {
-          // Make sure that the whole uuid is visible
-          styleNavLink = {
-            minWidth: "0px",
-            overflow: "hidden"
-          };
-          styleSpan = {
-            // Show uuid in lowercase
-            textTransform: "lowercase",
-            whiteSpace: "nowrap",
-            textOverflow: "ellipsis",
-            overflow: "hidden"
-          };
-        } else {
-          styleSpan = {
-            textTransform: "uppercase"
-          };
-        }
         return (
-          <NavLink to={to} key={to} style={styleNavLink}>
+          <NavLink to={to} key={to} className={this.uuidRegex.test(sp) ? styles.NavLinkUuid : null}>
             {" "}
             <span
-              style={styleSpan}
+              className={this.uuidRegex.test(sp) ? styles.NavLinkTextUuid : styles.NavLinkText}
               // Show 'uuid' upon hovering over uuid key, to make it apparent
               // for users that it is the uuid.
               title={this.uuidRegex.test(sp) ? "uuid" : ""}
