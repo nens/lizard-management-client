@@ -18,6 +18,7 @@ import { Route, NavLink } from "react-router-dom";
 import LanguageSwitcher from "./components/LanguageSwitcher";
 import OrganisationSwitcher from "./components/OrganisationSwitcher";
 import Snackbar from "./components/Snackbar";
+import Breadcrumbs from "./components/Breadcrumbs";
 import styles from "./App.css";
 import gridStyles from "./styles/Grid.css";
 import buttonStyles from "./styles/Buttons.css";
@@ -71,52 +72,6 @@ class App extends Component {
     const { innerWidth, innerHeight } = window;
     updateViewportDimensions(innerWidth, innerHeight);
   }
-  computeBreadcrumb() {
-    const { pathname } = this.props.location;
-    const splitPathnames = pathname.slice().split("/");
-    return pathname === "/"
-      ? null
-      : splitPathnames.map((sp, i) => {
-        const to = `/${splitPathnames.slice(1, i + 1).join("/")}`;
-        let title = sp.replace("_", " ");
-        let styleNavLink = {};
-        let styleSpan = {};
-        // Show the uuid as lowercase
-        if (this.uuidRegex.test(sp)) {
-          // Make sure that the whole uuid is visible
-          styleNavLink = {
-            minWidth: "0px",
-            overflow: "hidden"
-          };
-          styleSpan = {
-            // Show uuid in lowercase
-            textTransform: "lowercase",
-            whiteSpace: "nowrap",
-            textOverflow: "ellipsis",
-            overflow: "hidden"
-          };
-        } else {
-          styleSpan = {
-            textTransform: "capitalize"
-          };
-        }
-        return (
-          <NavLink to={to} key={to} style={styleNavLink}>
-            {" "}
-            <span
-              style={styleSpan}
-              // Show 'uuid' upon hovering over uuid key, to make it apparent
-              // for users that it is the uuid.
-              title={this.uuidRegex.test(sp) ? "uuid" : ""}
-            >
-              &nbsp;
-                {title}
-              {i === splitPathnames.length - 1 ? null : " /"}
-            </span>
-          </NavLink>
-        );
-      });
-  }
   renderProfileList() {
     return (
       <div
@@ -151,7 +106,6 @@ class App extends Component {
         ? bootstrap.bootstrap.user.first_name
         : "...";
       const { showOrganisationSwitcher } = this.state;
-      const breadcrumbs = this.computeBreadcrumb();
 
       return (
         <div className={styles.App} onClick={this.onUserProfileClick}>
@@ -222,23 +176,9 @@ class App extends Component {
           <div className={`${styles.Secondary}`}>
             <div className={gridStyles.Container}>
               <div className={gridStyles.Row}>
-                <div
-                  className={`${styles.BreadcrumbsContainer} ${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      flexWrap: "wrap",
-                      overflowX: "hidden,"
-                    }}
-                  >
-                    <NavLink to="/" style={{ overflowX: "hidden" }}>
-                      Lizard Management
-                    </NavLink>
-                    {breadcrumbs}
-                  </div>
-                </div>
+                <Breadcrumbs
+                  location= {this.props.location}
+                />
               </div>
             </div>
           </div>

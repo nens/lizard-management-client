@@ -55,15 +55,6 @@
   position: relative;
 }
 
-.BreadcrumbsContainer{
-  height: 65px;
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
-  font-size: 1.2em;
-  overflow-x: hidden;
-  -ms-overflow-style: -ms-autohiding-scrollbar;
-}
 .DocumentationHyperlink{
   position: relative;
   top: 5px;
