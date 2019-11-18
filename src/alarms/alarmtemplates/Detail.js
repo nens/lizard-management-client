@@ -198,7 +198,7 @@ class Detail extends Component {
             <div className={`${gridStyles.FloatRight}`}>
               <TemplateTypeSelection type={template.type} />
             </div>
-            <h5>{template.name} </h5>
+            <h4>{template.name} </h4>
             <hr />
           </div>
         </div>
