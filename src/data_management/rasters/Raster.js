@@ -513,7 +513,7 @@ class Raster extends Component {
                   : `${buttonStyles.Button} ${buttonStyles.Inactive}`
               }
               onClick={this.handleFlushDataRasterClick}
-              style={{ maxHeight: "36px", width: "213px",marginRight: "10px" }}
+              style={{ maxHeight: "36px", width: "220px",marginRight: "10px" }}
               disabled={clickedCheckboxes === 0 ? true : false}
             >
               <FormattedMessage
@@ -535,7 +535,7 @@ class Raster extends Component {
                   : `${buttonStyles.Button} ${buttonStyles.Inactive}`
               }
               onClick={this.handleDeleteRasterClick}
-              style={{ maxHeight: "36px", width: "213px" }}
+              style={{ maxHeight: "36px", width: "220px" }}
               disabled={clickedCheckboxes === 0 ? true : false}
             >
               <FormattedMessage
