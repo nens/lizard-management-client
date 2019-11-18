@@ -1,7 +1,7 @@
 .BreadcrumbsContainer{
   height: 65px;
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   align-items: center;
   font-size: 1.2em;
   overflow-x: hidden;
