@@ -1,0 +1,26 @@
+.BreadcrumbsContainer{
+  height: 65px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  font-size: 1.2em;
+  overflow-x: hidden;
+  -ms-overflow-style: -ms-autohiding-scrollbar;
+}
+
+.NavLinkUuid {
+    /*Make sure that the whole uuid is visible*/
+    min-width: 0px;
+    overflow: hidden;
+}
+.NavLinkText {
+	/*Show the general breadcrumbs in uppercase*/
+    text-transform: uppercase;
+}
+.NavLinkTextUuid {
+    /*Show the uuid in lowercase*/
+    text-transform: lowercase;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
