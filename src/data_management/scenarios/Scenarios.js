@@ -7,7 +7,7 @@ import { FormattedMessage } from "react-intl";
 import SearchBox from "../../components/SearchBox";
 import PaginationBar from "./PaginationBar";
 import buttonStyles from "../../styles/Buttons.css";
-import scenartioStyle from './Scenarios.css';
+import scenarioStyle from './Scenarios.css';
 import scenariosIcon from "../../images/3Di@3x.svg";
 
 class Scenarios extends Component {
@@ -246,31 +246,31 @@ class Scenarios extends Component {
 
         const scenarioTableHeader = () => {
             return (
-                <div className={scenartioStyle.tableHeader}>
-                    <div className={scenartioStyle.tableCheckbox}>
+                <div className={scenarioStyle.tableHeader}>
+                    <div className={scenarioStyle.tableCheckbox}>
                         <input 
                             type="checkbox"
                             onChange={() => this.handleAllCheckboxes(scenarios)}
                             checked={(checkboxes.length === scenarios.length && checkboxes.length !== 0) ? true : false}
                         />
                     </div>
-                    <div className={scenartioStyle.tableScenario}>
+                    <div className={scenarioStyle.tableScenario}>
                         <FormattedMessage id="scenario.scenario" defaultMessage="Scenario" />
                         <i className="fa fa-sort" onClick={() => this.handleOrdering("name")} />
                     </div>
-                    <div className={scenartioStyle.tableModel}>
+                    <div className={scenarioStyle.tableModel}>
                         <FormattedMessage id="scenario.model" defaultMessage="Model" />
                         <i className="fa fa-sort" onClick={() => this.handleOrdering("model_name")} />
                     </div>
-                    <div className={scenartioStyle.tableUser}>
+                    <div className={scenarioStyle.tableUser}>
                         <FormattedMessage id="scenario.user" defaultMessage="User" />
                         <i className="fa fa-sort" onClick={() => this.handleOrdering("username")} />
                     </div>
-                    <div className={scenartioStyle.tableDate}>
+                    <div className={scenarioStyle.tableDate}>
                         <FormattedMessage id="scenario.date" defaultMessage="Date" />
                         <i className="fa fa-sort" onClick={() => this.handleOrdering("created")} />
                     </div>
-                    <div className={scenartioStyle.tableSize}>
+                    <div className={scenarioStyle.tableSize}>
                         <FormattedMessage id="scenario.size" defaultMessage="Size" />
                         <i className="fa fa-sort" onClick={() => this.handleOrdering("total_size")} />
                     </div>
@@ -281,7 +281,7 @@ class Scenarios extends Component {
         const scenarioTableBody = (scenarios) => {
             if (scenarios.length === 0 && isFetching === false) {
                 return (
-                    <div className={scenartioStyle.NoResults}>
+                    <div className={scenarioStyle.NoResults}>
                         <img src={scenariosIcon} alt="3Di scenarios" />
                             <h5>
                                 <FormattedMessage
@@ -295,10 +295,10 @@ class Scenarios extends Component {
                 return scenarios.map(scenario =>
                     (
                         <div
-                            className={scenartioStyle.tableRow} key={scenario.uuid}
+                            className={scenarioStyle.tableRow} key={scenario.uuid}
                             style={{ visibility: isFetching ? "hidden" : "visible" }}
                         >
-                            <div className={scenartioStyle.tableCheckbox}>
+                            <div className={scenarioStyle.tableCheckbox}>
                                 <input
                                     type="checkbox"
                                     onChange={() => this.handleClickOnCheckbox(scenario.uuid)}
@@ -306,19 +306,19 @@ class Scenarios extends Component {
                                     id={scenario.uuid}
                                 />
                             </div>
-                            <div className={scenartioStyle.tableScenario}>
+                            <div className={scenarioStyle.tableScenario}>
                                 {scenario.name}
                             </div>
-                            <div className={scenartioStyle.tableModel}>
+                            <div className={scenarioStyle.tableModel}>
                                 {scenario.model_name}
                             </div>
-                            <div className={scenartioStyle.tableUser}>
+                            <div className={scenarioStyle.tableUser}>
                                 {scenario.username}
                             </div>
-                            <div className={scenartioStyle.tableDate}>
+                            <div className={scenarioStyle.tableDate}>
                                 {convertUTCtoDate(scenario.created)}
                             </div>
-                            <div className={scenartioStyle.tableSize}>
+                            <div className={scenarioStyle.tableSize}>
                                 {convertBytesToGb(scenario.total_size)} Gb
                             </div>
                         </div>
@@ -328,26 +328,26 @@ class Scenarios extends Component {
         };
 
         return (
-            <div className={scenartioStyle.Layout}>
-                <div className={scenartioStyle.SideBar}>
-                    <div className={scenartioStyle.Sum}>
+            <div className={scenarioStyle.Layout}>
+                <div className={scenarioStyle.SideBar}>
+                    <div className={scenarioStyle.Sum}>
                         <img
-                            className={scenartioStyle.DatabaseIcon}
+                            className={scenarioStyle.DatabaseIcon}
                             src={require("../../images/database.svg")}
                             alt="database"
                         />
-                        <div className={scenartioStyle.SumText}>
-                            <span className={scenartioStyle.TotalStorage}>
+                        <div className={scenarioStyle.SumText}>
+                            <span className={scenarioStyle.TotalStorage}>
                                 <FormattedMessage id="scenario.total_storage" defaultMessage="Total Storage" />
                             </span>
                             <br />
-                            <span className={scenartioStyle.TotalNumber}>{convertBytesToGb(usage)}</span>
-                            <span className={scenartioStyle.Gb}> Gb</span>
+                            <span className={scenarioStyle.TotalNumber}>{convertBytesToGb(usage)}</span>
+                            <span className={scenarioStyle.Gb}> Gb</span>
                         </div>
                     </div>
                 </div>
-                <div className={scenartioStyle.Main}>
-                    <div className={scenartioStyle.Search}>
+                <div className={scenarioStyle.Main}>
+                    <div className={scenarioStyle.Search}>
                         <SearchBox
                             handleSearchEnter={() => this.handleUpdateSearchedTermsEnter()}
                             handleSearchOnBlur={() => this.handleUpdateSearchedTermsOnBlur()}
@@ -362,7 +362,7 @@ class Scenarios extends Component {
                         //Hide vertical scrollbar of this component to use the vertical scrollbar of the table body only
                         renderTrackVertical={props => <div {...props} style={{ display: 'none' }} className="track-vertical" />}
                     >
-                        <div className={scenartioStyle.Table}>
+                        <div className={scenarioStyle.Table}>
                             {scenarioTableHeader()}
                             <Scrollbars
                                 autoHeight
@@ -384,23 +384,23 @@ class Scenarios extends Component {
                             </Scrollbars>
                         </div>
                     </Scrollbars>
-                    <div className={scenartioStyle.Footer}>
-                        <div className={scenartioStyle.Pagination}>
+                    <div className={scenarioStyle.Footer}>
+                        <div className={scenarioStyle.Pagination}>
                             <PaginationBar
                                 loadItemsOnPage={page => this.handleUpdatePage(page)}
                                 currentPage={page}
                                 totalPages={Math.ceil(total / pageSize)}
                             />
-                            <div className={scenartioStyle.numberOfScenarios}>
+                            <div className={scenarioStyle.numberOfScenarios}>
                                 {Math.ceil(total / pageSize)} Pages ({total} Scenarios) 
                             </div>
                         </div>
                         <button
                             className={
                                 checkboxes.length > 0 ?
-                                    `${scenartioStyle.DeleteButton} ${buttonStyles.Button} ${buttonStyles.Danger}`
+                                    `${scenarioStyle.DeleteButton} ${buttonStyles.Button} ${buttonStyles.Danger}`
                                     :
-                                    `${scenartioStyle.DeleteButton} ${buttonStyles.Button} ${buttonStyles.Inactive}`
+                                    `${scenarioStyle.DeleteButton} ${buttonStyles.Button} ${buttonStyles.Inactive}`
                             }
                             onClick={() => this.handleDeleteScenario(scenarios)}
                             style={{ maxHeight: "36px" }}
