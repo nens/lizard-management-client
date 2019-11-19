@@ -100,8 +100,6 @@ export function fetchOrganisations() {
             e.roles.find(e => e === "admin") ||
             e.roles.find(e => e === "supplier") 
             // users with only role "user" are no longer allowed in the management page. 
-            // ||
-            // e.roles.find(e => e === "user")
           );
         })
 

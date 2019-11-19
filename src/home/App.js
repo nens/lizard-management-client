@@ -50,7 +50,7 @@ class App extends Component {
                 to={{ opacity: 1, x: 0 }}
                 keys={appIcons.map(item => item.key)}
               >
-                {appIconsWithReadOnlyInfo.map((appIcon, i) => ({ x, opacity }) => (
+                {appIconsWithReadOnlyInfo.map((appIcon) => ({ x, opacity }) => (
                   <animated.div
                     style={{
                       opacity,

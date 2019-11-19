@@ -149,9 +149,9 @@ class App extends Component {
       this.props.isFetchingOrganisations === false &&
       this.props.timesFetchedOrganisations > 0
     ) {
-      const norolesMessage = this.props.intl.formatMessage({ id: "authorization.no_roles_message", defaultMessage: "Dear user, \nYou seem not to be in any organisations that can acces the management pages. \nTherefore you are redirected to the mainpage" });
+      const norolesMessage = this.props.intl.formatMessage({ id: "authorization.no_roles_message", defaultMessage: "Dear user, \nYou seem not to be in any organisations that can access the management pages. \nTherefore you are redirected to the mainpage." });
       alert(norolesMessage);
-      // should redirect to demo.lizard.net on prod
+      // should redirect to <customer_url>.lizard.net on prod
       window.location = "/";
     }
 
@@ -159,9 +159,9 @@ class App extends Component {
       return window.location.href.includes(icon.linksTo.path)
     });
     if (currentHomeAppIcon && !doArraysHaveEqualElement(this.props.selectedOrganisation.roles, currentHomeAppIcon.requiredRoles)) {
-      const redirectMessage = this.props.intl.formatMessage({ id: "authorization.redirected_based_onrole", defaultMessage: "You do not have the rights to acces this data under the selected organisation. \nYou will be redirected" });
+      const redirectMessage = this.props.intl.formatMessage({ id: "authorization.redirected_based_onrole", defaultMessage: "You do not have the rights to access this data under the selected organisation. \nYou will be redirected." });
       alert(redirectMessage);
-      // should redirect to demo.lizard.net/management on prod
+      // should redirect to <customer_url>.lizard.net/management/ on prod
       this.props.history.push("/");
     }
     if (!this.props.isAuthenticated) {

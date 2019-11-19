@@ -1,4 +1,5 @@
 import { combineReducers } from "redux";
+import {getLocalStorage} from "./utils/localStorageUtils";
 import {
   REQUEST_LIZARD_BOOTSTRAP,
   RECEIVE_LIZARD_BOOTSTRAP,
@@ -49,19 +50,7 @@ function organisations(
     timesFetched: 0,
     available: [],
     availableForRasterSharedWith: [],
-    selected: (function () {
-      const localStorageResult = localStorage.getItem("lizard-management-current-organisation");
-      if (!localStorageResult) {
-        return null;
-      }
-      let result;
-      try {
-        result = JSON.parse(localStorageResult);
-      } catch(e) {
-          return null;
-      }
-      return result;
-    }()),
+    selected: getLocalStorage("lizard-management-current-organisation", null),
   },
   action
 ) {
