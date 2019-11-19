@@ -11,6 +11,7 @@ import gridStyles from "../../styles/Grid.css";
 import tableStyles from "../../styles/Table.css";
 import buttonStyles from "../../styles/Buttons.css";
 import { withRouter, NavLink } from "react-router-dom";
+import contactsIcon from "../../images/contacts@3x.svg";
 
 class App extends Component {
   constructor(props) {
@@ -158,240 +159,253 @@ class App extends Component {
           </div>
         </div>
         <br />
-        <div className={`${gridStyles.Row}`}>
-          <div
-            className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
-          >
-            {/* <ActionBar handleFilter={this.handleFilter} /> */}
-            <table className={`${tableStyles.Table} ${tableStyles.Responsive}`}>
-              <thead style={{ backgroundColor: "#D8D8D8" }}>
-                <tr className="text-muted">
-                  <td
-                    style={{ cursor: "pointer", position: "relative" }}
-                    onClick={() =>
-                      this.setState(
-                        {
-                          ordering: {
-                            column: "first_name",
-                            direction: ordering.direction === "-" ? "" : "-"
-                          }
-                        },
-                        () => this.loadContactsOnPage(page)
-                      )}
-                  >
-                    <FormattedMessage
-                      id="contacts_app.first_name"
-                      defaultMessage="First name"
-                    />
-                    {ordering.column === "first_name" ? (
-                      ordering.direction === "-" ? (
-                        <i
-                          style={{ position: "absolute", right: 0 }}
-                          className="material-icons"
-                        >
-                          arrow_drop_up
-                        </i>
-                      ) : (
-                        <i
-                          style={{ position: "absolute", right: 0 }}
-                          className="material-icons"
-                        >
-                          arrow_drop_down
-                        </i>
-                      )
-                    ) : null}
-                  </td>
-                  <td
-                    style={{ cursor: "pointer", position: "relative" }}
-                    onClick={() =>
-                      this.setState(
-                        {
-                          ordering: {
-                            column: "last_name",
-                            direction: ordering.direction === "-" ? "" : "-"
-                          }
-                        },
-                        () => this.loadContactsOnPage(page)
-                      )}
-                  >
-                    <FormattedMessage
-                      id="contacts_app.last_name"
-                      defaultMessage="Last name"
-                    />
-                    {ordering.column === "last_name" ? (
-                      ordering.direction === "-" ? (
-                        <i
-                          style={{ position: "absolute", right: 0 }}
-                          className="material-icons"
-                        >
-                          arrow_drop_up
-                        </i>
-                      ) : (
-                        <i
-                          style={{ position: "absolute", right: 0 }}
-                          className="material-icons"
-                        >
-                          arrow_drop_down
-                        </i>
-                      )
-                    ) : null}
-                  </td>
-                  <td
-                    style={{ cursor: "pointer", position: "relative" }}
-                    onClick={() =>
-                      this.setState(
-                        {
-                          ordering: {
-                            column: "email",
-                            direction: ordering.direction === "-" ? "" : "-"
-                          }
-                        },
-                        () => this.loadContactsOnPage(page)
-                      )}
-                  >
-                    {" "}
-                    <FormattedMessage
-                      id="contacts_app.email_address"
-                      defaultMessage="E-mail address"
-                    />{" "}
-                    {ordering.column === "email" ? (
-                      ordering.direction === "-" ? (
-                        <i
-                          style={{ position: "absolute", right: 0 }}
-                          className="material-icons"
-                        >
-                          arrow_drop_up
-                        </i>
-                      ) : (
-                        <i
-                          style={{ position: "absolute", right: 0 }}
-                          className="material-icons"
-                        >
-                          arrow_drop_down
-                        </i>
-                      )
-                    ) : null}
-                  </td>
-                  <td
-                    style={{ cursor: "pointer", position: "relative" }}
-                    onClick={() =>
-                      this.setState(
-                        {
-                          ordering: {
-                            column: "phone_number",
-                            direction: ordering.direction === "-" ? "" : "-"
-                          }
-                        },
-                        () => this.loadContactsOnPage(page)
-                      )}
-                  >
-                    {" "}
-                    <FormattedMessage
-                      id="contacts_app.phone_number"
-                      defaultMessage="Telephone number"
-                    />{" "}
-                    {ordering.column === "phone_number" ? (
-                      ordering.direction === "-" ? (
-                        <i
-                          style={{ position: "absolute", right: 0 }}
-                          className="material-icons"
-                        >
-                          arrow_drop_up
-                        </i>
-                      ) : (
-                        <i
-                          style={{ position: "absolute", right: 0 }}
-                          className="material-icons"
-                        >
-                          arrow_drop_down
-                        </i>
-                      )
-                    ) : null}
-                  </td>
-                  <td>&nbsp;</td>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredContacts.map((contact, i) => {
-                  // If contact.user is not null, that means a Django User is linked to this contact
-                  // so show contact.user.first_name etcetera
-                  if (contact.user) {
-                    return (
-                      <tr key={contact.id}>
-                        <td>
-                          <NavLink
-                            to={`/alarms/contacts/${contact.id}`}
-                            style={{ color: "#000" }}
-                          >
-                            {contact.user.first_name}
-                          </NavLink>
-                        </td>
-                        <td>
-                          <NavLink
-                            to={`/alarms/contacts/${contact.id}`}
-                            style={{ color: "#000" }}
-                          >
-                            {contact.user.last_name}
-                          </NavLink>
-                        </td>
-                        <td>{contact.user.email}</td>
-                        <td>{contact.user.phone_number}</td>
-                        <td>
-                          <button
-                            type="button"
-                            onClick={() => this.handleDeleteContact(contact)}
-                            className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Danger2} ${gridStyles.FloatRight}`}
-                          >
-                            <FormattedMessage
-                              id="contacts_app.delete"
-                              defaultMessage="Delete"
-                            />
-                          </button>
-                        </td>
-                      </tr>
-                    );
-                  } else {
-                    // Otherwise, no Django User is linked, so show contact.first_name etc.
-                    return (
-                      <tr key={contact.id}>
-                        <td>
-                          <NavLink
-                            to={`/alarms/contacts/${contact.id}`}
-                            style={{ color: "#000" }}
-                          >
-                            {contact.first_name}
-                          </NavLink>
-                        </td>
-                        <td>
-                          <NavLink
-                            to={`/alarms/contacts/${contact.id}`}
-                            style={{ color: "#000" }}
-                          >
-                            {contact.last_name}
-                          </NavLink>
-                        </td>
-                        <td>{contact.email}</td>
-                        <td>{contact.phone_number}</td>
-                        <td>
-                          <button
-                            type="button"
-                            onClick={() => this.handleDeleteContact(contact)}
-                            className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Danger2} ${gridStyles.FloatRight}`}
-                          >
-                            <FormattedMessage
-                              id="contacts_app.delete"
-                              defaultMessage="Delete"
-                            />
-                          </button>
-                        </td>
-                      </tr>
-                    );
-                  }
-                })}
-              </tbody>
-            </table>
+
+        {total === 0 ? (
+          <div className={styles.NoResults}>
+            <img src={contactsIcon} alt="Contacts" />
+            <h5>
+              <FormattedMessage
+                id="alarmtemplates_app.no_contacts_configured"//to do
+                defaultMessage="No contacts configured..."
+              />
+            </h5>
           </div>
-        </div>
+        ) : (
+          <div className={`${gridStyles.Row}`}>
+            <div
+              className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
+            >
+              {/* <ActionBar handleFilter={this.handleFilter} /> */}
+              <table className={`${tableStyles.Table} ${tableStyles.Responsive}`}>
+                <thead style={{ backgroundColor: "#D8D8D8" }}>
+                  <tr className="text-muted">
+                    <td
+                      style={{ cursor: "pointer", position: "relative" }}
+                      onClick={() =>
+                        this.setState(
+                          {
+                            ordering: {
+                              column: "first_name",
+                              direction: ordering.direction === "-" ? "" : "-"
+                            }
+                          },
+                          () => this.loadContactsOnPage(page)
+                        )}
+                    >
+                      <FormattedMessage
+                        id="contacts_app.first_name"
+                        defaultMessage="First name"
+                      />
+                      {ordering.column === "first_name" ? (
+                        ordering.direction === "-" ? (
+                          <i
+                            style={{ position: "absolute", right: 0 }}
+                            className="material-icons"
+                          >
+                            arrow_drop_up
+                          </i>
+                        ) : (
+                          <i
+                            style={{ position: "absolute", right: 0 }}
+                            className="material-icons"
+                          >
+                            arrow_drop_down
+                          </i>
+                        )
+                      ) : null}
+                    </td>
+                    <td
+                      style={{ cursor: "pointer", position: "relative" }}
+                      onClick={() =>
+                        this.setState(
+                          {
+                            ordering: {
+                              column: "last_name",
+                              direction: ordering.direction === "-" ? "" : "-"
+                            }
+                          },
+                          () => this.loadContactsOnPage(page)
+                        )}
+                    >
+                      <FormattedMessage
+                        id="contacts_app.last_name"
+                        defaultMessage="Last name"
+                      />
+                      {ordering.column === "last_name" ? (
+                        ordering.direction === "-" ? (
+                          <i
+                            style={{ position: "absolute", right: 0 }}
+                            className="material-icons"
+                          >
+                            arrow_drop_up
+                          </i>
+                        ) : (
+                          <i
+                            style={{ position: "absolute", right: 0 }}
+                            className="material-icons"
+                          >
+                            arrow_drop_down
+                          </i>
+                        )
+                      ) : null}
+                    </td>
+                    <td
+                      style={{ cursor: "pointer", position: "relative" }}
+                      onClick={() =>
+                        this.setState(
+                          {
+                            ordering: {
+                              column: "email",
+                              direction: ordering.direction === "-" ? "" : "-"
+                            }
+                          },
+                          () => this.loadContactsOnPage(page)
+                        )}
+                    >
+                      {" "}
+                      <FormattedMessage
+                        id="contacts_app.email_address"
+                        defaultMessage="E-mail address"
+                      />{" "}
+                      {ordering.column === "email" ? (
+                        ordering.direction === "-" ? (
+                          <i
+                            style={{ position: "absolute", right: 0 }}
+                            className="material-icons"
+                          >
+                            arrow_drop_up
+                          </i>
+                        ) : (
+                          <i
+                            style={{ position: "absolute", right: 0 }}
+                            className="material-icons"
+                          >
+                            arrow_drop_down
+                          </i>
+                        )
+                      ) : null}
+                    </td>
+                    <td
+                      style={{ cursor: "pointer", position: "relative" }}
+                      onClick={() =>
+                        this.setState(
+                          {
+                            ordering: {
+                              column: "phone_number",
+                              direction: ordering.direction === "-" ? "" : "-"
+                            }
+                          },
+                          () => this.loadContactsOnPage(page)
+                        )}
+                    >
+                      {" "}
+                      <FormattedMessage
+                        id="contacts_app.phone_number"
+                        defaultMessage="Telephone number"
+                      />{" "}
+                      {ordering.column === "phone_number" ? (
+                        ordering.direction === "-" ? (
+                          <i
+                            style={{ position: "absolute", right: 0 }}
+                            className="material-icons"
+                          >
+                            arrow_drop_up
+                          </i>
+                        ) : (
+                          <i
+                            style={{ position: "absolute", right: 0 }}
+                            className="material-icons"
+                          >
+                            arrow_drop_down
+                          </i>
+                        )
+                      ) : null}
+                    </td>
+                    <td>&nbsp;</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredContacts.map((contact, i) => {
+                    // If contact.user is not null, that means a Django User is linked to this contact
+                    // so show contact.user.first_name etcetera
+                    if (contact.user) {
+                      return (
+                        <tr key={contact.id}>
+                          <td>
+                            <NavLink
+                              to={`/alarms/contacts/${contact.id}`}
+                              style={{ color: "#000" }}
+                            >
+                              {contact.user.first_name}
+                            </NavLink>
+                          </td>
+                          <td>
+                            <NavLink
+                              to={`/alarms/contacts/${contact.id}`}
+                              style={{ color: "#000" }}
+                            >
+                              {contact.user.last_name}
+                            </NavLink>
+                          </td>
+                          <td>{contact.user.email}</td>
+                          <td>{contact.user.phone_number}</td>
+                          <td>
+                            <button
+                              type="button"
+                              onClick={() => this.handleDeleteContact(contact)}
+                              className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Danger2} ${gridStyles.FloatRight}`}
+                            >
+                              <FormattedMessage
+                                id="contacts_app.delete"
+                                defaultMessage="Delete"
+                              />
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    } else {
+                      // Otherwise, no Django User is linked, so show contact.first_name etc.
+                      return (
+                        <tr key={contact.id}>
+                          <td>
+                            <NavLink
+                              to={`/alarms/contacts/${contact.id}`}
+                              style={{ color: "#000" }}
+                            >
+                              {contact.first_name}
+                            </NavLink>
+                          </td>
+                          <td>
+                            <NavLink
+                              to={`/alarms/contacts/${contact.id}`}
+                              style={{ color: "#000" }}
+                            >
+                              {contact.last_name}
+                            </NavLink>
+                          </td>
+                          <td>{contact.email}</td>
+                          <td>{contact.phone_number}</td>
+                          <td>
+                            <button
+                              type="button"
+                              onClick={() => this.handleDeleteContact(contact)}
+                              className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Danger2} ${gridStyles.FloatRight}`}
+                            >
+                              <FormattedMessage
+                                id="contacts_app.delete"
+                                defaultMessage="Delete"
+                              />
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    }
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
         <div className={gridStyles.Row}>
           <div
             className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}

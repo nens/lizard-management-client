@@ -1,3 +1,16 @@
 .App {
   
 }
+.NoResults {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 300px;
+  align-items: center;
+}
+.NoResults h5 {
+  color: #C1C1C1;
+  font-weight: 300;
+  margin: 30px;
+}

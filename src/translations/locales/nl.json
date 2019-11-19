@@ -41,6 +41,7 @@
   "alarmtemplates_app.manage_templates": "Sjablonen beheren",
   "alarmtemplates_app.name": "Naam",
   "alarmtemplates_app.new_group": "Nieuw sjabloon",
+  "alarmtemplates_app.no_contacts_configured": "Geen contacten geconfigureerd...",
   "alarmtemplates_app.no_templates_configured": "Geen sjablonen geconfigureerd...",
   "alarmtemplates_app.number_of_messages": "{number_of_messages, number} {number_of_messages, plural, one {ontvanger} other {ontvangers}}",
   "alarmtemplates_app.number_of_templates": "{numberOfTemplates, number} {numberOfTemplates, plural, one {SJABLOON} other {SJABLONEN}}",

@@ -41,6 +41,7 @@
   "alarmtemplates_app.manage_templates": "Manage templates",
   "alarmtemplates_app.name": "Name",
   "alarmtemplates_app.new_group": "New template",
+  "alarmtemplates_app.no_contacts_configured": "No contacts configured...",
   "alarmtemplates_app.no_templates_configured": "No templates configured...",
   "alarmtemplates_app.number_of_messages": "{number_of_messages, number} {number_of_messages, plural, one {recipient} other {recipient groups}}",
   "alarmtemplates_app.number_of_templates": "{numberOfTemplates, number} {numberOfTemplates, plural, one {TEMPLATE} other {TEMPLATES}}",
