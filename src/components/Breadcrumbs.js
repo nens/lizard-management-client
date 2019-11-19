@@ -10,15 +10,18 @@ class Breadcrumbs extends Component {
     this.uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
   }
   computeBreadcrumb() {
-    const { pathname } = this.props.location;
-    const splitPathnames = pathname.slice().split("/");
-    return pathname === "/"
+    const currentRelativeUrl = this.props.location.pathname;
+    // Split the currentRelativeUrl on /.
+    const splitPathnames = currentRelativeUrl.slice().split("/");
+    return currentRelativeUrl === "/"
       ? null
       : splitPathnames.map((sp, i) => {
-        const to = `/${splitPathnames.slice(1, i + 1).join("/")}`;
+        // Slice from 1 and not from 0, because 0 is an empty string caused by
+        // splitting on /.
+        const navLinkRelativeUrl = `/${splitPathnames.slice(1, i + 1).join("/")}`;
         let title = sp.replace("_", " ");
         return (
-          <NavLink to={to} key={to} className={this.uuidRegex.test(sp) ? styles.NavLinkUuid : null}>
+          <NavLink to={navLinkRelativeUrl} key={navLinkRelativeUrl} className={this.uuidRegex.test(sp) ? styles.NavLinkUuid : null}>
             {" "}
             <span
               className={this.uuidRegex.test(sp) ? styles.NavLinkTextUuid : styles.NavLinkText}
