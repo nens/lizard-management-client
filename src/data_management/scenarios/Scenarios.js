@@ -8,6 +8,7 @@ import SearchBox from "../../components/SearchBox";
 import PaginationBar from "./PaginationBar";
 import buttonStyles from "../../styles/Buttons.css";
 import scenartioStyle from './Scenarios.css';
+import scenariosIcon from "../../images/3Di@3x.svg";
 
 class Scenarios extends Component {
     state = {
@@ -278,38 +279,52 @@ class Scenarios extends Component {
         };
 
         const scenarioTableBody = (scenarios) => {
-            return scenarios.map(scenario =>
-                (
-                    <div
-                        className={scenartioStyle.tableRow} key={scenario.uuid}
-                        style={{ visibility: isFetching ? "hidden" : "visible" }}
-                    >
-                        <div className={scenartioStyle.tableCheckbox}>
-                            <input
-                                type="checkbox"
-                                onChange={() => this.handleClickOnCheckbox(scenario.uuid)}
-                                checked={checkboxes.filter(id => id === scenario.uuid).length === 0 ? false : true}
-                                id={scenario.uuid}
-                            />
-                        </div>
-                        <div className={scenartioStyle.tableScenario}>
-                            {scenario.name}
-                        </div>
-                        <div className={scenartioStyle.tableModel}>
-                            {scenario.model_name}
-                        </div>
-                        <div className={scenartioStyle.tableUser}>
-                            {scenario.username}
-                        </div>
-                        <div className={scenartioStyle.tableDate}>
-                            {convertUTCtoDate(scenario.created)}
-                        </div>
-                        <div className={scenartioStyle.tableSize}>
-                            {convertBytesToGb(scenario.total_size)} Gb
-                        </div>
+            if (scenarios.length === 0 && isFetching === false) {
+                return (
+                    <div className={scenartioStyle.NoResults}>
+                        <img src={scenariosIcon} alt="3Di scenarios" />
+                            <h5>
+                                <FormattedMessage
+                                    id="scenario.no_scenarios_configured"
+                                    defaultMessage="No 3Di scenarios configured..."
+                                />
+                            </h5>
                     </div>
-                )
-            );
+                );
+            }   else {
+                return scenarios.map(scenario =>
+                    (
+                        <div
+                            className={scenartioStyle.tableRow} key={scenario.uuid}
+                            style={{ visibility: isFetching ? "hidden" : "visible" }}
+                        >
+                            <div className={scenartioStyle.tableCheckbox}>
+                                <input
+                                    type="checkbox"
+                                    onChange={() => this.handleClickOnCheckbox(scenario.uuid)}
+                                    checked={checkboxes.filter(id => id === scenario.uuid).length === 0 ? false : true}
+                                    id={scenario.uuid}
+                                />
+                            </div>
+                            <div className={scenartioStyle.tableScenario}>
+                                {scenario.name}
+                            </div>
+                            <div className={scenartioStyle.tableModel}>
+                                {scenario.model_name}
+                            </div>
+                            <div className={scenartioStyle.tableUser}>
+                                {scenario.username}
+                            </div>
+                            <div className={scenartioStyle.tableDate}>
+                                {convertUTCtoDate(scenario.created)}
+                            </div>
+                            <div className={scenartioStyle.tableSize}>
+                                {convertBytesToGb(scenario.total_size)} Gb
+                            </div>
+                        </div>
+                    )
+                );
+            }
         };
 
         return (

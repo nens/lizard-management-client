@@ -269,5 +269,6 @@
   "scenario.scenario": "Scenario",
   "scenario.size": "Size",
   "scenario.total_storage": "Total Storage",
-  "scenario.user": "User"
+  "scenario.user": "User",
+  "scenario.no_scenarios_configured": "No 3Di scenarios configured."
 }

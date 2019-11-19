@@ -356,5 +356,6 @@
   "scenario.scenario": "Scenario",
   "scenario.size": "Grootte",
   "scenario.total_storage": "Totale Opslag",
-  "scenario.user": "Gebruiker"
+  "scenario.user": "Gebruiker",
+  "scenario.no_scenarios_configured": "Geen 3Di scenario's geconfigureerd."
 }
