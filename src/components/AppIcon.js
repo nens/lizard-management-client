@@ -7,24 +7,21 @@ import { injectIntl } from "react-intl";
 
 class AppIcon extends Component {
   render() {
-    const { src, title, subTitle, handleClick, readonly, requiredRoles } = this.props;
-    const requiresRoleMessage = this.props.intl.formatMessage({ id: "authorization.requires_role", defaultMessage: "Requires role: " });
-    const requiresRolesMessage = this.props.intl.formatMessage({ id: "authorization.requires_roles", defaultMessage: "Requires one of the following roles: " });
+    const { 
+      src, title, subTitle, handleClick, readonly, 
+      requiredRoles // eslint-disable-line no-unused-vars
+    } = this.props;
+    const requiresRoleMessage = this.props.intl.formatMessage({ 
+        id: "authorization.requires_role", 
+        defaultMessage: "Requires {requiredRolesLength, plural,  one {role} other {one of the following roles} }: ",
+      },
+      {requiredRolesLength: requiredRoles.length}
+    );
     return (
       <div 
         className={`${styles.AppIcon} ${readonly ? styles.Disabled: null}`} 
         onClick={!readonly ? handleClick : undefined} 
-        title={
-          readonly && requiredRoles.length === 1  
-          ? 
-          requiresRoleMessage + requiredRoles 
-          : 
-          readonly && requiredRoles.length > 1 
-          ?
-          requiresRolesMessage + requiredRoles 
-          : 
-          null 
-        }
+        title={readonly ? requiresRoleMessage + requiredRoles : null}
       >
         <img src={src} alt={title} className={styles.Img}/>
         <p className={styles.Title}>{title}</p>

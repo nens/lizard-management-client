@@ -73,7 +73,7 @@ export function fetchOrganisations() {
   return (dispatch, getState) => {
     const state = getState();
 
-    const organisation = state.organisations.selected;
+    
 
     dispatch({ type: REQUEST_ORGANISATIONS });
 
@@ -86,6 +86,7 @@ export function fetchOrganisations() {
     fetch(url, opts)
       .then(responseObj => responseObj.json())
       .then(responseData => {
+        const organisation = state.organisations.selected;
         const data = responseData.results;
         const allOrganisations = data.map(organisation => {
           //use organisation uuid without dashes only
