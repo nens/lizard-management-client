@@ -112,50 +112,28 @@ export function fetchOrganisations() {
         ) {
           const selectedOrganisation = availableOrganisations[0];
           dispatch(selectOrganisation(selectedOrganisation));
-          dispatch(
-            addNotification(
-              `Organisation "${(selectedOrganisation && selectedOrganisation.name) || 'none' }" selected`,
-              2000
-            )
-          );
-          localStorage.setItem(
-            "lizard-management-current-organisation",
-            JSON.stringify(selectedOrganisation)
-          );
-        }
-        
-
-        if (!organisation) {
-          // No organisation was chosen, select the first one that has admin role and else first one with suplier role, and let
-          // the user know about this
-
-          const firstOrganisation =
-            data.find(e => e.roles.find(e2 => e2 === "admin")) ||
-            data.find(e => e.roles.find(e2 => e2 === "supplier")) ||
-            null;
-
-          dispatch(selectOrganisation(firstOrganisation));
-
-          dispatch(
-            addNotification(
-              `Organisation "${(firstOrganisation && firstOrganisation.name) || "none"}" selected`,
-              2000
-            )
-          );
         }
       });
   };
 }
 
 export function selectOrganisation(organisation) {
-  localStorage.setItem(
-    "lizard-management-current-organisation",
-    JSON.stringify(organisation)
-  );
-  return {
-    type: SELECT_ORGANISATION,
-    organisation
-  };
+  return (dispatch) => {
+    localStorage.setItem(
+      "lizard-management-current-organisation",
+      JSON.stringify(organisation)
+    );
+    dispatch(
+      addNotification(
+        `Organisation "${(organisation && organisation.name) || "none"}" selected`,
+        2000
+      )
+    );
+    dispatch({
+      type: SELECT_ORGANISATION,
+      organisation
+    });
+  }
 }
 
 // MARK: Observation types

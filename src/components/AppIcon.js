@@ -15,7 +15,7 @@ class AppIcon extends Component {
         id: "authorization.requires_role", 
         defaultMessage: "Requires {requiredRolesLength, plural,  one {role} other {one of the following roles} }: ",
       },
-      {requiredRolesLength: requiredRoles.length}
+      {requiredRolesLength: (requiredRoles && requiredRoles.length) || 0}
     );
     return (
       <div 
