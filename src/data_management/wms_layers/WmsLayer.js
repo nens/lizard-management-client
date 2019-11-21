@@ -1,4 +1,4 @@
-import wmsIcon from "../../images/rasters@3x.svg";
+import wmsIcon from "../../images/wms@3x.svg";
 import buttonStyles from "../../styles/Buttons.css";
 import gridStyles from "../../styles/Grid.css";
 import wmsLayerTableStyles from "../../styles/RasterWmsTable.css";
@@ -258,7 +258,7 @@ class WmsLayer extends Component {
   }
 
   render() {
-    const { total, page } = this.state;
+    const { total, page, isFetching } = this.state;
     const clickedCheckboxes = this.state.checkboxes.filter(e => e.checked)
       .length;
 
@@ -299,7 +299,7 @@ class WmsLayer extends Component {
       >
         <div
           style={{
-            visibility: this.state.isFetching ? "hidden" : "visible"
+            visibility: isFetching ? "hidden" : "visible"
           }}
         >
           <Scrollbars
@@ -365,7 +365,7 @@ class WmsLayer extends Component {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            visibility: this.state.isFetching ? "visible" : "hidden"
+            visibility: isFetching ? "visible" : "hidden"
           }}
         >
           <MDSpinner />
@@ -382,7 +382,7 @@ class WmsLayer extends Component {
             justifyContent: "center",
             alignItems: "center",
             visibility:
-              this.state.isFetching === false && this.state.wmsLayers.length === 0
+              isFetching === false && total === 0
                 ? "visible"
                 : "hidden"
           }}
