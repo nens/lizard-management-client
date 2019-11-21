@@ -8,7 +8,7 @@ import SearchBox from "../../components/SearchBox";
 import PaginationBar from "./PaginationBar";
 import buttonStyles from "../../styles/Buttons.css";
 import scenarioStyle from './Scenarios.css';
-import scenariosIcon from "../../images/3Di@3x.svg";
+import scenariosIcon from "../../images/3di@3x.svg";
 
 class Scenarios extends Component {
     state = {
