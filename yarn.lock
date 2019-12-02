@@ -12113,6 +12113,13 @@ x-is-string@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/x-is-string/-/x-is-string-0.1.0.tgz#474b50865af3a49a9c4657f05acd145458f77d82"
 
+x2js@^3.4.0:
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/x2js/-/x2js-3.4.0.tgz#1414ad99062705086a4838e8dde4ecd06e8bd3a9"
+  integrity sha512-1tozn7D51ghz2DAiy5U6R55qn9x2F3lHUxusOD0QtYlLSDGxyXjHfn0c508eXG1D7s8qqj54SiU5HsPEfhDIpg==
+  dependencies:
+    xmldom "^0.1.19"
+
 xdg-basedir@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/xdg-basedir/-/xdg-basedir-3.0.0.tgz#496b2cc109eca8dbacfe2dc72b603c17c5870ad4"
@@ -12125,6 +12132,11 @@ xml-escape@~1.0.0:
 xml-name-validator@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/xml-name-validator/-/xml-name-validator-3.0.0.tgz#6ae73e06de4d8c6e47f9fb181f78d648ad457c6a"
+
+xmldom@^0.1.19:
+  version "0.1.27"
+  resolved "https://registry.yarnpkg.com/xmldom/-/xmldom-0.1.27.tgz#d501f97b3bdb403af8ef9ecc20573187aadac0e9"
+  integrity sha1-1QH5ezvbQDr4757MIFcxh6rawOk=
 
 xregexp@4.0.0:
   version "4.0.0"
