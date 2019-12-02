@@ -1,4 +1,4 @@
-import wmsIcon from "../../images/rasters@3x.svg";
+import wmsIcon from "../../images/wms@3x.svg";
 import buttonStyles from "../../styles/Buttons.css";
 import gridStyles from "../../styles/Grid.css";
 import wmsLayerTableStyles from "../../styles/RasterWmsTable.css";
@@ -258,7 +258,7 @@ class WmsLayer extends Component {
   }
 
   render() {
-    const { total, page } = this.state;
+    const { total, page, isFetching } = this.state;
     const clickedCheckboxes = this.state.checkboxes.filter(e => e.checked)
       .length;
 
@@ -292,108 +292,91 @@ class WmsLayer extends Component {
     );
 
     const htmlWmsLayerTableBody = (
-      <div
-        style={{
-          position: "relative"
-        }}
-      >
+      <div className={`${gridStyles.Row}`}>
         <div
-          style={{
-            visibility: this.state.isFetching ? "hidden" : "visible"
-          }}
+          className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
         >
-          <Scrollbars
-            autoHeight
-            autoHeightMin={450}
-            autoHeightMax={450}
-            style={{ width: "100%" }}
-          >
-            {this.state.paginatedWmsLayers.map((wmsLayer, i) => {
-              return (
-                <div 
-                  className={`${wmsLayerTableStyles.tableBody}`}
-                  key={wmsLayer.uuid}
-                >
-                  <div className={`${wmsLayerTableStyles.tableCheckbox}`}>
-                    <input
-                      type="checkbox"
-                      // Make sure that you can still use the checkbox to click on,
-                      // in combination with the check all checkbox.
-                      onClick={this.clickRegularCheckbox}
-                      checked={
-                        this.state.checkboxes[i]
-                          ? this.state.checkboxes[i].checked
-                          : false
-                      }
-                      id={"checkbox_" + i}
-                    />
-                  </div>
-                  <div
-                    className={`${wmsLayerTableStyles.tableName}`}
-                  >
-                    <NavLink
-                      to={`/data_management/wms_layers/${wmsLayer.uuid}`}
-                      style={{
-                        color: "#333"
-                      }}
+
+          {total === 0 && isFetching === false ? (
+            <div
+              className={styles.NoResults}
+              style={{ minHeight: "450px" }}
+            >
+              <img src={wmsIcon} alt="Alarms" />
+              <h5>
+                <FormattedMessage
+                  id="wms_layers.no_wms_layers"
+                  defaultMessage="No wms layers found..."
+                />
+              </h5>
+            </div>
+          ) : isFetching === true ? (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                minHeight: "450px"
+              }}
+            >
+              <MDSpinner />
+            </div>
+          ) : (
+            <div>
+              <Scrollbars
+                autoHeight
+                autoHeightMin={450}
+                autoHeightMax={450}
+                style={{ width: "100%" }}
+              >
+                {this.state.paginatedWmsLayers.map((wmsLayer, i) => {
+                  return (
+                    <div
+                      className={`${wmsLayerTableStyles.tableBody}`}
+                      key={wmsLayer.uuid}
                     >
-                      {wmsLayer.name}
-                    </NavLink>
-                  </div>
-                  <div className={`${wmsLayerTableStyles.tableDescription}`}>
-                    <NavLink
-                      to={`/data_management/wms_layers/${wmsLayer.uuid}`}
-                      style={{
-                        color: "#333"
-                      }}
-                    >
-                      {wmsLayer.description}
-                    </NavLink>
-                  </div>
-                </div>
-              );
-            })}
-          </Scrollbars>
-        </div>
-        <div
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            bottom: 0,
-            right: 0,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            visibility: this.state.isFetching ? "visible" : "hidden"
-          }}
-        >
-          <MDSpinner />
-        </div>
-        <div
-          className={styles.NoResults}
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            bottom: 0,
-            right: 0,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            visibility:
-              this.state.isFetching === false && this.state.wmsLayers.length === 0
-                ? "visible"
-                : "hidden"
-          }}
-        >
-          <img src={wmsIcon} alt="Alarms" />
-          <h5>
-            <FormattedMessage
-              id="wms_layers.no_wms_layers"
-              defaultMessage="No wms layers found..."
-            />
-          </h5>
+                      <div className={`${wmsLayerTableStyles.tableCheckbox}`}>
+                        <input
+                          type="checkbox"
+                          // Make sure that you can still use the checkbox to click on,
+                          // in combination with the check all checkbox.
+                          onClick={this.clickRegularCheckbox}
+                          checked={
+                            this.state.checkboxes[i]
+                              ? this.state.checkboxes[i].checked
+                              : false
+                          }
+                          id={"checkbox_" + i}
+                        />
+                      </div>
+                      <div
+                        className={`${wmsLayerTableStyles.tableName}`}
+                      >
+                        <NavLink
+                          to={`/data_management/wms_layers/${wmsLayer.uuid}`}
+                          style={{
+                            color: "#333"
+                          }}
+                        >
+                          {wmsLayer.name}
+                        </NavLink>
+                      </div>
+                      <div className={`${wmsLayerTableStyles.tableDescription}`}>
+                        <NavLink
+                          to={`/data_management/wms_layers/${wmsLayer.uuid}`}
+                          style={{
+                            color: "#333"
+                          }}
+                        >
+                          {wmsLayer.description}
+                        </NavLink>
+                      </div>
+                    </div>
+                  );
+                })}
+              </Scrollbars>
+            </div>
+          )}
         </div>
       </div>
     );
