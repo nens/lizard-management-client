@@ -300,12 +300,7 @@ class WmsLayer extends Component {
           {total === 0 && isFetching === false ? (
             <div
               className={styles.NoResults}
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                minHeight: "450px"
-              }}
+              style={{ minHeight: "450px" }}
             >
               <img src={wmsIcon} alt="Alarms" />
               <h5>
