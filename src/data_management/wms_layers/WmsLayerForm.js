@@ -91,6 +91,16 @@ class WmsLayerFormModel extends Component {
     }
   }
 
+  spatialBoundsValidator = (value) => {
+    try{
+      JSON.parse(value);
+      return false;
+    } catch (error) {
+      console.log(error);
+      return this.props.intl.formatMessage({ id: "wms_layer_form.spatial_bounds_must_be_json"});
+    }
+  }
+
   handleResponse(response) {
     this.setState({
       modalErrorMessage: response,
@@ -118,6 +128,7 @@ class WmsLayerFormModel extends Component {
           download_url: validatedData.wmsLayerDownloadUrl,
           min_zoom: validatedData.wmsLayerMinZoom,
           max_zoom: validatedData.wmsLayerMaxZoom,
+          spatial_bounds: validatedData.wmsLayerSpatialBounds,
           options: validatedData.wmsLayerOptions,
           get_feature_info: validatedData.wmsLayerGetFeatureInfo,
           get_feature_info_url: validatedData.wmsLayerGetFeatureInfoUrl,
@@ -146,6 +157,7 @@ class WmsLayerFormModel extends Component {
         download_url: validatedData.wmsLayerDownloadUrl,
         min_zoom: validatedData.wmsLayerMinZoom,
         max_zoom: validatedData.wmsLayerMaxZoom,
+        spatial_bounds: validatedData.wmsLayerSpatialBounds,
         options: validatedData.wmsLayerOptions,
         get_feature_info: validatedData.wmsLayerGetFeatureInfo,
         get_feature_info_url: validatedData.wmsLayerGetFeatureInfoUrl,
@@ -369,6 +381,16 @@ class WmsLayerFormModel extends Component {
                 currentWmsLayer.max_zoom.toString()) || 31
           }
           validators={[this.maxZoomValidator]}
+        />
+        <TextArea
+          name="wmsLayerSpatialBounds"
+          title={<FormattedMessage id="wms_layer_form.spatial_bounds" />}
+          subtitle={<FormattedMessage id="wms_layer_form.spatial_bounds_must_be_json" />}
+          initial = {
+            (currentWmsLayer &&
+              JSON.stringify(currentWmsLayer.spatial_bounds)) || '{}'
+          }
+          validators={[this.spatialBoundsValidator]}
         />
         <TextArea
           name="wmsLayerOptions"
