@@ -1,4 +1,5 @@
 import { combineReducers } from "redux";
+import {getLocalStorage} from "./utils/localStorageUtils";
 import {
   REQUEST_LIZARD_BOOTSTRAP,
   RECEIVE_LIZARD_BOOTSTRAP,
@@ -49,10 +50,7 @@ function organisations(
     timesFetched: 0,
     available: [],
     availableForRasterSharedWith: [],
-    selected:
-      JSON.parse(
-        localStorage.getItem("lizard-management-current-organisation")
-      ) || null
+    selected: getLocalStorage("lizard-management-current-organisation", null),
   },
   action
 ) {
@@ -70,38 +68,22 @@ function organisations(
     case REQUEST_ORGANISATIONS:
       return { ...state, isFetching: true };
     case RECEIVE_ORGANISATIONS:
+    {
       return {
         ...state,
-        available: action.data
-          .filter(e => {
-            return (
-              e.roles.find(e => e === "manager") ||
-              e.roles.find(e => e === "admin") ||
-              e.roles.find(e => e === "supplier") ||
-              e.roles.find(e => e === "user")
-            );
-          })
-          .map(organisation => {
-            //use organisation uuid without dashes only
-            return {
-              ...organisation,
-              uuid: organisation.uuid.replace(/-/g, "")
-            };
-          }),
-        availableForRasterSharedWith: action.data.map(organisation => {
-          //use organisation uuid without dashes only
-          return {
-            ...organisation,
-            uuid: organisation.uuid.replace(/-/g, "")
-          };
-        }),
+        available: action.available,
+        availableForRasterSharedWith: action.all,
         isFetching: false,
         timesFetched: state.timesFetched + 1
       };
+    }
     case SELECT_ORGANISATION:
       // the api v3 accepts no dashes in the uuid (this is called unique_id in api v3)
       const selectedOrganisation = action.organisation;
-      selectedOrganisation.uuid = selectedOrganisation.uuid.replace(/-/g, "");
+      if (selectedOrganisation) {
+        selectedOrganisation.uuid = selectedOrganisation.uuid.replace(/-/g, "");
+      }
+      
       return { ...state, selected: selectedOrganisation };
     default:
       return state;
