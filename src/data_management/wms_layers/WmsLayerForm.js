@@ -115,6 +115,7 @@ class WmsLayerFormModel extends Component {
           description: validatedData.description,
           wms_url: validatedData.wmsLayerUrl,
           slug: validatedData.wmsLayerSlug,
+          download_url: validatedData.wmsLayerDownloadUrl,
           min_zoom: validatedData.wmsLayerMinZoom,
           max_zoom: validatedData.wmsLayerMaxZoom,
           options: validatedData.wmsLayerOptions,
@@ -142,6 +143,7 @@ class WmsLayerFormModel extends Component {
         description: validatedData.description,
         wms_url: validatedData.wmsLayerUrl,
         slug: validatedData.wmsLayerSlug,
+        download_url: validatedData.wmsLayerDownloadUrl,
         min_zoom: validatedData.wmsLayerMinZoom,
         max_zoom: validatedData.wmsLayerMaxZoom,
         options: validatedData.wmsLayerOptions,
@@ -181,7 +183,6 @@ class WmsLayerFormModel extends Component {
     const placeholderMinZoom = intl.formatMessage({ id: "placeholder_min_zoom" });
     const placeholderMaxZoom = intl.formatMessage({ id: "placeholder_max_zoom" });
     const placeholderUrl = intl.formatMessage({ id: "placeholder_url" });
-    // const placeholderTiled = intl.formatMessage({ id: "placeholder_tiled" });
     const placeholderLegendUrl = intl.formatMessage({ id: "placeholder_legend_url" });
     const placeholderGetFeatureInfoUrl = intl.formatMessage({ id: "placeholder_get_feature_info_url" });
     const placeholderOrganisationSelection = intl.formatMessage({ id: "placeholder_organisation_selection" });
@@ -336,16 +337,15 @@ class WmsLayerFormModel extends Component {
           }
           validators={[minLength(1)]}
         />
-        {/* According to my (Tom) understanding this field is no longer needed */}
-        {/* <TextInput
-          name="wmsLayerTiled"
-          title={<FormattedMessage id="wms_layer_form.tiled" />}
-          placeholder={placeholderTiled}
+        <TextInput
+          name="wmsLayerDownloadUrl"
+          title={<FormattedMessage id="wms_layer_form.download_url" />}
+          placeholder={placeholderUrl}
           initial = {
             currentWmsLayer &&
-              currentWmsLayer.tiled
+              currentWmsLayer.download_url
           }
-        /> */}
+        />
         <IntegerInput
           name="wmsLayerMinZoom"
           title={<FormattedMessage id="wms_layer_form.min_zoom" />}
