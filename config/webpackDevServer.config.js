@@ -61,7 +61,19 @@ const PROXY_SETTING = {
       "username": "",
       "password": ""
     }
-  }
+  },
+  // add /proxy in order to send api request to lizard that should be proxied to different domain
+  // needed to make getCapabilities request to GeoServer
+  "/proxy": {
+    "target": PROXY_SERVER,
+    "changeOrigin": true,
+    "ssl": false,
+    "secure": false,
+    "headers": {
+      "username": "",
+      "password": ""
+    }
+  },
 };
 
 const password = process.env.PROXY_PASSWORD;
