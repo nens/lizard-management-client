@@ -322,10 +322,7 @@ class WmsLayer extends Component {
               <MDSpinner />
             </div>
           ) : (
-            <div
-              style={{
-              }}
-            >
+            <div>
               <Scrollbars
                 autoHeight
                 autoHeightMin={450}
