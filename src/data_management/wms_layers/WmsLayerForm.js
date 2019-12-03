@@ -386,7 +386,7 @@ class WmsLayerFormModel extends Component {
         <SpatialBoundsField
           name="wmsLayerSpatialBounds"
           title={<FormattedMessage id="wms_layer_form.spatial_bounds" />}
-          subtitle={<FormattedMessage id="wms_layer_form.spatial_bounds_must_be_json" />}
+          subtitle={<FormattedMessage id="wms_layer_form.add_spatial_bounds" />}
           initial = {
             (currentWmsLayer &&
               {

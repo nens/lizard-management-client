@@ -259,7 +259,7 @@
   "wms_layer_form.get_feature_info_url": "GetFeatureInfo url",
   "wms_layer_form.legend_url": "Legend Url",
   "wms_layer_form.spatial_bounds": "Spatial bounds",
-  "wms_layer_form.spatial_bounds_must_be_json": "Spatial bounds must be valid JSON",
+  "wms_layer_form.add_spatial_bounds": "Optional: add spatial bounds to WMS layer",
   "wms_layer_form.supplierName_subtitle": "Optional: select the user that is allowed to change and delete this WMS layer",
   "placeholder_timeseries_selection_via_asset": "Select the object which the timeseries is measured and the alarm is added to",
   "placeholder_timeseries_selection_via_nested_asset": "Select a sub-object if necessary (i.e. pump A from pumping station B or filter A from the groundwater measuring station B)",
