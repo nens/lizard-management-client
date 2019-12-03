@@ -29,6 +29,34 @@ interface SpatialBounds {
     west: string
 };
 
+// Validator
+export const spatialBoundsValidator = (fieldValue: SpatialBoundsProps['value']) => {
+    if (fieldValue.spatialBounds) {
+        const {
+            north,
+            east,
+            south,
+            west
+        } = fieldValue.spatialBounds;
+
+        if (
+            // Check if a number is entered into the input field
+            Number.isNaN(Number(north)) ||
+            Number.isNaN(Number(east)) ||
+            Number.isNaN(Number(south)) ||
+            Number.isNaN(Number(west))
+        ) {
+            return "Please enter a number in all fields"
+        } else if (north < south) {
+            return "North coordinate cannot be smaller than South coordinate"
+        } else if (east < west) {
+            return "East coordinate cannot be smaller than West coordinate"
+        } else {
+            return false;
+        };
+    };
+};
+
 export default class SpatialBoundsField extends Component<SpatialBoundsProps, {}> {
     updateSpatialBounds(key: string, value: string) {
         const newSpatialBounds = {

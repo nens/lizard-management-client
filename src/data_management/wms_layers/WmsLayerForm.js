@@ -15,7 +15,7 @@ import TextArea from "../../forms/TextArea";
 import SelectBox from "../../forms/SelectBox";
 import CheckBox from "../../forms/CheckBox";
 import SlushBucket from "../../forms/SlushBucket";
-import SpatialBoundsField from "../../forms/SpatialBoundsField";
+import SpatialBoundsField, { spatialBoundsValidator } from "../../forms/SpatialBoundsField";
 
 import {
   minLength,
@@ -400,6 +400,9 @@ class WmsLayerFormModel extends Component {
               wmsSlug: null,
             }
           }
+          validators={[
+            (fieldValue) => spatialBoundsValidator(fieldValue)
+          ]}
         />
         <TextArea
           name="wmsLayerOptions"
