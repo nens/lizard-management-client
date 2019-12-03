@@ -16,7 +16,10 @@
 .TextAlignRight{
   text-align: right;
 }
-
+.TextAlignCenter{
+  text-align: center;
+  width: 160px;
+}
 .Invalid{
   border-color: red;
 }
