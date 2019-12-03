@@ -7,19 +7,12 @@ import inputStyles from "../styles/Input.css";
 import thresholdsStyles from './ThresholdsSelection.css';
 
 interface SpatialBoundsProps {
-    name: string,
     value: {
         spatialBounds: SpatialBounds | null,
         wmsSlug: string,
         wmsUrl: string,
     },
-    placeholder?: string,
-    validators?: Function[],
-    validated: boolean,
-    handleEnter: (e: any) => void,
     valueChanged: Function,
-    wizardStyle: boolean,
-    readOnly?: boolean,
 };
 
 interface SpatialBounds {
@@ -40,7 +33,10 @@ export const spatialBoundsValidator = (fieldValue: SpatialBoundsProps['value']) 
         } = fieldValue.spatialBounds;
 
         if (
-            // Check if a number is entered into the input field
+            !north ||
+            !east ||
+            !south ||
+            !west ||
             Number.isNaN(Number(north)) ||
             Number.isNaN(Number(east)) ||
             Number.isNaN(Number(south)) ||
@@ -74,15 +70,27 @@ export default class SpatialBoundsField extends Component<SpatialBoundsProps, {}
             spatialBounds: null
         });
     }
+    componentWillUpdate(nextProps: SpatialBoundsProps) {
+        // If all fields are removed then update the spatial bounds value as null
+        if (nextProps.value.spatialBounds) {
+            const {
+                north,
+                east,
+                south,
+                west
+            } = nextProps.value.spatialBounds;
+            if (!north && !east && !south && !west) {
+                this.props.valueChanged({
+                    ...nextProps.value,
+                    spatialBounds: null
+                });
+            };
+        };
+    }
     render() {
         const {
-            name,
-            placeholder,
             value,
-            validated,
             valueChanged,
-            readOnly,
-            handleEnter,
         } = this.props;
 
         const {
