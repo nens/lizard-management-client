@@ -6,7 +6,10 @@ export const getBoundsFromWmsLayer = (wmsSlug, wmsUrl, value, valueChanged) => {
     const proxyUrl = `/proxy/${wmsUrl}`;
 
     fetch(`${proxyUrl}/?request=getCapabilities`)
-        .then(response => response.text())
+        .then(response => {
+            if (!response.ok) throw new Error('Oops! Cannot get data from the GeoServer');
+            return response.text();
+        })
         .then(data => {
             // Use X2JS library to convert XML response to JSON format
             const xml2Json = new X2JS();
@@ -28,5 +31,5 @@ export const getBoundsFromWmsLayer = (wmsSlug, wmsUrl, value, valueChanged) => {
                 spatialBounds: wmsBounds ? wmsBounds : value.spatialBounds
             });
         })
-        .catch(e => console.log(e));
+        .catch(e => alert(e));
 };
