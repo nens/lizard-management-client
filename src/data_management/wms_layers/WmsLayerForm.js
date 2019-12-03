@@ -15,14 +15,13 @@ import TextArea from "../../forms/TextArea";
 import SelectBox from "../../forms/SelectBox";
 import CheckBox from "../../forms/CheckBox";
 import SlushBucket from "../../forms/SlushBucket";
+import SpatialBoundsField from "../../forms/SpatialBoundsField";
 
 import {
   minLength,
   maxLength,
   required
 } from "../../forms/validators";
-
-
 
 class WmsLayerFormModel extends Component {
 
@@ -91,16 +90,6 @@ class WmsLayerFormModel extends Component {
     }
   }
 
-  spatialBoundsValidator = (value) => {
-    try{
-      JSON.parse(value);
-      return false;
-    } catch (error) {
-      console.log(error);
-      return this.props.intl.formatMessage({ id: "wms_layer_form.spatial_bounds_must_be_json"});
-    }
-  }
-
   handleResponse(response) {
     this.setState({
       modalErrorMessage: response,
@@ -112,6 +101,8 @@ class WmsLayerFormModel extends Component {
   onSubmit = (validatedData, currentWmsLayer) => {
 
     this.setState({ isFetching: true, openOverlay: true });
+
+    const { spatialBounds } = validatedData.wmsLayerSpatialBounds;
 
     const url = "/api/v4/wmslayers/";
      if (!currentWmsLayer) {
@@ -128,7 +119,12 @@ class WmsLayerFormModel extends Component {
           download_url: validatedData.wmsLayerDownloadUrl,
           min_zoom: validatedData.wmsLayerMinZoom,
           max_zoom: validatedData.wmsLayerMaxZoom,
-          spatial_bounds: validatedData.wmsLayerSpatialBounds,
+          spatial_bounds: spatialBounds ? {
+            north: parseFloat(spatialBounds.north),
+            east: parseFloat(spatialBounds.east),
+            south: parseFloat(spatialBounds.south),
+            west: parseFloat(spatialBounds.west)
+          } : null,
           options: validatedData.wmsLayerOptions,
           get_feature_info: validatedData.wmsLayerGetFeatureInfo,
           get_feature_info_url: validatedData.wmsLayerGetFeatureInfoUrl,
@@ -157,7 +153,12 @@ class WmsLayerFormModel extends Component {
         download_url: validatedData.wmsLayerDownloadUrl,
         min_zoom: validatedData.wmsLayerMinZoom,
         max_zoom: validatedData.wmsLayerMaxZoom,
-        spatial_bounds: validatedData.wmsLayerSpatialBounds,
+        spatial_bounds: spatialBounds ? {
+          north: parseFloat(spatialBounds.north),
+          east: parseFloat(spatialBounds.east),
+          south: parseFloat(spatialBounds.south),
+          west: parseFloat(spatialBounds.west)
+        } : null,
         options: validatedData.wmsLayerOptions,
         get_feature_info: validatedData.wmsLayerGetFeatureInfo,
         get_feature_info_url: validatedData.wmsLayerGetFeatureInfoUrl,
@@ -382,15 +383,23 @@ class WmsLayerFormModel extends Component {
           }
           validators={[this.maxZoomValidator]}
         />
-        <TextArea
+        <SpatialBoundsField
           name="wmsLayerSpatialBounds"
           title={<FormattedMessage id="wms_layer_form.spatial_bounds" />}
           subtitle={<FormattedMessage id="wms_layer_form.spatial_bounds_must_be_json" />}
           initial = {
             (currentWmsLayer &&
-              JSON.stringify(currentWmsLayer.spatial_bounds)) || '{}'
+              {
+                spatialBounds: currentWmsLayer.spatial_bounds,
+                wmsUrl: currentWmsLayer.wms_url,
+                wmsSlug: currentWmsLayer.slug,
+              }
+            ) || {
+              spatialBounds: null,
+              wmsUrl: null,
+              wmsSlug: null,
+            }
           }
-          validators={[this.spatialBoundsValidator]}
         />
         <TextArea
           name="wmsLayerOptions"
