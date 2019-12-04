@@ -77,6 +77,10 @@
   box-shadow: 0px 3px 6px #00000029;
 }
 
+.AddThresholdButton:hover {
+  background-color: #00a78b;
+}
+
 .AddThresholdButton:focus {
   outline: none;
 }
