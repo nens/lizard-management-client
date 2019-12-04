@@ -58,7 +58,7 @@
 }
 
 .ThresholdDelete:hover {
-  color: #51A789;
+  color: #00cdab;
 }
 
 /* Buttons */
@@ -70,7 +70,7 @@
   font-weight: bold;
   padding: 10px 20px;
   margin: 10px 0;
-  background-color: #51A789;
+  background-color: #00cdab;
   color: #fff;
   border-radius: 8px;
   border: none;
@@ -91,7 +91,7 @@
   cursor: pointer;
   font-weight: bold;
   padding: 6px;
-  background-color: #51A789;
+  background-color: #00cdab;
   color: #fff;
   border-radius: 4px;
   border: 1px solid #707070;
