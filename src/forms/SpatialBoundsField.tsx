@@ -8,10 +8,10 @@ import thresholdsStyles from './ThresholdsSelection.css';
 
 interface SpatialBoundsProps {
     value: {
-        north: string,
-        east: string,
-        south: string,
-        west: string
+        north: number,
+        east: number,
+        south: number,
+        west: number
     } | null,
     otherValues: {
         wmsLayerName: string,
@@ -35,13 +35,9 @@ export const spatialBoundsValidator = (fieldValue: SpatialBoundsProps['value']) 
             !north ||
             !east ||
             !south ||
-            !west ||
-            Number.isNaN(Number(north)) ||
-            Number.isNaN(Number(east)) ||
-            Number.isNaN(Number(south)) ||
-            Number.isNaN(Number(west))
+            !west
         ) {
-            return "Please enter a number in all fields"
+            return "Please enter a number in all fields or clear all inputs"
         } else if (north < south) {
             return "North coordinate cannot be smaller than South coordinate"
         } else if (east < west) {
@@ -56,29 +52,12 @@ export default class SpatialBoundsField extends Component<SpatialBoundsProps, {}
     updateSpatialBounds(key: string, value: string) {
         this.props.valueChanged({
             ...this.props.value,
-            [key]: value
+            [key]: parseFloat(value)
         });
     }
     removeSpatialBounds() {
         this.props.valueChanged(null);
     }
-    // componentWillUpdate(nextProps: SpatialBoundsProps) {
-    //     // If all fields are removed then update the spatial bounds value as null
-    //     if (nextProps.value) {
-    //         const {
-    //             north,
-    //             east,
-    //             south,
-    //             west
-    //         } = nextProps.value;
-    //         if (!north && !east && !south && !west) {
-    //             this.props.valueChanged({
-    //                 ...nextProps.value,
-    //                 spatialBounds: null
-    //             });
-    //         };
-    //     };
-    // }
     render() {
         const {
             value,
@@ -126,7 +105,7 @@ export default class SpatialBoundsField extends Component<SpatialBoundsProps, {}
                         <label>North (&deg;)</label>
                         <input
                             id="north"
-                            type="text"
+                            type="number"
                             className={
                                 formStyles.FormControl +
                                 " " +
@@ -146,7 +125,7 @@ export default class SpatialBoundsField extends Component<SpatialBoundsProps, {}
                         <label>East (&deg;)</label>
                         <input
                             id="east"
-                            type="text"
+                            type="number"
                             className={
                                 formStyles.FormControl +
                                 " " +
@@ -166,7 +145,7 @@ export default class SpatialBoundsField extends Component<SpatialBoundsProps, {}
                         <label>South (&deg;)</label>
                         <input
                             id="south"
-                            type="text"
+                            type="number"
                             className={
                                 formStyles.FormControl +
                                 " " +
@@ -188,7 +167,7 @@ export default class SpatialBoundsField extends Component<SpatialBoundsProps, {}
                         <label>West (&deg;)</label>
                         <input
                             id="west"
-                            type="text"
+                            type="number"
                             className={
                                 formStyles.FormControl +
                                 " " +

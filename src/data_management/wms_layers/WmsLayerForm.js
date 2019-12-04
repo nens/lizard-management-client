@@ -102,13 +102,6 @@ class WmsLayerFormModel extends Component {
 
     this.setState({ isFetching: true, openOverlay: true });
 
-    const spatialBounds = validatedData.wmsLayerSpatialBounds ? {
-      north: parseFloat(validatedData.wmsLayerSpatialBounds.north),
-      east: parseFloat(validatedData.wmsLayerSpatialBounds.east),
-      south: parseFloat(validatedData.wmsLayerSpatialBounds.south),
-      west: parseFloat(validatedData.wmsLayerSpatialBounds.west),
-    } : null;
-
     const url = "/api/v4/wmslayers/";
      if (!currentWmsLayer) {
       const opts = {
@@ -124,7 +117,7 @@ class WmsLayerFormModel extends Component {
           download_url: validatedData.wmsLayerDownloadUrl,
           min_zoom: validatedData.wmsLayerMinZoom,
           max_zoom: validatedData.wmsLayerMaxZoom,
-          spatial_bounds: spatialBounds,
+          spatial_bounds: validatedData.wmsLayerSpatialBounds,
           options: validatedData.wmsLayerOptions,
           get_feature_info: validatedData.wmsLayerGetFeatureInfo,
           get_feature_info_url: validatedData.wmsLayerGetFeatureInfoUrl,
@@ -153,7 +146,7 @@ class WmsLayerFormModel extends Component {
         download_url: validatedData.wmsLayerDownloadUrl,
         min_zoom: validatedData.wmsLayerMinZoom,
         max_zoom: validatedData.wmsLayerMaxZoom,
-        spatial_bounds: spatialBounds,
+        spatial_bounds: validatedData.wmsLayerSpatialBounds,
         options: validatedData.wmsLayerOptions,
         get_feature_info: validatedData.wmsLayerGetFeatureInfo,
         get_feature_info_url: validatedData.wmsLayerGetFeatureInfoUrl,
@@ -194,7 +187,6 @@ class WmsLayerFormModel extends Component {
     const placeholderLegendUrl = intl.formatMessage({ id: "placeholder_legend_url" });
     const placeholderGetFeatureInfoUrl = intl.formatMessage({ id: "placeholder_get_feature_info_url" });
     const placeholderOrganisationSelection = intl.formatMessage({ id: "placeholder_organisation_selection" });
-
     const placeholderOrganisationSearch = intl.formatMessage({ id: "placeholder_organisation_search" });
     const placeholderSupplierName = intl.formatMessage({ id: "placeholder_supplier_name" });
 
