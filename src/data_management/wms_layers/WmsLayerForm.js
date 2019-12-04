@@ -102,7 +102,12 @@ class WmsLayerFormModel extends Component {
 
     this.setState({ isFetching: true, openOverlay: true });
 
-    const { spatialBounds } = validatedData.wmsLayerSpatialBounds;
+    const spatialBounds = validatedData.wmsLayerSpatialBounds ? {
+      north: parseFloat(validatedData.wmsLayerSpatialBounds.north),
+      east: parseFloat(validatedData.wmsLayerSpatialBounds.east),
+      south: parseFloat(validatedData.wmsLayerSpatialBounds.south),
+      west: parseFloat(validatedData.wmsLayerSpatialBounds.west),
+    } : null;
 
     const url = "/api/v4/wmslayers/";
      if (!currentWmsLayer) {
@@ -119,12 +124,7 @@ class WmsLayerFormModel extends Component {
           download_url: validatedData.wmsLayerDownloadUrl,
           min_zoom: validatedData.wmsLayerMinZoom,
           max_zoom: validatedData.wmsLayerMaxZoom,
-          spatial_bounds: spatialBounds ? {
-            north: parseFloat(spatialBounds.north),
-            east: parseFloat(spatialBounds.east),
-            south: parseFloat(spatialBounds.south),
-            west: parseFloat(spatialBounds.west)
-          } : null,
+          spatial_bounds: spatialBounds,
           options: validatedData.wmsLayerOptions,
           get_feature_info: validatedData.wmsLayerGetFeatureInfo,
           get_feature_info_url: validatedData.wmsLayerGetFeatureInfoUrl,
@@ -153,12 +153,7 @@ class WmsLayerFormModel extends Component {
         download_url: validatedData.wmsLayerDownloadUrl,
         min_zoom: validatedData.wmsLayerMinZoom,
         max_zoom: validatedData.wmsLayerMaxZoom,
-        spatial_bounds: spatialBounds ? {
-          north: parseFloat(spatialBounds.north),
-          east: parseFloat(spatialBounds.east),
-          south: parseFloat(spatialBounds.south),
-          west: parseFloat(spatialBounds.west)
-        } : null,
+        spatial_bounds: spatialBounds,
         options: validatedData.wmsLayerOptions,
         get_feature_info: validatedData.wmsLayerGetFeatureInfo,
         get_feature_info_url: validatedData.wmsLayerGetFeatureInfoUrl,
@@ -388,17 +383,10 @@ class WmsLayerFormModel extends Component {
           title={<FormattedMessage id="wms_layer_form.spatial_bounds" />}
           subtitle={<FormattedMessage id="wms_layer_form.add_spatial_bounds" />}
           initial = {
-            (currentWmsLayer &&
-              {
-                spatialBounds: currentWmsLayer.spatial_bounds,
-                wmsUrl: currentWmsLayer.wms_url,
-                wmsSlug: currentWmsLayer.slug,
-              }
-            ) || {
-              spatialBounds: null,
-              wmsUrl: null,
-              wmsSlug: null,
-            }
+            (
+              currentWmsLayer &&
+              currentWmsLayer.spatial_bounds
+            ) || null
           }
           validators={[
             (fieldValue) => spatialBoundsValidator(fieldValue)

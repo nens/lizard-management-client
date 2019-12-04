@@ -8,29 +8,28 @@ import thresholdsStyles from './ThresholdsSelection.css';
 
 interface SpatialBoundsProps {
     value: {
-        spatialBounds: SpatialBounds | null,
-        wmsSlug: string,
-        wmsUrl: string,
+        north: string,
+        east: string,
+        south: string,
+        west: string
+    } | null,
+    otherValues: {
+        wmsLayerName: string,
+        wmsLayerSlug: string,
+        wmsLayerUrl: string,
     },
     valueChanged: Function,
 };
 
-interface SpatialBounds {
-    north: string,
-    east: string,
-    south: string,
-    west: string
-};
-
 // Validator
 export const spatialBoundsValidator = (fieldValue: SpatialBoundsProps['value']) => {
-    if (fieldValue.spatialBounds) {
+    if (fieldValue) {
         const {
             north,
             east,
             south,
             west
-        } = fieldValue.spatialBounds;
+        } = fieldValue;
 
         if (
             !north ||
@@ -55,57 +54,50 @@ export const spatialBoundsValidator = (fieldValue: SpatialBoundsProps['value']) 
 
 export default class SpatialBoundsField extends Component<SpatialBoundsProps, {}> {
     updateSpatialBounds(key: string, value: string) {
-        const newSpatialBounds = {
-            ...this.props.value.spatialBounds,
-            [key]: value
-        };
         this.props.valueChanged({
             ...this.props.value,
-            spatialBounds: newSpatialBounds
+            [key]: value
         });
     }
     removeSpatialBounds() {
-        this.props.valueChanged({
-            ...this.props.value,
-            spatialBounds: null
-        });
+        this.props.valueChanged(null);
     }
-    componentWillUpdate(nextProps: SpatialBoundsProps) {
-        // If all fields are removed then update the spatial bounds value as null
-        if (nextProps.value.spatialBounds) {
-            const {
-                north,
-                east,
-                south,
-                west
-            } = nextProps.value.spatialBounds;
-            if (!north && !east && !south && !west) {
-                this.props.valueChanged({
-                    ...nextProps.value,
-                    spatialBounds: null
-                });
-            };
-        };
-    }
+    // componentWillUpdate(nextProps: SpatialBoundsProps) {
+    //     // If all fields are removed then update the spatial bounds value as null
+    //     if (nextProps.value) {
+    //         const {
+    //             north,
+    //             east,
+    //             south,
+    //             west
+    //         } = nextProps.value;
+    //         if (!north && !east && !south && !west) {
+    //             this.props.valueChanged({
+    //                 ...nextProps.value,
+    //                 spatialBounds: null
+    //             });
+    //         };
+    //     };
+    // }
     render() {
         const {
             value,
+            otherValues,
             valueChanged,
         } = this.props;
 
         const {
-            spatialBounds,
-            wmsSlug,
-            wmsUrl,
-        } = value;
+            wmsLayerSlug,
+            wmsLayerUrl,
+        } = otherValues;
 
         let north, east, south, west;
 
-        if (spatialBounds) {
-            north = spatialBounds.north ? spatialBounds.north : "";
-            east = spatialBounds.east ? spatialBounds.east : "";
-            south = spatialBounds.south ? spatialBounds.south : "";
-            west = spatialBounds.west ? spatialBounds.west : "";
+        if (value) {
+            north = value.north ? value.north : "";
+            east = value.east ? value.east : "";
+            south = value.south ? value.south : "";
+            west = value.west ? value.west : "";
         } else {
             north = "";
             east = "";
@@ -211,11 +203,11 @@ export default class SpatialBoundsField extends Component<SpatialBoundsProps, {}
                 <button
                     className={thresholdsStyles.AddThresholdButton}
                     style={{
-                        display: (wmsUrl && wmsSlug) ? 'block' : 'none'
+                        display: (wmsLayerSlug && wmsLayerUrl) ? 'block' : 'none'
                     }}
                     onClick={() => getBoundsFromWmsLayer(
-                        wmsSlug,
-                        wmsUrl,
+                        wmsLayerSlug,
+                        wmsLayerUrl,
                         value,
                         valueChanged
                     )}

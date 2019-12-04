@@ -26,10 +26,7 @@ export const getBoundsFromWmsLayer = (wmsSlug, wmsUrl, value, valueChanged) => {
                 south: parseFloat(wmsLayer[0].EX_GeographicBoundingBox.southBoundLatitude),
                 west: parseFloat(wmsLayer[0].EX_GeographicBoundingBox.westBoundLongitude),
             } : null;
-            valueChanged({
-                ...value,
-                spatialBounds: wmsBounds ? wmsBounds : value.spatialBounds
-            });
+            valueChanged(wmsBounds ? wmsBounds : value.spatialBounds);
         })
         .catch(e => alert(e));
 };
