@@ -27,6 +27,7 @@ interface MyProps {
 interface MyState {
     thresholdValue: number,
     thresholdName: string,
+    thresholdOrderDirection: 'asc' | 'dsc',
 };
 
 // Validator for this component
@@ -42,6 +43,7 @@ class ThresholdsSelectionInput extends Component<MyProps & InjectedIntlProps, My
     state: MyState = {
         thresholdValue: 0,
         thresholdName: "",
+        thresholdOrderDirection: 'asc',
     }
     handleAddThreshold(value: any, warning_level: string) {
         this.props.valueChanged({
@@ -73,6 +75,24 @@ class ThresholdsSelectionInput extends Component<MyProps & InjectedIntlProps, My
     handleChangeThresholdName = (e: any) => {
         this.setState({
             thresholdName: e.target.value
+        });
+    }
+    sortThresholdValues = (thresholds: Threshold[]) => {
+        let newThresholds;
+        if (this.state.thresholdOrderDirection === 'asc') {
+            this.setState({
+                thresholdOrderDirection: 'dsc'
+            });
+            newThresholds = thresholds.sort((a, b) => a.value - b.value);
+        } else {
+            this.setState({
+                thresholdOrderDirection: 'asc'
+            });
+            newThresholds = thresholds.sort((a, b) => b.value - a.value);
+        };
+        this.props.valueChanged({
+            ...this.props.value,
+            thresholds: newThresholds
         });
     }
 
@@ -126,6 +146,12 @@ class ThresholdsSelectionInput extends Component<MyProps & InjectedIntlProps, My
                                     id="notifications_app.threshold_value"
                                     defaultMessage="Value"
                                 />
+                                &nbsp;
+                                <i
+                                    className="fa fa-sort"
+                                    onClick={() => this.sortThresholdValues(thresholds)}
+                                    style={{ cursor: 'pointer' }}
+                                />
                             </label>
                             <div className={styles.ThresholdValues}>
                                 {thresholds.map((threshold, i) => <div key={i}>{comparison} {threshold.value}</div>)}
@@ -167,7 +193,7 @@ class ThresholdsSelectionInput extends Component<MyProps & InjectedIntlProps, My
                             <div className={styles.ThresholdNames}>
                                 {thresholds.map((threshold, i) => (
                                     <div key={i}>
-                                        <span 
+                                        <span
                                             className={styles.ThresholdName}
                                             title={threshold.warning_level}
                                         >
