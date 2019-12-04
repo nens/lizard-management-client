@@ -167,7 +167,12 @@ class ThresholdsSelectionInput extends Component<MyProps & InjectedIntlProps, My
                             <div className={styles.ThresholdNames}>
                                 {thresholds.map((threshold, i) => (
                                     <div key={i}>
-                                        <span>{threshold.warning_level}</span>
+                                        <span 
+                                            className={styles.ThresholdName}
+                                            title={threshold.warning_level}
+                                        >
+                                            {threshold.warning_level}
+                                        </span>
                                         <span
                                             className={styles.ThresholdDelete}
                                             onClick={() => this.handleRemoveThreshold(i)}

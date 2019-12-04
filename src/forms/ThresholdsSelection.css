@@ -52,6 +52,13 @@
   justify-content: space-between;
 }
 
+.ThresholdName {
+  width: 80%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
 .ThresholdDelete {
   cursor: pointer;
   color: #707070;
