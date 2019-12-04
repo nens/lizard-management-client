@@ -411,6 +411,7 @@ class ManagementForm extends Component<ManagementFormProps, ManagementFormState>
   render() {
     const {
       currentFieldIndex,
+      allNames,
       formValues,
       formValidated,
       formErrors,
@@ -447,7 +448,8 @@ class ManagementForm extends Component<ManagementFormProps, ManagementFormState>
               valueChanged: (value: any) => this.valueChanged(name, value),
               opened: opened,
               wizardStyle: wizardStyle,
-              handleEnter: (e: any) => this.handleEnter(idx, e)
+              handleEnter: (e: any) => this.handleEnter(idx, e),
+              otherValues: this.valuesUpTo(allNames, formValues, name)
             };
             if (readOnly) {
               // If the whole form is readOnly, send this prop to
