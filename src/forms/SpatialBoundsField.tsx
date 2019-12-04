@@ -131,7 +131,7 @@ export default class SpatialBoundsField extends Component<SpatialBoundsProps, {}
                             styles.TextAlignCenter
                         }
                     >
-                        <label>North</label>
+                        <label>North (&deg;)</label>
                         <input
                             id="north"
                             type="text"
@@ -151,7 +151,7 @@ export default class SpatialBoundsField extends Component<SpatialBoundsProps, {}
                             styles.TextAlignCenter
                         }
                     >
-                        <label>East</label>
+                        <label>East (&deg;)</label>
                         <input
                             id="east"
                             type="text"
@@ -171,7 +171,7 @@ export default class SpatialBoundsField extends Component<SpatialBoundsProps, {}
                             styles.TextAlignCenter
                         }
                     >
-                        <label>South</label>
+                        <label>South (&deg;)</label>
                         <input
                             id="south"
                             type="text"
@@ -193,7 +193,7 @@ export default class SpatialBoundsField extends Component<SpatialBoundsProps, {}
                             styles.TextAlignCenter
                         }
                     >
-                        <label>West</label>
+                        <label>West (&deg;)</label>
                         <input
                             id="west"
                             type="text"
