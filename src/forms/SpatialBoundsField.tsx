@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { FormattedMessage } from "react-intl";
 import { getBoundsFromWmsLayer } from "../utils/getBoundsFromGeoServer";
 import ClearInputButton from "./ClearInputButton";
 import styles from "./SpatialBoundsField.css";
@@ -123,7 +124,10 @@ export default class SpatialBoundsField extends Component<SpatialBoundsProps, My
                             durationStyles.TextAlignCenter
                         }
                     >
-                        <label>North (&deg;)</label>
+                        <label>
+                            <FormattedMessage id="wms_layer_form.north" />
+                            &nbsp;(&deg;)
+                        </label>
                         <input
                             id="north"
                             type="number"
@@ -143,7 +147,10 @@ export default class SpatialBoundsField extends Component<SpatialBoundsProps, My
                             durationStyles.TextAlignCenter
                         }
                     >
-                        <label>East (&deg;)</label>
+                        <label>
+                            <FormattedMessage id="wms_layer_form.east" />
+                            &nbsp;(&deg;)
+                        </label>
                         <input
                             id="east"
                             type="number"
@@ -163,7 +170,10 @@ export default class SpatialBoundsField extends Component<SpatialBoundsProps, My
                             durationStyles.TextAlignCenter
                         }
                     >
-                        <label>South (&deg;)</label>
+                        <label>
+                            <FormattedMessage id="wms_layer_form.south" />
+                            &nbsp;(&deg;)
+                        </label>
                         <input
                             id="south"
                             type="number"
@@ -185,7 +195,10 @@ export default class SpatialBoundsField extends Component<SpatialBoundsProps, My
                             durationStyles.TextAlignCenter
                         }
                     >
-                        <label>West (&deg;)</label>
+                        <label>
+                            <FormattedMessage id="wms_layer_form.west" />
+                            &nbsp;(&deg;)
+                        </label>
                         <input
                             id="west"
                             type="number"
@@ -214,7 +227,10 @@ export default class SpatialBoundsField extends Component<SpatialBoundsProps, My
                             this.showErrorMessage
                         )}
                     >
-                        Get from GeoServer
+                        <FormattedMessage
+                            id="wms_layer_form.get_from_geoserver"
+                            defaultMessage="Get from GeoServer"
+                        />
                     </button>
                     &nbsp;
                     <span
