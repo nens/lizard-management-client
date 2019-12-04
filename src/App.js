@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, injectIntl } from "react-intl";
 import { App as Home } from "./home/App";
 import { App as AlarmsApp } from "./alarms/App";
 import { App as DataManagementApp } from "./data_management/App";
@@ -23,6 +23,10 @@ import gridStyles from "./styles/Grid.css";
 import buttonStyles from "./styles/Buttons.css";
 import lizardIcon from "./images/lizard@3x.svg";
 import { withRouter } from "react-router-dom";
+import {appIcons} from './home/HomeAppIconConfig';
+import doArraysHaveEqualElement from './utils/doArraysHaveEqualElement';
+
+
 
 class App extends Component {
   constructor(props) {
@@ -139,6 +143,27 @@ class App extends Component {
   };
 
   render() {
+
+    if ( 
+      this.props.availableOrganisations.length === 0 && 
+      this.props.isFetchingOrganisations === false &&
+      this.props.timesFetchedOrganisations > 0
+    ) {
+      const norolesMessage = this.props.intl.formatMessage({ id: "authorization.no_roles_message", defaultMessage: "Dear user, \nYou seem not to be in any organisations that can access the management pages. \nTherefore you are redirected to the mainpage." });
+      alert(norolesMessage);
+      // should redirect to <customer_url>.lizard.net on prod
+      window.location = "/";
+    }
+
+    const currentHomeAppIcon = appIcons.find(icon => {
+      return window.location.href.includes(icon.linksTo.path)
+    });
+    if (currentHomeAppIcon && !doArraysHaveEqualElement(this.props.selectedOrganisation.roles, currentHomeAppIcon.requiredRoles)) {
+      const redirectMessage = this.props.intl.formatMessage({ id: "authorization.redirected_based_onrole", defaultMessage: "You do not have the rights to access this data under the selected organisation. \nYou will be redirected." });
+      alert(redirectMessage);
+      // should redirect to <customer_url>.lizard.net/management/ on prod
+      this.props.history.push("/");
+    }
     if (!this.props.isAuthenticated) {
       return (
         <div className={styles.MDSpinner}>
@@ -341,6 +366,9 @@ const mapStateToProps = (state, ownProps) => {
       state.organisations.timesFetched < 1,
 
     selectedOrganisation: state.organisations.selected,
+    availableOrganisations: state.organisations.available,
+    isFetchingOrganisations: state.organisations.isFetching,
+    timesFetchedOrganisations: state.organisations.timesFetched,
 
     mustFetchObservationTypes:
       state.observationTypes.available.length === 0 &&
@@ -374,4 +402,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   };
 };
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(injectIntl(App)));

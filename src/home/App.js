@@ -1,13 +1,12 @@
 import React, { Component } from "react";
-import { FormattedMessage } from "react-intl";
+import { connect } from "react-redux";
 import styles from "./App.css";
 import AppIcon from "../components/AppIcon";
 import { withRouter } from "react-router-dom";
 import { Trail, animated } from "react-spring";
+import doArraysHaveEqualElement from '../utils/doArraysHaveEqualElement';
 
-import alarmIcon from "../images/alarm@3x.svg";
-import userManagementIcon from "../images/usermanagement.svg";
-import templateIcon from "../images/templates@3x.svg";
+import {appIcons} from './HomeAppIconConfig';
 
 class App extends Component {
   constructor(props) {
@@ -16,7 +15,7 @@ class App extends Component {
     this.handleExternalLink = this.handleExternalLink.bind(this);
   }
 
-  handleLink(destination) {
+  handleInternalLink(destination) {
     this.props.history.push(destination);
   }
 
@@ -24,55 +23,22 @@ class App extends Component {
     window.location.href = destination;
   }
 
+  handleLink (linksToObject) {
+    if (linksToObject.external === true) {
+      this.handleExternalLink(linksToObject.path);
+    } else {
+      this.handleInternalLink(linksToObject.path);
+    }
+  }
+
   render() {
-    const appIcons = [
-      {
-        key: 0,
-        handleClick: () => this.handleExternalLink("/management/users/"),
-        title: (
-          <FormattedMessage
-            id="home.usermanagement"
-            defaultMessage="User management"
-          />
-        ),
-        icon: userManagementIcon,
-        subTitle: (
-          <FormattedMessage
-            id="home.sso_management"
-            defaultMessage="Single sign-on account management"
-          />
-        )
-      },
-      {
-        key: 1,
-        handleClick: () => this.handleLink("/alarms"),
-        title: <FormattedMessage id="home.alarms" defaultMessage="Alarms" />,
-        icon: alarmIcon,
-        subTitle: (
-          <FormattedMessage
-            id="home.alarm_management"
-            defaultMessage="Alarm management"
-          />
-        )
-      },
-      {
-        key: 2,
-        handleClick: () => this.handleLink("/data_management"),
-        title: (
-          <FormattedMessage
-            id="home.data_management"
-            defaultMessage="Data Management"
-          />
-        ),
-        icon: templateIcon,
-        subTitle: (
-          <FormattedMessage
-            id="home.data_administration"
-            defaultMessage="Data administration"
-          />
-        )
+    const currentOrganisationRoles = (this.props.selectedOrganisation && this.props.selectedOrganisation.roles) || [];
+    const appIconsWithReadOnlyInfo = appIcons.map(appIcon=>{
+      return {
+        ...appIcon,
+        readonly: !doArraysHaveEqualElement(appIcon.requiredRoles, currentOrganisationRoles),
       }
-    ];
+    });
     return (
       <div>
         <div className="container">
@@ -84,7 +50,7 @@ class App extends Component {
                 to={{ opacity: 1, x: 0 }}
                 keys={appIcons.map(item => item.key)}
               >
-                {appIcons.map((appIcon, i) => ({ x, opacity }) => (
+                {appIconsWithReadOnlyInfo.map((appIcon) => ({ x, opacity }) => (
                   <animated.div
                     style={{
                       opacity,
@@ -92,11 +58,13 @@ class App extends Component {
                     }}
                   >
                     <AppIcon
-                      handleClick={appIcon.handleClick}
+                      handleClick={()=>{ this.handleLink(appIcon.linksTo)}}
                       key={+new Date()}
                       src={appIcon.icon}
                       title={appIcon.title}
                       subTitle={appIcon.subTitle}
+                      readonly={appIcon.readonly}
+                      requiredRoles={appIcon.requiredRoles}
                     />
                   </animated.div>
                 ))}
@@ -109,6 +77,14 @@ class App extends Component {
   }
 }
 
-App = withRouter(App);
+const mapStateToProps = (state) => {
+  return {
+    selectedOrganisation: state.organisations.selected,
+  };
+};
+
+App = withRouter(connect(mapStateToProps, null)(
+  App
+));
 
 export { App };
