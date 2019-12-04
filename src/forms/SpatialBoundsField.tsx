@@ -38,10 +38,10 @@ export const spatialBoundsValidator = (fieldValue: SpatialBoundsProps['value']) 
         } = fieldValue;
 
         if (
-            Number.isNaN(north) ||
-            Number.isNaN(east) ||
-            Number.isNaN(south) ||
-            Number.isNaN(west)
+            north === undefined || Number.isNaN(north) ||
+            east === undefined || Number.isNaN(east) ||
+            south === undefined || Number.isNaN(south) ||
+            west === undefined || Number.isNaN(west)
         ) {
             return "Please enter a number in all fields or clear all inputs"
         } else if (north < south) {
