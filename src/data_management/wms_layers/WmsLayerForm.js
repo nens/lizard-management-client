@@ -380,9 +380,7 @@ class WmsLayerFormModel extends Component {
               currentWmsLayer.spatial_bounds
             ) || null
           }
-          validators={[
-            (fieldValue) => spatialBoundsValidator(fieldValue)
-          ]}
+          validators={[spatialBoundsValidator]}
         />
         <TextArea
           name="wmsLayerOptions"

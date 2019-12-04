@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { getBoundsFromWmsLayer } from "../utils/getBoundsFromGeoServer";
 import ClearInputButton from "./ClearInputButton";
-import styles from "./DurationField.css";
+import styles from "./SpatialBoundsField.css";
+import durationStyles from "./DurationField.css";
 import formStyles from "../styles/Forms.css";
 import inputStyles from "../styles/Input.css";
 import thresholdsStyles from './ThresholdsSelection.css';
@@ -21,6 +22,10 @@ interface SpatialBoundsProps {
     valueChanged: Function,
 };
 
+interface MyState {
+    getFromGeoserverError: boolean,
+}
+
 // Validator
 export const spatialBoundsValidator = (fieldValue: SpatialBoundsProps['value']) => {
     if (fieldValue) {
@@ -32,10 +37,10 @@ export const spatialBoundsValidator = (fieldValue: SpatialBoundsProps['value']) 
         } = fieldValue;
 
         if (
-            !north ||
-            !east ||
-            !south ||
-            !west
+            Number.isNaN(north) ||
+            Number.isNaN(east) ||
+            Number.isNaN(south) ||
+            Number.isNaN(west)
         ) {
             return "Please enter a number in all fields or clear all inputs"
         } else if (north < south) {
@@ -48,7 +53,20 @@ export const spatialBoundsValidator = (fieldValue: SpatialBoundsProps['value']) 
     };
 };
 
-export default class SpatialBoundsField extends Component<SpatialBoundsProps, {}> {
+export default class SpatialBoundsField extends Component<SpatialBoundsProps, MyState> {
+    state={
+        getFromGeoserverError: false,
+    }
+    showErrorMessage = () => {
+        this.setState({
+            getFromGeoserverError: true
+        });
+    }
+    closeErrorMessage = () => {
+        this.setState({
+            getFromGeoserverError: false
+        });
+    }
     updateSpatialBounds(key: string, value: string) {
         this.props.valueChanged({
             ...this.props.value,
@@ -73,10 +91,10 @@ export default class SpatialBoundsField extends Component<SpatialBoundsProps, {}
         let north, east, south, west;
 
         if (value) {
-            north = value.north ? value.north : "";
-            east = value.east ? value.east : "";
-            south = value.south ? value.south : "";
-            west = value.west ? value.west : "";
+            north = Number.isFinite(value.north) ? value.north : "";
+            east = Number.isFinite(value.east) ? value.east : "";
+            south = Number.isFinite(value.south) ? value.south : "";
+            west = Number.isFinite(value.west) ? value.west : "";
         } else {
             north = "";
             east = "";
@@ -85,7 +103,10 @@ export default class SpatialBoundsField extends Component<SpatialBoundsProps, {}
         };
 
         return (
-            <div>
+            <div
+                onClick={this.closeErrorMessage}
+                onMouseLeave={this.closeErrorMessage}
+            >
                 <div
                     className={
                         formStyles.FormGroup +
@@ -95,11 +116,11 @@ export default class SpatialBoundsField extends Component<SpatialBoundsProps, {}
                 >
                     <div
                         className={
-                            styles.DurationInputFields +
+                            durationStyles.DurationInputFields +
                             " " +
-                            styles.DurationInputFieldDays +
+                            durationStyles.DurationInputFieldDays +
                             " " +
-                            styles.TextAlignCenter
+                            durationStyles.TextAlignCenter
                         }
                     >
                         <label>North (&deg;)</label>
@@ -109,7 +130,7 @@ export default class SpatialBoundsField extends Component<SpatialBoundsProps, {}
                             className={
                                 formStyles.FormControl +
                                 " " +
-                                styles.TextAlignCenter
+                                durationStyles.TextAlignCenter
                             }
                             value={north}
                             onChange={(e) => this.updateSpatialBounds('north', e.target.value)}
@@ -117,9 +138,9 @@ export default class SpatialBoundsField extends Component<SpatialBoundsProps, {}
                     </div>
                     <div
                         className={
-                            styles.DurationInputFields +
+                            durationStyles.DurationInputFields +
                             " " +
-                            styles.TextAlignCenter
+                            durationStyles.TextAlignCenter
                         }
                     >
                         <label>East (&deg;)</label>
@@ -129,7 +150,7 @@ export default class SpatialBoundsField extends Component<SpatialBoundsProps, {}
                             className={
                                 formStyles.FormControl +
                                 " " +
-                                styles.TextAlignCenter
+                                durationStyles.TextAlignCenter
                             }
                             value={east}
                             onChange={(e) => this.updateSpatialBounds('east', e.target.value)}
@@ -137,9 +158,9 @@ export default class SpatialBoundsField extends Component<SpatialBoundsProps, {}
                     </div>
                     <div
                         className={
-                            styles.DurationInputFields +
+                            durationStyles.DurationInputFields +
                             " " +
-                            styles.TextAlignCenter
+                            durationStyles.TextAlignCenter
                         }
                     >
                         <label>South (&deg;)</label>
@@ -149,7 +170,7 @@ export default class SpatialBoundsField extends Component<SpatialBoundsProps, {}
                             className={
                                 formStyles.FormControl +
                                 " " +
-                                styles.TextAlignCenter
+                                durationStyles.TextAlignCenter
                             }
                             value={south}
                             onChange={(e) => this.updateSpatialBounds('south', e.target.value)}
@@ -157,11 +178,11 @@ export default class SpatialBoundsField extends Component<SpatialBoundsProps, {}
                     </div>
                     <div
                         className={
-                            styles.DurationInputFields +
+                            durationStyles.DurationInputFields +
                             " " +
-                            styles.DurationInputFieldSeconds +
+                            durationStyles.DurationInputFieldSeconds +
                             " " +
-                            styles.TextAlignCenter
+                            durationStyles.TextAlignCenter
                         }
                     >
                         <label>West (&deg;)</label>
@@ -171,7 +192,7 @@ export default class SpatialBoundsField extends Component<SpatialBoundsProps, {}
                             className={
                                 formStyles.FormControl +
                                 " " +
-                                styles.TextAlignCenter
+                                durationStyles.TextAlignCenter
                             }
                             value={west}
                             onChange={(e) => this.updateSpatialBounds('west', e.target.value)}
@@ -179,20 +200,32 @@ export default class SpatialBoundsField extends Component<SpatialBoundsProps, {}
                     </div>
                     <ClearInputButton onClick={() => this.removeSpatialBounds()}/>
                 </div>
-                <button
-                    className={thresholdsStyles.AddThresholdButton}
-                    style={{
-                        display: (wmsLayerSlug && wmsLayerUrl) ? 'block' : 'none'
-                    }}
-                    onClick={() => getBoundsFromWmsLayer(
-                        wmsLayerSlug,
-                        wmsLayerUrl,
-                        value,
-                        valueChanged
-                    )}
-                >
-                    Get from GeoServer
-                </button>
+                <div className={styles.GetFromGeoServer}>
+                    <button
+                        className={thresholdsStyles.AddThresholdButton}
+                        style={{
+                            display: (wmsLayerSlug && wmsLayerUrl) ? 'block' : 'none'
+                        }}
+                        onClick={() => getBoundsFromWmsLayer(
+                            wmsLayerSlug,
+                            wmsLayerUrl,
+                            value,
+                            valueChanged,
+                            this.showErrorMessage
+                        )}
+                    >
+                        Get from GeoServer
+                    </button>
+                    &nbsp;
+                    <span
+                        className={styles.GetFromGeoServerError}
+                        style={{
+                            display: this.state.getFromGeoserverError ? 'block' : 'none'
+                        }}
+                    >
+                        Failed to get extent from GeoServer
+                    </span>
+                </div>
             </div>
         );
     }
