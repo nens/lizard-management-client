@@ -15,14 +15,13 @@ import TextArea from "../../forms/TextArea";
 import SelectBox from "../../forms/SelectBox";
 import CheckBox from "../../forms/CheckBox";
 import SlushBucket from "../../forms/SlushBucket";
+import SpatialBoundsField, { spatialBoundsValidator } from "../../forms/SpatialBoundsField";
 
 import {
   minLength,
   maxLength,
   required
 } from "../../forms/validators";
-
-
 
 class WmsLayerFormModel extends Component {
 
@@ -33,7 +32,20 @@ class WmsLayerFormModel extends Component {
       openOverlay: false,
       modalErrorMessage: "",
       createdWmsLayer: null,
+      geoServerError: false,
     }
+  }
+
+  showGeoServerError = () => {
+    this.setState({
+        geoServerError: true
+    });
+  }
+
+  hideGeoServerError = () => {
+    this.setState({
+        geoServerError: false
+    });
   }
 
   minZoomValidator = (value, allValues) => {
@@ -115,8 +127,10 @@ class WmsLayerFormModel extends Component {
           description: validatedData.description,
           wms_url: validatedData.wmsLayerUrl,
           slug: validatedData.wmsLayerSlug,
+          download_url: validatedData.wmsLayerDownloadUrl,
           min_zoom: validatedData.wmsLayerMinZoom,
           max_zoom: validatedData.wmsLayerMaxZoom,
+          spatial_bounds: validatedData.wmsLayerSpatialBounds,
           options: validatedData.wmsLayerOptions,
           get_feature_info: validatedData.wmsLayerGetFeatureInfo,
           get_feature_info_url: validatedData.wmsLayerGetFeatureInfoUrl,
@@ -142,8 +156,10 @@ class WmsLayerFormModel extends Component {
         description: validatedData.description,
         wms_url: validatedData.wmsLayerUrl,
         slug: validatedData.wmsLayerSlug,
+        download_url: validatedData.wmsLayerDownloadUrl,
         min_zoom: validatedData.wmsLayerMinZoom,
         max_zoom: validatedData.wmsLayerMaxZoom,
+        spatial_bounds: validatedData.wmsLayerSpatialBounds,
         options: validatedData.wmsLayerOptions,
         get_feature_info: validatedData.wmsLayerGetFeatureInfo,
         get_feature_info_url: validatedData.wmsLayerGetFeatureInfoUrl,
@@ -181,16 +197,14 @@ class WmsLayerFormModel extends Component {
     const placeholderMinZoom = intl.formatMessage({ id: "placeholder_min_zoom" });
     const placeholderMaxZoom = intl.formatMessage({ id: "placeholder_max_zoom" });
     const placeholderUrl = intl.formatMessage({ id: "placeholder_url" });
-    // const placeholderTiled = intl.formatMessage({ id: "placeholder_tiled" });
     const placeholderLegendUrl = intl.formatMessage({ id: "placeholder_legend_url" });
     const placeholderGetFeatureInfoUrl = intl.formatMessage({ id: "placeholder_get_feature_info_url" });
     const placeholderOrganisationSelection = intl.formatMessage({ id: "placeholder_organisation_selection" });
-
     const placeholderOrganisationSearch = intl.formatMessage({ id: "placeholder_organisation_search" });
     const placeholderSupplierName = intl.formatMessage({ id: "placeholder_supplier_name" });
 
     return (
-      <div>
+      <div onClick={this.hideGeoServerError}>
       {this.state.openOverlay ? (
         <ErrorOverlay
           isFetching={this.state.isFetching}
@@ -336,16 +350,15 @@ class WmsLayerFormModel extends Component {
           }
           validators={[minLength(1)]}
         />
-        {/* According to my (Tom) understanding this field is no longer needed */}
-        {/* <TextInput
-          name="wmsLayerTiled"
-          title={<FormattedMessage id="wms_layer_form.tiled" />}
-          placeholder={placeholderTiled}
+        <TextInput
+          name="wmsLayerDownloadUrl"
+          title={<FormattedMessage id="wms_layer_form.download_url" />}
+          placeholder={placeholderUrl}
           initial = {
             currentWmsLayer &&
-              currentWmsLayer.tiled
+              currentWmsLayer.download_url
           }
-        /> */}
+        />
         <IntegerInput
           name="wmsLayerMinZoom"
           title={<FormattedMessage id="wms_layer_form.min_zoom" />}
@@ -369,6 +382,20 @@ class WmsLayerFormModel extends Component {
                 currentWmsLayer.max_zoom.toString()) || 31
           }
           validators={[this.maxZoomValidator]}
+        />
+        <SpatialBoundsField
+          name="wmsLayerSpatialBounds"
+          title={<FormattedMessage id="wms_layer_form.spatial_bounds" />}
+          subtitle={<FormattedMessage id="wms_layer_form.add_spatial_bounds" />}
+          initial = {
+            (
+              currentWmsLayer &&
+              currentWmsLayer.spatial_bounds
+            ) || null
+          }
+          validators={[spatialBoundsValidator]}
+          geoServerError={this.state.geoServerError}
+          showGeoServerError={this.showGeoServerError}
         />
         <TextArea
           name="wmsLayerOptions"
