@@ -35,5 +35,8 @@ export const getBoundsFromWmsLayer = (wmsSlug, wmsUrl, value, valueChanged, show
             if (!wmsBounds) showGeoServerError();
             valueChanged(wmsBounds ? wmsBounds : value);
         })
-        .catch(e => console.log(e));
+        .catch(e => {
+            showGeoServerError();
+            console.log(e);
+        });
 };
