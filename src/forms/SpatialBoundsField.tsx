@@ -21,11 +21,9 @@ interface SpatialBoundsProps {
         wmsLayerUrl: string,
     },
     valueChanged: Function,
+    geoServerError: boolean,
+    showGeoServerError: Function,
 };
-
-interface MyState {
-    getFromGeoserverError: boolean,
-}
 
 // Validator
 export const spatialBoundsValidator = (fieldValue: SpatialBoundsProps['value']) => {
@@ -54,20 +52,7 @@ export const spatialBoundsValidator = (fieldValue: SpatialBoundsProps['value']) 
     };
 };
 
-export default class SpatialBoundsField extends Component<SpatialBoundsProps, MyState> {
-    state={
-        getFromGeoserverError: false,
-    }
-    showErrorMessage = () => {
-        this.setState({
-            getFromGeoserverError: true
-        });
-    }
-    closeErrorMessage = () => {
-        this.setState({
-            getFromGeoserverError: false
-        });
-    }
+export default class SpatialBoundsField extends Component<SpatialBoundsProps, {}> {
     updateSpatialBounds(key: string, value: string) {
         this.props.valueChanged({
             ...this.props.value,
@@ -82,6 +67,8 @@ export default class SpatialBoundsField extends Component<SpatialBoundsProps, My
             value,
             otherValues,
             valueChanged,
+            geoServerError,
+            showGeoServerError,
         } = this.props;
 
         const {
@@ -104,10 +91,7 @@ export default class SpatialBoundsField extends Component<SpatialBoundsProps, My
         };
 
         return (
-            <div
-                onClick={this.closeErrorMessage}
-                onMouseLeave={this.closeErrorMessage}
-            >
+            <div>
                 <div
                     className={
                         formStyles.FormGroup +
@@ -224,7 +208,7 @@ export default class SpatialBoundsField extends Component<SpatialBoundsProps, My
                             wmsLayerUrl,
                             value,
                             valueChanged,
-                            this.showErrorMessage
+                            showGeoServerError
                         )}
                     >
                         <FormattedMessage
@@ -236,7 +220,7 @@ export default class SpatialBoundsField extends Component<SpatialBoundsProps, My
                     <span
                         className={styles.GetFromGeoServerError}
                         style={{
-                            display: this.state.getFromGeoserverError ? 'block' : 'none'
+                            display: geoServerError ? 'block' : 'none'
                         }}
                     >
                         Failed to get extent from GeoServer

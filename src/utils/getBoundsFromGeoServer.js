@@ -1,13 +1,13 @@
 import X2JS from 'x2js';
 
-export const getBoundsFromWmsLayer = (wmsSlug, wmsUrl, value, valueChanged, showErrorMessage) => {
+export const getBoundsFromWmsLayer = (wmsSlug, wmsUrl, value, valueChanged, showGeoServerError) => {
     // Use /proxy/ to avoid the request is blocked by CORS policy
     const proxyUrl = `/proxy/${wmsUrl}`;
 
     fetch(`${proxyUrl}/?request=getCapabilities`)
         .then(response => {
             if (!response.ok) {
-                showErrorMessage();
+                showGeoServerError();
                 throw new Error('Failed to get extent from GeoServer');
             };
             return response.text();
@@ -32,7 +32,7 @@ export const getBoundsFromWmsLayer = (wmsSlug, wmsUrl, value, valueChanged, show
                 south: parseFloat(wmsLayer.EX_GeographicBoundingBox.southBoundLatitude),
                 west: parseFloat(wmsLayer.EX_GeographicBoundingBox.westBoundLongitude),
             } : null;
-            if (!wmsBounds) showErrorMessage();
+            if (!wmsBounds) showGeoServerError();
             valueChanged(wmsBounds ? wmsBounds : value);
         })
         .catch(e => console.log(e));

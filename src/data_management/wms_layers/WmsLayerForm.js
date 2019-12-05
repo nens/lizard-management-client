@@ -32,7 +32,20 @@ class WmsLayerFormModel extends Component {
       openOverlay: false,
       modalErrorMessage: "",
       createdWmsLayer: null,
+      geoServerError: false,
     }
+  }
+
+  showGeoServerError = () => {
+    this.setState({
+        geoServerError: true
+    });
+  }
+
+  hideGeoServerError = () => {
+    this.setState({
+        geoServerError: false
+    });
   }
 
   minZoomValidator = (value, allValues) => {
@@ -191,7 +204,7 @@ class WmsLayerFormModel extends Component {
     const placeholderSupplierName = intl.formatMessage({ id: "placeholder_supplier_name" });
 
     return (
-      <div>
+      <div onClick={this.hideGeoServerError}>
       {this.state.openOverlay ? (
         <ErrorOverlay
           isFetching={this.state.isFetching}
@@ -381,6 +394,8 @@ class WmsLayerFormModel extends Component {
             ) || null
           }
           validators={[spatialBoundsValidator]}
+          geoServerError={this.state.geoServerError}
+          showGeoServerError={this.showGeoServerError}
         />
         <TextArea
           name="wmsLayerOptions"
