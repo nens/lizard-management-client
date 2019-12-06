@@ -156,7 +156,9 @@ class ThresholdsSelectionInput extends Component<MyProps & InjectedIntlProps, My
                             />
                         </td>
                     </tr>
-                    {thresholds.map((threshold, i) => (
+                    {thresholds.sort((a, b) =>
+                        a.value - b.value
+                    ).map((threshold, i) => (
                         <tr key={i}>
                             <td className={styles.ThresholdValue}>
                                 {comparison} {threshold.value}
