@@ -1,11 +1,14 @@
 import React, { Component } from "react";
 import { FormattedMessage } from "react-intl";
-import AppIcon from "../components/AppIcon";
+import AppTile from "../components/AppTile";
 import { withRouter } from "react-router-dom";
 import { Trail, animated } from "react-spring";
-import alarmIcon from "../images/alarm@3x.svg";
-import groupsIcon from "../images/groups@3x.svg";
+
+import alarmsIcon from "../images/alarm@3x.svg";
+import groupsIcon from "../images/group.svg";
+import contactsIcon from "../images/contacts@3x.svg";
 import templatesIcon from "../images/templates@3x.svg";
+import backArrowIcon from "../images/backArrow.svg";
 
 class Alarms extends Component {
   handleLink(destination) {
@@ -17,7 +20,7 @@ class Alarms extends Component {
   }
 
   render() {
-    const appIcons = [
+    const appTiles = [
       { 
         key: 0,
         handleClick: () => this.handleLink("alarms/notifications"),
@@ -27,27 +30,18 @@ class Alarms extends Component {
             defaultMessage="Notifications"
           />
         ),
-        icon: alarmIcon,
-        subTitle: (
-          <FormattedMessage
-            id="alarms.manage_notifications"
-            defaultMessage="Manage notifications"
-          />
-        )
+        icon: alarmsIcon
       },
       {
         key: 1,
         handleClick: () => this.handleLink("alarms/groups"),
         title: (
-          <FormattedMessage id="alarms.alarms_groups" defaultMessage="Groups" />
-        ),
-        icon: groupsIcon,
-        subTitle: (
           <FormattedMessage
-            id="alarms.recipient_management"
-            defaultMessage="Recipient management"
+            id="alarms.recipients"
+            defaultMessage="Recipients"
           />
-        )
+        ),
+        icon: groupsIcon
       },
       {
         key: 2,
@@ -58,13 +52,7 @@ class Alarms extends Component {
             defaultMessage="Contacts"
           />
         ),
-        icon: groupsIcon,
-        subTitle: (
-          <FormattedMessage
-            id="alarms.contacts_management"
-            defaultMessage="Contacts management"
-          />
-        )
+        icon: contactsIcon
       },
       {
         key: 3,
@@ -75,13 +63,18 @@ class Alarms extends Component {
             defaultMessage="Templates"
           />
         ),
-        icon: templatesIcon,
-        subTitle: (
+        icon: templatesIcon
+      },
+      {
+        key: 4,
+        handleClick: () => this.handleLink(""),
+        title: (
           <FormattedMessage
-            id="alarms.alarms_template_management"
-            defaultMessage="Alarm template management"
+            id="go_back"
+            defaultMessage="Go Back"
           />
-        )
+        ),
+        icon: backArrowIcon
       }
     ];
 
@@ -93,21 +86,20 @@ class Alarms extends Component {
               native
               from={{ opacity: 0, x: -5 }}
               to={{ opacity: 1, x: 0 }}
-              keys={appIcons.map(item => item.key)}
+              keys={appTiles.map(item => item.key)}
             >
-              {appIcons.map((appIcon, i) => ({ x, opacity }) => (
+              {appTiles.map((appTile, i) => ({ x, opacity }) => (
                 <animated.div
                   style={{
                     opacity,
                     transform: x.interpolate(x => `translate3d(${x}%,0,0)`)
                   }}
                 >
-                  <AppIcon
-                    handleClick={appIcon.handleClick}
+                  <AppTile
+                    handleClick={appTile.handleClick}
                     key={+new Date()}
-                    src={appIcon.icon}
-                    title={appIcon.title}
-                    subTitle={appIcon.subTitle}
+                    title={appTile.title}
+                    icon={appTile.icon}
                   />
                 </animated.div>
               ))}

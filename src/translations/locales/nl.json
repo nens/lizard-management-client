@@ -1,6 +1,7 @@
 {
   "available": "Beschikbaar",
   "selected": "Gekozen",
+  "go_back": "Ga Terug",
   "alarmgroup.send_message": "Bericht verzenden",
   "alarmgroups_app.characters_left": "tekens resterend",
   "alarmgroups_app.delete_group": "Verwijder groep",
@@ -27,7 +28,7 @@
   "alarms.contacts_management": "Contactenbeheer",
   "alarms.manage_notifications": "Alarmberichten beheren",
   "alarms.notifications": "Notificaties",
-  "alarms.recipient_management": "Ontvangers beheren",
+  "alarms.recipients": "Ontvangers",
   "alarmtemplates_app.activate": "ACTIVEREN",
   "alarmtemplates_app.active": "ACTIEF",
   "alarmtemplates_app.deactivate": "DEACTIVEREN",
@@ -40,6 +41,7 @@
   "alarmtemplates_app.manage_templates": "Sjablonen beheren",
   "alarmtemplates_app.name": "Naam",
   "alarmtemplates_app.new_group": "Nieuw sjabloon",
+  "alarmtemplates_app.no_contacts_configured": "Geen contacten geconfigureerd...",
   "alarmtemplates_app.no_templates_configured": "Geen sjablonen geconfigureerd...",
   "alarmtemplates_app.number_of_messages": "{number_of_messages, number} {number_of_messages, plural, one {ontvanger} other {ontvangers}}",
   "alarmtemplates_app.number_of_templates": "{numberOfTemplates, number} {numberOfTemplates, plural, one {SJABLOON} other {SJABLONEN}}",
@@ -97,7 +99,7 @@
   "home.scenario_management": "Scenariobeheer",
   "home.scenarios": "3Di Scenario's",
   "home.sso_management": "Single sign-on beheer",
-  "home.usermanagement": "Gebruikersbeheer",
+  "home.users": "Gebruikers",
   "index.documentation": "Documentatie",
   "index.support": "Ondersteuning",
   "notifications_app.a_threshold_determines_when_an_alarm_should_be_triggered": "Een drempelwaarde bepaalt wanneer een alarm afgaat",
@@ -366,5 +368,6 @@
   "scenario.scenario": "Scenario",
   "scenario.size": "Grootte",
   "scenario.total_storage": "Totale Opslag",
-  "scenario.user": "Gebruiker"
+  "scenario.user": "Gebruiker",
+  "scenario.no_scenarios_configured": "Geen 3Di scenario's geconfigureerd."
 }

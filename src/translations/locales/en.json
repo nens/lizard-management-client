@@ -1,6 +1,7 @@
 {
   "available": "Available",
   "selected": "Selected",
+  "go_back": "Go Back",
   "alarmgroup.send_message": "Send message",
   "alarmgroups_app.characters_left": "characters left",
   "alarmgroups_app.delete_group": "Delete group",
@@ -27,7 +28,7 @@
   "alarms.contacts_management": "Contacts management",
   "alarms.manage_notifications": "Manage notifications",
   "alarms.notifications": "Notifications",
-  "alarms.recipient_management": "Recipient management",
+  "alarms.recipients": "Recipients",
   "alarmtemplates_app.activate": "ACTIVATE",
   "alarmtemplates_app.active": "ACTIVE",
   "alarmtemplates_app.deactivate": "DEACTIVATE",
@@ -40,6 +41,7 @@
   "alarmtemplates_app.manage_templates": "Manage templates",
   "alarmtemplates_app.name": "Name",
   "alarmtemplates_app.new_group": "New template",
+  "alarmtemplates_app.no_contacts_configured": "No contacts configured...",
   "alarmtemplates_app.no_templates_configured": "No templates configured...",
   "alarmtemplates_app.number_of_messages": "{number_of_messages, number} {number_of_messages, plural, one {recipient} other {recipient groups}}",
   "alarmtemplates_app.number_of_templates": "{numberOfTemplates, number} {numberOfTemplates, plural, one {TEMPLATE} other {TEMPLATES}}",
@@ -90,7 +92,7 @@
   "home.scenario_management": "Scenario management",
   "home.scenarios": "3Di Scenarios",
   "home.sso_management": "Single sign-on account management",
-  "home.usermanagement": "User management",
+  "home.users": "Users",
   "index.documentation": "Documentation",
   "index.support": "Support",
   "notifications_app.a_threshold_determines_when_an_alarm_should_be_triggered": "A threshold determines when an alarm should be triggered",
@@ -279,5 +281,6 @@
   "scenario.scenario": "Scenario",
   "scenario.size": "Size",
   "scenario.total_storage": "Total Storage",
-  "scenario.user": "User"
+  "scenario.user": "User",
+  "scenario.no_scenarios_configured": "No 3Di scenarios configured."
 }

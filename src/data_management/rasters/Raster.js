@@ -374,9 +374,7 @@ class Raster extends Component {
                   <div className={`${rasterTableStyles.tableName}`}>
                     <NavLink
                       to={`/data_management/rasters/${raster.uuid}`}
-                      style={{
-                        color: "#333"
-                      }}
+                      style={{ color: "#333" }}
                     >
                       {raster.name}
                     </NavLink>
@@ -384,9 +382,7 @@ class Raster extends Component {
                   <div className={`${rasterTableStyles.tableDescription}`}>
                     <NavLink
                       to={`/data_management/rasters/${raster.uuid}`}
-                      style={{
-                        color: "#333"
-                      }}
+                      style={{ color: "#333" }}
                     >
                       {raster.description}
                     </NavLink>
@@ -517,12 +513,12 @@ class Raster extends Component {
                   : `${buttonStyles.Button} ${buttonStyles.Inactive}`
               }
               onClick={this.handleFlushDataRasterClick}
-              style={{ maxHeight: "36px", width: "204px",marginRight: "10px" }}
+              style={{ maxHeight: "36px", width: "220px",marginRight: "10px" }}
               disabled={clickedCheckboxes === 0 ? true : false}
             >
               <FormattedMessage
                 id="rasters.flush_data_rasters"
-                defaultMessage={` Flush Data {clickedCheckboxes, number} {clickedCheckboxes, plural,
+                defaultMessage={` Flush data {clickedCheckboxes, number} {clickedCheckboxes, plural,
                   one {Raster}
                   other {Rasters}}`}
                 values={{
@@ -539,7 +535,7 @@ class Raster extends Component {
                   : `${buttonStyles.Button} ${buttonStyles.Inactive}`
               }
               onClick={this.handleDeleteRasterClick}
-              style={{ maxHeight: "36px", width: "204px" }}
+              style={{ maxHeight: "36px", width: "220px" }}
               disabled={clickedCheckboxes === 0 ? true : false}
             >
               <FormattedMessage
@@ -640,7 +636,7 @@ class Raster extends Component {
             autoHeight
             autoHeightMax={500}
             autoHeightMin={500}
-            renderTrackVertical={props => <div {...props} style={{display: 'none'}} className="track-vertical"/>}
+            renderTrackVertical={props => <div {...props} style={{display: 'none', overflowY: "hidden"}} className="track-vertical"/>}
           >
             {htmlRasterTableHeader}
             {htmlRasterTableBody}

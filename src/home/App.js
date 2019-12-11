@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import styles from "./App.css";
-import AppIcon from "../components/AppIcon";
+import AppTile from "../components/AppTile";
 import { withRouter } from "react-router-dom";
 import { Trail, animated } from "react-spring";
 import doArraysHaveEqualElement from '../utils/doArraysHaveEqualElement';
 
-import {appIcons} from './HomeAppIconConfig';
+import {appTiles} from './HomeAppTileConfig';
 
 class App extends Component {
   constructor(props) {
@@ -33,10 +33,10 @@ class App extends Component {
 
   render() {
     const currentOrganisationRoles = (this.props.selectedOrganisation && this.props.selectedOrganisation.roles) || [];
-    const appIconsWithReadOnlyInfo = appIcons.map(appIcon=>{
+    const appTilesWithReadOnlyInfo = appTiles.map(appTile=>{
       return {
-        ...appIcon,
-        readonly: !doArraysHaveEqualElement(appIcon.requiredRoles, currentOrganisationRoles),
+        ...appTile,
+        readonly: !doArraysHaveEqualElement(appTile.requiredRoles, currentOrganisationRoles)
       }
     });
     return (
@@ -48,23 +48,22 @@ class App extends Component {
                 native
                 from={{ opacity: 0, x: -5 }}
                 to={{ opacity: 1, x: 0 }}
-                keys={appIcons.map(item => item.key)}
+                keys={appTiles.map(item => item.key)}
               >
-                {appIconsWithReadOnlyInfo.map((appIcon) => ({ x, opacity }) => (
+                {appTilesWithReadOnlyInfo.map((appTile) => ({ x, opacity }) => (
                   <animated.div
                     style={{
                       opacity,
                       transform: x.interpolate(x => `translate3d(${x}%,0,0)`)
                     }}
                   >
-                    <AppIcon
-                      handleClick={()=>{ this.handleLink(appIcon.linksTo)}}
+                    <AppTile
+                      handleClick={()=>{ this.handleLink(appTile.linksTo)}}
                       key={+new Date()}
-                      src={appIcon.icon}
-                      title={appIcon.title}
-                      subTitle={appIcon.subTitle}
-                      readonly={appIcon.readonly}
-                      requiredRoles={appIcon.requiredRoles}
+                      title={appTile.title}
+                      icon={appTile.icon}
+                      readonly={appTile.readonly}
+                      requiredRoles={appTile.requiredRoles}
                     />
                   </animated.div>
                 ))}

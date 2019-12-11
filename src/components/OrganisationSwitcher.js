@@ -8,7 +8,7 @@ import { fetchSupplierIds, selectOrganisation } from "../actions";
 import { FormattedMessage, injectIntl } from "react-intl";
 import { Scrollbars } from "react-custom-scrollbars";
 import doArraysHaveEqualElement from '../utils/doArraysHaveEqualElement';
-import {appIcons} from '../home/HomeAppIconConfig';
+import {appTiles} from '../home/HomeAppTileConfig';
 
 
 class OrganisationSwitcher extends Component {
@@ -73,7 +73,7 @@ class OrganisationSwitcher extends Component {
         })
       : organisations;
 
-    const currentHomeAppIcon = appIcons.find(icon => {
+    const currentHomeAppTile = appTiles.find(icon => {
       return window.location.href.includes(icon.linksTo.path)
     });
     const authorisationText = this.props.intl.formatMessage({ id: "authorization.organisation_not_allowed_current_page", defaultMessage: "! Organisation not authorized to visit current page !" });
@@ -134,7 +134,7 @@ class OrganisationSwitcher extends Component {
               >
                 {filteredOrganisations
                   ? filteredOrganisations.map((organisation, i) => {
-                      const hasRequiredRoles = !currentHomeAppIcon || doArraysHaveEqualElement(organisation.roles, currentHomeAppIcon.requiredRoles);
+                      const hasRequiredRoles = !currentHomeAppTile || doArraysHaveEqualElement(organisation.roles, currentHomeAppTile.requiredRoles);
                       return (
                         <div
                           key={organisation.uuid}

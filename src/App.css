@@ -2,6 +2,7 @@
   display: flex;
   min-height: 100vh;
   flex-direction: column;
+  font-family: Montserrat;
 }
 
 .AppContent {
@@ -19,9 +20,11 @@
 .Primary {
   background-color: #009F86;
   color: #fff;
+  text-transform: uppercase;
 }
 .Secondary {
   background-color: #2FCBAB;
+  text-transform: uppercase;
 }
 .Secondary a {
   text-decoration: none;
@@ -30,9 +33,7 @@
 
 .Footer {
   background-color: #D8D8D8;
-  /* position: absolute;
-  width: 100%;
-  bottom: 0px; */
+  text-transform: uppercase;
 }
 .Footer a {
   color: #009F86;
@@ -54,15 +55,6 @@
   position: relative;
 }
 
-.BreadcrumbsContainer{
-  height: 65px;
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
-  font-size: 1.2em;
-  overflow-x: hidden;
-  -ms-overflow-style: -ms-autohiding-scrollbar;
-}
 .DocumentationHyperlink{
   position: relative;
   top: 5px;
@@ -101,7 +93,7 @@
   border-radius: 2px;
 }
 .OrganisationLinkContainer {
-  width: 160px;
+  width: 260px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -113,10 +105,11 @@
 }
 .OrganisationLink {
   color: #fff !important;
-  max-width: 150px;
+  max-width: 250px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  text-transform: uppercase;
 }
 .OrganisationLinkContainer:hover {
   background-color: rgb(3, 139, 119);
