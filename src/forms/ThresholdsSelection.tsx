@@ -91,17 +91,17 @@ class ThresholdsSelectionInput extends Component<MyProps & InjectedIntlProps, My
         const { comparison, thresholds } = value;
 
         return (
-            <table>
-                <th
-                    colSpan={2}
-                    className={styles.Comparision}
-                >
-                    <FormattedMessage
-                        id="notifications_app.comparison"
-                        defaultMessage="Comparison"
-                    />
-                </th>
-                <tbody>
+            <table className={styles.ThresholdsTable}>
+                <thead>
+                    <th
+                        colSpan={2}
+                        className={styles.Comparision}
+                    >
+                        <FormattedMessage
+                            id="notifications_app.comparison"
+                            defaultMessage="Comparison"
+                        />
+                    </th>
                     <tr>
                         <td>
                             <button
@@ -156,6 +156,8 @@ class ThresholdsSelectionInput extends Component<MyProps & InjectedIntlProps, My
                             />
                         </td>
                     </tr>
+                </thead>
+                <tbody>
                     {thresholds.sort((a, b) =>
                         a.value - b.value
                     ).map((threshold, i) => (
