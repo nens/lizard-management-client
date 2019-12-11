@@ -1,8 +1,10 @@
-.Threshold {
-  width: 100%;
-  border: 1px solid #a5a5a5;
-  padding: 5px;
-  margin: 0 0 10px 0;
+.ThresholdsTable th {
+  height: 50px;
+}
+
+.ThresholdsTable td {
+  max-width: 200px;
+  padding: 4px 10px 4px 0;
 }
 
 .Comparision {
@@ -11,45 +13,28 @@
   color: #707070;
 }
 
-.ThresholdInput {
-  display: flex;
-}
-
-.ThresholdInput label {
+.ThresholdLabel {
   color: #707070;
+  height: 50px;
   margin: 10px 0;
 }
 
-.ThresholdInput input {
-  margin: 6px 0;
-}
-
-.ThresholdValueInput {
-  max-width: 160px;
-  display: flex;
-  flex-direction: column;
-}
-
-.ThresholdNameInput {
-  max-width: 160px;
-  display: flex;
-  flex-direction: column;
-  margin-left: 10px;
-}
-
-.ThresholdValues {
+.ThresholdValue {
   font-weight: bold;
   color: #707070;
 }
 
-.ThresholdNames {
+.ThresholdName {
   font-weight: bold;
   color: #707070;
-}
-
-.ThresholdNames div {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+}
+
+.ThresholdNameText {
+  width: 90%;
+  word-wrap: break-word;
 }
 
 .ThresholdDelete {
@@ -91,8 +76,13 @@
   color: #fff;
 }
 
+.InactiveAddThresholdButton:hover {
+  background-color: #C9C9C9;
+}
+
 .SelectedButton {
   cursor: pointer;
+  width: 90%;
   font-weight: bold;
   padding: 6px;
   background-color: #00cdab;

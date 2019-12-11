@@ -30,8 +30,7 @@ interface MyState {
 };
 
 // Validator for this component
-
- export const thresholdSelection = (value: Threshold[]): validatorResult => {
+export const thresholdSelection = (value: Threshold[]): validatorResult => {
     if (value.length === 0) {
         return "Please add at least one threshold to the alarm"
     }
@@ -92,28 +91,29 @@ class ThresholdsSelectionInput extends Component<MyProps & InjectedIntlProps, My
         const { comparison, thresholds } = value;
 
         return (
-            <div>
-                <div className={styles.AddThreshold}>
-                    <label htmlFor="comparison" className={styles.Comparision}>
+            <table className={styles.ThresholdsTable}>
+                <thead>
+                    <th
+                        colSpan={2}
+                        className={styles.Comparision}
+                    >
                         <FormattedMessage
                             id="notifications_app.comparison"
                             defaultMessage="Comparison"
                         />
-                    </label>
-                    <div className={styles.ThresholdInput}>
-                        <div className={styles.ThresholdValueInput}>
+                    </th>
+                    <tr>
+                        <td>
                             <button
-                                className={
-                                    comparison === ">" ?
-                                        `${styles.SelectedButton}`
-                                        :
-                                        `${styles.SelectedButton} ${styles.UnselectedButton}`
-                                }
+                                className={comparison === ">" ? (
+                                    `${styles.SelectedButton}`
+                                ) : (
+                                    `${styles.SelectedButton} ${styles.UnselectedButton}`
+                                )}
                                 onClick={() => valueChanged({
-                                        comparison: ">",
-                                        thresholds: thresholds
-                                    })
-                                }
+                                    comparison: ">",
+                                    thresholds: thresholds
+                                })}
                             >
                                 <FormattedMessage
                                     id="notifications_app.higher_than"
@@ -121,36 +121,18 @@ class ThresholdsSelectionInput extends Component<MyProps & InjectedIntlProps, My
                                 />
                                 &nbsp;&gt;
                             </button>
-                            <label htmlFor="value">
-                                <FormattedMessage
-                                    id="notifications_app.threshold_value"
-                                    defaultMessage="Value"
-                                />
-                            </label>
-                            <div className={styles.ThresholdValues}>
-                                {thresholds.map((threshold, i) => <div key={i}>{comparison} {threshold.value}</div>)}
-                            </div>
-                            <input
-                                type="number"
-                                id="value"
-                                value={thresholdValue}
-                                className={formStyles.FormControlSmall}
-                                onChange={this.handleChangeThresholdValue}
-                            />
-                        </div>
-                        <div className={styles.ThresholdNameInput}>
+                        </td>
+                        <td>
                             <button
-                                className={
-                                    comparison === "<" ?
-                                        `${styles.SelectedButton}`
-                                        :
-                                        `${styles.SelectedButton} ${styles.UnselectedButton}`
-                                }
+                                className={comparison === "<" ? (
+                                    `${styles.SelectedButton}`
+                                ) : (
+                                    `${styles.SelectedButton} ${styles.UnselectedButton}`
+                                )}
                                 onClick={() => valueChanged({
-                                        comparison: "<",
-                                        thresholds: thresholds
-                                    })
-                                }
+                                    comparison: "<",
+                                    thresholds: thresholds
+                                })}
                             >
                                 <FormattedMessage
                                     id="notifications_app.lower_than"
@@ -158,25 +140,55 @@ class ThresholdsSelectionInput extends Component<MyProps & InjectedIntlProps, My
                                 />
                                 &nbsp;&lt;
                             </button>
-                            <label htmlFor="warning_label">
-                                <FormattedMessage
-                                    id="notifications_app.threshold_name"
-                                    defaultMessage="Name"
-                                />
-                            </label>
-                            <div className={styles.ThresholdNames}>
-                                {thresholds.map((threshold, i) => (
-                                    <div key={i}>
-                                        <span>{threshold.warning_level}</span>
-                                        <span
-                                            className={styles.ThresholdDelete}
-                                            onClick={() => this.handleRemoveThreshold(i)}
-                                        >
-                                            &#10007;
-                                      </span>
-                                    </div>
-                                ))}
-                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td className={styles.ThresholdLabel}>
+                            <FormattedMessage
+                                id="notifications_app.threshold_value"
+                                defaultMessage="Value"
+                            />
+                        </td>
+                        <td className={styles.ThresholdLabel}>
+                            <FormattedMessage
+                                id="notifications_app.threshold_name"
+                                defaultMessage="Name"
+                            />
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {thresholds.sort((a, b) =>
+                        a.value - b.value
+                    ).map((threshold, i) => (
+                        <tr key={i}>
+                            <td className={styles.ThresholdValue}>
+                                {comparison} {threshold.value}
+                            </td>
+                            <td className={styles.ThresholdName}>
+                                <span className={styles.ThresholdNameText}>
+                                    {threshold.warning_level}
+                                </span>
+                                <span
+                                    className={styles.ThresholdDelete}
+                                    onClick={() => this.handleRemoveThreshold(i)}
+                                >
+                                    &#10007;
+                                </span>
+                            </td>
+                        </tr>
+                    ))}
+                    <tr>
+                        <td>
+                            <input
+                                type="number"
+                                id="value"
+                                value={thresholdValue}
+                                className={formStyles.FormControlSmall}
+                                onChange={this.handleChangeThresholdValue}
+                            />
+                        </td>
+                        <td>
                             <input
                                 type="text"
                                 id="warning_label"
@@ -184,28 +196,31 @@ class ThresholdsSelectionInput extends Component<MyProps & InjectedIntlProps, My
                                 className={formStyles.FormControlSmall}
                                 onChange={this.handleChangeThresholdName}
                             />
-                        </div>
-                    </div>
-                    <button
-                        className={
-                            comparison && thresholdValue !== null && thresholdName ?
-                                `${styles.AddThresholdButton}`
-                                :
-                                `${styles.AddThresholdButton} ${styles.InactiveAddThresholdButton}`
-                        }
-                        onClick={() => {
-                            return comparison && thresholdValue !== null && thresholdName ? this.handleAddThreshold(
-                                thresholdValue, thresholdName
-                            ) : null
-                        }}
-                    >
-                        <FormattedMessage
-                            id="notifications_app.add_thresholds"
-                            defaultMessage="Save threshold"
-                        />
-                    </button>
-                </div>
-            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colSpan={2}>
+                            <button
+                                className={comparison && thresholdValue !== null && thresholdName ? (
+                                    `${styles.AddThresholdButton}`
+                                ) : (
+                                    `${styles.AddThresholdButton} ${styles.InactiveAddThresholdButton}`
+                                )}
+                                onClick={() => comparison && thresholdValue !== null && thresholdName ?
+                                    this.handleAddThreshold(
+                                        thresholdValue, thresholdName
+                                    ) : null
+                                }
+                            >
+                                <FormattedMessage
+                                    id="notifications_app.add_thresholds"
+                                    defaultMessage="Save threshold"
+                                />
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         )
     }
 }
