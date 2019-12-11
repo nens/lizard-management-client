@@ -5,8 +5,11 @@ import React, { Component } from "react";
 import styles from "./OrganisationSwitcher.css";
 import { connect } from "react-redux";
 import { fetchSupplierIds, selectOrganisation } from "../actions";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, injectIntl } from "react-intl";
 import { Scrollbars } from "react-custom-scrollbars";
+import doArraysHaveEqualElement from '../utils/doArraysHaveEqualElement';
+import {appTiles} from '../home/HomeAppTileConfig';
+
 
 class OrganisationSwitcher extends Component {
   constructor(props) {
@@ -70,6 +73,13 @@ class OrganisationSwitcher extends Component {
         })
       : organisations;
 
+    const currentHomeAppTile = appTiles.find(icon => {
+      return window.location.href.includes(icon.linksTo.path)
+    });
+    const authorisationText = this.props.intl.formatMessage({ id: "authorization.organisation_not_allowed_current_page", defaultMessage: "! Organisation not authorized to visit current page !" });
+
+        
+
     return (
       <div className={styles.OrganisationSwitcherContainer}>
         <CSSTransition
@@ -124,6 +134,7 @@ class OrganisationSwitcher extends Component {
               >
                 {filteredOrganisations
                   ? filteredOrganisations.map((organisation, i) => {
+                      const hasRequiredRoles = !currentHomeAppTile || doArraysHaveEqualElement(organisation.roles, currentHomeAppTile.requiredRoles);
                       return (
                         <div
                           key={organisation.uuid}
@@ -139,6 +150,9 @@ class OrganisationSwitcher extends Component {
                           <i className="material-icons">group</i>
                           <div className={styles.OrganisationName}>
                             {organisation.name}
+                          </div>
+                          <div className={styles.OrganisationAuthorised}>
+                          {!hasRequiredRoles? authorisationText  : null}
                           </div>
                         </div>
                       );
@@ -171,5 +185,5 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(
-  OrganisationSwitcher
+  injectIntl(OrganisationSwitcher)
 );

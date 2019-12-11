@@ -4,10 +4,10 @@ import AppTile from "../components/AppTile";
 import { withRouter } from "react-router-dom";
 import { Trail, animated } from "react-spring";
 
-import rasterTileImage from "../images/rastersTileImage.svg";
-import wmsTileImage from "../images/wmslayersTileImage.svg";
-import threediTileImage from "../images/3diScenariosTileImage.svg";
-import backArrowTileImage from "../images/backArrowTileImage.svg";
+import rasterIcon from "../images/rasters@3x.svg";
+import wmsIcon from "../images/wms@3x.svg";
+import threediIcon from "../images/3di@3x.svg";
+import backArrowIcon from "../images/backArrow.svg";
 
 class DataManagement extends Component {
   handleLink(destination) {
@@ -29,7 +29,7 @@ class DataManagement extends Component {
             defaultMessage="Rasters"
           />
         ),
-        bgImage: rasterTileImage
+        icon: rasterIcon
       },
       {
         key: 1,
@@ -40,7 +40,7 @@ class DataManagement extends Component {
             defaultMessage="WMS layers"
           />
         ),
-        bgImage: wmsTileImage
+        icon: wmsIcon
       },
       {
         key: 2,
@@ -51,7 +51,7 @@ class DataManagement extends Component {
             defaultMessage="3Di Scenarios"
           />
         ),
-        bgImage: threediTileImage
+        icon: threediIcon
       },
       {
         key: 3,
@@ -62,7 +62,7 @@ class DataManagement extends Component {
             defaultMessage="Go Back"
           />
         ),
-        bgImage: backArrowTileImage
+        icon: backArrowIcon
       }
     ];
 
@@ -87,7 +87,7 @@ class DataManagement extends Component {
                     handleClick={appTile.handleClick}
                     key={+new Date()}
                     title={appTile.title}
-                    bgImage={appTile.bgImage}
+                    icon={appTile.icon}
                   />
                 </animated.div>
               ))}

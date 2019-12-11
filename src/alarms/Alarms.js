@@ -4,11 +4,11 @@ import AppTile from "../components/AppTile";
 import { withRouter } from "react-router-dom";
 import { Trail, animated } from "react-spring";
 
-import alarmsTileImage from "../images/alarmsTileImage.svg";
-import groupsTileImage from "../images/groupsTileImage.svg";
-import contactsTileImage from "../images/contactsTileImage.svg";
-import templatesTileImage from "../images/templatesTileImage.svg";
-import backArrowTileImage from "../images/backArrowTileImage.svg";
+import alarmsIcon from "../images/alarm@3x.svg";
+import groupsIcon from "../images/group.svg";
+import contactsIcon from "../images/contacts@3x.svg";
+import templatesIcon from "../images/templates@3x.svg";
+import backArrowIcon from "../images/backArrow.svg";
 
 class Alarms extends Component {
   handleLink(destination) {
@@ -30,7 +30,7 @@ class Alarms extends Component {
             defaultMessage="Notifications"
           />
         ),
-        bgImage: alarmsTileImage
+        icon: alarmsIcon
       },
       {
         key: 1,
@@ -41,7 +41,7 @@ class Alarms extends Component {
             defaultMessage="Recipients"
           />
         ),
-        bgImage: groupsTileImage
+        icon: groupsIcon
       },
       {
         key: 2,
@@ -52,7 +52,7 @@ class Alarms extends Component {
             defaultMessage="Contacts"
           />
         ),
-        bgImage: contactsTileImage
+        icon: contactsIcon
       },
       {
         key: 3,
@@ -63,7 +63,7 @@ class Alarms extends Component {
             defaultMessage="Templates"
           />
         ),
-        bgImage: templatesTileImage
+        icon: templatesIcon
       },
       {
         key: 4,
@@ -74,7 +74,7 @@ class Alarms extends Component {
             defaultMessage="Go Back"
           />
         ),
-        bgImage: backArrowTileImage
+        icon: backArrowIcon
       }
     ];
 
@@ -99,7 +99,7 @@ class Alarms extends Component {
                     handleClick={appTile.handleClick}
                     key={+new Date()}
                     title={appTile.title}
-                    bgImage={appTile.bgImage}
+                    icon={appTile.icon}
                   />
                 </animated.div>
               ))}

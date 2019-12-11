@@ -73,7 +73,7 @@ export function fetchOrganisations() {
   return (dispatch, getState) => {
     const state = getState();
 
-    const organisation = state.organisations.selected;
+    
 
     dispatch({ type: REQUEST_ORGANISATIONS });
 
@@ -86,41 +86,54 @@ export function fetchOrganisations() {
     fetch(url, opts)
       .then(responseObj => responseObj.json())
       .then(responseData => {
+        const organisation = state.organisations.selected;
         const data = responseData.results;
-
-        dispatch({ type: RECEIVE_ORGANISATIONS, data });
-
-        if (!organisation) {
-          // No organisation was chosen, select the first one that has admin role and else first one with suplier role, and let
-          // the user know about this
-
-          const firstOrganisation =
-            data.find(e => e.roles.find(e2 => e2 === "admin")) ||
-            data.find(e => e.roles.find(e2 => e2 === "supplier")) ||
-            null;
-
-          dispatch(selectOrganisation(firstOrganisation));
-
-          dispatch(
-            addNotification(
-              `Organisation "${firstOrganisation.name}" selected`,
-              2000
-            )
+        const allOrganisations = data.map(organisation => {
+          //use organisation uuid without dashes only
+          return {
+            ...organisation,
+            uuid: organisation.uuid.replace(/-/g, "")
+          };
+        })
+        const availableOrganisations = allOrganisations.filter(e => {
+          return (
+            e.roles.find(e => e === "manager") ||
+            e.roles.find(e => e === "admin") ||
+            e.roles.find(e => e === "supplier") 
+            // users with only role "user" are no longer allowed in the management page. 
           );
+        })
+
+        dispatch({ type: RECEIVE_ORGANISATIONS, all:allOrganisations, available: availableOrganisations});
+
+        if (
+          !organisation ||
+          availableOrganisations.map(orga=>orga.uuid).indexOf(organisation.uuid) === -1
+        ) {
+          const selectedOrganisation = availableOrganisations[0];
+          dispatch(selectOrganisation(selectedOrganisation));
         }
       });
   };
 }
 
 export function selectOrganisation(organisation) {
-  localStorage.setItem(
-    "lizard-management-current-organisation",
-    JSON.stringify(organisation)
-  );
-  return {
-    type: SELECT_ORGANISATION,
-    organisation
-  };
+  return (dispatch) => {
+    localStorage.setItem(
+      "lizard-management-current-organisation",
+      JSON.stringify(organisation)
+    );
+    dispatch(
+      addNotification(
+        `Organisation "${(organisation && organisation.name) || "none"}" selected`,
+        2000
+      )
+    );
+    dispatch({
+      type: SELECT_ORGANISATION,
+      organisation
+    });
+  }
 }
 
 // MARK: Observation types

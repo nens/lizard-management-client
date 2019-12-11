@@ -33,18 +33,28 @@
   border-top: 1px solid #ccc;
   border-left: 1px solid #ccc;
   border-right: 1px solid #ccc;
-  height: 45px;
+  min-height: 45px;
   padding: 10px;
   cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
 }
 .OrganisationRow:last-child {
   border-bottom: 1px solid #ccc;
 }
 .OrganisationName {
-  position: absolute;
-  left: 50px;
-  top: 12px;
+  margin-left: 20px;;
+  min-width: 30%;
 }
+.OrganisationAuthorised {
+  min-width: 30%;
+  flex: 1;
+  color: #BE404A;
+}
+
 .OrganisationRow:hover {
   background-color: #00cdab;
   color: #fff;

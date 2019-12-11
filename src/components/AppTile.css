@@ -6,7 +6,20 @@
   cursor: pointer;
   float: left;
   border-radius: 10px;
+  justify-content: center;
+  background-color: #f2f2f2;
 }
+.AppTile.Disabled {
+  background-color: #b9b9b9;
+  cursor: not-allowed;
+}
+.AppTile.Disabled img {
+  filter: grayscale(0.9);
+}
+.AppTile.Disabled .SubTitle {
+  color: #737373;
+}
+
 @media only screen and (max-width: 700px) {
   .AppTile {
     transform: scale(.85);
@@ -15,9 +28,10 @@
 
 .Img {
   position: absolute;
-  left: 50%;
-  margin-left: -42px;
-  top: 30px;
+  top: 60px;
+  margin-left: 50%; /* From parent width */
+  transform: translateX(-50%); /* use self width which can be unknown */
+  -ms-transform: translateX(-50%); /* For IE9 */
 }
 .Title {
   position: absolute;
@@ -30,16 +44,5 @@
   font-size: 17px;
   text-transform: uppercase;
   text-align: center;
-  text-decoration: none;
-}
-.SubTitle {
-  position: absolute;
-  top: 150px;
-  padding-left: 10px;
-  padding-right: 10px;
-  font-size: 12px;
-  width: 100%;
-  text-align: center;
-  color: #a3a3a3;
   text-decoration: none;
 }

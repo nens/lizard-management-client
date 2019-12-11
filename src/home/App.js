@@ -1,13 +1,12 @@
 import React, { Component } from "react";
-import { FormattedMessage } from "react-intl";
+import { connect } from "react-redux";
 import styles from "./App.css";
 import AppTile from "../components/AppTile";
 import { withRouter } from "react-router-dom";
 import { Trail, animated } from "react-spring";
+import doArraysHaveEqualElement from '../utils/doArraysHaveEqualElement';
 
-import alarmTileImage from "../images/alarmsTileImage.svg";
-import userManagementTileImage from "../images/userManagementTileImage.svg";
-import dataManagementTileImage from "../images/dataManagementTileImage.svg";
+import {appTiles} from './HomeAppTileConfig';
 
 class App extends Component {
   constructor(props) {
@@ -16,7 +15,7 @@ class App extends Component {
     this.handleExternalLink = this.handleExternalLink.bind(this);
   }
 
-  handleLink(destination) {
+  handleInternalLink(destination) {
     this.props.history.push(destination);
   }
 
@@ -24,37 +23,22 @@ class App extends Component {
     window.location.href = destination;
   }
 
+  handleLink (linksToObject) {
+    if (linksToObject.external === true) {
+      this.handleExternalLink(linksToObject.path);
+    } else {
+      this.handleInternalLink(linksToObject.path);
+    }
+  }
+
   render() {
-    const appTiles = [
-      {
-        key: 0,
-        handleClick: () => this.handleExternalLink("/management/users/"),
-        title: (
-          <FormattedMessage
-            id="home.users"
-            defaultMessage="Users"
-          />
-        ),
-        bgImage: userManagementTileImage
-      },
-      {
-        key: 1,
-        handleClick: () => this.handleLink("/data_management"),
-        title: (
-          <FormattedMessage
-            id="home.data_management"
-            defaultMessage="Data Management"
-          />
-        ),
-        bgImage: dataManagementTileImage
-      },
-      {
-        key: 2,
-        handleClick: () => this.handleLink("/alarms"),
-        title: <FormattedMessage id="home.alarms" defaultMessage="Alarms" />,
-        bgImage: alarmTileImage
+    const currentOrganisationRoles = (this.props.selectedOrganisation && this.props.selectedOrganisation.roles) || [];
+    const appTilesWithReadOnlyInfo = appTiles.map(appTile=>{
+      return {
+        ...appTile,
+        readonly: !doArraysHaveEqualElement(appTile.requiredRoles, currentOrganisationRoles)
       }
-    ];
+    });
     return (
       <div>
         <div className="container">
@@ -66,7 +50,7 @@ class App extends Component {
                 to={{ opacity: 1, x: 0 }}
                 keys={appTiles.map(item => item.key)}
               >
-                {appTiles.map((appTile, i) => ({ x, opacity }) => (
+                {appTilesWithReadOnlyInfo.map((appTile) => ({ x, opacity }) => (
                   <animated.div
                     style={{
                       opacity,
@@ -74,10 +58,12 @@ class App extends Component {
                     }}
                   >
                     <AppTile
-                      handleClick={appTile.handleClick}
+                      handleClick={()=>{ this.handleLink(appTile.linksTo)}}
                       key={+new Date()}
                       title={appTile.title}
-                      bgImage={appTile.bgImage}
+                      icon={appTile.icon}
+                      readonly={appTile.readonly}
+                      requiredRoles={appTile.requiredRoles}
                     />
                   </animated.div>
                 ))}
@@ -90,6 +76,14 @@ class App extends Component {
   }
 }
 
-App = withRouter(App);
+const mapStateToProps = (state) => {
+  return {
+    selectedOrganisation: state.organisations.selected,
+  };
+};
+
+App = withRouter(connect(mapStateToProps, null)(
+  App
+));
 
 export { App };
