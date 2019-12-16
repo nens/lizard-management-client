@@ -94,15 +94,17 @@ class ThresholdsSelectionInput extends Component<MyProps & InjectedIntlProps, My
         return (
             <table className={styles.ThresholdsTable}>
                 <thead>
-                    <th
-                        colSpan={2}
-                        className={styles.Comparision}
-                    >
-                        <FormattedMessage
-                            id="notifications_app.comparison"
-                            defaultMessage="Comparison"
-                        />
-                    </th>
+                    <tr>
+                        <th
+                            colSpan={2}
+                            className={styles.Comparision}
+                        >
+                            <FormattedMessage
+                                id="notifications_app.comparison"
+                                defaultMessage="Comparison"
+                            />
+                        </th>
+                    </tr>
                     <tr>
                         <td>
                             <button
