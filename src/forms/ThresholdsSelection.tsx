@@ -25,7 +25,7 @@ interface MyProps {
 };
 
 interface MyState {
-    thresholdValue: number,
+    thresholdValue: number | '',
     thresholdName: string,
 };
 
@@ -65,8 +65,9 @@ class ThresholdsSelectionInput extends Component<MyProps & InjectedIntlProps, My
         });
     }
     handleChangeThresholdValue = (e: any) => {
+        const value = e.target.value ? parseFloat(e.target.value) : '';
         this.setState({
-            thresholdValue: parseFloat(e.target.value)
+            thresholdValue: value
         });
     }
     handleChangeThresholdName = (e: any) => {
