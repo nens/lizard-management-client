@@ -25,7 +25,7 @@ interface MyProps {
 };
 
 interface MyState {
-    thresholdValue: number,
+    thresholdValue: number | '',
     thresholdName: string,
 };
 
@@ -65,8 +65,9 @@ class ThresholdsSelectionInput extends Component<MyProps & InjectedIntlProps, My
         });
     }
     handleChangeThresholdValue = (e: any) => {
+        const value = e.target.value ? parseFloat(e.target.value) : '';
         this.setState({
-            thresholdValue: parseFloat(e.target.value)
+            thresholdValue: value
         });
     }
     handleChangeThresholdName = (e: any) => {
@@ -93,15 +94,17 @@ class ThresholdsSelectionInput extends Component<MyProps & InjectedIntlProps, My
         return (
             <table className={styles.ThresholdsTable}>
                 <thead>
-                    <th
-                        colSpan={2}
-                        className={styles.Comparision}
-                    >
-                        <FormattedMessage
-                            id="notifications_app.comparison"
-                            defaultMessage="Comparison"
-                        />
-                    </th>
+                    <tr>
+                        <th
+                            colSpan={2}
+                            className={styles.Comparision}
+                        >
+                            <FormattedMessage
+                                id="notifications_app.comparison"
+                                defaultMessage="Comparison"
+                            />
+                        </th>
+                    </tr>
                     <tr>
                         <td>
                             <button
