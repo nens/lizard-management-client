@@ -1,43 +1,8 @@
 
 .Container {
-  /*background-color: orange;*/
   margin-left: auto;
   margin-right: auto;
-  padding-left: 15px;
-  padding-right: 15px;
-}
-@media (min-width: 768px) {
-  .Container {
-    /*background-color: blue;*/
-    width: 750px;
-  }
-}
-@media (min-width: 992px) {
-  .Container {
-    /*background-color: red;*/
-    width: 970px;
-  }
-}
-@media (min-width: 1200px) {
-  .Container {
-    /*background-color: purple;*/
-    width: 1170px;
-  }
-}
-@media (min-width: 1400px) {
-  .Container {
-    width: 1330px;
-  }
-}
-@media (min-width: 1600px) {
-  .Container {
-    width: 1460px;
-  }
-}
-@media (min-width: 1900px) {
-  .Container {
-    width: 1720px;
-  }
+  width: 80%;
 }
 .Row {
   display: grid;
