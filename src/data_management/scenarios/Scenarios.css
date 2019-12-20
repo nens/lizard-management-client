@@ -117,7 +117,6 @@
 }
 .tableScenario span {
     word-wrap: break-word;
-    margin-right: 20px;
 }
 
 .tableModel {
@@ -125,7 +124,6 @@
 }
 .tableModel span {
     word-wrap: break-word;
-    margin-right: 20px;
 }
 
 .tableUser {
@@ -133,7 +131,6 @@
 }
 .tableUser span {
     word-wrap: break-word;
-    margin-right: 20px;
 }
 
 .tableDate {
@@ -141,7 +138,6 @@
 }
 .tableDate span {
     word-wrap: break-word;
-    margin-right: 20px;
 }
 
 .tableSize {
@@ -149,7 +145,6 @@
 }
 .tableSize span {
     word-wrap: break-word;
-    margin-right: 20px;
 }
 
 .Footer {
