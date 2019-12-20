@@ -140,7 +140,7 @@ class App extends Component {
                   className={`${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs12}`}
                 >
                   <NavLink to="/">
-                    <img src={`${lizardIcon}`} className={styles.LizardLogo} />
+                    <img src={`${lizardIcon}`} alt="Lizard logo" className={styles.LizardLogo} />
                   </NavLink>
                 </div>
                 <div
