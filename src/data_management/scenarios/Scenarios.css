@@ -101,6 +101,7 @@
     display: flex;
     align-items: center;
     margin-right: 20px;
+    word-wrap: break-word;
 }
 
 .tableRow div:first-child {
@@ -114,21 +115,41 @@
 .tableScenario {
     flex: 4;
 }
+.tableScenario span {
+    word-wrap: break-word;
+    margin-right: 20px;
+}
 
 .tableModel {
     flex: 4;
+}
+.tableModel span {
+    word-wrap: break-word;
+    margin-right: 20px;
 }
 
 .tableUser {
     flex: 3;
 }
+.tableUser span {
+    word-wrap: break-word;
+    margin-right: 20px;
+}
 
 .tableDate {
     flex: 3;
 }
+.tableDate span {
+    word-wrap: break-word;
+    margin-right: 20px;
+}
 
 .tableSize {
     flex: 2;
+}
+.tableSize span {
+    word-wrap: break-word;
+    margin-right: 20px;
 }
 
 .Footer {
