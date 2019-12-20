@@ -307,19 +307,29 @@ class Scenarios extends Component {
                                 />
                             </div>
                             <div className={scenarioStyle.tableScenario}>
-                                {scenario.name}
+                                <span>
+                                    {scenario.name}
+                                </span>
                             </div>
                             <div className={scenarioStyle.tableModel}>
-                                {scenario.model_name}
+                                <span>
+                                    {scenario.model_name}
+                                </span>
                             </div>
                             <div className={scenarioStyle.tableUser}>
-                                {scenario.username}
+                                <span>
+                                    {scenario.username}
+                                </span>
                             </div>
                             <div className={scenarioStyle.tableDate}>
-                                {convertUTCtoDate(scenario.created)}
+                                <span>
+                                    {convertUTCtoDate(scenario.created)}
+                                </span>
                             </div>
                             <div className={scenarioStyle.tableSize}>
-                                {convertBytesToGb(scenario.total_size)} Gb
+                                <span>
+                                    {convertBytesToGb(scenario.total_size)} Gb
+                                </span>
                             </div>
                         </div>
                     )
