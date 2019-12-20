@@ -22,7 +22,7 @@ import Breadcrumbs from "./components/Breadcrumbs";
 import styles from "./App.css";
 import gridStyles from "./styles/Grid.css";
 import buttonStyles from "./styles/Buttons.css";
-import lizardIcon from "./images/lizard@3x.svg";
+import lizardIcon from "./images/lizard.svg";
 import { withRouter } from "react-router-dom";
 import {appTiles} from './home/HomeAppTileConfig';
 import doArraysHaveEqualElement from './utils/doArraysHaveEqualElement';
@@ -136,14 +136,11 @@ class App extends Component {
             <div className={gridStyles.Container}>
               <div className={gridStyles.Row}>
                 <div
-                  style={{ height: 55 }}
+                  style={{ height: "55px" }}
                   className={`${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs12}`}
                 >
                   <NavLink to="/">
-                    <div
-                      className={styles.LizardLogo}
-                      style={{ backgroundImage: `url(${lizardIcon})` }}
-                    />
+                    <img src={`${lizardIcon}`} className={styles.LizardLogo} />
                   </NavLink>
                 </div>
                 <div
