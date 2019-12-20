@@ -185,7 +185,7 @@ class App extends Component {
                       className={styles.Profile}
                       id="user-profile"
                     >
-                      <div style={{ paddingLeft: 6 }} id="user-profile">
+                      <div id="user-profile">
                         <i className="fa fa-user" style={{ paddingRight: 8 }} id="user-profile"/>
                         {firstName}
                       </div>
