@@ -70,9 +70,9 @@
   position: relative;
   /*Height and margin and/ or padding should be 55px to be in line
   with the upper part of the header */
-  margin-top: 17.5px;
-  margin-bottom: 17.5px;
-  height: 20px;
+  margin-top: 18.5px;
+  margin-bottom: 18.5px;
+  height: 18px;
 }
 
 .MDSpinner {
