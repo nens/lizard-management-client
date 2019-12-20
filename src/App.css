@@ -68,12 +68,11 @@
 
 .LizardLogo {
   position: relative;
-  top: 0;
-  left: 0;
-  width: 75px;
-  height: 75px;
-  background-repeat: no-repeat;
-  background-size: 100%;
+  /*Height and margin and/ or padding should be 55px to be in line
+  with the upper part of the header */
+  margin-top: 18.5px;
+  margin-bottom: 18.5px;
+  height: 18px;
 }
 
 .MDSpinner {
