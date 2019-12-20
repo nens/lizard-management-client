@@ -257,10 +257,7 @@ class App extends Component {
                         ]}
                       />
                     </div>
-                    <div
-                      // Add width to align the Support button with the User button in the header
-                      style={{ width: '160px' }}
-                    >
+                    <div>
                       <a
                         href="https://nelen-schuurmans.topdesk.net/tas/public/ssp"
                         target="_blank"
