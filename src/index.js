@@ -8,13 +8,15 @@ import App from "./App";
 
 import nl from "./translations/locales/nl.json";
 import en from "./translations/locales/en.json";
+import zh from "./translations/locales/zh.json";
 import nldata from "react-intl/locale-data/nl";
+import zhdata from "react-intl/locale-data/zh";
 
 // Initialize Redux store
 let store = configureStore();
 
 // Add localisation data to translations
-addLocaleData([...nldata]);
+addLocaleData([...nldata, ...zhdata]);
 
 // React-router basename (https://reacttraining.com/react-router/web/api/BrowserRouter/basename-string)
 const basename = "/";
@@ -22,7 +24,8 @@ const basename = "/";
 // Create multiple languages object
 const localeData = {
   nl: nl,
-  en: en
+  en: en,
+  zh: zh
 };
 
 const preferredLocale =

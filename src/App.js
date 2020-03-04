@@ -250,7 +250,8 @@ class App extends Component {
                         locale={preferredLocale}
                         languages={[
                           { code: "nl", language: "Nederlands" },
-                          { code: "en", language: "English" }
+                          { code: "en", language: "English" },
+                          { code: "zh", language: "Chinese" },
                         ]}
                       />
                     </div>
