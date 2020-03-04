@@ -225,7 +225,7 @@ class App extends Component {
                   className={`${styles.FooterLeft} ${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs6}`}
                 >
                   <a
-                    href="https://docs.lizard.net"
+                    href="https://docs.lizard.net/a_lizard.html"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
