@@ -10,6 +10,60 @@ import buttonStyles from "../../styles/Buttons.css";
 import formStyles from "../../styles/Forms.css";
 import { withRouter } from "react-router-dom";
 
+export const availableParameters = [
+  {
+    parameter: "[[var:from]]",
+    description: "Name of the sender",
+    templateType: "email"
+  },
+  {
+    parameter: "[[var:from_email]]",
+    description: "E-mail address of the sender",
+    templateType: "email"
+  },
+  {
+    parameter: "[[var:organisation_name]]",
+    description: "Name of the sending organisation"
+  },
+  {
+    parameter: "[[var:name]]",
+    description: "First and last name of recipient"
+  },
+  {
+    parameter: "[[var:email]]",
+    description: "E-mail address of the recipient",
+    templateType: "email"
+  },
+  {
+    parameter: "[[var:alarm_name]]",
+    description: "Name of the alarm"
+  },
+  {
+    parameter: "[[var:warning_value]]",
+    description: "Numerical value of the threshold"
+  },
+  {
+    parameter: "[[var:warning_level]]",
+    description: "Name of the threshold"
+  },
+  {
+    parameter: "[[var:threshold_timestamp]]",
+    description: "Time the threshold was crossed"
+  },
+  {
+    parameter: "[[var:trigger_timestamp]]",
+    description: "Moment the alarm was analysed"
+  },
+  {
+    parameter: "[[var:warning_timestamp]]",
+    description: "Time the peak or trough is reached"
+  },
+  {
+    parameter: "[[var:first_timestamp]]",
+    description: "First time the alarm was triggered"
+  }
+];
+
 class NewTemplate extends Component {
   constructor(props) {
     super(props);
@@ -75,45 +129,6 @@ class NewTemplate extends Component {
   }
   render() {
     const { templateType, templateText, isFetching } = this.state;
-
-    const availableParameters = [
-      {
-        parameter: "[[var:from]]",
-        description: "Name of the sender",
-        templateType: "email"
-      },
-      {
-        parameter: "[[var:from_email]]",
-        description: "E-mail address of the sender",
-        templateType: "email"
-      },
-      {
-        parameter: "[[var:organisation_name]]",
-        description: "Name of the sending organisation"
-      },
-      {
-        parameter: "[[var:threshold_value]]",
-        description: "Value of the threshold"
-      },
-      {
-        parameter: "[[var:threshold_status]]",
-        description: "Status of the threshold"
-      },
-      {
-        parameter: "[[var:name]]",
-        description: "First and last name of recipient"
-      },
-      {
-        parameter: "[[var:email]]",
-        description: "E-mail address of the recipient",
-        templateType: "email"
-      },
-      {
-        parameter: "[[var:phone_number]]",
-        description: "Telephone number of recipient",
-        templateType: "sms"
-      }
-    ];
 
     const parameterTableRows = availableParameters.map((parameter, i) => {
       if (!parameter.templateType || parameter.templateType === templateType) {

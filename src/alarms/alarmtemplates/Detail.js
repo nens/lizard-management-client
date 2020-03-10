@@ -11,6 +11,7 @@ import gridStyles from "../../styles/Grid.css";
 import buttonStyles from "../../styles/Buttons.css";
 import formStyles from "../../styles/Forms.css";
 import { withRouter } from "react-router-dom";
+import { availableParameters } from "./NewTemplate";
 
 class Detail extends Component {
   constructor(props) {
@@ -118,45 +119,6 @@ class Detail extends Component {
         </div>
       );
     }
-
-    const availableParameters = [
-      {
-        parameter: "[[var:from]]",
-        description: "Name of the sender",
-        templateType: "email"
-      },
-      {
-        parameter: "[[var:from_email]]",
-        description: "E-mail address of the sender",
-        templateType: "email"
-      },
-      {
-        parameter: "[[var:organisation_name]]",
-        description: "Name of the sending organisation"
-      },
-      {
-        parameter: "[[var:threshold_value]]",
-        description: "Value of the threshold"
-      },
-      {
-        parameter: "[[var:threshold_status]]",
-        description: "Status of the threshold"
-      },
-      {
-        parameter: "[[var:name]]",
-        description: "First and last name of recipient"
-      },
-      {
-        parameter: "[[var:email]]",
-        description: "E-mail address of the recipient",
-        templateType: "email"
-      },
-      {
-        parameter: "[[var:phone_number]]",
-        description: "Telephone number of recipient",
-        templateType: "sms"
-      }
-    ];
 
     const parameterTableRows = availableParameters.map((parameter, i) => {
       if (!parameter.templateType || parameter.templateType === template.type) {
