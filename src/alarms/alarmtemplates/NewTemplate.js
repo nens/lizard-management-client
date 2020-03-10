@@ -55,7 +55,7 @@ class NewTemplate extends Component {
     fetch(url, opts)
       .then(response => response.json()) // TODO: kan dit weg?
       .then(_ => {
-        history.push("/alarms/templates/");
+        history.push("/alarms/templates");
       });
   }
   insertTextInTemplateText(templateText, addedText) {
