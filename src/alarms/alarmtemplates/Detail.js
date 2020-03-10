@@ -126,7 +126,7 @@ class Detail extends Component {
           <tr
             key={parameter.parameter}
             onClick={() => {
-              this.insertTextInTemplateText(template.text, parameter.parameter);
+              this.insertTextInTemplateText(template.text, parameter.parameterText);
             }}
           >
             <td>{parameter.parameter}</td>

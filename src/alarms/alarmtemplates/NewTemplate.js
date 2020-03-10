@@ -12,55 +12,73 @@ import { withRouter } from "react-router-dom";
 
 export const availableParameters = [
   {
-    parameter: "[[var:from]]",
+    parameter: "from",
+    parameterText: "[[var:from]]",
     description: "Name of the sender",
     templateType: "email"
   },
   {
-    parameter: "[[var:from_email]]",
+    parameter: "from_email",
+    parameterText: "[[var:from_email]]",
     description: "E-mail address of the sender",
     templateType: "email"
   },
   {
-    parameter: "[[var:organisation_name]]",
+    parameter: "organisation_name",
+    parameterText: "[[var:organisation_name]]",
     description: "Name of the sending organisation"
   },
   {
-    parameter: "[[var:name]]",
+    parameter: "name",
+    parameterText: "[[var:name]]",
     description: "First and last name of recipient"
   },
   {
-    parameter: "[[var:email]]",
+    parameter: "email",
+    parameterText: "[[var:email]]",
     description: "E-mail address of the recipient",
     templateType: "email"
   },
   {
-    parameter: "[[var:alarm_name]]",
+    parameter: "alarm_name",
+    parameterText: "[[var:alarm_name]]",
     description: "Name of the alarm"
   },
   {
-    parameter: "[[var:warning_value]]",
+    parameter: "warning_value",
+    parameterText: "[[var:warning_value]]",
     description: "Numerical value of the threshold"
   },
   {
-    parameter: "[[var:warning_level]]",
+    parameter: "warning_level",
+    parameterText: "[[var:warning_level]]",
     description: "Name of the threshold"
   },
   {
-    parameter: "[[var:threshold_timestamp]]",
+    parameter: "threshold_timestamp",
+    parameterText: "[[var:threshold_timestamp]]",
     description: "Time the threshold was crossed"
   },
   {
-    parameter: "[[var:trigger_timestamp]]",
+    parameter: "trigger_timestamp",
+    parameterText: "[[var:trigger_timestamp]]",
     description: "Moment the alarm was analysed"
   },
   {
-    parameter: "[[var:warning_timestamp]]",
+    parameter: "warning_timestamp",
+    parameterText: "[[var:warning_timestamp]]",
     description: "Time the peak or trough is reached"
   },
   {
-    parameter: "[[var:first_timestamp]]",
+    parameter: "first_timestamp",
+    parameterText: "[[var:first_timestamp]]",
     description: "First time the alarm was triggered"
+  },
+  {
+    parameter: "phone_number",
+    parameterText: "[[var:phone_number]]",
+    description: "Telephone number of recipient",
+    templateType: "sms"
   }
 ];
 
@@ -136,7 +154,7 @@ class NewTemplate extends Component {
           <tr
             key={parameter.parameter}
             onClick={() => {
-              this.insertTextInTemplateText(templateText, parameter.parameter);
+              this.insertTextInTemplateText(templateText, parameter.parameterText);
             }}
           >
             <td>{parameter.parameter}</td>
