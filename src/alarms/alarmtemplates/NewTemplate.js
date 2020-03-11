@@ -10,6 +10,78 @@ import buttonStyles from "../../styles/Buttons.css";
 import formStyles from "../../styles/Forms.css";
 import { withRouter } from "react-router-dom";
 
+export const availableParameters = [
+  {
+    parameter: "from",
+    parameterText: "[[var:from]]",
+    description: "Name of the sender",
+    templateType: "email"
+  },
+  {
+    parameter: "from_email",
+    parameterText: "[[var:from_email]]",
+    description: "E-mail address of the sender",
+    templateType: "email"
+  },
+  {
+    parameter: "organisation_name",
+    parameterText: "[[var:organisation_name]]",
+    description: "Name of the sending organisation"
+  },
+  {
+    parameter: "name",
+    parameterText: "[[var:name]]",
+    description: "First and last name of recipient"
+  },
+  {
+    parameter: "email",
+    parameterText: "[[var:email]]",
+    description: "E-mail address of the recipient",
+    templateType: "email"
+  },
+  {
+    parameter: "alarm_name",
+    parameterText: "[[var:alarm_name]]",
+    description: "Name of the alarm"
+  },
+  {
+    parameter: "warning_value",
+    parameterText: "[[var:warning_value]]",
+    description: "Numerical value of the threshold"
+  },
+  {
+    parameter: "warning_level",
+    parameterText: "[[var:warning_level]]",
+    description: "Name of the threshold"
+  },
+  {
+    parameter: "threshold_timestamp",
+    parameterText: "[[var:threshold_timestamp]]",
+    description: "Time the threshold was crossed"
+  },
+  {
+    parameter: "trigger_timestamp",
+    parameterText: "[[var:trigger_timestamp]]",
+    description: "Moment the alarm was analysed"
+  },
+  {
+    parameter: "warning_timestamp",
+    parameterText: "[[var:warning_timestamp]]",
+    description: "Time the peak or trough is reached"
+  },
+  {
+    parameter: "first_timestamp",
+    parameterText: "[[var:first_timestamp]]",
+    description: "First time the alarm was triggered"
+  },
+  {
+    parameter: "phone_number",
+    parameterText: "[[var:phone_number]]",
+    description: "Telephone number of recipient",
+    templateType: "sms"
+  }
+];
+
 class NewTemplate extends Component {
   constructor(props) {
     super(props);
@@ -76,52 +148,13 @@ class NewTemplate extends Component {
   render() {
     const { templateType, templateText, isFetching } = this.state;
 
-    const availableParameters = [
-      {
-        parameter: "[[var:from]]",
-        description: "Name of the sender",
-        templateType: "email"
-      },
-      {
-        parameter: "[[var:from_email]]",
-        description: "E-mail address of the sender",
-        templateType: "email"
-      },
-      {
-        parameter: "[[var:organisation_name]]",
-        description: "Name of the sending organisation"
-      },
-      {
-        parameter: "[[var:threshold_value]]",
-        description: "Value of the threshold"
-      },
-      {
-        parameter: "[[var:threshold_status]]",
-        description: "Status of the threshold"
-      },
-      {
-        parameter: "[[var:name]]",
-        description: "First and last name of recipient"
-      },
-      {
-        parameter: "[[var:email]]",
-        description: "E-mail address of the recipient",
-        templateType: "email"
-      },
-      {
-        parameter: "[[var:phone_number]]",
-        description: "Telephone number of recipient",
-        templateType: "sms"
-      }
-    ];
-
     const parameterTableRows = availableParameters.map((parameter, i) => {
       if (!parameter.templateType || parameter.templateType === templateType) {
         return (
           <tr
             key={parameter.parameter}
             onClick={() => {
-              this.insertTextInTemplateText(templateText, parameter.parameter);
+              this.insertTextInTemplateText(templateText, parameter.parameterText);
             }}
           >
             <td>{parameter.parameter}</td>
