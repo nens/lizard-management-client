@@ -79,7 +79,7 @@ class App extends Component {
         this.setState({
           total: responseData.count,
           templates: responseData.results,
-          page: 1,
+          page: page,
           isFetching: false
         });
       });
@@ -300,7 +300,11 @@ class App extends Component {
           <div
             className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
           >
-            <PaginationBar page={page} pages={Math.ceil(total / 10)} />
+            <PaginationBar
+              page={page}
+              pages={Math.ceil(total / 10)}
+              loadTemplatesOnPage={this.loadTemplatesOnPage}
+            />
           </div>
         </div>
       </div>
