@@ -20,6 +20,7 @@ import { FormattedMessage, injectIntl } from "react-intl";
 import { Map, Marker, TileLayer, WMSTileLayer } from "react-leaflet";
 import SelectAsset from "../components/SelectAsset";
 import styles from "./RasterPreview.css";
+import { mapBoxAccesToken} from '../mapboxConfig';
 
 // Center of the map if no raster yet
 const DEFAULT_POSITION = [52.1858, 5.2677];
@@ -107,9 +108,9 @@ class RasterPreview extends Component {
           {...mapLocation}
         >
           <TileLayer
-            url="https://{s}.tiles.mapbox.com/v3/nelenschuurmans.5641a12c/{z}/{x}/{y}.png"
-      attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-      setLocation={this.props.setLocation}
+            url={`https://api.mapbox.com/styles/v1/nelenschuurmans/ck8sgpk8h25ql1io2ccnueuj6/tiles/{z}/{x}/{y}?access_token=${mapBoxAccesToken}`}
+            attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+            setLocation={this.props.setLocation}
           />
           {raster ? (
             <WMSTileLayer
@@ -119,7 +120,7 @@ class RasterPreview extends Component {
               opacity={0.9}
             />) : null}
           <TileLayer
-            url="https://{s}.tiles.mapbox.com/v3/nelenschuurmans.0a5c8e74/{z}/{x}/{y}.png"
+            url={`https://api.mapbox.com/styles/v1/nelenschuurmans/ck8sgpk8h25ql1io2ccnueuj6/tiles/{z}/{x}/{y}?access_token=${mapBoxAccesToken}`}
             attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
           />
           {location ?
