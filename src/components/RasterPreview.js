@@ -108,7 +108,7 @@ class RasterPreview extends Component {
           {...mapLocation}
         >
           <TileLayer
-            url={`https://api.mapbox.com/styles/v1/nelenschuurmans/ck8sgpk8h25ql1io2ccnueuj6/tiles/{z}/{x}/{y}?access_token=${mapBoxAccesToken}`}
+            url={`https://api.mapbox.com/styles/v1/nelenschuurmans/ck8sgpk8h25ql1io2ccnueuj6/tiles/256/{z}/{x}/{y}@2x?access_token=${mapBoxAccesToken}`}
             attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
             setLocation={this.props.setLocation}
           />
@@ -120,7 +120,7 @@ class RasterPreview extends Component {
               opacity={0.9}
             />) : null}
           <TileLayer
-            url={`https://api.mapbox.com/styles/v1/nelenschuurmans/ck8sgpk8h25ql1io2ccnueuj6/tiles/{z}/{x}/{y}?access_token=${mapBoxAccesToken}`}
+            url={`https://api.mapbox.com/styles/v1/nelenschuurmans/ck8sgpk8h25ql1io2ccnueuj6/tiles/256/{z}/{x}/{y}@2x?access_token=${mapBoxAccesToken}`}
             attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
           />
           {location ?
