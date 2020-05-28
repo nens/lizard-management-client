@@ -30,7 +30,6 @@ class Raster extends Component {
       checkboxes: [],
       searchTerms: "",
       searchedTerms: "",
-      include3diScenarios: false
     };
     this.handleNewRasterClick = this.handleNewRasterClick.bind(this);
     this.handleDeleteRasterClick = this.handleDeleteRasterClick.bind(this);
@@ -42,14 +41,12 @@ class Raster extends Component {
     this.handleUpdateSearchedTermsEnter = this.handleUpdateSearchedTermsEnter.bind(this);
     this.handleUpdateSearchedTermsOnBlur = this.handleUpdateSearchedTermsOnBlur.bind(this);
     this.handleUpdateSearchedTermsClear = this.handleUpdateSearchedTermsClear.bind(this);
-    this.handleUpdateInclude3diResults = this.handleUpdateInclude3diResults.bind(this);
   }
 
   componentDidMount() {
     this.fetchRastersFromApi(
       this.state.page,
       this.state.searchTerms,
-      this.state.include3diScenarios,
       this.props.organisations.selected
     );
   }
@@ -58,7 +55,6 @@ class Raster extends Component {
       this.updatePageAndFetchRastersFromApi(
         1,
         this.state.searchedTerms,
-        this.state.include3diScenarios,
         nextProps.organisations.selected
       )
     }
@@ -67,27 +63,18 @@ class Raster extends Component {
       this.updatePageAndFetchRastersFromApi(
         1,
         nextState.searchedTerms,
-        this.state.include3diScenarios,
-        this.props.organisations.selected
-      );
-    } else if (nextState.include3diScenarios !== this.state.include3diScenarios) {
-      this.fetchRastersFromApi(
-        nextState.page,
-        this.state.searchedTerms,
-        nextState.include3diScenarios,
         this.props.organisations.selected
       );
     } else if (nextState.page !== this.state.page) {
       this.fetchRastersFromApi(
         nextState.page,
         this.state.searchedTerms,
-        this.state.include3diScenarios,
         this.props.organisations.selected
       );
     }
   }
 
-  updatePageAndFetchRastersFromApi(page, searchedTerms, include3diScenarios, organisation) {
+  updatePageAndFetchRastersFromApi(page, searchedTerms, organisation) {
     this.setState(
       {
         page: page
@@ -95,7 +82,6 @@ class Raster extends Component {
       this.fetchRastersFromApi(
         page,
         searchedTerms,
-        include3diScenarios,
         organisation
       )
     );
@@ -129,17 +115,9 @@ class Raster extends Component {
       page: 1 // Reset PaginationBar to page 1
     });
   }
-  handleUpdateInclude3diResults(include3diScenarios) {
-    this.setState({
-      include3diScenarios: include3diScenarios,
-      page: 1 // Reset PaginationBar to page 1
-    });
-  }
 
-  fetchRastersFromApi(page, searchContains, include3diScenarios, organisation) {
-    const url = include3diScenarios
-    ? `/api/v4/rasters/?writable=true&page_size=${this.state.pageSize}&page=${page}&name__icontains=${searchContains}&ordering=last_modified&organisation__uuid=${organisation.uuid}`
-    : `/api/v4/rasters/?writable=true&page_size=${this.state.pageSize}&page=${page}&name__icontains=${searchContains}&ordering=last_modified&organisation__uuid=${organisation.uuid}&scenario__isnull=true`;
+  fetchRastersFromApi(page, searchContains, organisation) {
+    const url = `/api/v4/rasters/?writable=true&page_size=${this.state.pageSize}&page=${page}&name__icontains=${searchContains}&ordering=last_modified&organisation__uuid=${organisation.uuid}&scenario__isnull=true`;
 
     this.setState({
       isFetching: true
@@ -229,7 +207,6 @@ class Raster extends Component {
       this.fetchRastersFromApi(
         this.state.page,
         this.state.searchTerms,
-        this.state.include3diScenarios,
         this.props.organisations.selected
       );
     });
@@ -579,41 +556,6 @@ class Raster extends Component {
                   this.handleUpdateSearchTerms(searchTerms);
                 }}
               />
-            </div>
-            <div>
-              {this.state.include3diScenarios ? (
-                <button
-                  className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link}`}
-                  style={{
-                    paddingLeft: 0,
-                    color: "#00a6ff"
-                  }}
-                  onClick={e => {
-                    this.handleUpdateInclude3diResults(false)
-                  }}
-                >
-                  <FormattedMessage
-                    id="rasters.exclude_3di_results"
-                    defaultMessage="Exclude 3di results"
-                  />
-                </button>
-              ) : (
-                <button
-                  className={`${buttonStyles.Button} ${buttonStyles.Small} ${buttonStyles.Link}`}
-                  style={{
-                    paddingLeft: 0,
-                    color: "#00a6ff"
-                  }}
-                  onClick={e => {
-                    this.handleUpdateInclude3diResults(true)
-                  }}
-                >
-                  <FormattedMessage
-                    id="rasters.include_3di_results"
-                    defaultMessage="Include 3di results"
-                  />
-                </button>
-              )}
             </div>
           </div>
           <div>
