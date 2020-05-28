@@ -9,7 +9,7 @@ import React, { Component } from "react";
 import styles from "./App.css";
 import { addNotification } from "../../actions";
 import { connect } from "react-redux";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, injectIntl } from "react-intl";
 import { withRouter } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import SearchBox from "../../components/SearchBox";
@@ -268,8 +268,11 @@ class Raster extends Component {
 
   render() {
     const { total } = this.state;
-    const clickedCheckboxes = this.state.checkboxes.filter(e => e.checked)
-      .length;
+    const placeholderForRasterSearch = this.props.intl.formatMessage({
+      id: "searchbox.raster_placeholder",
+      defaultMessage: "search for name or user"
+    });
+    const clickedCheckboxes = this.state.checkboxes.filter(e => e.checked).length;
 
     const numberOfRasters = total;
 
@@ -555,6 +558,7 @@ class Raster extends Component {
                 setSearchTerms={searchTerms => {
                   this.handleUpdateSearchTerms(searchTerms);
                 }}
+                placeholder={placeholderForRasterSearch}
               />
             </div>
           </div>
@@ -605,6 +609,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   };
 };
 
-Raster = withRouter(connect(mapStateToProps, mapDispatchToProps)(Raster));
+Raster = withRouter(connect(mapStateToProps, mapDispatchToProps)(injectIntl(Raster)));
 
 export { Raster };

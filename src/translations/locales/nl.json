@@ -290,6 +290,7 @@
   "raster_form.rasterSeries_label": "Selecteer of u een raster maakt dat meerdere rasters bevat in de loop van de tijd",
   "raster_form.duration": "Rasterseries Interval",
   "raster_form.duration_subtitle": "Interval van rasterseries",
+  "searchbox.raster_placeholder": "zoek op naam of gebruiker",
   "searchbox.title": "Zoek in naam en beschrijving",
   "color_map.initial_message": "Geen voorbeeld beschikbaar",
   "color_map.minimum_color_range": "Minimaal van het bereik van de kleurenkaart",

@@ -15,7 +15,7 @@ class SearchBox extends Component {
   }
 
   render() {
-    const { searchTerms, handleSearchEnter, handleSearchOnBlur, handleSearchClear, intl } = this.props;
+    const { searchTerms, handleSearchEnter, handleSearchOnBlur, handleSearchClear, placeholder, intl } = this.props;
 
     return (
       <div
@@ -36,7 +36,7 @@ class SearchBox extends Component {
         >
           <input
             type="text"
-            placeholder={searchTerms}
+            placeholder={placeholder? placeholder : ""}
             value={searchTerms}
             className={formStyles.FormControl}
             style={{
