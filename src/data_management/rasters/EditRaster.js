@@ -4,6 +4,7 @@ import { withRouter } from "react-router-dom";
 import MDSpinner from "react-md-spinner";
 
 import { RasterForm } from "./RasterForm";
+import { fetchRasterV4 } from "../../api/rasters";
 
 class EditRasterModel extends Component {
   constructor(props) {
@@ -17,10 +18,7 @@ class EditRasterModel extends Component {
     const { match } = this.props;
 
     (async () => {
-      const currentRaster = await fetch(`/api/v4/rasters/${match.params.id}/`, {
-        credentials: "same-origin"
-      }).then(response => response.json());
-
+      const currentRaster = await fetchRasterV4(match.params.id);
       this.setState({ currentRaster });
     })();
   }

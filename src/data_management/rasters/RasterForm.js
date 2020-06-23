@@ -8,6 +8,7 @@ import ErrorOverlay from "./ErrorOverlay.js";
 
 import "../../forms/validators";
 import {toISOValue, rasterIntervalStringServerToDurationObject} from "../../utils/isoUtils"
+import { createRaster, patchRaster } from "../../api/rasters";
 
 import ManagementForm from "../../forms/ManagementForm";
 import ColorMapInput, { colorMapValidator } from "../../forms/ColorMapInput";
@@ -45,46 +46,40 @@ class RasterFormModel extends Component {
     });
   }
 
-  
+
   onSubmit = (validatedData, currentRaster) => {
 
     this.setState({ isFetching: true, openOverlay: true });
-  
-    const url = "/api/v4/rasters/";
-     if (!currentRaster) {
-      const opts = {
-        credentials: "same-origin",
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: validatedData.rasterName,
-          organisation: validatedData.selectedOrganisation.replace(/-/g, ""),
-          access_modifier: validatedData.accessModifier,
-          observation_type: validatedData.observationType, // observationTypeId, //this.state.observationType,
-          description: validatedData.description,
-          supplier: validatedData.supplierName,
-          supplier_code: validatedData.supplierCode,
-          temporal: validatedData.temporal,
-          interval: validatedData.duration, //isoIntervalDuration, //'P1D', // P1D is default, = ISO 8601 datetime for 1 day",
-          rescalable: validatedData.colormap.rescalable,
-          optimizer: false, // default
-          aggregation_type: validatedData.aggregationType, 
-          options: validatedData.colormap.options,
-          shared_with: validatedData.sharedWithOrganisations,
-        })
+
+    if (!currentRaster) {
+      const raster = {
+        name: validatedData.rasterName,
+        organisation: validatedData.selectedOrganisation.replace(/-/g, ""),
+        access_modifier: validatedData.accessModifier,
+        observation_type: validatedData.observationType, // observationTypeId, //this.state.observationType,
+        description: validatedData.description,
+        supplier: validatedData.supplierName,
+        supplier_code: validatedData.supplierCode,
+        temporal: validatedData.temporal,
+        interval: validatedData.duration, //isoIntervalDuration, //'P1D', // P1D is default, = ISO 8601 datetime for 1 day",
+        rescalable: validatedData.colormap.rescalable,
+        optimizer: false, // default
+        aggregation_type: validatedData.aggregationType,
+        options: validatedData.colormap.options,
+        shared_with: validatedData.sharedWithOrganisations,
       };
-  
-      fetch(url, opts)
-        .then(responseParsed => {
+
+      createRaster(raster).then(
+        responseParsed => {
           this.handleResponse(responseParsed);
           return responseParsed.json();
-        })
-        .then(parsedBody => {
-          console.log("parsedBody", parsedBody);
-          this.setState({ createdRaster: parsedBody });
-        });
+        }).then(
+          parsedBody => {
+            console.log("parsedBody", parsedBody);
+            this.setState({ createdRaster: parsedBody });
+          });
     } else {
-      let body = {
+      const body = {
         name: validatedData.rasterName,
         organisation: validatedData.selectedOrganisation.replace(/-/g, ""),
         access_modifier: validatedData.accessModifier,
@@ -95,22 +90,13 @@ class RasterFormModel extends Component {
         aggregation_type: validatedData.aggregationType,//intAggregationType,
         shared_with: validatedData.sharedWithOrganisations,
         rescalable: validatedData.colormap.rescalable,
-        
       };
       // only add colormap in options if not multiple layers
       if (!optionsHasLayers(validatedData.colormap.options)) {
         body.options = validatedData.colormap.options;
       }
-      const opts = {
-        credentials: "same-origin",
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body)
-      };
-      
-  
-      fetch(url + "uuid:" + currentRaster.uuid + "/", opts)
-        .then(responseParsed => {
+
+      patchRaster(currentRaster.uuid, body).then(responseParsed => {
           console.log("responseParsed put", responseParsed);
           this.handleResponse(responseParsed);
           return responseParsed.json();
@@ -164,8 +150,8 @@ class RasterFormModel extends Component {
           showSearchField={true}
           initial ={
             (
-              currentRaster && 
-              currentRaster.organisation && 
+              currentRaster &&
+              currentRaster.organisation &&
               currentRaster.organisation.uuid &&
               currentRaster.organisation.uuid.replace(/-/g, "")
             ) || null
