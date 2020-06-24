@@ -38,7 +38,7 @@ export const fetchRasterV3 = async (uuid: string) => {
     credentials: "same-origin"
   });
 
-  return await response.json();
+  return response.json();
 };
 
 
@@ -50,35 +50,110 @@ export const fetchRasterV4 = async (uuid: string, options: RequestInit = {
     method: "GET"
   });
 
-  return await response.json();
+  return response.json();
 };
 
-export const flushRasters = (uuids: string[]) => {
-  const opts: RequestInit = {
-    // not permanently deleted, this will be implemented in backend
+export const flushRaster = async (uuid: string) => {
+  // Re-fetch raster so we have up to date information here
+  const raster = await fetchRasterV4(uuid);
+
+  if (raster.is_geoblock || !raster.source || !raster.raster_sources || !raster.raster_sources[0]) {
+    // Can't flush.
+    return;
+  }
+
+  const oldSourceResponse = await fetch(raster.raster_sources[0], {credentials: "same-origin"});
+  const oldSource = await oldSourceResponse.json();
+
+  // Patch raster so source is None
+  await fetch(`/api/v4/rasters/${uuid}/`, {
     credentials: "same-origin",
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({"source": null} )
+    body: JSON.stringify({"source": null})
+  });
+
+  // Try to delete source, ignore errors
+  await fetch(raster.raster_sources[0], {
+    credentials: "same-origin",
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({})
+  });
+
+  // Create new raster source from old one
+  const rasterSourceBody = {
+    name: oldSource.name,
+    description: oldSource.description,
+    organisation: oldSource.organisation,
+    access_modifier: "Private", // Always
+    supplier: oldSource.supplier,
+    supplier_code: oldSource.supplier_code,
+    temporal: oldSource.temporal,
+    interval: oldSource.temporal ? oldSource.interval : undefined
   };
 
-  return Promise.all(uuids.map(
-    uuid => fetch(`/api/v4/rasters/${uuid}/`, opts).then(response => response.json()))
-  );
+  const newSourceResponse = await fetch('/api/v4/rastersources/', {
+    credentials: "same-origin",
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(rasterSourceBody)
+  });
+  const newSource = await newSourceResponse.json();
+
+  // Patch layer so it has the new one
+  return fetch(`/api/v4/rasters/${uuid}/`, {
+    credentials: "same-origin",
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({source: {
+      graph: {
+        raster: [
+          "lizard_nxt.blocks.LizardRasterSource",
+          newSource.uuid
+        ]
+      },
+      name: "raster"
+    }})
+  });
+};
+
+export const flushRasters = (uuids: string[]) => {
+  return Promise.all(uuids.map(flushRaster));
 }
 
-export const deleteRasters = (uuids: string[]) => {
-  const opts: RequestInit = {
-    // not permanently deleted, this will be implemented in backend
+export const deleteRaster = async (uuid: string) => {
+  const deleteOpts: RequestInit = {
     credentials: "same-origin",
     method: "DELETE",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({})
   };
 
-  return Promise.all(uuids.map(
-    uuid => fetch(`/api/v4/rasters/${uuid}/`, opts).then(response => response.json()))
-  );
+  // Re-fetch raster so we have up to date information here
+  const raster = await fetchRasterV4(uuid);
+
+  // Send a delete request to delete the raster
+  await fetch(`/api/v4/rasters/${uuid}/`, deleteOpts);
+
+  // If this isn't a Geoblock, also delete the first raster source.
+  if (!raster.is_geoblock && raster.raster_sources) {
+    const source = raster.raster_sources[0];
+    if (source) {
+      // This can fail for various reasons but we ignore all of them:
+      // 412 "Precondition failed" -- another layer is using the source
+      // 403 "Permission denied" -- user doesn't have write rights to the source
+      // 404 -- user doesn't have read rights to the source
+      // On success, 204 Gone is returned.
+      await fetch(source, deleteOpts);
+    }
+  }
+
+  return raster;
+};
+
+export const deleteRasters = (uuids: string[]) => {
+  return Promise.all(uuids.map(deleteRaster));
 }
 
 export const listTemporalRastersContainingV3 = async (searchString: string) => {
@@ -90,7 +165,7 @@ export const listTemporalRastersContainingV3 = async (searchString: string) => {
     }
   );
 
-  return await response.json();
+  return response.json();
 };
 
 
@@ -103,7 +178,7 @@ export const listRastersForTable = async (
     credentials: "same-origin"
   });
 
-  return (await response.json()).results;
+  return response.json();
 };
 
 export const uploadRasterFile = async (rasterUuid: string, file: File, timestamp: Date) => {
@@ -127,27 +202,83 @@ export const uploadRasterFile = async (rasterUuid: string, file: File, timestamp
   };
 
   const response = await fetch(url, opts);
-  return await response.json();
+  return response.json();
 };
 
 
 export const createRaster = async (raster: OldRaster) => {
-  const url = "/api/v4/rasters/";
+  // A raster is created in two steps: first we create the raster *source*,
+  // then the raster *layer* using the uuid of the first.
+  // Some of the fields go into the source, some into the layer, some into both.
 
-  const opts: RequestInit = {
+  const defaultOpts: RequestInit = {
     credentials: "same-origin",
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(raster)
   };
 
-  return await fetch(url, opts);
+  const rasterSourceBody = {
+    name: raster.name,
+    description: raster.description,
+    organisation: raster.organisation,
+    access_modifier: "Private", // Always
+    supplier: raster.supplier,
+    supplier_code: raster.supplier_code,
+    temporal: raster.temporal,
+    interval: raster.temporal ? raster.interval : undefined
+  };
+
+  const rasterSourceResponse = await fetch('/api/v4/rastersources/', {
+    ...defaultOpts,
+    body: JSON.stringify(rasterSourceBody)
+  });
+
+  if (rasterSourceResponse.status !== 201) {
+    // Status other than "Created"
+    return rasterSourceResponse; // Don't know what else to do
+  }
+
+  const rasterSource = await rasterSourceResponse.json();
+
+  const rasterBody = {
+    name: raster.name,
+    organisation: raster.organisation,
+    observation_type: raster.observation_type,
+    description: raster.description,
+    supplier: raster.supplier,
+    aggregation_type: raster.aggregation_type,
+    options: raster.options,
+    shared_with: raster.shared_with,
+    rescalable: raster.rescalable,
+    access_modifier: raster.access_modifier,
+    temporal: raster.temporal,
+    interval: raster.temporal ? raster.interval : undefined,
+    source: {
+      graph: {
+        raster: [
+          "lizard_nxt.blocks.LizardRasterSource",
+          rasterSource.uuid
+        ]
+      },
+      name: "raster"
+    }
+  };
+
+  const rasterResponse = await fetch('/api/v4/rasters/', {
+    ...defaultOpts,
+    body: JSON.stringify(rasterBody)
+  });
+
+  return rasterResponse;
 };
 
 
 export const patchRaster = async (rasterUuid: string, raster: OldRasterEdit) => {
   const url = "/api/v4/rasters/";
-
+  // *Right now*, this only edits fields of rasters, not raster source.
+  // The question is does that make sense, some of the fields also exist on raster source,
+  // but then it's not possible for the field to have different values on different rasters
+  // anymore.
   const opts: RequestInit = {
     credentials: "same-origin",
     method: "PATCH",
@@ -155,5 +286,5 @@ export const patchRaster = async (rasterUuid: string, raster: OldRasterEdit) => 
     body: JSON.stringify(raster)
   };
 
-  return await fetch(url + "uuid:" + rasterUuid + "/", opts);
+  return fetch(url + "uuid:" + rasterUuid + "/", opts);
 };

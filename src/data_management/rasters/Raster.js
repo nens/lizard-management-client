@@ -124,14 +124,14 @@ class Raster extends Component {
 
     listRastersForTable(
       this.state.pageSize, page, searchContains, organisation.uuid
-    ).then(rasters => {
-      const checkboxes = this.createCheckboxDataFromRaster(rasters);
+    ).then(({results, count}) => {
+      const checkboxes = this.createCheckboxDataFromRaster(results);
       this.setState({
-        rasters: rasters,
+        rasters: results,
         checkAllCheckBoxes: false,
         checkboxes: checkboxes,
         isFetching: false,
-        total: data.count,
+        total: count,
       });
     });
   }
@@ -338,7 +338,7 @@ class Raster extends Component {
                   <div className={`${rasterTableStyles.tableUpload}`}>
                     {/* raster.source contains the metadata of the raster data */}
                     {/* if source is null no data is yet uploaded to the raster */}
-                    {raster.source === null ? (
+                    {(!raster.is_geoblock && raster.source === null) ? (
                       <NavLink
                         to={`/data_management/rasters/${raster.uuid}/data`}
                       >
@@ -351,8 +351,9 @@ class Raster extends Component {
                         </i>
                       </NavLink>
                     ) : // if raster.data.name contains "Optimizer OR "RasterStoreSource" then there is already data in the raster and the user is also allowed to update this
-                    raster.source.name.split("_")[0] === "Optimizer" ||
-                    raster.source.name.split("_")[0] === "RasterStoreSource" ? (
+                     (!raster.is_geoblock &&
+                      (raster.source.name.split("_")[0] === "Optimizer" ||
+                       raster.source.name.split("_")[0] === "RasterStoreSource")) ? (
                       <NavLink
                         to={`/data_management/rasters/${raster.uuid}/data`}
                       >
