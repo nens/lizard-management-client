@@ -337,8 +337,8 @@ class Raster extends Component {
                   </div>
                   <div className={`${rasterTableStyles.tableUpload}`}>
                     {/* raster.source contains the metadata of the raster data */}
-                    {/* if source is null no data is yet uploaded to the raster */}
-                    {(!raster.is_geoblock && raster.source === null) ? (
+                    {/* if spatial_bounds is null no data is yet uploaded to the raster */}
+                    {(!raster.is_geoblock && raster.source && !raster.spatial_bounds) ? (
                       <NavLink
                         to={`/data_management/rasters/${raster.uuid}/data`}
                       >
@@ -352,6 +352,7 @@ class Raster extends Component {
                       </NavLink>
                     ) : // if raster.data.name contains "Optimizer OR "RasterStoreSource" then there is already data in the raster and the user is also allowed to update this
                      (!raster.is_geoblock &&
+                      raster.source && raster.spatial_bounds &&
                       (raster.source.name.split("_")[0] === "Optimizer" ||
                        raster.source.name.split("_")[0] === "RasterStoreSource")) ? (
                       <NavLink

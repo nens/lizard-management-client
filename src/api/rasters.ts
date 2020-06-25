@@ -14,7 +14,7 @@ export interface OldRaster {
   temporal: boolean;
   interval?: number;
   rescalable: boolean;
-  optiimizer: false;
+  optimizer: false;
   aggregation_type: string;
   options: string;
   shared_with: string;
@@ -136,7 +136,7 @@ export const deleteRaster = async (uuid: string) => {
   // Send a delete request to delete the raster
   await fetch(`/api/v4/rasters/${uuid}/`, deleteOpts);
 
-  // If this isn't a Geoblock, also delete the first raster source.
+  // If this isn't a Geoblock, also delete the first (and only) raster source.
   if (!raster.is_geoblock && raster.raster_sources) {
     const source = raster.raster_sources[0];
     if (source) {
@@ -159,7 +159,7 @@ export const deleteRasters = (uuids: string[]) => {
 export const listTemporalRastersContainingV3 = async (searchString: string) => {
   const response = await fetch(
     // show all temporal rasters the user has access to
-    `/api/v3/rasters/?page_size=0&name__icontains=${searchString}&first_value_timestamp__isnull=false`,
+    `/api/v3/rasters/?page_size=0&name__icontains=${searchString}&temporal=true`,
     {
       credentials: "same-origin"
     }
@@ -252,7 +252,6 @@ export const createRaster = async (raster: OldRaster) => {
     rescalable: raster.rescalable,
     access_modifier: raster.access_modifier,
     temporal: raster.temporal,
-    interval: raster.temporal ? raster.interval : undefined,
     source: {
       graph: {
         raster: [
@@ -275,10 +274,7 @@ export const createRaster = async (raster: OldRaster) => {
 
 export const patchRaster = async (rasterUuid: string, raster: OldRasterEdit) => {
   const url = "/api/v4/rasters/";
-  // *Right now*, this only edits fields of rasters, not raster source.
-  // The question is does that make sense, some of the fields also exist on raster source,
-  // but then it's not possible for the field to have different values on different rasters
-  // anymore.
+  // Store most fields on the raster
   const opts: RequestInit = {
     credentials: "same-origin",
     method: "PATCH",
@@ -286,5 +282,21 @@ export const patchRaster = async (rasterUuid: string, raster: OldRasterEdit) => 
     body: JSON.stringify(raster)
   };
 
-  return fetch(url + "uuid:" + rasterUuid + "/", opts);
+  const newRasterResponse = await fetch(url + "uuid:" + rasterUuid + "/", opts);
+
+  if (newRasterResponse.ok) {
+    const newRaster = await newRasterResponse.json();
+    // Only supplier code is stored on the raster source
+    if (raster.supplier_code !== undefined &&
+        newRaster.raster_sources && newRaster.raster_sources.length === 1)  {
+      fetch(newRaster.raster_sources[0], {
+        credentials: "same-origin",
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({supplier_code: raster.supplier_code})
+      });
+    }
+  }
+
+  return newRasterResponse;
 };
