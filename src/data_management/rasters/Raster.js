@@ -350,11 +350,7 @@ class Raster extends Component {
                           cloud_upload
                         </i>
                       </NavLink>
-                    ) : // if raster.data.name contains "Optimizer OR "RasterStoreSource" then there is already data in the raster and the user is also allowed to update this
-                     (!raster.is_geoblock &&
-                      raster.source && raster.spatial_bounds &&
-                      (raster.source.name.split("_")[0] === "Optimizer" ||
-                       raster.source.name.split("_")[0] === "RasterStoreSource")) ? (
+                    ) : (!raster.is_geoblock && raster.source) ? (
                       <NavLink
                         to={`/data_management/rasters/${raster.uuid}/data`}
                       >
