@@ -10,6 +10,7 @@ import { UploadRasterDataMultiple } from "./UploadRasterDataMultiple";
 
 import buttonStyles from "../../styles/Buttons.css";
 import gridStyles from "../../styles/Grid.css";
+import { fetchRasterV3 } from "../../api/rasters";
 
 class UploadRasterDataModel extends Component {
   constructor(props) {
@@ -25,10 +26,7 @@ class UploadRasterDataModel extends Component {
     const { match } = this.props;
 
     (async () => {
-      const currentRaster = await fetch(`/api/v3/rasters/${match.params.id}/`, {
-        credentials: "same-origin"
-      }).then(response => response.json());
-
+      const currentRaster = await fetchRasterV3(match.params.id);
       this.setState({ currentRaster });
     })();
   }

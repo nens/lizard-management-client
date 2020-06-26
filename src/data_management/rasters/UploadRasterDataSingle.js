@@ -14,6 +14,7 @@ import formStyles from "../../styles/Forms.css";
 import buttonStyles from "../../styles/Buttons.css";
 import inputStyles from "../../styles/Input.css";
 import gridStyles from "../../styles/Grid.css";
+import { uploadRasterFile } from "../../api/rasters";
 
 class UploadRasterDataSingleModel extends Component {
   constructor(props) {
@@ -155,25 +156,12 @@ class UploadRasterDataSingleModel extends Component {
               className={`${buttonStyles.Button} ${buttonStyles.Success}`}
               style={{ marginTop: 10 }}
               onClick={e => {
-                var form = new FormData();
-                form.append("file", this.state.acceptedFiles[0]);
-                const url =
-                  "/api/v4/rasters/" + this.props.currentRaster.uuid + "/data/";
-                const opts = {
-                  credentials: "same-origin",
-                  method: "POST",
-                  headers: {
-                    mimeType: "multipart/form-data"
-                  },
-                  body: form
-                };
-
-                fetch(url, opts)
-                  .then(responseObj => responseObj.json())
-                  .then(responseData => {
-                    console.log(responseData);
-                    this.props.history.push("/data_management/rasters/");
-                  });
+                uploadRasterFile(
+                  this.props.currentRaster.uuid, this.state.acceptedFiles[0]
+                ).then(responseData => {
+                  console.log(responseData);
+                  this.props.history.push("/data_management/rasters/");
+                });
               }}
             >
               <FormattedMessage

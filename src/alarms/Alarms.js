@@ -21,7 +21,7 @@ class Alarms extends Component {
 
   render() {
     const appTiles = [
-      { 
+      {
         key: 0,
         handleClick: () => this.handleLink("alarms/notifications"),
         title: (
@@ -88,7 +88,7 @@ class Alarms extends Component {
               to={{ opacity: 1, x: 0 }}
               keys={appTiles.map(item => item.key)}
             >
-              {appTiles.map((appTile, i) => ({ x, opacity }) => (
+              {appTiles.map((appTile) => ({ x, opacity }) => (
                 <animated.div
                   style={{
                     opacity,

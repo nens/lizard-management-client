@@ -21,6 +21,7 @@ import "react-datetime/css/react-datetime.css";
 import { Scrollbars } from "react-custom-scrollbars";
 
 import Overlay from "../../components/Overlay";
+import { uploadRasterFile } from "../../api/rasters";
 
 class UploadRasterDataMultipleModel extends Component {
   constructor(props) {
@@ -129,24 +130,10 @@ class UploadRasterDataMultipleModel extends Component {
     });
     this.setState({ acceptedFiles: acceptedFilesMarkedSend });
 
-    var form = new FormData();
-    form.append("file", e.file);
-    if (this.props.currentRaster.temporal === true) {
-      form.append("timestamp", e.dateTime.toISOString());
-    }
-    const url = "/api/v4/rasters/" + this.props.match.params.id + "/data/";
-    const opts = {
-      credentials: "same-origin",
-      method: "POST",
-      headers: {
-        mimeType: "multipart/form-data"
-      },
-      body: form
-    };
-
-    fetch(url, opts)
-      .then(responseObj => responseObj.json())
-      .then(responseData => {
+    uploadRasterFile(
+      this.props.match.params.id,
+      e.file,
+      this.props.currentRaster.temporal ? e.dateTime : undefined).then(responseData => {
         console.log("responseData post raster", responseData);
 
         const newAcceptedFiles = this.state.acceptedFiles.map(oldE => {

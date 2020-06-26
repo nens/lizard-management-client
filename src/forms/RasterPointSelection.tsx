@@ -9,11 +9,10 @@
 
 import React, { Component } from "react";
 import { FormattedMessage } from "react-intl";
-import formStyles from "../styles/Forms.css";
 import RasterPreview from "../components/RasterPreview";
-import SelectAsset from "../components/SelectAsset";
 import SelectRaster from "../components/SelectRaster";
 import { validatorResult } from "./validators";
+import { fetchRasterV3 } from "../api/rasters";
 
 // Types
 
@@ -37,7 +36,7 @@ interface Location {
 }
 
 interface RasterPointSelectionT {
-  raster: Raster | null,
+  raster: string | null,
   point:  Location | null
 }
 
@@ -84,13 +83,9 @@ export default class RasterPointSelection
       // We are apparently in an edit-form as we have a
       // raster-uuid but no whole raster in the state. We need
       // to get it from the API.
-      fetch(`/api/v3/rasters/${this.props.value.raster}/`, {
-        credentials: "same-origin"
-      })
-        .then(response => response.json())
-        .then(json => {
-          this.setState({raster: json});
-        });
+      fetchRasterV3(this.props.value.raster).then(json => {
+        this.setState({raster: json});
+      });
     }
   }
 

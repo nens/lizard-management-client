@@ -5,6 +5,7 @@ import MDSpinner from "react-md-spinner";
 import styles from "./SelectRaster.css";
 import formStyles from "../styles/Forms.css";
 import { Scrollbars } from "react-custom-scrollbars";
+import { fetchRasterV3, listTemporalRastersContainingV3 } from "../api/rasters";
 
 class SelectRaster extends Component {
   constructor(props) {
@@ -57,20 +58,12 @@ class SelectRaster extends Component {
     this.setState({
       loading: true
     });
-    return fetch(
-      // show all temporal rasters the user has access to
-      `/api/v3/rasters/?page_size=0&name__icontains=${value}&first_value_timestamp__isnull=false`,
-      {
-        credentials: "same-origin"
-      }
-    )
-      .then(response => response.json())
-      .then(json => {
-        this.setState({
-          loading: false,
-          rasters: json
-        });
+    return listTemporalRastersContainingV3(value).then(json => {
+      this.setState({
+        loading: false,
+        rasters: json
       });
+    });
   }
   handleSelect(result) {
     this.setState(
@@ -80,18 +73,14 @@ class SelectRaster extends Component {
         showResults: false
       },
       () => {
-        fetch(`/api/v3/rasters/${result.uuid}/`, {
-          credentials: "same-origin"
-        })
-          .then(response => response.json())
-          .then(json => {
-            this.props.setRaster(json);
-          });
+        fetchRasterV3(result.uuid).then(json => {
+          this.props.setRaster(json);
+        });
       }
     );
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps) {
     if (prevProps.raster !== this.props.raster && this.props.raster) {
       this.setState({
         input: this.props.raster.name,
