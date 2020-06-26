@@ -96,15 +96,10 @@ class RasterFormModel extends Component {
         body.options = validatedData.colormap.options;
       }
 
-      patchRaster(currentRaster.uuid, body).then(responseParsed => {
-          console.log("responseParsed put", responseParsed);
-          this.handleResponse(responseParsed);
-          return responseParsed.json();
-        })
-        .then(parsedBody => {
-          console.log("parsedBody", parsedBody);
-          this.setState({ createdRaster: parsedBody });
-        });
+      patchRaster(currentRaster.uuid, body).then(({response, raster}) => {
+        this.handleResponse(response);
+        this.setState({ createdRaster: raster });
+      });
     }
   };
 

@@ -282,11 +282,11 @@ export const patchRaster = async (rasterUuid: string, raster: OldRasterEdit) => 
     body: JSON.stringify(raster)
   };
 
-  const newRasterResponse = await fetch(url + "uuid:" + rasterUuid + "/", opts);
+  const newRasterResponse = await fetch(url + rasterUuid + "/", opts);
+  const newRaster = await newRasterResponse.json();
 
   if (newRasterResponse.ok) {
-    const newRaster = await newRasterResponse.json();
-    // Only supplier code is stored on the raster source
+      // Only supplier code is stored on the raster source
     if (raster.supplier_code !== undefined &&
         newRaster.raster_sources && newRaster.raster_sources.length === 1)  {
       fetch(newRaster.raster_sources[0], {
@@ -298,5 +298,8 @@ export const patchRaster = async (rasterUuid: string, raster: OldRasterEdit) => 
     }
   }
 
-  return newRasterResponse;
+  return {
+    response: newRasterResponse,
+    raster: newRaster
+  };
 };
