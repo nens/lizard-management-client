@@ -170,9 +170,17 @@ export const listTemporalRastersContainingV3 = async (searchString: string) => {
 
 
 export const listRastersForTable = async (
-  pageSize: number, page: number, searchString: string, organisationUuid: string
+  pageSize: number,
+  page: number,
+  searchString: string,
+  include3diScenarios: boolean,
+  organisationUuid: string,
 ) => {
-  const url = `/api/v4/rasters/?writable=true&page_size=${pageSize}&page=${page}&name__icontains=${searchString}&ordering=-last_modified&organisation__uuid=${organisationUuid}&scenario__isnull=true`;
+  const url = include3diScenarios ? (
+    `/api/v4/rasters/?writable=true&page_size=${pageSize}&page=${page}&name__icontains=${searchString}&ordering=last_modified&organisation__uuid=${organisationUuid}`
+  ) : (
+    `/api/v4/rasters/?writable=true&page_size=${pageSize}&page=${page}&name__icontains=${searchString}&ordering=last_modified&organisation__uuid=${organisationUuid}&scenario__isnull=true`
+  );
 
   const response = await fetch(url, {
     credentials: "same-origin"
