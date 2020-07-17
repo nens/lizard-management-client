@@ -85,7 +85,7 @@ export const flushRaster = async (uuid: string) => {
   const rasterSourceBody = {
     name: oldSource.name,
     description: oldSource.description,
-    organisation: oldSource.organisation,
+    organisation: oldSource.organisation.uuid, // We receive whole org, but update with only the UUID
     access_modifier: "Private", // Always
     supplier: oldSource.supplier,
     supplier_code: oldSource.supplier_code,
