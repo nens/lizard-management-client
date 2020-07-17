@@ -61,8 +61,8 @@ export const flushRaster = async (uuid: string) => {
     // Can't flush.
     return;
   }
-
-  const oldSourceResponse = await fetch(raster.raster_sources[0], {credentials: "same-origin"});
+  const rasterSourceUrl = '/api/v4/' + (raster.raster_sources[0].split('/api/v4/')[1]);
+  const oldSourceResponse = await fetch(rasterSourceUrl, {credentials: "same-origin"});
   const oldSource = await oldSourceResponse.json();
 
   // Patch raster so source is None
@@ -74,7 +74,7 @@ export const flushRaster = async (uuid: string) => {
   });
 
   // Try to delete source, ignore errors
-  await fetch(raster.raster_sources[0], {
+  await fetch(rasterSourceUrl, {
     credentials: "same-origin",
     method: "DELETE",
     headers: { "Content-Type": "application/json" },
