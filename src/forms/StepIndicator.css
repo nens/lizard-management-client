@@ -1,0 +1,20 @@
+.StepIndicator {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 20px;
+  font-weight: 300;
+  color: #fff;
+  text-align: center;
+  line-height: 43px;
+  margin: -10px 20px;
+  position: relative;
+  top: 25px;
+}
+.Inactive {
+  background-color: #b9b9b9;
+  cursor: pointer;
+}
+.Active {
+  background-color: #00cdab;
+}

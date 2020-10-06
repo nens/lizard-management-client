@@ -1,0 +1,45 @@
+.NoResults {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 300px;
+  align-items: center;
+}
+.NoResults h5 {
+  color: #C1C1C1;
+  font-weight: 300;
+  margin: 30px;
+}
+
+.ChoicesContainer{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.ChoiceContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  color: #fff;
+  background-color: #00cdab;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+}
+.ChoiceContainer:hover {
+  background-color: #00a78b;
+}
+.ChoiceContainerLeft {
+  margin-right: 10px;
+}
+.ChoiceLabel {
+  margin: 0px;
+  padding-left: 4px;
+  cursor: pointer;
+}
+.ChoiceRadio {
+  cursor: pointer;
+}
+

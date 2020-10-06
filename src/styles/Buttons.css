@@ -1,0 +1,150 @@
+.Button {
+  position: relative;
+  display: inline-block;
+  font-weight: normal;
+  text-align: center;
+  text-transform: uppercase;
+  white-space: nowrap;
+  vertical-align: middle;
+  user-select: none;
+  border: 0 solid transparent;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.25;
+  border-radius: 0;
+  transition: all 0.15s ease-in-out;
+  cursor: pointer;
+}
+
+.ButtonLink {
+  background:none;
+  color: inherit;
+  border:none; 
+  padding:0;
+  font: inherit;
+  cursor: pointer;
+}
+
+
+.Danger {
+  color: #fff;
+  background-color: #ff7070;
+  border-color: #ff7070;
+}
+.Danger:active {
+  background-color: #BE404A;
+  background-image: none;
+  border-color: #BE404A;
+  outline: 0;
+  box-shadow: 0 0 0 3px rgba(205, 0, 31, 0.5);
+}
+.Danger:hover {
+  color: #fff;
+  background-color: #BE404A;
+  border-color: #BE404A;
+}
+.Danger:focus {
+  outline: 0;
+  box-shadow: 0 0 0 3px rgba(205, 0, 31, 0.5);
+}
+
+.Inactive {
+  background-color: #b9b9b9;
+  border-color: #b9b9b9;
+  color: silver;
+  color: grey;
+  cursor: not-allowed;
+}
+.Inactive:active {
+  background-color: #b9b9b9;
+  border-color: #b9b9b9;
+  background-image: none;
+  outline: 0;
+  box-shadow: 0 0 0 3px rgba(0, 205, 171, 0.5);
+}
+.Inactive:hover {
+  background-color: #b9b9b9;
+  border-color: #b9b9b9;
+}
+.Inactive:focus {
+  outline: 0;
+  box-shadow: 0 0 0 3px rgba(0, 205, 171, 0.5);
+}
+
+
+.Success {
+  color: #fff;
+  background-color: #00cdab;
+  border-color: #00cdab;
+}
+.Success:active {
+  background-color: #00a78b;
+  background-image: none;
+  border-color: #009a80;
+  outline: 0;
+  box-shadow: 0 0 0 3px rgba(0, 205, 171, 0.5);
+}
+.Success:hover {
+  color: #fff;
+  background-color: #00a78b;
+  border-color: #009a80;
+}
+.Success:focus {
+  outline: 0;
+  box-shadow: 0 0 0 3px rgba(0, 205, 171, 0.5);
+}
+
+
+.Link {
+  background-color: rgba(255, 255, 255, 0);
+  border-color: transparent;
+  box-shadow: none;
+  font-weight: normal;
+  color: #00a6ff;
+}
+.Link:active {
+  background-image: none;
+  outline: 0;
+  color: #00649a;
+}
+.Link:hover {
+  background-image: none;
+  outline: 0;
+  color: #00649a;
+}
+.Link:focus {
+  background-image: none;
+  outline: 0;
+  color: #00649a;
+}
+
+.Danger2 {
+  background-color: rgba(255, 255, 255, 0);
+  border-color: transparent;
+  box-shadow: none;
+  font-weight: normal;
+  color: #FC0E1D;
+}
+.Danger2:active {
+  background-image: none;
+  outline: 0;
+  color: #FC0E1D;
+}
+.Danger2:hover {
+  background-image: none;
+  outline: 0;
+  color: #FC0E1D;
+}
+.Danger2:focus {
+  background-image: none;
+  outline: 0;
+  color: #FC0E1D;
+}
+
+.Small {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  border-radius: 0;
+}

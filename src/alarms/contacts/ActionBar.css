@@ -1,0 +1,50 @@
+.ActionBar {
+  position: relative;
+  width: 100%;
+  background-color: #626262;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  z-index: 9999999;
+}
+.ActionBarItemsWrapper {
+  display: flex;
+  flex-direction: row;
+}
+.ActionBarItem {
+  position: relative;
+  padding: 10px 0 10px 40px;
+  width: 200px;
+  color: #fff;
+  border-right: 1px solid #fff;
+  cursor: pointer;
+}
+.ActionBarItem i {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+.DropDown {
+  position: absolute;
+  top: 45px;
+  width: 200px;
+  background-color: #626262;
+  color: #fff;
+  left: 0;
+}
+.DropDownItem {
+  padding: 10px 0 10px 36px;
+  cursor: pointer;
+  text-align: left;
+}
+.Search {
+  padding: 6px 6px 0 0;
+}
+.Search input {
+  background-color: #626262;
+  border: 1px solid #979797;
+}
+.Search input:focus {
+  background-color: #626262;
+  color: #fff;
+}

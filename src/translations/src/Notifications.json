@@ -1,0 +1,10 @@
+[
+  {
+    "id": "notifications.alarms_breadcrumb",
+    "defaultMessage": "Alarms"
+  },
+  {
+    "id": "notifications.alarms_notifications",
+    "defaultMessage": "Notifications"
+  }
+]

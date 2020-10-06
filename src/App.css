@@ -1,38 +1,175 @@
 .App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
+  display: flex;
   min-height: 100vh;
+  flex-direction: column;
+  font-family: Montserrat;
+}
+
+.AppContent {
+  flex: 1;
+}
+
+.AppIcon {
+  font-size: 17;
+  position: relative;
+  left: -7px;
+  top: 3px;
+}
+
+
+.Primary {
+  background-color: #009F86;
+  color: #fff;
+  text-transform: uppercase;
+}
+.Secondary {
+  background-color: #2FCBAB;
+  text-transform: uppercase;
+}
+.Secondary a {
+  text-decoration: none;
+  color: #fff;
+}
+
+.Footer {
+  background-color: #D8D8D8;
+  text-transform: uppercase;
+}
+.Footer a {
+  color: #009F86;
+  text-decoration: none;
+}
+.FooterLeft {
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+}
+.FooterRight {
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+.FooterRightWrapper{
+  display: flex;
+  position: relative;
+}
+
+.DocumentationHyperlink{
+  position: relative;
+  top: 5px;
+  font-size: 20px;
+}
+.SupportHyperlink {
+  position: relative;
+  top: 5px;
+  font-size: 20px;
+}
+
+.LizardLogo {
+  position: relative;
+  /*Height and margin and/ or padding should be 55px to be in line
+  with the upper part of the header */
+  margin-top: 18.5px;
+  margin-bottom: 18.5px;
+  height: 18px;
+}
+
+.MDSpinner {
+  position: relative;
+  top: 50px;
+  height: 300px;
+  bottom: 50px;
+  margin-left: 50%;
+}
+
+.NavbarTogglebutton {
+  cursor: pointer;
+  background-color: #2fcbab;
+  color: #fff;
+  width: 30px;
+  height: 25px;
+  border-radius: 2px;
+}
+.OrganisationLinkContainer {
+  width: 260px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding-left: 5px;
+  cursor: pointer;
+}
+.OrganisationLink {
+  color: #fff !important;
+  max-width: 250px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+.OrganisationLinkContainer:hover {
+  background-color: rgb(3, 139, 119);
+}
+
+.Profile {
+  width: 160px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.Profile:hover {
+  background-color: rgb(3, 139, 119);
+}
+
+.TopNav {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  height: 100%;
+}
+.TopNav div {
+  margin: 5px;
+}
+.TopNav div:last-child {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.TopNav a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.DropdownMenu {
+  font-size: 14px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  z-index: 1;
+  margin: 0 !important;
+
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+
+  border: 1px solid rgba(0, 0, 0, .15);
+  background-color: #fafafa;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
 }
 
-.App-link {
-  color: #61dafb;
+.DropdownMenu a {
+  text-decoration: none;
+  color: #333;
+  padding: 6px 10px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.DropdownMenu a:hover {
+  background-color: #e5e5e5;
 }

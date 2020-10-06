@@ -1,0 +1,898 @@
+[
+	{
+		"id": "alarmgroups_app.number_of_groups",
+		"defaultMessage": "{numberOfGroups, number} {numberOfGroups, plural, one {GROUP} other {GROUPS}}"
+	},
+	{
+		"id": "alarmgroups_app.new_group",
+		"defaultMessage": "New group"
+	},
+	{
+		"id": "alarmgroups_app.number_of_contacts",
+		"defaultMessage": "{numberOfContacts, plural, one {contact} other {contacts}}"
+	},
+	{
+		"id": "alarmgroups_app.delete_group",
+		"defaultMessage": "Delete group"
+	},
+	{
+		"id": "alarmgroups_app.no_groups_configured",
+		"defaultMessage": "No groups configured..."
+	},
+	{
+		"id": "alarmgroups_app.quickly_add_contacts",
+		"defaultMessage": "Quickly add contacts"
+	},
+	{
+		"id": "alarmgroups_app.number_of_contactgroups",
+		"defaultMessage": "{numberOfContactgroups, number} {numberOfContactgroups, plural, one {recipient} other {recipients}}"
+	},
+	{
+		"id": "alarmgroups_app.email_address",
+		"defaultMessage": "E-mail address"
+	},
+	{
+		"id": "alarmgroups_app.phone_number",
+		"defaultMessage": "Phone number"
+	},
+	{
+		"id": "alarmgroups_app.first_name",
+		"defaultMessage": "First name"
+	},
+	{
+		"id": "alarmgroups_app.last_name",
+		"defaultMessage": "Last name"
+	},
+	{
+		"id": "alarmgroups_app.remove_from_group",
+		"defaultMessage": "Remove from group"
+	},
+	{
+		"id": "alarmgroups_app.send_a_message_to_this_group",
+		"defaultMessage": "Send a message to this group"
+	},
+	{
+		"id": "alarmgroups_app.subject_only_applies",
+		"defaultMessage": "Subject (only applies to e-mail messages)"
+	},
+	{
+		"id": "alarmgroups_app.message",
+		"defaultMessage": "Message"
+	},
+	{
+		"id": "alarmgroups_app.characters_left",
+		"defaultMessage": "characters left"
+	},
+	{
+		"id": "alarmgroup.send_message",
+		"defaultMessage": "Send message"
+	},
+	{
+		"id": "alarmgroups_app.please_provide_a_name_for_this_group",
+		"defaultMessage": "Please provide a name for this group (max. 80 characters)"
+	},
+	{
+		"id": "alarmgroups_new.create_group",
+		"defaultMessage": "Create group"
+	},
+	{
+		"id": "alarms.notifications",
+		"defaultMessage": "Notifications"
+	},
+	{
+		"id": "alarms.manage_notifications",
+		"defaultMessage": "Manage notifications"
+	},
+	{
+		"id": "alarms.alarms_groups",
+		"defaultMessage": "Groups"
+	},
+	{
+		"id": "alarms.recipient_management",
+		"defaultMessage": "Recipient management"
+	},
+	{
+		"id": "alarms.alarms_contacts",
+		"defaultMessage": "Contacts"
+	},
+	{
+		"id": "alarms.contacts_management",
+		"defaultMessage": "Contacts management"
+	},
+	{
+		"id": "alarms.alarms_templates",
+		"defaultMessage": "Templates"
+	},
+	{
+		"id": "alarms.alarms_template_management",
+		"defaultMessage": "Alarm template management"
+	},
+	{
+		"id": "alarmtemplates_app.manage_templates",
+		"defaultMessage": "Manage templates"
+	},
+	{
+		"id": "alarmtemplates_app.select_all",
+		"defaultMessage": "Select all"
+	},
+	{
+		"id": "alarmtemplates_app.deselect_all",
+		"defaultMessage": "Deselect all"
+	},
+	{
+		"id": "alarmtemplates_app.delete_selected",
+		"defaultMessage": "Delete selected"
+	},
+	{
+		"id": "alarmtemplates_app.number_of_templates",
+		"defaultMessage": "{numberOfTemplates, number} {numberOfTemplates, plural, one {TEMPLATE} other {TEMPLATES}}"
+	},
+	{
+		"id": "alarmtemplates_app.new_group",
+		"defaultMessage": "New template"
+	},
+	{
+		"id": "alarmtemplates_app.no_templates_configured",
+		"defaultMessage": "No templates configured..."
+	},
+	{
+		"id": "alarmtemplates_app.name",
+		"defaultMessage": "Name"
+	},
+	{
+		"id": "alarmtemplates_app.type",
+		"defaultMessage": "Type"
+	},
+	{
+		"id": "alarmtemplates_app.delete",
+		"defaultMessage": "Delete"
+	},
+	{
+		"id": "alarmtemplates_detail.template",
+		"defaultMessage": "TEMPLATE"
+	},
+	{
+		"id": "alarmtemplates_detail.characters",
+		"defaultMessage": "characters"
+	},
+	{
+		"id": "alarmtemplates_app.delete_template",
+		"defaultMessage": "Delete template"
+	},
+	{
+		"id": "alarmtemplates_app.save_template",
+		"defaultMessage": "Save template"
+	},
+	{
+		"id": "alarmtemplates_app.parameter",
+		"defaultMessage": "Parameter"
+	},
+	{
+		"id": "alarmtemplates_app.description",
+		"defaultMessage": "Description"
+	},
+	{
+		"id": "alarmtemplates_app.please_provide_a_name",
+		"defaultMessage": "Please provide a name for this template"
+	},
+	{
+		"id": "alarmtemplates_app.the_subject_will_be_used_in_email_messages",
+		"defaultMessage": "The subject will be used in e-mail messages"
+	},
+	{
+		"id": "alarmtemplates_app.template",
+		"defaultMessage": "Template"
+	},
+	{
+		"id": "alarmtemplates_new.characters",
+		"defaultMessage": "characters"
+	},
+	{
+		"id": "alarmtemplates_new.sms_max_char_warning",
+		"defaultMessage": "SMS messages have a limit of 160 characters after substituting the parameter tags"
+	},
+	{
+		"id": "alarmtemplates_new.create_template",
+		"defaultMessage": "Create template"
+	},
+	{
+		"id": "contacts_app.manage_contacts",
+		"defaultMessage": "Manage contacts"
+	},
+	{
+		"id": "contacts_app.number_of_contacts",
+		"defaultMessage": "{total, number} {total, plural, one {CONTACT} other {CONTACTS}}"
+	},
+	{
+		"id": "contacts_app.new_contact",
+		"defaultMessage": "New contact"
+	},
+	{
+		"id": "contacts_app.first_name",
+		"defaultMessage": "First name"
+	},
+	{
+		"id": "contacts_app.last_name",
+		"defaultMessage": "Last name"
+	},
+	{
+		"id": "contacts_app.email_address",
+		"defaultMessage": "E-mail address"
+	},
+	{
+		"id": "contacts_app.phone_number",
+		"defaultMessage": "Telephone number"
+	},
+	{
+		"id": "contacts_app.delete",
+		"defaultMessage": "Delete"
+	},
+	{
+		"id": "contacts_app.first_name_1",
+		"defaultMessage": "First name"
+	},
+	{
+		"id": "contacts_app.last_name_1",
+		"defaultMessage": "Last name"
+	},
+	{
+		"id": "contacts_app.email_address_1",
+		"defaultMessage": "E-mail address"
+	},
+	{
+		"id": "contacts_app.phone_number_1",
+		"defaultMessage": "Phone number"
+	},
+	{
+		"id": "contacts_new.update_contact",
+		"defaultMessage": "Update contact"
+	},
+	{
+		"id": "contacts_app.first_name_2",
+		"defaultMessage": "First name"
+	},
+	{
+		"id": "contacts_app.last_name_2",
+		"defaultMessage": "Last name"
+	},
+	{
+		"id": "contacts_app.email_address_2",
+		"defaultMessage": "E-mail address"
+	},
+	{
+		"id": "contacts_app.phone_number_2",
+		"defaultMessage": "Phone number"
+	},
+	{
+		"id": "contacts_app.first_name_3",
+		"defaultMessage": "First name"
+	},
+	{
+		"id": "contacts_app.last_name_3",
+		"defaultMessage": "Last name"
+	},
+	{
+		"id": "contacts_app.email_address_3",
+		"defaultMessage": "E-mail address"
+	},
+	{
+		"id": "contacts_app.phone_number_3",
+		"defaultMessage": "Phone number"
+	},
+	{
+		"id": "contacts_new.create_contact",
+		"defaultMessage": "Create contact"
+	},
+	{
+		"id": "notifications_app.is_active",
+		"defaultMessage": "ACTIVE"
+	},
+	{
+		"id": "notifications_app.is_inactive",
+		"defaultMessage": "INACTIVE"
+	},
+	{
+		"id": "notifications_app.number_of_thresholds",
+		"defaultMessage": "{numberOfThresholds, number} {numberOfThresholds, plural, one {threshold} other {thresholds}}"
+	},
+	{
+		"id": "notifications_app.number_of_recipients",
+		"defaultMessage": "{numberOfRecipients, number} {numberOfRecipients, plural, one {recipient} other {recipients}}"
+	},
+	{
+		"id": "notifications_app.deactivate_alarm",
+		"defaultMessage": "Deactivate"
+	},
+	{
+		"id": "notifications_app.activate_alarm",
+		"defaultMessage": "Activate"
+	},
+	{
+		"id": "notifications_app.remove_alarm",
+		"defaultMessage": "Remove"
+	},
+	{
+		"id": "notifications_app.raster_alarms",
+		"defaultMessage": "Raster Alarms"
+	},
+	{
+		"id": "notifications_app.timeseries_alarms",
+		"defaultMessage": "Timeseries Alarms"
+	},
+	{
+		"id": "notifications_app.number_of_notifications",
+		"defaultMessage": "{numberOfNotifications, number} {numberOfNotifications, plural, one {NOTIFICATION} other {NOTIFICATIONS}}"
+	},
+	{
+		"id": "notifications_app.new_notification",
+		"defaultMessage": "New notification"
+	},
+	{
+		"id": "notifications_app.no_notifications",
+		"defaultMessage": "No notifications configured..."
+	},
+	{
+		"id": "notifications_app.configure_recipients",
+		"defaultMessage": "Configure recipients"
+	},
+	{
+		"id": "notifications_app.recipients_will_receive_a_message_when_the_threshold_is_exceeded",
+		"defaultMessage": "Recipients will receive a message when the threshold is exceeded"
+	},
+	{
+		"id": "notifications_app.configure_new_threshold",
+		"defaultMessage": "Configure new threshold"
+	},
+	{
+		"id": "notifications_app.a_threshold_determines_when_an_alarm_should_be_triggered",
+		"defaultMessage": "A threshold determines when an alarm should be triggered"
+	},
+	{
+		"id": "notifications_app.value",
+		"defaultMessage": "value"
+	},
+	{
+		"id": "notifications_app.value_of_this_threshold",
+		"defaultMessage": "Value of this threshold (float-point number)"
+	},
+	{
+		"id": "notifications_app.warning_level",
+		"defaultMessage": "Warning level"
+	},
+	{
+		"id": "notifications_app.warning_level_label",
+		"defaultMessage": "A warning level label. For example: 'Major'"
+	},
+	{
+		"id": "notifications_app.apply",
+		"defaultMessage": "Apply"
+	},
+	{
+		"id": "notifications_app.close",
+		"defaultMessage": "Close"
+	},
+	{
+		"id": "notifications_app.something_wrong",
+		"defaultMessage": "Something went wrong..."
+	},
+	{
+		"id": "notifications_app.remove",
+		"defaultMessage": "Remove"
+	},
+	{
+		"id": "alarmtemplates_app.active",
+		"defaultMessage": "ACTIVE"
+	},
+	{
+		"id": "alarmtemplates_app.inactive",
+		"defaultMessage": "INACTIVE"
+	},
+	{
+		"id": "alarmtemplates_app.number_of_thresholds",
+		"defaultMessage": "{number_of_thresholds, number} {number_of_thresholds, plural, one {threshold} other {thresholds}}"
+	},
+	{
+		"id": "alarmtemplates_app.number_of_messages",
+		"defaultMessage": "{number_of_messages, number} {number_of_messages, plural, one {recipient} other {recipient groups}}"
+	},
+	{
+		"id": "alarmtemplates_app.deactivate",
+		"defaultMessage": "DEACTIVATE"
+	},
+	{
+		"id": "alarmtemplates_app.activate",
+		"defaultMessage": "ACTIVATE"
+	},
+	{
+		"id": "notifications_app.map",
+		"defaultMessage": "Map"
+	},
+	{
+		"id": "notifications_app.not_available",
+		"defaultMessage": "Not available"
+	},
+	{
+		"id": "notifications_app.chart",
+		"defaultMessage": "Chart"
+	},
+	{
+		"id": "notifications_app.thresholds",
+		"defaultMessage": "Thresholds"
+	},
+	{
+		"id": "notifications_app.select_a_group",
+		"defaultMessage": "Select a group"
+	},
+	{
+		"id": "notifications_app.select_a_template",
+		"defaultMessage": "Select a template"
+	},
+	{
+		"id": "notifications_app.group_and_template_remove",
+		"defaultMessage": "Remove"
+	},
+	{
+		"id": "notifications_app.name_of_alarm",
+		"defaultMessage": "Name of this alarm"
+	},
+	{
+		"id": "notifications_app.name_will_be_used_in_alerts",
+		"defaultMessage": "The name of the raster will be used in e-mail and SMS alerts"
+	},
+	{
+		"id": "notifications_app.next_step",
+		"defaultMessage": "Next step"
+	},
+	{
+		"id": "notifications_app.source_type_selection",
+		"defaultMessage": "Source type selection"
+	},
+	{
+		"id": "notifications_app.whci_data_type",
+		"defaultMessage": "Which data type is the alarm for?"
+	},
+	{
+		"id": "notifications_app.raster_selection",
+		"defaultMessage": "Raster selection"
+	},
+	{
+		"id": "notifications_app.which_temporal_raster_to_use",
+		"defaultMessage": "Which temporal raster do you want to use?"
+	},
+	{
+		"id": "notifications_app.set_the_location",
+		"defaultMessage": "Set the location of this alarm by placing a marker (tap/click on the map)"
+	},
+	{
+		"id": "notifications_app.timeseries_selection",
+		"defaultMessage": "Timeseries selection"
+	},
+	{
+		"id": "notifications_app.select_timeserie_via_asset",
+		"defaultMessage": "Select timeserie via asset."
+	},
+	{
+		"id": "notifications_app.newnotification_thresholds",
+		"defaultMessage": "Thresholds"
+	},
+	{
+		"id": "notifications_app.this_alarm_will_be_triggered",
+		"defaultMessage": "This alarm will be triggered whenever a threshold is exceeded."
+	},
+	{
+		"id": "notifications_app.comparison",
+		"defaultMessage": "Comparison"
+	},
+	{
+		"id": "notifications_app.comparison_for_all_alarm_thresholds",
+		"defaultMessage": "Comparison for all alarm thresholds, either < or >"
+	},
+	{
+		"id": "notifications_app.alarm_when_value",
+		"defaultMessage": "Alarm when value"
+	},
+	{
+		"id": "notifications_app.newnotification_remove",
+		"defaultMessage": "Remove"
+	},
+	{
+		"id": "notifications_app.recipients",
+		"defaultMessage": "Recipients"
+	},
+	{
+		"id": "notifications_app.when_an_alarm_is_triggered",
+		"defaultMessage": "When an alarm is triggered, these groups of recipients will be notified."
+	},
+	{
+		"id": "notifications_app.activate",
+		"defaultMessage": "Activate"
+	},
+	{
+		"id": "notifications_app.recipient_groups",
+		"defaultMessage": "Recipient groups"
+	},
+	{
+		"id": "notifications_app.choose_a_recipient_group",
+		"defaultMessage": "--- Choose a recipient group ---"
+	},
+	{
+		"id": "notifications_app.choose_a_template",
+		"defaultMessage": "--- Choose a template ---"
+	},
+	{
+		"id": "notifications_app.recipientgroups_remove",
+		"defaultMessage": "Remove"
+	},
+	{
+		"id": "notifications_app.no_data_to_plot",
+		"defaultMessage": "No data to plot"
+	},
+	{
+		"id": "index.documentation",
+		"defaultMessage": "Documentation"
+	},
+	{
+		"id": "index.support",
+		"defaultMessage": "Support"
+	},
+	{
+		"id": "rasters.colormap_min_mandatory",
+		"defaultMessage": "Mandatory if a maximum is given"
+	},
+	{
+		"id": "rasters.colormap_max>min",
+		"defaultMessage": "Max should be Greater then Min"
+	},
+	{
+		"id": "rasters.next_step",
+		"defaultMessage": "Next Step"
+	},
+	{
+		"id": "components.switch_org",
+		"defaultMessage": "Switch organisation"
+	},
+	{
+		"id": "search",
+		"defaultMessage": "Search"
+	},
+	{
+		"id": "components_snackbar.dismiss",
+		"defaultMessage": "Dismiss"
+	},
+	{
+		"id": "data_management.rasters",
+		"defaultMessage": "Rasters"
+	},
+	{
+		"id": "data_management.manage_rasters",
+		"defaultMessage": "Manage rasters"
+	},
+	{
+		"id": "raster.post_metadata_success",
+		"defaultMessage": "Succes! Your raster meta-data was uploaded succesfully. You can add your data now, or do it later"
+	},
+	{
+		"id": "raster.post_metadata_error_in_400",
+		"defaultMessage": "Oops, something went wrong. Please check the form and your internet settings. Error code is:"
+	},
+	{
+		"id": "raster.post_metadata_error_in_500",
+		"defaultMessage": "Oops, something went wrong. Please contact support. Error code is:"
+	},
+	{
+		"id": "rasterscreen",
+		"defaultMessage": "Back to rasters"
+	},
+	{
+		"id": "upload",
+		"defaultMessage": "Upload data"
+	},
+	{
+		"id": "close",
+		"defaultMessage": "Back"
+	},
+	{
+		"id": "rasters.raster_name",
+		"defaultMessage": "Name"
+	},
+	{
+		"id": "rasters.raster_description",
+		"defaultMessage": "Description"
+	},
+	{
+		"id": "rasters.raster_suppliercode",
+		"defaultMessage": "Supplier Code"
+	},
+	{
+		"id": "rasters.raster_observationtype",
+		"defaultMessage": "Observation type"
+	},
+	{
+		"id": "rasters.no_rasters",
+		"defaultMessage": "No rasters found..."
+	},
+	{
+		"id": "rasters.number_of_rasters",
+		"defaultMessage": "{numberOfRasters, number} {numberOfRasters, plural, one {Raster} other {Rasters}}"
+	},
+	{
+		"id": "rasters.delete_rasters",
+		"defaultMessage": "Delete {clickedCheckboxes, number} {clickedCheckboxes, plural, one {Raster} other {Rasters}}"
+	},
+	{
+		"id": "rasters.exclude_3di_results",
+		"defaultMessage": "Exclude 3di results"
+	},
+	{
+		"id": "rasters.include_3di_results",
+		"defaultMessage": "Include 3di results"
+	},
+	{
+		"id": "rasters.new_raster",
+		"defaultMessage": "New raster"
+	},
+	{
+		"id": "rasters.organisation",
+		"defaultMessage": "Organisation"
+	},
+	{
+		"id": "rasters.please_select_organisation",
+		"defaultMessage": "Specify which organisation owns this raster"
+	},
+	{
+		"id": "rasters.shared_with_organisations",
+		"defaultMessage": "Shared with organisations"
+	},
+	{
+		"id": "rasters.which_organisations_would_you_like_to_share",
+		"defaultMessage": "Select other organisations that need read acces to this raster"
+	},
+	{
+		"id": "rasters.authorisation_type",
+		"defaultMessage": "Authorization type"
+	},
+	{
+		"id": "rasters.public_common_private",
+		"defaultMessage": "Specify who can view this raster"
+	},
+	{
+		"id": "rasters.name_of_this_raster",
+		"defaultMessage": "Name of this Raster"
+	},
+	{
+		"id": "rasters.description",
+		"defaultMessage": "Description"
+	},
+	{
+		"id": "rasters.please_describe_the_new_raster",
+		"defaultMessage": "Add a clear description of this raster with reference to the data source"
+	},
+	{
+		"id": "rasters.aggregation_type",
+		"defaultMessage": "Aggregation Type"
+	},
+	{
+		"id": "rasters.please_select_type_of_aggregation",
+		"defaultMessage": "Specify how data should be displayed in region selection mode"
+	},
+	{
+		"id": "rasters.observation_type",
+		"defaultMessage": "Observation Type"
+	},
+	{
+		"id": "rasters.please_select_type_of_observation",
+		"defaultMessage": "Specify the physical quantity and unit of the data"
+	},
+	{
+		"id": "rasters.colormap",
+		"defaultMessage": "Colormap"
+	},
+	{
+		"id": "rasters.fill_colormap_min",
+		"defaultMessage": "Minimum"
+	},
+	{
+		"id": "rasters.fill_colormap_max",
+		"defaultMessage": "Maximum"
+	},
+	{
+		"id": "rasters.colormap_readonly_layers",
+		"defaultMessage": "Readonly, because the style of this raster has multiple layers"
+	},
+	{
+		"id": "rasters.supplier_id",
+		"defaultMessage": "Supplier Name"
+	},
+	{
+		"id": "rasters.please_select_supplier_id",
+		"defaultMessage": "Select the user that is allowed to change and delete this raster"
+	},
+	{
+		"id": "rasters.supplier_code",
+		"defaultMessage": "Supplier Code"
+	},
+	{
+		"id": "rasters.unique_supplier_code",
+		"defaultMessage": "Provide a code for your own administration"
+	},
+	{
+		"id": "rasters.raster_is_temporal",
+		"defaultMessage": "Raster Series"
+	},
+	{
+		"id": "rasters.check_if_raster_is_temporal",
+		"defaultMessage": "Select whether you are creating a raster that contains multiple rasters over time"
+	},
+	{
+		"id": "rasters.yes_the_raster_is_temporal",
+		"defaultMessage": "Yes, this is a raster series"
+	},
+	{
+		"id": "rasters.no_the_raster_is_not_temporal",
+		"defaultMessage": "No, this is not a raster series"
+	},
+	{
+		"id": "rasters.temporal_raster_frequency",
+		"defaultMessage": "Raster Series Interval"
+	},
+	{
+		"id": "rasters.temporal_raster_frequency_description",
+		"defaultMessage": "Interval of raster series"
+	},
+	{
+		"id": "rasters.submit",
+		"defaultMessage": "Submit"
+	},
+	{
+		"id": "rasters.back_to_rasters",
+		"defaultMessage": "Back to Raster list"
+	},
+	{
+		"id": "rasters.back_to_metadata",
+		"defaultMessage": "Back to Metadata"
+	},
+	{
+		"id": "rasters.data_for",
+		"defaultMessage": "for raster"
+	},
+	{
+		"id": "rasters.are_you_sure_about_uploading_files",
+		"defaultMessage": "Are you sure about uploading the selected files?"
+	},
+	{
+		"id": "rasters.overwriting_data_cannot_be_undone",
+		"defaultMessage": "Please beware that the changes you are about to post to the database cannot be undone"
+	},
+	{
+		"id": "rasters.please_review_files_to_upload",
+		"defaultMessage": "Please only proceed if you carefully review all the files you are about to upload."
+	},
+	{
+		"id": "rasters.proceed_file_upload_by_typing_upload",
+		"defaultMessage": "Proceed by typing 'upload' in the field below"
+	},
+	{
+		"id": "rasters.back_to_raster_metadata",
+		"defaultMessage": "Back to Metadata"
+	},
+	{
+		"id": "rasters.following_files_upload_succes",
+		"defaultMessage": "Following files where succesfully uploaded"
+	},
+	{
+		"id": "rasters.click_to_url_upload_task",
+		"defaultMessage": "Show asynchronous task"
+	},
+	{
+		"id": "rasters.uploading_takes_additional_time_on_server",
+		"defaultMessage": "Please keep in mind that it might take a while before your changes are committed to the database."
+	},
+	{
+		"id": "rasters.check_url_for_progress_file_upload",
+		"defaultMessage": "The urls behind the files can show the progress for each file."
+	},
+	{
+		"id": "rasters.file_already_selected",
+		"defaultMessage": "A file with this name and size was already selected"
+	},
+	{
+		"id": "rasters.file_selection_not_tiff",
+		"defaultMessage": "Only .tif .tiff or .geotiff files are valid"
+	},
+	{
+		"id": "rasters.file_selection_failed_unknown_reason",
+		"defaultMessage": "Reason not known"
+	},
+	{
+		"id": "rasters.file_dropping",
+		"defaultMessage": "Drop files here..."
+	},
+	{
+		"id": "rasters.drop_file_here",
+		"defaultMessage": "Drop Files here"
+	},
+	{
+		"id": "rasters.no_file_selected",
+		"defaultMessage": "No file selected yet"
+	},
+	{
+		"id": "rasters.files_selected",
+		"defaultMessage": "Files Selected"
+	},
+	{
+		"id": "rasters.raster_upload_browse",
+		"defaultMessage": "Browse"
+	},
+	{
+		"id": "rasters.files_unable_to_select",
+		"defaultMessage": "Following files could not be selected"
+	},
+	{
+		"id": "rasters.upload_selected_files",
+		"defaultMessage": "Selected files"
+	},
+	{
+		"id": "rasters.selected_file_busy_uploading",
+		"defaultMessage": "File busy being uploaded"
+	},
+	{
+		"id": "rasters.selected_file_ready_to_send",
+		"defaultMessage": "file selected, ready to upload"
+	},
+	{
+		"id": "rasters.selected_file_succesfully uploaded",
+		"defaultMessage": "File succesfully uploaded to server"
+	},
+	{
+		"id": "rasters.selected_file_failed_upload",
+		"defaultMessage": "File could not be uploaded, maybe try once more"
+	},
+	{
+		"id": "rasters.selected_file_in queue",
+		"defaultMessage": "File waiting to be uploaded"
+	},
+	{
+		"id": "rasters.upload_selected_file",
+		"defaultMessage": "Save all files"
+	},
+	{
+		"id": "rasters.upload_abort_selected_file",
+		"defaultMessage": "Abort"
+	},
+	{
+		"id": "rasters.files_non_temporal_upload_multiple_files_not_allowed",
+		"defaultMessage": "For non-temporal rasters it is not possible to upload more than 1 file"
+	},
+	{
+		"id": "home.usermanagement",
+		"defaultMessage": "User management"
+	},
+	{
+		"id": "home.sso_management",
+		"defaultMessage": "Single sign-on account management"
+	},
+	{
+		"id": "home.scenarios",
+		"defaultMessage": "3Di Scenarios"
+	},
+	{
+		"id": "home.scenario_management",
+		"defaultMessage": "Scenario management"
+	},
+	{
+		"id": "home.alarms",
+		"defaultMessage": "Alarms"
+	},
+	{
+		"id": "home.alarm_management",
+		"defaultMessage": "Alarm management"
+	},
+	{
+		"id": "home.data_management",
+		"defaultMessage": "Data Management"
+	},
+	{
+		"id": "home.data_administration",
+		"defaultMessage": "Data administration"
+	}
+]
