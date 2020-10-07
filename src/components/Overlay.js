@@ -1,6 +1,6 @@
 import CSSTransition from "react-transition-group/CSSTransition";
 import React, { Component } from "react";
-import styles from ".//ErrorOverlay.css";
+import styles from ".//ErrorOverlay.module.css";
 
 class Overlay extends Component {
   componentDidMount() {

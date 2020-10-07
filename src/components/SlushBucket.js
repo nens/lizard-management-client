@@ -4,10 +4,10 @@ import MDSpinner from "react-md-spinner";
 import { Scrollbars } from "react-custom-scrollbars";
 import ClearButton from "../components/ClearButton.js";
 
-import styles from "./SlushBucket.css";
-import formStyles from "../styles/Forms.css";
-import inputStyles from "../styles/Input.css";
-import displayStyles from "../styles/Display.css";
+import styles from "./SlushBucket.module.css";
+import formStyles from "../styles/Forms.module.css";
+import inputStyles from "../styles/Input.module.css";
+import displayStyles from "../styles/Display.module.css";
 
 class SlushBucket extends Component {
   constructor(props) {

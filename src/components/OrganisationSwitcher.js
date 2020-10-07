@@ -1,8 +1,8 @@
 import CSSTransition from "react-transition-group/CSSTransition";
-import formStyles from "../styles/Forms.css";
+import formStyles from "../styles/Forms.module.css";
 import MDSpinner from "react-md-spinner";
 import React, { Component } from "react";
-import styles from "./OrganisationSwitcher.css";
+import styles from "./OrganisationSwitcher.module.css";
 import { connect } from "react-redux";
 import { fetchSupplierIds, selectOrganisation } from "../actions";
 import { FormattedMessage, injectIntl } from "react-intl";

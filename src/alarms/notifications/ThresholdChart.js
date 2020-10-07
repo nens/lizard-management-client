@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { FormattedMessage } from "react-intl";
 import moment from "moment";
-import styles from "./ThresholdChart.css";
+import styles from "./ThresholdChart.module.css";
 import {
   Baseline,
   Charts,

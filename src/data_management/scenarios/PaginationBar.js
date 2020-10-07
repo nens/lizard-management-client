@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import styles from "./PaginationBar.css";
+import styles from "./PaginationBar.module.css";
 
 class PaginationBar extends Component {
     render() {

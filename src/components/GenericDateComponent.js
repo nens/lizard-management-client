@@ -11,13 +11,13 @@ import "moment/locale/nl";
 import InputMoment from "input-moment";
 import "input-moment/dist/input-moment.css";
 
-import styles from "./GenericDateComponent.css";
+import styles from "./GenericDateComponent.module.css";
 import "./GenericDateComponentSymbols.css";
-import displayStyles from "../styles/Display.css";
+import displayStyles from "../styles/Display.module.css";
 
-import formStyles from "../styles/Forms.css";
-import buttonStyles from "../styles/Buttons.css";
-import inputStyles from "../styles/Input.css";
+import formStyles from "../styles/Forms.module.css";
+import buttonStyles from "../styles/Buttons.module.css";
+import inputStyles from "../styles/Input.module.css";
 
 class GenericDateComponent extends Component {
   // constructor(props) {

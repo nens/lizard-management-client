@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import styles from "./Row.css";
+import styles from "./Row.module.css";
 import { addNotification } from "../../actions";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";

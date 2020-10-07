@@ -3,7 +3,7 @@ import { FormattedMessage } from "react-intl";
 import { connect } from "react-redux";
 import { dismissNotification } from "../actions";
 
-import styles from "./Snackbar.css";
+import styles from "./Snackbar.module.css";
 
 class Snackbar extends Component {
   render() {

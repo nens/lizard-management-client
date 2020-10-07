@@ -1,4 +1,4 @@
-import styles from "./TemplateTypeSelection.css";
+import styles from "./TemplateTypeSelection.module.css";
 import React, { Component } from "react";
 
 class TemplateTypeSelection extends Component {

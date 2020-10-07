@@ -8,10 +8,10 @@ import { FormattedMessage } from "react-intl";
 import SelectBoxSimple from "./SelectBoxSimple.js";
 import SelectBoxSearch from "./SelectBoxSearch.js";
 
-import styles from "./GenericSelectBoxComponent.css";
-import formStyles from "../styles/Forms.css";
-import buttonStyles from "../styles/Buttons.css";
-import inputStyles from "../styles/Input.css";
+import styles from "./GenericSelectBoxComponent.module.css";
+import formStyles from "../styles/Forms.module.css";
+import buttonStyles from "../styles/Buttons.module.css";
+import inputStyles from "../styles/Input.module.css";
 
 class GenericSelectBoxComponent extends Component {
   setLocalStateFromProps(props) {

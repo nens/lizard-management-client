@@ -4,7 +4,7 @@ import React, { Component } from "react";
 
 import ClearInputButton from "./ClearInputButton";
 
-import formStyles from "../styles/Forms.css";
+import formStyles from "../styles/Forms.module.css";
 
 interface TextInputProps {
   name: string,

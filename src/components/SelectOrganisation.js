@@ -4,9 +4,9 @@ import MDSpinner from "react-md-spinner";
 import { Scrollbars } from "react-custom-scrollbars";
 import ClearInputButton from "../components/ClearInputButton.js";
 
-import styles from "./SelectOrganisation.css";
-import formStyles from "../styles/Forms.css";
-import displayStyles from "../styles/Display.css";
+import styles from "./SelectOrganisation.module.css";
+import formStyles from "../styles/Forms.module.css";
+import displayStyles from "../styles/Display.module.css";
 
 class SelectOrganisation extends Component {
   constructor(props) {

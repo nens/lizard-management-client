@@ -6,10 +6,10 @@ import Ink from "react-ink";
 import PaginationBar from "./PaginationBar";
 import { FormattedMessage } from "react-intl";
 import { connect } from "react-redux";
-import styles from "./App.css";
-import gridStyles from "../../styles/Grid.css";
-import tableStyles from "../../styles/Table.css";
-import buttonStyles from "../../styles/Buttons.css";
+import styles from "./App.module.css";
+import gridStyles from "../../styles/Grid.module.css";
+import tableStyles from "../../styles/Table.module.css";
+import buttonStyles from "../../styles/Buttons.module.css";
 import { withRouter, NavLink } from "react-router-dom";
 import templatesIcon from "../../images/templates@3x.svg";
 

@@ -1,13 +1,13 @@
-import buttonStyles from "../../styles/Buttons.css";
+import buttonStyles from "../../styles/Buttons.module.css";
 import ContactsPicker from "./ContactsPicker";
-import gridStyles from "../../styles/Grid.css";
+import gridStyles from "../../styles/Grid.module.css";
 import groupsIcon from "../../images/group.svg";
 import Ink from "react-ink";
 import MDSpinner from "react-md-spinner";
 import PaginationBar from "./PaginationBar";
 import React, { Component } from "react";
-import styles from "./App.css";
-import tableStyles from "../../styles/Table.css";
+import styles from "./App.module.css";
+import tableStyles from "../../styles/Table.module.css";
 import { addNotification } from "../../actions";
 import { connect } from "react-redux";
 import { FormattedMessage } from "react-intl";

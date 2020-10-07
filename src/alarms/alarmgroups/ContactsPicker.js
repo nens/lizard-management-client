@@ -1,8 +1,8 @@
 import CSSTransition from "react-transition-group/CSSTransition";
-import formStyles from "../../styles/Forms.css";
+import formStyles from "../../styles/Forms.module.css";
 import MDSpinner from "react-md-spinner";
 import React, { Component } from "react";
-import styles from "./ContactsPicker.css";
+import styles from "./ContactsPicker.module.css";
 import { addNotification } from "../../actions";
 import { connect } from "react-redux";
 import { FormattedMessage } from "react-intl";

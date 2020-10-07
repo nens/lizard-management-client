@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import onClickOutside from "react-onclickoutside";
-import styles from "./LanguageSwitcher.css";
-import buttonStyles from "../styles/Buttons.css";
+import styles from "./LanguageSwitcher.module.css";
+import buttonStyles from "../styles/Buttons.module.css";
 
 
 class LanguageSwitcherContainer extends Component {

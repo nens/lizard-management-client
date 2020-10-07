@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import StepIndicator from "./StepIndicator";
-import inputStyles from "../styles/Input.css";
+import inputStyles from "../styles/Input.module.css";
 
 interface DisabledStepProps {
   step: number;

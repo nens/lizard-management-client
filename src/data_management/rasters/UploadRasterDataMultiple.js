@@ -5,10 +5,10 @@ import MDSpinner from "react-md-spinner";
 
 import classNames from "classnames";
 import Dropzone from "react-dropzone";
-import styles from "./UploadRasterData.css";
+import styles from "./UploadRasterData.module.css";
 import { FormattedMessage } from "react-intl";
 
-import buttonStyles from "../../styles/Buttons.css";
+import buttonStyles from "../../styles/Buttons.module.css";
 
 // // moment is required for datepicker
 // eslint-disable-next-line

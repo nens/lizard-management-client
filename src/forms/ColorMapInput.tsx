@@ -7,9 +7,9 @@ import SelectBox, { choicesT } from "./SelectBox";
 
 import { validatorResult } from "./validators";
 
-import styles from "./ColorMapInput.css";
-import formStyles from "../styles/Forms.css";
-import inputStyles from "../styles/Input.css";
+import styles from "./ColorMapInput.module.css";
+import formStyles from "../styles/Forms.module.css";
+import inputStyles from "../styles/Input.module.css";
 import CheckBox from "./CheckBox";
 
 import {

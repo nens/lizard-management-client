@@ -4,9 +4,9 @@ import { FormattedMessage } from "react-intl";
 import Scrollbars from "react-custom-scrollbars";
 import ClearButton from "../components/ClearButton.js";
 
-import styles from "./SlushBucket.css";
-import formStyles from "../styles/Forms.css";
-import inputStyles from "../styles/Input.css";
+import styles from "./SlushBucket.module.css";
+import formStyles from "../styles/Forms.module.css";
+import inputStyles from "../styles/Input.module.css";
 
 type choiceT = {value: string | number, display: string};
 export type choicesT = [choiceT];

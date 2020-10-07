@@ -2,10 +2,10 @@ import React, { Component } from "react";
 
 import Scrollbars from "react-custom-scrollbars";
 //import ClearInputButton from "../components/ClearInputButton.js";
-import displayStyles from "../styles/Display.css";
+import displayStyles from "../styles/Display.module.css";
 
-import styles from "./SelectBoxSimple.css";
-import formStyles from "../styles/Forms.css";
+import styles from "./SelectBoxSimple.module.css";
+import formStyles from "../styles/Forms.module.css";
 
 class SelectBoxSimple extends Component {
   constructor(props) {

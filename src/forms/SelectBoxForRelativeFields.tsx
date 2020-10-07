@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { FormattedMessage } from "react-intl";
 import ClearInputButton from "./ClearInputButton";
-import styles from "./SelectBox.css";
-import formStyles from "../styles/Forms.css";
+import styles from "./SelectBox.module.css";
+import formStyles from "../styles/Forms.module.css";
 
 interface MyProps {
     currentSelection: "Before" | "After" | null,

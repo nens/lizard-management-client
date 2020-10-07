@@ -4,9 +4,9 @@ import CheckMark from "./CheckMark";
 import StepIndicator from "./StepIndicator";
 import { FormattedMessage } from "react-intl";
 
-import formStyles from "../styles/Forms.css";
-import inputStyles from "../styles/Input.css";
-import buttonStyles from "../styles/Buttons.css";
+import formStyles from "../styles/Forms.module.css";
+import inputStyles from "../styles/Input.module.css";
+import buttonStyles from "../styles/Buttons.module.css";
 
 interface WithStepProps {
   step: number;

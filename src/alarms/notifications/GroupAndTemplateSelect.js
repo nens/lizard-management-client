@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { FormattedMessage } from "react-intl";
-import styles from "./GroupAndTemplateSelect.css";
-import formStyles from "../../styles/Forms.css";
-import gridStyles from "../../styles/Grid.css";
-import buttonStyles from "../../styles/Buttons.css";
+import styles from "./GroupAndTemplateSelect.module.css";
+import formStyles from "../../styles/Forms.module.css";
+import gridStyles from "../../styles/Grid.module.css";
+import buttonStyles from "../../styles/Buttons.module.css";
 
 class GroupAndTemplateSelect extends Component {
   constructor(props) {

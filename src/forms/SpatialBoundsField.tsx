@@ -2,11 +2,11 @@ import React, { Component } from "react";
 import { FormattedMessage } from "react-intl";
 import { getBoundsFromWmsLayer } from "../utils/getBoundsFromGeoServer";
 import ClearInputButton from "./ClearInputButton";
-import styles from "./SpatialBoundsField.css";
-import durationStyles from "./DurationField.css";
-import formStyles from "../styles/Forms.css";
-import inputStyles from "../styles/Input.css";
-import thresholdsStyles from './ThresholdsSelection.css';
+import styles from "./SpatialBoundsField.module.css";
+import durationStyles from "./DurationField.module.css";
+import formStyles from "../styles/Forms.module.css";
+import inputStyles from "../styles/Input.module.css";
+import thresholdsStyles from './ThresholdsSelection.module.css';
 
 interface SpatialBoundsProps {
     value: {

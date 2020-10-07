@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { FormattedMessage } from "react-intl";
 
-import styles from "./DurationField.css";
-import formStyles from "../styles/Forms.css";
-import inputStyles from "../styles/Input.css";
+import styles from "./DurationField.module.css";
+import formStyles from "../styles/Forms.module.css";
+import inputStyles from "../styles/Input.module.css";
 
 import { convertDurationObjToSeconds, convertSecondsToDurationObject } from "../utils/dateUtils";
 import SelectBoxForRelativeFields from "./SelectBoxForRelativeFields";

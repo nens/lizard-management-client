@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import Ink from "react-ink";
 import { FormattedMessage } from "react-intl";
 import { connect } from "react-redux";
-import gridStyles from "../../styles/Grid.css";
-import formStyles from "../../styles/Forms.css";
-import buttonStyles from "../../styles/Buttons.css";
+import gridStyles from "../../styles/Grid.module.css";
+import formStyles from "../../styles/Forms.module.css";
+import buttonStyles from "../../styles/Buttons.module.css";
 
 import { withRouter } from "react-router-dom";
 

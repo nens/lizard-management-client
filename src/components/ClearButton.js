@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import styles from "./ClearButton.css";
+import styles from "./ClearButton.module.css";
 
 class ClearButton extends Component {
   render() {
