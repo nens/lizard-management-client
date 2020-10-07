@@ -68,7 +68,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "rm -rf dist/*.zip && node scripts/build.js && scripts/makedist.sh",
+    "build": "mkdir -p dist/ && rm -rf dist/*.zip && react-scripts build && scripts/makedist.sh",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "release": "release-it --verbose",
