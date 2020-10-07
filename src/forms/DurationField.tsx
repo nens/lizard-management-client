@@ -106,11 +106,11 @@ export default class DurationField extends Component<DurationFieldProps, {}> {
   render() {
     const {
       name,
-      placeholder,
+      // placeholder,
       value,
-      validated,
-      valueChanged,
-      handleEnter,
+      // validated,
+      // valueChanged,
+      // handleEnter,
       readOnly
     } = this.props;
 

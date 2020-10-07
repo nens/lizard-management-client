@@ -1,14 +1,12 @@
 import React, { Component } from "react";
 import { FormattedMessage } from "react-intl";
 
-import MDSpinner from "react-md-spinner";
 import Scrollbars from "react-custom-scrollbars";
 import ClearButton from "../components/ClearButton.js";
 
 import styles from "./SlushBucket.css";
 import formStyles from "../styles/Forms.css";
 import inputStyles from "../styles/Input.css";
-import displayStyles from "../styles/Display.css";
 
 type choiceT = {value: string | number, display: string};
 export type choicesT = [choiceT];

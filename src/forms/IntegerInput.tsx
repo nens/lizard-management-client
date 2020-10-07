@@ -1,10 +1,6 @@
 // The main Form class
 
 import React, { Component } from "react";
-
-import ClearInputButton from "./ClearInputButton";
-
-import formStyles from "../styles/Forms.css";
 import TextInput from "./TextInput";
 
 interface IntegerInputProps {

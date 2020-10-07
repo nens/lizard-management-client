@@ -5,7 +5,6 @@ import Scrollbars from "react-custom-scrollbars";
 
 import ClearInputButton from "./ClearInputButton";
 
-import displayStyles from "../styles/Display.css";
 import styles from "./SelectBox.css";
 import formStyles from "../styles/Forms.css";
 import inputStyles from "../styles/Input.css";

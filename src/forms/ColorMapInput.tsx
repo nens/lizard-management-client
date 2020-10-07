@@ -15,10 +15,10 @@ import CheckBox from "./CheckBox";
 import {
   calculateNewStyleAndOptions,
   optionsHasLayers,
-  getColorMapFromStyle,
-  getColorMinFromStyle,
-  getColorMaxFromStyle,
-  getStyleFromOptions,
+  // getColorMapFromStyle,
+  // getColorMinFromStyle,
+  // getColorMaxFromStyle,
+  // getStyleFromOptions,
   validateStyleObj,
   colorMapTypeFromOptions
 } from "../utils/rasterOptionFunctions";
@@ -202,10 +202,10 @@ class ColorMapInput extends Component<ColorMapProps & InjectedIntlProps, ColorMa
       name,
       colorMaps,
       value,
-      valueChanged,
-      validated,
-      placeholder,
-      wizardStyle,
+      // valueChanged,
+      // validated,
+      // placeholder,
+      // wizardStyle,
       intl
     } = this.props;
 
