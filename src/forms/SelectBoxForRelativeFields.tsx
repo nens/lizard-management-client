@@ -60,7 +60,7 @@ export default class SelectBoxForRelativeFields extends Component<MyProps, MySta
             <div className={`${styles.SelectGeneralClass} form-input`}>
                 <input
                     style={{ caretColor: "transparent" }}
-                    id={`selectbox-name`}
+                    id={`selectbox-${name}`}
                     tabIndex={-1}
                     type="text"
                     autoComplete="false"

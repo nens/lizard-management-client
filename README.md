@@ -1,44 +1,145 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+lizard-management-client
+========================
 
-In the project directory, you can run:
+IMPORTANT
+=========
 
-### `yarn start`
+This project is in early stages of development. Expect stuff to not work.
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+![Screenshot](https://raw.githubusercontent.com/nens/lizard-management-client/master/screenshot.jpg?token=AAAcGWEdm9ezSIyVUaNIkOxDiImLdpkOks5Z3cBuwA%3D%3D)
 
-### `yarn test`
+This is the React/Redux-based management interface for Lizard.
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+It enables administrators and power-users to perform administrative tasks, such as:
 
-### `yarn build`
+- User management
+- Alarm management
+- 3DI scenario management
+- Billing etc.
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+Installation
+============
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- Required: A working nodejs and yarn installation.
+- In the root directory of the repository: `$ yarn install`
+- ...followed by `$ PROXY_USERNAME=<your_sso_username> PROXY_PASSWORD=<your_sso_password> yarn start`
 
-### `yarn eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+create-react-app
+================
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+The base skeleton for this project was generated using [create-react-app](https://github.com/facebookincubator/create-react-app). Have a look at CRA.md for its documentation.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Development
+===========
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+A pre-commit hook is configured to run [Prettier.js](https://github.com/prettier/prettier) every time, so the codebase stays in consistent form, style-wise.
+
+If you work on this project, please submit changes via Pull Requests and follow the [commit guidelines as outlined here](https://github.com/conventional-changelog/standard-version#commit-message-convention-at-a-glance).
+
+See [![Standard Version](https://img.shields.io/badge/release-standard%20version-brightgreen.svg)](https://github.com/conventional-changelog/standard-version)
+
+These commit messages will be used to auto-generate `CHANGELOG.md`.
+
+Have a look at the [buck-trap README](https://github.com/nens/buck-trap/blob/master/README.md) for more information about the release procedure.
+
+View development server on multiple devices
+======================================
+
+1. In lizard-nxt, go to the settings folder and make a file and name it 'localsettings.py'. In this file, write:
+ALLOWED_HOSTS = ['localhost', 'YOUR_HOSTNAME']
+
+2. In this repository then, look for the 'start.js' file under 'scripts'. Change the line that contains:
+const HOST = process.env.HOST || '0.0.0.0', replace the HOST value with your IP address.
+
+3. On another device you can now open de browser and go to 'http://YOUR_HOSTNAME:3000/
+
+
+
+
+CSS
+===
+
+The first versions of this project used Twitter Bootstrap 4 for the styling of some components like Buttons, Forms and was especially chosen because of its popular grid system.
+
+This worked well until the point where a lot of customization was needed. It required Ruby and Bundler to be installed, as well as some other dependencies. It also involved rebuilding the entire Bootstrap SCSS sourcetree every time.
+
+Twitter Bootstrap was replaced by CSS Grid and Flexbox entirely in [PR #21](https://github.com/nens/lizard-management-client/pull/12).
+
+This project now uses CSS modules almost entirely, save for some CSS reset code in `index.html`.
+
+
+
+Production bundle
+=================
+
+Run `$ GENERATE_SOURCEMAP=false yarn build` and look in the `build/` folder.
+
+
+Releasing
+=========
+
+Run `$ yarn run release` and answer the questions accordingly.
+
+
+Deployment
+=========
+
+For the deployment of frontend repositories we make use of an Ansible script in the lizard-nxt repository.
+More information is provided in the readme file of lizard-nxt: https://github.com/nens/lizard-nxt/blob/master/README.rst
+Look below the heading "Deployment clients".
+
+
+Internationalisation
+====================
+
+This client has l10n/i18n support via react-intl.
+
+English is the default/fallback language.
+Dutch is the only planned supported other language for now.
+
+Below is described how to automaticly extract translations.
+Currently this does not find the translations that are passed as formatted messages in attributes of react components,
+nor does it find messages translated with intl.formatMessage({ id: "<key>" });
+Even worse, it deletes existing translations that were made that way.
+Therefore we do not currently use below command, but keep translations in sync manually.
+
+To extract translation tags to the i18n catalog (this thus wrongly removes some translations and should not be used untill this problem is resolved): `$ yarn run i18n:extract`.
+
+
+
+See `src/translations/locales/[language].json`. (where language is 'nl', for now)
+
+
+Redux
+=====
+
+Redux is used for the app-wide notification system.
+
+
+React-router
+============
+
+React-router is used for the URL setup.
+
+
+Sentry
+======
+
+To be written...
+
+
+Browser development extensions
+==============================
+
+These extensions may help:
+
+- React Devtools for [Chrome](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en) or [Firefox](https://addons.mozilla.org/en-US/firefox/addon/react-devtools/)
+
+- Redux Devtools for [Chrome](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd?hl=en) or [Firefox](https://addons.mozilla.org/en-Gb/firefox/addon/remotedev/)
