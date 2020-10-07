@@ -1,0 +1,27 @@
+.AlarmRow {
+  /* cursor: pointer; */
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 10px 0 0 0;
+}
+.Active {
+  background-color: #a2c6bf;
+}
+.InActive {
+  background-color: #c9c9c9;
+}
+
+.ActiveIndicator {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  padding: 5px;
+  color: #fff;
+  margin: 5px 20px 0 0;
+  width: 125px;
+  height: 40px;
+}

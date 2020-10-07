@@ -1,0 +1,27 @@
+.Detail {
+}
+
+.TemplateTypeBadge {
+  border: 1px solid #333;
+  font-size: 12px;
+  padding: 2px 10px 2px 10px;
+  border-radius: 3px;
+  margin: 0 5px 0 5px;
+  text-transform: uppercase;
+  width: 70px;
+  text-align: center;
+}
+.ParameterTable {
+  width: 100%;
+}
+.ParameterTable td {
+  font-size: 14px;
+  padding: 5px;
+}
+.ParameterTable tbody tr {
+  cursor: pointer;
+}
+.ParameterTable thead td {
+  font-weight: 500;
+  text-transform: uppercase;
+}

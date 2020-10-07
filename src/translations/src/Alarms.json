@@ -1,0 +1,38 @@
+[
+  {
+    "id": "alarms.alarms_breadcrumb",
+    "defaultMessage": "Alarms"
+  },
+  {
+    "id": "alarms.notifications",
+    "defaultMessage": "Notifications"
+  },
+  {
+    "id": "alarms.manage_notifications",
+    "defaultMessage": "Manage notifications"
+  },
+  {
+    "id": "alarms.alarms_groups",
+    "defaultMessage": "Groups"
+  },
+  {
+    "id": "alarms.recipient_management",
+    "defaultMessage": "Recipient management"
+  },
+  {
+    "id": "alarms.alarms_templates",
+    "defaultMessage": "Templates"
+  },
+  {
+    "id": "alarms.alarms_template_management",
+    "defaultMessage": "Alarm template management"
+  },
+  {
+    "id": "alarms.group_messages",
+    "defaultMessage": "Group messages"
+  },
+  {
+    "id": "alarms.send_group_messages_subtitle",
+    "defaultMessage": "Send one-off messages to groups of recipients"
+  }
+]

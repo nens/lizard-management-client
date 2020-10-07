@@ -1,0 +1,26 @@
+/* .UploadBox {
+  border-width: 2px;
+  border-style: solid;
+  border-color: grey;
+} */
+
+.DropZoneContainer {
+  border: 4px dashed #ced4da;
+  border-radius: .25rem;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+
+
+  width: 100%;
+  height: 200px;
+
+  margin-top: 10px;
+  marbin-bottom: 10px;
+}
+
+.GreyedText {
+  color: #ced4da
+}

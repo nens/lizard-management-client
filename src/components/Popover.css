@@ -1,0 +1,27 @@
+.PopoverContainer {
+  position: relative;
+}
+.Popover {
+  background-color: #fff;
+  position: absolute;
+  box-shadow: 0 2px 6px 1px rgba(0, 0, 0, 0.3);
+  min-width: 200px;
+  padding: 5px;
+  margin: 5px;
+  width: 125px;
+  left: -25px;
+  z-index: 999999;
+  top: 25px;
+}
+.ListItem {
+  background: #fff;
+  padding: 10px 5px 10px 5px;
+  cursor: pointer;
+  margin: 10px 0 10px 0;
+}
+.ListItem span {
+  margin-left: 15px;
+}
+.ListItem:hover {
+  background-color: #e8e8e8;
+}

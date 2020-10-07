@@ -1,0 +1,125 @@
+.tableContainer{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.tableSearch{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.tableSearchTop {
+  display: flex;
+  flex-direction: row;
+}
+
+.tableHeader {
+  display: flex;
+  align-items: center;
+  min-width: 800px;
+  color: #858E9C;
+  font-weight: bold;
+  padding: 10px;
+  display: flex;
+  border-bottom: 2px solid #858E9C;
+  justify-content: space-between;
+}
+.tableBody {
+  min-width: 800px;
+  padding: 10px;
+  flex: 1 0 0;
+  display: flex;
+  border-bottom: 1px solid #D8D8D8;
+  justify-content: space-between;
+}
+.tableFooter {
+  color: #858E9C;
+  font-weight: bold;
+  padding: 10px;
+  padding-right: 0px;
+  display: flex;
+  border-top: 1px solid #858E9C;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tableFooterBelow{
+  padding-top: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.tableInfoAndPagination{
+  display: flex;
+  flex: 1 0 0;
+  flex-direction: column;
+  align-items: center;
+}
+
+.tableCheckbox {
+  flex: 0.5;
+  padding: 0px 10px 0px 10px;
+  flex-direction: column;
+  justify-content: center;
+  display: flex;
+}
+.tableName {
+  flex: 4;
+  padding: 0px 10px 0px 10px;
+  flex-direction: column;
+  justify-content: center;
+  display: flex;
+  flex-shrink: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tableDescription {
+  flex: 5;
+  padding: 0px 10px 0px 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.TableSupplier {
+  flex: 3;
+  padding: 0px 10px 0px 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.TableObservationType {
+  flex: 2;
+  padding: 0px 10px 0px 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-direction: column;
+  justify-content: center;
+  display: flex;
+}
+.tableUpload {
+  display: flex;
+  padding: 0px 10px 0px 10px;
+  flex: 1;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.tableFooterLeftFiller{
+  display: flex;
+  flex: 2 0 0;
+}
+.tableFooterDeleteRasters {
+  /* display: flex; */
+  flex: 2 0 0;
+  justify-content: flex-end;
+  padding: 0px 0px 0px 10px;
+}
+.tableFooterDeleteRasters div {
+  float: right;
+  margin-bottom: -5px;
+}
+.tableFooterDeleteRasters button {
+  margin-bottom: 5px;
+}
+.tableFooterNumberOfRasters{
+  font-weight: normal;
+}
