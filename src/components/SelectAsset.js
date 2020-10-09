@@ -1,8 +1,8 @@
 import debounce from "lodash.debounce";
 import React, { Component } from "react";
 import MDSpinner from "react-md-spinner";
-import styles from "./SelectAsset.css";
-import formStyles from "../styles/Forms.css";
+import styles from "./SelectAsset.module.css";
+import formStyles from "../styles/Forms.module.css";
 import { Scrollbars } from "react-custom-scrollbars";
 
 class SelectAsset extends Component {

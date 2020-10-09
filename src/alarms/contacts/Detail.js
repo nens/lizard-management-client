@@ -1,10 +1,10 @@
-import buttonStyles from "../../styles/Buttons.css";
-import formStyles from "../../styles/Forms.css";
-import gridStyles from "../../styles/Grid.css";
+import buttonStyles from "../../styles/Buttons.module.css";
+import formStyles from "../../styles/Forms.module.css";
+import gridStyles from "../../styles/Grid.module.css";
 import Ink from "react-ink";
 import MDSpinner from "react-md-spinner";
 import React, { Component } from "react";
-import styles from "./Detail.css";
+import styles from "./Detail.module.css";
 import { addNotification } from "../../actions";
 import { connect } from "react-redux";
 import { FormattedMessage } from "react-intl";

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import onClickOutside from "react-onclickoutside";
-import styles from "./Popover.css";
+import styles from "./Popover.module.css";
 
 class PopoverContainer extends Component {
   constructor(props) {

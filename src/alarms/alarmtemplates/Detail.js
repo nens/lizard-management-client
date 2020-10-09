@@ -4,12 +4,12 @@ import Ink from "react-ink";
 import { FormattedMessage } from "react-intl";
 import { addNotification } from "../../actions";
 import { connect } from "react-redux";
-import styles from "./Detail.css";
+import styles from "./Detail.module.css";
 import TemplateTypeSelection from "./TemplateTypeSelection";
-import tableStyles from "../../styles/Table.css";
-import gridStyles from "../../styles/Grid.css";
-import buttonStyles from "../../styles/Buttons.css";
-import formStyles from "../../styles/Forms.css";
+import tableStyles from "../../styles/Table.module.css";
+import gridStyles from "../../styles/Grid.module.css";
+import buttonStyles from "../../styles/Buttons.module.css";
+import formStyles from "../../styles/Forms.module.css";
 import { withRouter } from "react-router-dom";
 import { availableParameters } from "./NewTemplate";
 

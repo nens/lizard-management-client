@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { FormattedMessage } from "react-intl";
 import ClearInputButton from "./ClearInputButton";
-import styles from "./SelectBox.css";
-import formStyles from "../styles/Forms.css";
+import styles from "./SelectBox.module.css";
+import formStyles from "../styles/Forms.module.css";
 
 interface MyProps {
     currentSelection: "Before" | "After" | null,
@@ -60,7 +60,7 @@ export default class SelectBoxForRelativeFields extends Component<MyProps, MySta
             <div className={`${styles.SelectGeneralClass} form-input`}>
                 <input
                     style={{ caretColor: "transparent" }}
-                    id={`selectbox-${name}`}
+                    id={`selectbox-name`}
                     tabIndex={-1}
                     type="text"
                     autoComplete="false"

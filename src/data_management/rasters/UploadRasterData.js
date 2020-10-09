@@ -8,8 +8,8 @@ import { FormattedMessage } from "react-intl";
 
 import { UploadRasterDataMultiple } from "./UploadRasterDataMultiple";
 
-import buttonStyles from "../../styles/Buttons.css";
-import gridStyles from "../../styles/Grid.css";
+import buttonStyles from "../../styles/Buttons.module.css";
+import gridStyles from "../../styles/Grid.module.css";
 import { fetchRasterV3 } from "../../api/rasters";
 
 class UploadRasterDataModel extends Component {

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { FormattedMessage, injectIntl, InjectedIntlProps } from "react-intl";
+import { injectIntl, InjectedIntlProps } from "react-intl";
 import SelectBoxSearch from "../components/SelectBoxSearch";
 import SelectTimeseriesSearch from "../components/SelectTimeseriesSearch";
 import { validatorResult } from "./validators";

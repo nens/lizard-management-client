@@ -3,11 +3,11 @@ import MDSpinner from "react-md-spinner";
 import Ink from "react-ink";
 import { FormattedMessage } from "react-intl";
 import { connect } from "react-redux";
-import styles from "./NewTemplate.css";
-import tableStyles from "../../styles/Table.css";
-import gridStyles from "../../styles/Grid.css";
-import buttonStyles from "../../styles/Buttons.css";
-import formStyles from "../../styles/Forms.css";
+import styles from "./NewTemplate.module.css";
+import tableStyles from "../../styles/Table.module.css";
+import gridStyles from "../../styles/Grid.module.css";
+import buttonStyles from "../../styles/Buttons.module.css";
+import formStyles from "../../styles/Forms.module.css";
 import { withRouter } from "react-router-dom";
 
 export const availableParameters = [

@@ -1,6 +1,6 @@
-import formStyles from "../../styles/Forms.css";
+import formStyles from "../../styles/Forms.module.css";
 import React, { Component } from "react";
-import styles from "./ActionBar.css";
+import styles from "./ActionBar.module.css";
 import { FormattedMessage } from "react-intl";
 
 class ActionBar extends Component {

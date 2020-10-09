@@ -2,8 +2,8 @@ import debounce from "lodash.debounce";
 import React, { Component } from "react";
 import { injectIntl } from "react-intl";
 import MDSpinner from "react-md-spinner";
-import styles from "./SelectRaster.css";
-import formStyles from "../styles/Forms.css";
+import styles from "./SelectRaster.module.css";
+import formStyles from "../styles/Forms.module.css";
 import { Scrollbars } from "react-custom-scrollbars";
 import { fetchRasterV3, listTemporalRastersContainingV3 } from "../api/rasters";
 

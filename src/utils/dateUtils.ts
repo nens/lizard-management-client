@@ -1,6 +1,6 @@
-import { durationObject } from "./isoUtils";
+import { durationObject as DurationObject } from "./isoUtils";
 
-export const convertDurationObjToSeconds = (durationObject: durationObject): number => {
+export const convertDurationObjToSeconds = (durationObject: DurationObject): number => {
   const { days, hours, minutes, seconds } = durationObject;
   // 1 day = 86400 seconds; 1 hour = 60 * 60 = 3600 seconds
   const totalNumberOfSeconds = days * 86400 + hours * 3600 + minutes * 60 + seconds;

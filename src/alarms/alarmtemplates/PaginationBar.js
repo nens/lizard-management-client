@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import styles from "./PaginationBar.css";
-import buttonStyles from "../../styles/Buttons.css";
+import styles from "./PaginationBar.module.css";
+import buttonStyles from "../../styles/Buttons.module.css";
 
 class PaginationBar extends Component {
   render() {

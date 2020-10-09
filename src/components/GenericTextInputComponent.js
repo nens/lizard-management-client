@@ -7,10 +7,10 @@ import StepIndicator from "./StepIndicator";
 import { FormattedMessage } from "react-intl";
 import ClearInputButton from "./ClearInputButton.js";
 
-import styles from "./GenericTextInputComponent.css";
-import formStyles from "../styles/Forms.css";
-import buttonStyles from "../styles/Buttons.css";
-import inputStyles from "../styles/Input.css";
+import styles from "./GenericTextInputComponent.module.css";
+import formStyles from "../styles/Forms.module.css";
+import buttonStyles from "../styles/Buttons.module.css";
+import inputStyles from "../styles/Input.module.css";
 
 class GenericTextInputComponent extends Component {
   constructor(props) {

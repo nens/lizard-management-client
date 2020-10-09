@@ -1,13 +1,6 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
-
-import CheckMark from "./CheckMark";
 import StepIndicator from "./StepIndicator";
-import { FormattedMessage } from "react-intl";
-
-import formStyles from "../styles/Forms.css";
-import inputStyles from "../styles/Input.css";
-import buttonStyles from "../styles/Buttons.css";
+import inputStyles from "../styles/Input.module.css";
 
 interface DisabledStepProps {
   step: number;

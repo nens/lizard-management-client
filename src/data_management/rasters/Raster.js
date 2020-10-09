@@ -1,12 +1,12 @@
 import rasterIcon from "../../images/rasters@3x.svg";
-import buttonStyles from "../../styles/Buttons.css";
-import rasterTableStyles from "../../styles/RasterWmsTable.css";
+import buttonStyles from "../../styles/Buttons.module.css";
+import rasterTableStyles from "../../styles/RasterWmsTable.module.css";
 import Ink from "react-ink";
 import MDSpinner from "react-md-spinner";
 import { Scrollbars } from "react-custom-scrollbars";
 import PaginationBar from "./PaginationBar";
 import React, { Component } from "react";
-import styles from "./App.css";
+import styles from "./App.module.css";
 import { addNotification } from "../../actions";
 import { connect } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";

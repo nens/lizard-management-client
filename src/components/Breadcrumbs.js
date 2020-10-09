@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
-import styles from "./Breadcrumbs.css";
-import gridStyles from "./../styles/Grid.css";
+import styles from "./Breadcrumbs.module.css";
+import gridStyles from "./../styles/Grid.module.css";
 
 
 class Breadcrumbs extends Component {

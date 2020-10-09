@@ -17,7 +17,7 @@ export const nonEmptyString = (str: string): validatorResult => {
     return "Please enter a string.";
   }
 
-  if (str.length == 0) {
+  if (str.length === 0) {
     return "Please enter a value.";
   }
   return false;

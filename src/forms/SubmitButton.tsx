@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { FormattedMessage } from "react-intl";
 
-import buttonStyles from "../styles/Buttons.css";
-import inputStyles from "../styles/Input.css";
+import buttonStyles from "../styles/Buttons.module.css";
+import inputStyles from "../styles/Input.module.css";
 
 interface SubmitButtonProps {
   notValidatedSteps: number[],

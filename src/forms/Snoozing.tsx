@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { FormattedMessage, injectIntl, InjectedIntlProps } from "react-intl";
-import styles from './Snoozing.css';
-import formStyles from "../styles/Forms.css";
+import styles from './Snoozing.module.css';
+import formStyles from "../styles/Forms.module.css";
 
 interface MyProps {
     name: string,

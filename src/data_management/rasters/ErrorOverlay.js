@@ -1,11 +1,11 @@
 import CSSTransition from "react-transition-group/CSSTransition";
 import MDSpinner from "react-md-spinner";
 import React, { Component } from "react";
-import styles from "../../components/ErrorOverlay.css";
+import styles from "../../components/ErrorOverlay.module.css";
 import Lottie from "react-lottie";
 import * as animationSucces from "./success.json";
 import * as animationError from "./error.json";
-import buttonStyles from "../../styles/Buttons.css";
+import buttonStyles from "../../styles/Buttons.module.css";
 import { FormattedMessage } from "react-intl";
 
 // Based on the OrganisationSwitcher, this overlay gets called when an error occurs during the upload process.

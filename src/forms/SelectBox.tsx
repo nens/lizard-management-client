@@ -5,10 +5,9 @@ import Scrollbars from "react-custom-scrollbars";
 
 import ClearInputButton from "./ClearInputButton";
 
-import displayStyles from "../styles/Display.css";
-import styles from "./SelectBox.css";
-import formStyles from "../styles/Forms.css";
-import inputStyles from "../styles/Input.css";
+import styles from "./SelectBox.module.css";
+import formStyles from "../styles/Forms.module.css";
+import inputStyles from "../styles/Input.module.css";
 
 type displayStringsT = {[key: string]: string};
 type choiceT = [string|number, string] | [string|number, string, string]

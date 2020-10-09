@@ -1,13 +1,13 @@
 import wmsIcon from "../../images/wms@3x.svg";
-import buttonStyles from "../../styles/Buttons.css";
-import gridStyles from "../../styles/Grid.css";
-import wmsLayerTableStyles from "../../styles/RasterWmsTable.css";
+import buttonStyles from "../../styles/Buttons.module.css";
+import gridStyles from "../../styles/Grid.module.css";
+import wmsLayerTableStyles from "../../styles/RasterWmsTable.module.css";
 import Ink from "react-ink";
 import MDSpinner from "react-md-spinner";
 import { Scrollbars } from "react-custom-scrollbars";
 import PaginationBar from "./PaginationBar";
 import React, { Component } from "react";
-import styles from "../rasters/App.css";
+import styles from "../rasters/App.module.css";
 import { addNotification } from "../../actions";
 import { connect } from "react-redux";
 import { FormattedMessage } from "react-intl";

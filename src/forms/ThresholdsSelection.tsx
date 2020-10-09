@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { FormattedMessage, injectIntl, InjectedIntlProps } from "react-intl";
-import formStyles from "../styles/Forms.css";
-import styles from './ThresholdsSelection.css';
+import formStyles from "../styles/Forms.module.css";
+import styles from './ThresholdsSelection.module.css';
 import { validatorResult } from "./validators";
 
 interface Threshold {

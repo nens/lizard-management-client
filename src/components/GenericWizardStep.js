@@ -7,10 +7,10 @@ import StepIndicator from "./StepIndicator";
 import { FormattedMessage } from "react-intl";
 import ClearInputButton from "./ClearInputButton.js";
 
-import styles from "./GenericWizardStep.css";
-import formStyles from "../styles/Forms.css";
-import buttonStyles from "../styles/Buttons.css";
-import displayStyles from "../styles/Display.css";
+import styles from "./GenericWizardStep.module.css";
+import formStyles from "../styles/Forms.module.css";
+import buttonStyles from "../styles/Buttons.module.css";
+import displayStyles from "../styles/Display.module.css";
 
 class GenericWizardStep extends Component {
   render() {

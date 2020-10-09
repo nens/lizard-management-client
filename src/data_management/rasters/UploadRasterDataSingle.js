@@ -1,19 +1,13 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import MDSpinner from "react-md-spinner";
 
 import classNames from "classnames";
 import Dropzone from "react-dropzone";
-import styles from "./UploadRasterData.css";
+import styles from "./UploadRasterData.module.css";
 import { FormattedMessage } from "react-intl";
-
-import ClearInputButton from "../../components/ClearInputButton.js";
-
-import formStyles from "../../styles/Forms.css";
-import buttonStyles from "../../styles/Buttons.css";
-import inputStyles from "../../styles/Input.css";
-import gridStyles from "../../styles/Grid.css";
+import buttonStyles from "../../styles/Buttons.module.css";
+import gridStyles from "../../styles/Grid.module.css";
 import { uploadRasterFile } from "../../api/rasters";
 
 class UploadRasterDataSingleModel extends Component {

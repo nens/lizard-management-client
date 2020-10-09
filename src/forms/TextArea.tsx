@@ -3,7 +3,7 @@ import React, { Component } from "react";
 
 import ClearInputButton from "./ClearInputButton";
 
-import formStyles from "../styles/Forms.css";
+import formStyles from "../styles/Forms.module.css";
 
 interface TextAreaProps {
   name: string,
@@ -23,10 +23,7 @@ export default class TextArea extends Component<TextAreaProps, {}> {
       name,
       placeholder,
       value,
-      validated,
-      valueChanged,
       readOnly,
-      handleEnter
     } = this.props;
 
     return (

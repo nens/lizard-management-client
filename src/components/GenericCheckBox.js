@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
-import styles from "./GenericCheckBox.css";
-import inputStyles from "../styles/Input.css";
+import styles from "./GenericCheckBox.module.css";
+import inputStyles from "../styles/Input.module.css";
 
 class GenericCheckBox extends Component {
   constructor(props) {

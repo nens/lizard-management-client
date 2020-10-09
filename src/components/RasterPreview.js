@@ -19,7 +19,7 @@ import React, { Component } from "react";
 import { FormattedMessage, injectIntl } from "react-intl";
 import { Map, Marker, TileLayer, WMSTileLayer } from "react-leaflet";
 import SelectAsset from "../components/SelectAsset";
-import styles from "./RasterPreview.css";
+import styles from "./RasterPreview.module.css";
 import { mapBoxAccesToken} from '../mapboxConfig';
 
 // Center of the map if no raster yet

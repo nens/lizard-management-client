@@ -1,11 +1,11 @@
 import ActionBar from "./ActionBar";
-import buttonStyles from "../../styles/Buttons.css";
-import gridStyles from "../../styles/Grid.css";
+import buttonStyles from "../../styles/Buttons.module.css";
+import gridStyles from "../../styles/Grid.module.css";
 import GroupMessage from "./GroupMessage";
 import MDSpinner from "react-md-spinner";
 import React, { Component } from "react";
-import styles from "./Detail.css";
-import tableStyles from "../../styles/Table.css";
+import styles from "./Detail.module.css";
+import tableStyles from "../../styles/Table.module.css";
 import { addNotification } from "../../actions";
 import { connect } from "react-redux";
 import { FormattedMessage } from "react-intl";

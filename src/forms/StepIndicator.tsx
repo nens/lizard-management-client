@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import styles from "./StepIndicator.css";
+import styles from "./StepIndicator.module.css";
 
 interface StepIndicatorProps {
   indicator: number,

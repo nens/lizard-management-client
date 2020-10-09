@@ -6,8 +6,8 @@ import { Scrollbars } from "react-custom-scrollbars";
 import { FormattedMessage } from "react-intl";
 import SearchBox from "../../components/SearchBox";
 import PaginationBar from "./PaginationBar";
-import buttonStyles from "../../styles/Buttons.css";
-import scenarioStyle from './Scenarios.css';
+import buttonStyles from "../../styles/Buttons.module.css";
+import scenarioStyle from './Scenarios.module.css';
 import scenariosIcon from "../../images/3di@3x.svg";
 
 class Scenarios extends Component {

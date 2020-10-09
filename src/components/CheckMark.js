@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import formStyles from "../styles/Forms.css";
+import formStyles from "../styles/Forms.module.css";
 
 class CheckMark extends Component {
   render() {

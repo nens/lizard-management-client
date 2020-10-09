@@ -1,14 +1,12 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
 
 import CheckMark from "./CheckMark";
 import StepIndicator from "./StepIndicator";
 import { FormattedMessage } from "react-intl";
-import ClearInputButton from "./ClearInputButton";
 
-import formStyles from "../styles/Forms.css";
-import inputStyles from "../styles/Input.css";
-import buttonStyles from "../styles/Buttons.css";
+import formStyles from "../styles/Forms.module.css";
+import inputStyles from "../styles/Input.module.css";
+import buttonStyles from "../styles/Buttons.module.css";
 
 interface WithStepProps {
   step: number;
@@ -36,15 +34,10 @@ class WithStep extends Component<WithStepProps, {}> {
       errors,
       showCheck,
       showErrors,
-      nextStep,
       selectStep,
       wizardStyle,
       isLastStep
     } = this.props;
-    /* const mustShowClearButton = modelValue !== ""; */
-
-    const mustShowClearButton = true;
-    const resetModelValue = () => null;
 
     return (
       <div id={"Step-" + step}>

@@ -1,6 +1,6 @@
-import buttonStyles from "../../styles/Buttons.css";
+import buttonStyles from "../../styles/Buttons.module.css";
 import React, { Component } from "react";
-import styles from "./AlarmRow.css";
+import styles from "./AlarmRow.module.css";
 import { addNotification } from "../../actions";
 import { connect } from "react-redux";
 import { FormattedMessage } from "react-intl";

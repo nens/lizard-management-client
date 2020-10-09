@@ -1,8 +1,8 @@
-import buttonStyles from "../../styles/Buttons.css";
+import buttonStyles from "../../styles/Buttons.module.css";
 import CSSTransition from "react-transition-group/CSSTransition";
-import formStyles from "../../styles/Forms.css";
+import formStyles from "../../styles/Forms.module.css";
 import React, { Component } from "react";
-import styles from "./ConfigureThreshold.css";
+import styles from "./ConfigureThreshold.module.css";
 import ThresholdChart from "./ThresholdChart";
 import { FormattedMessage } from "react-intl";
 import { Scrollbars } from "react-custom-scrollbars";

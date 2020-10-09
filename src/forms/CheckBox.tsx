@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
-import styles from "./CheckBox.css";
-import inputStyles from "../styles/Input.css";
+import styles from "./CheckBox.module.css";
+import inputStyles from "../styles/Input.module.css";
 
 interface CheckBoxProps {
   label: {},

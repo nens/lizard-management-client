@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Ink from "react-ink";
-import styles from "./AppTile.css";
+import styles from "./AppTile.module.css";
 import { withRouter } from "react-router-dom";
 import { injectIntl } from "react-intl";
 

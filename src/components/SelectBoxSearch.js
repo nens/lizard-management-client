@@ -4,10 +4,10 @@ import MDSpinner from "react-md-spinner";
 import { Scrollbars } from "react-custom-scrollbars";
 import ClearInputButton from "../components/ClearInputButton.js";
 
-import styles from "./SelectBoxSearch.css";
-import formStyles from "../styles/Forms.css";
-import displayStyles from "../styles/Display.css";
-import inputStyles from "../styles/Input.css";
+import styles from "./SelectBoxSearch.module.css";
+import formStyles from "../styles/Forms.module.css";
+import displayStyles from "../styles/Display.module.css";
+import inputStyles from "../styles/Input.module.css";
 
 class SelectBoxSearch extends Component {
   constructor(props) {

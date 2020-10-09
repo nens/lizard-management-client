@@ -1,8 +1,8 @@
 import AddButton from "../../components/AddButton";
-import buttonStyles from "../../styles/Buttons.css";
-import gridStyles from "../../styles/Grid.css";
+import buttonStyles from "../../styles/Buttons.module.css";
+import gridStyles from "../../styles/Grid.module.css";
 import React, { Component } from "react";
-import styles from "./RecipientGroups.css";
+import styles from "./RecipientGroups.module.css";
 import { addNotification } from "../../actions";
 import { connect } from "react-redux";
 import { FormattedMessage } from "react-intl";
