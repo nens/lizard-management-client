@@ -1,6 +1,4 @@
 import React, { Component } from "react";
-// import Ink from "react-ink";
-// import { FormattedMessage } from "react-intl";
 import formStyles from "../../styles/Forms.module.css";
 import styles from "./ActionBar.module.css";
 

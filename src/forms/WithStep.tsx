@@ -34,7 +34,6 @@ class WithStep extends Component<WithStepProps, {}> {
       errors,
       showCheck,
       showErrors,
-      // nextStep,
       selectStep,
       wizardStyle,
       isLastStep

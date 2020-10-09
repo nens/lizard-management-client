@@ -23,10 +23,7 @@ export default class TextArea extends Component<TextAreaProps, {}> {
       name,
       placeholder,
       value,
-      // validated,
-      // valueChanged,
       readOnly,
-      // handleEnter
     } = this.props;
 
     return (

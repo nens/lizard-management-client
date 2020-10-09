@@ -24,8 +24,6 @@ export default class TextInput extends Component<TextInputProps, {}> {
       name,
       placeholder,
       value,
-      // validated,
-      // valueChanged,
       handleEnter,
       readOnly
     } = this.props;
