@@ -9,3 +9,5 @@ export default {
 export const world = () => <Test name="world" />;
 
 export const people = () => <Test name="people" />;
+
+export const raster = () => <Test name="raster management" />;
