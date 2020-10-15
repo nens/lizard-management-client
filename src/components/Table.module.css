@@ -1,0 +1,28 @@
+.Table > div {
+  display: grid;
+  /* grid-template-columns: 3fr 2fr 2fr 2fr ; */
+  /* grid-template-columns: 25% 25% 25% 25% ; */
+  grid-template-columns: 20% 20% 20% 20% 20% ;
+}
+.Table > div:nth-child(2) {
+  display: grid;
+  /* grid-template-columns: 3fr 2fr 2fr 2fr ; */
+  /* grid-template-columns: 25% 25% 25% 25% ; */
+  grid-template-columns: 20% 20% 20% 20% 20% ;
+  height: 500px;
+  overflow-y: scroll;
+}
+
+.Table > div > span {
+  padding-left: 9px;
+  padding-right: 9px;
+  padding-top: 37px;
+  padding-bottom: 37px;
+  /* border-color: black;
+  border-style: solid; */
+  /* border-width: 0;
+  border-left-width: 1px;
+  border-top-width: 1px; */
+
+  overflow: hidden;
+}
