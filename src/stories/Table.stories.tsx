@@ -30,5 +30,5 @@ const rasterItems70Parsed = JSON.parse(rasterData70Items);
 //   });
 // });
 
-export const raster = () => <Table name="raster management" tableData={rasterItems70Parsed} />;
+export const raster = () => <Table tableData={rasterItems70Parsed} gridTemplateColumns={"10% 20% 20% 20% 20% 10%"} columnDefenitions={[]} />;
 
