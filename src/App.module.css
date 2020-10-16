@@ -1,3 +1,8 @@
+:root {
+  --color-dark-main: #354B61;
+  --color-ligth-main: #FFFFFF;
+}
+
 .App {
   display: flex;
   min-height: 100vh;

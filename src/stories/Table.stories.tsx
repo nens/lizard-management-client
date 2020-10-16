@@ -2,6 +2,7 @@ import React from 'react';
 import Table from './../components/Table';
 // import { listRastersForTable} from "../api/rasters";
 import { rasterData70Items } from './TableStoriesData';
+import {styles} from '../App.module.css';
 
 
 export default {
@@ -32,25 +33,35 @@ const rasterItems70Parsed = JSON.parse(rasterData70Items);
 
 const rasterSourceColumnDefenitions = [
   {
-    title: "Name",
+    titleRenderFunction: () => <input type="checkbox"></input>,
+    renderFunction: (row: any) => <input type="checkbox"></input>,
+    sortable: false,
+  },
+  {
+    titleRenderFunction: () => "Name",
     renderFunction: (row: any) => row.name,
     sortable: true,
   },
   {
-    title: "Code",
+    titleRenderFunction: () =>  "Code",
     renderFunction: (row: any) => row.supplier_code,
     sortable: true,
   },
   {
-    title: "Temporal",
+    titleRenderFunction: () =>  "Temporal",
     renderFunction: (row: any) => row.temporal === true? "Yes" : "No",
     sortable: false,
   },
   {
-    title: "Size",
+    titleRenderFunction: () =>  "Size",
     renderFunction: (row: any) => "2.5gb",
     sortable: true,
-  }
+  },
+  {
+    titleRenderFunction: () =>  "Actions",
+    renderFunction: (row: any) => "Actions",
+    sortable: false,
+  },
 ];
 // tableRow.temporal === true? "Yes" : "No"
 /*
