@@ -19,10 +19,11 @@ const Table: React.FC<TestProps> = ({tableData, gridTemplateColumns, columnDefen
       <div  className={styles.Table}>
         <div style={{gridTemplateColumns: gridTemplateColumns}}>
           <span><input type="checkbox"></input></span>
-          <span>Name</span>
+          {/* <span>Name</span>
           <span>Code</span>
           <span>temporal</span>
-          <span>Size</span>
+          <span>Size</span> */}
+          {columnDefenitions.map(defenition=><span>{defenition.title}</span>)}
           <span>Actions</span>
         </div>
         <div style={{gridTemplateColumns: gridTemplateColumns}}>
@@ -31,10 +32,11 @@ const Table: React.FC<TestProps> = ({tableData, gridTemplateColumns, columnDefen
             return (
               <>
                 <span><input type="checkbox"></input></span>
-                <span>{tableRow.name}</span>
+                {/* <span>{tableRow.name}</span>
                 <span>{tableRow.supplier_code}</span>
                 <span>{tableRow.temporal === true? "Yes" : "No"}</span>
-                <span>2.5gb</span>
+                <span>2.5gb</span> */}
+                {columnDefenitions.map(defenition=><span>{defenition.renderFunction(tableRow)}</span>)}
                 <span>ACTIONS</span>
               </>
             );
