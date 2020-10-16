@@ -3,3 +3,5 @@
 - what happens when all selected but user goes to next page? unselect all?
 - how do I retrieve raster source size ?
 - pagination in design. Although the new pagination cannot jump to page it may still know: to jump back to first page. What the current page is.
+- include 3di scenarios (hoe gaat de gebruiker dit nu filteren?)
+- 3di als er net een stoepje verkeerd ligt klopt de hele simulatie niet meer. Kan 3di uitrekenen waar potentiele butterfly-> hurricanes in het model liggen?
