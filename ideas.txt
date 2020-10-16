@@ -2,3 +2,4 @@
 - maybe we can check if sum checkbox below the table will work better ?
 - what happens when all selected but user goes to next page? unselect all?
 - how do I retrieve raster source size ?
+- pagination in design. Although the new pagination cannot jump to page it may still know: to jump back to first page. What the current page is.

@@ -7,14 +7,14 @@ interface ColumnDefenition {
   sortable: boolean;
 }
 
-interface TestProps {
+interface Props {
   // name: string;
   tableData: any [];
   gridTemplateColumns: string;
   columnDefenitions: ColumnDefenition[];
 }
 
-const Table: React.FC<TestProps> = ({tableData, gridTemplateColumns, columnDefenitions}) => {
+const Table: React.FC<Props> = ({tableData, gridTemplateColumns, columnDefenitions}) => {
   return (
       <div  className={styles.Table}>
         <div style={{gridTemplateColumns: gridTemplateColumns}}>

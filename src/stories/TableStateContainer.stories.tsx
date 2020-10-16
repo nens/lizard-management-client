@@ -1,33 +1,15 @@
 import React from 'react';
-import Table from './../components/Table';
+import TableStateContainer from './../components/TableStateContainer';
 // import { listRastersForTable} from "../api/rasters";
 import { rasterItems70Parsed } from './TableStoriesData';
 import {styles} from '../App.module.css';
 
 
 export default {
-  component: Table,
-  title: 'Table'
+  component: TableStateContainer,
+  title: 'TableStateContainer'
 }
 
-
-
-// export const world = () => <Table name="world" tableData={tableContent} />;
-
-// export const people = () => <Table name="people" tableData={tableContent} />;
-
-// listRastersForTable(
-//   70, 1, "", true, organisation.uuid
-// ).then(({results, count}) => {
-//   const checkboxes = this.createCheckboxDataFromRaster(results);
-//   this.setState({
-//     rasters: results,
-//     checkAllCheckBoxes: false,
-//     checkboxes: checkboxes,
-//     isFetching: false,
-//     total: count,
-//   });
-// });
 
 const rasterSourceColumnDefenitions = [
   {
@@ -63,7 +45,7 @@ const rasterSourceColumnDefenitions = [
 ];
 
 export const raster = () =>  
-  <Table 
+  <TableStateContainer 
     tableData={rasterItems70Parsed} 
     gridTemplateColumns={"10% 20% 20% 20% 20% 10%"} 
     columnDefenitions={rasterSourceColumnDefenitions} 
