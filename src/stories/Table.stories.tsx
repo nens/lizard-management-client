@@ -30,5 +30,40 @@ const rasterItems70Parsed = JSON.parse(rasterData70Items);
 //   });
 // });
 
-export const raster = () => <Table tableData={rasterItems70Parsed} gridTemplateColumns={"10% 20% 20% 20% 20% 10%"} columnDefenitions={[]} />;
+const rasterSourceColumnDefenitions = [
+  {
+    title: "Name",
+    renderFunction: (row: any) => row.name,
+    sortable: true,
+  },
+  {
+    title: "Code",
+    renderFunction: (row: any) => row.supplier_code,
+    sortable: true,
+  },
+  {
+    title: "Temporal",
+    renderFunction: (row: any) => row.temporal === true? "Yes" : "No",
+    sortable: false,
+  },
+  {
+    title: "Size",
+    renderFunction: (row: any) => "2.5gb",
+    sortable: true,
+  }
+];
+// tableRow.temporal === true? "Yes" : "No"
+/*
+<span>Code</span>
+          <span>temporal</span>
+          <span>Size</span>
+          <span>Actions</span>
+//*/
+
+export const raster = () =>  
+  <Table 
+    tableData={rasterItems70Parsed} 
+    gridTemplateColumns={"10% 20% 20% 20% 20% 10%"} 
+    columnDefenitions={rasterSourceColumnDefenitions} 
+  />;
 

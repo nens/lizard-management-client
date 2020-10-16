@@ -2,8 +2,8 @@ import React from 'react';
 import styles from './Table.module.css';
 
 interface ColumnDefenition {
-  renderFunction: any; //(value: any): any; //JSX.Element;
-  fieldKey: string;
+  title: string;
+  renderFunction: any; //(row: any): any; //returns field JSX.Element;
   sortable: boolean;
 }
 
@@ -34,7 +34,6 @@ const Table: React.FC<TestProps> = ({tableData, gridTemplateColumns, columnDefen
                 <span>{tableRow.name}</span>
                 <span>{tableRow.supplier_code}</span>
                 <span>{tableRow.temporal === true? "Yes" : "No"}</span>
-                <span>{tableRow.size}</span>
                 <span>2.5gb</span>
                 <span>ACTIONS</span>
               </>

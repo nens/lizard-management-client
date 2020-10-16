@@ -1,0 +1,4 @@
+- can we in the rastersource table show interval instead of temporal ?
+- maybe we can check if sum checkbox below the table will work better ?
+- what happens when all selected but user goes to next page? unselect all?
+- how do I retrieve raster source size ?
