@@ -28,6 +28,7 @@ interface Props {
 const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, columnDefenitions, baseUrl}) => {
 
   const [tableData, setTableData] = useState([]);
+  const [checkBoxes, setCheckBoxes] = useState([]);
   const [nextUrl, setNextUrl] = useState("");
   const [previousUrl, setPreviousUrl] = useState("");
   const [itemsPerPage, setItemsPerPage] = useState("20");
@@ -67,12 +68,72 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
     });
   }
 
+  const addUuidToCheckBoxes = (uuid: string) => {
+    const checkBoxesCopy = checkBoxes.map(uuid=>uuid);
+    // @ts-ignore
+    checkBoxesCopy.push(uuid);
+    setCheckBoxes(checkBoxesCopy);
+  }
+  const removeUuidFromCheckBoxes = (uuidParameter: string) => {
+    const checkBoxesCopy = checkBoxes.filter(uuid=> uuid !== uuidParameter);
+    setCheckBoxes(checkBoxesCopy);
+  }
+
+  const removeAllChecked = () => {
+    setCheckBoxes([])
+  }
+
+  const checkAllCheckBoxesOnCurrentPage = () => {
+    // @ts-ignore
+    const allCurrentPageUuids = tableData.map(row=>row.uuid);
+    // @ts-ignore
+    const mergedArrays = [...new Set([...checkBoxes ,...allCurrentPageUuids])];
+    // @ts-ignore
+    setCheckBoxes(mergedArrays);
+  }
+
+  const isChecked = (uuidParameter:string) => {
+    return !!checkBoxes.find((uuid) => uuid === uuidParameter)
+  }
+
+  const dataWithCheckBoxes = tableData.map((tableRow:any) => {
+    if (isChecked(tableRow.uuid)) {
+      return {...tableRow, checkboxChecked: true};
+    } else {
+      return {...tableRow, checkboxChecked: false};
+    }
+  })
+
+  const columnDefenitionsPlusCheckbox = 
+    [{
+      titleRenderFunction: () => 
+        <input  
+          onChange={event=>{
+            checkAllCheckBoxesOnCurrentPage();
+          }}
+          type="checkbox"
+        ></input>,
+      renderFunction: (row: any) => 
+        <input 
+          checked={row.checkboxChecked} 
+          onChange={event=>{
+            if (row.checkboxChecked) removeUuidFromCheckBoxes(row.uuid)
+            else addUuidToCheckBoxes(row.uuid)
+          }} 
+          type="checkbox"
+        ></input>,
+      sortable: false,
+    },].concat(columnDefenitions);
+
   return (
     <>
       <Table
-        tableData={tableData} 
+        // tableData={tableData} 
+        // gridTemplateColumns={gridTemplateColumns} 
+        // columnDefenitions={columnDefenitions}
+        tableData={dataWithCheckBoxes} 
         gridTemplateColumns={gridTemplateColumns} 
-        columnDefenitions={columnDefenitions}
+        columnDefenitions={columnDefenitionsPlusCheckbox}
       />
       
       <Pagination

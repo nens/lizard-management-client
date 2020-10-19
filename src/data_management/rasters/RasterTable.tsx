@@ -8,11 +8,11 @@ import { rasterItems70Parsed } from '../../stories/TableStoriesData';
 import {styles} from '../App.module.css';
 
 const rasterSourceColumnDefenitions = [
-  {
-    titleRenderFunction: () => <input type="checkbox"></input>,
-    renderFunction: (row: any) => <input type="checkbox"></input>,
-    sortable: false,
-  },
+  // {
+  //   titleRenderFunction: () => <input type="checkbox"></input>,
+  //   renderFunction: (row: any) => <input type="checkbox"></input>,
+  //   sortable: false,
+  // },
   {
     titleRenderFunction: () => "Name",
     renderFunction: (row: any) => row.name,
