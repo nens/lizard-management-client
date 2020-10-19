@@ -96,6 +96,13 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
     return !!checkBoxes.find((uuid) => uuid === uuidParameter)
   }
 
+  const areAllOnCurrentPageChecked = () => {
+    return tableData.length > 0 && tableData.every(row=>{
+      // @ts-ignore
+      return checkBoxes.find(uuid=>uuid===row.uuid)
+    })
+  }
+
   const dataWithCheckBoxes = tableData.map((tableRow:any) => {
     if (isChecked(tableRow.uuid)) {
       return {...tableRow, checkboxChecked: true};
@@ -108,8 +115,13 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
     [{
       titleRenderFunction: () => 
         <input  
+          checked={areAllOnCurrentPageChecked()}
           onChange={event=>{
-            checkAllCheckBoxesOnCurrentPage();
+            if (areAllOnCurrentPageChecked()) {
+              removeAllChecked();
+            } else {
+              checkAllCheckBoxesOnCurrentPage();
+            }
           }}
           type="checkbox"
         ></input>,
