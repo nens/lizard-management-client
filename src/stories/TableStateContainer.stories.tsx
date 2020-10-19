@@ -49,5 +49,6 @@ export const raster = () =>
     tableData={rasterItems70Parsed} 
     gridTemplateColumns={"10% 20% 20% 20% 20% 10%"} 
     columnDefenitions={rasterSourceColumnDefenitions} 
+    baseUrl={"/api/v4/rasters/?writable=${writable}&page_size=${page_size}&page=${page}&name__icontains=${name__icontains}&ordering=${ordering}&organisation__uuid=${organisation__uuid}"} 
   />;
 
