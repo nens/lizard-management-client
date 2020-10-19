@@ -1,6 +1,7 @@
 import React from 'react';
 import {useState, useEffect,}  from 'react';
 import Table from './Table';
+import Pagination from './Pagination';
 // import styles from './Table.module.css';
 import { connect, useSelector } from "react-redux";
 import { getSelectedOrganisation } from '../reducers'
@@ -29,6 +30,7 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
   const [tableData, setTableData] = useState([]);
   const [nextUrl, setNextUrl] = useState("");
   const [previousUrl, setPreviousUrl] = useState("");
+  const [itemsPerPage, setItemsPerPage] = useState("20");
 
 
   const selectedOrganisation = useSelector(getSelectedOrganisation);
@@ -38,26 +40,22 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
   const url = baseUrl
     .replace("${organisation__uuid}", selectedOrganisationUuid)
     .replace("${writable}", "true")
-    .replace("${page_size}", "20")
+    .replace("${page_size}", itemsPerPage+'')
     .replace("${page}", "1")
     .replace("${ordering}", "last_modified")
     // this icontains contains userinput keep it at the last because otherwise user can input ${} and break things
     .replace("${name__icontains}", "");
 
-  console.log('selectedOrganisationUuid 42',selectedOrganisationUuid)
-
   useEffect(() => { 
     fetchWithUrl(url);
-  }, []);
+  }, [selectedOrganisationUuid, itemsPerPage]);
 
   const fetchWithUrl = (url: string) => {
     fetch(url, {
       credentials: "same-origin"
     }).then(response=>{
-      console.log('response 1',response)
       return response.json();
     }).then(parsedResponse=>{
-      console.log('parsedResponse 1',parsedResponse)
       setTableData(parsedResponse.results);
       // we need to split on "lizard.net" because both nxt3.staging.lizard.net/api/v4 and demo.lizard.net/api/v4 both should parse out "/api/v4"
       if (parsedResponse.next) setNextUrl(parsedResponse.next.split("lizard.net")[1]);
@@ -77,9 +75,15 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
         columnDefenitions={columnDefenitions}
       />
       
-      <button disabled={previousUrl===""} onClick={()=>fetchWithUrl(url)}>Page 1</button>
-      <button disabled={previousUrl===""} onClick={()=>fetchWithUrl(previousUrl)}>Previous</button>
-      <button disabled={nextUrl===""} onClick={()=>fetchWithUrl(nextUrl)}>Next</button>
+      <Pagination
+        page1Url={url}
+        previousUrl={previousUrl}
+        nextUrl={nextUrl}
+        itemsPerPage={itemsPerPage}
+        reloadFromUrl={fetchWithUrl}
+        setItemsPerPage={setItemsPerPage}
+      />
+
     </>
   )
 };
