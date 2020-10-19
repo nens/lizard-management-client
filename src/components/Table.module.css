@@ -1,14 +1,20 @@
+.Table {
+  display: flex;
+  flex-direction: column;
+}
 .Table > div {
   display: grid;
 }
 .Table > div:nth-child(1) {
   background-color: var(--color-dark-main);
+  color: var(--color-ligth-main);
 }
 
 .Table > div:nth-child(2) {
   display: grid;
-  height: 500px;
+  height: 650px;
   overflow-y: scroll;
+  /* flex-grow: 1; */
 }
 
 .Table > div > span {
