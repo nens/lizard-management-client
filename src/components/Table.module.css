@@ -4,6 +4,7 @@
 }
 .Table > div {
   display: grid;
+  grid-gap: 18px 74px;
 }
 .Table > div:nth-child(1) {
   background-color: var(--color-dark-main);
@@ -11,23 +12,29 @@
 }
 
 .Table > div:nth-child(2) {
-  display: grid;
-  height: 650px;
+  /* display: grid;
+  grid-gap: 18px 74px; */
   overflow-y: scroll;
+  /* overflow-x: hidden; */
+  
+  height: 650px;
   /* flex-grow: 1; */
 }
 
 .Table > div > span {
-  padding-left: 9px;
+  
+  /* padding doesnot play nice with grid -> use gridgap instead */
+  /* padding-left: 9px;
   padding-right: 9px;
   padding-top: 37px;
-  padding-bottom: 37px;
+  padding-bottom: 37px; */
+
   /* border-color: black;
   border-style: solid; */
   /* border-width: 0;
   border-left-width: 1px;
   border-top-width: 1px; */
 
-  overflow: hidden;
-  text-overflow: ellipsis;
+  /* overflow: hidden;
+  text-overflow: ellipsis; */
 }

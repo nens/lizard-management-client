@@ -44,6 +44,10 @@ function bootstrap(
   }
 }
 
+export const getSelectedOrganisation = (state) => {
+  return state.organisations.selected;
+}
+
 function organisations(
   state = {
     isFetching: false,

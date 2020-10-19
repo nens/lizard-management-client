@@ -1,4 +1,7 @@
 import React from 'react';
+
+
+
 import TableStateContainer from '../../components/TableStateContainer';
 // import { listRastersForTable} from "../api/rasters";
 import { rasterItems70Parsed } from '../../stories/TableStoriesData';
@@ -48,5 +51,3 @@ export const RasterTable = (props:any) =>  {
     />
   );
 }
-  
-
