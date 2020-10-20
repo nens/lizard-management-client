@@ -8,6 +8,7 @@ import { connect, useSelector } from "react-redux";
 import { getSelectedOrganisation } from '../reducers'
 import { withRouter } from "react-router-dom";
 import {  injectIntl } from "react-intl";
+import {DataRetrievalState} from '../types/retrievingDataTypes';
 
 interface Props {
   tableData: any [];
@@ -31,6 +32,7 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
   // const sortableList: SortingState[]  = columnDefenitions.map(item=> item.sortable? "NOT_SORTED" : "NOT_SORTABLE");
   // const [sortingStatePerColumnIndex, setSortingStatePerColumnIndex] = useState(showCheckboxes? ["NOT_SORTABLE"].concat(sortableList): sortableList);
   const [nameContains, setNameContains] = useState("");
+  const [dataRetrievalState, setDataRetrievalState] = useState<DataRetrievalState>("NEVER_DID_RETRIEVE");
 
   // todo pass sorting name as column defenition
   // find out sorting in heigh to low versus low to heigh translates in parameter
@@ -56,12 +58,14 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
   }, [url]);
 
   const fetchWithUrl = (url: string) => {
+    setDataRetrievalState("RETRIEVING")
     fetch(url, {
       credentials: "same-origin"
     }).then(response=>{
       return response.json();
     }).then(parsedResponse=>{
       setTableData(parsedResponse.results);
+      setDataRetrievalState("RETRIEVED")
       // we need to split on "lizard.net" because both nxt3.staging.lizard.net/api/v4 and demo.lizard.net/api/v4 both should parse out "/api/v4"
       if (parsedResponse.next) setNextUrl(parsedResponse.next.split("lizard.net")[1]);
       else setNextUrl("")
@@ -69,6 +73,7 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
       else setPreviousUrl("")
     }).catch(error=>{
       console.log('fetching table data for url failed with error', url, error);
+      setDataRetrievalState({status:"ERROR", errorMesssage: error, url: url})
     });
   }
 
@@ -184,6 +189,7 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
 
   return (
     <>
+      
       <Table
         // tableData={tableData} 
         // gridTemplateColumns={gridTemplateColumns} 
@@ -191,6 +197,7 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
         tableData={dataWithCheckBoxes} 
         gridTemplateColumns={gridTemplateColumns} 
         columnDefenitions={columnDefenitionsPlusCheckboxSortable}
+        dataRetrievalState={dataRetrievalState}
       />
       
       <Pagination

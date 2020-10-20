@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './Table.module.css';
+import {DataRetrievalState} from '../types/retrievingDataTypes'
 
 export interface ColumnDefenition {
   titleRenderFunction: any;
@@ -12,9 +13,10 @@ interface Props {
   tableData: any [];
   gridTemplateColumns: string;
   columnDefenitions: ColumnDefenition[];
+  dataRetrievalState: DataRetrievalState
 }
 
-const Table: React.FC<Props> = ({tableData, gridTemplateColumns, columnDefenitions}) => {
+const Table: React.FC<Props> = ({tableData, gridTemplateColumns, columnDefenitions, dataRetrievalState}) => {
   return (
       <div  className={styles.Table}>
         <div style={{gridTemplateColumns: gridTemplateColumns}}>
@@ -26,7 +28,24 @@ const Table: React.FC<Props> = ({tableData, gridTemplateColumns, columnDefenitio
           {columnDefenitions.map(defenition=><span>{defenition.titleRenderFunction()}</span>)}
           {/* <span>Actions</span> */}
         </div>
+        <div>
+          {
+          dataRetrievalState === "NEVER_DID_RETRIEVE" || dataRetrievalState === "RETRIEVING"?
+          "LOADING"
+          :
+          null
+          }
+        </div>
+        <div>
+          {
+          dataRetrievalState === "RETRIEVED" && tableData.length === 0?
+          "No data found for with current filter"
+          :
+          null
+          }
+        </div>
         <div style={{gridTemplateColumns: gridTemplateColumns}}>
+        
         {
           tableData.map(tableRow=>{
             return (

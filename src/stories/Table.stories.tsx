@@ -66,6 +66,7 @@ export const raster = () =>
   <Table 
     tableData={rasterItems70Parsed} 
     gridTemplateColumns={"10% 20% 20% 20% 20% 10%"} 
-    columnDefenitions={rasterSourceColumnDefenitions} 
+    columnDefenitions={rasterSourceColumnDefenitions}
+    dataRetrievalState={"RETRIEVED"} 
   />;
 

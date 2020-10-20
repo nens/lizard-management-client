@@ -2,16 +2,20 @@
   display: flex;
   flex-direction: column;
 }
-.Table > div {
+/* .Table > div {
   display: grid;
   grid-gap: 18px 74px;
-}
+} */
 .Table > div:nth-child(1) {
+  display: grid;
+  grid-gap: 18px 74px;
   background-color: var(--color-dark-main);
   color: var(--color-ligth-main);
 }
 
-.Table > div:nth-child(2) {
+.Table > div:nth-child(4) {
+  display: grid;
+  grid-gap: 18px 74px;
   /* display: grid;
   grid-gap: 18px 74px; */
   overflow-y: scroll;
