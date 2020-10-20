@@ -2,6 +2,7 @@ import React from 'react';
 import {useState, useEffect,}  from 'react';
 import Table from './Table';
 import Pagination from './Pagination';
+import Checkbox from './Checkbox';
 // import styles from './Table.module.css';
 import { connect, useSelector } from "react-redux";
 import { getSelectedOrganisation } from '../reducers'
@@ -114,26 +115,24 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
 
   const checkBoxColumnDefenition = {
     titleRenderFunction: () => 
-      <input  
+      <Checkbox  
         checked={areAllOnCurrentPageChecked()}
-        onChange={event=>{
+        onChange={()=>{
           if (areAllOnCurrentPageChecked()) {
             removeAllChecked();
           } else {
             checkAllCheckBoxesOnCurrentPage();
           }
         }}
-        type="checkbox"
-      ></input>,
+      />,
     renderFunction: (row: any) => 
-      <input 
+      <Checkbox 
         checked={row.checkboxChecked} 
-        onChange={event=>{
+        onChange={()=>{
           if (row.checkboxChecked) removeUuidFromCheckBoxes(row.uuid)
           else addUuidToCheckBoxes(row.uuid)
         }} 
-        type="checkbox"
-      ></input>,
+      />,
     sortable: false,
   };
 
