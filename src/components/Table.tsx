@@ -1,10 +1,10 @@
 import React from 'react';
 import styles from './Table.module.css';
 
-interface ColumnDefenition {
+export interface ColumnDefenition {
   titleRenderFunction: any;
   renderFunction: any; //(row: any): any; //returns field JSX.Element;
-  sortable: boolean;
+  orderingField: null | string;
 }
 
 interface Props {

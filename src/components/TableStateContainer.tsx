@@ -1,24 +1,15 @@
 import React from 'react';
 import {useState, useEffect,}  from 'react';
 import Table from './Table';
+import {ColumnDefenition} from './Table';
 import Pagination from './Pagination';
 import Checkbox from './Checkbox';
-// import styles from './Table.module.css';
 import { connect, useSelector } from "react-redux";
 import { getSelectedOrganisation } from '../reducers'
 import { withRouter } from "react-router-dom";
-import { FormattedMessage, injectIntl } from "react-intl";
-
-type SortingState = "NOT_SORTABLE" | "NOT_SORTED" | "SORTED_HIGHT_TO_LOW" | "SORTED_LOW_TO_HEIGH"
-
-interface ColumnDefenition {
-  titleRenderFunction: any;
-  renderFunction: any; //(row: any): any; //returns field JSX.Element;
-  sortable: boolean;
-}
+import {  injectIntl } from "react-intl";
 
 interface Props {
-  // name: string;
   tableData: any [];
   gridTemplateColumns: string;
   columnDefenitions: ColumnDefenition[];
@@ -36,25 +27,33 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
   const [previousUrl, setPreviousUrl] = useState("");
   const [itemsPerPage, setItemsPerPage] = useState("20");
   // key will be based on ordr in array, but be aware that checkbox is added to beginning
-  const [sortingState, setSortingState] = useState([columnDefenitions.map(item=> item.sortable? "NOT_SORTED" : "NOT_SORTABLE")])
+  const [ordering, setOrdering] = useState<string | null>("last_modified");
+  // const sortableList: SortingState[]  = columnDefenitions.map(item=> item.sortable? "NOT_SORTED" : "NOT_SORTABLE");
+  // const [sortingStatePerColumnIndex, setSortingStatePerColumnIndex] = useState(showCheckboxes? ["NOT_SORTABLE"].concat(sortableList): sortableList);
+  const [nameContains, setNameContains] = useState("");
+
+  // todo pass sorting name as column defenition
+  // find out sorting in heigh to low versus low to heigh translates in parameter
+
+  // const sorting = sortingStatePerColumnIndex.
+  // todo later: find out how the state of the table can be represented in the url?
 
 
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const selectedOrganisationUuid = selectedOrganisation ? selectedOrganisation.uuid : "";
 
   // const url = "/api/v4/rasters/?writable=true&page_size=10&page=1&name__icontains=&ordering=last_modified&organisation__uuid=61f5a464c35044c19bc7d4b42d7f58cb";
-  const url = baseUrl
-    .replace("${organisation__uuid}", selectedOrganisationUuid)
-    .replace("${writable}", "true")
-    .replace("${page_size}", itemsPerPage+'')
-    .replace("${page}", "1")
-    .replace("${ordering}", "last_modified")
-    // this icontains contains userinput keep it at the last because otherwise user can input ${} and break things
-    .replace("${name__icontains}", "");
+  const url = baseUrl +
+    "writable=true" +
+    "&page_size=" + itemsPerPage +
+    "&page=1" +
+    "&name__icontains=" + nameContains +
+    "&ordering=" + ordering +
+    "&organisation__uuid=" + selectedOrganisationUuid;
 
   useEffect(() => { 
     fetchWithUrl(url);
-  }, [selectedOrganisationUuid, itemsPerPage]);
+  }, [url]);
 
   const fetchWithUrl = (url: string) => {
     fetch(url, {
@@ -116,7 +115,7 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
     }
   })
 
-  const checkBoxColumnDefenition = {
+  const checkBoxColumnDefenition: ColumnDefenition = {
     titleRenderFunction: () => 
       <Checkbox  
         checked={areAllOnCurrentPageChecked()}
@@ -136,7 +135,7 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
           else addUuidToCheckBoxes(row.uuid)
         }} 
       />,
-    sortable: false,
+      orderingField: null,
   };
 
   const columnDefenitionsPlusCheckbox = 
@@ -154,7 +153,29 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
       return (
         <span>
           {originalContent}
-          <span>SortingIcon</span>
+          {
+            columnDefenition.orderingField?
+            <button
+              onClick={()=>{
+                if (ordering === columnDefenition.orderingField) {
+                  setOrdering("-" + columnDefenition.orderingField)
+                } else if (ordering === ("-" + columnDefenition.orderingField)) {
+                  setOrdering(columnDefenition.orderingField)
+                } else {
+                  // ordering !== columnDefenition.orderingField
+                  setOrdering(columnDefenition.orderingField)
+                }
+              }}
+            >
+              {
+                ordering === columnDefenition.orderingField ? "v":
+                ordering === ("-" + columnDefenition.orderingField) ? "^":
+                ">"
+              }
+            </button>
+          :
+          null
+          }
         </span>
       );
     }

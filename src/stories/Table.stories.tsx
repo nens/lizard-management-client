@@ -33,32 +33,32 @@ const rasterSourceColumnDefenitions = [
   {
     titleRenderFunction: () => <input type="checkbox"></input>,
     renderFunction: (row: any) => <input type="checkbox"></input>,
-    sortable: false,
+    orderingField: null ,
   },
   {
     titleRenderFunction: () => "Name",
     renderFunction: (row: any) => row.name,
-    sortable: true,
+    orderingField: null ,
   },
   {
     titleRenderFunction: () =>  "Code",
     renderFunction: (row: any) => row.supplier_code,
-    sortable: true,
+    orderingField: null ,
   },
   {
     titleRenderFunction: () =>  "Temporal",
     renderFunction: (row: any) => row.temporal === true? "Yes" : "No",
-    sortable: false,
+    orderingField: null ,
   },
   {
     titleRenderFunction: () =>  "Size",
     renderFunction: (row: any) => "2.5gb",
-    sortable: true,
+    orderingField: null ,
   },
   {
     titleRenderFunction: () =>  "Actions",
     renderFunction: (row: any) => "Actions",
-    sortable: false,
+    orderingField: null ,
   },
 ];
 
