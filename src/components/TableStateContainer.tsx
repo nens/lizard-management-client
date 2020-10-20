@@ -9,6 +9,7 @@ import { getSelectedOrganisation } from '../reducers'
 import { withRouter } from "react-router-dom";
 import { FormattedMessage, injectIntl } from "react-intl";
 
+type SortingState = "NOT_SORTABLE" | "NOT_SORTED" | "SORTED_HIGHT_TO_LOW" | "SORTED_LOW_TO_HEIGH"
 
 interface ColumnDefenition {
   titleRenderFunction: any;
@@ -34,6 +35,8 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
   const [nextUrl, setNextUrl] = useState("");
   const [previousUrl, setPreviousUrl] = useState("");
   const [itemsPerPage, setItemsPerPage] = useState("20");
+  // key will be based on ordr in array, but be aware that checkbox is added to beginning
+  const [sortingState, setSortingState] = useState([columnDefenitions.map(item=> item.sortable? "NOT_SORTED" : "NOT_SORTABLE")])
 
 
   const selectedOrganisation = useSelector(getSelectedOrganisation);
@@ -143,6 +146,21 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
       columnDefenitions
       ;
 
+  const columnDefenitionsPlusCheckboxSortable =
+  columnDefenitionsPlusCheckbox.map((columnDefenition, ind)=>{
+    const originalTitleRenderFunction = columnDefenition.titleRenderFunction;
+    const sortedTitleRenderFunction = () => {
+      const originalContent = originalTitleRenderFunction();
+      return (
+        <span>
+          {originalContent}
+          <span>SortingIcon</span>
+        </span>
+      );
+    }
+    return {...columnDefenition, titleRenderFunction: sortedTitleRenderFunction}
+  });
+
   return (
     <>
       <Table
@@ -151,7 +169,7 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
         // columnDefenitions={columnDefenitions}
         tableData={dataWithCheckBoxes} 
         gridTemplateColumns={gridTemplateColumns} 
-        columnDefenitions={columnDefenitionsPlusCheckbox}
+        columnDefenitions={columnDefenitionsPlusCheckboxSortable}
       />
       
       <Pagination
