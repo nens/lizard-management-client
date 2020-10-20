@@ -23,9 +23,10 @@ interface Props {
   baseUrl: string; 
   // https://nxt3.staging.lizard.net/api/v4/rasters/?writable=true&page_size=10&page=1&name__icontains=&ordering=last_modified&organisation__uuid=61f5a464c35044c19bc7d4b42d7f58cb
   // /api/v4/rasters/?writable=${writable}&page_size=${page_size}&page=${page}&name__icontains=${name__icontains}&ordering=${ordering}&organisation__uuid=${organisation__uuid}
+  showCheckboxes: boolean;
 }
 
-const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, columnDefenitions, baseUrl}) => {
+const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, columnDefenitions, baseUrl, showCheckboxes}) => {
 
   const [tableData, setTableData] = useState([]);
   const [checkBoxes, setCheckBoxes] = useState([]);
@@ -111,31 +112,37 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
     }
   })
 
+  const checkBoxColumnDefenition = {
+    titleRenderFunction: () => 
+      <input  
+        checked={areAllOnCurrentPageChecked()}
+        onChange={event=>{
+          if (areAllOnCurrentPageChecked()) {
+            removeAllChecked();
+          } else {
+            checkAllCheckBoxesOnCurrentPage();
+          }
+        }}
+        type="checkbox"
+      ></input>,
+    renderFunction: (row: any) => 
+      <input 
+        checked={row.checkboxChecked} 
+        onChange={event=>{
+          if (row.checkboxChecked) removeUuidFromCheckBoxes(row.uuid)
+          else addUuidToCheckBoxes(row.uuid)
+        }} 
+        type="checkbox"
+      ></input>,
+    sortable: false,
+  };
+
   const columnDefenitionsPlusCheckbox = 
-    [{
-      titleRenderFunction: () => 
-        <input  
-          checked={areAllOnCurrentPageChecked()}
-          onChange={event=>{
-            if (areAllOnCurrentPageChecked()) {
-              removeAllChecked();
-            } else {
-              checkAllCheckBoxesOnCurrentPage();
-            }
-          }}
-          type="checkbox"
-        ></input>,
-      renderFunction: (row: any) => 
-        <input 
-          checked={row.checkboxChecked} 
-          onChange={event=>{
-            if (row.checkboxChecked) removeUuidFromCheckBoxes(row.uuid)
-            else addUuidToCheckBoxes(row.uuid)
-          }} 
-          type="checkbox"
-        ></input>,
-      sortable: false,
-    },].concat(columnDefenitions);
+    showCheckboxes ?  
+      [checkBoxColumnDefenition].concat(columnDefenitions)
+      :
+      columnDefenitions
+      ;
 
   return (
     <>
