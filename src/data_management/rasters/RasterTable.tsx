@@ -4,11 +4,15 @@ import React from 'react';
 
 import TableStateContainer from '../../components/TableStateContainer';
 import { rasterItems70Parsed } from '../../stories/TableStoriesData';
+import { NavLink } from "react-router-dom";
+
+
+const baseUrl = "/api/v4/rasters/";
 
 const rasterSourceColumnDefenitions = [
   {
     titleRenderFunction: () => "Name",
-    renderFunction: (row: any) => row.name,
+    renderFunction: (row: any) => <NavLink to={`/data_management/rasters/${row.uuid}/`}>{row.name}</NavLink>,
     orderingField: "name",
   },
   {
@@ -41,7 +45,7 @@ export const RasterTable = (props:any) =>  {
       columnDefenitions={rasterSourceColumnDefenitions}
       // /api/v4/rasters/?writable=true&page_size=10&page=1&name__icontains=&ordering=last_modified&organisation__uuid=61f5a464c35044c19bc7d4b42d7f58cb
       // baseUrl={"/api/v4/rasters/?writable=${writable}&page_size=${page_size}&page=${page}&name__icontains=${name__icontains}&ordering=${ordering}&organisation__uuid=${organisation__uuid}"}
-      baseUrl={"/api/v4/rasters/?"} 
+      baseUrl={`${baseUrl}?`} 
       showCheckboxes={true}
     />
   );

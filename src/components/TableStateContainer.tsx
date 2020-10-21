@@ -4,6 +4,7 @@ import Table from './Table';
 import {ColumnDefenition} from './Table';
 import Pagination from './Pagination';
 import Checkbox from './Checkbox';
+import TableSearchBox from './TableSearchBox';
 import { connect, useSelector } from "react-redux";
 import { getSelectedOrganisation } from '../reducers'
 import { withRouter } from "react-router-dom";
@@ -34,8 +35,11 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
   const [nameContains, setNameContains] = useState("");
   const [dataRetrievalState, setDataRetrievalState] = useState<DataRetrievalState>("NEVER_DID_RETRIEVE");
 
-  // todo pass sorting name as column defenition
-  // find out sorting in heigh to low versus low to heigh translates in parameter
+  // todo pass sorting name as column defenition v
+  // find out sorting in heigh to low versus low to heigh translates in parameter v
+  // do actions column logic
+  // remove any
+  //
 
   // const sorting = sortingStatePerColumnIndex.
   // todo later: find out how the state of the table can be represented in the url?
@@ -49,7 +53,7 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
     "writable=true" +
     "&page_size=" + itemsPerPage +
     "&page=1" +
-    "&name__icontains=" + nameContains +
+    (nameContains !==""? "&name__icontains=" + nameContains: "") +
     "&ordering=" + ordering +
     "&organisation__uuid=" + selectedOrganisationUuid;
 
@@ -189,7 +193,14 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
 
   return (
     <>
-      
+      <TableSearchBox
+        onChange={event=>{
+          const newValue = event.target.value;
+          setNameContains(newValue);
+        }}
+        value={nameContains}
+        placeholder={"Search for raster sources or layers"}
+      />
       <Table
         // tableData={tableData} 
         // gridTemplateColumns={gridTemplateColumns} 
