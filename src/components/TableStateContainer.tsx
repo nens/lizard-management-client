@@ -19,9 +19,10 @@ interface Props {
   // https://nxt3.staging.lizard.net/api/v4/rasters/?writable=true&page_size=10&page=1&name__icontains=&ordering=last_modified&organisation__uuid=61f5a464c35044c19bc7d4b42d7f58cb
   // /api/v4/rasters/?writable=${writable}&page_size=${page_size}&page=${page}&name__icontains=${name__icontains}&ordering=${ordering}&organisation__uuid=${organisation__uuid}
   showCheckboxes: boolean;
+  newItemOnClick: any | null
 }
 
-const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, columnDefenitions, baseUrl, showCheckboxes}) => {
+const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, columnDefenitions, baseUrl, showCheckboxes, newItemOnClick}) => {
 
   const [tableData, setTableData] = useState([]);
   const [checkBoxes, setCheckBoxes] = useState([]);
@@ -193,14 +194,29 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
 
   return (
     <>
-      <TableSearchBox
-        onChange={event=>{
-          const newValue = event.target.value;
-          setNameContains(newValue);
-        }}
-        value={nameContains}
-        placeholder={"Search for raster sources or layers"}
-      />
+      {/* above header */}
+      <div>
+        <TableSearchBox
+          onChange={event=>{
+            const newValue = event.target.value;
+            setNameContains(newValue);
+          }}
+          value={nameContains}
+          placeholder={"Search for raster sources or layers"}
+        />
+
+        {
+          newItemOnClick? 
+          <button
+            onClick={newItemOnClick}
+          >
+            + New Item
+          </button>
+          :
+          null
+        }
+      </div>
+      
       <Table
         // tableData={tableData} 
         // gridTemplateColumns={gridTemplateColumns} 

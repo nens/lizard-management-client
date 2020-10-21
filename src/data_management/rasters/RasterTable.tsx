@@ -38,6 +38,12 @@ const rasterSourceColumnDefenitions = [
 ];
 
 export const RasterTable = (props:any) =>  {
+
+  const handleNewRasterClick  = () => {
+    const { history } = props;
+    history.push("/data_management/rasters/new");
+  }
+
   return (
     <TableStateContainer 
       tableData={rasterItems70Parsed} 
@@ -47,6 +53,7 @@ export const RasterTable = (props:any) =>  {
       // baseUrl={"/api/v4/rasters/?writable=${writable}&page_size=${page_size}&page=${page}&name__icontains=${name__icontains}&ordering=${ordering}&organisation__uuid=${organisation__uuid}"}
       baseUrl={`${baseUrl}?`} 
       showCheckboxes={true}
+      newItemOnClick={handleNewRasterClick}
     />
   );
 }
