@@ -5,14 +5,18 @@ import React from 'react';
 import TableStateContainer from '../../components/TableStateContainer';
 import { rasterItems70Parsed } from '../../stories/TableStoriesData';
 import { NavLink } from "react-router-dom";
+import { deleteRasters } from "../../api/rasters";
+import TableActionButtons from '../../components/TableActionButtons';
+
 
 
 const baseUrl = "/api/v4/rasters/";
+const navigationUrlRasters = "/data_management/rasters";
 
 const rasterSourceColumnDefenitions = [
   {
     titleRenderFunction: () => "Name",
-    renderFunction: (row: any) => <NavLink to={`/data_management/rasters/${row.uuid}/`}>{row.name}</NavLink>,
+    renderFunction: (row: any) => <NavLink to={`${navigationUrlRasters}/${row.uuid}/`}>{row.name}</NavLink>,
     orderingField: "name",
   },
   {
@@ -32,7 +36,46 @@ const rasterSourceColumnDefenitions = [
   },
   {
     titleRenderFunction: () =>  "Actions",
-    renderFunction: (row: any) => "Actions",
+    renderFunction: (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any) => {
+      return (
+        <div>
+          <TableActionButtons
+            tableRow={row} 
+            tableData={tableData}
+            setTableData={setTableData} 
+            triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
+            triggerReloadWithBasePage={triggerReloadWithBasePage}
+            
+            // uuid={row.uuid}
+            actions={[
+              {
+                displayValue: "delete",
+                // actionFunction: (uuid:string)=>deleteRasters([uuid]),
+                actionFunction: (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any)=>{
+                  const uuid = row.uuid;
+                  // const tableDataCopy = tableData.map((row:any)=>{
+                  //   return {...row}
+                  // });
+                  const tableDataDeletedmarker = tableData.map((rowAllTables:any)=>{
+                    if (uuid === rowAllTables.uuid) {
+                      return {...rowAllTables, markAsDeleted: true}
+                    } else{
+                      return {...rowAllTables};
+                    }
+                  })
+                  setTableData(tableDataDeletedmarker);
+                  deleteRasters([uuid])
+                  .then((_result) => {
+                    triggerReloadWithCurrentPage();
+                  })
+                },
+                tableNeedsUpdate: true,
+              }
+            ]}
+          />
+        </div>
+      );
+    },
     orderingField: null,
   },
 ];
@@ -41,7 +84,7 @@ export const RasterTable = (props:any) =>  {
 
   const handleNewRasterClick  = () => {
     const { history } = props;
-    history.push("/data_management/rasters/new");
+    history.push(`${navigationUrlRasters}/new`);
   }
 
   return (
@@ -54,6 +97,31 @@ export const RasterTable = (props:any) =>  {
       baseUrl={`${baseUrl}?`} 
       showCheckboxes={true}
       newItemOnClick={handleNewRasterClick}
+      // should probably not use next lines of actions
+      // actions={
+      //   [
+        // {
+        //   titleRenderFunction: () =>  "Actions",
+        //   renderFunction: (row: any) => {
+        //     return (
+        //       <div>
+        //         <TableActionButtons
+        //           uuid={row.uuid}
+        //           actions={[
+        //             {
+        //               displayValue: "delete",
+        //               actionFunction: (uuid:string)=>deleteRasters([uuid]),
+        //               tableNeedsUpdate: true,
+        //             }
+        //           ]}
+        //         />
+        //       </div>
+        //     );
+        //   },
+        //   orderingField: null,
+        // },
+    //   ]
+    // }
     />
   );
 }

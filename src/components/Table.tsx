@@ -11,12 +11,15 @@ export interface ColumnDefenition {
 interface Props {
   // name: string;
   tableData: any [];
+  setTableData: any;
   gridTemplateColumns: string;
   columnDefenitions: ColumnDefenition[];
-  dataRetrievalState: DataRetrievalState
+  dataRetrievalState: DataRetrievalState;
+  triggerReloadWithCurrentPage: any;
+  triggerReloadWithBasePage: any;
 }
 
-const Table: React.FC<Props> = ({tableData, gridTemplateColumns, columnDefenitions, dataRetrievalState}) => {
+const Table: React.FC<Props> = ({tableData, setTableData, gridTemplateColumns, columnDefenitions, dataRetrievalState, triggerReloadWithCurrentPage, triggerReloadWithBasePage}) => {
   return (
       <div  className={styles.Table}>
         <div style={{gridTemplateColumns: gridTemplateColumns}}>
@@ -55,7 +58,7 @@ const Table: React.FC<Props> = ({tableData, gridTemplateColumns, columnDefenitio
                 <span>{tableRow.supplier_code}</span>
                 <span>{tableRow.temporal === true? "Yes" : "No"}</span>
                 <span>2.5gb</span> */}
-                {columnDefenitions.map(defenition=><span>{defenition.renderFunction(tableRow)}</span>)}
+                {columnDefenitions.map(defenition=><span>{defenition.renderFunction(tableRow, tableData, setTableData, triggerReloadWithCurrentPage, triggerReloadWithBasePage)}</span>)}
                 {/* <span>ACTIONS</span> */}
               </>
             );

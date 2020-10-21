@@ -68,5 +68,8 @@ export const raster = () =>
     gridTemplateColumns={"10% 20% 20% 20% 20% 10%"} 
     columnDefenitions={rasterSourceColumnDefenitions}
     dataRetrievalState={"RETRIEVED"} 
+    setTableData={()=>{}}
+    triggerReloadWithCurrentPage={()=>{}}
+    triggerReloadWithBasePage={()=>{}}
   />;
 

@@ -10,6 +10,8 @@ import { getSelectedOrganisation } from '../reducers'
 import { withRouter } from "react-router-dom";
 import {  injectIntl } from "react-intl";
 import {DataRetrievalState} from '../types/retrievingDataTypes';
+import TableActionButtons from './TableActionButtons';
+import {Action} from './TableActionButtons';
 
 interface Props {
   tableData: any [];
@@ -19,13 +21,15 @@ interface Props {
   // https://nxt3.staging.lizard.net/api/v4/rasters/?writable=true&page_size=10&page=1&name__icontains=&ordering=last_modified&organisation__uuid=61f5a464c35044c19bc7d4b42d7f58cb
   // /api/v4/rasters/?writable=${writable}&page_size=${page_size}&page=${page}&name__icontains=${name__icontains}&ordering=${ordering}&organisation__uuid=${organisation__uuid}
   showCheckboxes: boolean;
-  newItemOnClick: any | null
+  newItemOnClick: any | null;
+  // action: Action[]
 }
 
-const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, columnDefenitions, baseUrl, showCheckboxes, newItemOnClick}) => {
+const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, columnDefenitions, baseUrl, showCheckboxes, newItemOnClick, /*action*/}) => {
 
   const [tableData, setTableData] = useState([]);
   const [checkBoxes, setCheckBoxes] = useState([]);
+  const [currentUrl, setCurrentUrl] = useState("");
   const [nextUrl, setNextUrl] = useState("");
   const [previousUrl, setPreviousUrl] = useState("");
   const [itemsPerPage, setItemsPerPage] = useState("20");
@@ -63,7 +67,8 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
   }, [url]);
 
   const fetchWithUrl = (url: string) => {
-    setDataRetrievalState("RETRIEVING")
+    setDataRetrievalState("RETRIEVING");
+    setCurrentUrl(url);
     fetch(url, {
       credentials: "same-origin"
     }).then(response=>{
@@ -222,9 +227,12 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
         // gridTemplateColumns={gridTemplateColumns} 
         // columnDefenitions={columnDefenitions}
         tableData={dataWithCheckBoxes} 
+        setTableData={setTableData}
         gridTemplateColumns={gridTemplateColumns} 
         columnDefenitions={columnDefenitionsPlusCheckboxSortable}
         dataRetrievalState={dataRetrievalState}
+        triggerReloadWithCurrentPage={()=>{fetchWithUrl(currentUrl)}}
+        triggerReloadWithBasePage={()=>{fetchWithUrl(url)}}
       />
       
       <Pagination
