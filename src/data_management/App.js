@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { DataManagement as DataManagementHome } from "./DataManagement";
 import { Raster as RasterApp } from "./rasters/Raster";
 import { RasterTable} from "./rasters/RasterTable";
+import { RasterLayerTable} from "./rasters/RasterLayerTable";
+
 import { WmsLayer as WmsLayerApp } from "./wms_layers/WmsLayer";
 import { Scenarios as ScenariosApp } from "./scenarios/Scenarios";
 import { NewRaster } from "./rasters/NewRaster";
@@ -32,8 +34,9 @@ class App extends Component {
     return (
       <div>
         <Route exact path="/data_management" component={DataManagementHome} />
-        {/* <Route exact path="/data_management/rasters" component={RasterApp} />  */}
+        <Route exact path="/data_management/old_rasters" component={RasterApp} /> 
         <Route exact path="/data_management/rasters" component={RasterTable} />
+        <Route exact path="/data_management/raster_layers" component={RasterLayerTable} />
         <Route exact path="/data_management/wms_layers" component={WmsLayerApp} />
         <Route exact path="/data_management/scenarios" component={ScenariosApp} />
         <Switch>

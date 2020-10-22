@@ -25,14 +25,25 @@ class DataManagement extends Component {
         handleClick: () => this.handleLink("data_management/rasters"),
         title: (
           <FormattedMessage
-            id="data_management.rasters"
-            defaultMessage="Rasters"
+            id="data_management.rasters_sources"
+            defaultMessage="Rasters Sources"
           />
         ),
         icon: rasterIcon
       },
       {
         key: 1,
+        handleClick: () => this.handleLink("data_management/raster_layers"),
+        title: (
+          <FormattedMessage
+            id="data_management.raster_layers"
+            defaultMessage="Raster Layers"
+          />
+        ),
+        icon: rasterIcon
+      },
+      {
+        key: 2,
         handleClick: () => this.handleLink("data_management/wms_layers"),
         title: (
           <FormattedMessage
@@ -43,7 +54,7 @@ class DataManagement extends Component {
         icon: wmsIcon
       },
       {
-        key: 2,
+        key: 3,
         handleClick: () => this.handleLink("data_management/scenarios/"),
         title: (
           <FormattedMessage
@@ -54,7 +65,7 @@ class DataManagement extends Component {
         icon: threediIcon
       },
       {
-        key: 3,
+        key: 4,
         handleClick: () => this.handleLink(""),
         title: (
           <FormattedMessage

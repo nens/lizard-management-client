@@ -10,23 +10,10 @@ import TableActionButtons from '../../components/TableActionButtons';
 
 
 
-const baseUrl = "/api/v4/rastersources/";
+const baseUrl = "/api/v4/rasters/";
 const navigationUrlRasters = "/data_management/rasters";
 
 const deleteActionRaster = (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any)=>{
-  // const uuid = row.uuid;
-  // const tableDataDeletedmarker = tableData.map((rowAllTables:any)=>{
-  //   if (uuid === rowAllTables.uuid) {
-  //     return {...rowAllTables, markAsDeleted: true}
-  //   } else{
-  //     return {...rowAllTables};
-  //   }
-  // })
-  // setTableData(tableDataDeletedmarker);
-  // deleteRasters([uuid])
-  // .then((_result) => {
-  //   triggerReloadWithCurrentPage();
-  // })
   deleteActionRasters([row], tableData, setTableData, triggerReloadWithCurrentPage, triggerReloadWithBasePage, null)
 }
 
@@ -53,22 +40,22 @@ const deleteActionRasters = (rows: any[], tableData:any, setTableData:any, trigg
 const rasterSourceColumnDefenitions = [
   {
     titleRenderFunction: () => "Name",
-    renderFunction: (row: any) => <NavLink to={`${navigationUrlRasters}/${row.uuid}/`}>{!row.name? "(empty name)" : row.name }</NavLink>,
+    renderFunction: (row: any) => <NavLink to={`${navigationUrlRasters}/${row.uuid}/`}>{row.name}</NavLink>,
     orderingField: "name",
   },
   {
-    titleRenderFunction: () =>  "Code",
-    renderFunction: (row: any) => {return !row.supplier_code ? "(empty 'supplier code')" : row.supplier_code },
-    orderingField: "supplier_code",
+    titleRenderFunction: () =>  "Based on",
+    renderFunction: (row: any) => row.raster_sources[0],
+    orderingField: "raster_sources",
+  },
+  {
+    titleRenderFunction: () =>  "User",
+    renderFunction: (row: any) => row.supplier,
+    orderingField: "supplier",
   },
   {
     titleRenderFunction: () =>  "Temporal",
     renderFunction: (row: any) => row.temporal === true? "Yes" : "No",
-    orderingField: null,
-  },
-  {
-    titleRenderFunction: () =>  "Size",
-    renderFunction: (row: any) => `${row.size}`,
     orderingField: null,
   },
   {
@@ -82,21 +69,15 @@ const rasterSourceColumnDefenitions = [
             setTableData={setTableData} 
             triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
             triggerReloadWithBasePage={triggerReloadWithBasePage}
-            
-            // uuid={row.uuid}
             actions={[
               {
                 displayValue: "delete",
-                // actionFunction: (uuid:string)=>deleteRasters([uuid]),
                 actionFunction: deleteActionRaster,
               },
               {
                 displayValue: "flushRasters",
                 actionFunction: (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any)=>{
                   const uuid = row.uuid;
-                  // const tableDataCopy = tableData.map((row:any)=>{
-                  //   return {...row}
-                  // });
                   const tableDataFlushedmarker = tableData.map((rowAllTables:any)=>{
                     if (uuid === rowAllTables.uuid) {
                       return {...rowAllTables, markAsFlushed: true}
@@ -120,7 +101,7 @@ const rasterSourceColumnDefenitions = [
   },
 ];
 
-export const RasterTable = (props:any) =>  {
+export const RasterLayerTable = (props:any) =>  {
 
   const handleNewRasterClick  = () => {
     const { history } = props;
@@ -132,8 +113,6 @@ export const RasterTable = (props:any) =>  {
       tableData={rasterItems70Parsed} 
       gridTemplateColumns={"10% 20% 20% 20% 20% 10%"} 
       columnDefenitions={rasterSourceColumnDefenitions}
-      // /api/v4/rasters/?writable=true&page_size=10&page=1&name__icontains=&ordering=last_modified&organisation__uuid=61f5a464c35044c19bc7d4b42d7f58cb
-      // baseUrl={"/api/v4/rasters/?writable=${writable}&page_size=${page_size}&page=${page}&name__icontains=${name__icontains}&ordering=${ordering}&organisation__uuid=${organisation__uuid}"}
       baseUrl={`${baseUrl}?`} 
       showCheckboxes={true}
       checkBoxActions={[
@@ -143,31 +122,6 @@ export const RasterTable = (props:any) =>  {
         }
       ]}
       newItemOnClick={handleNewRasterClick}
-      // should probably not use next lines of actions
-      // actions={
-      //   [
-        // {
-        //   titleRenderFunction: () =>  "Actions",
-        //   renderFunction: (row: any) => {
-        //     return (
-        //       <div>
-        //         <TableActionButtons
-        //           uuid={row.uuid}
-        //           actions={[
-        //             {
-        //               displayValue: "delete",
-        //               actionFunction: (uuid:string)=>deleteRasters([uuid]),
-        //               tableNeedsUpdate: true,
-        //             }
-        //           ]}
-        //         />
-        //       </div>
-        //     );
-        //   },
-        //   orderingField: null,
-        // },
-    //   ]
-    // }
     />
   );
 }
