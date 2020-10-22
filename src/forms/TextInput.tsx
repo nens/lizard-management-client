@@ -29,7 +29,7 @@ export default class TextInput extends Component<TextInputProps, {}> {
     } = this.props;
 
     return (
-      <div>
+      <div style={{ position: 'relative'}}>
         <input
           name={name}
           id={`textinput-${name}`}

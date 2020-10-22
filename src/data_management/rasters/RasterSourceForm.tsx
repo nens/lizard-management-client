@@ -14,6 +14,7 @@ const RasterSourceForm: React.FC<Props> = ({}) => {
   const [supplierCode, setSupplierCode] = useState<string>('');
   const [temporal, setTemporal] = useState<boolean>(false);
   const [interval, setInterval] = useState<string>('');
+  const [accessModifier, setAccessModifier] = useState<'Private' | 'Common' | 'Public'>('Private');
 
   return (
     <div>
@@ -84,15 +85,32 @@ const RasterSourceForm: React.FC<Props> = ({}) => {
           />
         </label>
         <h3>3: RIGHTS</h3>
-        <label htmlFor="accessModifier">
-          <span>Access modifier</span>
-          <input
-            type="checkbox"
-            name="accessModifier"
-            id="accessModifier"
-            autoComplete="false"
-          />
-        </label>
+        <span>Access modifier</span>
+        <div
+          className={styles.AccessModifierTiles}
+        >
+          <div
+            className={accessModifier === 'Private' ? `${styles.AccessModifier} ${styles.AccessModifierSelected}` : styles.AccessModifier}
+            onClick={() => setAccessModifier('Private')}
+          >
+            <span>Private</span>
+            <span>(own organisation)</span>
+          </div>
+          <div
+            className={accessModifier === 'Common' ? `${styles.AccessModifier} ${styles.AccessModifierSelected}` : styles.AccessModifier}
+            onClick={() => setAccessModifier('Common')}
+          >
+            <span>Common</span>
+            <span>(logged in only)</span>
+          </div>
+          <div
+            className={accessModifier === 'Public' ? `${styles.AccessModifier} ${styles.AccessModifierSelected}` : styles.AccessModifier}
+            onClick={() => setAccessModifier('Public')}
+          >
+            <span>Public</span>
+            <span>(open to everyone)</span>
+          </div>
+        </div>
         <label htmlFor="textinput-organisation">
           <span>Organisation</span>
           <TextInput
@@ -118,6 +136,10 @@ const RasterSourceForm: React.FC<Props> = ({}) => {
           />
         </label>
       </form>
+      <div>
+        <button>CANCEL</button>
+        <button>SAVE</button>
+      </div>
     </div>
   );
 };

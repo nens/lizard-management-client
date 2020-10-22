@@ -27,7 +27,7 @@ export default class TextArea extends Component<TextAreaProps, {}> {
     } = this.props;
 
     return (
-      <div>
+      <div style={{ position: 'relative'}}>
         <textarea
           name={name}
           id={`textinput-${name}`}
