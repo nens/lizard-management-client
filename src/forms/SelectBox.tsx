@@ -102,7 +102,7 @@ export default class SelectBox extends Component<SelectBoxProps, SelectBoxState>
           id={`selectbox-${name}`}
           tabIndex={-1}
           type="text"
-          autoComplete="false"
+          autoComplete="off"
           className={
             formStyles.FormControl +
             " " +
@@ -137,7 +137,7 @@ export default class SelectBox extends Component<SelectBoxProps, SelectBoxState>
                 id={`searchbox-${name}`}
                 name={`searchbox-${name}`}
                 type="text"
-                autoComplete="false"
+                autoComplete="off"
                 autoFocus={true}
                 value={searchString}
                 onChange={(e) => {this.setState({ searchString: e.target.value })}}

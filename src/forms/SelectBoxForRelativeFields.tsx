@@ -63,7 +63,7 @@ export default class SelectBoxForRelativeFields extends Component<MyProps, MySta
                     id={`selectbox-name`}
                     tabIndex={-1}
                     type="text"
-                    autoComplete="false"
+                    autoComplete="off"
                     className={formStyles.FormControl}
                     value={currentSelection !== null ? currentSelection : ""}
                     onClick={() => this.toggleChoices()}

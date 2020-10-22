@@ -251,7 +251,7 @@ class ColorMapInput extends Component<ColorMapProps & InjectedIntlProps, ColorMa
         <br />
         <input
           type="number"
-          autoComplete="false"
+          autoComplete="off"
           onChange={e => this.valueChanged('min', this.toFloat(e.target.value))}
           value={(colorMapType && colorMapType.min) || ""}
           placeholder={placeholderMinimumColorRange}
@@ -267,7 +267,7 @@ class ColorMapInput extends Component<ColorMapProps & InjectedIntlProps, ColorMa
         </span>
         <input
           type="number"
-          autoComplete="false"
+          autoComplete="off"
           value={(colorMapType && colorMapType.max) || ""}
           onChange={e => this.valueChanged('max', this.toFloat(e.target.value))}
           placeholder={placeholderMaximumColorRange}

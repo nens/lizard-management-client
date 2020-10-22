@@ -31,7 +31,7 @@ export default class TextArea extends Component<TextAreaProps, {}> {
         <textarea
           name={name}
           id={`textinput-${name}`}
-          autoComplete="false"
+          autoComplete="off"
           className={formStyles.FormControl}
           placeholder={placeholder}
           onChange={e => this.props.valueChanged(e.target.value)}

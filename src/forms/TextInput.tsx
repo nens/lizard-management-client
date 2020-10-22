@@ -34,7 +34,7 @@ export default class TextInput extends Component<TextInputProps, {}> {
           name={name}
           id={`textinput-${name}`}
           type="text"
-          autoComplete="false"
+          autoComplete="off"
           className={formStyles.FormControl}
           placeholder={placeholder}
           onChange={e => this.props.valueChanged(e.target.value)}

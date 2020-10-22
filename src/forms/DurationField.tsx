@@ -142,7 +142,7 @@ export default class DurationField extends Component<DurationFieldProps, {}> {
             id={name + "days_input"}
             tabIndex={-2}
             type="text"
-            autoComplete="false"
+            autoComplete="off"
             className={
             formStyles.FormControl +
                        " " +
@@ -168,7 +168,7 @@ export default class DurationField extends Component<DurationFieldProps, {}> {
             id={name + "hours_input"}
             tabIndex={-2}
             type="text"
-            autoComplete="false"
+            autoComplete="off"
             className={
             formStyles.FormControl +
                        " " +
@@ -191,7 +191,7 @@ export default class DurationField extends Component<DurationFieldProps, {}> {
             id={name + "minutes_input"}
             tabIndex={-2}
             type="text"
-            autoComplete="false"
+            autoComplete="off"
             className={
             formStyles.FormControl +
                          (!minutesValid ? " " + styles.Invalid : "") +
@@ -217,7 +217,7 @@ export default class DurationField extends Component<DurationFieldProps, {}> {
             id={name + "seconds_input"}
             tabIndex={-2}
             type="text"
-            autoComplete="false"
+            autoComplete="off"
             className={
             formStyles.FormControl +
                          (!secondsValid ? " " + styles.Invalid : "") +

@@ -202,7 +202,7 @@ export default class RelativeField extends Component<RelativeFieldProps, Relativ
               id={name + "days_input"}
               tabIndex={-2}
               type="text"
-              autoComplete="false"
+              autoComplete="off"
               className={
                 formStyles.FormControl +
                 " " +
@@ -228,7 +228,7 @@ export default class RelativeField extends Component<RelativeFieldProps, Relativ
               id={name + "hours_input"}
               tabIndex={-2}
               type="text"
-              autoComplete="false"
+              autoComplete="off"
               className={
                 formStyles.FormControl +
                 " " +
@@ -251,7 +251,7 @@ export default class RelativeField extends Component<RelativeFieldProps, Relativ
               id={name + "minutes_input"}
               tabIndex={-2}
               type="text"
-              autoComplete="false"
+              autoComplete="off"
               className={
                 formStyles.FormControl +
                 (!minutesValid ? " " + styles.Invalid : "") +
@@ -277,7 +277,7 @@ export default class RelativeField extends Component<RelativeFieldProps, Relativ
               id={name + "seconds_input"}
               tabIndex={-2}
               type="text"
-              autoComplete="false"
+              autoComplete="off"
               className={
                 formStyles.FormControl +
                 (!secondsValid ? " " + styles.Invalid : "") +

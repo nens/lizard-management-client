@@ -77,7 +77,7 @@ export default class SlushBucket extends Component<Props, State> {
           <input
             tabIndex={-1}
             type="text"
-            autoComplete="false"
+            autoComplete="off"
             className={
               formStyles.FormControl +
               " " +
