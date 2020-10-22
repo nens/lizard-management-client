@@ -3,7 +3,6 @@ import React from 'react';
 export interface Action {
   displayValue: string;
   actionFunction: any; // function that takes uuid and performs action
-  tableNeedsUpdate: boolean;
 }
 
 interface Props {

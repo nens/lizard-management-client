@@ -5,13 +5,50 @@ import React from 'react';
 import TableStateContainer from '../../components/TableStateContainer';
 import { rasterItems70Parsed } from '../../stories/TableStoriesData';
 import { NavLink } from "react-router-dom";
-import { deleteRasters } from "../../api/rasters";
+import { deleteRasters, flushRasters } from "../../api/rasters";
 import TableActionButtons from '../../components/TableActionButtons';
 
 
 
 const baseUrl = "/api/v4/rasters/";
 const navigationUrlRasters = "/data_management/rasters";
+
+const deleteActionRaster = (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any)=>{
+  // const uuid = row.uuid;
+  // const tableDataDeletedmarker = tableData.map((rowAllTables:any)=>{
+  //   if (uuid === rowAllTables.uuid) {
+  //     return {...rowAllTables, markAsDeleted: true}
+  //   } else{
+  //     return {...rowAllTables};
+  //   }
+  // })
+  // setTableData(tableDataDeletedmarker);
+  // deleteRasters([uuid])
+  // .then((_result) => {
+  //   triggerReloadWithCurrentPage();
+  // })
+  deleteActionRasters([row], tableData, setTableData, triggerReloadWithCurrentPage, triggerReloadWithBasePage, null)
+}
+
+const deleteActionRasters = (rows: any[], tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any, setCheckboxes: any)=>{
+  const uuids = rows.map(row=> row.uuid);
+  const tableDataDeletedmarker = tableData.map((rowAllTables:any)=>{
+    if (uuids.find((uuid)=> uuid === rowAllTables.uuid)) {
+      return {...rowAllTables, markAsDeleted: true}
+    } else{
+      return {...rowAllTables};
+    }
+  })
+  setTableData(tableDataDeletedmarker);
+  deleteRasters(uuids)
+  .then((_result) => {
+    triggerReloadWithCurrentPage().then(()=>{
+      if (setCheckboxes) {
+        setCheckboxes([]);
+      }
+    });
+  })
+}
 
 const rasterSourceColumnDefenitions = [
   {
@@ -31,7 +68,7 @@ const rasterSourceColumnDefenitions = [
   },
   {
     titleRenderFunction: () =>  "Size",
-    renderFunction: (row: any) => "2.5gb",
+    renderFunction: (row: any) => "Unknown (currently not supported)",
     orderingField: null,
   },
   {
@@ -51,26 +88,29 @@ const rasterSourceColumnDefenitions = [
               {
                 displayValue: "delete",
                 // actionFunction: (uuid:string)=>deleteRasters([uuid]),
+                actionFunction: deleteActionRaster,
+              },
+              {
+                displayValue: "flushRasters",
                 actionFunction: (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any)=>{
                   const uuid = row.uuid;
                   // const tableDataCopy = tableData.map((row:any)=>{
                   //   return {...row}
                   // });
-                  const tableDataDeletedmarker = tableData.map((rowAllTables:any)=>{
+                  const tableDataFlushedmarker = tableData.map((rowAllTables:any)=>{
                     if (uuid === rowAllTables.uuid) {
-                      return {...rowAllTables, markAsDeleted: true}
+                      return {...rowAllTables, markAsFlushed: true}
                     } else{
                       return {...rowAllTables};
                     }
                   })
-                  setTableData(tableDataDeletedmarker);
-                  deleteRasters([uuid])
+                  setTableData(tableDataFlushedmarker);
+                  flushRasters([uuid])
                   .then((_result) => {
                     triggerReloadWithCurrentPage();
                   })
                 },
-                tableNeedsUpdate: true,
-              }
+              },
             ]}
           />
         </div>
@@ -96,6 +136,12 @@ export const RasterTable = (props:any) =>  {
       // baseUrl={"/api/v4/rasters/?writable=${writable}&page_size=${page_size}&page=${page}&name__icontains=${name__icontains}&ordering=${ordering}&organisation__uuid=${organisation__uuid}"}
       baseUrl={`${baseUrl}?`} 
       showCheckboxes={true}
+      checkBoxActions={[
+        {
+          displayValue: "Delete",
+          actionFunction: deleteActionRasters,
+        }
+      ]}
       newItemOnClick={handleNewRasterClick}
       // should probably not use next lines of actions
       // actions={

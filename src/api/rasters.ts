@@ -137,17 +137,18 @@ export const deleteRaster = async (uuid: string) => {
   await fetch(`/api/v4/rasters/${uuid}/`, deleteOpts);
 
   // If this isn't a Geoblock, also delete the first (and only) raster source.
-  if (!raster.is_geoblock && raster.raster_sources) {
-    const source = raster.raster_sources[0];
-    if (source) {
-      // This can fail for various reasons but we ignore all of them:
-      // 412 "Precondition failed" -- another layer is using the source
-      // 403 "Permission denied" -- user doesn't have write rights to the source
-      // 404 -- user doesn't have read rights to the source
-      // On success, 204 Gone is returned.
-      await fetch(source, deleteOpts);
-    }
-  }
+  // remove these lines because we will now threath source and layer seperately
+  // if (!raster.is_geoblock && raster.raster_sources) {
+  //   const source = raster.raster_sources[0];
+  //   if (source) {
+  //     // This can fail for various reasons but we ignore all of them:
+  //     // 412 "Precondition failed" -- another layer is using the source
+  //     // 403 "Permission denied" -- user doesn't have write rights to the source
+  //     // 404 -- user doesn't have read rights to the source
+  //     // On success, 204 Gone is returned.
+  //     await fetch(source, deleteOpts);
+  //   }
+  // }
 
   return raster;
 };

@@ -21,11 +21,12 @@ interface Props {
   // https://nxt3.staging.lizard.net/api/v4/rasters/?writable=true&page_size=10&page=1&name__icontains=&ordering=last_modified&organisation__uuid=61f5a464c35044c19bc7d4b42d7f58cb
   // /api/v4/rasters/?writable=${writable}&page_size=${page_size}&page=${page}&name__icontains=${name__icontains}&ordering=${ordering}&organisation__uuid=${organisation__uuid}
   showCheckboxes: boolean;
+  checkBoxActions: any[];
   newItemOnClick: any | null;
   // action: Action[]
 }
 
-const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, columnDefenitions, baseUrl, showCheckboxes, newItemOnClick, /*action*/}) => {
+const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, columnDefenitions, baseUrl, showCheckboxes, checkBoxActions, newItemOnClick, /*action*/}) => {
 
   const [tableData, setTableData] = useState([]);
   const [checkBoxes, setCheckBoxes] = useState([]);
@@ -69,7 +70,7 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
   const fetchWithUrl = (url: string) => {
     setDataRetrievalState("RETRIEVING");
     setCurrentUrl(url);
-    fetch(url, {
+    return fetch(url, {
       credentials: "same-origin"
     }).then(response=>{
       return response.json();
@@ -222,6 +223,34 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
         }
       </div>
       
+      <div
+        style={{
+          visibility: checkBoxes.length > 0? "visible" : "hidden",
+        }}
+      >
+        {
+          checkBoxActions.map(checkboxAction=>{
+            return (
+              <button
+                onClick={()=>{
+                  // @ts-ignore
+                  const rows = tableData.filter((row) => {return checkBoxes.find(checkBoxUuid=> checkBoxUuid===row.uuid)})
+                  checkboxAction.actionFunction(rows, tableData, setTableData, ()=>fetchWithUrl(currentUrl), ()=>fetchWithUrl(url), setCheckBoxes)
+                }}
+              >
+                {checkboxAction.displayValue + ' ' + (checkBoxes.length) + " items"}
+              </button>
+            );
+          })
+        }
+        {/* <button
+          onClick={()=>{
+            
+          }}
+        >
+          Delete {checkBoxes.length} items 
+        </button> */}
+      </div>
       <Table
         // tableData={tableData} 
         // gridTemplateColumns={gridTemplateColumns} 
