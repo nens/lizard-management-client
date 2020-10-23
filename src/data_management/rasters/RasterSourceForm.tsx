@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
 import { FormattedMessage } from 'react-intl';
+import { useSelector } from 'react-redux';
 import CheckBox from '../../forms/CheckBox';
 import DurationField from '../../forms/DurationField';
 import TextArea from '../../forms/TextArea';
 import TextInput from '../../forms/TextInput';
+import { getSelectedOrganisation } from '../../reducers';
 import styles from './RasterSourceForm.module.css';
 
 export interface Props {};
   
 const RasterSourceForm: React.FC<Props> = ({}) => {
+  const selectedOrganisation = useSelector(getSelectedOrganisation);
+
   const [rasterName, setRasterName] = useState<string>('');
   const [rasterDescription, setRasterDescription] = useState<string>('');
   const [supplierCode, setSupplierCode] = useState<string>('');
@@ -115,7 +119,7 @@ const RasterSourceForm: React.FC<Props> = ({}) => {
           <span>Organisation</span>
           <TextInput
             name="organisation"
-            value={''}
+            value={selectedOrganisation.name}
             valueChanged={() => null}
             handleEnter={() => null}
             validated={true}

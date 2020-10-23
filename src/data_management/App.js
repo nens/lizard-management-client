@@ -5,6 +5,7 @@ import { WmsLayer as WmsLayerApp } from "./wms_layers/WmsLayer";
 import { Scenarios as ScenariosApp } from "./scenarios/Scenarios";
 import { NewRaster } from "./rasters/NewRaster";
 import { NewRaster2 } from "./rasters/NewRaster2";
+import { NewRaster3 } from "./rasters/NewRaster3";
 import { EditRaster } from "./rasters/EditRaster";
 import { EditWmsLayer } from "./wms_layers/EditWmsLayer";
 import { NewWmsLayer } from "./wms_layers/NewWmsLayer";
@@ -44,6 +45,11 @@ class App extends Component {
             exact
             path="/data_management/rasters/new2"
             component={NewRaster2}
+          />
+          <Route
+            exact
+            path={`/data_management/:rasterType/new`}
+            component={NewRaster3}
           />
           <Route
             exact

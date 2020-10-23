@@ -3,8 +3,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import MDSpinner from "react-md-spinner";
 
-// import { RasterForm } from "./RasterForm";
-import RasterSourceForm from "./RasterSourceForm";
+import { RasterForm } from "./RasterForm";
 
 class NewRasterModel extends Component {
   render() {
@@ -14,7 +13,9 @@ class NewRasterModel extends Component {
       this.props.colorMaps.isFetching === false &&
       this.props.supplierIds.isFetching === false
     ) {
-      return <RasterSourceForm />;
+      return <RasterForm 
+                wizardStyle={true}
+            />;
     } else {
       return <div
         style={{
