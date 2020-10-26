@@ -75,7 +75,6 @@ const rasterSourceColumnDefenitions = [
     titleRenderFunction: () =>  "Actions",
     renderFunction: (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any) => {
       return (
-        <div>
           <TableActionButtons
             tableRow={row} 
             tableData={tableData}
@@ -113,7 +112,6 @@ const rasterSourceColumnDefenitions = [
               },
             ]}
           />
-        </div>
       );
     },
     orderingField: null,

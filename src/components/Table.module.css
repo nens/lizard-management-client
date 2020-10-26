@@ -1,12 +1,18 @@
 .Table {
+  height: 100%;
+  /* width: 100%; */
+  min-width: 1000px;
   display: flex;
   flex-direction: column;
+  align-items: stretch;
+  overflow-x: auto;
 }
 /* .Table > div {
   display: grid;
   grid-gap: 18px 74px;
 } */
 .Table > div:nth-child(1) {
+  overflow-x: visible;
   display: grid;
   grid-gap: 18px 74px;
   background-color: var(--color-dark-main);
@@ -19,9 +25,10 @@
   /* display: grid;
   grid-gap: 18px 74px; */
   overflow-y: scroll;
-  /* overflow-x: hidden; */
+  overflow-x: visible;
+  width: 100%;
   
-  height: 650px;
+  /* height: 650px; */
   /* flex-grow: 1; */
 }
 

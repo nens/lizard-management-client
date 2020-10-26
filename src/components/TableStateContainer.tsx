@@ -199,7 +199,13 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
   });
 
   return (
-    <>
+    <div style={{
+      height: "100%",
+      width: "100%",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "stretch",
+    }}>
       {/* above header */}
       <div>
         <TableSearchBox
@@ -251,18 +257,21 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
           Delete {checkBoxes.length} items 
         </button> */}
       </div>
-      <Table
-        // tableData={tableData} 
-        // gridTemplateColumns={gridTemplateColumns} 
-        // columnDefenitions={columnDefenitions}
-        tableData={dataWithCheckBoxes} 
-        setTableData={setTableData}
-        gridTemplateColumns={gridTemplateColumns} 
-        columnDefenitions={columnDefenitionsPlusCheckboxSortable}
-        dataRetrievalState={dataRetrievalState}
-        triggerReloadWithCurrentPage={()=>{fetchWithUrl(currentUrl)}}
-        triggerReloadWithBasePage={()=>{fetchWithUrl(url)}}
-      />
+      <div style={{flex:1, minHeight: 0}}>
+        <Table
+          // tableData={tableData} 
+          // gridTemplateColumns={gridTemplateColumns} 
+          // columnDefenitions={columnDefenitions}
+          tableData={dataWithCheckBoxes} 
+          setTableData={setTableData}
+          gridTemplateColumns={gridTemplateColumns} 
+          columnDefenitions={columnDefenitionsPlusCheckboxSortable}
+          dataRetrievalState={dataRetrievalState}
+          triggerReloadWithCurrentPage={()=>{fetchWithUrl(currentUrl)}}
+          triggerReloadWithBasePage={()=>{fetchWithUrl(url)}}
+        />
+      </div>
+      
       
       <Pagination
         page1Url={url}
@@ -273,7 +282,7 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
         setItemsPerPage={setItemsPerPage}
       />
 
-    </>
+    </div>
   )
 };
 

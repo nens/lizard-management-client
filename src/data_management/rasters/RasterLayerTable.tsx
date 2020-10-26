@@ -62,7 +62,6 @@ const rasterSourceColumnDefenitions = [
     titleRenderFunction: () =>  "Actions",
     renderFunction: (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any) => {
       return (
-        <div>
           <TableActionButtons
             tableRow={row} 
             tableData={tableData}
@@ -94,7 +93,6 @@ const rasterSourceColumnDefenitions = [
               },
             ]}
           />
-        </div>
       );
     },
     orderingField: null,
@@ -111,7 +109,8 @@ export const RasterLayerTable = (props:any) =>  {
   return (
     <TableStateContainer 
       tableData={rasterItems70Parsed} 
-      gridTemplateColumns={"10% 20% 20% 20% 20% 10%"} 
+      // gridTemplateColumns={"10% 20% 20% 20% 20% 10%"} 
+      gridTemplateColumns={"10px 100px 100px 100px 30px 50px"} 
       columnDefenitions={rasterSourceColumnDefenitions}
       baseUrl={`${baseUrl}?`} 
       showCheckboxes={true}

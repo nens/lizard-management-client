@@ -1,17 +1,31 @@
-:root {
+:root {  
   --color-dark-main: #354B61;
   --color-ligth-main: #FFFFFF;
 }
 
+html,
+body {
+  height: 98vh;
+  width: 100vw;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 .App {
+  height: 100%;
+  width: 100%;
   display: flex;
-  min-height: 100vh;
+  /* min-height: 100vh; */
   flex-direction: column;
   font-family: Montserrat;
 }
 
 .AppContent {
+  height: 100%;
+  width:100%;
   flex: 1;
+  min-height: 0;
 }
 
 .AppIcon {
@@ -37,6 +51,7 @@
 }
 
 .Footer {
+  display: none;
   background-color: #D8D8D8;
   text-transform: uppercase;
 }
