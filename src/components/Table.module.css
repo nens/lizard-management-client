@@ -26,7 +26,7 @@
   display: grid;
   column-gap: 74px;
   row-gap: 18px;
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: visible;
   width: 100%;
   
