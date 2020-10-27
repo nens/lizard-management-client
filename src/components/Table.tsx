@@ -22,7 +22,13 @@ interface Props {
 const Table: React.FC<Props> = ({tableData, setTableData, gridTemplateColumns, columnDefenitions, dataRetrievalState, triggerReloadWithCurrentPage, triggerReloadWithBasePage}) => {
   return (
       <div  className={styles.Table}>
-        <div style={{gridTemplateColumns: gridTemplateColumns}}>
+        <div style={{
+          gridTemplateColumns: gridTemplateColumns,
+          // width: "1200px",
+          // width: "100%",
+          minWidth: "1200px",
+            flexGrow: 1,
+        }}>
           {/* <span><input type="checkbox"></input></span> */}
           {/* <span>Name</span>
           <span>Code</span>
@@ -47,24 +53,32 @@ const Table: React.FC<Props> = ({tableData, setTableData, gridTemplateColumns, c
           null
           }
         </div>
-        <div style={{gridTemplateColumns: gridTemplateColumns}}>
+        {/* <div> */}
+          <div style={{
+            gridTemplateColumns: gridTemplateColumns,
+            // width: "100%",
+            // width: "1200px",
+            minWidth: "1200px",
+            flexGrow: 1,
+          }}>
+            {
+              tableData.map(tableRow=>{
+                return (
+                  <>
+                    {/* <span><input type="checkbox"></input></span> */}
+                    {/* <span>{tableRow.name}</span>
+                    <span>{tableRow.supplier_code}</span>
+                    <span>{tableRow.temporal === true? "Yes" : "No"}</span>
+                    <span>2.5gb</span> */}
+                    {columnDefenitions.map(defenition=><span>{defenition.renderFunction(tableRow, tableData, setTableData, triggerReloadWithCurrentPage, triggerReloadWithBasePage)}</span>)}
+                    {/* <span>ACTIONS</span> */}
+                  </>
+                );
+              })
+            }
+          </div>
+        {/* </div> */}
         
-        {
-          tableData.map(tableRow=>{
-            return (
-              <>
-                {/* <span><input type="checkbox"></input></span> */}
-                {/* <span>{tableRow.name}</span>
-                <span>{tableRow.supplier_code}</span>
-                <span>{tableRow.temporal === true? "Yes" : "No"}</span>
-                <span>2.5gb</span> */}
-                {columnDefenitions.map(defenition=><span>{defenition.renderFunction(tableRow, tableData, setTableData, triggerReloadWithCurrentPage, triggerReloadWithBasePage)}</span>)}
-                {/* <span>ACTIONS</span> */}
-              </>
-            );
-          })
-        }
-        </div>
       </div>
   )
 };

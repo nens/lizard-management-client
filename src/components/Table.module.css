@@ -1,11 +1,13 @@
 .Table {
   height: 100%;
-  /* width: 100%; */
-  min-width: 1000px;
+  width: 100%;
+  /* width: 1200px; */
+  /* min-width: 1000px; */
   display: flex;
   flex-direction: column;
   align-items: stretch;
   overflow-x: auto;
+  
 }
 /* .Table > div {
   display: grid;
@@ -14,23 +16,28 @@
 .Table > div:nth-child(1) {
   overflow-x: visible;
   display: grid;
-  grid-gap: 18px 74px;
+  column-gap: 74px;
+  /* grid-gap: 18px 74px; */
   background-color: var(--color-dark-main);
   color: var(--color-ligth-main);
 }
 
 .Table > div:nth-child(4) {
   display: grid;
-  grid-gap: 18px 74px;
-  /* display: grid;
-  grid-gap: 18px 74px; */
+  column-gap: 74px;
+  row-gap: 18px;
   overflow-y: scroll;
   overflow-x: visible;
   width: 100%;
   
   /* height: 650px; */
-  /* flex-grow: 1; */
+  flex-grow: 1;
 }
+/* .Table > div:nth-child(4) > div {
+  display: grid;
+  grid-gap: 18px 74px;
+  width: 100%;
+} */
 
 .Table > div > span {
   
