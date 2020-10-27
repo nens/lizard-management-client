@@ -33,6 +33,17 @@ export interface OldRasterEdit {
   shared_with: string;
 }
 
+export interface RasterSource {
+  name: string;
+  organisation: string;
+  access_modifier: string;
+  description: string;
+  supplier: string;
+  supplier_code: string;
+  temporal: boolean;
+  interval?: string;
+}
+
 export const fetchRasterV3 = async (uuid: string) => {
   const response = await fetch(`/api/v3/rasters/${uuid}/`, {
     credentials: "same-origin"
@@ -213,6 +224,31 @@ export const uploadRasterFile = async (rasterUuid: string, file: File, timestamp
   return response.json();
 };
 
+export const createRasterSource = (raster: RasterSource) => {
+  const defaultOpts: RequestInit = {
+    credentials: "same-origin",
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+  };
+
+  const rasterSourceBody = {
+    name: raster.name,
+    description: raster.description,
+    organisation: raster.organisation,
+    access_modifier: raster.access_modifier, // Always
+    supplier: raster.supplier,
+    supplier_code: raster.supplier_code,
+    temporal: raster.temporal,
+    interval: raster.temporal ? raster.interval : undefined
+  };
+
+  const rasterSourceResponse = fetch('/api/v4/rastersources/', {
+    ...defaultOpts,
+    body: JSON.stringify(rasterSourceBody)
+  });
+
+  return rasterSourceResponse;
+};
 
 export const createRaster = async (raster: OldRaster) => {
   // A raster is created in two steps: first we create the raster *source*,

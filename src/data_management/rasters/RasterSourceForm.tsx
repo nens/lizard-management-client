@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useSelector } from 'react-redux';
+import { createRasterSource } from '../../api/rasters';
 import CheckBox from '../../forms/CheckBox';
 import DurationField from '../../forms/DurationField';
 import TextArea from '../../forms/TextArea';
@@ -8,7 +9,7 @@ import TextInput from '../../forms/TextInput';
 import { getSelectedOrganisation } from '../../reducers';
 import styles from './RasterSourceForm.module.css';
 
-export interface Props {};
+interface Props {};
   
 const RasterSourceForm: React.FC<Props> = ({}) => {
   const selectedOrganisation = useSelector(getSelectedOrganisation);
@@ -20,6 +21,22 @@ const RasterSourceForm: React.FC<Props> = ({}) => {
   const [interval, setInterval] = useState<string>('');
   const [accessModifier, setAccessModifier] = useState<'Private' | 'Common' | 'Public'>('Private');
 
+  const onFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log('submitted');
+    // const raster = {
+    //   name: rasterName,
+    //   organisation: selectedOrganisation.uuid,
+    //   access_modifier: accessModifier,
+    //   description: rasterDescription,
+    //   supplier: '',
+    //   supplier_code: supplierCode,
+    //   temporal: temporal,
+    //   interval: temporal ? interval : undefined
+    // };
+    // createRasterSource(raster);
+  };
+
   return (
     <div>
       <div>
@@ -28,6 +45,7 @@ const RasterSourceForm: React.FC<Props> = ({}) => {
       </div>
       <form
         className={styles.Form}
+        onSubmit={onFormSubmit}
       >
         <h3>1: GENERAL</h3>
         <label htmlFor="textinput-rasterName">
@@ -37,7 +55,7 @@ const RasterSourceForm: React.FC<Props> = ({}) => {
             value={rasterName}
             valueChanged={setRasterName}
             handleEnter={() => null}
-            validated={true}
+            validated={false}
             wizardStyle={false}
           />
         </label>
@@ -139,6 +157,7 @@ const RasterSourceForm: React.FC<Props> = ({}) => {
             wizardStyle={false}
           />
         </label>
+        <input type="submit" value="Save" />
       </form>
       <div>
         <button>CANCEL</button>

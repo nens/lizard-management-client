@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { FormattedMessage } from 'react-intl';
-import CheckBox from '../../forms/CheckBox';
 import TextArea from '../../forms/TextArea';
 import TextInput from '../../forms/TextInput';
 import styles from './RasterSourceForm.module.css';
