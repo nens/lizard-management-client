@@ -207,7 +207,12 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
       alignItems: "stretch",
     }}>
       {/* above header */}
-      <div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between"
+        }}
+      >
         <TableSearchBox
           onChange={event=>{
             const newValue = event.target.value;
@@ -232,8 +237,14 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
       <div
         style={{
           visibility: checkBoxes.length > 0? "visible" : "hidden",
+          display: "flex",
+          justifyContent: "space-between",
         }}
       >
+        <div>
+          {`${checkBoxes.length} items selected`}
+        </div>
+        <div>
         {
           checkBoxActions.map(checkboxAction=>{
             return (
@@ -249,19 +260,10 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
             );
           })
         }
-        {/* <button
-          onClick={()=>{
-            
-          }}
-        >
-          Delete {checkBoxes.length} items 
-        </button> */}
+        </div>
       </div>
       <div style={{flex:1, minHeight: 0}}>
         <Table
-          // tableData={tableData} 
-          // gridTemplateColumns={gridTemplateColumns} 
-          // columnDefenitions={columnDefenitions}
           tableData={dataWithCheckBoxes} 
           setTableData={setTableData}
           gridTemplateColumns={gridTemplateColumns} 

@@ -32,7 +32,13 @@ export const ExplainSideColumn = (props:any) => {
         <NavLink to={backUrl}><span style={{fontSize:"36px"}}>{"←"}</span></NavLink>
         <img src={imgUrl}></img>
         <h2>{headerText}</h2>
-        <div>
+        <div
+          style={{
+            borderColor: "#A1A1A1",
+            borderStyle: "solid",
+            borderWidth: "0.5px",
+          }}
+        >
           {explainationText}
         </div>
 
