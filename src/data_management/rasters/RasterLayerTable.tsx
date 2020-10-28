@@ -7,6 +7,8 @@ import { rasterItems70Parsed } from '../../stories/TableStoriesData';
 import { NavLink } from "react-router-dom";
 import { deleteRasters, flushRasters } from "../../api/rasters";
 import TableActionButtons from '../../components/TableActionButtons';
+import {ExplainSideColumn} from '../../components/ExplainSideColumn';
+import rasterIcon from "../../images/raster_layers_logo_explainbar.svg";
 
 
 
@@ -107,38 +109,12 @@ export const RasterLayerTable = (props:any) =>  {
   }
 
   return (
-    <div 
-      style={{
-        display: "flex",
-        alignItems: "stretch",
-        width: "100%",
-        height: "100%",
-      }}
+    <ExplainSideColumn
+      imgUrl={rasterIcon}
+      headerText={"Raster Layers"}
+      explainationText={"Raster-Layer is a visual representation of a Raster-Source on the map. It contains among other things the styling of how the raster data should be visualized. One Raster-Source can contain multiple Raster-Layers."} 
+      backUrl={"/data_management"}
     >
-      <div
-        style={{
-          width: "200px",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center"
-        }}
-      >
-        <button>{"<--"} </button>
-        <img></img>
-        <h2>Raster Layers</h2>
-        <div>
-          Some raster layer text
-        </div>
-
-      </div>
-      <div
-        style={{
-          flex: 1,
-          minWidth: 0,
-        }}
-      >
-
-      
         <TableStateContainer 
           tableData={rasterItems70Parsed} 
           gridTemplateColumns={"3% 25% 25% 20% 12% 10%"} 
@@ -155,7 +131,6 @@ export const RasterLayerTable = (props:any) =>  {
           ]}
           newItemOnClick={handleNewRasterClick}
         />
-      </div>
-    </div>
+     </ExplainSideColumn>
   );
 }
