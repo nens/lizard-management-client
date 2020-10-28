@@ -12,3 +12,5 @@
 Would it be possible to include the name of the raster source here? Otherwise I have to do a api call for each rastet layer to retrieve name of the raster source. 
 This is not only very costly for the backend, 
 but also is going to be tricky to program on the frontend since I created a generic state manager to keep the state of the table.
+- uuid for observation type in api
+- parramatta moet ook in iframe werken ? Welke ui hoeven niet in het iframe ?
