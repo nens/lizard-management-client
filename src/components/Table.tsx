@@ -24,54 +24,35 @@ const Table: React.FC<Props> = ({tableData, setTableData, gridTemplateColumns, c
       <div  className={styles.Table}>
         <div style={{
           gridTemplateColumns: gridTemplateColumns,
-          minWidth: "1200px",
         }}>
-          {/* <span><input type="checkbox"></input></span> */}
-          {/* <span>Name</span>
-          <span>Code</span>
-          <span>temporal</span>
-          <span>Size</span> */}
           {columnDefenitions.map(defenition=><span>{defenition.titleRenderFunction()}</span>)}
-          {/* <span>Actions</span> */}
         </div>
-        <div>
-          {
-          dataRetrievalState === "NEVER_DID_RETRIEVE" || dataRetrievalState === "RETRIEVING"?
-          "LOADING"
-          :
-          null
-          }
-        </div>
-        <div>
-          {
-          dataRetrievalState === "RETRIEVED" && tableData.length === 0?
-          "No data found for with current filter"
-          :
-          null
-          }
-        </div>
-        {/* <div> */}
-          <div style={{
+        <div style={{
             gridTemplateColumns: gridTemplateColumns,
-            minWidth: "1200px",
-          }}>
+          }}
+        >
             {
               tableData.map(tableRow=>{
                 return (
                   <>
-                    {/* <span><input type="checkbox"></input></span> */}
-                    {/* <span>{tableRow.name}</span>
-                    <span>{tableRow.supplier_code}</span>
-                    <span>{tableRow.temporal === true? "Yes" : "No"}</span>
-                    <span>2.5gb</span> */}
                     {columnDefenitions.map(defenition=><span>{defenition.renderFunction(tableRow, tableData, setTableData, triggerReloadWithCurrentPage, triggerReloadWithBasePage)}</span>)}
-                    {/* <span>ACTIONS</span> */}
                   </>
                 );
               })
-            }
+            }          
+        </div>
+        <div>
+            <div>
+              {
+              dataRetrievalState === "NEVER_DID_RETRIEVE" || dataRetrievalState === "RETRIEVING"?
+              "LOADING"
+              : dataRetrievalState === "RETRIEVED" && tableData.length === 0?
+              "No data found for with current filter"
+              :
+              null
+              }
+            </div>
           </div>
-        {/* </div> */}
         
       </div>
   )
