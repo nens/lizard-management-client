@@ -4,6 +4,10 @@
   --color-border-table: #2C3E50;
 }
 
+button {
+  cursor: pointer;
+}
+
 html,
 body {
   height: 98vh;
