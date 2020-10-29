@@ -1,9 +1,6 @@
 import React from 'react';
 
 import { NavLink } from "react-router-dom";
-import rasterIcon from "../images/raster_layers_logo_explainbar.svg";
-
-
 
 export const ExplainSideColumn = (props:any) => {
 
@@ -30,7 +27,7 @@ export const ExplainSideColumn = (props:any) => {
         }}
       >
         <NavLink to={backUrl}><span style={{fontSize:"36px"}}>{"←"}</span></NavLink>
-        <img src={imgUrl}></img>
+        <img src={imgUrl} alt={""}></img>
         <h2>{headerText}</h2>
         <div
           style={{

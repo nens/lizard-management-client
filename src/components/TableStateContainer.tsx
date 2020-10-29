@@ -10,8 +10,6 @@ import { getSelectedOrganisation } from '../reducers'
 import { withRouter } from "react-router-dom";
 import {  injectIntl } from "react-intl";
 import {DataRetrievalState} from '../types/retrievingDataTypes';
-import TableActionButtons from './TableActionButtons';
-import {Action} from './TableActionButtons';
 
 interface Props {
   tableData: any [];
