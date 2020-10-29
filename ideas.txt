@@ -1,16 +1,23 @@
 - can we in the rastersource table show interval instead of temporal ?
 - maybe we can check if sum checkbox below the table will work better ?
 - what happens when all selected but user goes to next page? unselect all?
-- how do I retrieve raster source size ?
 - pagination in design. Although the new pagination cannot jump to page it may still know: to jump back to first page. What the current page is.
 - include 3di scenarios (hoe gaat de gebruiker dit nu filteren?)
+
 - it does not make sense to order on temporal, should we filter on it instead?
 - I do not see language anymore in current design. I assume we use the browser language
 - the footer is gone, where do we put the support link. Behind the user menu?
+
 - 3di als er net een stoepje verkeerd ligt klopt de hele simulatie niet meer. Kan 3di uitrekenen waar potentiele butterfly-> hurricanes in het model liggen?
+
 - in the raster_layer api the raster-sources are an array of urls. In the management client in the table I am supposed to show "based_on". I assume this is the source. 
 Would it be possible to include the name of the raster source here? Otherwise I have to do a api call for each rastet layer to retrieve name of the raster source. 
 This is not only very costly for the backend, 
 but also is going to be tricky to program on the frontend since I created a generic state manager to keep the state of the table.
-- uuid for observation type in api
+- flushing rasters now works with deleting and recreating the source. How will this work with the current raster sources layers strategy
+
 - parramatta moet ook in iframe werken ? Welke ui hoeven niet in het iframe ?
+
+- uuid for observation type in api
+
+- deleting raster source not yet supported in api ?

@@ -5,7 +5,7 @@ import React from 'react';
 import TableStateContainer from '../../components/TableStateContainer';
 import { rasterItems70Parsed } from '../../stories/TableStoriesData';
 import { NavLink } from "react-router-dom";
-import { deleteRasters, flushRasters } from "../../api/rasters";
+import { deleteRasterSources, flushRasters } from "../../api/rasters";
 import TableActionButtons from '../../components/TableActionButtons';
 
 
@@ -40,13 +40,13 @@ const deleteActionRasters = (rows: any[], tableData:any, setTableData:any, trigg
     }
   })
   setTableData(tableDataDeletedmarker);
-  deleteRasters(uuids)
+  deleteRasterSources(uuids)
   .then((_result) => {
-    triggerReloadWithCurrentPage().then(()=>{
-      if (setCheckboxes) {
-        setCheckboxes([]);
-      }
-    });
+    // TODO: this is not preferred way. see delet function in raster layer table
+    if (setCheckboxes) {
+      setCheckboxes([]);
+    }
+    triggerReloadWithCurrentPage();
   })
 }
 
@@ -68,7 +68,7 @@ const rasterSourceColumnDefenitions = [
   },
   {
     titleRenderFunction: () =>  "Size",
-    renderFunction: (row: any) => `${row.size}`,
+    renderFunction: (row: any) => `${row.size} Bytes`,
     orderingField: null,
   },
   {

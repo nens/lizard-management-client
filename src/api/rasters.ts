@@ -312,3 +312,18 @@ export const patchRaster = async (rasterUuid: string, raster: OldRasterEdit) => 
     raster: newRaster
   };
 };
+
+export const deleteRasterSource = async (uuid: string) => {
+  // Try to delete source, ignore errors
+  const result = await fetch("/api/v4/rastersources/", {
+    credentials: "same-origin",
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({})
+  });
+  return result;
+}
+
+export const deleteRasterSources = (uuids: string[]) => {
+  return Promise.all(uuids.map(deleteRasterSource));
+}
