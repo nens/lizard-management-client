@@ -1,6 +1,8 @@
 import React from 'react';
 import styles from './Table.module.css';
-import {DataRetrievalState} from '../types/retrievingDataTypes'
+import {DataRetrievalState} from '../types/retrievingDataTypes';
+import MDSpinner from "react-md-spinner";
+
 
 export interface ColumnDefenition {
   titleRenderFunction: any;
@@ -47,7 +49,8 @@ const Table: React.FC<Props> = ({tableData, setTableData, gridTemplateColumns, c
             <div>
               {
               dataRetrievalState === "NEVER_DID_RETRIEVE" || dataRetrievalState === "RETRIEVING"?
-              "LOADING"
+              // "LOADING"
+              <MDSpinner size={96} />
               : dataRetrievalState === "RETRIEVED" && tableData.length === 0?
               "No data found for with current filter"
               :
