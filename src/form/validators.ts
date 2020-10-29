@@ -42,14 +42,14 @@ export const testRegex = (regex: RegExp, error: string, str: string): validatorR
   return false;
 };
 
-export const rangeCheck = (value: number, min: number, max: number) => {
+export const rangeCheck = (value: number, min: number, max: number): validatorResult => {
   if (value < min || value > max) {
     return `Choose between ${min} and ${max}`;
   }
   return false;
 };
 
-export const greaterThanMin = (minValue: number, maxValue: number) => {
+export const greaterThanMin = (minValue: number, maxValue: number): validatorResult => {
   if (minValue > maxValue) {
     return `Choose 'Max zoom level' greater than 'Min zoom level'`;
   }

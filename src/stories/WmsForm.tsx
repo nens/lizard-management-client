@@ -82,8 +82,12 @@ export const WmsForm: React.FC = () => {
         value={values.minZoom as string}
         valueChanged={handleChange}
         clearInput={clearInput}
-        validated={!rangeCheck(parseInt(values.minZoom as string), 0, 31)}
-        errorMessage={rangeCheck(parseInt(values.minZoom as string), 0, 31)}
+        validated={
+          !rangeCheck(parseInt(values.minZoom as string), 0, 31)
+        }
+        errorMessage={
+          rangeCheck(parseInt(values.minZoom as string), 0, 31)
+        }
       />
       <IntegerInput
         title={'Max zoom level'}
@@ -92,8 +96,20 @@ export const WmsForm: React.FC = () => {
         value={values.maxZoom as string}
         valueChanged={handleChange}
         clearInput={clearInput}
-        validated={!rangeCheck(parseInt(values.maxZoom as string), 0, 31) && !greaterThanMin(parseInt(values.minZoom as string), parseInt(values.maxZoom as string))}
-        errorMessage={rangeCheck(parseInt(values.maxZoom as string), 0, 31) || greaterThanMin(parseInt(values.minZoom as string), parseInt(values.maxZoom as string))}
+        validated={
+          !rangeCheck(parseInt(values.maxZoom as string), 0, 31) &&
+          !greaterThanMin(
+            parseInt(values.minZoom as string),
+            parseInt(values.maxZoom as string)
+          )
+        }
+        errorMessage={
+          rangeCheck(parseInt(values.maxZoom as string), 0, 31) ||
+          greaterThanMin(
+            parseInt(values.minZoom as string),
+            parseInt(values.maxZoom as string)
+          )
+        }
       />
       <TextInput
         title={'Organisation'}
