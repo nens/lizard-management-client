@@ -5,7 +5,7 @@ import React from 'react';
 import TableStateContainer from '../../components/TableStateContainer';
 import { rasterItems70Parsed } from '../../stories/TableStoriesData';
 import { NavLink } from "react-router-dom";
-import { deleteRasters, flushRasters } from "../../api/rasters";
+import { deleteRasters, /*flushRasters*/ } from "../../api/rasters";
 import TableActionButtons from '../../components/TableActionButtons';
 import {ExplainSideColumn} from '../../components/ExplainSideColumn';
 import rasterIcon from "../../images/raster_layers_logo_explainbar.svg";
@@ -16,10 +16,18 @@ const baseUrl = "/api/v4/rasters/";
 const navigationUrlRasters = "/data_management/rasters";
 
 const deleteActionRaster = (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any)=>{
-  deleteActionRasters([row], tableData, setTableData, triggerReloadWithCurrentPage, triggerReloadWithBasePage, null)
+  if (window.confirm(`Are you sure you want to delete raster with uuids: ${row.uuid}`)) {
+    rawDeleteActionRasters([row], tableData, setTableData, triggerReloadWithCurrentPage, triggerReloadWithBasePage, null)
+  }
 }
 
 const deleteActionRasters = (rows: any[], tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any, setCheckboxes: any)=>{
+  if (window.confirm(`Are you sure you want to delete ${rows.length} rasters with uuids: ${rows.map(row=>"\n"+row.uuid)}`)) {
+    rawDeleteActionRasters(rows, tableData, setTableData, triggerReloadWithCurrentPage, triggerReloadWithBasePage, setCheckboxes)
+  }
+}
+
+const rawDeleteActionRasters = (rows: any[], tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any, setCheckboxes: any)=>{
   const uuids = rows.map(row=> row.uuid);
   const tableDataDeletedmarker = tableData.map((rowAllTables:any)=>{
     if (uuids.find((uuid)=> uuid === rowAllTables.uuid)) {
@@ -31,11 +39,21 @@ const deleteActionRasters = (rows: any[], tableData:any, setTableData:any, trigg
   setTableData(tableDataDeletedmarker);
   deleteRasters(uuids)
   .then((_result) => {
-    triggerReloadWithCurrentPage().then(()=>{
-      if (setCheckboxes) {
-        setCheckboxes([]);
-      }
-    });
+    // TODO: problem: triggerReloadWithCurrentPage requires a promise to set the checkboxes once the promise settles,
+    // but somehow triggerReloadWithCurrentPage is sometimes undefined leading to the error ".then of undefined"
+    // Workaround for now is to set the checkboxes before the promise returns.
+    // the function triggerReloadWithCurrentPage is actually the function fetchWithUrl 
+    // desired way would be:
+    // triggerReloadWithCurrentPage().then(()=>{
+    //   if (setCheckboxes) {
+    //     setCheckboxes([]);
+    //   }
+    // });
+    // workaround instead:
+    if (setCheckboxes) {
+      setCheckboxes([]);
+    }
+    triggerReloadWithCurrentPage();
   })
 }
 
@@ -75,24 +93,24 @@ const rasterSourceColumnDefenitions = [
                 displayValue: "delete",
                 actionFunction: deleteActionRaster,
               },
-              {
-                displayValue: "flushRasters",
-                actionFunction: (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any)=>{
-                  const uuid = row.uuid;
-                  const tableDataFlushedmarker = tableData.map((rowAllTables:any)=>{
-                    if (uuid === rowAllTables.uuid) {
-                      return {...rowAllTables, markAsFlushed: true}
-                    } else{
-                      return {...rowAllTables};
-                    }
-                  })
-                  setTableData(tableDataFlushedmarker);
-                  flushRasters([uuid])
-                  .then((_result) => {
-                    triggerReloadWithCurrentPage();
-                  })
-                },
-              },
+              // {
+              //   displayValue: "flushRasters",
+              //   actionFunction: (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any)=>{
+              //     const uuid = row.uuid;
+              //     const tableDataFlushedmarker = tableData.map((rowAllTables:any)=>{
+              //       if (uuid === rowAllTables.uuid) {
+              //         return {...rowAllTables, markAsFlushed: true}
+              //       } else{
+              //         return {...rowAllTables};
+              //       }
+              //     })
+              //     setTableData(tableDataFlushedmarker);
+              //     flushRasters([uuid])
+              //     .then((_result) => {
+              //       triggerReloadWithCurrentPage();
+              //     })
+              //   },
+              // },
             ]}
           />
       );
