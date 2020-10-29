@@ -118,7 +118,7 @@ const rasterSourceColumnDefenitions = [
   },
 ];
 
-export const RasterTable = (props:any) =>  {
+export const RasterSourceTable = (props:any) =>  {
 
   const handleNewRasterClick  = () => {
     const { history } = props;

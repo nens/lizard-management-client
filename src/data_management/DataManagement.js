@@ -22,7 +22,7 @@ class DataManagement extends Component {
     const appTiles = [
       {
         key: 0,
-        handleClick: () => this.handleLink("data_management/rasters"),
+        handleClick: () => this.handleLink("data_management/raster_sources"),
         title: (
           <FormattedMessage
             id="data_management.rasters_sources"
