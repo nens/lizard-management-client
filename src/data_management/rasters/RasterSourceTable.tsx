@@ -7,6 +7,9 @@ import { rasterItems70Parsed } from '../../stories/TableStoriesData';
 import { NavLink } from "react-router-dom";
 import { deleteRasterSources, flushRasters } from "../../api/rasters";
 import TableActionButtons from '../../components/TableActionButtons';
+import {ExplainSideColumn} from '../../components/ExplainSideColumn';
+import rasterSourcesIcon from "../../images/raster_sources_logo_explainbar.svg";
+
 
 
 
@@ -68,7 +71,7 @@ const rasterSourceColumnDefenitions = [
   },
   {
     titleRenderFunction: () =>  "Size",
-    renderFunction: (row: any) => `${row.size} Bytes`,
+    renderFunction: (row: any) => `${row.size? row.size: 0} Bytes`,
     orderingField: null,
   },
   {
@@ -126,46 +129,28 @@ export const RasterSourceTable = (props:any) =>  {
   }
 
   return (
-    <TableStateContainer 
-      tableData={rasterItems70Parsed} 
-      gridTemplateColumns={"5% 20% 20% 20% 20% 10%"} 
-      columnDefenitions={rasterSourceColumnDefenitions}
-      // /api/v4/rasters/?writable=true&page_size=10&page=1&name__icontains=&ordering=last_modified&organisation__uuid=61f5a464c35044c19bc7d4b42d7f58cb
-      // baseUrl={"/api/v4/rasters/?writable=${writable}&page_size=${page_size}&page=${page}&name__icontains=${name__icontains}&ordering=${ordering}&organisation__uuid=${organisation__uuid}"}
-      baseUrl={`${baseUrl}?`} 
-      showCheckboxes={true}
-      checkBoxActions={[
-        {
-          displayValue: "Delete",
-          actionFunction: deleteActionRasters,
-        }
-      ]}
-      newItemOnClick={handleNewRasterClick}
-      // should probably not use next lines of actions
-      // actions={
-      //   [
-        // {
-        //   titleRenderFunction: () =>  "Actions",
-        //   renderFunction: (row: any) => {
-        //     return (
-        //       <div>
-        //         <TableActionButtons
-        //           uuid={row.uuid}
-        //           actions={[
-        //             {
-        //               displayValue: "delete",
-        //               actionFunction: (uuid:string)=>deleteRasters([uuid]),
-        //               tableNeedsUpdate: true,
-        //             }
-        //           ]}
-        //         />
-        //       </div>
-        //     );
-        //   },
-        //   orderingField: null,
-        // },
-    //   ]
-    // }
-    />
+    <ExplainSideColumn
+      imgUrl={rasterSourcesIcon}
+      headerText={"Raster Sources"}
+      explainationText={"Raster-source contains the actual data belonging to the raster."} 
+      backUrl={"/data_management"}
+    >
+      <TableStateContainer 
+        tableData={rasterItems70Parsed} 
+        gridTemplateColumns={"10% 20% 20% 20% 10% 20%"} 
+        columnDefenitions={rasterSourceColumnDefenitions}
+        // /api/v4/rasters/?writable=true&page_size=10&page=1&name__icontains=&ordering=last_modified&organisation__uuid=61f5a464c35044c19bc7d4b42d7f58cb
+        // baseUrl={"/api/v4/rasters/?writable=${writable}&page_size=${page_size}&page=${page}&name__icontains=${name__icontains}&ordering=${ordering}&organisation__uuid=${organisation__uuid}"}
+        baseUrl={`${baseUrl}?`} 
+        showCheckboxes={true}
+        checkBoxActions={[
+          {
+            displayValue: "Delete",
+            actionFunction: deleteActionRasters,
+          }
+        ]}
+        newItemOnClick={handleNewRasterClick}
+      />
+    </ExplainSideColumn>
   );
 }
