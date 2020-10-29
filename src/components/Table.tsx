@@ -17,9 +17,10 @@ interface Props {
   dataRetrievalState: DataRetrievalState;
   triggerReloadWithCurrentPage: any;
   triggerReloadWithBasePage: any;
+  getIfCheckBoxOfUuidIsSelected?: any;
 }
 
-const Table: React.FC<Props> = ({tableData, setTableData, gridTemplateColumns, columnDefenitions, dataRetrievalState, triggerReloadWithCurrentPage, triggerReloadWithBasePage}) => {
+const Table: React.FC<Props> = ({tableData, setTableData, gridTemplateColumns, columnDefenitions, dataRetrievalState, triggerReloadWithCurrentPage, triggerReloadWithBasePage, getIfCheckBoxOfUuidIsSelected}) => {
   return (
       <div  className={styles.Table}>
         <div style={{
@@ -33,9 +34,10 @@ const Table: React.FC<Props> = ({tableData, setTableData, gridTemplateColumns, c
         >
             {
               tableData.map(tableRow=>{
+                const rowIsSelected = getIfCheckBoxOfUuidIsSelected && getIfCheckBoxOfUuidIsSelected(tableRow.uuid)
                 return (
                   <>
-                    {columnDefenitions.map(defenition=><span>{defenition.renderFunction(tableRow, tableData, setTableData, triggerReloadWithCurrentPage, triggerReloadWithBasePage)}</span>)}
+                    {columnDefenitions.map(defenition=><span className={rowIsSelected? styles.Selected: styles.NotSelected}>{defenition.renderFunction(tableRow, tableData, setTableData, triggerReloadWithCurrentPage, triggerReloadWithBasePage)}</span>)}
                   </>
                 );
               })

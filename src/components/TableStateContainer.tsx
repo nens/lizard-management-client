@@ -159,6 +159,8 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
       columnDefenitions
       ;
 
+  const getIfCheckBoxOfUuidIsSelected = ((uuid: string) => {return checkBoxes.find(checkBoxUuid=> checkBoxUuid===uuid)});
+
   const columnDefenitionsPlusCheckboxSortable =
   columnDefenitionsPlusCheckbox.map((columnDefenition, ind)=>{
     const originalTitleRenderFunction = columnDefenition.titleRenderFunction;
@@ -237,6 +239,8 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
           visibility: checkBoxes.length > 0? "visible" : "hidden",
           display: "flex",
           justifyContent: "space-between",
+          backgroundColor: "var(--color-header)",
+          color: "var(--color-ligth-main-second)",
         }}
       >
         <div>
@@ -249,7 +253,7 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
               <button
                 onClick={()=>{
                   // @ts-ignore
-                  const rows = tableData.filter((row) => {return checkBoxes.find(checkBoxUuid=> checkBoxUuid===row.uuid)})
+                  const rows = tableData.filter((row) => {return getIfCheckBoxOfUuidIsSelected(row.uuid)})
                   checkboxAction.actionFunction(rows, tableData, setTableData, ()=>fetchWithUrl(currentUrl), ()=>fetchWithUrl(url), setCheckBoxes)
                 }}
               >
@@ -269,6 +273,7 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
           dataRetrievalState={dataRetrievalState}
           triggerReloadWithCurrentPage={()=>{fetchWithUrl(currentUrl)}}
           triggerReloadWithBasePage={()=>{fetchWithUrl(url)}}
+          getIfCheckBoxOfUuidIsSelected={getIfCheckBoxOfUuidIsSelected}
         />
       </div>
       

@@ -39,6 +39,9 @@
   padding-bottom: 9px;
   box-sizing: border-box;
 }
+.Table > div > .Selected {
+  background-color: rgba(53, 75, 97, 0.24);
+}
 
 /* header ordering buttons */
 .Table > div:nth-child(1) button {
