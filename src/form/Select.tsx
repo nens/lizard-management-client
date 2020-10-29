@@ -1,13 +1,12 @@
 import React, { useEffect, useRef } from "react";
-import ClearInputButton from "./../forms/ClearInputButton";
 import formStyles from "../styles/Forms.module.css";
 
 interface MyProps {
   title: string,
   name: string,
   value: string,
-  valueChanged: (e: React.ChangeEvent<HTMLInputElement>) => void,
-  clearInput: (name: string) => void,
+  valueChanged: (e: React.ChangeEvent<HTMLSelectElement>) => void,
+  options: string[],
   validated: boolean,
   errorMessage?: string | false,
   placeholder?: string,
@@ -15,14 +14,14 @@ interface MyProps {
   readOnly?: boolean
 };
 
-export const TextInput: React.FC<MyProps> = (props) => {  
+export const Select: React.FC<MyProps> = (props) => {  
   const {
     title,
     name,
     placeholder,
     value,
     valueChanged,
-    clearInput,
+    options,
     handleEnter,
     validated,
     errorMessage,
@@ -30,7 +29,7 @@ export const TextInput: React.FC<MyProps> = (props) => {
   } = props;
 
   // Set validity of the input field
-  const myInput = useRef<HTMLInputElement>(null);
+  const myInput = useRef<HTMLSelectElement>(null);
   useEffect(() => {
     if (myInput && myInput.current) {
       if (validated) {
@@ -39,27 +38,34 @@ export const TextInput: React.FC<MyProps> = (props) => {
         myInput.current.setCustomValidity(errorMessage || '');
       };
     };
-  })
+  });
 
   return (
     <label htmlFor={name}>
       <span>{title}</span>
       <div style={{position: 'relative'}}>
-        <input
+        <select
           ref={myInput}
           name={name}
           id={name}
-          type="text"
+          value={value}
           autoComplete="off"
-          className={formStyles.FormControl}
-          placeholder={placeholder}
+          className={formStyles.FormControlSmall}
           onChange={valueChanged}
-          value={value || ""}
-          onKeyUp={handleEnter}
-          readOnly={!!readOnly}
-          disabled={!!readOnly}
-        />
-        {!readOnly ? <ClearInputButton onClick={() => clearInput(name)}/> : null}
+        >
+          <option
+            value={''}
+            label={placeholder}
+            disabled
+          />
+          {options.map(option => (
+            <option
+              key={option}
+              value={option}
+              label={option}
+            />
+          ))}
+        </select>
       </div>
     </label>
   );

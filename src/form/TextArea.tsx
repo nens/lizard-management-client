@@ -3,7 +3,7 @@ import ClearInputButton from "./../forms/ClearInputButton";
 import formStyles from "../styles/Forms.module.css";
 
 interface MyProps {
-  label: string,
+  title: string,
   name: string,
   value: string,
   valueChanged: Function,
@@ -17,7 +17,7 @@ interface MyProps {
 
 export const TextArea: React.FC<MyProps> = (props) => {  
   const {
-    label,
+    title,
     name,
     placeholder,
     value,
@@ -43,7 +43,7 @@ export const TextArea: React.FC<MyProps> = (props) => {
 
   return (
     <label htmlFor={name}>
-      <span>{label}</span>
+      <span>{title}</span>
       <div style={{ position: 'relative'}}>
         <textarea
           ref={myInput}
