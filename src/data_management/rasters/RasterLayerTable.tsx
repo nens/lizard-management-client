@@ -135,7 +135,7 @@ export const RasterLayerTable = (props:any) =>  {
     >
         <TableStateContainer 
           tableData={rasterItems70Parsed} 
-          gridTemplateColumns={"10% 20% 20% 20% 10% 20%"} 
+          gridTemplateColumns={"8% 30% 24% 20% 10% 8%"} 
           columnDefenitions={rasterSourceColumnDefenitions}
           baseUrl={`${baseUrl}?`} 
           showCheckboxes={true}
