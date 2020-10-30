@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useForm, Values } from '../form/useForm';
 import { minLength } from '../form/validators';
 import { TextInput } from '../form/TextInput';
@@ -8,6 +8,7 @@ import { Button } from '../form/Button';
 import { required } from '../form/validators';
 import { DurationField } from '../form/DurationField';
 import { CheckBox } from '../form/CheckBox';
+import { Dropdown } from '../form/Dropdown';
 
 export const RasterForm: React.FC = () => {
   const initialValues: Values = {
@@ -16,7 +17,8 @@ export const RasterForm: React.FC = () => {
     type: '',
     temporal: false,
     duration: null,
-    organisation: 'Nelen & Schuurmans',
+    organisation: '',
+    supplier: 'hoan.phung',
   };
   const onSubmit = (values: Values) => {
     console.log('submitted', values)
@@ -40,11 +42,12 @@ export const RasterForm: React.FC = () => {
     <form
       onSubmit={handleSubmit}
       onReset={handleReset}
+      style={{width: '90%'}}
     >
       <TextInput
         title={'Name'}
         name={'name'}
-        placeholder={'raster name'}
+        placeholder={'Enter at least 3 characters'}
         value={values.name as string}
         valueChanged={handleChange}
         clearInput={clearInput}
@@ -55,7 +58,7 @@ export const RasterForm: React.FC = () => {
       <TextArea
         title={'Description'}
         name={'description'}
-        placeholder={'raster description'}
+        placeholder={'Enter at least 1 character'}
         value={values.description as string}
         valueChanged={handleChange}
         clearInput={clearInput}
@@ -87,10 +90,22 @@ export const RasterForm: React.FC = () => {
         validated={true}
         readOnly={values.temporal === false}
       />
-      <TextInput
+      <Dropdown
         title={'Organisation'}
         name={'organisation'}
         value={values.organisation as string}
+        valueChanged={handleChange}
+        options={['Nelen', 'Nelens & Schuurman', 'Aa en Hunzen', 'Schuurman', 'Hunze']}
+        placeholder={'- search and select -'}
+        clearInput={clearInput}
+        validated={!required('Please select an organisation', values.organisation)}
+        // validated={true}
+        errorMessage={required('Please select an organisation', values.organisation)}
+      />
+      <TextInput
+        title={'Supplier'}
+        name={'supplier'}
+        value={values.supplier as string}
         valueChanged={handleChange}
         clearInput={clearInput}
         validated={true}

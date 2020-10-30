@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm, Values } from '../form/useForm';
 import { greaterThanMin, minLength, rangeCheck } from '../form/validators';
 import { TextInput } from '../form/TextInput';
@@ -39,11 +39,12 @@ export const WmsForm: React.FC = () => {
     <form
       onSubmit={handleSubmit}
       onReset={handleReset}
+      style={{width: '90%'}}
     >
       <TextInput
         title={'Name'}
         name={'name'}
-        placeholder={'raster name'}
+        placeholder={'Enter at least 3 characters'}
         value={values.name as string}
         valueChanged={handleChange}
         clearInput={clearInput}
@@ -53,7 +54,7 @@ export const WmsForm: React.FC = () => {
       <TextArea
         title={'Description'}
         name={'description'}
-        placeholder={'raster description'}
+        placeholder={'Enter description'}
         value={values.description as string}
         valueChanged={handleChange}
         clearInput={clearInput}
@@ -62,7 +63,7 @@ export const WmsForm: React.FC = () => {
       <TextInput
         title={'Url'}
         name={'url'}
-        placeholder={'WMS url'}
+        placeholder={'Enter at least 1 character'}
         value={values.url as string}
         valueChanged={handleChange}
         clearInput={clearInput}
@@ -78,7 +79,7 @@ export const WmsForm: React.FC = () => {
       <IntegerInput
         title={'Min zoom level'}
         name={'minZoom'}
-        placeholder={'Minimum zoom level'}
+        placeholder={'Enter between 0 and 31'}
         value={values.minZoom as string}
         valueChanged={handleChange}
         clearInput={clearInput}
@@ -92,7 +93,7 @@ export const WmsForm: React.FC = () => {
       <IntegerInput
         title={'Max zoom level'}
         name={'maxZoom'}
-        placeholder={'Maximum zoom level'}
+        placeholder={'Enter between 0 and 31'}
         value={values.maxZoom as string}
         valueChanged={handleChange}
         clearInput={clearInput}
