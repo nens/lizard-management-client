@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import { useForm, Values } from '../form/useForm';
 import { minLength } from '../form/validators';
 import { TextInput } from '../form/TextInput';
@@ -26,8 +26,6 @@ export const RasterForm: React.FC = () => {
 
   const {
     values,
-    touchedValues,
-    handleBlur,
     handleChange,
     handleSubmit,
     handleReset,

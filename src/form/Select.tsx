@@ -22,10 +22,8 @@ export const Select: React.FC<MyProps> = (props) => {
     value,
     valueChanged,
     options,
-    handleEnter,
     validated,
     errorMessage,
-    readOnly
   } = props;
 
   // Set validity of the input field

@@ -25,7 +25,6 @@ export const Dropdown: React.FC<MyProps> = (props) => {
     options,
     valueChanged,
     clearInput,
-    handleEnter,
     validated,
     errorMessage,
     readOnly
@@ -44,7 +43,7 @@ export const Dropdown: React.FC<MyProps> = (props) => {
         myInput.current.setCustomValidity(errorMessage || '');
       };
     };
-  }, [value]);
+  });
 
   return (
     <label htmlFor={name}>

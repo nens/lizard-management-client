@@ -1,5 +1,5 @@
 import React from "react";
-import buttonStyles from "../styles/Buttons.module.css";
+// import buttonStyles from "../styles/Buttons.module.css";
 
 interface MyProps {
   type: 'submit' | 'reset',

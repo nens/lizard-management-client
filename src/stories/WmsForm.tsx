@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useForm, Values } from '../form/useForm';
 import { greaterThanMin, minLength, rangeCheck } from '../form/validators';
 import { TextInput } from '../form/TextInput';
@@ -23,13 +23,10 @@ export const WmsForm: React.FC = () => {
 
   const {
     values,
-    touchedValues,
-    handleBlur,
     handleChange,
     handleSubmit,
     handleReset,
     clearInput,
-    handleValueChange,
   } = useForm({
     initialValues,
     onSubmit
