@@ -30,7 +30,7 @@ body {
 
 .AppContent {
   height: 100%;
-  width:100%;
+  width:80%;
   flex: 1;
   min-height: 0;
 }

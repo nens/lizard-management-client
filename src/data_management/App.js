@@ -32,7 +32,7 @@ class App extends Component {
 
   render() {
     return (
-      <div style={{height: "100%"}}>
+      <>
         <Route exact path="/data_management" component={DataManagementHome} />
         <Route exact path="/data_management/old_rasters" component={RasterApp} /> 
         <Route exact path="/data_management/raster_sources" component={RasterSourceTable} />
@@ -71,7 +71,7 @@ class App extends Component {
             component={EditWmsLayer}
           />
         </Switch>
-      </div>
+      </>
     );
   }
 }

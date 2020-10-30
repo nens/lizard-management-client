@@ -11,10 +11,7 @@ export const ExplainSideColumn = (props:any) => {
       style={{
         display: "flex",
         alignItems: "stretch",
-        // width: "100%",
-        width: "80%",
-        // minWidth: "80%",
-        margin: "auto",
+        width: "100%",
         height: "100%",
       }}
     >
