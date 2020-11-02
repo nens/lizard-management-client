@@ -21,3 +21,9 @@ but also is going to be tricky to program on the frontend since I created a gene
 - uuid for observation type in api
 
 - deleting raster source not yet supported in api ?
+
+- more rows need to fit on page
+- no scroll and pagination both
+- simplify table design?
+- put for Remco and Hoan to review
+- useQuery for datafetching https://react-query.tanstack.com/docs/overview
