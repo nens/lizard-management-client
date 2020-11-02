@@ -36,10 +36,24 @@ const Table: React.FC<Props> = ({tableData, setTableData, gridTemplateColumns, c
         >
             {
               tableData.map(tableRow=>{
-                const rowIsSelected = getIfCheckBoxOfUuidIsSelected && getIfCheckBoxOfUuidIsSelected(tableRow.uuid)
+                const rowIsSelected = getIfCheckBoxOfUuidIsSelected && getIfCheckBoxOfUuidIsSelected(tableRow.uuid);
+                const updateTableRow = (newTableRow: any) => {
+                  const newTableData = tableData.map((rowAllTables:any)=>{
+                    if (rowAllTables.uuid ===  tableRow.uuid) {
+                      return {...newTableRow}
+                    } else{
+                      return {...rowAllTables};
+                    }
+                  })
+                  setTableData(newTableData);
+                } 
                 return (
                   <>
-                    {columnDefenitions.map(defenition=><span className={rowIsSelected? styles.Selected: styles.NotSelected}>{defenition.renderFunction(tableRow, tableData, setTableData, triggerReloadWithCurrentPage, triggerReloadWithBasePage)}</span>)}
+                    {columnDefenitions.map(defenition=>
+                      <span className={rowIsSelected? styles.Selected: styles.NotSelected}>
+                        {defenition.renderFunction(tableRow, updateTableRow, triggerReloadWithCurrentPage, triggerReloadWithBasePage)}
+                      </span>
+                    )}
                   </>
                 );
               })

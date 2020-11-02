@@ -1,5 +1,4 @@
 import React from 'react';
-import {useState} from 'react';
 import actionsIcon from "../images/table_actions_button_icon.svg";
 import styles from './TableActionButtons.module.css';
 
@@ -19,7 +18,6 @@ interface Props {
 }
 
 const TableActionButtons: React.FC<Props> = ({actions, tableRow,tableData,setTableData,triggerReloadWithCurrentPage, triggerReloadWithBasePage }) => {
-  // const [isOpen, setIsOpen] = useState(false)
   return (
     <div
       className={styles.TableActionButtons}
@@ -30,6 +28,7 @@ const TableActionButtons: React.FC<Props> = ({actions, tableRow,tableData,setTab
         display: "flex",
         justifyContent: "flex-end",
         paddingRight: "10px",
+        backgroundColor: tableRow.markAsDeleted? "red": "blue",
       }}
     >
       <img src={actionsIcon} alt="actions dropdown button icon"/>

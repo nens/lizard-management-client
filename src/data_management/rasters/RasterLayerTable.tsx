@@ -15,46 +15,47 @@ import rasterIcon from "../../images/raster_layers_logo_explainbar.svg";
 const baseUrl = "/api/v4/rasters/";
 const navigationUrlRasters = "/data_management/rasters";
 
-const deleteActionRaster = (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any)=>{
-  if (window.confirm(`Are you sure you want to delete raster with uuids: ${row.uuid}`)) {
-    rawDeleteActionRasters([row], tableData, setTableData, triggerReloadWithCurrentPage, triggerReloadWithBasePage, null)
+const deleteActionRaster = (row: any, updateTableRow:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any)=>{
+  if (window.confirm(`Are you sure you want to delete raster with uuid: ${row.uuid} ?`)) {
+    updateTableRow({...row, markAsDeleted: true});
+    deleteRasters([row.uuid])
+    .then((_result) => {
+      // TODO: do we need this callback or should we otherwise indicate that the record is deleted ?
+      triggerReloadWithCurrentPage();
+    })
   }
 }
 
 const deleteActionRasters = (rows: any[], tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any, setCheckboxes: any)=>{
-  if (window.confirm(`Are you sure you want to delete ${rows.length} rasters with uuids: ${rows.map(row=>"\n"+row.uuid)}`)) {
-    rawDeleteActionRasters(rows, tableData, setTableData, triggerReloadWithCurrentPage, triggerReloadWithBasePage, setCheckboxes)
-  }
-}
-
-const rawDeleteActionRasters = (rows: any[], tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any, setCheckboxes: any)=>{
   const uuids = rows.map(row=> row.uuid);
-  const tableDataDeletedmarker = tableData.map((rowAllTables:any)=>{
-    if (uuids.find((uuid)=> uuid === rowAllTables.uuid)) {
-      return {...rowAllTables, markAsDeleted: true}
-    } else{
-      return {...rowAllTables};
-    }
-  })
-  setTableData(tableDataDeletedmarker);
-  deleteRasters(uuids)
-  .then((_result) => {
-    // TODO: problem: triggerReloadWithCurrentPage requires a promise to set the checkboxes once the promise settles,
-    // but somehow triggerReloadWithCurrentPage is sometimes undefined leading to the error ".then of undefined"
-    // Workaround for now is to set the checkboxes before the promise returns.
-    // the function triggerReloadWithCurrentPage is actually the function fetchWithUrl 
-    // desired way would be:
-    // triggerReloadWithCurrentPage().then(()=>{
-    //   if (setCheckboxes) {
-    //     setCheckboxes([]);
-    //   }
-    // });
-    // workaround instead:
-    if (setCheckboxes) {
-      setCheckboxes([]);
-    }
-    triggerReloadWithCurrentPage();
-  })
+  if (window.confirm(`Are you sure you want to delete rasters with uuids? \n ${uuids.join("\n")}`)) {
+    const tableDataDeletedmarker = tableData.map((rowAllTables:any)=>{
+      if (uuids.find((uuid)=> uuid === rowAllTables.uuid)) {
+        return {...rowAllTables, markAsDeleted: true}
+      } else{
+        return {...rowAllTables};
+      }
+    })
+    setTableData(tableDataDeletedmarker);
+    deleteRasters(uuids)
+    .then((_result) => {
+      // TODO: problem: triggerReloadWithCurrentPage requires a promise to set the checkboxes once the promise settles,
+      // but somehow triggerReloadWithCurrentPage is sometimes undefined leading to the error ".then of undefined"
+      // Workaround for now is to set the checkboxes before the promise returns.
+      // the function triggerReloadWithCurrentPage is actually the function fetchWithUrl 
+      // desired way would be:
+      // triggerReloadWithCurrentPage().then(()=>{
+      //   if (setCheckboxes) {
+      //     setCheckboxes([]);
+      //   }
+      // });
+      // workaround instead:
+      if (setCheckboxes) {
+        setCheckboxes([]);
+      }
+      triggerReloadWithCurrentPage();
+    })
+  }
 }
 
 const rasterSourceColumnDefenitions = [

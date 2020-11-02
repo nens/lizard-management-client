@@ -73,13 +73,17 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
     }).then(response=>{
       return response.json();
     }).then(parsedResponse=>{
-      setTableData(parsedResponse.results);
-      setDataRetrievalState("RETRIEVED")
-      // we need to split on "lizard.net" because both nxt3.staging.lizard.net/api/v4 and demo.lizard.net/api/v4 both should parse out "/api/v4"
-      if (parsedResponse.next) setNextUrl(parsedResponse.next.split("lizard.net")[1]);
-      else setNextUrl("")
-      if (parsedResponse.previous) setPreviousUrl(parsedResponse.previous.split("lizard.net")[1]);
-      else setPreviousUrl("")
+      // only set the data if it was actually received for the url that is latest requested
+      // problem: this is currently not working because the old url is still used by this function closure
+      // if (currentUrl === url /*|| dataRetrievalState === "NEVER_DID_RETRIEVE"*/) {
+        setTableData(parsedResponse.results);
+        setDataRetrievalState("RETRIEVED")
+        // we need to split on "lizard.net" because both nxt3.staging.lizard.net/api/v4 and demo.lizard.net/api/v4 both should parse out "/api/v4"
+        if (parsedResponse.next) setNextUrl(parsedResponse.next.split("lizard.net")[1]);
+        else setNextUrl("")
+        if (parsedResponse.previous) setPreviousUrl(parsedResponse.previous.split("lizard.net")[1]);
+        else setPreviousUrl("")
+      // }
     }).catch(error=>{
       console.log('fetching table data for url failed with error', url, error);
       setDataRetrievalState({status:"ERROR", errorMesssage: error, url: url})
