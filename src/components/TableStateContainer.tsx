@@ -31,7 +31,7 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
   const [currentUrl, setCurrentUrl] = useState("");
   const [nextUrl, setNextUrl] = useState("");
   const [previousUrl, setPreviousUrl] = useState("");
-  const [itemsPerPage, setItemsPerPage] = useState("20");
+  const [itemsPerPage, setItemsPerPage] = useState("10");
   // key will be based on ordr in array, but be aware that checkbox is added to beginning
   const [ordering, setOrdering] = useState<string | null>("last_modified");
   // const sortableList: SortingState[]  = columnDefenitions.map(item=> item.sortable? "NOT_SORTED" : "NOT_SORTABLE");

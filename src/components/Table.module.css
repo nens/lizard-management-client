@@ -37,8 +37,8 @@
 .Table > div > span {
   padding-left: 37px;
   padding-right: 37px;
-  padding-top: 24px;
-  padding-bottom: 24px;
+  padding-top: 16px;
+  padding-bottom: 16px;
   
   /* height: 64px; */
   box-sizing: border-box;
@@ -46,12 +46,15 @@
   display: flex;
   align-items: center;
   justify-content: flex-start;
-
   min-width: 0;
-  /* overflow: hidden; */
-  overflow-x: hidden;
-  text-overflow: ellipsis;
 }
+
+.CellEllipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .Table > div > .Selected {
   background-color: rgba(53, 75, 97, 0.24);
 }

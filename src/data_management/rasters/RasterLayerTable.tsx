@@ -9,6 +9,7 @@ import { deleteRasters, /*flushRasters*/ } from "../../api/rasters";
 import TableActionButtons from '../../components/TableActionButtons';
 import {ExplainSideColumn} from '../../components/ExplainSideColumn';
 import rasterIcon from "../../images/raster_layers_logo_explainbar.svg";
+import tableStyles from "../../components/Table.module.css";
 
 
 
@@ -61,17 +62,35 @@ const deleteActionRasters = (rows: any[], tableData:any, setTableData:any, trigg
 const rasterSourceColumnDefenitions = [
   {
     titleRenderFunction: () => "Name",
-    renderFunction: (row: any) => <NavLink to={`${navigationUrlRasters}/${row.uuid}/`}>{row.name}</NavLink>,
+    renderFunction: (row: any) => 
+      <span
+        className={tableStyles.CellEllipsis}
+        title={row.name}
+      >
+        <NavLink to={`${navigationUrlRasters}/${row.uuid}/`}>{row.name}</NavLink>
+      </span>,
     orderingField: "name",
   },
   {
     titleRenderFunction: () =>  "Based on",
-    renderFunction: (row: any) => row.raster_sources[0],
+    renderFunction: (row: any) => 
+      <span
+        className={tableStyles.CellEllipsis}
+        title={row.raster_sources[0]}
+      >
+        {row.raster_sources[0]}
+      </span>,
     orderingField: "raster_sources",
   },
   {
     titleRenderFunction: () =>  "User",
-    renderFunction: (row: any) => row.supplier,
+    renderFunction: (row: any) =>  
+    <span
+      className={tableStyles.CellEllipsis}
+      title={row.supplier}
+    >
+      {row.supplier}
+    </span>,
     orderingField: "supplier",
   },
   {
