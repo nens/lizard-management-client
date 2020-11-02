@@ -3,13 +3,15 @@ import React from "react";
 
 interface MyProps {
   type: 'submit' | 'reset',
-  readOnly?: boolean
+  readOnly?: boolean,
+  onClick?: () => void,
 };
 
 export const Button: React.FC<MyProps> = (props) => {  
   const {
     type,
-    readOnly
+    readOnly,
+    onClick
   } = props;
 
   return (
@@ -17,6 +19,7 @@ export const Button: React.FC<MyProps> = (props) => {
       type={type}
       value={type}
       // className={`${buttonStyles.Button} ${buttonStyles.Success}`}
+      onClick={onClick}
       readOnly={!!readOnly}
     />
   );

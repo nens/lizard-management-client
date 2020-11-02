@@ -23,6 +23,8 @@ export const WmsForm: React.FC = () => {
 
   const {
     values,
+    triedToSubmit,
+    tryToSubmitForm,
     handleChange,
     handleSubmit,
     handleReset,
@@ -47,6 +49,7 @@ export const WmsForm: React.FC = () => {
         clearInput={clearInput}
         validated={!minLength(3, values.name as string)}
         errorMessage={minLength(3, values.name as string)}
+        triedToSubmit={triedToSubmit}
       />
       <TextArea
         title={'Description'}
@@ -56,6 +59,7 @@ export const WmsForm: React.FC = () => {
         valueChanged={handleChange}
         clearInput={clearInput}
         validated={true}
+        triedToSubmit={triedToSubmit}
       />
       <TextInput
         title={'Url'}
@@ -66,6 +70,7 @@ export const WmsForm: React.FC = () => {
         clearInput={clearInput}
         validated={!minLength(1, values.url as string)}
         errorMessage={minLength(1, values.url as string)}
+        triedToSubmit={triedToSubmit}
       />
       <CheckBox
         title={'Feature info'}
@@ -86,6 +91,7 @@ export const WmsForm: React.FC = () => {
         errorMessage={
           rangeCheck(parseInt(values.minZoom as string), 0, 31)
         }
+        triedToSubmit={triedToSubmit}
       />
       <IntegerInput
         title={'Max zoom level'}
@@ -108,6 +114,7 @@ export const WmsForm: React.FC = () => {
             parseInt(values.maxZoom as string)
           )
         }
+        triedToSubmit={triedToSubmit}
       />
       <TextInput
         title={'Organisation'}
@@ -126,6 +133,7 @@ export const WmsForm: React.FC = () => {
         {' '}
         <Button
           type='submit'
+          onClick={tryToSubmitForm}
         />
       </div>
     </form>

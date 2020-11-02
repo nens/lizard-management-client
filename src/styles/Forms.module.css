@@ -23,6 +23,9 @@
   background-color: rgb(216, 216, 216);
   cursor: not-allowed;
 }
+.FormSubmitted:invalid {
+  border-color: #AE0000;
+}
 .FormGroup {
   margin-bottom: 10px;
 }

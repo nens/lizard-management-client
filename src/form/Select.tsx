@@ -11,6 +11,7 @@ interface MyProps {
   errorMessage?: string | false,
   placeholder?: string,
   handleEnter?: (e: any) => void,
+  triedToSubmit: boolean,
   readOnly?: boolean
 };
 
@@ -24,6 +25,7 @@ export const Select: React.FC<MyProps> = (props) => {
     options,
     validated,
     errorMessage,
+    triedToSubmit
   } = props;
 
   // Set validity of the input field
@@ -48,7 +50,7 @@ export const Select: React.FC<MyProps> = (props) => {
           id={name}
           value={value}
           autoComplete="off"
-          className={formStyles.FormControlSmall}
+          className={`${formStyles.FormControlSmall} ${triedToSubmit ? formStyles.FormSubmitted : ''}`}
           onChange={valueChanged}
         >
           <option

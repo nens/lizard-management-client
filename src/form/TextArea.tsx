@@ -12,6 +12,7 @@ interface MyProps {
   errorMessage?: string | false,
   placeholder?: string,
   handleEnter?: (e: any) => void,
+  triedToSubmit?: boolean,
   readOnly?: boolean
 };
 
@@ -26,6 +27,7 @@ export const TextArea: React.FC<MyProps> = (props) => {
     handleEnter,
     validated,
     errorMessage,
+    triedToSubmit,
     readOnly
   } = props;
 
@@ -50,7 +52,7 @@ export const TextArea: React.FC<MyProps> = (props) => {
           name={name}
           id={name}
           autoComplete="off"
-          className={formStyles.FormControl}
+          className={`${formStyles.FormControl} ${triedToSubmit ? formStyles.FormSubmitted : ''}`}
           placeholder={placeholder}
           onChange={e => valueChanged(e)}
           value={value || ""}

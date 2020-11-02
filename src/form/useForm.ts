@@ -15,6 +15,8 @@ interface FormInput {
 interface FormOutput {
   values: Values,
   touchedValues: TouchedValues,
+  triedToSubmit: boolean,
+  tryToSubmitForm: () => void, 
   handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void,
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void,
   handleReset: (e: React.FormEvent<HTMLFormElement>) => void,
@@ -26,6 +28,9 @@ interface FormOutput {
 export const useForm = ({ initialValues, onSubmit }: FormInput): FormOutput => {
   const [values, setValues] = useState<{}>(initialValues || {});
   const [touchedValues, setTouchedValues] = useState<{}>({});
+  const [triedToSubmit, setTriedToSubmit] = useState<boolean>(false);
+
+  const tryToSubmitForm = () => setTriedToSubmit(true);
 
   const handleChange = (event: any) => {
     const target = event.target;
@@ -63,6 +68,7 @@ export const useForm = ({ initialValues, onSubmit }: FormInput): FormOutput => {
   const handleReset = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setValues(initialValues);
+    setTriedToSubmit(false);
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -73,6 +79,8 @@ export const useForm = ({ initialValues, onSubmit }: FormInput): FormOutput => {
   return {
     values,
     touchedValues,
+    triedToSubmit,
+    tryToSubmitForm,
     handleChange,
     handleBlur,
     handleSubmit,

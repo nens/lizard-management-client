@@ -12,6 +12,7 @@ interface MyProps {
   errorMessage?: string | false,
   placeholder?: string,
   handleEnter?: (e: any) => void,
+  triedToSubmit?: boolean,
   readOnly?: boolean
 };
 
@@ -26,6 +27,7 @@ export const TextInput: React.FC<MyProps> = (props) => {
     handleEnter,
     validated,
     errorMessage,
+    triedToSubmit,
     readOnly
   } = props;
 
@@ -51,7 +53,7 @@ export const TextInput: React.FC<MyProps> = (props) => {
           id={name}
           type="text"
           autoComplete="off"
-          className={formStyles.FormControl}
+          className={`${formStyles.FormControl} ${triedToSubmit ? formStyles.FormSubmitted : ''}`}
           placeholder={placeholder}
           onChange={valueChanged}
           value={value || ""}

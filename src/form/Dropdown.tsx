@@ -13,6 +13,7 @@ interface MyProps {
   errorMessage?: string | false,
   placeholder?: string,
   handleEnter?: (e: any) => void,
+  triedToSubmit?: boolean,
   readOnly?: boolean
 };
 
@@ -27,6 +28,7 @@ export const Dropdown: React.FC<MyProps> = (props) => {
     clearInput,
     validated,
     errorMessage,
+    triedToSubmit,
     readOnly
   } = props;
 
@@ -55,7 +57,7 @@ export const Dropdown: React.FC<MyProps> = (props) => {
           id={name}
           value={value}
           autoComplete={'off'}
-          className={formStyles.FormControl}
+          className={`${formStyles.FormControl} ${triedToSubmit ? formStyles.FormSubmitted : ''}`}
           list={'data-list'}
           placeholder={placeholder}
           onChange={valueChanged}

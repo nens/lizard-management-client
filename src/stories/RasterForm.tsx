@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { useForm, Values } from '../form/useForm';
 import { minLength } from '../form/validators';
 import { TextInput } from '../form/TextInput';
@@ -26,6 +26,8 @@ export const RasterForm: React.FC = () => {
 
   const {
     values,
+    triedToSubmit,
+    tryToSubmitForm,
     handleChange,
     handleSubmit,
     handleReset,
@@ -52,6 +54,7 @@ export const RasterForm: React.FC = () => {
         validated={!minLength(3, values.name as string)}
         // validated={true}
         errorMessage={minLength(3, values.name as string)}
+        triedToSubmit={triedToSubmit}
       />
       <TextArea
         title={'Description'}
@@ -63,6 +66,7 @@ export const RasterForm: React.FC = () => {
         validated={!minLength(1, values.description as string)}
         // validated={true}
         errorMessage={minLength(1, values.description as string)}
+        triedToSubmit={triedToSubmit}
       />
       <Select
         title={'Type'}
@@ -74,6 +78,7 @@ export const RasterForm: React.FC = () => {
         validated={!required('Please select an option', values.type)}
         // validated={true}
         errorMessage={required('Please select an option', values.type)}
+        triedToSubmit={triedToSubmit}
       />
       <CheckBox
         title={'Temporal'}
@@ -99,6 +104,7 @@ export const RasterForm: React.FC = () => {
         validated={!required('Please select an organisation', values.organisation)}
         // validated={true}
         errorMessage={required('Please select an organisation', values.organisation)}
+        triedToSubmit={triedToSubmit}
       />
       <TextInput
         title={'Supplier'}
@@ -117,6 +123,7 @@ export const RasterForm: React.FC = () => {
         {' '}
         <Button
           type='submit'
+          onClick={tryToSubmitForm}
         />
       </div>
     </form>

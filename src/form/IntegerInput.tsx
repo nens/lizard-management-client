@@ -13,6 +13,7 @@ interface MyProps {
   errorMessage?: string | false,
   placeholder?: string,
   handleEnter?: (e: any) => void,
+  triedToSubmit?: boolean,
   readOnly?: boolean
 };
 
@@ -27,6 +28,7 @@ export const IntegerInput: React.FC<MyProps> = (props) => {
     handleEnter,
     clearInput,
     errorMessage,
+    triedToSubmit,
     readOnly
   } = props;
 
@@ -48,6 +50,7 @@ export const IntegerInput: React.FC<MyProps> = (props) => {
       handleEnter={handleEnter}
       errorMessage={errorMessage}
       readOnly={readOnly}
+      triedToSubmit={triedToSubmit}
     />
   );
 }
