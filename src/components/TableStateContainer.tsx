@@ -38,6 +38,7 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
   // const [sortingStatePerColumnIndex, setSortingStatePerColumnIndex] = useState(showCheckboxes? ["NOT_SORTABLE"].concat(sortableList): sortableList);
   const [nameContains, setNameContains] = useState("");
   const [dataRetrievalState, setDataRetrievalState] = useState<DataRetrievalState>("NEVER_DID_RETRIEVE");
+  const [apiResponse, setApiResponse] = useState<{response:any, currentUrl: string, dataRetrievalState: DataRetrievalState}>({response: {}, currentUrl: "", dataRetrievalState: "NEVER_DID_RETRIEVE"});
 
   // todo pass sorting name as column defenition v
   // find out sorting in heigh to low versus low to heigh translates in parameter v
@@ -62,6 +63,18 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
     "&organisation__uuid=" + selectedOrganisationUuid;
 
   useEffect(() => { 
+    if (currentUrl !== "" && currentUrl === apiResponse.currentUrl) {
+      apiResponse.response.results && setTableData(apiResponse.response.results);
+      setDataRetrievalState(apiResponse.dataRetrievalState)
+      // we need to split on "lizard.net" because both nxt3.staging.lizard.net/api/v4 and demo.lizard.net/api/v4 both should parse out "/api/v4"
+      if (apiResponse.response.next) setNextUrl(apiResponse.response.next.split("lizard.net")[1]);
+      else if (apiResponse.response.next === null)  setNextUrl("")
+      if (apiResponse.response.previous) setPreviousUrl(apiResponse.response.previous.split("lizard.net")[1]);
+      else if (apiResponse.response.previous === null) setPreviousUrl("")
+    }
+  }, [apiResponse, currentUrl]);
+
+  useEffect(() => { 
     fetchWithUrl(url);
   }, [url]);
 
@@ -73,20 +86,10 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
     }).then(response=>{
       return response.json();
     }).then(parsedResponse=>{
-      // only set the data if it was actually received for the url that is latest requested
-      // problem: this is currently not working because the old url is still used by this function closure
-      // if (currentUrl === url /*|| dataRetrievalState === "NEVER_DID_RETRIEVE"*/) {
-        setTableData(parsedResponse.results);
-        setDataRetrievalState("RETRIEVED")
-        // we need to split on "lizard.net" because both nxt3.staging.lizard.net/api/v4 and demo.lizard.net/api/v4 both should parse out "/api/v4"
-        if (parsedResponse.next) setNextUrl(parsedResponse.next.split("lizard.net")[1]);
-        else setNextUrl("")
-        if (parsedResponse.previous) setPreviousUrl(parsedResponse.previous.split("lizard.net")[1]);
-        else setPreviousUrl("")
-      // }
+      setApiResponse({response: parsedResponse, currentUrl: url, dataRetrievalState: "RETRIEVED"})
     }).catch(error=>{
       console.log('fetching table data for url failed with error', url, error);
-      setDataRetrievalState({status:"ERROR", errorMesssage: error, url: url})
+      setApiResponse({response: {}, currentUrl: url, dataRetrievalState: {status:"ERROR", errorMesssage: error, url: url}})
     });
   }
 
