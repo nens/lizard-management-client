@@ -1,5 +1,7 @@
 .Pagination {
   margin-top: 16px;
+  /* take all remaining whitespace to fit exactly 10 items in table. Maybe this margin should actually be on whole table state container instead */
+  margin-Bottom: 34px;
 }
 
 .Pagination label {

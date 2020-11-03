@@ -217,7 +217,9 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
       <div
         style={{
           display: "flex",
-          justifyContent: "space-between"
+          justifyContent: "space-between",
+          marginBottom: "16px",
+          marginTop: "16px",
         }}
       >
         <TableSearchBox
@@ -233,6 +235,18 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
           newItemOnClick? 
           <button
             onClick={newItemOnClick}
+            style={{
+              paddingTop: "8px",
+              paddingBottom: "8px",
+              paddingLeft: "32px",
+              paddingRight: "40px",
+              color: "white",
+              backgroundColor: "#009F86",
+              textTransform: "uppercase",
+              border: "none",
+              boxShadow: "2px 2px 2px #00000029",
+              borderRadius: "3px",
+            }}
           >
             + New Item
           </button>
