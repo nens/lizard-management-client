@@ -17,20 +17,48 @@ export const ExplainSideColumn = (props:any) => {
     >
       <div
         style={{
-          width: "200px",
+          width: "346px",
           display: "flex",
           flexDirection: "column",
-          alignItems: "center"
+          // alignItems: "center",
+          alignItems: "stretch",
+          margin: "8px",
+          marginRight: "16px",
+          
         }}
       >
-        <NavLink to={backUrl}><span style={{fontSize:"36px"}}>{"←"}</span></NavLink>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-start",
+          }}
+          
+        >
+          <NavLink to={backUrl}><span style={{fontSize:"36px"}}>{"←"}</span></NavLink>
+        </div>
         <img src={imgUrl} alt={""}></img>
-        <h2>{headerText}</h2>
+        <h2
+          style={{
+            marginBottom: "32px",
+            marginTop: "32px",
+            textTransform: "uppercase",
+            textAlign: "center",
+            color: "#2C3E50",
+            fontSize: "medium",
+            
+          }}
+        >
+          {headerText}
+        </h2>
         <div
           style={{
             borderColor: "#A1A1A1",
             borderStyle: "solid",
             borderWidth: "0.5px",
+            padding: "24px",
+            borderRadius: "5px",
+            // this doesnot work, it also takes the place of the pagination..
+            // flex: "1",
           }}
         >
           {explainationText}
