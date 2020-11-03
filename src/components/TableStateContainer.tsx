@@ -250,7 +250,13 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
           color: "var(--color-ligth-main-second)",
         }}
       >
-        <div>
+        <div 
+          style={{
+            paddingTop: "17px",
+            paddingBottom: "17px",
+            paddingLeft: "12px",
+          }}
+        >
           {`${checkBoxes.length} items selected`}
         </div>
         <div>
@@ -263,8 +269,16 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
                   const rows = tableData.filter((row) => {return getIfCheckBoxOfUuidIsSelected(row.uuid)})
                   checkboxAction.actionFunction(rows, tableData, setTableData, ()=>fetchWithUrl(currentUrl), ()=>fetchWithUrl(url), setCheckBoxes)
                 }}
+                style={{
+                  border: "none",
+                  backgroundColor: "rgba(0,0,0,0)",
+                  color: "white",
+                  paddingTop: "17px",
+                  paddingBottom: "17px",
+                  paddingRight: "12px",
+                }}
               >
-                {checkboxAction.displayValue + ' ' + (checkBoxes.length) + " items"}
+                {`${checkboxAction.displayValue} (${checkBoxes.length})`}
               </button>
             );
           })

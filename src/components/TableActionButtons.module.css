@@ -16,7 +16,7 @@
 
 .TableActionButtons > select {
   -moz-appearance : none;
-  -webkit-appearance:none; /* Safari and Chrome */
+  -webkit-appearance:none; 
   appearance:none;
   position :absolute;
   top: 0;
@@ -27,4 +27,12 @@
   /*  24 (from height image icon) / 2 = 12 px  */
   height: calc(50% + 12px);
   cursor: pointer;
+}
+
+.TableActionButtons > svg {
+  fill:#2c3e50;
+}
+
+.TableActionButtons > select:hover + svg {
+  fill: #009F86;
 }

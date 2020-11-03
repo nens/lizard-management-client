@@ -24,6 +24,10 @@
   background-color: var(--color-dark-main);
   color: var(--color-ligth-main);
 }
+.Table > div:nth-child(1) > span {
+  padding-top: 12px;
+  padding-bottom: 9px;
+}
 
 /* body */
 .Table > div:nth-child(2) {

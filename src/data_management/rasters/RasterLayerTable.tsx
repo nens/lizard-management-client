@@ -99,7 +99,7 @@ const rasterSourceColumnDefenitions = [
     orderingField: null,
   },
   {
-    titleRenderFunction: () =>  "Actions",
+    titleRenderFunction: () =>  "",//"Actions",
     renderFunction: (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any) => {
       return (
           <TableActionButtons
