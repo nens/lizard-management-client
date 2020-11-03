@@ -30,14 +30,14 @@ const RasterSourceForm: React.FC<Props> = ({}) => {
   const onSubmit = (values: Values) => {
     console.log('submitted', values);
     // const raster = {
-    //   name: rasterName,
-    //   organisation: selectedOrganisation.uuid,
-    //   access_modifier: accessModifier,
-    //   description: rasterDescription,
-    //   supplier: '',
-    //   supplier_code: supplierCode,
-    //   temporal: temporal,
-    //   interval: temporal ? interval : undefined
+    //   name: values.rasterName as string,
+    //   organisation: values.organisation as string,
+    //   access_modifier: values.accessModifier as string,
+    //   description: values.description as string,
+    //   supplier: values.supplierName as string,
+    //   supplier_code: values.supplierCode as string,
+    //   temporal: values.temporal as boolean,
+    //   interval: values.interval as string,
     // };
     // createRasterSource(raster);
   };
