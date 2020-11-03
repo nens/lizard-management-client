@@ -1,0 +1,31 @@
+.Pagination {
+  margin-top: 16px;
+}
+
+.Pagination label {
+  margin-left: 32px;
+}
+
+.Pagination > div > button {
+  background-color: white;
+  border-style: solid;
+  border-width: 0.5px;
+  border-color: #2C3E50;
+}
+
+.Pagination > div > button:disabled {
+  background-color: rgba(53, 75, 97, 0.24);
+  border-color:  rgba(53, 75, 97, 0.24);;
+}
+
+.Pagination > div > button:nth-child(1) {
+  border-radius: 3px 0 0 3px;
+  margin-right: 8px;
+}
+.Pagination > div > button:nth-child(2) {
+  border-radius: 3px 0 0 3px;
+  margin-right: 4px;
+}
+.Pagination > div > button:nth-child(3) {
+  border-radius: 0 3px 3px 0;
+}
