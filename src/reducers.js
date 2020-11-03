@@ -248,6 +248,27 @@ function alarmType(state = "RASTERS", action) {
   }
 }
 
+// Selectors
+export const getBootstrap = (state) => {
+  return state.bootstrap;
+};
+
+export const getOrganisations = (state) => {
+  return state.organisations;
+};
+export const getSelectedOrganisation = (state) => {
+  return state.organisations.selected;
+};
+export const getObservationTypes = (state) => {
+  return state.observationTypes;
+};
+export const getColorMaps = (state) => {
+  return state.colorMaps;
+};
+export const getSupplierIds = (state) => {
+  return state.supplierIds;
+};
+
 const rootReducer = combineReducers({
   bootstrap,
   organisations,

@@ -1,0 +1,32 @@
+.AccessModifierTiles {
+  display: flex;
+}
+.AccessModifier {
+  height: 96px;
+  width: 180px;
+  margin-right: 20px;
+  border: 1px solid #C9C9C9;
+  cursor: pointer;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.AccessModifierSelected {
+  border: 1px solid #73C9B2;
+  background-color: #55BFA226;
+}
+
+.AccessModifierTilesReadOnly {
+  display: flex;
+}
+.AccessModifierTilesReadOnly > .AccessModifier {
+  border-color: #C9C9C9;
+  background-color: #F6F6F6;
+  cursor: not-allowed;
+}
+.AccessModifierTilesReadOnly > .AccessModifierSelected {
+  border: 1px solid #73C9B2;
+  background-color: #55BFA226;
+}
