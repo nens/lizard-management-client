@@ -12,7 +12,6 @@ import {  injectIntl } from "react-intl";
 import {DataRetrievalState} from '../types/retrievingDataTypes';
 
 interface Props {
-  tableData: any [];
   gridTemplateColumns: string;
   columnDefenitions: ColumnDefenition[];
   baseUrl: string; 
@@ -259,8 +258,13 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
         }
         {
           queryCheckBox?
-          <span>
-            {queryCheckBox.text}
+          <span
+            style={{
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <span style={{marginRight: "8px"}}>{queryCheckBox.text}</span>
              <Checkbox 
                 checked={queryCheckBoxState} 
                 onChange={()=>{

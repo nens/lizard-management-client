@@ -4,9 +4,7 @@ import {useSelector} from 'react-redux';
 
 
 import TableStateContainer from '../../components/TableStateContainer';
-import { rasterItems70Parsed } from '../../stories/TableStoriesData';
 import { NavLink } from "react-router-dom";
-import { deleteRasters, /*flushRasters*/ } from "../../api/rasters";
 import TableActionButtons from '../../components/TableActionButtons';
 import {ExplainSideColumn} from '../../components/ExplainSideColumn';
 import rasterIcon from "../../images/raster_layers_logo_explainbar.svg";
@@ -18,20 +16,84 @@ import {getUsername} from "../../reducers";
 const baseUrl = "/api/v4/scenarios/";
 const navigationUrl = "/data_management/scenarios";
 
-const deleteActionRaster = (row: any, updateTableRow:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any)=>{
-  if (window.confirm(`Are you sure you want to delete raster with uuid: ${row.uuid} ?`)) {
-    updateTableRow({...row, markAsDeleted: true});
-    deleteRasters([row.uuid])
-    .then((_result) => {
-      // TODO: do we need this callback or should we otherwise indicate that the record is deleted ?
+const deleteSingle = (row: any, updateTableRow:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any)=>{
+  if (window.confirm(`Are you sure you want to detele scenario with name: ${row.name} ?`)) {
+    const uuid = row.uuid;
+    const flushedRow =  {...row, markAsDeleted: true}
+    updateTableRow(flushedRow);
+    const fetchOptions = {
+      //Not permanently deleted, this will be implemented in backend
+      credentials: "same-origin",
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({})
+    };
+    // @ts-ignore
+    fetch(baseUrl + uuid + "/", fetchOptions).then(()=>{
       triggerReloadWithCurrentPage();
-    })
+    });
   }
 }
 
-const deleteActionRasters = (rows: any[], tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any, setCheckboxes: any)=>{
+const deleteRawDataSingle = (row: any, updateTableRow:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any)=>{
+  if (window.confirm(`Are you sure you want to delete the raw data of scenario with name: ${row.name} ?`)) {
+    const uuid = row.uuid;
+    const markAsDeletedRaw =  {...row, markAsDeletedRaw: true}
+    updateTableRow(markAsDeletedRaw);
+    const fetchOptions = {
+      //Not permanently deleted, this will be implemented in backend
+      credentials: "same-origin",
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({})
+    };
+    alert("not implemented yet");
+    // @ts-ignore
+    // fetch(baseUrl + uuid + "/", fetchOptions).then(()=>{
+    //   triggerReloadWithCurrentPage();
+    // });
+  }
+}
+
+const deleteRawDataMultiple = (rows: any[], tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any, setCheckboxes: any)=>{
+
   const uuids = rows.map(row=> row.uuid);
-  if (window.confirm(`Are you sure you want to delete rasters with uuids? \n ${uuids.join("\n")}`)) {
+  const names = rows.map(row=> row.name);
+  if (window.confirm(`Are you sure you want to delete the raw data of scenario's with names? \n ${names.join("\n")}`)) {
+    const tableDataDeletedmarker = tableData.map((rowAllTables:any)=>{
+      if (uuids.find((uuid)=> uuid === rowAllTables.uuid)) {
+        return {...rowAllTables, markAsDeletedRaw: true}
+      } else{
+        return {...rowAllTables};
+      }
+    })
+    setTableData(tableDataDeletedmarker);
+    alert("not supported yet");
+    // Promise.all(uuids.map((uuid)=>{
+    //   const fetchOptions = {
+    //     //Not permanently deleted, this will be implemented in backend
+    //     credentials: "same-origin",
+    //     method: "DELETE",
+    //     headers: { "Content-Type": "application/json" },
+    //     body: JSON.stringify({})
+    //   };
+    //   // @ts-ignore
+    //   return fetch(baseUrl + uuid + "/", fetchOptions)
+    // }))
+    // .then((_result) => {
+    //   // TODO: this is not preferred way. see delet function in raster layer table
+    //   if (setCheckboxes) {
+    //     setCheckboxes([]);
+    //   }
+    //   triggerReloadWithCurrentPage();
+    // })
+  }
+}
+
+const deleteMultiple =  (rows: any[], tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any, setCheckboxes: any)=>{
+  const uuids = rows.map(row=> row.uuid);
+  const names = rows.map(row=> row.name);
+  if (window.confirm(`Are you sure you want to delete scenario's with names? \n ${names.join("\n")}`)) {
     const tableDataDeletedmarker = tableData.map((rowAllTables:any)=>{
       if (uuids.find((uuid)=> uuid === rowAllTables.uuid)) {
         return {...rowAllTables, markAsDeleted: true}
@@ -40,19 +102,19 @@ const deleteActionRasters = (rows: any[], tableData:any, setTableData:any, trigg
       }
     })
     setTableData(tableDataDeletedmarker);
-    deleteRasters(uuids)
+    Promise.all(uuids.map((uuid)=>{
+      const fetchOptions = {
+        //Not permanently deleted, this will be implemented in backend
+        credentials: "same-origin",
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({})
+      };
+      // @ts-ignore
+      return fetch(baseUrl + uuid + "/", fetchOptions)
+    }))
     .then((_result) => {
-      // TODO: problem: triggerReloadWithCurrentPage requires a promise to set the checkboxes once the promise settles,
-      // but somehow triggerReloadWithCurrentPage is sometimes undefined leading to the error ".then of undefined"
-      // Workaround for now is to set the checkboxes before the promise returns.
-      // the function triggerReloadWithCurrentPage is actually the function fetchWithUrl 
-      // desired way would be:
-      // triggerReloadWithCurrentPage().then(()=>{
-      //   if (setCheckboxes) {
-      //     setCheckboxes([]);
-      //   }
-      // });
-      // workaround instead:
+      // TODO: this is not preferred way. see delet function in raster layer table
       if (setCheckboxes) {
         setCheckboxes([]);
       }
@@ -61,7 +123,7 @@ const deleteActionRasters = (rows: any[], tableData:any, setTableData:any, trigg
   }
 }
 
-const rasterSourceColumnDefenitions = [
+const columnDefenitions = [
   {
     titleRenderFunction: () => "Name",
     renderFunction: (row: any) => 
@@ -95,11 +157,11 @@ const rasterSourceColumnDefenitions = [
     </span>,
     orderingField: "username",
   },
-  // {
-  //   titleRenderFunction: () =>  "Raw data",
-  //   renderFunction: (row: any) => row.hasRawData === true? "Yes" : "No",
-  //   orderingField: null,
-  // },
+  {
+    titleRenderFunction: () =>  "Raw data",
+    renderFunction: (row: any) => row.hasRawData === true? "Yes" : "No",
+    orderingField: null,
+  },
   {
     titleRenderFunction: () =>  "Size",
     renderFunction: (row: any) => 
@@ -112,53 +174,34 @@ const rasterSourceColumnDefenitions = [
     ,
     orderingField: "total_size",
   },
-  // {
-  //   titleRenderFunction: () =>  "",//"Actions",
-  //   renderFunction: (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any) => {
-  //     return (
-  //         <TableActionButtons
-  //           tableRow={row} 
-  //           tableData={tableData}
-  //           setTableData={setTableData} 
-  //           triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
-  //           triggerReloadWithBasePage={triggerReloadWithBasePage}
-  //           actions={[
-  //             {
-  //               displayValue: "delete",
-  //               actionFunction: deleteActionRaster,
-  //             },
-  //             // {
-  //             //   displayValue: "flushRasters",
-  //             //   actionFunction: (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any)=>{
-  //             //     const uuid = row.uuid;
-  //             //     const tableDataFlushedmarker = tableData.map((rowAllTables:any)=>{
-  //             //       if (uuid === rowAllTables.uuid) {
-  //             //         return {...rowAllTables, markAsFlushed: true}
-  //             //       } else{
-  //             //         return {...rowAllTables};
-  //             //       }
-  //             //     })
-  //             //     setTableData(tableDataFlushedmarker);
-  //             //     flushRasters([uuid])
-  //             //     .then((_result) => {
-  //             //       triggerReloadWithCurrentPage();
-  //             //     })
-  //             //   },
-  //             // },
-  //           ]}
-  //         />
-  //     );
-  //   },
-  //   orderingField: null,
-  // },
+  {
+    titleRenderFunction: () =>  "",//"Actions",
+    renderFunction: (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any) => {
+      return (
+          <TableActionButtons
+            tableRow={row} 
+            tableData={tableData}
+            setTableData={setTableData} 
+            triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
+            triggerReloadWithBasePage={triggerReloadWithBasePage}
+            actions={[
+              {
+                displayValue: "delete",
+                actionFunction: deleteSingle,
+              },
+              {
+                displayValue: "delete raw data",
+                actionFunction: deleteRawDataSingle,
+              }
+            ]}
+          />
+      );
+    },
+    orderingField: null,
+  },
 ];
 
 export const ScenarioTable = (props:any) =>  {
-
-  const handleNewRasterClick  = () => {
-    const { history } = props;
-    history.push(`${navigationUrl}/new`);
-  }
 
   const userName = useSelector(getUsername);
 
@@ -170,17 +213,20 @@ export const ScenarioTable = (props:any) =>  {
       backUrl={"/data_management"}
     >
         <TableStateContainer 
-          tableData={rasterItems70Parsed} 
-          gridTemplateColumns={"8% 30% 24% 20% 10%"} 
-          columnDefenitions={rasterSourceColumnDefenitions}
+          gridTemplateColumns={"8% 20% 18% 18% 14% 14% 8%"} 
+          columnDefenitions={columnDefenitions}
           baseUrl={`${baseUrl}?`} 
           showCheckboxes={true}
           checkBoxActions={[
-            // {
-            //   displayValue: "Delete",
-            //   actionFunction: deleteActionRasters,
-            // }
+            {
+              displayValue: "Delete",
+              actionFunction: deleteMultiple,
+            },{
+              displayValue: "Delete raw",
+              actionFunction: deleteRawDataMultiple
+            },
           ]}
+          // new item not supported for scenarios
           // newItemOnClick={handleNewRasterClick}
           queryCheckBox={{
             text:"Only show own scenario's",

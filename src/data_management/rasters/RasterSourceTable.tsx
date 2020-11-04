@@ -3,7 +3,6 @@ import React from 'react';
 
 
 import TableStateContainer from '../../components/TableStateContainer';
-import { rasterItems70Parsed } from '../../stories/TableStoriesData';
 import { NavLink } from "react-router-dom";
 import { deleteRasterSources, deleteRasterSource, flushRasters, flushRaster } from "../../api/rasters";
 import TableActionButtons from '../../components/TableActionButtons';
@@ -172,7 +171,6 @@ export const RasterSourceTable = (props:any) =>  {
       backUrl={"/data_management"}
     >
       <TableStateContainer 
-        tableData={rasterItems70Parsed} 
         gridTemplateColumns={"8% 29% 25% 10% 20% 8%"} 
         columnDefenitions={rasterSourceColumnDefenitions}
         baseUrl={`${baseUrl}?`} 
