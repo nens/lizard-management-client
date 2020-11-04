@@ -54,6 +54,7 @@ export const fetchRasterV4 = async (uuid: string, options: RequestInit = {
 };
 
 export const flushRaster = async (uuid: string) => {
+  return Promise.resolve();
   // Re-fetch raster so we have up to date information here
   const raster = await fetchRasterV4(uuid);
 
@@ -313,13 +314,20 @@ export const patchRaster = async (rasterUuid: string, raster: OldRasterEdit) => 
   };
 };
 
+/*
+Next function api call fails with error:
+{"status":405,"code":10,"message":"Request method not available. #405.10","detail":"Method \"DELETE\" not allowed."}
+//*/
 export const deleteRasterSource = async (uuid: string) => {
   // Try to delete source, ignore errors
   const result = await fetch("/api/v4/rastersources/", {
     credentials: "same-origin",
     method: "DELETE",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({})
+    body: JSON.stringify({
+      // we should hopefully eventually not need next line
+      "force": true,
+    })
   });
   return result;
 }

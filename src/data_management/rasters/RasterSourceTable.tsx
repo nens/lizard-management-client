@@ -5,7 +5,7 @@ import React from 'react';
 import TableStateContainer from '../../components/TableStateContainer';
 import { rasterItems70Parsed } from '../../stories/TableStoriesData';
 import { NavLink } from "react-router-dom";
-import { deleteRasterSources, flushRasters } from "../../api/rasters";
+import { deleteRasterSources, deleteRasterSource, flushRasters, flushRaster } from "../../api/rasters";
 import TableActionButtons from '../../components/TableActionButtons';
 import {ExplainSideColumn} from '../../components/ExplainSideColumn';
 import rasterSourcesIcon from "../../images/raster_sources_logo_explainbar.svg";
@@ -16,7 +16,7 @@ import rasterSourcesIcon from "../../images/raster_sources_logo_explainbar.svg";
 const baseUrl = "/api/v4/rastersources/";
 const navigationUrlRasters = "/data_management/rasters";
 
-const deleteActionRaster = (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any)=>{
+const deleteActionRaster = (row: any, updateTableRow:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any)=>{
   // const uuid = row.uuid;
   // const tableDataDeletedmarker = tableData.map((rowAllTables:any)=>{
   //   if (uuid === rowAllTables.uuid) {
@@ -30,27 +30,61 @@ const deleteActionRaster = (row: any, tableData:any, setTableData:any, triggerRe
   // .then((_result) => {
   //   triggerReloadWithCurrentPage();
   // })
-  deleteActionRasters([row], tableData, setTableData, triggerReloadWithCurrentPage, triggerReloadWithBasePage, null)
+
+  // deleteActionRasters([row], tableData, setTableData, triggerReloadWithCurrentPage, triggerReloadWithBasePage, null)
+  if (window.confirm(`Are you sure you want to delete raster-source with uuid: ${row.uuid} ?`)) {
+    updateTableRow({...row, markAsDeleted: true});
+    deleteRasterSource(row.uuid)
+    .then((_result) => {
+      // TODO: do we need this callback or should we otherwise indicate that the record is deleted ?
+      triggerReloadWithCurrentPage();
+    })
+  }
+  
 }
 
 const deleteActionRasters = (rows: any[], tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any, setCheckboxes: any)=>{
   const uuids = rows.map(row=> row.uuid);
-  const tableDataDeletedmarker = tableData.map((rowAllTables:any)=>{
-    if (uuids.find((uuid)=> uuid === rowAllTables.uuid)) {
-      return {...rowAllTables, markAsDeleted: true}
-    } else{
-      return {...rowAllTables};
-    }
-  })
-  setTableData(tableDataDeletedmarker);
-  deleteRasterSources(uuids)
-  .then((_result) => {
-    // TODO: this is not preferred way. see delet function in raster layer table
-    if (setCheckboxes) {
-      setCheckboxes([]);
-    }
-    triggerReloadWithCurrentPage();
-  })
+  if (window.confirm(`Are you sure you want to delete rasters with uuids? \n ${uuids.join("\n")}`)) {
+    const tableDataDeletedmarker = tableData.map((rowAllTables:any)=>{
+      if (uuids.find((uuid)=> uuid === rowAllTables.uuid)) {
+        return {...rowAllTables, markAsDeleted: true}
+      } else{
+        return {...rowAllTables};
+      }
+    })
+    setTableData(tableDataDeletedmarker);
+    deleteRasterSources(uuids)
+    .then((_result) => {
+      // TODO: this is not preferred way. see delet function in raster layer table
+      if (setCheckboxes) {
+        setCheckboxes([]);
+      }
+      triggerReloadWithCurrentPage();
+    })
+  }
+}
+
+const flushActionRasters = (rows: any[], tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any, setCheckboxes: any)=>{
+  const uuids = rows.map(row=> row.uuid);
+  if (window.confirm(`Are you sure you want to flush rasters with uuids? \n ${uuids.join("\n")}`)) {
+    const tableDataDeletedmarker = tableData.map((rowAllTables:any)=>{
+      if (uuids.find((uuid)=> uuid === rowAllTables.uuid)) {
+        return {...rowAllTables, markAsFlushed: true}
+      } else{
+        return {...rowAllTables};
+      }
+    })
+    setTableData(tableDataDeletedmarker);
+    flushRasters(uuids)
+    .then((_result) => {
+      // TODO: this is not preferred way. see delet function in raster layer table
+      if (setCheckboxes) {
+        setCheckboxes([]);
+      }
+      triggerReloadWithCurrentPage();
+    })
+  }
 }
 
 const rasterSourceColumnDefenitions = [
@@ -93,24 +127,17 @@ const rasterSourceColumnDefenitions = [
                 actionFunction: deleteActionRaster,
               },
               {
-                displayValue: "flushRasters",
-                actionFunction: (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any)=>{
-                  const uuid = row.uuid;
-                  // const tableDataCopy = tableData.map((row:any)=>{
-                  //   return {...row}
-                  // });
-                  const tableDataFlushedmarker = tableData.map((rowAllTables:any)=>{
-                    if (uuid === rowAllTables.uuid) {
-                      return {...rowAllTables, markAsFlushed: true}
-                    } else{
-                      return {...rowAllTables};
-                    }
-                  })
-                  setTableData(tableDataFlushedmarker);
-                  flushRasters([uuid])
-                  .then((_result) => {
-                    triggerReloadWithCurrentPage();
-                  })
+                displayValue: "flush raster",
+                actionFunction: (row: any, updateTableRow:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any)=>{
+                  if (window.confirm(`Are you sure you want to flush raster-source with uuid: ${row.uuid} ?`)) {
+                    const uuid = row.uuid;
+                    const flushedRow =  {...row, markAsFlushed: true}
+                    updateTableRow(flushedRow);
+                    flushRaster(uuid)
+                    .then((_result) => {
+                      triggerReloadWithCurrentPage();
+                    })
+                  }
                 },
               },
             ]}
@@ -145,9 +172,14 @@ export const RasterSourceTable = (props:any) =>  {
         showCheckboxes={true}
         checkBoxActions={[
           {
+            displayValue: "Flush Rasters",
+            actionFunction: flushActionRasters,
+          },
+          {
             displayValue: "Delete",
             actionFunction: deleteActionRasters,
-          }
+          },
+          
         ]}
         newItemOnClick={handleNewRasterClick}
       />
