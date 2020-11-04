@@ -9,29 +9,12 @@ import { deleteRasterSources, deleteRasterSource, flushRasters, flushRaster } fr
 import TableActionButtons from '../../components/TableActionButtons';
 import {ExplainSideColumn} from '../../components/ExplainSideColumn';
 import rasterSourcesIcon from "../../images/raster_sources_logo_explainbar.svg";
-
-
-
+import tableStyles from "../../components/Table.module.css";
 
 const baseUrl = "/api/v4/rastersources/";
 const navigationUrlRasters = "/data_management/rasters";
 
 const deleteActionRaster = (row: any, updateTableRow:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any)=>{
-  // const uuid = row.uuid;
-  // const tableDataDeletedmarker = tableData.map((rowAllTables:any)=>{
-  //   if (uuid === rowAllTables.uuid) {
-  //     return {...rowAllTables, markAsDeleted: true}
-  //   } else{
-  //     return {...rowAllTables};
-  //   }
-  // })
-  // setTableData(tableDataDeletedmarker);
-  // deleteRasters([uuid])
-  // .then((_result) => {
-  //   triggerReloadWithCurrentPage();
-  // })
-
-  // deleteActionRasters([row], tableData, setTableData, triggerReloadWithCurrentPage, triggerReloadWithBasePage, null)
   if (window.confirm(`Are you sure you want to delete raster-source with uuid: ${row.uuid} ?`)) {
     updateTableRow({...row, markAsDeleted: true});
     deleteRasterSource(row.uuid)
@@ -90,22 +73,51 @@ const flushActionRasters = (rows: any[], tableData:any, setTableData:any, trigge
 const rasterSourceColumnDefenitions = [
   {
     titleRenderFunction: () => "Name",
-    renderFunction: (row: any) => <NavLink to={`${navigationUrlRasters}/${row.uuid}/`}>{!row.name? "(empty name)" : row.name }</NavLink>,
+    renderFunction: (row: any) => 
+      <span
+        className={tableStyles.CellEllipsis}
+        title={row.name}
+      >
+        <NavLink to={`${navigationUrlRasters}/${row.uuid}/`}>{!row.name? "(empty name)" : row.name }</NavLink>
+      </span>
+    ,
     orderingField: "name",
   },
   {
     titleRenderFunction: () =>  "Code",
-    renderFunction: (row: any) => {return !row.supplier_code ? "(empty 'supplier code')" : row.supplier_code },
+    renderFunction: (row: any) =>
+    // (row: any) => {return !row.supplier_code ? "(empty 'supplier code')" : row.supplier_code },
+      <span
+        className={tableStyles.CellEllipsis}
+        title={row.supplier_code}
+      >
+        {!row.supplier_code? "(empty code)" : row.supplier_code }
+      </span>
+    ,
     orderingField: "supplier_code",
   },
   {
     titleRenderFunction: () =>  "Temporal",
-    renderFunction: (row: any) => row.temporal === true? "Yes" : "No",
+    renderFunction: (row: any) => 
+      // row.temporal === true? "Yes" : "No"
+      <span
+        className={tableStyles.CellEllipsis}
+      >
+        {row.temporal === true? "Yes" : "No"}
+      </span>
+    ,
     orderingField: null,
   },
   {
     titleRenderFunction: () =>  "Size",
-    renderFunction: (row: any) => `${row.size? row.size: 0} Bytes`,
+    renderFunction: (row: any) => 
+      <span
+        className={tableStyles.CellEllipsis}
+        title={`${row.size? row.size: 0} Bytes`}
+      >
+        {`${row.size? row.size: 0} Bytes`}
+      </span>
+    ,
     orderingField: null,
   },
   {
@@ -163,8 +175,6 @@ export const RasterSourceTable = (props:any) =>  {
         tableData={rasterItems70Parsed} 
         gridTemplateColumns={"8% 29% 25% 10% 20% 8%"} 
         columnDefenitions={rasterSourceColumnDefenitions}
-        // /api/v4/rasters/?writable=true&page_size=10&page=1&name__icontains=&ordering=last_modified&organisation__uuid=61f5a464c35044c19bc7d4b42d7f58cb
-        // baseUrl={"/api/v4/rasters/?writable=${writable}&page_size=${page_size}&page=${page}&name__icontains=${name__icontains}&ordering=${ordering}&organisation__uuid=${organisation__uuid}"}
         baseUrl={`${baseUrl}?`} 
         showCheckboxes={true}
         checkBoxActions={[

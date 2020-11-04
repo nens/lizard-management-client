@@ -21,10 +21,11 @@ interface Props {
   showCheckboxes: boolean;
   checkBoxActions: any[];
   newItemOnClick: any | null;
+  queryCheckBox: {text: string, adaptUrlFunction: (url:string)=>string} | null;
   // action: Action[]
 }
 
-const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, columnDefenitions, baseUrl, showCheckboxes, checkBoxActions, newItemOnClick, /*action*/}) => {
+const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, columnDefenitions, baseUrl, showCheckboxes, checkBoxActions, newItemOnClick, queryCheckBox/*action*/}) => {
 
   const [tableData, setTableData] = useState([]);
   const [checkBoxes, setCheckBoxes] = useState([]);
@@ -39,6 +40,7 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
   const [nameContains, setNameContains] = useState("");
   const [dataRetrievalState, setDataRetrievalState] = useState<DataRetrievalState>("NEVER_DID_RETRIEVE");
   const [apiResponse, setApiResponse] = useState<{response:any, currentUrl: string, dataRetrievalState: DataRetrievalState}>({response: {}, currentUrl: "", dataRetrievalState: "NEVER_DID_RETRIEVE"});
+  const [queryCheckBoxState, setQueryCheckBoxState] = useState(false);
 
   // todo pass sorting name as column defenition v
   // find out sorting in heigh to low versus low to heigh translates in parameter v
@@ -54,7 +56,7 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
   const selectedOrganisationUuid = selectedOrganisation ? selectedOrganisation.uuid : "";
 
   // const url = "/api/v4/rasters/?writable=true&page_size=10&page=1&name__icontains=&ordering=last_modified&organisation__uuid=61f5a464c35044c19bc7d4b42d7f58cb";
-  const url = baseUrl +
+  const preUrl = baseUrl +
     "writable=true" +
     "&page_size=" + itemsPerPage +
     "&page=1" +
@@ -62,6 +64,8 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
     "&ordering=" + ordering +
     "&organisation__uuid=" + selectedOrganisationUuid;
 
+  const url = queryCheckBox && queryCheckBoxState? queryCheckBox.adaptUrlFunction(preUrl) : preUrl
+    
   useEffect(() => { 
     if (currentUrl !== "" && currentUrl === apiResponse.currentUrl) {
       apiResponse.response.results && setTableData(apiResponse.response.results);
@@ -250,6 +254,21 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
           >
             + New Item
           </button>
+          :
+          null
+        }
+        {
+          queryCheckBox?
+          <span>
+            {queryCheckBox.text}
+             <Checkbox 
+                checked={queryCheckBoxState} 
+                onChange={()=>{
+                  if (queryCheckBoxState) setQueryCheckBoxState(false);
+                  else setQueryCheckBoxState(true)
+                }} 
+              />
+          </span>
           :
           null
         }
