@@ -109,7 +109,7 @@ const rasterSourceColumnDefenitions = [
     orderingField: null,
   },
   {
-    titleRenderFunction: () =>  "Actions",
+    titleRenderFunction: () =>  "",
     renderFunction: (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any) => {
       return (
           <TableActionButtons
@@ -118,12 +118,9 @@ const rasterSourceColumnDefenitions = [
             setTableData={setTableData} 
             triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
             triggerReloadWithBasePage={triggerReloadWithBasePage}
-            
-            // uuid={row.uuid}
             actions={[
               {
                 displayValue: "delete",
-                // actionFunction: (uuid:string)=>deleteRasters([uuid]),
                 actionFunction: deleteActionRaster,
               },
               {
@@ -164,7 +161,7 @@ export const RasterSourceTable = (props:any) =>  {
     >
       <TableStateContainer 
         tableData={rasterItems70Parsed} 
-        gridTemplateColumns={"10% 20% 20% 20% 10% 20%"} 
+        gridTemplateColumns={"8% 29% 25% 10% 20% 8%"} 
         columnDefenitions={rasterSourceColumnDefenitions}
         // /api/v4/rasters/?writable=true&page_size=10&page=1&name__icontains=&ordering=last_modified&organisation__uuid=61f5a464c35044c19bc7d4b42d7f58cb
         // baseUrl={"/api/v4/rasters/?writable=${writable}&page_size=${page_size}&page=${page}&name__icontains=${name__icontains}&ordering=${ordering}&organisation__uuid=${organisation__uuid}"}

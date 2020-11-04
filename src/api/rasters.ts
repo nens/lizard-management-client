@@ -56,67 +56,67 @@ export const fetchRasterV4 = async (uuid: string, options: RequestInit = {
 export const flushRaster = async (uuid: string) => {
   return Promise.resolve();
   // Re-fetch raster so we have up to date information here
-  const raster = await fetchRasterV4(uuid);
+  // const raster = await fetchRasterV4(uuid);
 
-  if (raster.is_geoblock || !raster.source || !raster.raster_sources || !raster.raster_sources[0]) {
-    // Can't flush.
-    return;
-  }
-  const rasterSourceUrl = '/api/v4/' + (raster.raster_sources[0].split('/api/v4/')[1]);
-  const oldSourceResponse = await fetch(rasterSourceUrl, {credentials: "same-origin"});
-  const oldSource = await oldSourceResponse.json();
+  // if (raster.is_geoblock || !raster.source || !raster.raster_sources || !raster.raster_sources[0]) {
+  //   // Can't flush.
+  //   return;
+  // }
+  // const rasterSourceUrl = '/api/v4/' + (raster.raster_sources[0].split('/api/v4/')[1]);
+  // const oldSourceResponse = await fetch(rasterSourceUrl, {credentials: "same-origin"});
+  // const oldSource = await oldSourceResponse.json();
 
-  // Patch raster so source is None
-  await fetch(`/api/v4/rasters/${uuid}/`, {
-    credentials: "same-origin",
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({"source": null})
-  });
+  // // Patch raster so source is None
+  // await fetch(`/api/v4/rasters/${uuid}/`, {
+  //   credentials: "same-origin",
+  //   method: "PATCH",
+  //   headers: { "Content-Type": "application/json" },
+  //   body: JSON.stringify({"source": null})
+  // });
 
-  // Try to delete source, ignore errors
-  await fetch(rasterSourceUrl, {
-    credentials: "same-origin",
-    method: "DELETE",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({})
-  });
+  // // Try to delete source, ignore errors
+  // await fetch(rasterSourceUrl, {
+  //   credentials: "same-origin",
+  //   method: "DELETE",
+  //   headers: { "Content-Type": "application/json" },
+  //   body: JSON.stringify({})
+  // });
 
-  // Create new raster source from old one
-  const rasterSourceBody = {
-    name: oldSource.name,
-    description: oldSource.description,
-    organisation: oldSource.organisation.uuid, // We receive whole org, but update with only the UUID
-    access_modifier: "Private", // Always
-    supplier: oldSource.supplier,
-    supplier_code: oldSource.supplier_code,
-    temporal: oldSource.temporal,
-    interval: oldSource.temporal ? oldSource.interval : undefined
-  };
+  // // Create new raster source from old one
+  // const rasterSourceBody = {
+  //   name: oldSource.name,
+  //   description: oldSource.description,
+  //   organisation: oldSource.organisation.uuid, // We receive whole org, but update with only the UUID
+  //   access_modifier: "Private", // Always
+  //   supplier: oldSource.supplier,
+  //   supplier_code: oldSource.supplier_code,
+  //   temporal: oldSource.temporal,
+  //   interval: oldSource.temporal ? oldSource.interval : undefined
+  // };
 
-  const newSourceResponse = await fetch('/api/v4/rastersources/', {
-    credentials: "same-origin",
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(rasterSourceBody)
-  });
-  const newSource = await newSourceResponse.json();
+  // const newSourceResponse = await fetch('/api/v4/rastersources/', {
+  //   credentials: "same-origin",
+  //   method: "POST",
+  //   headers: { "Content-Type": "application/json" },
+  //   body: JSON.stringify(rasterSourceBody)
+  // });
+  // const newSource = await newSourceResponse.json();
 
-  // Patch layer so it has the new one
-  return fetch(`/api/v4/rasters/${uuid}/`, {
-    credentials: "same-origin",
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({source: {
-      graph: {
-        raster: [
-          "lizard_nxt.blocks.LizardRasterSource",
-          newSource.uuid
-        ]
-      },
-      name: "raster"
-    }})
-  });
+  // // Patch layer so it has the new one
+  // return fetch(`/api/v4/rasters/${uuid}/`, {
+  //   credentials: "same-origin",
+  //   method: "PATCH",
+  //   headers: { "Content-Type": "application/json" },
+  //   body: JSON.stringify({source: {
+  //     graph: {
+  //       raster: [
+  //         "lizard_nxt.blocks.LizardRasterSource",
+  //         newSource.uuid
+  //       ]
+  //     },
+  //     name: "raster"
+  //   }})
+  // });
 };
 
 export const flushRasters = (uuids: string[]) => {
