@@ -37,16 +37,16 @@ const deleteSingle = (row: any, updateTableRow:any, triggerReloadWithCurrentPage
 
 const deleteRawDataSingle = (row: any, updateTableRow:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any)=>{
   if (window.confirm(`Are you sure you want to delete the raw data of scenario with name: ${row.name} ?`)) {
-    const uuid = row.uuid;
+    // const uuid = row.uuid;
     const markAsDeletedRaw =  {...row, markAsDeletedRaw: true}
     updateTableRow(markAsDeletedRaw);
-    const fetchOptions = {
-      //Not permanently deleted, this will be implemented in backend
-      credentials: "same-origin",
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({})
-    };
+    // const fetchOptions = {
+    //   //Not permanently deleted, this will be implemented in backend
+    //   credentials: "same-origin",
+    //   method: "DELETE",
+    //   headers: { "Content-Type": "application/json" },
+    //   body: JSON.stringify({})
+    // };
     alert("not implemented yet");
     // @ts-ignore
     // fetch(baseUrl + uuid + "/", fetchOptions).then(()=>{
