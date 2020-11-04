@@ -21,6 +21,8 @@ import {
   UPDATE_ALARM_TYPE
 } from "./actions";
 
+export const getUsername = (state) => (state.bootstrap && state.bootstrap.bootstrap && state.bootstrap.bootstrap.user &&  state.bootstrap.bootstrap.user.username) || null;
+
 function bootstrap(
   state = {
     bootstrap: {},

@@ -1,4 +1,5 @@
 import React from 'react';
+import {useSelector} from 'react-redux';
 
 
 
@@ -10,6 +11,7 @@ import TableActionButtons from '../../components/TableActionButtons';
 import {ExplainSideColumn} from '../../components/ExplainSideColumn';
 import rasterIcon from "../../images/raster_layers_logo_explainbar.svg";
 import tableStyles from "../../components/Table.module.css";
+import {getUsername} from "../../reducers";
 
 
 
@@ -158,6 +160,8 @@ export const ScenarioTable = (props:any) =>  {
     history.push(`${navigationUrl}/new`);
   }
 
+  const userName = useSelector(getUsername);
+
   return (
     <ExplainSideColumn
       imgUrl={rasterIcon}
@@ -179,8 +183,8 @@ export const ScenarioTable = (props:any) =>  {
           ]}
           // newItemOnClick={handleNewRasterClick}
           queryCheckBox={{
-            text:"Show only own data",
-            adaptUrlFunction: (url:string) => {return url + `&username__contains=${"tom.deboer"}`},
+            text:"Only show own scenario's",
+            adaptUrlFunction: (url:string) => {return userName? url + `&username__contains=${userName}` : url},
           }}
         />
      </ExplainSideColumn>
