@@ -147,7 +147,7 @@ export function fetchObservationTypes() {
   return dispatch => {
     dispatch({ type: REQUEST_OBSERVATION_TYPES });
 
-    const url = "/api/v3/observationtypes/?page_size=100000";
+    const url = "/api/v4/observationtypes/?page_size=100000";
     const opts = { credentials: "same-origin" };
 
     fetch(url, opts)
