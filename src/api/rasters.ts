@@ -44,6 +44,18 @@ export interface RasterSource {
   interval?: string;
 }
 
+export interface RasterLayer {
+  name: string;
+  organisation: string;
+  access_modifier: string;
+  observation_type: string;
+  supplier: string;
+  supplier_code: string;
+  aggregation_type: string;
+  options?: string;
+  shared_with: string;
+}
+
 export const fetchRasterV3 = async (uuid: string) => {
   const response = await fetch(`/api/v3/rasters/${uuid}/`, {
     credentials: "same-origin"
@@ -52,6 +64,16 @@ export const fetchRasterV3 = async (uuid: string) => {
   return response.json();
 };
 
+export const fetchRasterSourceV4 = async (uuid: string, options: RequestInit = {
+  credentials: "same-origin"
+}) => {
+  const response = await fetch(`/api/v4/rastersources/${uuid}/`, {
+    ...options,
+    method: "GET"
+  });
+
+  return response.json();
+};
 
 export const fetchRasterV4 = async (uuid: string, options: RequestInit = {
   credentials: "same-origin"

@@ -4,7 +4,8 @@ import { Raster as RasterApp } from "./rasters/Raster";
 import { WmsLayer as WmsLayerApp } from "./wms_layers/WmsLayer";
 import { Scenarios as ScenariosApp } from "./scenarios/Scenarios";
 import { NewRaster } from "./rasters/NewRaster";
-import { EditRaster } from "./rasters/EditRaster";
+import { EditRasterSource } from "./rasters/EditRasterSource";
+import { EditRasterLayer } from "./rasters/EditRasterLayer";
 import { EditWmsLayer } from "./wms_layers/EditWmsLayer";
 import { NewWmsLayer } from "./wms_layers/NewWmsLayer";
 import { UploadRasterData } from "./rasters/UploadRasterData";
@@ -46,8 +47,13 @@ class App extends Component {
           />
           <Route
             exact
-            path="/data_management/rasters/:id"
-            component={EditRaster}
+            path="/data_management/raster_sources/:uuid"
+            component={EditRasterSource}
+          />
+          <Route
+            exact
+            path="/data_management/raster_layers/:uuid"
+            component={EditRasterLayer}
           />
           <Route
             exact

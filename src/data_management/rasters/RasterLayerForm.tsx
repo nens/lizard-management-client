@@ -13,8 +13,11 @@ import { minLength, required } from '../../form/validators';
 import { AccessModifier } from '../../form/AccessModifier';
 import { Select } from '../../form/Select';
 import { Dropdown } from '../../form/Dropdown';
+import { RasterLayer } from '../../api/rasters';
 
-interface Props {};
+interface Props {
+  currentRasterLayer?: RasterLayer
+};
 
 const RasterLayerForm: React.FC<Props> = ({}) => {
   const organisationsToSharedWith = useSelector(getOrganisations).availableForRasterSharedWith;
@@ -30,7 +33,7 @@ const RasterLayerForm: React.FC<Props> = ({}) => {
     aggregationType: '',
     observationType: '',
     colorMap: '',
-    colorMapRescalable: false,
+    rescalable: false,
     colorMapMin: '',
     colorMapMax: '',
     accessModifier: 'Private',
@@ -119,14 +122,14 @@ const RasterLayerForm: React.FC<Props> = ({}) => {
           triedToSubmit={triedToSubmit}
         />
         <Select
-          title={'Type'}
-          name={'type'}
-          placeholder={'select raster type'}
-          value={values.type as string}
+          title={'Aggregation type'}
+          name={'aggregationType'}
+          placeholder={'- Select -'}
+          value={values.aggregationType as string}
           valueChanged={handleInputChange}
           options={['none', 'counts', 'curve', 'sum', 'aggregate']}
-          validated={!required('Please select an option', values.type)}
-          errorMessage={required('Please select an option', values.type)}
+          validated={!required('Please select an option', values.aggregationType)}
+          errorMessage={required('Please select an option', values.aggregationType)}
           triedToSubmit={triedToSubmit}
         />
         <Dropdown
@@ -135,7 +138,7 @@ const RasterLayerForm: React.FC<Props> = ({}) => {
           value={values.observationType as string}
           valueChanged={handleInputChange}
           options={observationTypes.map((obsType: any) => obsType.parameter)}
-          placeholder={'- Select -'}
+          placeholder={'- Search and select -'}
           validated={!required('Please select an observation type', values.observationType)}
           errorMessage={required('Please select an observation type', values.observationType)}
           triedToSubmit={triedToSubmit}
@@ -146,7 +149,7 @@ const RasterLayerForm: React.FC<Props> = ({}) => {
           value={values.colorMap as string}
           valueChanged={handleInputChange}
           options={colorMaps.map((colorMap: any) => colorMap.name)}
-          placeholder={'- Select -'}
+          placeholder={'- Search and select -'}
           validated={!required('Please select a color map', values.colorMap)}
           errorMessage={required('Please select a color map', values.colorMap)}
           triedToSubmit={triedToSubmit}
@@ -171,7 +174,7 @@ const RasterLayerForm: React.FC<Props> = ({}) => {
           value={values.organisations as string}
           valueChanged={handleInputChange}
           options={organisationsToSharedWith.map((organisation: any) => organisation.name)}
-          placeholder={'- search and select -'}
+          placeholder={'- Search and select -'}
           validated={!required('Please select an organisation', values.organisations)}
           errorMessage={required('Please select an organisation', values.organisations)}
           triedToSubmit={triedToSubmit}

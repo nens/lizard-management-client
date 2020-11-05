@@ -12,8 +12,11 @@ import styles from './RasterForm.module.css';
 import { useForm, Values } from '../../form/useForm';
 import { minLength } from '../../form/validators';
 import { AccessModifier } from '../../form/AccessModifier';
+import { RasterSource } from '../../api/rasters';
 
-interface Props {};
+interface Props {
+  currentRasterSource?: RasterSource
+};
 
 const RasterSourceForm: React.FC<Props> = ({}) => {
   const selectedOrganisation = useSelector(getSelectedOrganisation);
