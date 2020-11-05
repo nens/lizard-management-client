@@ -18,7 +18,10 @@ import {
   SHOW_NOTIFICATION,
   DISMISS_NOTIFICATION,
   UPDATE_VIEWPORT_DIMENSIONS,
-  UPDATE_ALARM_TYPE
+  UPDATE_ALARM_TYPE,
+  REQUEST_DATASETS,
+  RECEIVE_DATASETS_SUCCESS,
+  RECEIVE_DATASETS_ERROR
 } from "./actions";
 
 function bootstrap(
@@ -195,6 +198,41 @@ function colorMaps(
   }
 }
 
+function datasets(
+  state = {
+    isFetching: false,
+    timesFetched: 0,
+    hasError: false,
+    errorMessage: "",
+    available: []
+  },
+  action
+) {
+  switch (action.type) {
+    case REQUEST_DATASETS:
+      return { ...state, isFetching: true };
+    case RECEIVE_DATASETS_SUCCESS:
+      return {
+        ...state,
+        available: action.data,
+        isFetching: false,
+        hasError: false,
+        timesFetched: state.timesFetched + 1
+      };
+    case RECEIVE_DATASETS_ERROR:
+      return {
+        ...state,
+        available: [],
+        isFetching: false,
+        hasError: true,
+        errorMessage: action.errorMessage,
+        timesFetched: state.timesFetched + 1
+      };
+    default:
+      return state;
+  }
+}
+
 function notifications(
   state = {
     notifications: []
@@ -268,6 +306,9 @@ export const getColorMaps = (state) => {
 export const getSupplierIds = (state) => {
   return state.supplierIds;
 };
+export const getDatasets = (state) => {
+  return state.datasets;
+};
 
 const rootReducer = combineReducers({
   bootstrap,
@@ -275,6 +316,7 @@ const rootReducer = combineReducers({
   observationTypes,
   supplierIds,
   colorMaps,
+  datasets,
   notifications,
   viewport,
   alarmType

@@ -268,3 +268,33 @@ export function updateAlarmType(alarmType) {
     alarmType
   };
 }
+
+// MARK: Datasets
+export const REQUEST_DATASETS = "REQUEST_DATASETS";
+export const RECEIVE_DATASETS_SUCCESS = "RECEIVE_DATASETS_SUCCESS";
+export const RECEIVE_DATASETS_ERROR = "RECEIVE_DATASETS_ERROR";
+
+export function fetchDatasets() {
+  return dispatch => {
+    const url = `/api/v4/datasets/`;
+    const opts = { credentials: "same-origin" };
+
+    dispatch({ type: REQUEST_DATASETS });
+
+    fetch(url, opts)
+      .then(responseObj => {
+        if (!responseObj.ok) {
+          const errorMessage = `HTTP error ${responseObj.status} while fetching Datasets: ${responseObj.statusText}`;
+          dispatch({ type: RECEIVE_DATASETS_ERROR, errorMessage });
+          console.error("[E]", errorMessage, responseObj);
+          return Promise.reject(errorMessage);
+        } else {
+          return responseObj.json();
+        }
+      })
+      .then(responseData => {
+        const data = responseData.results;
+        dispatch({ type: RECEIVE_DATASETS_SUCCESS, data });
+      });
+  };
+}

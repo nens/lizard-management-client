@@ -4,7 +4,6 @@ import { RouteComponentProps } from 'react-router';
 import MDSpinner from "react-md-spinner";
 import { fetchRasterV4, RasterLayer } from "../../api/rasters";
 import { getColorMaps, getObservationTypes, getOrganisations, getSupplierIds } from "../../reducers";
-import RasterSourceForm from "./RasterSourceForm";
 import RasterLayerForm from "./RasterLayerForm";
 
 interface RouteParams {

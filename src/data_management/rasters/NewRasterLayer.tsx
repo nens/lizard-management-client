@@ -1,43 +1,31 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { withRouter } from "react-router-dom";
-import { RouteComponentProps } from 'react-router';
 import MDSpinner from "react-md-spinner";
 
-import RasterSourceForm from "./RasterSourceForm";
 import RasterLayerForm from "./RasterLayerForm";
 import {
   getColorMaps,
   getObservationTypes,
   getOrganisations,
-  getSupplierIds
+  getSupplierIds,
+  getDatasets,
 } from "../../reducers";
 
-interface RouteParams {
-  rasterType: 'raster_sources' | 'raster_layers';
-};
-
-const NewRasterModel: React.FC<RouteComponentProps<RouteParams>> = (props) => {
+export const NewRasterLayer: React.FC = () => {
   const organisations = useSelector(getOrganisations);
   const observationTypes = useSelector(getObservationTypes);
   const colorMaps = useSelector(getColorMaps);
   const supplierIds = useSelector(getSupplierIds);
-
-  const { rasterType } = props.match.params;
+  const datasets = useSelector(getDatasets);
 
   if (
     organisations.isFetching === false &&
     observationTypes.isFetching === false &&
     colorMaps.isFetching === false &&
-    supplierIds.isFetching === false
+    supplierIds.isFetching === false &&
+    datasets.isFetching === false
   ) {
-    if (rasterType === 'raster_sources') {
-      return <RasterSourceForm />;
-    } else if (rasterType === 'raster_layers') {
-      return <RasterLayerForm />
-    } else {
-      return <div />
-    }
+    return <RasterLayerForm />;
   } else {
     return <div
       style={{
@@ -52,7 +40,3 @@ const NewRasterModel: React.FC<RouteComponentProps<RouteParams>> = (props) => {
     </div>
   }
 }
-
-const NewRaster = withRouter(NewRasterModel);
-
-export { NewRaster };
