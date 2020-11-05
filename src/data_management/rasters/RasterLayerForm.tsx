@@ -39,14 +39,15 @@ const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
     rasterSource: currentRasterLayer.raster_sources[0] || '',
     aggregationType: currentRasterLayer.aggregation_type,
     observationType: currentRasterLayer.observation_type,
-    colorMap: currentRasterLayer.options,
+    // @ts-ignore
+    colorMap: currentRasterLayer.options.styles,
     rescalable: currentRasterLayer.rescalable,
     colorMapMin: '',
     colorMapMax: '',
     accessModifier: currentRasterLayer.access_modifier,
     sharedWith: currentRasterLayer.shared_with.length === 0 ? false : true,
-    organisations: currentRasterLayer.shared_with,
-    organisation: currentRasterLayer.organisation,
+    organisations: currentRasterLayer.shared_with.map(organisation => organisation.name).join(', '),
+    organisation: currentRasterLayer.organisation.name,
     supplierName: currentRasterLayer.supplier,
   } : {
     name: '',

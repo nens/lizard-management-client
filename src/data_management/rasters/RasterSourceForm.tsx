@@ -30,7 +30,7 @@ const RasterSourceForm: React.FC<Props> = ({ currentRasterSource }) => {
     temporal: currentRasterSource.temporal,
     interval: currentRasterSource.interval ? toISOValue(rasterIntervalStringServerToDurationObject(currentRasterSource.interval)) : '',
     accessModifier: currentRasterSource.access_modifier,
-    organisation: currentRasterSource.organisation,
+    organisation: currentRasterSource.organisation.name,
   } : {
     name: '',
     description: '',

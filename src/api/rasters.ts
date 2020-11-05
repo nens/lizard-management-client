@@ -33,9 +33,15 @@ export interface OldRasterEdit {
   shared_with: string;
 }
 
+export interface Organisation {
+  name: string,
+  uuid: string,
+  url: string,
+}
+
 export interface RasterSource {
   name: string;
-  organisation: string;
+  organisation: Organisation;
   access_modifier: string;
   description: string;
   supplier: string;
@@ -47,14 +53,14 @@ export interface RasterSource {
 export interface RasterLayer {
   name: string;
   description: string;
-  organisation: string;
+  organisation: Organisation;
   access_modifier: string;
   observation_type: string;
   supplier: string;
   supplier_code: string;
   aggregation_type: string;
   options: string;
-  shared_with: string;
+  shared_with: Organisation[];
   datasets: string[];
   raster_sources: string[];
   rescalable: boolean;
