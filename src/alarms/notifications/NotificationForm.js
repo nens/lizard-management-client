@@ -4,7 +4,7 @@ import React, { Component } from "react";
 import { addNotification } from "../../actions";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { FormattedMessage, injectIntl } from "react-intl";
+import { FormattedMessage, injectIntl } from 'react-intl.macro';
 import ErrorOverlay from "./ErrorOverlay.js";
 
 import ManagementForm from "../../forms/ManagementForm";

@@ -6,7 +6,7 @@ import Lottie from "react-lottie";
 import * as animationSucces from "./success.json";
 import * as animationError from "./error.json";
 import buttonStyles from "../../styles/Buttons.module.css";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage } from 'react-intl.macro';
 
 // Based on the OrganisationSwitcher, this overlay gets called when an error occurs during the upload process.
 class ErrorOverlay extends Component {

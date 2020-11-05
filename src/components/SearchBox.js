@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { FormattedMessage, injectIntl } from "react-intl";
+import { FormattedMessage, injectIntl } from 'react-intl.macro';
 import Ink from "react-ink";
 import buttonStyles from "../styles/Buttons.module.css";
 import formStyles from "../styles/Forms.module.css";

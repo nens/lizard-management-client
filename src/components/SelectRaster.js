@@ -1,6 +1,6 @@
 import debounce from "lodash.debounce";
 import React, { Component } from "react";
-import { injectIntl } from "react-intl";
+import { injectIntl } from 'react-intl.macro';
 import MDSpinner from "react-md-spinner";
 import styles from "./SelectRaster.module.css";
 import formStyles from "../styles/Forms.module.css";

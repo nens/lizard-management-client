@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { FormattedMessage, injectIntl, InjectedIntlProps } from "react-intl";
+import { FormattedMessage, injectIntl, InjectedIntlProps } from 'react-intl.macro';
 import AddButton from "../components/AddButton";
 import GroupAndTemplateSelect from "../alarms/notifications/GroupAndTemplateSelect";
 import { validatorResult } from "./validators";

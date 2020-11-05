@@ -9,7 +9,7 @@ import React, { Component } from "react";
 import styles from "./App.module.css";
 import { addNotification, updateAlarmType } from "../../actions";
 import { connect } from "react-redux";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage } from 'react-intl.macro';
 import { withRouter } from "react-router-dom";
 import classNames from "classnames";
 import { simpleJSONFetch } from "../../utils/simpleJSONFetch.js";

@@ -5,7 +5,7 @@ import React, { Component } from "react";
 import styles from "./OrganisationSwitcher.module.css";
 import { connect } from "react-redux";
 import { fetchSupplierIds, selectOrganisation } from "../actions";
-import { FormattedMessage, injectIntl } from "react-intl";
+import { FormattedMessage, injectIntl } from 'react-intl.macro';
 import { Scrollbars } from "react-custom-scrollbars";
 import doArraysHaveEqualElement from '../utils/doArraysHaveEqualElement';
 import {appTiles} from '../home/HomeAppTileConfig';

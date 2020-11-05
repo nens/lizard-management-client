@@ -1,7 +1,7 @@
 // {"styles": "Blues:0.0:2.0"}
 // {"styles": "transparent", "HEIGHT": 512, "ZINDEX": 20, "WIDTH": 1024, "effects": "radar:0:0.008", "TRANSPARENT": false}
 import React, { Component } from "react";
-import { FormattedMessage, injectIntl, InjectedIntlProps } from "react-intl";
+import { FormattedMessage, injectIntl, InjectedIntlProps } from 'react-intl.macro';
 
 import SelectBox, { choicesT } from "./SelectBox";
 

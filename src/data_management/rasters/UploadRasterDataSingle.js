@@ -5,7 +5,7 @@ import { withRouter } from "react-router-dom";
 import classNames from "classnames";
 import Dropzone from "react-dropzone";
 import styles from "./UploadRasterData.module.css";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage } from 'react-intl.macro';
 import buttonStyles from "../../styles/Buttons.module.css";
 import gridStyles from "../../styles/Grid.module.css";
 import { uploadRasterFile } from "../../api/rasters";

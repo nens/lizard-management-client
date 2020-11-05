@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import MDSpinner from "react-md-spinner";
 import Ink from "react-ink";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage } from 'react-intl.macro';
 import { addNotification } from "../../actions";
 import { connect } from "react-redux";
 import styles from "./Detail.module.css";

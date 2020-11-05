@@ -4,7 +4,7 @@ import { withRouter } from "react-router-dom";
 import MDSpinner from "react-md-spinner";
 
 import classNames from "classnames";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage } from 'react-intl.macro';
 
 import { UploadRasterDataMultiple } from "./UploadRasterDataMultiple";
 

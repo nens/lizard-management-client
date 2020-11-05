@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { FormattedMessage, injectIntl, InjectedIntlProps } from "react-intl";
+import { FormattedMessage, injectIntl, InjectedIntlProps } from 'react-intl.macro';
 import formStyles from "../styles/Forms.module.css";
 import styles from './ThresholdsSelection.module.css';
 import { validatorResult } from "./validators";

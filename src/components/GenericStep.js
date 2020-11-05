@@ -4,7 +4,7 @@ import { withRouter } from "react-router-dom";
 
 import CheckMark from "./CheckMark";
 import StepIndicator from "./StepIndicator";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage } from 'react-intl.macro';
 
 import formStyles from "../styles/Forms.module.css";
 import buttonStyles from "../styles/Buttons.module.css";

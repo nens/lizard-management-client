@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { FormattedMessage, injectIntl, InjectedIntlProps } from "react-intl";
+import { FormattedMessage, injectIntl, InjectedIntlProps } from 'react-intl.macro';
 import styles from './Snoozing.module.css';
 import formStyles from "../styles/Forms.module.css";
 

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage } from 'react-intl.macro';
 import styles from "./ConfigureRecipients.module.css";
 import CSSTransition from "react-transition-group/CSSTransition";
 

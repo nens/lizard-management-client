@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage } from 'react-intl.macro';
 import ClearInputButton from "./ClearInputButton";
 import styles from "./SelectBox.module.css";
 import formStyles from "../styles/Forms.module.css";

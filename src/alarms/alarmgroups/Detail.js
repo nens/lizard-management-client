@@ -8,7 +8,7 @@ import styles from "./Detail.module.css";
 import tableStyles from "../../styles/Table.module.css";
 import { addNotification } from "../../actions";
 import { connect } from "react-redux";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage } from 'react-intl.macro';
 import { withRouter } from "react-router-dom";
 
 class Detail extends Component {

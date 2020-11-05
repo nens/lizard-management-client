@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage } from 'react-intl.macro';
 
 import Scrollbars from "react-custom-scrollbars";
 import ClearButton from "../components/ClearButton.js";

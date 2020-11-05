@@ -16,7 +16,7 @@
 // That same location should be passed in as the 'location' prop.
 
 import React, { Component } from "react";
-import { FormattedMessage, injectIntl } from "react-intl";
+import { FormattedMessage, injectIntl } from 'react-intl.macro';
 import { Map, Marker, TileLayer, WMSTileLayer } from "react-leaflet";
 import SelectAsset from "../components/SelectAsset";
 import styles from "./RasterPreview.module.css";

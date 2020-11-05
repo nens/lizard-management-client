@@ -5,7 +5,7 @@ import React, { Component } from "react";
 import styles from "./RecipientGroups.module.css";
 import { addNotification } from "../../actions";
 import { connect } from "react-redux";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage } from 'react-intl.macro';
 
 class RecipientGroups extends Component {
   constructor(props) {

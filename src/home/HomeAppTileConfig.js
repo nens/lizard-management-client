@@ -1,5 +1,5 @@
 import React from "react";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage } from 'react-intl.macro';
 import alarmIcon from "../images/alarm@3x.svg";
 import userManagementIcon from "../images/userManagement.svg";
 import dataManagementIcon from "../images/database.svg";

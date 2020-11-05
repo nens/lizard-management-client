@@ -4,7 +4,7 @@ import MDSpinner from "react-md-spinner";
 import Ink from "react-ink";
 // import ActionBar from "./ActionBar";
 import PaginationBar from "./PaginationBar";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage } from 'react-intl.macro';
 import { connect } from "react-redux";
 import styles from "./App.module.css";
 import gridStyles from "../../styles/Grid.module.css";

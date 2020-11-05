@@ -10,7 +10,7 @@ import React, { Component } from "react";
 import styles from "../rasters/App.module.css";
 import { addNotification } from "../../actions";
 import { connect } from "react-redux";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage } from 'react-intl.macro';
 import { withRouter } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import SearchBox from "../../components/SearchBox";

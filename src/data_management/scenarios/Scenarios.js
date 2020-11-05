@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import MDSpinner from "react-md-spinner";
 import { Scrollbars } from "react-custom-scrollbars";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage } from 'react-intl.macro';
 import SearchBox from "../../components/SearchBox";
 import PaginationBar from "./PaginationBar";
 import buttonStyles from "../../styles/Buttons.module.css";
@@ -419,9 +419,10 @@ class Scenarios extends Component {
                             <FormattedMessage 
                                 id="scenario.delete_scenario" 
                                 defaultMessage={
-                                    checkboxes.length === 0 
-                                    ? "Delete" 
-                                    : `Delete ({clickedCheckboxes, number})`
+                                    // checkboxes.length === 0 
+                                    // ? "Delete" 
+                                    // : 
+                                    `Delete ({clickedCheckboxes, number})`
                                 }
                                 values={{
                                     clickedCheckboxes: checkboxes.length

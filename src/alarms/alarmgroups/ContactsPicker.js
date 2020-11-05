@@ -5,7 +5,7 @@ import React, { Component } from "react";
 import styles from "./ContactsPicker.module.css";
 import { addNotification } from "../../actions";
 import { connect } from "react-redux";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage } from 'react-intl.macro';
 import { Scrollbars } from "react-custom-scrollbars";
 
 class ContactsPicker extends Component {

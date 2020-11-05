@@ -1,7 +1,7 @@
 import formStyles from "../../styles/Forms.module.css";
 import React, { Component } from "react";
 import styles from "./ActionBar.module.css";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage } from 'react-intl.macro';
 
 class ActionBar extends Component {
   constructor(props) {

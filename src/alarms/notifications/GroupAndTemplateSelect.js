@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage } from 'react-intl.macro';
 import styles from "./GroupAndTemplateSelect.module.css";
 import formStyles from "../../styles/Forms.module.css";
 import gridStyles from "../../styles/Grid.module.css";

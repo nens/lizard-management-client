@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage } from 'react-intl.macro';
 import { getBoundsFromWmsLayer } from "../utils/getBoundsFromGeoServer";
 import ClearInputButton from "./ClearInputButton";
 import styles from "./SpatialBoundsField.module.css";

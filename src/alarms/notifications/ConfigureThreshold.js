@@ -4,7 +4,7 @@ import formStyles from "../../styles/Forms.module.css";
 import React, { Component } from "react";
 import styles from "./ConfigureThreshold.module.css";
 import ThresholdChart from "./ThresholdChart";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage } from 'react-intl.macro';
 import { Scrollbars } from "react-custom-scrollbars";
 
 class ConfigureThreshold extends Component {

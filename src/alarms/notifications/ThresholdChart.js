@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage } from 'react-intl.macro';
 import moment from "moment";
 import styles from "./ThresholdChart.module.css";
 import {

@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import styles from "./AlarmRow.module.css";
 import { addNotification } from "../../actions";
 import { connect } from "react-redux";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage } from 'react-intl.macro';
 import { withRouter, NavLink } from "react-router-dom";
 
 class AlarmRow extends Component {

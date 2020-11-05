@@ -8,7 +8,7 @@
 // }
 
 import React, { Component } from "react";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage } from 'react-intl.macro';
 import RasterPreview from "../components/RasterPreview";
 import SelectRaster from "../components/SelectRaster";
 import { validatorResult } from "./validators";
