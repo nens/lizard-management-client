@@ -5,6 +5,7 @@ import { RouteComponentProps } from 'react-router';
 import MDSpinner from "react-md-spinner";
 
 import RasterSourceForm from "./RasterSourceForm";
+import RasterLayerForm from "./RasterLayerForm";
 import {
   getColorMaps,
   getObservationTypes,
@@ -33,7 +34,7 @@ const NewRasterModel: React.FC<RouteComponentProps<RouteParams>> = (props) => {
     if (rasterType === 'raster_sources') {
       return <RasterSourceForm />;
     } else if (rasterType === 'raster_layers') {
-      return <div />
+      return <RasterLayerForm />
     } else {
       return <div />
     }

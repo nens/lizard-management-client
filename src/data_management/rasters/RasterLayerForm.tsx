@@ -3,29 +3,41 @@ import { FormattedMessage } from 'react-intl';
 import { useSelector } from 'react-redux';
 // import { createRasterSource } from '../../api/rasters';
 import { CheckBox } from './../../form/CheckBox';
-import { DurationField } from './../../form/DurationField';
 import { TextArea } from './../../form/TextArea';
 import { TextInput } from './../../form/TextInput';
 import { Button } from '../../form/Button';
-import { getSelectedOrganisation } from '../../reducers';
+import { getColorMaps, getObservationTypes, getOrganisations, getSelectedOrganisation } from '../../reducers';
 import styles from './RasterForm.module.css';
 import { useForm, Values } from '../../form/useForm';
-import { minLength } from '../../form/validators';
+import { minLength, required } from '../../form/validators';
 import { AccessModifier } from '../../form/AccessModifier';
+import { Select } from '../../form/Select';
+import { Dropdown } from '../../form/Dropdown';
 
 interface Props {};
 
-const RasterSourceForm: React.FC<Props> = ({}) => {
+const RasterLayerForm: React.FC<Props> = ({}) => {
+  const organisationsToSharedWith = useSelector(getOrganisations).availableForRasterSharedWith;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
+  const observationTypes = useSelector(getObservationTypes).available;
+  const colorMaps = useSelector(getColorMaps).available;
+
   const initialValues = {
     name: '',
     description: '',
-    supplierCode: '',
-    supplierName: 'hoan.phung',
-    temporal: false,
-    interval: '',
+    dataset: '',
+    rasterSource: '',
+    aggregationType: '',
+    observationType: '',
+    colorMap: '',
+    colorMapRescalable: false,
+    colorMapMin: '',
+    colorMapMax: '',
     accessModifier: 'Private',
+    shared: false,
+    organisations: '',
     organisation: selectedOrganisation.name,
+    supplierName: 'hoan.phung',
   };
   const onSubmit = (values: Values) => {
     console.log('submitted', values);
@@ -56,7 +68,7 @@ const RasterSourceForm: React.FC<Props> = ({}) => {
   return (
     <div>
       <div>
-        <div>RASTERS</div>
+        <div>LAYERS</div>
         <div>EXPLAIN BOX</div>
       </div>
       <form
@@ -79,38 +91,65 @@ const RasterSourceForm: React.FC<Props> = ({}) => {
         <TextArea
           title={'Description'}
           name={'description'}
-          placeholder={'Enter at least 1 character'}
+          placeholder={'This is a layer based on raster_source'}
           value={values.description as string}
           valueChanged={handleInputChange}
           clearInput={clearInput}
-          validated={!minLength(1, values.description as string)}
-          errorMessage={minLength(1, values.description as string)}
-          triedToSubmit={triedToSubmit}
+          validated
         />
         <TextInput
-          title={'FTP / Supplier code'}
-          name={'supplierCode'}
-          placeholder={'Enter at least 1 characters'}
-          value={values.supplierCode as string}
+          title={'Dataset'}
+          name={'dataset'}
+          placeholder={'- Select -'}
+          value={values.dataset as string}
           valueChanged={handleInputChange}
           clearInput={clearInput}
-          validated={!minLength(1, values.supplierCode as string)}
-          errorMessage={minLength(1, values.supplierCode as string)}
+          validated
           triedToSubmit={triedToSubmit}
         />
         <h3>2: DATA</h3>
-        <CheckBox
-          title={'Temporal'}
-          name={'temporal'}
-          value={values.temporal as boolean}
+        <TextInput
+          title={'Source*'}
+          name={'rasterSource'}
+          value={values.rasterSource as string}
           valueChanged={handleInputChange}
+          clearInput={clearInput}
+          validated
+          readOnly
+          triedToSubmit={triedToSubmit}
         />
-        <DurationField
-          name={'interval'}
-          value={values.interval as string}
-          valueChanged={(value) => handleValueChange('interval', value)}
-          validated={true}
-          readOnly={values.temporal === false}
+        <Select
+          title={'Type'}
+          name={'type'}
+          placeholder={'select raster type'}
+          value={values.type as string}
+          valueChanged={handleInputChange}
+          options={['none', 'counts', 'curve', 'sum', 'aggregate']}
+          validated={!required('Please select an option', values.type)}
+          errorMessage={required('Please select an option', values.type)}
+          triedToSubmit={triedToSubmit}
+        />
+        <Dropdown
+          title={'Observation type'}
+          name={'observationType'}
+          value={values.observationType as string}
+          valueChanged={handleInputChange}
+          options={observationTypes.map((obsType: any) => obsType.parameter)}
+          placeholder={'- Select -'}
+          validated={!required('Please select an observation type', values.observationType)}
+          errorMessage={required('Please select an observation type', values.observationType)}
+          triedToSubmit={triedToSubmit}
+        />
+        <Dropdown
+          title={'Color map'}
+          name={'colorMap'}
+          value={values.colorMap as string}
+          valueChanged={handleInputChange}
+          options={colorMaps.map((colorMap: any) => colorMap.name)}
+          placeholder={'- Select -'}
+          validated={!required('Please select a color map', values.colorMap)}
+          errorMessage={required('Please select a color map', values.colorMap)}
+          triedToSubmit={triedToSubmit}
         />
         <h3>3: RIGHTS</h3>
         <AccessModifier
@@ -119,6 +158,23 @@ const RasterSourceForm: React.FC<Props> = ({}) => {
           value={values.accessModifier as string}
           valueChanged={(value) => handleValueChange('accessModifier', value)}
           readOnly
+        />
+        <CheckBox
+          title={'Shared with other organisations'}
+          name={'shared'}
+          value={values.shared as boolean}
+          valueChanged={handleInputChange}
+        />
+        <Dropdown
+          title={'Organisations'}
+          name={'organisations'}
+          value={values.organisations as string}
+          valueChanged={handleInputChange}
+          options={organisationsToSharedWith.map((organisation: any) => organisation.name)}
+          placeholder={'- search and select -'}
+          validated={!required('Please select an organisation', values.organisations)}
+          errorMessage={required('Please select an organisation', values.organisations)}
+          triedToSubmit={triedToSubmit}
         />
         <TextInput
           title={'Organisation'}
@@ -152,4 +208,4 @@ const RasterSourceForm: React.FC<Props> = ({}) => {
   );
 };
 
-export default RasterSourceForm; 
+export default RasterLayerForm;

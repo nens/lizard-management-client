@@ -31,7 +31,6 @@ export const Dropdown: React.FC<MyProps> = (props) => {
     triedToSubmit,
     readOnly
   } = props;
-  if (name === "organisations") console.log(options)
 
   // Temporary state to reset input field on mouseOver and mouseOut
   const [oldInputValue, setOldInputValue] = useState<string>('');
