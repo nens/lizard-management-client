@@ -230,8 +230,9 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
             const newValue = event.target.value;
             setNameContains(newValue);
           }}
+          onClear={()=>setNameContains("")}
           value={nameContains}
-          placeholder={"Search for raster sources or layers"}
+          placeholder={"Type to search"}
         />
 
         {
