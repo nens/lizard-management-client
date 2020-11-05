@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
+// import { FormattedMessage } from 'react-intl';
 import { useSelector } from 'react-redux';
 // import { createRasterSource } from '../../api/rasters';
 import { CheckBox } from './../../form/CheckBox';
@@ -13,14 +13,25 @@ import { useForm, Values } from '../../form/useForm';
 import { minLength } from '../../form/validators';
 import { AccessModifier } from '../../form/AccessModifier';
 import { RasterSource } from '../../api/rasters';
+import { rasterIntervalStringServerToDurationObject, toISOValue } from '../../utils/isoUtils';
 
 interface Props {
   currentRasterSource?: RasterSource
 };
 
-const RasterSourceForm: React.FC<Props> = ({}) => {
+const RasterSourceForm: React.FC<Props> = ({ currentRasterSource }) => {
   const selectedOrganisation = useSelector(getSelectedOrganisation);
-  const initialValues = {
+
+  const initialValues = currentRasterSource ? {
+    name: currentRasterSource.name,
+    description: currentRasterSource.description,
+    supplierCode: currentRasterSource.supplier_code,
+    supplierName: currentRasterSource.supplier,
+    temporal: currentRasterSource.temporal,
+    interval: currentRasterSource.interval ? toISOValue(rasterIntervalStringServerToDurationObject(currentRasterSource.interval)) : '',
+    accessModifier: currentRasterSource.access_modifier,
+    organisation: currentRasterSource.organisation,
+  } : {
     name: '',
     description: '',
     supplierCode: '',
@@ -30,9 +41,10 @@ const RasterSourceForm: React.FC<Props> = ({}) => {
     accessModifier: 'Private',
     organisation: selectedOrganisation.name,
   };
+
   const onSubmit = (values: Values) => {
     console.log('submitted', values);
-    // const raster = {
+    // const rasterSource = {
     //   name: values.name as string,
     //   organisation: values.organisation as string,
     //   access_modifier: values.accessModifier as string,
@@ -42,7 +54,7 @@ const RasterSourceForm: React.FC<Props> = ({}) => {
     //   temporal: values.temporal as boolean,
     //   interval: values.interval as string,
     // };
-    // createRasterSource(raster);
+    // createRasterSource(rasterSource);
   };
 
   const {

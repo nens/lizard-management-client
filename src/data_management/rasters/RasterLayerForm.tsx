@@ -1,12 +1,18 @@
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
+// import { FormattedMessage } from 'react-intl';
 import { useSelector } from 'react-redux';
 // import { createRasterSource } from '../../api/rasters';
 import { CheckBox } from './../../form/CheckBox';
 import { TextArea } from './../../form/TextArea';
 import { TextInput } from './../../form/TextInput';
 import { Button } from '../../form/Button';
-import { getColorMaps, getObservationTypes, getOrganisations, getSelectedOrganisation } from '../../reducers';
+import {
+  getColorMaps,
+  getDatasets,
+  getObservationTypes,
+  getOrganisations,
+  getSelectedOrganisation
+} from '../../reducers';
 import styles from './RasterForm.module.css';
 import { useForm, Values } from '../../form/useForm';
 import { minLength, required } from '../../form/validators';
@@ -19,13 +25,30 @@ interface Props {
   currentRasterLayer?: RasterLayer
 };
 
-const RasterLayerForm: React.FC<Props> = ({}) => {
+const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
   const organisationsToSharedWith = useSelector(getOrganisations).availableForRasterSharedWith;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const observationTypes = useSelector(getObservationTypes).available;
   const colorMaps = useSelector(getColorMaps).available;
+  const datasets = useSelector(getDatasets).available;
 
-  const initialValues = {
+  const initialValues = currentRasterLayer ? {
+    name: currentRasterLayer.name,
+    description: currentRasterLayer.description,
+    dataset: currentRasterLayer.datasets[0] || '',
+    rasterSource: currentRasterLayer.raster_sources[0] || '',
+    aggregationType: currentRasterLayer.aggregation_type,
+    observationType: currentRasterLayer.observation_type,
+    colorMap: currentRasterLayer.options,
+    rescalable: currentRasterLayer.rescalable,
+    colorMapMin: '',
+    colorMapMax: '',
+    accessModifier: currentRasterLayer.access_modifier,
+    sharedWith: currentRasterLayer.shared_with.length === 0 ? false : true,
+    organisations: currentRasterLayer.shared_with,
+    organisation: currentRasterLayer.organisation,
+    supplierName: currentRasterLayer.supplier,
+  } : {
     name: '',
     description: '',
     dataset: '',
@@ -37,7 +60,7 @@ const RasterLayerForm: React.FC<Props> = ({}) => {
     colorMapMin: '',
     colorMapMax: '',
     accessModifier: 'Private',
-    shared: false,
+    sharedWith: false,
     organisations: '',
     organisation: selectedOrganisation.name,
     supplierName: 'hoan.phung',
@@ -100,15 +123,14 @@ const RasterLayerForm: React.FC<Props> = ({}) => {
           clearInput={clearInput}
           validated
         />
-        <TextInput
+        <Dropdown
           title={'Dataset'}
           name={'dataset'}
-          placeholder={'- Select -'}
           value={values.dataset as string}
           valueChanged={handleInputChange}
-          clearInput={clearInput}
-          validated
-          triedToSubmit={triedToSubmit}
+          options={datasets.map((dataset: any) => dataset.slug)}
+          placeholder={'- Search and select -'}
+          validated={true}
         />
         <h3>2: DATA</h3>
         <TextInput
@@ -164,8 +186,8 @@ const RasterLayerForm: React.FC<Props> = ({}) => {
         />
         <CheckBox
           title={'Shared with other organisations'}
-          name={'shared'}
-          value={values.shared as boolean}
+          name={'sharedWith'}
+          value={values.sharedWith as boolean}
           valueChanged={handleInputChange}
         />
         <Dropdown

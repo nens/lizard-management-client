@@ -46,14 +46,18 @@ export interface RasterSource {
 
 export interface RasterLayer {
   name: string;
+  description: string;
   organisation: string;
   access_modifier: string;
   observation_type: string;
   supplier: string;
   supplier_code: string;
   aggregation_type: string;
-  options?: string;
+  options: string;
   shared_with: string;
+  datasets: string[];
+  raster_sources: string[];
+  rescalable: boolean;
 }
 
 export const fetchRasterV3 = async (uuid: string) => {
