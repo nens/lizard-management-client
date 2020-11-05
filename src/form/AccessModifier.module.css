@@ -22,11 +22,10 @@
   display: flex;
 }
 .AccessModifierTilesReadOnly > .AccessModifier {
-  border-color: #C9C9C9;
-  background-color: #F6F6F6;
+  color: #929292;
   cursor: not-allowed;
 }
 .AccessModifierTilesReadOnly > .AccessModifierSelected {
-  border: 1px solid #73C9B2;
-  background-color: #55BFA226;
+  border-color:#C9C9C9;
+  background-color: #F6F6F6;
 }

@@ -118,7 +118,6 @@ const RasterSourceForm: React.FC<Props> = ({}) => {
           name={'accessModifier'}
           value={values.accessModifier as string}
           valueChanged={(value) => handleValueChange('accessModifier', value)}
-          readOnly
         />
         <TextInput
           title={'Organisation'}
