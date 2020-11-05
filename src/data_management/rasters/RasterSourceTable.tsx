@@ -174,7 +174,6 @@ export const RasterSourceTable = (props:any) =>  {
         gridTemplateColumns={"8% 29% 25% 10% 20% 8%"} 
         columnDefenitions={rasterSourceColumnDefenitions}
         baseUrl={`${baseUrl}?`} 
-        showCheckboxes={true}
         checkBoxActions={[
           {
             displayValue: "Flush Rasters",

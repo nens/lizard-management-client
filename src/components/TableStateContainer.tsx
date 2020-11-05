@@ -15,16 +15,12 @@ interface Props {
   gridTemplateColumns: string;
   columnDefenitions: ColumnDefenition[];
   baseUrl: string; 
-  // https://nxt3.staging.lizard.net/api/v4/rasters/?writable=true&page_size=10&page=1&name__icontains=&ordering=last_modified&organisation__uuid=61f5a464c35044c19bc7d4b42d7f58cb
-  // /api/v4/rasters/?writable=${writable}&page_size=${page_size}&page=${page}&name__icontains=${name__icontains}&ordering=${ordering}&organisation__uuid=${organisation__uuid}
-  showCheckboxes: boolean;
   checkBoxActions: any[];
-  newItemOnClick: any | null;
+  newItemOnClick: () => void | null;
   queryCheckBox: {text: string, adaptUrlFunction: (url:string)=>string} | null;
-  // action: Action[]
 }
 
-const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, columnDefenitions, baseUrl, showCheckboxes, checkBoxActions, newItemOnClick, queryCheckBox/*action*/}) => {
+const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, columnDefenitions, baseUrl, checkBoxActions, newItemOnClick, queryCheckBox/*action*/}) => {
 
   const [tableData, setTableData] = useState([]);
   const [checkBoxes, setCheckBoxes] = useState([]);
@@ -32,29 +28,17 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
   const [nextUrl, setNextUrl] = useState("");
   const [previousUrl, setPreviousUrl] = useState("");
   const [itemsPerPage, setItemsPerPage] = useState("10");
-  // key will be based on ordr in array, but be aware that checkbox is added to beginning
   const [ordering, setOrdering] = useState<string | null>("last_modified");
-  // const sortableList: SortingState[]  = columnDefenitions.map(item=> item.sortable? "NOT_SORTED" : "NOT_SORTABLE");
-  // const [sortingStatePerColumnIndex, setSortingStatePerColumnIndex] = useState(showCheckboxes? ["NOT_SORTABLE"].concat(sortableList): sortableList);
   const [nameContains, setNameContains] = useState("");
   const [dataRetrievalState, setDataRetrievalState] = useState<DataRetrievalState>("NEVER_DID_RETRIEVE");
   const [apiResponse, setApiResponse] = useState<{response:any, currentUrl: string, dataRetrievalState: DataRetrievalState}>({response: {}, currentUrl: "", dataRetrievalState: "NEVER_DID_RETRIEVE"});
   const [queryCheckBoxState, setQueryCheckBoxState] = useState(false);
 
-  // todo pass sorting name as column defenition v
-  // find out sorting in heigh to low versus low to heigh translates in parameter v
-  // do actions column logic
-  // remove any
-  //
-
-  // const sorting = sortingStatePerColumnIndex.
   // todo later: find out how the state of the table can be represented in the url?
-
 
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const selectedOrganisationUuid = selectedOrganisation ? selectedOrganisation.uuid : "";
 
-  // const url = "/api/v4/rasters/?writable=true&page_size=10&page=1&name__icontains=&ordering=last_modified&organisation__uuid=61f5a464c35044c19bc7d4b42d7f58cb";
   const preUrl = baseUrl +
     "writable=true" +
     "&page_size=" + itemsPerPage +
@@ -163,7 +147,7 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
   };
 
   const columnDefenitionsPlusCheckbox = 
-    showCheckboxes ?  
+    checkBoxActions.length > 0 ?  
       [checkBoxColumnDefenition].concat(columnDefenitions)
       :
       columnDefenitions

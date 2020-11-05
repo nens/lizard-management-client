@@ -216,7 +216,6 @@ export const ScenarioTable = (props:any) =>  {
           gridTemplateColumns={"8% 20% 18% 18% 14% 14% 8%"} 
           columnDefenitions={columnDefenitions}
           baseUrl={`${baseUrl}?`} 
-          showCheckboxes={true}
           checkBoxActions={[
             {
               displayValue: "Delete",

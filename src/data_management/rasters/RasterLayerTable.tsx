@@ -156,7 +156,6 @@ export const RasterLayerTable = (props:any) =>  {
           gridTemplateColumns={"8% 30% 24% 20% 10% 8%"} 
           columnDefenitions={rasterSourceColumnDefenitions}
           baseUrl={`${baseUrl}?`} 
-          showCheckboxes={true}
           checkBoxActions={[
             {
               displayValue: "Delete",
