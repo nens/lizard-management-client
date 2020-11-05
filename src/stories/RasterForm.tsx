@@ -28,7 +28,7 @@ export const RasterForm: React.FC = () => {
     values,
     triedToSubmit,
     tryToSubmitForm,
-    handleChange,
+    handleInputChange,
     handleSubmit,
     handleReset,
     clearInput,
@@ -49,7 +49,7 @@ export const RasterForm: React.FC = () => {
         name={'name'}
         placeholder={'Enter at least 3 characters'}
         value={values.name as string}
-        valueChanged={handleChange}
+        valueChanged={handleInputChange}
         clearInput={clearInput}
         validated={!minLength(3, values.name as string)}
         // validated={true}
@@ -61,7 +61,7 @@ export const RasterForm: React.FC = () => {
         name={'description'}
         placeholder={'Enter at least 1 character'}
         value={values.description as string}
-        valueChanged={handleChange}
+        valueChanged={handleInputChange}
         clearInput={clearInput}
         validated={!minLength(1, values.description as string)}
         // validated={true}
@@ -73,7 +73,7 @@ export const RasterForm: React.FC = () => {
         name={'type'}
         placeholder={'select raster type'}
         value={values.type as string}
-        valueChanged={handleChange}
+        valueChanged={handleInputChange}
         options={['none', 'curve', 'aggregate']}
         validated={!required('Please select an option', values.type)}
         // validated={true}
@@ -84,7 +84,7 @@ export const RasterForm: React.FC = () => {
         title={'Temporal'}
         name={'temporal'}
         value={values.temporal as boolean}
-        valueChanged={handleChange}
+        valueChanged={handleInputChange}
       />
       <DurationField
         name={'duration'}
@@ -97,7 +97,7 @@ export const RasterForm: React.FC = () => {
         title={'Organisation'}
         name={'organisation'}
         value={values.organisation as string}
-        valueChanged={handleChange}
+        valueChanged={handleInputChange}
         options={['Nelen', 'Nelens & Schuurman', 'Aa en Hunzen', 'Schuurman', 'Hunze']}
         placeholder={'- search and select -'}
         clearInput={clearInput}
@@ -110,7 +110,7 @@ export const RasterForm: React.FC = () => {
         title={'Supplier'}
         name={'supplier'}
         value={values.supplier as string}
-        valueChanged={handleChange}
+        valueChanged={handleInputChange}
         clearInput={clearInput}
         validated={true}
         readOnly

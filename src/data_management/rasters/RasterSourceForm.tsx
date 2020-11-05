@@ -46,7 +46,7 @@ const RasterSourceForm: React.FC<Props> = ({}) => {
     values,
     triedToSubmit,
     tryToSubmitForm,
-    handleChange,
+    handleInputChange,
     handleSubmit,
     handleReset,
     clearInput,
@@ -70,7 +70,7 @@ const RasterSourceForm: React.FC<Props> = ({}) => {
           name={'rasterName'}
           placeholder={'Enter at least 3 characters'}
           value={values.rasterName as string}
-          valueChanged={handleChange}
+          valueChanged={handleInputChange}
           clearInput={clearInput}
           validated={!minLength(3, values.rasterName as string)}
           errorMessage={minLength(3, values.rasterName as string)}
@@ -81,7 +81,7 @@ const RasterSourceForm: React.FC<Props> = ({}) => {
           name={'description'}
           placeholder={'Enter at least 1 character'}
           value={values.description as string}
-          valueChanged={handleChange}
+          valueChanged={handleInputChange}
           clearInput={clearInput}
           validated={!minLength(1, values.description as string)}
           errorMessage={minLength(1, values.description as string)}
@@ -92,7 +92,7 @@ const RasterSourceForm: React.FC<Props> = ({}) => {
           name={'supplierCode'}
           placeholder={'Enter at least 1 characters'}
           value={values.supplierCode as string}
-          valueChanged={handleChange}
+          valueChanged={handleInputChange}
           clearInput={clearInput}
           validated={!minLength(1, values.supplierCode as string)}
           errorMessage={minLength(1, values.supplierCode as string)}
@@ -103,7 +103,7 @@ const RasterSourceForm: React.FC<Props> = ({}) => {
           title={'Temporal'}
           name={'temporal'}
           value={values.temporal as boolean}
-          valueChanged={handleChange}
+          valueChanged={handleInputChange}
         />
         <DurationField
           name={'interval'}
@@ -124,7 +124,7 @@ const RasterSourceForm: React.FC<Props> = ({}) => {
           title={'Organisation'}
           name={'organisation'}
           value={values.organisation as string}
-          valueChanged={handleChange}
+          valueChanged={handleInputChange}
           clearInput={clearInput}
           validated={true}
           readOnly
@@ -133,7 +133,7 @@ const RasterSourceForm: React.FC<Props> = ({}) => {
           title={'Supplier'}
           name={'supplier'}
           value={values.supplierName as string}
-          valueChanged={handleChange}
+          valueChanged={handleInputChange}
           clearInput={clearInput}
           validated={true}
           readOnly
