@@ -17,9 +17,9 @@ import styles from './RasterForm.module.css';
 import { useForm, Values } from '../../form/useForm';
 import { minLength, required } from '../../form/validators';
 import { AccessModifier } from '../../form/AccessModifier';
-import { Dropdown } from '../../form/Dropdown';
 import { RasterLayer } from '../../api/rasters';
 import { SelectBox } from '../../form/SelectBox';
+import { SlushBucket } from '../../form/SlushBucket';
 
 interface Props {
   currentRasterLayer?: RasterLayer
@@ -27,6 +27,7 @@ interface Props {
 
 const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
   const organisationsToSharedWith = useSelector(getOrganisations).availableForRasterSharedWith;
+  const organisations = useSelector(getOrganisations).available;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const observationTypes = useSelector(getObservationTypes).available;
   const colorMaps = useSelector(getColorMaps).available;
@@ -39,7 +40,7 @@ const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
     rasterSource: currentRasterLayer.raster_sources[0] || '',
     aggregationType: currentRasterLayer.aggregation_type,
     // @ts-ignore
-    observationType: currentRasterLayer.observation_type.code,
+    observationType: (currentRasterLayer.observation_type && currentRasterLayer.observation_type.code) || '',
     // @ts-ignore
     colorMap: currentRasterLayer.options.styles,
     rescalable: currentRasterLayer.rescalable,
@@ -47,8 +48,8 @@ const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
     colorMapMax: '',
     accessModifier: currentRasterLayer.access_modifier,
     sharedWith: currentRasterLayer.shared_with.length === 0 ? false : true,
-    organisations: currentRasterLayer.shared_with.map(organisation => organisation.name).join(', '),
-    organisation: currentRasterLayer.organisation.name,
+    organisationsToSharedWith: currentRasterLayer.shared_with.map(organisation => organisation.uuid.replace(/-/g, "")) || [],
+    organisation: currentRasterLayer.organisation.uuid.replace(/-/g, "") || null,
     supplierName: currentRasterLayer.supplier,
   } : {
     name: '',
@@ -63,8 +64,8 @@ const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
     colorMapMax: '',
     accessModifier: 'Private',
     sharedWith: false,
-    organisations: '',
-    organisation: selectedOrganisation.name,
+    organisationsToSharedWith: [],
+    organisation: selectedOrganisation.uuid,
     supplierName: 'hoan.phung',
   };
   const onSubmit = (values: Values) => {
@@ -237,23 +238,29 @@ const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
           value={values.sharedWith as boolean}
           valueChanged={handleInputChange}
         />
-        <Dropdown
-          title={'Organisations'}
-          name={'organisations'}
-          placeholder={'- Search and select -'}
-          value={values.organisations as string}
-          valueChanged={handleInputChange}
-          options={organisationsToSharedWith.map((organisation: any) => organisation.name)}
-          validated={!required('Please select an organisation', values.organisations)}
-          errorMessage={required('Please select an organisation', values.organisations)}
-          triedToSubmit={triedToSubmit}
-        />
-        <TextInput
+        {values.sharedWith ? (
+          <SlushBucket
+            title={'Shared with other organisations'}
+            name={'organisationsToSharedWith'}
+            placeholder={'Search organisations'}
+            value={values.organisationsToSharedWith as string[]}
+            choices={organisationsToSharedWith.map((organisation: any) => {
+              return {
+                display: organisation.name,
+                value: organisation.uuid
+              }
+            })}
+            valueChanged={(value: any) => handleValueChange('organisationsToSharedWith', value)}
+            validated={true}
+          />
+        ) : null}
+        <SelectBox
           title={'Organisation'}
           name={'organisation'}
+          placeholder={'- Search and select -'}
           value={values.organisation as string}
-          valueChanged={handleInputChange}
-          clearInput={clearInput}
+          valueChanged={(value) => handleValueChange('organisation', value)}
+          choices={organisations.map((organisation: any) => [organisation.uuid, organisation.name])}
           validated={true}
           readOnly
         />

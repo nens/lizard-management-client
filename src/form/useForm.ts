@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 export interface Values {
-  [name: string]: string | boolean | null | undefined
+  [name: string]: string | string[] | boolean | null | undefined
 }
 interface TouchedValues {
   [name: string]: boolean

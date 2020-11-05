@@ -21,14 +21,8 @@ interface SelectBoxProps {
   placeholder?: string,
   showSearchField?: boolean,
   triedToSubmit?: boolean,
-  readonly?: boolean
+  readOnly?: boolean
 };
-
-interface SelectBoxState {
-  showChoices: boolean,
-  displayStrings: displayStringsT,
-  searchString: string
-}
 
 export const SelectBox: React.FC<SelectBoxProps> = (props) => {
   const {
@@ -42,11 +36,11 @@ export const SelectBox: React.FC<SelectBoxProps> = (props) => {
     errorMessage,
     showSearchField,
     triedToSubmit,
-    readonly
+    readOnly
   } = props;
 
   const [showChoices, setShowChoices] = useState<boolean>(false);
-  const [displayStrings, setDisplayStrings] = useState<{[name: string]: string}>({});
+  const [displayStrings, setDisplayStrings] = useState<displayStringsT>({});
   const [searchString, setSearchString] = useState<string>('');
 
   useEffect(() => {
@@ -54,7 +48,7 @@ export const SelectBox: React.FC<SelectBoxProps> = (props) => {
     // optionally a third element containing a description may be present.
     // Here we create an object to be able to translate keys to displayStrings.
     // Choice keys may be numbers, but they must map to strings uniquely!
-    const displayStrings: {[name: string]: string} = {};
+    const displayStrings: displayStringsT = {};
     choices.forEach(choice => {
       const [key, displayString] = choice;
       displayStrings[key] = displayString;
@@ -105,14 +99,14 @@ export const SelectBox: React.FC<SelectBoxProps> = (props) => {
           className={`${formStyles.FormControl} ${triedToSubmit ? formStyles.FormSubmitted : ''}`}
           placeholder={placeholder}
           value={value ? (displayStrings[value] || "") : ""}
-          onClick={() => !readonly &&  toggleChoices()}
-          onKeyUp={par => !readonly && handleKeyUp(par)}
+          onClick={() => !readOnly &&  toggleChoices()}
+          onKeyUp={par => !readOnly && handleKeyUp(par)}
           onChange={() => {}}
-          readOnly={readonly}
-          disabled={readonly}
+          readOnly={readOnly}
+          disabled={readOnly}
         />
         { 
-        !readonly ?
+        !readOnly ?
           value !== null ? (
             <ClearInputButton onClick={() => clearInput()}/>
             ) : (
