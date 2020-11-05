@@ -1,5 +1,5 @@
 import React from 'react';
-// import { FormattedMessage } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { useSelector } from 'react-redux';
 // import { createRasterSource } from '../../api/rasters';
 import { CheckBox } from './../../form/CheckBox';
@@ -17,9 +17,9 @@ import styles from './RasterForm.module.css';
 import { useForm, Values } from '../../form/useForm';
 import { minLength, required } from '../../form/validators';
 import { AccessModifier } from '../../form/AccessModifier';
-import { Select } from '../../form/Select';
 import { Dropdown } from '../../form/Dropdown';
 import { RasterLayer } from '../../api/rasters';
+import { SelectBox } from '../../form/SelectBox';
 
 interface Props {
   currentRasterLayer?: RasterLayer
@@ -38,7 +38,8 @@ const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
     dataset: currentRasterLayer.datasets[0] || '',
     rasterSource: currentRasterLayer.raster_sources[0] || '',
     aggregationType: currentRasterLayer.aggregation_type,
-    observationType: currentRasterLayer.observation_type,
+    // @ts-ignore
+    observationType: currentRasterLayer.observation_type.code,
     // @ts-ignore
     colorMap: currentRasterLayer.options.styles,
     rescalable: currentRasterLayer.rescalable,
@@ -124,13 +125,13 @@ const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
           clearInput={clearInput}
           validated
         />
-        <Dropdown
+        <SelectBox
           title={'Dataset'}
           name={'dataset'}
+          placeholder={'- Select -'}
           value={values.dataset as string}
-          valueChanged={handleInputChange}
-          options={datasets.map((dataset: any) => dataset.slug)}
-          placeholder={'- Search and select -'}
+          valueChanged={value => handleValueChange('dataset', value)}
+          choices={datasets.map((dataset: any) => [dataset.slug, dataset.slug])}
           validated={true}
         />
         <h3>2: DATA</h3>
@@ -144,38 +145,83 @@ const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
           readOnly
           triedToSubmit={triedToSubmit}
         />
-        <Select
+        <SelectBox
           title={'Aggregation type'}
           name={'aggregationType'}
           placeholder={'- Select -'}
           value={values.aggregationType as string}
-          valueChanged={handleInputChange}
-          options={['none', 'counts', 'curve', 'sum', 'aggregate']}
+          valueChanged={value => handleValueChange('aggregationType', value)}
+          choices={[
+            [
+              "none",
+              "none",
+              <FormattedMessage id="raster_form.aggregation_type_none" />
+            ],
+            [
+              "counts",
+              "counts",
+              <FormattedMessage id="raster_form.aggregation_type_counts" />
+            ],
+            [
+              "curve",
+              "curve",
+              <FormattedMessage id="raster_form.aggregation_type_curve" />
+            ],
+            [
+              "sum",
+              "sum",
+              <FormattedMessage id="raster_form.aggregation_type_sum" />
+            ],
+            [
+              "average",
+              "average",
+              <FormattedMessage id="raster_form.aggregation_type_average" />
+            ]
+          ]}
           validated={!required('Please select an option', values.aggregationType)}
           errorMessage={required('Please select an option', values.aggregationType)}
           triedToSubmit={triedToSubmit}
         />
-        <Dropdown
+        <SelectBox
           title={'Observation type'}
           name={'observationType'}
-          value={values.observationType as string}
-          valueChanged={handleInputChange}
-          options={observationTypes.map((obsType: any) => obsType.parameter)}
           placeholder={'- Search and select -'}
+          value={values.observationType as string}
+          valueChanged={(value) => handleValueChange('observationType', value)}
+          choices={observationTypes.map((obsT: any) => {
+            let parameterString = obsT.parameter + '';
+            if (obsT.unit || obsT.reference_frame) {
+              parameterString += ' ('
+              if (obsT.unit) {
+                parameterString += obsT.unit;
+              }
+              if (obsT.unit && obsT.reference_frame) {
+                parameterString += ' ';
+              }
+              if (obsT.reference_frame) {
+                parameterString += obsT.reference_frame;
+              }
+              parameterString += ')'
+            }
+
+            return [obsT.code, obsT.code, parameterString];
+          })}
           validated={!required('Please select an observation type', values.observationType)}
           errorMessage={required('Please select an observation type', values.observationType)}
           triedToSubmit={triedToSubmit}
+          showSearchField
         />
-        <Dropdown
+        <SelectBox
           title={'Color map'}
           name={'colorMap'}
-          value={values.colorMap as string}
-          valueChanged={handleInputChange}
-          options={colorMaps.map((colorMap: any) => colorMap.name)}
           placeholder={'- Search and select -'}
+          value={values.colorMap as string}
+          valueChanged={(value) => handleValueChange('colorMap', value)}
+          choices={colorMaps.map((colM: any) => [colM.name, colM.name, colM.description])}
           validated={!required('Please select a color map', values.colorMap)}
           errorMessage={required('Please select a color map', values.colorMap)}
           triedToSubmit={triedToSubmit}
+          showSearchField
         />
         <h3>3: RIGHTS</h3>
         <AccessModifier
@@ -194,10 +240,10 @@ const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
         <Dropdown
           title={'Organisations'}
           name={'organisations'}
+          placeholder={'- Search and select -'}
           value={values.organisations as string}
           valueChanged={handleInputChange}
           options={organisationsToSharedWith.map((organisation: any) => organisation.name)}
-          placeholder={'- Search and select -'}
           validated={!required('Please select an organisation', values.organisations)}
           errorMessage={required('Please select an organisation', values.organisations)}
           triedToSubmit={triedToSubmit}
