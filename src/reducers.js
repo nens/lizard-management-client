@@ -21,7 +21,8 @@ import {
   UPDATE_ALARM_TYPE,
   REQUEST_DATASETS,
   RECEIVE_DATASETS_SUCCESS,
-  RECEIVE_DATASETS_ERROR
+  RECEIVE_DATASETS_ERROR,
+  UPDATE_RASTER_SOURCE_UUID
 } from "./actions";
 
 function bootstrap(
@@ -286,6 +287,15 @@ function alarmType(state = "RASTERS", action) {
   }
 }
 
+function rasterSourceUUID(state = null, action) {
+  switch (action.type) {
+    case UPDATE_RASTER_SOURCE_UUID:
+      return action.uuid;
+    default:
+      return state;
+  };
+};
+
 // Selectors
 export const getBootstrap = (state) => {
   return state.bootstrap;
@@ -309,6 +319,9 @@ export const getSupplierIds = (state) => {
 export const getDatasets = (state) => {
   return state.datasets;
 };
+export const getRasterSourceUUID = (state) => {
+  return state.rasterSourceUUID;
+};
 
 const rootReducer = combineReducers({
   bootstrap,
@@ -319,7 +332,8 @@ const rootReducer = combineReducers({
   datasets,
   notifications,
   viewport,
-  alarmType
+  alarmType,
+  rasterSourceUUID
 });
 
 export default rootReducer;

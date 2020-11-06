@@ -18,10 +18,12 @@ import {
   getDatasets,
   getObservationTypes,
   getOrganisations,
+  getRasterSourceUUID,
   getSelectedOrganisation
 } from '../../reducers';
 import styles from './RasterForm.module.css';
 import { optionsHasLayers } from '../../utils/rasterOptionFunctions';
+import { getUuidFromUrl } from '../../utils/getUuidFromUrl';
 
 interface Props {
   currentRasterLayer?: RasterLayer
@@ -34,12 +36,13 @@ const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
   const observationTypes = useSelector(getObservationTypes).available;
   const colorMaps = useSelector(getColorMaps).available;
   const datasets = useSelector(getDatasets).available;
+  const rasterSourceUUID = useSelector(getRasterSourceUUID);
 
   const initialValues = currentRasterLayer ? {
     name: currentRasterLayer.name,
     description: currentRasterLayer.description,
     dataset: currentRasterLayer.datasets[0] || '',
-    rasterSource: (currentRasterLayer.raster_sources && currentRasterLayer.raster_sources[0]) || '',
+    rasterSource: (currentRasterLayer.raster_sources && currentRasterLayer.raster_sources[0] && getUuidFromUrl(currentRasterLayer.raster_sources[0])) || '',
     aggregationType: currentRasterLayer.aggregation_type,
     // @ts-ignore
     observationType: (currentRasterLayer.observation_type && currentRasterLayer.observation_type.id + '') || '',
@@ -57,7 +60,7 @@ const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
     name: '',
     description: '',
     dataset: '',
-    rasterSource: '13b31eda-2413-475a-9b3b-76262e52116d',
+    rasterSource: rasterSourceUUID || '13b31eda-2413-475a-9b3b-76262e52116d',
     aggregationType: '',
     observationType: null,
     colorMap: null,
@@ -101,13 +104,13 @@ const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
         options: values.colorMap.options,
         rescalable: values.resscalable as boolean,
         shared_with: values.organisationsToSharedWith as string[],
-        datasets: [values.dataset as string]
+        // datasets: [values.dataset as string]
       };
       // only add colormap in options if not multiple layers
       // @ts-ignore
-      if (!optionsHasLayers(values.colormap.options)) {
+      if (!optionsHasLayers(values.colorMap.options)) {
         // @ts-ignore
-        body.options = values.colormap.options;
+        body.options = values.colorMap.options;
       };
 
       // @ts-ignore
