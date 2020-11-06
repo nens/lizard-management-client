@@ -1,7 +1,7 @@
 import React from 'react';
 // import { FormattedMessage } from 'react-intl';
 import { useSelector } from 'react-redux';
-import { createRasterSource, Organisation, patchRasterSource } from '../../api/rasters';
+import { createRasterSource, patchRasterSource } from '../../api/rasters';
 import { CheckBox } from './../../form/CheckBox';
 import { DurationField } from './../../form/DurationField';
 import { TextArea } from './../../form/TextArea';
@@ -51,7 +51,7 @@ const RasterSourceForm: React.FC<Props> = ({ currentRasterSource }) => {
     if (!currentRasterSource) {
       const rasterSource = {
         name: values.name as string,
-        organisation: values.organisation as Organisation,
+        organisation: values.organisation as string,
         access_modifier: values.accessModifier as string,
         description: values.description as string,
         supplier: values.supplierName as string,
@@ -59,11 +59,12 @@ const RasterSourceForm: React.FC<Props> = ({ currentRasterSource }) => {
         temporal: values.temporal as boolean,
         interval: values.interval as string,
       };
+      // @ts-ignore
       createRasterSource(rasterSource);
     } else {
       const body = {
         name: values.name as string,
-        organisation: values.organisation as Organisation,
+        organisation: values.organisation as string,
         access_modifier: values.accessModifier as string,
         description: values.description as string,
         supplier: values.supplierName as string,
@@ -71,6 +72,7 @@ const RasterSourceForm: React.FC<Props> = ({ currentRasterSource }) => {
         temporal: values.temporal as boolean,
         interval: values.interval as string,
       };
+      // @ts-ignore
       patchRasterSource(currentRasterSource.uuid as string, body);
     }
   };

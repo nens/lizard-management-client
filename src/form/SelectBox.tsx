@@ -141,7 +141,7 @@ export const SelectBox: React.FC<SelectBoxProps> = (props) => {
   
           <Scrollbars autoHeight autoHeightMin={50} autoHeightMax={400}>
             {choices.map((choice, i) => {
-              const choiceValue = choice[0];
+              const choiceValue = choice[0]+'';
               const choiceDisplay = choice[1];
               const choiceDescription = (
                 choice.length === 3 ? choice[2] : "");
@@ -167,7 +167,7 @@ export const SelectBox: React.FC<SelectBoxProps> = (props) => {
                 : styles.Inactive}`}
                   onMouseDown={e => {
                     setShowChoices(false);
-                    valueChanged(choiceValue+'');
+                    valueChanged(choiceValue);
                   }}
                 >
                   <div style={{ flex: "1" }}>{choiceDisplay}</div>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useSelector } from 'react-redux';
-import { createRasterLayer, Organisation, patchRasterLayer } from '../../api/rasters';
+import { createRasterLayer, patchRasterLayer } from '../../api/rasters';
 import { CheckBox } from './../../form/CheckBox';
 import { TextArea } from './../../form/TextArea';
 import { TextInput } from './../../form/TextInput';
@@ -42,7 +42,7 @@ const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
     rasterSource: (currentRasterLayer.raster_sources && currentRasterLayer.raster_sources[0]) || '',
     aggregationType: currentRasterLayer.aggregation_type,
     // @ts-ignore
-    observationType: (currentRasterLayer.observation_type && currentRasterLayer.observation_type.code) || '',
+    observationType: (currentRasterLayer.observation_type && currentRasterLayer.observation_type.id + '') || '',
     // @ts-ignore
     colorMap: {options: currentRasterLayer.options, rescalable: currentRasterLayer.rescalable},
     rescalable: currentRasterLayer.rescalable,
@@ -57,9 +57,9 @@ const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
     name: '',
     description: '',
     dataset: '',
-    rasterSource: '',
+    rasterSource: '13b31eda-2413-475a-9b3b-76262e52116d',
     aggregationType: '',
-    observationType: '',
+    observationType: null,
     colorMap: null,
     accessModifier: 'Private',
     sharedWith: false,
@@ -73,7 +73,7 @@ const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
     if (!currentRasterLayer) {
       const rasterLayer = {
         name: values.name as string,
-        organisation: values.organisation as Organisation,
+        organisation: values.organisation as string,
         access_modifier: values.accessModifier as string,
         description: values.description as string,
         observation_type: values.observationType as string,
@@ -82,15 +82,16 @@ const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
         // @ts-ignore
         options: values.colorMap.options,
         rescalable: values.resscalable as boolean,
-        shared_with: values.organisationsToSharedWith as Organisation[],
+        shared_with: values.organisationsToSharedWith as string[],
         datasets: [values.dataset as string],
       };
 
+      // @ts-ignore
       createRasterLayer(rasterLayer, values.rasterSource as string);
     } else {
       const body = {
         name: values.name as string,
-        organisation: values.organisation as Organisation,
+        organisation: values.organisation as string,
         access_modifier: values.accessModifier as string,
         description: values.description as string,
         observation_type: values.observationType as string,
@@ -99,7 +100,7 @@ const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
         // @ts-ignore
         options: values.colorMap.options,
         rescalable: values.resscalable as boolean,
-        shared_with: values.organisationsToSharedWith as Organisation[],
+        shared_with: values.organisationsToSharedWith as string[],
         datasets: [values.dataset as string]
       };
       // only add colormap in options if not multiple layers
@@ -109,6 +110,7 @@ const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
         body.options = values.colormap.options;
       };
 
+      // @ts-ignore
       patchRasterLayer(currentRasterLayer.uuid as string, body);
     };
   };
@@ -235,7 +237,7 @@ const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
               parameterString += ')'
             }
 
-            return [obsT.code, obsT.code, parameterString];
+            return [obsT.id, obsT.code, parameterString];
           })}
           validated={!required('Please select an observation type', values.observationType)}
           errorMessage={required('Please select an observation type', values.observationType)}

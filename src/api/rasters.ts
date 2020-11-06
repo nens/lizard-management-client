@@ -302,7 +302,7 @@ export const createRasterLayer = (rasterLayer: RasterLayer, rasterSourceUuid: st
     shared_with: rasterLayer.shared_with,
     rescalable: rasterLayer.rescalable,
     access_modifier: rasterLayer.access_modifier,
-    datasets: rasterLayer.datasets,
+    // datasets: rasterLayer.datasets,
     source: {
       graph: {
         raster: [
