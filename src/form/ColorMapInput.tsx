@@ -48,55 +48,77 @@ export const colorMapValidator = (required: boolean) =>
 };
 
 const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
+  const {
+    title,
+    name,
+    colorMaps,
+    value,
+    valueChanged,
+    validated,
+    errorMessage,
+    triedToSubmit,
+    intl
+  } = props;
+
+  // Set validity of the input field
+  const myInput = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    if (myInput && myInput.current) {
+      if (validated) {
+        myInput.current.setCustomValidity('');
+      } else {
+        myInput.current.setCustomValidity(errorMessage || '');
+      };
+    };
+  })
 
   const [previewColor, setPreviewColor] = useState<any>(null);
 
   useEffect(() => {
-    if (props.value === undefined || props.value === null) {
-      props.valueChanged({
+    if (value === undefined || value === null) {
+      valueChanged({
         options: {},
         rescalable: false
       });
     };
   });
 
-  const setLocalStateFromProps = (props: ColorMapProps) => {
-    const initiatedValue = props.value || {
-      options: {},
-      rescalable: false,
-    };
-    getRGBAGradient(colorMapTypeFromOptions(initiatedValue.options));
-  };
-
   useEffect(() => {
-    setLocalStateFromProps(props);
-  });
-
-  const getRGBAGradient = (value: any | null) => {
-    if (value && value.colorMap) {
-      let style = value.colorMap;
-
-      if (value.min && value.max) {
-        style = `${style}:${value.min}:${value.max}`;
+    const getRGBAGradient = (value: any | null) => {
+      if (value && value.colorMap) {
+        let style = value.colorMap;
+  
+        if (value.min && value.max) {
+          style = `${style}:${value.min}:${value.max}`;
+        };
+  
+        fetch(
+          "/wms/?request=getlegend&style=" + style +
+          "&steps=100&format=json",
+          {
+            credentials: "same-origin",
+            method: "GET",
+            headers: { "Content-Type": "application/json" }
+          }
+        )
+          .then(response => response.json())
+          .then(responseData => setPreviewColor(responseData));
+      } else if (previewColor) {
+        // If the color map is unselected, also don't show a preview
+        setPreviewColor(null);
       };
-
-      fetch(
-        "/wms/?request=getlegend&style=" + style +
-        "&steps=100&format=json",
-        {
-          credentials: "same-origin",
-          method: "GET",
-          headers: { "Content-Type": "application/json" }
-        }
-      )
-        .then(response => response.json())
-        .then(responseData => setPreviewColor(responseData));
-    } else if (previewColor) {
-      // If the color map is unselected, also don't show a preview
-      setPreviewColor(null);
     };
-  };
 
+    const setLocalStateFromProps = (value: any) => {
+      const initiatedValue = value || {
+        options: {},
+        rescalable: false,
+      };
+      getRGBAGradient(colorMapTypeFromOptions(initiatedValue.options));
+    };
+
+    setLocalStateFromProps(value);
+  }, [previewColor, value]);
 
   const colorMapChanged = (colorMap: string) => {    
     if (colorMap === null) {
@@ -124,7 +146,7 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
     });
   }
 
-  const valueChanged = (field: string, value: number | null) => {
+  const handleValueChanged = (field: string, value: number | null) => {
     let newValue;
 
     if (field !== 'min' && field !== 'max') return;
@@ -166,31 +188,7 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
 
     return f;
   };
-
-  const {
-    title,
-    name,
-    colorMaps,
-    value,
-    validated,
-    errorMessage,
-    triedToSubmit,
-    intl
-  } = props;
-
-  // Set validity of the input field
-  const myInput = useRef<HTMLInputElement>(null);
-  useEffect(() => {
-    if (myInput && myInput.current) {
-      if (validated) {
-        myInput.current.setCustomValidity('');
-      } else {
-        myInput.current.setCustomValidity(errorMessage || '');
-      };
-    };
-  })
-
-  
+ 
   const initiatedValue = value || {
     options: {},
     rescalable: false,
@@ -249,7 +247,7 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
         <input
           type="number"
           autoComplete="false"
-          onChange={e => valueChanged('min', toFloat(e.target.value))}
+          onChange={e => handleValueChanged('min', toFloat(e.target.value))}
           value={(colorMapType && colorMapType.min) || ""}
           placeholder={placeholderMinimumColorRange}
           className={formStyles.FormControl}
@@ -264,7 +262,7 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
           type="number"
           autoComplete="false"
           value={(colorMapType && colorMapType.max) || ""}
-          onChange={e => valueChanged('max', toFloat(e.target.value))}
+          onChange={e => handleValueChanged('max', toFloat(e.target.value))}
           placeholder={placeholderMaximumColorRange}
           className={formStyles.FormControl}
           readOnly={readOnly}

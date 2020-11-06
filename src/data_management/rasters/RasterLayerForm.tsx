@@ -9,7 +9,7 @@ import { Button } from '../../form/Button';
 import { SelectBox } from '../../form/SelectBox';
 import { SlushBucket } from '../../form/SlushBucket';
 import { AccessModifier } from '../../form/AccessModifier';
-import ColorMapInput from '../../form/ColorMapInput';
+import ColorMapInput2 from '../../form/ColorMapInput2';
 import { useForm, Values } from '../../form/useForm';
 import { minLength, required } from '../../form/validators';
 import { RasterLayer } from '../../api/rasters';
@@ -60,7 +60,7 @@ const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
     name: '',
     description: '',
     dataset: '',
-    rasterSource: rasterSourceUUID || '13b31eda-2413-475a-9b3b-76262e52116d',
+    rasterSource: rasterSourceUUID || '13b31eda-2413-475a-9b3b-76262e52116d', // temporarily use this UUID as default
     aggregationType: '',
     observationType: null,
     colorMap: null,
@@ -247,7 +247,8 @@ const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
           triedToSubmit={triedToSubmit}
           showSearchField
         />
-        <ColorMapInput
+        {/* Below ColorMapInput component is not working properly as it keeps calling useEffect infinitely */}
+        {/* <ColorMapInput
           title={<FormattedMessage id="raster_form.colormap" />}
           name={'colorMap'}
           value={values.colorMap}
@@ -256,6 +257,14 @@ const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
           validated={!required('Please select a color map', values.colorMap)}
           errorMessage={required('Please select a color map', values.colorMap)}
           triedToSubmit={triedToSubmit}
+        /> */}
+        <ColorMapInput2
+          title={<FormattedMessage id="raster_form.colormap" />}
+          name={'colorMap'}
+          value={values.colorMap}
+          valueChanged={(value: any) => handleValueChange('colorMap', value)}
+          colorMaps={colorMaps.map((colM: any) => [colM.name, colM.name, colM.description])}
+          validated={true}
         />
         <h3>3: RIGHTS</h3>
         <AccessModifier
