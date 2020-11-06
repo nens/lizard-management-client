@@ -7,7 +7,8 @@ import { DurationField } from './../../form/DurationField';
 import { TextArea } from './../../form/TextArea';
 import { TextInput } from './../../form/TextInput';
 import { Button } from '../../form/Button';
-import { getSelectedOrganisation } from '../../reducers';
+import { SelectBox } from '../../form/SelectBox';
+import { getOrganisations, getSelectedOrganisation } from '../../reducers';
 import styles from './RasterForm.module.css';
 import { useForm, Values } from '../../form/useForm';
 import { minLength } from '../../form/validators';
@@ -20,6 +21,7 @@ interface Props {
 };
 
 const RasterSourceForm: React.FC<Props> = ({ currentRasterSource }) => {
+  const organisations = useSelector(getOrganisations).available;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
 
   const initialValues = currentRasterSource ? {
@@ -30,16 +32,16 @@ const RasterSourceForm: React.FC<Props> = ({ currentRasterSource }) => {
     temporal: currentRasterSource.temporal,
     interval: currentRasterSource.interval ? toISOValue(rasterIntervalStringServerToDurationObject(currentRasterSource.interval)) : '',
     accessModifier: currentRasterSource.access_modifier,
-    organisation: currentRasterSource.organisation.name,
+    organisation: currentRasterSource.organisation.uuid.replace(/-/g, "") || null,
   } : {
     name: '',
     description: '',
     supplierCode: '',
-    supplierName: 'hoan.phung',
+    supplierName: '',
     temporal: false,
     interval: '',
     accessModifier: 'Private',
-    organisation: selectedOrganisation.name,
+    organisation: selectedOrganisation.uuid.replace(/-/g, "") || null,
   };
 
   const onSubmit = (values: Values) => {
@@ -134,12 +136,13 @@ const RasterSourceForm: React.FC<Props> = ({ currentRasterSource }) => {
           value={values.accessModifier as string}
           valueChanged={(value) => handleValueChange('accessModifier', value)}
         />
-        <TextInput
+        <SelectBox
           title={'Organisation'}
           name={'organisation'}
+          placeholder={'- Search and select -'}
           value={values.organisation as string}
-          valueChanged={handleInputChange}
-          clearInput={clearInput}
+          valueChanged={(value) => handleValueChange('organisation', value)}
+          choices={organisations.map((organisation: any) => [organisation.uuid, organisation.name])}
           validated={true}
           readOnly
         />

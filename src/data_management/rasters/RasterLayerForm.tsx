@@ -65,8 +65,8 @@ const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
     accessModifier: 'Private',
     sharedWith: false,
     organisationsToSharedWith: [],
-    organisation: selectedOrganisation.uuid,
-    supplierName: 'hoan.phung',
+    organisation: selectedOrganisation.uuid.replace(/-/g, "") || null,
+    supplierName: '',
   };
   const onSubmit = (values: Values) => {
     console.log('submitted', values);
