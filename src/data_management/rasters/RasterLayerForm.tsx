@@ -1,11 +1,18 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useSelector } from 'react-redux';
-// import { createRasterSource } from '../../api/rasters';
+import { createRasterLayer, Organisation, patchRasterLayer } from '../../api/rasters';
 import { CheckBox } from './../../form/CheckBox';
 import { TextArea } from './../../form/TextArea';
 import { TextInput } from './../../form/TextInput';
 import { Button } from '../../form/Button';
+import { SelectBox } from '../../form/SelectBox';
+import { SlushBucket } from '../../form/SlushBucket';
+import { AccessModifier } from '../../form/AccessModifier';
+import ColorMapInput from '../../form/ColorMapInput';
+import { useForm, Values } from '../../form/useForm';
+import { minLength, required } from '../../form/validators';
+import { RasterLayer } from '../../api/rasters';
 import {
   getColorMaps,
   getDatasets,
@@ -14,12 +21,7 @@ import {
   getSelectedOrganisation
 } from '../../reducers';
 import styles from './RasterForm.module.css';
-import { useForm, Values } from '../../form/useForm';
-import { minLength, required } from '../../form/validators';
-import { AccessModifier } from '../../form/AccessModifier';
-import { RasterLayer } from '../../api/rasters';
-import { SelectBox } from '../../form/SelectBox';
-import { SlushBucket } from '../../form/SlushBucket';
+import { optionsHasLayers } from '../../utils/rasterOptionFunctions';
 
 interface Props {
   currentRasterLayer?: RasterLayer
@@ -37,12 +39,12 @@ const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
     name: currentRasterLayer.name,
     description: currentRasterLayer.description,
     dataset: currentRasterLayer.datasets[0] || '',
-    rasterSource: currentRasterLayer.raster_sources[0] || '',
+    rasterSource: (currentRasterLayer.raster_sources && currentRasterLayer.raster_sources[0]) || '',
     aggregationType: currentRasterLayer.aggregation_type,
     // @ts-ignore
     observationType: (currentRasterLayer.observation_type && currentRasterLayer.observation_type.code) || '',
     // @ts-ignore
-    colorMap: currentRasterLayer.options.styles,
+    colorMap: {options: currentRasterLayer.options, rescalable: currentRasterLayer.rescalable},
     rescalable: currentRasterLayer.rescalable,
     colorMapMin: '',
     colorMapMax: '',
@@ -58,10 +60,7 @@ const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
     rasterSource: '',
     aggregationType: '',
     observationType: '',
-    colorMap: '',
-    rescalable: false,
-    colorMapMin: '',
-    colorMapMax: '',
+    colorMap: null,
     accessModifier: 'Private',
     sharedWith: false,
     organisationsToSharedWith: [],
@@ -70,17 +69,48 @@ const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
   };
   const onSubmit = (values: Values) => {
     console.log('submitted', values);
-    // const raster = {
-    //   name: values.name as string,
-    //   organisation: values.organisation as string,
-    //   access_modifier: values.accessModifier as string,
-    //   description: values.description as string,
-    //   supplier: values.supplierName as string,
-    //   supplier_code: values.supplierCode as string,
-    //   temporal: values.temporal as boolean,
-    //   interval: values.interval as string,
-    // };
-    // createRasterSource(raster);
+
+    if (!currentRasterLayer) {
+      const rasterLayer = {
+        name: values.name as string,
+        organisation: values.organisation as Organisation,
+        access_modifier: values.accessModifier as string,
+        description: values.description as string,
+        observation_type: values.observationType as string,
+        supplier: values.supplierName as string,
+        aggregation_type: values.aggregationType as string,
+        // @ts-ignore
+        options: values.colorMap.options,
+        rescalable: values.resscalable as boolean,
+        shared_with: values.organisationsToSharedWith as Organisation[],
+        datasets: [values.dataset as string],
+      };
+
+      createRasterLayer(rasterLayer, values.rasterSource as string);
+    } else {
+      const body = {
+        name: values.name as string,
+        organisation: values.organisation as Organisation,
+        access_modifier: values.accessModifier as string,
+        description: values.description as string,
+        observation_type: values.observationType as string,
+        supplier: values.supplierName as string,
+        aggregation_type: values.aggregationType as string,
+        // @ts-ignore
+        options: values.colorMap.options,
+        rescalable: values.resscalable as boolean,
+        shared_with: values.organisationsToSharedWith as Organisation[],
+        datasets: [values.dataset as string]
+      };
+      // only add colormap in options if not multiple layers
+      // @ts-ignore
+      if (!optionsHasLayers(values.colormap.options)) {
+        // @ts-ignore
+        body.options = values.colormap.options;
+      };
+
+      patchRasterLayer(currentRasterLayer.uuid as string, body);
+    };
   };
 
   const {
@@ -212,17 +242,15 @@ const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
           triedToSubmit={triedToSubmit}
           showSearchField
         />
-        <SelectBox
-          title={'Color map'}
+        <ColorMapInput
+          title={<FormattedMessage id="raster_form.colormap" />}
           name={'colorMap'}
-          placeholder={'- Search and select -'}
-          value={values.colorMap as string}
-          valueChanged={(value) => handleValueChange('colorMap', value)}
-          choices={colorMaps.map((colM: any) => [colM.name, colM.name, colM.description])}
+          value={values.colorMap}
+          valueChanged={(value: any) => handleValueChange('colorMap', value)}
+          colorMaps={colorMaps.map((colM: any) => [colM.name, colM.name, colM.description])}
           validated={!required('Please select a color map', values.colorMap)}
           errorMessage={required('Please select a color map', values.colorMap)}
           triedToSubmit={triedToSubmit}
-          showSearchField
         />
         <h3>3: RIGHTS</h3>
         <AccessModifier
@@ -236,7 +264,7 @@ const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
           title={'Shared with other organisations'}
           name={'sharedWith'}
           value={values.sharedWith as boolean}
-          valueChanged={handleInputChange}
+          valueChanged={(bool: boolean) => handleValueChange('sharedWith', bool)}
         />
         {values.sharedWith ? (
           <SlushBucket

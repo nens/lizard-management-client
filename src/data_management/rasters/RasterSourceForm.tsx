@@ -1,7 +1,7 @@
 import React from 'react';
 // import { FormattedMessage } from 'react-intl';
 import { useSelector } from 'react-redux';
-// import { createRasterSource } from '../../api/rasters';
+import { createRasterSource, Organisation, patchRasterSource } from '../../api/rasters';
 import { CheckBox } from './../../form/CheckBox';
 import { DurationField } from './../../form/DurationField';
 import { TextArea } from './../../form/TextArea';
@@ -46,17 +46,33 @@ const RasterSourceForm: React.FC<Props> = ({ currentRasterSource }) => {
 
   const onSubmit = (values: Values) => {
     console.log('submitted', values);
-    // const rasterSource = {
-    //   name: values.name as string,
-    //   organisation: values.organisation as string,
-    //   access_modifier: values.accessModifier as string,
-    //   description: values.description as string,
-    //   supplier: values.supplierName as string,
-    //   supplier_code: values.supplierCode as string,
-    //   temporal: values.temporal as boolean,
-    //   interval: values.interval as string,
-    // };
-    // createRasterSource(rasterSource);
+    // 
+
+    if (!currentRasterSource) {
+      const rasterSource = {
+        name: values.name as string,
+        organisation: values.organisation as Organisation,
+        access_modifier: values.accessModifier as string,
+        description: values.description as string,
+        supplier: values.supplierName as string,
+        supplier_code: values.supplierCode as string,
+        temporal: values.temporal as boolean,
+        interval: values.interval as string,
+      };
+      createRasterSource(rasterSource);
+    } else {
+      const body = {
+        name: values.name as string,
+        organisation: values.organisation as Organisation,
+        access_modifier: values.accessModifier as string,
+        description: values.description as string,
+        supplier: values.supplierName as string,
+        supplier_code: values.supplierCode as string,
+        temporal: values.temporal as boolean,
+        interval: values.interval as string,
+      };
+      patchRasterSource(currentRasterSource.uuid as string, body);
+    }
   };
 
   const {

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 export interface Values {
-  [name: string]: string | string[] | boolean | null | undefined
+  [name: string]: string | string[] | {} | boolean | null | undefined
 }
 interface TouchedValues {
   [name: string]: boolean
@@ -18,7 +18,7 @@ interface FormOutput {
   triedToSubmit: boolean,
   tryToSubmitForm: () => void, 
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void,
-  handleValueChange: (name: string, value: string | null) => void,
+  handleValueChange: (name: string, value: string | boolean | null) => void,
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void,
   handleReset: (e: React.FormEvent<HTMLFormElement>) => void,
   handleBlur: (e: React.ChangeEvent<HTMLInputElement>) => void,
@@ -42,7 +42,7 @@ export const useForm = ({ initialValues, onSubmit }: FormInput): FormOutput => {
     });
   };
 
-  const handleValueChange = (name: string, value: string | null) => {
+  const handleValueChange = (name: string, value: string | boolean | null) => {
     setValues({
       ...values,
       [name]: value

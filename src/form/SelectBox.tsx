@@ -86,7 +86,10 @@ export const SelectBox: React.FC<SelectBoxProps> = (props) => {
   });
 
   return (
-    <label htmlFor={name}>
+    <label
+      htmlFor={name}
+      style={{width: '100%'}}
+    >
       <span>{title}</span>
       <div className={`${styles.SelectGeneralClass} form-input`}>
         <input
