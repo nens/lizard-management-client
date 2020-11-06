@@ -177,7 +177,6 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
     triedToSubmit,
     intl
   } = props;
-  console.log(value, 'validated', validated, 'error', errorMessage, triedToSubmit)
 
   // Set validity of the input field
   const myInput = useRef<HTMLInputElement>(null);
