@@ -20,6 +20,13 @@
   padding: 70px;
 }
 
+.ConfirmOverlay {
+  position: relative;
+  background-color: #fff;
+  box-shadow: 3px 3px 2px #00000029;
+  width: 50%;
+}
+
 .CloseButton {
   cursor: pointer;
   position: absolute;

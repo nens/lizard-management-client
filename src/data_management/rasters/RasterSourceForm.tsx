@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 // import { FormattedMessage } from 'react-intl';
 import { connect, useSelector } from 'react-redux';
-import { NavLink } from "react-router-dom";
 import { createRasterSource, patchRasterSource } from '../../api/rasters';
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import { CheckBox } from './../../form/CheckBox';
@@ -12,6 +11,7 @@ import { TextInput } from './../../form/TextInput';
 import { SubmitButton } from '../../form/SubmitButton';
 import { CancelButton } from '../../form/CancelButton';
 import { SelectBox } from '../../form/SelectBox';
+import ConfirmModal from '../../components/ConfirmModal';
 import { getOrganisations, getSelectedOrganisation } from '../../reducers';
 import { useForm, Values } from '../../form/useForm';
 import { minLength } from '../../form/validators';
@@ -33,7 +33,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
   const { currentRasterSource } = props;
   const organisations = useSelector(getOrganisations).available;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
-  const [successModal, setSuccessModal] = useState<boolean>(false);
+  const [rasterCreatedModal, setRasterCreatedModal] = useState<boolean>(false);
 
   const initialValues = currentRasterSource ? {
     name: currentRasterSource.name,
@@ -74,7 +74,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
         (response: any) => response.json()
       ).then((parsedBody: any) => {
         console.log('parsedBody', parsedBody);
-        setSuccessModal(true);
+        setRasterCreatedModal(true);
         props.updateRasterSourceUUID(parsedBody.uuid);
       }).catch(
         (e: any) => console.error(e)
@@ -208,13 +208,14 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           />
         </div>
       </form>
-      {successModal ? (
-        <div>
-          <h3>Raster created</h3>
-          <p>A layer is needed to view the raster in the portal</p>
-          <p>We automatically created a layer for you to compose. You will now be redirected to the layer management</p>
-          <NavLink to={'/data_management/raster_layers/new'}>Continue</NavLink>
-        </div>
+      {rasterCreatedModal ? (
+        <ConfirmModal
+          title={'Raster created'}
+          content={`A layer is needed to view the raster in the portal.
+          We automatically created a layer for you to compose. You will now be redirected to the layer management.`}
+          buttonName={'Continue'}
+          url={'/data_management/raster_layers/new'}
+        />
       ) : null}
     </ExplainSideColumn>
   );
