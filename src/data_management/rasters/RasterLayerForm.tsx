@@ -51,17 +51,14 @@ const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
     observationType: (currentRasterLayer.observation_type && currentRasterLayer.observation_type.id + '') || '',
     // @ts-ignore
     colorMap: {options: currentRasterLayer.options, rescalable: currentRasterLayer.rescalable},
-    rescalable: currentRasterLayer.rescalable,
-    colorMapMin: '',
-    colorMapMax: '',
     accessModifier: currentRasterLayer.access_modifier,
     sharedWith: currentRasterLayer.shared_with.length === 0 ? false : true,
     organisationsToSharedWith: currentRasterLayer.shared_with.map(organisation => organisation.uuid.replace(/-/g, "")) || [],
     organisation: currentRasterLayer.organisation.uuid.replace(/-/g, "") || null,
     supplierName: currentRasterLayer.supplier,
   } : {
-    name: '',
-    description: '',
+    name: null,
+    description: null,
     dataset: null,
     rasterSource: rasterSourceUUID || '13b31eda-2413-475a-9b3b-76262e52116d', // temporarily use this UUID as default
     aggregationType: null,
@@ -87,7 +84,8 @@ const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
         aggregation_type: values.aggregationType as string,
         // @ts-ignore
         options: values.colorMap.options,
-        rescalable: values.resscalable as boolean,
+        // @ts-ignore
+        rescalable: values.colorMap.rescalable as boolean,
         shared_with: values.organisationsToSharedWith as string[],
         datasets: [values.dataset as string],
       };
@@ -105,7 +103,8 @@ const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
         aggregation_type: values.aggregationType as string,
         // @ts-ignore
         options: values.colorMap.options,
-        rescalable: values.resscalable as boolean,
+        // @ts-ignore
+        rescalable: values.colorMap.rescalable as boolean,
         shared_with: values.organisationsToSharedWith as string[],
         // datasets: [values.dataset as string]
       };
@@ -174,7 +173,7 @@ const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
           value={values.dataset as string}
           valueChanged={value => handleValueChange('dataset', value)}
           choices={datasets.map((dataset: any) => [dataset.slug, dataset.slug])}
-          validated={true}
+          validated
         />
         <span className={formStyles.FormFieldTitle}>
           2: Data
@@ -272,7 +271,7 @@ const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
           value={values.colorMap}
           valueChanged={(value: any) => handleValueChange('colorMap', value)}
           colorMaps={colorMaps.map((colM: any) => [colM.name, colM.name, colM.description])}
-          validated={true}
+          validated
         />
         <span className={formStyles.FormFieldTitle}>
           3: Rights
@@ -303,7 +302,7 @@ const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
               }
             })}
             valueChanged={(value: any) => handleValueChange('organisationsToSharedWith', value)}
-            validated={true}
+            validated
           />
         ) : null}
         <SelectBox
@@ -313,7 +312,7 @@ const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
           value={values.organisation as string}
           valueChanged={(value) => handleValueChange('organisation', value)}
           choices={organisations.map((organisation: any) => [organisation.uuid, organisation.name])}
-          validated={true}
+          validated
           readOnly
         />
         <TextInput
@@ -322,7 +321,7 @@ const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
           value={values.supplierName as string}
           valueChanged={handleInputChange}
           clearInput={clearInput}
-          validated={true}
+          validated
           readOnly
         />
         <div

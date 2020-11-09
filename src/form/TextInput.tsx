@@ -5,7 +5,7 @@ import formStyles from "../styles/Forms.module.css";
 interface MyProps {
   title: string,
   name: string,
-  value: string,
+  value: string | null,
   valueChanged: (e: React.ChangeEvent<HTMLInputElement>) => void,
   clearInput: (name: string) => void,
   validated: boolean,
@@ -66,7 +66,7 @@ export const TextInput: React.FC<MyProps> = (props) => {
           readOnly={!!readOnly}
           disabled={!!readOnly}
         />
-        {!readOnly && value.length ? <ClearInputButton onClick={() => clearInput(name)}/> : null}
+        {!readOnly && value !== null && value.length ? <ClearInputButton onClick={() => clearInput(name)}/> : null}
       </div>
     </label>
   );

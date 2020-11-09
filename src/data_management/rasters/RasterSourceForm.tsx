@@ -44,12 +44,12 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch> = (props) => {
     accessModifier: currentRasterSource.access_modifier,
     organisation: currentRasterSource.organisation.uuid.replace(/-/g, "") || null,
   } : {
-    name: '',
-    description: '',
-    supplierCode: '',
-    supplierName: '',
+    name: null,
+    description: null,
+    supplierCode: null,
+    supplierName: null,
     temporal: false,
-    interval: '',
+    interval: null,
     accessModifier: 'Private',
     organisation: selectedOrganisation.uuid.replace(/-/g, "") || null,
   };
@@ -136,9 +136,10 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch> = (props) => {
           value={values.description as string}
           valueChanged={handleInputChange}
           clearInput={clearInput}
-          validated={!minLength(1, values.description as string)}
-          errorMessage={minLength(1, values.description as string)}
-          triedToSubmit={triedToSubmit}
+          validated={true}
+          // validated={!minLength(1, values.description as string)}
+          // errorMessage={minLength(1, values.description as string)}
+          // triedToSubmit={triedToSubmit}
         />
         <TextInput
           title={'FTP / Supplier code'}
@@ -147,9 +148,10 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch> = (props) => {
           value={values.supplierCode as string}
           valueChanged={handleInputChange}
           clearInput={clearInput}
-          validated={!minLength(1, values.supplierCode as string)}
-          errorMessage={minLength(1, values.supplierCode as string)}
-          triedToSubmit={triedToSubmit}
+          validated={true}
+          // validated={!minLength(1, values.supplierCode as string)}
+          // errorMessage={minLength(1, values.supplierCode as string)}
+          // triedToSubmit={triedToSubmit}
         />
         <span className={formStyles.FormFieldTitle}>
           2: Data
