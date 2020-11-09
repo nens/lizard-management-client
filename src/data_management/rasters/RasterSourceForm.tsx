@@ -153,7 +153,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch> = (props) => {
             title={'Temporal'}
             name={'temporal'}
             value={values.temporal as boolean}
-            valueChanged={handleInputChange}
+            valueChanged={(bool: boolean) => handleValueChange('temporal', bool)}
           />
           <DurationField
             name={'interval'}
