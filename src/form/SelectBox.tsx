@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Scrollbars from "react-custom-scrollbars";
 
-import ClearInputButton from "./../components/ClearInputButton";
+import { ClearInputButton } from "./ClearInputButton";
 
 import styles from "./SelectBox.module.css";
 import formStyles from "../styles/Forms.module.css";
@@ -13,7 +13,7 @@ export type choicesT = choiceT[];
 interface SelectBoxProps {
   title: string,
   name: string,
-  value: string,
+  value: string | null,
   choices: choicesT,
   valueChanged: (value: string) => void,
   validated: boolean,
@@ -88,9 +88,11 @@ export const SelectBox: React.FC<SelectBoxProps> = (props) => {
   return (
     <label
       htmlFor={name}
-      style={{width: '100%'}}
+      className={formStyles.Label}
     >
-      <span>{title}</span>
+      <span className={formStyles.LabelTitle}>
+        {title}
+      </span>
       <div className={`${styles.SelectGeneralClass} form-input`}>
         <input
           ref={myInput}
@@ -98,7 +100,7 @@ export const SelectBox: React.FC<SelectBoxProps> = (props) => {
           id={`selectbox-${name}`}
           tabIndex={-1}
           type="text"
-          autoComplete="false"
+          autoComplete="off"
           className={`${formStyles.FormControl} ${triedToSubmit ? formStyles.FormSubmitted : ''}`}
           placeholder={placeholder}
           value={value ? (displayStrings[value] || "") : ""}
@@ -129,7 +131,7 @@ export const SelectBox: React.FC<SelectBoxProps> = (props) => {
                 id={`searchbox-${name}`}
                 name={`searchbox-${name}`}
                 type="text"
-                autoComplete="false"
+                autoComplete="off"
                 autoFocus={true}
                 value={searchString}
                 onChange={e => setSearchString(e.target.value)}

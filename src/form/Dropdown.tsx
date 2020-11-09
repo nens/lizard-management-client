@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import ClearInputButton from "../components/ClearInputButton";
+import { ClearInputButton } from "./ClearInputButton";
 import formStyles from "../styles/Forms.module.css";
 
 interface MyProps {
@@ -48,8 +48,13 @@ export const Dropdown: React.FC<MyProps> = (props) => {
   });
 
   return (
-    <label htmlFor={name}>
-      <span>{title}</span>
+    <label
+      htmlFor={name}
+      className={formStyles.Label}
+    >
+      <span className={formStyles.LabelTitle}>
+        {title}
+      </span>
       <div style={{position: 'relative'}}>
         <input
           ref={myInput}

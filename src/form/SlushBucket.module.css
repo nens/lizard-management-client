@@ -20,6 +20,9 @@
   border-bottom: 1px solid #ccc;
   cursor: pointer;
 }
+.ResultRow:focus {
+  outline: none;
+}
 
 .ResultRow:hover {
   background-color: #a6ece0;;

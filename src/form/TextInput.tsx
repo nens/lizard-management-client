@@ -1,11 +1,11 @@
 import React, { useEffect, useRef } from "react";
-import ClearInputButton from "./../forms/ClearInputButton";
+import { ClearInputButton } from "./ClearInputButton";
 import formStyles from "../styles/Forms.module.css";
 
 interface MyProps {
   title: string,
   name: string,
-  value: string,
+  value: string | null,
   valueChanged: (e: React.ChangeEvent<HTMLInputElement>) => void,
   clearInput: (name: string) => void,
   validated: boolean,
@@ -44,8 +44,13 @@ export const TextInput: React.FC<MyProps> = (props) => {
   })
 
   return (
-    <label htmlFor={name}>
-      <span>{title}</span>
+    <label
+      htmlFor={name}
+      className={formStyles.Label}
+    >
+      <span className={formStyles.LabelTitle}>
+        {title}
+      </span>
       <div style={{position: 'relative'}}>
         <input
           ref={myInput}
@@ -61,7 +66,7 @@ export const TextInput: React.FC<MyProps> = (props) => {
           readOnly={!!readOnly}
           disabled={!!readOnly}
         />
-        {!readOnly ? <ClearInputButton onClick={() => clearInput(name)}/> : null}
+        {!readOnly && value !== null && value.length ? <ClearInputButton onClick={() => clearInput(name)}/> : null}
       </div>
     </label>
   );
