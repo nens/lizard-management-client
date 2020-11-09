@@ -18,3 +18,9 @@
   content: '';
   display: inline-block;
 }
+
+.ColorMapOptions {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
