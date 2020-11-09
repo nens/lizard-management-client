@@ -1,4 +1,5 @@
 import React from 'react';
+import { RouteComponentProps, withRouter } from 'react-router';
 import { FormattedMessage } from 'react-intl';
 import { useSelector } from 'react-redux';
 import { createRasterLayer, patchRasterLayer } from '../../api/rasters';
@@ -32,7 +33,8 @@ interface Props {
   currentRasterLayer?: RasterLayer
 };
 
-const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
+const RasterLayerForm: React.FC<Props & RouteComponentProps> = (props) => {
+  const { currentRasterLayer } = props;
   const organisationsToSharedWith = useSelector(getOrganisations).availableForRasterSharedWith;
   const organisations = useSelector(getOrganisations).available;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
@@ -91,7 +93,9 @@ const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
       };
 
       // @ts-ignore
-      createRasterLayer(rasterLayer, values.rasterSource as string);
+      createRasterLayer(rasterLayer, values.rasterSource as string).then(
+        (response: any) => props.history.push('/data_management/raster_layers')
+      ).catch((e: any) => console.error(e));
     } else {
       const body = {
         name: values.name as string,
@@ -116,7 +120,9 @@ const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
       };
 
       // @ts-ignore
-      patchRasterLayer(currentRasterLayer.uuid as string, body);
+      patchRasterLayer(currentRasterLayer.uuid as string, body).then(
+       (response: any) => props.history.push('/data_management/raster_layers')
+      ).catch((e: any) => console.error(e));
     };
   };
 
@@ -328,7 +334,7 @@ const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
           className={formStyles.ButtonContainer}
         >
           <CancelButton
-            url={'/data_management/raster_sources'}
+            url={'/data_management/raster_layers'}
           />
           <SubmitButton
             onClick={tryToSubmitForm}
@@ -339,4 +345,4 @@ const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
   );
 };
 
-export default RasterLayerForm;
+export default withRouter(RasterLayerForm);
