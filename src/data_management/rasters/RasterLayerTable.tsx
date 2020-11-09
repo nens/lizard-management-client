@@ -13,7 +13,7 @@ import tableStyles from "../../components/Table.module.css";
 
 
 const baseUrl = "/api/v4/rasters/";
-const navigationUrlRasters = "/data_management/rasters";
+const navigationUrlRasters = "/data_management/raster_layers";
 
 const deleteActionRaster = (row: any, updateTableRow:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any)=>{
   if (window.confirm(`Are you sure you want to delete raster with uuid: ${row.uuid} ?`)) {

@@ -11,7 +11,7 @@ import rasterSourcesIcon from "../../images/raster_sources_logo_explainbar.svg";
 import tableStyles from "../../components/Table.module.css";
 
 const baseUrl = "/api/v4/rastersources/";
-const navigationUrlRasters = "/data_management/rasters";
+const navigationUrlRasters = "/data_management/raster_sources";
 
 const deleteActionRaster = (row: any, updateTableRow:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any)=>{
   if (window.confirm(`Are you sure you want to delete raster-source with uuid: ${row.uuid} ?`)) {
