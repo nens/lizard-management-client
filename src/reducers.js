@@ -18,10 +18,12 @@ import {
   SHOW_NOTIFICATION,
   DISMISS_NOTIFICATION,
   UPDATE_VIEWPORT_DIMENSIONS,
-  UPDATE_ALARM_TYPE
+  UPDATE_ALARM_TYPE,
+  REQUEST_DATASETS,
+  RECEIVE_DATASETS_SUCCESS,
+  RECEIVE_DATASETS_ERROR,
+  UPDATE_RASTER_SOURCE_UUID
 } from "./actions";
-
-export const getUsername = (state) => (state.bootstrap && state.bootstrap.bootstrap && state.bootstrap.bootstrap.user &&  state.bootstrap.bootstrap.user.username) || null;
 
 function bootstrap(
   state = {
@@ -44,10 +46,6 @@ function bootstrap(
     default:
       return state;
   }
-}
-
-export const getSelectedOrganisation = (state) => {
-  return state.organisations.selected;
 }
 
 function organisations(
@@ -201,6 +199,41 @@ function colorMaps(
   }
 }
 
+function datasets(
+  state = {
+    isFetching: false,
+    timesFetched: 0,
+    hasError: false,
+    errorMessage: "",
+    available: []
+  },
+  action
+) {
+  switch (action.type) {
+    case REQUEST_DATASETS:
+      return { ...state, isFetching: true };
+    case RECEIVE_DATASETS_SUCCESS:
+      return {
+        ...state,
+        available: action.data,
+        isFetching: false,
+        hasError: false,
+        timesFetched: state.timesFetched + 1
+      };
+    case RECEIVE_DATASETS_ERROR:
+      return {
+        ...state,
+        available: [],
+        isFetching: false,
+        hasError: true,
+        errorMessage: action.errorMessage,
+        timesFetched: state.timesFetched + 1
+      };
+    default:
+      return state;
+  }
+}
+
 function notifications(
   state = {
     notifications: []
@@ -254,15 +287,57 @@ function alarmType(state = "RASTERS", action) {
   }
 }
 
+function rasterSourceUUID(state = null, action) {
+  switch (action.type) {
+    case UPDATE_RASTER_SOURCE_UUID:
+      return action.uuid;
+    default:
+      return state;
+  };
+};
+
+// Selectors
+export const getBootstrap = (state) => {
+  return state.bootstrap;
+};
+
+export const getUsername = (state) => {
+  return (state.bootstrap && state.bootstrap.bootstrap && state.bootstrap.bootstrap.user &&  state.bootstrap.bootstrap.user.username) || null;
+};
+
+export const getOrganisations = (state) => {
+  return state.organisations;
+};
+export const getSelectedOrganisation = (state) => {
+  return state.organisations.selected;
+};
+export const getObservationTypes = (state) => {
+  return state.observationTypes;
+};
+export const getColorMaps = (state) => {
+  return state.colorMaps;
+};
+export const getSupplierIds = (state) => {
+  return state.supplierIds;
+};
+export const getDatasets = (state) => {
+  return state.datasets;
+};
+export const getRasterSourceUUID = (state) => {
+  return state.rasterSourceUUID;
+};
+
 const rootReducer = combineReducers({
   bootstrap,
   organisations,
   observationTypes,
   supplierIds,
   colorMaps,
+  datasets,
   notifications,
   viewport,
-  alarmType
+  alarmType,
+  rasterSourceUUID
 });
 
 export default rootReducer;

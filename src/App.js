@@ -12,7 +12,8 @@ import {
   fetchObservationTypes,
   fetchSupplierIds,
   fetchColorMaps,
-  updateViewportDimensions
+  updateViewportDimensions,
+  fetchDatasets
 } from "./actions";
 import { Route, NavLink } from "react-router-dom";
 import LanguageSwitcher from "./components/LanguageSwitcher";
@@ -63,6 +64,7 @@ class App extends Component {
       if (props.mustFetchOrganisations) props.getOrganisations();
       if (props.mustFetchObservationTypes) props.getObservationTypes();
       if (props.mustFetchSupplierIds) props.getSupplierIds();
+      if (props.mustFetchDatasets) props.getDatasets();
     }
   }
   updateOnlineStatus(e) {
@@ -319,7 +321,11 @@ const mapStateToProps = (state, ownProps) => {
     mustFetchColorMaps:
       state.colorMaps.available.length === 0 &&
       !state.colorMaps.isFetching &&
-      state.colorMaps.timesFetched < 1
+      state.colorMaps.timesFetched < 1,
+    mustFetchDatasets:
+      state.datasets.available.length === 0 &&
+      !state.datasets.isFetching &&
+      state.datasets.timesFetched < 1
   };
 };
 
@@ -330,6 +336,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     getObservationTypes: () => dispatch(fetchObservationTypes()),
     getSupplierIds: () => dispatch(fetchSupplierIds()),
     getColorMaps: () => dispatch(fetchColorMaps()),
+    getDatasets: () => dispatch(fetchDatasets()),
     addNotification: (message, timeout) => {
       dispatch(addNotification(message, timeout));
     },

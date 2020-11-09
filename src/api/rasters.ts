@@ -33,6 +33,41 @@ export interface OldRasterEdit {
   shared_with: string;
 }
 
+export interface Organisation {
+  name: string,
+  uuid: string,
+  url: string,
+}
+
+export interface RasterSource {
+  name: string;
+  organisation: Organisation;
+  access_modifier: string;
+  description: string;
+  supplier: string;
+  supplier_code: string;
+  temporal: boolean;
+  interval?: string;
+  uuid?: string,
+}
+
+export interface RasterLayer {
+  name: string;
+  description: string;
+  organisation: Organisation;
+  access_modifier: string;
+  observation_type: string;
+  supplier: string;
+  supplier_code?: string;
+  aggregation_type: string;
+  options: string;
+  shared_with: Organisation[];
+  datasets: string[];
+  raster_sources?: string[];
+  rescalable: boolean;
+  uuid?: string,
+}
+
 export const fetchRasterV3 = async (uuid: string) => {
   const response = await fetch(`/api/v3/rasters/${uuid}/`, {
     credentials: "same-origin"
@@ -41,6 +76,16 @@ export const fetchRasterV3 = async (uuid: string) => {
   return response.json();
 };
 
+export const fetchRasterSourceV4 = async (uuid: string, options: RequestInit = {
+  credentials: "same-origin"
+}) => {
+  const response = await fetch(`/api/v4/rastersources/${uuid}/`, {
+    ...options,
+    method: "GET"
+  });
+
+  return response.json();
+};
 
 export const fetchRasterV4 = async (uuid: string, options: RequestInit = {
   credentials: "same-origin"
@@ -215,6 +260,69 @@ export const uploadRasterFile = async (rasterUuid: string, file: File, timestamp
   return response.json();
 };
 
+export const createRasterSource = (rasterSource: RasterSource) => {
+  const defaultOpts: RequestInit = {
+    credentials: "same-origin",
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+  };
+
+  const rasterSourceBody = {
+    name: rasterSource.name,
+    description: rasterSource.description,
+    organisation: rasterSource.organisation,
+    access_modifier: rasterSource.access_modifier,
+    supplier: rasterSource.supplier,
+    supplier_code: rasterSource.supplier_code,
+    temporal: rasterSource.temporal,
+    interval: rasterSource.temporal ? rasterSource.interval : undefined
+  };
+
+  const rasterSourceResponse = fetch('/api/v4/rastersources/', {
+    ...defaultOpts,
+    body: JSON.stringify(rasterSourceBody)
+  });
+
+  return rasterSourceResponse;
+};
+
+export const createRasterLayer = (rasterLayer: RasterLayer, rasterSourceUuid: string) => {
+  const defaultOpts: RequestInit = {
+    credentials: "same-origin",
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+  };
+
+  const rasterLayerBody = {
+    name: rasterLayer.name,
+    organisation: rasterLayer.organisation,
+    observation_type: rasterLayer.observation_type,
+    description: rasterLayer.description,
+    supplier: rasterLayer.supplier,
+    aggregation_type: rasterLayer.aggregation_type,
+    options: rasterLayer.options,
+    shared_with: rasterLayer.shared_with,
+    rescalable: rasterLayer.rescalable,
+    access_modifier: rasterLayer.access_modifier,
+    // datasets: rasterLayer.datasets,
+    source: {
+      graph: {
+        raster: [
+          "lizard_nxt.blocks.LizardRasterSource",
+          rasterSourceUuid
+        ]
+      },
+      name: "raster"
+    }
+  };
+
+  const rasterLayerResponse = fetch('/api/v4/rasters/', {
+    ...defaultOpts,
+    body: JSON.stringify(rasterLayerBody)
+  });
+
+  return rasterLayerResponse;
+};
 
 export const createRaster = async (raster: OldRaster) => {
   // A raster is created in two steps: first we create the raster *source*,
@@ -281,7 +389,6 @@ export const createRaster = async (raster: OldRaster) => {
   return rasterResponse;
 };
 
-
 export const patchRaster = async (rasterUuid: string, raster: OldRasterEdit) => {
   const url = "/api/v4/rasters/";
   // Store most fields on the raster
@@ -307,6 +414,57 @@ export const patchRaster = async (rasterUuid: string, raster: OldRasterEdit) => 
       });
     }
   }
+
+  return {
+    response: newRasterResponse,
+    raster: newRaster
+  };
+};
+
+export const patchRasterSource = async (rasterUuid: string, rasterSource: RasterSource) => {
+  const url = "/api/v4/rastersources/";
+  // Store most fields on the raster
+  const opts: RequestInit = {
+    credentials: "same-origin",
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(rasterSource)
+  };
+
+  const newRasterSourceResponse = await fetch(url + rasterUuid + "/", opts);
+  const newRasterSource = await newRasterSourceResponse.json();
+
+  return {
+    response: newRasterSourceResponse,
+    rasterSource: newRasterSource
+  };
+};
+
+export const patchRasterLayer = async (rasterUuid: string, raster: RasterLayer) => {
+  const url = "/api/v4/rasters/";
+  // Store most fields on the raster
+  const opts: RequestInit = {
+    credentials: "same-origin",
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(raster)
+  };
+
+  const newRasterResponse = await fetch(url + rasterUuid + "/", opts);
+  const newRaster = await newRasterResponse.json();
+
+  if (newRasterResponse.ok) {
+      // Only supplier code is stored on the raster source
+    if (raster.supplier_code !== undefined &&
+        newRaster.raster_sources && newRaster.raster_sources.length === 1)  {
+      fetch(newRaster.raster_sources[0], {
+        credentials: "same-origin",
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({supplier_code: raster.supplier_code})
+      });
+    };
+  };
 
   return {
     response: newRasterResponse,
