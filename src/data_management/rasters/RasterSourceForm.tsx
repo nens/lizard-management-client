@@ -103,110 +103,110 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch> = (props) => {
   } = useForm({initialValues, onSubmit});
 
   return (
-      <ExplainSideColumn
-        imgUrl={rasterIcon}
-        headerText={"Raster Sources"}
-        explainationText={"Fill in the form to create a new Raster Source."}
-        backUrl={"/data_management/raster_sources"}      
+    <ExplainSideColumn
+      imgUrl={rasterIcon}
+      headerText={"Raster Sources"}
+      explainationText={"Fill in the form to create a new Raster Source."}
+      backUrl={"/data_management/raster_sources"}      
+    >
+      <form
+        className={styles.Form}
+        onSubmit={handleSubmit}
+        onReset={handleReset}
       >
-        <form
-          className={styles.Form}
-          onSubmit={handleSubmit}
-          onReset={handleReset}
-        >
-          <h3>1: GENERAL</h3>
-          <TextInput
-            title={'Name*'}
-            name={'name'}
-            placeholder={'Enter at least 3 characters'}
-            value={values.name as string}
-            valueChanged={handleInputChange}
-            clearInput={clearInput}
-            validated={!minLength(3, values.name as string)}
-            errorMessage={minLength(3, values.name as string)}
-            triedToSubmit={triedToSubmit}
+        <h3>1: GENERAL</h3>
+        <TextInput
+          title={'Name*'}
+          name={'name'}
+          placeholder={'Enter at least 3 characters'}
+          value={values.name as string}
+          valueChanged={handleInputChange}
+          clearInput={clearInput}
+          validated={!minLength(3, values.name as string)}
+          errorMessage={minLength(3, values.name as string)}
+          triedToSubmit={triedToSubmit}
+        />
+        <TextArea
+          title={'Description'}
+          name={'description'}
+          placeholder={'Enter at least 1 character'}
+          value={values.description as string}
+          valueChanged={handleInputChange}
+          clearInput={clearInput}
+          validated={!minLength(1, values.description as string)}
+          errorMessage={minLength(1, values.description as string)}
+          triedToSubmit={triedToSubmit}
+        />
+        <TextInput
+          title={'FTP / Supplier code'}
+          name={'supplierCode'}
+          placeholder={'Enter at least 1 characters'}
+          value={values.supplierCode as string}
+          valueChanged={handleInputChange}
+          clearInput={clearInput}
+          validated={!minLength(1, values.supplierCode as string)}
+          errorMessage={minLength(1, values.supplierCode as string)}
+          triedToSubmit={triedToSubmit}
+        />
+        <h3>2: DATA</h3>
+        <CheckBox
+          title={'Temporal'}
+          name={'temporal'}
+          value={values.temporal as boolean}
+          valueChanged={(bool: boolean) => handleValueChange('temporal', bool)}
+        />
+        <DurationField
+          name={'interval'}
+          value={values.interval as string}
+          valueChanged={(value) => handleValueChange('interval', value)}
+          validated={true}
+          readOnly={values.temporal === false}
+        />
+        <h3>3: RIGHTS</h3>
+        <AccessModifier
+          title={'Access Modifier'}
+          name={'accessModifier'}
+          value={values.accessModifier as string}
+          valueChanged={(value) => handleValueChange('accessModifier', value)}
+        />
+        <SelectBox
+          title={'Organisation'}
+          name={'organisation'}
+          placeholder={'- Search and select -'}
+          value={values.organisation as string}
+          valueChanged={(value) => handleValueChange('organisation', value)}
+          choices={organisations.map((organisation: any) => [organisation.uuid, organisation.name])}
+          validated={true}
+          readOnly
+        />
+        <TextInput
+          title={'Supplier'}
+          name={'supplier'}
+          value={values.supplierName as string}
+          valueChanged={handleInputChange}
+          clearInput={clearInput}
+          validated={true}
+          readOnly
+        />
+        <div>
+          <Button
+            type='reset'
+          />{' '}
+          <Button
+            type='submit'
+            onClick={tryToSubmitForm}
           />
-          <TextArea
-            title={'Description'}
-            name={'description'}
-            placeholder={'Enter at least 1 character'}
-            value={values.description as string}
-            valueChanged={handleInputChange}
-            clearInput={clearInput}
-            validated={!minLength(1, values.description as string)}
-            errorMessage={minLength(1, values.description as string)}
-            triedToSubmit={triedToSubmit}
-          />
-          <TextInput
-            title={'FTP / Supplier code'}
-            name={'supplierCode'}
-            placeholder={'Enter at least 1 characters'}
-            value={values.supplierCode as string}
-            valueChanged={handleInputChange}
-            clearInput={clearInput}
-            validated={!minLength(1, values.supplierCode as string)}
-            errorMessage={minLength(1, values.supplierCode as string)}
-            triedToSubmit={triedToSubmit}
-          />
-          <h3>2: DATA</h3>
-          <CheckBox
-            title={'Temporal'}
-            name={'temporal'}
-            value={values.temporal as boolean}
-            valueChanged={(bool: boolean) => handleValueChange('temporal', bool)}
-          />
-          <DurationField
-            name={'interval'}
-            value={values.interval as string}
-            valueChanged={(value) => handleValueChange('interval', value)}
-            validated={true}
-            readOnly={values.temporal === false}
-          />
-          <h3>3: RIGHTS</h3>
-          <AccessModifier
-            title={'Access Modifier'}
-            name={'accessModifier'}
-            value={values.accessModifier as string}
-            valueChanged={(value) => handleValueChange('accessModifier', value)}
-          />
-          <SelectBox
-            title={'Organisation'}
-            name={'organisation'}
-            placeholder={'- Search and select -'}
-            value={values.organisation as string}
-            valueChanged={(value) => handleValueChange('organisation', value)}
-            choices={organisations.map((organisation: any) => [organisation.uuid, organisation.name])}
-            validated={true}
-            readOnly
-          />
-          <TextInput
-            title={'Supplier'}
-            name={'supplier'}
-            value={values.supplierName as string}
-            valueChanged={handleInputChange}
-            clearInput={clearInput}
-            validated={true}
-            readOnly
-          />
-          <div>
-            <Button
-              type='reset'
-            />{' '}
-            <Button
-              type='submit'
-              onClick={tryToSubmitForm}
-            />
-          </div>
-        </form>
-        {successModal ? (
-          <div>
-            <h3>Raster created</h3>
-            <p>A layer is needed to view the raster in the portal</p>
-            <p>We automatically created a layer for you to compose. You will now be redirected to the layer management</p>
-            <NavLink to={'/data_management/raster_layers/new'}>Continue</NavLink>
-          </div>
-        ) : null}
-      </ExplainSideColumn>
+        </div>
+      </form>
+      {successModal ? (
+        <div>
+          <h3>Raster created</h3>
+          <p>A layer is needed to view the raster in the portal</p>
+          <p>We automatically created a layer for you to compose. You will now be redirected to the layer management</p>
+          <NavLink to={'/data_management/raster_layers/new'}>Continue</NavLink>
+        </div>
+      ) : null}
+    </ExplainSideColumn>
   );
 };
 
