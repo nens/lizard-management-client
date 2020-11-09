@@ -149,7 +149,7 @@ const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
         <TextInput
           title={'Name *'}
           name={'name'}
-          placeholder={'Enter at least 3 characters'}
+          placeholder={'Please enter at least 3 characters'}
           value={values.name as string}
           valueChanged={handleInputChange}
           clearInput={clearInput}

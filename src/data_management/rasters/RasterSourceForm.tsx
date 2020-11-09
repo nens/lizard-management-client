@@ -121,7 +121,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch> = (props) => {
         <TextInput
           title={'Name *'}
           name={'name'}
-          placeholder={'Enter at least 3 characters'}
+          placeholder={'Please enter at least 3 characters'}
           value={values.name as string}
           valueChanged={handleInputChange}
           clearInput={clearInput}
@@ -132,7 +132,6 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch> = (props) => {
         <TextArea
           title={'Description'}
           name={'description'}
-          placeholder={'Enter at least 1 character'}
           value={values.description as string}
           valueChanged={handleInputChange}
           clearInput={clearInput}
@@ -144,7 +143,6 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch> = (props) => {
         <TextInput
           title={'FTP / Supplier code'}
           name={'supplierCode'}
-          placeholder={'Enter at least 1 characters'}
           value={values.supplierCode as string}
           valueChanged={handleInputChange}
           clearInput={clearInput}
