@@ -206,19 +206,19 @@ class App extends Component {
             </div>
           </div>
           <div className={gridStyles.Container + " " + styles.AppContent}>
-            <div className={gridStyles.Row}>
+            {/* <div className={gridStyles.Row}>
               <div
                 style={{ 
                   margin: "25px 0 25px 0",
                   width: "100%" 
                 }}
                 className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
-              >
+              > */}
                 <Route exact path="/" component={Home} />
                 <Route path="/alarms" component={AlarmsApp} />
                 <Route path="/data_management" component={DataManagementApp} />
-              </div>
-            </div>
+              {/* </div>
+            </div> */}
           </div>
           <footer className={styles.Footer}>
             <div className={gridStyles.Container}>

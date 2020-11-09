@@ -1,12 +1,41 @@
+:root {  
+  --color-dark-main: #354B61;
+  --color-ligth-main: #FFFFFF;
+  --color-ligth-main-second:#F6F6F6;
+  --color-border-table: #2C3E50;
+  --color-header: #008080;
+}
+
+button {
+  cursor: pointer;
+}
+button:disabled {
+  cursor: not-allowed;
+}
+
+html,
+body {
+  height: 98vh;
+  width: 100vw;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 .App {
+  height: 100%;
+  width: 100%;
   display: flex;
-  min-height: 100vh;
+  /* min-height: 100vh; */
   flex-direction: column;
   font-family: Montserrat;
 }
 
 .AppContent {
+  height: 100%;
+  width:86%;
   flex: 1;
+  min-height: 0;
 }
 
 .AppIcon {
@@ -32,6 +61,8 @@
 }
 
 .Footer {
+  /* hide footer untill we decide what to do with it */
+  display: none;
   background-color: #D8D8D8;
   text-transform: uppercase;
 }

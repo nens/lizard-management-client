@@ -301,6 +301,10 @@ export const getBootstrap = (state) => {
   return state.bootstrap;
 };
 
+export const getUsername = (state) => {
+  return (state.bootstrap && state.bootstrap.bootstrap && state.bootstrap.bootstrap.user &&  state.bootstrap.bootstrap.user.username) || null;
+};
+
 export const getOrganisations = (state) => {
   return state.organisations;
 };

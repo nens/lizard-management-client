@@ -1,0 +1,86 @@
+.Table {
+  height: 100%;
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  overflow-x: auto;
+
+  border-color: var(--color-border-table);
+  border-style: solid;
+  border-width: 0.5px;
+  
+}
+
+/* header + body */
+.Table > div {
+  min-width: 1200px;
+}
+
+/* header */
+.Table > div:nth-child(1) {
+  display: grid;
+  background-color: var(--color-dark-main);
+  color: var(--color-ligth-main);
+}
+.Table > div:nth-child(1) > span {
+  padding-top: 12px;
+  padding-bottom: 9px;
+}
+
+/* body */
+.Table > div:nth-child(2) {
+  /* grid-template-rows: repeat(max-content); */
+  grid-auto-rows: max-content;
+  overflow-y: auto;
+  display: grid;
+}
+
+/* cells */
+.Table > div > span {
+  padding-left: 37px;
+  padding-right: 37px;
+  padding-top: 16px;
+  padding-bottom: 16px;
+  
+  /* height: 64px; */
+  box-sizing: border-box;
+  
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-width: 0;
+}
+
+.CellEllipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.Table > div > .Selected {
+  background-color: rgba(53, 75, 97, 0.24);
+}
+
+/* header ordering buttons */
+.Table > div:nth-child(1) button {
+  background-color: transparent;
+  color: var(--color-ligth-main);
+  border: none;
+}
+
+/* Loading indicator container */
+.Table > div:nth-child(3) {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top:0;
+  left:0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+
