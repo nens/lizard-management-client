@@ -180,6 +180,7 @@
   "notifications_app.which_data_type": "Wat is het alarm type?",
   "notifications_app.when_an_alarm_is_triggered": "Wanneer dit alarm afgaat, zullen deze groepen bericht krijgen.",
   "notifications_app.which_temporal_raster_to_use": "Welk temporeel raster wil je gebruiken?",
+  "pagination.label_items_per_page": "Items per pagina",
   "raster.post_metadata_error_in_400": "Oeps, er ging iets mis. Controleer het formulier en uw internetverbinding. Error code:",
   "raster.post_metadata_error_in_500": "Oeps, er ging iets mis. Neem zo nodig contact op met support. Error code:",
   "raster.post_metadata_success": "Succes! De raster metadata is opgeslagen op de server. U kunt nu data toevoegen of dit later doen",

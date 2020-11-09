@@ -26,7 +26,8 @@ const localeData = {
 };
 
 const preferredLocale =
-  localStorage.getItem("lizard-preferred-language") || "en";
+  // localStorage.getItem("lizard-preferred-language") || "en";
+  "en";
 const messages = localeData[preferredLocale];
 
 const Root = ({ store }) => (

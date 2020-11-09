@@ -1,8 +1,12 @@
 import React, { Component } from "react";
 import { DataManagement as DataManagementHome } from "./DataManagement";
 import { Raster as RasterApp } from "./rasters/Raster";
+import { RasterSourceTable} from "./rasters/RasterSourceTable";
+import { RasterLayerTable} from "./rasters/RasterLayerTable";
+
 import { WmsLayer as WmsLayerApp } from "./wms_layers/WmsLayer";
 import { Scenarios as ScenariosApp } from "./scenarios/Scenarios";
+import { ScenarioTable } from "./scenarios/ScenarioTable";
 import { NewRaster } from "./rasters/NewRaster";
 import { NewRaster2 } from "./rasters/NewRaster2";
 import { EditRaster } from "./rasters/EditRaster";
@@ -29,11 +33,14 @@ class App extends Component {
 
   render() {
     return (
-      <div>
+      <>
         <Route exact path="/data_management" component={DataManagementHome} />
-        <Route exact path="/data_management/rasters" component={RasterApp} />
+        <Route exact path="/data_management/old_rasters" component={RasterApp} /> 
+        <Route exact path="/data_management/raster_sources" component={RasterSourceTable} />
+        <Route exact path="/data_management/raster_layers" component={RasterLayerTable} />
         <Route exact path="/data_management/wms_layers" component={WmsLayerApp} />
-        <Route exact path="/data_management/scenarios" component={ScenariosApp} />
+        <Route exact path="/data_management/scenarios_old" component={ScenariosApp} />
+        <Route exact path="/data_management/scenarios" component={ScenarioTable} />
         <Switch>
           <Route
             exact
@@ -66,7 +73,7 @@ class App extends Component {
             component={EditWmsLayer}
           />
         </Switch>
-      </div>
+      </>
     );
   }
 }
