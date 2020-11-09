@@ -217,8 +217,13 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
   const placeholderMaximumColorRange = intl.formatMessage({ id: "placeholder_maximum_color_range" })
 
   return (
-    <label htmlFor={name}>
-      <span>{title}</span>
+    <label
+      htmlFor={name}
+      className={formStyles.Label}
+    >
+      <span className={formStyles.LabelTitle}>
+        {title}
+      </span>
       <div>
         <div className={styles.previewColorContainer}>{colors}</div>
         <div className={styles.MinMaxValues}>
@@ -228,7 +233,7 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
         <SelectBox
           title={''}
           choices={colorMaps}
-          value={(colorMapType && colorMapType.colorMap) || ''}
+          value={(colorMapType && colorMapType.colorMap) || null}
           name={name + '_colorMapselect'}
           validated={validated}
           errorMessage={errorMessage}
@@ -246,7 +251,7 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
         <br />
         <input
           type="number"
-          autoComplete="false"
+          autoComplete="off"
           onChange={e => handleValueChanged('min', toFloat(e.target.value))}
           value={(colorMapType && colorMapType.min) || ""}
           placeholder={placeholderMinimumColorRange}
@@ -260,7 +265,7 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
         </span>
         <input
           type="number"
-          autoComplete="false"
+          autoComplete="off"
           value={(colorMapType && colorMapType.max) || ""}
           onChange={e => handleValueChanged('max', toFloat(e.target.value))}
           placeholder={placeholderMaximumColorRange}

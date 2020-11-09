@@ -1,3 +1,24 @@
+/* CSS for form layout and text */
+.Form {
+  display: flex;
+  flex-direction: column;
+}
+.FormFieldTitle {
+  font-size: 19px;
+  font-weight: 500;
+  text-transform: uppercase;
+  margin: 20px 0;
+}
+.Label {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+}
+.LabelTitle {
+  margin-bottom: 8px;
+}
+
+/* CSS for form input fields */
 .FormControl {
   display: block;
   width: 100%;
@@ -9,15 +30,12 @@
   background-image: none;
   background-clip: padding-box;
   border: 1px solid #ced4da;
-  border-radius: .25rem;
+  border-radius: 4px;
   transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
 }
 .FormControl:focus {
-  color: #495057;
-  background-color: #fff;
-  border-color: #80bdff;
-  outline: 0;
-  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  border-color: #73C9B2;
+  outline: none;
 }
 .FormControl:read-only {
   background-color: rgb(216, 216, 216);
@@ -45,11 +63,8 @@
   transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
 }
 .FormControlSmall:focus {
-  color: #495057;
-  background-color: #fff;
-  border-color: #80bdff;
+  border-color: #73C9B2;
   outline: 0;
-  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
 
 .Large {

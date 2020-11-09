@@ -87,6 +87,7 @@ export const RasterForm: React.FC = () => {
         valueChanged={handleInputChange}
       />
       <DurationField
+        title={'Interval'}
         name={'duration'}
         value={values.duration as string}
         valueChanged={(value) => handleValueChange('duration', value)}

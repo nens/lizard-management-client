@@ -1,5 +1,6 @@
 import React from "react";
 import styles from "./AccessModifier.module.css";
+import formStyles from "../styles/Forms.module.css";
 
 interface MyProps {
   title: string,
@@ -20,8 +21,13 @@ export const AccessModifier: React.FC<MyProps> = (props) => {
   } = props;
 
   return (
-    <label htmlFor={name}>
-      <span>{title}</span>
+    <label
+      htmlFor={name}
+      className={formStyles.Label}
+    >
+      <span className={formStyles.LabelTitle}>
+        {title}
+      </span>
       <div
         className={readOnly ? styles.AccessModifierTilesReadOnly : styles.AccessModifierTiles}
       >

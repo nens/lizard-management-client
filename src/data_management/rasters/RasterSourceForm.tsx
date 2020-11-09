@@ -11,7 +11,6 @@ import { TextInput } from './../../form/TextInput';
 import { Button } from '../../form/Button';
 import { SelectBox } from '../../form/SelectBox';
 import { getOrganisations, getSelectedOrganisation } from '../../reducers';
-import styles from './RasterForm.module.css';
 import { useForm, Values } from '../../form/useForm';
 import { minLength } from '../../form/validators';
 import { AccessModifier } from '../../form/AccessModifier';
@@ -19,6 +18,7 @@ import { RasterSource } from '../../api/rasters';
 import { rasterIntervalStringServerToDurationObject, toISOValue } from '../../utils/isoUtils';
 import { updateRasterSourceUUID } from '../../actions';
 import rasterIcon from "../../images/raster_layers_logo_explainbar.svg";
+import formStyles from './../../styles/Forms.module.css';
 
 interface Props {
   currentRasterSource?: RasterSource
@@ -110,13 +110,15 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch> = (props) => {
       backUrl={"/data_management/raster_sources"}      
     >
       <form
-        className={styles.Form}
+        className={formStyles.Form}
         onSubmit={handleSubmit}
         onReset={handleReset}
       >
-        <h3>1: GENERAL</h3>
+        <span className={formStyles.FormFieldTitle}>
+          1: General
+        </span>
         <TextInput
-          title={'Name*'}
+          title={'Name *'}
           name={'name'}
           placeholder={'Enter at least 3 characters'}
           value={values.name as string}
@@ -148,7 +150,9 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch> = (props) => {
           errorMessage={minLength(1, values.supplierCode as string)}
           triedToSubmit={triedToSubmit}
         />
-        <h3>2: DATA</h3>
+        <span className={formStyles.FormFieldTitle}>
+          2: Data
+        </span>
         <CheckBox
           title={'Temporal'}
           name={'temporal'}
@@ -156,13 +160,16 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch> = (props) => {
           valueChanged={(bool: boolean) => handleValueChange('temporal', bool)}
         />
         <DurationField
+          title={'Interval'}
           name={'interval'}
           value={values.interval as string}
           valueChanged={(value) => handleValueChange('interval', value)}
           validated={true}
           readOnly={values.temporal === false}
         />
-        <h3>3: RIGHTS</h3>
+        <span className={formStyles.FormFieldTitle}>
+          3: Rights
+        </span>
         <AccessModifier
           title={'Access Modifier'}
           name={'accessModifier'}

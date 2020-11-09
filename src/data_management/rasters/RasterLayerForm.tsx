@@ -22,7 +22,7 @@ import {
   getRasterSourceUUID,
   getSelectedOrganisation
 } from '../../reducers';
-import styles from './RasterForm.module.css';
+import formStyles from './../../styles/Forms.module.css';
 import { optionsHasLayers } from '../../utils/rasterOptionFunctions';
 import { getUuidFromUrl } from '../../utils/getUuidFromUrl';
 import rasterIcon from "../../images/raster_layers_logo_explainbar.svg";
@@ -61,16 +61,16 @@ const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
   } : {
     name: '',
     description: '',
-    dataset: '',
+    dataset: null,
     rasterSource: rasterSourceUUID || '13b31eda-2413-475a-9b3b-76262e52116d', // temporarily use this UUID as default
-    aggregationType: '',
+    aggregationType: null,
     observationType: null,
     colorMap: null,
     accessModifier: 'Private',
     sharedWith: false,
     organisationsToSharedWith: [],
     organisation: selectedOrganisation.uuid.replace(/-/g, "") || null,
-    supplierName: '',
+    supplierName: null,
   };
   const onSubmit = (values: Values) => {
     console.log('submitted', values);
@@ -139,13 +139,15 @@ const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
       backUrl={"/data_management/raster_layers"}
     >
       <form
-        className={styles.Form}
+        className={formStyles.Form}
         onSubmit={handleSubmit}
         onReset={handleReset}
       >
-        <h3>1: GENERAL</h3>
+        <span className={formStyles.FormFieldTitle}>
+          1: General
+        </span>
         <TextInput
-          title={'Name*'}
+          title={'Name *'}
           name={'name'}
           placeholder={'Enter at least 3 characters'}
           value={values.name as string}
@@ -173,9 +175,11 @@ const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
           choices={datasets.map((dataset: any) => [dataset.slug, dataset.slug])}
           validated={true}
         />
-        <h3>2: DATA</h3>
+        <span className={formStyles.FormFieldTitle}>
+          2: Data
+        </span>
         <TextInput
-          title={'Source*'}
+          title={'Source *'}
           name={'rasterSource'}
           value={values.rasterSource as string}
           valueChanged={handleInputChange}
@@ -185,7 +189,7 @@ const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
           triedToSubmit={triedToSubmit}
         />
         <SelectBox
-          title={'Aggregation type'}
+          title={'Aggregation type *'}
           name={'aggregationType'}
           placeholder={'- Select -'}
           value={values.aggregationType as string}
@@ -222,7 +226,7 @@ const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
           triedToSubmit={triedToSubmit}
         />
         <SelectBox
-          title={'Observation type'}
+          title={'Observation type *'}
           name={'observationType'}
           placeholder={'- Search and select -'}
           value={values.observationType as string}
@@ -262,14 +266,16 @@ const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
           triedToSubmit={triedToSubmit}
         /> */}
         <ColorMapInput2
-          title={<FormattedMessage id="raster_form.colormap" />}
+          title={'Color map *'}
           name={'colorMap'}
           value={values.colorMap}
           valueChanged={(value: any) => handleValueChange('colorMap', value)}
           colorMaps={colorMaps.map((colM: any) => [colM.name, colM.name, colM.description])}
           validated={true}
         />
-        <h3>3: RIGHTS</h3>
+        <span className={formStyles.FormFieldTitle}>
+          3: Rights
+        </span>
         <AccessModifier
           title={'Access Modifier'}
           name={'accessModifier'}
@@ -285,7 +291,7 @@ const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
         />
         {values.sharedWith ? (
           <SlushBucket
-            title={'Shared with other organisations'}
+            title={'Organisations'}
             name={'organisationsToSharedWith'}
             placeholder={'Search organisations'}
             value={values.organisationsToSharedWith as string[]}
