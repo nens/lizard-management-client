@@ -61,7 +61,7 @@ export const TextInput: React.FC<MyProps> = (props) => {
           readOnly={!!readOnly}
           disabled={!!readOnly}
         />
-        {!readOnly ? <ClearInputButton onClick={() => clearInput(name)}/> : null}
+        {!readOnly && value.length ? <ClearInputButton onClick={() => clearInput(name)}/> : null}
       </div>
     </label>
   );

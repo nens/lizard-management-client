@@ -2,6 +2,7 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useSelector } from 'react-redux';
 import { createRasterLayer, patchRasterLayer } from '../../api/rasters';
+import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import { CheckBox } from './../../form/CheckBox';
 import { TextArea } from './../../form/TextArea';
 import { TextInput } from './../../form/TextInput';
@@ -24,6 +25,7 @@ import {
 import styles from './RasterForm.module.css';
 import { optionsHasLayers } from '../../utils/rasterOptionFunctions';
 import { getUuidFromUrl } from '../../utils/getUuidFromUrl';
+import rasterIcon from "../../images/raster_layers_logo_explainbar.svg";
 
 interface Props {
   currentRasterLayer?: RasterLayer
@@ -130,11 +132,12 @@ const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
   } = useForm({initialValues, onSubmit});
 
   return (
-    <div>
-      <div>
-        <div>LAYERS</div>
-        <div>EXPLAIN BOX</div>
-      </div>
+    <ExplainSideColumn
+      imgUrl={rasterIcon}
+      headerText={"Raster Layers"}
+      explainationText={"Create a layer to view your raster data in the portal."}
+      backUrl={"/data_management/raster_layers"}
+    >
       <form
         className={styles.Form}
         onSubmit={handleSubmit}
@@ -239,7 +242,7 @@ const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
               }
               parameterString += ')'
             }
-
+  
             return [obsT.id, obsT.code, parameterString];
           })}
           validated={!required('Please select an observation type', values.observationType)}
@@ -325,7 +328,7 @@ const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
           />
         </div>
       </form>
-    </div>
+    </ExplainSideColumn>
   );
 };
 
