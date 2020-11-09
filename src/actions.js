@@ -147,7 +147,7 @@ export function fetchObservationTypes() {
   return dispatch => {
     dispatch({ type: REQUEST_OBSERVATION_TYPES });
 
-    const url = "/api/v3/observationtypes/?page_size=100000";
+    const url = "/api/v4/observationtypes/?page_size=100000";
     const opts = { credentials: "same-origin" };
 
     fetch(url, opts)
@@ -266,5 +266,45 @@ export function updateAlarmType(alarmType) {
   return {
     type: UPDATE_ALARM_TYPE,
     alarmType
+  };
+}
+
+// MARK: Datasets
+export const REQUEST_DATASETS = "REQUEST_DATASETS";
+export const RECEIVE_DATASETS_SUCCESS = "RECEIVE_DATASETS_SUCCESS";
+export const RECEIVE_DATASETS_ERROR = "RECEIVE_DATASETS_ERROR";
+
+export function fetchDatasets() {
+  return dispatch => {
+    const url = `/api/v4/datasets/`;
+    const opts = { credentials: "same-origin" };
+
+    dispatch({ type: REQUEST_DATASETS });
+
+    fetch(url, opts)
+      .then(responseObj => {
+        if (!responseObj.ok) {
+          const errorMessage = `HTTP error ${responseObj.status} while fetching Datasets: ${responseObj.statusText}`;
+          dispatch({ type: RECEIVE_DATASETS_ERROR, errorMessage });
+          console.error("[E]", errorMessage, responseObj);
+          return Promise.reject(errorMessage);
+        } else {
+          return responseObj.json();
+        }
+      })
+      .then(responseData => {
+        const data = responseData.results;
+        dispatch({ type: RECEIVE_DATASETS_SUCCESS, data });
+      });
+  };
+}
+
+// MARK: Raster source uuid
+export const UPDATE_RASTER_SOURCE_UUID = "UPDATE_RASTER_SOURCE_UUID";
+
+export function updateRasterSourceUUID(uuid) {
+  return {
+    type: UPDATE_RASTER_SOURCE_UUID,
+    uuid
   };
 }

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 export interface Values {
-  [name: string]: string | boolean | null
+  [name: string]: string | string[] | {} | boolean | null | undefined
 }
 interface TouchedValues {
   [name: string]: boolean
@@ -17,12 +17,12 @@ interface FormOutput {
   touchedValues: TouchedValues,
   triedToSubmit: boolean,
   tryToSubmitForm: () => void, 
-  handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void,
+  handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void,
+  handleValueChange: (name: string, value: string | boolean | null) => void,
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void,
   handleReset: (e: React.FormEvent<HTMLFormElement>) => void,
   handleBlur: (e: React.ChangeEvent<HTMLInputElement>) => void,
   clearInput: (name: string) => void,
-  handleValueChange: (name: string, value: string | null) => void,
 }
 
 export const useForm = ({ initialValues, onSubmit }: FormInput): FormOutput => {
@@ -32,7 +32,7 @@ export const useForm = ({ initialValues, onSubmit }: FormInput): FormOutput => {
 
   const tryToSubmitForm = () => setTriedToSubmit(true);
 
-  const handleChange = (event: any) => {
+  const handleInputChange = (event: any) => {
     const target = event.target;
     const value = target.type === "checkbox" ? target.checked : target.value;
     const name = target.name;
@@ -42,7 +42,7 @@ export const useForm = ({ initialValues, onSubmit }: FormInput): FormOutput => {
     });
   };
 
-  const handleValueChange = (name: string, value: string | null) => {
+  const handleValueChange = (name: string, value: string | boolean | null) => {
     setValues({
       ...values,
       [name]: value
@@ -81,7 +81,7 @@ export const useForm = ({ initialValues, onSubmit }: FormInput): FormOutput => {
     touchedValues,
     triedToSubmit,
     tryToSubmitForm,
-    handleChange,
+    handleInputChange,
     handleBlur,
     handleSubmit,
     handleReset,

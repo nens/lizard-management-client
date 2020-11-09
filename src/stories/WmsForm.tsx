@@ -25,7 +25,7 @@ export const WmsForm: React.FC = () => {
     values,
     triedToSubmit,
     tryToSubmitForm,
-    handleChange,
+    handleInputChange,
     handleSubmit,
     handleReset,
     clearInput,
@@ -45,7 +45,7 @@ export const WmsForm: React.FC = () => {
         name={'name'}
         placeholder={'Enter at least 3 characters'}
         value={values.name as string}
-        valueChanged={handleChange}
+        valueChanged={handleInputChange}
         clearInput={clearInput}
         validated={!minLength(3, values.name as string)}
         errorMessage={minLength(3, values.name as string)}
@@ -56,7 +56,7 @@ export const WmsForm: React.FC = () => {
         name={'description'}
         placeholder={'Enter description'}
         value={values.description as string}
-        valueChanged={handleChange}
+        valueChanged={handleInputChange}
         clearInput={clearInput}
         validated={true}
         triedToSubmit={triedToSubmit}
@@ -66,7 +66,7 @@ export const WmsForm: React.FC = () => {
         name={'url'}
         placeholder={'Enter at least 1 character'}
         value={values.url as string}
-        valueChanged={handleChange}
+        valueChanged={handleInputChange}
         clearInput={clearInput}
         validated={!minLength(1, values.url as string)}
         errorMessage={minLength(1, values.url as string)}
@@ -76,14 +76,14 @@ export const WmsForm: React.FC = () => {
         title={'Feature info'}
         name={'featureInfo'}
         value={values.featureInfo as boolean}
-        valueChanged={handleChange}
+        valueChanged={handleInputChange}
       />
       <IntegerInput
         title={'Min zoom level'}
         name={'minZoom'}
         placeholder={'Enter between 0 and 31'}
         value={values.minZoom as string}
-        valueChanged={handleChange}
+        valueChanged={handleInputChange}
         clearInput={clearInput}
         validated={
           !rangeCheck(parseInt(values.minZoom as string), 0, 31)
@@ -98,7 +98,7 @@ export const WmsForm: React.FC = () => {
         name={'maxZoom'}
         placeholder={'Enter between 0 and 31'}
         value={values.maxZoom as string}
-        valueChanged={handleChange}
+        valueChanged={handleInputChange}
         clearInput={clearInput}
         validated={
           !rangeCheck(parseInt(values.maxZoom as string), 0, 31) &&
@@ -120,7 +120,7 @@ export const WmsForm: React.FC = () => {
         title={'Organisation'}
         name={'organisation'}
         value={values.organisation as string}
-        valueChanged={handleChange}
+        valueChanged={handleInputChange}
         clearInput={clearInput}
         validated={true}
         readOnly

@@ -8,8 +8,8 @@ interface MyProps {
   value: string,
   options: string[],
   valueChanged: (e: React.ChangeEvent<HTMLInputElement>) => void,
-  clearInput: (name: string) => void,
   validated: boolean,
+  clearInput?: (name: string) => void,
   errorMessage?: string | false,
   placeholder?: string,
   handleEnter?: (e: any) => void,
@@ -58,7 +58,7 @@ export const Dropdown: React.FC<MyProps> = (props) => {
           value={value}
           autoComplete={'off'}
           className={`${formStyles.FormControl} ${triedToSubmit ? formStyles.FormSubmitted : ''}`}
-          list={'data-list'}
+          list={`${name}-list`}
           placeholder={placeholder}
           onChange={valueChanged}
           onMouseOver={e => {
@@ -67,11 +67,11 @@ export const Dropdown: React.FC<MyProps> = (props) => {
           }}
           onMouseOut={e => e.currentTarget.value = oldInputValue}
         />
-        {!readOnly ? <ClearInputButton onClick={() => clearInput(name)}/> : null}
-        <datalist id={'data-list'}>
-          {options.map(option => (
+        {!readOnly && clearInput ? <ClearInputButton onClick={() => clearInput(name)}/> : null}
+        <datalist id={`${name}-list`}>
+          {options.map((option, i) => (
             <option
-              key={option}
+              key={i}
               value={option}
               label={option}
             />

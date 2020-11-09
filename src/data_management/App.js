@@ -3,9 +3,10 @@ import { DataManagement as DataManagementHome } from "./DataManagement";
 import { Raster as RasterApp } from "./rasters/Raster";
 import { WmsLayer as WmsLayerApp } from "./wms_layers/WmsLayer";
 import { Scenarios as ScenariosApp } from "./scenarios/Scenarios";
-import { NewRaster } from "./rasters/NewRaster";
-import { NewRaster2 } from "./rasters/NewRaster2";
-import { EditRaster } from "./rasters/EditRaster";
+import { NewRasterSource } from "./rasters/NewRasterSource";
+import { NewRasterLayer } from "./rasters/NewRasterLayer";
+import { EditRasterSource } from "./rasters/EditRasterSource";
+import { EditRasterLayer } from "./rasters/EditRasterLayer";
 import { EditWmsLayer } from "./wms_layers/EditWmsLayer";
 import { NewWmsLayer } from "./wms_layers/NewWmsLayer";
 import { UploadRasterData } from "./rasters/UploadRasterData";
@@ -37,23 +38,28 @@ class App extends Component {
         <Switch>
           <Route
             exact
-            path="/data_management/rasters/new"
-            component={NewRaster}
+            path={`/data_management/raster_sources/new`}
+            component={NewRasterSource}
           />
           <Route
             exact
-            path="/data_management/rasters/new2"
-            component={NewRaster2}
+            path={`/data_management/raster_layers/new`}
+            component={NewRasterLayer}
+          />
+          <Route
+            exact
+            path="/data_management/raster_sources/:uuid"
+            component={EditRasterSource}
+          />
+          <Route
+            exact
+            path="/data_management/raster_layers/:uuid"
+            component={EditRasterLayer}
           />
           <Route
             exact
             path="/data_management/rasters/:id/data"
             component={UploadRasterData}
-          />
-          <Route
-            exact
-            path="/data_management/rasters/:id"
-            component={EditRaster}
           />
           <Route
             exact
