@@ -136,9 +136,6 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch> = (props) => {
           valueChanged={handleInputChange}
           clearInput={clearInput}
           validated={true}
-          // validated={!minLength(1, values.description as string)}
-          // errorMessage={minLength(1, values.description as string)}
-          // triedToSubmit={triedToSubmit}
         />
         <TextInput
           title={'FTP / Supplier code'}
@@ -147,9 +144,6 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch> = (props) => {
           valueChanged={handleInputChange}
           clearInput={clearInput}
           validated={true}
-          // validated={!minLength(1, values.supplierCode as string)}
-          // errorMessage={minLength(1, values.supplierCode as string)}
-          // triedToSubmit={triedToSubmit}
         />
         <span className={formStyles.FormFieldTitle}>
           2: Data
