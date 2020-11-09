@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { RouteComponentProps, withRouter } from 'react-router';
 // import { FormattedMessage } from 'react-intl';
 import { connect, useSelector } from 'react-redux';
 import { NavLink } from "react-router-dom";
@@ -28,7 +29,7 @@ interface PropsFromDispatch {
   updateRasterSourceUUID: (uuid: string) => void
 };
 
-const RasterSourceForm: React.FC<Props & PropsFromDispatch> = (props) => {
+const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (props) => {
   const { currentRasterSource } = props;
   const organisations = useSelector(getOrganisations).available;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
@@ -75,7 +76,9 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch> = (props) => {
         console.log('parsedBody', parsedBody);
         setSuccessModal(true);
         props.updateRasterSourceUUID(parsedBody.uuid);
-      });
+      }).catch(
+        (e: any) => console.error(e)
+      );
     } else {
       const body = {
         name: values.name as string,
@@ -88,7 +91,11 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch> = (props) => {
         interval: values.interval as string,
       };
       // @ts-ignore
-      patchRasterSource(currentRasterSource.uuid as string, body);
+      patchRasterSource(currentRasterSource.uuid as string, body).then(
+        (response: any) => props.history.push('/data_management/raster_sources')
+      ).catch(
+        (e: any) => console.error(e)
+      );
     }
   };
 
@@ -217,4 +224,4 @@ const mapPropsToDispatch = (dispatch: any) => ({
   updateRasterSourceUUID: (uuid: string) => dispatch(updateRasterSourceUUID(uuid))
 });
 
-export default connect(null, mapPropsToDispatch)(RasterSourceForm);
+export default connect(null, mapPropsToDispatch)(withRouter(RasterSourceForm));
