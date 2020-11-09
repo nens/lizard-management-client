@@ -2,6 +2,7 @@
 .Form {
   display: flex;
   flex-direction: column;
+  margin-bottom: 50px;
 }
 .FormFieldTitle {
   font-size: 19px;
@@ -9,6 +10,7 @@
   text-transform: uppercase;
   margin: 20px 0;
 }
+
 .Label {
   display: flex;
   flex-direction: column;
@@ -16,6 +18,14 @@
 }
 .LabelTitle {
   margin-bottom: 8px;
+}
+
+.ButtonContainer {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
 }
 
 /* CSS for form input fields */

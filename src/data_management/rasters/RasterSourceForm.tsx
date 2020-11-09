@@ -8,7 +8,8 @@ import { CheckBox } from './../../form/CheckBox';
 import { DurationField } from './../../form/DurationField';
 import { TextArea } from './../../form/TextArea';
 import { TextInput } from './../../form/TextInput';
-import { Button } from '../../form/Button';
+import { SubmitButton } from '../../form/SubmitButton';
+import { CancelButton } from '../../form/CancelButton';
 import { SelectBox } from '../../form/SelectBox';
 import { getOrganisations, getSelectedOrganisation } from '../../reducers';
 import { useForm, Values } from '../../form/useForm';
@@ -195,12 +196,13 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch> = (props) => {
           validated={true}
           readOnly
         />
-        <div>
-          <Button
-            type='reset'
-          />{' '}
-          <Button
-            type='submit'
+        <div
+          className={formStyles.ButtonContainer}
+        >
+          <CancelButton
+            url={'/data_management/raster_sources'}
+          />
+          <SubmitButton
             onClick={tryToSubmitForm}
           />
         </div>

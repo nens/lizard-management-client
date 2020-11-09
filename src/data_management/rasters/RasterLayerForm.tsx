@@ -6,7 +6,8 @@ import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import { CheckBox } from './../../form/CheckBox';
 import { TextArea } from './../../form/TextArea';
 import { TextInput } from './../../form/TextInput';
-import { Button } from '../../form/Button';
+import { SubmitButton } from '../../form/SubmitButton';
+import { CancelButton } from '../../form/CancelButton';
 import { SelectBox } from '../../form/SelectBox';
 import { SlushBucket } from '../../form/SlushBucket';
 import { AccessModifier } from '../../form/AccessModifier';
@@ -22,10 +23,10 @@ import {
   getRasterSourceUUID,
   getSelectedOrganisation
 } from '../../reducers';
-import formStyles from './../../styles/Forms.module.css';
 import { optionsHasLayers } from '../../utils/rasterOptionFunctions';
 import { getUuidFromUrl } from '../../utils/getUuidFromUrl';
 import rasterIcon from "../../images/raster_layers_logo_explainbar.svg";
+import formStyles from './../../styles/Forms.module.css';
 
 interface Props {
   currentRasterLayer?: RasterLayer
@@ -324,12 +325,13 @@ const RasterLayerForm: React.FC<Props> = ({ currentRasterLayer }) => {
           validated={true}
           readOnly
         />
-        <div>
-          <Button
-            type='reset'
-          />{' '}
-          <Button
-            type='submit'
+        <div
+          className={formStyles.ButtonContainer}
+        >
+          <CancelButton
+            url={'/data_management/raster_sources'}
+          />
+          <SubmitButton
             onClick={tryToSubmitForm}
           />
         </div>
