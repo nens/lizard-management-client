@@ -1,22 +1,26 @@
 import React, { useState } from 'react';
+import { RouteComponentProps, withRouter } from 'react-router';
 // import { FormattedMessage } from 'react-intl';
 import { connect, useSelector } from 'react-redux';
-import { NavLink } from "react-router-dom";
 import { createRasterSource, patchRasterSource } from '../../api/rasters';
+import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import { CheckBox } from './../../form/CheckBox';
 import { DurationField } from './../../form/DurationField';
 import { TextArea } from './../../form/TextArea';
 import { TextInput } from './../../form/TextInput';
-import { Button } from '../../form/Button';
+import { SubmitButton } from '../../form/SubmitButton';
+import { CancelButton } from '../../form/CancelButton';
 import { SelectBox } from '../../form/SelectBox';
+import ConfirmModal from '../../components/ConfirmModal';
 import { getOrganisations, getSelectedOrganisation } from '../../reducers';
-import styles from './RasterForm.module.css';
 import { useForm, Values } from '../../form/useForm';
 import { minLength } from '../../form/validators';
 import { AccessModifier } from '../../form/AccessModifier';
 import { RasterSource } from '../../api/rasters';
 import { rasterIntervalStringServerToDurationObject, toISOValue } from '../../utils/isoUtils';
 import { updateRasterSourceUUID } from '../../actions';
+import rasterIcon from "../../images/raster_layers_logo_explainbar.svg";
+import formStyles from './../../styles/Forms.module.css';
 
 interface Props {
   currentRasterSource?: RasterSource
@@ -25,11 +29,11 @@ interface PropsFromDispatch {
   updateRasterSourceUUID: (uuid: string) => void
 };
 
-const RasterSourceForm: React.FC<Props & PropsFromDispatch> = (props) => {
+const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (props) => {
   const { currentRasterSource } = props;
   const organisations = useSelector(getOrganisations).available;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
-  const [successModal, setSuccessModal] = useState<boolean>(false);
+  const [rasterCreatedModal, setRasterCreatedModal] = useState<boolean>(false);
 
   const initialValues = currentRasterSource ? {
     name: currentRasterSource.name,
@@ -41,12 +45,12 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch> = (props) => {
     accessModifier: currentRasterSource.access_modifier,
     organisation: currentRasterSource.organisation.uuid.replace(/-/g, "") || null,
   } : {
-    name: '',
-    description: '',
-    supplierCode: '',
-    supplierName: '',
+    name: null,
+    description: null,
+    supplierCode: null,
+    supplierName: null,
     temporal: false,
-    interval: '',
+    interval: null,
     accessModifier: 'Private',
     organisation: selectedOrganisation.uuid.replace(/-/g, "") || null,
   };
@@ -70,9 +74,11 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch> = (props) => {
         (response: any) => response.json()
       ).then((parsedBody: any) => {
         console.log('parsedBody', parsedBody);
-        setSuccessModal(true);
+        setRasterCreatedModal(true);
         props.updateRasterSourceUUID(parsedBody.uuid);
-      });
+      }).catch(
+        (e: any) => console.error(e)
+      );
     } else {
       const body = {
         name: values.name as string,
@@ -85,7 +91,11 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch> = (props) => {
         interval: values.interval as string,
       };
       // @ts-ignore
-      patchRasterSource(currentRasterSource.uuid as string, body);
+      patchRasterSource(currentRasterSource.uuid as string, body).then(
+        (response: any) => props.history.push('/data_management/raster_sources')
+      ).catch(
+        (e: any) => console.error(e)
+      );
     }
   };
 
@@ -101,21 +111,24 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch> = (props) => {
   } = useForm({initialValues, onSubmit});
 
   return (
-    <div>
-      <div>
-        <div>RASTERS</div>
-        <div>EXPLAIN BOX</div>
-      </div>
+    <ExplainSideColumn
+      imgUrl={rasterIcon}
+      headerText={"Raster Sources"}
+      explainationText={"Fill in the form to create a new Raster Source."}
+      backUrl={"/data_management/raster_sources"}      
+    >
       <form
-        className={styles.Form}
+        className={formStyles.Form}
         onSubmit={handleSubmit}
         onReset={handleReset}
       >
-        <h3>1: GENERAL</h3>
+        <span className={formStyles.FormFieldTitle}>
+          1: General
+        </span>
         <TextInput
-          title={'Name*'}
+          title={'Name *'}
           name={'name'}
-          placeholder={'Enter at least 3 characters'}
+          placeholder={'Please enter at least 3 characters'}
           value={values.name as string}
           valueChanged={handleInputChange}
           clearInput={clearInput}
@@ -126,40 +139,39 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch> = (props) => {
         <TextArea
           title={'Description'}
           name={'description'}
-          placeholder={'Enter at least 1 character'}
           value={values.description as string}
           valueChanged={handleInputChange}
           clearInput={clearInput}
-          validated={!minLength(1, values.description as string)}
-          errorMessage={minLength(1, values.description as string)}
-          triedToSubmit={triedToSubmit}
+          validated={true}
         />
         <TextInput
           title={'FTP / Supplier code'}
           name={'supplierCode'}
-          placeholder={'Enter at least 1 characters'}
           value={values.supplierCode as string}
           valueChanged={handleInputChange}
           clearInput={clearInput}
-          validated={!minLength(1, values.supplierCode as string)}
-          errorMessage={minLength(1, values.supplierCode as string)}
-          triedToSubmit={triedToSubmit}
+          validated={true}
         />
-        <h3>2: DATA</h3>
+        <span className={formStyles.FormFieldTitle}>
+          2: Data
+        </span>
         <CheckBox
           title={'Temporal'}
           name={'temporal'}
           value={values.temporal as boolean}
-          valueChanged={handleInputChange}
+          valueChanged={(bool: boolean) => handleValueChange('temporal', bool)}
         />
         <DurationField
+          title={'Interval'}
           name={'interval'}
           value={values.interval as string}
           valueChanged={(value) => handleValueChange('interval', value)}
           validated={true}
           readOnly={values.temporal === false}
         />
-        <h3>3: RIGHTS</h3>
+        <span className={formStyles.FormFieldTitle}>
+          3: Rights
+        </span>
         <AccessModifier
           title={'Access Modifier'}
           name={'accessModifier'}
@@ -185,25 +197,27 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch> = (props) => {
           validated={true}
           readOnly
         />
-        <div>
-          <Button
-            type='reset'
-          />{' '}
-          <Button
-            type='submit'
+        <div
+          className={formStyles.ButtonContainer}
+        >
+          <CancelButton
+            url={'/data_management/raster_sources'}
+          />
+          <SubmitButton
             onClick={tryToSubmitForm}
           />
         </div>
       </form>
-      {successModal ? (
-        <div>
-          <h3>Raster created</h3>
-          <p>A layer is needed to view the raster in the portal</p>
-          <p>We automatically created a layer for you to compose. You will now be redirected to the layer management</p>
-          <NavLink to={'/data_management/raster_layers/new'}>Continue</NavLink>
-        </div>
+      {rasterCreatedModal ? (
+        <ConfirmModal
+          title={'Raster created'}
+          content={`A layer is needed to view the raster in the portal.
+          We automatically created a layer for you to compose. You will now be redirected to the layer management.`}
+          buttonName={'Continue'}
+          url={'/data_management/raster_layers/new'}
+        />
       ) : null}
-    </div>
+    </ExplainSideColumn>
   );
 };
 
@@ -211,4 +225,4 @@ const mapPropsToDispatch = (dispatch: any) => ({
   updateRasterSourceUUID: (uuid: string) => dispatch(updateRasterSourceUUID(uuid))
 });
 
-export default connect(null, mapPropsToDispatch)(RasterSourceForm);
+export default connect(null, mapPropsToDispatch)(withRouter(RasterSourceForm));

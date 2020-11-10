@@ -222,8 +222,13 @@ class ColorMapInput2 extends Component<ColorMapProps & InjectedIntlProps, ColorM
     const placeholderMaximumColorRange = intl.formatMessage({ id: "placeholder_maximum_color_range" })
 
     return (
-      <label htmlFor={name}>
-        <span>{title}</span>
+      <label
+        htmlFor={name}
+        className={formStyles.Label}
+      >
+        <span className={formStyles.LabelTitle}>
+          {title}
+        </span>
         <div>
           <div className={styles.previewColorContainer}>{colors}</div>
           <div className={styles.MinMaxValues}>
@@ -234,7 +239,7 @@ class ColorMapInput2 extends Component<ColorMapProps & InjectedIntlProps, ColorM
             title={''}
             choices={colorMaps}
             // value={value ? value.colorMap : null}
-            value={(colorMapType && colorMapType.colorMap) || ''}
+            value={(colorMapType && colorMapType.colorMap) || null}
             name={name + '_colorMapselect'}
             validated={true}
             valueChanged={this.colorMapChanged.bind(this)}
@@ -242,49 +247,51 @@ class ColorMapInput2 extends Component<ColorMapProps & InjectedIntlProps, ColorM
             showSearchField={true}
             readOnly={readonly}
           />
-  
-          <br />
-          <span className="text-muted">
-            <FormattedMessage id="color_map.minimum_color_range" />
-          </span>
-          <br />
-          <input
-            type="number"
-            autoComplete="false"
-            onChange={e => this.valueChanged('min', this.toFloat(e.target.value))}
-            value={(colorMapType && colorMapType.min) || ""}
-            placeholder={placeholderMinimumColorRange}
-            className={`${formStyles.FormControl} ${readonly
-              ? inputStyles.ReadOnly
-              : null}`}
-            readOnly={readonly}
-            disabled={readonly}
-          />
-          <br />
-          <span className="text-muted">
-          <FormattedMessage id="color_map.maximum_color_range" />
-          </span>
-          <input
-            type="number"
-            autoComplete="false"
-            value={(colorMapType && colorMapType.max) || ""}
-            onChange={e => this.valueChanged('max', this.toFloat(e.target.value))}
-            placeholder={placeholderMaximumColorRange}
-            className={`${formStyles.FormControl} ${readonly
-              ? inputStyles.ReadOnly
-              : null}`}
-            readOnly={readonly}
-            disabled={readonly}
-          />
-          <br/>
-          <CheckBox
-            name="rescalable"
-            title={<FormattedMessage id="color_map.rescalable" />}
-            readonly={false}
-            value= {initiatedValue.rescalable}
-            valueChanged={((bool: boolean) => this.rescalableChanged(bool))}
-          />
-          
+          <div
+            className={styles.ColorMapOptions}
+          >
+            <CheckBox
+              name="rescalable"
+              title={<FormattedMessage id="color_map.rescalable" />}
+              readonly={false}
+              value= {initiatedValue.rescalable}
+              valueChanged={((bool: boolean) => this.rescalableChanged(bool))}
+            />
+            <div>
+              <span className="text-muted">
+                <FormattedMessage id="color_map.minimum_color_range" />
+              </span>
+              <input
+                type="number"
+                autoComplete="off"
+                onChange={e => this.valueChanged('min', this.toFloat(e.target.value))}
+                value={(colorMapType && colorMapType.min) || ""}
+                placeholder={placeholderMinimumColorRange}
+                className={`${formStyles.FormControl} ${readonly
+                  ? inputStyles.ReadOnly
+                  : null}`}
+                readOnly={readonly}
+                disabled={readonly}
+              />
+            </div>
+            <div>
+              <span className="text-muted">
+              <FormattedMessage id="color_map.maximum_color_range" />
+              </span>
+              <input
+                type="number"
+                autoComplete="off"
+                value={(colorMapType && colorMapType.max) || ""}
+                onChange={e => this.valueChanged('max', this.toFloat(e.target.value))}
+                placeholder={placeholderMaximumColorRange}
+                className={`${formStyles.FormControl} ${readonly
+                  ? inputStyles.ReadOnly
+                  : null}`}
+                readOnly={readonly}
+                disabled={readonly}
+              />
+            </div>
+          </div>
         </div>
       </label>
     );

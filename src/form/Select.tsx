@@ -41,8 +41,13 @@ export const Select: React.FC<MyProps> = (props) => {
   });
 
   return (
-    <label htmlFor={name}>
-      <span>{title}</span>
+    <label
+      htmlFor={name}
+      className={formStyles.Label}
+    >
+      <span className={formStyles.LabelTitle}>
+        {title}
+      </span>
       <div style={{position: 'relative'}}>
         <select
           ref={myInput}

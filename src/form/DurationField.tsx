@@ -10,6 +10,7 @@ import inputStyles from "../styles/Input.module.css";
 import {toISOValue, durationObject} from "../utils/isoUtils"
 
 interface DurationFieldProps {
+  title: string,
   name: string,
   value: string,
   valueChanged: (value: string | null) => void,
@@ -97,6 +98,7 @@ export const DurationField: React.FC<DurationFieldProps> = (props) => {
   }
   
   const {
+    title,
     name,
     value,
     readOnly
@@ -115,119 +117,127 @@ export const DurationField: React.FC<DurationFieldProps> = (props) => {
   } = validPerField(value);
 
   return (
-    <div
-      className={
-      formStyles.FormGroup + " " + inputStyles.PositionRelative
-      }
+    <label
+      htmlFor={name}
+      className={formStyles.Label}
     >
+      <span className={formStyles.LabelTitle}>
+        {title}
+      </span>
       <div
         className={
-        styles.DurationInputFields +
-                    " " +
-                    styles.DurationInputFieldDays +
-                    " " +
-                    styles.TextAlignRight
+        formStyles.FormGroup + " " + inputStyles.PositionRelative
         }
       >
-        {/* <label><FormattedMessage id="duration.days" /></label> */}
-        <label>Days</label>
-        <input
-          id={name + "days_input"}
-          tabIndex={-2}
-          type="text"
-          autoComplete="false"
+        <div
           className={
-          formStyles.FormControl +
+          styles.DurationInputFields +
                       " " +
-                      styles.TextAlignRight +
-                        (!daysValid ? " " + styles.Invalid : "") +
-                        (readOnly ? " " + inputStyles.ReadOnly : "")
-          }
-          maxLength={3}
-          size={4}
-          onChange={e => updateValue('days', e.target.value)}
-          value={days}
-          readOnly={readOnly}
-          disabled={readOnly}
-        />
-      </div>
-      <div
-        className={
-        styles.DurationInputFields + " " + styles.TextAlignRight
-        }
-      >
-        {/* <label><FormattedMessage id="duration.hours" /></label> */}
-        <label>Hours</label>
-        <input
-          id={name + "hours_input"}
-          tabIndex={-2}
-          type="text"
-          autoComplete="false"
-          className={
-          formStyles.FormControl +
+                      styles.DurationInputFieldDays +
                       " " +
-                      styles.TextAlignRight +
-                        (!hoursValid ? " " + styles.Invalid : "") +
-                        (readOnly ? " " + inputStyles.ReadOnly : "")
+                      styles.TextAlignRight
           }
-          maxLength={2}
-          size={2}
-          onChange={e => updateValue('hours', e.target.value)}
-          value={hours}
-          readOnly={readOnly}
-          disabled={readOnly}
-        />
-      </div>
-      <div className={styles.DurationInputHourSecondSeperator}>:</div>
-      <div className={styles.DurationInputFields}>
-        {/* <label><FormattedMessage id="duration.mins" /></label> */}
-        <label>Mins</label>
-        <input
-          id={name + "minutes_input"}
-          tabIndex={-2}
-          type="text"
-          autoComplete="false"
+        >
+          {/* <label><FormattedMessage id="duration.days" /></label> */}
+          <label>Days</label>
+          <input
+            id={name + "days_input"}
+            tabIndex={-2}
+            type="text"
+            autoComplete="off"
+            className={
+            formStyles.FormControl +
+                        " " +
+                        styles.TextAlignRight +
+                          (!daysValid ? " " + styles.Invalid : "") +
+                          (readOnly ? " " + inputStyles.ReadOnly : "")
+            }
+            maxLength={3}
+            size={4}
+            onChange={e => updateValue('days', e.target.value)}
+            value={days}
+            readOnly={readOnly}
+            disabled={readOnly}
+          />
+        </div>
+        <div
           className={
-          formStyles.FormControl +
-                        (!minutesValid ? " " + styles.Invalid : "") +
-                        (readOnly ? " " + inputStyles.ReadOnly : "")
+          styles.DurationInputFields + " " + styles.TextAlignRight
           }
-          maxLength={2}
-          size={2}
-          onChange={e => updateValue('minutes', e.target.value)}
-          value={minutes}
-          readOnly={readOnly}
-          disabled={readOnly}
-        />
-      </div>
-      <div
-        className={
-        styles.DurationInputFields +
-                    " " +
-                    styles.DurationInputFieldSeconds
-        }
-      >
-        {/* <label><FormattedMessage id="duration.seconds" /></label> */}
-        <label>Seconds</label>
-        <input
-          id={name + "seconds_input"}
-          tabIndex={-2}
-          type="text"
-          autoComplete="false"
+        >
+          {/* <label><FormattedMessage id="duration.hours" /></label> */}
+          <label>Hours</label>
+          <input
+            id={name + "hours_input"}
+            tabIndex={-2}
+            type="text"
+            autoComplete="off"
+            className={
+            formStyles.FormControl +
+                        " " +
+                        styles.TextAlignRight +
+                          (!hoursValid ? " " + styles.Invalid : "") +
+                          (readOnly ? " " + inputStyles.ReadOnly : "")
+            }
+            maxLength={2}
+            size={2}
+            onChange={e => updateValue('hours', e.target.value)}
+            value={hours}
+            readOnly={readOnly}
+            disabled={readOnly}
+          />
+        </div>
+        <div className={styles.DurationInputHourSecondSeperator}>:</div>
+        <div className={styles.DurationInputFields}>
+          {/* <label><FormattedMessage id="duration.mins" /></label> */}
+          <label>Mins</label>
+          <input
+            id={name + "minutes_input"}
+            tabIndex={-2}
+            type="text"
+            autoComplete="off"
+            className={
+            formStyles.FormControl +
+                          (!minutesValid ? " " + styles.Invalid : "") +
+                          (readOnly ? " " + inputStyles.ReadOnly : "")
+            }
+            maxLength={2}
+            size={2}
+            onChange={e => updateValue('minutes', e.target.value)}
+            value={minutes}
+            readOnly={readOnly}
+            disabled={readOnly}
+          />
+        </div>
+        <div
           className={
-          formStyles.FormControl +
-                        (!secondsValid ? " " + styles.Invalid : "") +
-                        (readOnly ? " " + inputStyles.ReadOnly : "")
+          styles.DurationInputFields +
+                      " " +
+                      styles.DurationInputFieldSeconds
           }
-          maxLength={2}
-          size={4}
-          onChange={e => updateValue('seconds', e.target.value)}
-          value={seconds}
-          readOnly={readOnly}
-          disabled={readOnly}
-        />
+        >
+          {/* <label><FormattedMessage id="duration.seconds" /></label> */}
+          <label>Seconds</label>
+          <input
+            id={name + "seconds_input"}
+            tabIndex={-2}
+            type="text"
+            autoComplete="off"
+            className={
+            formStyles.FormControl +
+                          (!secondsValid ? " " + styles.Invalid : "") +
+                          (readOnly ? " " + inputStyles.ReadOnly : "")
+            }
+            maxLength={2}
+            size={4}
+            onChange={e => updateValue('seconds', e.target.value)}
+            value={seconds}
+            readOnly={readOnly}
+            disabled={readOnly}
+          />
+        </div>
+        <div />
       </div>
-      <div />
-    </div>
+    </label>
   );
 }
