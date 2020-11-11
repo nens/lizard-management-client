@@ -236,7 +236,7 @@ const RasterLayerForm: React.FC<Props & RouteComponentProps> = (props) => {
           name={'observationType'}
           placeholder={'- Search and select -'}
           value={values.observationType as string}
-          valueChanged={(value) => handleValueChange('observationType', value)}
+          valueChanged={value => handleValueChange('observationType', value)}
           choices={observationTypes.map((obsT: any) => {
             let parameterString = obsT.parameter + '';
             if (obsT.unit || obsT.reference_frame) {
@@ -275,7 +275,7 @@ const RasterLayerForm: React.FC<Props & RouteComponentProps> = (props) => {
           title={'Color map *'}
           name={'colorMap'}
           value={values.colorMap}
-          valueChanged={(value: any) => handleValueChange('colorMap', value)}
+          valueChanged={value => handleValueChange('colorMap', value)}
           colorMaps={colorMaps.map((colM: any) => [colM.name, colM.name, colM.description])}
           validated
         />
@@ -286,14 +286,14 @@ const RasterLayerForm: React.FC<Props & RouteComponentProps> = (props) => {
           title={'Access Modifier'}
           name={'accessModifier'}
           value={values.accessModifier as string}
-          valueChanged={(value) => handleValueChange('accessModifier', value)}
+          valueChanged={value => handleValueChange('accessModifier', value)}
           readOnly
         />
         <CheckBox
           title={'Shared with other organisations'}
           name={'sharedWith'}
           value={values.sharedWith as boolean}
-          valueChanged={(bool: boolean) => handleValueChange('sharedWith', bool)}
+          valueChanged={bool => handleValueChange('sharedWith', bool)}
         />
         {values.sharedWith ? (
           <SlushBucket
@@ -316,7 +316,7 @@ const RasterLayerForm: React.FC<Props & RouteComponentProps> = (props) => {
           name={'organisation'}
           placeholder={'- Search and select -'}
           value={values.organisation as string}
-          valueChanged={(value) => handleValueChange('organisation', value)}
+          valueChanged={value => handleValueChange('organisation', value)}
           choices={organisations.map((organisation: any) => [organisation.uuid, organisation.name])}
           validated
           readOnly

@@ -159,13 +159,13 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           title={'Temporal'}
           name={'temporal'}
           value={values.temporal as boolean}
-          valueChanged={(bool: boolean) => handleValueChange('temporal', bool)}
+          valueChanged={bool => handleValueChange('temporal', bool)}
         />
         <DurationField
           title={'Interval'}
           name={'interval'}
           value={values.interval as string}
-          valueChanged={(value) => handleValueChange('interval', value)}
+          valueChanged={value => handleValueChange('interval', value)}
           validated={true}
           readOnly={values.temporal === false}
         />
@@ -176,14 +176,14 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           title={'Access Modifier'}
           name={'accessModifier'}
           value={values.accessModifier as string}
-          valueChanged={(value) => handleValueChange('accessModifier', value)}
+          valueChanged={value => handleValueChange('accessModifier', value)}
         />
         <SelectBox
           title={'Organisation'}
           name={'organisation'}
           placeholder={'- Search and select -'}
           value={values.organisation as string}
-          valueChanged={(value) => handleValueChange('organisation', value)}
+          valueChanged={value => handleValueChange('organisation', value)}
           choices={organisations.map((organisation: any) => [organisation.uuid, organisation.name])}
           validated={true}
           readOnly

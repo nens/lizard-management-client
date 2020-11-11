@@ -26,7 +26,7 @@ interface ColorMapProps {
   value: any,
   colorMaps: choicesT,
   validated: boolean,
-  valueChanged: Function,
+  valueChanged: (value: {}) => void,
 };
 
 interface LegendResponse {

@@ -6,7 +6,7 @@ interface CheckBoxProps {
   title: string | JSX.Element,
   name: string,
   value: boolean,
-  valueChanged: Function,
+  valueChanged: (bool: boolean) => void,
   readonly?: boolean
 };
 
