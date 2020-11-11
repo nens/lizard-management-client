@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import { ColorMapOptions } from './ColorMapInput';
 
-type Value = string | number | boolean | string[] | {} | null |undefined;
+type Value = string | number | boolean | string[] | {} | ColorMapOptions | null |undefined;
 
 export interface Values {
   [name: string]: Value

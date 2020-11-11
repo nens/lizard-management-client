@@ -12,7 +12,7 @@ import { CancelButton } from '../../form/CancelButton';
 import { SelectBox } from '../../form/SelectBox';
 import { SlushBucket } from '../../form/SlushBucket';
 import { AccessModifier } from '../../form/AccessModifier';
-import ColorMapInput2 from '../../form/ColorMapInput2';
+import ColorMapInput, { ColorMapOptions } from '../../form/ColorMapInput';
 import { useForm, Values } from '../../form/useForm';
 import { minLength, required } from '../../form/validators';
 import { RasterLayer } from '../../api/rasters';
@@ -260,24 +260,15 @@ const RasterLayerForm: React.FC<Props & RouteComponentProps> = (props) => {
           triedToSubmit={triedToSubmit}
           showSearchField
         />
-        {/* Below ColorMapInput component is not working properly as it keeps calling useEffect infinitely */}
-        {/* <ColorMapInput
+        <ColorMapInput
           title={<FormattedMessage id="raster_form.colormap" />}
           name={'colorMap'}
-          value={values.colorMap}
-          valueChanged={(value: any) => handleValueChange('colorMap', value)}
+          value={values.colorMap as ColorMapOptions}
+          valueChanged={value => handleValueChange('colorMap', value)}
           colorMaps={colorMaps.map((colM: any) => [colM.name, colM.name, colM.description])}
           validated={!required('Please select a color map', values.colorMap)}
           errorMessage={required('Please select a color map', values.colorMap)}
           triedToSubmit={triedToSubmit}
-        /> */}
-        <ColorMapInput2
-          title={'Color map *'}
-          name={'colorMap'}
-          value={values.colorMap}
-          valueChanged={value => handleValueChange('colorMap', value)}
-          colorMaps={colorMaps.map((colM: any) => [colM.name, colM.name, colM.description])}
-          validated
         />
         <span className={formStyles.FormFieldTitle}>
           3: Rights
