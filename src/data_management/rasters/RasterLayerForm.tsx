@@ -131,10 +131,10 @@ const RasterLayerForm: React.FC<Props & RouteComponentProps> = (props) => {
     triedToSubmit,
     tryToSubmitForm,
     handleInputChange,
+    handleValueChange,
     handleSubmit,
     handleReset,
     clearInput,
-    handleValueChange,
   } = useForm({initialValues, onSubmit});
 
   return (

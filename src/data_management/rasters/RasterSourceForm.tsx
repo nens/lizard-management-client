@@ -104,10 +104,10 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
     triedToSubmit,
     tryToSubmitForm,
     handleInputChange,
+    handleValueChange,
     handleSubmit,
     handleReset,
     clearInput,
-    handleValueChange,
   } = useForm({initialValues, onSubmit});
 
   return (
@@ -208,7 +208,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           />
         </div>
       </form>
-      {!rasterCreatedModal ? (
+      {rasterCreatedModal ? (
         <ConfirmModal
           title={'Raster created'}
           buttonName={'Continue'}
