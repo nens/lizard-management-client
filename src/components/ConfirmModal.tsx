@@ -6,7 +6,6 @@ import buttonStyles from './../styles/Buttons.module.css';
 
 interface MyProps {
   title: string,
-  content: string,
   buttonName: string,
   url: string
 }
@@ -14,7 +13,6 @@ interface MyProps {
 const ConfirmModal: React.FC<MyProps & RouteComponentProps> = (props) => {
   const {
     title,
-    content,
     buttonName,
     url
   } = props;
@@ -26,7 +24,7 @@ const ConfirmModal: React.FC<MyProps & RouteComponentProps> = (props) => {
           {title}
         </div>
         <div className={styles.ModalBody}>
-          {content}
+          {props.children}
         </div>
         <div className={styles.ModalFooter}>
           <button

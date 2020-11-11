@@ -208,14 +208,15 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           />
         </div>
       </form>
-      {rasterCreatedModal ? (
+      {!rasterCreatedModal ? (
         <ConfirmModal
           title={'Raster created'}
-          content={`A layer is needed to view the raster in the portal.
-          We automatically created a layer for you to compose. You will now be redirected to the layer management.`}
           buttonName={'Continue'}
           url={'/data_management/raster_layers/new'}
-        />
+        >
+          <p>A layer is needed to view the raster in the portal.</p>
+          <p>We automatically created a layer for you to compose. You will now be redirected to the layer management.</p>
+        </ConfirmModal>
       ) : null}
     </ExplainSideColumn>
   );
