@@ -12,7 +12,7 @@ import { CancelButton } from '../../form/CancelButton';
 import { SelectBox } from '../../form/SelectBox';
 import { SlushBucket } from '../../form/SlushBucket';
 import { AccessModifier } from '../../form/AccessModifier';
-import ColorMapInput, { ColorMapOptions } from '../../form/ColorMapInput';
+import ColorMapInput, { ColorMapOptions, colorMapValidator } from '../../form/ColorMapInput';
 import { useForm, Values } from '../../form/useForm';
 import { minLength, required } from '../../form/validators';
 import {
@@ -273,8 +273,8 @@ const RasterLayerForm: React.FC<Props & RouteComponentProps> = (props) => {
           value={values.colorMap as ColorMapOptions}
           valueChanged={value => handleValueChange('colorMap', value)}
           colorMaps={colorMaps.map((colM: any) => [colM.name, colM.name, colM.description])}
-          validated={!required('Please select a color map', values.colorMap)}
-          errorMessage={required('Please select a color map', values.colorMap)}
+          validated={!colorMapValidator(values.colorMap as ColorMapOptions)}
+          errorMessage={colorMapValidator(values.colorMap as ColorMapOptions)}
           triedToSubmit={triedToSubmit}
         />
         <span className={formStyles.FormFieldTitle}>

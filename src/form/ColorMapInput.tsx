@@ -40,13 +40,11 @@ interface ColorMapProps {
   validators?: Function[],
 };
 
-export const colorMapValidator = (required: boolean) =>
-  (options: ColorMapOptions | null): validatorResult => {
-
+export const colorMapValidator = (options: ColorMapOptions | null): validatorResult => {
     const initiatedOptions = options || {
       options: {},
       rescalable: false,
-    }
+    };
     const colorMap = colorMapTypeFromOptions(initiatedOptions.options);
 
     const result = validateStyleObj(colorMap);
@@ -54,7 +52,7 @@ export const colorMapValidator = (required: boolean) =>
       return false;
     } else {
       return result.errorMessage + '';
-    }
+    };
 };
 
 // Make a custom hook to keep previous value between renders
