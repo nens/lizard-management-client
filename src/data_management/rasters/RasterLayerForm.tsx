@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { FormattedMessage } from 'react-intl';
-import { useSelector } from 'react-redux';
-import { createRasterLayer, patchRasterLayer, RasterLayer } from '../../api/rasters';
+import { connect, useSelector } from 'react-redux';
+import { createRasterLayer, patchRasterLayer, RasterLayer, RasterSource } from '../../api/rasters';
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import { CheckBox } from './../../form/CheckBox';
 import { TextArea } from './../../form/TextArea';
@@ -25,15 +25,21 @@ import {
 } from '../../reducers';
 import { optionsHasLayers } from '../../utils/rasterOptionFunctions';
 import { getUuidFromUrl } from '../../utils/getUuidFromUrl';
+import { removeRasterSourceUUID } from './../../actions';
 import rasterIcon from "../../images/raster_layers_logo_explainbar.svg";
 import formStyles from './../../styles/Forms.module.css';
 
 interface Props {
-  currentRasterLayer?: RasterLayer
+  currentRasterLayer?: RasterLayer,
+  rasterSources?: RasterSource[] | null,
 };
 
-const RasterLayerForm: React.FC<Props & RouteComponentProps> = (props) => {
-  const { currentRasterLayer } = props;
+interface PropsFromDispatch {
+  removeRasterSourceUUID: () => void,
+};
+
+const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (props) => {
+  const { currentRasterLayer, rasterSources, removeRasterSourceUUID } = props;
   const organisationsToSharedWith = useSelector(getOrganisations).availableForRasterSharedWith;
   const organisations = useSelector(getOrganisations).available;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
@@ -41,6 +47,12 @@ const RasterLayerForm: React.FC<Props & RouteComponentProps> = (props) => {
   const colorMaps = useSelector(getColorMaps).available;
   const datasets = useSelector(getDatasets).available;
   const rasterSourceUUID = useSelector(getRasterSourceUUID);
+
+  useEffect(() => {
+    return () => {
+      removeRasterSourceUUID();
+    };
+  }, [removeRasterSourceUUID]);
 
   const initialValues = currentRasterLayer ? {
     name: currentRasterLayer.name,
@@ -59,7 +71,7 @@ const RasterLayerForm: React.FC<Props & RouteComponentProps> = (props) => {
     name: null,
     description: null,
     dataset: null,
-    rasterSource: rasterSourceUUID || '13b31eda-2413-475a-9b3b-76262e52116d', // temporarily use this UUID as default
+    rasterSource: rasterSourceUUID || null,
     aggregationType: null,
     observationType: null,
     colorMap: null,
@@ -191,16 +203,32 @@ const RasterLayerForm: React.FC<Props & RouteComponentProps> = (props) => {
         <span className={formStyles.FormFieldTitle}>
           2: Data
         </span>
-        <TextInput
-          title={'Source *'}
-          name={'rasterSource'}
-          value={values.rasterSource as string}
-          valueChanged={handleInputChange}
-          clearInput={clearInput}
-          validated
-          readOnly
-          triedToSubmit={triedToSubmit}
-        />
+        {!currentRasterLayer && !rasterSourceUUID && rasterSources ?
+          <SelectBox
+            title={'Source *'}
+            name={'rasterSource'}
+            placeholder={'- Search and select -'}
+            value={values.rasterSource as string}
+            valueChanged={value => handleValueChange('rasterSource', value)}
+            choices={rasterSources.map(rasterSource => [rasterSource.uuid!, rasterSource.name])}
+            validated={!required('Please select a raster source', values.rasterSource)}
+            errorMessage={required('Please select a raster source', values.rasterSource)}
+            triedToSubmit={triedToSubmit}
+            readOnly={!!currentRasterLayer || !!rasterSourceUUID}
+            showSearchField
+          />
+          :
+          <TextInput
+            title={'Source *'}
+            name={'rasterSource'}
+            value={values.rasterSource as string}
+            valueChanged={handleInputChange}
+            clearInput={clearInput}
+            validated
+            readOnly
+            triedToSubmit={triedToSubmit}
+          />
+        }
         <SelectBox
           title={'Aggregation type *'}
           name={'aggregationType'}
@@ -343,4 +371,8 @@ const RasterLayerForm: React.FC<Props & RouteComponentProps> = (props) => {
   );
 };
 
-export default withRouter(RasterLayerForm);
+const mapDispatchToProps = (dispatch: any) => ({
+  removeRasterSourceUUID: () => dispatch(removeRasterSourceUUID())
+})
+
+export default connect(null, mapDispatchToProps)(withRouter(RasterLayerForm));

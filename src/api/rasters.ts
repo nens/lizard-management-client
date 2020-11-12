@@ -86,6 +86,16 @@ export type RasterLayer = RasterLayerRoot & {
   };
 }
 
+export const fetchRasterSourcesV4 = async () => {
+  const response = await fetch('/api/v4/rastersources/?page_size=100000', {
+    credentials: "same-origin",
+    method: "GET",
+    headers: {"Content-Type": "application/json"}
+  });
+
+  return response.json();
+};
+
 export const fetchRasterV3 = async (uuid: string) => {
   const response = await fetch(`/api/v3/rasters/${uuid}/`, {
     credentials: "same-origin"

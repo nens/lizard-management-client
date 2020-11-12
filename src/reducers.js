@@ -22,7 +22,8 @@ import {
   REQUEST_DATASETS,
   RECEIVE_DATASETS_SUCCESS,
   RECEIVE_DATASETS_ERROR,
-  UPDATE_RASTER_SOURCE_UUID
+  UPDATE_RASTER_SOURCE_UUID,
+  REMOVE_RASTER_SOURCE_UUID
 } from "./actions";
 
 function bootstrap(
@@ -291,6 +292,8 @@ function rasterSourceUUID(state = null, action) {
   switch (action.type) {
     case UPDATE_RASTER_SOURCE_UUID:
       return action.uuid;
+    case REMOVE_RASTER_SOURCE_UUID:
+      return null;
     default:
       return state;
   };
