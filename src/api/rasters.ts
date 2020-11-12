@@ -62,7 +62,6 @@ interface RasterLayerRoot {
   name: string;
   description: string;
   access_modifier: string;
-  observation_type: string;
   supplier: string;
   supplier_code?: string;
   aggregation_type: string;
@@ -76,11 +75,15 @@ interface RasterLayerRoot {
 export type RasterLayerAPI = RasterLayerRoot & {
   organisation: string;
   shared_with: string[];
+  observation_type: string;
 }
 
 export type RasterLayer = RasterLayerRoot & {
   organisation: Organisation;
   shared_with: Organisation[];
+  observation_type: {
+    id: number
+  };
 }
 
 export const fetchRasterV3 = async (uuid: string) => {

@@ -48,9 +48,7 @@ const RasterLayerForm: React.FC<Props & RouteComponentProps> = (props) => {
     dataset: (currentRasterLayer.datasets && currentRasterLayer.datasets[0]) || '',
     rasterSource: (currentRasterLayer.raster_sources && currentRasterLayer.raster_sources[0] && getUuidFromUrl(currentRasterLayer.raster_sources[0])) || '',
     aggregationType: currentRasterLayer.aggregation_type,
-    // @ts-ignore
     observationType: (currentRasterLayer.observation_type && currentRasterLayer.observation_type.id + '') || '',
-    // @ts-ignore
     colorMap: {options: currentRasterLayer.options, rescalable: currentRasterLayer.rescalable},
     accessModifier: currentRasterLayer.access_modifier,
     sharedWith: currentRasterLayer.shared_with.length === 0 ? false : true,
