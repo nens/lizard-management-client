@@ -10,6 +10,8 @@ import { getSelectedOrganisation } from '../reducers'
 import { withRouter } from "react-router-dom";
 import {  injectIntl } from "react-intl";
 import {DataRetrievalState} from '../types/retrievingDataTypes';
+import unorderedIcon from "../images/list_order_icon_unordered.svg";
+import orderedIcon from "../images/list_order_icon_ordered.svg";
 
 interface Props {
   gridTemplateColumns: string;
@@ -165,24 +167,50 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
           {originalContent}
           {
             columnDefenition.orderingField?
-            <button
-              onClick={()=>{
-                if (ordering === columnDefenition.orderingField) {
+            // <button
+            //   onClick={()=>{
+            //     if (ordering === columnDefenition.orderingField) {
+            //       setOrdering("-" + columnDefenition.orderingField)
+            //     } else if (ordering === ("-" + columnDefenition.orderingField)) {
+            //       setOrdering(columnDefenition.orderingField)
+            //     } else {
+            //       // ordering !== columnDefenition.orderingField
+            //       setOrdering(columnDefenition.orderingField)
+            //     }
+            //   }}
+            // >
+            //   {
+            //     ordering === columnDefenition.orderingField ? "v":
+            //     ordering === ("-" + columnDefenition.orderingField) ? "^":
+            //     ">"
+            //   }
+            // </button>
+            <>
+              <button
+                style={ordering !== columnDefenition.orderingField && ordering !== '-'+columnDefenition.orderingField ? {}: {display:"none"}}
+                onClick={()=>{
+                  setOrdering(columnDefenition.orderingField)
+                }}
+              >
+                <img height="12px" src={`${unorderedIcon}`} alt="ordering icon unordened" />
+              </button>
+              <button
+                style={ordering === columnDefenition.orderingField ?{}:{display:"none"}}
+                onClick={()=>{
                   setOrdering("-" + columnDefenition.orderingField)
-                } else if (ordering === ("-" + columnDefenition.orderingField)) {
-                  setOrdering(columnDefenition.orderingField)
-                } else {
-                  // ordering !== columnDefenition.orderingField
-                  setOrdering(columnDefenition.orderingField)
-                }
-              }}
-            >
-              {
-                ordering === columnDefenition.orderingField ? "v":
-                ordering === ("-" + columnDefenition.orderingField) ? "^":
-                ">"
-              }
-            </button>
+                }}
+              >
+                <img height="6px" src={`${orderedIcon}`} alt="ordering icon ordened" />
+              </button>
+              <button
+                style={ordering === '-'+columnDefenition.orderingField ?{}:{display:"none"}}
+                onClick={()=>{
+                  setOrdering("last_modified");
+                }}
+              >
+                <img height="6px" style={{transform: "scaleY(-1)",}} src={`${orderedIcon}`} alt="ordering icon ordened" />
+              </button>
+            </>
           :
           null
           }
