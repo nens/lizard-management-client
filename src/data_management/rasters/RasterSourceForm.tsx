@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 // import { FormattedMessage } from 'react-intl';
 import { connect, useSelector } from 'react-redux';
-import { createRasterSource, patchRasterSource } from '../../api/rasters';
+import { createRasterSource, patchRasterSource, RasterSource } from '../../api/rasters';
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import { CheckBox } from './../../form/CheckBox';
 import { DurationField } from './../../form/DurationField';
@@ -16,7 +16,6 @@ import { getOrganisations, getSelectedOrganisation } from '../../reducers';
 import { useForm, Values } from '../../form/useForm';
 import { minLength } from '../../form/validators';
 import { AccessModifier } from '../../form/AccessModifier';
-import { RasterSource } from '../../api/rasters';
 import { rasterIntervalStringServerToDurationObject, toISOValue } from '../../utils/isoUtils';
 import { updateRasterSourceUUID } from '../../actions';
 import rasterIcon from "../../images/raster_layers_logo_explainbar.svg";
@@ -69,16 +68,13 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
         temporal: values.temporal as boolean,
         interval: values.interval as string,
       };
-      // @ts-ignore
-      createRasterSource(rasterSource).then(
-        (response: any) => response.json()
-      ).then((parsedBody: any) => {
-        console.log('parsedBody', parsedBody);
-        setRasterCreatedModal(true);
-        props.updateRasterSourceUUID(parsedBody.uuid);
-      }).catch(
-        (e: any) => console.error(e)
-      );
+      createRasterSource(rasterSource)
+        .then(response => {
+          return response.json();
+        }).then((parsedBody: any) => {
+          setRasterCreatedModal(true);
+          props.updateRasterSourceUUID(parsedBody.uuid);
+        }).catch(e => console.error(e));
     } else {
       const body = {
         name: values.name as string,
@@ -90,12 +86,16 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
         temporal: values.temporal as boolean,
         interval: values.interval as string,
       };
-      // @ts-ignore
-      patchRasterSource(currentRasterSource.uuid as string, body).then(
-        (response: any) => props.history.push('/data_management/raster_sources')
-      ).catch(
-        (e: any) => console.error(e)
-      );
+      patchRasterSource(currentRasterSource.uuid as string, body)
+        .then(data => {
+          const status = data.response.status;
+          if (status === 200) {
+            // redirect back to the table of raster sources
+            props.history.push('/data_management/raster_sources')
+          };
+        })
+        .catch(e => console.error(e)
+        );
     }
   };
 

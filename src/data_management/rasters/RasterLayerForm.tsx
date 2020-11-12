@@ -2,7 +2,7 @@ import React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { FormattedMessage } from 'react-intl';
 import { useSelector } from 'react-redux';
-import { createRasterLayer, patchRasterLayer } from '../../api/rasters';
+import { createRasterLayer, patchRasterLayer, RasterLayer } from '../../api/rasters';
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import { CheckBox } from './../../form/CheckBox';
 import { TextArea } from './../../form/TextArea';
@@ -15,7 +15,6 @@ import { AccessModifier } from '../../form/AccessModifier';
 import ColorMapInput, { ColorMapOptions } from '../../form/ColorMapInput';
 import { useForm, Values } from '../../form/useForm';
 import { minLength, required } from '../../form/validators';
-import { RasterLayer } from '../../api/rasters';
 import {
   getColorMaps,
   getDatasets,
@@ -46,7 +45,7 @@ const RasterLayerForm: React.FC<Props & RouteComponentProps> = (props) => {
   const initialValues = currentRasterLayer ? {
     name: currentRasterLayer.name,
     description: currentRasterLayer.description,
-    dataset: currentRasterLayer.datasets[0] || '',
+    dataset: (currentRasterLayer.datasets && currentRasterLayer.datasets[0]) || '',
     rasterSource: (currentRasterLayer.raster_sources && currentRasterLayer.raster_sources[0] && getUuidFromUrl(currentRasterLayer.raster_sources[0])) || '',
     aggregationType: currentRasterLayer.aggregation_type,
     // @ts-ignore
@@ -92,10 +91,15 @@ const RasterLayerForm: React.FC<Props & RouteComponentProps> = (props) => {
         datasets: [values.dataset as string],
       };
 
-      // @ts-ignore
-      createRasterLayer(rasterLayer, values.rasterSource as string).then(
-        (response: any) => props.history.push('/data_management/raster_layers')
-      ).catch((e: any) => console.error(e));
+      createRasterLayer(rasterLayer, values.rasterSource as string)
+        .then(response => {
+          const status = response.status;
+          if (status === 201) {
+            // redirect back to the table of raster layers
+            props.history.push('/data_management/raster_layers');
+          };
+        })
+        .catch(e => console.error(e));
     } else {
       const body = {
         name: values.name as string,
@@ -119,10 +123,15 @@ const RasterLayerForm: React.FC<Props & RouteComponentProps> = (props) => {
         body.options = values.colorMap.options;
       };
 
-      // @ts-ignore
-      patchRasterLayer(currentRasterLayer.uuid as string, body).then(
-       (response: any) => props.history.push('/data_management/raster_layers')
-      ).catch((e: any) => console.error(e));
+      patchRasterLayer(currentRasterLayer.uuid as string, body)
+        .then(data => {
+          const status = data.response.status;
+          if (status === 200) {
+            // redirect back to the table of raster layers
+            props.history.push('/data_management/raster_layers');
+          };
+        })
+        .catch(e => console.error(e));
     };
   };
 
