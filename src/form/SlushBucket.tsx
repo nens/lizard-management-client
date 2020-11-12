@@ -68,7 +68,7 @@ export const SlushBucket: React.FC<MyProps> = (props) => {
           }}
         >
           <input
-            tabIndex={-1}
+            id={name}
             type="text"
             autoComplete="off"
             className={formStyles.FormControl}

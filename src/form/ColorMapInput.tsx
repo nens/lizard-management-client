@@ -138,7 +138,7 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
     };
   }, [previewColor, options, prevStyles]);
 
-  const colorMapChanged = (colorMap: string) => {    
+  const colorMapChanged = (colorMap: string | null) => {
     if (colorMap === null) {
       colorMap = '';
     }
