@@ -13,6 +13,7 @@ import {DataRetrievalState} from '../types/retrievingDataTypes';
 import unorderedIcon from "../images/list_order_icon_unordered.svg";
 import orderedIcon from "../images/list_order_icon_ordered.svg";
 import styles from './Table.module.css';
+import buttonStyles from '../styles/Buttons.module.css';
 
 interface Props {
   gridTemplateColumns: string;
@@ -252,18 +253,7 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
           newItemOnClick? 
           <button
             onClick={newItemOnClick}
-            style={{
-              paddingTop: "8px",
-              paddingBottom: "8px",
-              paddingLeft: "32px",
-              paddingRight: "40px",
-              color: "white",
-              backgroundColor: "#009F86",
-              textTransform: "uppercase",
-              border: "none",
-              boxShadow: "2px 2px 2px #00000029",
-              borderRadius: "3px",
-            }}
+            className={buttonStyles.NewButton}
           >
             + New Item
           </button>
