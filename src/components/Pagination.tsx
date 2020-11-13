@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './Pagination.module.css';
-import { FormattedMessage, } from "react-intl";
+// import { FormattedMessage, } from "react-intl";
 
 interface Props {
   page1Url: string;
@@ -25,10 +25,11 @@ const Pagination: React.FC<Props> = ({page1Url,previousUrl, nextUrl, itemsPerPag
           <button disabled={nextUrl===""} onClick={()=>reloadFromUrl(nextUrl)}>{">"}</button>
           <label>
             
-            <FormattedMessage
+            {/* <FormattedMessage
                 id="pagination.label_items_per_page"
-                defaultMessage="Items per page"
-            />
+                defaultMessage="Items per page:"
+            /> */}
+            Items per page:
             <select
               value={itemsPerPage}
               onChange={event=>{
