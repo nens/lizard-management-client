@@ -9,6 +9,7 @@ import TableActionButtons from '../../components/TableActionButtons';
 import {ExplainSideColumn} from '../../components/ExplainSideColumn';
 import rasterSourcesIcon from "../../images/raster_sources_logo_explainbar.svg";
 import tableStyles from "../../components/Table.module.css";
+import { bytesToDisplayValue } from '../../utils/byteUtils';
 
 const baseUrl = "/api/v4/rastersources/";
 const navigationUrlRasters = "/data_management/raster_sources";
@@ -114,7 +115,7 @@ const rasterSourceColumnDefenitions = [
         className={tableStyles.CellEllipsis}
         title={`${row.size? row.size: 0} Bytes`}
       >
-        {`${row.size? row.size: 0} Bytes`}
+        {bytesToDisplayValue(row.size? row.size: 0)}
       </span>
     ,
     orderingField: null,
