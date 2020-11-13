@@ -10,6 +10,10 @@ import { getSelectedOrganisation } from '../reducers'
 import { withRouter } from "react-router-dom";
 import {  injectIntl } from "react-intl";
 import {DataRetrievalState} from '../types/retrievingDataTypes';
+import unorderedIcon from "../images/list_order_icon_unordered.svg";
+import orderedIcon from "../images/list_order_icon_ordered.svg";
+import styles from './Table.module.css';
+import buttonStyles from '../styles/Buttons.module.css';
 
 interface Props {
   gridTemplateColumns: string;
@@ -165,24 +169,32 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
           {originalContent}
           {
             columnDefenition.orderingField?
-            <button
-              onClick={()=>{
-                if (ordering === columnDefenition.orderingField) {
+            <>
+              <button
+                style={ordering !== columnDefenition.orderingField && ordering !== '-'+columnDefenition.orderingField ? {}: {display:"none"}}
+                onClick={()=>{
+                  setOrdering(columnDefenition.orderingField)
+                }}
+              >
+                <img height="12px" src={`${unorderedIcon}`} alt="ordering icon unordened" />
+              </button>
+              <button
+                style={ordering === columnDefenition.orderingField ?{}:{display:"none"}}
+                onClick={()=>{
                   setOrdering("-" + columnDefenition.orderingField)
-                } else if (ordering === ("-" + columnDefenition.orderingField)) {
-                  setOrdering(columnDefenition.orderingField)
-                } else {
-                  // ordering !== columnDefenition.orderingField
-                  setOrdering(columnDefenition.orderingField)
-                }
-              }}
-            >
-              {
-                ordering === columnDefenition.orderingField ? "v":
-                ordering === ("-" + columnDefenition.orderingField) ? "^":
-                ">"
-              }
-            </button>
+                }}
+              >
+                <img height="6px" src={`${orderedIcon}`} alt="ordering icon ordened" />
+              </button>
+              <button
+                style={ordering === '-'+columnDefenition.orderingField ?{}:{display:"none"}}
+                onClick={()=>{
+                  setOrdering("last_modified");
+                }}
+              >
+                <img height="6px" style={{transform: "scaleY(-1)",}} src={`${orderedIcon}`} alt="ordering icon ordened" />
+              </button>
+            </>
           :
           null
           }
@@ -223,18 +235,7 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
           newItemOnClick? 
           <button
             onClick={newItemOnClick}
-            style={{
-              paddingTop: "8px",
-              paddingBottom: "8px",
-              paddingLeft: "32px",
-              paddingRight: "40px",
-              color: "white",
-              backgroundColor: "#009F86",
-              textTransform: "uppercase",
-              border: "none",
-              boxShadow: "2px 2px 2px #00000029",
-              borderRadius: "3px",
-            }}
+            className={buttonStyles.NewButton}
           >
             + New Item
           </button>
@@ -264,12 +265,15 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
       </div>
       
       <div
+        // @ts-ignore
         style={{
           visibility: checkBoxes.length > 0? "visible" : "hidden",
           display: "flex",
           justifyContent: "space-between",
           backgroundColor: "var(--color-header)",
           color: "var(--color-ligth-main-second)",
+          // @ts-ignore
+          fontWeight: "var(--font-weight-button)",
         }}
       >
         <div 
@@ -291,14 +295,7 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
                   const rows = tableData.filter((row) => {return getIfCheckBoxOfUuidIsSelected(row.uuid)})
                   checkboxAction.actionFunction(rows, tableData, setTableData, ()=>fetchWithUrl(currentUrl), ()=>fetchWithUrl(url), setCheckBoxes)
                 }}
-                style={{
-                  border: "none",
-                  backgroundColor: "rgba(0,0,0,0)",
-                  color: "white",
-                  paddingTop: "17px",
-                  paddingBottom: "17px",
-                  paddingRight: "12px",
-                }}
+                className={styles.TableActionButton}
               >
                 {`${checkboxAction.displayValue} (${checkBoxes.length})`}
               </button>

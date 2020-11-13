@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './Pagination.module.css';
-import { FormattedMessage, } from "react-intl";
+import paginationArrowIcon from '../images/pagination_arrow.svg';
+// import { FormattedMessage, } from "react-intl";
 
 interface Props {
   page1Url: string;
@@ -20,15 +21,23 @@ const Pagination: React.FC<Props> = ({page1Url,previousUrl, nextUrl, itemsPerPag
         }}
       >
         <div>
-          <button disabled={previousUrl===""} onClick={()=>reloadFromUrl(page1Url)}>{"<|"}</button>
-          <button disabled={previousUrl===""} onClick={()=>reloadFromUrl(previousUrl)}>{"<"}</button>
-          <button disabled={nextUrl===""} onClick={()=>reloadFromUrl(nextUrl)}>{">"}</button>
+          <button title={"to first page"} disabled={previousUrl===""} onClick={()=>reloadFromUrl(page1Url)}>
+            <img alt="" style={{transform:"scaleX(-1"}} src={paginationArrowIcon}/>
+            <img alt="to first page" style={{transform:"scaleX(-1"}} src={paginationArrowIcon}/>
+          </button>
+          <button disabled={previousUrl===""} onClick={()=>reloadFromUrl(previousUrl)}>
+            <img alt="to previous page" style={{transform:"scaleX(-1"}} src={paginationArrowIcon}/>
+          </button>
+          <button disabled={nextUrl===""} onClick={()=>reloadFromUrl(nextUrl)}>
+            <img alt="to next page" src={paginationArrowIcon}/>
+          </button>
           <label>
             
-            <FormattedMessage
+            {/* <FormattedMessage
                 id="pagination.label_items_per_page"
-                defaultMessage="Items per page"
-            />
+                defaultMessage="Items per page:"
+            /> */}
+            Items per page:
             <select
               value={itemsPerPage}
               onChange={event=>{

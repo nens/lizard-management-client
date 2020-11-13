@@ -1,4 +1,5 @@
 import React from 'react';
+import styles from './Checkbox.module.css';
 
 interface Props {
   checked: boolean;
@@ -7,11 +8,21 @@ interface Props {
 
 const Checkbox: React.FC<Props> = ({checked, onChange}) => {
   return (
-    <input 
-      checked={checked} 
-      onChange={onChange} 
-      type="checkbox"
-    ></input>
+    <div
+      className={styles.CheckboxContainer}
+    >
+      <input 
+        className={styles.Checkbox}
+        checked={checked} 
+        onChange={onChange} 
+        type="checkbox"
+      >
+      </input>
+      {/* next div is checkmark */}
+      <div></div>
+
+    </div>
+    
   )
 };
 
