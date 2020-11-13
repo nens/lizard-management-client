@@ -169,24 +169,6 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
           {originalContent}
           {
             columnDefenition.orderingField?
-            // <button
-            //   onClick={()=>{
-            //     if (ordering === columnDefenition.orderingField) {
-            //       setOrdering("-" + columnDefenition.orderingField)
-            //     } else if (ordering === ("-" + columnDefenition.orderingField)) {
-            //       setOrdering(columnDefenition.orderingField)
-            //     } else {
-            //       // ordering !== columnDefenition.orderingField
-            //       setOrdering(columnDefenition.orderingField)
-            //     }
-            //   }}
-            // >
-            //   {
-            //     ordering === columnDefenition.orderingField ? "v":
-            //     ordering === ("-" + columnDefenition.orderingField) ? "^":
-            //     ">"
-            //   }
-            // </button>
             <>
               <button
                 style={ordering !== columnDefenition.orderingField && ordering !== '-'+columnDefenition.orderingField ? {}: {display:"none"}}
