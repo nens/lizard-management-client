@@ -20,8 +20,8 @@
 }
 
 .Pagination > div > button:disabled {
-  background-color: rgba(53, 75, 97, 0.24);
-  border-color:  rgba(53, 75, 97, 0.24);
+  background-color:#E8E8E8;
+  border-color:  #E8E8E8;
 }
 
 .Pagination > div > button:nth-child(1) {

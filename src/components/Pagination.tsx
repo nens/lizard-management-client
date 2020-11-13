@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './Pagination.module.css';
+import paginationArrowIcon from '../images/pagination_arrow.svg';
 // import { FormattedMessage, } from "react-intl";
 
 interface Props {
@@ -20,9 +21,16 @@ const Pagination: React.FC<Props> = ({page1Url,previousUrl, nextUrl, itemsPerPag
         }}
       >
         <div>
-          <button disabled={previousUrl===""} onClick={()=>reloadFromUrl(page1Url)}>{"<|"}</button>
-          <button disabled={previousUrl===""} onClick={()=>reloadFromUrl(previousUrl)}>{"<"}</button>
-          <button disabled={nextUrl===""} onClick={()=>reloadFromUrl(nextUrl)}>{">"}</button>
+          <button disabled={previousUrl===""} onClick={()=>reloadFromUrl(page1Url)}>
+            <img style={{transform:"scaleX(-1"}} src={paginationArrowIcon}/>
+            <img style={{transform:"scaleX(-1"}} src={paginationArrowIcon}/>
+          </button>
+          <button disabled={previousUrl===""} onClick={()=>reloadFromUrl(previousUrl)}>
+            <img style={{transform:"scaleX(-1"}} src={paginationArrowIcon}/>
+          </button>
+          <button disabled={nextUrl===""} onClick={()=>reloadFromUrl(nextUrl)}>
+            <img src={paginationArrowIcon}/>
+          </button>
           <label>
             
             {/* <FormattedMessage
