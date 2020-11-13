@@ -87,7 +87,7 @@ button.TableActionButton {
   border: none;
   background-color: transparent;
   color: var(--color-ligth-main-second);
-  font-weight: 600;
+  font-weight: var(--font-weight-button);
   padding-top: 17px;
   padding-bottom: 17px;
   padding-right: 12px;

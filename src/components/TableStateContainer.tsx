@@ -293,13 +293,15 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
       </div>
       
       <div
+        // @ts-ignore
         style={{
           visibility: checkBoxes.length > 0? "visible" : "hidden",
           display: "flex",
           justifyContent: "space-between",
           backgroundColor: "var(--color-header)",
           color: "var(--color-ligth-main-second)",
-          fontWeight: 600,
+          // @ts-ignore
+          fontWeight: "var(--font-weight-button)",
         }}
       >
         <div 
