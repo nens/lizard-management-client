@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { NavLink } from "react-router-dom";
+import backArrow from '../images/back_arrow.svg';
 
 export const ExplainSideColumn = (props:any) => {
 
@@ -34,7 +35,10 @@ export const ExplainSideColumn = (props:any) => {
           }}
           
         >
-          <NavLink to={backUrl}><span style={{fontSize:"36px"}}>{"←"}</span></NavLink>
+          <NavLink to={backUrl}><span style={{fontSize:"36px"}}>
+            {/* {"←"} */}
+            <img alt="back" src={backArrow}/>
+          </span></NavLink>
         </div>
         <img src={imgUrl} alt={""}></img>
         <h2

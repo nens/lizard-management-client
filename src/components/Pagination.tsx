@@ -21,15 +21,15 @@ const Pagination: React.FC<Props> = ({page1Url,previousUrl, nextUrl, itemsPerPag
         }}
       >
         <div>
-          <button disabled={previousUrl===""} onClick={()=>reloadFromUrl(page1Url)}>
-            <img style={{transform:"scaleX(-1"}} src={paginationArrowIcon}/>
-            <img style={{transform:"scaleX(-1"}} src={paginationArrowIcon}/>
+          <button title={"to first page"} disabled={previousUrl===""} onClick={()=>reloadFromUrl(page1Url)}>
+            <img alt="" style={{transform:"scaleX(-1"}} src={paginationArrowIcon}/>
+            <img alt="to first page" style={{transform:"scaleX(-1"}} src={paginationArrowIcon}/>
           </button>
           <button disabled={previousUrl===""} onClick={()=>reloadFromUrl(previousUrl)}>
-            <img style={{transform:"scaleX(-1"}} src={paginationArrowIcon}/>
+            <img alt="to previous page" style={{transform:"scaleX(-1"}} src={paginationArrowIcon}/>
           </button>
           <button disabled={nextUrl===""} onClick={()=>reloadFromUrl(nextUrl)}>
-            <img src={paginationArrowIcon}/>
+            <img alt="to next page" src={paginationArrowIcon}/>
           </button>
           <label>
             
