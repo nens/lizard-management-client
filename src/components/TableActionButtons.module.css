@@ -29,6 +29,15 @@
   cursor: pointer;
 }
 
+.TableActionButtons > select > option {
+  font-size: 24px;
+  /* below styling do not work consistently */
+  /* zoom: 1.5 */
+  /* height: 40px; */
+  /*line-height: 40px;*/
+  /* padding: 4px */ /* does not work in chrome*/
+}
+
 .TableActionButtons > svg {
   fill:#2c3e50;
 }
