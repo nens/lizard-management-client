@@ -89,6 +89,46 @@ class App extends Component {
           <i className="fa fa-pencil" />
           &nbsp;&nbsp;Edit Profile
         </a>
+        {/* language switcher no longer needed, but we might need it in future */}
+        {/* <LanguageSwitcher
+          locale={preferredLocale}
+          languages={[
+            { code: "nl", language: "Nederlands" },
+            { code: "en", language: "English" }
+          ]}
+        /> */}
+        <a
+          href="https://nelen-schuurmans.topdesk.net/tas/public/ssp"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <i
+            className={`${styles.SupportHyperlink} material-icons`}
+          >
+            headset_mic
+          </i>
+          &nbsp;
+          <FormattedMessage
+            id="index.support"
+            defaultMessage="Support"
+          />
+        </a>
+        <a
+          href="https://docs.lizard.net/a_lizard.html"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+           <i
+            className={`${styles.DocumentationHyperlink} material-icons`}
+          >
+            local_library
+          </i>
+          &nbsp;
+          <FormattedMessage
+            id="index.documentation"
+            defaultMessage="Documentation"
+          />
+        </a>
         <a href="/accounts/logout/" >
           <i className="fa fa-power-off" />
           &nbsp;&nbsp;Logout
