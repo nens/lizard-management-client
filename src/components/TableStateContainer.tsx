@@ -12,6 +12,7 @@ import {  injectIntl } from "react-intl";
 import {DataRetrievalState} from '../types/retrievingDataTypes';
 import unorderedIcon from "../images/list_order_icon_unordered.svg";
 import orderedIcon from "../images/list_order_icon_ordered.svg";
+import styles from './Table.module.css';
 
 interface Props {
   gridTemplateColumns: string;
@@ -298,6 +299,7 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
           justifyContent: "space-between",
           backgroundColor: "var(--color-header)",
           color: "var(--color-ligth-main-second)",
+          fontWeight: 600,
         }}
       >
         <div 
@@ -319,14 +321,7 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
                   const rows = tableData.filter((row) => {return getIfCheckBoxOfUuidIsSelected(row.uuid)})
                   checkboxAction.actionFunction(rows, tableData, setTableData, ()=>fetchWithUrl(currentUrl), ()=>fetchWithUrl(url), setCheckBoxes)
                 }}
-                style={{
-                  border: "none",
-                  backgroundColor: "rgba(0,0,0,0)",
-                  color: "white",
-                  paddingTop: "17px",
-                  paddingBottom: "17px",
-                  paddingRight: "12px",
-                }}
+                className={styles.TableActionButton}
               >
                 {`${checkboxAction.displayValue} (${checkBoxes.length})`}
               </button>

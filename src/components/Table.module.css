@@ -83,4 +83,14 @@
   pointer-events: none;
 }
 
+button.TableActionButton {
+  border: none;
+  background-color: transparent;
+  color: var(--color-ligth-main-second);
+  font-weight: 600;
+  padding-top: 17px;
+  padding-bottom: 17px;
+  padding-right: 12px;
+}
+
 
