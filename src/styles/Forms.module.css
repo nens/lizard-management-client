@@ -1,5 +1,7 @@
 /* CSS for form layout and text */
 .Form {
+  height: 100%;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   margin-bottom: 50px;
