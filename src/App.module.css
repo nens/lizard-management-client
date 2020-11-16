@@ -54,12 +54,16 @@ body {
   text-transform: uppercase;
 }
 .Secondary {
-  background-color: #2FCBAB;
+  /* previous background color */
+  /* background-color: #2FCBAB; */
+  background-color: #F6F6F6;
   text-transform: uppercase;
 }
 .Secondary a {
   text-decoration: none;
-  color: #fff;
+  /* previous color */
+  /* color: #fff; */
+  color: #008080;
 }
 
 .Footer {
@@ -148,7 +152,7 @@ body {
 }
 
 .Profile {
-  width: 160px;
+  width: 174px;
   text-overflow: ellipsis;
   white-space: nowrap;
   cursor: pointer;
