@@ -4,7 +4,9 @@ import AppTile from "../components/AppTile";
 import { withRouter } from "react-router-dom";
 import { Trail, animated } from "react-spring";
 
-import rasterIcon from "../images/rasters@3x.svg";
+import rasterSourcesIcon from "../images/raster_sources_logo_explainbar.svg";
+import rasterLayersIcon from "../images/raster_layers_logo_explainbar.svg";
+
 import wmsIcon from "../images/wms@3x.svg";
 import threediIcon from "../images/3di@3x.svg";
 import backArrowIcon from "../images/backArrow.svg";
@@ -29,7 +31,7 @@ class DataManagement extends Component {
             defaultMessage="Rasters Sources"
           />
         ),
-        icon: rasterIcon
+        icon: rasterSourcesIcon
       },
       {
         key: 1,
@@ -40,7 +42,7 @@ class DataManagement extends Component {
             defaultMessage="Raster Layers"
           />
         ),
-        icon: rasterIcon
+        icon: rasterLayersIcon
       },
       {
         key: 2,
