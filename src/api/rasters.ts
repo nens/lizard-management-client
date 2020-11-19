@@ -478,13 +478,13 @@ Next function api call fails with error:
 //*/
 export const deleteRasterSource = async (uuid: string) => {
   // Try to delete source, ignore errors
-  const result = await fetch("/api/v4/rastersources/", {
+  const result = await fetch("/api/v4/rastersources/"+uuid, {
     credentials: "same-origin",
     method: "DELETE",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       // we should hopefully eventually not need next line
-      "force": true,
+      // "force": true,
     })
   });
   return result;
