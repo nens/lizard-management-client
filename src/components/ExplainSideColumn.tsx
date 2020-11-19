@@ -63,16 +63,14 @@ export const ExplainSideColumn = (props:any) => {
         >
           {explainationText}
         </div>
-
       </div>
       <div
         style={{
           flex: 1,
           minWidth: 0,
+          overflowY: 'auto'
         }}
       >
-
-      
         {props.children}
       </div>
     </div>
