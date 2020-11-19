@@ -1,0 +1,13 @@
+.DropZoneContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border: 2px dashed #C9C9C9;
+  border-radius: 4px;
+}
+
+.DropZoneContainer:focus {
+  border-color: #73C9B2;
+  outline: none;
+}

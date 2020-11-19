@@ -11,6 +11,7 @@ import { TextInput } from './../../form/TextInput';
 import { SubmitButton } from '../../form/SubmitButton';
 import { CancelButton } from '../../form/CancelButton';
 import { SelectBox } from '../../form/SelectBox';
+import { UploadRasterData } from './../../form/UploadRasterData';
 import ConfirmModal from '../../components/ConfirmModal';
 import { getOrganisations, getSelectedOrganisation } from '../../reducers';
 import { useForm, Values } from '../../form/useForm';
@@ -155,6 +156,10 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
         <span className={formStyles.FormFieldTitle}>
           2: Data
         </span>
+        <UploadRasterData
+          title={'Data'}
+          name={'data'}
+        />
         <CheckBox
           title={'Temporal'}
           name={'temporal'}
