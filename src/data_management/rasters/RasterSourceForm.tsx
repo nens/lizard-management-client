@@ -17,7 +17,7 @@ import { useForm, Values } from '../../form/useForm';
 import { minLength } from '../../form/validators';
 import { AccessModifier } from '../../form/AccessModifier';
 import { rasterIntervalStringServerToDurationObject, toISOValue } from '../../utils/isoUtils';
-import { updateRasterSourceUUID } from '../../actions';
+import { addNotification, updateRasterSourceUUID } from '../../actions';
 import rasterIcon from "../../images/raster_layers_logo_explainbar.svg";
 import formStyles from './../../styles/Forms.module.css';
 
@@ -25,7 +25,8 @@ interface Props {
   currentRasterSource?: RasterSource
 };
 interface PropsFromDispatch {
-  updateRasterSourceUUID: (uuid: string) => void
+  updateRasterSourceUUID: (uuid: string) => void,
+  addNotification: (message: string | number, timeout: number) => void,
 };
 
 const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (props) => {
@@ -70,9 +71,15 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
       };
       createRasterSource(rasterSource)
         .then(response => {
-          return response.json();
+          const status = response.status;
+          props.addNotification(status, 2000);
+          if (status === 201) {
+            setRasterCreatedModal(true);
+            return response.json();
+          } else {
+            console.error(response);
+          }
         }).then((parsedBody: any) => {
-          setRasterCreatedModal(true);
           props.updateRasterSourceUUID(parsedBody.uuid);
         }).catch(e => console.error(e));
     } else {
@@ -89,13 +96,15 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
       patchRasterSource(currentRasterSource.uuid as string, body)
         .then(data => {
           const status = data.response.status;
+          props.addNotification(status, 2000);
           if (status === 200) {
             // redirect back to the table of raster sources
             props.history.push('/data_management/raster_sources')
+          } else {
+            console.error(data);
           };
         })
-        .catch(e => console.error(e)
-        );
+        .catch(e => console.error(e));
     }
   };
 
@@ -223,7 +232,8 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
 };
 
 const mapPropsToDispatch = (dispatch: any) => ({
-  updateRasterSourceUUID: (uuid: string) => dispatch(updateRasterSourceUUID(uuid))
+  updateRasterSourceUUID: (uuid: string) => dispatch(updateRasterSourceUUID(uuid)),
+  addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout)),
 });
 
 export default connect(null, mapPropsToDispatch)(withRouter(RasterSourceForm));
