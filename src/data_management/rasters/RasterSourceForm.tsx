@@ -208,7 +208,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           />
         </div>
       </form>
-      {!rasterCreatedModal ? (
+      {rasterCreatedModal ? (
         <ConfirmModal
           title={'Raster created'}
           buttonName={'Continue'}
