@@ -72,7 +72,6 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
       createRasterSource(rasterSource)
         .then(response => {
           const status = response.status;
-          props.addNotification(status, 2000);
           if (status === 201) {
             setRasterCreatedModal(true);
             return response.json();
