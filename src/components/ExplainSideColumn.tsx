@@ -68,7 +68,6 @@ export const ExplainSideColumn = (props:any) => {
         style={{
           flex: 1,
           minWidth: 0,
-          overflowY: 'auto'
         }}
       >
         {props.children}
