@@ -1,39 +1,43 @@
 .SnackbarWrapper {
   position: fixed;
   width: 100%;
-  bottom: 0;
+  top: 0;
   display: flex;
   justify-content: center;
   flex-direction: row;
 }
 .Snackbar {
   position: absolute;
-  width: 80%;
-  height: 50px;
-  background-color: #000;
-  color: #fff;
+  width: 50%;
+  height: 86px;
+  background-color: #FFFFFF;
+  border: 2px solid #2C3E50;
+  opacity: 0.8;
+  color:#2C3E50;
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  padding: 10px 20px;
   transition: all 200ms ease-in-out;
   -moz-transition: all 200ms ease-in-out;
   -webkit-transition: all 200ms ease-in-out;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 .Show {
-  bottom: 0;
+  top: 5px;
 }
 .Hide {
-  bottom: -50px;
+  top: -90px;
 }
 .DismissButton {
   position: absolute;
   right: 20px;
   color: #ff3b80;
   text-transform: uppercase;
-  top: 15px;
   cursor: pointer;
+}
+.SnackbarMessage {
+  width: 100%;
+  margin-right: 80px;
+  text-align: center;
 }

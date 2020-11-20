@@ -15,11 +15,23 @@ import {
   colorMapTypeFromOptions
 } from "../utils/rasterOptionFunctions";
 
+export interface ColorMapOptions {
+  options: {
+    styles?: string
+  },
+  rescalable: boolean
+}
+
+interface LegendResponse {
+  limits: [number, number],
+  legend: {color: string}[]
+}
+
 interface ColorMapProps {
   title: string | JSX.Element,
   name: string,
-  value: any,
-  valueChanged: Function,
+  value: ColorMapOptions,
+  valueChanged: (value: ColorMapOptions) => void,
   colorMaps: choicesT,
   validated: boolean,
   errorMessage?: string | false,
@@ -28,23 +40,30 @@ interface ColorMapProps {
   validators?: Function[],
 };
 
-export const colorMapValidator = (required: boolean) =>
-  (options: any | null): validatorResult => {
-
+export const colorMapValidator = (options: ColorMapOptions | null): validatorResult => {
     const initiatedOptions = options || {
       options: {},
       rescalable: false,
-    }
+    };
     const colorMap = colorMapTypeFromOptions(initiatedOptions.options);
-
-
 
     const result = validateStyleObj(colorMap);
     if (result.validated === true) {
       return false;
     } else {
       return result.errorMessage + '';
-    }
+    };
+};
+
+// Make a custom hook to keep previous value between renders
+// The purpose is to deep compare values of colormap options
+// (which is an object) so useEffect gets called correctly
+const usePrevious = (value: any) => {
+  const ref = useRef();
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
 };
 
 const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
@@ -72,16 +91,20 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
     };
   })
 
-  const [previewColor, setPreviewColor] = useState<any>(null);
+  const [previewColor, setPreviewColor] = useState<LegendResponse | null>(null);
+  const [colorMapValue, setColorMapValue] = useState<ColorMapOptions>({
+    options: {},
+    rescalable: false
+  });
+
+  const { options } = colorMapValue;
+  const prevStyles = usePrevious(options.styles);
 
   useEffect(() => {
-    if (value === undefined || value === null) {
-      valueChanged({
-        options: {},
-        rescalable: false
-      });
+    if (value !== undefined && value !== null) {
+      setColorMapValue(value);
     };
-  });
+  }, [value]);
 
   useEffect(() => {
     const getRGBAGradient = (value: any | null) => {
@@ -109,39 +132,30 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
       };
     };
 
-    const setLocalStateFromProps = (value: any) => {
-      const initiatedValue = value || {
-        options: {},
-        rescalable: false,
-      };
-      getRGBAGradient(colorMapTypeFromOptions(initiatedValue.options));
+    // fetch legends of colormaps only when options' styles changed
+    if (prevStyles !== options.styles) {
+      getRGBAGradient(colorMapTypeFromOptions(options));
     };
+  }, [previewColor, options, prevStyles]);
 
-    setLocalStateFromProps(value);
-  }, [previewColor, value]);
-
-  const colorMapChanged = (colorMap: string) => {    
+  const colorMapChanged = (colorMap: string | null) => {
     if (colorMap === null) {
       colorMap = '';
     }
-    const initializedOptions = props.value || {
-      options: {},
-      rescalable: false,
-    };
     const newStyleOptions = calculateNewStyleAndOptions(
-      colorMapTypeFromOptions(initializedOptions.options),
-      initializedOptions.options,
+      colorMapTypeFromOptions(colorMapValue.options),
+      colorMapValue.options,
       {colorMap: colorMap}
     );
-    props.valueChanged({
+    valueChanged({
       options: newStyleOptions.options,
-      rescalable: props.value.rescalable
+      rescalable: colorMapValue.rescalable
     });
   }
 
   const rescalableChanged = (rescalable: boolean) => {
-    props.valueChanged({
-      options: props.value.options,
+    valueChanged({
+      options: colorMapValue.options,
       rescalable: rescalable
     });
   }
@@ -160,22 +174,22 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
     let newStyleOptions;
     if (field === 'min') {
       newStyleOptions = calculateNewStyleAndOptions(
-        colorMapTypeFromOptions(props.value.options),
-        props.value.options,
+        colorMapTypeFromOptions(colorMapValue.options),
+        colorMapValue.options,
         {min: newValue}
       );
     } 
     else { //  (field === 'max') {
       newStyleOptions = calculateNewStyleAndOptions(
-        colorMapTypeFromOptions(props.value.options),
-        props.value.options,
+        colorMapTypeFromOptions(colorMapValue.options),
+        colorMapValue.options,
         {max: newValue}
       );
     }
 
-    props.valueChanged({
+    valueChanged({
       options: newStyleOptions.options,
-      rescalable: props.value.rescalable
+      rescalable: colorMapValue.rescalable
     });
   }
 
@@ -188,13 +202,9 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
 
     return f;
   };
- 
-  const initiatedValue = value || {
-    options: {},
-    rescalable: false,
-  };
-  const readOnly = optionsHasLayers(initiatedValue.options);
-  const colorMapType = colorMapTypeFromOptions(initiatedValue.options);
+
+  const readOnly = optionsHasLayers(colorMapValue.options || {} );
+  const colorMapType = colorMapTypeFromOptions(colorMapValue.options || {});
 
   let colors = null, minValue = null, maxValue = null;
   if (previewColor !== null) {
@@ -277,7 +287,7 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
         <CheckBox
           title={'Rescalable'}
           name={'rescalable'}
-          value={initiatedValue.rescalable}
+          value={colorMapValue.rescalable}
           valueChanged={(bool: boolean) => rescalableChanged(bool)}
         />      
       </div>

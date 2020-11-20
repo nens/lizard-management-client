@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 // import { FormattedMessage } from 'react-intl';
 import { connect, useSelector } from 'react-redux';
-import { createRasterSource, patchRasterSource } from '../../api/rasters';
+import { createRasterSource, patchRasterSource, RasterSource } from '../../api/rasters';
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import { CheckBox } from './../../form/CheckBox';
 import { DurationField } from './../../form/DurationField';
@@ -16,9 +16,8 @@ import { getOrganisations, getSelectedOrganisation } from '../../reducers';
 import { useForm, Values } from '../../form/useForm';
 import { minLength } from '../../form/validators';
 import { AccessModifier } from '../../form/AccessModifier';
-import { RasterSource } from '../../api/rasters';
 import { rasterIntervalStringServerToDurationObject, toISOValue } from '../../utils/isoUtils';
-import { updateRasterSourceUUID } from '../../actions';
+import { addNotification, updateRasterSourceUUID } from '../../actions';
 import rasterIcon from "../../images/raster_layers_logo_explainbar.svg";
 import formStyles from './../../styles/Forms.module.css';
 
@@ -26,7 +25,8 @@ interface Props {
   currentRasterSource?: RasterSource
 };
 interface PropsFromDispatch {
-  updateRasterSourceUUID: (uuid: string) => void
+  updateRasterSourceUUID: (uuid: string) => void,
+  addNotification: (message: string | number, timeout: number) => void,
 };
 
 const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (props) => {
@@ -69,16 +69,18 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
         temporal: values.temporal as boolean,
         interval: values.interval as string,
       };
-      // @ts-ignore
-      createRasterSource(rasterSource).then(
-        (response: any) => response.json()
-      ).then((parsedBody: any) => {
-        console.log('parsedBody', parsedBody);
-        setRasterCreatedModal(true);
-        props.updateRasterSourceUUID(parsedBody.uuid);
-      }).catch(
-        (e: any) => console.error(e)
-      );
+      createRasterSource(rasterSource)
+        .then(response => {
+          const status = response.status;
+          if (status === 201) {
+            setRasterCreatedModal(true);
+            return response.json();
+          } else {
+            console.error(response);
+          }
+        }).then((parsedBody: any) => {
+          props.updateRasterSourceUUID(parsedBody.uuid);
+        }).catch(e => console.error(e));
     } else {
       const body = {
         name: values.name as string,
@@ -90,12 +92,18 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
         temporal: values.temporal as boolean,
         interval: values.interval as string,
       };
-      // @ts-ignore
-      patchRasterSource(currentRasterSource.uuid as string, body).then(
-        (response: any) => props.history.push('/data_management/raster_sources')
-      ).catch(
-        (e: any) => console.error(e)
-      );
+      patchRasterSource(currentRasterSource.uuid as string, body)
+        .then(data => {
+          const status = data.response.status;
+          props.addNotification(status, 2000);
+          if (status === 200) {
+            // redirect back to the table of raster sources
+            props.history.push('/data_management/raster_sources')
+          } else {
+            console.error(data);
+          };
+        })
+        .catch(e => console.error(e));
     }
   };
 
@@ -104,10 +112,10 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
     triedToSubmit,
     tryToSubmitForm,
     handleInputChange,
+    handleValueChange,
     handleSubmit,
     handleReset,
     clearInput,
-    handleValueChange,
   } = useForm({initialValues, onSubmit});
 
   return (
@@ -159,13 +167,13 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           title={'Temporal'}
           name={'temporal'}
           value={values.temporal as boolean}
-          valueChanged={(bool: boolean) => handleValueChange('temporal', bool)}
+          valueChanged={bool => handleValueChange('temporal', bool)}
         />
         <DurationField
           title={'Interval'}
           name={'interval'}
           value={values.interval as string}
-          valueChanged={(value) => handleValueChange('interval', value)}
+          valueChanged={value => handleValueChange('interval', value)}
           validated={true}
           readOnly={values.temporal === false}
         />
@@ -176,14 +184,14 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           title={'Access Modifier'}
           name={'accessModifier'}
           value={values.accessModifier as string}
-          valueChanged={(value) => handleValueChange('accessModifier', value)}
+          valueChanged={value => handleValueChange('accessModifier', value)}
         />
         <SelectBox
           title={'Organisation'}
           name={'organisation'}
           placeholder={'- Search and select -'}
           value={values.organisation as string}
-          valueChanged={(value) => handleValueChange('organisation', value)}
+          valueChanged={value => handleValueChange('organisation', value)}
           choices={organisations.map((organisation: any) => [organisation.uuid, organisation.name])}
           validated={true}
           readOnly
@@ -223,7 +231,8 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
 };
 
 const mapPropsToDispatch = (dispatch: any) => ({
-  updateRasterSourceUUID: (uuid: string) => dispatch(updateRasterSourceUUID(uuid))
+  updateRasterSourceUUID: (uuid: string) => dispatch(updateRasterSourceUUID(uuid)),
+  addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout)),
 });
 
 export default connect(null, mapPropsToDispatch)(withRouter(RasterSourceForm));
