@@ -25,7 +25,7 @@ import {
 } from '../../reducers';
 import { optionsHasLayers } from '../../utils/rasterOptionFunctions';
 import { getUuidFromUrl } from '../../utils/getUuidFromUrl';
-import { removeRasterSourceUUID } from './../../actions';
+import { addNotification, removeRasterSourceUUID } from './../../actions';
 import rasterIcon from "../../images/raster_layers_logo_explainbar.svg";
 import formStyles from './../../styles/Forms.module.css';
 
@@ -36,6 +36,7 @@ interface Props {
 
 interface PropsFromDispatch {
   removeRasterSourceUUID: () => void,
+  addNotification: (message: string | number, timeout: number) => void,
 };
 
 const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (props) => {
@@ -104,9 +105,12 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
       createRasterLayer(rasterLayer, values.rasterSource as string)
         .then(response => {
           const status = response.status;
+          props.addNotification(status, 2000);
           if (status === 201) {
             // redirect back to the table of raster layers
             props.history.push('/data_management/raster_layers');
+          } else {
+            console.error(response);
           };
         })
         .catch(e => console.error(e));
@@ -136,9 +140,12 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
       patchRasterLayer(currentRasterLayer.uuid as string, body)
         .then(data => {
           const status = data.response.status;
+          props.addNotification(status, 2000);
           if (status === 200) {
             // redirect back to the table of raster layers
             props.history.push('/data_management/raster_layers');
+          } else {
+            console.error(data);
           };
         })
         .catch(e => console.error(e));
@@ -372,7 +379,8 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
 };
 
 const mapDispatchToProps = (dispatch: any) => ({
-  removeRasterSourceUUID: () => dispatch(removeRasterSourceUUID())
-})
+  removeRasterSourceUUID: () => dispatch(removeRasterSourceUUID()),
+  addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout)),
+});
 
 export default connect(null, mapDispatchToProps)(withRouter(RasterLayerForm));

@@ -63,7 +63,6 @@ export const ExplainSideColumn = (props:any) => {
         >
           {explainationText}
         </div>
-
       </div>
       <div
         style={{
@@ -71,8 +70,6 @@ export const ExplainSideColumn = (props:any) => {
           minWidth: 0,
         }}
       >
-
-      
         {props.children}
       </div>
     </div>

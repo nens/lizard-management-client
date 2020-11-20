@@ -52,7 +52,7 @@ export function dismissNotification(idx) {
   };
 }
 
-export function addNotification(message, timeout = false) {
+export function addNotification(message, timeout) {
   return (dispatch, getState) => {
     if (timeout) {
       const idx = getState().notifications.notifications.length;
