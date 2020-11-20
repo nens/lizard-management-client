@@ -52,7 +52,7 @@ export function dismissNotification(idx) {
   };
 }
 
-export function addNotification(message, timeout = false) {
+export function addNotification(message, timeout) {
   return (dispatch, getState) => {
     if (timeout) {
       const idx = getState().notifications.notifications.length;
@@ -301,10 +301,17 @@ export function fetchDatasets() {
 
 // MARK: Raster source uuid
 export const UPDATE_RASTER_SOURCE_UUID = "UPDATE_RASTER_SOURCE_UUID";
+export const REMOVE_RASTER_SOURCE_UUID = "REMOVE_RASTER_SOURCE_UUID";
 
 export function updateRasterSourceUUID(uuid) {
   return {
     type: UPDATE_RASTER_SOURCE_UUID,
     uuid
+  };
+}
+
+export function removeRasterSourceUUID() {
+  return {
+    type: REMOVE_RASTER_SOURCE_UUID
   };
 }

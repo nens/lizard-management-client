@@ -15,7 +15,7 @@ interface SelectBoxProps {
   name: string,
   value: string | null,
   choices: choicesT,
-  valueChanged: (value: string) => void,
+  valueChanged: (value: string | null) => void,
   validated: boolean,
   errorMessage?: string | false,
   placeholder?: string,
@@ -63,13 +63,14 @@ export const SelectBox: React.FC<SelectBoxProps> = (props) => {
   }
 
   const toggleChoices = () => {
+    console.log(showChoices)
     setShowChoices(!showChoices);
     setSearchString('');
   };
 
   const clearInput = () => {
     // Clear input and close choices
-    props.valueChanged('');
+    props.valueChanged(null);
     setShowChoices(false);
   };
 
@@ -97,14 +98,13 @@ export const SelectBox: React.FC<SelectBoxProps> = (props) => {
         <input
           ref={myInput}
           style={{ caretColor: "transparent" }}
-          id={`selectbox-${name}`}
-          tabIndex={-1}
+          id={name}
           type="text"
           autoComplete="off"
           className={`${formStyles.FormControl} ${triedToSubmit ? formStyles.FormSubmitted : ''}`}
           placeholder={placeholder}
           value={value ? (displayStrings[value] || "") : ""}
-          onClick={() => !readOnly &&  toggleChoices()}
+          onClick={() => !readOnly && toggleChoices()}
           onKeyUp={par => !readOnly && handleKeyUp(par)}
           onChange={() => {}}
           readOnly={readOnly}
