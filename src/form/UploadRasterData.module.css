@@ -11,3 +11,22 @@
   border-color: #73C9B2;
   outline: none;
 }
+
+.File {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.FileName {
+  font-weight: 500;
+}
+
+.ClearIcon {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  cursor: pointer;
+}

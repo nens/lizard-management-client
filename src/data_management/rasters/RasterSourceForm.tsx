@@ -164,10 +164,6 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
         <span className={formStyles.FormFieldTitle}>
           2: Data
         </span>
-        <UploadRasterData
-          title={'Data'}
-          name={'data'}
-        />
         <CheckBox
           title={'Temporal'}
           name={'temporal'}
@@ -181,6 +177,11 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           valueChanged={value => handleValueChange('interval', value)}
           validated={true}
           readOnly={values.temporal === false}
+        />
+        <UploadRasterData
+          title={'Data'}
+          name={'data'}
+          temporal={values.temporal as boolean}
         />
         <span className={formStyles.FormFieldTitle}>
           3: Rights
