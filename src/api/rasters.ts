@@ -93,8 +93,8 @@ export type RasterLayerFromAPI = RasterLayerInstance & {
   datasets: Dataset[];
 }
 
-export const fetchRasterSourcesV4 = async () => {
-  const response = await fetch('/api/v4/rastersources/?page_size=100000', {
+export const fetchRasterSourcesV4BySelectedOrganisation = async (organisationUuid: string) => {
+  const response = await fetch(`/api/v4/rastersources/?page_size=100000&organisation__uuid=${organisationUuid}`, {
     credentials: "same-origin",
     method: "GET",
     headers: {"Content-Type": "application/json"}
