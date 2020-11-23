@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useDropzone } from "react-dropzone";
 import formStyles from "./../styles/Forms.module.css";
 import uploadStyles from './UploadRasterData.module.css';
@@ -10,20 +10,17 @@ import "moment/locale/nl";
 import Datetime from "react-datetime";
 import "react-datetime/css/react-datetime.css";
 
-interface MyProps {
-  title: string,
-  name: string,
-  temporal: boolean,
-}
-
-interface AcceptedFile {
+export interface AcceptedFile {
   file: File,
   dateTime: Date
 }
 
-interface RejectedFile {
-  file: File,
-  reason: string
+interface MyProps {
+  title: string,
+  name: string,
+  temporal: boolean,
+  data: AcceptedFile[],
+  setData: (data: AcceptedFile[]) => void,
 }
 
 export const UploadRasterData: React.FC<MyProps> = (props) => {
@@ -31,10 +28,9 @@ export const UploadRasterData: React.FC<MyProps> = (props) => {
     title,
     name,
     temporal,
+    data,
+    setData
   } = props;
-
-  const [acceptedFiles, setAcceptedFiles] = useState<AcceptedFile[]>([]);
-  const [rejectedFiles, setRejectedFiles] = useState<RejectedFile[]>([]);
 
   // check for valid date
   // https://stackoverflow.com/questions/1353684/detecting-an-invalid-date-date-instance-in-javascript
@@ -60,41 +56,16 @@ export const UploadRasterData: React.FC<MyProps> = (props) => {
     return a.name === b.name && a.size === b.size;
   };
 
-  const getFileClientsideRejectionReason = (file: File) => {
-    const files = acceptedFiles.map(e => e.file);
-    if (filesArrayContainsFile(files, file)) {
-      return "File already selected";
-    } else if (
-      !file.name.toLowerCase().endsWith(".tif") ||
-      !file.name.toLowerCase().endsWith(".tiff") ||
-      !file.name.toLowerCase().endsWith(".geotiff")
-    ) {
-      return "Only .tif .tiff or .geotiff files are valid";
-    } else {
-      return "Reason not known";
-    };
-  };
-
   const onDrop = (files: File[]) => {
-    const oldAcceptedFiles = acceptedFiles.map(e => e.file);
+    const oldFiles = data.map(e => e.file);
 
     // ensure no duplicates in files by name and size
-    const newAcceptedFilesNonDuplicates = files.filter(file => {
-      return !filesArrayContainsFile(oldAcceptedFiles, file);
-    });
-    const duplicateFiles = files.filter(file => {
-      return filesArrayContainsFile(oldAcceptedFiles, file);
+    const newFilesNonDuplicates = files.filter(file => {
+      return !filesArrayContainsFile(oldFiles, file);
     });
 
-    const duplicateFilesPlusReason = duplicateFiles.map(file => {
-      return {
-        file: file,
-        reason: getFileClientsideRejectionReason(file)
-      };
-    });
-
-    // convert accepted files to Objects with Date
-    const acceptedFilesData = newAcceptedFilesNonDuplicates.map(file => {
+    // convert files to Objects with Date
+    const filesData = newFilesNonDuplicates.map(file => {
       const regex = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?/gm;
       const regexUTC = /\d{8}T(\d{4}|\d{6})?/gm;
       const dateStrFromFile = (file.name + "").match(regex);
@@ -120,8 +91,7 @@ export const UploadRasterData: React.FC<MyProps> = (props) => {
       };
     });
 
-    setRejectedFiles(rejectedFiles.concat(duplicateFilesPlusReason));
-    setAcceptedFiles(acceptedFiles.concat(acceptedFilesData));
+    setData(data.concat(filesData));
   };
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -154,35 +124,9 @@ export const UploadRasterData: React.FC<MyProps> = (props) => {
     <div
       className={uploadStyles.FileListContainer}
     >
-      {rejectedFiles.map((e, i) => (
-        <div
-          key={e.file.name + e.file.size}
-          className={uploadStyles.File}
-          style={{ color: 'red' }}
-        >
-          <span
-            className={uploadStyles.FileName}
-          >
-            {e.file.name}
-          </span>
-          <span>{e.reason}</span>
-          <span
-            className={uploadStyles.ClearIcon}
-            onClick={() => {
-              const rejectedFilesCopy = rejectedFiles;
-              const newRejectedFiles = rejectedFilesCopy.filter(
-                (_, iLoc) => i !== iLoc
-              );
-              setRejectedFiles(newRejectedFiles);
-            }}
-          >
-            <i className={'material-icons'}>clear</i>
-          </span>
-        </div>
-      ))}
       {temporal  ? (
         <div>
-          {acceptedFiles.map((e, i) => (
+          {data.map((e, i) => (
             <div
               key={e.file.name + e.file.size}
               className={uploadStyles.File}
@@ -196,20 +140,20 @@ export const UploadRasterData: React.FC<MyProps> = (props) => {
                 <Datetime
                   value={e.dateTime}
                   onChange={event => {
-                    let acceptedFilesCopy = acceptedFiles;
-                    acceptedFilesCopy[i].dateTime = moment(event).toDate();
-                    setAcceptedFiles(acceptedFilesCopy);
+                    let dataCopy = data;
+                    dataCopy[i].dateTime = moment(event).toDate();
+                    setData(dataCopy);
                   }}
                 />
               </span>
               <span
                 className={uploadStyles.ClearIcon}
                 onClick={() => {
-                  const acceptedFilesCopy = acceptedFiles;
-                  const newAcceptedFiles = acceptedFilesCopy.filter(
+                  const dataCopy = data;
+                  const newData = dataCopy.filter(
                     (_, iLoc) => i !== iLoc
                   );
-                  setAcceptedFiles(newAcceptedFiles);
+                  setData(newData);
                 }}
               >
                 <i className={'material-icons'}>clear</i>
@@ -219,7 +163,7 @@ export const UploadRasterData: React.FC<MyProps> = (props) => {
         </div>
       ) : (
         <div>
-          {acceptedFiles.map((e, i) => (
+          {data.map((e, i) => (
             <div
               key={e.file.name + e.file.size}
               className={uploadStyles.File}
@@ -232,11 +176,11 @@ export const UploadRasterData: React.FC<MyProps> = (props) => {
               <span
                 className={uploadStyles.ClearIcon}
                 onClick={() => {
-                  const acceptedFilesCopy = acceptedFiles;
-                  const newAcceptedFiles = acceptedFilesCopy.filter(
+                  const dataCopy = data;
+                  const newData = dataCopy.filter(
                     (_, iLoc) => i !== iLoc
                   );
-                  setAcceptedFiles(newAcceptedFiles);
+                  setData(newData);
                 }}
               >
                 <i className={'material-icons'}>clear</i>

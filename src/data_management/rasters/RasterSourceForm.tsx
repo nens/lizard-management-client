@@ -11,7 +11,7 @@ import { TextInput } from './../../form/TextInput';
 import { SubmitButton } from '../../form/SubmitButton';
 import { CancelButton } from '../../form/CancelButton';
 import { SelectBox } from '../../form/SelectBox';
-import { UploadRasterData } from './../../form/UploadRasterData';
+import { AcceptedFile, UploadRasterData } from './../../form/UploadRasterData';
 import ConfirmModal from '../../components/ConfirmModal';
 import { getOrganisations, getSelectedOrganisation } from '../../reducers';
 import { useForm, Values } from '../../form/useForm';
@@ -45,6 +45,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
     interval: currentRasterSource.interval ? toISOValue(rasterIntervalStringServerToDurationObject(currentRasterSource.interval)) : '',
     accessModifier: currentRasterSource.access_modifier,
     organisation: currentRasterSource.organisation.uuid.replace(/-/g, "") || null,
+    data: [],
   } : {
     name: null,
     description: null,
@@ -54,6 +55,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
     interval: null,
     accessModifier: 'Private',
     organisation: selectedOrganisation.uuid.replace(/-/g, "") || null,
+    data: []
   };
 
   const onSubmit = (values: Values) => {
@@ -182,6 +184,8 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           title={'Data'}
           name={'data'}
           temporal={values.temporal as boolean}
+          data={values.data as AcceptedFile[]}
+          setData={data => handleValueChange('data', data)}
         />
         <span className={formStyles.FormFieldTitle}>
           3: Rights
