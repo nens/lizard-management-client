@@ -264,6 +264,30 @@ export const listRastersForTable = async (
   return response.json();
 };
 
+export const uploadRasterSourceFile = async (rasterSourceUuid: string, file: File, timestamp: Date | undefined) => {
+  const form = new FormData();
+
+  form.append("file", file);
+
+  if (timestamp !== undefined) {
+    form.append("timestamp", timestamp.toISOString());
+  }
+
+  const url = `/api/v4/rastersources/${rasterSourceUuid}/data/`;
+
+  const opts: RequestInit = {
+    credentials: "same-origin",
+    method: "POST",
+    headers: {
+      mimeType: "multipart/form-data"
+    },
+    body: form
+  };
+
+  const response = await fetch(url, opts);
+  return response;
+};
+
 export const uploadRasterFile = async (rasterUuid: string, file: File, timestamp: Date) => {
   const form = new FormData();
 

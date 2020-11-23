@@ -21,6 +21,7 @@ import { rasterIntervalStringServerToDurationObject, toISOValue } from '../../ut
 import { addNotification, updateRasterSourceUUID } from '../../actions';
 import rasterIcon from "../../images/raster_layers_logo_explainbar.svg";
 import formStyles from './../../styles/Forms.module.css';
+import { sendDataToLizard } from '../../utils/sendDataToLizard';
 
 interface Props {
   currentRasterSource?: RasterSource
@@ -29,8 +30,11 @@ interface PropsFromDispatch {
   updateRasterSourceUUID: (uuid: string) => void,
   addNotification: (message: string | number, timeout: number) => void,
 };
+interface RouteParams {
+  uuid: string;
+};
 
-const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (props) => {
+const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<RouteParams>> = (props) => {
   const { currentRasterSource } = props;
   const organisations = useSelector(getOrganisations).available;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
@@ -83,6 +87,11 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           }
         }).then((parsedBody: any) => {
           props.updateRasterSourceUUID(parsedBody.uuid);
+          sendDataToLizard(
+            parsedBody.uuid,
+            values.data as AcceptedFile[],
+            values.temporal as boolean
+          );
         }).catch(e => console.error(e));
     } else {
       const body = {
@@ -100,6 +109,12 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           const status = data.response.status;
           props.addNotification(status, 2000);
           if (status === 200) {
+            // send data to server
+            sendDataToLizard(
+              props.match.params.uuid,
+              values.data as AcceptedFile[],
+              values.temporal as boolean
+            );
             // redirect back to the table of raster sources
             props.history.push('/data_management/raster_sources')
           } else {
