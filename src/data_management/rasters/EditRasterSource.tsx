@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { RouteComponentProps } from 'react-router';
 import MDSpinner from "react-md-spinner";
-import { fetchRasterSourceV4, RasterSource } from "../../api/rasters";
+import { fetchRasterSourceV4, RasterSourceFromAPI } from "../../api/rasters";
 import { getColorMaps, getObservationTypes, getOrganisations, getSupplierIds } from "../../reducers";
 import RasterSourceForm from "./RasterSourceForm";
 
@@ -11,7 +11,7 @@ interface RouteParams {
 };
 
 export const EditRasterSource: React.FC<RouteComponentProps<RouteParams>> = (props) => {
-  const [currentRasterSource, setCurrentRasterSource] = useState<RasterSource | null>(null);
+  const [currentRasterSource, setCurrentRasterSource] = useState<RasterSourceFromAPI | null>(null);
   const organisations = useSelector(getOrganisations);
   const observationTypes = useSelector(getObservationTypes);
   const colorMaps = useSelector(getColorMaps);

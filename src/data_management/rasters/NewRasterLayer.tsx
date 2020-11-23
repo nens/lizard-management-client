@@ -11,7 +11,7 @@ import {
   getDatasets,
   getRasterSourceUUID,
 } from "../../reducers";
-import { fetchRasterSourcesV4, RasterSource } from "../../api/rasters";
+import { fetchRasterSourcesV4, RasterSourceFromAPI } from "../../api/rasters";
 
 export const NewRasterLayer: React.FC = () => {
   const organisations = useSelector(getOrganisations);
@@ -21,7 +21,7 @@ export const NewRasterLayer: React.FC = () => {
   const datasets = useSelector(getDatasets);
   const rasterSourceUUID = useSelector(getRasterSourceUUID);
 
-  const [rasterSources, setRasterSources] = useState<RasterSource[] | null>(null);
+  const [rasterSources, setRasterSources] = useState<RasterSourceFromAPI[] | null>(null);
   useEffect(() => {
     if (!rasterSourceUUID) {
       (async () => {

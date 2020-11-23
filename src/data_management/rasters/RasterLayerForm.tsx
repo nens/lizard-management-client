@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { FormattedMessage } from 'react-intl';
 import { connect, useSelector } from 'react-redux';
-import { createRasterLayer, patchRasterLayer, RasterLayer, RasterSource } from '../../api/rasters';
+import { createRasterLayer, patchRasterLayer, RasterLayerFromAPI, RasterSourceFromAPI } from '../../api/rasters';
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import { CheckBox } from './../../form/CheckBox';
 import { TextArea } from './../../form/TextArea';
@@ -30,8 +30,8 @@ import rasterIcon from "../../images/raster_layers_logo_explainbar.svg";
 import formStyles from './../../styles/Forms.module.css';
 
 interface Props {
-  currentRasterLayer?: RasterLayer,
-  rasterSources?: RasterSource[] | null,
+  currentRasterLayer?: RasterLayerFromAPI,
+  rasterSources?: RasterSourceFromAPI[] | null,
 };
 
 interface PropsFromDispatch {
@@ -58,7 +58,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
   const initialValues = currentRasterLayer ? {
     name: currentRasterLayer.name,
     description: currentRasterLayer.description,
-    dataset: (currentRasterLayer.datasets && currentRasterLayer.datasets[0]) || null,
+    dataset: (currentRasterLayer.datasets && currentRasterLayer.datasets[0] && currentRasterLayer.datasets[0].slug) || null,
     rasterSource: (currentRasterLayer.raster_sources && currentRasterLayer.raster_sources[0] && getUuidFromUrl(currentRasterLayer.raster_sources[0])) || null,
     aggregationType: currentRasterLayer.aggregation_type || null,
     observationType: (currentRasterLayer.observation_type && currentRasterLayer.observation_type.id + '') || null,
@@ -128,7 +128,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
         // @ts-ignore
         rescalable: values.colorMap.rescalable as boolean,
         shared_with: values.organisationsToSharedWith as string[],
-        // datasets: [values.dataset as string]
+        datasets: [values.dataset as string]
       };
       // only add colormap in options if not multiple layers
       // @ts-ignore
