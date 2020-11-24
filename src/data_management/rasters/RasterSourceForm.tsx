@@ -20,7 +20,7 @@ import { rasterIntervalStringServerToDurationObject, toISOValue } from '../../ut
 import { addNotification, updateRasterSourceUUID } from '../../actions';
 import rasterIcon from "../../images/raster_layers_logo_explainbar.svg";
 import formStyles from './../../styles/Forms.module.css';
-import { sendDataToLizard } from '../../utils/sendDataToLizard';
+import { sendDataToLizardRecursive } from '../../utils/sendDataToLizard';
 
 interface Props {
   currentRasterSource?: RasterSourceFromAPI
@@ -86,7 +86,8 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           }
         }).then((parsedBody: any) => {
           props.updateRasterSourceUUID(parsedBody.uuid);
-          sendDataToLizard(
+          // send data to Lizard server
+          sendDataToLizardRecursive(
             parsedBody.uuid,
             values.data as AcceptedFile[],
             values.temporal as boolean
@@ -108,8 +109,8 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           const status = data.response.status;
           props.addNotification(status, 2000);
           if (status === 200) {
-            // send data to server
-            sendDataToLizard(
+            // send data to Lizard server
+            sendDataToLizardRecursive(
               props.match.params.uuid,
               values.data as AcceptedFile[],
               values.temporal as boolean
