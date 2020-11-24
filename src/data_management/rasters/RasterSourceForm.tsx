@@ -185,6 +185,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           name={'temporal'}
           value={values.temporal as boolean}
           valueChanged={bool => handleValueChange('temporal', bool)}
+          readonly={!!currentRasterSource}
         />
         <DurationField
           title={'Interval'}
@@ -192,7 +193,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           value={values.interval as string}
           valueChanged={value => handleValueChange('interval', value)}
           validated={true}
-          readOnly={values.temporal === false}
+          readOnly={!!currentRasterSource || values.temporal === false}
         />
         <UploadRasterData
           title={'Data'}
