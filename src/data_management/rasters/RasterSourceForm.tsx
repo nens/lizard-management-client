@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
-// import { FormattedMessage } from 'react-intl';
 import { connect, useSelector } from 'react-redux';
-import { createRasterSource, patchRasterSource, RasterSource } from '../../api/rasters';
+import { createRasterSource, patchRasterSource, RasterSourceFromAPI } from '../../api/rasters';
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import { CheckBox } from './../../form/CheckBox';
 import { DurationField } from './../../form/DurationField';
@@ -24,7 +23,7 @@ import formStyles from './../../styles/Forms.module.css';
 import { sendDataToLizard } from '../../utils/sendDataToLizard';
 
 interface Props {
-  currentRasterSource?: RasterSource
+  currentRasterSource?: RasterSourceFromAPI
 };
 interface PropsFromDispatch {
   updateRasterSourceUUID: (uuid: string) => void,

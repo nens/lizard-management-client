@@ -39,7 +39,15 @@ export interface Organisation {
   url: string,
 }
 
-interface RasterSourceRoot {
+export interface Dataset {
+  slug: string
+}
+
+export interface ObservationType {
+  id: number
+}
+
+interface RasterSourceInstance {
   name: string;
   access_modifier: string;
   description: string;
@@ -50,15 +58,15 @@ interface RasterSourceRoot {
   uuid?: string,
 }
 
-export type RasterSourceAPI = RasterSourceRoot & {
+export type RasterSourceFromForm = RasterSourceInstance & {
   organisation: string;
 }
 
-export type RasterSource = RasterSourceRoot & {
+export type RasterSourceFromAPI = RasterSourceInstance & {
   organisation: Organisation;
 }
 
-interface RasterLayerRoot {
+interface RasterLayerInstance {
   name: string;
   description: string;
   access_modifier: string;
@@ -66,28 +74,27 @@ interface RasterLayerRoot {
   supplier_code?: string;
   aggregation_type: string;
   options: string;
-  datasets?: string[];
   raster_sources?: string[];
   rescalable: boolean;
   uuid?: string,
 }
 
-export type RasterLayerAPI = RasterLayerRoot & {
+export type RasterLayerFromForm = RasterLayerInstance & {
   organisation: string;
   shared_with: string[];
   observation_type: string;
+  datasets: string[];
 }
 
-export type RasterLayer = RasterLayerRoot & {
+export type RasterLayerFromAPI = RasterLayerInstance & {
   organisation: Organisation;
   shared_with: Organisation[];
-  observation_type: {
-    id: number
-  };
+  observation_type: ObservationType;
+  datasets: Dataset[];
 }
 
-export const fetchRasterSourcesV4 = async () => {
-  const response = await fetch('/api/v4/rastersources/?page_size=100000', {
+export const fetchRasterSourcesV4BySelectedOrganisation = async (organisationUuid: string) => {
+  const response = await fetch(`/api/v4/rastersources/?page_size=100000&organisation__uuid=${organisationUuid}`, {
     credentials: "same-origin",
     method: "GET",
     headers: {"Content-Type": "application/json"}
@@ -312,7 +319,7 @@ export const uploadRasterFile = async (rasterUuid: string, file: File, timestamp
   return response.json();
 };
 
-export const createRasterSource = (rasterSource: RasterSourceAPI) => {
+export const createRasterSource = (rasterSource: RasterSourceFromForm) => {
   const defaultOpts: RequestInit = {
     credentials: "same-origin",
     method: "POST",
@@ -338,7 +345,7 @@ export const createRasterSource = (rasterSource: RasterSourceAPI) => {
   return rasterSourceResponse;
 };
 
-export const createRasterLayer = (rasterLayer: RasterLayerAPI, rasterSourceUuid: string) => {
+export const createRasterLayer = (rasterLayer: RasterLayerFromForm, rasterSourceUuid: string) => {
   const defaultOpts: RequestInit = {
     credentials: "same-origin",
     method: "POST",
@@ -356,7 +363,7 @@ export const createRasterLayer = (rasterLayer: RasterLayerAPI, rasterSourceUuid:
     shared_with: rasterLayer.shared_with,
     rescalable: rasterLayer.rescalable,
     access_modifier: rasterLayer.access_modifier,
-    // datasets: rasterLayer.datasets,
+    datasets: rasterLayer.datasets,
     source: {
       graph: {
         raster: [
@@ -473,7 +480,7 @@ export const patchRaster = async (rasterUuid: string, raster: OldRasterEdit) => 
   };
 };
 
-export const patchRasterSource = async (rasterUuid: string, rasterSource: RasterSourceAPI) => {
+export const patchRasterSource = async (rasterUuid: string, rasterSource: RasterSourceFromForm) => {
   const url = "/api/v4/rastersources/";
   // Store most fields on the raster
   const opts: RequestInit = {
@@ -492,7 +499,7 @@ export const patchRasterSource = async (rasterUuid: string, rasterSource: Raster
   };
 };
 
-export const patchRasterLayer = async (rasterUuid: string, raster: RasterLayerAPI) => {
+export const patchRasterLayer = async (rasterUuid: string, raster: RasterLayerFromForm) => {
   const url = "/api/v4/rasters/";
   // Store most fields on the raster
   const opts: RequestInit = {

@@ -10,26 +10,28 @@ import {
   getSupplierIds,
   getDatasets,
   getRasterSourceUUID,
+  getSelectedOrganisation,
 } from "../../reducers";
-import { fetchRasterSourcesV4, RasterSource } from "../../api/rasters";
+import { fetchRasterSourcesV4BySelectedOrganisation, RasterSourceFromAPI } from "../../api/rasters";
 
 export const NewRasterLayer: React.FC = () => {
   const organisations = useSelector(getOrganisations);
+  const selectedOrganisation = useSelector(getSelectedOrganisation);
   const observationTypes = useSelector(getObservationTypes);
   const colorMaps = useSelector(getColorMaps);
   const supplierIds = useSelector(getSupplierIds);
   const datasets = useSelector(getDatasets);
   const rasterSourceUUID = useSelector(getRasterSourceUUID);
 
-  const [rasterSources, setRasterSources] = useState<RasterSource[] | null>(null);
+  const [rasterSources, setRasterSources] = useState<RasterSourceFromAPI[] | null>(null);
   useEffect(() => {
     if (!rasterSourceUUID) {
       (async () => {
-        const listOfRasterSources = await fetchRasterSourcesV4();
+        const listOfRasterSources = await fetchRasterSourcesV4BySelectedOrganisation(selectedOrganisation.uuid);
         setRasterSources(listOfRasterSources.results);
       })();
     }
-  }, [rasterSourceUUID]);
+  }, [rasterSourceUUID, selectedOrganisation]);
 
   if (
     organisations.isFetching === false &&

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { RouteComponentProps } from 'react-router';
 import MDSpinner from "react-md-spinner";
-import { fetchRasterV4, RasterLayer } from "../../api/rasters";
+import { fetchRasterV4, RasterLayerFromAPI } from "../../api/rasters";
 import { getColorMaps, getObservationTypes, getOrganisations, getSupplierIds } from "../../reducers";
 import RasterLayerForm from "./RasterLayerForm";
 
@@ -11,7 +11,7 @@ interface RouteParams {
 };
 
 export const EditRasterLayer: React.FC<RouteComponentProps<RouteParams>> = (props) => {
-  const [currentRasterLayer, setCurrentRasterLayer] = useState<RasterLayer | null>(null);
+  const [currentRasterLayer, setCurrentRasterLayer] = useState<RasterLayerFromAPI | null>(null);
   const organisations = useSelector(getOrganisations);
   const observationTypes = useSelector(getObservationTypes);
   const colorMaps = useSelector(getColorMaps);
