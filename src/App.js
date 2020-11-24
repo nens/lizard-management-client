@@ -34,7 +34,8 @@ class App extends Component {
     super(props);
     this.state = {
       showOrganisationSwitcher: false,
-      showProfileList: false
+      showProfileList: false,
+      showUploadQueue: false
     };
     this.updateOnlineStatus = this.updateOnlineStatus.bind(this);
     this.updateViewportDimensions = this.updateViewportDimensions.bind(this);
@@ -138,7 +139,6 @@ class App extends Component {
   };
 
   render() {
-
     if ( 
       this.props.availableOrganisations.length === 0 && 
       this.props.isFetchingOrganisations === false &&
@@ -179,14 +179,14 @@ class App extends Component {
               <div className={gridStyles.Row}>
                 <div
                   style={{ height: "55px" }}
-                  className={`${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs12}`}
+                  className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${gridStyles.colSm4} ${gridStyles.colXs12}`}
                 >
                   <NavLink to="/">
                     <img src={`${lizardIcon}`} alt="Lizard logo" className={styles.LizardLogo} />
                   </NavLink>
                 </div>
                 <div
-                  className={`${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs12}`}
+                  className={`${gridStyles.colLg8} ${gridStyles.colMd8} ${gridStyles.colSm8} ${gridStyles.colXs12}`}
                 >
                   <div className={styles.TopNav}>
                     <div style={{ display: "none" }}>
@@ -196,6 +196,19 @@ class App extends Component {
                         </i>
                         Apps
                       </a>
+                    </div>
+                    <div
+                      className={styles.Profile}
+                      onClick={() => {
+                        this.setState({
+                          showUploadQueue: !this.state.showUploadQueue
+                        })
+                      }}
+                    >
+                      <div>
+                        <i className="fa fa-upload" style={{ paddingRight: 8 }} />
+                        Upload queue
+                      </div>
                     </div>
                     <div
                       className={styles.OrganisationLinkContainer}
