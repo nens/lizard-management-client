@@ -315,3 +315,29 @@ export function removeRasterSourceUUID() {
     type: REMOVE_RASTER_SOURCE_UUID
   };
 }
+
+// MARK: Tasks
+export const ADD_TASK = "ADD_TASK";
+export const UPDATE_TASK = "UPDATE_TASK";
+export const REMOVE_TASK = "REMOVE_TASK";
+
+export function addTask(uuid) {
+  return {
+    type: ADD_TASK,
+    uuid
+  };
+}
+
+export function updateTask(uuid) {
+  return {
+    type: UPDATE_TASK,
+    uuid
+  }
+}
+
+export function removeTask(uuid) {
+  return {
+    type: REMOVE_TASK,
+    uuid
+  };
+}

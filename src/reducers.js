@@ -23,7 +23,8 @@ import {
   RECEIVE_DATASETS_SUCCESS,
   RECEIVE_DATASETS_ERROR,
   UPDATE_RASTER_SOURCE_UUID,
-  REMOVE_RASTER_SOURCE_UUID
+  REMOVE_RASTER_SOURCE_UUID,
+  ADD_TASK
 } from "./actions";
 
 function bootstrap(
@@ -299,6 +300,18 @@ function rasterSourceUUID(state = null, action) {
   };
 };
 
+function tasks(state = null, action) {
+  switch (action.type) {
+    case ADD_TASK:
+      return {
+        ...state,
+        [action.uuid]: ''
+      };
+    default:
+      return state;
+  };
+};
+
 // Selectors
 export const getBootstrap = (state) => {
   return state.bootstrap;
@@ -344,7 +357,8 @@ const rootReducer = combineReducers({
   notifications,
   viewport,
   alarmType,
-  rasterSourceUUID
+  rasterSourceUUID,
+  tasks
 });
 
 export default rootReducer;

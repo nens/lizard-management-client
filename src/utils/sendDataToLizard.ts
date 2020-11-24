@@ -1,5 +1,5 @@
 import { storeDispatch } from "./../index";
-import { addNotification } from "../actions";
+import { addNotification, addTask } from "../actions";
 import { uploadRasterSourceFile } from "../api/rasters";
 import { AcceptedFile } from "../form/UploadRasterData";
 
@@ -21,6 +21,11 @@ export const sendDataToLizard = (uuid: string, data: AcceptedFile[], temporal: b
           return response.json();
         } else if (status === 400) {
           storeDispatch(addNotification(`Error uploading ${e.file.name}`, 5000));
+        };
+      })
+      .then(response => {
+        if (response) {
+          storeDispatch(addTask(response.task_id));
         };
       })
       .catch(e => console.error(e));
