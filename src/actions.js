@@ -321,17 +321,20 @@ export const ADD_TASK = "ADD_TASK";
 export const UPDATE_TASK = "UPDATE_TASK";
 export const REMOVE_TASK = "REMOVE_TASK";
 
-export function addTask(uuid) {
+export function addTask(uuid, filename, filesize) {
   return {
     type: ADD_TASK,
-    uuid
+    uuid,
+    filename,
+    filesize
   };
 }
 
-export function updateTask(uuid) {
+export function updateTask(uuid, status) {
   return {
     type: UPDATE_TASK,
-    uuid
+    uuid,
+    status
   }
 }
 

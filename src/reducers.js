@@ -303,9 +303,15 @@ function rasterSourceUUID(state = null, action) {
 function tasks(state = null, action) {
   switch (action.type) {
     case ADD_TASK:
+      const { uuid, filename, filesize } = action;
       return {
         ...state,
-        [action.uuid]: ''
+        [action.uuid]: {
+          "uuid": uuid,
+          "filename": filename,
+          "size": filesize,
+          "status": 'Waiting'
+        }
       };
     default:
       return state;

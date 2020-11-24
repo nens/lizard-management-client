@@ -25,7 +25,7 @@ export const sendDataToLizard = (uuid: string, data: AcceptedFile[], temporal: b
       })
       .then(response => {
         if (response) {
-          storeDispatch(addTask(response.task_id));
+          storeDispatch(addTask(response.task_id, e.file.name, e.file.size));
         };
       })
       .catch(e => console.error(e));
