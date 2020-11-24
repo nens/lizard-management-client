@@ -63,7 +63,6 @@ export const SelectBox: React.FC<SelectBoxProps> = (props) => {
   }
 
   const toggleChoices = () => {
-    console.log(showChoices)
     setShowChoices(!showChoices);
     setSearchString('');
   };
