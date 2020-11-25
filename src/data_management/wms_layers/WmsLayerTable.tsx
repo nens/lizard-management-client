@@ -5,6 +5,7 @@ import { NavLink } from "react-router-dom";
 import {ExplainSideColumn} from '../../components/ExplainSideColumn';
 import wmsIcon from "../../images/wms@3x.svg";
 import tableStyles from "../../components/Table.module.css";
+import TableActionButtons from '../../components/TableActionButtons';
 
 const baseUrl = "/api/v4/wmslayers/";
 const navigationUrl = "/data_management/wms_layers";
@@ -45,6 +46,24 @@ const deleteActions = (rows: any[], tableData:any, setTableData:any, triggerRelo
   }
 }
 
+const deleteAction = (row: any, updateTableRow:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any)=>{
+  const uuid = row.uuid;
+  if (window.confirm(`Are you sure you want to delete wms-layer with uuid: ${uuid} ?`)) {
+    updateTableRow({...row, markAsDeleted: true});
+    const opts = {
+      credentials: "same-origin",
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({})
+    };
+    fetchWmsLayerUuidsWithOptions(uuid, opts)
+    .then((_result) => {
+      // TODO: do we need this callback or should we otherwise indicate that the record is deleted ?
+      triggerReloadWithCurrentPage();
+    })
+  }
+}
+
 const rasterSourceColumnDefenitions = [
   {
     titleRenderFunction: () => "Name",
@@ -68,16 +87,37 @@ const rasterSourceColumnDefenitions = [
       </span>,
     orderingField: null,//"description",
   },
+  // {
+  //   titleRenderFunction: () =>  "User",
+  //   renderFunction: (row: any) => 
+  //     <span
+  //       className={tableStyles.CellEllipsis}
+  //       title={row.supplier}
+  //     >
+  //       {row.supplier}
+  //     </span>,
+  //   orderingField: "supplier",
+  // },
   {
-    titleRenderFunction: () =>  "User",
-    renderFunction: (row: any) => 
-      <span
-        className={tableStyles.CellEllipsis}
-        title={row.supplier}
-      >
-        {row.supplier}
-      </span>,
-    orderingField: "supplier",
+    titleRenderFunction: () =>  "",//"Actions",
+    renderFunction: (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any) => {
+      return (
+          <TableActionButtons
+            tableRow={row} 
+            tableData={tableData}
+            setTableData={setTableData} 
+            triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
+            triggerReloadWithBasePage={triggerReloadWithBasePage}
+            actions={[
+              {
+                displayValue: "delete",
+                actionFunction: deleteAction,
+              },
+            ]}
+          />
+      );
+    },
+    orderingField: null,
   },
 ];
 
@@ -96,7 +136,7 @@ export const WmsLayerTable = (props:any) =>  {
       backUrl={"/data_management"}
     >
         <TableStateContainer 
-          gridTemplateColumns={"8% 31% 36% 25%"} 
+          gridTemplateColumns={"8% 29% 55% 8%"} 
           columnDefenitions={rasterSourceColumnDefenitions}
           baseUrl={`${baseUrl}?`} 
           checkBoxActions={[
