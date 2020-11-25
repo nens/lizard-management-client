@@ -56,7 +56,7 @@ const deleteAction = (row: any, updateTableRow:any, triggerReloadWithCurrentPage
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({})
     };
-    fetchWmsLayerUuidsWithOptions(uuid, opts)
+    fetchWmsLayerUuidsWithOptions([uuid], opts)
     .then((_result) => {
       // TODO: do we need this callback or should we otherwise indicate that the record is deleted ?
       triggerReloadWithCurrentPage();
