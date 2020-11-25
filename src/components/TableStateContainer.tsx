@@ -166,7 +166,6 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
       const originalContent = originalTitleRenderFunction();
       return (
         <span>
-          {originalContent}
           {
             columnDefenition.orderingField?
             <>
@@ -176,6 +175,7 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
                   setOrdering(columnDefenition.orderingField)
                 }}
               >
+                {originalContent}
                 <img height="12px" src={`${unorderedIcon}`} alt="ordering icon unordened" />
               </button>
               <button
@@ -184,6 +184,7 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
                   setOrdering("-" + columnDefenition.orderingField)
                 }}
               >
+                {originalContent}
                 <img height="6px" src={`${orderedIcon}`} alt="ordering icon ordened" />
               </button>
               <button
@@ -192,11 +193,12 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
                   setOrdering("last_modified");
                 }}
               >
+                {originalContent}
                 <img height="6px" style={{transform: "scaleY(-1)",}} src={`${orderedIcon}`} alt="ordering icon ordened" />
               </button>
             </>
           :
-          null
+          originalContent
           }
         </span>
       );

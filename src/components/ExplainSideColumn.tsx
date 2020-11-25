@@ -40,7 +40,9 @@ export const ExplainSideColumn = (props:any) => {
             <img alt="back" src={backArrow}/>
           </span></NavLink>
         </div>
-        <img src={imgUrl} alt={""}></img>
+        <div style={{display:"flex", justifyContent: "center"}}>
+          <img src={imgUrl} alt={""}/>
+        </div>
         <h2
           style={{
             marginBottom: "32px",

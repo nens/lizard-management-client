@@ -66,7 +66,18 @@ const rasterSourceColumnDefenitions = [
       >
         {row.description}
       </span>,
-    orderingField: "raster_sources",
+    orderingField: null,//"description",
+  },
+  {
+    titleRenderFunction: () =>  "User",
+    renderFunction: (row: any) => 
+      <span
+        className={tableStyles.CellEllipsis}
+        title={row.supplier}
+      >
+        {row.supplier}
+      </span>,
+    orderingField: "supplier",
   },
 ];
 
@@ -85,7 +96,7 @@ export const WmsLayerTable = (props:any) =>  {
       backUrl={"/data_management"}
     >
         <TableStateContainer 
-          gridTemplateColumns={"8% 46% 46%"} 
+          gridTemplateColumns={"8% 31% 36% 25%"} 
           columnDefenitions={rasterSourceColumnDefenitions}
           baseUrl={`${baseUrl}?`} 
           checkBoxActions={[
