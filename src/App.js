@@ -5,6 +5,7 @@ import { App as Home } from "./home/App";
 import { App as AlarmsApp } from "./alarms/App";
 import { App as DataManagementApp } from "./data_management/App";
 import MDSpinner from "react-md-spinner";
+import { fetchTaskInstance } from "./api/tasks";
 import {
   addNotification,
   fetchLizardBootstrap,
@@ -13,7 +14,8 @@ import {
   fetchSupplierIds,
   fetchColorMaps,
   updateViewportDimensions,
-  fetchDatasets
+  fetchDatasets,
+  updateTask
 } from "./actions";
 import { Route, NavLink } from "react-router-dom";
 import LanguageSwitcher from "./components/LanguageSwitcher";
@@ -27,6 +29,7 @@ import lizardIcon from "./images/lizard.svg";
 import { withRouter } from "react-router-dom";
 import {appTiles} from './home/HomeAppTileConfig';
 import doArraysHaveEqualElement from './utils/doArraysHaveEqualElement';
+import ConfirmModal from "./components/ConfirmModal";
 
 
 class App extends Component {
@@ -67,6 +70,26 @@ class App extends Component {
       if (props.mustFetchSupplierIds) props.getSupplierIds();
       if (props.mustFetchDatasets) props.getDatasets();
     }
+  }
+  componentDidUpdate(prevProps) {
+    if (prevProps.tasks !== this.props.tasks) {
+      console.log('tasks changed');
+      const waitingTasks = Object.values(this.props.tasks).filter(
+        task => task.status === 'WAITING' || task.status === 'STARTED'
+      );
+      const firstTaskInTheQueue = waitingTasks[0];
+
+      // stop polling the tasks endpoint if no task left in the queue
+      if (!firstTaskInTheQueue) return;
+
+      setTimeout(() => {
+        fetchTaskInstance(firstTaskInTheQueue.uuid)
+          .then(response => {
+            this.props.updateTask(firstTaskInTheQueue.uuid, response.status);
+          })
+          .catch(e => console.error(e))
+      }, 5000);
+    };
   }
   updateOnlineStatus(e) {
     const { addNotification } = this.props;
@@ -339,6 +362,38 @@ class App extends Component {
             />
           ) : null}
           <Snackbar />
+          {this.state.showUploadQueue ? (
+            <ConfirmModal
+              title="Upload queue"
+              buttonName="Close"
+              onClick={() => this.setState({ showUploadQueue: false })}
+            >
+              <div
+                style={{
+                  width: '100%',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  fontWeight: 500
+                }}
+              >
+                <span>Filename</span>
+                <span>Upload status</span>
+              </div>
+              {this.props.tasks && Object.values(this.props.tasks).map(task => (
+                <div
+                  key={task.uuid}
+                  style={{
+                    width: '100%',
+                    display: 'flex',
+                    justifyContent: 'space-between'
+                  }}
+                >
+                  <span>{task.filename}</span>
+                  <span>{task.status}</span>
+                </div>
+              ))}
+            </ConfirmModal>
+          ) : null}
         </div>
       );
     }
@@ -350,6 +405,7 @@ const mapStateToProps = (state, ownProps) => {
     isFetching: state.isFetching,
     bootstrap: state.bootstrap,
     isAuthenticated: state.bootstrap.isAuthenticated,
+    tasks: state.tasks,
 
     mustFetchOrganisations:
       state.organisations.available.length === 0 &&
@@ -393,8 +449,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     addNotification: (message, timeout) => {
       dispatch(addNotification(message, timeout));
     },
-    updateViewportDimensions: (width, height) =>
+    updateViewportDimensions: (width, height) => {
       dispatch(updateViewportDimensions(width, height))
+    },
+    updateTask: (uuid, status) => dispatch(updateTask(uuid, status))
   };
 };
 

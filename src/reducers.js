@@ -24,7 +24,8 @@ import {
   RECEIVE_DATASETS_ERROR,
   UPDATE_RASTER_SOURCE_UUID,
   REMOVE_RASTER_SOURCE_UUID,
-  ADD_TASK
+  ADD_TASK,
+  UPDATE_TASK
 } from "./actions";
 
 function bootstrap(
@@ -306,13 +307,23 @@ function tasks(state = null, action) {
       const { uuid, filename, filesize } = action;
       return {
         ...state,
-        [action.uuid]: {
+        [uuid]: {
           "uuid": uuid,
           "filename": filename,
           "size": filesize,
-          "status": 'Waiting'
+          "status": 'WAITING'
         }
       };
+    case UPDATE_TASK:
+      const { status } = action;
+      const taskUuid = action.uuid;
+      return {
+        ...state,
+        [taskUuid]: {
+          ...state[taskUuid],
+          "status": status
+        }
+      }
     default:
       return state;
   };
