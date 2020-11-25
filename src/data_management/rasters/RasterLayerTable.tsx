@@ -149,7 +149,7 @@ export const RasterLayerTable = (props:any) =>  {
     <ExplainSideColumn
       imgUrl={rasterIcon}
       headerText={"Raster Layers"}
-      explainationText={"Raster-Layer is a visual representation of a Raster-Source on the map. It contains among other things the styling of how the raster data should be visualized. One Raster-Source can contain multiple Raster-Layers."} 
+      explainationText={"Raster Layers are visual presentations of your raster data. Choose the prefered Raster Source so that the Raster Layer fetches the right data and give the Raster Layer a name, description, observation type and styling. Once published, your Raster Layer will be visible in the Catalogue and the Portal."}
       backUrl={"/data_management"}
     >
         <TableStateContainer 
