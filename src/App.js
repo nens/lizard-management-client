@@ -80,7 +80,7 @@ class App extends Component {
       const firstTaskInTheQueue = waitingTasks[0];
 
       // stop polling the tasks endpoint if no task left in the queue
-      if (!firstTaskInTheQueue) return;
+      if (waitingTasks.length === 0 || !firstTaskInTheQueue) return;
 
       setTimeout(() => {
         fetchTaskInstance(firstTaskInTheQueue.uuid)
