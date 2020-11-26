@@ -17,7 +17,7 @@ import { minLength } from '../../form/validators';
 import { AccessModifier } from '../../form/AccessModifier';
 import { rasterIntervalStringServerToDurationObject, toISOValue } from '../../utils/isoUtils';
 import { addNotification, updateRasterSourceUUID } from '../../actions';
-import rasterIcon from "../../images/raster_layer_icon.svg";
+import rasterSourceIcon from "../../images/raster_source_icon.svg";
 import formStyles from './../../styles/Forms.module.css';
 
 interface Props {
@@ -119,7 +119,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
 
   return (
     <ExplainSideColumn
-      imgUrl={rasterIcon}
+      imgUrl={rasterSourceIcon}
       headerText={"Raster Sources"}
       explainationText={"Fill in the form to create a new Raster Source."}
       backUrl={"/data_management/rasters/sources"}

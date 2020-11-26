@@ -26,7 +26,7 @@ import {
 import { optionsHasLayers } from '../../utils/rasterOptionFunctions';
 import { getUuidFromUrl } from '../../utils/getUuidFromUrl';
 import { addNotification, removeRasterSourceUUID } from './../../actions';
-import rasterIcon from "../../images/raster_layer_icon.svg";
+import rasterLayerIcon from "../../images/raster_layer_icon.svg";
 import formStyles from './../../styles/Forms.module.css';
 
 interface Props {
@@ -165,7 +165,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
 
   return (
     <ExplainSideColumn
-      imgUrl={rasterIcon}
+      imgUrl={rasterLayerIcon}
       headerText={"Raster Layers"}
       explainationText={"Create a layer to view your raster data in the portal."}
       backUrl={"/data_management/rasters/layers"}
