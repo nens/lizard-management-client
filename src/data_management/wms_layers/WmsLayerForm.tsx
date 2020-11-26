@@ -29,6 +29,9 @@ import { getUuidFromUrl } from '../../utils/getUuidFromUrl';
 import { addNotification, removeRasterSourceUUID } from './../../actions';
 import rasterIcon from "../../images/raster_layers_logo_explainbar.svg";
 import formStyles from './../../styles/Forms.module.css';
+import SpatialBoundsField, { spatialBoundsValidator } from "../../forms/SpatialBoundsField";
+import MinMaxZoomField from '../../components/MinMaxZoomField';
+
 
 interface Props {
   currentWmsLayer?: any, //RasterLayerFromAPI,
@@ -153,8 +156,9 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
         }
         // @ts-ignore
         fetch(url, opts)
-          .then(preresponse => preresponse.json())
-          .then(response => {
+        // @ts-ignore
+          .then((preresponse:any) => preresponse.json())
+          .then((response:any) => {
             const status = response.status;
             props.addNotification(status, 2000);
             if (status === 201) {
@@ -164,7 +168,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
               console.error(response);
             };
           })
-          .catch(e => console.error(e));
+          .catch((e:any) => console.error(e));
     } else {
       const opts = {
         credentials: "same-origin",
@@ -174,8 +178,8 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
       };
       // @ts-ignore
       fetch(url + "uuid:" + currentWmsLayer.uuid + "/", opts)
-        .then(preresponse => preresponse.json())
-        .then(data => {
+        .then((preresponse:any) => preresponse.json())
+        .then((data:any) => {
           const status = data.response.status;
           props.addNotification(status, 2000);
           if (status === 200) {
@@ -185,7 +189,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
             console.error(data);
           };
         })
-        .catch(e => console.error(e));
+        .catch((e:any) => console.error(e));
       }
     };
   };
@@ -302,6 +306,38 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           validated={!minLength(3, values.name as string)}
           errorMessage={minLength(3, values.name as string)}
           triedToSubmit={triedToSubmit}
+        />
+        <CheckBox
+          title={'Tiled'}
+          name={'tiled'}
+          value={values.tiled as boolean}
+          valueChanged={bool => handleValueChange('tiled', bool)}
+          // readonly={!!currentRasterSource}
+        />
+        <MinMaxZoomField
+          // title={'Get Feature Url *'}
+          name={'minMaxZoom'}
+          // placeholder={'http://example.com'}
+          value={values.minMaxZoom}
+          valueChanged={handleInputChange}
+          clearInput={clearInput}
+          // validated={!minLength(3, values.name as string)}
+          // errorMessage={minLength(3, values.name as string)}
+          triedToSubmit={triedToSubmit}
+        />
+        <SpatialBoundsField
+          name="wmsLayerSpatialBounds"
+          title={<FormattedMessage id="wms_layer_form.spatial_bounds" />}
+          subtitle={<FormattedMessage id="wms_layer_form.add_spatial_bounds" />}
+          initial = {
+            (
+              currentWmsLayer &&
+              currentWmsLayer.spatial_bounds
+            ) || null
+          }
+          validators={[spatialBoundsValidator]}
+          geoServerError={this.state.geoServerError}
+          showGeoServerError={this.showGeoServerError}
         />
         
         <span className={formStyles.FormFieldTitle}>
