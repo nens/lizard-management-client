@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { DataManagement as DataManagementHome } from "./DataManagement";
+import RasterManagement from "./rasters/RasterManagement";
 import { Raster as RasterApp } from "./rasters/Raster";
 import { RasterSourceTable} from "./rasters/RasterSourceTable";
 import { RasterLayerTable} from "./rasters/RasterLayerTable";
@@ -37,9 +38,10 @@ class App extends Component {
     return (
       <>
         <Route exact path="/data_management" component={DataManagementHome} />
+        <Route exact path="/data_management/rasters" component={RasterManagement} />
         <Route exact path="/data_management/old_rasters" component={RasterApp} /> 
-        <Route exact path="/data_management/raster_sources" component={RasterSourceTable} />
-        <Route exact path="/data_management/raster_layers" component={RasterLayerTable} />
+        <Route exact path="/data_management/rasters/sources" component={RasterSourceTable} />
+        <Route exact path="/data_management/rasters/layers" component={RasterLayerTable} />
         <Route exact path="/data_management/wms_layers_old" component={WmsLayerApp} />
         <Route exact path="/data_management/wms_layers" component={WmsLayerTable} />
         <Route exact path="/data_management/scenarios_old" component={ScenariosApp} />
@@ -47,22 +49,22 @@ class App extends Component {
         <Switch>
           <Route
             exact
-            path={`/data_management/raster_sources/new`}
+            path={`/data_management/rasters/sources/new`}
             component={NewRasterSource}
           />
           <Route
             exact
-            path={`/data_management/raster_layers/new`}
+            path={`/data_management/rasters/layers/new`}
             component={NewRasterLayer}
           />
           <Route
             exact
-            path="/data_management/raster_sources/:uuid"
+            path="/data_management/rasters/sources/:uuid"
             component={EditRasterSource}
           />
           <Route
             exact
-            path="/data_management/raster_layers/:uuid"
+            path="/data_management/rasters/layers/:uuid"
             component={EditRasterLayer}
           />
           <Route

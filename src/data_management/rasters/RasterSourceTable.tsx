@@ -12,7 +12,7 @@ import tableStyles from "../../components/Table.module.css";
 import { bytesToDisplayValue } from '../../utils/byteUtils';
 
 const baseUrl = "/api/v4/rastersources/";
-const navigationUrlRasters = "/data_management/raster_sources";
+const navigationUrlRasters = "/data_management/rasters/sources";
 
 const deleteActionRaster = (row: any, updateTableRow:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any)=>{
   if (window.confirm(`Are you sure you want to delete raster-source with uuid: ${row.uuid} ?`)) {

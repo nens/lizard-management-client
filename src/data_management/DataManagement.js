@@ -4,7 +4,6 @@ import AppTile from "../components/AppTile";
 import { withRouter } from "react-router-dom";
 import { Trail, animated } from "react-spring";
 
-import rasterSourcesIcon from "../images/raster_sources_logo_explainbar.svg";
 import rasterLayersIcon from "../images/raster_layers_logo_explainbar.svg";
 
 import wmsIcon from "../images/wms@3x.svg";
@@ -24,28 +23,17 @@ class DataManagement extends Component {
     const appTiles = [
       {
         key: 0,
-        handleClick: () => this.handleLink("data_management/raster_sources"),
+        handleClick: () => this.handleLink("data_management/rasters"),
         title: (
           <FormattedMessage
-            id="data_management.rasters_sources"
-            defaultMessage="Rasters Sources"
-          />
-        ),
-        icon: rasterSourcesIcon
-      },
-      {
-        key: 1,
-        handleClick: () => this.handleLink("data_management/raster_layers"),
-        title: (
-          <FormattedMessage
-            id="data_management.raster_layers"
-            defaultMessage="Raster Layers"
+            id="data_management.rasters"
+            defaultMessage="Rasters"
           />
         ),
         icon: rasterLayersIcon
       },
       {
-        key: 2,
+        key: 1,
         handleClick: () => this.handleLink("data_management/wms_layers"),
         title: (
           <FormattedMessage
@@ -56,7 +44,7 @@ class DataManagement extends Component {
         icon: wmsIcon
       },
       {
-        key: 3,
+        key: 2,
         handleClick: () => this.handleLink("data_management/scenarios/"),
         title: (
           <FormattedMessage
@@ -67,7 +55,7 @@ class DataManagement extends Component {
         icon: threediIcon
       },
       {
-        key: 4,
+        key: 3,
         handleClick: () => this.handleLink(""),
         title: (
           <FormattedMessage
