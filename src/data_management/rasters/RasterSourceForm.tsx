@@ -17,7 +17,7 @@ import { minLength } from '../../form/validators';
 import { AccessModifier } from '../../form/AccessModifier';
 import { rasterIntervalStringServerToDurationObject, toISOValue } from '../../utils/isoUtils';
 import { addNotification, updateRasterSourceUUID } from '../../actions';
-import rasterIcon from "../../images/raster_layers_logo_explainbar.svg";
+import rasterIcon from "../../images/raster_layer_icon.svg";
 import formStyles from './../../styles/Forms.module.css';
 
 interface Props {

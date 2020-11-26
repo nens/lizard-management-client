@@ -7,7 +7,7 @@ import { NavLink } from "react-router-dom";
 import { deleteRasters, /*flushRasters*/ } from "../../api/rasters";
 import TableActionButtons from '../../components/TableActionButtons';
 import {ExplainSideColumn} from '../../components/ExplainSideColumn';
-import rasterIcon from "../../images/raster_layers_logo_explainbar.svg";
+import rasterIcon from "../../images/raster_layer_icon.svg";
 import tableStyles from "../../components/Table.module.css";
 
 

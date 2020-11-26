@@ -4,8 +4,8 @@ import AppTile from "../../components/AppTile";
 import { withRouter } from "react-router-dom";
 import { Trail, animated } from "react-spring";
 
-import rasterSourcesIcon from "../../images/raster_sources_logo_explainbar.svg";
-import rasterLayersIcon from "../../images/raster_layers_logo_explainbar.svg";
+import rasterSourcesIcon from "../../images/raster_source_icon.svg";
+import rasterLayersIcon from "../../images/raster_layer_icon.svg";
 import backArrowIcon from "../../images/backArrow.svg";
 
 const RasterManagement = (props) => {

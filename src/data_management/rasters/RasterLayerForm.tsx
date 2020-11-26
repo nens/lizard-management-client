@@ -26,7 +26,7 @@ import {
 import { optionsHasLayers } from '../../utils/rasterOptionFunctions';
 import { getUuidFromUrl } from '../../utils/getUuidFromUrl';
 import { addNotification, removeRasterSourceUUID } from './../../actions';
-import rasterIcon from "../../images/raster_layers_logo_explainbar.svg";
+import rasterIcon from "../../images/raster_layer_icon.svg";
 import formStyles from './../../styles/Forms.module.css';
 
 interface Props {
