@@ -15,6 +15,7 @@ import { AccessModifier } from '../../form/AccessModifier';
 import ColorMapInput, { ColorMapOptions, colorMapValidator } from '../../form/ColorMapInput';
 import { useForm, Values } from '../../form/useForm';
 import { minLength, required } from '../../form/validators';
+import wmsIcon from "../../images/wms@3x.svg";
 import {
   getColorMaps,
   getDatasets,
@@ -78,7 +79,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
     sharedWith: currentWmsLayer.shared_with.length === 0 ? false : true,
     organisationsToSharedWith: currentWmsLayer.shared_with.map((organisation:any) => organisation.uuid.replace(/-/g, "")) || [],
     organisation: currentWmsLayer.organisation.uuid.replace(/-/g, "") || null,
-    supplierName: currentWmsLayer.supplier,
+    supplier: currentWmsLayer.supplier,
   } : {
     name: null,
     description: null,
@@ -102,103 +103,90 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
     sharedWith: false,
     organisationsToSharedWith: [],
     organisation: selectedOrganisation.uuid.replace(/-/g, "") || null,
-    supplierName: null,
+    supplier: null,
   };
   const onSubmit = (values: Values) => {
     console.log('submitted', values);
 
     const wmsLayer = {
-      name: values.name,
-      description: values.description,
-      datasets: values.datasets,
-      wmsUrl: values.wms_url,
-      downloadUrl: values.download_url,
-      legendUrl: values.legend_url,
-      getFeatureInfoUrl: values.get_feature_info_url,
+      name: values.name + '',
+      description: values.description + '',
+      datasets: values.datasets  + '',
+      wms_url: values.wmsUrl + '',
+      download_url: values.downloadUrl + '',
+      legend_url: values.legendUrl + '',
+      get_feature_info_url: values.getFeatureInfoUrl + '',
       tiled: values.tiled,
-      min_zoom: values.minMaxZoom.minZoom,
-      max_zoom: values.minMaxZoom.maxZoom,
+      // @ts-ignore
+      min_zoom: values.minMaxZoom.minZoom + '',
+      // @ts-ignore
+      max_zoom: values.minMaxZoom.maxZoom + '',
       // minMaxZoom: {
       //   minZoom: currentWmsLayer.min_zoom + '',
       //   maxZoom: currentWmsLayer.max_zoom + '',
       // },
-      spatialBounds: values.spatial_bounds,
-      options: values.options,
+      spatial_bounds: values.spatialBounds + '',
+      options: values.options + '',
       // rasterSource: (currentWmsLayer.raster_sources && currentWmsLayer.raster_sources[0] && getUuidFromUrl(currentWmsLayer.raster_sources[0])) || null,
       // aggregationType: currentWmsLayer.aggregation_type || null,
       // observationType: (currentWmsLayer.observation_type && currentWmsLayer.observation_type.id + '') || null,
       // colorMap: {options: currentWmsLayer.options, rescalable: currentWmsLayer.rescalable},
       // accessModifier: currentWmsLayer.access_modifier,
-      sharedWith: values.shared_with.length === 0 ? false : true,
-      organisationsToSharedWith: values.shared_with.map((organisation:any) => organisation.uuid.replace(/-/g, "")) || [],
-      organisation: values.organisation.uuid.replace(/-/g, "") || null,
-      supplierName: values.supplier,
-    }
+      // @ts-ignore
+      shared_with: (values.organisationsToSharedWith.map((organisation:any) => organisation.uuid.replace(/-/g, "")) || [])  + '',
+      // @ts-ignore
+      organisation: (values.organisation.uuid.replace(/-/g, "")) + '' || null,
+      supplier: values.supplier + '',
+    };
+
+    const url = "/api/v4/wmslayers/";
 
     if (!currentWmsLayer) {
-      const wmsLayer = {
-        name: values.name as string,
-        organisation: values.organisation as string,
-        access_modifier: values.accessModifier as string,
-        description: values.description as string,
-        observation_type: values.observationType as string,
-        supplier: values.supplierName as string,
-        aggregation_type: values.aggregationType as string,
-        // @ts-ignore
-        options: values.colorMap.options,
-        // @ts-ignore
-        rescalable: values.colorMap.rescalable as boolean,
-        shared_with: values.organisationsToSharedWith as string[],
-        datasets: [values.dataset as string],
-      };
 
-      createRasterLayer(wmsLayer, values.rasterSource as string)
-        .then(response => {
-          const status = response.status;
-          props.addNotification(status, 2000);
-          if (status === 201) {
-            // redirect back to the table of raster layers
-            props.history.push('/data_management/raster_layers');
-          } else {
-            console.error(response);
-          };
-        })
-        .catch(e => console.error(e));
+      
+     if (!currentWmsLayer) {
+        const opts = {
+          credentials: "same-origin",
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(wmsLayer),
+        }
+        // @ts-ignore
+        fetch(url, opts)
+          .then(preresponse => preresponse.json())
+          .then(response => {
+            const status = response.status;
+            props.addNotification(status, 2000);
+            if (status === 201) {
+              // redirect back to the table of raster layers
+              props.history.push('/data_management/wms_layers');
+            } else {
+              console.error(response);
+            };
+          })
+          .catch(e => console.error(e));
     } else {
-      const body = {
-        name: values.name as string,
-        organisation: values.organisation as string,
-        access_modifier: values.accessModifier as string,
-        description: values.description as string,
-        observation_type: values.observationType as string,
-        supplier: values.supplierName as string,
-        aggregation_type: values.aggregationType as string,
-        // @ts-ignore
-        options: values.colorMap.options,
-        // @ts-ignore
-        rescalable: values.colorMap.rescalable as boolean,
-        shared_with: values.organisationsToSharedWith as string[],
-        datasets: [values.dataset as string]
+      const opts = {
+        credentials: "same-origin",
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(wmsLayer)
       };
-      // only add colormap in options if not multiple layers
       // @ts-ignore
-      if (!optionsHasLayers(values.colorMap.options)) {
-        // @ts-ignore
-        body.options = values.colorMap.options;
-      };
-
-      patchRasterLayer(currentRasterLayer.uuid as string, body)
+      fetch(url + "uuid:" + currentWmsLayer.uuid + "/", opts)
+        .then(preresponse => preresponse.json())
         .then(data => {
           const status = data.response.status;
           props.addNotification(status, 2000);
           if (status === 200) {
             // redirect back to the table of raster layers
-            props.history.push('/data_management/raster_layers');
+            props.history.push('/data_management/wms_layers');
           } else {
             console.error(data);
           };
         })
         .catch(e => console.error(e));
+      }
     };
   };
 
@@ -215,10 +203,10 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
 
   return (
     <ExplainSideColumn
-      imgUrl={rasterIcon}
-      headerText={"Raster Layers"}
-      explainationText={"Create a layer to view your raster data in the portal."}
-      backUrl={"/data_management/raster_layers"}
+      imgUrl={wmsIcon}
+      headerText={"WMS Layers"}
+      explainationText={"WMS-Layers allow to configure layers in lizard even if they are hosted on another platform"} 
+      backUrl={"/data_management"}
     >
       <form
         className={formStyles.Form}
@@ -260,108 +248,62 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
         <span className={formStyles.FormFieldTitle}>
           2: Data
         </span>
-        {!currentRasterLayer && !rasterSourceUUID && rasterSources ?
-          <SelectBox
-            title={'Source *'}
-            name={'rasterSource'}
-            placeholder={'- Search and select -'}
-            value={values.rasterSource as string}
-            valueChanged={value => handleValueChange('rasterSource', value)}
-            choices={rasterSources.map(rasterSource => [rasterSource.uuid!, rasterSource.name])}
-            validated={!required('Please select a raster source', values.rasterSource)}
-            errorMessage={required('Please select a raster source', values.rasterSource)}
-            triedToSubmit={triedToSubmit}
-            readOnly={!!currentRasterLayer || !!rasterSourceUUID}
-            showSearchField
-          />
-          :
-          <TextInput
-            title={'Source *'}
-            name={'rasterSource'}
-            value={values.rasterSource as string}
-            valueChanged={handleInputChange}
-            clearInput={clearInput}
-            validated
-            readOnly
-            triedToSubmit={triedToSubmit}
-          />
-        }
-        <SelectBox
-          title={'Aggregation type *'}
-          name={'aggregationType'}
-          placeholder={'- Select -'}
-          value={values.aggregationType as string}
-          valueChanged={value => handleValueChange('aggregationType', value)}
-          choices={[
-            [
-              "none",
-              "none",
-              <FormattedMessage id="raster_form.aggregation_type_none" />
-            ],
-            [
-              "counts",
-              "counts",
-              <FormattedMessage id="raster_form.aggregation_type_counts" />
-            ],
-            [
-              "curve",
-              "curve",
-              <FormattedMessage id="raster_form.aggregation_type_curve" />
-            ],
-            [
-              "sum",
-              "sum",
-              <FormattedMessage id="raster_form.aggregation_type_sum" />
-            ],
-            [
-              "average",
-              "average",
-              <FormattedMessage id="raster_form.aggregation_type_average" />
-            ]
-          ]}
-          validated={!required('Please select an option', values.aggregationType)}
-          errorMessage={required('Please select an option', values.aggregationType)}
+        {/* wmsUrl: "",
+        downloadUrl: "",
+        legendUrl: "",
+        getFeatureInfoUrl: "",
+        tiled: true,
+        minMaxZoom: {
+          minZoom: "",
+          maxZoom: "",
+        },
+        spatialBounds: null,
+        options: {}, */}
+        <TextInput
+          title={'WMS Url *'}
+          name={'wmsUrl'}
+          placeholder={'http://example.com'}
+          value={values.wmsUrl as string}
+          valueChanged={handleInputChange}
+          clearInput={clearInput}
+          validated={!minLength(3, values.name as string)}
+          errorMessage={minLength(3, values.name as string)}
           triedToSubmit={triedToSubmit}
         />
-        <SelectBox
-          title={'Observation type *'}
-          name={'observationType'}
-          placeholder={'- Search and select -'}
-          value={values.observationType as string}
-          valueChanged={value => handleValueChange('observationType', value)}
-          choices={observationTypes.map((obsT: any) => {
-            let parameterString = obsT.parameter + '';
-            if (obsT.unit || obsT.reference_frame) {
-              parameterString += ' ('
-              if (obsT.unit) {
-                parameterString += obsT.unit;
-              }
-              if (obsT.unit && obsT.reference_frame) {
-                parameterString += ' ';
-              }
-              if (obsT.reference_frame) {
-                parameterString += obsT.reference_frame;
-              }
-              parameterString += ')'
-            }
-  
-            return [obsT.id, obsT.code, parameterString];
-          })}
-          validated={!required('Please select an observation type', values.observationType)}
-          errorMessage={required('Please select an observation type', values.observationType)}
-          triedToSubmit={triedToSubmit}
-          showSearchField
-        />
-        <ColorMapInput
-          title={<FormattedMessage id="raster_form.colormap" />}
-          name={'colorMap'}
-          value={values.colorMap as ColorMapOptions}
-          valueChanged={value => handleValueChange('colorMap', value)}
-          colorMaps={colorMaps.map((colM: any) => [colM.name, colM.name, colM.description])}
-          validated={!colorMapValidator(values.colorMap as ColorMapOptions)}
-          errorMessage={colorMapValidator(values.colorMap as ColorMapOptions)}
+        <TextInput
+          title={'Download Url *'}
+          name={'downloadUrl'}
+          placeholder={'http://example.com'}
+          value={values.downloadUrl as string}
+          valueChanged={handleInputChange}
+          clearInput={clearInput}
+          validated={!minLength(3, values.name as string)}
+          errorMessage={minLength(3, values.name as string)}
           triedToSubmit={triedToSubmit}
         />
+        <TextInput
+          title={'Legend Url *'}
+          name={'legendUrl'}
+          placeholder={'http://example.com'}
+          value={values.legendUrl as string}
+          valueChanged={handleInputChange}
+          clearInput={clearInput}
+          validated={!minLength(3, values.name as string)}
+          errorMessage={minLength(3, values.name as string)}
+          triedToSubmit={triedToSubmit}
+        />
+        <TextInput
+          title={'Get Feature Url *'}
+          name={'getFeatureInfoUrl'}
+          placeholder={'http://example.com'}
+          value={values.getFeatureInfoUrl as string}
+          valueChanged={handleInputChange}
+          clearInput={clearInput}
+          validated={!minLength(3, values.name as string)}
+          errorMessage={minLength(3, values.name as string)}
+          triedToSubmit={triedToSubmit}
+        />
+        
         <span className={formStyles.FormFieldTitle}>
           3: Rights
         </span>
