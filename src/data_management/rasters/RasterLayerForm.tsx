@@ -26,7 +26,7 @@ import {
 import { optionsHasLayers } from '../../utils/rasterOptionFunctions';
 import { getUuidFromUrl } from '../../utils/getUuidFromUrl';
 import { addNotification, removeRasterSourceUUID } from './../../actions';
-import rasterIcon from "../../images/raster_layers_logo_explainbar.svg";
+import rasterLayerIcon from "../../images/raster_layer_icon.svg";
 import formStyles from './../../styles/Forms.module.css';
 
 interface Props {
@@ -108,7 +108,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           props.addNotification(status, 2000);
           if (status === 201) {
             // redirect back to the table of raster layers
-            props.history.push('/data_management/raster_layers');
+            props.history.push('/data_management/rasters/layers');
           } else {
             console.error(response);
           };
@@ -143,7 +143,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           props.addNotification(status, 2000);
           if (status === 200) {
             // redirect back to the table of raster layers
-            props.history.push('/data_management/raster_layers');
+            props.history.push('/data_management/rasters/layers');
           } else {
             console.error(data);
           };
@@ -165,10 +165,10 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
 
   return (
     <ExplainSideColumn
-      imgUrl={rasterIcon}
+      imgUrl={rasterLayerIcon}
       headerText={"Raster Layers"}
       explainationText={"Create a layer to view your raster data in the portal."}
-      backUrl={"/data_management/raster_layers"}
+      backUrl={"/data_management/rasters/layers"}
     >
       <form
         className={formStyles.Form}
@@ -367,7 +367,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           className={formStyles.ButtonContainer}
         >
           <CancelButton
-            url={'/data_management/raster_layers'}
+            url={'/data_management/rasters/layers'}
           />
           <SubmitButton
             onClick={tryToSubmitForm}

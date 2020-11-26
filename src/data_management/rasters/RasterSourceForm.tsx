@@ -17,7 +17,7 @@ import { minLength } from '../../form/validators';
 import { AccessModifier } from '../../form/AccessModifier';
 import { rasterIntervalStringServerToDurationObject, toISOValue } from '../../utils/isoUtils';
 import { addNotification, updateRasterSourceUUID } from '../../actions';
-import rasterIcon from "../../images/raster_layers_logo_explainbar.svg";
+import rasterSourceIcon from "../../images/raster_source_icon.svg";
 import formStyles from './../../styles/Forms.module.css';
 
 interface Props {
@@ -97,7 +97,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           props.addNotification(status, 2000);
           if (status === 200) {
             // redirect back to the table of raster sources
-            props.history.push('/data_management/raster_sources')
+            props.history.push('/data_management/rasters/sources')
           } else {
             console.error(data);
           };
@@ -119,10 +119,10 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
 
   return (
     <ExplainSideColumn
-      imgUrl={rasterIcon}
+      imgUrl={rasterSourceIcon}
       headerText={"Raster Sources"}
       explainationText={"Fill in the form to create a new Raster Source."}
-      backUrl={"/data_management/raster_sources"}      
+      backUrl={"/data_management/rasters/sources"}
     >
       <form
         className={formStyles.Form}
@@ -209,7 +209,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           className={formStyles.ButtonContainer}
         >
           <CancelButton
-            url={'/data_management/raster_sources'}
+            url={'/data_management/rasters/sources'}
           />
           <SubmitButton
             onClick={tryToSubmitForm}
@@ -220,7 +220,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
         <ConfirmModal
           title={'Raster created'}
           buttonName={'Continue'}
-          url={'/data_management/raster_layers/new'}
+          url={'/data_management/rasters/layers/new'}
         >
           <p>A layer is needed to view the raster in the portal.</p>
           <p>We automatically created a layer for you to compose. You will now be redirected to the layer management.</p>

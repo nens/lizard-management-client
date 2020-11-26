@@ -7,13 +7,13 @@ import { NavLink } from "react-router-dom";
 import { deleteRasters, /*flushRasters*/ } from "../../api/rasters";
 import TableActionButtons from '../../components/TableActionButtons';
 import {ExplainSideColumn} from '../../components/ExplainSideColumn';
-import rasterIcon from "../../images/raster_layers_logo_explainbar.svg";
+import rasterIcon from "../../images/raster_layer_icon.svg";
 import tableStyles from "../../components/Table.module.css";
 
 
 
 const baseUrl = "/api/v4/rasters/";
-const navigationUrlRasters = "/data_management/raster_layers";
+const navigationUrlRasters = "/data_management/rasters/layers";
 
 const deleteActionRaster = (row: any, updateTableRow:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any)=>{
   if (window.confirm(`Are you sure you want to delete raster with uuid: ${row.uuid} ?`)) {
@@ -150,7 +150,7 @@ export const RasterLayerTable = (props:any) =>  {
       imgUrl={rasterIcon}
       headerText={"Raster Layers"}
       explainationText={"Raster Layers are visual presentations of your raster data. Choose the prefered Raster Source so that the Raster Layer fetches the right data and give the Raster Layer a name, description, observation type and styling. Once published, your Raster Layer will be visible in the Catalogue and the Portal."}
-      backUrl={"/data_management"}
+      backUrl={"/data_management/rasters"}
     >
         <TableStateContainer 
           gridTemplateColumns={"8% 30% 24% 20% 10% 8%"} 
