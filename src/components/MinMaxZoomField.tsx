@@ -3,7 +3,7 @@ import { FormattedMessage } from "react-intl";
 import { getBoundsFromWmsLayer } from "../utils/getBoundsFromGeoServer";
 import ClearInputButton from "./ClearInputButton";
 import styles from "./SpatialBoundsField.module.css";
-import durationStyles from "./DurationField.module.css";
+import durationStyles from "../forms/DurationField.module.css";
 import formStyles from "../styles/Forms.module.css";
 import inputStyles from "../styles/Input.module.css";
 import thresholdsStyles from './ThresholdsSelection.module.css';

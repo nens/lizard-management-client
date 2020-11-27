@@ -40,7 +40,7 @@ interface Props {
 
 interface PropsFromDispatch {
   // removeRasterSourceUUID: () => void,
-  addNotification: (message: string | number, timeout: number) => void,
+  // addNotification: (message: string | number, timeout: number) => void,
 };
 
 const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (props) => {
@@ -160,7 +160,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           .then((preresponse:any) => preresponse.json())
           .then((response:any) => {
             const status = response.status;
-            props.addNotification(status, 2000);
+            // props.addNotification(status, 2000);
             if (status === 201) {
               // redirect back to the table of raster layers
               props.history.push('/data_management/wms_layers');
@@ -181,7 +181,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
         .then((preresponse:any) => preresponse.json())
         .then((data:any) => {
           const status = data.response.status;
-          props.addNotification(status, 2000);
+          // props.addNotification(status, 2000);
           if (status === 200) {
             // redirect back to the table of raster layers
             props.history.push('/data_management/wms_layers');
@@ -411,4 +411,4 @@ const mapDispatchToProps = (dispatch: any) => ({
   addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout)),
 });
 
-export default connect(null, mapDispatchToProps)(withRouter(WmsLayerForm));
+export default WmsLayerForm; //connect(null, mapDispatchToProps)(withRouter(WmsLayerForm));
