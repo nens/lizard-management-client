@@ -17,7 +17,7 @@ interface Props {
   value: MinMax,
 }
 
-export const MinMaxZoomFields =  (props:any) => {
+ const  MinMaxZoomFields =  (props:any) => {
   const {value, valueChanged} = props;
         return (
             <div>
@@ -81,3 +81,6 @@ export const MinMaxZoomFields =  (props:any) => {
             </div>
         );
 }
+
+export default  MinMaxZoomFields;
+

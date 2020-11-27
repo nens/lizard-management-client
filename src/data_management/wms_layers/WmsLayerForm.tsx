@@ -325,10 +325,10 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           // errorMessage={minLength(3, values.name as string)}
           triedToSubmit={triedToSubmit}
         />
-        <SpatialBoundsField
-          name="wmsLayerSpatialBounds"
-          title={<FormattedMessage id="wms_layer_form.spatial_bounds" />}
-          subtitle={<FormattedMessage id="wms_layer_form.add_spatial_bounds" />}
+        {/* <SpatialBoundsField
+          // name="wmsLayerSpatialBounds"
+          // title={<FormattedMessage id="wms_layer_form.spatial_bounds" />}
+          // subtitle={<FormattedMessage id="wms_layer_form.add_spatial_bounds" />}
           initial = {
             (
               currentWmsLayer &&
@@ -338,7 +338,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           validators={[spatialBoundsValidator]}
           geoServerError={this.state.geoServerError}
           showGeoServerError={this.showGeoServerError}
-        />
+        /> */}
         
         <span className={formStyles.FormFieldTitle}>
           3: Rights
