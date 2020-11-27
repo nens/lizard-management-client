@@ -73,7 +73,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
       maxZoom: currentWmsLayer.max_zoom + '',
     },
     spatialBounds: currentWmsLayer.spatial_bounds,
-    options: currentWmsLayer.options,
+    options: JSON.stringify(currentWmsLayer.options),
     // rasterSource: (currentWmsLayer.raster_sources && currentWmsLayer.raster_sources[0] && getUuidFromUrl(currentWmsLayer.raster_sources[0])) || null,
     // aggregationType: currentWmsLayer.aggregation_type || null,
     // observationType: (currentWmsLayer.observation_type && currentWmsLayer.observation_type.id + '') || null,
@@ -97,7 +97,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
       maxZoom: 31,
     },
     spatialBounds: null,
-    options: {},
+    options: '{"transparent": "True"}',
     // rasterSource: rasterSourceUUID || null,
     // aggregationType: null,
     // observationType: null,
@@ -333,20 +333,49 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           triedToSubmit={triedToSubmit}
         />
         {/* <SpatialBoundsField
+           name={'spatialBounds'}
+           // placeholder={'http://example.com'}
+           value={values.spatialBounds}
+           // valueChanged={handleInputChange}
+           valueChanged={(value:any) => handleValueChange('spatialBounds', value)}
+           clearInput={clearInput}
+           // validated={!minLength(3, values.name as string)}
+           // errorMessage={minLength(3, values.name as string)}
+           triedToSubmit={triedToSubmit}
+          
           // name="wmsLayerSpatialBounds"
-          // title={<FormattedMessage id="wms_layer_form.spatial_bounds" />}
-          // subtitle={<FormattedMessage id="wms_layer_form.add_spatial_bounds" />}
-          initial = {
-            (
-              currentWmsLayer &&
-              currentWmsLayer.spatial_bounds
-            ) || null
-          }
-          validators={[spatialBoundsValidator]}
-          geoServerError={this.state.geoServerError}
-          showGeoServerError={this.showGeoServerError}
+          title={<FormattedMessage id="wms_layer_form.spatial_bounds" />}
+          subtitle={<FormattedMessage id="wms_layer_form.add_spatial_bounds" />}
+          // initial = {
+          //   (
+          //     currentWmsLayer &&
+          //     currentWmsLayer.spatial_bounds
+          //   ) || null
+          // }
+          // validators={[spatialBoundsValidator]}
+          // geoServerError={this.state.geoServerError}
+          // showGeoServerError={this.showGeoServerError}
         /> */}
-        
+        <TextArea
+          title={'Options (JSON)'}
+          name={'options'}
+          placeholder={'This is a layer based on raster_source'}
+          value={values.options as string}
+          valueChanged={handleInputChange}
+          clearInput={clearInput}
+          validated={(()=>{
+            // console.log('JSON.parse 1')
+            try{
+              // console.log('JSON.parse 2')
+              JSON.parse(values.options as string)
+            } catch(e) {
+              // console.log('JSON.parse 3')
+              return false;
+            }
+            // console.log('JSON.parse 4')
+            return true;
+          })()}
+        />
         <span className={formStyles.FormFieldTitle}>
           3: Rights
         </span>
