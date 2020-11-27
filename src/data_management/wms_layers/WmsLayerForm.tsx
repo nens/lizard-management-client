@@ -30,7 +30,7 @@ import { addNotification, removeRasterSourceUUID } from './../../actions';
 import rasterIcon from "../../images/raster_layers_logo_explainbar.svg";
 import formStyles from './../../styles/Forms.module.css';
 import SpatialBoundsField, { spatialBoundsValidator } from "../../forms/SpatialBoundsField";
-import MinMaxZoomField from '../../components/MinMaxZoomField';
+import MinMaxZoomField, {MinMax} from '../../components/MinMaxZoomField';
 
 
 interface Props {
@@ -62,7 +62,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
   const initialValues = currentWmsLayer ? {
     name: currentWmsLayer.name,
     description: currentWmsLayer.description,
-    dataset: currentWmsLayer.datasets,
+    datasets: currentWmsLayer.datasets.map((dataset:any)=>dataset.slug),
     wmsUrl: currentWmsLayer.wms_url,
     downloadUrl: currentWmsLayer.download_url,
     legendUrl: currentWmsLayer.legend_url,
@@ -78,7 +78,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
     // aggregationType: currentWmsLayer.aggregation_type || null,
     // observationType: (currentWmsLayer.observation_type && currentWmsLayer.observation_type.id + '') || null,
     // colorMap: {options: currentWmsLayer.options, rescalable: currentWmsLayer.rescalable},
-    // accessModifier: currentWmsLayer.access_modifier,
+    accessModifier: currentWmsLayer.access_modifier,
     sharedWith: currentWmsLayer.shared_with.length === 0 ? false : true,
     organisationsToSharedWith: currentWmsLayer.shared_with.map((organisation:any) => organisation.uuid.replace(/-/g, "")) || [],
     organisation: currentWmsLayer.organisation.uuid.replace(/-/g, "") || null,
@@ -87,14 +87,14 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
     name: null,
     description: null,
     datasets: [],
-    wmsUrl: "",
+    wmsUrl: "http://example.com",
     downloadUrl: "",
     legendUrl: "",
     getFeatureInfoUrl: "",
     tiled: true,
     minMaxZoom: {
-      minZoom: "",
-      maxZoom: "",
+      minZoom: 0,
+      maxZoom: 31,
     },
     spatialBounds: null,
     options: {},
@@ -113,40 +113,30 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
 
     const wmsLayer = {
       name: values.name + '',
+      slug: values.name + '',
+      get_feature_info:false,
       description: values.description + '',
-      datasets: values.datasets  + '',
+      datasets: values.datasets,
       wms_url: values.wmsUrl + '',
       download_url: values.downloadUrl + '',
       legend_url: values.legendUrl + '',
       get_feature_info_url: values.getFeatureInfoUrl + '',
       tiled: values.tiled,
       // @ts-ignore
-      min_zoom: values.minMaxZoom.minZoom + '',
+      min_zoom: values.minMaxZoom.minZoom,
       // @ts-ignore
-      max_zoom: values.minMaxZoom.maxZoom + '',
-      // minMaxZoom: {
-      //   minZoom: currentWmsLayer.min_zoom + '',
-      //   maxZoom: currentWmsLayer.max_zoom + '',
-      // },
-      spatial_bounds: values.spatialBounds + '',
-      options: values.options + '',
-      // rasterSource: (currentWmsLayer.raster_sources && currentWmsLayer.raster_sources[0] && getUuidFromUrl(currentWmsLayer.raster_sources[0])) || null,
-      // aggregationType: currentWmsLayer.aggregation_type || null,
-      // observationType: (currentWmsLayer.observation_type && currentWmsLayer.observation_type.id + '') || null,
-      // colorMap: {options: currentWmsLayer.options, rescalable: currentWmsLayer.rescalable},
-      // accessModifier: currentWmsLayer.access_modifier,
+      max_zoom: values.minMaxZoom.maxZoom,
+      spatial_bounds: values.spatialBounds,
+      options: JSON.stringify({"transparent": "True"}), //JSON.stringify(values.options),
+      accessModifier: values.accessModifier,
       // @ts-ignore
-      shared_with: (values.organisationsToSharedWith.map((organisation:any) => organisation.uuid.replace(/-/g, "")) || [])  + '',
-      // @ts-ignore
-      organisation: (values.organisation.uuid.replace(/-/g, "")) + '' || null,
-      supplier: values.supplier + '',
+      shared_with: values.organisationsToSharedWith.map((organisation:any) => organisation.replace(/-/g, "")),
+      organisation: ((values.organisation + '').replace(/-/g, "")) + '' || null,
+      supplier: values.supplier,
     };
 
     const url = "/api/v4/wmslayers/";
 
-    if (!currentWmsLayer) {
-
-      
      if (!currentWmsLayer) {
         const opts = {
           credentials: "same-origin",
@@ -191,7 +181,6 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
         })
         .catch((e:any) => console.error(e));
       }
-    };
   };
 
   const {
@@ -240,13 +229,30 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           clearInput={clearInput}
           validated
         />
-        <SelectBox
+        {/* <SelectBox
           title={'Dataset'}
           name={'dataset'}
           placeholder={'- Select -'}
           value={values.dataset as string}
           valueChanged={value => handleValueChange('dataset', value)}
           choices={datasets.map((dataset: any) => [dataset.slug, dataset.slug])}
+          validated
+        /> */}
+        <SlushBucket
+          title={'Datasets'}
+          name={'datasets'}
+          placeholder={'Search datasets'}
+          value={values.datasets as string[]}
+          choices={datasets.map((dataset: any) => {
+            return {
+              display: dataset.slug,
+              value: dataset.slug,
+            }
+          })}
+          valueChanged={(value: any) => {
+            console.log("datasets 123", value);
+            handleValueChange('datasets', value)
+          }}
           validated
         />
         <span className={formStyles.FormFieldTitle}>
@@ -319,7 +325,8 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           name={'minMaxZoom'}
           // placeholder={'http://example.com'}
           value={values.minMaxZoom}
-          valueChanged={handleInputChange}
+          // valueChanged={handleInputChange}
+          valueChanged={(value:MinMax) => handleValueChange('minMaxZoom', value)}
           clearInput={clearInput}
           // validated={!minLength(3, values.name as string)}
           // errorMessage={minLength(3, values.name as string)}

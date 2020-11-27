@@ -8,7 +8,7 @@ import formStyles from "../styles/Forms.module.css";
 import inputStyles from "../styles/Input.module.css";
 import thresholdsStyles from './ThresholdsSelection.module.css';
 
-interface MinMax {
+export interface MinMax {
   minZoom: number,
   maxZoom: number
 };
@@ -70,8 +70,8 @@ interface Props {
                                 " " +
                                 durationStyles.TextAlignCenter
                             }
-                            value={value.minZoom}
-                            onChange={(e) => valueChanged({minZoom: e.target.value, maxZoom: value.maxZoom})}
+                            value={value.maxZoom}
+                            onChange={(e) => valueChanged({minZoom: value.minZoom, maxZoom: e.target.value})}
                         />
                     </div>
                     
