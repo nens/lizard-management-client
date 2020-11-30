@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { FormattedMessage } from 'react-intl';
 import { connect, useSelector } from 'react-redux';
@@ -45,6 +45,8 @@ interface PropsFromDispatch {
 
 const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (props) => {
   const { currentWmsLayer} = props;
+
+  const [geoserverError, setGeoserverError,] = useState(false)
   const organisationsToSharedWith = useSelector(getOrganisations).availableForRasterSharedWith;
   const organisations = useSelector(getOrganisations).available;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
@@ -115,7 +117,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
 
     const wmsLayer = {
       name: values.name + '',
-      slug: values.name + '',
+      slug: values.slug + '',
       get_feature_info:false,
       description: values.description + '',
       datasets: values.datasets,
@@ -354,28 +356,17 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
            // validated={!minLength(3, values.name as string)}
            // errorMessage={minLength(3, values.name as string)}
            triedToSubmit={triedToSubmit}
-          // @ts-ignore
            otherValues= {{
             wmsLayerName: values.name + '',
             wmsLayerSlug: values.slug + '',
             wmsLayerUrl: values.wmsUrl + '',
            }}
-           // valueChanged: Function,
-           geoServerError={false}
-           showGeoServerError={()=>{}}
-          
-           // name="wmsLayerSpatialBounds"
-           // title={<FormattedMessage id="wms_layer_form.spatial_bounds" />}
-           // subtitle={<FormattedMessage id="wms_layer_form.add_spatial_bounds" />}
-           // initial = {
-           //   (
-           //     currentWmsLayer &&
-           //     currentWmsLayer.spatial_bounds
-           //   ) || null
-           // }
-           // validators={[spatialBoundsValidator]}
-           // geoServerError={this.state.geoServerError}
-           // showGeoServerError={this.showGeoServerError}
+           geoServerError={geoserverError}
+           showGeoServerError={()=>setGeoserverError(true)}
+           validated={()=>{
+             // @ts-ignore
+            spatialBoundsValidator(values.spatialBounds)
+           }}
         />
         <TextArea
           title={'Options (JSON)'}

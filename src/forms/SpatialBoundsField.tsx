@@ -7,14 +7,10 @@ import durationStyles from "./DurationField.module.css";
 import formStyles from "../styles/Forms.module.css";
 import inputStyles from "../styles/Input.module.css";
 import thresholdsStyles from './ThresholdsSelection.module.css';
+import {SpatialBounds} from '../types/mapTypes'
 
 interface SpatialBoundsProps {
-    value: {
-        north: number,
-        east: number,
-        south: number,
-        west: number
-    } | null,
+    value: SpatialBounds | null,
     otherValues: {
         wmsLayerName: string,
         wmsLayerSlug: string,
