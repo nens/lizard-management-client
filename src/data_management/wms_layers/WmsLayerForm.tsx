@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { RouteComponentProps, withRouter } from 'react-router';
-import { FormattedMessage } from 'react-intl';
-import { connect, useSelector } from 'react-redux';
-import { createRasterLayer, patchRasterLayer, RasterLayerFromAPI, RasterSourceFromAPI } from '../../api/rasters';
+import React, { useState } from 'react';
+import { RouteComponentProps, } from 'react-router';
+import {  useSelector, connect } from 'react-redux';
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import { CheckBox } from './../../form/CheckBox';
 import { TextArea } from './../../form/TextArea';
@@ -12,22 +10,18 @@ import { CancelButton } from '../../form/CancelButton';
 import { SelectBox } from '../../form/SelectBox';
 import { SlushBucket } from '../../form/SlushBucket';
 import { AccessModifier } from '../../form/AccessModifier';
-import ColorMapInput, { ColorMapOptions, colorMapValidator } from '../../form/ColorMapInput';
 import { useForm, Values } from '../../form/useForm';
-import { minLength, required } from '../../form/validators';
+import { minLength, 
+  // required 
+} 
+  from '../../form/validators';
 import wmsIcon from "../../images/wms@3x.svg";
 import {
-  getColorMaps,
   getDatasets,
-  getObservationTypes,
   getOrganisations,
-  getRasterSourceUUID,
   getSelectedOrganisation
 } from '../../reducers';
-import { optionsHasLayers } from '../../utils/rasterOptionFunctions';
-import { getUuidFromUrl } from '../../utils/getUuidFromUrl';
-import { addNotification, removeRasterSourceUUID } from './../../actions';
-import rasterIcon from "../../images/raster_layers_logo_explainbar.svg";
+import { addNotification } from './../../actions';
 import formStyles from './../../styles/Forms.module.css';
 import SpatialBoundsField, { spatialBoundsValidator } from "../../forms/SpatialBoundsField";
 import MinMaxZoomField, {MinMax} from '../../components/MinMaxZoomField';
@@ -35,7 +29,6 @@ import MinMaxZoomField, {MinMax} from '../../components/MinMaxZoomField';
 
 interface Props {
   currentWmsLayer?: any, //RasterLayerFromAPI,
-  // rasterSources?: RasterSourceFromAPI[] | null,
 };
 
 interface PropsFromDispatch {
@@ -50,16 +43,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
   const organisationsToSharedWith = useSelector(getOrganisations).availableForRasterSharedWith;
   const organisations = useSelector(getOrganisations).available;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
-  // const observationTypes = useSelector(getObservationTypes).available;
-  // const colorMaps = useSelector(getColorMaps).available;
   const datasets = useSelector(getDatasets).available;
-  // const rasterSourceUUID = useSelector(getRasterSourceUUID);
-
-  // useEffect(() => {
-  //   return () => {
-  //     removeRasterSourceUUID();
-  //   };
-  // }, [removeRasterSourceUUID]);
 
   const initialValues = currentWmsLayer ? {
     name: currentWmsLayer.name,
@@ -77,10 +61,6 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
     },
     spatialBounds: currentWmsLayer.spatial_bounds,
     options: JSON.stringify(currentWmsLayer.options),
-    // rasterSource: (currentWmsLayer.raster_sources && currentWmsLayer.raster_sources[0] && getUuidFromUrl(currentWmsLayer.raster_sources[0])) || null,
-    // aggregationType: currentWmsLayer.aggregation_type || null,
-    // observationType: (currentWmsLayer.observation_type && currentWmsLayer.observation_type.id + '') || null,
-    // colorMap: {options: currentWmsLayer.options, rescalable: currentWmsLayer.rescalable},
     accessModifier: currentWmsLayer.access_modifier,
     sharedWith: currentWmsLayer.shared_with.length === 0 ? false : true,
     organisationsToSharedWith: currentWmsLayer.shared_with.map((organisation:any) => organisation.uuid.replace(/-/g, "")) || [],
@@ -102,10 +82,6 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
     },
     spatialBounds: null,
     options: '{"transparent": "True"}',
-    // rasterSource: rasterSourceUUID || null,
-    // aggregationType: null,
-    // observationType: null,
-    // colorMap: null,
     accessModifier: 'Private',
     sharedWith: false,
     organisationsToSharedWith: [],
@@ -233,15 +209,6 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           clearInput={clearInput}
           validated
         />
-        {/* <SelectBox
-          title={'Dataset'}
-          name={'dataset'}
-          placeholder={'- Select -'}
-          value={values.dataset as string}
-          valueChanged={value => handleValueChange('dataset', value)}
-          choices={datasets.map((dataset: any) => [dataset.slug, dataset.slug])}
-          validated
-        /> */}
         <SlushBucket
           title={'Datasets'}
           name={'datasets'}
@@ -262,17 +229,6 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
         <span className={formStyles.FormFieldTitle}>
           2: Data
         </span>
-        {/* wmsUrl: "",
-        downloadUrl: "",
-        legendUrl: "",
-        getFeatureInfoUrl: "",
-        tiled: true,
-        minMaxZoom: {
-          minZoom: "",
-          maxZoom: "",
-        },
-        spatialBounds: null,
-        options: {}, */}
         <TextInput
           title={'WMS Url *'}
           name={'wmsUrl'}
@@ -337,10 +293,10 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           // title={'Get Feature Url *'}
           name={'minMaxZoom'}
           // placeholder={'http://example.com'}
-          value={values.minMaxZoom}
+          value={values.minMaxZoom as MinMax}
           // valueChanged={handleInputChange}
           valueChanged={(value:MinMax) => handleValueChange('minMaxZoom', value)}
-          clearInput={clearInput}
+          // clearInput={clearInput}
           // validated={!minLength(3, values.name as string)}
           // errorMessage={minLength(3, values.name as string)}
           triedToSubmit={triedToSubmit}
@@ -350,10 +306,8 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
            // placeholder={'http://example.com'}
            // @ts-ignore
            value={values.spatialBounds}
-           // valueChanged={handleInputChange}
            valueChanged={(value:any) => handleValueChange('spatialBounds', value)}
            clearInput={clearInput}
-           // validated={!minLength(3, values.name as string)}
            // errorMessage={minLength(3, values.name as string)}
            triedToSubmit={triedToSubmit}
            otherValues= {{
@@ -455,8 +409,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
 };
 
 const mapDispatchToProps = (dispatch: any) => ({
-  removeRasterSourceUUID: () => dispatch(removeRasterSourceUUID()),
   addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout)),
 });
 
-export default WmsLayerForm; //connect(null, mapDispatchToProps)(withRouter(WmsLayerForm));
+export default connect(null, mapDispatchToProps)(WmsLayerForm);

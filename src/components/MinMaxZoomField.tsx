@@ -1,12 +1,10 @@
-import React, { Component } from "react";
-import { FormattedMessage } from "react-intl";
-import { getBoundsFromWmsLayer } from "../utils/getBoundsFromGeoServer";
-import ClearInputButton from "./ClearInputButton";
-import styles from "./SpatialBoundsField.module.css";
+import React from "react";
+// import { FormattedMessage } from "react-intl";
+// import styles from "./SpatialBoundsField.module.css";
 import durationStyles from "../forms/DurationField.module.css";
 import formStyles from "../styles/Forms.module.css";
 import inputStyles from "../styles/Input.module.css";
-import thresholdsStyles from './ThresholdsSelection.module.css';
+// import thresholdsStyles from './ThresholdsSelection.module.css';
 
 export interface MinMax {
   minZoom: number,
@@ -14,10 +12,13 @@ export interface MinMax {
 };
 
 interface Props {
+  name: string,
   value: MinMax,
+  valueChanged: Function,
+  triedToSubmit: boolean,
 }
 
- const  MinMaxZoomFields =  (props:any) => {
+ const  MinMaxZoomFields =  (props: Props) => {
   const {value, valueChanged} = props;
         return (
             <div>

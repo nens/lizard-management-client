@@ -88,6 +88,9 @@ export default class SpatialBoundsField extends Component<SpatialBoundsProps, {}
 
         return (
             <div>
+                <label>
+                    Spatial bounds
+                </label>
                 <div
                     className={
                         formStyles.FormGroup +
