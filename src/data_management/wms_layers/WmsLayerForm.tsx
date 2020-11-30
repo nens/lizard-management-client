@@ -64,6 +64,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
     description: currentWmsLayer.description,
     datasets: currentWmsLayer.datasets.map((dataset:any)=>dataset.slug),
     wmsUrl: currentWmsLayer.wms_url,
+    slug: currentWmsLayer.slug,
     downloadUrl: currentWmsLayer.download_url,
     legendUrl: currentWmsLayer.legend_url,
     getFeatureInfoUrl: currentWmsLayer.get_feature_info_url,
@@ -88,6 +89,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
     description: null,
     datasets: [],
     wmsUrl: "http://example.com",
+    slug: "",
     downloadUrl: "",
     legendUrl: "",
     getFeatureInfoUrl: "",
@@ -276,8 +278,19 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           value={values.wmsUrl as string}
           valueChanged={handleInputChange}
           clearInput={clearInput}
-          validated={!minLength(3, values.name as string)}
-          errorMessage={minLength(3, values.name as string)}
+          validated={!minLength(3, values.wmsUrl as string)}
+          errorMessage={minLength(3, values.wmsUrl as string)}
+          triedToSubmit={triedToSubmit}
+        />
+        <TextInput
+          title={'Slug'}
+          name={'slug'}
+          placeholder={'Slug for this WMS'}
+          value={values.slug as string}
+          valueChanged={handleInputChange}
+          clearInput={clearInput}
+          validated={true}
+          // errorMessage={minLength(3, values.wmsUrl as string)}
           triedToSubmit={triedToSubmit}
         />
         <TextInput
@@ -287,8 +300,8 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           value={values.downloadUrl as string}
           valueChanged={handleInputChange}
           clearInput={clearInput}
-          validated={!minLength(3, values.name as string)}
-          errorMessage={minLength(3, values.name as string)}
+          validated={true}
+          // errorMessage={minLength(3, values.name as string)}
           triedToSubmit={triedToSubmit}
         />
         <TextInput
@@ -298,8 +311,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           value={values.legendUrl as string}
           valueChanged={handleInputChange}
           clearInput={clearInput}
-          validated={!minLength(3, values.name as string)}
-          errorMessage={minLength(3, values.name as string)}
+          validated={true}
           triedToSubmit={triedToSubmit}
         />
         <TextInput
@@ -309,8 +321,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           value={values.getFeatureInfoUrl as string}
           valueChanged={handleInputChange}
           clearInput={clearInput}
-          validated={!minLength(3, values.name as string)}
-          errorMessage={minLength(3, values.name as string)}
+          validated={true}
           triedToSubmit={triedToSubmit}
         />
         <CheckBox
@@ -332,9 +343,10 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           // errorMessage={minLength(3, values.name as string)}
           triedToSubmit={triedToSubmit}
         />
-        {/* <SpatialBoundsField
+        <SpatialBoundsField
            name={'spatialBounds'}
            // placeholder={'http://example.com'}
+           // @ts-ignore
            value={values.spatialBounds}
            // valueChanged={handleInputChange}
            valueChanged={(value:any) => handleValueChange('spatialBounds', value)}
@@ -342,20 +354,29 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
            // validated={!minLength(3, values.name as string)}
            // errorMessage={minLength(3, values.name as string)}
            triedToSubmit={triedToSubmit}
+          // @ts-ignore
+           otherValues= {{
+            wmsLayerName: values.name + '',
+            wmsLayerSlug: values.slug + '',
+            wmsLayerUrl: values.wmsUrl + '',
+           }}
+           // valueChanged: Function,
+           geoServerError={false}
+           showGeoServerError={()=>{}}
           
-          // name="wmsLayerSpatialBounds"
-          title={<FormattedMessage id="wms_layer_form.spatial_bounds" />}
-          subtitle={<FormattedMessage id="wms_layer_form.add_spatial_bounds" />}
-          // initial = {
-          //   (
-          //     currentWmsLayer &&
-          //     currentWmsLayer.spatial_bounds
-          //   ) || null
-          // }
-          // validators={[spatialBoundsValidator]}
-          // geoServerError={this.state.geoServerError}
-          // showGeoServerError={this.showGeoServerError}
-        /> */}
+           // name="wmsLayerSpatialBounds"
+           // title={<FormattedMessage id="wms_layer_form.spatial_bounds" />}
+           // subtitle={<FormattedMessage id="wms_layer_form.add_spatial_bounds" />}
+           // initial = {
+           //   (
+           //     currentWmsLayer &&
+           //     currentWmsLayer.spatial_bounds
+           //   ) || null
+           // }
+           // validators={[spatialBoundsValidator]}
+           // geoServerError={this.state.geoServerError}
+           // showGeoServerError={this.showGeoServerError}
+        />
         <TextArea
           title={'Options (JSON)'}
           name={'options'}

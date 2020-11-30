@@ -210,6 +210,7 @@ export default class SpatialBoundsField extends Component<SpatialBoundsProps, {}
                             valueChanged,
                             showGeoServerError
                         )}
+                        type={"button"}
                     >
                         <FormattedMessage
                             id="wms_layer_form.get_from_geoserver"
