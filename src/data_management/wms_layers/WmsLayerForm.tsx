@@ -25,10 +25,11 @@ import { addNotification } from './../../actions';
 import formStyles from './../../styles/Forms.module.css';
 import SpatialBoundsField, { spatialBoundsValidator } from "../../forms/SpatialBoundsField";
 import MinMaxZoomField, {MinMax} from '../../components/MinMaxZoomField';
+import { WmsLayerAsReceivedFromApi} from '../../types/WmsLayerType';
 
 
 interface Props {
-  currentWmsLayer?: any, //RasterLayerFromAPI,
+  currentWmsLayer?: WmsLayerAsReceivedFromApi, 
 };
 
 interface PropsFromDispatch {
