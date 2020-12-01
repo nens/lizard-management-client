@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { FormattedMessage } from 'react-intl';
 import { connect, useSelector } from 'react-redux';
-import { createRasterLayer, patchRasterLayer, RasterLayerFromAPI, RasterSourceFromAPI } from '../../api/rasters';
+import { createRasterLayer, fetchRasterSourceV4, patchRasterLayer, RasterLayerFromAPI, RasterSourceFromAPI } from '../../api/rasters';
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import { CheckBox } from './../../form/CheckBox';
 import { TextArea } from './../../form/TextArea';
@@ -76,20 +76,17 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
     aggregationType: null,
     observationType: null,
     colorMap: null,
-    accessModifier: 'Private',
     sharedWith: false,
     organisationsToSharedWith: [],
     organisation: selectedOrganisation.uuid.replace(/-/g, "") || null,
     supplierName: null,
   };
   const onSubmit = (values: Values) => {
-    console.log('submitted', values);
-
     if (!currentRasterLayer) {
       const rasterLayer = {
         name: values.name as string,
         organisation: values.organisation as string,
-        access_modifier: values.accessModifier as string,
+        access_modifier: accessModifier as string || 'Private',
         description: values.description as string,
         observation_type: values.observationType as string,
         supplier: values.supplierName as string,
@@ -162,6 +159,18 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
     handleReset,
     clearInput,
   } = useForm({initialValues, onSubmit});
+
+  // For Access Modifier of a new Raster Layer, we need to keep it in sync
+  // with each new selected raster source by user by using useEffect
+  const { rasterSource } = values;
+  const [accessModifier, setAccessModifier] = useState<string | null>(null);
+  useEffect(() => {
+    if (!currentRasterLayer && rasterSource) {
+      fetchRasterSourceV4(rasterSource as string).then(
+        rasterSourceData => setAccessModifier(rasterSourceData.access_modifier || 'Private')
+      ).catch(e => console.error(e));
+    };
+  }, [currentRasterLayer, rasterSource]);
 
   return (
     <ExplainSideColumn
@@ -318,8 +327,8 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
         <AccessModifier
           title={'Access Modifier'}
           name={'accessModifier'}
-          value={values.accessModifier as string}
-          valueChanged={value => handleValueChange('accessModifier', value)}
+          value={values.accessModifier as string || accessModifier}
+          valueChanged={() => null}
           readOnly
         />
         <CheckBox
