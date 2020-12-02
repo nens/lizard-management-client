@@ -23,28 +23,29 @@ interface SpatialBoundsProps {
 
 // Validator
 export const spatialBoundsValidator = (fieldValue: SpatialBoundsProps['value']) => {
-    if (fieldValue) {
-        const {
-            north,
-            east,
-            south,
-            west
-        } = fieldValue;
+    if (fieldValue === null) {
+        return true;
+    }
+    const {
+        north,
+        east,
+        south,
+        west
+    } = fieldValue;
 
-        if (
-            north === undefined || Number.isNaN(north) ||
-            east === undefined || Number.isNaN(east) ||
-            south === undefined || Number.isNaN(south) ||
-            west === undefined || Number.isNaN(west)
-        ) {
-            return "Please enter a number in all fields or clear all inputs"
-        } else if (north < south) {
-            return "North coordinate cannot be smaller than South coordinate"
-        } else if (east < west) {
-            return "East coordinate cannot be smaller than West coordinate"
-        } else {
-            return false;
-        };
+    if (
+        north === undefined || Number.isNaN(north) ||
+        east === undefined || Number.isNaN(east) ||
+        south === undefined || Number.isNaN(south) ||
+        west === undefined || Number.isNaN(west)
+    ) {
+        return "Please enter a number in all fields or clear all inputs"
+    } else if (north < south) {
+        return "North coordinate cannot be smaller than South coordinate"
+    } else if (east < west) {
+        return "East coordinate cannot be smaller than West coordinate"
+    } else {
+        return false;
     };
 };
 

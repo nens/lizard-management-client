@@ -39,6 +39,7 @@ export const wmsLayerReceivedFromApiToForm = (wmsLayer: WmsLayerReceivedFromApi)
       organisation: wmsLayer.organisation.uuid,
       shared_with: wmsLayer.shared_with.map(orga=>orga.uuid),
       datasets: wmsLayer.datasets.map(dataset=>dataset.slug),
+      options: JSON.stringify(wmsLayer.options)
     }
 }
 

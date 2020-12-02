@@ -136,6 +136,8 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
     clearInput,
   } = useForm({initialValues, onSubmit});
 
+  // @ts-ignore
+  console.log("spatialBoundsValidator(values.spatial_bounds)", spatialBoundsValidator(values.spatial_bounds));
   return (
     <ExplainSideColumn
       imgUrl={wmsIcon}
@@ -289,10 +291,10 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
            }}
            geoServerError={geoserverError}
            showGeoServerError={()=>setGeoserverError(true)}
-           validated={()=>{
+           validated={(()=>{
              // @ts-ignore
             spatialBoundsValidator(values.spatial_bounds)
-           }}
+           })()}
         />
         <TextArea
           title={'Options (JSON)'}
