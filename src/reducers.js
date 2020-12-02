@@ -24,8 +24,11 @@ import {
   RECEIVE_DATASETS_ERROR,
   UPDATE_RASTER_SOURCE_UUID,
   REMOVE_RASTER_SOURCE_UUID,
-  ADD_TASK,
-  UPDATE_TASK
+  ADD_FILES_TO_QUEUE,
+  REMOVE_FILE_FROM_QUEUE,
+  UPDATE_FILE_STATUS,
+  ADD_TASK_UUID_TO_FILE,
+  UPDATE_TASK_STATUS
 } from "./actions";
 
 function bootstrap(
@@ -301,29 +304,53 @@ function rasterSourceUUID(state = null, action) {
   };
 };
 
-function tasks(state = null, action) {
+function uploadFiles(state = null, action) {
   switch (action.type) {
-    case ADD_TASK:
-      const { uuid, filename, filesize } = action;
-      return {
-        ...state,
-        [uuid]: {
-          "uuid": uuid,
-          "filename": filename,
-          "size": filesize,
+    case ADD_FILES_TO_QUEUE:
+      return action.files.map(file => {
+        return {
+          "name": file.name,
+          "size": file.size,
+          "uuid": null,
           "status": 'WAITING'
-        }
-      };
-    case UPDATE_TASK:
-      const { status } = action;
-      const taskUuid = action.uuid;
-      return {
-        ...state,
-        [taskUuid]: {
-          ...state[taskUuid],
-          "status": status
-        }
-      }
+        };
+      });
+    case UPDATE_FILE_STATUS:
+      return state.map(f => {
+        if (f.name === action.file.name && f.size === action.file.size) {
+          return {
+            ...f,
+            "status": action.status
+          };
+        } else {
+          return f;
+        };
+      });
+    case ADD_TASK_UUID_TO_FILE:
+      return state.map(f => {
+        if (f.name === action.file.name && f.size === action.file.size) {
+          return {
+            ...f,
+            "uuid": action.uuid
+          };
+        } else {
+          return f;
+        };
+      })
+    case UPDATE_TASK_STATUS:
+      return state.map(f => {
+        if (f.uuid === action.uuid) {
+          const status = (action.status === 'SUCCESS' || action.status === 'FAILED') ? action.status : 'PROCESSING'
+          return {
+            ...f,
+            "status": status
+          };
+        } else {
+          return f;
+        };
+      });
+    case REMOVE_FILE_FROM_QUEUE:
+      return state.filter(f => f.name !== action.file.name && f.size !== action.file.size);
     default:
       return state;
   };
@@ -375,7 +402,7 @@ const rootReducer = combineReducers({
   viewport,
   alarmType,
   rasterSourceUUID,
-  tasks
+  uploadFiles
 });
 
 export default rootReducer;

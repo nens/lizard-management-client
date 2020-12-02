@@ -15,7 +15,7 @@ import {
   fetchColorMaps,
   updateViewportDimensions,
   fetchDatasets,
-  updateTask
+  updateTaskStatus
 } from "./actions";
 import { Route, NavLink } from "react-router-dom";
 import LanguageSwitcher from "./components/LanguageSwitcher";
@@ -30,7 +30,6 @@ import { withRouter } from "react-router-dom";
 import {appTiles} from './home/HomeAppTileConfig';
 import doArraysHaveEqualElement from './utils/doArraysHaveEqualElement';
 import ConfirmModal from "./components/ConfirmModal";
-
 
 class App extends Component {
   constructor(props) {
@@ -71,26 +70,6 @@ class App extends Component {
       if (props.mustFetchDatasets) props.getDatasets();
     }
   }
-  componentDidUpdate(prevProps) {
-    if (prevProps.tasks !== this.props.tasks) {
-      console.log('tasks changed');
-      const waitingTasks = Object.values(this.props.tasks).filter(
-        task => task.status === 'WAITING' || task.status === 'STARTED'
-      );
-      const firstTaskInTheQueue = waitingTasks[0];
-
-      // stop polling the tasks endpoint if no task left in the queue
-      if (waitingTasks.length === 0 || !firstTaskInTheQueue) return;
-
-      setTimeout(() => {
-        fetchTaskInstance(firstTaskInTheQueue.uuid)
-          .then(response => {
-            this.props.updateTask(firstTaskInTheQueue.uuid, response.status);
-          })
-          .catch(e => console.error(e))
-      }, 5000);
-    };
-  }
   updateOnlineStatus(e) {
     const { addNotification } = this.props;
     addNotification(`Your internet connection seems to be ${e.type}`, 2000);
@@ -100,6 +79,28 @@ class App extends Component {
     const { innerWidth, innerHeight } = window;
     updateViewportDimensions(innerWidth, innerHeight);
   }
+
+  // Poll the task endpoint to update status of uploading files for raster source
+  // in the upload queue when there is upload files waiting to be uploaded in the queue
+  componentDidUpdate(prevProps) {
+    if (this.props.uploadFiles && prevProps.uploadFiles !== this.props.uploadFiles) {
+      const waitingFiles = this.props.uploadFiles.filter(
+        f => f.status !== 'SUCCESS' || f.status === 'FAILED' || f.status === 'FAILED TO UPLOAD'
+      );
+      const firstFileInTheQueue = waitingFiles[0];
+
+      if (waitingFiles.length === 0 || !firstFileInTheQueue || !firstFileInTheQueue.uuid) return;
+
+      setTimeout(() => {
+        fetchTaskInstance(firstFileInTheQueue.uuid)
+          .then(response => {
+            this.props.updateTaskStatus(firstFileInTheQueue.uuid, response.status);
+          })
+          .catch(e => console.error(e))
+      }, 5000);
+    };
+  };
+
   renderProfileList() {
     return (
       <div
@@ -379,17 +380,17 @@ class App extends Component {
                 <span>Filename</span>
                 <span>Upload status</span>
               </div>
-              {this.props.tasks && Object.values(this.props.tasks).map(task => (
+              {this.props.uploadFiles && Object.values(this.props.uploadFiles).map(file => (
                 <div
-                  key={task.uuid}
+                  key={file.name + file.size}
                   style={{
                     width: '100%',
                     display: 'flex',
                     justifyContent: 'space-between'
                   }}
                 >
-                  <span>{task.filename}</span>
-                  <span>{task.status}</span>
+                  <span>{file.name}</span>
+                  <span>{file.status}</span>
                 </div>
               ))}
             </ConfirmModal>
@@ -405,7 +406,7 @@ const mapStateToProps = (state, ownProps) => {
     isFetching: state.isFetching,
     bootstrap: state.bootstrap,
     isAuthenticated: state.bootstrap.isAuthenticated,
-    tasks: state.tasks,
+    uploadFiles: state.uploadFiles,
 
     mustFetchOrganisations:
       state.organisations.available.length === 0 &&
@@ -452,7 +453,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     updateViewportDimensions: (width, height) => {
       dispatch(updateViewportDimensions(width, height))
     },
-    updateTask: (uuid, status) => dispatch(updateTask(uuid, status))
+    updateTaskStatus: (uuid, status) => dispatch(updateTaskStatus(uuid, status))
   };
 };
 

@@ -17,7 +17,7 @@ import { useForm, Values } from '../../form/useForm';
 import { minLength } from '../../form/validators';
 import { AccessModifier } from '../../form/AccessModifier';
 import { rasterIntervalStringServerToDurationObject, toISOValue } from '../../utils/isoUtils';
-import { addNotification, updateRasterSourceUUID } from '../../actions';
+import { addFilesToQueue, addNotification, updateRasterSourceUUID } from '../../actions';
 import rasterIcon from "../../images/raster_layers_logo_explainbar.svg";
 import formStyles from './../../styles/Forms.module.css';
 import { sendDataToLizardRecursive } from '../../utils/sendDataToLizard';
@@ -28,6 +28,7 @@ interface Props {
 interface PropsFromDispatch {
   updateRasterSourceUUID: (uuid: string) => void,
   addNotification: (message: string | number, timeout: number) => void,
+  addFilesToQueue: (files: File[]) => void,
 };
 interface RouteParams {
   uuid: string;
@@ -86,7 +87,11 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           }
         }).then((parsedBody: any) => {
           props.updateRasterSourceUUID(parsedBody.uuid);
-          // send data to Lizard server
+          // Add files to Upload Queue in Redux store
+          // and send data to Lizard server
+          const acceptedFiles = values.data as AcceptedFile[] || [];
+          const uploadFiles = acceptedFiles.map(f => f.file);
+          props.addFilesToQueue(uploadFiles);
           sendDataToLizardRecursive(
             parsedBody.uuid,
             values.data as AcceptedFile[],
@@ -109,7 +114,11 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           const status = data.response.status;
           props.addNotification(status, 2000);
           if (status === 200) {
-            // send data to Lizard server
+            // Add files to Upload Queue in Redux store
+            // and send data to Lizard server
+            const acceptedFiles = values.data as AcceptedFile[] || [];
+            const uploadFiles = acceptedFiles.map(f => f.file);
+            props.addFilesToQueue(uploadFiles);
             sendDataToLizardRecursive(
               props.match.params.uuid,
               values.data as AcceptedFile[],
@@ -259,6 +268,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
 const mapPropsToDispatch = (dispatch: any) => ({
   updateRasterSourceUUID: (uuid: string) => dispatch(updateRasterSourceUUID(uuid)),
   addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout)),
+  addFilesToQueue: (files: File[]) => dispatch(addFilesToQueue(files)),
 });
 
 export default connect(null, mapPropsToDispatch)(withRouter(RasterSourceForm));

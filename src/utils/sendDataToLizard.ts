@@ -1,5 +1,5 @@
 import { storeDispatch } from "./../index";
-import { addNotification, addTask } from "../actions";
+import { addNotification, addTaskUuidToFile, updateFileStatus } from "../actions";
 import { uploadRasterSourceFile } from "../api/rasters";
 import { AcceptedFile } from "../form/UploadRasterData";
 
@@ -23,6 +23,7 @@ export const sendDataToLizardRecursive = (uuid: string, data: AcceptedFile[], te
   };
 
   // else proceed sending the file to Lizard server
+  storeDispatch(updateFileStatus(e.file, 'UPLOADING'));
   uploadRasterSourceFile(
     uuid,
     e.file,
@@ -36,15 +37,17 @@ export const sendDataToLizardRecursive = (uuid: string, data: AcceptedFile[], te
 
       // return
       if (status === 200) {
+        storeDispatch(updateFileStatus(e.file, 'PROCESSING'));
         return response.json();
       } else if (status === 400) {
+        storeDispatch(updateFileStatus(e.file, 'FAILED TO UPLOAD'));
         storeDispatch(addNotification(`Error uploading ${e.file.name}`, 5000));
         return;
       };
     })
     .then(response => {
       if (response) {
-        storeDispatch(addTask(response.task_id, e.file.name, e.file.size));
+        storeDispatch(addTaskUuidToFile(e.file, response.task_id));
       };
     })
     .catch(e => console.error(e));
