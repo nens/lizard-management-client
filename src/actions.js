@@ -354,7 +354,7 @@ export function updateTaskStatus(uuid, status) {
   };
 }
 
-export function removeFile(file) {
+export function removeFileFromQueue(file) {
   return {
     type: REMOVE_FILE_FROM_QUEUE,
     file

@@ -340,7 +340,9 @@ function uploadFiles(state = null, action) {
     case UPDATE_TASK_STATUS:
       return state.map(f => {
         if (f.uuid === action.uuid) {
-          const status = (action.status === 'SUCCESS' || action.status === 'FAILED') ? action.status : 'PROCESSING'
+          // An async task to Lizard can have different statuses. However for the client side,
+          // we divide them into 3 main statuses: "PROCESSING", "SUCCESS" and "FAILED"
+          const status = (action.status === 'SUCCESS' || action.status === 'FAILED') ? action.status : 'PROCESSING';
           return {
             ...f,
             "status": status
@@ -350,7 +352,7 @@ function uploadFiles(state = null, action) {
         };
       });
     case REMOVE_FILE_FROM_QUEUE:
-      return state.filter(f => f.name !== action.file.name && f.size !== action.file.size);
+      return state.filter(f => f.name !== action.file.name || f.size !== action.file.size);
     default:
       return state;
   };

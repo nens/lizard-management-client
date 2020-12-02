@@ -15,7 +15,8 @@ import {
   fetchColorMaps,
   updateViewportDimensions,
   fetchDatasets,
-  updateTaskStatus
+  updateTaskStatus,
+  removeFileFromQueue
 } from "./actions";
 import { Route, NavLink } from "react-router-dom";
 import LanguageSwitcher from "./components/LanguageSwitcher";
@@ -85,7 +86,7 @@ class App extends Component {
   componentDidUpdate(prevProps) {
     if (this.props.uploadFiles && prevProps.uploadFiles !== this.props.uploadFiles) {
       const waitingFiles = this.props.uploadFiles.filter(
-        f => f.status !== 'SUCCESS' || f.status === 'FAILED' || f.status === 'FAILED TO UPLOAD'
+        f => f.status !== 'SUCCESS' || f.status === 'FAILED'
       );
       const firstFileInTheQueue = waitingFiles[0];
 
@@ -378,7 +379,8 @@ class App extends Component {
                 }}
               >
                 <span>Filename</span>
-                <span>Upload status</span>
+                <span>Filesize</span>
+                <span>Status</span>
               </div>
               {this.props.uploadFiles && Object.values(this.props.uploadFiles).map(file => (
                 <div
@@ -390,7 +392,11 @@ class App extends Component {
                   }}
                 >
                   <span>{file.name}</span>
-                  <span>{file.status}</span>
+                  <span>{file.size}</span>
+                  <span>
+                    {file.status}
+                    <span onClick={() => this.props.removeFileFromQueue(file)}>x</span>
+                  </span>
                 </div>
               ))}
             </ConfirmModal>
@@ -453,7 +459,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     updateViewportDimensions: (width, height) => {
       dispatch(updateViewportDimensions(width, height))
     },
-    updateTaskStatus: (uuid, status) => dispatch(updateTaskStatus(uuid, status))
+    updateTaskStatus: (uuid, status) => dispatch(updateTaskStatus(uuid, status)),
+    removeFileFromQueue: (file) => dispatch(removeFileFromQueue(file)),
   };
 };
 

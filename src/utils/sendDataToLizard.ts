@@ -40,7 +40,7 @@ export const sendDataToLizardRecursive = (uuid: string, data: AcceptedFile[], te
         storeDispatch(updateFileStatus(e.file, 'PROCESSING'));
         return response.json();
       } else if (status === 400) {
-        storeDispatch(updateFileStatus(e.file, 'FAILED TO UPLOAD'));
+        storeDispatch(updateFileStatus(e.file, 'FAILED'));
         storeDispatch(addNotification(`Error uploading ${e.file.name}`, 5000));
         return;
       };
