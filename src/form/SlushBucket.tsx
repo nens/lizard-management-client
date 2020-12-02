@@ -169,6 +169,8 @@ export const SlushBucket: React.FC<MyProps> = (props) => {
                   // lookup complete { value, display} object in choices array
                   return choices.filter(choice => choice.value === selectedItem)[0];
                 })
+                // filter out unfound choices. This could happen on uuid of organisations that are sometimes with sometimes without dashes
+                .filter((choiceItem) => choiceItem)
                 .map((choiceItem,i) => {
                   return (
                     <div

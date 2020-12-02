@@ -25,11 +25,11 @@ import { addNotification } from './../../actions';
 import formStyles from './../../styles/Forms.module.css';
 import SpatialBoundsField, { spatialBoundsValidator } from "../../forms/SpatialBoundsField";
 import MinMaxZoomField, {MinMax} from '../../components/MinMaxZoomField';
-import { WmsLayerAsReceivedFromApi} from '../../types/WmsLayerType';
+import { WmsLayerReceivedFromApi, wmsLayerReceivedFromApiToForm, WmsLayerFormType, wmsLayerGetDefaultFormValues, wmsLayerFormToFormSendToApi} from '../../types/WmsLayerType';
 
 
 interface Props {
-  currentWmsLayer?: WmsLayerAsReceivedFromApi, 
+  currentWmsLayer?: WmsLayerReceivedFromApi, 
 };
 
 interface PropsFromDispatch {
@@ -46,75 +46,36 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const datasets = useSelector(getDatasets).available;
 
-  const initialValues = currentWmsLayer ? {
-    name: currentWmsLayer.name,
-    description: currentWmsLayer.description,
-    datasets: currentWmsLayer.datasets.map((dataset:any)=>dataset.slug),
-    wmsUrl: currentWmsLayer.wms_url,
-    slug: currentWmsLayer.slug,
-    downloadUrl: currentWmsLayer.download_url,
-    legendUrl: currentWmsLayer.legend_url,
-    getFeatureInfoUrl: currentWmsLayer.get_feature_info_url,
-    tiled: currentWmsLayer.tiled,
-    minMaxZoom: {
-      minZoom: currentWmsLayer.min_zoom + '',
-      maxZoom: currentWmsLayer.max_zoom + '',
-    },
-    spatialBounds: currentWmsLayer.spatial_bounds,
-    options: JSON.stringify(currentWmsLayer.options),
-    accessModifier: currentWmsLayer.access_modifier,
-    sharedWith: currentWmsLayer.shared_with.length === 0 ? false : true,
-    organisationsToSharedWith: currentWmsLayer.shared_with.map((organisation:any) => organisation.uuid.replace(/-/g, "")) || [],
-    organisation: currentWmsLayer.organisation.uuid.replace(/-/g, "") || null,
-    supplier: currentWmsLayer.supplier,
-  } : {
-    name: null,
-    description: null,
-    datasets: [],
-    wmsUrl: "http://example.com",
-    slug: "",
-    downloadUrl: "",
-    legendUrl: "",
-    getFeatureInfoUrl: "",
-    tiled: true,
-    minMaxZoom: {
-      minZoom: 0,
-      maxZoom: 31,
-    },
-    spatialBounds: null,
-    options: '{"transparent": "True"}',
-    accessModifier: 'Private',
-    sharedWith: false,
-    organisationsToSharedWith: [],
-    organisation: selectedOrganisation.uuid.replace(/-/g, "") || null,
-    supplier: null,
-  };
+  const initialValues: WmsLayerFormType = currentWmsLayer ? wmsLayerReceivedFromApiToForm(currentWmsLayer) : wmsLayerGetDefaultFormValues(selectedOrganisation.uuid);
+  
   const onSubmit = (values: Values) => {
     console.log('submitted', values);
 
-    const wmsLayer = {
-      name: values.name + '',
-      slug: values.slug + '',
-      get_feature_info:false,
-      description: values.description + '',
-      datasets: values.datasets,
-      wms_url: values.wmsUrl + '',
-      download_url: values.downloadUrl + '',
-      legend_url: values.legendUrl + '',
-      get_feature_info_url: values.getFeatureInfoUrl + '',
-      tiled: values.tiled,
-      // @ts-ignore
-      min_zoom: values.minMaxZoom.minZoom,
-      // @ts-ignore
-      max_zoom: values.minMaxZoom.maxZoom,
-      spatial_bounds: values.spatialBounds,
-      options: JSON.stringify({"transparent": "True"}), //JSON.stringify(values.options),
-      accessModifier: values.accessModifier,
-      // @ts-ignore
-      shared_with: values.organisationsToSharedWith.map((organisation:any) => organisation.replace(/-/g, "")),
-      organisation: ((values.organisation + '').replace(/-/g, "")) + '' || null,
-      supplier: values.supplier,
-    };
+    // @ts-ignore
+    const wmsLayer = wmsLayerFormToFormSendToApi(values);
+    // {
+    //   name: values.name + '',
+    //   slug: values.slug + '',
+    //   get_feature_info:false,
+    //   description: values.description + '',
+    //   datasets: values.datasets,
+    //   wms_url: values.wmsUrl + '',
+    //   download_url: values.downloadUrl + '',
+    //   legend_url: values.legendUrl + '',
+    //   get_feature_info_url: values.getFeatureInfoUrl + '',
+    //   tiled: values.tiled,
+    //   // @ts-ignore
+    //   min_zoom: values.minMaxZoom.minZoom,
+    //   // @ts-ignore
+    //   max_zoom: values.minMaxZoom.maxZoom,
+    //   spatial_bounds: values.spatialBounds,
+    //   options: JSON.stringify({"transparent": "True"}), //JSON.stringify(values.options),
+    //   accessModifier: values.accessModifier,
+    //   // @ts-ignore
+    //   shared_with: values.organisationsToSharedWith.map((organisation:any) => organisation.replace(/-/g, "")),
+    //   organisation: ((values.organisation + '').replace(/-/g, "")) + '' || null,
+    //   supplier: values.supplier,
+    // };
 
     const url = "/api/v4/wmslayers/";
 
@@ -232,13 +193,13 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
         </span>
         <TextInput
           title={'WMS Url *'}
-          name={'wmsUrl'}
+          name={'wms_url'}
           placeholder={'http://example.com'}
-          value={values.wmsUrl as string}
+          value={values.wms_url as string}
           valueChanged={handleInputChange}
           clearInput={clearInput}
-          validated={!minLength(3, values.wmsUrl as string)}
-          errorMessage={minLength(3, values.wmsUrl as string)}
+          validated={!minLength(3, values.wms_url as string)}
+          errorMessage={minLength(3, values.wms_url as string)}
           triedToSubmit={triedToSubmit}
         />
         <TextInput
@@ -254,9 +215,9 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
         />
         <TextInput
           title={'Download Url *'}
-          name={'downloadUrl'}
+          name={'download_url'}
           placeholder={'http://example.com'}
-          value={values.downloadUrl as string}
+          value={values.download_url as string}
           valueChanged={handleInputChange}
           clearInput={clearInput}
           validated={true}
@@ -265,9 +226,9 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
         />
         <TextInput
           title={'Legend Url *'}
-          name={'legendUrl'}
+          name={'legend_url'}
           placeholder={'http://example.com'}
-          value={values.legendUrl as string}
+          value={values.legend_url as string}
           valueChanged={handleInputChange}
           clearInput={clearInput}
           validated={true}
@@ -275,9 +236,9 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
         />
         <TextInput
           title={'Get Feature Url *'}
-          name={'getFeatureInfoUrl'}
+          name={'get_feature_info_url'}
           placeholder={'http://example.com'}
-          value={values.getFeatureInfoUrl as string}
+          value={values.get_feature_info_url as string}
           valueChanged={handleInputChange}
           clearInput={clearInput}
           validated={true}
@@ -294,33 +255,43 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           // title={'Get Feature Url *'}
           name={'minMaxZoom'}
           // placeholder={'http://example.com'}
-          value={values.minMaxZoom as MinMax}
+          // value={values.minMaxZoom as MinMax}
+          value={{
+            minZoom: values.min_zoom as number,
+            maxZoom: values.max_zoom as number,
+          }}
           // valueChanged={handleInputChange}
-          valueChanged={(value:MinMax) => handleValueChange('minMaxZoom', value)}
+          valueChanged={(value:MinMax) => { 
+            if (values.min_zoom !== value.minZoom) {
+              handleValueChange('min_zoom', value.minZoom);
+            } else {
+              handleValueChange('max_zoom', value.maxZoom);
+            }
+          }}
           // clearInput={clearInput}
           // validated={!minLength(3, values.name as string)}
           // errorMessage={minLength(3, values.name as string)}
           triedToSubmit={triedToSubmit}
         />
         <SpatialBoundsField
-           name={'spatialBounds'}
+           name={'spatial_bounds'}
            // placeholder={'http://example.com'}
            // @ts-ignore
-           value={values.spatialBounds}
-           valueChanged={(value:any) => handleValueChange('spatialBounds', value)}
+           value={values.spatial_bounds}
+           valueChanged={(value:any) => handleValueChange('spatial_bounds', value)}
            clearInput={clearInput}
            // errorMessage={minLength(3, values.name as string)}
            triedToSubmit={triedToSubmit}
            otherValues= {{
             wmsLayerName: values.name + '',
             wmsLayerSlug: values.slug + '',
-            wmsLayerUrl: values.wmsUrl + '',
+            wmsLayerUrl: values.wms_url + '',
            }}
            geoServerError={geoserverError}
            showGeoServerError={()=>setGeoserverError(true)}
            validated={()=>{
              // @ts-ignore
-            spatialBoundsValidator(values.spatialBounds)
+            spatialBoundsValidator(values.spatial_bounds)
            }}
         />
         <TextArea
@@ -348,30 +319,31 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
         </span>
         <AccessModifier
           title={'Access Modifier'}
-          name={'accessModifier'}
-          value={values.accessModifier as string}
-          valueChanged={value => handleValueChange('accessModifier', value)}
+          name={'access_modifier'}
+          value={values.access_modifier as string}
+          valueChanged={value => handleValueChange('access_modifier', value)}
           readOnly
         />
         <CheckBox
           title={'Shared with other organisations'}
-          name={'sharedWith'}
-          value={values.sharedWith as boolean}
-          valueChanged={bool => handleValueChange('sharedWith', bool)}
+          name={'sharedWithCheckbox'}
+          value={values.sharedWithCheckbox as boolean}
+          valueChanged={bool => handleValueChange('sharedWithCheckbox', bool)}
         />
-        {values.sharedWith ? (
+        {values.sharedWithCheckbox ? (
           <SlushBucket
             title={'Organisations'}
-            name={'organisationsToSharedWith'}
+            name={'shared_with'}
             placeholder={'Search organisations'}
-            value={values.organisationsToSharedWith as string[]}
+            // str.replace is needed because we still use uuid without dashes everywhere. If possible we should remove this everywhere.
+            value={(values.shared_with as string[]).map((str)=>str.replace(/-/g, ""))}
             choices={organisationsToSharedWith.map((organisation: any) => {
               return {
                 display: organisation.name,
                 value: organisation.uuid
               }
             })}
-            valueChanged={(value: any) => handleValueChange('organisationsToSharedWith', value)}
+            valueChanged={(value: any) => handleValueChange('shared_with', value)}
             validated
           />
         ) : null}

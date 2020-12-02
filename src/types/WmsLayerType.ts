@@ -32,16 +32,17 @@ export interface WmsLayerReceivedFromApi {
   supplier_code: string;
 }
 
-export const wmsLayerReceivedFromApiToForm = (wmsLayer: WmsLayerReceivedFromApi): WmsLayerForm => {
+export const wmsLayerReceivedFromApiToForm = (wmsLayer: WmsLayerReceivedFromApi): WmsLayerFormType => {
   return { 
       ...wmsLayer,
+      sharedWithCheckbox: wmsLayer.shared_with.length > 1? true : false,
       organisation: wmsLayer.organisation.uuid,
       shared_with: wmsLayer.shared_with.map(orga=>orga.uuid),
       datasets: wmsLayer.datasets.map(dataset=>dataset.slug),
     }
 }
 
-export interface WmsLayerForm {
+export type WmsLayerFormType = {
   name: string;
   uuid?: string,
   slug: string;
@@ -60,13 +61,14 @@ export interface WmsLayerForm {
   options: string;
 
   organisation: string;
+  sharedWithCheckbox: boolean;
   shared_with: string[];
   access_modifier: string;
   supplier: string;
   supplier_code: string;
 }
 
-export const wmsLayerGetDefaultFormValues = (organisationUuid: string): WmsLayerForm => {
+export const wmsLayerGetDefaultFormValues = (organisationUuid: string): WmsLayerFormType => {
   return {
     name: "",
   uuid: "",
@@ -75,6 +77,8 @@ export const wmsLayerGetDefaultFormValues = (organisationUuid: string): WmsLayer
   datasets: [],
   
   wms_url: "",
+  // use next url to test spatial bounds button
+  // wms_url: "https://maps1.project.lizard.net/geoserver/Q0007_sat4rice_2018/wms",
   download_url: "",
   legend_url: "",
   get_feature_info_url: "",
@@ -86,6 +90,7 @@ export const wmsLayerGetDefaultFormValues = (organisationUuid: string): WmsLayer
   options: '{"transparent": "True"}',
 
   organisation: organisationUuid,
+  sharedWithCheckbox: false,
   shared_with: [],
   access_modifier: "Private",
   supplier: "",
@@ -96,9 +101,10 @@ export const wmsLayerGetDefaultFormValues = (organisationUuid: string): WmsLayer
 
 
 
-export const wmsLayerFormToFormSendToApi = (wmsLayer: WmsLayerForm) => {
+export const wmsLayerFormToFormSendToApi = (wmsLayer: WmsLayerFormType) => {
   return { 
       ...wmsLayer,
       uuid: wmsLayer.uuid === "" ? undefined :  wmsLayer.uuid,
+      sharedWithCheckbox: undefined,
     }
 }
