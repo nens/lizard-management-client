@@ -92,16 +92,13 @@ class App extends Component {
     };
   }
 
-  // Poll the task endpoint to update status of uploading files for raster source
-  // in the upload queue when there is upload files waiting to be uploaded in the queue
+  // Poll the task endpoint to update status of uploading/processing files in the queue
   componentDidUpdate(prevProps) {
     if (this.props.uploadFiles && prevProps.uploadFiles !== this.props.uploadFiles) {
-      const waitingFiles = this.props.uploadFiles.filter(
-        f => f.status !== 'SUCCESS' || f.status === 'FAILED'
-      );
-      const firstFileInTheQueue = waitingFiles[0];
+      console.log(this.props.filesInProcess)
+      const firstFileInTheQueue = this.props.filesInProcess[0];
 
-      if (waitingFiles.length === 0 || !firstFileInTheQueue || !firstFileInTheQueue.uuid) return;
+      if (this.props.filesInProcess.length === 0 || !firstFileInTheQueue || !firstFileInTheQueue.uuid) return;
 
       setTimeout(() => {
         fetchTaskInstance(firstFileInTheQueue.uuid)
