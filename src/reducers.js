@@ -396,6 +396,9 @@ export const getRasterSourceUUID = (state) => {
 export const getUploadFiles = (state) => {
   return state.uploadFiles;
 };
+export const getFinsihedFiles = (state) => {
+  return state.uploadFiles && state.uploadFiles.length > 0 && state.uploadFiles.filter(file => file.status === 'SUCCESS' || file.status === 'FAILED');
+};
 
 const rootReducer = combineReducers({
   bootstrap,

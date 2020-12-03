@@ -1,7 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { useSelector } from 'react-redux';
-import { getUploadFiles } from '../reducers';
+import { getFinsihedFiles, getUploadFiles } from '../reducers';
+import { removeFileFromQueue } from '../actions';
 import { bytesToMb } from '../utils/byteUtils';
 import ModalBackground from './ModalBackground';
 import styles from './UploadQueue.module.css';
@@ -12,7 +13,6 @@ import setting from "../images/setting.svg";
 import checkMark from "../images/checkMark.svg";
 import upload from "../images/upload.svg";
 import warning from "../images/warning.svg";
-import { removeFileFromQueue } from '../actions';
 
 const getStatusIcon = (status: string) => {
   if (status === 'WAITING') {
@@ -49,6 +49,7 @@ interface PropsFromDispatch {
 
 const UploadQueue: React.FC<MyProps & PropsFromDispatch> = (props) => {
   const uploadFiles: any[] = useSelector(getUploadFiles);
+  const finishedFiles: any[] = useSelector(getFinsihedFiles);
 
   return (
     <ModalBackground
@@ -99,13 +100,8 @@ const UploadQueue: React.FC<MyProps & PropsFromDispatch> = (props) => {
       <div className={styles.ModalFooter}>
         <button
           className={buttonStyles.NewButton}
-          onClick={() => {
-            if (uploadFiles && uploadFiles.length > 0) {
-              const finishedFiles = uploadFiles.filter(file => file.status === 'SUCCESS' || file.status === 'FAILED');
-              return finishedFiles.map(file => props.removeFileFromQueue(file));
-            };
-          }}
-          disabled={!uploadFiles || uploadFiles.length === 0}
+          onClick={() => finishedFiles.map(file => props.removeFileFromQueue(file))}
+          disabled={!finishedFiles || finishedFiles.length === 0}
         >
           Clean queue
         </button>
