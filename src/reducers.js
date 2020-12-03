@@ -393,6 +393,10 @@ export const getRasterSourceUUID = (state) => {
   return state.rasterSourceUUID;
 };
 
+export const getUploadFiles = (state) => {
+  return state.uploadFiles;
+};
+
 const rootReducer = combineReducers({
   bootstrap,
   organisations,

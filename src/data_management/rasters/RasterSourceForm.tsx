@@ -88,9 +88,10 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
         }).then((parsedBody: any) => {
           props.updateRasterSourceUUID(parsedBody.uuid);
           // Add files to Upload Queue in Redux store
-          // and send data to Lizard server
+          // add notification and send data to Lizard server
           const acceptedFiles = values.data as AcceptedFile[] || [];
           const uploadFiles = acceptedFiles.map(f => f.file);
+          if (uploadFiles.length > 0) props.addNotification('Upload started', 1000);
           props.addFilesToQueue(uploadFiles);
           sendDataToLizardRecursive(
             parsedBody.uuid,
@@ -112,12 +113,13 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
       patchRasterSource(currentRasterSource.uuid as string, body)
         .then(data => {
           const status = data.response.status;
-          props.addNotification(status, 2000);
           if (status === 200) {
+            props.addNotification('Success! Raster source updated', 2000);
             // Add files to Upload Queue in Redux store
-            // and send data to Lizard server
+            // add notification and send data to Lizard server
             const acceptedFiles = values.data as AcceptedFile[] || [];
             const uploadFiles = acceptedFiles.map(f => f.file);
+            if (uploadFiles.length > 0) props.addNotification('Upload started', 1000);
             props.addFilesToQueue(uploadFiles);
             sendDataToLizardRecursive(
               props.match.params.uuid,
@@ -127,6 +129,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
             // redirect back to the table of raster sources
             props.history.push('/data_management/raster_sources')
           } else {
+            props.addNotification(status, 2000);
             console.error(data);
           };
         })

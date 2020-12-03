@@ -105,11 +105,12 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
       createRasterLayer(rasterLayer, values.rasterSource as string)
         .then(response => {
           const status = response.status;
-          props.addNotification(status, 2000);
           if (status === 201) {
+            props.addNotification('Success! Raster layer created', 2000);
             // redirect back to the table of raster layers
             props.history.push('/data_management/raster_layers');
           } else {
+            props.addNotification(status, 2000);
             console.error(response);
           };
         })
@@ -140,11 +141,12 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
       patchRasterLayer(currentRasterLayer.uuid as string, body)
         .then(data => {
           const status = data.response.status;
-          props.addNotification(status, 2000);
           if (status === 200) {
+            props.addNotification('Success! Raster layer updated', 2000);
             // redirect back to the table of raster layers
             props.history.push('/data_management/raster_layers');
           } else {
+            props.addNotification(status, 2000);
             console.error(data);
           };
         })

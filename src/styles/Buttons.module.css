@@ -14,6 +14,15 @@ button.NewButton:hover,
 button.NewButton:active {
   background-color: var(--color-header);
 }
+button.NewButton:active {
+  transform: translateY(2px);
+}
+button.NewButton:focus {
+  outline: none;
+}
+button.NewButton:disabled {
+  background-color: var(--color-button-disabled);
+}
 
 .Button {
   position: relative;

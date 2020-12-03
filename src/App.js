@@ -23,6 +23,7 @@ import LanguageSwitcher from "./components/LanguageSwitcher";
 import OrganisationSwitcher from "./components/OrganisationSwitcher";
 import Snackbar from "./components/Snackbar";
 import Breadcrumbs from "./components/Breadcrumbs";
+import UploadQueue from "./components/UploadQueue";
 import styles from "./App.module.css";
 import gridStyles from "./styles/Grid.module.css";
 import buttonStyles from "./styles/Buttons.module.css";
@@ -30,7 +31,6 @@ import lizardIcon from "./images/lizard.svg";
 import { withRouter } from "react-router-dom";
 import {appTiles} from './home/HomeAppTileConfig';
 import doArraysHaveEqualElement from './utils/doArraysHaveEqualElement';
-import ConfirmModal from "./components/ConfirmModal";
 
 class App extends Component {
   constructor(props) {
@@ -365,41 +365,9 @@ class App extends Component {
           ) : null}
           <Snackbar />
           {this.state.showUploadQueue ? (
-            <ConfirmModal
-              title="Upload queue"
-              buttonName="Close"
-              onClick={() => this.setState({ showUploadQueue: false })}
-            >
-              <div
-                style={{
-                  width: '100%',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  fontWeight: 500
-                }}
-              >
-                <span>Filename</span>
-                <span>Filesize</span>
-                <span>Status</span>
-              </div>
-              {this.props.uploadFiles && Object.values(this.props.uploadFiles).map(file => (
-                <div
-                  key={file.name + file.size}
-                  style={{
-                    width: '100%',
-                    display: 'flex',
-                    justifyContent: 'space-between'
-                  }}
-                >
-                  <span>{file.name}</span>
-                  <span>{file.size}</span>
-                  <span>
-                    {file.status}
-                    <span onClick={() => this.props.removeFileFromQueue(file)}>x</span>
-                  </span>
-                </div>
-              ))}
-            </ConfirmModal>
+            <UploadQueue
+              handleClose={() => this.setState({ showUploadQueue: false })}
+            />
           ) : null}
         </div>
       );
