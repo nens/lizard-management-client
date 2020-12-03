@@ -95,7 +95,6 @@ class App extends Component {
   // Poll the task endpoint to update status of uploading/processing files in the queue
   componentDidUpdate(prevProps) {
     if (this.props.uploadFiles && prevProps.uploadFiles !== this.props.uploadFiles) {
-      console.log(this.props.filesInProcess)
       const firstFileInTheQueue = this.props.filesInProcess[0];
 
       if (this.props.filesInProcess.length === 0 || !firstFileInTheQueue || !firstFileInTheQueue.uuid) return;
