@@ -42,6 +42,7 @@ class App extends Component {
     };
     this.updateOnlineStatus = this.updateOnlineStatus.bind(this);
     this.updateViewportDimensions = this.updateViewportDimensions.bind(this);
+    this.handleWindowClose = this.handleWindowClose.bind(this);
   }
   //Click the user-profile button open the dropdown
   //Click anywhere outside of the user-profile modal will close the modal
@@ -55,12 +56,14 @@ class App extends Component {
     window.addEventListener("online", e => this.updateOnlineStatus(e));
     window.addEventListener("offline", e => this.updateOnlineStatus(e));
     window.addEventListener("resize", e => this.updateViewportDimensions(e));
+    window.addEventListener("beforeunload", this.handleWindowClose);
     this.props.getLizardBootstrap();
   }
   componentWillUnmount() {
     window.removeEventListener("online", e => this.updateOnlineStatus(e));
     window.removeEventListener("offline", e => this.updateOnlineStatus(e));
     window.removeEventListener("resize", e => this.updateViewportDimensions(e));
+    window.removeEventListener("beforeunload", this.handleWindowClose);
   }
   componentWillReceiveProps(props) {
     if (props.isAuthenticated) {
@@ -79,6 +82,14 @@ class App extends Component {
     const { updateViewportDimensions } = this.props;
     const { innerWidth, innerHeight } = window;
     updateViewportDimensions(innerWidth, innerHeight);
+  }
+  handleWindowClose(e) {
+    e.preventDefault();
+    if (this.props.uploadingFiles && this.props.uploadingFiles.length > 0) {
+      return e.returnValue = "";
+    } else {
+      return null;
+    };
   }
 
   // Poll the task endpoint to update status of uploading files for raster source
@@ -382,6 +393,10 @@ const mapStateToProps = (state, ownProps) => {
     bootstrap: state.bootstrap,
     isAuthenticated: state.bootstrap.isAuthenticated,
     uploadFiles: state.uploadFiles,
+    uploadingFiles:
+      state.uploadFiles &&
+      state.uploadFiles.length > 0 &&
+      state.uploadFiles.filter(file => file.status === 'WAITING' || file.status === 'UPLOADING'),
     filesInProcess:
       state.uploadFiles &&
       state.uploadFiles.length > 0 &&
