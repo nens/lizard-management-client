@@ -99,7 +99,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
         // @ts-ignore
         rescalable: values.colorMap.rescalable as boolean,
         shared_with: values.organisationsToSharedWith as string[],
-        datasets: [values.dataset as string],
+        datasets: values.dataset ? [values.dataset as string] : []
       };
 
       createRasterLayer(rasterLayer, values.rasterSource as string)
@@ -129,7 +129,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
         // @ts-ignore
         rescalable: values.colorMap.rescalable as boolean,
         shared_with: values.organisationsToSharedWith as string[],
-        datasets: [values.dataset as string]
+        datasets: values.dataset ? [values.dataset as string] : []
       };
       // only add colormap in options if not multiple layers
       // @ts-ignore
