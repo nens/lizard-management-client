@@ -11,10 +11,10 @@ import { SelectBox } from '../../form/SelectBox';
 import { SlushBucket } from '../../form/SlushBucket';
 import { AccessModifier } from '../../form/AccessModifier';
 import { useForm, Values } from '../../form/useForm';
-import { minLength, 
+import { 
+  minLength, 
   // required 
-} 
-  from '../../form/validators';
+} from '../../form/validators';
 import wmsIcon from "../../images/wms@3x.svg";
 import {
   getDatasets,

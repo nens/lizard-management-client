@@ -51,11 +51,34 @@ export const spatialBoundsValidator = (fieldValue: SpatialBoundsProps['value']) 
 
 export default class SpatialBoundsField extends Component<SpatialBoundsProps, {}> {
     updateSpatialBounds(key: string, value: string) {
-        this.props.valueChanged({
-            ...this.props.value,
+        let tempValue: SpatialBounds | null;
+        if (this.props.value === null) {
+            tempValue = {
+                north: NaN,
+                east: NaN,
+                south: NaN,
+                west: NaN,
+            }
+        } else {
+            tempValue = {...this.props.value}
+        }
+
+        tempValue = {
+            ...tempValue,
             [key]: parseFloat(value)
-        });
+        }
+        if (
+            isNaN(tempValue.north) &&
+            isNaN(tempValue.east) &&
+            isNaN(tempValue.south) &&
+            isNaN(tempValue.west)
+        ) {
+            this.props.valueChanged(null);
+        } else {
+            this.props.valueChanged(tempValue);
+        }
     }
+
     removeSpatialBounds() {
         this.props.valueChanged(null);
     }
