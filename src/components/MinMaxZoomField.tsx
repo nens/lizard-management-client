@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 // import { FormattedMessage } from "react-intl";
 // import styles from "./SpatialBoundsField.module.css";
 import durationStyles from "../forms/DurationField.module.css";
 import formStyles from "../styles/Forms.module.css";
 import inputStyles from "../styles/Input.module.css";
 // import thresholdsStyles from './ThresholdsSelection.module.css';
+import {isValidIntegerZeroOrLarger} from '../form/validators';
 
 export interface MinMax {
   minZoom: number,
@@ -18,69 +19,123 @@ interface Props {
   triedToSubmit: boolean,
 }
 
+const isValidMaxZoom = (min:any, max: any) => {
+    const minZoomValidated = isValidIntegerZeroOrLarger(min);
+    const maxZoomValidated = isValidIntegerZeroOrLarger(max);
+    if (!maxZoomValidated.valid) {
+        return maxZoomValidated;
+    } else if (minZoomValidated) {
+        if (max >= min) {
+            return {
+                valid: true,
+                invalidMessage: "",
+            }
+        } 
+        else {
+            return {
+                valid: false,
+                invalidMessage: "Max must be greater than min",
+            }
+        }
+    } else {
+        // if min zoom not validated impossible yet to invalidate maxzoom
+        return {
+            valid: true,
+            invalidMessage: "",
+        }
+    }
+
+}
+
+
  const  MinMaxZoomFields =  (props: Props) => {
-  const {value, valueChanged} = props;
-        return (
-            <div>
+  
+    const {value, valueChanged} = props;
+    const minZoomInput = useRef<HTMLInputElement>(null);
+    const maxZoomInput = useRef<HTMLInputElement>(null);
+
+    const minZoomValidated = isValidIntegerZeroOrLarger(value.minZoom); 
+    const maxZoomValidated = isValidMaxZoom(value.minZoom, value.maxZoom);
+
+    useEffect(() => {
+        if (minZoomInput && minZoomInput.current) {
+            if (minZoomValidated.valid) {
+                minZoomInput.current.setCustomValidity('');
+            } else {
+                minZoomInput.current.setCustomValidity(minZoomValidated.invalidMessage);
+            }
+        }
+        if (maxZoomInput && maxZoomInput.current) {
+            if (maxZoomValidated.valid) {
+                maxZoomInput.current.setCustomValidity('');
+            } else {
+                maxZoomInput.current.setCustomValidity(maxZoomValidated.invalidMessage);
+            }
+        }
+        
+    })
+
+    return (
+        <div>
+            <div
+                className={
+                    formStyles.FormGroup +
+                    " " +
+                    inputStyles.PositionRelative
+                }
+            >
                 <div
                     className={
-                        formStyles.FormGroup +
+                        durationStyles.DurationInputFields +
                         " " +
-                        inputStyles.PositionRelative
+                        durationStyles.DurationInputFieldDays +
+                        " " +
+                        durationStyles.TextAlignCenter
                     }
                 >
-                    <div
+                    <label>
+                        Minimal Zoom
+                    </label>
+                    <input
+                        type="number"
                         className={
-                            durationStyles.DurationInputFields +
-                            " " +
-                            durationStyles.DurationInputFieldDays +
+                            formStyles.FormControl +
                             " " +
                             durationStyles.TextAlignCenter
                         }
-                    >
-                        <label>
-                            Minimal Zoom
-                        </label>
-                        <input
-                            // id="north"
-                            type="number"
-                            className={
-                                formStyles.FormControl +
-                                " " +
-                                durationStyles.TextAlignCenter
-                            }
-                            value={value.minZoom}
-                            onChange={(e) => valueChanged({minZoom: e.target.value, maxZoom: value.maxZoom})}
-                        />
-                    </div>
-                    <div
+                        value={value.minZoom}
+                        onChange={(e) => valueChanged({minZoom: parseFloat(e.target.value), maxZoom: value.maxZoom})}
+                        ref={minZoomInput}
+                    />
+                </div>
+                <div
+                    className={
+                        durationStyles.DurationInputFields +
+                        " " +
+                        durationStyles.TextAlignCenter
+                    }
+                >
+                    <label>
+                        Maximal zoom
+                    </label>
+                    <input
+                        type="number"
                         className={
-                            durationStyles.DurationInputFields +
+                            formStyles.FormControl +
                             " " +
                             durationStyles.TextAlignCenter
                         }
-                    >
-                        <label>
-                            Maximal zoom
-                        </label>
-                        <input
-                            // id="east"
-                            type="number"
-                            className={
-                                formStyles.FormControl +
-                                " " +
-                                durationStyles.TextAlignCenter
-                            }
-                            value={value.maxZoom}
-                            onChange={(e) => valueChanged({minZoom: value.minZoom, maxZoom: e.target.value})}
-                        />
-                    </div>
-                    
-                    
+                        value={value.maxZoom}
+                        onChange={(e) => valueChanged({minZoom: value.minZoom, maxZoom: parseFloat(e.target.value)})}
+                        ref={maxZoomInput}
+                    />
                 </div>
                 
+                
             </div>
-        );
+            
+        </div>
+    );
 }
 
 export default  MinMaxZoomFields;

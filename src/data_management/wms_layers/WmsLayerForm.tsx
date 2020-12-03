@@ -53,30 +53,6 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
 
     // @ts-ignore
     const wmsLayer = wmsLayerFormToFormSendToApi(values);
-    // {
-    //   name: values.name + '',
-    //   slug: values.slug + '',
-    //   get_feature_info:false,
-    //   description: values.description + '',
-    //   datasets: values.datasets,
-    //   wms_url: values.wmsUrl + '',
-    //   download_url: values.downloadUrl + '',
-    //   legend_url: values.legendUrl + '',
-    //   get_feature_info_url: values.getFeatureInfoUrl + '',
-    //   tiled: values.tiled,
-    //   // @ts-ignore
-    //   min_zoom: values.minMaxZoom.minZoom,
-    //   // @ts-ignore
-    //   max_zoom: values.minMaxZoom.maxZoom,
-    //   spatial_bounds: values.spatialBounds,
-    //   options: JSON.stringify({"transparent": "True"}), //JSON.stringify(values.options),
-    //   accessModifier: values.accessModifier,
-    //   // @ts-ignore
-    //   shared_with: values.organisationsToSharedWith.map((organisation:any) => organisation.replace(/-/g, "")),
-    //   organisation: ((values.organisation + '').replace(/-/g, "")) + '' || null,
-    //   supplier: values.supplier,
-    // };
-
     const url = "/api/v4/wmslayers/";
 
      if (!currentWmsLayer) {
@@ -216,7 +192,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           triedToSubmit={triedToSubmit}
         />
         <TextInput
-          title={'Download Url *'}
+          title={'Download Url'}
           name={'download_url'}
           placeholder={'http://example.com'}
           value={values.download_url as string}
@@ -227,7 +203,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           triedToSubmit={triedToSubmit}
         />
         <TextInput
-          title={'Legend Url *'}
+          title={'Legend Url'}
           name={'legend_url'}
           placeholder={'http://example.com'}
           value={values.legend_url as string}
@@ -237,7 +213,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           triedToSubmit={triedToSubmit}
         />
         <TextInput
-          title={'Get Feature Url *'}
+          title={'Get Feature Url'}
           name={'get_feature_info_url'}
           placeholder={'http://example.com'}
           value={values.get_feature_info_url as string}
@@ -273,6 +249,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           // clearInput={clearInput}
           // validated={!minLength(3, values.name as string)}
           // errorMessage={minLength(3, values.name as string)}
+          // minZoomValidated={ typeof values.min_zoom === 'number' && values.min_zoom >= 0 && !(values.min_zoom+'').includes(".") }
           triedToSubmit={triedToSubmit}
         />
         <SpatialBoundsField
