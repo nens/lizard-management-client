@@ -110,7 +110,7 @@ export const UploadRasterData: React.FC<MyProps> = (props) => {
       ) : (
         <span>Drag and drop .tiff files here or
           <span
-            className={`${buttonStyles.Button} ${buttonStyles.Success}`}
+            className={buttonStyles.NewButton}
             style={{ marginLeft: 10}}
           >
             BROWSE

@@ -1,4 +1,4 @@
-button.NewButton {
+.NewButton {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 32px;
@@ -9,18 +9,19 @@ button.NewButton {
   border: none;
   box-shadow: 2px 2px 2px #00000029;
   border-radius: 3px;
+  cursor: pointer;
 }
-button.NewButton:hover,
-button.NewButton:active {
+.NewButton:hover,
+.NewButton:active {
   background-color: var(--color-header);
 }
-button.NewButton:active {
+.NewButton:active {
   transform: translateY(2px);
 }
-button.NewButton:focus {
+.NewButton:focus {
   outline: none;
 }
-button.NewButton:disabled {
+.NewButton:disabled {
   background-color: var(--color-button-disabled);
 }
 
