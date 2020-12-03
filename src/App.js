@@ -232,6 +232,7 @@ class App extends Component {
                     >
                       <div>
                         <i className="fa fa-upload" style={{ paddingRight: 8 }} />
+                        {this.props.filesInProcess && this.props.filesInProcess.length > 0 ? <span className={styles.NavNotification}>!</span> : null}
                         Upload queue
                       </div>
                     </div>
@@ -381,6 +382,10 @@ const mapStateToProps = (state, ownProps) => {
     bootstrap: state.bootstrap,
     isAuthenticated: state.bootstrap.isAuthenticated,
     uploadFiles: state.uploadFiles,
+    filesInProcess:
+      state.uploadFiles &&
+      state.uploadFiles.length > 0 &&
+      state.uploadFiles.filter(file => file.status !== 'SUCCESS' && file.status !== 'FAILED'),
 
     mustFetchOrganisations:
       state.organisations.available.length === 0 &&

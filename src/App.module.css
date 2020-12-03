@@ -213,3 +213,19 @@ body {
 .DropdownMenu a:hover {
   background-color: #e5e5e5;
 }
+
+.NavNotification {
+  font-size: 13px;
+  font-weight: 500;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background-color: orangered;
+  position: absolute;
+  top: 4px;
+  left: 12px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

@@ -49,4 +49,7 @@
 .RemoveIcon {
   cursor: pointer;
   color: grey;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
