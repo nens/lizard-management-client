@@ -51,7 +51,7 @@ body {
 
 
 .Primary {
-  background-color: #009F86;
+  background-color: var(--color-header);
   color: #fff;
   text-transform: uppercase;
 }
@@ -213,6 +213,7 @@ body {
   text-decoration: none;
   color: #333;
   padding: 6px 10px;
+  padding-left: 14px;
 }
 .DropdownMenu a:hover {
   background-color: #e5e5e5;
