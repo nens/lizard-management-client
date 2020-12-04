@@ -181,14 +181,14 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           triedToSubmit={triedToSubmit}
         />
         <TextInput
-          title={'Slug'}
+          title={'Slug *'}
           name={'slug'}
           placeholder={'Slug for this WMS'}
           value={values.slug as string}
           valueChanged={handleInputChange}
           clearInput={clearInput}
-          validated={true}
-          // errorMessage={minLength(3, values.wmsUrl as string)}
+          validated={!minLength(3, values.slug as string)}
+          errorMessage={minLength(3, values.slug as string)}
           triedToSubmit={triedToSubmit}
         />
         <TextInput
@@ -291,6 +291,18 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
             }
             // console.log('JSON.parse 4')
             return true;
+          })()}
+          errorMessage={(()=>{
+            // console.log('JSON.parse 1')
+            try{
+              // console.log('JSON.parse 2')
+              JSON.parse(values.options as string)
+            } catch(e) {
+              // console.log('JSON.parse 3')
+              return "needs to be valid JSON";
+            }
+            // console.log('JSON.parse 4')
+            return "";
           })()}
         />
         <span className={formStyles.FormFieldTitle}>
