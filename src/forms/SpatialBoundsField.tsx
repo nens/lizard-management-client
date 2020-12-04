@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useEffect, useRef } from "react";
 import { FormattedMessage } from "react-intl";
 import { getBoundsFromWmsLayer } from "../utils/getBoundsFromGeoServer";
 import ClearInputButton from "./ClearInputButton";
@@ -49,10 +49,83 @@ export const spatialBoundsValidator = (fieldValue: SpatialBoundsProps['value']) 
     };
 };
 
-export default class SpatialBoundsField extends Component<SpatialBoundsProps, {}> {
-    updateSpatialBounds(key: string, value: string) {
+const SpatialBoundsField  =  (props: SpatialBoundsProps) => {
+
+    const {
+        value,
+        otherValues,
+        valueChanged,
+        geoServerError,
+        showGeoServerError,
+    } = props;
+
+    const {
+        wmsLayerSlug,
+        wmsLayerUrl,
+    } = otherValues;
+
+    const northInput = useRef<HTMLInputElement>(null);
+    const eastInput = useRef<HTMLInputElement>(null);
+    const southInput = useRef<HTMLInputElement>(null);
+    const westInput = useRef<HTMLInputElement>(null);
+
+    let north, east, south, west;
+
+    if (value) {
+        north = Number.isFinite(value.north) ? value.north : "";
+        east = Number.isFinite(value.east) ? value.east : "";
+        south = Number.isFinite(value.south) ? value.south : "";
+        west = Number.isFinite(value.west) ? value.west : "";
+    } else {
+        north = "";
+        east = "";
+        south = "";
+        west = "";
+    };
+
+    console.log('nesw', value, north, east, south, west);
+
+    useEffect(() => {
+        if (
+            northInput && northInput.current &&
+            southInput && southInput.current &&
+            eastInput && eastInput.current &&
+            westInput && westInput.current
+        ) {
+            if (value===null) {
+                northInput.current.setCustomValidity('');
+                southInput.current.setCustomValidity('');
+                eastInput.current.setCustomValidity('');
+                westInput.current.setCustomValidity('');
+                return
+            }
+
+            if ((isNaN(value.north) || isNaN(value.east) || isNaN(value.south) || isNaN(value.west))) {
+                northInput.current.setCustomValidity('Fields must be either all empty or all filled');
+                southInput.current.setCustomValidity('');
+                eastInput.current.setCustomValidity('');
+                westInput.current.setCustomValidity('');
+                // return here because otherwise we have to check lateron for each field seperately again i it is NaN
+                return;
+            } else {
+                northInput.current.setCustomValidity('');
+            }
+            if (value.north < value.south) {
+                southInput.current.setCustomValidity('South coordinate must be smaller than North coordinate');
+            } else {
+                northInput.current.setCustomValidity('');
+            }
+            if (value.east < value.west) {
+                southInput.current.setCustomValidity('East coordinate must be greater than West coordinate');
+            } else {
+                northInput.current.setCustomValidity('');
+            }
+        }
+    });
+
+    const updateSpatialBounds = (key: string, value: string) => {
         let tempValue: SpatialBounds | null;
-        if (this.props.value === null) {
+        if (props.value === null) {
             tempValue = {
                 north: NaN,
                 east: NaN,
@@ -60,7 +133,7 @@ export default class SpatialBoundsField extends Component<SpatialBoundsProps, {}
                 west: NaN,
             }
         } else {
-            tempValue = {...this.props.value}
+            tempValue = {...props.value}
         }
 
         tempValue = {
@@ -73,42 +146,17 @@ export default class SpatialBoundsField extends Component<SpatialBoundsProps, {}
             isNaN(tempValue.south) &&
             isNaN(tempValue.west)
         ) {
-            this.props.valueChanged(null);
+            props.valueChanged(null);
         } else {
-            this.props.valueChanged(tempValue);
+            props.valueChanged(tempValue);
         }
     }
 
-    removeSpatialBounds() {
-        this.props.valueChanged(null);
+    const removeSpatialBounds = () => {
+        props.valueChanged(null);
     }
-    render() {
-        const {
-            value,
-            otherValues,
-            valueChanged,
-            geoServerError,
-            showGeoServerError,
-        } = this.props;
-
-        const {
-            wmsLayerSlug,
-            wmsLayerUrl,
-        } = otherValues;
-
-        let north, east, south, west;
-
-        if (value) {
-            north = Number.isFinite(value.north) ? value.north : "";
-            east = Number.isFinite(value.east) ? value.east : "";
-            south = Number.isFinite(value.south) ? value.south : "";
-            west = Number.isFinite(value.west) ? value.west : "";
-        } else {
-            north = "";
-            east = "";
-            south = "";
-            west = "";
-        };
+    
+        
 
         return (
             <div>
@@ -144,7 +192,8 @@ export default class SpatialBoundsField extends Component<SpatialBoundsProps, {}
                                 durationStyles.TextAlignCenter
                             }
                             value={north}
-                            onChange={(e) => this.updateSpatialBounds('north', e.target.value)}
+                            onChange={(e) => updateSpatialBounds('north', e.target.value)}
+                            ref={northInput}
                         />
                     </div>
                     <div
@@ -167,7 +216,8 @@ export default class SpatialBoundsField extends Component<SpatialBoundsProps, {}
                                 durationStyles.TextAlignCenter
                             }
                             value={east}
-                            onChange={(e) => this.updateSpatialBounds('east', e.target.value)}
+                            onChange={(e) => updateSpatialBounds('east', e.target.value)}
+                            ref={eastInput}
                         />
                     </div>
                     <div
@@ -190,7 +240,8 @@ export default class SpatialBoundsField extends Component<SpatialBoundsProps, {}
                                 durationStyles.TextAlignCenter
                             }
                             value={south}
-                            onChange={(e) => this.updateSpatialBounds('south', e.target.value)}
+                            onChange={(e) => updateSpatialBounds('south', e.target.value)}
+                            ref={southInput}
                         />
                     </div>
                     <div
@@ -215,10 +266,11 @@ export default class SpatialBoundsField extends Component<SpatialBoundsProps, {}
                                 durationStyles.TextAlignCenter
                             }
                             value={west}
-                            onChange={(e) => this.updateSpatialBounds('west', e.target.value)}
+                            onChange={(e) => updateSpatialBounds('west', e.target.value)}
+                            ref={westInput}
                         />
                     </div>
-                    <ClearInputButton onClick={() => this.removeSpatialBounds()}/>
+                    <ClearInputButton onClick={() => removeSpatialBounds()}/>
                 </div>
                 <div className={styles.GetFromGeoServer}>
                     <button
@@ -252,5 +304,6 @@ export default class SpatialBoundsField extends Component<SpatialBoundsProps, {}
                 </div>
             </div>
         );
-    }
 }
+
+export default  SpatialBoundsField;
