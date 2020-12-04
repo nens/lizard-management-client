@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { FormattedMessage } from 'react-intl';
 import { connect, useSelector } from 'react-redux';
-import { createRasterLayer, patchRasterLayer, RasterLayerFromAPI, RasterSourceFromAPI } from '../../api/rasters';
+import { createRasterLayer, fetchRasterSourceV4, patchRasterLayer, RasterLayerFromAPI, RasterSourceFromAPI } from '../../api/rasters';
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import { CheckBox } from './../../form/CheckBox';
 import { TextArea } from './../../form/TextArea';
@@ -26,7 +26,7 @@ import {
 import { optionsHasLayers } from '../../utils/rasterOptionFunctions';
 import { getUuidFromUrl } from '../../utils/getUuidFromUrl';
 import { addNotification, removeRasterSourceUUID } from './../../actions';
-import rasterIcon from "../../images/raster_layers_logo_explainbar.svg";
+import rasterLayerIcon from "../../images/raster_layer_icon.svg";
 import formStyles from './../../styles/Forms.module.css';
 
 interface Props {
@@ -76,20 +76,17 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
     aggregationType: null,
     observationType: null,
     colorMap: null,
-    accessModifier: 'Private',
     sharedWith: false,
     organisationsToSharedWith: [],
     organisation: selectedOrganisation.uuid.replace(/-/g, "") || null,
     supplierName: null,
   };
   const onSubmit = (values: Values) => {
-    console.log('submitted', values);
-
     if (!currentRasterLayer) {
       const rasterLayer = {
         name: values.name as string,
         organisation: values.organisation as string,
-        access_modifier: values.accessModifier as string,
+        access_modifier: accessModifier as string || 'Private',
         description: values.description as string,
         observation_type: values.observationType as string,
         supplier: values.supplierName as string,
@@ -108,7 +105,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           if (status === 201) {
             props.addNotification('Success! Raster layer created', 2000);
             // redirect back to the table of raster layers
-            props.history.push('/data_management/raster_layers');
+            props.history.push('/data_management/rasters/layers');
           } else {
             props.addNotification(status, 2000);
             console.error(response);
@@ -144,7 +141,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           if (status === 200) {
             props.addNotification('Success! Raster layer updated', 2000);
             // redirect back to the table of raster layers
-            props.history.push('/data_management/raster_layers');
+            props.history.push('/data_management/rasters/layers');
           } else {
             props.addNotification(status, 2000);
             console.error(data);
@@ -165,12 +162,24 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
     clearInput,
   } = useForm({initialValues, onSubmit});
 
+  // For Access Modifier of a new Raster Layer, we need to keep it in sync
+  // with each new selected raster source by user by using useEffect
+  const { rasterSource } = values;
+  const [accessModifier, setAccessModifier] = useState<string | null>(null);
+  useEffect(() => {
+    if (!currentRasterLayer && rasterSource) {
+      fetchRasterSourceV4(rasterSource as string).then(
+        rasterSourceData => setAccessModifier(rasterSourceData.access_modifier || 'Private')
+      ).catch(e => console.error(e));
+    };
+  }, [currentRasterLayer, rasterSource]);
+
   return (
     <ExplainSideColumn
-      imgUrl={rasterIcon}
+      imgUrl={rasterLayerIcon}
       headerText={"Raster Layers"}
       explainationText={"Create a layer to view your raster data in the portal."}
-      backUrl={"/data_management/raster_layers"}
+      backUrl={"/data_management/rasters/layers"}
     >
       <form
         className={formStyles.Form}
@@ -320,8 +329,8 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
         <AccessModifier
           title={'Access Modifier'}
           name={'accessModifier'}
-          value={values.accessModifier as string}
-          valueChanged={value => handleValueChange('accessModifier', value)}
+          value={values.accessModifier as string || accessModifier}
+          valueChanged={() => null}
           readOnly
         />
         <CheckBox
@@ -369,7 +378,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           className={formStyles.ButtonContainer}
         >
           <CancelButton
-            url={'/data_management/raster_layers'}
+            url={'/data_management/rasters/layers'}
           />
           <SubmitButton
             onClick={tryToSubmitForm}

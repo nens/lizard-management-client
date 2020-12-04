@@ -32,6 +32,11 @@ import { withRouter } from "react-router-dom";
 import {appTiles} from './home/HomeAppTileConfig';
 import doArraysHaveEqualElement from './utils/doArraysHaveEqualElement';
 
+import helpIcon from './images/help.svg'
+import documentIcon from './images/document.svg';
+import logoutIcon from './images/logout.svg';
+import editIcon from './images/edit.svg';
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -115,12 +120,14 @@ class App extends Component {
         className={styles.DropdownMenu}
         onMouseLeave={() => this.setState({showProfileList: false})}
       >
-        <a href="https://sso.lizard.net/edit_profile/"
+        <a
+          className={styles.DropdownMenuRow}
+          href="https://sso.lizard.net/edit_profile/"
           target="_blank"
           rel="noopener noreferrer"
         >
-          <i className="fa fa-pencil" />
-          &nbsp;&nbsp;Edit Profile
+          <img src={editIcon} alt={'Profile'} />
+          <span>Profile</span>
         </a>
         {/* language switcher no longer needed, but we might need it in future */}
         {/* <LanguageSwitcher
@@ -131,40 +138,34 @@ class App extends Component {
           ]}
         /> */}
         <a
+          className={styles.DropdownMenuRow}
           href="https://nelen-schuurmans.topdesk.net/tas/public/ssp"
           target="_blank"
           rel="noopener noreferrer"
         >
-          <i
-            className={`${styles.SupportHyperlink} material-icons`}
-          >
-            headset_mic
-          </i>
-          &nbsp;
-          <FormattedMessage
-            id="index.support"
-            defaultMessage="Support"
-          />
+          <img src={helpIcon} alt={'Help'} />
+          <span>Help</span>
         </a>
         <a
+          className={styles.DropdownMenuRow}
           href="https://docs.lizard.net/a_lizard.html"
           target="_blank"
           rel="noopener noreferrer"
         >
-           <i
-            className={`${styles.DocumentationHyperlink} material-icons`}
-          >
-            local_library
-          </i>
-          &nbsp;
-          <FormattedMessage
-            id="index.documentation"
-            defaultMessage="Documentation"
-          />
+          <img src={documentIcon} alt={'Documentation'} />
+          <span>
+            <FormattedMessage
+              id="index.documentation"
+              defaultMessage="Documentation"
+            />
+          </span>
         </a>
-        <a href="/accounts/logout/" >
-          <i className="fa fa-power-off" />
-          &nbsp;&nbsp;Logout
+        <a
+          className={styles.DropdownMenuRow}
+          href="/accounts/logout/"
+        >
+          <img src={logoutIcon} alt={'Logout'} />
+          <span>Logout</span>
         </a>
       </div>
     );
@@ -270,9 +271,9 @@ class App extends Component {
                       className={styles.Profile}
                       id="user-profile"
                     >
-                      <div id="user-profile">
+                      <div className={styles.UserProfile} id="user-profile">
                         <i className="fa fa-user" style={{ paddingRight: 8 }} id="user-profile"/>
-                        {firstName}
+                        <span className={styles.UserName} id="user-profile">{firstName}</span>
                       </div>
                       {this.state.showProfileList && this.renderProfileList()}
                     </div>

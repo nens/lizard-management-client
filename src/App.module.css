@@ -4,6 +4,7 @@
   --color-ligth-main-second:#F6F6F6;
   --color-border-table: #2C3E50;
   --color-header: #008080;
+  --color-header-hover: #017676;
   --color-button:  #009F86;
   --color-button-disabled: #878787;
   --font-weight-button: 600;
@@ -51,7 +52,7 @@ body {
 
 
 .Primary {
-  background-color: #009F86;
+  background-color: var(--color-header);
   color: #fff;
   text-transform: uppercase;
 }
@@ -71,7 +72,7 @@ body {
   text-transform: uppercase;
 }
 .Footer a {
-  color: #009F86;
+  color:var(--color-header);
   text-decoration: none;
 }
 .FooterLeft {
@@ -146,13 +147,11 @@ body {
   text-transform: uppercase;
 }
 .OrganisationLinkContainer:hover {
-  background-color: rgb(3, 139, 119);
+  background-color: var(--color-header-hover);
 }
 
 .Profile {
   width: 174px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
   cursor: pointer;
   position: relative;
   height: 100%;
@@ -161,7 +160,7 @@ body {
 }
 
 .Profile:hover {
-  background-color: rgb(3, 139, 119);
+  background-color: var(--color-header-hover);
 }
 
 .TopNav {
@@ -173,17 +172,26 @@ body {
 .TopNav div {
   margin: 5px;
 }
-.TopNav div:last-child {
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
 .TopNav a {
   color: #fff;
   text-decoration: none;
 }
+.UserProfile {
+  width: 100%;
+  margin: 0;
+  padding-right: 10px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  overflow: hidden;
+}
+.UserName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 .DropdownMenu {
-  font-size: 14px;
+  font-size: 16px;
   display: flex;
   flex-direction: column;
   z-index: 1;
@@ -191,22 +199,28 @@ body {
 
   position: absolute;
   top: 100%;
-  left: 0;
-  width: 100%;
+  right: 0;
+  width: 210px;
 
   border: 1px solid rgba(0, 0, 0, .15);
   background-color: #fafafa;
   box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
 }
-
 .DropdownMenu a {
   text-decoration: none;
   color: #333;
   padding: 6px 10px;
+  padding-left: 14px;
 }
-
 .DropdownMenu a:hover {
   background-color: #e5e5e5;
+}
+.DropdownMenuRow {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .NavNotification {
@@ -222,5 +236,4 @@ body {
 
   display: flex;
   justify-content: center;
-  align-items: center;
 }

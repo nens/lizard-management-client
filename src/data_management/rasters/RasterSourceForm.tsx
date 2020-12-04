@@ -18,7 +18,7 @@ import { minLength } from '../../form/validators';
 import { AccessModifier } from '../../form/AccessModifier';
 import { rasterIntervalStringServerToDurationObject, toISOValue } from '../../utils/isoUtils';
 import { addFilesToQueue, addNotification, updateRasterSourceUUID } from '../../actions';
-import rasterIcon from "../../images/raster_layers_logo_explainbar.svg";
+import rasterSourceIcon from "../../images/raster_source_icon.svg";
 import formStyles from './../../styles/Forms.module.css';
 import { sendDataToLizardRecursive } from '../../utils/sendDataToLizard';
 
@@ -63,8 +63,6 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
   };
 
   const onSubmit = (values: Values) => {
-    console.log('submitted', values);
-
     if (!currentRasterSource) {
       const rasterSource = {
         name: values.name as string,
@@ -127,7 +125,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
               values.temporal as boolean
             );
             // redirect back to the table of raster sources
-            props.history.push('/data_management/raster_sources')
+            props.history.push('/data_management/rasters/sources')
           } else {
             props.addNotification(status, 2000);
             console.error(data);
@@ -150,10 +148,10 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
 
   return (
     <ExplainSideColumn
-      imgUrl={rasterIcon}
+      imgUrl={rasterSourceIcon}
       headerText={"Raster Sources"}
       explainationText={"Fill in the form to create a new Raster Source."}
-      backUrl={"/data_management/raster_sources"}      
+      backUrl={"/data_management/rasters/sources"}
     >
       <form
         className={formStyles.Form}
@@ -247,7 +245,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           className={formStyles.ButtonContainer}
         >
           <CancelButton
-            url={'/data_management/raster_sources'}
+            url={'/data_management/rasters/sources'}
           />
           <SubmitButton
             onClick={tryToSubmitForm}
