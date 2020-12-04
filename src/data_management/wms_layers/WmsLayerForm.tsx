@@ -19,7 +19,8 @@ import wmsIcon from "../../images/wms@3x.svg";
 import {
   getDatasets,
   getOrganisations,
-  getSelectedOrganisation
+  getSelectedOrganisation,
+  getSupplierIds,
 } from '../../reducers';
 import { addNotification } from './../../actions';
 import formStyles from './../../styles/Forms.module.css';
@@ -44,6 +45,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
 
   const [geoserverError, setGeoserverError,] = useState(false)
   const organisationsToSharedWith = useSelector(getOrganisations).availableForRasterSharedWith;
+  const supplierIds = useSelector(getSupplierIds);
   const organisations = useSelector(getOrganisations).available;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const datasets = useSelector(getDatasets).available;
@@ -313,7 +315,6 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           name={'access_modifier'}
           value={values.access_modifier as string}
           valueChanged={value => handleValueChange('access_modifier', value)}
-          readOnly
         />
         <CheckBox
           title={'Shared with other organisations'}
@@ -342,20 +343,26 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           title={'Organisation'}
           name={'organisation'}
           placeholder={'- Search and select -'}
-          value={values.organisation as string}
+          value={(values.organisation as string).replace(/-/g, "") }
           valueChanged={value => handleValueChange('organisation', value)}
           choices={organisations.map((organisation: any) => [organisation.uuid, organisation.name])}
           validated
-          readOnly
+          // this nees to be read only in some cases !?
+          readOnly={false}
         />
-        <TextInput
+        <SelectBox
           title={'Supplier'}
           name={'supplier'}
-          value={values.supplierName as string}
-          valueChanged={handleInputChange}
-          clearInput={clearInput}
+          placeholder={'- Search and select -'}
+          value={values.supplier as string}
+          valueChanged={value => handleValueChange('supplier', value)}
+          choices={supplierIds.available.map((suppl:any)=>
+            [suppl.username, suppl.username]
+          )}
+          showSearchField={true}
           validated
-          readOnly
+          // this nees to be read only in some cases !?
+          readOnly={false}
         />
         <div
           className={formStyles.ButtonContainer}
