@@ -4,6 +4,7 @@
   --color-ligth-main-second:#F6F6F6;
   --color-border-table: #2C3E50;
   --color-header: #008080;
+  --color-header-hover: #017676;
   --color-button:  #009F86;
   --font-weight-button: 600;
 }
@@ -75,7 +76,7 @@ body {
   text-transform: uppercase;
 }
 .Footer a {
-  color: #009F86;
+  color:var(--color-header);
   text-decoration: none;
 }
 .FooterLeft {
@@ -150,7 +151,7 @@ body {
   text-transform: uppercase;
 }
 .OrganisationLinkContainer:hover {
-  background-color: rgb(3, 139, 119);
+  background-color: var(--color-header-hover);
 }
 
 .Profile {
@@ -163,7 +164,7 @@ body {
 }
 
 .Profile:hover {
-  background-color: rgb(3, 139, 119);
+  background-color: var(--color-header-hover);
 }
 
 .TopNav {
