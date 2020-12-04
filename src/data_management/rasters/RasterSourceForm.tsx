@@ -55,8 +55,6 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
   };
 
   const onSubmit = (values: Values) => {
-    console.log('submitted', values);
-
     if (!currentRasterSource) {
       const rasterSource = {
         name: values.name as string,

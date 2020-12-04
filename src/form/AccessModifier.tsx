@@ -5,7 +5,7 @@ import formStyles from "../styles/Forms.module.css";
 interface MyProps {
   title: string,
   name: string,
-  value: string,
+  value: string | null,
   valueChanged: (value: string) => void,
   handleEnter?: (e: any) => void,
   readOnly?: boolean
