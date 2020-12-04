@@ -16,7 +16,7 @@ export const SubmitButton: React.FC<MyProps> = (props) => {
     <input
       type={'submit'}
       value={'Save'}
-      className={`${buttonStyles.Button} ${buttonStyles.Success}`}
+      className={buttonStyles.NewButton}
       onClick={onClick}
       readOnly={!!readOnly}
     />

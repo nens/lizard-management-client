@@ -1,20 +1,18 @@
 import React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router';
 import Overlay from './../components/Overlay';
 import styles from './ConfirmModal.module.css';
 import buttonStyles from './../styles/Buttons.module.css';
 
 interface MyProps {
   title: string,
-  buttonName: string,
-  url: string
+  buttonName?: string,
+  onClick?: () => void,
 }
 
-const ConfirmModal: React.FC<MyProps & RouteComponentProps> = (props) => {
+const ConfirmModal: React.FC<MyProps> = (props) => {
   const {
     title,
-    buttonName,
-    url
+    buttonName
   } = props;
 
   return (
@@ -27,16 +25,18 @@ const ConfirmModal: React.FC<MyProps & RouteComponentProps> = (props) => {
           {props.children}
         </div>
         <div className={styles.ModalFooter}>
-          <button
-            className={`${buttonStyles.Button} ${buttonStyles.Success}`}
-            onClick={() => props.history.push(url)}
-          >
-            {buttonName}
-          </button>
+          {buttonName ? (
+            <button
+              className={`${buttonStyles.Button} ${buttonStyles.Success}`}
+              onClick={props.onClick}
+            >
+              {buttonName}
+            </button>
+          ) : null}
         </div>
       </div>
     </Overlay>
   )
 }
 
-export default withRouter(ConfirmModal);
+export default ConfirmModal;
