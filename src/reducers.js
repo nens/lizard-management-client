@@ -307,7 +307,7 @@ function rasterSourceUUID(state = null, action) {
 function uploadFiles(state = null, action) {
   switch (action.type) {
     case ADD_FILES_TO_QUEUE:
-      return action.files.map(file => {
+      const files = action.files.map(file => {
         return {
           "name": file.name,
           "size": file.size,
@@ -315,6 +315,8 @@ function uploadFiles(state = null, action) {
           "status": 'WAITING'
         };
       });
+      const newState = state ? state.concat(files) : files;
+      return newState;
     case UPDATE_FILE_STATUS:
       return state.map(f => {
         if (f.name === action.file.name && f.size === action.file.size) {
