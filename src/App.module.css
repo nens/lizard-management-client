@@ -30,7 +30,6 @@ body {
   height: 100%;
   width: 100%;
   display: flex;
-  /* min-height: 100vh; */
   flex-direction: column;
   font-family: Montserrat;
   overflow-y: auto;
@@ -57,16 +56,12 @@ body {
   text-transform: uppercase;
 }
 .Secondary {
-  /* previous background color */
-  /* background-color: #2FCBAB; */
   background-color: #F6F6F6;
   text-transform: uppercase;
 }
 .Secondary a {
   text-decoration: none;
-  /* previous color */
-  /* color: #fff; */
-  color: #008080;
+  color: var(--color-header);
 }
 
 .Footer {
