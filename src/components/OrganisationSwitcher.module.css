@@ -56,11 +56,11 @@
 }
 
 .OrganisationRow:hover {
-  background-color: #00cdab;
+  background-color: var(--color-button);
   color: #fff;
 }
 .Active {
-  background-color: #00cdab;
+  background-color: var(--color-button);
   color: #fff;
 }
 .InActive {
