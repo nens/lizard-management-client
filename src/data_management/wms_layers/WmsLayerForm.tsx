@@ -30,7 +30,6 @@ from "../../forms/SpatialBoundsField";
 import MinMaxZoomField, {MinMax} from '../../components/MinMaxZoomField';
 import { WmsLayerReceivedFromApi, wmsLayerReceivedFromApiToForm, WmsLayerFormType, wmsLayerGetDefaultFormValues, wmsLayerFormToFormSendToApi} from '../../types/WmsLayerType';
 
-
 interface Props {
   currentWmsLayer?: WmsLayerReceivedFromApi, 
 };
@@ -343,10 +342,11 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           title={'Organisation'}
           name={'organisation'}
           placeholder={'- Search and select -'}
-          value={(values.organisation as string).replace(/-/g, "") }
+          value={typeof values.organisation === "string" ? (values.organisation as string).replace(/-/g, ""): (values.organisation as string) }
           valueChanged={value => handleValueChange('organisation', value)}
           choices={organisations.map((organisation: any) => [organisation.uuid, organisation.name])}
-          validated
+          validated={values.organisation !== null && values.organisation !== ""}
+          errorMessage={"required"}
           // this nees to be read only in some cases !?
           readOnly={false}
         />
