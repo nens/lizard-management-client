@@ -5,6 +5,7 @@ import { App as Home } from "./home/App";
 import { App as AlarmsApp } from "./alarms/App";
 import { App as DataManagementApp } from "./data_management/App";
 import MDSpinner from "react-md-spinner";
+import { fetchTaskInstance } from "./api/tasks";
 import {
   addNotification,
   fetchLizardBootstrap,
@@ -13,13 +14,16 @@ import {
   fetchSupplierIds,
   fetchColorMaps,
   updateViewportDimensions,
-  fetchDatasets
+  fetchDatasets,
+  updateTaskStatus,
+  removeFileFromQueue
 } from "./actions";
 import { Route, NavLink } from "react-router-dom";
 import LanguageSwitcher from "./components/LanguageSwitcher";
 import OrganisationSwitcher from "./components/OrganisationSwitcher";
 import Snackbar from "./components/Snackbar";
 import Breadcrumbs from "./components/Breadcrumbs";
+import UploadQueue from "./components/UploadQueue";
 import styles from "./App.module.css";
 import gridStyles from "./styles/Grid.module.css";
 import buttonStyles from "./styles/Buttons.module.css";
@@ -38,10 +42,12 @@ class App extends Component {
     super(props);
     this.state = {
       showOrganisationSwitcher: false,
-      showProfileList: false
+      showProfileList: false,
+      showUploadQueue: false
     };
     this.updateOnlineStatus = this.updateOnlineStatus.bind(this);
     this.updateViewportDimensions = this.updateViewportDimensions.bind(this);
+    this.handleWindowClose = this.handleWindowClose.bind(this);
   }
   //Click the user-profile button open the dropdown
   //Click anywhere outside of the user-profile modal will close the modal
@@ -55,12 +61,14 @@ class App extends Component {
     window.addEventListener("online", e => this.updateOnlineStatus(e));
     window.addEventListener("offline", e => this.updateOnlineStatus(e));
     window.addEventListener("resize", e => this.updateViewportDimensions(e));
+    window.addEventListener("beforeunload", this.handleWindowClose);
     this.props.getLizardBootstrap();
   }
   componentWillUnmount() {
     window.removeEventListener("online", e => this.updateOnlineStatus(e));
     window.removeEventListener("offline", e => this.updateOnlineStatus(e));
     window.removeEventListener("resize", e => this.updateViewportDimensions(e));
+    window.removeEventListener("beforeunload", this.handleWindowClose);
   }
   componentWillReceiveProps(props) {
     if (props.isAuthenticated) {
@@ -80,6 +88,32 @@ class App extends Component {
     const { innerWidth, innerHeight } = window;
     updateViewportDimensions(innerWidth, innerHeight);
   }
+  handleWindowClose(e) {
+    e.preventDefault();
+    if (this.props.uploadingFiles && this.props.uploadingFiles.length > 0) {
+      return e.returnValue = "";
+    } else {
+      return null;
+    };
+  }
+
+  // Poll the task endpoint to update status of uploading/processing files in the queue
+  componentDidUpdate(prevProps) {
+    if (this.props.uploadFiles && prevProps.uploadFiles !== this.props.uploadFiles) {
+      const firstFileInTheQueue = this.props.filesInProcess[0];
+
+      if (this.props.filesInProcess.length === 0 || !firstFileInTheQueue || !firstFileInTheQueue.uuid) return;
+
+      setTimeout(() => {
+        fetchTaskInstance(firstFileInTheQueue.uuid)
+          .then(response => {
+            this.props.updateTaskStatus(firstFileInTheQueue.uuid, response.status);
+          })
+          .catch(e => console.error(e))
+      }, 5000);
+    };
+  };
+
   renderProfileList() {
     return (
       <div
@@ -138,7 +172,6 @@ class App extends Component {
   };
 
   render() {
-
     if ( 
       this.props.availableOrganisations.length === 0 && 
       this.props.isFetchingOrganisations === false &&
@@ -179,14 +212,14 @@ class App extends Component {
               <div className={gridStyles.Row}>
                 <div
                   style={{ height: "55px" }}
-                  className={`${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs12}`}
+                  className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${gridStyles.colSm4} ${gridStyles.colXs12}`}
                 >
                   <NavLink to="/">
                     <img src={`${lizardIcon}`} alt="Lizard logo" className={styles.LizardLogo} />
                   </NavLink>
                 </div>
                 <div
-                  className={`${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs12}`}
+                  className={`${gridStyles.colLg8} ${gridStyles.colMd8} ${gridStyles.colSm8} ${gridStyles.colXs12}`}
                 >
                   <div className={styles.TopNav}>
                     <div style={{ display: "none" }}>
@@ -196,6 +229,20 @@ class App extends Component {
                         </i>
                         Apps
                       </a>
+                    </div>
+                    <div
+                      className={styles.Profile}
+                      onClick={() => {
+                        this.setState({
+                          showUploadQueue: !this.state.showUploadQueue
+                        })
+                      }}
+                    >
+                      <div>
+                        <i className="fa fa-upload" style={{ paddingRight: 8 }} />
+                        {this.props.filesInProcess && this.props.filesInProcess.length > 0 ? <span className={styles.NavNotification}>!</span> : null}
+                        Upload queue
+                      </div>
                     </div>
                     <div
                       className={styles.OrganisationLinkContainer}
@@ -326,6 +373,11 @@ class App extends Component {
             />
           ) : null}
           <Snackbar />
+          {this.state.showUploadQueue ? (
+            <UploadQueue
+              handleClose={() => this.setState({ showUploadQueue: false })}
+            />
+          ) : null}
         </div>
       );
     }
@@ -337,6 +389,15 @@ const mapStateToProps = (state, ownProps) => {
     isFetching: state.isFetching,
     bootstrap: state.bootstrap,
     isAuthenticated: state.bootstrap.isAuthenticated,
+    uploadFiles: state.uploadFiles,
+    uploadingFiles:
+      state.uploadFiles &&
+      state.uploadFiles.length > 0 &&
+      state.uploadFiles.filter(file => file.status === 'WAITING' || file.status === 'UPLOADING'),
+    filesInProcess:
+      state.uploadFiles &&
+      state.uploadFiles.length > 0 &&
+      state.uploadFiles.filter(file => file.status !== 'SUCCESS' && file.status !== 'FAILED'),
 
     mustFetchOrganisations:
       state.organisations.available.length === 0 &&
@@ -380,8 +441,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     addNotification: (message, timeout) => {
       dispatch(addNotification(message, timeout));
     },
-    updateViewportDimensions: (width, height) =>
+    updateViewportDimensions: (width, height) => {
       dispatch(updateViewportDimensions(width, height))
+    },
+    updateTaskStatus: (uuid, status) => dispatch(updateTaskStatus(uuid, status)),
+    removeFileFromQueue: (file) => dispatch(removeFileFromQueue(file)),
   };
 };
 

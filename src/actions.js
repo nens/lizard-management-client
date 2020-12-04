@@ -315,3 +315,48 @@ export function removeRasterSourceUUID() {
     type: REMOVE_RASTER_SOURCE_UUID
   };
 }
+
+// MARK: Uploads
+export const ADD_FILES_TO_QUEUE = "ADD_FILES_TO_QUEUE";
+export const ADD_TASK_UUID_TO_FILE = "ADD_TASK_UUID_TO_FILE"
+export const UPDATE_TASK_STATUS = "UPDATE_TASK_STATUS";
+export const UPDATE_FILE_STATUS = "UPDATE_FILE_STATUS";
+export const REMOVE_FILE_FROM_QUEUE = "REMOVE_FILE";
+
+export function addFilesToQueue(files) {
+  return {
+    type: ADD_FILES_TO_QUEUE,
+    files
+  };
+}
+
+export function updateFileStatus(file, status) {
+  return {
+    type: UPDATE_FILE_STATUS,
+    file,
+    status
+  };
+}
+
+export function addTaskUuidToFile(file, uuid) {
+  return {
+    type: ADD_TASK_UUID_TO_FILE,
+    file,
+    uuid
+  };
+}
+
+export function updateTaskStatus(uuid, status) {
+  return {
+    type: UPDATE_TASK_STATUS,
+    uuid,
+    status
+  };
+}
+
+export function removeFileFromQueue(file) {
+  return {
+    type: REMOVE_FILE_FROM_QUEUE,
+    file
+  };
+}

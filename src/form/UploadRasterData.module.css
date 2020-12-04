@@ -1,0 +1,32 @@
+.DropZoneContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border: 2px dashed #C9C9C9;
+  border-radius: 4px;
+}
+
+.DropZoneContainer:focus {
+  border-color: #73C9B2;
+  outline: none;
+}
+
+.File {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.FileName {
+  font-weight: 500;
+}
+
+.ClearIcon {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  cursor: pointer;
+}

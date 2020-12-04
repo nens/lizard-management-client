@@ -23,7 +23,12 @@ import {
   RECEIVE_DATASETS_SUCCESS,
   RECEIVE_DATASETS_ERROR,
   UPDATE_RASTER_SOURCE_UUID,
-  REMOVE_RASTER_SOURCE_UUID
+  REMOVE_RASTER_SOURCE_UUID,
+  ADD_FILES_TO_QUEUE,
+  REMOVE_FILE_FROM_QUEUE,
+  UPDATE_FILE_STATUS,
+  ADD_TASK_UUID_TO_FILE,
+  UPDATE_TASK_STATUS
 } from "./actions";
 
 function bootstrap(
@@ -299,6 +304,62 @@ function rasterSourceUUID(state = null, action) {
   };
 };
 
+function uploadFiles(state = null, action) {
+  switch (action.type) {
+    case ADD_FILES_TO_QUEUE:
+      const files = action.files.map(file => {
+        return {
+          "name": file.name,
+          "size": file.size,
+          "uuid": null,
+          "status": 'WAITING'
+        };
+      });
+      const newState = state ? state.concat(files) : files;
+      return newState;
+    case UPDATE_FILE_STATUS:
+      return state.map(f => {
+        if (f.name === action.file.name && f.size === action.file.size) {
+          return {
+            ...f,
+            "status": action.status
+          };
+        } else {
+          return f;
+        };
+      });
+    case ADD_TASK_UUID_TO_FILE:
+      return state.map(f => {
+        if (f.name === action.file.name && f.size === action.file.size) {
+          return {
+            ...f,
+            "uuid": action.uuid
+          };
+        } else {
+          return f;
+        };
+      })
+    case UPDATE_TASK_STATUS:
+      return state.map(f => {
+        if (f.uuid === action.uuid) {
+          // An async task to Lizard can have different statuses. However for the client side,
+          // we divide them into 3 main statuses: "PROCESSING", "SUCCESS" and "FAILED"
+          const status = (action.status === 'SUCCESS' || action.status === 'FAILED') ? action.status : 'PROCESSING';
+          return {
+            ...f,
+            "status": status
+          };
+        } else {
+          return f;
+        };
+      });
+    case REMOVE_FILE_FROM_QUEUE:
+      return state.filter(f => f.name !== action.file.name || f.size !== action.file.size);
+    default:
+      return state;
+  };
+};
+
 // Selectors
 export const getBootstrap = (state) => {
   return state.bootstrap;
@@ -334,6 +395,13 @@ export const getRasterSourceUUID = (state) => {
   return state.rasterSourceUUID;
 };
 
+export const getUploadFiles = (state) => {
+  return state.uploadFiles;
+};
+export const getFinsihedFiles = (state) => {
+  return state.uploadFiles && state.uploadFiles.length > 0 && state.uploadFiles.filter(file => file.status === 'SUCCESS' || file.status === 'FAILED');
+};
+
 const rootReducer = combineReducers({
   bootstrap,
   organisations,
@@ -344,7 +412,8 @@ const rootReducer = combineReducers({
   notifications,
   viewport,
   alarmType,
-  rasterSourceUUID
+  rasterSourceUUID,
+  uploadFiles
 });
 
 export default rootReducer;

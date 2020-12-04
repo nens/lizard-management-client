@@ -10,15 +10,17 @@ import { TextInput } from './../../form/TextInput';
 import { SubmitButton } from '../../form/SubmitButton';
 import { CancelButton } from '../../form/CancelButton';
 import { SelectBox } from '../../form/SelectBox';
+import { AcceptedFile, UploadRasterData } from './../../form/UploadRasterData';
 import ConfirmModal from '../../components/ConfirmModal';
 import { getOrganisations, getSelectedOrganisation } from '../../reducers';
 import { useForm, Values } from '../../form/useForm';
 import { minLength } from '../../form/validators';
 import { AccessModifier } from '../../form/AccessModifier';
 import { rasterIntervalStringServerToDurationObject, toISOValue } from '../../utils/isoUtils';
-import { addNotification, updateRasterSourceUUID } from '../../actions';
+import { addFilesToQueue, addNotification, updateRasterSourceUUID } from '../../actions';
 import rasterSourceIcon from "../../images/raster_source_icon.svg";
 import formStyles from './../../styles/Forms.module.css';
+import { sendDataToLizardRecursive } from '../../utils/sendDataToLizard';
 
 interface Props {
   currentRasterSource?: RasterSourceFromAPI
@@ -26,9 +28,13 @@ interface Props {
 interface PropsFromDispatch {
   updateRasterSourceUUID: (uuid: string) => void,
   addNotification: (message: string | number, timeout: number) => void,
+  addFilesToQueue: (files: File[]) => void,
+};
+interface RouteParams {
+  uuid: string;
 };
 
-const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (props) => {
+const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<RouteParams>> = (props) => {
   const { currentRasterSource } = props;
   const organisations = useSelector(getOrganisations).available;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
@@ -43,6 +49,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
     interval: currentRasterSource.interval ? toISOValue(rasterIntervalStringServerToDurationObject(currentRasterSource.interval)) : '',
     accessModifier: currentRasterSource.access_modifier,
     organisation: currentRasterSource.organisation.uuid.replace(/-/g, "") || null,
+    data: [],
   } : {
     name: null,
     description: null,
@@ -52,6 +59,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
     interval: null,
     accessModifier: 'Private',
     organisation: selectedOrganisation.uuid.replace(/-/g, "") || null,
+    data: []
   };
 
   const onSubmit = (values: Values) => {
@@ -77,6 +85,17 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           }
         }).then((parsedBody: any) => {
           props.updateRasterSourceUUID(parsedBody.uuid);
+          // Add files to Upload Queue in Redux store
+          // add notification and send data to Lizard server
+          const acceptedFiles = values.data as AcceptedFile[] || [];
+          const uploadFiles = acceptedFiles.map(f => f.file);
+          if (uploadFiles.length > 0) props.addNotification('Upload started', 1000);
+          props.addFilesToQueue(uploadFiles);
+          sendDataToLizardRecursive(
+            parsedBody.uuid,
+            values.data as AcceptedFile[],
+            values.temporal as boolean
+          );
         }).catch(e => console.error(e));
     } else {
       const body = {
@@ -92,11 +111,23 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
       patchRasterSource(currentRasterSource.uuid as string, body)
         .then(data => {
           const status = data.response.status;
-          props.addNotification(status, 2000);
           if (status === 200) {
+            props.addNotification('Success! Raster source updated', 2000);
+            // Add files to Upload Queue in Redux store
+            // add notification and send data to Lizard server
+            const acceptedFiles = values.data as AcceptedFile[] || [];
+            const uploadFiles = acceptedFiles.map(f => f.file);
+            if (uploadFiles.length > 0) props.addNotification('Upload started', 1000);
+            props.addFilesToQueue(uploadFiles);
+            sendDataToLizardRecursive(
+              props.match.params.uuid,
+              values.data as AcceptedFile[],
+              values.temporal as boolean
+            );
             // redirect back to the table of raster sources
             props.history.push('/data_management/rasters/sources')
           } else {
+            props.addNotification(status, 2000);
             console.error(data);
           };
         })
@@ -175,6 +206,13 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           validated={true}
           readOnly={!!currentRasterSource || values.temporal === false}
         />
+        <UploadRasterData
+          title={'Data'}
+          name={'data'}
+          temporal={values.temporal as boolean}
+          data={values.data as AcceptedFile[]}
+          setData={data => handleValueChange('data', data)}
+        />
         <span className={formStyles.FormFieldTitle}>
           3: Rights
         </span>
@@ -218,7 +256,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
         <ConfirmModal
           title={'Raster created'}
           buttonName={'Continue'}
-          url={'/data_management/rasters/layers/new'}
+          onClick={() => props.history.push('/data_management/raster_layers/new')}
         >
           <p>A layer is needed to view the raster in the portal.</p>
           <p>We automatically created a layer for you to compose. You will now be redirected to the layer management.</p>
@@ -231,6 +269,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
 const mapPropsToDispatch = (dispatch: any) => ({
   updateRasterSourceUUID: (uuid: string) => dispatch(updateRasterSourceUUID(uuid)),
   addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout)),
+  addFilesToQueue: (files: File[]) => dispatch(addFilesToQueue(files)),
 });
 
 export default connect(null, mapPropsToDispatch)(withRouter(RasterSourceForm));
