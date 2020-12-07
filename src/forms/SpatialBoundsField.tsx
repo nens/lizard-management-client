@@ -113,12 +113,12 @@ const SpatialBoundsField  =  (props: SpatialBoundsProps) => {
             if (value.north < value.south) {
                 southInput.current.setCustomValidity('South coordinate must be smaller than North coordinate');
             } else {
-                northInput.current.setCustomValidity('');
+                southInput.current.setCustomValidity('');
             }
             if (value.east < value.west) {
-                southInput.current.setCustomValidity('East coordinate must be greater than West coordinate');
+                eastInput.current.setCustomValidity('East coordinate must be greater than West coordinate');
             } else {
-                northInput.current.setCustomValidity('');
+                eastInput.current.setCustomValidity('');
             }
         }
     });
