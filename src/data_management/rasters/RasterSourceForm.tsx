@@ -255,8 +255,8 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
       {rasterCreatedModal ? (
         <ConfirmModal
           title={'Raster created'}
-          buttonName={'Continue'}
-          onClick={() => props.history.push('/data_management/raster_layers/new')}
+          buttonConfirmName={'Continue'}
+          onClickButtonConfirm={() => props.history.push('/data_management/raster_layers/new')}
         >
           <p>A layer is needed to view the raster in the portal.</p>
           <p>We automatically created a layer for you to compose. You will now be redirected to the layer management.</p>

@@ -5,14 +5,17 @@ import buttonStyles from './../styles/Buttons.module.css';
 
 interface MyProps {
   title: string,
-  buttonName?: string,
-  onClick?: () => void,
+  buttonConfirmName?: string,
+  onClickButtonConfirm?: () => void,
+  cancelAction?: () => void,
 }
 
 const ConfirmModal: React.FC<MyProps> = (props) => {
   const {
     title,
-    buttonName
+    buttonConfirmName,
+    onClickButtonConfirm,
+    cancelAction,
   } = props;
 
   return (
@@ -25,12 +28,20 @@ const ConfirmModal: React.FC<MyProps> = (props) => {
           {props.children}
         </div>
         <div className={styles.ModalFooter}>
-          {buttonName ? (
+          {cancelAction ? (
             <button
               className={`${buttonStyles.Button} ${buttonStyles.Success}`}
-              onClick={props.onClick}
+              onClick={cancelAction}
             >
-              {buttonName}
+              Cancel
+            </button>
+          ) : null}
+          {buttonConfirmName ? (
+            <button
+              className={`${buttonStyles.Button} ${buttonStyles.Success}`}
+              onClick={onClickButtonConfirm}
+            >
+              {buttonConfirmName}
             </button>
           ) : null}
         </div>
