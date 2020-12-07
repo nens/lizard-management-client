@@ -107,5 +107,6 @@ export const wmsLayerFormToFormSendToApi = (wmsLayer: WmsLayerFormType) => {
       ...wmsLayer,
       uuid: wmsLayer.uuid === "" ? undefined :  wmsLayer.uuid,
       sharedWithCheckbox: undefined,
+      get_feature_info: wmsLayer.get_feature_info_url === ""? false: true
     }
 }
