@@ -13,6 +13,7 @@ import nldata from "react-intl/locale-data/nl";
 
 // Initialize Redux store
 let store = configureStore();
+export const storeDispatch = store.dispatch;
 
 // Add localisation data to translations
 addLocaleData([...nldata]);

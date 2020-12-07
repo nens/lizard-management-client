@@ -7,12 +7,12 @@ import { NavLink } from "react-router-dom";
 import { deleteRasterSources, deleteRasterSource, flushRasters, flushRaster } from "../../api/rasters";
 import TableActionButtons from '../../components/TableActionButtons';
 import {ExplainSideColumn} from '../../components/ExplainSideColumn';
-import rasterSourcesIcon from "../../images/raster_sources_logo_explainbar.svg";
+import rasterSourcesIcon from "../../images/raster_source_icon.svg";
 import tableStyles from "../../components/Table.module.css";
 import { bytesToDisplayValue } from '../../utils/byteUtils';
 
 const baseUrl = "/api/v4/rastersources/";
-const navigationUrlRasters = "/data_management/raster_sources";
+const navigationUrlRasters = "/data_management/rasters/sources";
 
 const deleteActionRaster = (row: any, updateTableRow:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any)=>{
   if (window.confirm(`Are you sure you want to delete raster-source with uuid: ${row.uuid} ?`)) {
@@ -168,8 +168,8 @@ export const RasterSourceTable = (props:any) =>  {
     <ExplainSideColumn
       imgUrl={rasterSourcesIcon}
       headerText={"Raster Sources"}
-      explainationText={"Raster-source contains the actual data belonging to the raster."} 
-      backUrl={"/data_management"}
+      explainationText={"Raster Sources are the containers for your raster data. When your raster data is uploaded to a Raster Source, it can be published as a Raster Layer to be visualized in the Catalogue and the Portal or it can be used in a GeoBlocks model."} 
+      backUrl={"/data_management/rasters"}
     >
       <TableStateContainer 
         gridTemplateColumns={"8% 29% 25% 10% 20% 8%"} 

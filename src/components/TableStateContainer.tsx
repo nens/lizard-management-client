@@ -230,7 +230,7 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
           }}
           onClear={()=>setNameContains("")}
           value={nameContains}
-          placeholder={"Type to search"}
+          placeholder={"Type to search for name"}
         />
 
         {

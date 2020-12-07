@@ -1,0 +1,55 @@
+.ModalBody {
+  width: 100%;
+  font-size: 16px;
+  color: #003D7A;
+  padding: 20px 40px;
+}
+
+.ModalFooter {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 30px;
+  position: absolute;
+  bottom: 0;
+}
+
+.GridContainer {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 35% 30% 20% 10% 5%;
+}
+
+.GridContainerHeader {
+  font-weight: 500;
+}
+
+.GridContainerBody {
+  max-height: 380px;
+  overflow-y: auto;
+  border: 1px solid #003D7A;
+}
+
+.GridItem {
+  padding: 5px 10px;
+  line-height: 2;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #003D7A;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.Image {
+  justify-content: center;
+}
+
+.RemoveIcon {
+  cursor: pointer;
+  color: grey;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

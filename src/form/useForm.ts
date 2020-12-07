@@ -2,10 +2,9 @@ import React, { useState } from 'react';
 import { ColorMapOptions } from './ColorMapInput';
 import {SpatialBounds} from '../types/mapTypes'
 import  {MinMax} from '../components/MinMaxZoomField';
+import { AcceptedFile } from './UploadRasterData';
 
-
-
-type Value = string | number | boolean | string[] | {} | ColorMapOptions | SpatialBounds | MinMax | null |undefined;
+type Value = string | number | boolean | string[] | {} | ColorMapOptions | SpatialBounds | MinMax | AcceptedFile[] | null |undefined;
 
 export interface Values {
   [name: string]: Value

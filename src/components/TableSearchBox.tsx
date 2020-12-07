@@ -31,6 +31,7 @@ const TableSearchBox: React.FC<Props> = ({value, onChange, onClear, placeholder}
             placeholder={placeholder}
             value={value}
             style={{
+              minWidth: "260px",
               // make sure input field has same height as search button
               padding: "6px",
               paddingLeft: "35px",
