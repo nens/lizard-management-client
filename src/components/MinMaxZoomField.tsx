@@ -1,10 +1,7 @@
 import React, { useEffect, useRef } from "react";
-// import { FormattedMessage } from "react-intl";
-// import styles from "./SpatialBoundsField.module.css";
 import durationStyles from "../forms/DurationField.module.css";
 import formStyles from "../styles/Forms.module.css";
 import inputStyles from "../styles/Input.module.css";
-// import thresholdsStyles from './ThresholdsSelection.module.css';
 import {isValidIntegerZeroOrLarger} from '../form/validators';
 
 export interface MinMax {

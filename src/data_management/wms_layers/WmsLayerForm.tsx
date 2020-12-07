@@ -11,10 +11,7 @@ import { SelectBox } from '../../form/SelectBox';
 import { SlushBucket } from '../../form/SlushBucket';
 import { AccessModifier } from '../../form/AccessModifier';
 import { useForm, Values } from '../../form/useForm';
-import { 
-  minLength, 
-  // required 
-} from '../../form/validators';
+import { minLength,} from '../../form/validators';
 import wmsIcon from "../../images/wms@3x.svg";
 import {
   getDatasets,
@@ -24,9 +21,7 @@ import {
 } from '../../reducers';
 import { addNotification } from './../../actions';
 import formStyles from './../../styles/Forms.module.css';
-import SpatialBoundsField
-//, { spatialBoundsValidator } 
-from "../../forms/SpatialBoundsField";
+import SpatialBoundsField from "../../forms/SpatialBoundsField";
 import MinMaxZoomField, {MinMax} from '../../components/MinMaxZoomField';
 import { WmsLayerReceivedFromApi, wmsLayerReceivedFromApiToForm, WmsLayerFormType, wmsLayerGetDefaultFormValues, wmsLayerFormToFormSendToApi} from '../../types/WmsLayerType';
 
@@ -51,7 +46,6 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
   const initialValues: WmsLayerFormType = currentWmsLayer ? wmsLayerReceivedFromApiToForm(currentWmsLayer) : wmsLayerGetDefaultFormValues(selectedOrganisation.uuid);
   
   const onSubmit = (values: Values) => {
-    console.log('submitted', values);
 
     // @ts-ignore
     const wmsLayer = wmsLayerFormToFormSendToApi(values);
@@ -70,7 +64,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
         .then((data:any) => {
             const status = data.status;
             if (status === 201) {
-              // redirect back to the table of raster layers
+              // redirect back to the table of wms layers
               props.addNotification('WMS-Layer created', 2000);
               props.history.push('/data_management/wms_layers');
             } else {
@@ -228,18 +222,13 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           name={'tiled'}
           value={values.tiled as boolean}
           valueChanged={bool => handleValueChange('tiled', bool)}
-          // readonly={!!currentRasterSource}
         />
         <MinMaxZoomField
-          // title={'Get Feature Url *'}
           name={'minMaxZoom'}
-          // placeholder={'http://example.com'}
-          // value={values.minMaxZoom as MinMax}
           value={{
             minZoom: values.min_zoom as number,
             maxZoom: values.max_zoom as number,
           }}
-          // valueChanged={handleInputChange}
           valueChanged={(value:MinMax) => { 
             if (values.min_zoom !== value.minZoom) {
               handleValueChange('min_zoom', value.minZoom);
@@ -247,20 +236,14 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
               handleValueChange('max_zoom', value.maxZoom);
             }
           }}
-          // clearInput={clearInput}
-          // validated={!minLength(3, values.name as string)}
-          // errorMessage={minLength(3, values.name as string)}
-          // minZoomValidated={ typeof values.min_zoom === 'number' && values.min_zoom >= 0 && !(values.min_zoom+'').includes(".") }
           triedToSubmit={triedToSubmit}
         />
         <SpatialBoundsField
            name={'spatial_bounds'}
-           // placeholder={'http://example.com'}
            // @ts-ignore
            value={values.spatial_bounds}
            valueChanged={(value:any) => handleValueChange('spatial_bounds', value)}
            clearInput={clearInput}
-           // errorMessage={minLength(3, values.name as string)}
            triedToSubmit={triedToSubmit}
            otherValues= {{
             wmsLayerName: values.name + '',
@@ -269,40 +252,28 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
            }}
            geoServerError={geoserverError}
            showGeoServerError={()=>setGeoserverError(true)}
-          //  validated={(()=>{
-          //    // @ts-ignore
-          //   spatialBoundsValidator(values.spatial_bounds)
-          //  })()}
         />
         <TextArea
           title={'Options (JSON)'}
           name={'options'}
-          placeholder={'This is a layer based on raster_source'}
+          placeholder={'Enter valid JSON'}
           value={values.options as string}
           valueChanged={handleInputChange}
           clearInput={clearInput}
           validated={(()=>{
-            // console.log('JSON.parse 1')
             try{
-              // console.log('JSON.parse 2')
               JSON.parse(values.options as string)
             } catch(e) {
-              // console.log('JSON.parse 3')
               return false;
             }
-            // console.log('JSON.parse 4')
             return true;
           })()}
           errorMessage={(()=>{
-            // console.log('JSON.parse 1')
             try{
-              // console.log('JSON.parse 2')
               JSON.parse(values.options as string)
             } catch(e) {
-              // console.log('JSON.parse 3')
               return "needs to be valid JSON";
             }
-            // console.log('JSON.parse 4')
             return "";
           })()}
         />
@@ -347,7 +318,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           choices={organisations.map((organisation: any) => [organisation.uuid, organisation.name])}
           validated={values.organisation !== null && values.organisation !== ""}
           errorMessage={"required"}
-          // this nees to be read only in some cases !?
+          // this needs to be read only in some cases !?
           readOnly={false}
         />
         <SelectBox
@@ -361,7 +332,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           )}
           showSearchField={true}
           validated
-          // this nees to be read only in some cases !?
+          // this needs to be read only in some cases !?
           readOnly={false}
         />
         <div
