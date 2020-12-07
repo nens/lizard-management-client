@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { RouteComponentProps, } from 'react-router';
+import { RouteComponentProps, withRouter} from 'react-router';
 import {  useSelector, connect } from 'react-redux';
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import { CheckBox } from './../../form/CheckBox';
@@ -35,8 +35,7 @@ interface Props {
 };
 
 interface PropsFromDispatch {
-  // removeRasterSourceUUID: () => void,
-  // addNotification: (message: string | number, timeout: number) => void,
+  addNotification: (message: string | number, timeout: number) => void,
 };
 
 const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (props) => {
@@ -68,15 +67,15 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
         // @ts-ignore
         fetch(url, opts)
         // @ts-ignore
-          .then((preresponse:any) => preresponse.json())
-          .then((response:any) => {
-            const status = response.status;
-            // props.addNotification(status, 2000);
+        .then((data:any) => {
+            const status = data.status;
             if (status === 201) {
               // redirect back to the table of raster layers
+              props.addNotification('WMS-Layer created', 2000);
               props.history.push('/data_management/wms_layers');
             } else {
-              console.error(response);
+              props.addNotification('Something went wrong creating the WMS-Layer. Check the form and the console', 2000);
+              console.error(data);
             };
           })
           .catch((e:any) => console.error(e));
@@ -89,14 +88,15 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
       };
       // @ts-ignore
       fetch(url + "uuid:" + currentWmsLayer.uuid + "/", opts)
-        .then((preresponse:any) => preresponse.json())
         .then((data:any) => {
-          const status = data.response.status;
-          // props.addNotification(status, 2000);
+          const status = data.status;
+          
           if (status === 200) {
             // redirect back to the table of raster layers
+            props.addNotification('WMS-Layer updated', 2000);
             props.history.push('/data_management/wms_layers');
           } else {
+            props.addNotification('Something went wrong updating the WMS-Layer. Check the form and the console', 2000);
             console.error(data);
           };
         })
@@ -383,4 +383,4 @@ const mapDispatchToProps = (dispatch: any) => ({
   addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout)),
 });
 
-export default connect(null, mapDispatchToProps)(WmsLayerForm);
+export default connect(null, mapDispatchToProps)(withRouter(WmsLayerForm));
