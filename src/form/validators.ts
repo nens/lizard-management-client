@@ -55,30 +55,3 @@ export const greaterThanMin = (minValue: number, maxValue: number): validatorRes
   }
   return false;
 };
-
-export const isValidIntegerZeroOrLarger = (value: any) => {
-  if (isNaN(value) || typeof value !== 'number') {
-      return {
-          valid: false,
-          invalidMessage: "Enter a valid number",
-      }
-  } 
-  else if (value < 0 ) {
-      return {
-          valid: false,
-          invalidMessage: "Number needs to be at least 0",
-      }
-  }
-  else if ((value+'').includes(".")) {
-      return {
-          valid: false,
-          invalidMessage: "Only integers allowed",
-      }
-  }
-  else {
-      return {
-          valid: true,
-          invalidMessage: "",
-      }
-  }
-}
