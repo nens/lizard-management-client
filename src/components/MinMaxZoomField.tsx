@@ -71,7 +71,7 @@ const isValidMaxZoom = (min:any, max: any) => {
 }
 
 
- const  MinMaxZoomFields =  (props: Props) => {
+ const  MinMaxZoomField =  (props: Props) => {
 
     const {value, valueChanged} = props;
     const minZoomInput = useRef<HTMLInputElement>(null);
@@ -161,4 +161,4 @@ const isValidMaxZoom = (min:any, max: any) => {
     );
 }
 
-export default  MinMaxZoomFields;
+export default  MinMaxZoomField;
