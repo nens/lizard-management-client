@@ -55,3 +55,12 @@ export const greaterThanMin = (minValue: number, maxValue: number): validatorRes
   }
   return false;
 };
+
+export const jsonValidator =  (jsonStr: string) => {
+  try{
+    JSON.parse(jsonStr as string)
+  } catch(e) {
+    return "needs to be valid JSON";
+  }
+  return false;
+}

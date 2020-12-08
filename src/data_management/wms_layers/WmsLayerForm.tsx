@@ -12,7 +12,7 @@ import { SelectBox } from '../../form/SelectBox';
 import { SlushBucket } from '../../form/SlushBucket';
 import { AccessModifier } from '../../form/AccessModifier';
 import { useForm, Values } from '../../form/useForm';
-import { greaterThanMin, minLength, rangeCheck,} from '../../form/validators';
+import { greaterThanMin, minLength, rangeCheck, jsonValidator} from '../../form/validators';
 import wmsIcon from "../../images/wms@3x.svg";
 import {
   getDatasets,
@@ -281,22 +281,8 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           value={values.options as string}
           valueChanged={handleInputChange}
           clearInput={clearInput}
-          validated={(()=>{
-            try{
-              JSON.parse(values.options as string)
-            } catch(e) {
-              return false;
-            }
-            return true;
-          })()}
-          errorMessage={(()=>{
-            try{
-              JSON.parse(values.options as string)
-            } catch(e) {
-              return "needs to be valid JSON";
-            }
-            return "";
-          })()}
+          validated={!jsonValidator(values.options as string)}
+          errorMessage={jsonValidator(values.options as string)}
         />
         <span className={formStyles.FormFieldTitle}>
           3: Rights
