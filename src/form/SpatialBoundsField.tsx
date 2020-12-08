@@ -86,8 +86,6 @@ const SpatialBoundsField  =  (props: SpatialBoundsProps) => {
         west = "";
     };
 
-    console.log('nesw', value, north, east, south, west);
-
     useEffect(() => {
         if (
             northInput && northInput.current &&

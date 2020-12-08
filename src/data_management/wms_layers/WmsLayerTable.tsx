@@ -85,19 +85,8 @@ const rasterSourceColumnDefenitions = [
       >
         {row.description}
       </span>,
-    orderingField: null,//"description",
+    orderingField: null,
   },
-  // {
-  //   titleRenderFunction: () =>  "User",
-  //   renderFunction: (row: any) => 
-  //     <span
-  //       className={tableStyles.CellEllipsis}
-  //       title={row.supplier}
-  //     >
-  //       {row.supplier}
-  //     </span>,
-  //   orderingField: "supplier",
-  // },
   {
     titleRenderFunction: () =>  "",//"Actions",
     renderFunction: (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any) => {
