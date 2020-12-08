@@ -22,6 +22,8 @@ import {
 } from '../../reducers';
 import { addNotification } from './../../actions';
 import formStyles from './../../styles/Forms.module.css';
+// We might later decide to use this combined minmax zoom component instead of the 2 seperate fields.
+// import MinMaxZoomField, {MinMax} from '../../components/MinMaxZoomField';
 import SpatialBoundsField from "../../forms/SpatialBoundsField";
 import { WmsLayerReceivedFromApi, wmsLayerReceivedFromApiToForm, WmsLayerFormType, wmsLayerGetDefaultFormValues, wmsLayerFormToFormSendToApi} from '../../types/WmsLayerType';
 
@@ -223,6 +225,22 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           value={values.tiled as boolean}
           valueChanged={bool => handleValueChange('tiled', bool)}
         />
+        {/* We might later decide to use this combined minmax zoom component instead of the 2 seperate fields */}
+        {/* <MinMaxZoomField
+          name={'minMaxZoom'}
+          value={{
+            minZoom: values.min_zoom as number,
+            maxZoom: values.max_zoom as number,
+          }}
+          valueChanged={(value:MinMax) => { 
+            if (values.min_zoom !== value.minZoom) {
+              handleValueChange('min_zoom', value.minZoom);
+            } else {
+              handleValueChange('max_zoom', value.maxZoom);
+            }
+          }}
+          triedToSubmit={triedToSubmit}
+        /> */}
         <div style={{ display: 'flex' }}>
           <IntegerInput
             title={'Min Zoom'}
