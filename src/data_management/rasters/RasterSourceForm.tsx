@@ -149,6 +149,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
   return (
     <ExplainSideColumn
       imgUrl={rasterSourceIcon}
+      imgAltDescription={"Raster-Source icon"}
       headerText={"Raster Sources"}
       explainationText={"Fill in the form to create a new Raster Source."}
       backUrl={"/data_management/rasters/sources"}
