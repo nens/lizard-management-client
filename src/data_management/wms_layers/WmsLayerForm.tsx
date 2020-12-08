@@ -24,7 +24,7 @@ import { addNotification } from './../../actions';
 import formStyles from './../../styles/Forms.module.css';
 // We might later decide to use this combined minmax zoom component instead of the 2 seperate fields.
 // import MinMaxZoomField, {MinMax} from '../../components/MinMaxZoomField';
-import SpatialBoundsField from "../../forms/SpatialBoundsField";
+import SpatialBoundsField from "../../form/SpatialBoundsField";
 import { WmsLayerReceivedFromApi, wmsLayerReceivedFromApiToForm, WmsLayerFormType, wmsLayerGetDefaultFormValues, wmsLayerFormToFormSendToApi} from '../../types/WmsLayerType';
 
 interface Props {

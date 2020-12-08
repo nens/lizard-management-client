@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { FormattedMessage } from "react-intl";
 import { getBoundsFromWmsLayer } from "../utils/getBoundsFromGeoServer";
-import ClearInputButton from "./ClearInputButton";
+import ClearInputButton from "../forms/ClearInputButton";
 import styles from "./SpatialBoundsField.module.css";
 import durationStyles from "./DurationField.module.css";
 import formStyles from "../styles/Forms.module.css";
