@@ -5,7 +5,7 @@ import backArrow from '../images/back_arrow.svg';
 
 export const ExplainSideColumn = (props:any) => {
 
-  const {imgUrl, headerText,explainationText, backUrl} = props;
+  const {imgUrl, imgAltDescription, headerText,explainationText, backUrl} = props;
 
   return (
     <div 
@@ -40,7 +40,9 @@ export const ExplainSideColumn = (props:any) => {
             <img alt="back" src={backArrow}/>
           </span></NavLink>
         </div>
-        <img src={imgUrl} alt={""}></img>
+        <div style={{display:"flex", justifyContent: "center"}}>
+          <img src={imgUrl} alt={imgAltDescription? imgAltDescription: "Left sidebar icon"}/>
+        </div>
         <h2
           style={{
             marginBottom: "32px",

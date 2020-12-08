@@ -69,6 +69,9 @@
   color: var(--color-ligth-main);
   border: none;
 }
+.Table > div:nth-child(1) button > img {
+  margin-left: 8px;
+}
 
 /* Loading indicator container */
 .Table > div:nth-child(3) {

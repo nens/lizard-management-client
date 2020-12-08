@@ -70,7 +70,10 @@ export const SelectBox: React.FC<SelectBoxProps> = (props) => {
   const clearInput = () => {
     // Clear input and close choices
     props.valueChanged(null);
-    setShowChoices(false);
+    // this toggleChoices is actually meant to reverse the toggle choices that is automatically triggered when clicking on the clear icon.
+    // The cleear icon triggers the input onclick because a label element is around all of them.
+    // Is there a better way to fix this ?  
+    toggleChoices();    
   };
 
   // Set validity of the input field
@@ -116,7 +119,9 @@ export const SelectBox: React.FC<SelectBoxProps> = (props) => {
             ) : (
             <ClearInputButton
               icon="arrow_drop_down"
-              onClick={() => toggleChoices()}/>
+              // do nothing because onClick on input will handle it
+              onClick={() => {}}//toggleChoices()}
+            />
           )
         :
         null

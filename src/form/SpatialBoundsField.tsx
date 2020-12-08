@@ -1,20 +1,19 @@
-import React, { Component } from "react";
+import React, { useEffect, useRef } from "react";
 import { FormattedMessage } from "react-intl";
 import { getBoundsFromWmsLayer } from "../utils/getBoundsFromGeoServer";
-import ClearInputButton from "./ClearInputButton";
+import ClearInputButton from "../forms/ClearInputButton";
 import styles from "./SpatialBoundsField.module.css";
 import durationStyles from "./DurationField.module.css";
 import formStyles from "../styles/Forms.module.css";
 import inputStyles from "../styles/Input.module.css";
 import thresholdsStyles from './ThresholdsSelection.module.css';
+import {SpatialBounds} from '../types/mapTypes'
 
 interface SpatialBoundsProps {
-    value: {
-        north: number,
-        east: number,
-        south: number,
-        west: number
-    } | null,
+    name: string,
+    clearInput: (e: any) => void,
+    triedToSubmit?: boolean,
+    value: SpatialBounds | null,
     otherValues: {
         wmsLayerName: string,
         wmsLayerSlug: string,
@@ -27,71 +26,144 @@ interface SpatialBoundsProps {
 
 // Validator
 export const spatialBoundsValidator = (fieldValue: SpatialBoundsProps['value']) => {
-    if (fieldValue) {
-        const {
-            north,
-            east,
-            south,
-            west
-        } = fieldValue;
+    if (fieldValue === null) {
+        return true;
+    }
+    const {
+        north,
+        east,
+        south,
+        west
+    } = fieldValue;
 
-        if (
-            north === undefined || Number.isNaN(north) ||
-            east === undefined || Number.isNaN(east) ||
-            south === undefined || Number.isNaN(south) ||
-            west === undefined || Number.isNaN(west)
-        ) {
-            return "Please enter a number in all fields or clear all inputs"
-        } else if (north < south) {
-            return "North coordinate cannot be smaller than South coordinate"
-        } else if (east < west) {
-            return "East coordinate cannot be smaller than West coordinate"
-        } else {
-            return false;
-        };
+    if (
+        north === undefined || Number.isNaN(north) ||
+        east === undefined || Number.isNaN(east) ||
+        south === undefined || Number.isNaN(south) ||
+        west === undefined || Number.isNaN(west)
+    ) {
+        return "Please enter a number in all fields or clear all inputs"
+    } else if (north < south) {
+        return "North coordinate cannot be smaller than South coordinate"
+    } else if (east < west) {
+        return "East coordinate cannot be smaller than West coordinate"
+    } else {
+        return false;
     };
 };
 
-export default class SpatialBoundsField extends Component<SpatialBoundsProps, {}> {
-    updateSpatialBounds(key: string, value: string) {
-        this.props.valueChanged({
-            ...this.props.value,
-            [key]: parseFloat(value)
-        });
-    }
-    removeSpatialBounds() {
-        this.props.valueChanged(null);
-    }
-    render() {
-        const {
-            value,
-            otherValues,
-            valueChanged,
-            geoServerError,
-            showGeoServerError,
-        } = this.props;
+const SpatialBoundsField  =  (props: SpatialBoundsProps) => {
 
-        const {
-            wmsLayerSlug,
-            wmsLayerUrl,
-        } = otherValues;
+    const {
+        value,
+        otherValues,
+        valueChanged,
+        geoServerError,
+        showGeoServerError,
+    } = props;
 
-        let north, east, south, west;
+    const {
+        wmsLayerSlug,
+        wmsLayerUrl,
+    } = otherValues;
 
-        if (value) {
-            north = Number.isFinite(value.north) ? value.north : "";
-            east = Number.isFinite(value.east) ? value.east : "";
-            south = Number.isFinite(value.south) ? value.south : "";
-            west = Number.isFinite(value.west) ? value.west : "";
+    const northInput = useRef<HTMLInputElement>(null);
+    const eastInput = useRef<HTMLInputElement>(null);
+    const southInput = useRef<HTMLInputElement>(null);
+    const westInput = useRef<HTMLInputElement>(null);
+
+    let north, east, south, west;
+
+    if (value) {
+        north = Number.isFinite(value.north) ? value.north : "";
+        east = Number.isFinite(value.east) ? value.east : "";
+        south = Number.isFinite(value.south) ? value.south : "";
+        west = Number.isFinite(value.west) ? value.west : "";
+    } else {
+        north = "";
+        east = "";
+        south = "";
+        west = "";
+    };
+
+    useEffect(() => {
+        if (
+            northInput && northInput.current &&
+            southInput && southInput.current &&
+            eastInput && eastInput.current &&
+            westInput && westInput.current
+        ) {
+            if (value===null) {
+                northInput.current.setCustomValidity('');
+                southInput.current.setCustomValidity('');
+                eastInput.current.setCustomValidity('');
+                westInput.current.setCustomValidity('');
+                return
+            }
+
+            if ((isNaN(value.north) || isNaN(value.east) || isNaN(value.south) || isNaN(value.west))) {
+                northInput.current.setCustomValidity('Fields must be either all empty or all filled');
+                southInput.current.setCustomValidity('');
+                eastInput.current.setCustomValidity('');
+                westInput.current.setCustomValidity('');
+                // return here because otherwise we have to check lateron for each field seperately again i it is NaN
+                return;
+            } else {
+                northInput.current.setCustomValidity('');
+            }
+            if (value.north < value.south) {
+                southInput.current.setCustomValidity('South coordinate must be smaller than North coordinate');
+            } else {
+                southInput.current.setCustomValidity('');
+            }
+            if (value.east < value.west) {
+                eastInput.current.setCustomValidity('East coordinate must be greater than West coordinate');
+            } else {
+                eastInput.current.setCustomValidity('');
+            }
+        }
+    });
+
+    const updateSpatialBounds = (key: string, value: string) => {
+        let tempValue: SpatialBounds | null;
+        if (props.value === null) {
+            tempValue = {
+                north: NaN,
+                east: NaN,
+                south: NaN,
+                west: NaN,
+            }
         } else {
-            north = "";
-            east = "";
-            south = "";
-            west = "";
-        };
+            tempValue = {...props.value}
+        }
+
+        tempValue = {
+            ...tempValue,
+            [key]: parseFloat(value)
+        }
+        if (
+            isNaN(tempValue.north) &&
+            isNaN(tempValue.east) &&
+            isNaN(tempValue.south) &&
+            isNaN(tempValue.west)
+        ) {
+            props.valueChanged(null);
+        } else {
+            props.valueChanged(tempValue);
+        }
+    }
+
+    const removeSpatialBounds = () => {
+        props.valueChanged(null);
+    }
+    
+        
 
         return (
             <div>
+                <label>
+                    Spatial bounds
+                </label>
                 <div
                     className={
                         formStyles.FormGroup +
@@ -121,7 +193,8 @@ export default class SpatialBoundsField extends Component<SpatialBoundsProps, {}
                                 durationStyles.TextAlignCenter
                             }
                             value={north}
-                            onChange={(e) => this.updateSpatialBounds('north', e.target.value)}
+                            onChange={(e) => updateSpatialBounds('north', e.target.value)}
+                            ref={northInput}
                         />
                     </div>
                     <div
@@ -144,7 +217,8 @@ export default class SpatialBoundsField extends Component<SpatialBoundsProps, {}
                                 durationStyles.TextAlignCenter
                             }
                             value={east}
-                            onChange={(e) => this.updateSpatialBounds('east', e.target.value)}
+                            onChange={(e) => updateSpatialBounds('east', e.target.value)}
+                            ref={eastInput}
                         />
                     </div>
                     <div
@@ -167,7 +241,8 @@ export default class SpatialBoundsField extends Component<SpatialBoundsProps, {}
                                 durationStyles.TextAlignCenter
                             }
                             value={south}
-                            onChange={(e) => this.updateSpatialBounds('south', e.target.value)}
+                            onChange={(e) => updateSpatialBounds('south', e.target.value)}
+                            ref={southInput}
                         />
                     </div>
                     <div
@@ -192,10 +267,11 @@ export default class SpatialBoundsField extends Component<SpatialBoundsProps, {}
                                 durationStyles.TextAlignCenter
                             }
                             value={west}
-                            onChange={(e) => this.updateSpatialBounds('west', e.target.value)}
+                            onChange={(e) => updateSpatialBounds('west', e.target.value)}
+                            ref={westInput}
                         />
                     </div>
-                    <ClearInputButton onClick={() => this.removeSpatialBounds()}/>
+                    <ClearInputButton onClick={() => removeSpatialBounds()}/>
                 </div>
                 <div className={styles.GetFromGeoServer}>
                     <button
@@ -210,6 +286,7 @@ export default class SpatialBoundsField extends Component<SpatialBoundsProps, {}
                             valueChanged,
                             showGeoServerError
                         )}
+                        type={"button"}
                     >
                         <FormattedMessage
                             id="wms_layer_form.get_from_geoserver"
@@ -228,5 +305,6 @@ export default class SpatialBoundsField extends Component<SpatialBoundsProps, {}
                 </div>
             </div>
         );
-    }
 }
+
+export default  SpatialBoundsField;

@@ -177,6 +177,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
   return (
     <ExplainSideColumn
       imgUrl={rasterLayerIcon}
+      imgAltDescription={"Raster-Layer icon"}
       headerText={"Raster Layers"}
       explainationText={"Create a layer to view your raster data in the portal."}
       backUrl={"/data_management/rasters/layers"}
