@@ -65,12 +65,10 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
         // @ts-ignore
         .then((data:any) => {
             const status = data.status;
+            props.addNotification(status, 2000);
             if (status === 201) {
-              // redirect back to the table of wms layers
-              props.addNotification('WMS-Layer created', 2000);
               props.history.push('/data_management/wms_layers');
             } else {
-              props.addNotification('Something went wrong creating the WMS-Layer. Check the form and the console', 2000);
               console.error(data);
             };
           })
@@ -86,13 +84,10 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
       fetch(url + "uuid:" + currentWmsLayer.uuid + "/", opts)
         .then((data:any) => {
           const status = data.status;
-          
+          props.addNotification(status, 2000);
           if (status === 200) {
-            // redirect back to the table of raster layers
-            props.addNotification('WMS-Layer updated', 2000);
             props.history.push('/data_management/wms_layers');
           } else {
-            props.addNotification('Something went wrong updating the WMS-Layer. Check the form and the console', 2000);
             console.error(data);
           };
         })
@@ -117,7 +112,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
       imgAltDescription={"WMS-Layer icon"}
       headerText={"WMS Layers"}
       explainationText={"WMS-Layers allow to configure layers in lizard even if they are hosted on another platform"} 
-      backUrl={"/data_management"}
+      backUrl={"/data_management/wms_layers"}
     >
       <form
         className={formStyles.Form}
@@ -159,7 +154,6 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
             }
           })}
           valueChanged={(value: any) => {
-            console.log("datasets 123", value);
             handleValueChange('datasets', value)
           }}
           validated
@@ -168,7 +162,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           2: Data
         </span>
         <TextInput
-          title={'WMS Url *'}
+          title={'WMS URL *'}
           name={'wms_url'}
           placeholder={'http://example.com'}
           value={values.wms_url as string}
@@ -185,12 +179,12 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           value={values.slug as string}
           valueChanged={handleInputChange}
           clearInput={clearInput}
-          validated={!minLength(3, values.slug as string)}
-          errorMessage={minLength(3, values.slug as string)}
+          validated={!minLength(1, values.slug as string)}
+          errorMessage={minLength(1, values.slug as string)}
           triedToSubmit={triedToSubmit}
         />
         <TextInput
-          title={'Download Url'}
+          title={'Download URL'}
           name={'download_url'}
           placeholder={'http://example.com'}
           value={values.download_url as string}
@@ -201,7 +195,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           triedToSubmit={triedToSubmit}
         />
         <TextInput
-          title={'Legend Url'}
+          title={'Legend URL'}
           name={'legend_url'}
           placeholder={'http://example.com'}
           value={values.legend_url as string}
@@ -211,7 +205,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           triedToSubmit={triedToSubmit}
         />
         <TextInput
-          title={'Get Feature Url'}
+          title={'Get Feature URL'}
           name={'get_feature_info_url'}
           placeholder={'http://example.com'}
           value={values.get_feature_info_url as string}
