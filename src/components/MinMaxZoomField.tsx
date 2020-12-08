@@ -2,7 +2,33 @@ import React, { useEffect, useRef } from "react";
 import durationStyles from "../forms/DurationField.module.css";
 import formStyles from "../styles/Forms.module.css";
 import inputStyles from "../styles/Input.module.css";
-import {isValidIntegerZeroOrLarger} from '../form/validators';
+
+export const isValidIntegerZeroOrLarger = (value: any) => {
+  if (isNaN(value) || typeof value !== 'number') {
+      return {
+          valid: false,
+          invalidMessage: "Enter a valid number",
+      }
+  } 
+  else if (value < 0 ) {
+      return {
+          valid: false,
+          invalidMessage: "Number needs to be at least 0",
+      }
+  }
+  else if ((value+'').includes(".")) {
+      return {
+          valid: false,
+          invalidMessage: "Only integers allowed",
+      }
+  }
+  else {
+      return {
+          valid: true,
+          invalidMessage: "",
+      }
+  }
+} 
 
 export interface MinMax {
   minZoom: number,
@@ -45,8 +71,8 @@ const isValidMaxZoom = (min:any, max: any) => {
 }
 
 
- const  MinMaxZoomFields =  (props: Props) => {
-  
+ const  MinMaxZoomField =  (props: Props) => {
+
     const {value, valueChanged} = props;
     const minZoomInput = useRef<HTMLInputElement>(null);
     const maxZoomInput = useRef<HTMLInputElement>(null);
@@ -69,7 +95,7 @@ const isValidMaxZoom = (min:any, max: any) => {
                 maxZoomInput.current.setCustomValidity(maxZoomValidated.invalidMessage);
             }
         }
-        
+
     })
 
     return (
@@ -127,13 +153,12 @@ const isValidMaxZoom = (min:any, max: any) => {
                         ref={maxZoomInput}
                     />
                 </div>
-                
-                
+
+
             </div>
-            
+
         </div>
     );
 }
 
-export default  MinMaxZoomFields;
-
+export default  MinMaxZoomField;

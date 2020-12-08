@@ -5,13 +5,14 @@ import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import { CheckBox } from './../../form/CheckBox';
 import { TextArea } from './../../form/TextArea';
 import { TextInput } from './../../form/TextInput';
+import { IntegerInput } from '../../form/IntegerInput';
 import { SubmitButton } from '../../form/SubmitButton';
 import { CancelButton } from '../../form/CancelButton';
 import { SelectBox } from '../../form/SelectBox';
 import { SlushBucket } from '../../form/SlushBucket';
 import { AccessModifier } from '../../form/AccessModifier';
 import { useForm, Values } from '../../form/useForm';
-import { minLength,} from '../../form/validators';
+import { greaterThanMin, minLength, rangeCheck,} from '../../form/validators';
 import wmsIcon from "../../images/wms@3x.svg";
 import {
   getDatasets,
@@ -21,8 +22,9 @@ import {
 } from '../../reducers';
 import { addNotification } from './../../actions';
 import formStyles from './../../styles/Forms.module.css';
+// We might later decide to use this combined minmax zoom component instead of the 2 seperate fields.
+// import MinMaxZoomField, {MinMax} from '../../components/MinMaxZoomField';
 import SpatialBoundsField from "../../forms/SpatialBoundsField";
-import MinMaxZoomField, {MinMax} from '../../components/MinMaxZoomField';
 import { WmsLayerReceivedFromApi, wmsLayerReceivedFromApiToForm, WmsLayerFormType, wmsLayerGetDefaultFormValues, wmsLayerFormToFormSendToApi} from '../../types/WmsLayerType';
 
 interface Props {
@@ -223,7 +225,8 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           value={values.tiled as boolean}
           valueChanged={bool => handleValueChange('tiled', bool)}
         />
-        <MinMaxZoomField
+        {/* We might later decide to use this combined minmax zoom component instead of the 2 seperate fields */}
+        {/* <MinMaxZoomField
           name={'minMaxZoom'}
           value={{
             minZoom: values.min_zoom as number,
@@ -237,7 +240,30 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
             }
           }}
           triedToSubmit={triedToSubmit}
-        />
+        /> */}
+        <div style={{ display: 'flex' }}>
+          <IntegerInput
+            title={'Min Zoom'}
+            name={'min_zoom'}
+            value={values.min_zoom + ''}
+            valueChanged={handleInputChange}
+            clearInput={clearInput}
+            validated={!rangeCheck(Number(values.min_zoom), 0, 31)}
+            errorMessage={rangeCheck(Number(values.min_zoom), 0, 31)}
+            triedToSubmit={triedToSubmit}
+          />
+          <span style={{ width: 20 }}/>
+          <IntegerInput
+            title={'Max Zoom'}
+            name={'max_zoom'}
+            value={values.max_zoom + ''}
+            valueChanged={handleInputChange}
+            clearInput={clearInput}
+            validated={!rangeCheck(Number(values.max_zoom), 0, 31) && !greaterThanMin(Number(values.min_zoom), Number(values.max_zoom))}
+            errorMessage={rangeCheck(Number(values.max_zoom), 0, 31) || greaterThanMin(Number(values.min_zoom), Number(values.max_zoom))}
+            triedToSubmit={triedToSubmit}
+          />
+        </div>
         <SpatialBoundsField
            name={'spatial_bounds'}
            // @ts-ignore

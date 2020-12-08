@@ -43,7 +43,7 @@ export const testRegex = (regex: RegExp, error: string, str: string): validatorR
 };
 
 export const rangeCheck = (value: number, min: number, max: number): validatorResult => {
-  if (!value || value < min || value > max) {
+  if ((!value && value !== 0) || value < min || value > max) {
     return `Choose between ${min} and ${max}`;
   }
   return false;
@@ -55,30 +55,3 @@ export const greaterThanMin = (minValue: number, maxValue: number): validatorRes
   }
   return false;
 };
-
-export const isValidIntegerZeroOrLarger = (value: any) => {
-  if (isNaN(value) || typeof value !== 'number') {
-      return {
-          valid: false,
-          invalidMessage: "Enter a valid number",
-      }
-  } 
-  else if (value < 0 ) {
-      return {
-          valid: false,
-          invalidMessage: "Number needs to be at least 0",
-      }
-  }
-  else if ((value+'').includes(".")) {
-      return {
-          valid: false,
-          invalidMessage: "Only integers allowed",
-      }
-  }
-  else {
-      return {
-          valid: true,
-          invalidMessage: "",
-      }
-  }
-}

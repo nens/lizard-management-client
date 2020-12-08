@@ -10,6 +10,9 @@ import thresholdsStyles from './ThresholdsSelection.module.css';
 import {SpatialBounds} from '../types/mapTypes'
 
 interface SpatialBoundsProps {
+    name: string,
+    clearInput: (e: any) => void,
+    triedToSubmit?: boolean,
     value: SpatialBounds | null,
     otherValues: {
         wmsLayerName: string,
