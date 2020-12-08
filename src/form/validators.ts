@@ -43,7 +43,7 @@ export const testRegex = (regex: RegExp, error: string, str: string): validatorR
 };
 
 export const rangeCheck = (value: number, min: number, max: number): validatorResult => {
-  if (!value || value < min || value > max) {
+  if ((!value && value !== 0) || value < min || value > max) {
     return `Choose between ${min} and ${max}`;
   }
   return false;
