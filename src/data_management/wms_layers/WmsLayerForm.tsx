@@ -44,6 +44,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
   const organisations = useSelector(getOrganisations).available;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const datasets = useSelector(getDatasets).available;
+  const organisationsToSwitchTo = organisations.filter((org:any)=>{return org.roles.includes("manager")})
 
   const initialValues: WmsLayerFormType = currentWmsLayer ? wmsLayerReceivedFromApiToForm(currentWmsLayer) : wmsLayerGetDefaultFormValues(selectedOrganisation.uuid);
   
@@ -322,11 +323,11 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           placeholder={'- Search and select -'}
           value={typeof values.organisation === "string" ? (values.organisation as string).replace(/-/g, ""): (values.organisation as string) }
           valueChanged={value => handleValueChange('organisation', value)}
-          choices={organisations.map((organisation: any) => [organisation.uuid, organisation.name])}
+          choices={organisationsToSwitchTo.map((organisation: any) => [organisation.uuid, organisation.name])}
           validated={values.organisation !== null && values.organisation !== ""}
           errorMessage={"required"}
           // this needs to be read only in some cases !?
-          readOnly={false}
+          readOnly={!(organisationsToSwitchTo.length > 1 && selectedOrganisation.roles.includes("manager"))}
         />
         <SelectBox
           title={'Supplier'}
@@ -340,7 +341,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           showSearchField={true}
           validated
           // this needs to be read only in some cases !?
-          readOnly={false}
+          readOnly={!selectedOrganisation.roles.includes("manager")}
         />
         <div
           className={formStyles.ButtonContainer}
