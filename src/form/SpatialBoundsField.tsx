@@ -3,7 +3,6 @@ import { FormattedMessage } from "react-intl";
 import { getBoundsFromWmsLayer } from "../utils/getBoundsFromGeoServer";
 import ClearInputButton from "../forms/ClearInputButton";
 import styles from "./SpatialBoundsField.module.css";
-import durationStyles from "./DurationField.module.css";
 import formStyles from "../styles/Forms.module.css";
 import inputStyles from "../styles/Input.module.css";
 import thresholdsStyles from './ThresholdsSelection.module.css';
@@ -173,11 +172,11 @@ const SpatialBoundsField  =  (props: SpatialBoundsProps) => {
                 >
                     <div
                         className={
-                            durationStyles.DurationInputFields +
+                            styles.InputFields +
                             " " +
-                            durationStyles.DurationInputFieldDays +
-                            " " +
-                            durationStyles.TextAlignCenter
+                            // styles.DurationInputFieldDays +
+                            // " " +
+                            styles.TextAlignCenter
                         }
                     >
                         <label>
@@ -190,7 +189,7 @@ const SpatialBoundsField  =  (props: SpatialBoundsProps) => {
                             className={
                                 formStyles.FormControl +
                                 " " +
-                                durationStyles.TextAlignCenter
+                                styles.TextAlignCenter
                             }
                             value={north}
                             onChange={(e) => updateSpatialBounds('north', e.target.value)}
@@ -199,9 +198,9 @@ const SpatialBoundsField  =  (props: SpatialBoundsProps) => {
                     </div>
                     <div
                         className={
-                            durationStyles.DurationInputFields +
+                            styles.InputFields +
                             " " +
-                            durationStyles.TextAlignCenter
+                            styles.TextAlignCenter
                         }
                     >
                         <label>
@@ -214,7 +213,7 @@ const SpatialBoundsField  =  (props: SpatialBoundsProps) => {
                             className={
                                 formStyles.FormControl +
                                 " " +
-                                durationStyles.TextAlignCenter
+                                styles.TextAlignCenter
                             }
                             value={east}
                             onChange={(e) => updateSpatialBounds('east', e.target.value)}
@@ -223,9 +222,9 @@ const SpatialBoundsField  =  (props: SpatialBoundsProps) => {
                     </div>
                     <div
                         className={
-                            durationStyles.DurationInputFields +
+                            styles.InputFields +
                             " " +
-                            durationStyles.TextAlignCenter
+                            styles.TextAlignCenter
                         }
                     >
                         <label>
@@ -238,7 +237,7 @@ const SpatialBoundsField  =  (props: SpatialBoundsProps) => {
                             className={
                                 formStyles.FormControl +
                                 " " +
-                                durationStyles.TextAlignCenter
+                                styles.TextAlignCenter
                             }
                             value={south}
                             onChange={(e) => updateSpatialBounds('south', e.target.value)}
@@ -247,11 +246,11 @@ const SpatialBoundsField  =  (props: SpatialBoundsProps) => {
                     </div>
                     <div
                         className={
-                            durationStyles.DurationInputFields +
+                            styles.InputFields +
                             " " +
-                            durationStyles.DurationInputFieldSeconds +
-                            " " +
-                            durationStyles.TextAlignCenter
+                            // styles.InputFieldseconds +
+                            // " " +
+                            styles.TextAlignCenter
                         }
                     >
                         <label>
@@ -264,7 +263,7 @@ const SpatialBoundsField  =  (props: SpatialBoundsProps) => {
                             className={
                                 formStyles.FormControl +
                                 " " +
-                                durationStyles.TextAlignCenter
+                                styles.TextAlignCenter
                             }
                             value={west}
                             onChange={(e) => updateSpatialBounds('west', e.target.value)}
