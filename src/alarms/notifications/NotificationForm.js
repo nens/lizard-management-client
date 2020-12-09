@@ -230,7 +230,8 @@ class NotificationFormModel extends Component {
             initial={
             (
               currentNotification &&
-              currentNotification.timeseries
+              currentNotification.timeseries &&
+              currentNotification.timeseries.split('/')[currentNotification.timeseries.split('/').length-2]
             ) || null
             }
           />
