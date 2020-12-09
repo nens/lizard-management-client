@@ -231,6 +231,9 @@ class NotificationFormModel extends Component {
             (
               currentNotification &&
               currentNotification.timeseries &&
+              // https://github.com/nens/lizard-management-client/issues/543
+              // seems that timeseries previously was a uuid, but now a url. 
+              // -> quich fix to parse out uuid
               currentNotification.timeseries.split('/')[currentNotification.timeseries.split('/').length-2]
             ) || null
             }
