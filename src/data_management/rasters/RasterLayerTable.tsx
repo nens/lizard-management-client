@@ -200,9 +200,9 @@ export const RasterLayerTable = (props:any) =>  {
          >
            {
                busyDeleting === true?
-               <div style={{position:"absolute", width:"100%", height:"100%", display:"flex", justifyContent:"center", alignItems: "center"}} >
+               <div style={{position:"absolute", top:0, left:0, width:"100%", height:"100%", display:"flex", justifyContent:"center", alignItems: "center"}} >
                   <MDSpinner size={96} />
-                  <span>Deleting ...</span>
+                  <span style={{marginLeft: "20px", fontSize: "19px", fontWeight: "bold"}}>Deleting ...</span>
                 </div>
                 :
                 null
@@ -257,7 +257,7 @@ export const RasterLayerTable = (props:any) =>  {
                busyDeleting === true?
                <div style={{position:"absolute", width:"100%", height:"100%", display:"flex", justifyContent:"center", alignItems: "center"}} >
                   <MDSpinner size={96} />
-                  <span>Deleting ...</span>
+                  <span style={{marginLeft: "20px", fontSize: "19px", fontWeight: "bold"}}>Deleting ...</span>
                 </div>
                 :
                 null
