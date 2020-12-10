@@ -12,6 +12,9 @@ import tableStyles from "../../components/Table.module.css";
 
 import {useState, }  from 'react';
 import ConfirmModal from '../../components/ConfirmModal';
+// Spinner for modal
+import MDSpinner from "react-md-spinner";
+
 
 
 export const RasterLayerTable = (props:any) =>  {
@@ -236,9 +239,19 @@ export const RasterLayerTable = (props:any) =>  {
              setRowToBeDeleted(null);
              setDeleteFunction(null);
            }}
+           disableButtons={busyDeleting}
          >
            <p>Are you sure? You are deleting the following raster-layer:</p>
-           <div>
+           <div style={{position:"relative"}}>
+             {
+               busyDeleting === true?
+               <div style={{position:"absolute", width:"100%", height:"100%", display:"flex", justifyContent:"center", alignItems: "center"}} >
+                  <MDSpinner size={96} />
+                  <span>Deleting ...</span>
+                </div>
+                :
+                null
+             }
              <ul>
                <li style={{fontStyle: "italic", listStyleType: "square", height: "80px"}}>
                 <span style={{display:"flex", flexDirection: "row",justifyContent: "space-between", alignItems: "center"}}>

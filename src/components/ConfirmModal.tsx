@@ -8,6 +8,7 @@ interface MyProps {
   buttonConfirmName?: string,
   onClickButtonConfirm?: () => void,
   cancelAction?: () => void,
+  disableButtons?: boolean
 }
 
 const ConfirmModal: React.FC<MyProps> = (props) => {
@@ -16,6 +17,7 @@ const ConfirmModal: React.FC<MyProps> = (props) => {
     buttonConfirmName,
     onClickButtonConfirm,
     cancelAction,
+    disableButtons,
   } = props;
 
   return (
@@ -32,6 +34,7 @@ const ConfirmModal: React.FC<MyProps> = (props) => {
             <button
               className={`${buttonStyles.Button} ${buttonStyles.LinkCancel}`}
               onClick={cancelAction}
+              disabled={disableButtons}
             >
               Cancel
             </button>
@@ -40,6 +43,7 @@ const ConfirmModal: React.FC<MyProps> = (props) => {
             <button
               className={`${buttonStyles.Button} ${buttonStyles.Danger}`}
               onClick={onClickButtonConfirm}
+              disabled={disableButtons}
             >
               {buttonConfirmName}
             </button>
