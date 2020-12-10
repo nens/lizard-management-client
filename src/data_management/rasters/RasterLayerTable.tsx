@@ -55,12 +55,12 @@ export const RasterLayerTable = (props:any) =>  {
 
   const deleteActionRasters = (rows: any[], tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any, setCheckboxes: any)=>{
     //@ts-ignore
-    setBusyDeleting(true);
+    
     setRowsToBeDeleted(rows);
     const uuids = rows.map(row=> row.uuid);
     // if (window.confirm(`Are you sure you want to delete rasters with uuids? \n ${uuids.join("\n")}`)) {
     setDeleteFunction(()=>()=>{
-      console.log('multiple confirm function');
+      setBusyDeleting(true);
       const tableDataDeletedmarker = tableData.map((rowAllTables:any)=>{
         if (uuids.find((uuid)=> uuid === rowAllTables.uuid)) {
           return {...rowAllTables, markAsDeleted: true}
@@ -196,7 +196,17 @@ export const RasterLayerTable = (props:any) =>  {
             setRowsToBeDeleted([]);
             setDeleteFunction(null);
           }}
+          disableButtons={busyDeleting}
          >
+           {
+               busyDeleting === true?
+               <div style={{position:"absolute", width:"100%", height:"100%", display:"flex", justifyContent:"center", alignItems: "center"}} >
+                  <MDSpinner size={96} />
+                  <span>Deleting ...</span>
+                </div>
+                :
+                null
+             }
            <p>Are you sure? You are deleting the following raster layers:</p>
            <ul>
            {
