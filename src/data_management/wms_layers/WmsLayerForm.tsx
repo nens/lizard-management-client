@@ -137,14 +137,14 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
         <TextArea
           title={'Description'}
           name={'description'}
-          placeholder={'This is a layer based on raster_source'}
+          placeholder={''}
           value={values.description as string}
           valueChanged={handleInputChange}
           clearInput={clearInput}
           validated
         />
         <SlushBucket
-          title={'Datasets'}
+          title={'Tags / Datasets'}
           name={'datasets'}
           placeholder={'Search datasets'}
           value={values.datasets as string[]}
@@ -216,7 +216,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           triedToSubmit={triedToSubmit}
         />
         <CheckBox
-          title={'Tiled'}
+          title={'Tiled WMS'}
           name={'tiled'}
           value={values.tiled as boolean}
           valueChanged={bool => handleValueChange('tiled', bool)}

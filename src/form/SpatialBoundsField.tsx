@@ -6,7 +6,8 @@ import styles from "./SpatialBoundsField.module.css";
 import formStyles from "../styles/Forms.module.css";
 import inputStyles from "../styles/Input.module.css";
 import thresholdsStyles from './ThresholdsSelection.module.css';
-import {SpatialBounds} from '../types/mapTypes'
+import {SpatialBounds} from '../types/mapTypes';
+
 
 interface SpatialBoundsProps {
     name: string,
@@ -59,6 +60,7 @@ const SpatialBoundsField  =  (props: SpatialBoundsProps) => {
         valueChanged,
         geoServerError,
         showGeoServerError,
+        triedToSubmit,
     } = props;
 
     const {
@@ -174,23 +176,20 @@ const SpatialBoundsField  =  (props: SpatialBoundsProps) => {
                         className={
                             styles.InputFields +
                             " " +
-                            // styles.DurationInputFieldDays +
-                            // " " +
                             styles.TextAlignCenter
                         }
                     >
-                        <label>
+                        <label
+                            // we do not use label class below because this wraps text to a newline. Should fix that later.
+                            // className={formStyles.Label}
+                        >
                             <FormattedMessage id="wms_layer_form.north" />
                             &nbsp;(&deg;)
                         </label>
                         <input
                             id="north"
                             type="number"
-                            className={
-                                formStyles.FormControl +
-                                " " +
-                                styles.TextAlignCenter
-                            }
+                            className={`${formStyles.FormControl} ${triedToSubmit ? formStyles.FormSubmitted : ''}`}
                             value={north}
                             onChange={(e) => updateSpatialBounds('north', e.target.value)}
                             ref={northInput}
@@ -210,11 +209,7 @@ const SpatialBoundsField  =  (props: SpatialBoundsProps) => {
                         <input
                             id="east"
                             type="number"
-                            className={
-                                formStyles.FormControl +
-                                " " +
-                                styles.TextAlignCenter
-                            }
+                            className={`${formStyles.FormControl} ${triedToSubmit ? formStyles.FormSubmitted : ''}`}
                             value={east}
                             onChange={(e) => updateSpatialBounds('east', e.target.value)}
                             ref={eastInput}
@@ -234,11 +229,7 @@ const SpatialBoundsField  =  (props: SpatialBoundsProps) => {
                         <input
                             id="south"
                             type="number"
-                            className={
-                                formStyles.FormControl +
-                                " " +
-                                styles.TextAlignCenter
-                            }
+                            className={`${formStyles.FormControl} ${triedToSubmit ? formStyles.FormSubmitted : ''}`}
                             value={south}
                             onChange={(e) => updateSpatialBounds('south', e.target.value)}
                             ref={southInput}
@@ -248,8 +239,6 @@ const SpatialBoundsField  =  (props: SpatialBoundsProps) => {
                         className={
                             styles.InputFields +
                             " " +
-                            // styles.InputFieldseconds +
-                            // " " +
                             styles.TextAlignCenter
                         }
                     >
@@ -260,11 +249,7 @@ const SpatialBoundsField  =  (props: SpatialBoundsProps) => {
                         <input
                             id="west"
                             type="number"
-                            className={
-                                formStyles.FormControl +
-                                " " +
-                                styles.TextAlignCenter
-                            }
+                            className={`${formStyles.FormControl} ${triedToSubmit ? formStyles.FormSubmitted : ''}`}
                             value={west}
                             onChange={(e) => updateSpatialBounds('west', e.target.value)}
                             ref={westInput}
