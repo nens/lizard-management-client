@@ -208,6 +208,7 @@ export const ScenarioTable = (props:any) =>  {
   return (
     <ExplainSideColumn
       imgUrl={rasterIcon}
+      imgAltDescription={"Scenario icon"}
       headerText={"Scenarios"}
       explainationText={"Scenarios are created in 3di."} 
       backUrl={"/data_management"}

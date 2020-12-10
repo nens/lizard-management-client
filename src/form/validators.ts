@@ -43,7 +43,7 @@ export const testRegex = (regex: RegExp, error: string, str: string): validatorR
 };
 
 export const rangeCheck = (value: number, min: number, max: number): validatorResult => {
-  if (!value || value < min || value > max) {
+  if ((!value && value !== 0) || value < min || value > max) {
     return `Choose between ${min} and ${max}`;
   }
   return false;
@@ -55,3 +55,12 @@ export const greaterThanMin = (minValue: number, maxValue: number): validatorRes
   }
   return false;
 };
+
+export const jsonValidator =  (jsonStr: string) => {
+  try{
+    JSON.parse(jsonStr as string)
+  } catch(e) {
+    return "needs to be valid JSON";
+  }
+  return false;
+}

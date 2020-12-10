@@ -1,0 +1,101 @@
+.ThresholdsTable th {
+  height: 50px;
+}
+
+.ThresholdsTable td {
+  max-width: 200px;
+  padding: 4px 10px 4px 0;
+}
+
+.Comparision {
+  font-size: 20px;
+  font-weight: 500;
+  color: #707070;
+}
+
+.ThresholdLabel {
+  color: #707070;
+  height: 50px;
+  margin: 10px 0;
+}
+
+.ThresholdValue {
+  font-weight: bold;
+  color: #707070;
+}
+
+.ThresholdName {
+  font-weight: bold;
+  color: #707070;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ThresholdNameText {
+  width: 90%;
+  word-wrap: break-word;
+}
+
+.ThresholdDelete {
+  cursor: pointer;
+  color: #707070;
+}
+
+.ThresholdDelete:hover {
+  color: #00cdab;
+}
+
+/* Buttons */
+
+.AddThresholdButton {
+  /* max-width: 400px; */
+  text-transform: uppercase;
+  cursor: pointer;
+  font-weight: bold;
+  padding: 10px 20px;
+  margin: 10px 0;
+  background-color: #00cdab;
+  color: #fff;
+  border-radius: 8px;
+  border: none;
+  box-shadow: 0px 3px 6px #00000029;
+}
+
+.AddThresholdButton:hover {
+  background-color: #00a78b;
+}
+
+.AddThresholdButton:focus {
+  outline: none;
+}
+
+.InactiveAddThresholdButton {
+  cursor: not-allowed;
+  background-color: #C9C9C9;
+  color: #fff;
+}
+
+.InactiveAddThresholdButton:hover {
+  background-color: #C9C9C9;
+}
+
+.SelectedButton {
+  cursor: pointer;
+  width: 90%;
+  font-weight: bold;
+  padding: 6px;
+  background-color: #00cdab;
+  color: #fff;
+  border-radius: 4px;
+  border: 1px solid #707070;
+  box-shadow: 0px 3px 6px #00000029;
+}
+.SelectedButton:focus {
+  outline: none;
+}
+
+.UnselectedButton {
+  color: #707070;
+  background-color: #fff;
+}

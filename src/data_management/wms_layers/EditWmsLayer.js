@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import MDSpinner from "react-md-spinner";
 
-import { WmsLayerForm } from "./WmsLayerForm";
+import WmsLayerForm  from "./WmsLayerForm";
 
 class EditWmsLayerModel extends Component {
   constructor(props) {
