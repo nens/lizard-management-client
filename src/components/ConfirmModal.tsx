@@ -30,7 +30,7 @@ const ConfirmModal: React.FC<MyProps> = (props) => {
         <div className={styles.ModalFooter}>
           {cancelAction ? (
             <button
-              className={`${buttonStyles.Button} ${buttonStyles.Success}`}
+              className={`${buttonStyles.Button} ${buttonStyles.LinkCancel}`}
               onClick={cancelAction}
             >
               Cancel
@@ -38,7 +38,7 @@ const ConfirmModal: React.FC<MyProps> = (props) => {
           ) : null}
           {buttonConfirmName ? (
             <button
-              className={`${buttonStyles.Button} ${buttonStyles.Success}`}
+              className={`${buttonStyles.Button} ${buttonStyles.Danger}`}
               onClick={onClickButtonConfirm}
             >
               {buttonConfirmName}

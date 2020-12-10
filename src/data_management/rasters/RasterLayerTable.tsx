@@ -21,18 +21,24 @@ export const RasterLayerTable = (props:any) =>  {
 
   const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
   const [rowToBeDeleted, setRowToBeDeleted] = useState<any | null>(null);
-  const [deleteFunction, setDeleteFunction] = useState<null | Function>(null)
+  const [deleteFunction, setDeleteFunction] = useState<null | Function>(null);
+  const [busyDeleting, setBusyDeleting] = useState<boolean>(false);
 
 
   const deleteActionRaster = (row: any, updateTableRow:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any)=>{
     setRowToBeDeleted(row);
     setDeleteFunction(()=>()=>{
+      setBusyDeleting(true);
       updateTableRow({...row, markAsDeleted: true});
-      deleteRasters([row.uuid])
+      return deleteRasters([row.uuid])
       .then((_result) => {
-      // TODO: do we need this callback or should we otherwise indicate that the record is deleted ?
-      triggerReloadWithCurrentPage();
-      })
+        setBusyDeleting(false);
+        // TODO: do we need this callback or should we otherwise indicate that the record is deleted ?
+        triggerReloadWithCurrentPage();
+        return new Promise((resolve, _reject) => {
+            resolve();
+          });
+        })
     })
     // if (window.confirm(`Are you sure you want to delete raster with uuid: ${row.uuid} ?`)) {
     //   updateTableRow({...row, markAsDeleted: true});
@@ -46,6 +52,7 @@ export const RasterLayerTable = (props:any) =>  {
 
   const deleteActionRasters = (rows: any[], tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any, setCheckboxes: any)=>{
     //@ts-ignore
+    setBusyDeleting(true);
     setRowsToBeDeleted(rows);
     const uuids = rows.map(row=> row.uuid);
     // if (window.confirm(`Are you sure you want to delete rasters with uuids? \n ${uuids.join("\n")}`)) {
@@ -59,7 +66,7 @@ export const RasterLayerTable = (props:any) =>  {
         }
       })
       setTableData(tableDataDeletedmarker);
-      deleteRasters(uuids)
+      return deleteRasters(uuids)
       .then((_result) => {
         // TODO: problem: triggerReloadWithCurrentPage requires a promise to set the checkboxes once the promise settles,
         // but somehow triggerReloadWithCurrentPage is sometimes undefined leading to the error ".then of undefined"
@@ -71,11 +78,15 @@ export const RasterLayerTable = (props:any) =>  {
         //     setCheckboxes([]);
         //   }
         // });
+        setBusyDeleting(false);
         // workaround instead:
         if (setCheckboxes) {
           setCheckboxes([]);
         }
         triggerReloadWithCurrentPage();
+        return new Promise((resolve, _reject) => {
+          resolve();
+        });
       })
     });
   }
@@ -173,10 +184,10 @@ export const RasterLayerTable = (props:any) =>  {
            title={'Are you sure?'}
            buttonConfirmName={'Delete'}
            onClickButtonConfirm={() => {
-             console.log('multiple confirm');
-             deleteFunction && deleteFunction();
-             setRowsToBeDeleted([]);
-             setDeleteFunction(null);
+              deleteFunction && deleteFunction().then(()=>{
+              setRowsToBeDeleted([]);
+              setDeleteFunction(null);
+             });
            }}
            cancelAction={()=>{
             setRowsToBeDeleted([]);
@@ -188,14 +199,17 @@ export const RasterLayerTable = (props:any) =>  {
            {
              rowsToBeDeleted.map(rasterLayerRow=>{
                return (
-                  <li key={rasterLayerRow.uuid}>
-                    {/* 
-                    //@ts-ignore */}
-                    <span title={rasterLayerRow.name} style={{width:"100px", textOverflow: "ellipsis"}}>{rasterLayerRow.name}</span>
-                    {/* 
-                    //@ts-ignore */}
-                    <span title={rasterLayerRow.uuid} style={{width:"100px", textOverflow: "ellipsis"}}>{rasterLayerRow.uuid}</span>
-                  </li>
+                <li style={{fontStyle: "italic", listStyleType: "square", height: "80px"}}>
+                  <span style={{display:"flex", flexDirection: "row",justifyContent: "space-between", alignItems: "center"}}>
+                  {/* 
+                  //@ts-ignore */}
+                  <span title={rasterLayerRow.name} style={{width:"65%", textOverflow: "ellipsis", overflow: "hidden"}}>{rasterLayerRow.name}</span>
+                  
+                  {/* 
+                  //@ts-ignore */}
+                  <span title={rasterLayerRow.uuid} style={{width:"25%", textOverflow: "ellipsis", overflow: "hidden"}}>{rasterLayerRow.uuid}</span>
+                  </span>
+               </li>
                )
              })
             }
@@ -212,9 +226,11 @@ export const RasterLayerTable = (props:any) =>  {
            title={'Are you sure?'}
            buttonConfirmName={'Delete'}
            onClickButtonConfirm={() => {
-             deleteFunction && deleteFunction();
-             setRowToBeDeleted(null);
-             setDeleteFunction(null);
+             deleteFunction && deleteFunction().then(()=>{
+              setRowToBeDeleted(null);
+              setDeleteFunction(null);
+             });
+             
            }}
            cancelAction={()=>{
              setRowToBeDeleted(null);
@@ -223,12 +239,20 @@ export const RasterLayerTable = (props:any) =>  {
          >
            <p>Are you sure? You are deleting the following raster-layer:</p>
            <div>
-                    {/* 
-                    //@ts-ignore */}
-                    <span title={rowToBeDeleted.name} style={{width:"100px", textOverflow: "ellipsis"}}>{rowToBeDeleted.name}</span>
-                    {/* 
-                    //@ts-ignore */}
-                    <span title={rowToBeDeleted.uuid} style={{width:"100px", textOverflow: "ellipsis"}}>{rowToBeDeleted.uuid}</span>
+             <ul>
+               <li style={{fontStyle: "italic", listStyleType: "square", height: "80px"}}>
+                <span style={{display:"flex", flexDirection: "row",justifyContent: "space-between", alignItems: "center"}}>
+                  {/* 
+                  //@ts-ignore */}
+                  <span title={rowToBeDeleted.name} style={{width:"65%", textOverflow: "ellipsis", overflow: "hidden"}}>{rowToBeDeleted.name}</span>
+                  
+                  {/* 
+                  //@ts-ignore */}
+                  <span title={rowToBeDeleted.uuid} style={{width:"25%", textOverflow: "ellipsis", overflow: "hidden"}}>{rowToBeDeleted.uuid}</span>
+                </span>
+                
+               </li>
+             </ul>
             </div>
            
          </ConfirmModal>

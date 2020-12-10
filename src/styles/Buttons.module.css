@@ -122,6 +122,14 @@
   box-shadow: 0 0 0 3px rgba(0, 205, 171, 0.5);
 }
 
+.LinkCancel {
+  background-color: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  font-weight: normal;
+  color: #ABABAB;
+  font-size: 19px;
+}
 
 .Link {
   background-color: rgba(255, 255, 255, 0);
