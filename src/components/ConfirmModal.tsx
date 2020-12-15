@@ -29,7 +29,7 @@ const ConfirmModal: React.FC<MyProps> = (props) => {
         <div className={styles.ModalBody}>
           {props.children}
         </div>
-        <div className={styles.ModalFooter}>
+        <div className={styles.ModalFooter} style={cancelAction?{justifyContent: "space-between"}:{justifyContent: "flex-end"}}>
           {cancelAction ? (
             <button
               className={`${buttonStyles.Button} ${buttonStyles.LinkCancel}`}
