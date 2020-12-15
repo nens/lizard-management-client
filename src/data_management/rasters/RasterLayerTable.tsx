@@ -155,17 +155,17 @@ export const RasterLayerTable = (props:any) =>  {
       <div>
       <ul>
           {
-          rows.map(rasterLayerRow=>{
+          rows.map(row=>{
               return (
               <li style={{fontStyle: "italic", listStyleType: "square", height: "80px"}}>
                 <span style={{display:"flex", flexDirection: "row",justifyContent: "space-between", alignItems: "center"}}>
                 {/* 
                 //@ts-ignore */}
-                <span title={rasterLayerRow.name} style={{width:"65%", textOverflow: "ellipsis", overflow: "hidden"}}>{rasterLayerRow.name}</span>
+                <span title={row.name} style={{width:"65%", textOverflow: "ellipsis", overflow: "hidden"}}>{row.name}</span>
                 
                 {/* 
                 //@ts-ignore */}
-                <span title={rasterLayerRow.uuid} style={{width:"25%", textOverflow: "ellipsis", overflow: "hidden"}}>{rasterLayerRow.uuid}</span>
+                <span title={row.uuid} style={{width:"25%", textOverflow: "ellipsis", overflow: "hidden"}}>{row.uuid}</span>
                 </span>
               </li>
               )
