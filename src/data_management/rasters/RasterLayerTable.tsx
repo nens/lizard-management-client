@@ -43,22 +43,11 @@ export const RasterLayerTable = (props:any) =>  {
           });
         })
     })
-    // if (window.confirm(`Are you sure you want to delete raster with uuid: ${row.uuid} ?`)) {
-    //   updateTableRow({...row, markAsDeleted: true});
-    //   deleteRasters([row.uuid])
-    //   .then((_result) => {
-    //     // TODO: do we need this callback or should we otherwise indicate that the record is deleted ?
-    //     triggerReloadWithCurrentPage();
-    //   })
-    // }
   }
 
   const deleteActionRasters = (rows: any[], tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any, setCheckboxes: any)=>{
-    //@ts-ignore
-    
     setRowsToBeDeleted(rows);
     const uuids = rows.map(row=> row.uuid);
-    // if (window.confirm(`Are you sure you want to delete rasters with uuids? \n ${uuids.join("\n")}`)) {
     setDeleteFunction(()=>()=>{
       setBusyDeleting(true);
       const tableDataDeletedmarker = tableData.map((rowAllTables:any)=>{
@@ -161,6 +150,42 @@ export const RasterLayerTable = (props:any) =>  {
     history.push(`${navigationUrlRasters}/new`);
   }
 
+  const modalDeleteContent = (rows: any[], spinner: boolean) => {
+    return (
+      <div>
+      <ul>
+          {
+          rows.map(rasterLayerRow=>{
+              return (
+              <li style={{fontStyle: "italic", listStyleType: "square", height: "80px"}}>
+                <span style={{display:"flex", flexDirection: "row",justifyContent: "space-between", alignItems: "center"}}>
+                {/* 
+                //@ts-ignore */}
+                <span title={rasterLayerRow.name} style={{width:"65%", textOverflow: "ellipsis", overflow: "hidden"}}>{rasterLayerRow.name}</span>
+                
+                {/* 
+                //@ts-ignore */}
+                <span title={rasterLayerRow.uuid} style={{width:"25%", textOverflow: "ellipsis", overflow: "hidden"}}>{rasterLayerRow.uuid}</span>
+                </span>
+              </li>
+              )
+            })
+          }
+          </ul>
+          
+          {spinner === true?
+          <div style={{position:"absolute", top:0, left:0, width:"100%", height:"100%", display:"flex", justifyContent:"center", alignItems: "center"}} >
+              <MDSpinner size={96} />
+              <span style={{marginLeft: "20px", fontSize: "19px", fontWeight: "bold"}}>Deleting ...</span>
+            </div>
+            :
+            null}
+            </div>
+        )
+      }
+    
+  
+
   return (
     <ExplainSideColumn
       imgUrl={rasterIcon}
@@ -198,35 +223,10 @@ export const RasterLayerTable = (props:any) =>  {
           }}
           disableButtons={busyDeleting}
          >
-           {
-               busyDeleting === true?
-               <div style={{position:"absolute", top:0, left:0, width:"100%", height:"100%", display:"flex", justifyContent:"center", alignItems: "center"}} >
-                  <MDSpinner size={96} />
-                  <span style={{marginLeft: "20px", fontSize: "19px", fontWeight: "bold"}}>Deleting ...</span>
-                </div>
-                :
-                null
-             }
+           
            <p>Are you sure? You are deleting the following raster layers:</p>
-           <ul>
-           {
-             rowsToBeDeleted.map(rasterLayerRow=>{
-               return (
-                <li style={{fontStyle: "italic", listStyleType: "square", height: "80px"}}>
-                  <span style={{display:"flex", flexDirection: "row",justifyContent: "space-between", alignItems: "center"}}>
-                  {/* 
-                  //@ts-ignore */}
-                  <span title={rasterLayerRow.name} style={{width:"65%", textOverflow: "ellipsis", overflow: "hidden"}}>{rasterLayerRow.name}</span>
-                  
-                  {/* 
-                  //@ts-ignore */}
-                  <span title={rasterLayerRow.uuid} style={{width:"25%", textOverflow: "ellipsis", overflow: "hidden"}}>{rasterLayerRow.uuid}</span>
-                  </span>
-               </li>
-               )
-             })
-            }
-           </ul>
+           
+           {modalDeleteContent(rowsToBeDeleted, busyDeleting)}
            
          </ConfirmModal>
         :
@@ -252,38 +252,11 @@ export const RasterLayerTable = (props:any) =>  {
            disableButtons={busyDeleting}
          >
            <p>Are you sure? You are deleting the following raster-layer:</p>
-           <div style={{position:"relative"}}>
-             {
-               busyDeleting === true?
-               <div style={{position:"absolute", width:"100%", height:"100%", display:"flex", justifyContent:"center", alignItems: "center"}} >
-                  <MDSpinner size={96} />
-                  <span style={{marginLeft: "20px", fontSize: "19px", fontWeight: "bold"}}>Deleting ...</span>
-                </div>
-                :
-                null
-             }
-             <ul>
-               <li style={{fontStyle: "italic", listStyleType: "square", height: "80px"}}>
-                <span style={{display:"flex", flexDirection: "row",justifyContent: "space-between", alignItems: "center"}}>
-                  {/* 
-                  //@ts-ignore */}
-                  <span title={rowToBeDeleted.name} style={{width:"65%", textOverflow: "ellipsis", overflow: "hidden"}}>{rowToBeDeleted.name}</span>
-                  
-                  {/* 
-                  //@ts-ignore */}
-                  <span title={rowToBeDeleted.uuid} style={{width:"25%", textOverflow: "ellipsis", overflow: "hidden"}}>{rowToBeDeleted.uuid}</span>
-                </span>
-                
-               </li>
-             </ul>
-            </div>
-           
+           {modalDeleteContent([rowToBeDeleted], busyDeleting)}
          </ConfirmModal>
         :
           null
         }
-       
-        
      </ExplainSideColumn>
   );
 }
