@@ -360,7 +360,8 @@ class Raster extends Component {
                   <div className={`${rasterTableStyles.tableUpload}`}>
                     {/* raster.source contains the metadata of the raster data */}
                     {/* if spatial_bounds is null no data is yet uploaded to the raster */}
-                    {(!raster.is_geoblock && raster.source && !raster.spatial_bounds) ? (
+                    {/* upload allowed when there is only 1 source conected to the raster */}
+                    {(!raster.is_geoblock && raster.raster_sources.length === 1 && !raster.spatial_bounds) ? (
                       <NavLink
                         to={`/data_management/rasters/${raster.uuid}/data`}
                       >
@@ -372,7 +373,7 @@ class Raster extends Component {
                           cloud_upload
                         </i>
                       </NavLink>
-                    ) : (!raster.is_geoblock && raster.source) ? (
+                    ) : (!raster.is_geoblock && raster.raster_sources.length === 1) ? (
                       <NavLink
                         to={`/data_management/rasters/${raster.uuid}/data`}
                       >
