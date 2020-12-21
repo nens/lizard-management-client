@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RouteComponentProps, withRouter } from "react-router-dom";
-import MDSpinner from "react-md-spinner";
 import { getOrganisations, getSupplierIds } from "../../reducers";
-import ScenarioForm from "./ScenarioForm";
+import { ScenarioForm } from "./ScenarioForm";
+import MDSpinner from "react-md-spinner";
 
 interface RouteProps {
   uuid: string

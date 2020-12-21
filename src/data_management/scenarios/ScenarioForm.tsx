@@ -1,15 +1,16 @@
 import React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
+import { getOrganisations, getUsername } from '../../reducers';
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import { TextInput } from './../../form/TextInput';
 import { SubmitButton } from '../../form/SubmitButton';
 import { CancelButton } from '../../form/CancelButton';
 import { useForm, Values } from '../../form/useForm';
+import { minLength } from '../../form/validators';
 import { addFilesToQueue, addNotification } from '../../actions';
 import rasterSourceIcon from "../../images/raster_source_icon.svg";
 import formStyles from './../../styles/Forms.module.css';
-import { minLength } from '../../form/validators';
 
 interface Props {
   currentScenario: any
@@ -22,8 +23,11 @@ interface RouteParams {
   uuid: string;
 };
 
-const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<RouteParams>> = (props) => {
+const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProps<RouteParams>> = (props) => {
   const { currentScenario } = props;
+  const organisations = useSelector(getOrganisations).available;
+  const scenarioOrganisation = organisations.find((org: any) => org.uuid === currentScenario.organisation.uuid.replace(/-/g, ""));
+  const username = useSelector(getUsername);
 
   const initialValues = {
     name: currentScenario.name || '',
@@ -93,6 +97,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           validated={!minLength(3, values.name)}
           errorMessage={minLength(3, values.name)}
           triedToSubmit={triedToSubmit}
+          readOnly={!scenarioOrganisation.roles.includes("admin") && !(username === currentScenario.username)}
         />
         <TextInput
           title={'Based on model'}
@@ -147,4 +152,6 @@ const mapPropsToDispatch = (dispatch: any) => ({
   addFilesToQueue: (files: File[]) => dispatch(addFilesToQueue(files)),
 });
 
-export default connect(null, mapPropsToDispatch)(withRouter(RasterSourceForm));
+const ScenarioForm = connect(null, mapPropsToDispatch)(withRouter(ScenarioFormModel));
+
+export { ScenarioForm };
