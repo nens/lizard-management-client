@@ -29,13 +29,10 @@ class EditWmsLayerModel extends Component {
     if (
       this.state.currentWmsLayer &&
       this.props.organisations.isFetching === false &&
-      this.props.observationTypes.isFetching === false &&
-      this.props.colorMaps.isFetching === false &&
       this.props.supplierIds.isFetching === false
     ) {
       return <WmsLayerForm 
         currentWmsLayer={this.state.currentWmsLayer}
-        wizardStyle={false} 
       />;
     }
     else {
