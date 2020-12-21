@@ -8,7 +8,7 @@ import { SubmitButton } from '../../form/SubmitButton';
 import { CancelButton } from '../../form/CancelButton';
 import { useForm, Values } from '../../form/useForm';
 import { minLength } from '../../form/validators';
-import { addFilesToQueue, addNotification } from '../../actions';
+import { addNotification } from '../../actions';
 import rasterSourceIcon from "../../images/raster_source_icon.svg";
 import formStyles from './../../styles/Forms.module.css';
 
@@ -16,8 +16,7 @@ interface Props {
   currentScenario: any
 };
 interface PropsFromDispatch {
-  addNotification: (message: string | number, timeout: number) => void,
-  addFilesToQueue: (files: File[]) => void,
+  addNotification: (message: string | number, timeout: number) => void
 };
 interface RouteParams {
   uuid: string;
@@ -148,8 +147,7 @@ const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProp
 };
 
 const mapPropsToDispatch = (dispatch: any) => ({
-  addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout)),
-  addFilesToQueue: (files: File[]) => dispatch(addFilesToQueue(files)),
+  addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout))
 });
 
 const ScenarioForm = connect(null, mapPropsToDispatch)(withRouter(ScenarioFormModel));
