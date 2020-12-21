@@ -13,6 +13,7 @@ import { NewRasterLayer } from "./rasters/NewRasterLayer";
 import { EditRasterSource } from "./rasters/EditRasterSource";
 import { EditRasterLayer } from "./rasters/EditRasterLayer";
 import { ScenarioTable } from "./scenarios/ScenarioTable";
+import { EditScenario } from "./scenarios/EditScenario";
 import { EditWmsLayer } from "./wms_layers/EditWmsLayer";
 import { NewWmsLayer } from "./wms_layers/NewWmsLayer";
 import { UploadRasterData } from "./rasters/UploadRasterData";
@@ -81,6 +82,11 @@ class App extends Component {
             exact
             path="/data_management/wms_layers/:id"
             component={EditWmsLayer}
+          />
+          <Route
+            exact
+            path="/data_management/scenarios/:uuid"
+            component={EditScenario}
           />
         </Switch>
       </>
