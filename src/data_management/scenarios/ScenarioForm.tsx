@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { connect, useSelector } from 'react-redux';
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
@@ -6,9 +6,8 @@ import { TextInput } from './../../form/TextInput';
 import { SubmitButton } from '../../form/SubmitButton';
 import { CancelButton } from '../../form/CancelButton';
 import { SelectBox } from '../../form/SelectBox';
-import { getOrganisations } from '../../reducers';
+import { getOrganisations, getSelectedOrganisation, getSupplierIds } from '../../reducers';
 import { useForm, Values } from '../../form/useForm';
-import { minLength } from '../../form/validators';
 import { addFilesToQueue, addNotification } from '../../actions';
 import rasterSourceIcon from "../../images/raster_source_icon.svg";
 import formStyles from './../../styles/Forms.module.css';
@@ -27,11 +26,14 @@ interface RouteParams {
 const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<RouteParams>> = (props) => {
   const { currentScenario } = props;
   const organisations = useSelector(getOrganisations).available;
+  const selectedOrganisation = useSelector(getSelectedOrganisation);
+  const organisationsToSwitchTo = organisations.filter((organisation: any) => organisation.roles.includes("manager"))
+  const supplierIds = useSelector(getSupplierIds);
 
   const initialValues = {
     name: currentScenario.name,
     modelName: currentScenario.model_name,
-    supplierName: currentScenario.username,
+    supplier: currentScenario.username,
     organisation: currentScenario.organisation.uuid.replace(/-/g, "") || null,
   };
 
@@ -65,7 +67,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
 
   const {
     values,
-    triedToSubmit,
+    // triedToSubmit,
     tryToSubmitForm,
     handleInputChange,
     handleValueChange,
@@ -96,7 +98,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           value={values.name as string}
           valueChanged={handleInputChange}
           clearInput={clearInput}
-          validated={true}
+          validated
         />
         <TextInput
           title={'Based on model'}
@@ -104,7 +106,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           value={values.modelName as string}
           valueChanged={handleInputChange}
           clearInput={clearInput}
-          validated={true}
+          validated
           readOnly
         />
         <span className={formStyles.FormFieldTitle}>
@@ -120,17 +122,20 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           value={values.organisation as string}
           valueChanged={value => handleValueChange('organisation', value)}
           choices={organisations.map((organisation: any) => [organisation.uuid, organisation.name])}
-          validated={true}
-          readOnly
+          validated
+          readOnly={!(organisationsToSwitchTo.length > 1 && selectedOrganisation.roles.includes("manager"))}
         />
-        <TextInput
+        <SelectBox
           title={'Supplier'}
           name={'supplier'}
-          value={values.supplierName as string}
-          valueChanged={handleInputChange}
-          clearInput={clearInput}
-          validated={true}
-          readOnly
+          value={values.supplier as string}
+          valueChanged={value => handleValueChange('supplier', value)}
+          choices={supplierIds.available.map((suppl:any)=>
+            [suppl.username, suppl.username]
+          )}
+          showSearchField={true}
+          validated
+          readOnly={!selectedOrganisation.roles.includes("manager")}
         />
         <div
           className={formStyles.ButtonContainer}
