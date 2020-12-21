@@ -1,16 +1,15 @@
 import React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
-import { connect, useSelector } from 'react-redux';
+import { connect } from 'react-redux';
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import { TextInput } from './../../form/TextInput';
 import { SubmitButton } from '../../form/SubmitButton';
 import { CancelButton } from '../../form/CancelButton';
-import { SelectBox } from '../../form/SelectBox';
-import { getOrganisations, getSelectedOrganisation, getSupplierIds } from '../../reducers';
 import { useForm, Values } from '../../form/useForm';
 import { addFilesToQueue, addNotification } from '../../actions';
 import rasterSourceIcon from "../../images/raster_source_icon.svg";
 import formStyles from './../../styles/Forms.module.css';
+import { minLength } from '../../form/validators';
 
 interface Props {
   currentScenario: any
@@ -25,52 +24,45 @@ interface RouteParams {
 
 const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<RouteParams>> = (props) => {
   const { currentScenario } = props;
-  const organisations = useSelector(getOrganisations).available;
-  const selectedOrganisation = useSelector(getSelectedOrganisation);
-  const organisationsToSwitchTo = organisations.filter((organisation: any) => organisation.roles.includes("manager"))
-  const supplierIds = useSelector(getSupplierIds);
 
   const initialValues = {
-    name: currentScenario.name,
-    modelName: currentScenario.model_name,
-    supplier: currentScenario.username,
-    organisation: currentScenario.organisation.uuid.replace(/-/g, "") || null,
+    name: currentScenario.name || '',
+    modelName: currentScenario.model_name || '',
+    supplier: currentScenario.username || '',
+    organisation: currentScenario.organisation.name || '',
   };
 
   const onSubmit = (values: Values) => {
     const body = {
-      name: values.name as string,
-      organisation: values.organisation as string,
-      access_modifier: values.accessModifier as string,
-      description: values.description as string,
-      supplier: values.supplierName as string,
-      supplier_code: values.supplierCode as string,
-      temporal: values.temporal as boolean,
-      interval: values.interval as string,
+      name: values.name
     };
-    // patchRasterSource(currentScenario.uuid as string, body)
-    //   .then(data => {
-    //     const status = data.response.status;
-    //     if (status === 200) {
-    //       props.addNotification('Success! Scenario updated', 2000);
-    //       // redirect back to the table of raster sources
-    //       props.history.push('/data_management/scenarios/');
-    //     } else {
-    //       props.addNotification(status, 2000);
-    //       console.error(data);
-    //     };
-    //   })
-    //   .catch(e => console.error(e));
-
     console.log('submitted', body);
+
+    fetch(`/api/v4/scenarios/${currentScenario.uuid}/`, {
+      credentials: 'same-origin',
+      method: 'PATCH',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(body)
+    })
+      .then(data => {
+        const status = data.status;
+        if (status === 200) {
+          props.addNotification('Success! Scenario updated', 2000);
+          props.history.push('/data_management/scenarios/');
+        } else {
+          props.addNotification(status, 2000);
+          console.error(data);
+        };
+      })
+      .catch(console.error);
   };
 
   const {
     values,
-    // triedToSubmit,
+    triedToSubmit,
     tryToSubmitForm,
     handleInputChange,
-    handleValueChange,
+    // handleValueChange,
     handleSubmit,
     handleReset,
     clearInput,
@@ -93,17 +85,19 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           1: General
         </span>
         <TextInput
-          title={'Name *'}
+          title={'Scenario name'}
           name={'name'}
-          value={values.name as string}
+          value={values.name}
           valueChanged={handleInputChange}
           clearInput={clearInput}
-          validated
+          validated={!minLength(3, values.name)}
+          errorMessage={minLength(3, values.name)}
+          triedToSubmit={triedToSubmit}
         />
         <TextInput
           title={'Based on model'}
           name={'modelName'}
-          value={values.modelName as string}
+          value={values.modelName}
           valueChanged={handleInputChange}
           clearInput={clearInput}
           validated
@@ -115,27 +109,23 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
         <span className={formStyles.FormFieldTitle}>
           3: Rights
         </span>
-        <SelectBox
+        <TextInput
           title={'Organisation'}
           name={'organisation'}
-          placeholder={'- Search and select -'}
-          value={values.organisation as string}
-          valueChanged={value => handleValueChange('organisation', value)}
-          choices={organisations.map((organisation: any) => [organisation.uuid, organisation.name])}
+          value={values.organisation}
+          valueChanged={handleInputChange}
+          clearInput={clearInput}
           validated
-          readOnly={!(organisationsToSwitchTo.length > 1 && selectedOrganisation.roles.includes("manager"))}
+          readOnly
         />
-        <SelectBox
-          title={'Supplier'}
+        <TextInput
+          title={'Username of supplier'}
           name={'supplier'}
-          value={values.supplier as string}
-          valueChanged={value => handleValueChange('supplier', value)}
-          choices={supplierIds.available.map((suppl:any)=>
-            [suppl.username, suppl.username]
-          )}
-          showSearchField={true}
+          value={values.supplier}
+          valueChanged={handleInputChange}
+          clearInput={clearInput}
           validated
-          readOnly={!selectedOrganisation.roles.includes("manager")}
+          readOnly
         />
         <div
           className={formStyles.ButtonContainer}
