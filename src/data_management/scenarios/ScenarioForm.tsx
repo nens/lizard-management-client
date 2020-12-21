@@ -39,7 +39,6 @@ const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProp
     const body = {
       name: values.name
     };
-    console.log('submitted', body);
 
     fetch(`/api/v4/scenarios/${currentScenario.uuid}/`, {
       credentials: 'same-origin',
