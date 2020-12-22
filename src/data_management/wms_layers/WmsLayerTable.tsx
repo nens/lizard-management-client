@@ -87,7 +87,7 @@ export const WmsLayerTable = (props:any) =>  {
     })
   }
 
-  const rasterSourceColumnDefenitions = [
+  const columnDefinitions = [
     {
       titleRenderFunction: () => "Name",
       renderFunction: (row: any) => 
@@ -184,7 +184,7 @@ export const WmsLayerTable = (props:any) =>  {
     >
         <TableStateContainer 
           gridTemplateColumns={"8% 29% 55% 8%"} 
-          columnDefenitions={rasterSourceColumnDefenitions}
+          columnDefinitions={columnDefinitions}
           baseUrl={`${baseUrl}?`} 
           checkBoxActions={[
             {

@@ -123,7 +123,7 @@ const deleteMultiple =  (rows: any[], tableData:any, setTableData:any, triggerRe
   }
 }
 
-const columnDefenitions = [
+const columnDefinitions = [
   {
     titleRenderFunction: () => "Name",
     renderFunction: (row: any) => 
@@ -215,7 +215,7 @@ export const ScenarioTable = (props:any) =>  {
     >
         <TableStateContainer 
           gridTemplateColumns={"8% 20% 18% 18% 14% 14% 8%"} 
-          columnDefenitions={columnDefenitions}
+          columnDefinitions={columnDefinitions}
           baseUrl={`${baseUrl}?`} 
           checkBoxActions={[
             {

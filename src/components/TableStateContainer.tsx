@@ -1,7 +1,7 @@
 import React from 'react';
 import {useState, useEffect,}  from 'react';
 import Table from './Table';
-import {ColumnDefenition} from './Table';
+import {ColumnDefinition} from './Table';
 import Pagination from './Pagination';
 import Checkbox from './Checkbox';
 import TableSearchBox from './TableSearchBox';
@@ -17,14 +17,14 @@ import buttonStyles from '../styles/Buttons.module.css';
 
 interface Props {
   gridTemplateColumns: string;
-  columnDefenitions: ColumnDefenition[];
+  columnDefinitions: ColumnDefinition[];
   baseUrl: string; 
   checkBoxActions: any[];
   newItemOnClick: () => void | null;
   queryCheckBox: {text: string, adaptUrlFunction: (url:string)=>string} | null;
 }
 
-const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, columnDefenitions, baseUrl, checkBoxActions, newItemOnClick, queryCheckBox/*action*/}) => {
+const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, columnDefinitions, baseUrl, checkBoxActions, newItemOnClick, queryCheckBox/*action*/}) => {
 
   const [tableData, setTableData] = useState([]);
   const [checkBoxes, setCheckBoxes] = useState([]);
@@ -127,7 +127,7 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
     }
   })
 
-  const checkBoxColumnDefenition: ColumnDefenition = {
+  const checkBoxColumnDefinition: ColumnDefinition = {
     titleRenderFunction: () => 
       <Checkbox  
         checked={areAllOnCurrentPageChecked()}
@@ -150,45 +150,45 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
       orderingField: null,
   };
 
-  const columnDefenitionsPlusCheckbox = 
+  const columnDefinitionsPlusCheckbox = 
     checkBoxActions.length > 0 ?  
-      [checkBoxColumnDefenition].concat(columnDefenitions)
+      [checkBoxColumnDefinition].concat(columnDefinitions)
       :
-      columnDefenitions
+      columnDefinitions
       ;
 
   const getIfCheckBoxOfUuidIsSelected = ((uuid: string) => {return checkBoxes.find(checkBoxUuid=> checkBoxUuid===uuid)});
 
-  const columnDefenitionsPlusCheckboxSortable =
-  columnDefenitionsPlusCheckbox.map((columnDefenition, ind)=>{
-    const originalTitleRenderFunction = columnDefenition.titleRenderFunction;
+  const columnDefinitionsPlusCheckboxSortable =
+  columnDefinitionsPlusCheckbox.map((columnDefinition, ind)=>{
+    const originalTitleRenderFunction = columnDefinition.titleRenderFunction;
     const sortedTitleRenderFunction = () => {
       const originalContent = originalTitleRenderFunction();
       return (
         <span>
           {
-            columnDefenition.orderingField?
+            columnDefinition.orderingField?
             <>
               <button
-                style={ordering !== columnDefenition.orderingField && ordering !== '-'+columnDefenition.orderingField ? {}: {display:"none"}}
+                style={ordering !== columnDefinition.orderingField && ordering !== '-'+columnDefinition.orderingField ? {}: {display:"none"}}
                 onClick={()=>{
-                  setOrdering(columnDefenition.orderingField)
+                  setOrdering(columnDefinition.orderingField)
                 }}
               >
                 {originalContent}
                 <img height="12px" src={`${unorderedIcon}`} alt="ordering icon unordened" />
               </button>
               <button
-                style={ordering === columnDefenition.orderingField ?{}:{display:"none"}}
+                style={ordering === columnDefinition.orderingField ?{}:{display:"none"}}
                 onClick={()=>{
-                  setOrdering("-" + columnDefenition.orderingField)
+                  setOrdering("-" + columnDefinition.orderingField)
                 }}
               >
                 {originalContent}
                 <img height="6px" src={`${orderedIcon}`} alt="ordering icon ordened" />
               </button>
               <button
-                style={ordering === '-'+columnDefenition.orderingField ?{}:{display:"none"}}
+                style={ordering === '-'+columnDefinition.orderingField ?{}:{display:"none"}}
                 onClick={()=>{
                   setOrdering("last_modified");
                 }}
@@ -203,7 +203,7 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
         </span>
       );
     }
-    return {...columnDefenition, titleRenderFunction: sortedTitleRenderFunction}
+    return {...columnDefinition, titleRenderFunction: sortedTitleRenderFunction}
   });
 
   return (
@@ -311,7 +311,7 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
           tableData={dataWithCheckBoxes} 
           setTableData={setTableData}
           gridTemplateColumns={gridTemplateColumns} 
-          columnDefenitions={columnDefenitionsPlusCheckboxSortable}
+          columnDefinitions={columnDefinitionsPlusCheckboxSortable}
           dataRetrievalState={dataRetrievalState}
           triggerReloadWithCurrentPage={()=>{fetchWithUrl(currentUrl)}}
           triggerReloadWithBasePage={()=>{fetchWithUrl(url)}}

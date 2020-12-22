@@ -29,7 +29,7 @@ export default {
 //   });
 // });
 
-const rasterSourceColumnDefenitions = [
+const rasterSourceColumnDefinitions = [
   {
     titleRenderFunction: () => <input type="checkbox"></input>,
     renderFunction: (row: any) => <input type="checkbox"></input>,
@@ -66,7 +66,7 @@ export const raster = () =>
   <Table 
     tableData={rasterItems70Parsed} 
     gridTemplateColumns={"10% 20% 20% 20% 20% 10%"} 
-    columnDefenitions={rasterSourceColumnDefenitions}
+    columnDefinitions={rasterSourceColumnDefinitions}
     dataRetrievalState={"RETRIEVED"} 
     setTableData={()=>{}}
     triggerReloadWithCurrentPage={()=>{}}

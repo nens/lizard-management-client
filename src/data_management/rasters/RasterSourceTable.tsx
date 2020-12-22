@@ -70,7 +70,7 @@ const flushActionRasters = (rows: any[], tableData:any, setTableData:any, trigge
   }
 }
 
-const rasterSourceColumnDefenitions = [
+const rasterSourceColumnDefinitions = [
   {
     titleRenderFunction: () => "Name",
     renderFunction: (row: any) => 
@@ -174,7 +174,7 @@ export const RasterSourceTable = (props:any) =>  {
     >
       <TableStateContainer 
         gridTemplateColumns={"8% 29% 25% 10% 20% 8%"} 
-        columnDefenitions={rasterSourceColumnDefenitions}
+        columnDefinitions={rasterSourceColumnDefinitions}
         baseUrl={`${baseUrl}?`} 
         checkBoxActions={[
           {

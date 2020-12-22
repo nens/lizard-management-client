@@ -83,7 +83,7 @@ export const RasterLayerTable = (props:any) =>  {
     });
   }
 
-  const rasterSourceColumnDefenitions = [
+  const columnDefinitions = [
     {
       titleRenderFunction: () => "Name",
       renderFunction: (row: any) => 
@@ -196,7 +196,7 @@ export const RasterLayerTable = (props:any) =>  {
     >
         <TableStateContainer 
           gridTemplateColumns={"8% 30% 24% 20% 10% 8%"} 
-          columnDefenitions={rasterSourceColumnDefenitions}
+          columnDefinitions={columnDefinitions}
           baseUrl={`${baseUrl}?`} 
           checkBoxActions={[
             {
