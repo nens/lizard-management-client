@@ -44,7 +44,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
   const organisations = useSelector(getOrganisations).available;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const datasets = useSelector(getDatasets).available;
-  const organisationsToSwitchTo = organisations.filter((org:any)=>{return org.roles.includes("manager")})
+  const organisationsToSwitchTo = organisations.filter((org:any) => org.roles.includes('admin'));
 
   const initialValues: WmsLayerFormType = currentWmsLayer ? wmsLayerReceivedFromApiToForm(currentWmsLayer) : wmsLayerGetDefaultFormValues(selectedOrganisation.uuid);
   
@@ -106,6 +106,8 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
     handleReset,
     clearInput,
   } = useForm({initialValues, onSubmit});
+
+  const currentSelectedOrganisation = organisations.find((org: any) => org.uuid === values.organisation.replace(/-/g, ""));
 
   return (
     <ExplainSideColumn
@@ -325,9 +327,8 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           valueChanged={value => handleValueChange('organisation', value)}
           choices={organisationsToSwitchTo.map((organisation: any) => [organisation.uuid, organisation.name])}
           validated={values.organisation !== null && values.organisation !== ""}
-          errorMessage={"required"}
-          // this needs to be read only in some cases !?
-          readOnly={!(organisationsToSwitchTo.length > 1 && selectedOrganisation.roles.includes("manager"))}
+          errorMessage={'Please select an organisation'}
+          readOnly={!(organisationsToSwitchTo.length > 0 && currentSelectedOrganisation.roles.includes("admin"))}
         />
         <SelectBox
           title={'Supplier'}
@@ -340,8 +341,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           )}
           showSearchField={true}
           validated
-          // this needs to be read only in some cases !?
-          readOnly={!selectedOrganisation.roles.includes("manager")}
+          readOnly={!(supplierIds.available.length > 0 && currentSelectedOrganisation.roles.includes("admin"))}
         />
         <div
           className={formStyles.ButtonContainer}

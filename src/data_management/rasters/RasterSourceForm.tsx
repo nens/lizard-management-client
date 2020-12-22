@@ -12,7 +12,7 @@ import { CancelButton } from '../../form/CancelButton';
 import { SelectBox } from '../../form/SelectBox';
 import { AcceptedFile, UploadRasterData } from './../../form/UploadRasterData';
 import ConfirmModal from '../../components/ConfirmModal';
-import { getOrganisations, getSelectedOrganisation } from '../../reducers';
+import { getOrganisations, getSelectedOrganisation, getSupplierIds } from '../../reducers';
 import { useForm, Values } from '../../form/useForm';
 import { minLength } from '../../form/validators';
 import { AccessModifier } from '../../form/AccessModifier';
@@ -36,15 +36,17 @@ interface RouteParams {
 
 const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<RouteParams>> = (props) => {
   const { currentRasterSource } = props;
+  const supplierIds = useSelector(getSupplierIds);
   const organisations = useSelector(getOrganisations).available;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
+  const organisationsToSwitchTo = organisations.filter((org: any) => org.roles.includes('admin'));
   const [rasterCreatedModal, setRasterCreatedModal] = useState<boolean>(false);
 
   const initialValues = currentRasterSource ? {
     name: currentRasterSource.name,
     description: currentRasterSource.description,
     supplierCode: currentRasterSource.supplier_code,
-    supplierName: currentRasterSource.supplier,
+    supplier: currentRasterSource.supplier,
     temporal: currentRasterSource.temporal,
     interval: currentRasterSource.interval ? toISOValue(rasterIntervalStringServerToDurationObject(currentRasterSource.interval)) : '',
     accessModifier: currentRasterSource.access_modifier,
@@ -54,7 +56,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
     name: null,
     description: null,
     supplierCode: null,
-    supplierName: null,
+    supplier: null,
     temporal: false,
     interval: null,
     accessModifier: 'Private',
@@ -69,7 +71,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
         organisation: values.organisation,
         access_modifier: values.accessModifier,
         description: values.description,
-        supplier: values.supplierName,
+        supplier: values.supplier,
         supplier_code: values.supplierCode,
         temporal: values.temporal,
         interval: values.interval,
@@ -103,7 +105,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
         organisation: values.organisation,
         access_modifier: values.accessModifier,
         description: values.description,
-        supplier: values.supplierName,
+        supplier: values.supplier,
         supplier_code: values.supplierCode,
         temporal: values.temporal,
         interval: values.interval,
@@ -145,6 +147,8 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
     handleReset,
     clearInput,
   } = useForm({initialValues, onSubmit});
+
+  const currentSelectedOrganisation = organisations.find((org: any) => org.uuid === values.organisation.replace(/-/g, ""));
 
   return (
     <ExplainSideColumn
@@ -230,17 +234,20 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           value={values.organisation}
           valueChanged={value => handleValueChange('organisation', value)}
           choices={organisations.map((organisation: any) => [organisation.uuid, organisation.name])}
-          validated={true}
-          readOnly
+          validated={values.organisation !== null && values.organisation !== ''}
+          errorMessage={'Please select an organisation'}
+          readOnly={!(organisationsToSwitchTo.length > 0 && currentSelectedOrganisation.roles.includes('admin'))}
         />
-        <TextInput
+        <SelectBox
           title={'Supplier'}
           name={'supplier'}
-          value={values.supplierName}
-          valueChanged={handleInputChange}
-          clearInput={clearInput}
-          validated={true}
-          readOnly
+          placeholder={'- Search and select -'}
+          value={values.supplier}
+          valueChanged={value => handleValueChange('supplier', value)}
+          choices={supplierIds.available.map((suppl:any) => [suppl.username, suppl.username])}
+          showSearchField
+          validated
+          readOnly={!(supplierIds.available.length > 0 && currentSelectedOrganisation.roles.includes('admin'))}
         />
         <div
           className={formStyles.ButtonContainer}
