@@ -21,7 +21,7 @@ const ConfirmModal: React.FC<MyProps> = (props) => {
   } = props;
 
   return (
-    <Overlay confirmModal>
+    <Overlay confirmModal handleClose={()=>{cancelAction && cancelAction()}}>
       <div className={styles.Modal}>
         <div className={styles.ModalHeader}>
           {title}
