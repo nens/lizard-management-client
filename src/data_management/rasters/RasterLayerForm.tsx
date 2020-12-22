@@ -12,7 +12,7 @@ import { CancelButton } from '../../form/CancelButton';
 import { SelectBox } from '../../form/SelectBox';
 import { SlushBucket } from '../../form/SlushBucket';
 import { AccessModifier } from '../../form/AccessModifier';
-import ColorMapInput, { ColorMapOptions, colorMapValidator } from '../../form/ColorMapInput';
+import ColorMapInput, { colorMapValidator } from '../../form/ColorMapInput';
 import { useForm, Values } from '../../form/useForm';
 import { minLength, required } from '../../form/validators';
 import {
@@ -84,22 +84,20 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
   const onSubmit = (values: Values) => {
     if (!currentRasterLayer) {
       const rasterLayer = {
-        name: values.name as string,
-        organisation: values.organisation as string,
-        access_modifier: accessModifier as string || 'Private',
-        description: values.description as string,
-        observation_type: values.observationType as string,
-        supplier: values.supplierName as string,
-        aggregation_type: values.aggregationType as string,
-        // @ts-ignore
+        name: values.name,
+        organisation: values.organisation,
+        access_modifier: accessModifier || 'Private',
+        description: values.description,
+        observation_type: values.observationType,
+        supplier: values.supplierName,
+        aggregation_type: values.aggregationType,
         options: values.colorMap.options,
-        // @ts-ignore
-        rescalable: values.colorMap.rescalable as boolean,
-        shared_with: values.organisationsToSharedWith as string[],
-        datasets: values.dataset ? [values.dataset as string] : []
+        rescalable: values.colorMap.rescalable,
+        shared_with: values.organisationsToSharedWith,
+        datasets: values.dataset ? [values.dataset] : []
       };
 
-      createRasterLayer(rasterLayer, values.rasterSource as string)
+      createRasterLayer(rasterLayer, values.rasterSource)
         .then(response => {
           const status = response.status;
           if (status === 201) {
@@ -114,24 +112,20 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
         .catch(e => console.error(e));
     } else {
       const body = {
-        name: values.name as string,
-        organisation: values.organisation as string,
-        access_modifier: values.accessModifier as string,
-        description: values.description as string,
-        observation_type: values.observationType as string,
-        supplier: values.supplierName as string,
-        aggregation_type: values.aggregationType as string,
-        // @ts-ignore
+        name: values.name,
+        organisation: values.organisation,
+        access_modifier: values.accessModifier,
+        description: values.description,
+        observation_type: values.observationType,
+        supplier: values.supplierName,
+        aggregation_type: values.aggregationType,
         options: values.colorMap.options,
-        // @ts-ignore
-        rescalable: values.colorMap.rescalable as boolean,
-        shared_with: values.organisationsToSharedWith as string[],
-        datasets: values.dataset ? [values.dataset as string] : []
+        rescalable: values.colorMap.rescalable,
+        shared_with: values.organisationsToSharedWith,
+        datasets: values.dataset ? [values.dataset] : []
       };
       // only add colormap in options if not multiple layers
-      // @ts-ignore
       if (!optionsHasLayers(values.colorMap.options)) {
-        // @ts-ignore
         body.options = values.colorMap.options;
       };
 
@@ -168,7 +162,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
   const [accessModifier, setAccessModifier] = useState<string | null>(null);
   useEffect(() => {
     if (!currentRasterLayer && rasterSource) {
-      fetchRasterSourceV4(rasterSource as string).then(
+      fetchRasterSourceV4(rasterSource).then(
         rasterSourceData => setAccessModifier(rasterSourceData.access_modifier || 'Private')
       ).catch(e => console.error(e));
     };
@@ -194,18 +188,18 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           title={'Name *'}
           name={'name'}
           placeholder={'Please enter at least 3 characters'}
-          value={values.name as string}
+          value={values.name}
           valueChanged={handleInputChange}
           clearInput={clearInput}
-          validated={!minLength(3, values.name as string)}
-          errorMessage={minLength(3, values.name as string)}
+          validated={!minLength(3, values.name)}
+          errorMessage={minLength(3, values.name)}
           triedToSubmit={triedToSubmit}
         />
         <TextArea
           title={'Description'}
           name={'description'}
           placeholder={'This is a layer based on raster_source'}
-          value={values.description as string}
+          value={values.description}
           valueChanged={handleInputChange}
           clearInput={clearInput}
           validated
@@ -214,7 +208,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           title={'Dataset'}
           name={'dataset'}
           placeholder={'- Select -'}
-          value={values.dataset as string}
+          value={values.dataset}
           valueChanged={value => handleValueChange('dataset', value)}
           choices={datasets.map((dataset: any) => [dataset.slug, dataset.slug])}
           validated
@@ -227,7 +221,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
             title={'Source *'}
             name={'rasterSource'}
             placeholder={'- Search and select -'}
-            value={values.rasterSource as string}
+            value={values.rasterSource}
             valueChanged={value => handleValueChange('rasterSource', value)}
             choices={rasterSources.map(rasterSource => [rasterSource.uuid!, rasterSource.name])}
             validated={!required('Please select a raster source', values.rasterSource)}
@@ -240,7 +234,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           <TextInput
             title={'Source *'}
             name={'rasterSource'}
-            value={values.rasterSource as string}
+            value={values.rasterSource}
             valueChanged={handleInputChange}
             clearInput={clearInput}
             validated
@@ -252,7 +246,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           title={'Aggregation type *'}
           name={'aggregationType'}
           placeholder={'- Select -'}
-          value={values.aggregationType as string}
+          value={values.aggregationType}
           valueChanged={value => handleValueChange('aggregationType', value)}
           choices={[
             [
@@ -289,7 +283,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           title={'Observation type *'}
           name={'observationType'}
           placeholder={'- Search and select -'}
-          value={values.observationType as string}
+          value={values.observationType}
           valueChanged={value => handleValueChange('observationType', value)}
           choices={observationTypes.map((obsT: any) => {
             let parameterString = obsT.parameter + '';
@@ -317,11 +311,11 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
         <ColorMapInput
           title={<FormattedMessage id="raster_form.colormap" />}
           name={'colorMap'}
-          value={values.colorMap as ColorMapOptions}
+          value={values.colorMap}
           valueChanged={value => handleValueChange('colorMap', value)}
           colorMaps={colorMaps.map((colM: any) => [colM.name, colM.name, colM.description])}
-          validated={!colorMapValidator(values.colorMap as ColorMapOptions)}
-          errorMessage={colorMapValidator(values.colorMap as ColorMapOptions)}
+          validated={!colorMapValidator(values.colorMap)}
+          errorMessage={colorMapValidator(values.colorMap)}
           triedToSubmit={triedToSubmit}
         />
         <span className={formStyles.FormFieldTitle}>
@@ -330,14 +324,14 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
         <AccessModifier
           title={'Access Modifier'}
           name={'accessModifier'}
-          value={values.accessModifier as string || accessModifier}
+          value={values.accessModifier || accessModifier}
           valueChanged={() => null}
           readOnly
         />
         <CheckBox
           title={'Shared with other organisations'}
           name={'sharedWith'}
-          value={values.sharedWith as boolean}
+          value={values.sharedWith}
           valueChanged={bool => handleValueChange('sharedWith', bool)}
         />
         {values.sharedWith ? (
@@ -345,7 +339,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
             title={'Organisations'}
             name={'organisationsToSharedWith'}
             placeholder={'Search organisations'}
-            value={values.organisationsToSharedWith as string[]}
+            value={values.organisationsToSharedWith}
             choices={organisationsToSharedWith.map((organisation: any) => {
               return {
                 display: organisation.name,
@@ -360,7 +354,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           title={'Organisation'}
           name={'organisation'}
           placeholder={'- Search and select -'}
-          value={values.organisation as string}
+          value={values.organisation}
           valueChanged={value => handleValueChange('organisation', value)}
           choices={organisations.map((organisation: any) => [organisation.uuid, organisation.name])}
           validated
@@ -369,7 +363,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
         <TextInput
           title={'Supplier'}
           name={'supplier'}
-          value={values.supplierName as string}
+          value={values.supplierName}
           valueChanged={handleInputChange}
           clearInput={clearInput}
           validated
