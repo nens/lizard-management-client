@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RouteComponentProps, withRouter } from "react-router-dom";
-import { getOrganisations, getSupplierIds } from "../../reducers";
+import { getOrganisations } from "../../reducers";
 import { ScenarioForm } from "./ScenarioForm";
 import MDSpinner from "react-md-spinner";
 
@@ -11,7 +11,6 @@ interface RouteProps {
 
 const EditScenarioModel: React.FC<RouteComponentProps<RouteProps>> = (props) => {
   const organisations = useSelector(getOrganisations);
-  const supplierIds = useSelector(getSupplierIds);
   const [currentScenario, setCurrentScenario] = useState(null);
   const { uuid } = props.match.params;
   useEffect (() => {
@@ -26,8 +25,7 @@ const EditScenarioModel: React.FC<RouteComponentProps<RouteProps>> = (props) => 
 
   if (
     currentScenario &&
-    organisations.isFetching === false &&
-    supplierIds.isFetching === false
+    organisations.isFetching === false
   ) {
     return <ScenarioForm
       currentScenario={currentScenario}
