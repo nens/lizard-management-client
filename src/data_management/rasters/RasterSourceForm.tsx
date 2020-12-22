@@ -12,7 +12,7 @@ import { CancelButton } from '../../form/CancelButton';
 import { SelectBox } from '../../form/SelectBox';
 import { AcceptedFile, UploadRasterData } from './../../form/UploadRasterData';
 import ConfirmModal from '../../components/ConfirmModal';
-import { getOrganisations, getSelectedOrganisation } from '../../reducers';
+import { getOrganisations, getSelectedOrganisation, getSupplierIds } from '../../reducers';
 import { useForm, Values } from '../../form/useForm';
 import { minLength } from '../../form/validators';
 import { AccessModifier } from '../../form/AccessModifier';
@@ -36,15 +36,17 @@ interface RouteParams {
 
 const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<RouteParams>> = (props) => {
   const { currentRasterSource } = props;
+  const supplierIds = useSelector(getSupplierIds).available;
   const organisations = useSelector(getOrganisations).available;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
+  const organisationsToSwitchTo = organisations.filter((org: any) => org.roles.includes('admin'));
   const [rasterCreatedModal, setRasterCreatedModal] = useState<boolean>(false);
 
   const initialValues = currentRasterSource ? {
     name: currentRasterSource.name,
     description: currentRasterSource.description,
     supplierCode: currentRasterSource.supplier_code,
-    supplierName: currentRasterSource.supplier,
+    supplier: currentRasterSource.supplier,
     temporal: currentRasterSource.temporal,
     interval: currentRasterSource.interval ? toISOValue(rasterIntervalStringServerToDurationObject(currentRasterSource.interval)) : '',
     accessModifier: currentRasterSource.access_modifier,
@@ -54,7 +56,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
     name: null,
     description: null,
     supplierCode: null,
-    supplierName: null,
+    supplier: null,
     temporal: false,
     interval: null,
     accessModifier: 'Private',
@@ -65,14 +67,14 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
   const onSubmit = (values: Values) => {
     if (!currentRasterSource) {
       const rasterSource = {
-        name: values.name as string,
-        organisation: values.organisation as string,
-        access_modifier: values.accessModifier as string,
-        description: values.description as string,
-        supplier: values.supplierName as string,
-        supplier_code: values.supplierCode as string,
-        temporal: values.temporal as boolean,
-        interval: values.interval as string,
+        name: values.name,
+        organisation: values.organisation,
+        access_modifier: values.accessModifier,
+        description: values.description,
+        supplier: values.supplier,
+        supplier_code: values.supplierCode,
+        temporal: values.temporal,
+        interval: values.interval,
       };
       createRasterSource(rasterSource)
         .then(response => {
@@ -93,20 +95,20 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           props.addFilesToQueue(uploadFiles);
           sendDataToLizardRecursive(
             parsedBody.uuid,
-            values.data as AcceptedFile[],
-            values.temporal as boolean
+            values.data,
+            values.temporal
           );
         }).catch(e => console.error(e));
     } else {
       const body = {
-        name: values.name as string,
-        organisation: values.organisation as string,
-        access_modifier: values.accessModifier as string,
-        description: values.description as string,
-        supplier: values.supplierName as string,
-        supplier_code: values.supplierCode as string,
-        temporal: values.temporal as boolean,
-        interval: values.interval as string,
+        name: values.name,
+        organisation: values.organisation,
+        access_modifier: values.accessModifier,
+        description: values.description,
+        supplier: values.supplier,
+        supplier_code: values.supplierCode,
+        temporal: values.temporal,
+        interval: values.interval,
       };
       patchRasterSource(currentRasterSource.uuid as string, body)
         .then(data => {
@@ -121,8 +123,8 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
             props.addFilesToQueue(uploadFiles);
             sendDataToLizardRecursive(
               props.match.params.uuid,
-              values.data as AcceptedFile[],
-              values.temporal as boolean
+              values.data,
+              values.temporal
             );
             // redirect back to the table of raster sources
             props.history.push('/data_management/rasters/sources')
@@ -166,17 +168,17 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           title={'Name *'}
           name={'name'}
           placeholder={'Please enter at least 3 characters'}
-          value={values.name as string}
+          value={values.name}
           valueChanged={handleInputChange}
           clearInput={clearInput}
-          validated={!minLength(3, values.name as string)}
-          errorMessage={minLength(3, values.name as string)}
+          validated={!minLength(3, values.name)}
+          errorMessage={minLength(3, values.name)}
           triedToSubmit={triedToSubmit}
         />
         <TextArea
           title={'Description'}
           name={'description'}
-          value={values.description as string}
+          value={values.description}
           valueChanged={handleInputChange}
           clearInput={clearInput}
           validated={true}
@@ -184,7 +186,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
         <TextInput
           title={'FTP / Supplier code'}
           name={'supplierCode'}
-          value={values.supplierCode as string}
+          value={values.supplierCode}
           valueChanged={handleInputChange}
           clearInput={clearInput}
           validated={true}
@@ -195,14 +197,14 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
         <CheckBox
           title={'Temporal'}
           name={'temporal'}
-          value={values.temporal as boolean}
+          value={values.temporal}
           valueChanged={bool => handleValueChange('temporal', bool)}
           readonly={!!currentRasterSource}
         />
         <DurationField
           title={'Interval'}
           name={'interval'}
-          value={values.interval as string}
+          value={values.interval}
           valueChanged={value => handleValueChange('interval', value)}
           validated={true}
           readOnly={!!currentRasterSource || values.temporal === false}
@@ -210,8 +212,8 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
         <UploadRasterData
           title={'Data'}
           name={'data'}
-          temporal={values.temporal as boolean}
-          data={values.data as AcceptedFile[]}
+          temporal={values.temporal}
+          data={values.data}
           setData={data => handleValueChange('data', data)}
         />
         <span className={formStyles.FormFieldTitle}>
@@ -220,27 +222,32 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
         <AccessModifier
           title={'Access Modifier'}
           name={'accessModifier'}
-          value={values.accessModifier as string}
+          value={values.accessModifier}
           valueChanged={value => handleValueChange('accessModifier', value)}
         />
         <SelectBox
           title={'Organisation'}
           name={'organisation'}
           placeholder={'- Search and select -'}
-          value={values.organisation as string}
+          value={values.organisation}
           valueChanged={value => handleValueChange('organisation', value)}
           choices={organisations.map((organisation: any) => [organisation.uuid, organisation.name])}
-          validated={true}
-          readOnly
+          showSearchField
+          validated={values.organisation !== null && values.organisation !== ''}
+          errorMessage={'Please select an organisation'}
+          triedToSubmit={triedToSubmit}
+          readOnly={!(organisationsToSwitchTo.length > 0 && selectedOrganisation.roles.includes('admin'))}
         />
-        <TextInput
+        <SelectBox
           title={'Supplier'}
           name={'supplier'}
-          value={values.supplierName as string}
-          valueChanged={handleInputChange}
-          clearInput={clearInput}
-          validated={true}
-          readOnly
+          placeholder={'- Search and select -'}
+          value={values.supplier}
+          valueChanged={value => handleValueChange('supplier', value)}
+          choices={supplierIds.map((suppl:any) => [suppl.username, suppl.username])}
+          showSearchField
+          validated
+          readOnly={!(supplierIds.length > 0 && selectedOrganisation.roles.includes('admin'))}
         />
         <div
           className={formStyles.ButtonContainer}
