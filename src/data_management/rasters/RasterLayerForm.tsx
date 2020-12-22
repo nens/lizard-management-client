@@ -21,7 +21,8 @@ import {
   getObservationTypes,
   getOrganisations,
   getRasterSourceUUID,
-  getSelectedOrganisation
+  getSelectedOrganisation,
+  getSupplierIds
 } from '../../reducers';
 import { optionsHasLayers } from '../../utils/rasterOptionFunctions';
 import { getUuidFromUrl } from '../../utils/getUuidFromUrl';
@@ -41,9 +42,11 @@ interface PropsFromDispatch {
 
 const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (props) => {
   const { currentRasterLayer, rasterSources, removeRasterSourceUUID } = props;
+  const supplierIds = useSelector(getSupplierIds).available;
   const organisationsToSharedWith = useSelector(getOrganisations).availableForRasterSharedWith;
   const organisations = useSelector(getOrganisations).available;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
+  const organisationsToSwitchTo = organisations.filter((org: any) => org.roles.includes('admin'));
   const observationTypes = useSelector(getObservationTypes).available;
   const colorMaps = useSelector(getColorMaps).available;
   const datasets = useSelector(getDatasets).available;
@@ -67,7 +70,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
     sharedWith: currentRasterLayer.shared_with.length === 0 ? false : true,
     organisationsToSharedWith: currentRasterLayer.shared_with.map(organisation => organisation.uuid.replace(/-/g, "")) || [],
     organisation: currentRasterLayer.organisation.uuid.replace(/-/g, "") || null,
-    supplierName: currentRasterLayer.supplier,
+    supplier: currentRasterLayer.supplier,
   } : {
     name: null,
     description: null,
@@ -79,7 +82,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
     sharedWith: false,
     organisationsToSharedWith: [],
     organisation: selectedOrganisation.uuid.replace(/-/g, "") || null,
-    supplierName: null,
+    supplier: null,
   };
   const onSubmit = (values: Values) => {
     if (!currentRasterLayer) {
@@ -89,7 +92,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
         access_modifier: accessModifier || 'Private',
         description: values.description,
         observation_type: values.observationType,
-        supplier: values.supplierName,
+        supplier: values.supplier,
         aggregation_type: values.aggregationType,
         options: values.colorMap.options,
         rescalable: values.colorMap.rescalable,
@@ -117,7 +120,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
         access_modifier: values.accessModifier,
         description: values.description,
         observation_type: values.observationType,
-        supplier: values.supplierName,
+        supplier: values.supplier,
         aggregation_type: values.aggregationType,
         options: values.colorMap.options,
         rescalable: values.colorMap.rescalable,
@@ -357,17 +360,22 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           value={values.organisation}
           valueChanged={value => handleValueChange('organisation', value)}
           choices={organisations.map((organisation: any) => [organisation.uuid, organisation.name])}
-          validated
-          readOnly
+          showSearchField
+          validated={values.organisation !== null && values.organisation !== ''}
+          errorMessage={'Please select an organisation'}
+          triedToSubmit={triedToSubmit}
+          readOnly={!(organisationsToSwitchTo.length > 0 && selectedOrganisation.roles.includes('admin'))}
         />
-        <TextInput
+        <SelectBox
           title={'Supplier'}
           name={'supplier'}
-          value={values.supplierName}
-          valueChanged={handleInputChange}
-          clearInput={clearInput}
+          placeholder={'- Search and select -'}
+          value={values.supplier}
+          valueChanged={value => handleValueChange('supplier', value)}
+          choices={supplierIds.map((suppl:any) => [suppl.username, suppl.username])}
+          showSearchField
           validated
-          readOnly
+          readOnly={!(supplierIds.length > 0 && selectedOrganisation.roles.includes('admin'))}
         />
         <div
           className={formStyles.ButtonContainer}

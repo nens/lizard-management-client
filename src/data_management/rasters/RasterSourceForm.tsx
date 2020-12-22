@@ -36,7 +36,7 @@ interface RouteParams {
 
 const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<RouteParams>> = (props) => {
   const { currentRasterSource } = props;
-  const supplierIds = useSelector(getSupplierIds);
+  const supplierIds = useSelector(getSupplierIds).available;
   const organisations = useSelector(getOrganisations).available;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const organisationsToSwitchTo = organisations.filter((org: any) => org.roles.includes('admin'));
@@ -148,8 +148,6 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
     clearInput,
   } = useForm({initialValues, onSubmit});
 
-  const currentSelectedOrganisation = organisations.find((org: any) => org.uuid === values.organisation.replace(/-/g, ""));
-
   return (
     <ExplainSideColumn
       imgUrl={rasterSourceIcon}
@@ -234,9 +232,11 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           value={values.organisation}
           valueChanged={value => handleValueChange('organisation', value)}
           choices={organisations.map((organisation: any) => [organisation.uuid, organisation.name])}
+          showSearchField
           validated={values.organisation !== null && values.organisation !== ''}
           errorMessage={'Please select an organisation'}
-          readOnly={!(organisationsToSwitchTo.length > 0 && currentSelectedOrganisation.roles.includes('admin'))}
+          triedToSubmit={triedToSubmit}
+          readOnly={!(organisationsToSwitchTo.length > 0 && selectedOrganisation.roles.includes('admin'))}
         />
         <SelectBox
           title={'Supplier'}
@@ -244,10 +244,10 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           placeholder={'- Search and select -'}
           value={values.supplier}
           valueChanged={value => handleValueChange('supplier', value)}
-          choices={supplierIds.available.map((suppl:any) => [suppl.username, suppl.username])}
+          choices={supplierIds.map((suppl:any) => [suppl.username, suppl.username])}
           showSearchField
           validated
-          readOnly={!(supplierIds.available.length > 0 && currentSelectedOrganisation.roles.includes('admin'))}
+          readOnly={!(supplierIds.length > 0 && selectedOrganisation.roles.includes('admin'))}
         />
         <div
           className={formStyles.ButtonContainer}

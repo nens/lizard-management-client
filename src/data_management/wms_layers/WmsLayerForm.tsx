@@ -40,7 +40,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
 
   const [geoserverError, setGeoserverError,] = useState(false)
   const organisationsToSharedWith = useSelector(getOrganisations).availableForRasterSharedWith;
-  const supplierIds = useSelector(getSupplierIds);
+  const supplierIds = useSelector(getSupplierIds).available;
   const organisations = useSelector(getOrganisations).available;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const datasets = useSelector(getDatasets).available;
@@ -63,7 +63,6 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
         }
         // @ts-ignore
         fetch(url, opts)
-        // @ts-ignore
         .then((data:any) => {
             const status = data.status;
             props.addNotification(status, 2000);
@@ -107,8 +106,6 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
     clearInput,
   } = useForm({initialValues, onSubmit});
 
-  const currentSelectedOrganisation = organisations.find((org: any) => org.uuid === values.organisation.replace(/-/g, ""));
-
   return (
     <ExplainSideColumn
       imgUrl={wmsIcon}
@@ -129,18 +126,18 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           title={'Name *'}
           name={'name'}
           placeholder={'Please enter at least 3 characters'}
-          value={values.name as string}
+          value={values.name}
           valueChanged={handleInputChange}
           clearInput={clearInput}
-          validated={!minLength(3, values.name as string)}
-          errorMessage={minLength(3, values.name as string)}
+          validated={!minLength(3, values.name)}
+          errorMessage={minLength(3, values.name)}
           triedToSubmit={triedToSubmit}
         />
         <TextArea
           title={'Description'}
           name={'description'}
           placeholder={''}
-          value={values.description as string}
+          value={values.description}
           valueChanged={handleInputChange}
           clearInput={clearInput}
           validated
@@ -149,7 +146,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           title={'Tags / Datasets'}
           name={'datasets'}
           placeholder={'Search datasets'}
-          value={values.datasets as string[]}
+          value={values.datasets}
           choices={datasets.map((dataset: any) => {
             return {
               display: dataset.slug,
@@ -168,59 +165,55 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           title={'WMS URL *'}
           name={'wms_url'}
           placeholder={'http://example.com'}
-          value={values.wms_url as string}
+          value={values.wms_url}
           valueChanged={handleInputChange}
           clearInput={clearInput}
-          validated={!minLength(3, values.wms_url as string)}
-          errorMessage={minLength(3, values.wms_url as string)}
+          validated={!minLength(3, values.wms_url)}
+          errorMessage={minLength(3, values.wms_url)}
           triedToSubmit={triedToSubmit}
         />
         <TextInput
           title={'Slug *'}
           name={'slug'}
           placeholder={'Slug for this WMS'}
-          value={values.slug as string}
+          value={values.slug}
           valueChanged={handleInputChange}
           clearInput={clearInput}
-          validated={!minLength(1, values.slug as string)}
-          errorMessage={minLength(1, values.slug as string)}
+          validated={!minLength(1, values.slug)}
+          errorMessage={minLength(1, values.slug)}
           triedToSubmit={triedToSubmit}
         />
         <TextInput
           title={'Download URL'}
           name={'download_url'}
           placeholder={'http://example.com'}
-          value={values.download_url as string}
+          value={values.download_url}
           valueChanged={handleInputChange}
           clearInput={clearInput}
-          validated={true}
-          // errorMessage={minLength(3, values.name as string)}
-          triedToSubmit={triedToSubmit}
+          validated
         />
         <TextInput
           title={'Legend URL'}
           name={'legend_url'}
           placeholder={'http://example.com'}
-          value={values.legend_url as string}
+          value={values.legend_url}
           valueChanged={handleInputChange}
           clearInput={clearInput}
-          validated={true}
-          triedToSubmit={triedToSubmit}
+          validated
         />
         <TextInput
           title={'Get Feature URL'}
           name={'get_feature_info_url'}
           placeholder={'http://example.com'}
-          value={values.get_feature_info_url as string}
+          value={values.get_feature_info_url}
           valueChanged={handleInputChange}
           clearInput={clearInput}
-          validated={true}
-          triedToSubmit={triedToSubmit}
+          validated
         />
         <CheckBox
           title={'Tiled WMS'}
           name={'tiled'}
-          value={values.tiled as boolean}
+          value={values.tiled}
           valueChanged={bool => handleValueChange('tiled', bool)}
         />
         {/* We might later decide to use this combined minmax zoom component instead of the 2 seperate fields */}
@@ -264,7 +257,6 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
         </div>
         <SpatialBoundsField
            name={'spatial_bounds'}
-           // @ts-ignore
            value={values.spatial_bounds}
            valueChanged={(value:any) => handleValueChange('spatial_bounds', value)}
            clearInput={clearInput}
@@ -281,11 +273,12 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           title={'Options (JSON)'}
           name={'options'}
           placeholder={'Enter valid JSON'}
-          value={values.options as string}
+          value={values.options}
           valueChanged={handleInputChange}
           clearInput={clearInput}
-          validated={!jsonValidator(values.options as string)}
-          errorMessage={jsonValidator(values.options as string)}
+          validated={!jsonValidator(values.options)}
+          errorMessage={jsonValidator(values.options)}
+          triedToSubmit={triedToSubmit}
         />
         <span className={formStyles.FormFieldTitle}>
           3: Rights
@@ -293,13 +286,13 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
         <AccessModifier
           title={'Access Modifier'}
           name={'access_modifier'}
-          value={values.access_modifier as string}
+          value={values.access_modifier}
           valueChanged={value => handleValueChange('access_modifier', value)}
         />
         <CheckBox
           title={'Shared with other organisations'}
           name={'sharedWithCheckbox'}
-          value={values.sharedWithCheckbox as boolean}
+          value={values.sharedWithCheckbox}
           valueChanged={bool => handleValueChange('sharedWithCheckbox', bool)}
         />
         {values.sharedWithCheckbox ? (
@@ -308,7 +301,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
             name={'shared_with'}
             placeholder={'Search organisations'}
             // str.replace is needed because we still use uuid without dashes everywhere. If possible we should remove this everywhere.
-            value={(values.shared_with as string[]).map((str)=>str.replace(/-/g, ""))}
+            value={(values.shared_with).map((str: string)=>str.replace(/-/g, ""))}
             choices={organisationsToSharedWith.map((organisation: any) => {
               return {
                 display: organisation.name,
@@ -323,25 +316,26 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           title={'Organisation'}
           name={'organisation'}
           placeholder={'- Search and select -'}
-          value={typeof values.organisation === "string" ? (values.organisation as string).replace(/-/g, ""): (values.organisation as string) }
+          value={typeof values.organisation === "string" ? values.organisation.replace(/-/g, ""): (values.organisation) }
           valueChanged={value => handleValueChange('organisation', value)}
           choices={organisationsToSwitchTo.map((organisation: any) => [organisation.uuid, organisation.name])}
           validated={values.organisation !== null && values.organisation !== ""}
           errorMessage={'Please select an organisation'}
-          readOnly={!(organisationsToSwitchTo.length > 0 && currentSelectedOrganisation.roles.includes("admin"))}
+          readOnly={!(organisationsToSwitchTo.length > 0 && selectedOrganisation.roles.includes("admin"))}
+          triedToSubmit={triedToSubmit}
         />
         <SelectBox
           title={'Supplier'}
           name={'supplier'}
           placeholder={'- Search and select -'}
-          value={values.supplier as string}
+          value={values.supplier}
           valueChanged={value => handleValueChange('supplier', value)}
-          choices={supplierIds.available.map((suppl:any)=>
+          choices={supplierIds.map((suppl:any)=>
             [suppl.username, suppl.username]
           )}
           showSearchField={true}
           validated
-          readOnly={!(supplierIds.available.length > 0 && currentSelectedOrganisation.roles.includes("admin"))}
+          readOnly={!(supplierIds.length > 0 && selectedOrganisation.roles.includes("admin"))}
         />
         <div
           className={formStyles.ButtonContainer}
