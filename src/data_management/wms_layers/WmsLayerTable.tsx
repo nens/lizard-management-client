@@ -1,16 +1,14 @@
 import React from 'react';
-
 import TableStateContainer from '../../components/TableStateContainer';
 import { NavLink } from "react-router-dom";
 import {ExplainSideColumn} from '../../components/ExplainSideColumn';
 import wmsIcon from "../../images/wms@3x.svg";
 import tableStyles from "../../components/Table.module.css";
 import TableActionButtons from '../../components/TableActionButtons';
-
 import {useState, }  from 'react';
 import ConfirmModal from '../../components/ConfirmModal';
-// Spinner for modal
-import MDSpinner from "react-md-spinner";
+import { ModalDeleteContent } from '../../components/ModalDeleteContent'
+
 
 export const WmsLayerTable = (props:any) =>  {
 
@@ -140,40 +138,6 @@ export const WmsLayerTable = (props:any) =>  {
     history.push(`${navigationUrl}/new`);
   }
 
-  const modalDeleteContent = (rows: any[], spinner: boolean) => {
-    return (
-      <div>
-      <ul>
-          {
-          rows.map(row=>{
-              return (
-              <li style={{fontStyle: "italic", listStyleType: "square", height: "80px"}}>
-                <span style={{display:"flex", flexDirection: "row",justifyContent: "space-between", alignItems: "center"}}>
-                {/* 
-                //@ts-ignore */}
-                <span title={row.name} style={{width:"65%", textOverflow: "ellipsis", overflow: "hidden"}}>{row.name}</span>
-                
-                {/* 
-                //@ts-ignore */}
-                <span title={row.uuid} style={{width:"25%", textOverflow: "ellipsis", overflow: "hidden"}}>{row.uuid}</span>
-                </span>
-              </li>
-              )
-            })
-          }
-          </ul>
-          
-          {spinner === true?
-          <div style={{position:"absolute", top:0, left:0, width:"100%", height:"100%", display:"flex", justifyContent:"center", alignItems: "center"}} >
-              <MDSpinner size={96} />
-              <span style={{marginLeft: "20px", fontSize: "19px", fontWeight: "bold"}}>Deleting ...</span>
-            </div>
-            :
-            null}
-            </div>
-        )
-      }
-
   return (
     <ExplainSideColumn
       imgUrl={wmsIcon}
@@ -213,8 +177,7 @@ export const WmsLayerTable = (props:any) =>  {
          >
            
            <p>Are you sure? You are deleting the following WMS-layers:</p>
-           
-           {modalDeleteContent(rowsToBeDeleted, busyDeleting)}
+           {ModalDeleteContent(rowsToBeDeleted, busyDeleting, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
            
          </ConfirmModal>
         :
@@ -240,7 +203,8 @@ export const WmsLayerTable = (props:any) =>  {
            disableButtons={busyDeleting}
          >
            <p>Are you sure? You are deleting the following WMS-layer:</p>
-           {modalDeleteContent([rowToBeDeleted], busyDeleting)}
+           {ModalDeleteContent([rowToBeDeleted], busyDeleting, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
+
          </ConfirmModal>
         :
           null
