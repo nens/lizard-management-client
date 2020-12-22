@@ -9,136 +9,139 @@ import TableActionButtons from '../../components/TableActionButtons';
 import {ExplainSideColumn} from '../../components/ExplainSideColumn';
 import rasterIcon from "../../images/raster_layer_icon.svg";
 import tableStyles from "../../components/Table.module.css";
+import {useState, }  from 'react';
+import ConfirmModal from '../../components/ConfirmModal';
+import { ModalDeleteContent } from '../../components/ModalDeleteContent'
 
 
-
-const baseUrl = "/api/v4/rasters/";
-const navigationUrlRasters = "/data_management/rasters/layers";
-
-const deleteActionRaster = (row: any, updateTableRow:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any)=>{
-  if (window.confirm(`Are you sure you want to delete raster with uuid: ${row.uuid} ?`)) {
-    updateTableRow({...row, markAsDeleted: true});
-    deleteRasters([row.uuid])
-    .then((_result) => {
-      // TODO: do we need this callback or should we otherwise indicate that the record is deleted ?
-      triggerReloadWithCurrentPage();
-    })
-  }
-}
-
-const deleteActionRasters = (rows: any[], tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any, setCheckboxes: any)=>{
-  const uuids = rows.map(row=> row.uuid);
-  if (window.confirm(`Are you sure you want to delete rasters with uuids? \n ${uuids.join("\n")}`)) {
-    const tableDataDeletedmarker = tableData.map((rowAllTables:any)=>{
-      if (uuids.find((uuid)=> uuid === rowAllTables.uuid)) {
-        return {...rowAllTables, markAsDeleted: true}
-      } else{
-        return {...rowAllTables};
-      }
-    })
-    setTableData(tableDataDeletedmarker);
-    deleteRasters(uuids)
-    .then((_result) => {
-      // TODO: problem: triggerReloadWithCurrentPage requires a promise to set the checkboxes once the promise settles,
-      // but somehow triggerReloadWithCurrentPage is sometimes undefined leading to the error ".then of undefined"
-      // Workaround for now is to set the checkboxes before the promise returns.
-      // the function triggerReloadWithCurrentPage is actually the function fetchWithUrl 
-      // desired way would be:
-      // triggerReloadWithCurrentPage().then(()=>{
-      //   if (setCheckboxes) {
-      //     setCheckboxes([]);
-      //   }
-      // });
-      // workaround instead:
-      if (setCheckboxes) {
-        setCheckboxes([]);
-      }
-      triggerReloadWithCurrentPage();
-    })
-  }
-}
-
-const rasterSourceColumnDefenitions = [
-  {
-    titleRenderFunction: () => "Name",
-    renderFunction: (row: any) => 
-      <span
-        className={tableStyles.CellEllipsis}
-        title={row.name}
-      >
-        <NavLink to={`${navigationUrlRasters}/${row.uuid}/`}>{row.name}</NavLink>
-      </span>,
-    orderingField: "name",
-  },
-  {
-    titleRenderFunction: () =>  "Based on",
-    renderFunction: (row: any) => 
-      <span
-        className={tableStyles.CellEllipsis}
-        title={row.raster_sources[0]}
-      >
-        {row.raster_sources[0]}
-      </span>,
-    orderingField: "raster_sources",
-  },
-  {
-    titleRenderFunction: () =>  "User",
-    renderFunction: (row: any) =>  
-    <span
-      className={tableStyles.CellEllipsis}
-      title={row.supplier}
-    >
-      {row.supplier}
-    </span>,
-    orderingField: "supplier",
-  },
-  {
-    titleRenderFunction: () =>  "Temporal",
-    renderFunction: (row: any) => row.temporal === true? "Yes" : "No",
-    orderingField: null,
-  },
-  {
-    titleRenderFunction: () =>  "",//"Actions",
-    renderFunction: (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any) => {
-      return (
-          <TableActionButtons
-            tableRow={row} 
-            tableData={tableData}
-            setTableData={setTableData} 
-            triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
-            triggerReloadWithBasePage={triggerReloadWithBasePage}
-            actions={[
-              {
-                displayValue: "delete",
-                actionFunction: deleteActionRaster,
-              },
-              // {
-              //   displayValue: "flushRasters",
-              //   actionFunction: (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any)=>{
-              //     const uuid = row.uuid;
-              //     const tableDataFlushedmarker = tableData.map((rowAllTables:any)=>{
-              //       if (uuid === rowAllTables.uuid) {
-              //         return {...rowAllTables, markAsFlushed: true}
-              //       } else{
-              //         return {...rowAllTables};
-              //       }
-              //     })
-              //     setTableData(tableDataFlushedmarker);
-              //     flushRasters([uuid])
-              //     .then((_result) => {
-              //       triggerReloadWithCurrentPage();
-              //     })
-              //   },
-              // },
-            ]}
-          />
-      );
-    },
-    orderingField: null,
-  },
-];
 
 export const RasterLayerTable = (props:any) =>  {
+
+  const baseUrl = "/api/v4/rasters/";
+  const navigationUrlRasters = "/data_management/rasters/layers";
+
+  const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
+  const [rowToBeDeleted, setRowToBeDeleted] = useState<any | null>(null);
+  const [deleteFunction, setDeleteFunction] = useState<null | Function>(null);
+  const [busyDeleting, setBusyDeleting] = useState<boolean>(false);
+
+
+  const deleteActionRaster = (row: any, updateTableRow:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any)=>{
+    setRowToBeDeleted(row);
+    setDeleteFunction(()=>()=>{
+      setBusyDeleting(true);
+      updateTableRow({...row, markAsDeleted: true});
+      return deleteRasters([row.uuid])
+      .then((_result) => {
+        setBusyDeleting(false);
+        // TODO: do we need this callback or should we otherwise indicate that the record is deleted ?
+        triggerReloadWithCurrentPage();
+        return new Promise((resolve, _reject) => {
+            resolve();
+          });
+        })
+    })
+  }
+
+  const deleteActionRasters = (rows: any[], tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any, setCheckboxes: any)=>{
+    setRowsToBeDeleted(rows);
+    const uuids = rows.map(row=> row.uuid);
+    setDeleteFunction(()=>()=>{
+      setBusyDeleting(true);
+      const tableDataDeletedmarker = tableData.map((rowAllTables:any)=>{
+        if (uuids.find((uuid)=> uuid === rowAllTables.uuid)) {
+          return {...rowAllTables, markAsDeleted: true}
+        } else{
+          return {...rowAllTables};
+        }
+      })
+      setTableData(tableDataDeletedmarker);
+      return deleteRasters(uuids)
+      .then((_result) => {
+        // TODO: problem: triggerReloadWithCurrentPage requires a promise to set the checkboxes once the promise settles,
+        // but somehow triggerReloadWithCurrentPage is sometimes undefined leading to the error ".then of undefined"
+        // Workaround for now is to set the checkboxes before the promise returns.
+        // the function triggerReloadWithCurrentPage is actually the function fetchWithUrl 
+        // desired way would be:
+        // triggerReloadWithCurrentPage().then(()=>{
+        //   if (setCheckboxes) {
+        //     setCheckboxes([]);
+        //   }
+        // });
+        setBusyDeleting(false);
+        // workaround instead:
+        if (setCheckboxes) {
+          setCheckboxes([]);
+        }
+        triggerReloadWithCurrentPage();
+        return new Promise((resolve, _reject) => {
+          resolve();
+        });
+      })
+    });
+  }
+
+  const columnDefinitions = [
+    {
+      titleRenderFunction: () => "Name",
+      renderFunction: (row: any) => 
+        <span
+          className={tableStyles.CellEllipsis}
+          title={row.name}
+        >
+          <NavLink to={`${navigationUrlRasters}/${row.uuid}/`}>{row.name}</NavLink>
+        </span>,
+      orderingField: "name",
+    },
+    {
+      titleRenderFunction: () =>  "Based on",
+      renderFunction: (row: any) => 
+        <span
+          className={tableStyles.CellEllipsis}
+          title={row.raster_sources[0]}
+        >
+          {row.raster_sources[0]}
+        </span>,
+      orderingField: "raster_sources",
+    },
+    {
+      titleRenderFunction: () =>  "User",
+      renderFunction: (row: any) =>  
+      <span
+        className={tableStyles.CellEllipsis}
+        title={row.supplier}
+      >
+        {row.supplier}
+      </span>,
+      orderingField: "supplier",
+    },
+    {
+      titleRenderFunction: () =>  "Temporal",
+      renderFunction: (row: any) => row.temporal === true? "Yes" : "No",
+      orderingField: null,
+    },
+    {
+      titleRenderFunction: () =>  "",//"Actions",
+      renderFunction: (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any) => {
+        return (
+            <TableActionButtons
+              tableRow={row} 
+              tableData={tableData}
+              setTableData={setTableData} 
+              triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
+              triggerReloadWithBasePage={triggerReloadWithBasePage}
+              actions={[
+                {
+                  displayValue: "delete",
+                  actionFunction: deleteActionRaster,
+                },
+              ]}
+            />
+        );
+      },
+      orderingField: null,
+    },
+  ];
 
   const handleNewRasterClick  = () => {
     const { history } = props;
@@ -155,7 +158,7 @@ export const RasterLayerTable = (props:any) =>  {
     >
         <TableStateContainer 
           gridTemplateColumns={"8% 30% 24% 20% 10% 8%"} 
-          columnDefenitions={rasterSourceColumnDefenitions}
+          columnDefinitions={columnDefinitions}
           baseUrl={`${baseUrl}?`} 
           checkBoxActions={[
             {
@@ -165,6 +168,57 @@ export const RasterLayerTable = (props:any) =>  {
           ]}
           newItemOnClick={handleNewRasterClick}
         />
+        { 
+        rowsToBeDeleted.length > 0?
+           <ConfirmModal
+           title={'Are you sure?'}
+           buttonConfirmName={'Delete'}
+           onClickButtonConfirm={() => {
+              deleteFunction && deleteFunction().then(()=>{
+              setRowsToBeDeleted([]);
+              setDeleteFunction(null);
+             });
+           }}
+           cancelAction={()=>{
+            setRowsToBeDeleted([]);
+            setDeleteFunction(null);
+          }}
+          disableButtons={busyDeleting}
+         >
+           
+           <p>Are you sure? You are deleting the following raster layers:</p>
+           
+           {ModalDeleteContent(rowsToBeDeleted, busyDeleting, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
+           
+         </ConfirmModal>
+        :
+          null
+        }
+
+        { 
+        rowToBeDeleted?
+           <ConfirmModal
+           title={'Are you sure?'}
+           buttonConfirmName={'Delete'}
+           onClickButtonConfirm={() => {
+             deleteFunction && deleteFunction().then(()=>{
+              setRowToBeDeleted(null);
+              setDeleteFunction(null);
+             });
+             
+           }}
+           cancelAction={()=>{
+             setRowToBeDeleted(null);
+             setDeleteFunction(null);
+           }}
+           disableButtons={busyDeleting}
+         >
+           <p>Are you sure? You are deleting the following raster-layer:</p>
+           {ModalDeleteContent([rowToBeDeleted], busyDeleting, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
+         </ConfirmModal>
+        :
+          null
+        }
      </ExplainSideColumn>
   );
 }

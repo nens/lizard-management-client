@@ -5,18 +5,23 @@ import buttonStyles from './../styles/Buttons.module.css';
 
 interface MyProps {
   title: string,
-  buttonName?: string,
-  onClick?: () => void,
+  buttonConfirmName?: string,
+  onClickButtonConfirm?: () => void,
+  cancelAction?: () => void,
+  disableButtons?: boolean
 }
 
 const ConfirmModal: React.FC<MyProps> = (props) => {
   const {
     title,
-    buttonName
+    buttonConfirmName,
+    onClickButtonConfirm,
+    cancelAction,
+    disableButtons,
   } = props;
 
   return (
-    <Overlay confirmModal>
+    <Overlay confirmModal handleClose={()=>{cancelAction && cancelAction()}}>
       <div className={styles.Modal}>
         <div className={styles.ModalHeader}>
           {title}
@@ -24,13 +29,23 @@ const ConfirmModal: React.FC<MyProps> = (props) => {
         <div className={styles.ModalBody}>
           {props.children}
         </div>
-        <div className={styles.ModalFooter}>
-          {buttonName ? (
+        <div className={styles.ModalFooter} style={cancelAction?{justifyContent: "space-between"}:{justifyContent: "flex-end"}}>
+          {cancelAction ? (
             <button
-              className={`${buttonStyles.Button} ${buttonStyles.Success}`}
-              onClick={props.onClick}
+              className={`${buttonStyles.Button} ${buttonStyles.LinkCancel}`}
+              onClick={cancelAction}
+              disabled={disableButtons}
             >
-              {buttonName}
+              Cancel
+            </button>
+          ) : null}
+          {buttonConfirmName ? (
+            <button
+              className={`${buttonStyles.Button} ${buttonStyles.Danger}`}
+              onClick={onClickButtonConfirm}
+              disabled={disableButtons}
+            >
+              {buttonConfirmName}
             </button>
           ) : null}
         </div>
