@@ -65,7 +65,11 @@ const DeleteButton: React.FC<DeleteButtonProps> = ({
         color: scheduledForDeletion ? '#2C3E50' : '#D50000',
       }}
     >
-      {scheduledForDeletion ? <i className='fa fa-undo' /> : <i className='fa fa-trash' />}
+      {scheduledForDeletion ? (
+        <i className='fa fa-undo' title='Undo' />
+      ) : (
+        <i className='fa fa-trash' title='Delete'/>
+      )}
     </button>
   );
 };
