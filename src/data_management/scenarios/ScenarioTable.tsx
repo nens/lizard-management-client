@@ -1,8 +1,5 @@
 import React from 'react';
 import {useSelector} from 'react-redux';
-
-
-
 import TableStateContainer from '../../components/TableStateContainer';
 import { NavLink } from "react-router-dom";
 import TableActionButtons from '../../components/TableActionButtons';
@@ -10,6 +7,8 @@ import {ExplainSideColumn} from '../../components/ExplainSideColumn';
 import rasterIcon from "../../images/raster_layer_icon.svg";
 import tableStyles from "../../components/Table.module.css";
 import {getUsername} from "../../reducers";
+import { bytesToDisplayValue } from '../../utils/byteUtils';
+
 
 
 
@@ -159,7 +158,7 @@ const columnDefinitions = [
   },
   {
     titleRenderFunction: () =>  "Raw data",
-    renderFunction: (row: any) => row.hasRawData === true? "Yes" : "No",
+    renderFunction: (row: any) => row.has_raw_results === true? "Yes" : "No",
     orderingField: null,
   },
   {
@@ -169,7 +168,7 @@ const columnDefinitions = [
         className={tableStyles.CellEllipsis}
         title={`${row.total_size? row.total_size: 0} Bytes`}
       >
-        {`${row.total_size? row.total_size: 0} Bytes`}
+        {`${row.total_size? bytesToDisplayValue(row.total_size): 0}`}
       </span>
     ,
     orderingField: "total_size",
