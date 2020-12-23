@@ -2,6 +2,7 @@ import React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { connect, useSelector } from 'react-redux';
 import { getOrganisations, getUsername } from '../../reducers';
+import { ScenarioResult } from '../../form/ScenarioResult';
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import { TextInput } from './../../form/TextInput';
 import { SubmitButton } from '../../form/SubmitButton';
@@ -62,9 +63,9 @@ const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProp
   const {
     values,
     triedToSubmit,
+    formSubmitted,
     tryToSubmitForm,
     handleInputChange,
-    // handleValueChange,
     handleSubmit,
     handleReset,
     clearInput,
@@ -109,6 +110,11 @@ const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProp
         <span className={formStyles.FormFieldTitle}>
           2: Data
         </span>
+        <ScenarioResult
+          name={'results'}
+          uuid={currentScenario.uuid}
+          formSubmitted={formSubmitted}
+        />
         <span className={formStyles.FormFieldTitle}>
           3: Rights
         </span>
