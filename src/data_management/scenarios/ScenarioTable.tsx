@@ -10,8 +10,6 @@ import {getUsername} from "../../reducers";
 import { bytesToDisplayValue } from '../../utils/byteUtils';
 
 
-
-
 const baseUrl = "/api/v4/scenarios/";
 const navigationUrl = "/data_management/scenarios";
 
@@ -36,21 +34,20 @@ const deleteSingle = (row: any, updateTableRow:any, triggerReloadWithCurrentPage
 
 const deleteRawDataSingle = (row: any, updateTableRow:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any)=>{
   if (window.confirm(`Are you sure you want to delete the raw data of scenario with name: ${row.name} ?`)) {
-    // const uuid = row.uuid;
+    const uuid = row.uuid;
     const markAsDeletedRaw =  {...row, markAsDeletedRaw: true}
     updateTableRow(markAsDeletedRaw);
-    // const fetchOptions = {
-    //   //Not permanently deleted, this will be implemented in backend
-    //   credentials: "same-origin",
-    //   method: "DELETE",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify({})
-    // };
-    alert("not implemented yet");
+    const fetchOptions = {
+      credentials: "same-origin",
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({})
+    };
+    // alert("not implemented yet");
     // @ts-ignore
-    // fetch(baseUrl + uuid + "/", fetchOptions).then(()=>{
-    //   triggerReloadWithCurrentPage();
-    // });
+    fetch(baseUrl + uuid + "/results/raw", fetchOptions).then(()=>{
+      triggerReloadWithCurrentPage();
+    });
   }
 }
 
@@ -67,25 +64,24 @@ const deleteRawDataMultiple = (rows: any[], tableData:any, setTableData:any, tri
       }
     })
     setTableData(tableDataDeletedmarker);
-    alert("not supported yet");
-    // Promise.all(uuids.map((uuid)=>{
-    //   const fetchOptions = {
-    //     //Not permanently deleted, this will be implemented in backend
-    //     credentials: "same-origin",
-    //     method: "DELETE",
-    //     headers: { "Content-Type": "application/json" },
-    //     body: JSON.stringify({})
-    //   };
-    //   // @ts-ignore
-    //   return fetch(baseUrl + uuid + "/", fetchOptions)
-    // }))
-    // .then((_result) => {
-    //   // TODO: this is not preferred way. see delet function in raster layer table
-    //   if (setCheckboxes) {
-    //     setCheckboxes([]);
-    //   }
-    //   triggerReloadWithCurrentPage();
-    // })
+    // alert("not supported yet");
+    Promise.all(uuids.map((uuid)=>{
+      const fetchOptions = {
+        credentials: "same-origin",
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({})
+      };
+      // @ts-ignore
+      return fetch(baseUrl + uuid + "/results/raw", fetchOptions)
+    }))
+    .then((_result) => {
+      // TODO: this is not preferred way. see delet function in raster layer table
+      if (setCheckboxes) {
+        setCheckboxes([]);
+      }
+      triggerReloadWithCurrentPage();
+    })
   }
 }
 
@@ -185,12 +181,12 @@ const columnDefinitions = [
             triggerReloadWithBasePage={triggerReloadWithBasePage}
             actions={[
               {
-                displayValue: "delete",
-                actionFunction: deleteSingle,
-              },
-              {
                 displayValue: "delete raw data",
                 actionFunction: deleteRawDataSingle,
+              },
+              {
+                displayValue: "delete",
+                actionFunction: deleteSingle,
               }
             ]}
           />
