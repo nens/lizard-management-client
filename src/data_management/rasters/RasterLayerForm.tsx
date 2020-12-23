@@ -46,7 +46,6 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
   const organisationsToSharedWith = useSelector(getOrganisations).availableForRasterSharedWith;
   const organisations = useSelector(getOrganisations).available;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
-  const organisationsToSwitchTo = organisations.filter((org: any) => org.roles.includes('admin'));
   const observationTypes = useSelector(getObservationTypes).available;
   const colorMaps = useSelector(getColorMaps).available;
   const datasets = useSelector(getDatasets).available;
@@ -364,7 +363,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           validated={values.organisation !== null && values.organisation !== ''}
           errorMessage={'Please select an organisation'}
           triedToSubmit={triedToSubmit}
-          readOnly={!(organisationsToSwitchTo.length > 0 && selectedOrganisation.roles.includes('admin'))}
+          readOnly={true}
         />
         <SelectBox
           title={'Supplier'}

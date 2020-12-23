@@ -236,7 +236,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           validated={values.organisation !== null && values.organisation !== ''}
           errorMessage={'Please select an organisation'}
           triedToSubmit={triedToSubmit}
-          readOnly={!(organisationsToSwitchTo.length > 0 && selectedOrganisation.roles.includes('admin'))}
+          readOnly={!(!currentRasterSource && organisationsToSwitchTo.length > 0 && selectedOrganisation.roles.includes('admin'))}
         />
         <SelectBox
           title={'Supplier'}
