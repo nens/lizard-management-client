@@ -10,7 +10,7 @@ import { CancelButton } from '../../form/CancelButton';
 import { useForm, Values } from '../../form/useForm';
 import { minLength } from '../../form/validators';
 import { addNotification } from '../../actions';
-import rasterSourceIcon from "../../images/raster_source_icon.svg";
+import threediIcon from "../../images/3di@3x.svg";
 import formStyles from './../../styles/Forms.module.css';
 
 interface Props {
@@ -73,9 +73,9 @@ const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProp
 
   return (
     <ExplainSideColumn
-      imgUrl={rasterSourceIcon}
-      imgAltDescription={"Raster-Source icon"}
-      headerText={"Scenarios"}
+      imgUrl={threediIcon}
+      imgAltDescription={"3Di icon"}
+      headerText={"3Di Scenarios"}
       explainationText={"Edit a 3Di scenario."}
       backUrl={"/data_management/scenarios/"}
     >

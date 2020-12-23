@@ -7,7 +7,7 @@ import TableStateContainer from '../../components/TableStateContainer';
 import { NavLink } from "react-router-dom";
 import TableActionButtons from '../../components/TableActionButtons';
 import {ExplainSideColumn} from '../../components/ExplainSideColumn';
-import rasterIcon from "../../images/raster_layer_icon.svg";
+import threediIcon from "../../images/3di@3x.svg";
 import tableStyles from "../../components/Table.module.css";
 import {getUsername} from "../../reducers";
 
@@ -207,9 +207,9 @@ export const ScenarioTable = (props:any) =>  {
 
   return (
     <ExplainSideColumn
-      imgUrl={rasterIcon}
-      imgAltDescription={"Scenario icon"}
-      headerText={"Scenarios"}
+      imgUrl={threediIcon}
+      imgAltDescription={"3Di icon"}
+      headerText={"3Di Scenarios"}
       explainationText={"Scenarios are created in 3di."} 
       backUrl={"/data_management"}
     >
