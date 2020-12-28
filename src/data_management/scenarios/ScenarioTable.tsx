@@ -31,7 +31,6 @@ export const ScenarioTable = (props:any) =>  {
       return fetch(baseUrl + row.uuid + "/", fetchOptions as RequestInit)
       .then((_result) => {
         setBusyDeleting(false);
-        // TODO: do we need this callback or should we otherwise indicate that the record is deleted ?
         triggerReloadWithCurrentPage();
         return new Promise((resolve, _reject) => {
             resolve();
@@ -41,22 +40,25 @@ export const ScenarioTable = (props:any) =>  {
   }
 
   const deleteRawDataSingle = (row: any, updateTableRow:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any)=>{
-    if (window.confirm(`Are you sure you want to delete the raw data of scenario with name: ${row.name} ?`)) {
-      const uuid = row.uuid;
-      const markAsDeletedRaw =  {...row, markAsDeletedRaw: true}
-      updateTableRow(markAsDeletedRaw);
-      const fetchOptions = {
-        credentials: "same-origin",
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({})
-      };
-      // alert("not implemented yet");
-      // @ts-ignore
-      fetch(baseUrl + uuid + "/results/raw", fetchOptions).then(()=>{
+    setRowToBeDeleted(row);
+    setDeleteFunction(()=>()=>{
+      setBusyDeleting(true);
+      updateTableRow({...row, markAsDeleted: true});
+        const fetchOptions = {
+          credentials: "same-origin",
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({})
+        };
+      return fetch(baseUrl + row.uuid + "/results/raw", fetchOptions as RequestInit)
+      .then((_result) => {
+        setBusyDeleting(false);
         triggerReloadWithCurrentPage();
-      });
-    }
+        return new Promise((resolve, _reject) => {
+            resolve();
+          });
+        })
+    })
   }
 
   const deleteRawDataMultiple = (rows: any[], tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any, setCheckboxes: any)=>{
