@@ -2,8 +2,8 @@ import React from 'react';
 import {useState, }  from 'react';
 import TableStateContainer from '../../components/TableStateContainer';
 import { NavLink } from "react-router-dom";
-import { deleteRasterSources, deleteRasterSource, 
-  // flushRasters, flushRaster 
+import {  deleteRasterSource, 
+  // deleteRasterSources, flushRasters, flushRaster 
 } from "../../api/rasters";
 import TableActionButtons from '../../components/TableActionButtons';
 import {ExplainSideColumn} from '../../components/ExplainSideColumn';
@@ -42,32 +42,33 @@ export const RasterSourceTable = (props:any) =>  {
     
   }
 
-  const deleteActionRasters = (rows: any[], tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any, setCheckboxes: any)=>{
-    setRowsToBeDeleted(rows);
-    const uuids = rows.map(row=> row.uuid);
-    setDeleteFunction(()=>()=>{
-      setBusyDeleting(true);
-      const tableDataDeletedmarker = tableData.map((rowAllTables:any)=>{
-        if (uuids.find((uuid)=> uuid === rowAllTables.uuid)) {
-          return {...rowAllTables, markAsDeleted: true}
-        } else{
-          return {...rowAllTables};
-        }
-      })
-      setTableData(tableDataDeletedmarker);
-      return deleteRasterSources(uuids)
-      .then((result) => {
-        setBusyDeleting(false);
-        if (setCheckboxes) {
-          setCheckboxes([]);
-        }
-        triggerReloadWithCurrentPage();
-        return new Promise((resolve, _reject) => {
-          resolve(result);
-        });
-      })
-    });
-  }
+  // implement later
+  // const deleteActionRasters = (rows: any[], tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any, setCheckboxes: any)=>{
+  //   setRowsToBeDeleted(rows);
+  //   const uuids = rows.map(row=> row.uuid);
+  //   setDeleteFunction(()=>()=>{
+  //     setBusyDeleting(true);
+  //     const tableDataDeletedmarker = tableData.map((rowAllTables:any)=>{
+  //       if (uuids.find((uuid)=> uuid === rowAllTables.uuid)) {
+  //         return {...rowAllTables, markAsDeleted: true}
+  //       } else{
+  //         return {...rowAllTables};
+  //       }
+  //     })
+  //     setTableData(tableDataDeletedmarker);
+  //     return deleteRasterSources(uuids)
+  //     .then((result) => {
+  //       setBusyDeleting(false);
+  //       if (setCheckboxes) {
+  //         setCheckboxes([]);
+  //       }
+  //       triggerReloadWithCurrentPage();
+  //       return new Promise((resolve, _reject) => {
+  //         resolve(result);
+  //       });
+  //     })
+  //   });
+  // }
 
   // const flushActionRasters = (rows: any[], tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any, setCheckboxes: any)=>{
   //   const uuids = rows.map(row=> row.uuid);
@@ -193,7 +194,9 @@ export const RasterSourceTable = (props:any) =>  {
       backUrl={"/data_management/rasters"}
     >
       <TableStateContainer 
-        gridTemplateColumns={"8% 29% 25% 10% 20% 8%"} 
+        // with checkboxes
+        // gridTemplateColumns={"8% 29% 25% 10% 20% 8%"}
+        gridTemplateColumns={"37% 25% 10% 20% 8%"}  
         columnDefinitions={rasterSourceColumnDefinitions}
         baseUrl={`${baseUrl}?`} 
         checkBoxActions={[
@@ -202,10 +205,10 @@ export const RasterSourceTable = (props:any) =>  {
           //   displayValue: "Flush Rasters",
           //   actionFunction: flushActionRasters,
           // },
-          {
-            displayValue: "Delete",
-            actionFunction: deleteActionRasters,
-          },
+          // {
+          //   displayValue: "Delete",
+          //   actionFunction: deleteActionRasters,
+          // },
           
         ]}
         newItemOnClick={handleNewRasterClick}
