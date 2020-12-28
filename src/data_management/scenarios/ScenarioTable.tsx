@@ -41,7 +41,7 @@ export const ScenarioTable = (props:any) =>  {
 
   const deleteRawDataSingle = (row: any, updateTableRow:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any)=>{
     setRowToBeDeleted(row);
-    setDeleteFunction(()=>()=>{
+    setDeleteRawFunction(()=>()=>{
       setBusyDeleting(true);
       updateTableRow({...row, markAsDeleted: true});
         const fetchOptions = {
@@ -63,42 +63,10 @@ export const ScenarioTable = (props:any) =>  {
 
   const deleteRawDataMultiple = (rows: any[], tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any, setCheckboxes: any)=>{
 
+    setRowsToBeDeleted(rows);
     const uuids = rows.map(row=> row.uuid);
-    const names = rows.map(row=> row.name);
-    if (window.confirm(`Are you sure you want to delete the raw data of scenario's with names? \n ${names.join("\n")}`)) {
-      const tableDataDeletedmarker = tableData.map((rowAllTables:any)=>{
-        if (uuids.find((uuid)=> uuid === rowAllTables.uuid)) {
-          return {...rowAllTables, markAsDeletedRaw: true}
-        } else{
-          return {...rowAllTables};
-        }
-      })
-      setTableData(tableDataDeletedmarker);
-      // alert("not supported yet");
-      Promise.all(uuids.map((uuid)=>{
-        const fetchOptions = {
-          credentials: "same-origin",
-          method: "DELETE",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({})
-        };
-        // @ts-ignore
-        return fetch(baseUrl + uuid + "/results/raw", fetchOptions)
-      }))
-      .then((_result) => {
-        // TODO: this is not preferred way. see delet function in raster layer table
-        if (setCheckboxes) {
-          setCheckboxes([]);
-        }
-        triggerReloadWithCurrentPage();
-      })
-    }
-  }
-
-  const deleteMultiple =  (rows: any[], tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any, setCheckboxes: any)=>{
-    const uuids = rows.map(row=> row.uuid);
-    const names = rows.map(row=> row.name);
-    if (window.confirm(`Are you sure you want to delete scenario's with names? \n ${names.join("\n")}`)) {
+    setDeleteRawFunction(()=>()=>{
+      setBusyDeleting(true);
       const tableDataDeletedmarker = tableData.map((rowAllTables:any)=>{
         if (uuids.find((uuid)=> uuid === rowAllTables.uuid)) {
           return {...rowAllTables, markAsDeleted: true}
@@ -107,25 +75,61 @@ export const ScenarioTable = (props:any) =>  {
         }
       })
       setTableData(tableDataDeletedmarker);
-      Promise.all(uuids.map((uuid)=>{
-        const fetchOptions = {
-          //Not permanently deleted, this will be implemented in backend
-          credentials: "same-origin",
-          method: "DELETE",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({})
-        };
-        // @ts-ignore
-        return fetch(baseUrl + uuid + "/", fetchOptions)
+      return Promise.all(uuids.map((uuid)=>{
+            const fetchOptions = {
+              credentials: "same-origin",
+              method: "DELETE",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({})
+            };
+            return fetch(baseUrl + uuid + "/results/raw", fetchOptions as RequestInit)
       }))
       .then((_result) => {
-        // TODO: this is not preferred way. see delet function in raster layer table
+        setBusyDeleting(false);
         if (setCheckboxes) {
           setCheckboxes([]);
         }
         triggerReloadWithCurrentPage();
+        return new Promise((resolve, _reject) => {
+          resolve();
+        });
       })
-    }
+    });
+  }
+
+  const deleteMultiple =  (rows: any[], tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any, setCheckboxes: any)=>{
+    setRowsToBeDeleted(rows);
+    const uuids = rows.map(row=> row.uuid);
+    setDeleteFunction(()=>()=>{
+      setBusyDeleting(true);
+      const tableDataDeletedmarker = tableData.map((rowAllTables:any)=>{
+        if (uuids.find((uuid)=> uuid === rowAllTables.uuid)) {
+          return {...rowAllTables, markAsDeleted: true}
+        } else{
+          return {...rowAllTables};
+        }
+      })
+      setTableData(tableDataDeletedmarker);
+      return Promise.all(uuids.map((uuid)=>{
+            const fetchOptions = {
+              credentials: "same-origin",
+              method: "DELETE",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({})
+            };
+            return fetch(baseUrl + uuid + "/", fetchOptions as RequestInit)
+      }))
+      .then((_result) => {
+        setBusyDeleting(false);
+        if (setCheckboxes) {
+          setCheckboxes([]);
+        }
+        triggerReloadWithCurrentPage();
+        return new Promise((resolve, _reject) => {
+          resolve();
+        });
+      })
+    });
   }
 
   const columnDefinitions = [
