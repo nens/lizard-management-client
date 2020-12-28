@@ -12,6 +12,7 @@ import tableStyles from "../../components/Table.module.css";
 import { bytesToDisplayValue } from '../../utils/byteUtils';
 import ConfirmModal from '../../components/ConfirmModal';
 import { ModalDeleteContent } from '../../components/ModalDeleteContent';
+import { RasterSourceDeleteModalLayersWarning } from './RasterSourceDeleteModalLayersWarning';
 
 export const RasterSourceTable = (props:any) =>  {
 
@@ -240,6 +241,7 @@ export const RasterSourceTable = (props:any) =>  {
            {ModalDeleteContent([rowToBeDeleted], busyDeleting, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
            {rowToBeDeleted.layers}
            {rowToBeDeleted.labeltypes}
+           <RasterSourceDeleteModalLayersWarning row={rowToBeDeleted} />
          </ConfirmModal>
         :
           null
