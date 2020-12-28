@@ -238,6 +238,8 @@ export const RasterSourceTable = (props:any) =>  {
          >
            <p>Are you sure? You are deleting the following raster-source:</p>
            {ModalDeleteContent([rowToBeDeleted], busyDeleting, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
+           {rowToBeDeleted.layers}
+           {rowToBeDeleted.labeltypes}
          </ConfirmModal>
         :
           null
