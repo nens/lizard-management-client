@@ -19,6 +19,7 @@ export const RasterSourceTable = (props:any) =>  {
   const [rowToBeDeleted, setRowToBeDeleted] = useState<any | null>(null);
   const [deleteFunction, setDeleteFunction] = useState<null | Function>(null);
   const [busyDeleting, setBusyDeleting] = useState<boolean>(false);
+  // const [busyDeleting, setBusyDeleting] = useState<boolean>(false);
 
   const baseUrl = "/api/v4/rastersources/";
   const navigationUrlRasters = "/data_management/rasters/sources";
@@ -29,11 +30,12 @@ export const RasterSourceTable = (props:any) =>  {
       setBusyDeleting(true);
       updateTableRow({...row, markAsDeleted: true});
       return deleteRasterSource(row.uuid)
-      .then((_result) => {
+      .then((result) => {
+        console.log('result', result)
         setBusyDeleting(false);
         triggerReloadWithCurrentPage();
         return new Promise((resolve, _reject) => {
-            resolve();
+            resolve({result:result, row:row});
           });
         })
     })
@@ -54,14 +56,14 @@ export const RasterSourceTable = (props:any) =>  {
       })
       setTableData(tableDataDeletedmarker);
       return deleteRasterSources(uuids)
-      .then((_result) => {
+      .then((result) => {
         setBusyDeleting(false);
         if (setCheckboxes) {
           setCheckboxes([]);
         }
         triggerReloadWithCurrentPage();
         return new Promise((resolve, _reject) => {
-          resolve();
+          resolve(result);
         });
       })
     });
@@ -214,9 +216,14 @@ export const RasterSourceTable = (props:any) =>  {
            title={'Are you sure?'}
            buttonConfirmName={'Delete'}
            onClickButtonConfirm={() => {
-             deleteFunction && deleteFunction().then(()=>{
-              setRowToBeDeleted(null);
-              setDeleteFunction(null);
+             deleteFunction && deleteFunction().then((resultObj:any)=>{
+              if (resultObj.result.status === 412) {
+
+              } else {
+                setRowToBeDeleted(null);
+                setDeleteFunction(null);
+              }
+              
              });
              
            }}
