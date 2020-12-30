@@ -13,6 +13,7 @@ import { bytesToDisplayValue } from '../../utils/byteUtils';
 import ConfirmModal from '../../components/ConfirmModal';
 import { ModalDeleteContent } from '../../components/ModalDeleteContent';
 import { RasterSourceDeleteModalLayersWarning } from './RasterSourceDeleteModalLayersWarning';
+import { RasterSourceDeleteModalLabelTypesWarning } from './RasterSourceDeleteModalLabelTypesWarning';
 
 export const RasterSourceTable = (props:any) =>  {
 
@@ -239,9 +240,41 @@ export const RasterSourceTable = (props:any) =>  {
          >
            <p>Are you sure? You are deleting the following raster-source:</p>
            {ModalDeleteContent([rowToBeDeleted], busyDeleting, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
-           {rowToBeDeleted.layers}
-           {rowToBeDeleted.labeltypes}
-           <RasterSourceDeleteModalLayersWarning row={rowToBeDeleted} />
+           {rowToBeDeleted.layers.length !==0 ?
+            <>
+            <p>This raster source is in use by the following raster-layers:</p>
+            <RasterSourceDeleteModalLayersWarning row={rowToBeDeleted} />
+            </>
+           :
+           null
+           }
+           {rowToBeDeleted.labeltypes.length !==0 ?
+            <>
+            <p>This raster source is in use by the following labletypes:</p>
+            <RasterSourceDeleteModalLabelTypesWarning row={rowToBeDeleted} />
+            </>
+           :
+           null
+           }
+           {rowToBeDeleted.isStillInUse === true ?
+            <>
+            <p>This raster-source is still in use by objects from another organisation</p>
+            </>
+           :
+           null
+           }
+           { 
+            rowToBeDeleted.layers.length !==0 || 
+            rowToBeDeleted.labeltypes.length !==0 ||
+            rowToBeDeleted.isStillInUse === true ?
+            <>
+            <p>Deleting this raster source will break all these related objects !</p>
+            </>
+           :
+           null
+
+           }
+             
          </ConfirmModal>
         :
           null
