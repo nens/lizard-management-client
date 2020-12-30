@@ -14,6 +14,7 @@ import ConfirmModal from '../../components/ConfirmModal';
 import { ModalDeleteContent } from '../../components/ModalDeleteContent';
 import { RasterSourceDeleteModalLayersWarning } from './RasterSourceDeleteModalLayersWarning';
 import { RasterSourceDeleteModalLabelTypesWarning } from './RasterSourceDeleteModalLabelTypesWarning';
+import DeleteRasterSourceNotAllowed  from './DeleteRasterSourceNotAllowed'
 
 export const RasterSourceTable = (props:any) =>  {
 
@@ -215,7 +216,20 @@ export const RasterSourceTable = (props:any) =>  {
         ]}
         newItemOnClick={handleNewRasterClick}
       />
-      { 
+      {
+        rowToBeDeleted?
+
+        <DeleteRasterSourceNotAllowed 
+        closeDialogAction={()=>{
+          setRowToBeDeleted(null);
+          setDeleteFunction(null);
+          // todo refresh table, because maybe user has in meanwhile deleted items. Or pass row instead and put logic for what modal is show inside modal component?
+        }}
+        />
+        :
+        null
+      }
+      {/* { 
         rowToBeDeleted?
            <ConfirmModal
            title={'Are you sure?'}
@@ -304,7 +318,7 @@ export const RasterSourceTable = (props:any) =>  {
          </ConfirmModal>
         :
           null
-        }
+        } */}
     </ExplainSideColumn>
   );
 }

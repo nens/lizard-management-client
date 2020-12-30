@@ -47,12 +47,12 @@ export const RasterSourceDeleteModalLayersWarning = (props:any) => {
 
   return (
     <div>
-      <ul
+      {/* <ul
         style={{
           overflowY: "auto",
           maxHeight: "200px"
         }}
-      >
+      > */}
         {/* {layers.map((layer:any)=>{
           <li style={{fontStyle: "italic", listStyleType: "square", height: "80px"}}>
           <span style={{display:"flex", flexDirection: "row",justifyContent: "space-between", alignItems: "center"}}>
@@ -65,7 +65,7 @@ export const RasterSourceDeleteModalLayersWarning = (props:any) => {
         </li>
         })} */}
         {ModalDeleteContent(layers, false, fields)}
-      </ul>  
+      {/* </ul>   */}
     </div>
   )
 }
