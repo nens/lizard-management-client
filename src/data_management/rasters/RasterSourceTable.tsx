@@ -220,11 +220,12 @@ export const RasterSourceTable = (props:any) =>  {
         rowToBeDeleted?
 
         <DeleteRasterSourceNotAllowed 
-        closeDialogAction={()=>{
-          setRowToBeDeleted(null);
-          setDeleteFunction(null);
-          // todo refresh table, because maybe user has in meanwhile deleted items. Or pass row instead and put logic for what modal is show inside modal component?
-        }}
+          closeDialogAction={()=>{
+            setRowToBeDeleted(null);
+            setDeleteFunction(null);
+            // todo refresh table, because maybe user has in meanwhile deleted items. Or pass row instead and put logic for what modal is show inside modal component?
+          }}
+          rowToBeDeleted={rowToBeDeleted}
         />
         :
         null
