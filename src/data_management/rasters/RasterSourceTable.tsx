@@ -10,8 +10,8 @@ import {ExplainSideColumn} from '../../components/ExplainSideColumn';
 import rasterSourcesIcon from "../../images/raster_source_icon.svg";
 import tableStyles from "../../components/Table.module.css";
 import { bytesToDisplayValue } from '../../utils/byteUtils';
-// import ConfirmModal from '../../components/ConfirmModal';
-// import { ModalDeleteContent } from '../../components/ModalDeleteContent';
+import ConfirmModal from '../../components/ConfirmModal';
+import { ModalDeleteContent } from '../../components/ModalDeleteContent';
 // import { RasterSourceDeleteModalLayersWarning } from './RasterSourceDeleteModalLayersWarning';
 // import { RasterSourceDeleteModalLabelTypesWarning } from './RasterSourceDeleteModalLabelTypesWarning';
 import DeleteRasterSourceNotAllowed  from './DeleteRasterSourceNotAllowed'
@@ -32,7 +32,7 @@ export const RasterSourceTable = (props:any) =>  {
     setDeleteFunction(()=>()=>{
       setBusyDeleting(true);
       updateTableRow({...row, markAsDeleted: true});
-      return deleteRasterSource(row.uuid)
+      return deleteRasterSource(row.uuid, row.hasDependencies)
       .then((result) => {
         console.log('result', result)
         setBusyDeleting(false);
@@ -230,22 +230,45 @@ export const RasterSourceTable = (props:any) =>  {
         :
         null
       }
-      {/* {
-        rowToBeDeleted && (rowToBeDeleted.layers.length === 0 && rowToBeDeleted.labeltypes.length === 0) ?
+      {
+        rowToBeDeleted && (rowToBeDeleted.layers.length === 0 && rowToBeDeleted.labeltypes.length === 0) 
+        // && rowToBeDeleted.hasDependencies  
+        ?
 
-        <DeleteRasterSourceNotAllowed 
-          closeDialogAction={()=>{
+        <ConfirmModal
+          title={'Warning'}
+          buttonConfirmName={'Delete'}
+          onClickButtonConfirm={() => {
+            deleteFunction && deleteFunction().then((resultObj:any)=>{
+            if (resultObj.result.status === 412) {
+
+            } else {
+              setRowToBeDeleted(null);
+              setDeleteFunction(null);
+            }
+            
+            });
+            
+          }}
+          cancelAction={()=>{
             setRowToBeDeleted(null);
             setDeleteFunction(null);
-            // todo refresh table, because maybe user has in meanwhile deleted items. Or pass row instead and put logic for what modal is show inside modal component?
           }}
-          rowToBeDeleted={rowToBeDeleted}
-        />
+          disableButtons={busyDeleting}
+          requiredCheckboxText={"I understand deleting this raster-source might break objects for other organisations."}
+        >
+          <p>Are you sure?</p>
+          <p>You are about to delete the following raster source: </p>
+          {ModalDeleteContent([rowToBeDeleted], busyDeleting, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
+          <p>This raster source still has dependent objects belonging to other organisations.</p>
+          <p>Deleting this  raster source might break these dependent objects.</p>
+          <p>Proceed anyway?</p>
+        </ConfirmModal>
         :
         null
-      } */}
+      }
       {/* { 
-        rowToBeDeleted?
+        rowToBeDeleted && (rowToBeDeleted.layers.length === 0 && rowToBeDeleted.labeltypes.length === 0) && !rowToBeDeleted.hasDependencies?
            <ConfirmModal
            title={'Are you sure?'}
            buttonConfirmName={'Delete'}
@@ -268,47 +291,12 @@ export const RasterSourceTable = (props:any) =>  {
            disableButtons={busyDeleting}
          >
            <p>Are you sure? You are deleting the following raster-source:</p>
-           {ModalDeleteContent([rowToBeDeleted], busyDeleting, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
-           {rowToBeDeleted.layers.length !==0 ?
-            <>
-            <p>This raster source is in use by the following raster-layers:</p>
-            <RasterSourceDeleteModalLayersWarning row={rowToBeDeleted} />
-            </>
-           :
-           null
-           }
-           {rowToBeDeleted.labeltypes.length !==0 ?
-            <>
-            <p>This raster source is in use by the following labletypes:</p>
-            <RasterSourceDeleteModalLabelTypesWarning row={rowToBeDeleted} />
-            </>
-           :
-           null
-           }
-           {rowToBeDeleted.isStillInUse === true ?
-            <>
-            <p>This raster-source is still in use by objects from another organisation</p>
-            </>
-           :
-           null
-           }
-           { 
-            rowToBeDeleted.layers.length !==0 || 
-            rowToBeDeleted.labeltypes.length !==0 ||
-            rowToBeDeleted.isStillInUse === true ?
-            <>
-            <p>Deleting this raster source will break all these related objects !</p>
-            </>
-           :
-           null
-
-           }
-             
+           {ModalDeleteContent([rowToBeDeleted], busyDeleting, [{name: "name", width: 65}, {name: "uuid", width: 25}])}             
          </ConfirmModal>
         :
           null
-        }
-        { 
+        } */}
+        {/* { 
         rowsToBeDeleted.length > 0?
            <ConfirmModal
            title={'Are you sure?'}
