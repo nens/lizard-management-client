@@ -183,3 +183,16 @@
   line-height: 1.5;
   border-radius: 0;
 }
+
+.IconButton {
+  padding: 0;
+  margin: 0;
+  border: none;
+  background-color: transparent;
+}
+.IconButton:focus {
+  outline: none;
+}
+.IconButton:active {
+  transform: translateY(2px);
+}

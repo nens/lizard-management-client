@@ -2,6 +2,7 @@ import React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { connect, useSelector } from 'react-redux';
 import { getOrganisations, getUsername } from '../../reducers';
+import { ScenarioResult } from '../../form/ScenarioResult';
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import { TextInput } from './../../form/TextInput';
 import { SubmitButton } from '../../form/SubmitButton';
@@ -9,7 +10,7 @@ import { CancelButton } from '../../form/CancelButton';
 import { useForm, Values } from '../../form/useForm';
 import { minLength } from '../../form/validators';
 import { addNotification } from '../../actions';
-import rasterSourceIcon from "../../images/raster_source_icon.svg";
+import threediIcon from "../../images/3di@3x.svg";
 import formStyles from './../../styles/Forms.module.css';
 
 interface Props {
@@ -62,9 +63,9 @@ const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProp
   const {
     values,
     triedToSubmit,
+    formSubmitted,
     tryToSubmitForm,
     handleInputChange,
-    // handleValueChange,
     handleSubmit,
     handleReset,
     clearInput,
@@ -72,9 +73,9 @@ const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProp
 
   return (
     <ExplainSideColumn
-      imgUrl={rasterSourceIcon}
-      imgAltDescription={"Raster-Source icon"}
-      headerText={"Scenarios"}
+      imgUrl={threediIcon}
+      imgAltDescription={"3Di icon"}
+      headerText={"3Di Scenarios"}
       explainationText={"Edit a 3Di scenario."}
       backUrl={"/data_management/scenarios/"}
     >
@@ -109,6 +110,11 @@ const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProp
         <span className={formStyles.FormFieldTitle}>
           2: Data
         </span>
+        <ScenarioResult
+          name={'results'}
+          uuid={currentScenario.uuid}
+          formSubmitted={formSubmitted}
+        />
         <span className={formStyles.FormFieldTitle}>
           3: Rights
         </span>
