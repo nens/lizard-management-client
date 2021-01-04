@@ -23,6 +23,7 @@ export const RasterSourceTable = (props:any) =>  {
   const [deleteFunction, setDeleteFunction] = useState<null | Function>(null);
   const [busyDeleting, setBusyDeleting] = useState<boolean>(false);
   // const [busyDeleting, setBusyDeleting] = useState<boolean>(false);
+  const [showDeleteFailedModal, setShowDeleteFailedModal] = useState<boolean>(false);
 
   const baseUrl = "/api/v4/rastersources/";
   const navigationUrlRasters = "/data_management/rasters/sources";
@@ -32,7 +33,7 @@ export const RasterSourceTable = (props:any) =>  {
     setDeleteFunction(()=>()=>{
       setBusyDeleting(true);
       updateTableRow({...row, markAsDeleted: true});
-      return deleteRasterSource(row.uuid, row.hasDependencies)
+      return deleteRasterSource(row.uuid)
       .then((result) => {
         console.log('result', result)
         setBusyDeleting(false);
@@ -230,9 +231,8 @@ export const RasterSourceTable = (props:any) =>  {
         :
         null
       }
-      {
+      {/* {
         rowToBeDeleted && (rowToBeDeleted.layers.length === 0 && rowToBeDeleted.labeltypes.length === 0) 
-        // && rowToBeDeleted.hasDependencies  
         ?
 
         <ConfirmModal
@@ -266,16 +266,18 @@ export const RasterSourceTable = (props:any) =>  {
         </ConfirmModal>
         :
         null
-      }
-      {/* { 
-        rowToBeDeleted && (rowToBeDeleted.layers.length === 0 && rowToBeDeleted.labeltypes.length === 0) && !rowToBeDeleted.hasDependencies?
+      } */}
+      { 
+        rowToBeDeleted && (rowToBeDeleted.layers.length === 0 && rowToBeDeleted.labeltypes.length === 0) ?
            <ConfirmModal
            title={'Are you sure?'}
            buttonConfirmName={'Delete'}
            onClickButtonConfirm={() => {
              deleteFunction && deleteFunction().then((resultObj:any)=>{
               if (resultObj.result.status === 412) {
-
+                setShowDeleteFailedModal(true);
+                // setRowToBeDeleted(null);
+                setDeleteFunction(null);
               } else {
                 setRowToBeDeleted(null);
                 setDeleteFunction(null);
@@ -295,7 +297,7 @@ export const RasterSourceTable = (props:any) =>  {
          </ConfirmModal>
         :
           null
-        } */}
+        }
         {/* { 
         rowsToBeDeleted.length > 0?
            <ConfirmModal
