@@ -1,6 +1,6 @@
 import React from 'react';
 import Overlay from './../components/Overlay';
-import styles from './ConfirmModal.module.css';
+import modalStyles from '../styles/Modal.module.css';
 import buttonStyles from './../styles/Buttons.module.css';
 
 interface MyProps {
@@ -22,14 +22,14 @@ const ConfirmModal: React.FC<MyProps> = (props) => {
 
   return (
     <Overlay confirmModal handleClose={()=>{cancelAction && cancelAction()}}>
-      <div className={styles.Modal}>
-        <div className={styles.ModalHeader}>
+      <div className={modalStyles.Modal}>
+        <div className={modalStyles.ModalHeader}>
           {title}
         </div>
-        <div className={styles.ModalBody}>
+        <div className={modalStyles.ModalBody}>
           {props.children}
         </div>
-        <div className={styles.ModalFooter} style={cancelAction?{justifyContent: "space-between"}:{justifyContent: "flex-end"}}>
+        <div className={modalStyles.ModalFooter} style={cancelAction?{justifyContent: "space-between"}:{justifyContent: "flex-end"}}>
           {cancelAction ? (
             <button
               className={`${buttonStyles.Button} ${buttonStyles.LinkCancel}`}

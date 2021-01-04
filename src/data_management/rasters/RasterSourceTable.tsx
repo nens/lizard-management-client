@@ -10,15 +10,15 @@ import {ExplainSideColumn} from '../../components/ExplainSideColumn';
 import rasterSourcesIcon from "../../images/raster_source_icon.svg";
 import tableStyles from "../../components/Table.module.css";
 import { bytesToDisplayValue } from '../../utils/byteUtils';
-import ConfirmModal from '../../components/ConfirmModal';
-import { ModalDeleteContent } from '../../components/ModalDeleteContent';
-import { RasterSourceDeleteModalLayersWarning } from './RasterSourceDeleteModalLayersWarning';
-import { RasterSourceDeleteModalLabelTypesWarning } from './RasterSourceDeleteModalLabelTypesWarning';
+// import ConfirmModal from '../../components/ConfirmModal';
+// import { ModalDeleteContent } from '../../components/ModalDeleteContent';
+// import { RasterSourceDeleteModalLayersWarning } from './RasterSourceDeleteModalLayersWarning';
+// import { RasterSourceDeleteModalLabelTypesWarning } from './RasterSourceDeleteModalLabelTypesWarning';
 import DeleteRasterSourceNotAllowed  from './DeleteRasterSourceNotAllowed'
 
 export const RasterSourceTable = (props:any) =>  {
 
-  const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
+  // const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
   const [rowToBeDeleted, setRowToBeDeleted] = useState<any | null>(null);
   const [deleteFunction, setDeleteFunction] = useState<null | Function>(null);
   const [busyDeleting, setBusyDeleting] = useState<boolean>(false);
@@ -217,7 +217,7 @@ export const RasterSourceTable = (props:any) =>  {
         newItemOnClick={handleNewRasterClick}
       />
       {
-        rowToBeDeleted?
+        rowToBeDeleted && (rowToBeDeleted.layers.length !== 0 || rowToBeDeleted.labeltypes.length !== 0) ?
 
         <DeleteRasterSourceNotAllowed 
           closeDialogAction={()=>{
@@ -230,6 +230,20 @@ export const RasterSourceTable = (props:any) =>  {
         :
         null
       }
+      {/* {
+        rowToBeDeleted && (rowToBeDeleted.layers.length === 0 && rowToBeDeleted.labeltypes.length === 0) ?
+
+        <DeleteRasterSourceNotAllowed 
+          closeDialogAction={()=>{
+            setRowToBeDeleted(null);
+            setDeleteFunction(null);
+            // todo refresh table, because maybe user has in meanwhile deleted items. Or pass row instead and put logic for what modal is show inside modal component?
+          }}
+          rowToBeDeleted={rowToBeDeleted}
+        />
+        :
+        null
+      } */}
       {/* { 
         rowToBeDeleted?
            <ConfirmModal

@@ -1,7 +1,8 @@
 import React from 'react';
-import {useState, useEffect,}  from 'react';
+// import {useState, useEffect,}  from 'react';
 import Overlay from '../../components/Overlay';
-import styles from './DeleteRasterSourceNotAllowed.module.css';
+import modalStyles from '../../styles/Modal.module.css';
+
 // import buttonStyles from './../styles/Buttons.module.css';
 
 interface MyProps {
@@ -60,18 +61,18 @@ const DeleteRasterSourceNotAllowed: React.FC<MyProps> = (props) => {
       confirmModal 
       handleClose={()=>{closeDialogAction()}}
     >
-      <div className={styles.Modal}>
-        <div className={styles.ModalHeader}>
+      <div className={modalStyles.Modal}>
+        <div className={modalStyles.ModalHeader}>
           Not allowed
           <button onClick={(e)=>{closeDialogAction()}}>x</button>
         </div>
-        <div className={styles.ModalBody} style={{
+        <div className={modalStyles.ModalBody} style={{
             overflowY: "auto",
             maxHeight: "410px"
           }}
         >
           {"You are trying to delete the raster-source "}
-          <a target="_blank" href={`/management#/data_management/rasters/sources/${rowToBeDeleted.uuid}`}>{rowToBeDeleted.name}</a>
+          <a target="_blank" rel="noopener noreferrer" href={`/management#/data_management/rasters/sources/${rowToBeDeleted.uuid}`}>{rowToBeDeleted.name}</a>
           <br></br>
           {"but this raster-source still has dependent objects."} 
           <br></br>
@@ -90,7 +91,7 @@ const DeleteRasterSourceNotAllowed: React.FC<MyProps> = (props) => {
             <ul>
               {layerUrls.map((url:string)=>{return(
                 <li>
-                  <a target="_blank" href={url}>{url}</a>
+                  <a target="_blank" rel="noopener noreferrer" href={url}>{url}</a>
                 </li>
               )})}
             </ul>
@@ -105,7 +106,7 @@ const DeleteRasterSourceNotAllowed: React.FC<MyProps> = (props) => {
             <ul>
               {labelTypeUrls.map((url:string)=>{return(
                 <li>
-                  <a target="_blank" href={url}>{url}</a>
+                  <a target="_blank" rel="noopener noreferrer" href={url}>{url}</a>
                 </li>
               )})}
             </ul>
