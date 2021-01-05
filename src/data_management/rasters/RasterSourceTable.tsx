@@ -13,8 +13,6 @@ import { bytesToDisplayValue } from '../../utils/byteUtils';
 import Modal from '../../components/Modal';
 
 import { ModalDeleteContent } from '../../components/ModalDeleteContent';
-// import { RasterSourceDeleteModalLayersWarning } from './RasterSourceDeleteModalLayersWarning';
-// import { RasterSourceDeleteModalLabelTypesWarning } from './RasterSourceDeleteModalLabelTypesWarning';
 import DeleteRasterSourceNotAllowed  from './DeleteRasterSourceNotAllowed'
 
 export const RasterSourceTable = (props:any) =>  {
@@ -23,7 +21,6 @@ export const RasterSourceTable = (props:any) =>  {
   const [rowToBeDeleted, setRowToBeDeleted] = useState<any | null>(null);
   const [deleteFunction, setDeleteFunction] = useState<null | Function>(null);
   const [busyDeleting, setBusyDeleting] = useState<boolean>(false);
-  // const [busyDeleting, setBusyDeleting] = useState<boolean>(false);
   const [showDeleteFailedModal, setShowDeleteFailedModal] = useState<boolean>(false);
 
   const baseUrl = "/api/v4/rastersources/";
@@ -36,7 +33,6 @@ export const RasterSourceTable = (props:any) =>  {
       updateTableRow({...row, markAsDeleted: true});
       return deleteRasterSource(row.uuid)
       .then((result) => {
-        console.log('result', result)
         setBusyDeleting(false);
         triggerReloadWithCurrentPage();
         return new Promise((resolve, _reject) => {
@@ -113,7 +109,6 @@ export const RasterSourceTable = (props:any) =>  {
     {
       titleRenderFunction: () =>  "Code",
       renderFunction: (row: any) =>
-      // (row: any) => {return !row.supplier_code ? "(empty 'supplier code')" : row.supplier_code },
         <span
           className={tableStyles.CellEllipsis}
           title={row.supplier_code}
@@ -126,7 +121,6 @@ export const RasterSourceTable = (props:any) =>  {
     {
       titleRenderFunction: () =>  "Temporal",
       renderFunction: (row: any) => 
-        // row.temporal === true? "Yes" : "No"
         <span
           className={tableStyles.CellEllipsis}
         >
@@ -234,42 +228,6 @@ export const RasterSourceTable = (props:any) =>  {
         :
         null
       }
-      {/* {
-        rowToBeDeleted && (rowToBeDeleted.layers.length === 0 && rowToBeDeleted.labeltypes.length === 0) 
-        ?
-
-        <ConfirmModal
-          title={'Warning'}
-          buttonConfirmName={'Delete'}
-          onClickButtonConfirm={() => {
-            deleteFunction && deleteFunction().then((resultObj:any)=>{
-            if (resultObj.result.status === 412) {
-
-            } else {
-              setRowToBeDeleted(null);
-              setDeleteFunction(null);
-            }
-            
-            });
-            
-          }}
-          cancelAction={()=>{
-            setRowToBeDeleted(null);
-            setDeleteFunction(null);
-          }}
-          disableButtons={busyDeleting}
-          requiredCheckboxText={"I understand deleting this raster-source might break objects for other organisations."}
-        >
-          <p>Are you sure?</p>
-          <p>You are about to delete the following raster source: </p>
-          {ModalDeleteContent([rowToBeDeleted], busyDeleting, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
-          <p>This raster source still has dependent objects belonging to other organisations.</p>
-          <p>Deleting this  raster source might break these dependent objects.</p>
-          <p>Proceed anyway?</p>
-        </ConfirmModal>
-        :
-        null
-      } */}
       { 
         rowToBeDeleted && deleteFunction 
         && 
@@ -282,7 +240,6 @@ export const RasterSourceTable = (props:any) =>  {
              deleteFunction && deleteFunction().then((resultObj:any)=>{
               if (resultObj.result.status === 412) {
                 setShowDeleteFailedModal(true);
-                // setRowToBeDeleted(null);
                 setDeleteFunction(null);
               } else {
                 setRowToBeDeleted(null);
