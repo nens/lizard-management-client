@@ -3,7 +3,7 @@ import Overlay from './../components/Overlay';
 import modalStyles from '../styles/Modal.module.css';
 import buttonStyles from './../styles/Buttons.module.css';
 import {useState,}  from 'react';
-import Checkbox from './Checkbox';
+// import Checkbox from './Checkbox';
 
 
 
@@ -14,6 +14,7 @@ interface MyProps {
   cancelAction?: () => void,
   disableButtons?: boolean,
   closeDialogAction?: () => void,
+  // requiredCheckboxText works, but is currently not used
   requiredCheckboxText?: string,
 }
 
@@ -28,9 +29,10 @@ const Modal: React.FC<MyProps> = (props) => {
     requiredCheckboxText,
   } = props;
 
-  const [checkboxState, setCheckboxState] = useState<boolean>(false);
+  const [checkboxState, /*setCheckboxState*/] = useState<boolean>(false);
 
   return (
+    // todo: remve this confirmModal attribute, but some css in the overlay depends on it
     <Overlay confirmModal handleClose={()=>{cancelAction && cancelAction()}}>
       <div className={modalStyles.Modal}>
         <div className={modalStyles.ModalHeader}>
@@ -40,7 +42,7 @@ const Modal: React.FC<MyProps> = (props) => {
         <div className={modalStyles.ModalBody}>
           {props.children}
         </div>
-        {requiredCheckboxText?
+        {/* {requiredCheckboxText?
           <div className={modalStyles.ModalFooter} style={{display:"fex", justifyContent: "flex-start"}}>
             <div
               style={{
@@ -66,7 +68,7 @@ const Modal: React.FC<MyProps> = (props) => {
           </div>
         :
         null
-        }
+        } */}
         { cancelAction || buttonConfirmName?
           <div className={modalStyles.ModalFooter} style={cancelAction?{justifyContent: "space-between"}:{justifyContent: "flex-end"}}>
             {cancelAction ? (
