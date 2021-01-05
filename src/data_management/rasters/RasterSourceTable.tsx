@@ -269,7 +269,10 @@ export const RasterSourceTable = (props:any) =>  {
         null
       } */}
       { 
-        rowToBeDeleted && (rowToBeDeleted.layers.length === 0 && rowToBeDeleted.labeltypes.length === 0) ?
+        rowToBeDeleted 
+        && 
+        (rowToBeDeleted.layers.length === 0 && rowToBeDeleted.labeltypes.length === 0) 
+        ?
            <Modal
            title={'Are you sure?'}
            buttonConfirmName={'Delete'}
@@ -295,6 +298,23 @@ export const RasterSourceTable = (props:any) =>  {
          >
            <p>Are you sure? You are deleting the following raster-source:</p>
            {ModalDeleteContent([rowToBeDeleted], busyDeleting, [{name: "name", width: 65}, {name: "uuid", width: 25}])}             
+         </Modal>
+        :
+          null
+        }
+        { 
+        rowToBeDeleted &&  showDeleteFailedModal?
+           <Modal
+           title={'Not allowed'}
+           closeDialogAction={()=>{
+            setShowDeleteFailedModal(false);
+            setRowToBeDeleted(null);
+           }}
+         >
+           <p>You are trying to delete the following raster-source:</p>
+           {ModalDeleteContent([rowToBeDeleted], busyDeleting, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
+           <p>But tis raster-source is still in use by objects outside your organisation.</p>
+           <p>Please contact support.</p>             
          </Modal>
         :
           null
