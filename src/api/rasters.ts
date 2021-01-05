@@ -535,9 +535,13 @@ export const patchRasterLayer = async (rasterUuid: string, raster: RasterLayerFr
 Next function api call fails with error:
 {"status":405,"code":10,"message":"Request method not available. #405.10","detail":"Method \"DELETE\" not allowed."}
 //*/
-export const deleteRasterSource = async (uuid: string, useForce?:boolean) => {
-  
-  const body = useForce===true ? {"force": true,} : {}
+// useForce works, but we are not going to use it for now
+export const deleteRasterSource = async (
+  uuid: string, 
+  // useForce?:boolean
+) => {  
+  // const body = useForce===true ? {"force": true,} : {};
+  const body = {};
   // Try to delete source, ignore errors
   const result = await fetch("/api/v4/rastersources/"+uuid, {
     credentials: "same-origin",
