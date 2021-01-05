@@ -6,7 +6,7 @@ import wmsIcon from "../../images/wms@3x.svg";
 import tableStyles from "../../components/Table.module.css";
 import TableActionButtons from '../../components/TableActionButtons';
 import {useState, }  from 'react';
-import ConfirmModal from '../../components/ConfirmModal';
+import Modal from '../../components/Modal';
 import { ModalDeleteContent } from '../../components/ModalDeleteContent'
 
 
@@ -160,7 +160,7 @@ export const WmsLayerTable = (props:any) =>  {
         />
         { 
         rowsToBeDeleted.length > 0?
-           <ConfirmModal
+           <Modal
            title={'Are you sure?'}
            buttonConfirmName={'Delete'}
            onClickButtonConfirm={() => {
@@ -179,14 +179,14 @@ export const WmsLayerTable = (props:any) =>  {
            <p>Are you sure? You are deleting the following WMS-layers:</p>
            {ModalDeleteContent(rowsToBeDeleted, busyDeleting, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
            
-         </ConfirmModal>
+         </Modal>
         :
           null
         }
 
         { 
         rowToBeDeleted?
-           <ConfirmModal
+           <Modal
            title={'Are you sure?'}
            buttonConfirmName={'Delete'}
            onClickButtonConfirm={() => {
@@ -205,7 +205,7 @@ export const WmsLayerTable = (props:any) =>  {
            <p>Are you sure? You are deleting the following WMS-layer:</p>
            {ModalDeleteContent([rowToBeDeleted], busyDeleting, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
 
-         </ConfirmModal>
+         </Modal>
         :
           null
         }

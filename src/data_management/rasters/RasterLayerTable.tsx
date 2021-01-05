@@ -10,7 +10,7 @@ import {ExplainSideColumn} from '../../components/ExplainSideColumn';
 import rasterIcon from "../../images/raster_layer_icon.svg";
 import tableStyles from "../../components/Table.module.css";
 import {useState, }  from 'react';
-import ConfirmModal from '../../components/ConfirmModal';
+import Modal from '../../components/Modal';
 import { ModalDeleteContent } from '../../components/ModalDeleteContent'
 
 
@@ -170,7 +170,7 @@ export const RasterLayerTable = (props:any) =>  {
         />
         { 
         rowsToBeDeleted.length > 0?
-           <ConfirmModal
+           <Modal
            title={'Are you sure?'}
            buttonConfirmName={'Delete'}
            onClickButtonConfirm={() => {
@@ -190,14 +190,14 @@ export const RasterLayerTable = (props:any) =>  {
            
            {ModalDeleteContent(rowsToBeDeleted, busyDeleting, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
            
-         </ConfirmModal>
+         </Modal>
         :
           null
         }
 
         { 
         rowToBeDeleted?
-           <ConfirmModal
+           <Modal
            title={'Are you sure?'}
            buttonConfirmName={'Delete'}
            onClickButtonConfirm={() => {
@@ -215,7 +215,7 @@ export const RasterLayerTable = (props:any) =>  {
          >
            <p>Are you sure? You are deleting the following raster-layer:</p>
            {ModalDeleteContent([rowToBeDeleted], busyDeleting, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
-         </ConfirmModal>
+         </Modal>
         :
           null
         }

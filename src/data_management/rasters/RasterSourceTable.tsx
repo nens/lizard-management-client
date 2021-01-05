@@ -286,7 +286,7 @@ export const RasterSourceTable = (props:any) =>  {
         }
         {/* { 
         rowsToBeDeleted.length > 0?
-           <ConfirmModal
+           <Modal
            title={'Are you sure?'}
            buttonConfirmName={'Delete'}
            onClickButtonConfirm={() => {
@@ -306,7 +306,7 @@ export const RasterSourceTable = (props:any) =>  {
            
            {ModalDeleteContent(rowsToBeDeleted, busyDeleting, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
            
-         </ConfirmModal>
+         </Modal>
         :
           null
         } */}
