@@ -1,9 +1,7 @@
 import React from 'react';
 // import {useState, useEffect,}  from 'react';
-import Overlay from '../../components/Overlay';
-import modalStyles from '../../styles/Modal.module.css';
+import Modal from '../../components/Modal';
 
-// import buttonStyles from './../styles/Buttons.module.css';
 
 interface MyProps {
   closeDialogAction: () => void,
@@ -20,6 +18,7 @@ const DeleteRasterSourceNotAllowed: React.FC<MyProps> = (props) => {
   const layerUrls = layerUuids.map((layerUuid:string)=>{return '/management#/data_management/rasters/layers/' + layerUuid})
   const labelTypeUrls = rowToBeDeleted.labeltypes.map((uuid:string)=>{return '/management#/data_management/labeltypes/' + uuid})
 
+  // Do not remove, lateron we are going to display layer name and labeltype name instead of url
   // const fetchLayers = (uuids: string[],) => {
   //   const baseUrl = "/api/v4/rasters/";
   //   const fetches = uuids.map (uuid => {
@@ -55,22 +54,10 @@ const DeleteRasterSourceNotAllowed: React.FC<MyProps> = (props) => {
   // }, [rowToBeDeleted]);
 
   return (
-    <Overlay 
-      // Todo confirmModal attribute is needed for styling. Need to change it to deleteRasterSourceNotAllowed ?
-      // deleteRasterSourceNotAllowed
-      confirmModal 
-      handleClose={()=>{closeDialogAction()}}
+    <Modal
+      title={"Not allowed"}
+      closeDialogAction={closeDialogAction}
     >
-      <div className={modalStyles.Modal}>
-        <div className={modalStyles.ModalHeader}>
-          Not allowed
-          <button onClick={(e)=>{closeDialogAction()}}>x</button>
-        </div>
-        <div className={modalStyles.ModalBody} style={{
-            overflowY: "auto",
-            maxHeight: "410px"
-          }}
-        >
           {"You are trying to delete the raster-source "}
           <a target="_blank" rel="noopener noreferrer" href={`/management#/data_management/rasters/sources/${rowToBeDeleted.uuid}`}>{rowToBeDeleted.name}</a>
           <br></br>
@@ -85,66 +72,43 @@ const DeleteRasterSourceNotAllowed: React.FC<MyProps> = (props) => {
             <li>Deleting them</li>
           </ul>
           <br></br>
-          {layerUrls.length > 0?
-          <div>
-            <label>Dependent raster-layers:</label>
-            <ul>
-              {layerUrls.map((url:string)=>{return(
-                <li>
-                  <a target="_blank" rel="noopener noreferrer" href={url}>{url}</a>
-                </li>
-              )})}
-            </ul>
-          </div>
-          :
-          null
-          }
-          <br></br>
-          {labelTypeUrls.length > 0?
-          <div>
-            <label>Dependent labeltypes:</label>
-            <ul>
-              {labelTypeUrls.map((url:string)=>{return(
-                <li>
-                  <a target="_blank" rel="noopener noreferrer" href={url}>{url}</a>
-                </li>
-              )})}
-            </ul>
-          </div>
-          :
-          null
-          }
-          {/* {props.children} */}
-          {/* {spinner === true?
-          <div style={{position:"absolute", top:0, left:0, width:"100%", height:"100%", display:"flex", justifyContent:"center", alignItems: "center"}} >
-              <MDSpinner size={96} />
-              <span style={{marginLeft: "20px", fontSize: "19px", fontWeight: "bold"}}>Deleting ...</span>
+          <div
+            style={{
+              overflowY: "auto",
+              maxHeight: "210px"
+            }}
+          >
+            {layerUrls.length > 0?
+            <div>
+              <label>Dependent raster-layers:</label>
+              <ul>
+                {layerUrls.map((url:string)=>{return(
+                  <li>
+                    <a target="_blank" rel="noopener noreferrer" href={url}>{url}</a>
+                  </li>
+                )})}
+              </ul>
             </div>
             :
-            null} */}
-        </div>
-        {/* <div className={styles.ModalFooter} style={cancelAction?{justifyContent: "space-between"}:{justifyContent: "flex-end"}}>
-          {cancelAction ? (
-            <button
-              className={`${buttonStyles.Button} ${buttonStyles.LinkCancel}`}
-              onClick={cancelAction}
-              disabled={disableButtons}
-            >
-              Cancel
-            </button>
-          ) : null}
-          {buttonConfirmName ? (
-            <button
-              className={`${buttonStyles.Button} ${buttonStyles.Danger}`}
-              onClick={onClickButtonConfirm}
-              disabled={disableButtons}
-            >
-              {buttonConfirmName}
-            </button>
-          ) : null}
-        </div> */}
-      </div>
-    </Overlay>
+            null
+            }
+            <br></br>
+            {labelTypeUrls.length > 0?
+            <div>
+              <label>Dependent labeltypes:</label>
+              <ul>
+                {labelTypeUrls.map((url:string)=>{return(
+                  <li>
+                    <a target="_blank" rel="noopener noreferrer" href={url}>{url}</a>
+                  </li>
+                )})}
+              </ul>
+            </div>
+            :
+            null
+            }
+          </div>
+    </Modal>
   )
 }
 
