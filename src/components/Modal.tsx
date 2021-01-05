@@ -32,8 +32,7 @@ const Modal: React.FC<MyProps> = (props) => {
   const [checkboxState, /*setCheckboxState*/] = useState<boolean>(false);
 
   return (
-    // todo: remve this confirmModal attribute, but some css in the overlay depends on it
-    <Overlay confirmModal handleClose={()=>{cancelAction && cancelAction()}}>
+    <Overlay confirmModal={true} handleClose={()=>{cancelAction && cancelAction()}}>
       <div className={modalStyles.Modal}>
         <div className={modalStyles.ModalHeader}>
           {title}
