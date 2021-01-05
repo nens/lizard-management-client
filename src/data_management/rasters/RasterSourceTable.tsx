@@ -219,6 +219,8 @@ export const RasterSourceTable = (props:any) =>  {
         newItemOnClick={handleNewRasterClick}
       />
       {
+        // next line is correctly commented out, use it for testing delete 412 error
+        // false &&
         rowToBeDeleted && (rowToBeDeleted.layers.length !== 0 || rowToBeDeleted.labeltypes.length !== 0) ?
 
         <DeleteRasterSourceNotAllowed 
@@ -269,7 +271,7 @@ export const RasterSourceTable = (props:any) =>  {
         null
       } */}
       { 
-        rowToBeDeleted 
+        rowToBeDeleted && deleteFunction 
         && 
         (rowToBeDeleted.layers.length === 0 && rowToBeDeleted.labeltypes.length === 0) 
         ?
@@ -314,7 +316,13 @@ export const RasterSourceTable = (props:any) =>  {
            <p>You are trying to delete the following raster-source:</p>
            {ModalDeleteContent([rowToBeDeleted], busyDeleting, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
            <p>But tis raster-source is still in use by objects outside your organisation.</p>
-           <p>Please contact support.</p>             
+           <p>{"Please contact "} 
+             <a
+              href="https://nelen-schuurmans.topdesk.net/tas/public/ssp"
+              target="_blank"
+              rel="noopener noreferrer"
+            >support</a>
+          </p>             
          </Modal>
         :
           null
