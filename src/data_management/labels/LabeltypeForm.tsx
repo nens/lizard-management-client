@@ -1,16 +1,15 @@
 import React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
-import { connect, useSelector } from 'react-redux';
-import { getOrganisations, getUsername } from '../../reducers';
-import { ScenarioResult } from '../../form/ScenarioResult';
+import { connect, /*useSelector*/ } from 'react-redux';
+// import { getOrganisations, getUsername } from '../../reducers';
+// import { ScenarioResult } from '../../form/ScenarioResult';
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import { TextInput } from './../../form/TextInput';
-import { SubmitButton } from '../../form/SubmitButton';
-import { CancelButton } from '../../form/CancelButton';
+// import { SubmitButton } from '../../form/SubmitButton';
+// import { CancelButton } from '../../form/CancelButton';
 import { useForm, Values } from '../../form/useForm';
 import { minLength } from '../../form/validators';
 import { addNotification } from '../../actions';
-import threediIcon from "../../images/3di@3x.svg";
 import formStyles from './../../styles/Forms.module.css';
 import { TextArea } from './../../form/TextArea';
 import labeltypesIcon from "../../images/labeltypes_icon.svg";
@@ -29,7 +28,8 @@ interface RouteParams {
 const LabeltypeModel: React.FC<Props & PropsFromDispatch & RouteComponentProps<RouteParams>> = (props) => {
   const { currentRecord } = props;
   // const organisations = useSelector(getOrganisations).available;
-  // const scenarioOrganisation = organisations.find((org: any) => org.uuid === currentRecord.organisation.uuid.replace(/-/g, ""));
+  // next line doesnot work, because organisation has no uuid, but unique_id instead. Thus I do not use it
+  // const thisRecordOrganisation = organisations.find((org: any) => org.uuid === currentRecord.organisation.uuid.replace(/-/g, ""));
   // const username = useSelector(getUsername);
 
   const initialValues = {
@@ -38,7 +38,7 @@ const LabeltypeModel: React.FC<Props & PropsFromDispatch & RouteComponentProps<R
     description: currentRecord.description || '',
     // modelName: currentRecord.model_name || '',
     // supplier: currentRecord.username || '',
-    // organisation: currentRecord.organisation.name || '',
+    organisation: currentRecord.organisation.name || '',
   };
 
   const onSubmit = (values: Values) => {
@@ -69,8 +69,8 @@ const LabeltypeModel: React.FC<Props & PropsFromDispatch & RouteComponentProps<R
   const {
     values,
     triedToSubmit,
-    formSubmitted,
-    tryToSubmitForm,
+    // formSubmitted,
+    // tryToSubmitForm,
     handleInputChange,
     handleSubmit,
     handleReset,
@@ -121,6 +121,15 @@ const LabeltypeModel: React.FC<Props & PropsFromDispatch & RouteComponentProps<R
           clearInput={clearInput}
           validated
           readOnly={true}
+        />
+        <TextInput
+          title={'Organisation'}
+          name={'organisation'}
+          value={values.organisation}
+          valueChanged={handleInputChange}
+          clearInput={clearInput}
+          validated
+          readOnly
         />
         {/* <div
           className={formStyles.ButtonContainer}

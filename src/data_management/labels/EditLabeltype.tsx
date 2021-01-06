@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-// import { useSelector } from "react-redux";
-import { RouteComponentProps, withRouter } from "react-router-dom";
-// import { getOrganisations } from "../../reducers";
+import { useSelector } from "react-redux";
+import { RouteComponentProps, /*withRouter*/ } from "react-router-dom";
+import { getOrganisations } from "../../reducers";
 import { LabeltypeForm } from "./LabeltypeForm";
 import MDSpinner from "react-md-spinner";
 
@@ -10,7 +10,7 @@ interface RouteProps {
 }
 
 const EditLabeltype: React.FC<RouteComponentProps<RouteProps>> = (props) => {
-  // const organisations = useSelector(getOrganisations);
+  const organisations = useSelector(getOrganisations);
   const [currentRecord, setCurrentRecord] = useState(null);
   const { uuid } = props.match.params;
   useEffect (() => {
@@ -24,8 +24,8 @@ const EditLabeltype: React.FC<RouteComponentProps<RouteProps>> = (props) => {
   }, [uuid])
 
   if (
-    currentRecord //&&
-    // organisations.isFetching === false
+    currentRecord &&
+    organisations.isFetching === false
   ) {
     return <LabeltypeForm
       currentRecord={currentRecord}
@@ -47,7 +47,5 @@ const EditLabeltype: React.FC<RouteComponentProps<RouteProps>> = (props) => {
     );
   }
 }
-
-const EditScenario = withRouter(EditLabeltype);
 
 export { EditLabeltype };
