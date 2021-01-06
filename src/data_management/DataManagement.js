@@ -8,6 +8,7 @@ import rasterIcon from "../images/raster_icon.svg";
 import wmsIcon from "../images/wms@3x.svg";
 import threediIcon from "../images/3di@3x.svg";
 import backArrowIcon from "../images/backArrow.svg";
+import labelIcon from "../images/labels_icon.svg";
 
 class DataManagement extends Component {
   handleLink(destination) {
@@ -55,6 +56,17 @@ class DataManagement extends Component {
       },
       {
         key: 3,
+        handleClick: () => this.handleLink("data_management/labels/"),
+        title: (
+          <FormattedMessage
+            id="home.labels"
+            defaultMessage="Labels"
+          />
+        ),
+        icon: labelIcon
+      },
+      {
+        key: 4,
         handleClick: () => this.handleLink(""),
         title: (
           <FormattedMessage

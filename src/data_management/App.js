@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { DataManagement as DataManagementHome } from "./DataManagement";
 import RasterManagement from "./rasters/RasterManagement";
+import LabelManagement from "./labels/LabelManagement";
 import { Raster as RasterApp } from "./rasters/Raster";
 import { RasterSourceTable} from "./rasters/RasterSourceTable";
 import { RasterLayerTable} from "./rasters/RasterLayerTable";
@@ -47,6 +48,8 @@ class App extends Component {
         <Route exact path="/data_management/wms_layers" component={WmsLayerTable} />
         <Route exact path="/data_management/scenarios_old" component={ScenariosApp} />
         <Route exact path="/data_management/scenarios" component={ScenarioTable} />
+        <Route exact path="/data_management/labels" component={LabelManagement} />
+        <Route exact path="/data_management/labels/labeltypes" component={ScenarioTable} />
         <Switch>
           <Route
             exact
