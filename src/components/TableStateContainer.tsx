@@ -56,6 +56,8 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
   useEffect(() => { 
     if (currentUrl !== "" && currentUrl === apiResponse.currentUrl) {
       apiResponse.response.results && setTableData(apiResponse.response.results);
+      // make sure no checkboxes are checked outside of current page !
+      apiResponse.response.results && setCheckBoxes(checkBoxesPar=>checkBoxesPar.filter(value => (apiResponse.response.results.map((item:any)=>item.uuid)).includes(value)));
       setDataRetrievalState(apiResponse.dataRetrievalState)
       // we need to split on "lizard.net" because both nxt3.staging.lizard.net/api/v4 and demo.lizard.net/api/v4 both should parse out "/api/v4"
       if (apiResponse.response.next) setNextUrl(apiResponse.response.next.split("lizard.net")[1]);
