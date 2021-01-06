@@ -19,6 +19,7 @@ import { EditScenario } from "./scenarios/EditScenario";
 import { EditWmsLayer } from "./wms_layers/EditWmsLayer";
 import { NewWmsLayer } from "./wms_layers/NewWmsLayer";
 import { UploadRasterData } from "./rasters/UploadRasterData";
+import {EditLabeltype} from "./labels/EditLabeltype";
 
 import { Route, Switch, withRouter } from "react-router-dom";
 
@@ -91,6 +92,11 @@ class App extends Component {
             exact
             path="/data_management/scenarios/:uuid"
             component={EditScenario}
+          />
+          <Route
+            exact
+            path="/data_management/labels/labeltypes/:uuid"
+            component={EditLabeltype}
           />
         </Switch>
       </>
