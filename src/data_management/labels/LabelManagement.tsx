@@ -15,7 +15,7 @@ const LabelManagement = (props:any) => {
   const appTiles = [
     {
       key: 0,
-      handleClick: () => handleLink("labels/labeltypes"),
+      handleClick: () => handleLink("labeltypes"),
       title: (
         <FormattedMessage
           id="data_management.labeltypes"

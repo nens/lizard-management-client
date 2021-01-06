@@ -6,6 +6,7 @@ import { Raster as RasterApp } from "./rasters/Raster";
 import { RasterSourceTable} from "./rasters/RasterSourceTable";
 import { RasterLayerTable} from "./rasters/RasterLayerTable";
 import { WmsLayerTable } from './wms_layers/WmsLayerTable';
+import { LabeltypesTable} from "./labels/LabeltypesTable";
 
 import { WmsLayer as WmsLayerApp } from "./wms_layers/WmsLayer";
 import { Scenarios as ScenariosApp } from "./scenarios/Scenarios";
@@ -49,7 +50,7 @@ class App extends Component {
         <Route exact path="/data_management/scenarios_old" component={ScenariosApp} />
         <Route exact path="/data_management/scenarios" component={ScenarioTable} />
         <Route exact path="/data_management/labels" component={LabelManagement} />
-        <Route exact path="/data_management/labels/labeltypes" component={ScenarioTable} />
+        <Route exact path="/data_management/labels/labeltypes" component={LabeltypesTable} />
         <Switch>
           <Route
             exact
