@@ -272,7 +272,7 @@ export const RasterSourceTable = (props:any) =>  {
          >
            <p>You are trying to delete the following raster-source:</p>
            {ModalDeleteContent([rowToBeDeleted], busyDeleting, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
-           <p>But tis raster-source is still in use by objects outside your organisation.</p>
+           <p>But this raster-source is still in use by objects outside your organisation.</p>
            <p>{"Please contact "} 
              <a
               href="https://nelen-schuurmans.topdesk.net/tas/public/ssp"
