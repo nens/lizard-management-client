@@ -272,7 +272,7 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
         // @ts-ignore
         style={{
           visibility: checkBoxes.length > 0? "visible" : "hidden",
-          display: "flex",
+          display: checkBoxActions.length === 0? "none" :"flex",
           justifyContent: "space-between",
           backgroundColor: "var(--color-header)",
           color: "var(--color-ligth-main-second)",

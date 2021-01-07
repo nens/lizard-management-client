@@ -59,6 +59,11 @@
   background-color: #ff7070;
   border-color: #ff7070;
 }
+.Danger:disabled,
+.Danger:disabled:hover {
+  background-color: var(--color-button-disabled);
+  border-color:var(--color-button-disabled);
+}
 .Danger:active {
   background-color: #BE404A;
   background-image: none;

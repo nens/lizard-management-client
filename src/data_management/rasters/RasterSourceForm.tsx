@@ -11,7 +11,7 @@ import { SubmitButton } from '../../form/SubmitButton';
 import { CancelButton } from '../../form/CancelButton';
 import { SelectBox } from '../../form/SelectBox';
 import { AcceptedFile, UploadRasterData } from './../../form/UploadRasterData';
-import ConfirmModal from '../../components/ConfirmModal';
+import Modal from '../../components/Modal';
 import { getOrganisations, getSelectedOrganisation, getSupplierIds } from '../../reducers';
 import { useForm, Values } from '../../form/useForm';
 import { minLength } from '../../form/validators';
@@ -261,14 +261,14 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
         </div>
       </form>
       {rasterCreatedModal ? (
-        <ConfirmModal
+        <Modal
           title={'Raster created'}
           buttonConfirmName={'Continue'}
           onClickButtonConfirm={() => props.history.push('/data_management/rasters/layers/new')}
         >
           <p>A layer is needed to view the raster in the portal.</p>
           <p>We automatically created a layer for you to compose. You will now be redirected to the layer management.</p>
-        </ConfirmModal>
+        </Modal>
       ) : null}
     </ExplainSideColumn>
   );
