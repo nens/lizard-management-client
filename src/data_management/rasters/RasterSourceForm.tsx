@@ -21,6 +21,7 @@ import { addFilesToQueue, addNotification, updateRasterSourceUUID } from '../../
 import rasterSourceIcon from "../../images/raster_source_icon.svg";
 import formStyles from './../../styles/Forms.module.css';
 import { sendDataToLizardRecursive } from '../../utils/sendDataToLizard';
+import { rasterSourceFormHelpText } from '../../utils/helpTextForForms';
 
 interface Props {
   currentRasterSource?: RasterSourceFromAPI
@@ -143,6 +144,9 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
     tryToSubmitForm,
     handleInputChange,
     handleValueChange,
+    touchedField,
+    handleBlur,
+    handleFocus,
     handleSubmit,
     handleReset,
     clearInput,
@@ -153,7 +157,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
       imgUrl={rasterSourceIcon}
       imgAltDescription={"Raster-Source icon"}
       headerText={"Raster Sources"}
-      explainationText={"Fill in the form to create a new Raster Source."}
+      explainationText={rasterSourceFormHelpText[touchedField] || rasterSourceFormHelpText['default']}
       backUrl={"/data_management/rasters/sources"}
     >
       <form
@@ -170,6 +174,8 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           placeholder={'Please enter at least 3 characters'}
           value={values.name}
           valueChanged={handleInputChange}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           clearInput={clearInput}
           validated={!minLength(3, values.name)}
           errorMessage={minLength(3, values.name)}
@@ -180,6 +186,8 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           name={'description'}
           value={values.description}
           valueChanged={handleInputChange}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           clearInput={clearInput}
           validated={true}
         />
@@ -188,6 +196,8 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           name={'supplierCode'}
           value={values.supplierCode}
           valueChanged={handleInputChange}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           clearInput={clearInput}
           validated={true}
         />
