@@ -7,13 +7,13 @@ import { CheckBox } from "./CheckBox";
 import { validatorResult } from "./validators";
 import styles from "./ColorMapInput.module.css";
 import formStyles from "../styles/Forms.module.css";
-
 import {
   calculateNewStyleAndOptions,
   optionsHasLayers,
   validateStyleObj,
   colorMapTypeFromOptions
 } from "../utils/rasterOptionFunctions";
+import Modal from '../components/Modal';
 
 export interface ColorMapOptions {
   options: {
@@ -96,6 +96,7 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
     options: {},
     rescalable: false
   });
+  const [showCustomColormapModal, setShowCustomColormapModal] = useState(false);
 
   const { options } = colorMapValue;
   const prevStyles = usePrevious(options.styles);
@@ -139,6 +140,12 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
   }, [previewColor, options, prevStyles]);
 
   const colorMapChanged = (colorMap: string | null) => {
+
+    if (colorMap === "Custom colormap") {
+      setShowCustomColormapModal(true);
+      return;
+    }
+
     if (colorMap === null) {
       colorMap = '';
     }
@@ -226,11 +233,32 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
   const placeholderMinimumColorRange = intl.formatMessage({ id: "placeholder_minimum_color_range" })
   const placeholderMaximumColorRange = intl.formatMessage({ id: "placeholder_maximum_color_range" })
 
+  console.log('colorMaps', colorMaps)
   return (
     <label
       htmlFor={name}
       className={formStyles.Label}
     >
+      {showCustomColormapModal? 
+        <Modal
+          title={'CUSTOM COLORMAP'}
+          // closeDialogAction={()=>{
+          // setShowDeleteFailedModal(false);
+          // setRowToBeDeleted(null);
+          // }}
+        >
+        {/* <p>You are trying to delete the following raster-source:</p>
+        {ModalDeleteContent([rowToBeDeleted], busyDeleting, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
+        <p>But this raster-source is still in use by objects outside your organisation.</p>
+        <p>{"Please contact "} 
+          <a
+           href="https://nelen-schuurmans.topdesk.net/tas/public/ssp"
+           target="_blank"
+           rel="noopener noreferrer"
+         >support</a>
+       </p>              */}
+      </Modal>
+      :null}
       <span className={formStyles.LabelTitle}>
         {title}
       </span>
@@ -242,7 +270,7 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
         </div>
         <SelectBox
           title={''}
-          choices={colorMaps}
+          choices={[["Custom colormap","Custom colormap","+ Create new colormap for this raster"],...colorMaps]}
           value={(colorMapType && colorMapType.colorMap) || null}
           name={name + '_colorMapselect'}
           validated={validated}
