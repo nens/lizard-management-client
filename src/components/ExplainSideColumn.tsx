@@ -63,7 +63,6 @@ export const ExplainSideColumn = (props:any) => {
             borderWidth: "0.5px",
             padding: "24px",
             borderRadius: "5px",
-            whiteSpace: "pre-wrap",
             // this doesnot work, it also takes the place of the pagination..
             // flex: "1",
           }}
