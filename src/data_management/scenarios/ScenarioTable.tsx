@@ -9,7 +9,7 @@ import threediIcon from "../../images/3di@3x.svg";
 import tableStyles from "../../components/Table.module.css";
 import {getUsername} from "../../reducers";
 import { bytesToDisplayValue } from '../../utils/byteUtils';
-import ConfirmModal from '../../components/ConfirmModal';
+import Modal from '../../components/Modal';
 import { ModalDeleteContent } from '../../components/ModalDeleteContent'
 
 export const ScenarioTable = (props:any) =>  {
@@ -249,7 +249,7 @@ export const ScenarioTable = (props:any) =>  {
         />
         { 
         rowsToBeDeleted.length > 0 && deleteFunction?
-           <ConfirmModal
+           <Modal
            title={'Are you sure?'}
            buttonConfirmName={'Delete'}
            onClickButtonConfirm={() => {
@@ -269,14 +269,14 @@ export const ScenarioTable = (props:any) =>  {
            
            {ModalDeleteContent(rowsToBeDeleted, busyDeleting, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
            
-         </ConfirmModal>
+         </Modal>
         :
           null
         }
 
         { 
         rowToBeDeleted && deleteFunction?
-           <ConfirmModal
+           <Modal
            title={'Are you sure?'}
            buttonConfirmName={'Delete'}
            onClickButtonConfirm={() => {
@@ -294,14 +294,14 @@ export const ScenarioTable = (props:any) =>  {
          >
            <p>Are you sure? You are deleting the following scenario:</p>
            {ModalDeleteContent([rowToBeDeleted], busyDeleting, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
-         </ConfirmModal>
+         </Modal>
         :
           null
         }
 
         { 
         rowsToBeDeleted.length > 0 && deleteRawFunction?
-           <ConfirmModal
+           <Modal
            title={'Are you sure?'}
            buttonConfirmName={'Delete'}
            onClickButtonConfirm={() => {
@@ -321,14 +321,14 @@ export const ScenarioTable = (props:any) =>  {
            
            {ModalDeleteContent(rowsToBeDeleted, busyDeleting, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
            
-         </ConfirmModal>
+         </Modal>
         :
           null
         }
 
         { 
         rowToBeDeleted && deleteRawFunction?
-           <ConfirmModal
+           <Modal
            title={'Are you sure?'}
            buttonConfirmName={'Delete'}
            onClickButtonConfirm={() => {
@@ -346,7 +346,7 @@ export const ScenarioTable = (props:any) =>  {
          >
            <p>Are you sure? You are deleting the RAW results of the following scenario::</p>
            {ModalDeleteContent([rowToBeDeleted], busyDeleting, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
-         </ConfirmModal>
+         </Modal>
         :
           null
         }
