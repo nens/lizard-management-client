@@ -21,6 +21,8 @@ interface MyProps {
   temporal: boolean,
   data: AcceptedFile[],
   setData: (data: AcceptedFile[]) => void,
+  onFocus?: (e: any) => void,
+  onBlur?: () => void,
 }
 
 export const UploadRasterData: React.FC<MyProps> = (props) => {
@@ -29,7 +31,9 @@ export const UploadRasterData: React.FC<MyProps> = (props) => {
     name,
     temporal,
     data,
-    setData
+    setData,
+    onFocus,
+    onBlur,
   } = props;
 
   // check for valid date
@@ -101,10 +105,15 @@ export const UploadRasterData: React.FC<MyProps> = (props) => {
 
   const dropZone = (
     <div
+      id={name}
       className={uploadStyles.DropZoneContainer}
       {...getRootProps()}
+      onFocus={onFocus}
+      onBlur={onBlur}
     >
-      <input {...getInputProps()} />
+      <input
+        {...getInputProps()}
+      />
       {isDragActive ? (
         <span>Drop selected files here ...</span>
       ) : (

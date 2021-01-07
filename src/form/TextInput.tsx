@@ -70,7 +70,7 @@ export const TextInput: React.FC<MyProps> = (props) => {
           value={value || ""}
           onKeyUp={handleEnter}
           readOnly={!!readOnly}
-          disabled={!!readOnly}
+          // disabled={!!readOnly}
         />
         {!readOnly && value !== null && value.length ? <ClearInputButton onClick={() => clearInput(name)}/> : null}
       </div>

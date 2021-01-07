@@ -36,6 +36,10 @@
   -ms-user-select: none; /* IE10+/Edge */
   user-select: none; /* Standard */
 }
+.CheckboxSpan:focus {
+  border-color: #73C9B2;
+  outline: none;
+}
 
 /*Edge browser renders the icon too big*/
 @supports (-ms-ime-align: auto) {

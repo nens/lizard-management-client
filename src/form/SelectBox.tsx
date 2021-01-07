@@ -16,6 +16,8 @@ interface SelectBoxProps {
   value: string | null,
   choices: choicesT,
   valueChanged: (value: string | null) => void,
+  onFocus?: (e: React.ChangeEvent<HTMLInputElement>) => void,
+  onBlur?: () => void,
   validated: boolean,
   errorMessage?: string | false,
   placeholder?: string,
@@ -30,6 +32,8 @@ export const SelectBox: React.FC<SelectBoxProps> = (props) => {
     name,
     value,
     valueChanged,
+    onFocus,
+    onBlur,
     choices,
     placeholder,
     validated,
@@ -101,6 +105,7 @@ export const SelectBox: React.FC<SelectBoxProps> = (props) => {
           ref={myInput}
           style={{ caretColor: "transparent" }}
           id={name}
+          name={name}
           type="text"
           autoComplete="off"
           className={`${formStyles.FormControl} ${triedToSubmit ? formStyles.FormSubmitted : ''}`}
@@ -109,8 +114,10 @@ export const SelectBox: React.FC<SelectBoxProps> = (props) => {
           onClick={() => !readOnly && toggleChoices()}
           onKeyUp={par => !readOnly && handleKeyUp(par)}
           onChange={() => {}}
+          onFocus={onFocus}
+          onBlur={onBlur}
           readOnly={readOnly}
-          disabled={readOnly}
+          // disabled={readOnly}
         />
         { 
         !readOnly ?

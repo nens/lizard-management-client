@@ -12,7 +12,7 @@ interface FormInput {
 
 interface FormOutput {
   values: Values,
-  touchedField: string,
+  fieldOnFocus: string,
   triedToSubmit: boolean,
   formSubmitted: boolean,
   tryToSubmitForm: () => void, 
@@ -27,7 +27,7 @@ interface FormOutput {
 
 export const useForm = ({ initialValues, onSubmit }: FormInput): FormOutput => {
   const [values, setValues] = useState<{}>(initialValues || {});
-  const [touchedField, setTouchedField] = useState<string>('');
+  const [fieldOnFocus, setFieldOnFocus] = useState<string>('');
   const [triedToSubmit, setTriedToSubmit] = useState<boolean>(false);
   const [formSubmitted, setFormSubmitted] = useState<boolean>(false);
 
@@ -59,12 +59,12 @@ export const useForm = ({ initialValues, onSubmit }: FormInput): FormOutput => {
 
   const handleFocus = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const target = event.target;
-    const name = target.name;
-    setTouchedField(name);
+    const id = target.id;
+    setFieldOnFocus(id);
   };
 
   const handleBlur = () => {
-    setTouchedField('');
+    setFieldOnFocus('');
   };
 
   const handleReset = (event: React.FormEvent<HTMLFormElement>) => {
@@ -81,7 +81,7 @@ export const useForm = ({ initialValues, onSubmit }: FormInput): FormOutput => {
 
   return {
     values,
-    touchedField,
+    fieldOnFocus,
     triedToSubmit,
     formSubmitted,
     tryToSubmitForm,

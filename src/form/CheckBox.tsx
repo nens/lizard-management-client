@@ -7,6 +7,8 @@ interface CheckBoxProps {
   name: string,
   value: boolean,
   valueChanged: (bool: boolean) => void,
+  onFocus?: (e: any) => void,
+  onBlur?: () => void,
   readonly?: boolean
 };
 
@@ -34,6 +36,8 @@ export const CheckBox: React.FC<CheckBoxProps> = (props) => {
     name,
     value,
     valueChanged,
+    onFocus,
+    onBlur,
     readonly
   } = props;
 
@@ -70,10 +74,15 @@ export const CheckBox: React.FC<CheckBoxProps> = (props) => {
           type="checkbox"
           style={{ opacity: 0, position: "absolute" }}
           checked={value}
+          tabIndex={-2}
           onChange={() => {}} // no op in order to suppress error in console
         />
         <span
+          id={name}
           className={`${styles.CheckboxSpan} ${checkedClass} ${hoverClass}`}
+          tabIndex={0}
+          onFocus={onFocus}
+          onBlur={onBlur}
         >
           {/* always render checkmark but make hidden or transparent with css */}
           <span>{"✔"}</span>

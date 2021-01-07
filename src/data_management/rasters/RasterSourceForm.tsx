@@ -144,7 +144,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
     tryToSubmitForm,
     handleInputChange,
     handleValueChange,
-    touchedField,
+    fieldOnFocus,
     handleBlur,
     handleFocus,
     handleSubmit,
@@ -157,7 +157,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
       imgUrl={rasterSourceIcon}
       imgAltDescription={"Raster-Source icon"}
       headerText={"Raster Sources"}
-      explainationText={rasterSourceFormHelpText[touchedField] || rasterSourceFormHelpText['default']}
+      explainationText={rasterSourceFormHelpText[fieldOnFocus] || rasterSourceFormHelpText['default']}
       backUrl={"/data_management/rasters/sources"}
     >
       <form
@@ -209,6 +209,8 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           name={'temporal'}
           value={values.temporal}
           valueChanged={bool => handleValueChange('temporal', bool)}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           readonly={!!currentRasterSource}
         />
         <DurationField
@@ -217,6 +219,8 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           value={values.interval}
           valueChanged={value => handleValueChange('interval', value)}
           validated={true}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           readOnly={!!currentRasterSource || values.temporal === false}
         />
         <UploadRasterData
@@ -225,6 +229,8 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           temporal={values.temporal}
           data={values.data}
           setData={data => handleValueChange('data', data)}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         <span className={formStyles.FormFieldTitle}>
           3: Rights
@@ -234,6 +240,8 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           name={'accessModifier'}
           value={values.accessModifier}
           valueChanged={value => handleValueChange('accessModifier', value)}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         <SelectBox
           title={'Organisation'}
@@ -246,6 +254,8 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           validated={values.organisation !== null && values.organisation !== ''}
           errorMessage={'Please select an organisation'}
           triedToSubmit={triedToSubmit}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           readOnly={!(!currentRasterSource && organisationsToSwitchTo.length > 0 && selectedOrganisation.roles.includes('admin'))}
         />
         <SelectBox
@@ -257,6 +267,8 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           choices={supplierIds.map((suppl:any) => [suppl.username, suppl.username])}
           showSearchField
           validated
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           readOnly={!(supplierIds.length > 0 && selectedOrganisation.roles.includes('admin'))}
         />
         <div
