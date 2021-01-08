@@ -14,12 +14,18 @@ import {
   colorMapTypeFromOptions
 } from "../utils/rasterOptionFunctions";
 import Modal from '../components/Modal';
+import { SubmitButton } from '../form/SubmitButton';
+// import { CancelButton } from '../form/CancelButton';
+import buttonStyles from "../styles/Buttons.module.css";
+import { ColormapForm } from '../data_management/colormap/ColormapForm';
+
 
 export interface ColorMapOptions {
   options: {
     styles?: string
   },
-  rescalable: boolean
+  rescalable: boolean,
+  customColormap: any,
 }
 
 interface LegendResponse {
@@ -94,7 +100,8 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
   const [previewColor, setPreviewColor] = useState<LegendResponse | null>(null);
   const [colorMapValue, setColorMapValue] = useState<ColorMapOptions>({
     options: {},
-    rescalable: false
+    rescalable: false,
+    customColormap: null,
   });
   const [showCustomColormapModal, setShowCustomColormapModal] = useState(false);
 
@@ -156,14 +163,25 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
     );
     valueChanged({
       options: newStyleOptions.options,
-      rescalable: colorMapValue.rescalable
+      rescalable: colorMapValue.rescalable,
+      customColormap: colorMapValue.customColormap,
     });
   }
 
   const rescalableChanged = (rescalable: boolean) => {
     valueChanged({
       options: colorMapValue.options,
-      rescalable: rescalable
+      rescalable: rescalable,
+      customColormap: colorMapValue.customColormap,
+    });
+  }
+
+  const customColormapChanged = (customColormap: any) => {
+    valueChanged({
+      options: colorMapValue.options,
+      rescalable: colorMapValue.rescalable,
+      customColormap: customColormap
+
     });
   }
 
@@ -196,7 +214,8 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
 
     valueChanged({
       options: newStyleOptions.options,
-      rescalable: colorMapValue.rescalable
+      rescalable: colorMapValue.rescalable,
+      customColormap: colorMapValue.customColormap,
     });
   }
 
@@ -247,17 +266,31 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
           // setRowToBeDeleted(null);
           // }}
         >
-        {/* <p>You are trying to delete the following raster-source:</p>
-        {ModalDeleteContent([rowToBeDeleted], busyDeleting, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
-        <p>But this raster-source is still in use by objects outside your organisation.</p>
-        <p>{"Please contact "} 
-          <a
-           href="https://nelen-schuurmans.topdesk.net/tas/public/ssp"
-           target="_blank"
-           rel="noopener noreferrer"
-         >support</a>
-       </p>              */}
-      </Modal>
+          <ColormapForm
+            currentRecord={null}
+            cancelAction={()=>{setShowCustomColormapModal(false)}}
+            confirmAction={(customColormap:any)=>{customColormapChanged(customColormap)}}
+          />
+          {/* <form
+            className={formStyles.Form}
+            // onSubmit={handleSubmit}
+            // onReset={handleReset}
+          >
+
+            <div
+              className={formStyles.ButtonContainer}
+            >
+              <button
+                className={buttonStyles.ButtonLink}
+              >
+                CANCEL
+              </button>
+              <SubmitButton
+                onClick={()=>{}}
+              />
+            </div>
+          </form> */}
+        </Modal>
       :null}
       <span className={formStyles.LabelTitle}>
         {title}

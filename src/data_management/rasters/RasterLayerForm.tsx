@@ -64,7 +64,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
     rasterSource: (currentRasterLayer.raster_sources && currentRasterLayer.raster_sources[0] && getUuidFromUrl(currentRasterLayer.raster_sources[0])) || null,
     aggregationType: currentRasterLayer.aggregation_type || null,
     observationType: (currentRasterLayer.observation_type && currentRasterLayer.observation_type.id + '') || null,
-    colorMap: {options: currentRasterLayer.options, rescalable: currentRasterLayer.rescalable},
+    colorMap: {options: currentRasterLayer.options, rescalable: currentRasterLayer.rescalable, customColormap: currentRasterLayer.colormap || null},
     accessModifier: currentRasterLayer.access_modifier,
     sharedWith: currentRasterLayer.shared_with.length === 0 ? false : true,
     organisationsToSharedWith: currentRasterLayer.shared_with.map(organisation => organisation.uuid.replace(/-/g, "")) || [],
@@ -94,6 +94,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
         supplier: values.supplier,
         aggregation_type: values.aggregationType,
         options: values.colorMap.options,
+        colormap: values.colorMap.customColormap,
         rescalable: values.colorMap.rescalable,
         shared_with: values.organisationsToSharedWith,
         datasets: values.dataset ? [values.dataset] : []
@@ -122,6 +123,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
         supplier: values.supplier,
         aggregation_type: values.aggregationType,
         options: values.colorMap.options,
+        colormap: values.colorMap.options.customColormap,
         rescalable: values.colorMap.rescalable,
         shared_with: values.organisationsToSharedWith,
         datasets: values.dataset ? [values.dataset] : []
