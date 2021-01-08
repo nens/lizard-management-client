@@ -51,7 +51,12 @@ export const rasterLayerFormHelpText: HelpText = {
       <p><i>If this raster was created automatically from a source, there will be a reference to it.</i></p>
     </>
   ),
-  dataset: 'Choose a dataset for this object. Datasets are used to group objects together and can be seen as a tag or label.',
+  dataset: (
+    <>
+      <p>Choose a dataset for this object.</p>
+      <p><i>Datasets are used to group objects together and can be seen as tag or label.</i></p>
+    </>
+  ),
   rasterSource: (
     <>
       <p>Choose a (raster) source for this object.</p>
@@ -64,7 +69,7 @@ export const rasterLayerFormHelpText: HelpText = {
       <p><i>This variable is only used in the "region selection" of the Lizard portal.</i></p>
     </>
   ),
-  observationType: 'Choose the way the data is measured, and the units.',
+  observationType: 'Choose the way the data is measured and the units.',
   colorMap: 'Choose a color range that is displayed on the Lizard portal.',
   accessModifier: 'Choose an access modifier to decide who has access to this object. The default is private.',
   sharedWith: 'Specify if this object should be accessible by other organisations.',
@@ -82,7 +87,12 @@ export const wmsFormHelpText: HelpText = {
   default: 'WMS layers allow to configure layers in Lizard even if they are hosted on another platform.',
   name: 'Choose a name that is findable and not too difficult.',
   description: 'Please give an accurate description of this object and its uses.',
-  datasets: 'Choose a dataset for this object. Datasets are used to group objects together and can be seen as a tag or label.',
+  datasets: (
+    <>
+      <p>Choose a dataset for this object.</p>
+      <p><i>Datasets are used to group objects together and can be seen as tag or label.</i></p>
+    </>
+  ),
   wms_url: 'Specify which URL is used to retrieve the image data.',
   slug: '',
   download_url: 'Specify which URL is used to download the data. This will enable the download button in the Lizard Catalogue.',
@@ -104,7 +114,7 @@ export const wmsFormHelpText: HelpText = {
   spatial_bounds: (
     <>
       <p>Specify the extent of this layer on the map.</p>
-      <p><i>If the source is from a GeoServer, the button can be used to automatically obtain this information.</i></p>
+      <p><i>If the source is from a GeoServer, the "Get From GeoServer" button can be used to automatically obtain this information.</i></p>
     </>
   ),
   options: (
