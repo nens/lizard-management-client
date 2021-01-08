@@ -83,5 +83,20 @@ export const wmsFormHelpText: HelpText = {
 }
 
 export const scenarioFormHelpText: HelpText = {
-
+  default: 'Form to edit 3Di scenario.',
+  name: 'The scenario name comes from 3Di. This name can be changed for your convenience.',
+  modelName: 'The model that was used to create this scenario.',
+  resultDeleteButton: (
+    <>
+      <p>Delete data that was saved in this scenario.</p>
+      <p><i>Raw data takes up the most space, and deleting it will have no impact on the other layers created in this scenario.</i></p>
+    </>
+  ),
+  organisation: (
+    <>
+      <p>The organisation which this object belongs to.</p>
+      <p><i>If you are not an administrator, this field is always pre-filled with the current organisation.</i></p>
+    </>
+  ),
+  supplier: 'The supplier of this object.',
 }

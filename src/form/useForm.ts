@@ -20,7 +20,7 @@ interface FormOutput {
   handleValueChange: (name: string, value: Value) => void,
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void,
   handleReset: (e: React.FormEvent<HTMLFormElement>) => void,
-  handleFocus: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void,
+  handleFocus: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLButtonElement>) => void,
   handleBlur: () => void,
   clearInput: (name: string) => void,
 }
@@ -57,7 +57,7 @@ export const useForm = ({ initialValues, onSubmit }: FormInput): FormOutput => {
     });
   };
 
-  const handleFocus = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleFocus = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLButtonElement>) => {
     const target = event.target;
     const id = target.id;
     setFieldOnFocus(id);
