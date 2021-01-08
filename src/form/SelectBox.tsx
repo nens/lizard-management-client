@@ -139,7 +139,7 @@ export const SelectBox: React.FC<SelectBoxProps> = (props) => {
           {showSearchField ? (
             <span style={{fontSize: "smaller"}}>
               <input
-                id={`searchbox-${name}`}
+                id={name}
                 name={`searchbox-${name}`}
                 type="text"
                 autoComplete="off"
@@ -147,6 +147,8 @@ export const SelectBox: React.FC<SelectBoxProps> = (props) => {
                 value={searchString}
                 onChange={e => setSearchString(e.target.value)}
                 onKeyUp={handleKeyUp}
+                onFocus={onFocus}
+                onBlur={onBlur}
               />
               <i style={{verticalAlign: "middle"}} className="material-icons">search</i>
             </span>
