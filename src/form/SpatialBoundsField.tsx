@@ -22,6 +22,8 @@ interface SpatialBoundsProps {
     valueChanged: Function,
     geoServerError: boolean,
     showGeoServerError: Function,
+    onFocus?: (e: React.ChangeEvent<HTMLInputElement>) => void,
+    onBlur?: () => void,
 };
 
 // Validator
@@ -55,12 +57,15 @@ export const spatialBoundsValidator = (fieldValue: SpatialBoundsProps['value']) 
 const SpatialBoundsField  =  (props: SpatialBoundsProps) => {
 
     const {
+        name,
         value,
         otherValues,
         valueChanged,
         geoServerError,
         showGeoServerError,
         triedToSubmit,
+        onFocus,
+        onBlur,
     } = props;
 
     const {
@@ -187,12 +192,15 @@ const SpatialBoundsField  =  (props: SpatialBoundsProps) => {
                             &nbsp;(&deg;)
                         </label>
                         <input
-                            id="north"
+                            id={name}
+                            name="north"
                             type="number"
                             className={`${formStyles.FormControl} ${triedToSubmit ? formStyles.FormSubmitted : ''}`}
                             value={north}
                             onChange={(e) => updateSpatialBounds('north', e.target.value)}
                             ref={northInput}
+                            onFocus={onFocus}
+                            onBlur={onBlur}
                         />
                     </div>
                     <div
@@ -207,12 +215,15 @@ const SpatialBoundsField  =  (props: SpatialBoundsProps) => {
                             &nbsp;(&deg;)
                         </label>
                         <input
-                            id="east"
+                            id={name}
+                            name="east"
                             type="number"
                             className={`${formStyles.FormControl} ${triedToSubmit ? formStyles.FormSubmitted : ''}`}
                             value={east}
                             onChange={(e) => updateSpatialBounds('east', e.target.value)}
                             ref={eastInput}
+                            onFocus={onFocus}
+                            onBlur={onBlur}
                         />
                     </div>
                     <div
@@ -227,12 +238,15 @@ const SpatialBoundsField  =  (props: SpatialBoundsProps) => {
                             &nbsp;(&deg;)
                         </label>
                         <input
-                            id="south"
+                            id={name}
+                            name="south"
                             type="number"
                             className={`${formStyles.FormControl} ${triedToSubmit ? formStyles.FormSubmitted : ''}`}
                             value={south}
                             onChange={(e) => updateSpatialBounds('south', e.target.value)}
                             ref={southInput}
+                            onFocus={onFocus}
+                            onBlur={onBlur}
                         />
                     </div>
                     <div
@@ -247,12 +261,15 @@ const SpatialBoundsField  =  (props: SpatialBoundsProps) => {
                             &nbsp;(&deg;)
                         </label>
                         <input
-                            id="west"
+                            id={name}
+                            name="west"
                             type="number"
                             className={`${formStyles.FormControl} ${triedToSubmit ? formStyles.FormSubmitted : ''}`}
                             value={west}
                             onChange={(e) => updateSpatialBounds('west', e.target.value)}
                             ref={westInput}
+                            onFocus={onFocus}
+                            onBlur={onBlur}
                         />
                     </div>
                     <ClearInputButton onClick={() => removeSpatialBounds()}/>

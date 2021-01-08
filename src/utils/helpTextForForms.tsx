@@ -48,7 +48,7 @@ export const rasterLayerFormHelpText: HelpText = {
   description: (
     <>
       <p>Please give an accurate description of this object and its uses.</p>
-      <p><i>If this raster was created automatically from a source there will be a reference to it.</i></p>
+      <p><i>If this raster was created automatically from a source, there will be a reference to it.</i></p>
     </>
   ),
   dataset: 'Choose a dataset for this object. Datasets are used to group objects together and can be seen as a tag or label.',
@@ -79,7 +79,50 @@ export const rasterLayerFormHelpText: HelpText = {
 }
 
 export const wmsFormHelpText: HelpText = {
-
+  default: 'WMS layers allow to configure layers in Lizard even if they are hosted on another platform.',
+  name: 'Choose a name that is findable and not too difficult.',
+  description: 'Please give an accurate description of this object and its uses.',
+  datasets: 'Choose a dataset for this object. Datasets are used to group objects together and can be seen as a tag or label.',
+  wms_url: 'Specify which URL is used to retrieve the image data.',
+  slug: '',
+  download_url: 'Specify which URL is used to download the data. This will enable the download button in the Lizard Catalogue.',
+  legend_url: 'Specify which URL is used to show the legend of this layer.',
+  get_feature_info_url: (
+    <>
+      <p>Optional URL to retrieve feature info data.</p>
+      <p><i>Do not use the GeoWebCache (GWC) URL here.</i></p>
+    </>
+  ),
+  tiled: (
+    <>
+      <p>Specifies whether the layer is tiled (for better performance).</p>
+      <p><i>Enabled by default unless this layer is a "Temporal Raster" and needs to be animated. Only for "TMS" and "WMS".</i></p>
+    </>
+  ),
+  min_zoom: 'Closest view point in this WMS layer.',
+  max_zoom: 'Furthest view point in this WMS layer.',
+  spatial_bounds: (
+    <>
+      <p>Specify the extent of this layer on the map.</p>
+      <p><i>If the source is from a GeoServer, the button can be used to automatically obtain this information.</i></p>
+    </>
+  ),
+  options: (
+    <>
+      <p>Extra options of this layer, specfied in JSON.</p>
+      <p><i>e.g. {'{"transparent": "True"}'}</i></p>
+    </>
+  ),
+  access_modifier: 'Choose an access modifier to decide who has access to this object. The default is private.',
+  sharedWithCheckbox: 'Specify if this object should be accessible by other organisations.',
+  shared_with: 'Search and select organisations to share with.',
+  organisation: (
+    <>
+      <p>The organisation which this object belongs to.</p>
+      <p><i>If you are not an administrator, this field is always pre-filled with the current organisation.</i></p>
+    </>
+  ),
+  supplier: 'The supplier of this object.',
 }
 
 export const scenarioFormHelpText: HelpText = {

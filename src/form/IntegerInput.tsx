@@ -13,6 +13,8 @@ interface MyProps {
   errorMessage?: string | false,
   placeholder?: string,
   handleEnter?: (e: any) => void,
+  onFocus?: (e: React.ChangeEvent<HTMLInputElement>) => void,
+  onBlur?: () => void,
   triedToSubmit?: boolean,
   readOnly?: boolean
 };
@@ -25,6 +27,8 @@ export const IntegerInput: React.FC<MyProps> = (props) => {
     value,
     validated,
     valueChanged,
+    onFocus,
+    onBlur,
     handleEnter,
     clearInput,
     errorMessage,
@@ -47,6 +51,8 @@ export const IntegerInput: React.FC<MyProps> = (props) => {
         };
       }}
       clearInput={clearInput}
+      onFocus={onFocus}
+      onBlur={onBlur}
       handleEnter={handleEnter}
       errorMessage={errorMessage}
       readOnly={readOnly}
