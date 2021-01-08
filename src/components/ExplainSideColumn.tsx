@@ -1,11 +1,21 @@
-import React from 'react';
-
+import React, { useRef } from 'react';
 import { NavLink } from "react-router-dom";
+import styles from './ExplainSideColumn.module.css';
 import backArrow from '../images/back_arrow.svg';
 
-export const ExplainSideColumn = (props:any) => {
+interface MyProps {
+  imgUrl: string,
+  imgAltDescription: string,
+  headerText: string,
+  explainationText: string | JSX.Element,
+  backUrl: string,
+}
 
-  const {imgUrl, imgAltDescription, headerText,explainationText, backUrl} = props;
+export const ExplainSideColumn: React.FC<MyProps> = ({
+  imgUrl, imgAltDescription, headerText, explainationText, backUrl, children
+}) => {
+  // useRef to track text changes in the Explain side column for animation effect
+  const myRef = useRef<HTMLDivElement>(null);
 
   return (
     <div 
@@ -36,7 +46,6 @@ export const ExplainSideColumn = (props:any) => {
           
         >
           <NavLink to={backUrl}><span style={{fontSize:"36px"}}>
-            {/* {"←"} */}
             <img alt="back" src={backArrow}/>
           </span></NavLink>
         </div>
@@ -57,6 +66,9 @@ export const ExplainSideColumn = (props:any) => {
           {headerText}
         </h2>
         <div
+          ref={myRef}
+          key={explainationText as string}
+          className={myRef && myRef.current && myRef.current.innerText !== explainationText && styles.ExplainColumnEffect}
           style={{
             borderColor: "#A1A1A1",
             borderStyle: "solid",
@@ -76,7 +88,7 @@ export const ExplainSideColumn = (props:any) => {
           minWidth: 0,
         }}
       >
-        {props.children}
+        {children}
       </div>
     </div>
   );
