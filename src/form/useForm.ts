@@ -27,7 +27,7 @@ interface FormOutput {
 
 export const useForm = ({ initialValues, onSubmit }: FormInput): FormOutput => {
   const [values, setValues] = useState<{}>(initialValues || {});
-  const [fieldOnFocus, setFieldOnFocus] = useState<string>('');
+  const [fieldOnFocus, setFieldOnFocus] = useState<string>('default');
   const [triedToSubmit, setTriedToSubmit] = useState<boolean>(false);
   const [formSubmitted, setFormSubmitted] = useState<boolean>(false);
 
@@ -58,13 +58,12 @@ export const useForm = ({ initialValues, onSubmit }: FormInput): FormOutput => {
   };
 
   const handleFocus = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLButtonElement>) => {
-    const target = event.target;
-    const id = target.id;
+    const id = event.target.id;
     setFieldOnFocus(id);
   };
 
   const handleBlur = () => {
-    setFieldOnFocus('');
+    setFieldOnFocus('default');
   };
 
   const handleReset = (event: React.FormEvent<HTMLFormElement>) => {

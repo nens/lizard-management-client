@@ -63,7 +63,7 @@ export const ExplainSideColumn: React.FC<MyProps> = ({
           {headerText}
         </h2>
         <div
-          key={explainationText as string}
+          key={JSON.stringify(explainationText)}
           className={styles.ExplainColumnEffect}
           style={{
             borderColor: "#A1A1A1",

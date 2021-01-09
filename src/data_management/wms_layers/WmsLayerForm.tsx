@@ -115,7 +115,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
       imgUrl={wmsIcon}
       imgAltDescription={"WMS-Layer icon"}
       headerText={"WMS Layers"}
-      explainationText={wmsFormHelpText[fieldOnFocus] || wmsFormHelpText['default']}
+      explainationText={wmsFormHelpText[fieldOnFocus]}
       backUrl={"/data_management/wms_layers"}
     >
       <form
