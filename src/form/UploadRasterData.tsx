@@ -33,7 +33,6 @@ export const UploadRasterData: React.FC<MyProps> = (props) => {
     data,
     setData,
     onFocus,
-    onBlur,
   } = props;
 
   // check for valid date
@@ -109,7 +108,6 @@ export const UploadRasterData: React.FC<MyProps> = (props) => {
       className={uploadStyles.DropZoneContainer}
       {...getRootProps()}
       onFocus={onFocus}
-      onBlur={onBlur}
     >
       <input
         {...getInputProps()}
