@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import { NavLink } from "react-router-dom";
 import styles from './ExplainSideColumn.module.css';
 import backArrow from '../images/back_arrow.svg';
@@ -14,9 +14,6 @@ interface MyProps {
 export const ExplainSideColumn: React.FC<MyProps> = ({
   imgUrl, imgAltDescription, headerText, explainationText, backUrl, children
 }) => {
-  // useRef to track text changes in the Explain side column for animation effect
-  const myRef = useRef<HTMLDivElement>(null);
-
   return (
     <div 
       style={{
@@ -66,9 +63,8 @@ export const ExplainSideColumn: React.FC<MyProps> = ({
           {headerText}
         </h2>
         <div
-          ref={myRef}
           key={explainationText as string}
-          className={myRef && myRef.current && myRef.current.innerText !== explainationText && styles.ExplainColumnEffect}
+          className={styles.ExplainColumnEffect}
           style={{
             borderColor: "#A1A1A1",
             borderStyle: "solid",
