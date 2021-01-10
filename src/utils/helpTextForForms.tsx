@@ -71,6 +71,7 @@ export const rasterLayerFormHelpText: HelpText = {
   ),
   observationType: 'Choose the way the data is measured and the units.',
   colorMap: 'Choose a color range that is displayed on the Lizard portal.',
+  colorMap_rescalable: 'Make color map rescalable.',
   accessModifier: 'The access modifier of a layer is inherited from the selected source by default.',
   sharedWith: 'Specify if this object should be accessible by other organisations.',
   organisationsToSharedWith: 'Search and select organisations to share with.',

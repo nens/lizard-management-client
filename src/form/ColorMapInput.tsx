@@ -298,7 +298,7 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
         <br/>
         <CheckBox
           title={'Rescalable'}
-          name={name}
+          name={name+'_rescalable'}
           value={colorMapValue.rescalable}
           valueChanged={(bool: boolean) => rescalableChanged(bool)}
           onFocus={onFocus}
