@@ -141,7 +141,8 @@ export const SlushBucket: React.FC<MyProps> = (props) => {
                       )
                         ? styles.Active
                         : ""}`}
-                      onMouseDown={() => {
+                      onMouseDown={e => {
+                        e.preventDefault();
                         if (
                           selected.filter(item => item === value).length === 0
                         ) {
@@ -169,7 +170,7 @@ export const SlushBucket: React.FC<MyProps> = (props) => {
             <div className={`${styles.SelectedRow}`}>
               <b><FormattedMessage id="selected" /></b>
             </div>
-            <Scrollbars autoHeight autoHeightMin={400} autoHeightMax={400}>
+            <Scrollbars autoHeight autoHeightMin={400} autoHeightMax={400} key={selected.join()}>
               {selected
                 .map((selectedItem) => {
                   // lookup complete { value, display} object in choices array
