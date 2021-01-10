@@ -179,7 +179,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
       imgUrl={rasterLayerIcon}
       imgAltDescription={"Raster-Layer icon"}
       headerText={"Raster Layers"}
-      explainationText={rasterLayerFormHelpText[fieldOnFocus]}
+      explainationText={rasterLayerFormHelpText[fieldOnFocus] || rasterLayerFormHelpText['default']}
       backUrl={"/data_management/rasters/layers"}
     >
       <form

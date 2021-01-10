@@ -80,7 +80,7 @@ const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProp
       imgUrl={threediIcon}
       imgAltDescription={"3Di icon"}
       headerText={"3Di Scenarios"}
-      explainationText={scenarioFormHelpText[fieldOnFocus]}
+      explainationText={scenarioFormHelpText[fieldOnFocus] || scenarioFormHelpText['default']}
       backUrl={"/data_management/scenarios/"}
     >
       <form
