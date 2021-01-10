@@ -7,12 +7,12 @@ interface MyProps {
   imgUrl: string,
   imgAltDescription: string,
   headerText: string,
-  explainationText: string | JSX.Element,
+  explanationText: string | JSX.Element,
   backUrl: string,
 }
 
 export const ExplainSideColumn: React.FC<MyProps> = ({
-  imgUrl, imgAltDescription, headerText, explainationText, backUrl, children
+  imgUrl, imgAltDescription, headerText, explanationText, backUrl, children
 }) => {
   return (
     <div 
@@ -63,8 +63,8 @@ export const ExplainSideColumn: React.FC<MyProps> = ({
           {headerText}
         </h2>
         <div
-          key={JSON.stringify(explainationText)}
-          className={styles.ExplainColumnEffect}
+          key={JSON.stringify(explanationText)}
+          className={styles.ExplainBoxEffect}
           style={{
             borderColor: "#A1A1A1",
             borderStyle: "solid",
@@ -75,7 +75,7 @@ export const ExplainSideColumn: React.FC<MyProps> = ({
             // flex: "1",
           }}
         >
-          {explainationText}
+          {explanationText}
         </div>
       </div>
       <div

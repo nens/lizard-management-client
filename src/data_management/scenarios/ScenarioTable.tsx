@@ -224,7 +224,7 @@ export const ScenarioTable = (props:any) =>  {
       imgUrl={threediIcon}
       imgAltDescription={"3Di icon"}
       headerText={"3Di Scenarios"}
-      explainationText={"Scenarios are created in 3di."} 
+      explanationText={"Scenarios are created in 3di."} 
       backUrl={"/data_management"}
     >
         <TableStateContainer 
