@@ -49,7 +49,7 @@ const ColormapForm: React.FC<Props> = (props) => {
         label: "",
       },
       {
-        step: 0,
+        step: 1,
         rgba: {r:0, g:255, b:100, a:1},
         label: "",
       },
@@ -145,7 +145,7 @@ const ColormapForm: React.FC<Props> = (props) => {
               return;
             } else if (difference > 0) {
               const tempArray = Array(difference).fill({
-                step: 0,
+                step: oldLength,
                 rgba: {r:0, g:255, b:100, a:1},
                 label: "",
               });
