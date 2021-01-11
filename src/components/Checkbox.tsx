@@ -6,7 +6,6 @@ interface Props {
   checked: boolean;
   onChange: () => void;
   size?: number;
-  borderColor?: string;
   borderRadius?: number;
   checkmarkColor?: string;
   readOnly?: boolean;
@@ -18,7 +17,6 @@ const Checkbox: React.FC<Props> = (props) => {
     checked,
     onChange,
     size,
-    borderColor,
     borderRadius,
     checkmarkColor,
     readOnly
@@ -41,9 +39,7 @@ const Checkbox: React.FC<Props> = (props) => {
         style={{
           width: size,
           height: size,
-          borderColor: borderColor,
-          borderRadius: borderRadius,
-          cursor: readOnly ? 'not-allowed' : 'pointer'
+          borderRadius: borderRadius
         }}
         readOnly={readOnly}
       />

@@ -32,7 +32,6 @@ export const CheckBox: React.FC<CheckBoxProps> = (props) => {
         checked={value}
         onChange={() => valueChanged(!value)}
         size={36}
-        borderColor={'#C9C9C9'}
         borderRadius={3}
         checkmarkColor={'#009f86'}
         readOnly={readOnly}

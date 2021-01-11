@@ -7,17 +7,22 @@
   -webkit-appearance: none;
   appearance: none;
 	background-color: white;
-  border: 0.5px solid #707070;
+  border: 1px solid #C9C9C9;
   width: 16px;
   height: 16px;
   position: absolute;
   top: 0;
   left: 0;
+  cursor: pointer;
 }
 .CheckboxContainer > input[type=checkbox]:focus {
-  border-color: #73C9B2 !important;
+  border-color: #73C9B2;
   outline: none;
 }
+.CheckboxContainer > input[type=checkbox][readonly] {
+  cursor: not-allowed;
+}
+
 .CheckboxContainer > input[type=checkbox] + div {
   pointer-events: none;
   visibility: hidden;
