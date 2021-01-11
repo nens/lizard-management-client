@@ -53,6 +53,14 @@ export const ColormapAllSteps: React.FC<Props> = (props) => {
     // @ts-ignore
     onChange(fakeEvent);
   }
+  const handleStepChange = (event:React.ChangeEvent<HTMLInputElement>, ind:number)=>{
+    const oldSteps = JSON.parse(JSON.stringify(steps));
+    oldSteps[ind].step = parseFloat(event.target.value);
+    // const (event: as React.ChangeEvent<HTMLInputElement>) = {target:{name: name, value: oldSteps}}
+    const fakeEvent = {target:{name: name, value: oldSteps}}
+    // @ts-ignore
+    onChange(fakeEvent);
+  }
 
   return (
     <div>
@@ -61,7 +69,10 @@ export const ColormapAllSteps: React.FC<Props> = (props) => {
         const rgba = step.rgba;
         return(
           <div key={ind}>
-            <span>{step.step}</span>
+            {/* <span>{step.step}</span> */}
+            <input value={step.step} onChange={(event:React.ChangeEvent<HTMLInputElement>)=>{
+              handleStepChange(event, ind);
+            }}/>
             <button 
               onClick={()=> {if (visiblepickerIndex === ind) {setVisiblepickerIndex(null)} else {setVisiblepickerIndex(ind)} }}
               type="button"
