@@ -12,7 +12,7 @@
   height: 16px;
   position: absolute;
   top: 0;
-	left: 0;
+  left: 0;
 }
 .CheckboxContainer > input[type=checkbox] + div {
   pointer-events: none;

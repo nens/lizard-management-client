@@ -2,12 +2,27 @@ import React from 'react';
 import styles from './Checkbox.module.css';
 
 interface Props {
+  name?: string;
   checked: boolean;
   onChange: () => void;
   size?: number;
+  borderColor?: string;
+  borderRadius?: number;
+  checkmarkColor?: string;
+  readOnly?: boolean;
 }
 
-const Checkbox: React.FC<Props> = ({checked, onChange, size}) => {
+const Checkbox: React.FC<Props> = (props) => {
+  const {
+    name,
+    checked,
+    onChange,
+    size,
+    borderColor,
+    borderRadius,
+    checkmarkColor,
+    readOnly
+  } = props;
   return (
     <div
       className={styles.CheckboxContainer}
@@ -17,21 +32,28 @@ const Checkbox: React.FC<Props> = ({checked, onChange, size}) => {
       }}
     >
       <input 
+        id={name+'_checkbox'}
+        name={name}
         className={styles.Checkbox}
         checked={checked} 
-        onChange={onChange} 
+        onChange={() => !readOnly && onChange()}
         type="checkbox"
         style={{
           width: size,
-          height: size
+          height: size,
+          borderColor: borderColor,
+          borderRadius: borderRadius,
+          cursor: readOnly ? 'not-allowed' : 'pointer'
         }}
-      >
-      </input>
+        readOnly={readOnly}
+      />
       {/* next div is checkmark */}
       <div
         style={{
           width: size && size - 4,
-          height: size && size - 4
+          height: size && size - 4,
+          borderRadius: borderRadius,
+          backgroundColor: checkmarkColor
         }}
       />
 
