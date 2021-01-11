@@ -8,7 +8,7 @@ interface Option {
   imgUrl: string,
 }
 
-interface CheckBoxProps {
+interface Props {
   title: string | JSX.Element,
   name: string,
   value: string,
@@ -17,7 +17,7 @@ interface CheckBoxProps {
   options: Option[]
 };
 
-export const CustomRadioSelect: React.FC<CheckBoxProps> = (props) => {
+export const CustomRadioSelect: React.FC<Props> = (props) => {
 
   const {
     title,
@@ -47,6 +47,7 @@ export const CustomRadioSelect: React.FC<CheckBoxProps> = (props) => {
                 valueChanged(event);
               }}
               checked={option.value === value}
+              readOnly={readonly}
             />
             <label 
               htmlFor={title+name+option.value}
@@ -57,27 +58,6 @@ export const CustomRadioSelect: React.FC<CheckBoxProps> = (props) => {
           );
         })
       }
-      {/* <input type="radio" id="male" name={name} value="male"/>
-      <label 
-        // @ts-ignore
-        for="male"
-      >
-        Male
-      </label>
-      <input type="radio" id="female" name={name} value="female"/>
-      <label 
-        // @ts-ignore
-        for="female"
-      >
-        Female
-      </label>
-      <input type="radio" id="other" name={name} value="other"/>
-      <label 
-        // @ts-ignore
-        for="other"
-      >
-        Other
-      </label> */}
     </div>
   );
 }

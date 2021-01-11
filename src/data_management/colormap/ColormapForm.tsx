@@ -4,6 +4,7 @@ import React from 'react';
 import { TextInput } from './../../form/TextInput';
 import { SubmitButton } from '../../form/SubmitButton';
 import { CustomRadioSelect } from '../../form/CustomRadioSelect';
+import { ColormapAllSteps } from '../../form/ColormapAllSteps';
 import { useForm, Values } from '../../form/useForm';
 import { minLength } from '../../form/validators';
 // import { addNotification } from '../../actions';
@@ -157,11 +158,19 @@ const ColormapForm: React.FC<Props> = (props) => {
           // disabled={readOnly}
         />
         <div>
-          {values.data.map((item:any)=>{
+          <ColormapAllSteps
+            title={""}
+            steps={values.data.map((dataRgb:any)=>{return {
+              step: dataRgb[0],
+              rgba: dataRgb[1],
+              label: "",
+            }})}
+          ></ColormapAllSteps>
+          {/* {values.data.map((item:any)=>{
             return (
               <div>{item +""}</div>
             );
-          })}
+          })} */}
         </div>
         <div
           className={formStyles.ButtonContainer}
