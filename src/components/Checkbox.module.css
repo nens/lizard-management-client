@@ -14,6 +14,10 @@
   top: 0;
   left: 0;
 }
+.CheckboxContainer > input[type=checkbox]:focus {
+  border-color: #73C9B2 !important;
+  outline: none;
+}
 .CheckboxContainer > input[type=checkbox] + div {
   pointer-events: none;
   visibility: hidden;
