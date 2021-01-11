@@ -4,7 +4,7 @@ import React from 'react';
 import { TextInput } from './../../form/TextInput';
 import { SubmitButton } from '../../form/SubmitButton';
 import { CustomRadioSelect } from '../../form/CustomRadioSelect';
-import { ColormapAllSteps } from '../../form/ColormapAllSteps';
+import { ColormapAllSteps, ColormapStep } from '../../form/ColormapAllSteps';
 import { useForm, Values } from '../../form/useForm';
 import { minLength } from '../../form/validators';
 // import { addNotification } from '../../actions';
@@ -42,7 +42,18 @@ const ColormapForm: React.FC<Props> = (props) => {
   {
     name: null,
     description: null,
-    data: [[0.0, [255, 255, 255, 255]],[1.0, [0, 255, 100, 255]]],
+    data: [
+      {
+        step: 0,
+        rgba: {r:255, g:255, b:255, a:1},
+        label: "",
+      },
+      {
+        step: 0,
+        rgba: {r:0, g:255, b:100, a:1},
+        label: "",
+      },
+    ],
     type: "GradientColormap",
     rescalable: true,
   };
@@ -133,7 +144,11 @@ const ColormapForm: React.FC<Props> = (props) => {
             if (difference === 0) {
               return;
             } else if (difference > 0) {
-              const tempArray = Array(difference).fill([1,[255,255,255,255]]);
+              const tempArray = Array(difference).fill({
+                step: 0,
+                rgba: {r:0, g:255, b:100, a:1},
+                label: "",
+              });
               const newArray = values.data.concat(tempArray);
               console.log("make data bigger", tempArray, newArray)
               const newEvent = {...e, target: {...e.target, value: newArray, name: e.target.name}}
@@ -159,12 +174,12 @@ const ColormapForm: React.FC<Props> = (props) => {
         />
         <div>
           <ColormapAllSteps
-            title={""}
-            steps={values.data.map((dataRgb:any)=>{return {
-              step: dataRgb[0],
-              rgba: dataRgb[1],
-              label: "",
-            }})}
+            title={"Colormap Values"}
+            steps={values.data}
+            onChange={((event:any)=>{
+              handleInputChange(event);
+            })}
+            name={"data"}
           ></ColormapAllSteps>
           {/* {values.data.map((item:any)=>{
             return (
