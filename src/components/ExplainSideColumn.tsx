@@ -58,6 +58,7 @@ export const ExplainSideColumn = (props:any) => {
         </h2>
         <div
           style={{
+            backgroundColor: "#FCFCFC",
             borderColor: "#A1A1A1",
             borderStyle: "solid",
             borderWidth: "0.5px",
