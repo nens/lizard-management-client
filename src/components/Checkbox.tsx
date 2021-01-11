@@ -25,8 +25,8 @@ const Checkbox: React.FC<Props> = (props) => {
     <div
       className={styles.CheckboxContainer}
       style={{
-        width: size,
-        height: size
+        width: size || 16, // default checkbox size is 16px
+        height: size || 16
       }}
     >
       <input 
@@ -37,8 +37,8 @@ const Checkbox: React.FC<Props> = (props) => {
         onChange={() => !readOnly && onChange()}
         type="checkbox"
         style={{
-          width: size,
-          height: size,
+          width: size || 16,
+          height: size || 16,
           borderRadius: borderRadius
         }}
         readOnly={readOnly}
@@ -46,10 +46,10 @@ const Checkbox: React.FC<Props> = (props) => {
       {/* next div is checkmark */}
       <div
         style={{
-          width: size && size - 4,
-          height: size && size - 4,
+          width: size ? (size - 4) : 12, // default checkmark size is 16-4=12px
+          height: size ? (size - 4) : 12,
           borderRadius: borderRadius,
-          backgroundColor: checkmarkColor
+          backgroundColor: checkmarkColor || "#354B61"
         }}
       />
 
