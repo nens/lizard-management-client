@@ -3,6 +3,7 @@ import React from 'react';
 // import { connect, useSelector } from 'react-redux';
 import { TextInput } from './../../form/TextInput';
 import { SubmitButton } from '../../form/SubmitButton';
+import { CustomRadioSelect } from '../../form/CustomRadioSelect';
 import { useForm, Values } from '../../form/useForm';
 import { minLength } from '../../form/validators';
 // import { addNotification } from '../../actions';
@@ -91,6 +92,30 @@ const ColormapForm: React.FC<Props> = (props) => {
           validated
           // readOnly
         />
+        <CustomRadioSelect
+          title="Colormap Type"
+          name="type"
+          value={values.type}
+          valueChanged={handleInputChange}
+          readonly={false}
+          options={[
+            {
+            title: "Discreet",
+            value: "Discreet",
+            imgUrl: "1234",
+            },
+            {
+              title: "Lineair Gradient",
+              value: "GradientColormap",
+              imgUrl: "1234",
+            },
+            {
+              title: "Logarithmic",
+              value: "Logarithmic",
+              imgUrl: "1234",
+            },
+          ]}
+        ></CustomRadioSelect>
         <input
           name={"data"}
           type="number"
