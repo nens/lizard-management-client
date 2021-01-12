@@ -10,6 +10,17 @@ export interface ColormapStep {
   label: string,
 }
 
+export type ColormapStepApi = [number, [number,number,number, number]]
+
+// const colorMapStepApiToColormapStep = (stepApi: ColormapStepApi) => {
+//   const step = stepApi[0];
+//   const rgbArray = stepApi[1];
+//   const rgba = {
+//     r: 
+//   }
+
+// }
+
 interface Props {
   name: string,
   title: string | JSX.Element,
@@ -70,9 +81,14 @@ export const ColormapAllSteps: React.FC<Props> = (props) => {
         return(
           <div key={ind}>
             {/* <span>{step.step}</span> */}
-            <input value={step.step} onChange={(event:React.ChangeEvent<HTMLInputElement>)=>{
-              handleStepChange(event, ind);
-            }}/>
+            <input 
+              type="number" 
+              value={isNaN(step.step)? "" :step.step} 
+              onChange={(event:React.ChangeEvent<HTMLInputElement>)=>{
+                handleStepChange(event, ind);
+              }}
+              required={true}
+            />
             <button 
               onClick={()=> {if (visiblepickerIndex === ind) {setVisiblepickerIndex(null)} else {setVisiblepickerIndex(ind)} }}
               type="button"

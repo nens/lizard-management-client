@@ -1,4 +1,5 @@
 import React from 'react';
+import {useState,}  from 'react';
 // import { RouteComponentProps, withRouter } from 'react-router';
 // import { connect, useSelector } from 'react-redux';
 import { TextInput } from './../../form/TextInput';
@@ -30,6 +31,8 @@ const ColormapForm: React.FC<Props> = (props) => {
     cancelAction,
     confirmAction, 
   } = props;
+
+  const [stepLengthFieldIsEmpty, setStepLengthFieldIsEmpty] = useState<boolean>(false);
 
   const initialValues = currentRecord? {
     name: currentRecord.name || '',
@@ -135,10 +138,11 @@ const ColormapForm: React.FC<Props> = (props) => {
           onChange={e => {
             // e.persist();
             const newLength = parseInt(e.target.value);
-            // do nothing on NaN or 0
             if (!newLength) {
+              setStepLengthFieldIsEmpty(true);
               return;
             }
+            setStepLengthFieldIsEmpty(false);
             const oldLength = values.data.length;
             const difference = newLength - oldLength;
             if (difference === 0) {
@@ -166,7 +170,7 @@ const ColormapForm: React.FC<Props> = (props) => {
               handleInputChange(newEvent);
             }
           }}
-          value={(values.data && values.data.length) || 0}
+          value={stepLengthFieldIsEmpty? "" :(values.data && values.data.length) || 0}
           // placeholder={placeholderMinimumColorRange}
           className={formStyles.FormControl}
           // readOnly={readOnly}
@@ -193,6 +197,7 @@ const ColormapForm: React.FC<Props> = (props) => {
           <button
             className={buttonStyles.ButtonLink}
             onClick={cancelAction}
+            type="button"
           >
             CANCEL
           </button>
