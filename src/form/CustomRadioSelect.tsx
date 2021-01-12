@@ -37,7 +37,7 @@ export const CustomRadioSelect: React.FC<Props> = (props) => {
         options.map((option: Option)=>{
 
           return (
-            <>
+            <span key={option.value}>
             <input 
               type="radio" 
               id={title+name+value} 
@@ -54,7 +54,7 @@ export const CustomRadioSelect: React.FC<Props> = (props) => {
             >
               {option.title}
             </label>
-            </>
+            </span>
           );
         })
       }

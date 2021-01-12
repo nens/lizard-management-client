@@ -12,14 +12,25 @@ export interface ColormapStep {
 
 export type ColormapStepApi = [number, [number,number,number, number]]
 
-// const colorMapStepApiToColormapStep = (stepApi: ColormapStepApi) => {
-//   const step = stepApi[0];
-//   const rgbArray = stepApi[1];
-//   const rgba = {
-//     r: 
-//   }
+const colorMapStepApiToColormapStep = (stepApi: ColormapStepApi) => {
+  const step = stepApi[0];
+  const rgbArray = stepApi[1];
+  const rgba = {
+    r: rgbArray[0],
+    g: rgbArray[1],
+    b: rgbArray[2],
+    a: ((rgbArray[3]*1000000) / 255) / 1000000,
+  };
+  return {
+    step: step,
+    rgba: rgba,
+    label: "",
+  }
+}
 
-// }
+const toApiColorMapStep = (colormapStep: ColormapStep) => {
+  return [colormapStep.step, [colormapStep.rgba.r, colormapStep.rgba.g, colormapStep.rgba.b, (colormapStep.rgba.a === undefined? 255: (colormapStep.rgba.a*255))]]
+}
 
 interface Props {
   name: string,
@@ -89,26 +100,29 @@ export const ColormapAllSteps: React.FC<Props> = (props) => {
               }}
               required={true}
             />
-            <button 
-              onClick={()=> {if (visiblepickerIndex === ind) {setVisiblepickerIndex(null)} else {setVisiblepickerIndex(ind)} }}
-              type="button"
-              className={styles.ColormapStepToggleColorpicker}
-              style={{
-                backgroundColor: `rgba(${step.rgba.r},${step.rgba.g},${step.rgba.b},${step.rgba.a})`,
-              }}
+            <div
+              style={{position: "relative"}}
             >
-              
-            </button>
-
-            { visiblepickerIndex === ind && (
-              <div style={{ position: 'absolute' }}>
-               <ChromePicker color={rgba} onChangeComplete={(color)=>{
-                  handleColorChange(color.rgb,ind);
-                  setVisiblepickerIndex(null);
+              <button 
+                onClick={()=> {if (visiblepickerIndex === ind) {setVisiblepickerIndex(null)} else {setVisiblepickerIndex(ind)} }}
+                type="button"
+                className={styles.ColormapStepToggleColorpicker}
+                style={{
+                  backgroundColor: `rgba(${step.rgba.r},${step.rgba.g},${step.rgba.b},${step.rgba.a})`,
                 }}
-                />
-              </div>
-            ) }
+              >
+              </button>
+              { visiblepickerIndex === ind && (
+                <div style={{ position: 'absolute' }}>
+                <ChromePicker color={rgba} onChangeComplete={(color)=>{
+                    console.log('color.hex', color.hex);
+                    handleColorChange(color.rgb,ind);
+                    setVisiblepickerIndex(null);
+                  }}
+                  />
+                </div>
+              )}
+            </div>
             
             <input value={step.label} onChange={(event:React.ChangeEvent<HTMLInputElement>)=>{
               handleLabelChange(event, ind);

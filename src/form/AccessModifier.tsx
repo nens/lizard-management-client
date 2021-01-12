@@ -8,7 +8,8 @@ interface MyProps {
   value: string | null,
   valueChanged: (value: string) => void,
   handleEnter?: (e: any) => void,
-  readOnly?: boolean
+  readOnly?: boolean,
+  form?: string,
 };
 
 export const AccessModifier: React.FC<MyProps> = (props) => {  
@@ -17,7 +18,8 @@ export const AccessModifier: React.FC<MyProps> = (props) => {
     name,
     value,
     valueChanged,
-    readOnly
+    readOnly,
+    // form,
   } = props;
 
   return (

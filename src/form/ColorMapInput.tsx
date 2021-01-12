@@ -44,6 +44,7 @@ interface ColorMapProps {
   triedToSubmit?: boolean,
   placeholder?: string,
   validators?: Function[],
+  form?: string,
 };
 
 export const colorMapValidator = (options: ColorMapOptions | null): validatorResult => {
@@ -82,7 +83,8 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
     validated,
     errorMessage,
     triedToSubmit,
-    intl
+    intl,
+    form,
   } = props;
 
   // Set validity of the input field
@@ -313,6 +315,7 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
           placeholder={placeholderColorMapSelection}
           showSearchField={true}
           readOnly={readOnly}
+          form={form}
         />
   
         <br />
@@ -329,6 +332,7 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
           className={formStyles.FormControl}
           readOnly={readOnly}
           disabled={readOnly}
+          form={form}
         />
         <br />
         <span className="text-muted">
@@ -343,6 +347,7 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
           className={formStyles.FormControl}
           readOnly={readOnly}
           disabled={readOnly}
+          form={form}
         />
         <br/>
         <CheckBox
@@ -350,6 +355,7 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
           name={'rescalable'}
           value={colorMapValue.rescalable}
           valueChanged={(bool: boolean) => rescalableChanged(bool)}
+          form={form}
         />      
       </div>
     </label>

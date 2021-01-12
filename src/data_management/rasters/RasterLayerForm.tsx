@@ -181,10 +181,14 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
       backUrl={"/data_management/rasters/layers"}
     >
       <form
-        className={formStyles.Form}
+        // remove this class because it gives element height
+        // className={formStyles.Form}
         onSubmit={handleSubmit}
         onReset={handleReset}
+        id={"raster_layer_form_id"}
       >
+      </form>
+      <div className={formStyles.Form}>
         <span className={formStyles.FormFieldTitle}>
           1: General
         </span>
@@ -198,6 +202,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           validated={!minLength(3, values.name)}
           errorMessage={minLength(3, values.name)}
           triedToSubmit={triedToSubmit}
+          form={"raster_layer_form_id"}
         />
         <TextArea
           title={'Description'}
@@ -207,6 +212,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           valueChanged={handleInputChange}
           clearInput={clearInput}
           validated
+          form={"raster_layer_form_id"}
         />
         <SelectBox
           title={'Dataset'}
@@ -216,6 +222,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           valueChanged={value => handleValueChange('dataset', value)}
           choices={datasets.map((dataset: any) => [dataset.slug, dataset.slug])}
           validated
+          form={"raster_layer_form_id"}
         />
         <span className={formStyles.FormFieldTitle}>
           2: Data
@@ -233,6 +240,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
             triedToSubmit={triedToSubmit}
             readOnly={!!currentRasterLayer || !!rasterSourceUUID}
             showSearchField
+            form={"raster_layer_form_id"}
           />
           :
           <TextInput
@@ -244,6 +252,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
             validated
             readOnly
             triedToSubmit={triedToSubmit}
+            form={"raster_layer_form_id"}
           />
         }
         <SelectBox
@@ -282,6 +291,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           validated={!required('Please select an option', values.aggregationType)}
           errorMessage={required('Please select an option', values.aggregationType)}
           triedToSubmit={triedToSubmit}
+          form={"raster_layer_form_id"}
         />
         <SelectBox
           title={'Observation type *'}
@@ -311,6 +321,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           errorMessage={required('Please select an observation type', values.observationType)}
           triedToSubmit={triedToSubmit}
           showSearchField
+          form={"raster_layer_form_id"}
         />
         <ColorMapInput
           title={<FormattedMessage id="raster_form.colormap" />}
@@ -321,6 +332,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           validated={!colorMapValidator(values.colorMap)}
           errorMessage={colorMapValidator(values.colorMap)}
           triedToSubmit={triedToSubmit}
+          form={"raster_layer_form_id"}
         />
         <span className={formStyles.FormFieldTitle}>
           3: Rights
@@ -331,12 +343,14 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           value={values.accessModifier || accessModifier}
           valueChanged={() => null}
           readOnly
+          form={"raster_layer_form_id"}
         />
         <CheckBox
           title={'Shared with other organisations'}
           name={'sharedWith'}
           value={values.sharedWith}
           valueChanged={bool => handleValueChange('sharedWith', bool)}
+          form={"raster_layer_form_id"}
         />
         {values.sharedWith ? (
           <SlushBucket
@@ -352,6 +366,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
             })}
             valueChanged={(value: any) => handleValueChange('organisationsToSharedWith', value)}
             validated
+            form={"raster_layer_form_id"}
           />
         ) : null}
         <SelectBox
@@ -366,6 +381,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           errorMessage={'Please select an organisation'}
           triedToSubmit={triedToSubmit}
           readOnly={true}
+          form={"raster_layer_form_id"}
         />
         <SelectBox
           title={'Supplier'}
@@ -377,18 +393,21 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           showSearchField
           validated
           readOnly={!(supplierIds.length > 0 && selectedOrganisation.roles.includes('admin'))}
+          form={"raster_layer_form_id"}
         />
         <div
           className={formStyles.ButtonContainer}
         >
           <CancelButton
             url={'/data_management/rasters/layers'}
+            form={"raster_layer_form_id"}
           />
           <SubmitButton
             onClick={tryToSubmitForm}
+            form={"raster_layer_form_id"}
           />
         </div>
-      </form>
+      </div>
     </ExplainSideColumn>
   );
 };

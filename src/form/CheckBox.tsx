@@ -7,7 +7,8 @@ interface CheckBoxProps {
   name: string,
   value: boolean,
   valueChanged: (bool: boolean) => void,
-  readonly?: boolean
+  readonly?: boolean,
+  form?: string,
 };
 
 export const CheckBox: React.FC<CheckBoxProps> = (props) => {
@@ -34,7 +35,8 @@ export const CheckBox: React.FC<CheckBoxProps> = (props) => {
     name,
     value,
     valueChanged,
-    readonly
+    readonly,
+    form,
   } = props;
 
   const checkedClass = value ? styles.Checked : styles.Unchecked;
@@ -71,6 +73,7 @@ export const CheckBox: React.FC<CheckBoxProps> = (props) => {
           style={{ opacity: 0, position: "absolute" }}
           checked={value}
           onChange={() => {}} // no op in order to suppress error in console
+          form={form}
         />
         <span
           className={`${styles.CheckboxSpan} ${checkedClass} ${hoverClass}`}

@@ -81,11 +81,11 @@ const ColormapForm: React.FC<Props> = (props) => {
   } = useForm({initialValues, onSubmit});
 
   return (
-      // <form
-      //   className={formStyles.Form}
-      //   onSubmit={handleSubmit}
-      //   onReset={handleReset}
-      // >
+      <form
+        className={formStyles.Form}
+        onSubmit={handleSubmit}
+        onReset={handleReset}
+      >
       <div>
         <TextInput
           title={'Name'}
@@ -201,12 +201,12 @@ const ColormapForm: React.FC<Props> = (props) => {
           >
             CANCEL
           </button>
-          <SubmitButton
+          {/* <SubmitButton
             onClick={()=>{}}
-          />
+          /> */}
         </div>
       </div>
-      // </form>
+      </form>
   );
 };
 

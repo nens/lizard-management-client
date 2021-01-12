@@ -13,7 +13,8 @@ interface MyProps {
   placeholder?: string,
   handleEnter?: (e: any) => void,
   triedToSubmit?: boolean,
-  readOnly?: boolean
+  readOnly?: boolean,
+  form?: string,
 };
 
 export const TextArea: React.FC<MyProps> = (props) => {  
@@ -28,7 +29,8 @@ export const TextArea: React.FC<MyProps> = (props) => {
     validated,
     errorMessage,
     triedToSubmit,
-    readOnly
+    readOnly,
+    form,
   } = props;
 
   // Set validity of the input field
@@ -64,6 +66,7 @@ export const TextArea: React.FC<MyProps> = (props) => {
           onKeyUp={handleEnter}
           readOnly={!!readOnly}
           disabled={!!readOnly}
+          form={form}
         />
         {!readOnly && value !== null && value.length ? <ClearInputButton onClick={() => clearInput(name)}/> : null}
       </div>

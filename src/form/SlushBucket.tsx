@@ -20,6 +20,7 @@ interface MyProps {
   validators?: Function[],
   validated: boolean,
   valueChanged: Function,
+  form?: string,
 };
 
 export const SlushBucket: React.FC<MyProps> = (props) => {
@@ -46,7 +47,8 @@ export const SlushBucket: React.FC<MyProps> = (props) => {
     value,
     placeholder,
     valueChanged,
-    readOnly
+    readOnly,
+    form,
   } = props;
 
   const selected = value || [];
@@ -78,6 +80,7 @@ export const SlushBucket: React.FC<MyProps> = (props) => {
             value={searchString}
             disabled={readOnly}
             readOnly={readOnly}
+            form={form}
           />
           <div
             style={{
