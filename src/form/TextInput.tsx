@@ -5,9 +5,9 @@ import formStyles from "../styles/Forms.module.css";
 interface MyProps {
   title: string,
   name: string,
-  value: string | null,
+  value: string | null | number,
   valueChanged: (e: React.ChangeEvent<HTMLInputElement>) => void,
-  clearInput: (name: string) => void,
+  clearInput?: (name: string) => void,
   validated: boolean,
   errorMessage?: string | false,
   placeholder?: string,
@@ -15,6 +15,8 @@ interface MyProps {
   triedToSubmit?: boolean,
   readOnly?: boolean,
   form?: string,
+  type?: string,
+  required?: boolean,
 };
 
 export const TextInput: React.FC<MyProps> = (props) => {  
@@ -31,6 +33,8 @@ export const TextInput: React.FC<MyProps> = (props) => {
     triedToSubmit,
     readOnly,
     form,
+    type,
+    required,
   } = props;
 
   // Set validity of the input field
@@ -58,18 +62,19 @@ export const TextInput: React.FC<MyProps> = (props) => {
           ref={myInput}
           name={name}
           id={name}
-          type="text"
           autoComplete="off"
           className={`${formStyles.FormControl} ${triedToSubmit ? formStyles.FormSubmitted : ''}`}
           placeholder={placeholder}
           onChange={valueChanged}
-          value={value || ""}
+          value={value || (value===0? value: "")}
           onKeyUp={handleEnter}
           readOnly={!!readOnly}
           disabled={!!readOnly}
           form={form}
+          type={type || "text"}
+          required={required}
         />
-        {!readOnly && value !== null && value.length ? <ClearInputButton onClick={() => clearInput(name)}/> : null}
+        {clearInput && !readOnly && value !== null && (value + '').length ? <ClearInputButton onClick={() => clearInput(name)}/> : null}
       </div>
     </label>
   );

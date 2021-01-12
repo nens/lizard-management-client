@@ -3,12 +3,16 @@ import {useState,}  from 'react';
 // import { RouteComponentProps, withRouter } from 'react-router';
 // import { connect, useSelector } from 'react-redux';
 import { TextInput } from './../../form/TextInput';
+import { TextArea } from './../../form/TextArea';
+import { IntegerInput } from './../../form/IntegerInput';
 import { SubmitButton } from '../../form/SubmitButton';
 import { CustomRadioSelect } from '../../form/CustomRadioSelect';
 import { ColormapAllSteps, ColormapStep } from '../../form/ColormapAllSteps';
 import { useForm, Values } from '../../form/useForm';
 import { minLength } from '../../form/validators';
 // import { addNotification } from '../../actions';
+import styles from './ColormapForm.module.css';
+
 import formStyles from './../../styles/Forms.module.css';
 import buttonStyles from "../../styles/Buttons.module.css";
 
@@ -82,115 +86,122 @@ const ColormapForm: React.FC<Props> = (props) => {
 
   return (
       <form
-        className={formStyles.Form}
+        className={`${formStyles.Form} ${styles.Form}`}
         onSubmit={handleSubmit}
         onReset={handleReset}
       >
-      <div>
-        <TextInput
-          title={'Name'}
-          name={'name'}
-          value={values.name}
-          valueChanged={handleInputChange}
-          clearInput={clearInput}
-          validated={!minLength(2, values.name)}
-          errorMessage={minLength(2, values.name)}
-          triedToSubmit={triedToSubmit}
-          // readOnly={!scenarioOrganisation.roles.includes("admin") && !(username === currentScenario.username)}
-        />
-        <TextInput
-          title={'Description'}
-          name={'description'}
-          value={values.description}
-          valueChanged={handleInputChange}
-          clearInput={clearInput}
-          validated
-          // readOnly
-        />
-        <CustomRadioSelect
-          title="Colormap Type"
-          name="type"
-          value={values.type}
-          valueChanged={handleInputChange}
-          readonly={false}
-          options={[
-            {
-            title: "Discreet",
-            value: "Discreet",
-            imgUrl: "1234",
-            },
-            {
-              title: "Lineair Gradient",
-              value: "GradientColormap",
-              imgUrl: "1234",
-            },
-            {
-              title: "Logarithmic",
-              value: "Logarithmic",
-              imgUrl: "1234",
-            },
-          ]}
-        ></CustomRadioSelect>
-        <input
-          name={"data"}
-          type="number"
-          autoComplete="off"
-          onChange={e => {
-            // e.persist();
-            const newLength = parseInt(e.target.value);
-            if (!newLength) {
-              setStepLengthFieldIsEmpty(true);
-              return;
-            }
-            setStepLengthFieldIsEmpty(false);
-            const oldLength = values.data.length;
-            const difference = newLength - oldLength;
-            if (difference === 0) {
-              return;
-            } else if (difference > 0) {
-              const tempArray = Array(difference).fill({
-                step: oldLength,
-                rgba: {r:0, g:255, b:100, a:1},
-                label: "",
-              });
-              const newArray = values.data.concat(tempArray);
-              console.log("make data bigger", tempArray, newArray)
-              const newEvent = {...e, target: {...e.target, value: newArray, name: e.target.name}}
-              handleInputChange(newEvent);
-            } else /*if (difference < 0)*/ {
-              const newArray = values.data.filter((item:any,i:number)=>{ 
-                if ((i+1) > (values.data.length + difference)) { // difference is negative so we add it
-                  return false
-                } 
-                else {
-                  return true 
-                } 
-                })
-              const newEvent = {...e, target: {...e.target, value: newArray, name: e.target.name}}
-              handleInputChange(newEvent);
-            }
-          }}
-          value={stepLengthFieldIsEmpty? "" :(values.data && values.data.length) || 0}
-          // placeholder={placeholderMinimumColorRange}
-          className={formStyles.FormControl}
-          // readOnly={readOnly}
-          // disabled={readOnly}
-        />
         <div>
-          <ColormapAllSteps
-            title={"Colormap Values"}
-            steps={values.data}
-            onChange={((event:any)=>{
-              handleInputChange(event);
-            })}
-            name={"data"}
-          ></ColormapAllSteps>
-          {/* {values.data.map((item:any)=>{
-            return (
-              <div>{item +""}</div>
-            );
-          })} */}
+          <div>
+            <TextInput
+              title={'Name'}
+              name={'name'}
+              value={values.name}
+              valueChanged={handleInputChange}
+              clearInput={clearInput}
+              validated={!minLength(2, values.name)}
+              errorMessage={minLength(2, values.name)}
+              triedToSubmit={triedToSubmit}
+            />
+            <TextArea
+              title={'Description'}
+              name={'description'}
+              value={values.description}
+              valueChanged={handleInputChange}
+              clearInput={clearInput}
+              validated
+            />
+          </div>
+          <div>
+            <CustomRadioSelect
+              title="Colormap Type"
+              name="type"
+              value={values.type}
+              valueChanged={handleInputChange}
+              readonly={false}
+              options={[
+                {
+                title: "Discreet",
+                value: "Discreet",
+                imgUrl: "1234",
+                },
+                {
+                  title: "Lineair Gradient",
+                  value: "GradientColormap",
+                  imgUrl: "1234",
+                },
+                {
+                  title: "Logarithmic",
+                  value: "Logarithmic",
+                  imgUrl: "1234",
+                },
+              ]}
+            ></CustomRadioSelect>
+            {/* <label>Colormap Steps</label>
+            <br/> */}
+            <IntegerInput
+              title="Colormap Steps"
+              name={"data"}
+              // type="number"
+              validated={true}
+              valueChanged={e => {
+                // e.persist();
+                const newLength = parseInt(e.target.value);
+                if (!newLength) {
+                  setStepLengthFieldIsEmpty(true);
+                  return;
+                }
+                setStepLengthFieldIsEmpty(false);
+                const oldLength = values.data.length;
+                const difference = newLength - oldLength;
+                if (difference === 0) {
+                  return;
+                } else if (difference > 0) {
+                  const tempArray = Array(difference).fill({
+                    step: values.data[oldLength-1].step,
+                    rgba: values.data[oldLength-1].rgba,
+                    label: "",
+                  });
+                  const newArray = values.data.concat(tempArray);
+                  console.log("make data bigger", tempArray, newArray)
+                  const newEvent = {...e, target: {...e.target, value: newArray, name: e.target.name}}
+                  handleInputChange(newEvent);
+                } else /*if (difference < 0)*/ {
+                  const newArray = values.data.filter((item:any,i:number)=>{ 
+                    if ((i+1) > (values.data.length + difference)) { // difference is negative so we add it
+                      return false
+                    } 
+                    else {
+                      return true 
+                    } 
+                    })
+                  const newEvent = {...e, target: {...e.target, value: newArray, name: e.target.name}}
+                  handleInputChange(newEvent);
+                }
+              }}
+              value={stepLengthFieldIsEmpty? "" :(values.data && values.data.length) || 0}
+              // placeholder={placeholderMinimumColorRange}
+              // className={formStyles.FormControl}
+              // readOnly={readOnly}
+              // disabled={readOnly}
+            />
+            <div>
+              <ColormapAllSteps
+                title={"Colormap Values"}
+                steps={values.data}
+                onChange={((event:any)=>{
+                  handleInputChange(event);
+                })}
+                name={"data"}
+              ></ColormapAllSteps>
+              {/* {values.data.map((item:any)=>{
+                return (
+                  <div>{item +""}</div>
+                );
+              })} */}
+            </div>
+          </div>
         </div>
+        
         <div
           className={formStyles.ButtonContainer}
         >
@@ -205,7 +216,6 @@ const ColormapForm: React.FC<Props> = (props) => {
             onClick={()=>{}}
           /> */}
         </div>
-      </div>
       </form>
   );
 };

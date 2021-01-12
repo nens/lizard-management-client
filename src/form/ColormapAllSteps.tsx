@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styles from "./ColormapAllSteps.module.css";
 import formStyles from "../styles/Forms.module.css";
 import { ChromePicker, RGBColor } from 'react-color';
+import { TextInput } from '../form/TextInput';
 
 
 export interface ColormapStep {
@@ -29,7 +30,7 @@ const colorMapStepApiToColormapStep = (stepApi: ColormapStepApi) => {
 }
 
 const toApiColorMapStep = (colormapStep: ColormapStep) => {
-  return [colormapStep.step, [colormapStep.rgba.r, colormapStep.rgba.g, colormapStep.rgba.b, (colormapStep.rgba.a === undefined? 255: (colormapStep.rgba.a*255))]]
+  return [colormapStep.step, [colormapStep.rgba.r, colormapStep.rgba.g, colormapStep.rgba.b, (colormapStep.rgba.a === undefined? 255: (Math.round(colormapStep.rgba.a*255)))]]
 }
 
 interface Props {
@@ -87,15 +88,29 @@ export const ColormapAllSteps: React.FC<Props> = (props) => {
   return (
     <div>
       <label>{title}</label>
+      <div className={styles.StepRow}>
+        <span>Step</span><span>Color</span>
+      </div>
       {steps.map((step:ColormapStep, ind)=>{
         const rgba = step.rgba;
+        const previousStepValue = steps[ind-1] && steps[ind-1].step;
+        const isLogarithmic = true;
+        const errorMsg = 
+          isLogarithmic === true && ind === 0 && (step.step === 0 || step.step < 0 ) ? "Logarithmic step must be larger then 0" :
+          ind > 0 && step.step < previousStepValue? "Each step must be greater or equal to previous step":
+          undefined;
+
         return(
-          <div key={ind}>
+          <div key={ind} className={styles.StepRow}>
             {/* <span>{step.step}</span> */}
-            <input 
+            <TextInput 
+              title=""
+              name="Colormap_Steps"
+              validated={errorMsg? false : true}
+              errorMessage={errorMsg}
               type="number" 
               value={isNaN(step.step)? "" :step.step} 
-              onChange={(event:React.ChangeEvent<HTMLInputElement>)=>{
+              valueChanged={(event:React.ChangeEvent<HTMLInputElement>)=>{
                 handleStepChange(event, ind);
               }}
               required={true}
@@ -115,7 +130,6 @@ export const ColormapAllSteps: React.FC<Props> = (props) => {
               { visiblepickerIndex === ind && (
                 <div style={{ position: 'absolute' }}>
                 <ChromePicker color={rgba} onChangeComplete={(color)=>{
-                    console.log('color.hex', color.hex);
                     handleColorChange(color.rgb,ind);
                     setVisiblepickerIndex(null);
                   }}
@@ -124,9 +138,10 @@ export const ColormapAllSteps: React.FC<Props> = (props) => {
               )}
             </div>
             
-            <input value={step.label} onChange={(event:React.ChangeEvent<HTMLInputElement>)=>{
+            {/* Lateron add labels */}
+            {/* <input value={step.label} onChange={(event:React.ChangeEvent<HTMLInputElement>)=>{
               handleLabelChange(event, ind);
-            }}/>
+            }}/> */}
           </div>
         );
       })}

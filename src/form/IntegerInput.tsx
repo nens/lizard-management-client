@@ -9,7 +9,7 @@ interface MyProps {
   value: string,
   validated: boolean,
   valueChanged: (e: React.ChangeEvent<HTMLInputElement>) => void,
-  clearInput: (e: any) => void,
+  clearInput?: (e: any) => void,
   errorMessage?: string | false,
   placeholder?: string,
   handleEnter?: (e: any) => void,
