@@ -309,7 +309,7 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
         <SelectBox
           title={''}
           choices={[["Custom colormap","Custom colormap","+ Create new colormap for this raster"],...colorMaps]}
-          value={(colorMapType && colorMapType.colorMap) || null}
+          value={JSON.stringify(colorMapValue.customColormap) !=="{}" ? "Custom colormap" : (colorMapType && colorMapType.colorMap) || null}
           name={name + '_colorMapselect'}
           validated={validated}
           errorMessage={errorMessage}
