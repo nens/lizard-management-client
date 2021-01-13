@@ -50,7 +50,7 @@ const ColormapForm: React.FC<Props> = (props) => {
   const initialValues = currentRecord? {
     name: currentRecord.name || '',
     description: currentRecord.description || '',
-    data: currentRecord.data.map(colorMapStepApiToColormapStep) || [],
+    data: (currentRecord.data || []).map(colorMapStepApiToColormapStep),
     type: currentRecord.log? "Logarithmic": currentRecord.type || "GradientColormap",
     rescalable: currentRecord.rescalable === true,
     labels: currentRecord.labels,

@@ -51,7 +51,12 @@ export const colorMapValidator = (options: ColorMapOptions | null): validatorRes
     const initiatedOptions = options || {
       options: {},
       rescalable: false,
+      customColormap: {},
     };
+    if (JSON.stringify(initiatedOptions.customColormap) !== "{}") {
+      return false;
+    }
+
     const colorMap = colorMapTypeFromOptions(initiatedOptions.options);
 
     const result = validateStyleObj(colorMap);
@@ -103,7 +108,7 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
   const [colorMapValue, setColorMapValue] = useState<ColorMapOptions>({
     options: {},
     rescalable: false,
-    customColormap: null,
+    customColormap: {},
   });
   const [showCustomColormapModal, setShowCustomColormapModal] = useState(false);
 
@@ -180,7 +185,7 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
 
   const customColormapChanged = (customColormap: any) => {
     valueChanged({
-      options: colorMapValue.options,
+      options: JSON.stringify(customColormap) ==="{}"? colorMapValue.options : {},
       rescalable: colorMapValue.rescalable,
       customColormap: customColormap
 
@@ -269,7 +274,7 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
           // }}
         >
           <ColormapForm
-            currentRecord={value.customColormap}
+            currentRecord={value.customColormap.data? value.customColormap: undefined}
             cancelAction={()=>{setShowCustomColormapModal(false)}}
             confirmAction={(customColormap:any)=>{
               customColormapChanged(customColormap);
@@ -314,7 +319,13 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
           validated={validated}
           errorMessage={errorMessage}
           triedToSubmit={triedToSubmit}
-          valueChanged={colorMapChanged}
+          valueChanged={(colormap)=>{ 
+            colorMapChanged(colormap); 
+            if (colormap !== "Custom colormap") {
+              customColormapChanged({}) 
+            }
+            
+          }}
           placeholder={placeholderColorMapSelection}
           showSearchField={true}
           readOnly={readOnly}
