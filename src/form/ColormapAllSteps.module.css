@@ -17,9 +17,7 @@
   box-sizing: border-box;
 }
 
-/* .StepRow > *:nth-child(1) {
-  width: 172px;
-} */
-.StepRow > *:nth-child(2) {
-  /* width: 172px; */
+.StepContainer {
+  overflow-y: auto;
+  height: 350px;
 }

@@ -192,6 +192,7 @@ const ColormapForm: React.FC<Props> = (props) => {
                   handleInputChange(event);
                 })}
                 name={"data"}
+                colormapIsLogarithmic={values.type === "Logarithmic"}
               ></ColormapAllSteps>
               {/* {values.data.map((item:any)=>{
                 return (
