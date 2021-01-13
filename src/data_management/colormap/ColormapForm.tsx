@@ -7,7 +7,7 @@ import { TextArea } from './../../form/TextArea';
 import { IntegerInput } from './../../form/IntegerInput';
 import { SubmitButton } from '../../form/SubmitButton';
 import { CustomRadioSelect } from '../../form/CustomRadioSelect';
-import { ColormapAllSteps, ColormapStep } from '../../form/ColormapAllSteps';
+import { ColormapAllSteps, ColormapStep, ColormapStepApi, toApiColorMapStep, colorMapStepApiToColormapStep } from '../../form/ColormapAllSteps';
 import { useForm, Values } from '../../form/useForm';
 import { minLength } from '../../form/validators';
 // import { addNotification } from '../../actions';
@@ -16,6 +16,15 @@ import styles from './ColormapForm.module.css';
 import formStyles from './../../styles/Forms.module.css';
 import buttonStyles from "../../styles/Buttons.module.css";
 
+interface ColomapObj {
+  type: string,
+  data: ColormapStepApi[],
+  // log: boolean,
+  // name: string,
+  // description: string,
+  // rescalable: boolean,
+  labels: any[],
+}
 
 interface Props {
   currentRecord: any,
@@ -41,9 +50,11 @@ const ColormapForm: React.FC<Props> = (props) => {
   const initialValues = currentRecord? {
     name: currentRecord.name || '',
     description: currentRecord.description || '',
-    data: currentRecord.data || [],
-    type: currentRecord.type || "GradientColormap",
+    data: currentRecord.data.map(colorMapStepApiToColormapStep) || [],
+    type: currentRecord.log? "Logarithmic": currentRecord.type || "GradientColormap",
     rescalable: currentRecord.rescalable === true,
+    labels: currentRecord.labels,
+    invalid: currentRecord.invalid,
   }
   :
   {
@@ -70,7 +81,24 @@ const ColormapForm: React.FC<Props> = (props) => {
   //*/
 
   const onSubmit = (values: Values) => {
+    let jsonObj:ColomapObj = {
+      // log: false,
+      data: [],
+      type: values.type,
+      // name: values.name,
+      // description: values.description,
+      // rescalable: values.rescalable,
+      labels: values.labels,
+    };
+    if (values.type === "Logarithmic" ) {
+      jsonObj.type = "GradientColormap";
+      // the api seems to only accept a "log" field if log:true ... nah
+      // @ts-ignore
+      jsonObj.log = true;
+    }
+    jsonObj.data = values.data.map(toApiColorMapStep);
 
+    confirmAction(jsonObj);
   }
 
   const {
@@ -91,7 +119,7 @@ const ColormapForm: React.FC<Props> = (props) => {
         onReset={handleReset}
       >
         <div>
-          <div>
+          {/* <div>
             <TextInput
               title={'Name'}
               name={'name'}
@@ -110,7 +138,7 @@ const ColormapForm: React.FC<Props> = (props) => {
               clearInput={clearInput}
               validated
             />
-          </div>
+          </div> */}
           <div>
             <CustomRadioSelect
               title="Colormap Type"
@@ -121,7 +149,7 @@ const ColormapForm: React.FC<Props> = (props) => {
               options={[
                 {
                 title: "Discreet",
-                value: "Discreet",
+                value: "DiscreteColormap",
                 imgUrl: "1234",
                 },
                 {
@@ -213,9 +241,9 @@ const ColormapForm: React.FC<Props> = (props) => {
           >
             CANCEL
           </button>
-          {/* <SubmitButton
-            onClick={()=>{}}
-          /> */}
+          <SubmitButton
+            onClick={()=>{tryToSubmitForm()}}
+          />
         </div>
       </form>
   );

@@ -269,9 +269,12 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
           // }}
         >
           <ColormapForm
-            currentRecord={null}
+            currentRecord={value.customColormap}
             cancelAction={()=>{setShowCustomColormapModal(false)}}
-            confirmAction={(customColormap:any)=>{customColormapChanged(customColormap)}}
+            confirmAction={(customColormap:any)=>{
+              customColormapChanged(customColormap);
+              setShowCustomColormapModal(false);
+            }}
           />
           {/* <form
             className={formStyles.Form}

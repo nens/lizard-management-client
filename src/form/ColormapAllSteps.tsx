@@ -13,7 +13,7 @@ export interface ColormapStep {
 
 export type ColormapStepApi = [number, [number,number,number, number]]
 
-const colorMapStepApiToColormapStep = (stepApi: ColormapStepApi) => {
+export const colorMapStepApiToColormapStep = (stepApi: ColormapStepApi) => {
   const step = stepApi[0];
   const rgbArray = stepApi[1];
   const rgba = {
@@ -29,7 +29,7 @@ const colorMapStepApiToColormapStep = (stepApi: ColormapStepApi) => {
   }
 }
 
-const toApiColorMapStep = (colormapStep: ColormapStep) => {
+export const toApiColorMapStep = (colormapStep: ColormapStep) => {
   return [colormapStep.step, [colormapStep.rgba.r, colormapStep.rgba.g, colormapStep.rgba.b, (colormapStep.rgba.a === undefined? 255: (Math.round(colormapStep.rgba.a*255)))]]
 }
 

@@ -123,7 +123,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
         supplier: values.supplier,
         aggregation_type: values.aggregationType,
         options: values.colorMap.options,
-        colormap: values.colorMap.options.customColormap,
+        colormap: values.colorMap.customColormap,
         rescalable: values.colorMap.rescalable,
         shared_with: values.organisationsToSharedWith,
         datasets: values.dataset ? [values.dataset] : []
