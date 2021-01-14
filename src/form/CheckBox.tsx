@@ -38,6 +38,8 @@ export const CheckBox: React.FC<CheckBoxProps> = (props) => {
         size={36}
         borderRadius={3}
         checkmarkColor={'#009f86'}
+        onFocus={onFocus}
+        onBlur={onBlur}
         readOnly={readOnly}
       />
     </label>
