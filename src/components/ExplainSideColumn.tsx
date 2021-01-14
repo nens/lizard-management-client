@@ -66,6 +66,7 @@ export const ExplainSideColumn: React.FC<MyProps> = ({
           key={JSON.stringify(explanationText)}
           className={styles.ExplainBoxEffect}
           style={{
+            backgroundColor: "#FCFCFC",
             borderColor: "#A1A1A1",
             borderStyle: "solid",
             borderWidth: "0.5px",

@@ -211,7 +211,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           valueChanged={bool => handleValueChange('temporal', bool)}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          readonly={!!currentRasterSource}
+          readOnly={!!currentRasterSource}
         />
         <DurationField
           title={'Interval'}
