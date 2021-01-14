@@ -8,6 +8,8 @@ interface Props {
   size?: number;
   borderRadius?: number;
   checkmarkColor?: string;
+  onFocus?: (e: React.ChangeEvent<HTMLInputElement>) => void,
+  onBlur?: () => void,
   readOnly?: boolean;
 }
 
@@ -19,6 +21,8 @@ const Checkbox: React.FC<Props> = (props) => {
     size,
     borderRadius,
     checkmarkColor,
+    onFocus,
+    onBlur,
     readOnly
   } = props;
   return (
@@ -30,7 +34,7 @@ const Checkbox: React.FC<Props> = (props) => {
       }}
     >
       <input 
-        id={name+'_checkbox'}
+        id={name}
         name={name}
         className={styles.Checkbox}
         checked={checked} 
@@ -41,6 +45,8 @@ const Checkbox: React.FC<Props> = (props) => {
           height: size || 16,
           borderRadius: borderRadius
         }}
+        onFocus={onFocus}
+        onBlur={onBlur}
         readOnly={readOnly}
       />
       {/* next div is checkmark */}

@@ -38,6 +38,8 @@ interface ColorMapProps {
   triedToSubmit?: boolean,
   placeholder?: string,
   validators?: Function[],
+  onFocus?: (e: React.ChangeEvent<HTMLInputElement>) => void,
+  onBlur?: () => void,
 };
 
 export const colorMapValidator = (options: ColorMapOptions | null): validatorResult => {
@@ -76,6 +78,8 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
     validated,
     errorMessage,
     triedToSubmit,
+    onFocus,
+    onBlur,
     intl
   } = props;
 
@@ -242,15 +246,17 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
         </div>
         <SelectBox
           title={''}
+          name={name}
           choices={colorMaps}
           value={(colorMapType && colorMapType.colorMap) || null}
-          name={name + '_colorMapselect'}
           validated={validated}
           errorMessage={errorMessage}
           triedToSubmit={triedToSubmit}
           valueChanged={colorMapChanged}
           placeholder={placeholderColorMapSelection}
           showSearchField={true}
+          onFocus={onFocus}
+          onBlur={onBlur}
           readOnly={readOnly}
         />
   
@@ -260,35 +266,43 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
         </span>
         <br />
         <input
+          id={name}
           type="number"
           autoComplete="off"
           onChange={e => handleValueChanged('min', toFloat(e.target.value))}
           value={(colorMapType && colorMapType.min) || ""}
           placeholder={placeholderMinimumColorRange}
           className={formStyles.FormControl}
+          onFocus={onFocus}
+          onBlur={onBlur}
           readOnly={readOnly}
-          disabled={readOnly}
+          // disabled={readOnly}
         />
         <br />
         <span className="text-muted">
         <FormattedMessage id="color_map.maximum_color_range" />
         </span>
         <input
+          id={name}
           type="number"
           autoComplete="off"
           value={(colorMapType && colorMapType.max) || ""}
           onChange={e => handleValueChanged('max', toFloat(e.target.value))}
           placeholder={placeholderMaximumColorRange}
           className={formStyles.FormControl}
+          onFocus={onFocus}
+          onBlur={onBlur}
           readOnly={readOnly}
-          disabled={readOnly}
+          // disabled={readOnly}
         />
         <br/>
         <CheckBox
           title={'Rescalable'}
-          name={'rescalable'}
+          name={name+'_rescalable'}
           value={colorMapValue.rescalable}
           valueChanged={(bool: boolean) => rescalableChanged(bool)}
+          onFocus={onFocus}
+          onBlur={onBlur}
         />      
       </div>
     </label>

@@ -20,6 +20,8 @@ interface MyProps {
   validators?: Function[],
   validated: boolean,
   valueChanged: Function,
+  onFocus?: (e: React.ChangeEvent<HTMLInputElement>) => void,
+  onBlur?: () => void,
 };
 
 export const SlushBucket: React.FC<MyProps> = (props) => {
@@ -46,6 +48,8 @@ export const SlushBucket: React.FC<MyProps> = (props) => {
     value,
     placeholder,
     valueChanged,
+    onFocus,
+    onBlur,
     readOnly
   } = props;
 
@@ -69,6 +73,7 @@ export const SlushBucket: React.FC<MyProps> = (props) => {
         >
           <input
             id={name}
+            name={name}
             type="text"
             autoComplete="off"
             className={formStyles.FormControl}
@@ -76,7 +81,9 @@ export const SlushBucket: React.FC<MyProps> = (props) => {
             onChange={handleInput}
             onKeyUp={handleKeyUp}
             value={searchString}
-            disabled={readOnly}
+            // disabled={readOnly}
+            onFocus={onFocus}
+            onBlur={onBlur}
             readOnly={readOnly}
           />
           <div
@@ -135,7 +142,8 @@ export const SlushBucket: React.FC<MyProps> = (props) => {
                       )
                         ? styles.Active
                         : ""}`}
-                      onMouseDown={() => {
+                      onMouseDown={e => {
+                        e.preventDefault();
                         if (
                           selected.filter(item => item === value).length === 0
                         ) {
@@ -163,7 +171,7 @@ export const SlushBucket: React.FC<MyProps> = (props) => {
             <div className={`${styles.SelectedRow}`}>
               <b><FormattedMessage id="selected" /></b>
             </div>
-            <Scrollbars autoHeight autoHeightMin={400} autoHeightMax={400}>
+            <Scrollbars autoHeight autoHeightMin={400} autoHeightMax={400} key={selected.join()}>
               {selected
                 .map((selectedItem) => {
                   // lookup complete { value, display} object in choices array

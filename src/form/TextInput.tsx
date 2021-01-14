@@ -11,6 +11,8 @@ interface MyProps {
   validated: boolean,
   errorMessage?: string | false,
   placeholder?: string,
+  onFocus?: (e: React.ChangeEvent<HTMLInputElement>) => void,
+  onBlur?: () => void,
   handleEnter?: (e: any) => void,
   triedToSubmit?: boolean,
   readOnly?: boolean
@@ -24,6 +26,8 @@ export const TextInput: React.FC<MyProps> = (props) => {
     value,
     valueChanged,
     clearInput,
+    onFocus,
+    onBlur,
     handleEnter,
     validated,
     errorMessage,
@@ -61,10 +65,12 @@ export const TextInput: React.FC<MyProps> = (props) => {
           className={`${formStyles.FormControl} ${triedToSubmit ? formStyles.FormSubmitted : ''}`}
           placeholder={placeholder}
           onChange={valueChanged}
+          onFocus={onFocus}
+          onBlur={onBlur}
           value={value || ""}
           onKeyUp={handleEnter}
           readOnly={!!readOnly}
-          disabled={!!readOnly}
+          // disabled={!!readOnly}
         />
         {!readOnly && value !== null && value.length ? <ClearInputButton onClick={() => clearInput(name)}/> : null}
       </div>

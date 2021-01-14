@@ -26,6 +26,7 @@ import formStyles from './../../styles/Forms.module.css';
 // import MinMaxZoomField, {MinMax} from '../../components/MinMaxZoomField';
 import SpatialBoundsField from "../../form/SpatialBoundsField";
 import { WmsLayerReceivedFromApi, wmsLayerReceivedFromApiToForm, WmsLayerFormType, wmsLayerGetDefaultFormValues, wmsLayerFormToFormSendToApi} from '../../types/WmsLayerType';
+import { wmsFormHelpText } from '../../utils/helpTextForForms';
 
 interface Props {
   currentWmsLayer?: WmsLayerReceivedFromApi, 
@@ -101,6 +102,9 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
     tryToSubmitForm,
     handleInputChange,
     handleValueChange,
+    fieldOnFocus,
+    handleFocus,
+    handleBlur,
     handleSubmit,
     handleReset,
     clearInput,
@@ -111,7 +115,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
       imgUrl={wmsIcon}
       imgAltDescription={"WMS-Layer icon"}
       headerText={"WMS Layers"}
-      explainationText={"WMS-Layers allow to configure layers in lizard even if they are hosted on another platform"} 
+      explanationText={wmsFormHelpText[fieldOnFocus] || wmsFormHelpText['default']}
       backUrl={"/data_management/wms_layers"}
     >
       <form
@@ -131,6 +135,8 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           clearInput={clearInput}
           validated={!minLength(3, values.name)}
           errorMessage={minLength(3, values.name)}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           triedToSubmit={triedToSubmit}
         />
         <TextArea
@@ -141,6 +147,8 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           valueChanged={handleInputChange}
           clearInput={clearInput}
           validated
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         <SlushBucket
           title={'Tags / Datasets'}
@@ -157,6 +165,8 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
             handleValueChange('datasets', value)
           }}
           validated
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         <span className={formStyles.FormFieldTitle}>
           2: Data
@@ -171,6 +181,8 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           validated={!minLength(3, values.wms_url)}
           errorMessage={minLength(3, values.wms_url)}
           triedToSubmit={triedToSubmit}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         <TextInput
           title={'Slug *'}
@@ -182,6 +194,8 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           validated={!minLength(1, values.slug)}
           errorMessage={minLength(1, values.slug)}
           triedToSubmit={triedToSubmit}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         <TextInput
           title={'Download URL'}
@@ -191,6 +205,8 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           valueChanged={handleInputChange}
           clearInput={clearInput}
           validated
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         <TextInput
           title={'Legend URL'}
@@ -200,6 +216,8 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           valueChanged={handleInputChange}
           clearInput={clearInput}
           validated
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         <TextInput
           title={'Get Feature URL'}
@@ -209,12 +227,16 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           valueChanged={handleInputChange}
           clearInput={clearInput}
           validated
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         <CheckBox
           title={'Tiled WMS'}
           name={'tiled'}
           value={values.tiled}
           valueChanged={bool => handleValueChange('tiled', bool)}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         {/* We might later decide to use this combined minmax zoom component instead of the 2 seperate fields */}
         {/* <MinMaxZoomField
@@ -242,6 +264,8 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
             validated={!rangeCheck(Number(values.min_zoom), 0, 31)}
             errorMessage={rangeCheck(Number(values.min_zoom), 0, 31)}
             triedToSubmit={triedToSubmit}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
           />
           <span style={{ width: 20 }}/>
           <IntegerInput
@@ -253,6 +277,8 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
             validated={!rangeCheck(Number(values.max_zoom), 0, 31) && !greaterThanMin(Number(values.min_zoom), Number(values.max_zoom))}
             errorMessage={rangeCheck(Number(values.max_zoom), 0, 31) || greaterThanMin(Number(values.min_zoom), Number(values.max_zoom))}
             triedToSubmit={triedToSubmit}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
           />
         </div>
         <SpatialBoundsField
@@ -268,6 +294,8 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
            }}
            geoServerError={geoserverError}
            showGeoServerError={()=>setGeoserverError(true)}
+           onFocus={handleFocus}
+           onBlur={handleBlur}
         />
         <TextArea
           title={'Options (JSON)'}
@@ -279,6 +307,8 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           validated={!jsonValidator(values.options)}
           errorMessage={jsonValidator(values.options)}
           triedToSubmit={triedToSubmit}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         <span className={formStyles.FormFieldTitle}>
           3: Rights
@@ -288,12 +318,16 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           name={'access_modifier'}
           value={values.access_modifier}
           valueChanged={value => handleValueChange('access_modifier', value)}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         <CheckBox
           title={'Shared with other organisations'}
           name={'sharedWithCheckbox'}
           value={values.sharedWithCheckbox}
           valueChanged={bool => handleValueChange('sharedWithCheckbox', bool)}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         {values.sharedWithCheckbox ? (
           <SlushBucket
@@ -310,6 +344,8 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
             })}
             valueChanged={(value: any) => handleValueChange('shared_with', value)}
             validated
+            onFocus={handleFocus}
+            onBlur={handleBlur}
           />
         ) : null}
         <SelectBox
@@ -323,6 +359,8 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           errorMessage={'Please select an organisation'}
           readOnly={!(organisationsToSwitchTo.length > 0 && selectedOrganisation.roles.includes("admin"))}
           triedToSubmit={triedToSubmit}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         <SelectBox
           title={'Supplier'}
@@ -335,6 +373,8 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           )}
           showSearchField={true}
           validated
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           readOnly={!(supplierIds.length > 0 && selectedOrganisation.roles.includes("admin"))}
         />
         <div

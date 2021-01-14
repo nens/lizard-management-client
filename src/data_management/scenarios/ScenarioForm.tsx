@@ -12,6 +12,7 @@ import { minLength } from '../../form/validators';
 import { addNotification } from '../../actions';
 import threediIcon from "../../images/3di@3x.svg";
 import formStyles from './../../styles/Forms.module.css';
+import { scenarioFormHelpText } from '../../utils/helpTextForForms';
 
 interface Props {
   currentScenario: any
@@ -66,6 +67,9 @@ const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProp
     formSubmitted,
     tryToSubmitForm,
     handleInputChange,
+    fieldOnFocus,
+    handleFocus,
+    handleBlur,
     handleSubmit,
     handleReset,
     clearInput,
@@ -76,7 +80,7 @@ const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProp
       imgUrl={threediIcon}
       imgAltDescription={"3Di icon"}
       headerText={"3Di Scenarios"}
-      explainationText={"Edit a 3Di scenario."}
+      explanationText={scenarioFormHelpText[fieldOnFocus] || scenarioFormHelpText['default']}
       backUrl={"/data_management/scenarios/"}
     >
       <form
@@ -96,6 +100,8 @@ const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProp
           validated={!minLength(3, values.name)}
           errorMessage={minLength(3, values.name)}
           triedToSubmit={triedToSubmit}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           readOnly={!scenarioOrganisation.roles.includes("admin") && !(username === currentScenario.username)}
         />
         <TextInput
@@ -105,6 +111,8 @@ const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProp
           valueChanged={handleInputChange}
           clearInput={clearInput}
           validated
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           readOnly
         />
         <span className={formStyles.FormFieldTitle}>
@@ -114,6 +122,8 @@ const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProp
           name={'results'}
           uuid={currentScenario.uuid}
           formSubmitted={formSubmitted}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         <span className={formStyles.FormFieldTitle}>
           3: Rights
@@ -125,6 +135,8 @@ const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProp
           valueChanged={handleInputChange}
           clearInput={clearInput}
           validated
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           readOnly
         />
         <TextInput
@@ -134,6 +146,8 @@ const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProp
           valueChanged={handleInputChange}
           clearInput={clearInput}
           validated
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           readOnly
         />
         <div

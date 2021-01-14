@@ -15,6 +15,8 @@ interface DurationFieldProps {
   value: string,
   valueChanged: (value: string | null) => void,
   validated: boolean,
+  onFocus?: (e: React.ChangeEvent<HTMLInputElement>) => void,
+  onBlur?: () => void,
   handleEnter?: (e: any) => void,
   readOnly?: boolean,
 };
@@ -101,6 +103,8 @@ export const DurationField: React.FC<DurationFieldProps> = (props) => {
     title,
     name,
     value,
+    onFocus,
+    onBlur,
     readOnly
   } = props;
 
@@ -141,8 +145,8 @@ export const DurationField: React.FC<DurationFieldProps> = (props) => {
           {/* <label><FormattedMessage id="duration.days" /></label> */}
           <label>Days</label>
           <input
-            id={name + "days_input"}
-            tabIndex={-2}
+            id={name}
+            // tabIndex={-2}
             type="text"
             autoComplete="off"
             className={
@@ -156,8 +160,10 @@ export const DurationField: React.FC<DurationFieldProps> = (props) => {
             size={4}
             onChange={e => updateValue('days', e.target.value)}
             value={days}
+            onFocus={onFocus}
+            onBlur={onBlur}
             readOnly={readOnly}
-            disabled={readOnly}
+            // disabled={readOnly}
           />
         </div>
         <div
@@ -168,8 +174,8 @@ export const DurationField: React.FC<DurationFieldProps> = (props) => {
           {/* <label><FormattedMessage id="duration.hours" /></label> */}
           <label>Hours</label>
           <input
-            id={name + "hours_input"}
-            tabIndex={-2}
+            id={name}
+            // tabIndex={-2}
             type="text"
             autoComplete="off"
             className={
@@ -183,8 +189,10 @@ export const DurationField: React.FC<DurationFieldProps> = (props) => {
             size={2}
             onChange={e => updateValue('hours', e.target.value)}
             value={hours}
+            onFocus={onFocus}
+            onBlur={onBlur}
             readOnly={readOnly}
-            disabled={readOnly}
+            // disabled={readOnly}
           />
         </div>
         <div className={styles.DurationInputHourSecondSeperator}>:</div>
@@ -192,8 +200,8 @@ export const DurationField: React.FC<DurationFieldProps> = (props) => {
           {/* <label><FormattedMessage id="duration.mins" /></label> */}
           <label>Mins</label>
           <input
-            id={name + "minutes_input"}
-            tabIndex={-2}
+            id={name}
+            // tabIndex={-2}
             type="text"
             autoComplete="off"
             className={
@@ -205,8 +213,10 @@ export const DurationField: React.FC<DurationFieldProps> = (props) => {
             size={2}
             onChange={e => updateValue('minutes', e.target.value)}
             value={minutes}
+            onFocus={onFocus}
+            onBlur={onBlur}
             readOnly={readOnly}
-            disabled={readOnly}
+            // disabled={readOnly}
           />
         </div>
         <div
@@ -219,8 +229,8 @@ export const DurationField: React.FC<DurationFieldProps> = (props) => {
           {/* <label><FormattedMessage id="duration.seconds" /></label> */}
           <label>Seconds</label>
           <input
-            id={name + "seconds_input"}
-            tabIndex={-2}
+            id={name}
+            // tabIndex={-2}
             type="text"
             autoComplete="off"
             className={
@@ -232,8 +242,10 @@ export const DurationField: React.FC<DurationFieldProps> = (props) => {
             size={4}
             onChange={e => updateValue('seconds', e.target.value)}
             value={seconds}
+            onFocus={onFocus}
+            onBlur={onBlur}
             readOnly={readOnly}
-            disabled={readOnly}
+            // disabled={readOnly}
           />
         </div>
         <div />
