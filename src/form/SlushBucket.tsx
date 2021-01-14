@@ -73,6 +73,7 @@ export const SlushBucket: React.FC<MyProps> = (props) => {
         >
           <input
             id={name}
+            name={name}
             type="text"
             autoComplete="off"
             className={formStyles.FormControl}
