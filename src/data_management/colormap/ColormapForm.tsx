@@ -24,6 +24,8 @@ interface ColomapObj {
   // description: string,
   // rescalable: boolean,
   labels: any[],
+  free?: boolean,
+  invalid?: ColormapStepApi,
 }
 
 interface Props {
@@ -55,6 +57,7 @@ const ColormapForm: React.FC<Props> = (props) => {
     rescalable: currentRecord.rescalable === true,
     labels: currentRecord.labels,
     invalid: currentRecord.invalid,
+    free: currentRecord.free,
   }
   :
   {
@@ -77,6 +80,9 @@ const ColormapForm: React.FC<Props> = (props) => {
   };
 
   /*
+  {"data": [[0, [255, 255, 255, 255]], [1, [0, 255, 100, 255]], [2, [255, 0, 186, 255]], [3, [0, 27, 255, 255]]], "type": "DiscreteColormap", "labels": {"nl_NL": [[0, "BAG - woonfunctie"], [1, "BAG - celfunctie"], [2, "BAG - industriefunctie"], [3, "BAG - industriefunctie"]]}, "invalid": [7, 255, 255, 255]}
+  //*/
+  /*
 [0.0, [255, 255, 204, 0]], [0.125, [255, 237, 160, 255]], [0.25, [254, 217, 118, 255]], [0.375, [254, 178, 76, 255]], [0.5, [253, 141, 60, 255]], [0.625, [252, 78, 42, 255]], [0.75, [227, 26, 28, 255]], [0.875, [189, 0, 38, 255]], [1.0, [128, 0, 38, 255]]
   //*/
 
@@ -90,6 +96,12 @@ const ColormapForm: React.FC<Props> = (props) => {
       // rescalable: values.rescalable,
       labels: values.labels,
     };
+    if (values.free === true || values.free === false) {
+      jsonObj.free = jsonObj.free;
+    }
+    if (values.invalid) {
+      jsonObj.invalid = values.invalid;
+    }
     if (values.type === "Logarithmic" ) {
       jsonObj.type = "GradientColormap";
       // the api seems to only accept a "log" field if log:true ... nah
