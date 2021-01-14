@@ -199,7 +199,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           name={'temporal'}
           value={values.temporal}
           valueChanged={bool => handleValueChange('temporal', bool)}
-          readonly={!!currentRasterSource}
+          readOnly={!!currentRasterSource}
         />
         <DurationField
           title={'Interval'}

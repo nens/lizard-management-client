@@ -252,6 +252,7 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
             style={{
               display: "flex",
               alignItems: "center",
+              fontWeight: 500
             }}
           >
             <span style={{marginRight: "8px"}}>{queryCheckBox.text}</span>
@@ -261,6 +262,7 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
                   if (queryCheckBoxState) setQueryCheckBoxState(false);
                   else setQueryCheckBoxState(true)
                 }} 
+                size={32}
               />
           </span>
           :
