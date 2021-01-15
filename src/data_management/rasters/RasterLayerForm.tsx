@@ -94,7 +94,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
         supplier: values.supplier,
         aggregation_type: values.aggregationType,
         options: values.colorMap.options,
-        colormap: values.colorMap.customColormap,
+        colormap: JSON.stringify(values.colorMap.customColormap) ==="{}"? undefined : values.colorMap.customColormap,
         rescalable: values.colorMap.rescalable,
         shared_with: values.organisationsToSharedWith,
         datasets: values.dataset ? [values.dataset] : []
@@ -123,7 +123,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
         supplier: values.supplier,
         aggregation_type: values.aggregationType,
         options: values.colorMap.options,
-        colormap: values.colorMap.customColormap,
+        colormap: JSON.stringify(values.colorMap.customColormap) ==="{}"? undefined : values.colorMap.customColormap,
         rescalable: values.colorMap.rescalable,
         shared_with: values.organisationsToSharedWith,
         datasets: values.dataset ? [values.dataset] : []

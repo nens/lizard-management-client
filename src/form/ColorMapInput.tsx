@@ -171,7 +171,7 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
     valueChanged({
       options: newStyleOptions.options,
       rescalable: colorMapValue.rescalable,
-      customColormap: colorMapValue.customColormap,
+      customColormap: colorMap !== "Custom colormap"? {} : colorMapValue.customColormap,
     });
   }
 
@@ -314,17 +314,13 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
         <SelectBox
           title={''}
           choices={[["Custom colormap","Custom colormap","+ Create new colormap for this raster"],...colorMaps]}
-          value={JSON.stringify(colorMapValue.customColormap) !=="{}" ? "Custom colormap" : (colorMapType && colorMapType.colorMap) || null}
+          value={JSON.stringify(colorMapValue.customColormap) !=="{}" && JSON.stringify(colorMapValue.options) ==="{}" ? "Custom colormap" : (colorMapType && colorMapType.colorMap) || null}
           name={name + '_colorMapselect'}
           validated={validated}
           errorMessage={errorMessage}
           triedToSubmit={triedToSubmit}
           valueChanged={(colormap)=>{ 
             colorMapChanged(colormap); 
-            if (colormap !== "Custom colormap") {
-              customColormapChanged({}) 
-            }
-            
           }}
           placeholder={placeholderColorMapSelection}
           showSearchField={true}
