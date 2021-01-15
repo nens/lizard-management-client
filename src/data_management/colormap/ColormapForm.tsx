@@ -119,6 +119,7 @@ const ColormapForm: React.FC<Props> = (props) => {
     formSubmitted,
     tryToSubmitForm,
     handleInputChange,
+    handleValueChanges,
     handleSubmit,
     handleReset,
     clearInput,
@@ -156,7 +157,13 @@ const ColormapForm: React.FC<Props> = (props) => {
               title="Colormap Type"
               name="type"
               value={values.type}
-              valueChanged={handleInputChange}
+              valueChanged={(event)=>{
+                if (event.target.value === 'DiscreteColormap') {
+                  handleInputChange(event);
+                } else {
+                  handleValueChanges([{name: "invalid", value: undefined}, {name: "labels", value: undefined}, {name: "type", value: event.target.value}]);
+                }
+              }}
               readonly={false}
               options={[
                 {
@@ -233,6 +240,7 @@ const ColormapForm: React.FC<Props> = (props) => {
                 })}
                 name={"data"}
                 colormapIsLogarithmic={values.type === "Logarithmic"}
+                colormapIsDiscrete={values.type === "DiscreteColormap"}
               ></ColormapAllSteps>
               {/* {values.data.map((item:any)=>{
                 return (

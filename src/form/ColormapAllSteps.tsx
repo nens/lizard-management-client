@@ -39,6 +39,7 @@ interface Props {
   steps: ColormapStep[],
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void,
   colormapIsLogarithmic: boolean,
+  colormapIsDiscrete: boolean,
 };
 
 export const ColormapAllSteps: React.FC<Props> = (props) => {
@@ -49,6 +50,7 @@ export const ColormapAllSteps: React.FC<Props> = (props) => {
     name,
     onChange,
     colormapIsLogarithmic,
+    colormapIsDiscrete,
   } = props;
 
   const [visiblepickerIndex, setVisiblepickerIndex] = useState<null | number>(null);
@@ -100,6 +102,7 @@ export const ColormapAllSteps: React.FC<Props> = (props) => {
           const errorMsg = 
             colormapIsLogarithmic === true && ind === 0 && (step.step === 0 || step.step < 0 ) ? "Logarithmic step must be larger then 0" :
             ind > 0 && step.step < previousStepValue? "Each step must be greater or equal to previous step":
+            colormapIsDiscrete && (step.step+'').match(/^[+-]?\d+(\.\d+)?$/) && (step.step+'').includes('.')? "Discrete steps must be whole numbers":
             undefined;
 
           return(

@@ -21,6 +21,7 @@ interface FormOutput {
   tryToSubmitForm: () => void, 
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void,
   handleValueChange: (name: string, value: Value) => void,
+  handleValueChanges: (changes:{name: string, value: Value}[]) => void,
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void,
   handleReset: (e: React.FormEvent<HTMLFormElement>) => void,
   handleBlur: (e: React.ChangeEvent<HTMLInputElement>) => void,
@@ -52,13 +53,22 @@ export const useForm = ({ initialValues, onSubmit }: FormInput): FormOutput => {
     });
   };
 
+  const handleValueChanges = (changes:{name: string, value: Value}[]) => {
+    let tmpObj = {...values};
+    changes.forEach((change)=>{
+      // @ts-ignore
+      tmpObj[change.name] = change.value;
+    })
+    setValues(tmpObj);
+  };
+
   const clearInput = (name: string) => {
     setValues({
       ...values,
       [name]: ''
     });
   };
-
+  
   const handleBlur = (event: React.ChangeEvent<HTMLInputElement>) => {
     const target = event.target;
     const name = target.name;
@@ -87,6 +97,7 @@ export const useForm = ({ initialValues, onSubmit }: FormInput): FormOutput => {
     formSubmitted,
     tryToSubmitForm,
     handleInputChange,
+    handleValueChanges,
     handleBlur,
     handleSubmit,
     handleReset,
