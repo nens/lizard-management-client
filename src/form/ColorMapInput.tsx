@@ -327,6 +327,16 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
           readOnly={readOnly}
           form={form}
         />
+        {
+          JSON.stringify(colorMapValue.customColormap) !=="{}" && JSON.stringify(colorMapValue.options) ==="{}"?
+          <button
+            onClick={()=>setShowCustomColormapModal(true)}
+          >
+            Edit
+          </button>
+          :
+          null
+        }
   
         <br />
         <span className="text-muted">
