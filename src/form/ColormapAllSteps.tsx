@@ -54,14 +54,6 @@ export const ColormapAllSteps: React.FC<Props> = (props) => {
 
   const [visiblepickerIndex, setVisiblepickerIndex] = useState<null | number>(null);
 
-
-  // const [color, setColor] = useState();
-  // const handleChange = color => setColor(color);
-  // return (
-  //   <div className="App">
-  //     <SketchPicker color={color} onChangeComplete={handleChange} />
-  //   </div>
-
   const handleColorChange=(color: RGBColor, ind: number) => {
     const oldSteps = JSON.parse(JSON.stringify(steps));
     oldSteps[ind].rgba = color;
@@ -83,7 +75,6 @@ export const ColormapAllSteps: React.FC<Props> = (props) => {
   const handleStepChange = (event:React.ChangeEvent<HTMLInputElement>, ind:number)=>{
     const oldSteps = JSON.parse(JSON.stringify(steps));
     oldSteps[ind].step = parseFloat(event.target.value);
-    // const (event: as React.ChangeEvent<HTMLInputElement>) = {target:{name: name, value: oldSteps}}
     const fakeEvent = {target:{name: name, value: oldSteps}}
     // @ts-ignore
     onChange(fakeEvent);
@@ -155,7 +146,6 @@ export const ColormapAllSteps: React.FC<Props> = (props) => {
                         color={rgba} 
                         onChangeComplete={(color)=>{
                           handleColorChange(color.rgb,ind);
-                          // setVisiblepickerIndex(null);
                         }}
                       />
                     </div>

@@ -264,10 +264,6 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
       {showCustomColormapModal? 
         <Modal
           title={'CUSTOM COLORMAP'}
-          // closeDialogAction={()=>{
-          // setShowDeleteFailedModal(false);
-          // setRowToBeDeleted(null);
-          // }}
         >
           <ColormapForm
             currentRecord={value.customColormap.data? value.customColormap: undefined}
@@ -277,25 +273,6 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
               setShowCustomColormapModal(false);
             }}
           />
-          {/* <form
-            className={formStyles.Form}
-            // onSubmit={handleSubmit}
-            // onReset={handleReset}
-          >
-
-            <div
-              className={formStyles.ButtonContainer}
-            >
-              <button
-                className={buttonStyles.ButtonLink}
-              >
-                CANCEL
-              </button>
-              <SubmitButton
-                onClick={()=>{}}
-              />
-            </div>
-          </form> */}
         </Modal>
       :null}
       <span className={formStyles.LabelTitle}>
