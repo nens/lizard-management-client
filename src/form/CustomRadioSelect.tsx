@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import styles from "./CustomRadioselect.module.css";
+import styles from "./CustomRadioSelect.module.css";
 import formStyles from "../styles/Forms.module.css";
 
 interface Option {
-  title: string,
   value: string,
-  imgUrl: string,
+  component: JSX.Element,
+  selectedComponent: JSX.Element,
 }
 
 interface Props {
@@ -32,32 +32,36 @@ export const CustomRadioSelect: React.FC<Props> = (props) => {
   return (
     <div>
       <label>{title}</label>
-      <br/>
+      {/* <br/> */}
+      <div className={styles.OptionsRow}>
       {
         options.map((option: Option)=>{
 
           return (
-            <span key={option.value}>
-            <input 
-              type="radio" 
-              id={title+name+value} 
-              name={name} 
-              value={option.value}
-              onChange={(event:any)=>{
-                valueChanged(event);
-              }}
-              checked={option.value === value}
-              readOnly={readonly}
-            />
-            <label 
-              htmlFor={title+name+option.value}
-            >
-              {option.title}
-            </label>
-            </span>
+            <div key={option.value} className={styles.OptionContainer}>
+              <input 
+                type="radio" 
+                id={title+name+option.value} 
+                name={name} 
+                value={option.value}
+                onChange={(event:any)=>{
+                  valueChanged(event);
+                }}
+                checked={option.value === value}
+                readOnly={readonly}
+              />
+              <label 
+                htmlFor={title+name+option.value}
+                className={styles.Label}
+              >
+                {option.component}
+                {option.selectedComponent}
+              </label>
+            </div>
           );
         })
       }
+      </div>
     </div>
   );
 }

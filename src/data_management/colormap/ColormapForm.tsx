@@ -130,6 +130,11 @@ const ColormapForm: React.FC<Props> = (props) => {
         className={`${formStyles.Form} ${styles.Form}`}
         onSubmit={handleSubmit}
         onReset={handleReset}
+        style={{
+          // reset form styles that are not applicable in modal
+          margin: 0,
+          padding: 0,
+        }}
       >
         <div>
           {/* <div>
@@ -167,19 +172,49 @@ const ColormapForm: React.FC<Props> = (props) => {
               readonly={false}
               options={[
                 {
-                title: "Discreet",
                 value: "DiscreteColormap",
-                imgUrl: "1234",
+                component: (
+                  <div className={styles.TypeLabel}>
+                    <div></div>
+                    <div>Discreet</div>
+                  </div>
+                  ),
+                selectedComponent: (
+                  <div className={`${styles.TypeLabel} ${styles.TypeLabelSelected}`}>
+                    <div></div>
+                    <div>Discreet</div>
+                  </div>
+                  ),
                 },
                 {
-                  title: "Lineair Gradient",
                   value: "GradientColormap",
-                  imgUrl: "1234",
+                  component: (
+                    <div className={styles.TypeLabel}>
+                      <div></div>
+                      <div>Lineair Gradient</div>
+                    </div>
+                    ),
+                  selectedComponent: (
+                    <div className={`${styles.TypeLabel} ${styles.TypeLabelSelected}`}>
+                      <div></div>
+                      <div>Lineair Gradient</div>
+                    </div>
+                    ),
                 },
                 {
-                  title: "Logarithmic",
                   value: "Logarithmic",
-                  imgUrl: "1234",
+                  component: (
+                    <div className={styles.TypeLabel}>
+                      <div></div>
+                      <div>Logarithmic</div>
+                    </div>
+                    ),
+                  selectedComponent: (
+                    <div className={`${styles.TypeLabel} ${styles.TypeLabelSelected}`}>
+                      <div></div>
+                      <div>Logarithmic</div>
+                    </div>
+                    ),
                 },
               ]}
             ></CustomRadioSelect>
