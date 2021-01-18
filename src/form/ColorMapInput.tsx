@@ -256,7 +256,6 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
   const placeholderMinimumColorRange = intl.formatMessage({ id: "placeholder_minimum_color_range" })
   const placeholderMaximumColorRange = intl.formatMessage({ id: "placeholder_maximum_color_range" })
 
-  console.log('colorMaps', colorMaps)
   return (
     <label
       htmlFor={name}

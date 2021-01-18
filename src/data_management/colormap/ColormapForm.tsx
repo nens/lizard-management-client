@@ -228,7 +228,6 @@ const ColormapForm: React.FC<Props> = (props) => {
                     label: "",
                   });
                   const newArray = values.data.concat(tempArray);
-                  console.log("make data bigger", tempArray, newArray)
                   const newEvent = {...e, target: {...e.target, value: newArray, name: e.target.name}}
                   handleInputChange(newEvent);
                 } else /*if (difference < 0)*/ {
