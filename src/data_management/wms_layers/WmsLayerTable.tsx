@@ -143,7 +143,7 @@ export const WmsLayerTable = (props:any) =>  {
       imgUrl={wmsIcon}
       imgAltDescription={"WMS-Layer icon"}
       headerText={"WMS Layers"}
-      explainationText={"WMS-Layers allow to configure layers in lizard even if they are hosted on another platform"} 
+      explanationText={"WMS-Layers allow to configure layers in lizard even if they are hosted on another platform"} 
       backUrl={"/data_management"}
     >
         <TableStateContainer 

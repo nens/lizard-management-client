@@ -30,40 +30,53 @@ interface MyProps {
   name: string,
   uuid: string,
   formSubmitted?: boolean,
+  onFocus?: (e: React.FocusEvent<HTMLButtonElement>) => void,
+  onBlur?: () => void,
   readOnly?: boolean
 };
 
 interface DeleteButtonProps {
   scheduledForDeletion: boolean,
-  handleClick: (e: React.MouseEvent<HTMLButtonElement>) => void
+  handleClick: (e: React.MouseEvent<HTMLButtonElement>) => void,
+  onFocus?: (e: React.FocusEvent<HTMLButtonElement>) => void,
+  onBlur?: () => void,
 };
 
 interface ResultGroupTitleProps {
   name: string,
   results: Result[],
   scheduledForBulkDeletion: boolean,
-  handleDeletion: (e: React.MouseEvent<HTMLButtonElement>) => void
+  handleDeletion: (e: React.MouseEvent<HTMLButtonElement>) => void,
+  onFocus?: (e: React.FocusEvent<HTMLButtonElement>) => void,
+  onBlur?: () => void,
 };
 
 interface ResultRowProps {
   scheduledForBulkDeletion: boolean,
   result: Result,
-  handleDeletion: (e: React.MouseEvent<HTMLButtonElement>, id: number) => void
+  handleDeletion: (e: React.MouseEvent<HTMLButtonElement>, id: number) => void,
+  onFocus?: (e: React.FocusEvent<HTMLButtonElement>) => void,
+  onBlur?: () => void,
 };
 
 // Render button for result deletion
 const DeleteButton: React.FC<DeleteButtonProps> = ({
   scheduledForDeletion,
-  handleClick
+  handleClick,
+  onFocus,
+  onBlur
 }) => {
   return (
     <button
+      id={'resultDeleteButton'}
       className={buttonStyles.IconButton}
       onClick={handleClick}
       style={{
         fontSize: 18,
         color: scheduledForDeletion ? '#2C3E50' : '#D50000',
       }}
+      onFocus={onFocus}
+      onBlur={onBlur}
     >
       {scheduledForDeletion ? (
         <i className='fa fa-undo' title='Undo' />
@@ -79,7 +92,9 @@ const ResultGroupTitle: React.FC<ResultGroupTitleProps> = ({
   name,
   results,
   scheduledForBulkDeletion,
-  handleDeletion
+  handleDeletion,
+  onFocus,
+  onBlur
 }) => {
   return (
     <div className={scenarioResultStyles.ResultTitleRow}>
@@ -88,6 +103,8 @@ const ResultGroupTitle: React.FC<ResultGroupTitleProps> = ({
         <DeleteButton
           scheduledForDeletion={scheduledForBulkDeletion}
           handleClick={handleDeletion}
+          onFocus={onFocus}
+          onBlur={onBlur}
         />
       ) : null}
     </div>
@@ -98,7 +115,9 @@ const ResultGroupTitle: React.FC<ResultGroupTitleProps> = ({
 const ResultRow: React.FC<ResultRowProps> = ({
   scheduledForBulkDeletion,
   result,
-  handleDeletion
+  handleDeletion,
+  onFocus,
+  onBlur
 }) => {
   return (
     <div
@@ -112,6 +131,8 @@ const ResultRow: React.FC<ResultRowProps> = ({
         <DeleteButton
           scheduledForDeletion={result.scheduledForDeletion}
           handleClick={(e) => handleDeletion(e, result.id)}
+          onFocus={onFocus}
+          onBlur={onBlur}
         />
       ) : null}
     </div>
@@ -123,6 +144,8 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
     name,
     uuid,
     formSubmitted,
+    onFocus,
+    onBlur,
     // readOnly
   } = props;
 
@@ -395,6 +418,8 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
           results={rawResults.results}
           scheduledForBulkDeletion={rawResults.scheduledForBulkDeletion}
           handleDeletion={handleRawResultsBulkDeletion}
+          onFocus={onFocus}
+          onBlur={onBlur}
         />
         {rawResults.isFetching ? (
           <MDSpinner size={24} />
@@ -405,6 +430,8 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
               scheduledForBulkDeletion={rawResults.scheduledForBulkDeletion}
               result={result}
               handleDeletion={handleRawResultDeletion}
+              onFocus={onFocus}
+              onBlur={onBlur}
             />
           ))
         )}
@@ -415,6 +442,8 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
           results={arrivalResults.results}
           scheduledForBulkDeletion={arrivalResults.scheduledForBulkDeletion}
           handleDeletion={handleArrivalResultsBulkDeletion}
+          onFocus={onFocus}
+          onBlur={onBlur}
         />
         {arrivalResults.isFetching ? (
           <MDSpinner size={24} />
@@ -425,6 +454,8 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
               scheduledForBulkDeletion={arrivalResults.scheduledForBulkDeletion}
               result={result}
               handleDeletion={handleArrivalResultDeletion}
+              onFocus={onFocus}
+              onBlur={onBlur}
             />
           ))
         )}
@@ -435,6 +466,8 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
           results={basicResults.results}
           scheduledForBulkDeletion={basicResults.scheduledForBulkDeletion}
           handleDeletion={handleBasicResultsBulkDeletion}
+          onFocus={onFocus}
+          onBlur={onBlur}
         />
         {basicResults.isFetching ? (
           <MDSpinner size={24} />
@@ -445,6 +478,8 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
               scheduledForBulkDeletion={basicResults.scheduledForBulkDeletion}
               result={result}
               handleDeletion={handleBasicResultDeletion}
+              onFocus={onFocus}
+              onBlur={onBlur}
             />
           ))
         )}
@@ -455,6 +490,8 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
           results={damageResults.results}
           scheduledForBulkDeletion={damageResults.scheduledForBulkDeletion}
           handleDeletion={handleDamageResultsBulkDeletion}
+          onFocus={onFocus}
+          onBlur={onBlur}
         />
         {damageResults.isFetching ? (
           <MDSpinner size={24} />
@@ -465,6 +502,8 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
               scheduledForBulkDeletion={damageResults.scheduledForBulkDeletion}
               result={result}
               handleDeletion={handleDamageResultDeletion}
+              onFocus={onFocus}
+              onBlur={onBlur}
             />
           ))
         )}

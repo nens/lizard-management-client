@@ -44,6 +44,8 @@ interface ColorMapProps {
   placeholder?: string,
   validators?: Function[],
   form?: string,
+  onFocus?: (e: React.ChangeEvent<HTMLInputElement>) => void,
+  onBlur?: () => void,
 };
 
 export const colorMapValidator = (options: ColorMapOptions | null): validatorResult => {
@@ -87,8 +89,10 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
     validated,
     errorMessage,
     triedToSubmit,
-    intl,
     form,
+    onFocus,
+    onBlur,
+    intl
   } = props;
 
   // Set validity of the input field
@@ -313,6 +317,8 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
             showSearchField={true}
             readOnly={readOnly}
             form={form}
+            onFocus={onFocus}
+            onBlur={onBlur}
           />
           {
             JSON.stringify(colorMapValue.customColormap) !=="{}" && JSON.stringify(colorMapValue.options) ==="{}"?
@@ -337,12 +343,15 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
         </span>
         <br />
         <input
+          id={name}
           type="number"
           autoComplete="off"
           onChange={e => handleValueChanged('min', toFloat(e.target.value))}
           value={(colorMapType && colorMapType.min) || ""}
           placeholder={placeholderMinimumColorRange}
           className={formStyles.FormControl}
+          onFocus={onFocus}
+          onBlur={onBlur}
           readOnly={readOnly}
           disabled={readOnly}
           form={form}
@@ -352,12 +361,15 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
         <FormattedMessage id="color_map.maximum_color_range" />
         </span>
         <input
+          id={name}
           type="number"
           autoComplete="off"
           value={(colorMapType && colorMapType.max) || ""}
           onChange={e => handleValueChanged('max', toFloat(e.target.value))}
           placeholder={placeholderMaximumColorRange}
           className={formStyles.FormControl}
+          onFocus={onFocus}
+          onBlur={onBlur}
           readOnly={readOnly}
           disabled={readOnly}
           form={form}
@@ -365,10 +377,12 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
         <br/>
         <CheckBox
           title={'Rescalable'}
-          name={'rescalable'}
+          name={name+'_rescalable'}
           value={colorMapValue.rescalable}
           valueChanged={(bool: boolean) => rescalableChanged(bool)}
           form={form}
+          onFocus={onFocus}
+          onBlur={onBlur}
         />      
       </div>
     </label>

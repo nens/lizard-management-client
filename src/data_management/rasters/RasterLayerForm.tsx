@@ -26,6 +26,7 @@ import {
 } from '../../reducers';
 import { optionsHasLayers } from '../../utils/rasterOptionFunctions';
 import { getUuidFromUrl } from '../../utils/getUuidFromUrl';
+import { rasterLayerFormHelpText } from '../../utils/helpTextForForms';
 import { addNotification, removeRasterSourceUUID } from './../../actions';
 import rasterLayerIcon from "../../images/raster_layer_icon.svg";
 import formStyles from './../../styles/Forms.module.css';
@@ -155,6 +156,9 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
     tryToSubmitForm,
     handleInputChange,
     handleValueChange,
+    fieldOnFocus,
+    handleBlur,
+    handleFocus,
     handleSubmit,
     handleReset,
     clearInput,
@@ -177,7 +181,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
       imgUrl={rasterLayerIcon}
       imgAltDescription={"Raster-Layer icon"}
       headerText={"Raster Layers"}
-      explainationText={"Create a layer to view your raster data in the portal."}
+      explanationText={rasterLayerFormHelpText[fieldOnFocus] || rasterLayerFormHelpText['default']}
       backUrl={"/data_management/rasters/layers"}
     >
       <form
@@ -198,6 +202,8 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           placeholder={'Please enter at least 3 characters'}
           value={values.name}
           valueChanged={handleInputChange}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           clearInput={clearInput}
           validated={!minLength(3, values.name)}
           errorMessage={minLength(3, values.name)}
@@ -210,6 +216,8 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           placeholder={'This is a layer based on raster_source'}
           value={values.description}
           valueChanged={handleInputChange}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           clearInput={clearInput}
           validated
           form={"raster_layer_form_id"}
@@ -221,6 +229,8 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           value={values.dataset}
           valueChanged={value => handleValueChange('dataset', value)}
           choices={datasets.map((dataset: any) => [dataset.slug, dataset.slug])}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           validated
           form={"raster_layer_form_id"}
         />
@@ -237,6 +247,8 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
             choices={rasterSources.map(rasterSource => [rasterSource.uuid!, rasterSource.name])}
             validated={!required('Please select a raster source', values.rasterSource)}
             errorMessage={required('Please select a raster source', values.rasterSource)}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
             triedToSubmit={triedToSubmit}
             readOnly={!!currentRasterLayer || !!rasterSourceUUID}
             showSearchField
@@ -250,6 +262,8 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
             valueChanged={handleInputChange}
             clearInput={clearInput}
             validated
+            onFocus={handleFocus}
+            onBlur={handleBlur}
             readOnly
             triedToSubmit={triedToSubmit}
             form={"raster_layer_form_id"}
@@ -290,6 +304,8 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           ]}
           validated={!required('Please select an option', values.aggregationType)}
           errorMessage={required('Please select an option', values.aggregationType)}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           triedToSubmit={triedToSubmit}
           form={"raster_layer_form_id"}
         />
@@ -319,6 +335,8 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           })}
           validated={!required('Please select an observation type', values.observationType)}
           errorMessage={required('Please select an observation type', values.observationType)}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           triedToSubmit={triedToSubmit}
           showSearchField
           form={"raster_layer_form_id"}
@@ -333,6 +351,9 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           errorMessage={colorMapValidator(values.colorMap)}
           triedToSubmit={triedToSubmit}
           form={"raster_layer_form_id"}
+          // @ts-ignore
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         <span className={formStyles.FormFieldTitle}>
           3: Rights
@@ -342,6 +363,8 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           name={'accessModifier'}
           value={values.accessModifier || accessModifier}
           valueChanged={() => null}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           readOnly
           form={"raster_layer_form_id"}
         />
@@ -351,6 +374,9 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           value={values.sharedWith}
           valueChanged={bool => handleValueChange('sharedWith', bool)}
           form={"raster_layer_form_id"}
+          // @ts-ignore
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         {values.sharedWith ? (
           <SlushBucket
@@ -367,6 +393,9 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
             valueChanged={(value: any) => handleValueChange('organisationsToSharedWith', value)}
             validated
             form={"raster_layer_form_id"}
+            // @ts-ignore
+            onFocus={handleFocus}
+            onBlur={handleBlur}
           />
         ) : null}
         <SelectBox
@@ -380,6 +409,8 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           validated={values.organisation !== null && values.organisation !== ''}
           errorMessage={'Please select an organisation'}
           triedToSubmit={triedToSubmit}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           readOnly={true}
           form={"raster_layer_form_id"}
         />
@@ -392,6 +423,8 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           choices={supplierIds.map((suppl:any) => [suppl.username, suppl.username])}
           showSearchField
           validated
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           readOnly={!(supplierIds.length > 0 && selectedOrganisation.roles.includes('admin'))}
           form={"raster_layer_form_id"}
         />

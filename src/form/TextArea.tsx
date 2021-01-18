@@ -6,11 +6,13 @@ interface MyProps {
   title: string,
   name: string,
   value: string | null,
-  valueChanged: Function,
+  valueChanged: (e: React.ChangeEvent<HTMLTextAreaElement>) => void,
   clearInput: (name: string) => void,
   validated: boolean,
   errorMessage?: string | false,
   placeholder?: string,
+  onFocus?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void,
+  onBlur?: () => void,
   handleEnter?: (e: any) => void,
   triedToSubmit?: boolean,
   readOnly?: boolean,
@@ -25,6 +27,8 @@ export const TextArea: React.FC<MyProps> = (props) => {
     value,
     valueChanged,
     clearInput,
+    onFocus,
+    onBlur,
     handleEnter,
     validated,
     errorMessage,
@@ -63,10 +67,12 @@ export const TextArea: React.FC<MyProps> = (props) => {
           placeholder={placeholder}
           onChange={e => valueChanged(e)}
           value={value || ""}
+          onFocus={onFocus}
+          onBlur={onBlur}
           onKeyUp={handleEnter}
           readOnly={!!readOnly}
-          disabled={!!readOnly}
           form={form}
+          // disabled={!!readOnly}
         />
         {!readOnly && value !== null && value.length ? <ClearInputButton onClick={() => clearInput(name)}/> : null}
       </div>

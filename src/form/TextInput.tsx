@@ -11,6 +11,8 @@ interface MyProps {
   validated: boolean,
   errorMessage?: string | false,
   placeholder?: string,
+  onFocus?: (e: React.ChangeEvent<HTMLInputElement>) => void,
+  onBlur?: () => void,
   handleEnter?: (e: any) => void,
   triedToSubmit?: boolean,
   readOnly?: boolean,
@@ -27,6 +29,8 @@ export const TextInput: React.FC<MyProps> = (props) => {
     value,
     valueChanged,
     clearInput,
+    onFocus,
+    onBlur,
     handleEnter,
     validated,
     errorMessage,
@@ -73,6 +77,8 @@ export const TextInput: React.FC<MyProps> = (props) => {
           form={form}
           type={type || "text"}
           required={required}
+          onFocus={onFocus}
+          onBlur={onBlur}
         />
         {clearInput && !readOnly && value !== null && (value + '').length ? <ClearInputButton onClick={() => clearInput(name)}/> : null}
       </div>

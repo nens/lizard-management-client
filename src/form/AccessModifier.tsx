@@ -7,6 +7,8 @@ interface MyProps {
   name: string,
   value: string | null,
   valueChanged: (value: string) => void,
+  onFocus?: (e: any) => void,
+  onBlur?: () => void,
   handleEnter?: (e: any) => void,
   readOnly?: boolean,
   form?: string,
@@ -18,8 +20,10 @@ export const AccessModifier: React.FC<MyProps> = (props) => {
     name,
     value,
     valueChanged,
-    readOnly,
     // form,
+    onFocus,
+    onBlur,
+    readOnly
   } = props;
 
   return (
@@ -34,22 +38,34 @@ export const AccessModifier: React.FC<MyProps> = (props) => {
         className={readOnly ? styles.AccessModifierTilesReadOnly : styles.AccessModifierTiles}
       >
         <div
+          id={name}
           className={value === 'Private' ? `${styles.AccessModifier} ${styles.AccessModifierSelected}` : styles.AccessModifier}
           onClick={() => !readOnly && valueChanged('Private')}
+          tabIndex={0}
+          onFocus={onFocus}
+          onBlur={onBlur}
         >
           <span>Private</span>
           <span>(own organisation)</span>
         </div>
         <div
+          id={name}
           className={value === 'Common' ? `${styles.AccessModifier} ${styles.AccessModifierSelected}` : styles.AccessModifier}
           onClick={() => !readOnly && valueChanged('Common')}
+          tabIndex={0}
+          onFocus={onFocus}
+          onBlur={onBlur}
         >
           <span>Common</span>
           <span>(logged in only)</span>
         </div>
         <div
+          id={name}
           className={value === 'Public' ? `${styles.AccessModifier} ${styles.AccessModifierSelected}` : styles.AccessModifier}
           onClick={() => !readOnly && valueChanged('Public')}
+          tabIndex={0}
+          onFocus={onFocus}
+          onBlur={onBlur}
         >
           <span>Public</span>
           <span>(open to everyone)</span>

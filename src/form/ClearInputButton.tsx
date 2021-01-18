@@ -4,12 +4,16 @@ import styles from "./ClearInputButton.module.css";
 interface ClearInputButtonProps {
   className?: string,
   icon?: string
-  onClick: (e: any) => void
+  onClick?: (e: any) => void
 };
 
 export const ClearInputButton: React.FC<ClearInputButtonProps> = (props) => {
   return (
-    <div className={props.className} onClick={props.onClick}>
+    <div
+      className={props.className}
+      onClick={props.onClick}
+      onMouseDown={e => e.preventDefault()} // to prevent focus on this element
+    >
       <i
         className={`${styles.ClearInput} ${
           styles.ClearInputTopRight

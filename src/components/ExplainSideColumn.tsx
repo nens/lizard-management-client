@@ -1,12 +1,19 @@
 import React from 'react';
-
 import { NavLink } from "react-router-dom";
+import styles from './ExplainSideColumn.module.css';
 import backArrow from '../images/back_arrow.svg';
 
-export const ExplainSideColumn = (props:any) => {
+interface MyProps {
+  imgUrl: string,
+  imgAltDescription: string,
+  headerText: string,
+  explanationText: string | JSX.Element,
+  backUrl: string,
+}
 
-  const {imgUrl, imgAltDescription, headerText,explainationText, backUrl} = props;
-
+export const ExplainSideColumn: React.FC<MyProps> = ({
+  imgUrl, imgAltDescription, headerText, explanationText, backUrl, children
+}) => {
   return (
     <div 
       style={{
@@ -36,7 +43,6 @@ export const ExplainSideColumn = (props:any) => {
           
         >
           <NavLink to={backUrl}><span style={{fontSize:"36px"}}>
-            {/* {"←"} */}
             <img alt="back" src={backArrow}/>
           </span></NavLink>
         </div>
@@ -57,7 +63,10 @@ export const ExplainSideColumn = (props:any) => {
           {headerText}
         </h2>
         <div
+          key={JSON.stringify(explanationText)}
+          className={styles.ExplainBoxEffect}
           style={{
+            backgroundColor: "#FCFCFC",
             borderColor: "#A1A1A1",
             borderStyle: "solid",
             borderWidth: "0.5px",
@@ -67,7 +76,7 @@ export const ExplainSideColumn = (props:any) => {
             // flex: "1",
           }}
         >
-          {explainationText}
+          {explanationText}
         </div>
       </div>
       <div
@@ -76,7 +85,7 @@ export const ExplainSideColumn = (props:any) => {
           minWidth: 0,
         }}
       >
-        {props.children}
+        {children}
       </div>
     </div>
   );
