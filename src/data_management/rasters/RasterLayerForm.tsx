@@ -351,7 +351,6 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           errorMessage={colorMapValidator(values.colorMap)}
           triedToSubmit={triedToSubmit}
           form={"raster_layer_form_id"}
-          // @ts-ignore
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
@@ -374,7 +373,6 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           value={values.sharedWith}
           valueChanged={bool => handleValueChange('sharedWith', bool)}
           form={"raster_layer_form_id"}
-          // @ts-ignore
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
@@ -393,7 +391,6 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
             valueChanged={(value: any) => handleValueChange('organisationsToSharedWith', value)}
             validated
             form={"raster_layer_form_id"}
-            // @ts-ignore
             onFocus={handleFocus}
             onBlur={handleBlur}
           />
