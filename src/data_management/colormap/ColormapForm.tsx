@@ -111,8 +111,11 @@ const ColormapForm: React.FC<Props> = (props) => {
         onReset={handleReset}
         style={{
           // reset form styles that are not applicable in modal
+          // margin: 0,
+          // padding: 0,
           margin: 0,
           padding: 0,
+          height: "unset"
         }}
       >
         <div>

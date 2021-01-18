@@ -13,7 +13,9 @@ import {
   validateStyleObj,
   colorMapTypeFromOptions
 } from "../utils/rasterOptionFunctions";
-import Modal from '../components/Modal';
+// import Modal from '../components/Modal';
+import ModalBackground from '../components/ModalBackground';
+
 import { ColormapForm } from '../data_management/colormap/ColormapForm';
 
 
@@ -262,18 +264,29 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
       className={formStyles.Label}
     >
       {showCustomColormapModal? 
-        <Modal
+        // <Modal
+        //   title={'CUSTOM COLORMAP'}
+        // >
+        <ModalBackground
           title={'CUSTOM COLORMAP'}
+          handleClose={() => setShowCustomColormapModal(false)}
+          // value depends on content, but should be precisely hardcoded
+          height={'816px'} 
         >
-          <ColormapForm
-            currentRecord={value.customColormap.data? value.customColormap: undefined}
-            cancelAction={()=>{setShowCustomColormapModal(false)}}
-            confirmAction={(customColormap:any)=>{
-              customColormapChanged(customColormap);
-              setShowCustomColormapModal(false);
-            }}
-          />
-        </Modal>
+          <div
+            style={{padding: "30px"}}
+          >
+            <ColormapForm
+              currentRecord={value.customColormap.data? value.customColormap: undefined}
+              cancelAction={()=>{setShowCustomColormapModal(false)}}
+              confirmAction={(customColormap:any)=>{
+                customColormapChanged(customColormap);
+                setShowCustomColormapModal(false);
+              }}
+            />
+          </div>
+        </ModalBackground>
+        // {/* </Modal> */}
       :null}
       <span className={formStyles.LabelTitle}>
         {title}
