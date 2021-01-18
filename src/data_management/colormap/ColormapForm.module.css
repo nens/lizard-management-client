@@ -1,4 +1,4 @@
-.Form > div:nth-child(1) {
+/* .Form > div:nth-child(1) {
   display: flex;
   flex-direction: row;
 }
@@ -7,7 +7,7 @@
   width: 50%;
   padding-right: 40px;
   box-sizing: border-box;
-}
+} */
 
 .TypeLabel {
   width: 160px;
@@ -17,9 +17,20 @@
   border: 1px solid #C9C9C9;
   border-radius: 3px;
   margin-right: 16px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
 }
 
 .TypeLabel.TypeLabelSelected {
   background-color: #E5F6F1;
   border: 2px solid #55BFA2;
+}
+
+/* gradient */
+.TypeLabel *:nth-child(1) {
+  width: 67px;
+  height: 23px;
 }

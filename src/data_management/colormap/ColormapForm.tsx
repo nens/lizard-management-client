@@ -157,7 +157,7 @@ const ColormapForm: React.FC<Props> = (props) => {
               validated
             />
           </div> */}
-          <div>
+          {/* <div> */}
             <CustomRadioSelect
               title="Colormap Type"
               name="type"
@@ -175,13 +175,21 @@ const ColormapForm: React.FC<Props> = (props) => {
                 value: "DiscreteColormap",
                 component: (
                   <div className={styles.TypeLabel}>
-                    <div></div>
+                    <div style={{display:"flex"}}>
+                      <div style={{backgroundColor: "#43E669", width: "33%"}}></div>
+                      <div style={{backgroundColor: "#F95959", width: "33%"}}></div>
+                      <div style={{backgroundColor: "#8A6EFF", width: "33%"}}></div>
+                    </div>
                     <div>Discreet</div>
                   </div>
                   ),
                 selectedComponent: (
                   <div className={`${styles.TypeLabel} ${styles.TypeLabelSelected}`}>
-                    <div></div>
+                    <div style={{display:"flex"}}>
+                      <div style={{backgroundColor: "#43E669", width: "33%"}}></div>
+                      <div style={{backgroundColor: "#F95959", width: "33%"}}></div>
+                      <div style={{backgroundColor: "#8A6EFF", width: "33%"}}></div>
+                    </div>
                     <div>Discreet</div>
                   </div>
                   ),
@@ -190,13 +198,13 @@ const ColormapForm: React.FC<Props> = (props) => {
                   value: "GradientColormap",
                   component: (
                     <div className={styles.TypeLabel}>
-                      <div></div>
+                      <div style={{background: "transparent linear-gradient(90deg, #6E5757 0%, #C8E2EC 0%, #4247EC 100%) 0% 0% no-repeat padding-box",}}></div>
                       <div>Lineair Gradient</div>
                     </div>
                     ),
                   selectedComponent: (
                     <div className={`${styles.TypeLabel} ${styles.TypeLabelSelected}`}>
-                      <div></div>
+                      <div style={{background: "transparent linear-gradient(90deg, #6E5757 0%, #C8E2EC 0%, #4247EC 100%) 0% 0% no-repeat padding-box",}}></div>
                       <div>Lineair Gradient</div>
                     </div>
                     ),
@@ -205,13 +213,13 @@ const ColormapForm: React.FC<Props> = (props) => {
                   value: "Logarithmic",
                   component: (
                     <div className={styles.TypeLabel}>
-                      <div></div>
+                      <div style={{background: "transparent linear-gradient(90deg, #6E5757 0%, #FFF67A 0%, #FFD153 56%, #FF2E2E 89%, #6D1600 100%) 0% 0% no-repeat padding-box",}}></div>
                       <div>Logarithmic</div>
                     </div>
                     ),
                   selectedComponent: (
                     <div className={`${styles.TypeLabel} ${styles.TypeLabelSelected}`}>
-                      <div></div>
+                      <div style={{background: "transparent linear-gradient(90deg, #6E5757 0%, #FFF67A 0%, #FFD153 56%, #FF2E2E 89%, #6D1600 100%) 0% 0% no-repeat padding-box",}}></div>
                       <div>Logarithmic</div>
                     </div>
                     ),
@@ -283,7 +291,7 @@ const ColormapForm: React.FC<Props> = (props) => {
                 );
               })} */}
             </div>
-          </div>
+          {/* </div> */}
         </div>
         
         <div
