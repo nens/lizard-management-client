@@ -311,32 +311,39 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
           <span>{minValue}</span>
           <span>{maxValue}</span>
         </div>
-        <SelectBox
-          title={''}
-          choices={[["Custom colormap","Custom colormap","+ Create new colormap for this raster"],...colorMaps]}
-          value={JSON.stringify(colorMapValue.customColormap) !=="{}" && JSON.stringify(colorMapValue.options) ==="{}" ? "Custom colormap" : (colorMapType && colorMapType.colorMap) || null}
-          name={name + '_colorMapselect'}
-          validated={validated}
-          errorMessage={errorMessage}
-          triedToSubmit={triedToSubmit}
-          valueChanged={(colormap)=>{ 
-            colorMapChanged(colormap); 
-          }}
-          placeholder={placeholderColorMapSelection}
-          showSearchField={true}
-          readOnly={readOnly}
-          form={form}
-        />
-        {
-          JSON.stringify(colorMapValue.customColormap) !=="{}" && JSON.stringify(colorMapValue.options) ==="{}"?
-          <button
-            onClick={()=>setShowCustomColormapModal(true)}
-          >
-            Edit
-          </button>
-          :
-          null
-        }
+        <div style={{position: "relative"}}>
+          <SelectBox
+            title={''}
+            choices={[["Custom colormap","Custom colormap","+ Create new colormap for this raster"],...colorMaps]}
+            value={JSON.stringify(colorMapValue.customColormap) !=="{}" && JSON.stringify(colorMapValue.options) ==="{}" ? "Custom colormap" : (colorMapType && colorMapType.colorMap) || null}
+            name={name + '_colorMapselect'}
+            validated={validated}
+            errorMessage={errorMessage}
+            triedToSubmit={triedToSubmit}
+            valueChanged={(colormap)=>{ 
+              colorMapChanged(colormap); 
+            }}
+            placeholder={placeholderColorMapSelection}
+            showSearchField={true}
+            readOnly={readOnly}
+            form={form}
+          />
+          {
+            JSON.stringify(colorMapValue.customColormap) !=="{}" && JSON.stringify(colorMapValue.options) ==="{}"?
+            <div style={{position:"absolute", left: "164px", top: "18px"}}>
+              <button
+                onClick={()=>setShowCustomColormapModal(true)}
+                className={styles.ColormapEditButton}
+              >
+                <i className='fa fa-edit' title='Undo' /> 
+                {" EDIT"}
+              </button>
+            </div>
+            :
+            null
+          }
+        </div>
+        
   
         <br />
         <span className="text-muted">
