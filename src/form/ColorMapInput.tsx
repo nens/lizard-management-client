@@ -14,9 +14,6 @@ import {
   colorMapTypeFromOptions
 } from "../utils/rasterOptionFunctions";
 import Modal from '../components/Modal';
-import { SubmitButton } from '../form/SubmitButton';
-// import { CancelButton } from '../form/CancelButton';
-import buttonStyles from "../styles/Buttons.module.css";
 import { ColormapForm } from '../data_management/colormap/ColormapForm';
 
 

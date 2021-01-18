@@ -1,8 +1,9 @@
+
+/* below 2 blocks are commented out. We will need them again once we can add name and description to the colormap form */
 /* .Form > div:nth-child(1) {
   display: flex;
   flex-direction: row;
 }
-
 .Form > div:nth-child(1) > div {
   width: 50%;
   padding-right: 40px;

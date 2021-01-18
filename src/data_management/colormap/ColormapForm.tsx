@@ -1,16 +1,10 @@
 import React from 'react';
 import {useState,}  from 'react';
-// import { RouteComponentProps, withRouter } from 'react-router';
-// import { connect, useSelector } from 'react-redux';
-import { TextInput } from './../../form/TextInput';
-import { TextArea } from './../../form/TextArea';
 import { IntegerInput } from './../../form/IntegerInput';
 import { SubmitButton } from '../../form/SubmitButton';
 import { CustomRadioSelect } from '../../form/CustomRadioSelect';
-import { ColormapAllSteps, ColormapStep, ColormapStepApi, toApiColorMapStep, colorMapStepApiToColormapStep } from '../../form/ColormapAllSteps';
+import { ColormapAllSteps, ColormapStepApi, toApiColorMapStep, colorMapStepApiToColormapStep } from '../../form/ColormapAllSteps';
 import { useForm, Values } from '../../form/useForm';
-import { minLength } from '../../form/validators';
-// import { addNotification } from '../../actions';
 import styles from './ColormapForm.module.css';
 
 import formStyles from './../../styles/Forms.module.css';
@@ -19,10 +13,8 @@ import buttonStyles from "../../styles/Buttons.module.css";
 interface ColomapObj {
   type: string,
   data: ColormapStepApi[],
-  // log: boolean,
   // name: string,
   // description: string,
-  // rescalable: boolean,
   labels: any[],
   free?: boolean,
   invalid?: ColormapStepApi,
@@ -33,12 +25,6 @@ interface Props {
   cancelAction: () => void,
   confirmAction: (record:any) => void,
 };
-// interface PropsFromDispatch {
-//   addNotification: (message: string | number, timeout: number) => void
-// };
-// interface RouteParams {
-//   uuid: string;
-// };
 
 const ColormapForm: React.FC<Props> = (props) => {
   const { 
@@ -79,32 +65,28 @@ const ColormapForm: React.FC<Props> = (props) => {
     rescalable: true,
   };
 
+  // example data of discrete custom colormap with labels. 
   /*
   {"data": [[0, [255, 255, 255, 255]], [1, [0, 255, 100, 255]], [2, [255, 0, 186, 255]], [3, [0, 27, 255, 255]]], "type": "DiscreteColormap", "labels": {"nl_NL": [[0, "BAG - woonfunctie"], [1, "BAG - celfunctie"], [2, "BAG - industriefunctie"], [3, "BAG - industriefunctie"]]}, "invalid": [7, 255, 255, 255]}
-  //*/
-  /*
-[0.0, [255, 255, 204, 0]], [0.125, [255, 237, 160, 255]], [0.25, [254, 217, 118, 255]], [0.375, [254, 178, 76, 255]], [0.5, [253, 141, 60, 255]], [0.625, [252, 78, 42, 255]], [0.75, [227, 26, 28, 255]], [0.875, [189, 0, 38, 255]], [1.0, [128, 0, 38, 255]]
   //*/
 
   const onSubmit = (values: Values) => {
     let jsonObj:ColomapObj = {
-      // log: false,
       data: [],
       type: values.type,
       // name: values.name,
       // description: values.description,
-      // rescalable: values.rescalable,
       labels: values.labels,
     };
     if (values.free === true || values.free === false) {
-      jsonObj.free = jsonObj.free;
+      jsonObj.free = values.free;
     }
     if (values.invalid) {
       jsonObj.invalid = values.invalid;
     }
     if (values.type === "Logarithmic" ) {
       jsonObj.type = "GradientColormap";
-      // the api seems to only accept a "log" field if log:true ... nah
+      // the api seems to only accept a "log" field if log:true
       // @ts-ignore
       jsonObj.log = true;
     }
@@ -115,14 +97,11 @@ const ColormapForm: React.FC<Props> = (props) => {
 
   const {
     values,
-    triedToSubmit,
-    formSubmitted,
     tryToSubmitForm,
     handleInputChange,
     handleValueChanges,
     handleSubmit,
     handleReset,
-    clearInput,
   } = useForm({initialValues, onSubmit});
 
   return (
@@ -137,6 +116,7 @@ const ColormapForm: React.FC<Props> = (props) => {
         }}
       >
         <div>
+          {/*  below 2 blocks are commented out. We will need them again once we can add name and description to the colormap form  */}
           {/* <div>
             <TextInput
               title={'Name'}
@@ -226,15 +206,11 @@ const ColormapForm: React.FC<Props> = (props) => {
                 },
               ]}
             ></CustomRadioSelect>
-            {/* <label>Colormap Steps</label>
-            <br/> */}
             <IntegerInput
               title="Colormap Steps"
               name={"data"}
-              // type="number"
               validated={true}
               valueChanged={e => {
-                // e.persist();
                 const newLength = parseInt(e.target.value);
                 if (!newLength) {
                   setStepLengthFieldIsEmpty(true);
@@ -269,10 +245,6 @@ const ColormapForm: React.FC<Props> = (props) => {
                 }
               }}
               value={stepLengthFieldIsEmpty? "" :(values.data && values.data.length) || 0}
-              // placeholder={placeholderMinimumColorRange}
-              // className={formStyles.FormControl}
-              // readOnly={readOnly}
-              // disabled={readOnly}
             />
             <div>
               <ColormapAllSteps
@@ -285,11 +257,6 @@ const ColormapForm: React.FC<Props> = (props) => {
                 colormapIsLogarithmic={values.type === "Logarithmic"}
                 colormapIsDiscrete={values.type === "DiscreteColormap"}
               ></ColormapAllSteps>
-              {/* {values.data.map((item:any)=>{
-                return (
-                  <div>{item +""}</div>
-                );
-              })} */}
             </div>
           {/* </div> */}
         </div>
@@ -311,11 +278,5 @@ const ColormapForm: React.FC<Props> = (props) => {
       </form>
   );
 };
-
-// const mapPropsToDispatch = (dispatch: any) => ({
-//   addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout))
-// });
-
-// const ColormapForm = connect(null, mapPropsToDispatch)(withRouter(ColormapModel));
 
 export { ColormapForm };

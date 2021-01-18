@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import styles from "./ColormapAllSteps.module.css";
-import formStyles from "../styles/Forms.module.css";
 import { ChromePicker, RGBColor } from 'react-color';
 import { TextInput } from '../form/TextInput';
 
@@ -72,14 +71,15 @@ export const ColormapAllSteps: React.FC<Props> = (props) => {
     onChange(event);
   }
 
-  const handleLabelChange = (event:React.ChangeEvent<HTMLInputElement>, ind:number)=>{
-    const oldSteps = JSON.parse(JSON.stringify(steps));
-    oldSteps[ind].label = event.target.value;
-    // const (event: as React.ChangeEvent<HTMLInputElement>) = {target:{name: name, value: oldSteps}}
-    const fakeEvent = {target:{name: name, value: oldSteps}}
-    // @ts-ignore
-    onChange(fakeEvent);
-  }
+  // lateron we will need to support labels
+  // const handleLabelChange = (event:React.ChangeEvent<HTMLInputElement>, ind:number)=>{
+  //   const oldSteps = JSON.parse(JSON.stringify(steps));
+  //   oldSteps[ind].label = event.target.value;
+  //   // const (event: as React.ChangeEvent<HTMLInputElement>) = {target:{name: name, value: oldSteps}}
+  //   const fakeEvent = {target:{name: name, value: oldSteps}}
+  //   // @ts-ignore
+  //   onChange(fakeEvent);
+  // }
   const handleStepChange = (event:React.ChangeEvent<HTMLInputElement>, ind:number)=>{
     const oldSteps = JSON.parse(JSON.stringify(steps));
     oldSteps[ind].step = parseFloat(event.target.value);

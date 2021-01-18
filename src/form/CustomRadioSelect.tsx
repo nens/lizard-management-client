@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
 import styles from "./CustomRadioSelect.module.css";
-import formStyles from "../styles/Forms.module.css";
 
 interface Option {
   value: string,
