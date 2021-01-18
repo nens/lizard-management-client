@@ -28,7 +28,7 @@ export function fetchLizardBootstrap() {
           dispatch(receiveLizardBootstrap(data));
         } else {
           const nextUrl = window.location.href;
-          window.location.href = `${data.sso.login}&next=${nextUrl}`;
+          window.location.href = `${data.sso.login}?next=${nextUrl}`;
         }
       });
   };
