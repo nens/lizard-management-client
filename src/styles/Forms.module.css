@@ -101,3 +101,16 @@
 .Errors {
   color: red;
 }
+
+
+
+input::-webkit-outer-spin-button.HideNumberUpDownArrows,
+input::-webkit-inner-spin-button.HideNumberUpDownArrows {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number].HideNumberUpDownArrows {
+  -moz-appearance: textfield;
+}

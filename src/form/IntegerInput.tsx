@@ -43,6 +43,7 @@ export const IntegerInput: React.FC<MyProps> = (props) => {
       placeholder={placeholder}
       value={value}
       validated={validated}
+      type={"number"}
       valueChanged={(e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         var reg = /^\d+$/;
@@ -57,6 +58,7 @@ export const IntegerInput: React.FC<MyProps> = (props) => {
       errorMessage={errorMessage}
       readOnly={readOnly}
       triedToSubmit={triedToSubmit}
+      showUpDownArrows={true}
     />
   );
 }
