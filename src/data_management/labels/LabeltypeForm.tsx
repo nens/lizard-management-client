@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState,} from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { connect, /*useSelector*/ } from 'react-redux';
 // import { getOrganisations, getUsername } from '../../reducers';
@@ -14,6 +14,8 @@ import formStyles from './../../styles/Forms.module.css';
 import { TextArea } from './../../form/TextArea';
 import labeltypesIcon from "../../images/labeltypes_icon.svg";
 import FormActionButtons from '../../components/FormActionButtons';
+import ConfirmModal from '../../components/ConfirmModal';
+import { ModalDeleteContent } from '../../components/ModalDeleteContent'
 
 
 interface Props {
@@ -28,6 +30,8 @@ interface RouteParams {
 
 const LabeltypeModel: React.FC<Props & PropsFromDispatch & RouteComponentProps<RouteParams>> = (props) => {
   const { currentRecord } = props;
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
   // const organisations = useSelector(getOrganisations).available;
   // next line doesnot work, because organisation has no uuid, but unique_id instead. Thus I do not use it
   // const thisRecordOrganisation = organisations.find((org: any) => org.uuid === currentRecord.organisation.uuid.replace(/-/g, ""));
@@ -194,7 +198,7 @@ const LabeltypeModel: React.FC<Props & PropsFromDispatch & RouteComponentProps<R
               actions={[
                 {
                   displayValue: "Delete",
-                  actionFunction: onDelete
+                  actionFunction: () => {setShowDeleteModal(true);}
                 },
                 // {
                 //   displayValue: "Create",
@@ -206,6 +210,29 @@ const LabeltypeModel: React.FC<Props & PropsFromDispatch & RouteComponentProps<R
           
         </div>
       </form>
+      { 
+        currentRecord && showDeleteModal?
+           <ConfirmModal
+           title={'Are you sure?'}
+           buttonConfirmName={'Delete'}
+           onClickButtonConfirm={() => {
+              onDelete();
+              setShowDeleteModal(false);
+           }}
+           cancelAction={()=>{
+            setShowDeleteModal(false)
+          }}
+          disableButtons={false}
+         >
+           
+           <p>Are you sure? You are deleting the following Label-type:</p>
+           
+           {ModalDeleteContent([currentRecord], false, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
+           
+         </ConfirmModal>
+        :
+          null
+        }
     </ExplainSideColumn>
   );
 };
