@@ -191,6 +191,7 @@ const LabeltypeModel: React.FC<Props & PropsFromDispatch & RouteComponentProps<R
         <div
           className={formStyles.ButtonContainer}
         >
+          { currentRecord?
           <div
             style={{marginLeft: "auto"}}
           >
@@ -207,6 +208,7 @@ const LabeltypeModel: React.FC<Props & PropsFromDispatch & RouteComponentProps<R
               ]}
             />
           </div>
+          :null}
           
         </div>
       </form>
