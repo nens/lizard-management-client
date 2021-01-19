@@ -5,7 +5,6 @@
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  padding-right: 16px;
 }
 
 /* .ActionButtons > * { */
@@ -24,8 +23,7 @@
   z-index: 10;
   opacity: 0;
   width: 100%;
-  /*  24 (from height image icon) / 2 = 12 px  */
-  height: calc(50% + 12px);
+  height: 100%;
   cursor: pointer;
 }
 

@@ -188,7 +188,7 @@ const LabeltypeModel: React.FC<Props & PropsFromDispatch & RouteComponentProps<R
           className={formStyles.ButtonContainer}
         >
           <div
-            style={{width: "104px", marginLeft: "auto"}}
+            style={{marginLeft: "auto"}}
           >
             <FormActionButtons
               actions={[

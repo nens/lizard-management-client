@@ -18,7 +18,6 @@ const ActionButtons: React.FC<Props> = ({actions, onChange, clickableComponent }
         position: "relative",
         display: "flex",
         justifyContent: "flex-end",
-        paddingRight: "10px",
       }}
     >
       <select
