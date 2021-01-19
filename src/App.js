@@ -58,14 +58,12 @@ class App extends Component {
   }
 
   componentDidMount() {
-    window.addEventListener("online", e => this.updateOnlineStatus(e));
     window.addEventListener("offline", e => this.updateOnlineStatus(e));
     window.addEventListener("resize", e => this.updateViewportDimensions(e));
     window.addEventListener("beforeunload", this.handleWindowClose);
     this.props.getLizardBootstrap();
   }
   componentWillUnmount() {
-    window.removeEventListener("online", e => this.updateOnlineStatus(e));
     window.removeEventListener("offline", e => this.updateOnlineStatus(e));
     window.removeEventListener("resize", e => this.updateViewportDimensions(e));
     window.removeEventListener("beforeunload", this.handleWindowClose);
