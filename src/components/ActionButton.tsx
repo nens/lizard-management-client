@@ -1,5 +1,4 @@
 import React from 'react';
-// import actionsIcon from "../images/table_actions_button_icon.svg";
 import styles from './ActionButton.module.css';
 
 
@@ -20,7 +19,6 @@ const ActionButtons: React.FC<Props> = ({actions, onChange, clickableComponent }
         display: "flex",
         justifyContent: "flex-end",
         paddingRight: "10px",
-        // backgroundColor: tableRow.markAsDeleted? "red": "blue",
       }}
     >
       <select
@@ -37,10 +35,7 @@ const ActionButtons: React.FC<Props> = ({actions, onChange, clickableComponent }
         {/* use this hidden option */}
         <option hidden value="Actions">Actions</option>
       </select>
-      {/* <svg xmlns="http://www.w3.org/2000/svg" width="6" height="24" viewBox="0 0 4 16"><defs><style></style></defs><g transform="translate(-192)"><g transform="translate(192)"><circle cx="2" cy="2" r="2" transform="translate(0 6)"/><circle cx="2" cy="2" r="2" transform="translate(0 12)"/><circle cx="2" cy="2" r="2"/></g></g></svg> */}
       {clickableComponent}
-      {/* use svg instead of img so we can make hover in css work */}
-      {/* <img src={actionsIcon} alt="actions dropdown button icon"/> */}
     </div>
   )
 };

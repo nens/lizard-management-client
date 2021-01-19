@@ -13,6 +13,7 @@ import { addNotification } from '../../actions';
 import formStyles from './../../styles/Forms.module.css';
 import { TextArea } from './../../form/TextArea';
 import labeltypesIcon from "../../images/labeltypes_icon.svg";
+import FormActionButtons from '../../components/FormActionButtons';
 
 
 interface Props {
@@ -42,29 +43,81 @@ const LabeltypeModel: React.FC<Props & PropsFromDispatch & RouteComponentProps<R
   };
 
   const onSubmit = (values: Values) => {
-    const body = {
-      name: values.name,
-      description: values.description,
-    };
+    // const body = {
+    //   name: values.name,
+    //   description: values.description,
+  //     organisation: values.organisation.unique_id,
+  //     object_type: values.object_type,
+    // };
 
-    fetch(`/api/v4/scenarios/${currentRecord.uuid}/`, {
+    // fetch(`/api/v3/labeltypes/${currentRecord.uuid}/`, {
+    //   credentials: 'same-origin',
+    //   method: 'PATCH',
+    //   headers: {'Content-Type': 'application/json'},
+    //   body: JSON.stringify(body)
+    // })
+    //   .then(data => {
+    //     const status = data.status;
+    //     if (status === 200) {
+    //       props.addNotification('Success! Labeltype updated', 2000);
+    //       props.history.push('/data_management/labels/labeltypes/');
+    //     } else {
+    //       props.addNotification(status, 2000);
+    //       console.error(data);
+    //     };
+    //   })
+    //   .catch(console.error);
+  };
+
+  // dummie function to test creation
+  // const onCreate = () => {
+  //   const body = {
+  //     name: "test labeltype",
+  //     description: "test labeltype",
+  //     organisation: currentRecord.organisation.unique_id,
+  //     object_type: currentRecord.object_type,
+  //   };
+
+  //   fetch(`/api/v3/labeltypes/`, {
+  //     credentials: 'same-origin',
+  //     method: 'POST',
+  //     headers: {'Content-Type': 'application/json'},
+  //     body: JSON.stringify(body)
+  //   })
+  //     .then(data => {
+  //       const status = data.status;
+  //       if (status === 201) {
+  //         props.addNotification('Success! Labeltype created', 2000);
+  //         props.history.push('/data_management/labels/labeltypes/');
+  //       } else {
+  //         props.addNotification(status, 2000);
+  //         console.error(data);
+  //       };
+  //     })
+  //     .catch(console.error);
+  // }
+
+  const onDelete = () => {
+    const body = {};
+
+    fetch(`/api/v3/labeltypes/${currentRecord.uuid}/`, {
       credentials: 'same-origin',
-      method: 'PATCH',
+      method: 'DELETE',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(body)
     })
       .then(data => {
         const status = data.status;
-        if (status === 200) {
-          props.addNotification('Success! Scenario updated', 2000);
-          props.history.push('/data_management/scenarios/');
+        if (status === 204) {
+          props.addNotification('Success! Labeltype deleted', 2000);
+          props.history.push('/data_management/labels/labeltypes/');
         } else {
           props.addNotification(status, 2000);
           console.error(data);
         };
       })
       .catch(console.error);
-  };
+  }
 
   const {
     values,
@@ -131,16 +184,27 @@ const LabeltypeModel: React.FC<Props & PropsFromDispatch & RouteComponentProps<R
           validated
           readOnly
         />
-        {/* <div
+        <div
           className={formStyles.ButtonContainer}
         >
-          <CancelButton
-            url={'/data_management/scenarios/'}
-          />
-          <SubmitButton
-            onClick={tryToSubmitForm}
-          />
-        </div> */}
+          <div
+            style={{width: "104px", marginLeft: "auto"}}
+          >
+            <FormActionButtons
+              actions={[
+                {
+                  displayValue: "Delete",
+                  actionFunction: onDelete
+                },
+                // {
+                //   displayValue: "Create",
+                //   actionFunction: onCreate,
+                // }
+              ]}
+            />
+          </div>
+          
+        </div>
       </form>
     </ExplainSideColumn>
   );
