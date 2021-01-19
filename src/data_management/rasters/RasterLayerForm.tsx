@@ -29,6 +29,7 @@ import { getUuidFromUrl } from '../../utils/getUuidFromUrl';
 import { addNotification, removeRasterSourceUUID } from './../../actions';
 import rasterLayerIcon from "../../images/raster_layer_icon.svg";
 import formStyles from './../../styles/Forms.module.css';
+import FormActionButtons from '../../components/FormActionButtons';
 
 interface Props {
   currentRasterLayer?: RasterLayerFromAPI,
@@ -56,6 +57,28 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
       removeRasterSourceUUID();
     };
   }, [removeRasterSourceUUID]);
+
+  const onDelete = () => {
+    const body = {};
+
+    currentRasterLayer && fetch(`/api/v4/rasters/${currentRasterLayer.uuid}/`, {
+      credentials: 'same-origin',
+      method: 'DELETE',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(body)
+    })
+      .then(data => {
+        const status = data.status;
+        if (status === 204) {
+          props.addNotification('Success! Raster-layer deleted', 2000);
+          props.history.push('/data_management/rasters/layers/');
+        } else {
+          props.addNotification(status, 2000);
+          console.error(data);
+        };
+      })
+      .catch(console.error);
+  }
 
   const initialValues = currentRasterLayer ? {
     name: currentRasterLayer.name,
@@ -382,9 +405,26 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           <CancelButton
             url={'/data_management/rasters/layers'}
           />
-          <SubmitButton
-            onClick={tryToSubmitForm}
-          />
+          <div style={{
+            display: "flex"
+          }}>
+            {currentRasterLayer?
+             <div style={{marginRight: "16px"}}> 
+              <FormActionButtons
+                actions={[
+                  {
+                    displayValue: "Delete",
+                    actionFunction: onDelete
+                  },
+                ]}
+              />
+            </div>
+            :null}
+            <SubmitButton
+              onClick={tryToSubmitForm}
+            />
+          </div>
+          
         </div>
       </form>
     </ExplainSideColumn>
