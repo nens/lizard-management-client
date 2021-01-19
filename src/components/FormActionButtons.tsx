@@ -1,5 +1,4 @@
 import React from 'react';
-// import actionsIcon from "../images/table_actions_button_icon.svg";
 import styles from './FormActionButtons.module.css';
 import ActionButton from './ActionButton';
 

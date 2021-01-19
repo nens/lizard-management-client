@@ -30,7 +30,6 @@ const columnDefinitions = [
   {
     titleRenderFunction: () =>  "Uuid",
     renderFunction: (row: any) =>
-    // (row: any) => {return !row.supplier_code ? "(empty 'supplier code')" : row.supplier_code },
       <span
         className={tableStyles.CellEllipsis}
         title={row.supplier_code}

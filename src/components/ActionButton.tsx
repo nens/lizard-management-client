@@ -21,7 +21,6 @@ const ActionButtons: React.FC<Props> = ({actions, onChange, clickableComponent }
       }}
     >
       <select
-        // className={styles.ActionButtonsSelect}
         // set the default value so clicking on another value is counted as a "onchange" by react.
         value={"Actions"}
         onChange={event=>{
