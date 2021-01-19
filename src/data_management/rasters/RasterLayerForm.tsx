@@ -30,6 +30,9 @@ import { addNotification, removeRasterSourceUUID } from './../../actions';
 import rasterLayerIcon from "../../images/raster_layer_icon.svg";
 import formStyles from './../../styles/Forms.module.css';
 import FormActionButtons from '../../components/FormActionButtons';
+import ConfirmModal from '../../components/ConfirmModal';
+import { ModalDeleteContent } from '../../components/ModalDeleteContent'
+
 
 interface Props {
   currentRasterLayer?: RasterLayerFromAPI,
@@ -185,6 +188,9 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
   // with each new selected raster source by user by using useEffect
   const { rasterSource } = values;
   const [accessModifier, setAccessModifier] = useState<string | null>(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+
   useEffect(() => {
     if (!currentRasterLayer && rasterSource) {
       fetchRasterSourceV4(rasterSource).then(
@@ -414,7 +420,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
                 actions={[
                   {
                     displayValue: "Delete",
-                    actionFunction: onDelete
+                    actionFunction: () => {setShowDeleteModal(true)}
                   },
                 ]}
               />
@@ -427,6 +433,29 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           
         </div>
       </form>
+      { 
+        currentRasterLayer && showDeleteModal?
+           <ConfirmModal
+           title={'Are you sure?'}
+           buttonConfirmName={'Delete'}
+           onClickButtonConfirm={() => {
+              onDelete();
+              setShowDeleteModal(false);
+           }}
+           cancelAction={()=>{
+            setShowDeleteModal(false)
+          }}
+          disableButtons={false}
+         >
+           
+           <p>Are you sure? You are deleting the following raster layer:</p>
+           
+           {ModalDeleteContent([currentRasterLayer], false, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
+           
+         </ConfirmModal>
+        :
+          null
+        }
     </ExplainSideColumn>
   );
 };
