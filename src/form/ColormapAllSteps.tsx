@@ -119,6 +119,11 @@ export const ColormapAllSteps: React.FC<Props> = (props) => {
                   className={styles.ColormapStepToggleColorpicker}
                   style={{
                     backgroundColor: `rgba(${step.rgba.r},${step.rgba.g},${step.rgba.b},${step.rgba.a})`,
+                    borderRadius: "4px",
+                    borderWidth: "1px",
+                    borderStyle: "solid",
+                    borderColor: "#ced4da",
+                    boxShadow: "none",
                   }}
                 >
                 </button>
