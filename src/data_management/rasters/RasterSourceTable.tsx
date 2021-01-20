@@ -139,7 +139,7 @@ export const RasterSourceTable = (props:any) =>  {
           {bytesToDisplayValue(row.size? row.size: 0)}
         </span>
       ,
-      orderingField: null,
+      orderingField: "size",
     },
     {
       titleRenderFunction: () =>  "",

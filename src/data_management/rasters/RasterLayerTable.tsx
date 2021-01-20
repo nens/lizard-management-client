@@ -118,7 +118,7 @@ export const RasterLayerTable = (props:any) =>  {
     {
       titleRenderFunction: () =>  "Temporal",
       renderFunction: (row: any) => row.temporal === true? "Yes" : "No",
-      orderingField: null,
+      orderingField: "temporal",
     },
     {
       titleRenderFunction: () =>  "",//"Actions",
@@ -157,7 +157,7 @@ export const RasterLayerTable = (props:any) =>  {
       backUrl={"/data_management/rasters"}
     >
         <TableStateContainer 
-          gridTemplateColumns={"8% 30% 24% 20% 10% 8%"} 
+          gridTemplateColumns={"8% 28% 22% 18% 16% 8%"} 
           columnDefinitions={columnDefinitions}
           baseUrl={`${baseUrl}?`} 
           checkBoxActions={[
