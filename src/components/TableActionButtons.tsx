@@ -30,6 +30,7 @@ const TableActionButtons: React.FC<Props> = ({actions, tableRow,tableData,setTab
         paddingRight: "10px",
         // backgroundColor: tableRow.markAsDeleted? "red": "blue",
       }}
+      title={"Actions"}
     >
       <select
         // className={styles.ActionButtonsSelect}

@@ -7,6 +7,7 @@ interface CheckBoxProps {
   name: string,
   value: boolean,
   valueChanged: (bool: boolean) => void,
+  form?: string,
   onFocus?: (e: any) => void,
   onBlur?: () => void,
   readOnly?: boolean
@@ -18,6 +19,7 @@ export const CheckBox: React.FC<CheckBoxProps> = (props) => {
     name,
     value,
     valueChanged,
+    form,
     onFocus,
     onBlur,
     readOnly
@@ -41,6 +43,7 @@ export const CheckBox: React.FC<CheckBoxProps> = (props) => {
         onFocus={onFocus}
         onBlur={onBlur}
         readOnly={readOnly}
+        form={form}
       />
     </label>
   );

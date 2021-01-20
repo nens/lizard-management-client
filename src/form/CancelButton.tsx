@@ -3,12 +3,14 @@ import { NavLink } from "react-router-dom";
 import buttonStyles from "../styles/Buttons.module.css";
 
 interface MyProps {
-  url: string
+  url: string,
+  form?: string,
 };
 
 export const CancelButton: React.FC<MyProps> = (props) => {  
   const {
-    url
+    url,
+    // form
   } = props;
 
   return (

@@ -5,9 +5,9 @@ import formStyles from "../styles/Forms.module.css";
 interface MyProps {
   title: string,
   name: string,
-  value: string | null,
+  value: string | null | number,
   valueChanged: (e: React.ChangeEvent<HTMLInputElement>) => void,
-  clearInput: (name: string) => void,
+  clearInput?: (name: string) => void,
   validated: boolean,
   errorMessage?: string | false,
   placeholder?: string,
@@ -15,7 +15,11 @@ interface MyProps {
   onBlur?: () => void,
   handleEnter?: (e: any) => void,
   triedToSubmit?: boolean,
-  readOnly?: boolean
+  readOnly?: boolean,
+  form?: string,
+  type?: string,
+  required?: boolean,
+  showUpDownArrows?: boolean, // only works if type = "number"
 };
 
 export const TextInput: React.FC<MyProps> = (props) => {  
@@ -32,7 +36,11 @@ export const TextInput: React.FC<MyProps> = (props) => {
     validated,
     errorMessage,
     triedToSubmit,
-    readOnly
+    readOnly,
+    form,
+    type,
+    required,
+    showUpDownArrows,
   } = props;
 
   // Set validity of the input field
@@ -60,19 +68,21 @@ export const TextInput: React.FC<MyProps> = (props) => {
           ref={myInput}
           name={name}
           id={name}
-          type="text"
           autoComplete="off"
-          className={`${formStyles.FormControl} ${triedToSubmit ? formStyles.FormSubmitted : ''}`}
+          className={`${formStyles.FormControl} ${triedToSubmit ? formStyles.FormSubmitted : ''} ${showUpDownArrows? "": formStyles.HideNumberUpDownArrows}`}
           placeholder={placeholder}
           onChange={valueChanged}
-          onFocus={onFocus}
-          onBlur={onBlur}
-          value={value || ""}
+          value={value || (value===0? value: "")}
           onKeyUp={handleEnter}
           readOnly={!!readOnly}
-          // disabled={!!readOnly}
+          disabled={!!readOnly}
+          form={form}
+          type={type || "text"}
+          required={required}
+          onFocus={onFocus}
+          onBlur={onBlur}
         />
-        {!readOnly && value !== null && value.length ? <ClearInputButton onClick={() => clearInput(name)}/> : null}
+        {clearInput && !readOnly && value !== null && (value + '').length ? <ClearInputButton onClick={() => clearInput(name)}/> : null}
       </div>
     </label>
   );

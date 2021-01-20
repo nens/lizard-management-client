@@ -23,7 +23,8 @@ interface SelectBoxProps {
   placeholder?: string,
   showSearchField?: boolean,
   triedToSubmit?: boolean,
-  readOnly?: boolean
+  readOnly?: boolean,
+  form?: string,
 };
 
 export const SelectBox: React.FC<SelectBoxProps> = (props) => {
@@ -40,7 +41,8 @@ export const SelectBox: React.FC<SelectBoxProps> = (props) => {
     errorMessage,
     showSearchField,
     triedToSubmit,
-    readOnly
+    readOnly,
+    form,
   } = props;
 
   const [showChoices, setShowChoices] = useState<boolean>(false);
@@ -114,7 +116,8 @@ export const SelectBox: React.FC<SelectBoxProps> = (props) => {
           onFocus={onFocus}
           onBlur={onBlur}
           readOnly={readOnly}
-          // disabled={readOnly}
+          disabled={readOnly}
+          form={form}
         />
         { 
         !readOnly ?

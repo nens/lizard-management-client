@@ -74,6 +74,7 @@ interface RasterLayerInstance {
   supplier_code?: string;
   aggregation_type: string;
   options: string;
+  colormap: string;
   raster_sources?: string[];
   rescalable: boolean;
   uuid?: string,
