@@ -306,7 +306,7 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
             title={''}
             choices={[["Custom colormap","Custom colormap","+ Create new colormap for this raster"],...colorMaps]}
             value={JSON.stringify(colorMapValue.customColormap) !=="{}" && JSON.stringify(colorMapValue.options) ==="{}" ? "Custom colormap" : (colorMapType && colorMapType.colorMap) || null}
-            name={name + '_colorMapselect'}
+            name={name}
             validated={validated}
             errorMessage={errorMessage}
             triedToSubmit={triedToSubmit}
@@ -343,7 +343,7 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
         </span>
         <br />
         <input
-          id={name}
+          id={"colormap_minimum"}
           type="number"
           autoComplete="off"
           onChange={e => handleValueChanged('min', toFloat(e.target.value))}
@@ -361,7 +361,7 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
         <FormattedMessage id="color_map.maximum_color_range" />
         </span>
         <input
-          id={name}
+          id={"colormap_maximum"}
           type="number"
           autoComplete="off"
           value={(colorMapType && colorMapType.max) || ""}
