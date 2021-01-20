@@ -28,7 +28,7 @@ const ActionButtons: React.FC<Props> = ({actions, onChange, clickableComponent }
         }}
       >
         {
-          actions.map(action => <option value={action}>{action}</option>)
+          actions.map(action => <option key={action} value={action}>{action}</option>)
         }
         {/* use this hidden option */}
         <option hidden value="Actions">Actions</option>
