@@ -274,11 +274,13 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
         <ModalBackground
           title={'CUSTOM COLORMAP'}
           handleClose={() => setShowCustomColormapModal(false)}
-          // value depends on content, but should be precisely hardcoded
-          height={'816px'} 
+          // previously this value was precisely hardcoded to pixels, because some of the content has a fixed minheight
+          // height={'816px'}
+          height={'90%'}
+          width={'50%'} 
         >
           <div
-            style={{padding: "30px"}}
+            style={{padding: "30px", flexGrow: 1,}}
           >
             <ColormapForm
               currentRecord={value.customColormap.data? value.customColormap: undefined}

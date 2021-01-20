@@ -115,7 +115,9 @@ const ColormapForm: React.FC<Props> = (props) => {
           // padding: 0,
           margin: 0,
           padding: 0,
-          height: "unset"
+          // height: "unset", // why wasthis previously needed?
+          height: "100%",
+          justifyContent: "space-between"
         }}
       >
         <div>
