@@ -139,6 +139,11 @@ export const ScenarioTable = (props:any) =>  {
         <span
           className={tableStyles.CellEllipsis}
           title={row.name}
+          style={{
+            // Allow name to break into multiple lines if too long
+            whiteSpace: 'normal',
+            wordBreak: 'break-all'
+          }}
         >
           <NavLink to={`${navigationUrl}/${row.uuid}/`}>{row.name}</NavLink>
         </span>,
@@ -228,7 +233,7 @@ export const ScenarioTable = (props:any) =>  {
       backUrl={"/data_management"}
     >
         <TableStateContainer 
-          gridTemplateColumns={"8% 20% 18% 18% 14% 14% 8%"} 
+          gridTemplateColumns={"3% 40% 20% 17% 8% 8% 4%"}
           columnDefinitions={columnDefinitions}
           baseUrl={`${baseUrl}?`} 
           checkBoxActions={[
