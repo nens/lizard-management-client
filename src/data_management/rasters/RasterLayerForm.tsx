@@ -184,6 +184,13 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
       explanationText={rasterLayerFormHelpText[fieldOnFocus] || rasterLayerFormHelpText['default']}
       backUrl={"/data_management/rasters/layers"}
     >
+      {/* 
+      I also use a form inside the colormap modal.
+      A form inside a form is not valid html.
+      Therefore I used the workaround here:
+      https://stackoverflow.com/questions/3430214/form-inside-a-form-is-that-alright?lq=1
+      Answer from user: "ilevent"
+      */}
       <form
         // remove this class because it gives element height
         // className={formStyles.Form}
