@@ -95,13 +95,42 @@ export const RasterLayerTable = (props:any) =>  {
     },
     {
       titleRenderFunction: () =>  "Based on",
-      renderFunction: (row: any) => 
-        <span
-          className={tableStyles.CellEllipsis}
-          title={row.raster_sources[0]}
-        >
-          {row.raster_sources[0]}
-        </span>,
+      renderFunction: (row: any) => {
+        const firstSource = row.raster_sources[0] + '';
+        const firstRasterSourceUuid = firstSource.split('/')[(firstSource.split('/').length - 2)];
+        const url = `/management#/data_management/rasters/sources/${firstRasterSourceUuid}/`;
+        if (row.raster_sources.length === 0) {
+          return (
+            <span
+              className={tableStyles.CellEllipsis}
+              title={"This raster-layer seems to have no related raster-source"}
+            >
+              Empty source
+            </span>
+          );
+        }
+        else if (row.raster_sources.length === 1) {
+          return (
+            <span
+              className={tableStyles.CellEllipsis}
+              title={firstRasterSourceUuid}
+            >
+              {/* previous code  */}
+              {/* {row.raster_sources[0]} */}
+              <a target="_blank" rel="noopener noreferrer" href={url}>{firstRasterSourceUuid}</a>
+            </span>
+          );
+        } else /*if (row.raster_sources.length > 1)*/ {
+          return (
+            <span
+              className={tableStyles.CellEllipsis}
+              title={`This raster-layer is dependent on multipel sources. The first one has uuid: ${firstRasterSourceUuid}`}
+            >
+              <a target="_blank" rel="noopener noreferrer" href={url}>{`First source: ${firstRasterSourceUuid}`}</a>
+            </span>
+          );
+        }
+      },
       orderingField: "raster_sources",
     },
     {
