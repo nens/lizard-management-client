@@ -24,56 +24,53 @@ interface Props {
 
 const Table: React.FC<Props> = ({tableData, setTableData, gridTemplateColumns, columnDefinitions, dataRetrievalState, triggerReloadWithCurrentPage, triggerReloadWithBasePage, getIfCheckBoxOfUuidIsSelected}) => {
   return (
-      <div  className={styles.Table}>
-        <div style={{
-          gridTemplateColumns: gridTemplateColumns,
-        }}>
-          {columnDefinitions.map(definition=><span>{definition.titleRenderFunction()}</span>)}
-        </div>
-        <div style={{
-            gridTemplateColumns: gridTemplateColumns,
-          }}
-        >
-            {
-              tableData.map(tableRow=>{
-                const rowIsSelected = getIfCheckBoxOfUuidIsSelected && getIfCheckBoxOfUuidIsSelected(tableRow.uuid);
-                const updateTableRow = (newTableRow: any) => {
-                  const newTableData = tableData.map((rowAllTables:any)=>{
-                    if (rowAllTables.uuid ===  tableRow.uuid) {
-                      return {...newTableRow}
-                    } else{
-                      return {...rowAllTables};
-                    }
-                  })
-                  setTableData(newTableData);
-                } 
-                return (
-                  <>
-                    {columnDefinitions.map(definition=>
-                      <span className={rowIsSelected? styles.Selected: styles.NotSelected}>
-                        {definition.renderFunction(tableRow, updateTableRow, triggerReloadWithCurrentPage, triggerReloadWithBasePage)}
-                      </span>
-                    )}
-                  </>
-                );
-              })
-            }          
-        </div>
-        <div>
-            <div>
-              {
-              dataRetrievalState === "NEVER_DID_RETRIEVE" || dataRetrievalState === "RETRIEVING"?
-              // "LOADING"
-              <MDSpinner size={96} />
-              : dataRetrievalState === "RETRIEVED" && tableData.length === 0?
-              "No data found for with current filter"
-              :
-              null
-              }
-            </div>
-          </div>
-        
+    <div  className={styles.Table}>
+      <div style={{
+        gridTemplateColumns: gridTemplateColumns,
+      }}>
+        {columnDefinitions.map(definition=><span>{definition.titleRenderFunction()}</span>)}
       </div>
+      <div style={{
+          gridTemplateColumns: gridTemplateColumns,
+        }}
+      >
+          {
+            tableData.map(tableRow=>{
+              const rowIsSelected = getIfCheckBoxOfUuidIsSelected && getIfCheckBoxOfUuidIsSelected(tableRow.uuid);
+              const updateTableRow = (newTableRow: any) => {
+                const newTableData = tableData.map((rowAllTables:any)=>{
+                  if (rowAllTables.uuid ===  tableRow.uuid) {
+                    return {...newTableRow}
+                  } else{
+                    return {...rowAllTables};
+                  }
+                })
+                setTableData(newTableData);
+              } 
+              return (
+                <>
+                  {columnDefinitions.map(definition=>
+                    <span className={rowIsSelected? styles.Selected: styles.NotSelected}>
+                      {definition.renderFunction(tableRow, updateTableRow, triggerReloadWithCurrentPage, triggerReloadWithBasePage)}
+                    </span>
+                  )}
+                </>
+              );
+            })
+          }          
+      </div>
+      <div>
+        <div className={styles.TableSpinner}>
+          {dataRetrievalState === "NEVER_DID_RETRIEVE" || dataRetrievalState === "RETRIEVING"?
+            // "LOADING"
+            <MDSpinner size={96} />
+          : dataRetrievalState === "RETRIEVED" && tableData.length === 0?
+            "No data found for with current filter"
+          : null
+          }
+        </div>
+      </div>
+    </div>
   )
 };
 
