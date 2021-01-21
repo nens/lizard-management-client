@@ -24,6 +24,11 @@
   left: 0;
 }
 
+.Label {
+  cursor: pointer;
+  margin-right: 16px;
+}
+
 /* Show selected, hide normal label */
 input[type="radio"]:checked+label.Label > *:nth-child(1) {
   visibility: hidden;

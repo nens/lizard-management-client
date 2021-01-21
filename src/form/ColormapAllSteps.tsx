@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import styles from "./ColormapAllSteps.module.css";
 import { ChromePicker, RGBColor } from 'react-color';
 import { TextInput } from '../form/TextInput';
+import formStyles from "../styles/Forms.module.css";
+
 
 
 export interface ColormapStep {
@@ -82,7 +84,7 @@ export const ColormapAllSteps: React.FC<Props> = (props) => {
 
   return (
     <div>
-      <label>{title}</label>
+      <label><span className={`${formStyles.LabelTitle}`}>{title}</span></label>
       <div className={styles.StepRow}>
         <span>Step</span><span>Color</span>
       </div>
@@ -119,6 +121,11 @@ export const ColormapAllSteps: React.FC<Props> = (props) => {
                   className={styles.ColormapStepToggleColorpicker}
                   style={{
                     backgroundColor: `rgba(${step.rgba.r},${step.rgba.g},${step.rgba.b},${step.rgba.a})`,
+                    borderRadius: "4px",
+                    borderWidth: "1px",
+                    borderStyle: "solid",
+                    borderColor: "#ced4da",
+                    boxShadow: "none",
                   }}
                 >
                 </button>

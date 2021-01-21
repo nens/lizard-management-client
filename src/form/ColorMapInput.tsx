@@ -340,7 +340,7 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
         
   
         <br />
-        <span className="text-muted">
+        <span className={`${"text-muted"} ${formStyles.LabelTitle}`}>
           <FormattedMessage id="color_map.minimum_color_range" />
         </span>
         <br />
@@ -359,7 +359,7 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
           form={form}
         />
         <br />
-        <span className="text-muted">
+        <span className={`${"text-muted"} ${formStyles.LabelTitle}`}>
         <FormattedMessage id="color_map.maximum_color_range" />
         </span>
         <input
