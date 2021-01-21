@@ -59,8 +59,9 @@
   transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
 }
 .FormControl:focus {
-  border-color: #73C9B2;
   outline: none;
+  border-color: #73C9B2;
+  box-shadow: 0 0 1px 1px #73C9B2;
 }
 .FormControl:read-only {
   background-color: rgb(216, 216, 216);

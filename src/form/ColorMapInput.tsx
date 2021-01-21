@@ -355,7 +355,6 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
           onFocus={onFocus}
           onBlur={onBlur}
           readOnly={readOnly}
-          disabled={readOnly}
           form={form}
         />
         <br />
@@ -373,7 +372,6 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
           onFocus={onFocus}
           onBlur={onBlur}
           readOnly={readOnly}
-          disabled={readOnly}
           form={form}
         />
         <br/>

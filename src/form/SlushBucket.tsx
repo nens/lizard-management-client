@@ -83,7 +83,6 @@ export const SlushBucket: React.FC<MyProps> = (props) => {
             onChange={handleInput}
             onKeyUp={handleKeyUp}
             value={searchString}
-            // disabled={readOnly}
             onFocus={onFocus}
             onBlur={onBlur}
             readOnly={readOnly}

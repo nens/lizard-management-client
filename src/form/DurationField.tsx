@@ -163,7 +163,6 @@ export const DurationField: React.FC<DurationFieldProps> = (props) => {
             onFocus={onFocus}
             onBlur={onBlur}
             readOnly={readOnly}
-            // disabled={readOnly}
           />
         </div>
         <div
@@ -192,7 +191,6 @@ export const DurationField: React.FC<DurationFieldProps> = (props) => {
             onFocus={onFocus}
             onBlur={onBlur}
             readOnly={readOnly}
-            // disabled={readOnly}
           />
         </div>
         <div className={styles.DurationInputHourSecondSeperator}>:</div>
@@ -216,7 +214,6 @@ export const DurationField: React.FC<DurationFieldProps> = (props) => {
             onFocus={onFocus}
             onBlur={onBlur}
             readOnly={readOnly}
-            // disabled={readOnly}
           />
         </div>
         <div
@@ -245,7 +242,6 @@ export const DurationField: React.FC<DurationFieldProps> = (props) => {
             onFocus={onFocus}
             onBlur={onBlur}
             readOnly={readOnly}
-            // disabled={readOnly}
           />
         </div>
         <div />

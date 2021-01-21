@@ -13,6 +13,7 @@
 }
 .CheckboxContainer > input[type=checkbox]:focus {
   border-color: #73C9B2;
+  box-shadow: 0 0 1px 1px #73C9B2;
   outline: none;
 }
 .CheckboxContainer > input[type=checkbox][readonly] {
