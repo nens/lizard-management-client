@@ -75,7 +75,7 @@ export const TextInput: React.FC<MyProps> = (props) => {
           value={value || (value===0? value: "")}
           onKeyUp={handleEnter}
           readOnly={!!readOnly}
-          disabled={!!readOnly}
+          // disabled={!!readOnly}
           form={form}
           type={type || "text"}
           required={required}
