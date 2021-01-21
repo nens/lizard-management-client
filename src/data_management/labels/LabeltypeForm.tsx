@@ -138,9 +138,9 @@ const LabeltypeModel: React.FC<Props & PropsFromDispatch & RouteComponentProps<R
     <ExplainSideColumn
       imgUrl={labeltypesIcon}
       imgAltDescription={"Label-types icon"}
-      headerText={"Label-types"}
-      explainationText={"Inspect a label-type"}
-      backUrl={"/data_management/labels/labeltypes/"}
+      headerText={"Label types"}
+      explainationText={"Labeltypes are the different types of labels that can exist in the system"} 
+      backUrl={"/data_management/labels/label_types/"}
     >
       <form
         className={formStyles.Form}

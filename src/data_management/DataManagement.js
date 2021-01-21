@@ -56,7 +56,7 @@ class DataManagement extends Component {
       },
       {
         key: 3,
-        handleClick: () => this.handleLink("data_management/labels/"),
+        handleClick: () => this.handleLink("data_management/labels"),
         title: (
           <FormattedMessage
             id="home.labels"

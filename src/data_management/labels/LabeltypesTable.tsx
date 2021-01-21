@@ -10,7 +10,7 @@ import labeltypesIcon from "../../images/labeltypes_icon.svg";
 
 
 const baseUrl = "/api/v3/labeltypes/";
-const navigationUrl = "/data_management/labels/labeltypes";
+const navigationUrl = "/data_management/labels/label_types";
 
 
 
@@ -47,7 +47,7 @@ export const LabeltypesTable = (props:any) =>  {
     <ExplainSideColumn
       imgUrl={labeltypesIcon}
       imgAltDescription={"Label-types icon"}
-      headerText={"Label-types"}
+      headerText={"Label types"}
       explainationText={"Labeltypes are the different types of labels that can exist in the system"} 
       backUrl={"/data_management/labels"}
     >

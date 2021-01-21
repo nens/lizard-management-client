@@ -51,7 +51,7 @@ class App extends Component {
         <Route exact path="/data_management/scenarios_old" component={ScenariosApp} />
         <Route exact path="/data_management/scenarios" component={ScenarioTable} />
         <Route exact path="/data_management/labels" component={LabelManagement} />
-        <Route exact path="/data_management/labels/labeltypes" component={LabeltypesTable} />
+        <Route exact path="/data_management/labels/label_types" component={LabeltypesTable} />
         <Switch>
           <Route
             exact
@@ -95,7 +95,7 @@ class App extends Component {
           />
           <Route
             exact
-            path="/data_management/labels/labeltypes/:uuid"
+            path="/data_management/labels/label_types/:uuid"
             component={EditLabeltype}
           />
         </Switch>

@@ -15,11 +15,11 @@ const LabelManagement = (props:any) => {
   const appTiles = [
     {
       key: 0,
-      handleClick: () => handleLink("labeltypes"),
+      handleClick: () => handleLink("labels/label_types"),
       title: (
         <FormattedMessage
           id="data_management.labeltypes"
-          defaultMessage="Label-types"
+          defaultMessage="Label types"
         />
       ),
       icon: labeltypesIcon
