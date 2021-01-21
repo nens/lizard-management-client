@@ -1,0 +1,23 @@
+.ColormapStepToggleColorpicker {
+  width: 36px;
+  height: 36px;
+  border-radius: 3px;
+}
+
+.StepRow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.StepRow > * {
+  width: 50%;
+  padding-right: 40px;
+  box-sizing: border-box;
+}
+
+.StepContainer {
+  overflow-y: auto;
+  height: 385px;
+}

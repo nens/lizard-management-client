@@ -10,7 +10,7 @@ import {ExplainSideColumn} from '../../components/ExplainSideColumn';
 import rasterIcon from "../../images/raster_layer_icon.svg";
 import tableStyles from "../../components/Table.module.css";
 import {useState, }  from 'react';
-import ConfirmModal from '../../components/ConfirmModal';
+import Modal from '../../components/Modal';
 import { ModalDeleteContent } from '../../components/ModalDeleteContent'
 
 
@@ -118,7 +118,7 @@ export const RasterLayerTable = (props:any) =>  {
     {
       titleRenderFunction: () =>  "Temporal",
       renderFunction: (row: any) => row.temporal === true? "Yes" : "No",
-      orderingField: null,
+      orderingField: "temporal",
     },
     {
       titleRenderFunction: () =>  "",//"Actions",
@@ -153,11 +153,11 @@ export const RasterLayerTable = (props:any) =>  {
       imgUrl={rasterIcon}
       imgAltDescription={"Raster-Layer icon"}
       headerText={"Raster Layers"}
-      explainationText={"Raster Layers are visual presentations of your raster data. Choose the prefered Raster Source so that the Raster Layer fetches the right data and give the Raster Layer a name, description, observation type and styling. Once published, your Raster Layer will be visible in the Catalogue and the Portal."}
+      explanationText={"Raster Layers are visual presentations of your raster data. Choose the prefered Raster Source so that the Raster Layer fetches the right data and give the Raster Layer a name, description, observation type and styling. Once published, your Raster Layer will be visible in the Catalogue and the Portal."}
       backUrl={"/data_management/rasters"}
     >
         <TableStateContainer 
-          gridTemplateColumns={"8% 30% 24% 20% 10% 8%"} 
+          gridTemplateColumns={"8% 28% 22% 18% 16% 8%"} 
           columnDefinitions={columnDefinitions}
           baseUrl={`${baseUrl}?`} 
           checkBoxActions={[
@@ -170,7 +170,7 @@ export const RasterLayerTable = (props:any) =>  {
         />
         { 
         rowsToBeDeleted.length > 0?
-           <ConfirmModal
+           <Modal
            title={'Are you sure?'}
            buttonConfirmName={'Delete'}
            onClickButtonConfirm={() => {
@@ -190,14 +190,14 @@ export const RasterLayerTable = (props:any) =>  {
            
            {ModalDeleteContent(rowsToBeDeleted, busyDeleting, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
            
-         </ConfirmModal>
+         </Modal>
         :
           null
         }
 
         { 
         rowToBeDeleted?
-           <ConfirmModal
+           <Modal
            title={'Are you sure?'}
            buttonConfirmName={'Delete'}
            onClickButtonConfirm={() => {
@@ -215,7 +215,7 @@ export const RasterLayerTable = (props:any) =>  {
          >
            <p>Are you sure? You are deleting the following raster-layer:</p>
            {ModalDeleteContent([rowToBeDeleted], busyDeleting, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
-         </ConfirmModal>
+         </Modal>
         :
           null
         }

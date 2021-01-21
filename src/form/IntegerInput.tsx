@@ -9,10 +9,12 @@ interface MyProps {
   value: string,
   validated: boolean,
   valueChanged: (e: React.ChangeEvent<HTMLInputElement>) => void,
-  clearInput: (e: any) => void,
+  clearInput?: (e: any) => void,
   errorMessage?: string | false,
   placeholder?: string,
   handleEnter?: (e: any) => void,
+  onFocus?: (e: React.ChangeEvent<HTMLInputElement>) => void,
+  onBlur?: () => void,
   triedToSubmit?: boolean,
   readOnly?: boolean
 };
@@ -25,6 +27,8 @@ export const IntegerInput: React.FC<MyProps> = (props) => {
     value,
     validated,
     valueChanged,
+    onFocus,
+    onBlur,
     handleEnter,
     clearInput,
     errorMessage,
@@ -39,6 +43,7 @@ export const IntegerInput: React.FC<MyProps> = (props) => {
       placeholder={placeholder}
       value={value}
       validated={validated}
+      type={"number"}
       valueChanged={(e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         var reg = /^\d+$/;
@@ -47,10 +52,13 @@ export const IntegerInput: React.FC<MyProps> = (props) => {
         };
       }}
       clearInput={clearInput}
+      onFocus={onFocus}
+      onBlur={onBlur}
       handleEnter={handleEnter}
       errorMessage={errorMessage}
       readOnly={readOnly}
       triedToSubmit={triedToSubmit}
+      showUpDownArrows={true}
     />
   );
 }

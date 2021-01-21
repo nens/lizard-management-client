@@ -1,0 +1,50 @@
+.OptionsRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.OptionContainer {
+  position: relative;
+}
+
+/* radio-button */
+.OptionContainer > *:nth-child(1) {
+  opacity: 0;
+  position: absolute;
+  /* top: 0;
+  left: 0; */
+}
+
+/* selectedLabel component needs be placed at same location as normal label */
+.OptionContainer > *:nth-child(2) > *:nth-child(2) {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.Label {
+  cursor: pointer;
+  margin-right: 16px;
+}
+
+/* Show selected, hide normal label */
+input[type="radio"]:checked+label.Label > *:nth-child(1) {
+  visibility: hidden;
+  opacity: 0;
+}
+input[type="radio"]:checked+label.Label > *:nth-child(2) {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Hide selected, show normal label */
+input[type="radio"]:not(:checked)+label.Label > *:nth-child(2) {
+  visibility: hidden;
+  opacity: 0;
+}
+input[type="radio"]:not(:checked)+label.Label > *:nth-child(1) {
+  visibility: visible;
+  opacity: 1;
+}
