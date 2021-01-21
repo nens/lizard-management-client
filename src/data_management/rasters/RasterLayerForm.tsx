@@ -30,6 +30,10 @@ import { rasterLayerFormHelpText } from '../../utils/helpTextForForms';
 import { addNotification, removeRasterSourceUUID } from './../../actions';
 import rasterLayerIcon from "../../images/raster_layer_icon.svg";
 import formStyles from './../../styles/Forms.module.css';
+import FormActionButtons from '../../components/FormActionButtons';
+import ConfirmModal from '../../components/Modal';
+import { ModalDeleteContent } from '../../components/ModalDeleteContent'
+
 
 interface Props {
   currentRasterLayer?: RasterLayerFromAPI,
@@ -57,6 +61,28 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
       removeRasterSourceUUID();
     };
   }, [removeRasterSourceUUID]);
+
+  const onDelete = () => {
+    const body = {};
+
+    currentRasterLayer && fetch(`/api/v4/rasters/${currentRasterLayer.uuid}/`, {
+      credentials: 'same-origin',
+      method: 'DELETE',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(body)
+    })
+      .then(data => {
+        const status = data.status;
+        if (status === 204) {
+          props.addNotification('Success! Raster-layer deleted', 2000);
+          props.history.push('/data_management/rasters/layers/');
+        } else {
+          props.addNotification(status, 2000);
+          console.error(data);
+        };
+      })
+      .catch(console.error);
+  }
 
   const initialValues = currentRasterLayer ? {
     name: currentRasterLayer.name,
@@ -168,6 +194,9 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
   // with each new selected raster source by user by using useEffect
   const { rasterSource } = values;
   const [accessModifier, setAccessModifier] = useState<string | null>(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+
   useEffect(() => {
     if (!currentRasterLayer && rasterSource) {
       fetchRasterSourceV4(rasterSource).then(
@@ -439,12 +468,52 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
             url={'/data_management/rasters/layers'}
             form={"raster_layer_form_id"}
           />
-          <SubmitButton
-            onClick={tryToSubmitForm}
-            form={"raster_layer_form_id"}
-          />
+          <div style={{
+            display: "flex"
+          }}>
+            {currentRasterLayer?
+             <div style={{marginRight: "16px"}}> 
+              <FormActionButtons
+                actions={[
+                  {
+                    displayValue: "Delete",
+                    actionFunction: () => {setShowDeleteModal(true)}
+                  },
+                ]}
+              />
+            </div>
+            :null}
+            <SubmitButton
+              onClick={tryToSubmitForm}
+              form={"raster_layer_form_id"}
+            />
+          </div>
+          
         </div>
       </div>
+      { 
+        currentRasterLayer && showDeleteModal?
+           <ConfirmModal
+           title={'Are you sure?'}
+           buttonConfirmName={'Delete'}
+           onClickButtonConfirm={() => {
+              onDelete();
+              setShowDeleteModal(false);
+           }}
+           cancelAction={()=>{
+            setShowDeleteModal(false)
+          }}
+          disableButtons={false}
+         >
+           
+           <p>Are you sure? You are deleting the following raster layer:</p>
+           
+           {ModalDeleteContent([currentRasterLayer], false, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
+           
+         </ConfirmModal>
+        :
+          null
+        }
     </ExplainSideColumn>
   );
 };
