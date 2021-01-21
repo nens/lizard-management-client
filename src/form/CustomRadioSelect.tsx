@@ -1,5 +1,7 @@
 import React from "react";
 import styles from "./CustomRadioSelect.module.css";
+import formStyles from "../styles/Forms.module.css";
+
 
 interface Option {
   value: string,
@@ -30,7 +32,7 @@ export const CustomRadioSelect: React.FC<Props> = (props) => {
 
   return (
     <div>
-      <label>{title}</label>
+      <label><span className={`${formStyles.LabelTitle}`}>{title}</span></label>
       {/* <br/> */}
       <div className={styles.OptionsRow}>
       {

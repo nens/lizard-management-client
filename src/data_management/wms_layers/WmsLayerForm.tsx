@@ -381,7 +381,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           className={formStyles.ButtonContainer}
         >
           <CancelButton
-            url={'/data_management/raster_layers'}
+            url={'/data_management/wms_layers'}
           />
           <SubmitButton
             onClick={tryToSubmitForm}

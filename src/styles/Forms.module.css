@@ -23,6 +23,16 @@
 }
 .LabelTitle {
   margin-bottom: 8px;
+  font-weight: 500;
+
+  /* font-style: normal;
+  font-variant: normal;
+  font-size: 16px;
+  line-height: 16px;
+  color: #2C3E50; */
+}
+.Form input {
+  font-weight: normal;
 }
 
 .ButtonContainer {
