@@ -48,7 +48,7 @@ export const LabeltypesTable = (props:any) =>  {
       imgUrl={labeltypesIcon}
       imgAltDescription={"Label-types icon"}
       headerText={"Label types"}
-      explainationText={"Labeltypes are the different types of labels that can exist in the system"} 
+      explanationText={"Labeltypes are the different types of labels that can exist in the system"} 
       backUrl={"/data_management/labels"}
     >
       <TableStateContainer 

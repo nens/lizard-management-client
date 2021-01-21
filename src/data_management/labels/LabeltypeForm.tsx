@@ -14,8 +14,10 @@ import formStyles from './../../styles/Forms.module.css';
 import { TextArea } from './../../form/TextArea';
 import labeltypesIcon from "../../images/labeltypes_icon.svg";
 import FormActionButtons from '../../components/FormActionButtons';
-import ConfirmModal from '../../components/ConfirmModal';
-import { ModalDeleteContent } from '../../components/ModalDeleteContent'
+import Modal from '../../components/Modal';
+import { ModalDeleteContent } from '../../components/ModalDeleteContent';
+import { lableTypeFormHelpText } from '../../utils/helpTextForForms';
+
 
 
 interface Props {
@@ -132,6 +134,7 @@ const LabeltypeModel: React.FC<Props & PropsFromDispatch & RouteComponentProps<R
     handleSubmit,
     handleReset,
     clearInput,
+    fieldOnFocus,
   } = useForm({initialValues, onSubmit});
 
   return (
@@ -139,7 +142,7 @@ const LabeltypeModel: React.FC<Props & PropsFromDispatch & RouteComponentProps<R
       imgUrl={labeltypesIcon}
       imgAltDescription={"Label-types icon"}
       headerText={"Label types"}
-      explainationText={"Labeltypes are the different types of labels that can exist in the system"} 
+      explanationText={lableTypeFormHelpText[fieldOnFocus] || lableTypeFormHelpText['default']}
       backUrl={"/data_management/labels/label_types/"}
     >
       <form
@@ -148,7 +151,7 @@ const LabeltypeModel: React.FC<Props & PropsFromDispatch & RouteComponentProps<R
         onReset={handleReset}
       >
         <TextInput
-          title={'Label-type name'}
+          title={'Label type name'}
           name={'name'}
           value={values.name}
           valueChanged={handleInputChange}
@@ -159,7 +162,7 @@ const LabeltypeModel: React.FC<Props & PropsFromDispatch & RouteComponentProps<R
           readOnly={true}
         />
         <TextInput
-          title={'Label-type Uuid'}
+          title={'Label type Uuid'}
           name={'uuid'}
           value={values.uuid}
           valueChanged={handleInputChange}
@@ -214,7 +217,7 @@ const LabeltypeModel: React.FC<Props & PropsFromDispatch & RouteComponentProps<R
       </form>
       { 
         currentRecord && showDeleteModal?
-           <ConfirmModal
+           <Modal
            title={'Are you sure?'}
            buttonConfirmName={'Delete'}
            onClickButtonConfirm={() => {
@@ -231,7 +234,7 @@ const LabeltypeModel: React.FC<Props & PropsFromDispatch & RouteComponentProps<R
            
            {ModalDeleteContent([currentRecord], false, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
            
-         </ConfirmModal>
+         </Modal>
         :
           null
         }

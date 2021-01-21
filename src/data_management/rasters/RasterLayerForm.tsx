@@ -31,7 +31,7 @@ import { addNotification, removeRasterSourceUUID } from './../../actions';
 import rasterLayerIcon from "../../images/raster_layer_icon.svg";
 import formStyles from './../../styles/Forms.module.css';
 import FormActionButtons from '../../components/FormActionButtons';
-import ConfirmModal from '../../components/ConfirmModal';
+import ConfirmModal from '../../components/Modal';
 import { ModalDeleteContent } from '../../components/ModalDeleteContent'
 
 
@@ -490,7 +490,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           </div>
           
         </div>
-      </form>
+      </div>
       { 
         currentRasterLayer && showDeleteModal?
            <ConfirmModal
