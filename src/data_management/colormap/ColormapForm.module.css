@@ -1,0 +1,36 @@
+
+/* below 2 blocks are commented out. We will need them again once we can add name and description to the colormap form */
+/* .Form > div:nth-child(1) {
+  display: flex;
+  flex-direction: row;
+}
+.Form > div:nth-child(1) > div {
+  width: 50%;
+  padding-right: 40px;
+  box-sizing: border-box;
+} */
+
+.TypeLabel {
+  width: 160px;
+  height: 96px;
+  
+  box-shadow: 1px 2px 2px #00000029;
+  border: 1px solid #C9C9C9;
+  border-radius: 3px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.TypeLabel.TypeLabelSelected {
+  background-color: #E5F6F1;
+  border: 2px solid #55BFA2;
+}
+
+/* gradient */
+.TypeLabel *:nth-child(1) {
+  width: 67px;
+  height: 23px;
+}

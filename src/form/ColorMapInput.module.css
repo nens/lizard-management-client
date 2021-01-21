@@ -24,3 +24,10 @@
   flex-direction: row;
   justify-content: space-between;
 }
+
+.ColormapEditButton {
+  background-color: transparent;
+  border: none;
+  color: var(--color-header);
+  font-weight: 600;
+}

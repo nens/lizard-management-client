@@ -5,7 +5,8 @@
   height: calc(100% - 60px);
   margin: 30px 0;
   padding-bottom: 20px;
-  padding-right: 10px;
+  padding-right: 20px;
+  padding-left: 5px;
   overflow-y: auto;
 }
 .FormFieldTitle {
@@ -22,6 +23,16 @@
 }
 .LabelTitle {
   margin-bottom: 8px;
+  font-weight: 500;
+
+  /* font-style: normal;
+  font-variant: normal;
+  font-size: 16px;
+  line-height: 16px;
+  color: #2C3E50; */
+}
+.Form input {
+  font-weight: normal;
 }
 
 .ButtonContainer {
@@ -99,4 +110,17 @@
 
 .Errors {
   color: red;
+}
+
+
+
+input::-webkit-outer-spin-button.HideNumberUpDownArrows,
+input::-webkit-inner-spin-button.HideNumberUpDownArrows {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number].HideNumberUpDownArrows {
+  -moz-appearance: textfield;
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import {useState, useEffect,}  from 'react';
 import Table from './Table';
-import {ColumnDefenition} from './Table';
+import {ColumnDefinition} from './Table';
 import Pagination from './Pagination';
 import Checkbox from './Checkbox';
 import TableSearchBox from './TableSearchBox';
@@ -17,14 +17,14 @@ import buttonStyles from '../styles/Buttons.module.css';
 
 interface Props {
   gridTemplateColumns: string;
-  columnDefenitions: ColumnDefenition[];
+  columnDefinitions: ColumnDefinition[];
   baseUrl: string; 
   checkBoxActions: any[];
   newItemOnClick: () => void | null;
   queryCheckBox: {text: string, adaptUrlFunction: (url:string)=>string} | null;
 }
 
-const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, columnDefenitions, baseUrl, checkBoxActions, newItemOnClick, queryCheckBox/*action*/}) => {
+const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, columnDefinitions, baseUrl, checkBoxActions, newItemOnClick, queryCheckBox/*action*/}) => {
 
   const [tableData, setTableData] = useState([]);
   const [checkBoxes, setCheckBoxes] = useState([]);
@@ -56,6 +56,8 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
   useEffect(() => { 
     if (currentUrl !== "" && currentUrl === apiResponse.currentUrl) {
       apiResponse.response.results && setTableData(apiResponse.response.results);
+      // make sure no checkboxes are checked outside of current page !
+      apiResponse.response.results && setCheckBoxes(checkBoxesPar=>checkBoxesPar.filter(value => (apiResponse.response.results.map((item:any)=>item.uuid)).includes(value)));
       setDataRetrievalState(apiResponse.dataRetrievalState)
       // we need to split on "lizard.net" because both nxt3.staging.lizard.net/api/v4 and demo.lizard.net/api/v4 both should parse out "/api/v4"
       if (apiResponse.response.next) setNextUrl(apiResponse.response.next.split("lizard.net")[1]);
@@ -127,7 +129,7 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
     }
   })
 
-  const checkBoxColumnDefenition: ColumnDefenition = {
+  const checkBoxColumnDefinition: ColumnDefinition = {
     titleRenderFunction: () => 
       <Checkbox  
         checked={areAllOnCurrentPageChecked()}
@@ -150,45 +152,45 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
       orderingField: null,
   };
 
-  const columnDefenitionsPlusCheckbox = 
+  const columnDefinitionsPlusCheckbox = 
     checkBoxActions.length > 0 ?  
-      [checkBoxColumnDefenition].concat(columnDefenitions)
+      [checkBoxColumnDefinition].concat(columnDefinitions)
       :
-      columnDefenitions
+      columnDefinitions
       ;
 
   const getIfCheckBoxOfUuidIsSelected = ((uuid: string) => {return checkBoxes.find(checkBoxUuid=> checkBoxUuid===uuid)});
 
-  const columnDefenitionsPlusCheckboxSortable =
-  columnDefenitionsPlusCheckbox.map((columnDefenition, ind)=>{
-    const originalTitleRenderFunction = columnDefenition.titleRenderFunction;
+  const columnDefinitionsPlusCheckboxSortable =
+  columnDefinitionsPlusCheckbox.map((columnDefinition, ind)=>{
+    const originalTitleRenderFunction = columnDefinition.titleRenderFunction;
     const sortedTitleRenderFunction = () => {
       const originalContent = originalTitleRenderFunction();
       return (
         <span>
           {
-            columnDefenition.orderingField?
+            columnDefinition.orderingField?
             <>
               <button
-                style={ordering !== columnDefenition.orderingField && ordering !== '-'+columnDefenition.orderingField ? {}: {display:"none"}}
+                style={ordering !== columnDefinition.orderingField && ordering !== '-'+columnDefinition.orderingField ? {}: {display:"none"}}
                 onClick={()=>{
-                  setOrdering(columnDefenition.orderingField)
+                  setOrdering(columnDefinition.orderingField)
                 }}
               >
                 {originalContent}
                 <img height="12px" src={`${unorderedIcon}`} alt="ordering icon unordened" />
               </button>
               <button
-                style={ordering === columnDefenition.orderingField ?{}:{display:"none"}}
+                style={ordering === columnDefinition.orderingField ?{}:{display:"none"}}
                 onClick={()=>{
-                  setOrdering("-" + columnDefenition.orderingField)
+                  setOrdering("-" + columnDefinition.orderingField)
                 }}
               >
                 {originalContent}
                 <img height="6px" src={`${orderedIcon}`} alt="ordering icon ordened" />
               </button>
               <button
-                style={ordering === '-'+columnDefenition.orderingField ?{}:{display:"none"}}
+                style={ordering === '-'+columnDefinition.orderingField ?{}:{display:"none"}}
                 onClick={()=>{
                   setOrdering("last_modified");
                 }}
@@ -203,7 +205,7 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
         </span>
       );
     }
-    return {...columnDefenition, titleRenderFunction: sortedTitleRenderFunction}
+    return {...columnDefinition, titleRenderFunction: sortedTitleRenderFunction}
   });
 
   return (
@@ -250,6 +252,7 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
             style={{
               display: "flex",
               alignItems: "center",
+              fontWeight: 500
             }}
           >
             <span style={{marginRight: "8px"}}>{queryCheckBox.text}</span>
@@ -259,6 +262,7 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
                   if (queryCheckBoxState) setQueryCheckBoxState(false);
                   else setQueryCheckBoxState(true)
                 }} 
+                size={32}
               />
           </span>
           :
@@ -270,7 +274,7 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
         // @ts-ignore
         style={{
           visibility: checkBoxes.length > 0? "visible" : "hidden",
-          display: "flex",
+          display: checkBoxActions.length === 0? "none" :"flex",
           justifyContent: "space-between",
           backgroundColor: "var(--color-header)",
           color: "var(--color-ligth-main-second)",
@@ -311,7 +315,7 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
           tableData={dataWithCheckBoxes} 
           setTableData={setTableData}
           gridTemplateColumns={gridTemplateColumns} 
-          columnDefenitions={columnDefenitionsPlusCheckboxSortable}
+          columnDefinitions={columnDefinitionsPlusCheckboxSortable}
           dataRetrievalState={dataRetrievalState}
           triggerReloadWithCurrentPage={()=>{fetchWithUrl(currentUrl)}}
           triggerReloadWithBasePage={()=>{fetchWithUrl(url)}}

@@ -7,19 +7,24 @@ import { CheckBox } from "./CheckBox";
 import { validatorResult } from "./validators";
 import styles from "./ColorMapInput.module.css";
 import formStyles from "../styles/Forms.module.css";
-
 import {
   calculateNewStyleAndOptions,
   optionsHasLayers,
   validateStyleObj,
   colorMapTypeFromOptions
 } from "../utils/rasterOptionFunctions";
+// import Modal from '../components/Modal';
+import ModalBackground from '../components/ModalBackground';
+
+import { ColormapForm } from '../data_management/colormap/ColormapForm';
+
 
 export interface ColorMapOptions {
   options: {
     styles?: string
   },
-  rescalable: boolean
+  rescalable: boolean,
+  customColormap: any,
 }
 
 interface LegendResponse {
@@ -38,13 +43,21 @@ interface ColorMapProps {
   triedToSubmit?: boolean,
   placeholder?: string,
   validators?: Function[],
+  form?: string,
+  onFocus?: (e: React.ChangeEvent<HTMLInputElement>) => void,
+  onBlur?: () => void,
 };
 
 export const colorMapValidator = (options: ColorMapOptions | null): validatorResult => {
     const initiatedOptions = options || {
       options: {},
       rescalable: false,
+      customColormap: {},
     };
+    if (JSON.stringify(initiatedOptions.customColormap) !== "{}") {
+      return false;
+    }
+
     const colorMap = colorMapTypeFromOptions(initiatedOptions.options);
 
     const result = validateStyleObj(colorMap);
@@ -76,6 +89,9 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
     validated,
     errorMessage,
     triedToSubmit,
+    form,
+    onFocus,
+    onBlur,
     intl
   } = props;
 
@@ -94,8 +110,10 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
   const [previewColor, setPreviewColor] = useState<LegendResponse | null>(null);
   const [colorMapValue, setColorMapValue] = useState<ColorMapOptions>({
     options: {},
-    rescalable: false
+    rescalable: false,
+    customColormap: {},
   });
+  const [showCustomColormapModal, setShowCustomColormapModal] = useState(false);
 
   const { options } = colorMapValue;
   const prevStyles = usePrevious(options.styles);
@@ -139,6 +157,12 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
   }, [previewColor, options, prevStyles]);
 
   const colorMapChanged = (colorMap: string | null) => {
+
+    if (colorMap === "Custom colormap") {
+      setShowCustomColormapModal(true);
+      return;
+    }
+
     if (colorMap === null) {
       colorMap = '';
     }
@@ -149,14 +173,25 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
     );
     valueChanged({
       options: newStyleOptions.options,
-      rescalable: colorMapValue.rescalable
+      rescalable: colorMapValue.rescalable,
+      customColormap: colorMap !== "Custom colormap"? {} : colorMapValue.customColormap,
     });
   }
 
   const rescalableChanged = (rescalable: boolean) => {
     valueChanged({
       options: colorMapValue.options,
-      rescalable: rescalable
+      rescalable: rescalable,
+      customColormap: colorMapValue.customColormap,
+    });
+  }
+
+  const customColormapChanged = (customColormap: any) => {
+    valueChanged({
+      options: JSON.stringify(customColormap) ==="{}"? colorMapValue.options : {},
+      rescalable: colorMapValue.rescalable,
+      customColormap: customColormap
+
     });
   }
 
@@ -189,7 +224,8 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
 
     valueChanged({
       options: newStyleOptions.options,
-      rescalable: colorMapValue.rescalable
+      rescalable: colorMapValue.rescalable,
+      customColormap: colorMapValue.customColormap,
     });
   }
 
@@ -231,6 +267,33 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
       htmlFor={name}
       className={formStyles.Label}
     >
+      {showCustomColormapModal? 
+        // <Modal
+        //   title={'CUSTOM COLORMAP'}
+        // >
+        <ModalBackground
+          title={'CUSTOM COLORMAP'}
+          handleClose={() => setShowCustomColormapModal(false)}
+          // previously this value was precisely hardcoded to pixels, because some of the content has a fixed minheight
+          // height={'816px'}
+          height={'90%'}
+          width={'50%'} 
+        >
+          <div
+            style={{padding: "30px", flexGrow: 1,}}
+          >
+            <ColormapForm
+              currentRecord={value.customColormap.data? value.customColormap: undefined}
+              cancelAction={()=>{setShowCustomColormapModal(false)}}
+              confirmAction={(customColormap:any)=>{
+                customColormapChanged(customColormap);
+                setShowCustomColormapModal(false);
+              }}
+            />
+          </div>
+        </ModalBackground>
+        // {/* </Modal> */}
+      :null}
       <span className={formStyles.LabelTitle}>
         {title}
       </span>
@@ -240,55 +303,88 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
           <span>{minValue}</span>
           <span>{maxValue}</span>
         </div>
-        <SelectBox
-          title={''}
-          choices={colorMaps}
-          value={(colorMapType && colorMapType.colorMap) || null}
-          name={name + '_colorMapselect'}
-          validated={validated}
-          errorMessage={errorMessage}
-          triedToSubmit={triedToSubmit}
-          valueChanged={colorMapChanged}
-          placeholder={placeholderColorMapSelection}
-          showSearchField={true}
-          readOnly={readOnly}
-        />
+        <div style={{position: "relative"}}>
+          <SelectBox
+            title={''}
+            choices={[["Custom colormap","Custom colormap","+ Create new colormap for this raster"],...colorMaps]}
+            value={JSON.stringify(colorMapValue.customColormap) !=="{}" && JSON.stringify(colorMapValue.options) ==="{}" ? "Custom colormap" : (colorMapType && colorMapType.colorMap) || null}
+            name={name}
+            validated={validated}
+            errorMessage={errorMessage}
+            triedToSubmit={triedToSubmit}
+            valueChanged={(colormap)=>{ 
+              colorMapChanged(colormap); 
+            }}
+            placeholder={placeholderColorMapSelection}
+            showSearchField={true}
+            readOnly={readOnly}
+            form={form}
+            onFocus={onFocus}
+            onBlur={onBlur}
+          />
+          {
+            JSON.stringify(colorMapValue.customColormap) !=="{}" && JSON.stringify(colorMapValue.options) ==="{}"?
+            <div style={{position:"absolute", left: "164px", top: "18px"}}>
+              <button
+                onClick={()=>setShowCustomColormapModal(true)}
+                className={styles.ColormapEditButton}
+              >
+                <i className='fa fa-edit' title='Undo' /> 
+                {" EDIT"}
+              </button>
+            </div>
+            :
+            null
+          }
+        </div>
+        
   
         <br />
-        <span className="text-muted">
+        <span className={`${"text-muted"} ${formStyles.LabelTitle}`}>
           <FormattedMessage id="color_map.minimum_color_range" />
         </span>
         <br />
         <input
+          id={"colormap_minimum"}
           type="number"
           autoComplete="off"
           onChange={e => handleValueChanged('min', toFloat(e.target.value))}
           value={(colorMapType && colorMapType.min) || ""}
           placeholder={placeholderMinimumColorRange}
           className={formStyles.FormControl}
+          onFocus={onFocus}
+          onBlur={onBlur}
           readOnly={readOnly}
           disabled={readOnly}
+          form={form}
         />
         <br />
-        <span className="text-muted">
+        <span className={`${"text-muted"} ${formStyles.LabelTitle}`}>
         <FormattedMessage id="color_map.maximum_color_range" />
         </span>
         <input
+          id={"colormap_maximum"}
           type="number"
           autoComplete="off"
           value={(colorMapType && colorMapType.max) || ""}
           onChange={e => handleValueChanged('max', toFloat(e.target.value))}
           placeholder={placeholderMaximumColorRange}
           className={formStyles.FormControl}
+          onFocus={onFocus}
+          onBlur={onBlur}
           readOnly={readOnly}
           disabled={readOnly}
+          form={form}
         />
         <br/>
         <CheckBox
           title={'Rescalable'}
-          name={'rescalable'}
+          name={name+'_rescalable'}
           value={colorMapValue.rescalable}
           valueChanged={(bool: boolean) => rescalableChanged(bool)}
+          form={form}
+          onFocus={onFocus}
+          onBlur={onBlur}
         />      
       </div>
     </label>

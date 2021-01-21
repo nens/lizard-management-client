@@ -74,6 +74,7 @@ interface RasterLayerInstance {
   supplier_code?: string;
   aggregation_type: string;
   options: string;
+  colormap: string;
   raster_sources?: string[];
   rescalable: boolean;
   uuid?: string,
@@ -535,20 +536,23 @@ export const patchRasterLayer = async (rasterUuid: string, raster: RasterLayerFr
 Next function api call fails with error:
 {"status":405,"code":10,"message":"Request method not available. #405.10","detail":"Method \"DELETE\" not allowed."}
 //*/
-export const deleteRasterSource = async (uuid: string) => {
+// useForce works, but we are not going to use it for now
+export const deleteRasterSource = async (
+  uuid: string, 
+  // useForce?:boolean
+) => {  
+  // const body = useForce===true ? {"force": true,} : {};
+  const body = {};
   // Try to delete source, ignore errors
   const result = await fetch("/api/v4/rastersources/"+uuid, {
     credentials: "same-origin",
     method: "DELETE",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      // we should hopefully eventually not need next line
-      // "force": true,
-    })
+    body: JSON.stringify(body)
   });
   return result;
 }
 
 export const deleteRasterSources = (uuids: string[]) => {
-  return Promise.all(uuids.map(deleteRasterSource));
+  return Promise.all(uuids.map((uuid)=>deleteRasterSource(uuid)));
 }

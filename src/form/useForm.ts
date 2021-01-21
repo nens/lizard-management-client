@@ -1,15 +1,8 @@
 import React, { useState } from 'react';
-import { ColorMapOptions } from './ColorMapInput';
-import { SpatialBounds } from '../types/mapTypes';
-import { AcceptedFile } from './UploadRasterData';
 
-type Value = string | number | boolean | string[] | {} | ColorMapOptions | SpatialBounds | AcceptedFile[] | null |undefined;
-
+type Value = any;
 export interface Values {
   [name: string]: Value
-}
-interface TouchedValues {
-  [name: string]: boolean
 }
 
 interface FormInput {
@@ -19,21 +12,25 @@ interface FormInput {
 
 interface FormOutput {
   values: Values,
-  touchedValues: TouchedValues,
+  fieldOnFocus: string,
   triedToSubmit: boolean,
+  formSubmitted: boolean,
   tryToSubmitForm: () => void, 
-  handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void,
+  handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void,
   handleValueChange: (name: string, value: Value) => void,
+  handleValueChanges: (changes:{name: string, value: Value}[]) => void,
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void,
   handleReset: (e: React.FormEvent<HTMLFormElement>) => void,
-  handleBlur: (e: React.ChangeEvent<HTMLInputElement>) => void,
+  handleFocus: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLButtonElement>) => void,
+  handleBlur: () => void,
   clearInput: (name: string) => void,
 }
 
 export const useForm = ({ initialValues, onSubmit }: FormInput): FormOutput => {
   const [values, setValues] = useState<{}>(initialValues || {});
-  const [touchedValues, setTouchedValues] = useState<{}>({});
+  const [fieldOnFocus, setFieldOnFocus] = useState<string>('default');
   const [triedToSubmit, setTriedToSubmit] = useState<boolean>(false);
+  const [formSubmitted, setFormSubmitted] = useState<boolean>(false);
 
   const tryToSubmitForm = () => setTriedToSubmit(true);
 
@@ -54,6 +51,15 @@ export const useForm = ({ initialValues, onSubmit }: FormInput): FormOutput => {
     });
   };
 
+  const handleValueChanges = (changes:{name: string, value: Value}[]) => {
+    let tmpObj = {...values};
+    changes.forEach((change)=>{
+      // @ts-ignore
+      tmpObj[change.name] = change.value;
+    })
+    setValues(tmpObj);
+  };
+
   const clearInput = (name: string) => {
     setValues({
       ...values,
@@ -61,13 +67,13 @@ export const useForm = ({ initialValues, onSubmit }: FormInput): FormOutput => {
     });
   };
 
-  const handleBlur = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const target = event.target;
-    const name = target.name;
-    setTouchedValues({
-      ...touchedValues,
-      [name]: true
-    });
+  const handleFocus = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLButtonElement>) => {
+    const id = event.target.id;
+    setFieldOnFocus(id);
+  };
+
+  const handleBlur = () => {
+    setFieldOnFocus('default');
   };
 
   const handleReset = (event: React.FormEvent<HTMLFormElement>) => {
@@ -78,15 +84,19 @@ export const useForm = ({ initialValues, onSubmit }: FormInput): FormOutput => {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setFormSubmitted(true);
     onSubmit(values);
   };
 
   return {
     values,
-    touchedValues,
+    fieldOnFocus,
     triedToSubmit,
+    formSubmitted,
     tryToSubmitForm,
     handleInputChange,
+    handleValueChanges,
+    handleFocus,
     handleBlur,
     handleSubmit,
     handleReset,

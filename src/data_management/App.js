@@ -1,10 +1,12 @@
 import React, { Component } from "react";
 import { DataManagement as DataManagementHome } from "./DataManagement";
 import RasterManagement from "./rasters/RasterManagement";
+import LabelManagement from "./labels/LabelManagement";
 import { Raster as RasterApp } from "./rasters/Raster";
 import { RasterSourceTable} from "./rasters/RasterSourceTable";
 import { RasterLayerTable} from "./rasters/RasterLayerTable";
 import { WmsLayerTable } from './wms_layers/WmsLayerTable';
+import { LabeltypesTable} from "./labels/LabeltypesTable";
 
 import { WmsLayer as WmsLayerApp } from "./wms_layers/WmsLayer";
 import { Scenarios as ScenariosApp } from "./scenarios/Scenarios";
@@ -13,9 +15,11 @@ import { NewRasterLayer } from "./rasters/NewRasterLayer";
 import { EditRasterSource } from "./rasters/EditRasterSource";
 import { EditRasterLayer } from "./rasters/EditRasterLayer";
 import { ScenarioTable } from "./scenarios/ScenarioTable";
+import { EditScenario } from "./scenarios/EditScenario";
 import { EditWmsLayer } from "./wms_layers/EditWmsLayer";
 import { NewWmsLayer } from "./wms_layers/NewWmsLayer";
 import { UploadRasterData } from "./rasters/UploadRasterData";
+import {EditLabeltype} from "./labels/EditLabeltype";
 
 import { Route, Switch, withRouter } from "react-router-dom";
 
@@ -46,6 +50,8 @@ class App extends Component {
         <Route exact path="/data_management/wms_layers" component={WmsLayerTable} />
         <Route exact path="/data_management/scenarios_old" component={ScenariosApp} />
         <Route exact path="/data_management/scenarios" component={ScenarioTable} />
+        <Route exact path="/data_management/labels" component={LabelManagement} />
+        <Route exact path="/data_management/labels/label_types" component={LabeltypesTable} />
         <Switch>
           <Route
             exact
@@ -81,6 +87,16 @@ class App extends Component {
             exact
             path="/data_management/wms_layers/:id"
             component={EditWmsLayer}
+          />
+          <Route
+            exact
+            path="/data_management/scenarios/:uuid"
+            component={EditScenario}
+          />
+          <Route
+            exact
+            path="/data_management/labels/label_types/:uuid"
+            component={EditLabeltype}
           />
         </Switch>
       </>

@@ -12,7 +12,7 @@ import { CancelButton } from '../../form/CancelButton';
 import { SelectBox } from '../../form/SelectBox';
 import { SlushBucket } from '../../form/SlushBucket';
 import { AccessModifier } from '../../form/AccessModifier';
-import ColorMapInput, { ColorMapOptions, colorMapValidator } from '../../form/ColorMapInput';
+import ColorMapInput, { colorMapValidator } from '../../form/ColorMapInput';
 import { useForm, Values } from '../../form/useForm';
 import { minLength, required } from '../../form/validators';
 import {
@@ -21,13 +21,19 @@ import {
   getObservationTypes,
   getOrganisations,
   getRasterSourceUUID,
-  getSelectedOrganisation
+  getSelectedOrganisation,
+  getSupplierIds
 } from '../../reducers';
 import { optionsHasLayers } from '../../utils/rasterOptionFunctions';
 import { getUuidFromUrl } from '../../utils/getUuidFromUrl';
+import { rasterLayerFormHelpText } from '../../utils/helpTextForForms';
 import { addNotification, removeRasterSourceUUID } from './../../actions';
 import rasterLayerIcon from "../../images/raster_layer_icon.svg";
 import formStyles from './../../styles/Forms.module.css';
+import FormActionButtons from '../../components/FormActionButtons';
+import ConfirmModal from '../../components/Modal';
+import { ModalDeleteContent } from '../../components/ModalDeleteContent'
+
 
 interface Props {
   currentRasterLayer?: RasterLayerFromAPI,
@@ -41,6 +47,7 @@ interface PropsFromDispatch {
 
 const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (props) => {
   const { currentRasterLayer, rasterSources, removeRasterSourceUUID } = props;
+  const supplierIds = useSelector(getSupplierIds).available;
   const organisationsToSharedWith = useSelector(getOrganisations).availableForRasterSharedWith;
   const organisations = useSelector(getOrganisations).available;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
@@ -55,6 +62,28 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
     };
   }, [removeRasterSourceUUID]);
 
+  const onDelete = () => {
+    const body = {};
+
+    currentRasterLayer && fetch(`/api/v4/rasters/${currentRasterLayer.uuid}/`, {
+      credentials: 'same-origin',
+      method: 'DELETE',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(body)
+    })
+      .then(data => {
+        const status = data.status;
+        if (status === 204) {
+          props.addNotification('Success! Raster-layer deleted', 2000);
+          props.history.push('/data_management/rasters/layers/');
+        } else {
+          props.addNotification(status, 2000);
+          console.error(data);
+        };
+      })
+      .catch(console.error);
+  }
+
   const initialValues = currentRasterLayer ? {
     name: currentRasterLayer.name,
     description: currentRasterLayer.description,
@@ -62,12 +91,12 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
     rasterSource: (currentRasterLayer.raster_sources && currentRasterLayer.raster_sources[0] && getUuidFromUrl(currentRasterLayer.raster_sources[0])) || null,
     aggregationType: currentRasterLayer.aggregation_type || null,
     observationType: (currentRasterLayer.observation_type && currentRasterLayer.observation_type.id + '') || null,
-    colorMap: {options: currentRasterLayer.options, rescalable: currentRasterLayer.rescalable},
+    colorMap: {options: currentRasterLayer.options, rescalable: currentRasterLayer.rescalable, customColormap: currentRasterLayer.colormap || {}},
     accessModifier: currentRasterLayer.access_modifier,
     sharedWith: currentRasterLayer.shared_with.length === 0 ? false : true,
     organisationsToSharedWith: currentRasterLayer.shared_with.map(organisation => organisation.uuid.replace(/-/g, "")) || [],
     organisation: currentRasterLayer.organisation.uuid.replace(/-/g, "") || null,
-    supplierName: currentRasterLayer.supplier,
+    supplier: currentRasterLayer.supplier,
   } : {
     name: null,
     description: null,
@@ -79,27 +108,26 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
     sharedWith: false,
     organisationsToSharedWith: [],
     organisation: selectedOrganisation.uuid.replace(/-/g, "") || null,
-    supplierName: null,
+    supplier: null,
   };
   const onSubmit = (values: Values) => {
     if (!currentRasterLayer) {
       const rasterLayer = {
-        name: values.name as string,
-        organisation: values.organisation as string,
-        access_modifier: accessModifier as string || 'Private',
-        description: values.description as string,
-        observation_type: values.observationType as string,
-        supplier: values.supplierName as string,
-        aggregation_type: values.aggregationType as string,
-        // @ts-ignore
+        name: values.name,
+        organisation: values.organisation,
+        access_modifier: accessModifier || 'Private',
+        description: values.description,
+        observation_type: values.observationType,
+        supplier: values.supplier,
+        aggregation_type: values.aggregationType,
         options: values.colorMap.options,
-        // @ts-ignore
-        rescalable: values.colorMap.rescalable as boolean,
-        shared_with: values.organisationsToSharedWith as string[],
-        datasets: values.dataset ? [values.dataset as string] : []
+        colormap: JSON.stringify(values.colorMap.customColormap) ==="{}"? undefined : values.colorMap.customColormap,
+        rescalable: values.colorMap.rescalable,
+        shared_with: values.organisationsToSharedWith,
+        datasets: values.dataset ? [values.dataset] : []
       };
 
-      createRasterLayer(rasterLayer, values.rasterSource as string)
+      createRasterLayer(rasterLayer, values.rasterSource)
         .then(response => {
           const status = response.status;
           if (status === 201) {
@@ -114,24 +142,21 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
         .catch(e => console.error(e));
     } else {
       const body = {
-        name: values.name as string,
-        organisation: values.organisation as string,
-        access_modifier: values.accessModifier as string,
-        description: values.description as string,
-        observation_type: values.observationType as string,
-        supplier: values.supplierName as string,
-        aggregation_type: values.aggregationType as string,
-        // @ts-ignore
+        name: values.name,
+        organisation: values.organisation,
+        access_modifier: values.accessModifier,
+        description: values.description,
+        observation_type: values.observationType,
+        supplier: values.supplier,
+        aggregation_type: values.aggregationType,
         options: values.colorMap.options,
-        // @ts-ignore
-        rescalable: values.colorMap.rescalable as boolean,
-        shared_with: values.organisationsToSharedWith as string[],
-        datasets: values.dataset ? [values.dataset as string] : []
+        colormap: JSON.stringify(values.colorMap.customColormap) ==="{}"? undefined : values.colorMap.customColormap,
+        rescalable: values.colorMap.rescalable,
+        shared_with: values.organisationsToSharedWith,
+        datasets: values.dataset ? [values.dataset] : []
       };
       // only add colormap in options if not multiple layers
-      // @ts-ignore
       if (!optionsHasLayers(values.colorMap.options)) {
-        // @ts-ignore
         body.options = values.colorMap.options;
       };
 
@@ -157,6 +182,9 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
     tryToSubmitForm,
     handleInputChange,
     handleValueChange,
+    fieldOnFocus,
+    handleBlur,
+    handleFocus,
     handleSubmit,
     handleReset,
     clearInput,
@@ -166,9 +194,12 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
   // with each new selected raster source by user by using useEffect
   const { rasterSource } = values;
   const [accessModifier, setAccessModifier] = useState<string | null>(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+
   useEffect(() => {
     if (!currentRasterLayer && rasterSource) {
-      fetchRasterSourceV4(rasterSource as string).then(
+      fetchRasterSourceV4(rasterSource).then(
         rasterSourceData => setAccessModifier(rasterSourceData.access_modifier || 'Private')
       ).catch(e => console.error(e));
     };
@@ -179,14 +210,25 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
       imgUrl={rasterLayerIcon}
       imgAltDescription={"Raster-Layer icon"}
       headerText={"Raster Layers"}
-      explainationText={"Create a layer to view your raster data in the portal."}
+      explanationText={rasterLayerFormHelpText[fieldOnFocus] || rasterLayerFormHelpText['default']}
       backUrl={"/data_management/rasters/layers"}
     >
+      {/* 
+      I also use a form inside the colormap modal.
+      A form inside a form is not valid html.
+      Therefore I used the workaround here:
+      https://stackoverflow.com/questions/3430214/form-inside-a-form-is-that-alright?lq=1
+      Answer from user: "ilevent"
+      */}
       <form
-        className={formStyles.Form}
+        // remove this class because it gives element height
+        // className={formStyles.Form}
         onSubmit={handleSubmit}
         onReset={handleReset}
+        id={"raster_layer_form_id"}
       >
+      </form>
+      <div className={formStyles.Form}>
         <span className={formStyles.FormFieldTitle}>
           1: General
         </span>
@@ -194,30 +236,39 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           title={'Name *'}
           name={'name'}
           placeholder={'Please enter at least 3 characters'}
-          value={values.name as string}
+          value={values.name}
           valueChanged={handleInputChange}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           clearInput={clearInput}
-          validated={!minLength(3, values.name as string)}
-          errorMessage={minLength(3, values.name as string)}
+          validated={!minLength(3, values.name)}
+          errorMessage={minLength(3, values.name)}
           triedToSubmit={triedToSubmit}
+          form={"raster_layer_form_id"}
         />
         <TextArea
           title={'Description'}
           name={'description'}
           placeholder={'This is a layer based on raster_source'}
-          value={values.description as string}
+          value={values.description}
           valueChanged={handleInputChange}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           clearInput={clearInput}
           validated
+          form={"raster_layer_form_id"}
         />
         <SelectBox
           title={'Dataset'}
           name={'dataset'}
           placeholder={'- Select -'}
-          value={values.dataset as string}
+          value={values.dataset}
           valueChanged={value => handleValueChange('dataset', value)}
           choices={datasets.map((dataset: any) => [dataset.slug, dataset.slug])}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           validated
+          form={"raster_layer_form_id"}
         />
         <span className={formStyles.FormFieldTitle}>
           2: Data
@@ -227,32 +278,38 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
             title={'Source *'}
             name={'rasterSource'}
             placeholder={'- Search and select -'}
-            value={values.rasterSource as string}
+            value={values.rasterSource}
             valueChanged={value => handleValueChange('rasterSource', value)}
             choices={rasterSources.map(rasterSource => [rasterSource.uuid!, rasterSource.name])}
             validated={!required('Please select a raster source', values.rasterSource)}
             errorMessage={required('Please select a raster source', values.rasterSource)}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
             triedToSubmit={triedToSubmit}
             readOnly={!!currentRasterLayer || !!rasterSourceUUID}
             showSearchField
+            form={"raster_layer_form_id"}
           />
           :
           <TextInput
             title={'Source *'}
             name={'rasterSource'}
-            value={values.rasterSource as string}
+            value={values.rasterSource}
             valueChanged={handleInputChange}
             clearInput={clearInput}
             validated
+            onFocus={handleFocus}
+            onBlur={handleBlur}
             readOnly
             triedToSubmit={triedToSubmit}
+            form={"raster_layer_form_id"}
           />
         }
         <SelectBox
           title={'Aggregation type *'}
           name={'aggregationType'}
           placeholder={'- Select -'}
-          value={values.aggregationType as string}
+          value={values.aggregationType}
           valueChanged={value => handleValueChange('aggregationType', value)}
           choices={[
             [
@@ -283,13 +340,16 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           ]}
           validated={!required('Please select an option', values.aggregationType)}
           errorMessage={required('Please select an option', values.aggregationType)}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           triedToSubmit={triedToSubmit}
+          form={"raster_layer_form_id"}
         />
         <SelectBox
           title={'Observation type *'}
           name={'observationType'}
           placeholder={'- Search and select -'}
-          value={values.observationType as string}
+          value={values.observationType}
           valueChanged={value => handleValueChange('observationType', value)}
           choices={observationTypes.map((obsT: any) => {
             let parameterString = obsT.parameter + '';
@@ -311,18 +371,24 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           })}
           validated={!required('Please select an observation type', values.observationType)}
           errorMessage={required('Please select an observation type', values.observationType)}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           triedToSubmit={triedToSubmit}
           showSearchField
+          form={"raster_layer_form_id"}
         />
         <ColorMapInput
           title={<FormattedMessage id="raster_form.colormap" />}
           name={'colorMap'}
-          value={values.colorMap as ColorMapOptions}
+          value={values.colorMap}
           valueChanged={value => handleValueChange('colorMap', value)}
           colorMaps={colorMaps.map((colM: any) => [colM.name, colM.name, colM.description])}
-          validated={!colorMapValidator(values.colorMap as ColorMapOptions)}
-          errorMessage={colorMapValidator(values.colorMap as ColorMapOptions)}
+          validated={!colorMapValidator(values.colorMap)}
+          errorMessage={colorMapValidator(values.colorMap)}
           triedToSubmit={triedToSubmit}
+          form={"raster_layer_form_id"}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         <span className={formStyles.FormFieldTitle}>
           3: Rights
@@ -330,22 +396,28 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
         <AccessModifier
           title={'Access Modifier'}
           name={'accessModifier'}
-          value={values.accessModifier as string || accessModifier}
+          value={values.accessModifier || accessModifier}
           valueChanged={() => null}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           readOnly
+          form={"raster_layer_form_id"}
         />
         <CheckBox
           title={'Shared with other organisations'}
           name={'sharedWith'}
-          value={values.sharedWith as boolean}
+          value={values.sharedWith}
           valueChanged={bool => handleValueChange('sharedWith', bool)}
+          form={"raster_layer_form_id"}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         {values.sharedWith ? (
           <SlushBucket
             title={'Organisations'}
             name={'organisationsToSharedWith'}
             placeholder={'Search organisations'}
-            value={values.organisationsToSharedWith as string[]}
+            value={values.organisationsToSharedWith}
             choices={organisationsToSharedWith.map((organisation: any) => {
               return {
                 display: organisation.name,
@@ -354,38 +426,94 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
             })}
             valueChanged={(value: any) => handleValueChange('organisationsToSharedWith', value)}
             validated
+            form={"raster_layer_form_id"}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
           />
         ) : null}
         <SelectBox
           title={'Organisation'}
           name={'organisation'}
           placeholder={'- Search and select -'}
-          value={values.organisation as string}
+          value={values.organisation}
           valueChanged={value => handleValueChange('organisation', value)}
           choices={organisations.map((organisation: any) => [organisation.uuid, organisation.name])}
-          validated
-          readOnly
+          showSearchField
+          validated={values.organisation !== null && values.organisation !== ''}
+          errorMessage={'Please select an organisation'}
+          triedToSubmit={triedToSubmit}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          readOnly={true}
+          form={"raster_layer_form_id"}
         />
-        <TextInput
+        <SelectBox
           title={'Supplier'}
           name={'supplier'}
-          value={values.supplierName as string}
-          valueChanged={handleInputChange}
-          clearInput={clearInput}
+          placeholder={'- Search and select -'}
+          value={values.supplier}
+          valueChanged={value => handleValueChange('supplier', value)}
+          choices={supplierIds.map((suppl:any) => [suppl.username, suppl.username])}
+          showSearchField
           validated
-          readOnly
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          readOnly={!(supplierIds.length > 0 && selectedOrganisation.roles.includes('admin'))}
+          form={"raster_layer_form_id"}
         />
         <div
           className={formStyles.ButtonContainer}
         >
           <CancelButton
             url={'/data_management/rasters/layers'}
+            form={"raster_layer_form_id"}
           />
-          <SubmitButton
-            onClick={tryToSubmitForm}
-          />
+          <div style={{
+            display: "flex"
+          }}>
+            {currentRasterLayer?
+             <div style={{marginRight: "16px"}}> 
+              <FormActionButtons
+                actions={[
+                  {
+                    displayValue: "Delete",
+                    actionFunction: () => {setShowDeleteModal(true)}
+                  },
+                ]}
+              />
+            </div>
+            :null}
+            <SubmitButton
+              onClick={tryToSubmitForm}
+              form={"raster_layer_form_id"}
+            />
+          </div>
+          
         </div>
-      </form>
+      </div>
+      { 
+        currentRasterLayer && showDeleteModal?
+           <ConfirmModal
+           title={'Are you sure?'}
+           buttonConfirmName={'Delete'}
+           onClickButtonConfirm={() => {
+              onDelete();
+              setShowDeleteModal(false);
+           }}
+           cancelAction={()=>{
+            setShowDeleteModal(false)
+          }}
+          disableButtons={false}
+         >
+           
+           <p>Are you sure? You are deleting the following raster layer:</p>
+           
+           {ModalDeleteContent([currentRasterLayer], false, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
+           
+         </ConfirmModal>
+        :
+          null
+        }
     </ExplainSideColumn>
   );
 };

@@ -16,12 +16,15 @@ interface SelectBoxProps {
   value: string | null,
   choices: choicesT,
   valueChanged: (value: string | null) => void,
+  onFocus?: (e: React.ChangeEvent<HTMLInputElement>) => void,
+  onBlur?: () => void,
   validated: boolean,
   errorMessage?: string | false,
   placeholder?: string,
   showSearchField?: boolean,
   triedToSubmit?: boolean,
-  readOnly?: boolean
+  readOnly?: boolean,
+  form?: string,
 };
 
 export const SelectBox: React.FC<SelectBoxProps> = (props) => {
@@ -30,13 +33,16 @@ export const SelectBox: React.FC<SelectBoxProps> = (props) => {
     name,
     value,
     valueChanged,
+    onFocus,
+    onBlur,
     choices,
     placeholder,
     validated,
     errorMessage,
     showSearchField,
     triedToSubmit,
-    readOnly
+    readOnly,
+    form,
   } = props;
 
   const [showChoices, setShowChoices] = useState<boolean>(false);
@@ -70,9 +76,6 @@ export const SelectBox: React.FC<SelectBoxProps> = (props) => {
   const clearInput = () => {
     // Clear input and close choices
     props.valueChanged(null);
-    // this toggleChoices is actually meant to reverse the toggle choices that is automatically triggered when clicking on the clear icon.
-    // The cleear icon triggers the input onclick because a label element is around all of them.
-    // Is there a better way to fix this ?  
     toggleChoices();    
   };
 
@@ -101,6 +104,7 @@ export const SelectBox: React.FC<SelectBoxProps> = (props) => {
           ref={myInput}
           style={{ caretColor: "transparent" }}
           id={name}
+          name={name}
           type="text"
           autoComplete="off"
           className={`${formStyles.FormControl} ${triedToSubmit ? formStyles.FormSubmitted : ''}`}
@@ -109,19 +113,18 @@ export const SelectBox: React.FC<SelectBoxProps> = (props) => {
           onClick={() => !readOnly && toggleChoices()}
           onKeyUp={par => !readOnly && handleKeyUp(par)}
           onChange={() => {}}
+          onFocus={onFocus}
+          onBlur={onBlur}
           readOnly={readOnly}
           disabled={readOnly}
+          form={form}
         />
         { 
         !readOnly ?
           value !== null ? (
-            <ClearInputButton onClick={() => clearInput()}/>
+            <ClearInputButton onClick={clearInput} />
             ) : (
-            <ClearInputButton
-              icon="arrow_drop_down"
-              // do nothing because onClick on input will handle it
-              onClick={() => {}}//toggleChoices()}
-            />
+            <ClearInputButton icon="arrow_drop_down" />
           )
         :
         null
@@ -132,7 +135,7 @@ export const SelectBox: React.FC<SelectBoxProps> = (props) => {
           {showSearchField ? (
             <span style={{fontSize: "smaller"}}>
               <input
-                id={`searchbox-${name}`}
+                id={name}
                 name={`searchbox-${name}`}
                 type="text"
                 autoComplete="off"
@@ -140,6 +143,8 @@ export const SelectBox: React.FC<SelectBoxProps> = (props) => {
                 value={searchString}
                 onChange={e => setSearchString(e.target.value)}
                 onKeyUp={handleKeyUp}
+                onFocus={onFocus}
+                onBlur={onBlur}
               />
               <i style={{verticalAlign: "middle"}} className="material-icons">search</i>
             </span>
@@ -172,8 +177,10 @@ export const SelectBox: React.FC<SelectBoxProps> = (props) => {
                 ? styles.Active
                 : styles.Inactive}`}
                   onMouseDown={e => {
+                    e.preventDefault();
                     setShowChoices(false);
                     valueChanged(choiceValue);
+                    if (myInput && myInput.current) myInput.current.focus(); // set the input field on focus again if the focus is lost
                   }}
                 >
                   <div style={{ flex: "1" }}>{choiceDisplay}</div>

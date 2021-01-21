@@ -4,7 +4,7 @@ import {DataRetrievalState} from '../types/retrievingDataTypes';
 import MDSpinner from "react-md-spinner";
 
 
-export interface ColumnDefenition {
+export interface ColumnDefinition {
   titleRenderFunction: any;
   renderFunction: any; //(row: any): any; //returns field JSX.Element;
   orderingField: null | string;
@@ -15,20 +15,20 @@ interface Props {
   tableData: any [];
   setTableData: any;
   gridTemplateColumns: string;
-  columnDefenitions: ColumnDefenition[];
+  columnDefinitions: ColumnDefinition[];
   dataRetrievalState: DataRetrievalState;
   triggerReloadWithCurrentPage: any;
   triggerReloadWithBasePage: any;
   getIfCheckBoxOfUuidIsSelected?: any;
 }
 
-const Table: React.FC<Props> = ({tableData, setTableData, gridTemplateColumns, columnDefenitions, dataRetrievalState, triggerReloadWithCurrentPage, triggerReloadWithBasePage, getIfCheckBoxOfUuidIsSelected}) => {
+const Table: React.FC<Props> = ({tableData, setTableData, gridTemplateColumns, columnDefinitions, dataRetrievalState, triggerReloadWithCurrentPage, triggerReloadWithBasePage, getIfCheckBoxOfUuidIsSelected}) => {
   return (
       <div  className={styles.Table}>
         <div style={{
           gridTemplateColumns: gridTemplateColumns,
         }}>
-          {columnDefenitions.map(defenition=><span>{defenition.titleRenderFunction()}</span>)}
+          {columnDefinitions.map(definition=><span>{definition.titleRenderFunction()}</span>)}
         </div>
         <div style={{
             gridTemplateColumns: gridTemplateColumns,
@@ -49,9 +49,9 @@ const Table: React.FC<Props> = ({tableData, setTableData, gridTemplateColumns, c
                 } 
                 return (
                   <>
-                    {columnDefenitions.map(defenition=>
+                    {columnDefinitions.map(definition=>
                       <span className={rowIsSelected? styles.Selected: styles.NotSelected}>
-                        {defenition.renderFunction(tableRow, updateTableRow, triggerReloadWithCurrentPage, triggerReloadWithBasePage)}
+                        {definition.renderFunction(tableRow, updateTableRow, triggerReloadWithCurrentPage, triggerReloadWithBasePage)}
                       </span>
                     )}
                   </>
