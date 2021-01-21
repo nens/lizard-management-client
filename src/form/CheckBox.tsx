@@ -27,7 +27,7 @@ export const CheckBox: React.FC<CheckBoxProps> = (props) => {
 
   return (
     <label
-      htmlFor={name}
+      htmlFor={name+'_checkbox'}
       className={formStyles.Label}
     >
       <span className={formStyles.LabelTitle}>
