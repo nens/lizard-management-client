@@ -20,11 +20,12 @@ interface Props {
   columnDefinitions: ColumnDefinition[];
   baseUrl: string; 
   checkBoxActions: any[];
+  textSearchBox?: boolean; // default true
   newItemOnClick: () => void | null;
   queryCheckBox: {text: string, adaptUrlFunction: (url:string)=>string} | null;
 }
 
-const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, columnDefinitions, baseUrl, checkBoxActions, newItemOnClick, queryCheckBox/*action*/}) => {
+const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, columnDefinitions, baseUrl, checkBoxActions, textSearchBox, newItemOnClick, queryCheckBox/*action*/}) => {
 
   const [tableData, setTableData] = useState([]);
   const [checkBoxes, setCheckBoxes] = useState([]);
@@ -225,6 +226,7 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
           marginTop: "16px",
         }}
       >
+        { textSearchBox !== false?
         <TableSearchBox
           onChange={event=>{
             const newValue = event.target.value;
@@ -234,6 +236,7 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
           value={nameContains}
           placeholder={"Type to search for name"}
         />
+        :null}
 
         {
           newItemOnClick? 

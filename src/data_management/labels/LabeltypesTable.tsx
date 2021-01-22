@@ -32,7 +32,7 @@ const columnDefinitions = [
     renderFunction: (row: any) =>
       <span
         className={tableStyles.CellEllipsis}
-        title={row.supplier_code}
+        title={row.uuid}
       >
         {row.uuid}
       </span>

@@ -36,6 +36,7 @@ import helpIcon from './images/help.svg'
 import documentIcon from './images/document.svg';
 import logoutIcon from './images/logout.svg';
 import editIcon from './images/edit.svg';
+import {PersonalApiKeysTable} from './personal_api_keys/PersonalApiKeysTable';
 
 class App extends Component {
   constructor(props) {
@@ -302,6 +303,7 @@ class App extends Component {
                 <Route exact path="/" component={Home} />
                 <Route path="/alarms" component={AlarmsApp} />
                 <Route path="/data_management" component={DataManagementApp} />
+                <Route path="/personal_api_keys" component={PersonalApiKeysTable} />
               {/* </div>
             </div> */}
           </div>

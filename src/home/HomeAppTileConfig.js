@@ -53,7 +53,7 @@ const appTiles = [
     key: 3,
     linksTo: {
       external: false,
-      path: "/personal_api_keys/"
+      path: "/personal_api_keys"
     },
     title: (
       <FormattedMessage
