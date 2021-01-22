@@ -116,7 +116,6 @@ export const SelectBox: React.FC<SelectBoxProps> = (props) => {
           onFocus={onFocus}
           onBlur={onBlur}
           readOnly={readOnly}
-          disabled={readOnly}
           form={form}
         />
         { 

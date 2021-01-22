@@ -10,6 +10,7 @@ import {SpatialBounds} from '../types/mapTypes';
 
 
 interface SpatialBoundsProps {
+    title: string,
     name: string,
     clearInput: (e: any) => void,
     triedToSubmit?: boolean,
@@ -57,6 +58,7 @@ export const spatialBoundsValidator = (fieldValue: SpatialBoundsProps['value']) 
 const SpatialBoundsField  =  (props: SpatialBoundsProps) => {
 
     const {
+        title,
         name,
         value,
         otherValues,
@@ -162,150 +164,152 @@ const SpatialBoundsField  =  (props: SpatialBoundsProps) => {
     const removeSpatialBounds = () => {
         props.valueChanged(null);
     }
-    
-        
 
-        return (
-            <div>
-                <label>
-                    Spatial bounds
-                </label>
+    return (
+        <div>
+            <label
+                htmlFor={name}
+            >
+                <span className={formStyles.LabelTitle}>
+                    {title}
+                </span>
+            </label>
+            <div
+                className={
+                    formStyles.FormGroup +
+                    " " +
+                    inputStyles.PositionRelative
+                }
+            >
                 <div
                     className={
-                        formStyles.FormGroup +
+                        styles.InputFields +
                         " " +
-                        inputStyles.PositionRelative
+                        styles.TextAlignCenter
                     }
                 >
-                    <div
-                        className={
-                            styles.InputFields +
-                            " " +
-                            styles.TextAlignCenter
-                        }
+                    <label
+                        // we do not use label class below because this wraps text to a newline. Should fix that later.
+                        // className={formStyles.Label}
                     >
-                        <label
-                            // we do not use label class below because this wraps text to a newline. Should fix that later.
-                            // className={formStyles.Label}
-                        >
-                            <FormattedMessage id="wms_layer_form.north" />
-                            &nbsp;(&deg;)
-                        </label>
-                        <input
-                            id={name}
-                            name="north"
-                            type="number"
-                            className={`${formStyles.FormControl} ${triedToSubmit ? formStyles.FormSubmitted : ''}`}
-                            value={north}
-                            onChange={(e) => updateSpatialBounds('north', e.target.value)}
-                            ref={northInput}
-                            onFocus={onFocus}
-                            onBlur={onBlur}
-                        />
-                    </div>
-                    <div
-                        className={
-                            styles.InputFields +
-                            " " +
-                            styles.TextAlignCenter
-                        }
-                    >
-                        <label>
-                            <FormattedMessage id="wms_layer_form.east" />
-                            &nbsp;(&deg;)
-                        </label>
-                        <input
-                            id={name}
-                            name="east"
-                            type="number"
-                            className={`${formStyles.FormControl} ${triedToSubmit ? formStyles.FormSubmitted : ''}`}
-                            value={east}
-                            onChange={(e) => updateSpatialBounds('east', e.target.value)}
-                            ref={eastInput}
-                            onFocus={onFocus}
-                            onBlur={onBlur}
-                        />
-                    </div>
-                    <div
-                        className={
-                            styles.InputFields +
-                            " " +
-                            styles.TextAlignCenter
-                        }
-                    >
-                        <label>
-                            <FormattedMessage id="wms_layer_form.south" />
-                            &nbsp;(&deg;)
-                        </label>
-                        <input
-                            id={name}
-                            name="south"
-                            type="number"
-                            className={`${formStyles.FormControl} ${triedToSubmit ? formStyles.FormSubmitted : ''}`}
-                            value={south}
-                            onChange={(e) => updateSpatialBounds('south', e.target.value)}
-                            ref={southInput}
-                            onFocus={onFocus}
-                            onBlur={onBlur}
-                        />
-                    </div>
-                    <div
-                        className={
-                            styles.InputFields +
-                            " " +
-                            styles.TextAlignCenter
-                        }
-                    >
-                        <label>
-                            <FormattedMessage id="wms_layer_form.west" />
-                            &nbsp;(&deg;)
-                        </label>
-                        <input
-                            id={name}
-                            name="west"
-                            type="number"
-                            className={`${formStyles.FormControl} ${triedToSubmit ? formStyles.FormSubmitted : ''}`}
-                            value={west}
-                            onChange={(e) => updateSpatialBounds('west', e.target.value)}
-                            ref={westInput}
-                            onFocus={onFocus}
-                            onBlur={onBlur}
-                        />
-                    </div>
-                    <ClearInputButton onClick={() => removeSpatialBounds()}/>
+                        <FormattedMessage id="wms_layer_form.north" />
+                        &nbsp;(&deg;)
+                    </label>
+                    <input
+                        id={name}
+                        name="north"
+                        type="number"
+                        className={`${formStyles.FormControl} ${triedToSubmit ? formStyles.FormSubmitted : ''}`}
+                        value={north}
+                        onChange={(e) => updateSpatialBounds('north', e.target.value)}
+                        ref={northInput}
+                        onFocus={onFocus}
+                        onBlur={onBlur}
+                    />
                 </div>
-                <div className={styles.GetFromGeoServer}>
-                    <button
-                        className={thresholdsStyles.AddThresholdButton}
-                        style={{
-                            display: (wmsLayerSlug && wmsLayerUrl) ? 'block' : 'none'
-                        }}
-                        onClick={() => getBoundsFromWmsLayer(
-                            wmsLayerSlug,
-                            wmsLayerUrl,
-                            value,
-                            valueChanged,
-                            showGeoServerError
-                        )}
-                        type={"button"}
-                    >
-                        <FormattedMessage
-                            id="wms_layer_form.get_from_geoserver"
-                            defaultMessage="Get from GeoServer"
-                        />
-                    </button>
-                    &nbsp;
-                    <span
-                        className={styles.GetFromGeoServerError}
-                        style={{
-                            display: geoServerError ? 'block' : 'none'
-                        }}
-                    >
-                        Failed to get extent from GeoServer
-                    </span>
+                <div
+                    className={
+                        styles.InputFields +
+                        " " +
+                        styles.TextAlignCenter
+                    }
+                >
+                    <label>
+                        <FormattedMessage id="wms_layer_form.east" />
+                        &nbsp;(&deg;)
+                    </label>
+                    <input
+                        id={name}
+                        name="east"
+                        type="number"
+                        className={`${formStyles.FormControl} ${triedToSubmit ? formStyles.FormSubmitted : ''}`}
+                        value={east}
+                        onChange={(e) => updateSpatialBounds('east', e.target.value)}
+                        ref={eastInput}
+                        onFocus={onFocus}
+                        onBlur={onBlur}
+                    />
                 </div>
+                <div
+                    className={
+                        styles.InputFields +
+                        " " +
+                        styles.TextAlignCenter
+                    }
+                >
+                    <label>
+                        <FormattedMessage id="wms_layer_form.south" />
+                        &nbsp;(&deg;)
+                    </label>
+                    <input
+                        id={name}
+                        name="south"
+                        type="number"
+                        className={`${formStyles.FormControl} ${triedToSubmit ? formStyles.FormSubmitted : ''}`}
+                        value={south}
+                        onChange={(e) => updateSpatialBounds('south', e.target.value)}
+                        ref={southInput}
+                        onFocus={onFocus}
+                        onBlur={onBlur}
+                    />
+                </div>
+                <div
+                    className={
+                        styles.InputFields +
+                        " " +
+                        styles.TextAlignCenter
+                    }
+                >
+                    <label>
+                        <FormattedMessage id="wms_layer_form.west" />
+                        &nbsp;(&deg;)
+                    </label>
+                    <input
+                        id={name}
+                        name="west"
+                        type="number"
+                        className={`${formStyles.FormControl} ${triedToSubmit ? formStyles.FormSubmitted : ''}`}
+                        value={west}
+                        onChange={(e) => updateSpatialBounds('west', e.target.value)}
+                        ref={westInput}
+                        onFocus={onFocus}
+                        onBlur={onBlur}
+                    />
+                </div>
+                <ClearInputButton onClick={() => removeSpatialBounds()}/>
             </div>
-        );
+            <div className={styles.GetFromGeoServer}>
+                <button
+                    className={thresholdsStyles.AddThresholdButton}
+                    style={{
+                        display: (wmsLayerSlug && wmsLayerUrl) ? 'block' : 'none'
+                    }}
+                    onClick={() => getBoundsFromWmsLayer(
+                        wmsLayerSlug,
+                        wmsLayerUrl,
+                        value,
+                        valueChanged,
+                        showGeoServerError
+                    )}
+                    type={"button"}
+                >
+                    <FormattedMessage
+                        id="wms_layer_form.get_from_geoserver"
+                        defaultMessage="Get from GeoServer"
+                    />
+                </button>
+                &nbsp;
+                <span
+                    className={styles.GetFromGeoServerError}
+                    style={{
+                        display: geoServerError ? 'block' : 'none'
+                    }}
+                >
+                    Failed to get extent from GeoServer
+                </span>
+            </div>
+        </div>
+    );
 }
 
 export default  SpatialBoundsField;

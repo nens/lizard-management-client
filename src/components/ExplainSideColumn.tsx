@@ -70,13 +70,19 @@ export const ExplainSideColumn: React.FC<MyProps> = ({
             borderColor: "#A1A1A1",
             borderStyle: "solid",
             borderWidth: "0.5px",
-            padding: "24px",
+            padding: "40px",
             borderRadius: "5px",
             // this doesnot work, it also takes the place of the pagination..
             // flex: "1",
           }}
         >
-          {explanationText}
+          <span
+            style={{
+              lineHeight: "28px"
+            }}
+          >
+            {explanationText}
+          </span>
         </div>
       </div>
       <div
