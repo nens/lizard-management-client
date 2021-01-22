@@ -18,7 +18,7 @@ import {
   updateTaskStatus,
   removeFileFromQueue
 } from "./actions";
-import { Route, NavLink } from "react-router-dom";
+import { Route, Switch, NavLink } from "react-router-dom";
 import LanguageSwitcher from "./components/LanguageSwitcher";
 import OrganisationSwitcher from "./components/OrganisationSwitcher";
 import Snackbar from "./components/Snackbar";
@@ -37,6 +37,7 @@ import documentIcon from './images/document.svg';
 import logoutIcon from './images/logout.svg';
 import editIcon from './images/edit.svg';
 import {PersonalApiKeysTable} from './personal_api_keys/PersonalApiKeysTable';
+import { EditPersonalApiKey } from './personal_api_keys/EditPersonalApiKey';
 
 class App extends Component {
   constructor(props) {
@@ -303,7 +304,20 @@ class App extends Component {
                 <Route exact path="/" component={Home} />
                 <Route path="/alarms" component={AlarmsApp} />
                 <Route path="/data_management" component={DataManagementApp} />
-                <Route path="/personal_api_keys" component={PersonalApiKeysTable} />
+                
+                <Switch>
+                  <Route exact path="/personal_api_keys" component={PersonalApiKeysTable} />
+                  {/* <Route
+                    exact
+                    path={`/personal_api_keys/new`}
+                    component={NewRasterSource}
+                  /> */}
+                  <Route
+                    exact
+                    path="/personal_api_keys/:uuid"
+                    component={EditPersonalApiKey}
+                  />
+                </Switch>
               {/* </div>
             </div> */}
           </div>
