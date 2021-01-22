@@ -222,7 +222,7 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
           display: "flex",
           justifyContent: "space-between",
           marginBottom: "16px",
-          marginTop: "16px",
+          marginTop: "18px",
         }}
       >
         <TableSearchBox
