@@ -169,3 +169,9 @@ export const lableTypeFormHelpText: HelpText = {
     </>
   ),
 }
+
+export const personalApiKeysFormHelpText: HelpText = {
+  default: "Personal API keys can be used to authenticate external applications in Lizard",
+  name: "Name of the personal api key",
+  scope: "Defines what the personal api key can be used for",
+}

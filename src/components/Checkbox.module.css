@@ -1,14 +1,14 @@
 .CheckboxContainer {
   position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .CheckboxContainer > input[type=checkbox] {
   -webkit-appearance: none;
   appearance: none;
 	background-color: white;
   border: 1px solid #C9C9C9;
-  position: absolute;
-  top: 0;
-  left: 0;
   cursor: pointer;
 }
 .CheckboxContainer > input[type=checkbox]:focus {
@@ -24,8 +24,6 @@
   pointer-events: none;
   visibility: hidden;
   position: absolute;
-  top: 2px;
-	left: 2px;
 }
 .CheckboxContainer > input[type=checkbox]:checked + div {
   visibility: visible;

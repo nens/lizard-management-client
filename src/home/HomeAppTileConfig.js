@@ -3,6 +3,7 @@ import { FormattedMessage } from "react-intl";
 import alarmIcon from "../images/alarm@3x.svg";
 import userManagementIcon from "../images/userManagement.svg";
 import dataManagementIcon from "../images/database.svg";
+import personalApiKeysIcon from "../images/personal_api_key_icon.svg";
 
 const appTiles = [
   {
@@ -46,7 +47,22 @@ const appTiles = [
       <FormattedMessage id="home.alarms" defaultMessage="Alarms" />
     ),
     icon: alarmIcon
-  }
+  },
+  {
+    requiredRoles: ["user"],
+    key: 3,
+    linksTo: {
+      external: false,
+      path: "/personal_api_keys"
+    },
+    title: (
+      <FormattedMessage
+        id="home.personal_api_keys"
+        defaultMessage="Personal API keys"
+      />
+    ),
+    icon: personalApiKeysIcon,
+  },
 ];
 
 export {appTiles};
