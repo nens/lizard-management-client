@@ -205,20 +205,24 @@ const PersonalApiKeyFormModel: React.FC<Props & PropsFromDispatch & RouteCompone
             display: "flex"
           }}>
             {currentRecord?
-             <>
-             <div style={{ marginRight: "16px" }}>
+            //  <>
+            //  {/* <div style={{ marginRight: "16px" }}> */}
                 <FormActionButtons
                   actions={[
                     {
                       displayValue: "Delete",
                       actionFunction: () => { setShowDeleteModal(true); }
                     },
-                  ]} />
-              </div>
-                <SubmitButton
-                  onClick={tryToSubmitForm} 
+                  ]} 
                 />
-              </>
+              // {/* </div> */}
+                
+              // </>
+            :null}
+            {!currentRecord?
+            <SubmitButton
+              onClick={tryToSubmitForm} 
+            />
             :null}
         </div>
         </div>
