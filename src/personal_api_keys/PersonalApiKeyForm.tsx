@@ -15,7 +15,7 @@ import formStyles from './../styles/Forms.module.css';
 import { personalApiKeysFormHelpText } from '../utils/helpTextForForms';
 
 interface Props {
-  currentRecord: any
+  currentRecord?: any
 };
 interface PropsFromDispatch {
   addNotification: (message: string | number, timeout: number) => void
@@ -31,15 +31,30 @@ const PersonalApiKeyFormModel: React.FC<Props & PropsFromDispatch & RouteCompone
   // const username = useSelector(getUsername);
 
   const initialValues = {
-    name: currentRecord.name || '',
+    name: (currentRecord && currentRecord.name) || '',
+    scopeWildcardReadWrite: (currentRecord && currentRecord.scope && (currentRecord.scope+'').includes('*:readwrite')) || true,
+    scopeFtpReadWrite: (currentRecord && currentRecord.scope && (currentRecord.scope+'').includes('ftp:readwrite')) || false,  
     // modelName: currentRecord.model_name || '',
     // supplier: currentRecord.username || '',
     // organisation: currentRecord.organisation.name || '',
   };
 
+  const getScopeStringFromValues = (values:any) => {
+    let scopeArr = [];
+    if (values.scopeWildcardReadWrite) {
+      scopeArr.push('*:readwrite');
+    }
+    if (values.scopeFtpReadWrite) {
+      scopeArr.push('ftp:readwrite');
+    }
+
+    return scopeArr.join(" ");
+  }
+
   const onSubmit = (values: Values) => {
     const body = {
-      name: values.name
+      name: values.name,
+      scope: getScopeStringFromValues(values),
     };
 
     fetch(`/api/v4/personalapikeys/`, {
@@ -89,9 +104,9 @@ const PersonalApiKeyFormModel: React.FC<Props & PropsFromDispatch & RouteCompone
         onSubmit={handleSubmit}
         onReset={handleReset}
       >
-        <span className={formStyles.FormFieldTitle}>
+        {/* <span className={formStyles.FormFieldTitle}>
           1: General
-        </span>
+        </span> */}
         <TextInput
           title={'name'}
           name={'name'}

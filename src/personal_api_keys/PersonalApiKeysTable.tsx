@@ -50,6 +50,11 @@ const columnDefinitions = [
 
 export const PersonalApiKeysTable = (props:any) =>  {
 
+  const handleNewClick  = () => {
+    const { history } = props;
+    history.push(`${navigationUrl}/new`);
+  }
+
   return (
     <ExplainSideColumn
       imgUrl={personalApiKeysIcon}
@@ -64,6 +69,7 @@ export const PersonalApiKeysTable = (props:any) =>  {
         baseUrl={`${baseUrl}?`} 
         checkBoxActions={[]}
         textSearchBox={false}
+        newItemOnClick={handleNewClick}
       />
     </ExplainSideColumn>
   );

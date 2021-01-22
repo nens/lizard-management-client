@@ -38,6 +38,9 @@ import logoutIcon from './images/logout.svg';
 import editIcon from './images/edit.svg';
 import {PersonalApiKeysTable} from './personal_api_keys/PersonalApiKeysTable';
 import { EditPersonalApiKey } from './personal_api_keys/EditPersonalApiKey';
+import { NewPersonalApiKey } from './personal_api_keys/NewPersonalApiKey';
+
+
 
 class App extends Component {
   constructor(props) {
@@ -307,11 +310,11 @@ class App extends Component {
                 
                 <Switch>
                   <Route exact path="/personal_api_keys" component={PersonalApiKeysTable} />
-                  {/* <Route
+                  <Route
                     exact
                     path={`/personal_api_keys/new`}
-                    component={NewRasterSource}
-                  /> */}
+                    component={NewPersonalApiKey}
+                  />
                   <Route
                     exact
                     path="/personal_api_keys/:uuid"
