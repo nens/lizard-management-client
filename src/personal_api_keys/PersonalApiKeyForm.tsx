@@ -97,10 +97,9 @@ const PersonalApiKeyFormModel: React.FC<Props & PropsFromDispatch & RouteCompone
       .then(data => {
         const status = data.status;
         if (status === 201) {
-          console.log('data', data);
-          props.addNotification('Success! Personal API key generated', 2000);
+          // setting both modal and snackbar message is a bit too much so I comment snackbar message out
+          // props.addNotification('Success! Personal API key generated', 2000);
           data.json().then((record: any)=>{
-            console.log('record', record);
             setApiKeyString(record.key+'');
           })
           // do not redirect because we need to show the api key modal
@@ -169,6 +168,8 @@ const PersonalApiKeyFormModel: React.FC<Props & PropsFromDispatch & RouteCompone
           onFocus={handleFocus}
           onBlur={handleBlur}
           readOnly={!!currentRecord}
+          validated={values.scopeWildcardReadWrite === true || values.scopeFtpReadWrite === true }
+          errorMessage={(values.scopeWildcardReadWrite === true || values.scopeFtpReadWrite === true)? false : "Chose at least 1 scope: read/ write or FTP"}
         />
         <CheckBox
           title={'FTP'}

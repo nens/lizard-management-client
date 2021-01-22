@@ -1,4 +1,5 @@
 import React from 'react';
+import { useEffect, useRef } from "react";
 import styles from './Checkbox.module.css';
 
 interface Props {
@@ -12,6 +13,8 @@ interface Props {
   onBlur?: () => void,
   readOnly?: boolean;
   form?:string;
+  validated?: boolean;
+  errorMessage?: string | false,
 }
 
 const Checkbox: React.FC<Props> = (props) => {
@@ -26,7 +29,21 @@ const Checkbox: React.FC<Props> = (props) => {
     onBlur,
     readOnly,
     form,
+    validated,
+    errorMessage,
   } = props;
+
+  const myInput = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    if (myInput && myInput.current) {
+      if (validated !== false) {
+        myInput.current.setCustomValidity('');
+      } else {
+        myInput.current.setCustomValidity(errorMessage || '');
+      };
+    };
+  })
+
   return (
     <div
       className={styles.CheckboxContainer}
@@ -35,7 +52,8 @@ const Checkbox: React.FC<Props> = (props) => {
         height: size || 16
       }}
     >
-      <input 
+      <input
+        ref={myInput} 
         id={name}
         name={name}
         className={styles.Checkbox}
