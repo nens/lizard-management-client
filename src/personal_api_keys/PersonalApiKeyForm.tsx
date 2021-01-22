@@ -21,7 +21,8 @@ import FormActionButtons from '../components/FormActionButtons';
 
 
 interface Props {
-  currentRecord?: any
+  currentRecord?: any;
+  allPersonalApiKeys?: [];
 };
 interface PropsFromDispatch {
   addNotification: (message: string | number, timeout: number) => void
@@ -31,7 +32,9 @@ interface RouteParams {
 };
 
 const PersonalApiKeyFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProps<RouteParams>> = (props) => {
-  const { currentRecord } = props;
+  const { currentRecord, allPersonalApiKeys } = props;
+  // @ts-ignore
+  const recordWithFtpExists = ((allPersonalApiKeys || []).filter(record=>(record.scope+'').includes("ftp:readwrite"))).length > 0;
   // const organisations = useSelector(getOrganisations).available;
   // const scenarioOrganisation = organisations.find((org: any) => org.uuid === currentRecord.organisation.uuid.replace(/-/g, ""));
   // const username = useSelector(getUsername);
@@ -133,7 +136,6 @@ const PersonalApiKeyFormModel: React.FC<Props & PropsFromDispatch & RouteCompone
       imgAltDescription={"Personal API keys icon"}
       headerText={"Label types"}
       explanationText={personalApiKeysFormHelpText[fieldOnFocus] || personalApiKeysFormHelpText['default']}
-      // explanationText={"Personal API keys can be used to authenticate external applications in Lizard"} 
       backUrl={"/personal_api_keys"}
     >
       <form
@@ -141,9 +143,6 @@ const PersonalApiKeyFormModel: React.FC<Props & PropsFromDispatch & RouteCompone
         onSubmit={handleSubmit}
         onReset={handleReset}
       >
-        {/* <span className={formStyles.FormFieldTitle}>
-          1: General
-        </span> */}
         <TextInput
           title={'name'}
           name={'name'}
@@ -173,24 +172,15 @@ const PersonalApiKeyFormModel: React.FC<Props & PropsFromDispatch & RouteCompone
         />
         <CheckBox
           title={'FTP'}
+          htmlTitle={recordWithFtpExists? "There exists already a record with scope FTP in your api keys. Only one is allowed." : 'FTP'}
           name={'scopeFtpReadWrite'}
           value={values.scopeFtpReadWrite}
           valueChanged={bool => handleValueChange('scopeFtpReadWrite', bool)}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          readOnly={!!currentRecord}
+          readOnly={!!currentRecord || recordWithFtpExists}
+          
         />
-        {/* <TextInput
-          title={'Based on model'}
-          name={'modelName'}
-          value={values.modelName}
-          valueChanged={handleInputChange}
-          clearInput={clearInput}
-          validated
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-          readOnly
-        /> */}
         <div
           className={formStyles.ButtonContainer}
         >
@@ -226,15 +216,9 @@ const PersonalApiKeyFormModel: React.FC<Props & PropsFromDispatch & RouteCompone
            title={'Your newly created api key?'}
            buttonConfirmName={'Close'}
            onClickButtonConfirm={() => {
-              // onDelete();
-              // setShowDeleteModal(false);
               setApiKeyString("");
               props.history.push('/personal_api_keys/');
            }}
-          //  cancelAction={()=>{
-          //   setShowDeleteModal(false)
-          // }}
-          // disableButtons={false}
          >
            
           <p>

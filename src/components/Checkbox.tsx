@@ -15,6 +15,7 @@ interface Props {
   form?:string;
   validated?: boolean;
   errorMessage?: string | false,
+  title?: string,
 }
 
 const Checkbox: React.FC<Props> = (props) => {
@@ -31,6 +32,7 @@ const Checkbox: React.FC<Props> = (props) => {
     form,
     validated,
     errorMessage,
+    title,
   } = props;
 
   const myInput = useRef<HTMLInputElement>(null);
@@ -69,6 +71,7 @@ const Checkbox: React.FC<Props> = (props) => {
         onBlur={onBlur}
         readOnly={readOnly}
         form={form}
+        title={title}
       />
       {/* next div is checkmark */}
       <div

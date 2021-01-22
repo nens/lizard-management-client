@@ -12,7 +12,8 @@ interface CheckBoxProps {
   onBlur?: () => void,
   readOnly?: boolean
   validated?: boolean;
-  errorMessage?: string | false; 
+  errorMessage?: string | false;
+  htmlTitle?: string;  
 };
 
 export const CheckBox: React.FC<CheckBoxProps> = (props) => {
@@ -27,6 +28,7 @@ export const CheckBox: React.FC<CheckBoxProps> = (props) => {
     readOnly,
     validated,
     errorMessage,
+    htmlTitle,
   } = props;
 
   return (
@@ -50,6 +52,7 @@ export const CheckBox: React.FC<CheckBoxProps> = (props) => {
         form={form}
         validated={validated}
         errorMessage={errorMessage}
+        title={htmlTitle}
       />
     </label>
   );

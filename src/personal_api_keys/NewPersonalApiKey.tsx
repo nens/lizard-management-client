@@ -1,8 +1,9 @@
-import React /*,{ useEffect, useState }*/ from "react";
+import React ,{ useEffect, useState } from "react";
 // import { useSelector } from "react-redux";
 import MDSpinner from "react-md-spinner";
 
 import {PersonalApiKeyForm} from "./PersonalApiKeyForm";
+import { DataRetrievalState} from '../types/retrievingDataTypes';
 // import {
 //   getColorMaps,
 //   getObservationTypes,
@@ -14,23 +15,26 @@ import {PersonalApiKeyForm} from "./PersonalApiKeyForm";
 // } from "../reducers";
 
 export const NewPersonalApiKey: React.FC = () => {
-  // const organisations = useSelector(getOrganisations);
-  // const selectedOrganisation = useSelector(getSelectedOrganisation);
-  // const observationTypes = useSelector(getObservationTypes);
-  // const colorMaps = useSelector(getColorMaps);
-  // const supplierIds = useSelector(getSupplierIds);
-  // const datasets = useSelector(getDatasets);
-  // const rasterSourceUUID = useSelector(getRasterSourceUUID);
+  const [allPersonalApiKeys, setAllPersonalApiKeys] = useState([]);
+  const [allPersonalApiKeysFetching, setallPersonalApiKeysFetching] = useState<DataRetrievalState>("NEVER_DID_RETRIEVE");
 
-  // const [rasterSources, setRasterSources] = useState<any[] | null>(null);
-  // useEffect(() => {
-  //   if (!rasterSourceUUID) {
-  //     (async () => {
-  //       const listOfRasterSources = await fetchRasterSourcesV4BySelectedOrganisation(selectedOrganisation.uuid);
-  //       setRasterSources(listOfRasterSources.results);
-  //     })();
-  //   }
-  // }, [rasterSourceUUID, selectedOrganisation]);
+  useEffect(() => {
+    setallPersonalApiKeysFetching("RETRIEVING");
+    fetch('/api/v4/personalapikeys')
+    .then(response=>{
+      if (response.status === 200) {
+        return response.json();
+      } else {
+          // props.addNotification(status, 2000);
+          console.error(response);
+          setallPersonalApiKeysFetching({status:"ERROR", errorMesssage: response.status+'', url:"/api/v4/personalapikeys"})
+      }
+    })
+    .then(data=>{
+      setAllPersonalApiKeys(data.results);
+      setallPersonalApiKeysFetching("RETRIEVED");
+    })
+  },[])
 
   if (
     // organisations.isFetching === false &&
@@ -39,9 +43,14 @@ export const NewPersonalApiKey: React.FC = () => {
     // supplierIds.isFetching === false &&
     // datasets.isFetching === false &&
     // (rasterSourceUUID || rasterSources !== null)
-    true
+    allPersonalApiKeysFetching === "RETRIEVED"
   ) {
-    return <PersonalApiKeyForm/>;
+    return ( 
+      <PersonalApiKeyForm
+        // @ts-ignore
+        allPersonalApiKeys={allPersonalApiKeys}
+      />
+    );
   } else {
     return <div
       style={{
