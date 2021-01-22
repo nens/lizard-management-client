@@ -34,6 +34,18 @@ const columnDefinitions = [
     ,
     orderingField: null,
   },
+  {
+    titleRenderFunction: () => "Created on",
+    renderFunction: (row: any) => 
+      <span
+        className={tableStyles.CellEllipsis}
+        title={row.creatd}
+      >
+        {row.created}
+      </span>
+    ,
+    orderingField: null,
+  },
   // {
   //   titleRenderFunction: () =>  "Uuid",
   //   renderFunction: (row: any) =>
@@ -64,7 +76,7 @@ export const PersonalApiKeysTable = (props:any) =>  {
       backUrl={"/"}
     >
       <TableStateContainer 
-        gridTemplateColumns={"60% 40%"} 
+        gridTemplateColumns={"50% 25% 25%"} 
         columnDefinitions={columnDefinitions}
         baseUrl={`${baseUrl}?`} 
         checkBoxActions={[]}

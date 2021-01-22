@@ -13,6 +13,8 @@ import { addNotification } from '../actions';
 import personalApiKeysIcon from "../images/personal_api_key_icon.svg";
 import formStyles from './../styles/Forms.module.css';
 import { personalApiKeysFormHelpText } from '../utils/helpTextForForms';
+import { CheckBox } from './../form/CheckBox';
+
 
 interface Props {
   currentRecord?: any
@@ -80,6 +82,7 @@ const PersonalApiKeyFormModel: React.FC<Props & PropsFromDispatch & RouteCompone
     values,
     triedToSubmit,
     // formSubmitted,
+    handleValueChange,
     tryToSubmitForm,
     handleInputChange,
     fieldOnFocus,
@@ -119,6 +122,27 @@ const PersonalApiKeyFormModel: React.FC<Props & PropsFromDispatch & RouteCompone
           onFocus={handleFocus}
           onBlur={handleBlur}
           readOnly={currentRecord}
+        />
+        <span className={formStyles.FormFieldTitle}>
+          Scope
+        </span>
+        <CheckBox
+          title={'Read / Write'}
+          name={'scopeWildcardReadWrite'}
+          value={values.scopeWildcardReadWrite}
+          valueChanged={bool => handleValueChange('scopeWildcardReadWrite', bool)}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          readOnly={!!currentRecord}
+        />
+        <CheckBox
+          title={'FTP'}
+          name={'scopeFtpReadWrite'}
+          value={values.scopeFtpReadWrite}
+          valueChanged={bool => handleValueChange('scopeFtpReadWrite', bool)}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          readOnly={!!currentRecord}
         />
         {/* <TextInput
           title={'Based on model'}
