@@ -158,9 +158,9 @@ export const scenarioFormHelpText: HelpText = {
 }
 
 export const lableTypeFormHelpText: HelpText = {
-  default: "Labeltypes are the different types of labels that can exist in the system",
-  name: "Name of the Label type",
-  uuid: "Unique identifier of this label type",
+  default: "Label types are different types of labels that can exist in the system.",
+  name: "Name of the label type.",
+  uuid: "Unique identifier of this label type.",
   description: 'Please give an accurate description of this object and its uses.',
   organisation: (
     <>

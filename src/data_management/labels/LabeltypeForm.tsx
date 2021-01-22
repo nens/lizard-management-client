@@ -135,6 +135,8 @@ const LabeltypeModel: React.FC<Props & PropsFromDispatch & RouteComponentProps<R
     handleReset,
     clearInput,
     fieldOnFocus,
+    handleBlur,
+    handleFocus,
   } = useForm({initialValues, onSubmit});
 
   return (
@@ -159,6 +161,8 @@ const LabeltypeModel: React.FC<Props & PropsFromDispatch & RouteComponentProps<R
           validated={!minLength(3, values.name)}
           errorMessage={minLength(3, values.name)}
           triedToSubmit={triedToSubmit}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           readOnly={true}
         />
         <TextInput
@@ -170,6 +174,8 @@ const LabeltypeModel: React.FC<Props & PropsFromDispatch & RouteComponentProps<R
           validated={!minLength(3, values.uuid)}
           errorMessage={minLength(3, values.uuid)}
           triedToSubmit={triedToSubmit}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           readOnly={true}
         />
         <TextArea
@@ -180,6 +186,8 @@ const LabeltypeModel: React.FC<Props & PropsFromDispatch & RouteComponentProps<R
           valueChanged={handleInputChange}
           clearInput={clearInput}
           validated
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           readOnly={true}
         />
         <TextInput
@@ -189,6 +197,8 @@ const LabeltypeModel: React.FC<Props & PropsFromDispatch & RouteComponentProps<R
           valueChanged={handleInputChange}
           clearInput={clearInput}
           validated
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           readOnly
         />
         <div
