@@ -213,7 +213,7 @@ const PersonalApiKeyFormModel: React.FC<Props & PropsFromDispatch & RouteCompone
         // true
         ?
       <Modal
-           title={'Your newly created api key?'}
+           title={'Save this key!'}
            buttonConfirmName={'Close'}
            onClickButtonConfirm={() => {
               setApiKeyString("");
@@ -222,13 +222,35 @@ const PersonalApiKeyFormModel: React.FC<Props & PropsFromDispatch & RouteCompone
          >
            
           <p>
-            Store this personal API key somewhere save.
-            This key will only be shown once !
+            Save this key somewhere on your computer.
+            <br/>
+            <br/>
+            Key cannot be retrieved after closing this window.
+            <br/>
+            <br/>
           </p>
-          <div>
+          <div
+            style={{
+              backgroundColor: "#2fcbab",
+              borderWidth: "2px",
+              borderStyle: "solid",
+              borderRadius: "4px",
+              borderColor: "var(--color-header)",
+              padding: "16px"
+            }}
+          >
             <span>
               {apiKeyString}
             </span>
+            <button style={{
+              border: "none",
+              borderWidth: "none",
+              backgroundColor: "transparent"
+            }}
+            onClick={() => navigator.clipboard.writeText(apiKeyString)}
+            >
+              <i className={"fa fa-clone"}></i>
+            </button>
           </div>
         </Modal>
         :null}
