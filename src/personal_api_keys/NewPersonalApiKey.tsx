@@ -1,18 +1,8 @@
 import React ,{ useEffect, useState } from "react";
-// import { useSelector } from "react-redux";
 import MDSpinner from "react-md-spinner";
-
 import {PersonalApiKeyForm} from "./PersonalApiKeyForm";
 import { DataRetrievalState} from '../types/retrievingDataTypes';
-// import {
-//   getColorMaps,
-//   getObservationTypes,
-//   getOrganisations,
-//   getSupplierIds,
-//   getDatasets,
-//   getRasterSourceUUID,
-//   getSelectedOrganisation,
-// } from "../reducers";
+
 
 export const NewPersonalApiKey: React.FC = () => {
   const [allPersonalApiKeys, setAllPersonalApiKeys] = useState([]);
@@ -25,6 +15,7 @@ export const NewPersonalApiKey: React.FC = () => {
       if (response.status === 200) {
         return response.json();
       } else {
+          // todo fix this erro notification
           // props.addNotification(status, 2000);
           console.error(response);
           setallPersonalApiKeysFetching({status:"ERROR", errorMesssage: response.status+'', url:"/api/v4/personalapikeys"})
@@ -37,12 +28,6 @@ export const NewPersonalApiKey: React.FC = () => {
   },[])
 
   if (
-    // organisations.isFetching === false &&
-    // observationTypes.isFetching === false &&
-    // colorMaps.isFetching === false &&
-    // supplierIds.isFetching === false &&
-    // datasets.isFetching === false &&
-    // (rasterSourceUUID || rasterSources !== null)
     allPersonalApiKeysFetching === "RETRIEVED"
   ) {
     return ( 

@@ -1,9 +1,7 @@
 import React from 'react';
 import {useState} from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
-import { connect, /*useSelector*/ } from 'react-redux';
-// import { getOrganisations, getUsername } from '../reducers';
-// import { ScenarioResult } from '../form/ScenarioResult';
+import { connect } from 'react-redux';
 import { ExplainSideColumn } from '../components/ExplainSideColumn';
 import { TextInput } from './../form/TextInput';
 import { SubmitButton } from '../form/SubmitButton';
@@ -35,10 +33,6 @@ const PersonalApiKeyFormModel: React.FC<Props & PropsFromDispatch & RouteCompone
   const { currentRecord, allPersonalApiKeys } = props;
   // @ts-ignore
   const recordWithFtpExists = ((allPersonalApiKeys || []).filter(record=>(record.scope+'').includes("ftp:readwrite"))).length > 0;
-  // const organisations = useSelector(getOrganisations).available;
-  // const scenarioOrganisation = organisations.find((org: any) => org.uuid === currentRecord.organisation.uuid.replace(/-/g, ""));
-  // const username = useSelector(getUsername);
-
   const [apiKeyString, setApiKeyString ] = useState("");
   const [showDeleteModal, setShowDeleteModal ] = useState(false);
 
@@ -46,9 +40,6 @@ const PersonalApiKeyFormModel: React.FC<Props & PropsFromDispatch & RouteCompone
     name: (currentRecord && currentRecord.name) || '',
     scopeWildcardReadWrite: (currentRecord && currentRecord.scope && (currentRecord.scope+'').includes('*:readwrite')) || true,
     scopeFtpReadWrite: (currentRecord && currentRecord.scope && (currentRecord.scope+'').includes('ftp:readwrite')) || false,  
-    // modelName: currentRecord.model_name || '',
-    // supplier: currentRecord.username || '',
-    // organisation: currentRecord.organisation.name || '',
   };
 
   const getScopeStringFromValues = (values:any) => {
