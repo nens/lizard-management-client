@@ -196,17 +196,10 @@ const PersonalApiKeyFormModel: React.FC<Props & PropsFromDispatch & RouteCompone
           <CancelButton
             url={'/personal_api_keys'}
           />
-          {/* {!currentRecord?
-          <SubmitButton
-            onClick={tryToSubmitForm}
-          />
-          :null} */}
           <div style={{
             display: "flex"
           }}>
             {currentRecord?
-            //  <>
-            //  {/* <div style={{ marginRight: "16px" }}> */}
                 <FormActionButtons
                   actions={[
                     {
@@ -215,9 +208,6 @@ const PersonalApiKeyFormModel: React.FC<Props & PropsFromDispatch & RouteCompone
                     },
                   ]} 
                 />
-              // {/* </div> */}
-                
-              // </>
             :null}
             {!currentRecord?
             <SubmitButton
