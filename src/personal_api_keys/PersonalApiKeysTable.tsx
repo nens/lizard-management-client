@@ -46,18 +46,6 @@ const columnDefinitions = [
     ,
     orderingField: null,
   },
-  // {
-  //   titleRenderFunction: () =>  "Uuid",
-  //   renderFunction: (row: any) =>
-  //     <span
-  //       className={tableStyles.CellEllipsis}
-  //       title={row.supplier_code}
-  //     >
-  //       {row.uuid}
-  //     </span>
-  //   ,
-  //   orderingField: null,
-  // },
 ];
 
 export const PersonalApiKeysTable = (props:any) =>  {

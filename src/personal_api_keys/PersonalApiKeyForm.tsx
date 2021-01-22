@@ -1,4 +1,5 @@
 import React from 'react';
+import {useState} from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { connect, /*useSelector*/ } from 'react-redux';
 // import { getOrganisations, getUsername } from '../reducers';
@@ -8,12 +9,15 @@ import { TextInput } from './../form/TextInput';
 import { SubmitButton } from '../form/SubmitButton';
 import { CancelButton } from '../form/CancelButton';
 import { useForm, Values } from '../form/useForm';
-// import { minLength } from '../form/validators';
+import { minLength } from '../form/validators';
 import { addNotification } from '../actions';
 import personalApiKeysIcon from "../images/personal_api_key_icon.svg";
 import formStyles from './../styles/Forms.module.css';
 import { personalApiKeysFormHelpText } from '../utils/helpTextForForms';
 import { CheckBox } from './../form/CheckBox';
+import Modal from '../components/Modal';
+import { ModalDeleteContent } from '../components/ModalDeleteContent'
+import FormActionButtons from '../components/FormActionButtons';
 
 
 interface Props {
@@ -31,6 +35,9 @@ const PersonalApiKeyFormModel: React.FC<Props & PropsFromDispatch & RouteCompone
   // const organisations = useSelector(getOrganisations).available;
   // const scenarioOrganisation = organisations.find((org: any) => org.uuid === currentRecord.organisation.uuid.replace(/-/g, ""));
   // const username = useSelector(getUsername);
+
+  const [apiKeyString, setApiKeyString ] = useState("");
+  const [showDeleteModal, setShowDeleteModal ] = useState(false);
 
   const initialValues = {
     name: (currentRecord && currentRecord.name) || '',
@@ -53,6 +60,28 @@ const PersonalApiKeyFormModel: React.FC<Props & PropsFromDispatch & RouteCompone
     return scopeArr.join(" ");
   }
 
+  const onDelete = () => {
+    const body = {};
+
+    currentRecord && fetch(`/api/v4/personalapikeys/${currentRecord.prefix}/`, {
+      credentials: 'same-origin',
+      method: 'DELETE',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(body)
+    })
+      .then(data => {
+        const status = data.status;
+        if (status === 204) {
+          props.addNotification('Success! API key deleted', 2000);
+          props.history.push('/personal_api_keys/');
+        } else {
+          props.addNotification(status, 2000);
+          console.error(data);
+        };
+      })
+      .catch(console.error);
+  }
+
   const onSubmit = (values: Values) => {
     const body = {
       name: values.name,
@@ -67,9 +96,15 @@ const PersonalApiKeyFormModel: React.FC<Props & PropsFromDispatch & RouteCompone
     })
       .then(data => {
         const status = data.status;
-        if (status === 200) {
+        if (status === 201) {
+          console.log('data', data);
           props.addNotification('Success! Personal API key generated', 2000);
-          // props.history.push('/data_management/scenarios/');
+          data.json().then((record: any)=>{
+            console.log('record', record);
+            setApiKeyString(record.key+'');
+          })
+          // do not redirect because we need to show the api key modal
+          // props.history.push('/personal_api_keys/');
         } else {
           props.addNotification(status, 2000);
           console.error(data);
@@ -116,8 +151,8 @@ const PersonalApiKeyFormModel: React.FC<Props & PropsFromDispatch & RouteCompone
           value={values.name}
           valueChanged={handleInputChange}
           clearInput={clearInput}
-          validated={true}
-          errorMessage={false}
+          validated={!minLength(2, values.name)}
+          errorMessage={minLength(2, values.name)}
           triedToSubmit={triedToSubmit}
           onFocus={handleFocus}
           onBlur={handleBlur}
@@ -161,13 +196,86 @@ const PersonalApiKeyFormModel: React.FC<Props & PropsFromDispatch & RouteCompone
           <CancelButton
             url={'/personal_api_keys'}
           />
-          {!currentRecord?
+          {/* {!currentRecord?
           <SubmitButton
             onClick={tryToSubmitForm}
           />
-          :null}
+          :null} */}
+          <div style={{
+            display: "flex"
+          }}>
+            {currentRecord?
+             <>
+             <div style={{ marginRight: "16px" }}>
+                <FormActionButtons
+                  actions={[
+                    {
+                      displayValue: "Delete",
+                      actionFunction: () => { setShowDeleteModal(true); }
+                    },
+                  ]} />
+              </div>
+                <SubmitButton
+                  onClick={tryToSubmitForm} 
+                />
+              </>
+            :null}
+        </div>
         </div>
       </form>
+      {
+        apiKeyString !== ""
+        // true
+        ?
+      <Modal
+           title={'Your newly created api key?'}
+           buttonConfirmName={'Close'}
+           onClickButtonConfirm={() => {
+              // onDelete();
+              // setShowDeleteModal(false);
+              setApiKeyString("");
+              props.history.push('/personal_api_keys/');
+           }}
+          //  cancelAction={()=>{
+          //   setShowDeleteModal(false)
+          // }}
+          // disableButtons={false}
+         >
+           
+          <p>
+            Store this personal API key somewhere save.
+            This key will only be shown once !
+          </p>
+          <div>
+            <span>
+              {apiKeyString}
+            </span>
+          </div>
+        </Modal>
+        :null}
+        { 
+        currentRecord && showDeleteModal?
+           <Modal
+           title={'Are you sure?'}
+           buttonConfirmName={'Delete'}
+           onClickButtonConfirm={() => {
+              onDelete();
+              setShowDeleteModal(false);
+           }}
+           cancelAction={()=>{
+            setShowDeleteModal(false)
+          }}
+          disableButtons={false}
+         >
+           
+           <p>Are you sure? Undoing is not possible. You are deleting the following personal API key:</p>
+           
+           {ModalDeleteContent([currentRecord], false, [{name: "name", width: 65}, {name: "prefix", width: 25}])}
+           
+         </Modal>
+        :
+          null
+        }
     </ExplainSideColumn>
   );
 };
