@@ -172,7 +172,7 @@ const PersonalApiKeyFormModel: React.FC<Props & PropsFromDispatch & RouteCompone
         />
         <CheckBox
           title={'FTP'}
-          htmlTitle={recordWithFtpExists? "There exists already a record with scope FTP in your api keys. Only one is allowed." : 'FTP'}
+          htmlTitle={recordWithFtpExists && !currentRecord? "There exists already a record with scope FTP in your api keys. Only one is allowed." : 'FTP'}
           name={'scopeFtpReadWrite'}
           value={values.scopeFtpReadWrite}
           valueChanged={bool => handleValueChange('scopeFtpReadWrite', bool)}
