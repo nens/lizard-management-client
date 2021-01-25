@@ -14,7 +14,7 @@ import formStyles from './../styles/Forms.module.css';
 import { personalApiKeysFormHelpText } from '../utils/helpTextForForms';
 import { CheckBox } from './../form/CheckBox';
 import Modal from '../components/Modal';
-import { ModalDeleteContent } from '../components/ModalDeleteContent'
+import { ModalDeleteContent } from '../components/ModalDeleteContent';
 import FormActionButtons from '../components/FormActionButtons';
 
 
