@@ -167,6 +167,7 @@ export const RasterLayerTable = (props:any) =>  {
             }
           ]}
           newItemOnClick={handleNewRasterClick}
+          textSearchBox={true}
         />
         { 
         rowsToBeDeleted.length > 0?

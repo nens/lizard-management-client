@@ -157,6 +157,7 @@ export const WmsLayerTable = (props:any) =>  {
             }
           ]}
           newItemOnClick={handleNewRasterClick}
+          textSearchBox={true}
         />
         { 
         rowsToBeDeleted.length > 0?

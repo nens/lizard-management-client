@@ -211,6 +211,7 @@ export const RasterSourceTable = (props:any) =>  {
           
         ]}
         newItemOnClick={handleNewRasterClick}
+        textSearchBox={true}
       />
       {
         // next line is correctly commented out, use it for testing delete 412 error

@@ -251,6 +251,7 @@ export const ScenarioTable = (props:any) =>  {
             text:"Only show own scenario's",
             adaptUrlFunction: (url:string) => {return userName? url + `&username__contains=${userName}` : url},
           }}
+          textSearchBox={true}
         />
         { 
         rowsToBeDeleted.length > 0 && deleteFunction?

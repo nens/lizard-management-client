@@ -226,7 +226,7 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
           marginTop: "18px",
         }}
       >
-        { textSearchBox !== false?
+        { textSearchBox?
         <TableSearchBox
           onChange={event=>{
             const newValue = event.target.value;
