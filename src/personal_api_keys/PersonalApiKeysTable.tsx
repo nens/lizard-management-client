@@ -8,6 +8,7 @@ import personalApiKeysIcon from "../images/personal_api_key_icon.svg";
 import Modal from '../components/Modal';
 import { ModalDeleteContent } from '../components/ModalDeleteContent';
 import TableActionButtons from '../components/TableActionButtons';
+import { personalApiKeysFormHelpText } from '../utils/helpTextForForms';
 
 const baseUrl = "/api/v4/personalapikeys/";
 const navigationUrl = "/personal_api_keys";
@@ -111,7 +112,7 @@ export const PersonalApiKeysTable = (props:any) =>  {
       imgUrl={personalApiKeysIcon}
       imgAltDescription={"Personal API keys icon"}
       headerText={"Personal API keys"}
-      explanationText={"Personal API keys can be used to authenticate external applications in Lizard"} 
+      explanationText={personalApiKeysFormHelpText['default']}
       backUrl={"/"}
     >
       <TableStateContainer 

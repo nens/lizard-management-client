@@ -171,7 +171,22 @@ export const lableTypeFormHelpText: HelpText = {
 }
 
 export const personalApiKeysFormHelpText: HelpText = {
-  default: "Personal API keys can be used to authenticate external applications in Lizard",
+  default:  
+  (
+    <>
+      <p>Personal API keys can be used to authenticate external applications in Lizard with <a target="_blank" rel="noopener noreferrer" href="https://en.wikipedia.org/wiki/Basic_access_authentication">basic authentication</a>:</p>
+      <br/>
+      <div style={{
+          backgroundColor: "#EEEEEE",
+          fontFamily: "Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New",
+      }}>
+      <span>&lt;username&gt;:&lt;key&gt;</span>
+      </div>
+      <br/>
+      <p>The key itself is only visible once you create the api key. They can not be looked up later.</p>
+    </>
+  ),
+  // default: "Personal API keys can be used to authenticate external applications in Lizard",
   name: "Name of the personal api key",
   scope: "Defines what the personal api key can be used for",
 }
