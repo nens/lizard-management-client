@@ -59,7 +59,7 @@ export const PersonalApiKeysTable = (props:any) =>  {
     <ExplainSideColumn
       imgUrl={personalApiKeysIcon}
       imgAltDescription={"Personal API keys icon"}
-      headerText={"Label types"}
+      headerText={"Personal API keys"}
       explanationText={"Personal API keys can be used to authenticate external applications in Lizard"} 
       backUrl={"/"}
     >
