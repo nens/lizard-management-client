@@ -188,5 +188,6 @@ export const personalApiKeysFormHelpText: HelpText = {
   ),
   // default: "Personal API keys can be used to authenticate external applications in Lizard",
   name: "Name of the personal api key",
-  scope: "Defines what the personal api key can be used for",
+  scopeWildcardReadWrite: "Defines if the key can be used to read and write data",
+  scopeFtpReadWrite: "Defines if the key can be used with the FTP sever. Only one 'Personal API key' with FTP scope enabled is allowed per person.",
 }
