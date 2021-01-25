@@ -141,7 +141,7 @@ export const PersonalApiKeysTable = (props:any) =>  {
            }}
            disableButtons={busyDeleting}
          >
-           <p>Are you sure? You are deleting the following Personal API key:</p>
+           <p>Are you sure? Undoing is not possible. You are deleting the following personal API key:</p>
            {ModalDeleteContent([rowToBeDeleted], busyDeleting, [{name: "name", width: 65}, {name: "prefix", width: 25}])}
          </Modal>
         :
