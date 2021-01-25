@@ -102,7 +102,7 @@ export const RasterLayerTable = (props:any) =>  {
         >
           {row.is_geoblock ? 'Geoblock' : 'Raster source'}
         </span>,
-      orderingField: "raster_sources",
+      orderingField: "is_geoblock",
     },
     {
       titleRenderFunction: () =>  "User",
