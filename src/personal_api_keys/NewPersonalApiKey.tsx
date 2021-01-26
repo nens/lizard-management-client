@@ -12,9 +12,12 @@ export const NewPersonalApiKey: React.FC = () => {
     setallPersonalApiKeysFetching("RETRIEVING");
     fetch('/api/v4/personalapikeys')
     .then(response=>{
+      console.log("response", response)
       if (response.status === 200) {
+        console.log("response2", response)
         return response.json();
       } else {
+        console.log("response3", response)
           // todo fix this erro notification
           // props.addNotification(status, 2000);
           console.error(response);
@@ -22,7 +25,8 @@ export const NewPersonalApiKey: React.FC = () => {
       }
     })
     .then(data=>{
-      setAllPersonalApiKeys(data.results);
+      console.log("data4", data)
+      setAllPersonalApiKeys((data && data.results) || []);
       setallPersonalApiKeysFetching("RETRIEVED");
     })
   },[])
