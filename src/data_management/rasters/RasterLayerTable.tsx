@@ -1,49 +1,14 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import TableStateContainer from '../../components/TableStateContainer';
 import { NavLink, RouteComponentProps } from "react-router-dom";
-import { deleteRasters, fetchRasterV4, /*flushRasters*/ } from "../../api/rasters";
+import { deleteRasters, /*flushRasters*/ } from "../../api/rasters";
 import TableActionButtons from '../../components/TableActionButtons';
 import {ExplainSideColumn} from '../../components/ExplainSideColumn';
 import rasterIcon from "../../images/raster_layer_icon.svg";
 import tableStyles from "../../components/Table.module.css";
-import {useState, }  from 'react';
 import Modal from '../../components/Modal';
-import { ModalDeleteContent } from '../../components/ModalDeleteContent'
-import { getUuidFromUrl } from '../../utils/getUuidFromUrl';
-
-interface SourceModalProps {
-  selectedLayer: string;
-  closeModal: () => void;
-}
-
-const SourceModal: React.FC<SourceModalProps> = (props) => {
-  const { selectedLayer, closeModal } = props;
-  const [rasterSources, setRasterSources] = useState<string[]>([]);
-  useEffect(() => {
-    if (selectedLayer) fetchRasterV4(selectedLayer).then(
-      res => {
-        const rasterSourceURLs = res.raster_sources as string[];
-        const rasterSourceUUIDs = rasterSourceURLs.map(url => getUuidFromUrl(url));
-        setRasterSources(rasterSourceUUIDs);
-      }
-    ).catch(console.error);
-  }, [selectedLayer]);
-
-  return (
-    <Modal
-      title={'Raster Sources'}
-      cancelAction={closeModal}
-    >
-      <ul>
-        {rasterSources.map(rasterSource => (
-          <li>
-            <a href={`/management#/data_management/rasters/sources/${rasterSource}/`} target="_blank" rel="noopener noreferrer">{rasterSource}</a>
-          </li>
-        ))}
-      </ul>
-    </Modal>
-  )
-}
+import { ModalDeleteContent } from '../../components/ModalDeleteContent';
+import { RasterSourceModal } from './RasterSourceModal';
 
 export const RasterLayerTable: React.FC<RouteComponentProps> = (props) =>  {
 
@@ -256,7 +221,7 @@ export const RasterLayerTable: React.FC<RouteComponentProps> = (props) =>  {
         }
 
         {selectedLayer ? (
-          <SourceModal
+          <RasterSourceModal
             selectedLayer={selectedLayer}
             closeModal={() => setSelectedLayer('')}
           />
