@@ -23,10 +23,10 @@ interface Props {
   textSearchBox?: boolean; // default true
   newItemOnClick: () => void | null;
   queryCheckBox: {text: string, adaptUrlFunction: (url:string)=>string} | null;
-  scenarioIsNull?: boolean;
+  defaultUrlParams?: string;
 }
 
-const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, columnDefinitions, baseUrl, checkBoxActions, textSearchBox, newItemOnClick, queryCheckBox/*action*/, scenarioIsNull }) => {
+const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, columnDefinitions, baseUrl, checkBoxActions, textSearchBox, newItemOnClick, queryCheckBox/*action*/, defaultUrlParams }) => {
 
   const [tableData, setTableData] = useState([]);
   const [checkBoxes, setCheckBoxes] = useState([]);
@@ -52,7 +52,7 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
     (nameContains !==""? "&name__icontains=" + nameContains: "") +
     "&ordering=" + ordering +
     "&organisation__uuid=" + selectedOrganisationUuid +
-    (scenarioIsNull !== undefined ? "&scenario__isnull=" + scenarioIsNull : '');
+    (defaultUrlParams ? defaultUrlParams : '');
 
   const url = queryCheckBox && queryCheckBoxState? queryCheckBox.adaptUrlFunction(preUrl) : preUrl
     

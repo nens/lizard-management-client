@@ -210,7 +210,7 @@ export const RasterSourceTable = (props:any) =>  {
           // },
         ]}
         newItemOnClick={handleNewRasterClick}
-        scenarioIsNull // to exclude 3Di scenario rasters
+        defaultUrlParams={'&scenario__isnull=true'} // to exclude 3Di scenario rasters
       />
       {
         // next line is correctly commented out, use it for testing delete 412 error
