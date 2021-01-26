@@ -98,11 +98,11 @@ export const RasterLayerTable = (props:any) =>  {
       renderFunction: (row: any) => 
         <span
           className={tableStyles.CellEllipsis}
-          title={row.raster_sources[0]}
+          title={row.is_geoblock ? 'Geoblock' : 'Raster source'}
         >
-          {row.raster_sources[0]}
+          {row.is_geoblock ? 'Geoblock' : 'Raster source'}
         </span>,
-      orderingField: "raster_sources",
+      orderingField: "is_geoblock",
     },
     {
       titleRenderFunction: () =>  "User",
