@@ -231,11 +231,6 @@ const PersonalApiKeyFormModel: React.FC<Props & PropsFromDispatch & RouteCompone
             </span>
             <button 
               className={styles.KeyCopyButton}
-              style={{
-                border: "none",
-                borderWidth: "none",
-                backgroundColor: "transparent"
-              }}
               onClick={() => {
                 navigator.clipboard.writeText(apiKeyString).then(() => {
                   props.addNotification("Copied to clipboard", 2000);
