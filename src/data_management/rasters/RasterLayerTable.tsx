@@ -167,6 +167,7 @@ export const RasterLayerTable = (props:any) =>  {
             }
           ]}
           newItemOnClick={handleNewRasterClick}
+          defaultUrlParams={'&scenario__isnull=true'} // to exclude 3Di scenario rasters
         />
         { 
         rowsToBeDeleted.length > 0?
