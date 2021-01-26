@@ -17,7 +17,7 @@ const ActionButtons: React.FC<Props> = ({actions, onChange, clickableComponent }
         height: "100%",
         position: "relative",
         display: "flex",
-        justifyContent: "flex-end",
+        justifyContent: "center",
       }}
     >
       <select

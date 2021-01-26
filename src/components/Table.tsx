@@ -5,6 +5,7 @@ import MDSpinner from "react-md-spinner";
 
 
 export interface ColumnDefinition {
+  name?: string,
   titleRenderFunction: any;
   renderFunction: any; //(row: any): any; //returns field JSX.Element;
   orderingField: null | string;
@@ -28,7 +29,11 @@ const Table: React.FC<Props> = ({tableData, setTableData, gridTemplateColumns, c
       <div style={{
         gridTemplateColumns: gridTemplateColumns,
       }}>
-        {columnDefinitions.map(definition=><span>{definition.titleRenderFunction()}</span>)}
+        {columnDefinitions.map(definition =>
+          <span style={{justifyContent: definition.name === 'checkbox'? 'center' : 'flex-start'}}>
+            {definition.titleRenderFunction()}
+          </span>
+        )}
       </div>
       <div style={{
           gridTemplateColumns: gridTemplateColumns,
@@ -50,7 +55,7 @@ const Table: React.FC<Props> = ({tableData, setTableData, gridTemplateColumns, c
               return (
                 <>
                   {columnDefinitions.map(definition=>
-                    <span className={rowIsSelected? styles.Selected: styles.NotSelected}>
+                    <span className={rowIsSelected? styles.Selected: styles.NotSelected} style={{justifyContent: definition.name === 'checkbox'? 'center' : 'flex-start'}}>
                       {definition.renderFunction(tableRow, updateTableRow, triggerReloadWithCurrentPage, triggerReloadWithBasePage)}
                     </span>
                   )}

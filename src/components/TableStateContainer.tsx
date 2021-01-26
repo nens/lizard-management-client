@@ -131,6 +131,7 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
   })
 
   const checkBoxColumnDefinition: ColumnDefinition = {
+    name: 'checkbox',
     titleRenderFunction: () => 
       <Checkbox  
         checked={areAllOnCurrentPageChecked()}
