@@ -1,10 +1,7 @@
-import React from 'react';
-
-
-
+import React, { useEffect } from 'react';
 import TableStateContainer from '../../components/TableStateContainer';
-import { NavLink } from "react-router-dom";
-import { deleteRasters, /*flushRasters*/ } from "../../api/rasters";
+import { NavLink, RouteComponentProps } from "react-router-dom";
+import { deleteRasters, fetchRasterV4, /*flushRasters*/ } from "../../api/rasters";
 import TableActionButtons from '../../components/TableActionButtons';
 import {ExplainSideColumn} from '../../components/ExplainSideColumn';
 import rasterIcon from "../../images/raster_layer_icon.svg";
@@ -12,10 +9,43 @@ import tableStyles from "../../components/Table.module.css";
 import {useState, }  from 'react';
 import Modal from '../../components/Modal';
 import { ModalDeleteContent } from '../../components/ModalDeleteContent'
+import { getUuidFromUrl } from '../../utils/getUuidFromUrl';
 
+interface SourceModalProps {
+  selectedLayer: string;
+  closeModal: () => void;
+}
 
+const SourceModal: React.FC<SourceModalProps> = (props) => {
+  const { selectedLayer, closeModal } = props;
+  const [rasterSources, setRasterSources] = useState<string[]>([]);
+  useEffect(() => {
+    if (selectedLayer) fetchRasterV4(selectedLayer).then(
+      res => {
+        const rasterSourceURLs = res.raster_sources as string[];
+        const rasterSourceUUIDs = rasterSourceURLs.map(url => getUuidFromUrl(url));
+        setRasterSources(rasterSourceUUIDs);
+      }
+    ).catch(console.error);
+  }, [selectedLayer]);
 
-export const RasterLayerTable = (props:any) =>  {
+  return (
+    <Modal
+      title={'Raster Sources'}
+      cancelAction={closeModal}
+    >
+      <ul>
+        {rasterSources.map(rasterSource => (
+          <li>
+            <a href={`/management#/data_management/rasters/sources/${rasterSource}/`} target="_blank" rel="noopener noreferrer">{rasterSource}</a>
+          </li>
+        ))}
+      </ul>
+    </Modal>
+  )
+}
+
+export const RasterLayerTable: React.FC<RouteComponentProps> = (props) =>  {
 
   const baseUrl = "/api/v4/rasters/";
   const navigationUrlRasters = "/data_management/rasters/layers";
@@ -25,6 +55,7 @@ export const RasterLayerTable = (props:any) =>  {
   const [deleteFunction, setDeleteFunction] = useState<null | Function>(null);
   const [busyDeleting, setBusyDeleting] = useState<boolean>(false);
 
+  const [selectedLayer, setSelectedLayer] = useState<string>('');
 
   const deleteActionRaster = (row: any, updateTableRow:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any)=>{
     setRowToBeDeleted(row);
@@ -99,6 +130,10 @@ export const RasterLayerTable = (props:any) =>  {
         <span
           className={tableStyles.CellEllipsis}
           title={row.is_geoblock ? 'Geoblock' : 'Raster source'}
+          onClick={() => setSelectedLayer(row.uuid)}
+          style={{
+            cursor: 'pointer'
+          }}
         >
           {row.is_geoblock ? 'Geoblock' : 'Raster source'}
         </span>,
@@ -219,6 +254,13 @@ export const RasterLayerTable = (props:any) =>  {
         :
           null
         }
+
+        {selectedLayer ? (
+          <SourceModal
+            selectedLayer={selectedLayer}
+            closeModal={() => setSelectedLayer('')}
+          />
+        ) : null}
      </ExplainSideColumn>
   );
 }
