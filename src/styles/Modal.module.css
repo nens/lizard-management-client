@@ -19,6 +19,7 @@
   padding: 30px;
   padding-bottom: 50px;
   word-wrap: break-word;
+  overflow-y: auto;
 }
 
 .ModalFooter {

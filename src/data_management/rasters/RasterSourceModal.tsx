@@ -27,18 +27,20 @@ export const RasterSourceModal: React.FC<SourceModalProps> = (props) => {
     <Modal
       title={'Related raster sources'}
       cancelAction={closeModal}
+      height={300}
     >
       {rasterSources ? (
-        <ul>
+        <ol>
           {rasterSources.map(rasterSource => (
             <li>
               <a href={`/management#/data_management/rasters/sources/${rasterSource}/`} target="_blank" rel="noopener noreferrer">{rasterSource}</a>
             </li>
           ))}
-        </ul>
+        </ol>
       ) : (
         <span
           style={{
+            height: '100%',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center'
