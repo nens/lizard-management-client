@@ -1,5 +1,5 @@
 import React from 'react';
-import {useState, }  from 'react';
+import {useState, useEffect}  from 'react';
 import TableStateContainer from '../../components/TableStateContainer';
 import { NavLink } from "react-router-dom";
 import {  deleteRasterSource, 
@@ -13,18 +13,33 @@ import { bytesToDisplayValue } from '../../utils/byteUtils';
 import Modal from '../../components/Modal';
 
 import { ModalDeleteContent } from '../../components/ModalDeleteContent';
-import DeleteRasterSourceNotAllowed  from './DeleteRasterSourceNotAllowed'
+import DeleteRasterSourceNotAllowed  from './DeleteRasterSourceNotAllowed';
+import MDSpinner from "react-md-spinner";
+
 
 export const RasterSourceTable = (props:any) =>  {
 
   // const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
   const [rowToBeDeleted, setRowToBeDeleted] = useState<any | null>(null);
+  const [currentRowDetailView, setCurrentRowDetailView] = useState<null | any>(null);
   const [deleteFunction, setDeleteFunction] = useState<null | Function>(null);
   const [busyDeleting, setBusyDeleting] = useState<boolean>(false);
   const [showDeleteFailedModal, setShowDeleteFailedModal] = useState<boolean>(false);
 
   const baseUrl = "/api/v4/rastersources/";
   const navigationUrlRasters = "/data_management/rasters/sources";
+
+  useEffect(() => { 
+    if (rowToBeDeleted) {
+      fetch(baseUrl + rowToBeDeleted.uuid)
+        .then((result:any)=>{
+          return result.json();
+        })
+        .then((detailView:any)=>{
+          setCurrentRowDetailView(detailView);
+        })
+    }
+  }, [rowToBeDeleted]);
 
   const deleteActionRaster = (row: any, updateTableRow:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any)=>{
     setRowToBeDeleted(row);
@@ -213,13 +228,39 @@ export const RasterSourceTable = (props:any) =>  {
         newItemOnClick={handleNewRasterClick}
       />
       {
+        rowToBeDeleted && !currentRowDetailView ?
+        <Modal
+           title={'Loading'}
+           closeDialogAction={()=>{
+            setShowDeleteFailedModal(false);
+            setRowToBeDeleted(null);
+            setCurrentRowDetailView(null);
+           }}
+         >
+           {/* <p>You are trying to delete the following raster-source:</p>
+           {ModalDeleteContent([rowToBeDeleted], busyDeleting, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
+           <p>But this raster-source is still in use by objects outside your organisation.</p>
+           <p>{"Please contact "} 
+             <a
+              href="https://nelen-schuurmans.topdesk.net/tas/public/ssp"
+              target="_blank"
+              rel="noopener noreferrer"
+            >support</a>
+          </p>              */}
+          <MDSpinner size={24} /><span style={{marginLeft: "40px"}}>Loading dependent objects ..</span>
+         </Modal>
+        :
+        null
+      }
+      {
         // next line is correctly commented out, use it for testing delete 412 error
         // false &&
-        rowToBeDeleted && (rowToBeDeleted.layers.length !== 0 || rowToBeDeleted.labeltypes.length !== 0) ?
+        currentRowDetailView && (currentRowDetailView.layers.length !== 0 || currentRowDetailView.labeltypes.length !== 0) ?
 
         <DeleteRasterSourceNotAllowed 
           closeDialogAction={()=>{
             setRowToBeDeleted(null);
+            setCurrentRowDetailView(null);
             setDeleteFunction(null);
             // todo refresh table, because maybe user has in meanwhile deleted items. Or pass row instead and put logic for what modal is show inside modal component?
           }}
@@ -229,9 +270,9 @@ export const RasterSourceTable = (props:any) =>  {
         null
       }
       { 
-        rowToBeDeleted && deleteFunction 
+        currentRowDetailView && deleteFunction 
         && 
-        (rowToBeDeleted.layers.length === 0 && rowToBeDeleted.labeltypes.length === 0) 
+        (currentRowDetailView.layers.length === 0 && currentRowDetailView.labeltypes.length === 0) 
         ?
            <Modal
            title={'Are you sure?'}
@@ -243,6 +284,7 @@ export const RasterSourceTable = (props:any) =>  {
                 setDeleteFunction(null);
               } else {
                 setRowToBeDeleted(null);
+                setCurrentRowDetailView(null);
                 setDeleteFunction(null);
               }
               
@@ -251,6 +293,7 @@ export const RasterSourceTable = (props:any) =>  {
            }}
            cancelAction={()=>{
              setRowToBeDeleted(null);
+             setCurrentRowDetailView(null);
              setDeleteFunction(null);
            }}
            disableButtons={busyDeleting}
@@ -262,12 +305,13 @@ export const RasterSourceTable = (props:any) =>  {
           null
         }
         { 
-        rowToBeDeleted &&  showDeleteFailedModal?
+        currentRowDetailView &&  showDeleteFailedModal?
            <Modal
            title={'Not allowed'}
            closeDialogAction={()=>{
             setShowDeleteFailedModal(false);
             setRowToBeDeleted(null);
+            setCurrentRowDetailView(null);
            }}
          >
            <p>You are trying to delete the following raster-source:</p>

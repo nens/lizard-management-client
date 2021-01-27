@@ -14,28 +14,28 @@ const DeleteRasterSourceNotAllowed: React.FC<MyProps> = (props) => {
     rowToBeDeleted,
   } = props;
 
-  const rasterSourceUrl = "/api/v4/rastersources/";
+  // const rasterSourceUrl = "/api/v4/rastersources/";
   const [rasterSource, setRasterSource] = useState<null | any>(null);
 
-  const layerUuids = rasterSource && rasterSource.layers.map((layerUrl:string)=>{return layerUrl.split("/")[layerUrl.split("/").length-2] });
-  const layerUrls = layerUuids && layerUuids.map((layerUuid:string)=>{return '/management#/data_management/rasters/layers/' + layerUuid})
-  const labelTypeUrls = rasterSource && rasterSource.labeltypes.map((uuid:string)=>{return '/management#/data_management/labeltypes/' + uuid})
+  // const layerUuids = rasterSource && rasterSource.layers.map((layerUrl:string)=>{return layerUrl.split("/")[layerUrl.split("/").length-2] });
+  // const layerUrls = layerUuids && layerUuids.map((layerUuid:string)=>{return '/management#/data_management/rasters/layers/' + layerUuid})
+  // const labelTypeUrls = rasterSource && rasterSource.labeltypes.map((uuid:string)=>{return '/management#/data_management/labeltypes/' + uuid})
   
   // old code when rasterlayers and labels were on the rastersource list api
-  // const layerUuids = rowToBeDeleted.layers.map((layerUrl:string)=>{return layerUrl.split("/")[layerUrl.split("/").length-2] });
-  // const layerUrls = layerUuids.map((layerUuid:string)=>{return '/management#/data_management/rasters/layers/' + layerUuid})
-  // const labelTypeUrls = rowToBeDeleted.labeltypes.map((uuid:string)=>{return '/management#/data_management/labeltypes/' + uuid})
+  const layerUuids = rowToBeDeleted.layers.map((layerUrl:string)=>{return layerUrl.split("/")[layerUrl.split("/").length-2] });
+  const layerUrls = layerUuids.map((layerUuid:string)=>{return '/management#/data_management/rasters/layers/' + layerUuid})
+  const labelTypeUrls = rowToBeDeleted.labeltypes.map((uuid:string)=>{return '/management#/data_management/labeltypes/' + uuid})
 
-  useEffect(() => { 
+  // useEffect(() => { 
     
-    fetch(rasterSourceUrl + rowToBeDeleted.uuid)
-    .then((result:any)=>{
-      return result.json();
-    })
-    .then((rasterSource:any)=>{
-      setRasterSource(rasterSource);
-    })
-  }, [rowToBeDeleted]);
+  //   fetch(rasterSourceUrl + rowToBeDeleted.uuid)
+  //   .then((result:any)=>{
+  //     return result.json();
+  //   })
+  //   .then((rasterSource:any)=>{
+  //     setRasterSource(rasterSource);
+  //   })
+  // }, [rowToBeDeleted]);
   
 
 
@@ -101,12 +101,12 @@ const DeleteRasterSourceNotAllowed: React.FC<MyProps> = (props) => {
               height: "210px"
             }}
           >
-            {
+            {/* {
               rasterSource === null?
               <>
               <MDSpinner size={24} /><span style={{marginLeft: "40px"}}>Loading dependent objects ..</span>
               </>
-              :
+              : */}
               <>
                 {layerUrls.length > 0?
                   <div>
@@ -138,7 +138,7 @@ const DeleteRasterSourceNotAllowed: React.FC<MyProps> = (props) => {
                   null
                   }
               </>
-            }
+            {/* } */}
             
           </div>
     </Modal>
