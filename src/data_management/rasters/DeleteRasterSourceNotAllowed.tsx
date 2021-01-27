@@ -1,7 +1,5 @@
 import React from 'react';
-import {useState, useEffect,}  from 'react';
 import Modal from '../../components/Modal';
-import MDSpinner from "react-md-spinner";
 
 interface MyProps {
   closeDialogAction: () => void,
@@ -14,30 +12,9 @@ const DeleteRasterSourceNotAllowed: React.FC<MyProps> = (props) => {
     rowToBeDeleted,
   } = props;
 
-  // const rasterSourceUrl = "/api/v4/rastersources/";
-  const [rasterSource, setRasterSource] = useState<null | any>(null);
-
-  // const layerUuids = rasterSource && rasterSource.layers.map((layerUrl:string)=>{return layerUrl.split("/")[layerUrl.split("/").length-2] });
-  // const layerUrls = layerUuids && layerUuids.map((layerUuid:string)=>{return '/management#/data_management/rasters/layers/' + layerUuid})
-  // const labelTypeUrls = rasterSource && rasterSource.labeltypes.map((uuid:string)=>{return '/management#/data_management/labeltypes/' + uuid})
-  
-  // old code when rasterlayers and labels were on the rastersource list api
   const layerUuids = rowToBeDeleted.layers.map((layerUrl:string)=>{return layerUrl.split("/")[layerUrl.split("/").length-2] });
   const layerUrls = layerUuids.map((layerUuid:string)=>{return '/management#/data_management/rasters/layers/' + layerUuid})
   const labelTypeUrls = rowToBeDeleted.labeltypes.map((uuid:string)=>{return '/management#/data_management/labeltypes/' + uuid})
-
-  // useEffect(() => { 
-    
-  //   fetch(rasterSourceUrl + rowToBeDeleted.uuid)
-  //   .then((result:any)=>{
-  //     return result.json();
-  //   })
-  //   .then((rasterSource:any)=>{
-  //     setRasterSource(rasterSource);
-  //   })
-  // }, [rowToBeDeleted]);
-  
-
 
   // Do not remove, lateron we are going to display layer name and labeltype name instead of url
   // const fetchLayers = (uuids: string[],) => {

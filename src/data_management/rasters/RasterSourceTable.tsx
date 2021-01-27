@@ -299,7 +299,7 @@ export const RasterSourceTable = (props:any) =>  {
            disableButtons={busyDeleting}
          >
            <p>Are you sure? You are deleting the following raster-source:</p>
-           {ModalDeleteContent([rowToBeDeleted], busyDeleting, [{name: "name", width: 65}, {name: "uuid", width: 25}])}             
+           {ModalDeleteContent([currentRowDetailView], busyDeleting, [{name: "name", width: 65}, {name: "uuid", width: 25}])}             
          </Modal>
         :
           null
@@ -315,7 +315,7 @@ export const RasterSourceTable = (props:any) =>  {
            }}
          >
            <p>You are trying to delete the following raster-source:</p>
-           {ModalDeleteContent([rowToBeDeleted], busyDeleting, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
+           {ModalDeleteContent([currentRowDetailView], busyDeleting, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
            <p>But this raster-source is still in use by objects outside your organisation.</p>
            <p>{"Please contact "} 
              <a
