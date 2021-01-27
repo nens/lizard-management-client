@@ -29,7 +29,7 @@ export const RasterSourceModal: React.FC<SourceModalProps> = (props) => {
       cancelAction={closeModal}
       height={300}
     >
-      {rasterSources ? (
+      {rasterSources && rasterSources.length > 0 ? (
         <ol>
           {rasterSources.map(rasterSource => (
             <li>
@@ -37,6 +37,17 @@ export const RasterSourceModal: React.FC<SourceModalProps> = (props) => {
             </li>
           ))}
         </ol>
+      ) : (rasterSources && rasterSources.length === 0) ? (
+        <span
+          style={{
+            height: '100%',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}
+        >
+          This layer is not connected to any source!
+        </span>
       ) : (
         <span
           style={{
@@ -46,7 +57,7 @@ export const RasterSourceModal: React.FC<SourceModalProps> = (props) => {
             alignItems: 'center'
           }}
         >
-          <MDSpinner size={24} />
+          <MDSpinner size={40} />
         </span>
       )}
     </Modal>
