@@ -14,8 +14,9 @@ import formStyles from './../styles/Forms.module.css';
 import { personalApiKeysFormHelpText } from '../utils/helpTextForForms';
 import { CheckBox } from './../form/CheckBox';
 import Modal from '../components/Modal';
-import { ModalDeleteContent } from '../components/ModalDeleteContent'
+import { ModalDeleteContent } from '../components/ModalDeleteContent';
 import FormActionButtons from '../components/FormActionButtons';
+import styles from './PersonalApiKeyForm.module.css';
 
 
 interface Props {
@@ -91,13 +92,9 @@ const PersonalApiKeyFormModel: React.FC<Props & PropsFromDispatch & RouteCompone
       .then(data => {
         const status = data.status;
         if (status === 201) {
-          // setting both modal and snackbar message is a bit too much so I comment snackbar message out
-          // props.addNotification('Success! Personal API key generated', 2000);
           data.json().then((record: any)=>{
             setApiKeyString(record.key+'');
           })
-          // do not redirect because we need to show the api key modal
-          // props.history.push('/personal_api_keys/');
         } else {
           props.addNotification(status, 2000);
           console.error(data);
@@ -125,7 +122,7 @@ const PersonalApiKeyFormModel: React.FC<Props & PropsFromDispatch & RouteCompone
     <ExplainSideColumn
       imgUrl={personalApiKeysIcon}
       imgAltDescription={"Personal API keys icon"}
-      headerText={"Label types"}
+      headerText={"Personal API keys"}
       explanationText={personalApiKeysFormHelpText[fieldOnFocus] || personalApiKeysFormHelpText['default']}
       backUrl={"/personal_api_keys"}
     >
@@ -201,7 +198,6 @@ const PersonalApiKeyFormModel: React.FC<Props & PropsFromDispatch & RouteCompone
       </form>
       {
         apiKeyString !== ""
-        // true
         ?
       <Modal
            title={'Save this key!'}
@@ -233,12 +229,16 @@ const PersonalApiKeyFormModel: React.FC<Props & PropsFromDispatch & RouteCompone
             <span>
               {apiKeyString}
             </span>
-            <button style={{
-              border: "none",
-              borderWidth: "none",
-              backgroundColor: "transparent"
-            }}
-            onClick={() => navigator.clipboard.writeText(apiKeyString)}
+            <button 
+              className={styles.KeyCopyButton}
+              onClick={() => {
+                navigator.clipboard.writeText(apiKeyString).then(() => {
+                  props.addNotification("Copied to clipboard", 2000);
+                }, () => {
+                  props.addNotification("Failed copying ! \nTry manually instead", 2000);
+                }
+                );
+              }}
             >
               <i className={"fa fa-clone"}></i>
             </button>

@@ -172,6 +172,7 @@ export const RasterLayerTable: React.FC<RouteComponentProps> = (props) =>  {
             }
           ]}
           newItemOnClick={handleNewRasterClick}
+          textSearchBox={true}
           defaultUrlParams={'&scenario__isnull=true'} // to exclude 3Di scenario rasters
         />
         { 

@@ -225,6 +225,7 @@ export const RasterSourceTable = (props:any) =>  {
           // },
         ]}
         newItemOnClick={handleNewRasterClick}
+        textSearchBox={true}
         defaultUrlParams={'&scenario__isnull=true'} // to exclude 3Di scenario rasters
       />
       {

@@ -97,6 +97,7 @@ export function fetchOrganisations() {
         })
         const availableOrganisations = allOrganisations.filter(e => {
           return (
+            e.roles.find(e => e === "user") ||
             e.roles.find(e => e === "manager") ||
             e.roles.find(e => e === "admin") ||
             e.roles.find(e => e === "supplier") 

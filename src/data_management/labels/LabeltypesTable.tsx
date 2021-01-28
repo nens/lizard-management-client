@@ -56,6 +56,7 @@ export const LabeltypesTable = (props:any) =>  {
         columnDefinitions={columnDefinitions}
         baseUrl={`${baseUrl}?`} 
         checkBoxActions={[]}
+        textSearchBox={true}
       />
     </ExplainSideColumn>
   );
