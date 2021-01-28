@@ -1,7 +1,5 @@
 import React from 'react';
-// import {useState, useEffect,}  from 'react';
 import Modal from '../../components/Modal';
-
 
 interface MyProps {
   closeDialogAction: () => void,
@@ -75,7 +73,7 @@ const DeleteRasterSourceNotAllowed: React.FC<MyProps> = (props) => {
           <div
             style={{
               overflowY: "auto",
-              maxHeight: "210px"
+              maxHeight: "210px",
             }}
           >
             {layerUrls.length > 0?
