@@ -70,6 +70,9 @@
 .FormSubmitted:invalid {
   border-color: #AE0000;
 }
+.FormSubmitted:invalid:focus {
+  box-shadow: none;
+}
 .FormGroup {
   margin-bottom: 10px;
 }
