@@ -8,28 +8,39 @@ export const NewPersonalApiKey: React.FC = () => {
   const [allPersonalApiKeys, setAllPersonalApiKeys] = useState([]);
   const [allPersonalApiKeysFetching, setallPersonalApiKeysFetching] = useState<DataRetrievalState>("NEVER_DID_RETRIEVE");
 
+  
+
   useEffect(() => {
-    setallPersonalApiKeysFetching("RETRIEVING");
-    fetch('/api/v4/personalapikeys')
-    .then(response=>{
-      console.log("response", response)
-      if (response.status === 200) {
-        console.log("response2", response)
-        return response.json();
-      } else {
-        console.log("response3", response)
+
+    const fetchApiKeys = (url:string) => {
+      setallPersonalApiKeysFetching("RETRIEVING");
+      fetch(url)
+      .then(response=>{
+        if (response.status === 200) {
+          return response.json();
+        } else {
           // todo fix this erro notification
           // props.addNotification(status, 2000);
-          console.error(response);
-          setallPersonalApiKeysFetching({status:"ERROR", errorMesssage: response.status+'', url:"/api/v4/personalapikeys"})
-      }
-    })
-    .then(data=>{
-      console.log("data4", data)
-      setAllPersonalApiKeys((data && data.results) || []);
-      setallPersonalApiKeysFetching("RETRIEVED");
-    })
-  },[])
+          setallPersonalApiKeysFetching({status:"ERROR", errorMesssage: response.status+'', url:url})
+          return Promise.reject();
+        }
+      })
+      .catch(()=>{
+        console.error('error fetching apikeys', allPersonalApiKeysFetching);
+      })
+      .then(data=>{
+        setAllPersonalApiKeys((allPersonalApiKeys)=>{return allPersonalApiKeys.concat((data && data.results) || [])});
+        if (data && data.next === null) {
+          setallPersonalApiKeysFetching("RETRIEVED");
+        } else if (data && data.next !== null) {
+          fetchApiKeys((data.next+'').split("lizard.net")[1])
+        }
+      })
+    }
+    if (allPersonalApiKeysFetching === "NEVER_DID_RETRIEVE") {
+      fetchApiKeys('/api/v4/personalapikeys');
+    }
+  },[allPersonalApiKeysFetching])
 
   if (
     allPersonalApiKeysFetching === "RETRIEVED"
@@ -40,6 +51,21 @@ export const NewPersonalApiKey: React.FC = () => {
         allPersonalApiKeys={allPersonalApiKeys}
       />
     );
+  } else if (
+    allPersonalApiKeysFetching === "NEVER_DID_RETRIEVE" ||
+    allPersonalApiKeysFetching === "RETRIEVING"
+    ) {
+    return <div
+      style={{
+        position: "relative",
+        top: 50,
+        height: 300,
+        bottom: 50,
+        marginLeft: "50%"
+      }}
+    >
+      <MDSpinner size={48} />
+    </div>
   } else {
     return <div
       style={{
@@ -50,7 +76,7 @@ export const NewPersonalApiKey: React.FC = () => {
         marginLeft: "50%"
       }}
     >
-      <MDSpinner size={24} />
+      <span>Failed to load 'Personal api keys'. Please try refreshing</span>
     </div>
   }
 }
