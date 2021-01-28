@@ -1,6 +1,5 @@
 export const getUuidFromUrl = (url: string) => {
   // The UUID is the last part of the URL
-  if (!url) return null;
   if (url.charAt(url.length -1) !== '/') {
     // Make sure it ends with '/'
     url += '/';
