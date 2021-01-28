@@ -28,14 +28,14 @@ const Table: React.FC<Props> = ({tableData, setTableData, gridTemplateColumns, c
       <div style={{
         gridTemplateColumns: gridTemplateColumns,
       }}>
-        {columnDefinitions.map(definition=><span>{definition.titleRenderFunction()}</span>)}
+        {columnDefinitions.map((definition, i) => <span key={i}>{definition.titleRenderFunction()}</span>)}
       </div>
       <div style={{
           gridTemplateColumns: gridTemplateColumns,
         }}
       >
           {
-            tableData.map(tableRow=>{
+            tableData.map((tableRow, idx) => {
               const rowIsSelected = getIfCheckBoxOfUuidIsSelected && getIfCheckBoxOfUuidIsSelected(tableRow.uuid);
               const updateTableRow = (newTableRow: any) => {
                 const newTableData = tableData.map((rowAllTables:any)=>{
@@ -48,13 +48,13 @@ const Table: React.FC<Props> = ({tableData, setTableData, gridTemplateColumns, c
                 setTableData(newTableData);
               } 
               return (
-                <>
-                  {columnDefinitions.map(definition=>
-                    <span className={rowIsSelected? styles.Selected: styles.NotSelected}>
+                <React.Fragment key={idx}>
+                  {columnDefinitions.map((definition, i)=>
+                    <span className={rowIsSelected? styles.Selected: styles.NotSelected} key={idx + i}>
                       {definition.renderFunction(tableRow, updateTableRow, triggerReloadWithCurrentPage, triggerReloadWithBasePage)}
                     </span>
                   )}
-                </>
+                </React.Fragment>
               );
             })
           }          
