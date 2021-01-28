@@ -231,23 +231,13 @@ export const RasterSourceTable = (props:any) =>  {
         rowToBeDeleted && !currentRowDetailView ?
         <Modal
            title={'Loading'}
-           closeDialogAction={()=>{
+           cancelAction={()=>{
             setShowDeleteFailedModal(false);
             setRowToBeDeleted(null);
             setCurrentRowDetailView(null);
            }}
          >
-           {/* <p>You are trying to delete the following raster-source:</p>
-           {ModalDeleteContent([rowToBeDeleted], busyDeleting, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
-           <p>But this raster-source is still in use by objects outside your organisation.</p>
-           <p>{"Please contact "} 
-             <a
-              href="https://nelen-schuurmans.topdesk.net/tas/public/ssp"
-              target="_blank"
-              rel="noopener noreferrer"
-            >support</a>
-          </p>              */}
-          <MDSpinner size={24} /><span style={{marginLeft: "40px"}}>Loading dependent objects ..</span>
+          <MDSpinner size={24} /><span style={{marginLeft: "40px"}}>Loading dependent objects for delete ..</span>
          </Modal>
         :
         null
