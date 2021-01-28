@@ -157,6 +157,12 @@ export function getStyleFromOptions(options) {
 // colorMap should always be filled
 // if max is filled then min should also be filled
 export function validateStyleObj(style) {
+  if (style.colorMap === "") {
+    return {
+      validated:false,
+      errorMessage: "Colormap is required"
+    };
+  }
   if (style.max && style.max !== "") {
     if (style.min === "" || !style.min) {
       return {
