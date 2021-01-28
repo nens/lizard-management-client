@@ -25,7 +25,7 @@ export const RasterSourceModal: React.FC<SourceModalProps> = (props) => {
 
   return (
     <Modal
-      title={'Related raster sources'}
+      title={'Related raster source(s)'}
       cancelAction={closeModal}
       height={300}
     >
@@ -46,7 +46,7 @@ export const RasterSourceModal: React.FC<SourceModalProps> = (props) => {
             alignItems: 'center'
           }}
         >
-          This layer is not connected to any source!
+          No source is connected to this layer!
         </span>
       ) : (
         <span

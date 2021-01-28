@@ -6,6 +6,7 @@ import TableActionButtons from '../../components/TableActionButtons';
 import {ExplainSideColumn} from '../../components/ExplainSideColumn';
 import rasterIcon from "../../images/raster_layer_icon.svg";
 import tableStyles from "../../components/Table.module.css";
+import buttonStyles from "../../styles/Buttons.module.css";
 import Modal from '../../components/Modal';
 import { ModalDeleteContent } from '../../components/ModalDeleteContent';
 import { RasterSourceModal } from './RasterSourceModal';
@@ -95,12 +96,16 @@ export const RasterLayerTable: React.FC<RouteComponentProps> = (props) =>  {
         <span
           className={tableStyles.CellEllipsis}
           title={row.is_geoblock ? 'Geoblock' : 'Raster source'}
-          onClick={() => setSelectedLayer(row.uuid)}
-          style={{
-            cursor: 'pointer'
-          }}
         >
-          {row.is_geoblock ? 'Geoblock' : 'Raster source'}
+          <button
+            className={buttonStyles.ButtonLink}
+            onClick={() => setSelectedLayer(row.uuid)}
+            style={{
+              color: 'var(--color-button)'
+            }}
+          >
+            {row.is_geoblock ? 'Geoblock' : 'Raster source'}
+          </button>
         </span>,
       orderingField: "is_geoblock",
     },
