@@ -77,34 +77,34 @@ const DeleteRasterSourceNotAllowed: React.FC<MyProps> = (props) => {
             }}
           >
             {layerUrls.length > 0?
-              <div>
-                <label>Dependent raster-layers:</label>
-                <ul>
-                  {layerUrls.map((url:string)=>{return(
-                    <li>
-                      <a target="_blank" rel="noopener noreferrer" href={url}>{url}</a>
-                    </li>
-                  )})}
-                </ul>
-              </div>
-              :
-              null
-              }
-              <br></br>
-              {labelTypeUrls.length > 0?
-              <div>
-                <label>Dependent labeltypes:</label>
-                <ul>
-                  {labelTypeUrls.map((url:string)=>{return(
-                    <li>
-                      <a target="_blank" rel="noopener noreferrer" href={url}>{url}</a>
-                    </li>
-                  )})}
-                </ul>
-              </div>
-              :
-              null
-              }
+            <div>
+              <label>Dependent raster-layers:</label>
+              <ul>
+                {layerUrls.map((url:string)=>{return(
+                  <li>
+                    <a target="_blank" rel="noopener noreferrer" href={url}>{url}</a>
+                  </li>
+                )})}
+              </ul>
+            </div>
+            :
+            null
+            }
+            <br></br>
+            {labelTypeUrls.length > 0?
+            <div>
+              <label>Dependent labeltypes:</label>
+              <ul>
+                {labelTypeUrls.map((url:string)=>{return(
+                  <li>
+                    <a target="_blank" rel="noopener noreferrer" href={url}>{url}</a>
+                  </li>
+                )})}
+              </ul>
+            </div>
+            :
+            null
+            }
           </div>
     </Modal>
   )
