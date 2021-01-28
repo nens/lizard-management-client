@@ -298,9 +298,10 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
         </div>
         <div>
         {
-          checkBoxActions.map(checkboxAction=>{
+          checkBoxActions.map((checkboxAction, i) => {
             return (
               <button
+                key={i}
                 onClick={()=>{
                   // @ts-ignore
                   const rows = tableData.filter((row) => {return getIfCheckBoxOfUuidIsSelected(row.uuid)})
