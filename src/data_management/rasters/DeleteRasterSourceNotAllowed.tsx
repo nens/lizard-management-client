@@ -73,50 +73,38 @@ const DeleteRasterSourceNotAllowed: React.FC<MyProps> = (props) => {
           <div
             style={{
               overflowY: "auto",
-              // because we do not want the ontainer to change height after the content is loaded we give it static height
-              // maxHeight: "210px",
-              height: "210px"
+              maxHeight: "210px",
             }}
           >
-            {/* {
-              rasterSource === null?
-              <>
-              <MDSpinner size={24} /><span style={{marginLeft: "40px"}}>Loading dependent objects ..</span>
-              </>
-              : */}
-              <>
-                {layerUrls.length > 0?
-                  <div>
-                    <label>Dependent raster-layers:</label>
-                    <ul>
-                      {layerUrls.map((url:string)=>{return(
-                        <li>
-                          <a target="_blank" rel="noopener noreferrer" href={url}>{url}</a>
-                        </li>
-                      )})}
-                    </ul>
-                  </div>
-                  :
-                  null
-                  }
-                  <br></br>
-                  {labelTypeUrls.length > 0?
-                  <div>
-                    <label>Dependent labeltypes:</label>
-                    <ul>
-                      {labelTypeUrls.map((url:string)=>{return(
-                        <li>
-                          <a target="_blank" rel="noopener noreferrer" href={url}>{url}</a>
-                        </li>
-                      )})}
-                    </ul>
-                  </div>
-                  :
-                  null
-                  }
-              </>
-            {/* } */}
-            
+            {layerUrls.length > 0?
+              <div>
+                <label>Dependent raster-layers:</label>
+                <ul>
+                  {layerUrls.map((url:string)=>{return(
+                    <li>
+                      <a target="_blank" rel="noopener noreferrer" href={url}>{url}</a>
+                    </li>
+                  )})}
+                </ul>
+              </div>
+              :
+              null
+              }
+              <br></br>
+              {labelTypeUrls.length > 0?
+              <div>
+                <label>Dependent labeltypes:</label>
+                <ul>
+                  {labelTypeUrls.map((url:string)=>{return(
+                    <li>
+                      <a target="_blank" rel="noopener noreferrer" href={url}>{url}</a>
+                    </li>
+                  )})}
+                </ul>
+              </div>
+              :
+              null
+              }
           </div>
     </Modal>
   )
