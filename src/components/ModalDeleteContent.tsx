@@ -13,13 +13,13 @@ export const ModalDeleteContent = (rows: any[], spinner: boolean, fields: {name:
       }}
     >
         {
-        rows.map(row=>{
+        rows.map((row, i) => {
             return (
-            <li style={{fontStyle: "italic", listStyleType: "square", height: "80px"}}>
+            <li key={i} style={{fontStyle: "italic", listStyleType: "square", height: "80px"}}>
               <span style={{display:"flex", flexDirection: "row",justifyContent: "space-between", alignItems: "center"}}>
                 { fields.map(field=>{
                   return (
-                    <span title={row[field.name]} style={{width:`${field.width}%`, textOverflow: "ellipsis", overflow: "hidden"}}>{row[field.name]}</span>
+                    <span key={field.name} title={row[field.name]} style={{width:`${field.width}%`, textOverflow: "ellipsis", overflow: "hidden"}}>{row[field.name]}</span>
                   );
                 })}
               </span>

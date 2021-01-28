@@ -102,7 +102,7 @@ export const ColormapAllSteps: React.FC<Props> = (props) => {
             <div key={ind} className={styles.StepRow}>
               <TextInput 
                 title=""
-                name="Colormap_Steps"
+                name={"Colormap_Steps" + ind}
                 validated={errorMsg? false : true}
                 errorMessage={errorMsg}
                 type="number" 

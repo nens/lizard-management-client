@@ -104,7 +104,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
     rasterSource: rasterSourceUUID || null,
     aggregationType: null,
     observationType: null,
-    colorMap: null,
+    colorMap: {options: {}, rescalable: true, customColormap: {}},
     sharedWith: false,
     organisationsToSharedWith: [],
     organisation: selectedOrganisation.uuid.replace(/-/g, "") || null,

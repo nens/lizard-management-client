@@ -16,6 +16,7 @@ interface MyProps {
   closeDialogAction?: () => void,
   // requiredCheckboxText works, but is currently not used
   requiredCheckboxText?: string,
+  height?: number | string, // height for modal body, default is auto
 }
 
 const Modal: React.FC<MyProps> = (props) => {
@@ -27,6 +28,7 @@ const Modal: React.FC<MyProps> = (props) => {
     disableButtons,
     closeDialogAction,
     requiredCheckboxText,
+    height
   } = props;
 
   const [checkboxState, /*setCheckboxState*/] = useState<boolean>(false);
@@ -38,7 +40,10 @@ const Modal: React.FC<MyProps> = (props) => {
           {title}
           {closeDialogAction? <button onClick={(e)=>{closeDialogAction()}}>x</button>:null}
         </div>
-        <div className={modalStyles.ModalBody}>
+        <div
+          className={modalStyles.ModalBody}
+          style={{ height: height }}
+        >
           {props.children}
         </div>
         {/* {requiredCheckboxText?

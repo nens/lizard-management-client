@@ -1,21 +1,17 @@
-import React from 'react';
-
-
-
+import React, { useState } from 'react';
 import TableStateContainer from '../../components/TableStateContainer';
-import { NavLink } from "react-router-dom";
+import { NavLink, RouteComponentProps } from "react-router-dom";
 import { deleteRasters, /*flushRasters*/ } from "../../api/rasters";
 import TableActionButtons from '../../components/TableActionButtons';
 import {ExplainSideColumn} from '../../components/ExplainSideColumn';
 import rasterIcon from "../../images/raster_layer_icon.svg";
 import tableStyles from "../../components/Table.module.css";
-import {useState, }  from 'react';
+import buttonStyles from "../../styles/Buttons.module.css";
 import Modal from '../../components/Modal';
-import { ModalDeleteContent } from '../../components/ModalDeleteContent'
+import { ModalDeleteContent } from '../../components/ModalDeleteContent';
+import { RasterSourceModal } from './RasterSourceModal';
 
-
-
-export const RasterLayerTable = (props:any) =>  {
+export const RasterLayerTable: React.FC<RouteComponentProps> = (props) =>  {
 
   const baseUrl = "/api/v4/rasters/";
   const navigationUrlRasters = "/data_management/rasters/layers";
@@ -25,6 +21,7 @@ export const RasterLayerTable = (props:any) =>  {
   const [deleteFunction, setDeleteFunction] = useState<null | Function>(null);
   const [busyDeleting, setBusyDeleting] = useState<boolean>(false);
 
+  const [selectedLayer, setSelectedLayer] = useState<string>('');
 
   const deleteActionRaster = (row: any, updateTableRow:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any)=>{
     setRowToBeDeleted(row);
@@ -98,11 +95,19 @@ export const RasterLayerTable = (props:any) =>  {
       renderFunction: (row: any) => 
         <span
           className={tableStyles.CellEllipsis}
-          title={row.raster_sources[0]}
+          title={row.is_geoblock ? 'Geoblock' : 'Raster source'}
         >
-          {row.raster_sources[0]}
+          <button
+            className={buttonStyles.ButtonLink}
+            onClick={() => setSelectedLayer(row.uuid)}
+            style={{
+              color: 'var(--color-button)'
+            }}
+          >
+            {row.is_geoblock ? 'Geoblock' : 'Raster source'}
+          </button>
         </span>,
-      orderingField: "raster_sources",
+      orderingField: "is_geoblock",
     },
     {
       titleRenderFunction: () =>  "User",
@@ -168,6 +173,7 @@ export const RasterLayerTable = (props:any) =>  {
           ]}
           newItemOnClick={handleNewRasterClick}
           textSearchBox={true}
+          defaultUrlParams={'&scenario__isnull=true'} // to exclude 3Di scenario rasters
         />
         { 
         rowsToBeDeleted.length > 0?
@@ -220,6 +226,13 @@ export const RasterLayerTable = (props:any) =>  {
         :
           null
         }
+
+        {selectedLayer ? (
+          <RasterSourceModal
+            selectedLayer={selectedLayer}
+            closeModal={() => setSelectedLayer('')}
+          />
+        ) : null}
      </ExplainSideColumn>
   );
 }

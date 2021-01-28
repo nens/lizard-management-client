@@ -23,9 +23,10 @@ interface Props {
   textSearchBox?: boolean; // default true
   newItemOnClick: () => void | null;
   queryCheckBox: {text: string, adaptUrlFunction: (url:string)=>string} | null;
+  defaultUrlParams?: string;
 }
 
-const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, columnDefinitions, baseUrl, checkBoxActions, textSearchBox, newItemOnClick, queryCheckBox/*action*/}) => {
+const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, columnDefinitions, baseUrl, checkBoxActions, textSearchBox, newItemOnClick, queryCheckBox/*action*/, defaultUrlParams }) => {
 
   const [tableData, setTableData] = useState([]);
   const [checkBoxes, setCheckBoxes] = useState([]);
@@ -50,7 +51,8 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
     "&page=1" +
     (nameContains !==""? "&name__icontains=" + nameContains: "") +
     "&ordering=" + ordering +
-    "&organisation__uuid=" + selectedOrganisationUuid;
+    "&organisation__uuid=" + selectedOrganisationUuid +
+    (defaultUrlParams ? defaultUrlParams : '');
 
   const url = queryCheckBox && queryCheckBoxState? queryCheckBox.adaptUrlFunction(preUrl) : preUrl
     
@@ -296,9 +298,10 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
         </div>
         <div>
         {
-          checkBoxActions.map(checkboxAction=>{
+          checkBoxActions.map((checkboxAction, i) => {
             return (
               <button
+                key={i}
                 onClick={()=>{
                   // @ts-ignore
                   const rows = tableData.filter((row) => {return getIfCheckBoxOfUuidIsSelected(row.uuid)})
