@@ -242,6 +242,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           valueChanged={value => handleValueChange('accessModifier', value)}
           onFocus={handleFocus}
           onBlur={handleBlur}
+          readOnly={!!currentRasterSource}
         />
         <SelectBox
           title={'Organisation'}
