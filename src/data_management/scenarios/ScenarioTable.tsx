@@ -198,11 +198,16 @@ export const ScenarioTable = (props:any) =>  {
               setTableData={setTableData} 
               triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
               triggerReloadWithBasePage={triggerReloadWithBasePage}
-              actions={[
+              actions={row.has_raw_results ? [
                 {
                   displayValue: "delete raw data",
                   actionFunction: deleteRawDataSingle,
                 },
+                {
+                  displayValue: "delete",
+                  actionFunction: deleteSingle,
+                }
+              ] : [
                 {
                   displayValue: "delete",
                   actionFunction: deleteSingle,
