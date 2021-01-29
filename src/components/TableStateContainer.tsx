@@ -5,10 +5,8 @@ import {ColumnDefinition} from './Table';
 import Pagination from './Pagination';
 import Checkbox from './Checkbox';
 import TableSearchBox from './TableSearchBox';
-import { connect, useSelector } from "react-redux";
-import { getSelectedOrganisation } from '../reducers'
-import { withRouter } from "react-router-dom";
-import {  injectIntl } from "react-intl";
+import { useSelector } from "react-redux";
+import { getSelectedOrganisation } from '../reducers';
 import {DataRetrievalState} from '../types/retrievingDataTypes';
 import unorderedIcon from "../images/list_order_icon_unordered.svg";
 import orderedIcon from "../images/list_order_icon_ordered.svg";
@@ -21,15 +19,15 @@ interface Props {
   baseUrl: string; 
   checkBoxActions: any[];
   textSearchBox?: boolean; // default true
-  newItemOnClick: () => void | null;
-  queryCheckBox: {text: string, adaptUrlFunction: (url:string)=>string} | null;
+  newItemOnClick?: () => void | null;
+  queryCheckBox?: {text: string, adaptUrlFunction: (url:string)=>string} | null;
   defaultUrlParams?: string;
 }
 
-const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, columnDefinitions, baseUrl, checkBoxActions, textSearchBox, newItemOnClick, queryCheckBox/*action*/, defaultUrlParams }) => {
+const TableStateContainer: React.FC<Props> = ({ gridTemplateColumns, columnDefinitions, baseUrl, checkBoxActions, textSearchBox, newItemOnClick, queryCheckBox/*action*/, defaultUrlParams }) => {
 
-  const [tableData, setTableData] = useState([]);
-  const [checkBoxes, setCheckBoxes] = useState([]);
+  const [tableData, setTableData] = useState<any[]>([]);
+  const [checkBoxes, setCheckBoxes] = useState<string[]>([]);
   const [currentUrl, setCurrentUrl] = useState("");
   const [nextUrl, setNextUrl] = useState("");
   const [previousUrl, setPreviousUrl] = useState("");
@@ -91,7 +89,6 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
 
   const addUuidToCheckBoxes = (uuid: string) => {
     const checkBoxesCopy = checkBoxes.map(uuid=>uuid);
-    // @ts-ignore
     checkBoxesCopy.push(uuid);
     setCheckBoxes(checkBoxesCopy);
   }
@@ -105,11 +102,9 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
   }
 
   const checkAllCheckBoxesOnCurrentPage = () => {
-    // @ts-ignore
-    const allCurrentPageUuids = tableData.map(row=>row.uuid);
+    const allCurrentPageUuids = tableData.map(row=>row.uuid as string);
     // @ts-ignore
     const mergedArrays = [...new Set([...checkBoxes ,...allCurrentPageUuids])];
-    // @ts-ignore
     setCheckBoxes(mergedArrays);
   }
 
@@ -119,7 +114,6 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
 
   const areAllOnCurrentPageChecked = () => {
     return tableData.length > 0 && tableData.every(row=>{
-      // @ts-ignore
       return checkBoxes.find(uuid=>uuid===row.uuid)
     })
   }
@@ -299,17 +293,22 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
         <div>
         {
           checkBoxActions.map((checkboxAction, i) => {
+            const rows = checkboxAction.hasData ? (
+              tableData.filter(row => getIfCheckBoxOfUuidIsSelected(row.uuid) && row[checkboxAction.hasData])
+            ) : (
+              tableData.filter(row => getIfCheckBoxOfUuidIsSelected(row.uuid))
+            );
+            const checkboxesWithData = checkboxAction.hasData && checkBoxes.filter(uuid => {
+              const row = tableData.find(row => row.uuid === uuid);
+              return row[checkboxAction.hasData];
+            });
             return (
               <button
                 key={i}
-                onClick={()=>{
-                  // @ts-ignore
-                  const rows = tableData.filter((row) => {return getIfCheckBoxOfUuidIsSelected(row.uuid)})
-                  checkboxAction.actionFunction(rows, tableData, setTableData, ()=>fetchWithUrl(currentUrl), ()=>fetchWithUrl(url), setCheckBoxes)
-                }}
+                onClick={() => checkboxAction.actionFunction(rows, tableData, setTableData, ()=>fetchWithUrl(currentUrl), ()=>fetchWithUrl(url), setCheckBoxes)}
                 className={styles.TableActionButton}
               >
-                {`${checkboxAction.displayValue} (${checkBoxes.length})`}
+                {`${checkboxAction.displayValue} (${checkboxAction.hasData? checkboxesWithData.length : checkBoxes.length})`}
               </button>
             );
           })
@@ -343,18 +342,4 @@ const TableStateContainerElement: React.FC<Props> = ({ gridTemplateColumns, colu
   )
 };
 
-const mapStateToProps = (state:any, ownProps:any) => {
-  return {
-    bootstrap: state.bootstrap,
-    organisations: state.organisations
-  };
-};
-
-const mapDispatchToProps = (dispatch:any, ownProps:any) => {
-  return {
-  }
-};
-
-const TableStateContainer = withRouter(connect(mapStateToProps, mapDispatchToProps)(injectIntl(TableStateContainerElement)));
-
-export default TableStateContainer
+export default TableStateContainer;
