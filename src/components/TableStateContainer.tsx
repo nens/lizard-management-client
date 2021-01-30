@@ -109,7 +109,6 @@ const TableStateContainer: React.FC<Props> = ({ gridTemplateColumns, columnDefin
 
   const checkAllCheckBoxesOnCurrentPage = () => {
     const allCurrentPageUuids = tableData.map(row=>row.uuid as string);
-    // @ts-ignore
     const mergedArrays = [...new Set([...checkBoxes ,...allCurrentPageUuids])];
     setCheckBoxes(mergedArrays);
   }
