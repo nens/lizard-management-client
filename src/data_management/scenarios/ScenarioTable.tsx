@@ -248,7 +248,7 @@ export const ScenarioTable = (props:any) =>  {
             },{
               displayValue: "Delete raw",
               actionFunction: deleteRawDataMultiple,
-              hasData: "has_raw_results"
+              nameOfDependentDataField: "has_raw_results"
             },
           ]}
           // new item not supported for scenarios

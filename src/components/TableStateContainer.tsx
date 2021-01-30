@@ -13,11 +13,17 @@ import orderedIcon from "../images/list_order_icon_ordered.svg";
 import styles from './Table.module.css';
 import buttonStyles from '../styles/Buttons.module.css';
 
+interface checkboxAction {
+  displayValue: string,
+  actionFunction: Function,
+  nameOfDependentDataField?: string,
+}
+
 interface Props {
   gridTemplateColumns: string;
   columnDefinitions: ColumnDefinition[];
   baseUrl: string; 
-  checkBoxActions: any[];
+  checkBoxActions: checkboxAction[];
   textSearchBox?: boolean; // default true
   newItemOnClick?: () => void | null;
   queryCheckBox?: {text: string, adaptUrlFunction: (url:string)=>string} | null;
@@ -293,22 +299,19 @@ const TableStateContainer: React.FC<Props> = ({ gridTemplateColumns, columnDefin
         <div>
         {
           checkBoxActions.map((checkboxAction, i) => {
-            const rows = checkboxAction.hasData ? (
-              tableData.filter(row => getIfCheckBoxOfUuidIsSelected(row.uuid) && row[checkboxAction.hasData])
+            const { displayValue, actionFunction, nameOfDependentDataField } = checkboxAction;
+            const selectedRows = nameOfDependentDataField ? (
+              tableData.filter(row => getIfCheckBoxOfUuidIsSelected(row.uuid) && row[nameOfDependentDataField])
             ) : (
               tableData.filter(row => getIfCheckBoxOfUuidIsSelected(row.uuid))
             );
-            const checkboxesWithData = checkboxAction.hasData && checkBoxes.filter(uuid => {
-              const row = tableData.find(row => row.uuid === uuid);
-              return row[checkboxAction.hasData];
-            });
             return (
               <button
                 key={i}
-                onClick={() => checkboxAction.actionFunction(rows, tableData, setTableData, ()=>fetchWithUrl(currentUrl), ()=>fetchWithUrl(url), setCheckBoxes)}
+                onClick={() => actionFunction(selectedRows, tableData, setTableData, ()=>fetchWithUrl(currentUrl), ()=>fetchWithUrl(url), setCheckBoxes)}
                 className={styles.TableActionButton}
               >
-                {`${checkboxAction.displayValue} (${checkboxAction.hasData? checkboxesWithData.length : checkBoxes.length})`}
+                {`${displayValue} (${selectedRows.length})`}
               </button>
             );
           })
