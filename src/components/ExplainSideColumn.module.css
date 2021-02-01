@@ -1,5 +1,5 @@
 .ExplainBoxEffect {
-  animation: color 0.8s;
+  animation: color 1s ease-out;
 }
 
 @keyframes move {
@@ -16,7 +16,7 @@
   0% { border-color: #73C9B2; box-shadow: 0 }
   10% { border-color: #73C9B2; box-shadow: 0 0 1px #73C9B2 }
   20% { border-color: #73C9B2; box-shadow: 0 0 2px #73C9B2 }
-  40% { border-color: #73C9B2; box-shadow: 0 0 3px #73C9B2 }
+  30% { border-color: #73C9B2; box-shadow: 0 0 3px #73C9B2 }
   50% { border-color: #73C9B2; box-shadow: 0 0 4px #73C9B2 }
   70% { border-color: #73C9B2; box-shadow: 0 0 3px #73C9B2 }
   80% { border-color: #73C9B2; box-shadow: 0 0 2px #73C9B2 }
