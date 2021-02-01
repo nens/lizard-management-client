@@ -361,6 +361,7 @@ export const createRasterLayer = (rasterLayer: RasterLayerFromForm, rasterSource
     supplier: rasterLayer.supplier,
     aggregation_type: rasterLayer.aggregation_type,
     options: rasterLayer.options,
+    colormap: rasterLayer.colormap,
     shared_with: rasterLayer.shared_with,
     rescalable: rasterLayer.rescalable,
     access_modifier: rasterLayer.access_modifier,
