@@ -56,7 +56,7 @@ export const AccessModifier: React.FC<MyProps> = (props) => {
           onFocus={onFocus}
           onBlur={onBlur}
         >
-          <span>Common</span>
+          <span>Login required</span>
           <span>(logged in only)</span>
         </div>
         <div

@@ -394,7 +394,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           3: Rights
         </span>
         <AccessModifier
-          title={'Access Modifier'}
+          title={'Accessibility'}
           name={'accessModifier'}
           value={values.accessModifier || accessModifier}
           valueChanged={() => null}
