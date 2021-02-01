@@ -33,7 +33,14 @@ export const RasterSourceModal: React.FC<SourceModalProps> = (props) => {
         <ol>
           {rasterSources.map(rasterSource => (
             <li>
-              <a href={`/management#/data_management/rasters/sources/${rasterSource}/`} target="_blank" rel="noopener noreferrer">{rasterSource}</a>
+              <a
+                key={rasterSource}
+                href={`/management#/data_management/rasters/sources/${rasterSource}/`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {rasterSource}
+              </a>
             </li>
           ))}
         </ol>
