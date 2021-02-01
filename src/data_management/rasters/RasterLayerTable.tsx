@@ -107,7 +107,7 @@ export const RasterLayerTable: React.FC<RouteComponentProps> = (props) =>  {
             {row.is_geoblock ? 'Geoblock' : 'Raster source'}
           </button>
         </span>,
-      orderingField: "is_geoblock",
+      orderingField: null,
     },
     {
       titleRenderFunction: () =>  "User",
