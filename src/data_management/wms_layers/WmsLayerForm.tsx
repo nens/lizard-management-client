@@ -315,7 +315,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           3: Rights
         </span>
         <AccessModifier
-          title={'Access Modifier'}
+          title={'Accessibility'}
           name={'access_modifier'}
           value={values.access_modifier}
           valueChanged={value => handleValueChange('access_modifier', value)}

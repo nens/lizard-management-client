@@ -29,7 +29,7 @@ export const rasterSourceFormHelpText: HelpText = {
   ),
   accessModifier: (
     <>
-      <p>Choose an access modifier to decide who has access to this object. The default is private.</p>
+      <p>Choose an accessibility to decide who has access to this object. The default is private.</p>
       <p><i>Once the object is created, this field cannot be changed anymore.</i></p>
     </>
   ),
@@ -74,7 +74,7 @@ export const rasterLayerFormHelpText: HelpText = {
   colormap_minimum: 'Lowest value in the colorscale',
   colormap_maximum: 'Highest value in the colorscale',
   colorMap_rescalable: 'Make color map rescalable.',
-  accessModifier: 'The access modifier of a layer is inherited from the selected source by default.',
+  accessModifier: 'The accessibility of a layer is inherited from the selected source by default.',
   sharedWith: 'Specify if this object should be accessible by other organisations.',
   organisationsToSharedWith: 'Search and select organisations to share with.',
   organisation: (
@@ -126,7 +126,7 @@ export const wmsFormHelpText: HelpText = {
       <p><i>e.g. {'{"transparent": "True"}'}</i></p>
     </>
   ),
-  access_modifier: 'Choose an access modifier to decide who has access to this object. The default is private.',
+  access_modifier: 'Choose an accessibility to decide who has access to this object. The default is private.',
   sharedWithCheckbox: 'Specify if this object should be accessible by other organisations.',
   shared_with: 'Search and select organisations to share with.',
   organisation: (
