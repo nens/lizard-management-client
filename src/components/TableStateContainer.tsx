@@ -16,7 +16,7 @@ import buttonStyles from '../styles/Buttons.module.css';
 interface checkboxAction {
   displayValue: string,
   actionFunction: Function,
-  nameOfDependentDataField?: string,
+  checkIfActionIsApplicable?: (row: any) => boolean
 }
 
 interface Props {
@@ -298,9 +298,9 @@ const TableStateContainer: React.FC<Props> = ({ gridTemplateColumns, columnDefin
         <div>
         {
           checkBoxActions.map((checkboxAction, i) => {
-            const { displayValue, actionFunction, nameOfDependentDataField } = checkboxAction;
-            const selectedRows = nameOfDependentDataField ? (
-              tableData.filter(row => getIfCheckBoxOfUuidIsSelected(row.uuid) && row[nameOfDependentDataField])
+            const { displayValue, actionFunction, checkIfActionIsApplicable } = checkboxAction;
+            const selectedRows = checkIfActionIsApplicable ? (
+              tableData.filter(row => getIfCheckBoxOfUuidIsSelected(row.uuid) && checkIfActionIsApplicable(row))
             ) : (
               tableData.filter(row => getIfCheckBoxOfUuidIsSelected(row.uuid))
             );

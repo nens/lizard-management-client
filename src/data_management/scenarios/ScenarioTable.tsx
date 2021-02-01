@@ -12,7 +12,7 @@ import { bytesToDisplayValue } from '../../utils/byteUtils';
 import Modal from '../../components/Modal';
 import { ModalDeleteContent } from '../../components/ModalDeleteContent'
 
-export const ScenarioTable = (props:any) =>  {
+export const ScenarioTable = () =>  {
 
   const baseUrl = "/api/v4/scenarios/";
   const navigationUrl = "/data_management/scenarios";
@@ -248,7 +248,7 @@ export const ScenarioTable = (props:any) =>  {
             },{
               displayValue: "Delete raw",
               actionFunction: deleteRawDataMultiple,
-              nameOfDependentDataField: "has_raw_results"
+              checkIfActionIsApplicable: (row: any) => row.has_raw_results === true
             },
           ]}
           // new item not supported for scenarios
