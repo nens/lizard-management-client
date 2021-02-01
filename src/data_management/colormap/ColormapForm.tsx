@@ -165,7 +165,7 @@ const ColormapForm: React.FC<Props> = (props) => {
                       <div style={{backgroundColor: "#F95959", width: "33%"}}></div>
                       <div style={{backgroundColor: "#8A6EFF", width: "33%"}}></div>
                     </div>
-                    <div>Discreet</div>
+                    <div>Discrete</div>
                   </div>
                   ),
                 selectedComponent: (
@@ -175,7 +175,7 @@ const ColormapForm: React.FC<Props> = (props) => {
                       <div style={{backgroundColor: "#F95959", width: "33%"}}></div>
                       <div style={{backgroundColor: "#8A6EFF", width: "33%"}}></div>
                     </div>
-                    <div>Discreet</div>
+                    <div>Discrete</div>
                   </div>
                   ),
                 },
@@ -184,13 +184,13 @@ const ColormapForm: React.FC<Props> = (props) => {
                   component: (
                     <div className={styles.TypeLabel}>
                       <div style={{background: "transparent linear-gradient(90deg, #6E5757 0%, #C8E2EC 0%, #4247EC 100%) 0% 0% no-repeat padding-box",}}></div>
-                      <div>Lineair Gradient</div>
+                      <div>Gradient</div>
                     </div>
                     ),
                   selectedComponent: (
                     <div className={`${styles.TypeLabel} ${styles.TypeLabelSelected}`}>
                       <div style={{background: "transparent linear-gradient(90deg, #6E5757 0%, #C8E2EC 0%, #4247EC 100%) 0% 0% no-repeat padding-box",}}></div>
-                      <div>Lineair Gradient</div>
+                      <div>Gradient</div>
                     </div>
                     ),
                 },
