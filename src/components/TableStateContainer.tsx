@@ -227,18 +227,20 @@ const TableStateContainer: React.FC<Props> = ({ gridTemplateColumns, columnDefin
           marginTop: "18px",
         }}
       >
-        { textSearchBox?
-        <TableSearchBox
-          onChange={event=>{
-            const newValue = event.target.value;
-            setNameContains(newValue);
-          }}
-          onClear={()=>setNameContains("")}
-          value={nameContains}
-          placeholder={"Type to search for name"}
-        />
-        :null}
-
+        {
+          textSearchBox?
+          <TableSearchBox
+            onChange={event=>{
+              const newValue = event.target.value;
+              setNameContains(newValue);
+            }}
+            onClear={()=>setNameContains("")}
+            value={nameContains}
+            placeholder={"Type to search for name"}
+          />
+          :
+          <div />
+        }
         {
           newItemOnClick? 
           <button
