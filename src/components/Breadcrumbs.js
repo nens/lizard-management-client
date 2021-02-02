@@ -29,9 +29,8 @@ class Breadcrumbs extends Component {
               // for users that it is the uuid.
               title={this.uuidRegex.test(sp) ? "uuid" : ""}
             >
-              &nbsp;
-                {title}
-              {i === splitPathnames.length - 1 ? null : " /"}
+              {title}
+              {i === splitPathnames.length - 1 ? null : <span style={{ margin: 5 }}>&#062;</span>}
             </span>
           </NavLink>
         );
