@@ -63,7 +63,28 @@ const HOST = process.env.HOST || '0.0.0.0', replace the HOST value with your IP 
 
 3. On another device you can now open de browser and go to 'http://YOUR_HOSTNAME:3000/
 
+Storybook
+=========
+Simple UI-focused React components can be tested in Storybook. They can be developed there and then used in larger screens.
 
+Run it with
+
+`$ yarn run storybook`
+
+And Storybook will be available on https://localhost:9009/.
+
+There is important configuration in the .storybook/ directory; it defines which files contain stories (*.stories.tsx files) and which plugins we use (actions and knobs; links too but I don't think I use it).
+
+- Actions can show messages when a callback is used (e.g. when a button on the component is pressed)
+- Knobs let the Storybook user control what value is used for a prop
+
+Together that is enough to test the components.
+
+preview-head.html is used in the template used by Storybook to render the components. It contains two important things:
+
+- External CSS and JS files, in this case particularly the Google fonts, but I included everything we have in index.html for the App.
+
+- The CSS from index.css, copy and pasted. As there is no easy way to include a CSS file that in the app is included by Webpack. If you update index.css, also update the CSS here!
 
 
 CSS
