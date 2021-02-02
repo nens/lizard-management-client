@@ -27,7 +27,8 @@ export const NewRasterLayer: React.FC = () => {
   useEffect(() => {
     if (!rasterSourceUUID) {
       (async () => {
-        const listOfRasterSources = await fetchRasterSourcesV4BySelectedOrganisation(selectedOrganisation.uuid);
+        const query = "scenario__isnull=true"; // to remove sources based on scenario results from the API response
+        const listOfRasterSources = await fetchRasterSourcesV4BySelectedOrganisation(selectedOrganisation.uuid, query);
         setRasterSources(listOfRasterSources.results);
       })();
     }
