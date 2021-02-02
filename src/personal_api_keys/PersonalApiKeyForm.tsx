@@ -132,7 +132,7 @@ const PersonalApiKeyFormModel: React.FC<Props & PropsFromDispatch & RouteCompone
         onReset={handleReset}
       >
         <TextInput
-          title={'name'}
+          title={'Name *'}
           name={'name'}
           value={values.name}
           valueChanged={handleInputChange}
