@@ -1,21 +1,17 @@
 import React from 'react';
 import { Dropdown } from '../form/Dropdown';
 import { Select } from '../form/Select';
+import { SubmitButton } from '../form/SubmitButton';
 import { useForm } from '../form/useForm';
 
-const Form: React.FC = () => {
-  const names = ['Hoan', 'Remco', 'Tom', 'Madeleine'];
-  const ages = [30, 40, 35, 20];
-  const genders = ['male', 'female', 'N/A'];
-  const favoriteColors = ['red', 'purple', 'yellow', 'green', 'brown', 'white', 'black', 'pink', 'rose', 'blue', 'grey', 'orange'];
+interface FormProps {
+  onSubmit: (values: any) => void
+}
 
-  const initialValues = {
-    name: null,
-    age: null,
-    gender: 'male',
-    favorites: null
-  };
-  const onSubmit = (values: any) => console.log(values);
+const Form: React.FC<FormProps> = ({ onSubmit }) => {
+  const colors = ['red', 'purple', 'yellow', 'green', 'brown', 'white', 'black', 'pink', 'rose', 'blue', 'grey', 'orange', 'gold', 'chocolate'];
+
+  const initialValues = {};
 
   const {
     values,
@@ -32,23 +28,31 @@ const Form: React.FC = () => {
   } = useForm({initialValues, onSubmit});
 
   return (
-    <form>
-      <Dropdown
-        title='Name'
-        name='name'
-        value={values.name}
-        options={names}
-        valueChanged={handleInputChange}
-        validated={true}
-      />
+    <form
+      onSubmit={handleSubmit}
+      style={{
+        padding: 20
+      }}
+    >
       <Select
-        title='Gender'
-        name="gender"
-        value={values.gender}
-        options={genders}
+        title='Simple select dropdown'
+        name='select'
+        value={values.select || ''}
+        options={colors}
         valueChanged={handleInputChange}
         validated={true}
         triedToSubmit
+      />
+      <Dropdown
+        title='Dropdown with search bar'
+        name='dropdown'
+        value={values.dropdown || ''}
+        options={colors}
+        valueChanged={handleInputChange}
+        validated={true}
+      />
+      <SubmitButton
+        onClick={tryToSubmitForm}
       />
     </form>
   )
