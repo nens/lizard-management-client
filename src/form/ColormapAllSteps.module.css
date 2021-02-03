@@ -19,5 +19,10 @@
 
 .StepContainer {
   overflow-y: auto;
-  height: 385px;
+  /* 
+  We comment out height because of this bug:
+  https://github.com/nens/lizard-management-client/issues/622
+  The disadvantage is now that the scroll goes over the whole body of the modal, intead of just over the steps
+  */
+  /* height: 385px; */
 }
