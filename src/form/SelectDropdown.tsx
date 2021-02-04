@@ -15,7 +15,6 @@ interface MyProps {
   validated: boolean,
   errorMessage?: string | false,
   placeholder?: string,
-  handleEnter?: (e: any) => void,
   triedToSubmit?: boolean,
   readOnly?: boolean,
   searchable?: boolean,
@@ -69,7 +68,6 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
       </span>
       <div style={{position: 'relative'}}>
         <Select
-          // className={`${formStyles.FormControl} ${triedToSubmit ? formStyles.FormSubmitted : ''}`}
           name={name}
           placeholder={placeholder}
           options={options}
@@ -80,11 +78,23 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
           isSearchable={searchable}
           isDisabled={readOnly}
           formatOptionLabel={optionSubLabel}
-          // required
-          // inputProps={{
-          //   onInvalid: (e: any) => e.target.setCustomValidity('Please select one'),
-          //   onInput: (e: any) => e.target.setCustomValidity(''),
-          // }}
+        />
+        {/* Hidden input field to apply HTML custom validation */}
+        <input
+          ref={myInput}
+          tabIndex={-1}
+          autoComplete='off'
+          style={{
+            position: 'absolute',
+            opacity: 0,
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            border: 'none',
+            padding: 0,
+            zIndex: -1,
+          }}
         />
       </div>
     </label>

@@ -69,7 +69,7 @@ const Form: React.FC<FormProps> = ({ onSubmit }) => {
           label: color
         }))}
         valueChanged={value => handleValueChange('color', value)}
-        validated={false}
+        validated={values.color !== null}
         errorMessage={'Please select a color'}
         searchable={false}
       />
@@ -82,7 +82,7 @@ const Form: React.FC<FormProps> = ({ onSubmit }) => {
           label: color
         }))}
         valueChanged={value => handleValueChange('color', value)}
-        validated={false}
+        validated={values.color !== null}
         errorMessage={'Please select a color'}
       />
       <SelectDropdown
@@ -95,7 +95,7 @@ const Form: React.FC<FormProps> = ({ onSubmit }) => {
           subLabel: color
         }))}
         valueChanged={value => handleValueChange('color', value)}
-        validated={false}
+        validated={values.color !== null}
         errorMessage={'Please select a color'}
       />
       <SelectDropdown
@@ -113,14 +113,14 @@ const Form: React.FC<FormProps> = ({ onSubmit }) => {
       />
       <br/>
       <SubmitButton />
-      <FormActionButtons
+      {/* <FormActionButtons
         actions={[
           {
             displayValue: "Delete",
             actionFunction: () => null
           },
         ]}
-      />
+      /> */}
     </form>
   )
 };
