@@ -33,6 +33,7 @@ import formStyles from './../../styles/Forms.module.css';
 import FormActionButtons from '../../components/FormActionButtons';
 import ConfirmModal from '../../components/Modal';
 import { ModalDeleteContent } from '../../components/ModalDeleteContent'
+import { SelectDropdown } from '../../form/SelectDropdown';
 
 
 interface Props {
@@ -305,7 +306,32 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
             form={"raster_layer_form_id"}
           />
         }
-        <SelectBox
+        <SelectDropdown
+          title={'Aggregation type *'}
+          name={'aggregationType'}
+          placeholder={'- Select -'}
+          value={values.aggregationType}
+          valueChanged={value => handleValueChange('aggregationType', value)}
+          options={[
+            {
+              value: 'none',
+              label: 'none',
+              subLabel: 'something'
+            },
+            {
+              value: 'curve',
+              label: 'curve',
+              subLabel: 'something'
+            },
+            {
+              value: 'sum',
+              label: 'sum',
+              subLabel: 'something'
+            },
+          ]}
+          validated
+        />
+        {/* <SelectBox
           title={'Aggregation type *'}
           name={'aggregationType'}
           placeholder={'- Select -'}
@@ -344,7 +370,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           onBlur={handleBlur}
           triedToSubmit={triedToSubmit}
           form={"raster_layer_form_id"}
-        />
+        /> */}
         <SelectBox
           title={'Observation type *'}
           name={'observationType'}

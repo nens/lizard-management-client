@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import Select, { StylesConfig } from 'react-select';
+import Select, { createFilter, StylesConfig } from 'react-select';
 import formStyles from "../styles/Forms.module.css";
 
 type Value = {
@@ -65,7 +65,7 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
   );
 
   // Custom styling for Select component
-  const customStyles: StylesConfig<Value, boolean> = {
+  const customStyles: StylesConfig<{}, boolean> = {
     control: (styles, { isFocused }) => ({
       ...styles,
       borderColor: isFocused? '#73C9B2' : styles.borderColor,
@@ -92,6 +92,7 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
           placeholder={placeholder}
           options={options}
           defaultValue={value}
+          // @ts-ignore
           onChange={option => valueChanged(option)}
           isLoading={loading}
           isClearable={clearable === undefined ? true : false}
@@ -99,7 +100,7 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
           isDisabled={readOnly}
           isMulti={isMulti}
           formatOptionLabel={optionSubLabel}
-          // filterOption={createFilter({ ignoreAccents: false })}
+          filterOption={createFilter({ ignoreAccents: false })}
         />
         {/* Hidden input field to apply HTML custom validation */}
         <input
