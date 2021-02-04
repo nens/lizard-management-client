@@ -83,7 +83,7 @@ export const ColormapAllSteps: React.FC<Props> = (props) => {
   }
 
   return (
-    <div>
+    <div style={{height: "100%", display: "flex", flexDirection: "column"}}>
       <label><span className={`${formStyles.LabelTitle}`}>{title}</span></label>
       <div className={styles.StepRow}>
         <span>Step</span><span>Color</span>

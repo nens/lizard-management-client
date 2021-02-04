@@ -19,5 +19,6 @@
 
 .StepContainer {
   overflow-y: auto;
-  height: 385px;
+  min-height: 0;
+  flex-grow: 1;
 }
