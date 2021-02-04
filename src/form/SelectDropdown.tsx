@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import Select from 'react-select';
+import Select, { StylesConfig } from 'react-select';
 import formStyles from "../styles/Forms.module.css";
 
 type Value = {
@@ -11,7 +11,7 @@ interface MyProps {
   name: string,
   value: Value,
   valueChanged: (value: Value | null) => void,
-  options: {[key: string]: string}[],
+  options: Value[],
   validated: boolean,
   errorMessage?: string | false,
   placeholder?: string,
@@ -20,6 +20,7 @@ interface MyProps {
   searchable?: boolean,
   clearable?: boolean,
   loading?: boolean,
+  isMulti?: boolean,
 };
 
 export const SelectDropdown: React.FC<MyProps> = (props) => {  
@@ -36,6 +37,7 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
     searchable,
     clearable,
     loading,
+    isMulti,
     readOnly,
   } = props;
 
@@ -54,12 +56,25 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
   // useRef for Select component to set focus on
   const mySelect = useRef<any>(null);
 
+  // Optional sub-labels for the Option container
   const optionSubLabel: React.FC<{[key: string]: string}> = ({ label, subLabel }) => (
     <div style={{ display: "flex", position: 'relative' }}>
       <div>{label}</div>
       <div style={{ position: 'absolute', left: 400, color: "#ccc" }}>{subLabel}</div>
     </div>
   );
+
+  // Custom styling for Select component
+  const customStyles: StylesConfig<Value, boolean> = {
+    control: (styles, { isFocused }) => ({
+      ...styles,
+      borderColor: isFocused? '#73C9B2' : styles.borderColor,
+      boxShadow: isFocused? '0 0 1px 1px #73C9B2' : styles.boxShadow,
+      ':hover': {
+        borderColor: isFocused? '#73C9B2' : styles[':hover']?.borderColor
+      }
+    })
+  }
 
   return (
     <label
@@ -73,6 +88,7 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
         <Select
           ref={mySelect}
           name={name}
+          styles={customStyles}
           placeholder={placeholder}
           options={options}
           defaultValue={value}
@@ -81,7 +97,9 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
           isClearable={clearable === undefined ? true : false}
           isSearchable={searchable}
           isDisabled={readOnly}
+          isMulti={isMulti}
           formatOptionLabel={optionSubLabel}
+          // filterOption={createFilter({ ignoreAccents: false })}
         />
         {/* Hidden input field to apply HTML custom validation */}
         <input

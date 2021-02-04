@@ -72,6 +72,7 @@ const Form: React.FC<FormProps> = ({ onSubmit }) => {
         validated={!!values.color1}
         errorMessage={'Please select a color'}
         searchable={false}
+        readOnly
       />
       <SelectDropdown
         title='Searchable dropdown'
@@ -84,6 +85,7 @@ const Form: React.FC<FormProps> = ({ onSubmit }) => {
         valueChanged={value => handleValueChange('color2', value)}
         validated={!!values.color2}
         errorMessage={'Please select a color'}
+        isMulti
       />
       <SelectDropdown
         title='Searchable dropdown with label'
