@@ -62,40 +62,40 @@ const Form: React.FC<FormProps> = ({ onSubmit }) => {
       />
       <SelectDropdown
         title='Select dropdown'
-        name='color'
-        value={values.color}
+        name='color1'
+        value={values.color1}
         options={colors.map(color => ({
           value: color,
           label: color
         }))}
-        valueChanged={value => handleValueChange('color', value)}
-        validated={values.color !== null}
+        valueChanged={value => handleValueChange('color1', value)}
+        validated={!!values.color1}
         errorMessage={'Please select a color'}
         searchable={false}
       />
       <SelectDropdown
         title='Searchable dropdown'
-        name='color'
-        value={values.color}
+        name='color2'
+        value={values.color2}
         options={colors.map(color => ({
           value: color,
           label: color
         }))}
-        valueChanged={value => handleValueChange('color', value)}
-        validated={values.color !== null}
+        valueChanged={value => handleValueChange('color2', value)}
+        validated={!!values.color2}
         errorMessage={'Please select a color'}
       />
       <SelectDropdown
         title='Searchable dropdown with label'
-        name='color'
-        value={values.color}
+        name='color3'
+        value={values.color3}
         options={colors.map(color => ({
           value: color,
           label: color,
           subLabel: color
         }))}
-        valueChanged={value => handleValueChange('color', value)}
-        validated={values.color !== null}
+        valueChanged={value => handleValueChange('color3', value)}
+        validated={!!values.color3}
         errorMessage={'Please select a color'}
       />
       <SelectDropdown
