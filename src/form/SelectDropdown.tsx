@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from 'react';
 import Select from 'react-select';
 import formStyles from "../styles/Forms.module.css";
 
@@ -51,6 +51,9 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
     };
   });
 
+  // useRef for Select component to set focus on
+  const mySelect = useRef<any>(null);
+
   const optionSubLabel: React.FC<{[key: string]: string}> = ({ label, subLabel }) => (
     <div style={{ display: "flex", position: 'relative' }}>
       <div>{label}</div>
@@ -68,6 +71,7 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
       </span>
       <div style={{position: 'relative'}}>
         <Select
+          ref={mySelect}
           name={name}
           placeholder={placeholder}
           options={options}
@@ -84,6 +88,7 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
           ref={myInput}
           tabIndex={-1}
           autoComplete='off'
+          onFocus={() => mySelect.current && mySelect.current.focus()}
           style={{
             position: 'absolute',
             opacity: 0,
