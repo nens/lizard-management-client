@@ -280,7 +280,7 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
           width={'50%'} 
         >
           <div
-            style={{padding: "30px", flexGrow: 1,}}
+            style={{padding: "30px", flexGrow: 1, minHeight: 0,}}
           >
             <ColormapForm
               currentRecord={value.customColormap.data? value.customColormap: undefined}

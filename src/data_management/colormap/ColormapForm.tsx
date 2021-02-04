@@ -120,7 +120,13 @@ const ColormapForm: React.FC<Props> = (props) => {
           justifyContent: "space-between"
         }}
       >
-        <div>
+        <div
+          style={{
+            minHeight: 0,
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
           {/*  below 2 blocks are commented out. We will need them again once we can add name and description to the colormap form  */}
           {/* <div>
             <TextInput
@@ -250,7 +256,7 @@ const ColormapForm: React.FC<Props> = (props) => {
               }}
               value={stepLengthFieldIsEmpty? "" :(values.data && values.data.length) || 0}
             />
-            <div>
+            <div style={{flexGrow: 1, minHeight: 0}}>
               <ColormapAllSteps
                 title={"Colormap Values"}
                 steps={values.data}
