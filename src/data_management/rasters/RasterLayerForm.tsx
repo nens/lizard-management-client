@@ -316,17 +316,27 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
             {
               value: 'none',
               label: 'none',
-              subLabel: 'something'
+              subLabel: 'no aggregation'
+            },
+            {
+              value: 'counts',
+              label: 'counts',
+              subLabel: 'area per category'
             },
             {
               value: 'curve',
               label: 'curve',
-              subLabel: 'something'
+              subLabel: 'cumulative distribution'
             },
             {
               value: 'sum',
               label: 'sum',
-              subLabel: 'something'
+              subLabel: 'values in the region are summed'
+            },
+            {
+              value: 'average',
+              label: 'average',
+              subLabel: 'values in the region are averaged'
             },
           ]}
           validated={!!values.aggregationType}

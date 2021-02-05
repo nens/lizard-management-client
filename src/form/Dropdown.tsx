@@ -35,7 +35,6 @@ export const Dropdown: React.FC<MyProps> = (props) => {
   const [menuIsOpen, setMenuIsOpen] = useState<boolean>(false);
   const [searchString, setSearchString] = useState<string>('');
   const [filteredOptions, setFilteredOptions] = useState<string[]>(options);
-  console.log(filteredOptions)
 
   // Set validity of the input field
   const myInput = useRef<HTMLInputElement>(null);

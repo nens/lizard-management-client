@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import Select, { createFilter, StylesConfig } from 'react-select';
+import Select, { createFilter, StylesConfig, ValueType } from 'react-select';
 import formStyles from "../styles/Forms.module.css";
 
 type Value = {
@@ -10,7 +10,7 @@ interface MyProps {
   title: string,
   name: string,
   value: Value,
-  valueChanged: (value: Value | null) => void,
+  valueChanged: (value: ValueType<Value, boolean>) => void,
   options: Value[],
   validated: boolean,
   errorMessage?: string | false,
@@ -105,7 +105,6 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
           placeholder={placeholder}
           options={options}
           defaultValue={value}
-          // @ts-ignore
           onChange={option => valueChanged(option)}
           isLoading={loading}
           isClearable={clearable === undefined ? true : false}
