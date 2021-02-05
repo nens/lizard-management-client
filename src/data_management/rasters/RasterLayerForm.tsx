@@ -88,7 +88,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
   const initialValues = currentRasterLayer ? {
     name: currentRasterLayer.name,
     description: currentRasterLayer.description,
-    dataset: (currentRasterLayer.datasets && currentRasterLayer.datasets[0] && currentRasterLayer.datasets[0].slug) || null,
+    datasets: currentRasterLayer.datasets.map(dataset => ({value: dataset.slug, label: dataset.slug})) || [],
     rasterSource: (currentRasterLayer.raster_sources && currentRasterLayer.raster_sources[0] && getUuidFromUrl(currentRasterLayer.raster_sources[0])) || null,
     aggregationType: {value: currentRasterLayer.aggregation_type, label: currentRasterLayer.aggregation_type} || null,
     observationType: (currentRasterLayer.observation_type && currentRasterLayer.observation_type.id + '') || null,
@@ -101,7 +101,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
   } : {
     name: null,
     description: null,
-    dataset: null,
+    datasets: [],
     rasterSource: rasterSourceUUID || null,
     aggregationType: null,
     observationType: null,
@@ -125,7 +125,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
         colormap: JSON.stringify(values.colorMap.customColormap) ==="{}"? undefined : values.colorMap.customColormap,
         rescalable: values.colorMap.rescalable,
         shared_with: values.organisationsToSharedWith,
-        datasets: values.dataset ? [values.dataset] : []
+        datasets: values.datasets.map((data: any) => data.value)
       };
 
       createRasterLayer(rasterLayer, values.rasterSource)
@@ -154,7 +154,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
         colormap: JSON.stringify(values.colorMap.customColormap) ==="{}"? undefined : values.colorMap.customColormap,
         rescalable: values.colorMap.rescalable,
         shared_with: values.organisationsToSharedWith,
-        datasets: values.dataset ? [values.dataset] : []
+        datasets: values.datasets.map((dataset: any) => dataset.value)
       };
       // only add colormap in options if not multiple layers
       if (!optionsHasLayers(values.colorMap.options)) {
@@ -259,17 +259,21 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           validated
           form={"raster_layer_form_id"}
         />
-        <SelectBox
+        <SelectDropdown
           title={'Dataset'}
-          name={'dataset'}
+          name={'datasets'}
           placeholder={'- Select -'}
-          value={values.dataset}
-          valueChanged={value => handleValueChange('dataset', value)}
-          choices={datasets.map((dataset: any) => [dataset.slug, dataset.slug])}
+          value={values.datasets}
+          valueChanged={value => handleValueChange('datasets', value)}
+          options={datasets.map((dataset: any) => ({
+            value: dataset.slug,
+            label: dataset.slug
+          }))}
+          validated
+          isMulti
+          form={"raster_layer_form_id"}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          validated
-          form={"raster_layer_form_id"}
         />
         <span className={formStyles.FormFieldTitle}>
           2: Data
