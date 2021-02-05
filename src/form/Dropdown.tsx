@@ -50,7 +50,9 @@ export const Dropdown: React.FC<MyProps> = (props) => {
 
   // Filter options
   useEffect(() => {
-    setFilteredOptions(options.filter(option => option.includes(searchString)));
+    setFilteredOptions(options.filter(
+      option => option.toLowerCase().includes(searchString.toLowerCase())
+    ));
   }, [name, options, searchString]);
 
   const handleKeyUp = (e: any) => {
@@ -58,6 +60,21 @@ export const Dropdown: React.FC<MyProps> = (props) => {
       setMenuIsOpen(false);
     };
   };
+  
+  // const handleClickOutside = (event: Event) => {
+  //   if (
+  //       myInput.current &&
+  //       !myInput.current.contains(event.target as Node)
+  //   ) {
+  //       setMenuIsOpen(false);
+  //   }
+  // };
+  // useEffect(() => {
+  //   document.addEventListener('click', handleClickOutside, true);
+  //   return () => {
+  //     document.removeEventListener('click', handleClickOutside, true);
+  //   };
+  // });
 
   return (
     <label
@@ -73,7 +90,15 @@ export const Dropdown: React.FC<MyProps> = (props) => {
             position: 'absolute',
             top: 0,
             left: 0,
-            zIndex: 1,
+            padding: 10,
+            height: '100%',
+            width: '100%',
+            overflow: 'hidden',
+            whiteSpace: 'nowrap',
+            textOverflow: 'ellipsis',
+            display: 'flex',
+            alignItems: 'center',
+            visibility: searchString ? 'hidden' : 'visible'
           }}
         >
           {value}
@@ -84,13 +109,14 @@ export const Dropdown: React.FC<MyProps> = (props) => {
           id={name}
           autoComplete={'off'}
           className={`${formStyles.FormControl} ${triedToSubmit ? formStyles.FormSubmitted : ''}`}
-          placeholder={placeholder}
+          placeholder={!value ? placeholder : ''}
           onClick={() => setMenuIsOpen(!menuIsOpen)}
           onKeyUp={e => handleKeyUp(e)}
           onKeyDown={() => setMenuIsOpen(true)}
           onChange={e => setSearchString(e.target.value)}
           style={{
-            position: 'relative'
+            position: 'relative',
+            zIndex: -1
           }}
           onBlur={() => setMenuIsOpen(false)}
         />
@@ -105,7 +131,7 @@ export const Dropdown: React.FC<MyProps> = (props) => {
               left: 0,
               zIndex: 1,
               backgroundColor: 'grey',
-              maxHeight: 100,
+              maxHeight: 250,
               width: '100%',
               overflowY: 'auto',
               marginTop: 10,
