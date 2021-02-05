@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import Select, { components, createFilter, StylesConfig, ValueType, OptionProps } from 'react-select';
+import AsyncSelect from 'react-select/async';
 import formStyles from "../styles/Forms.module.css";
 
 type Value = {
@@ -19,11 +20,13 @@ interface MyProps {
   placeholder?: string,
   triedToSubmit?: boolean,
   readOnly?: boolean,
-  searchable?: boolean,
-  clearable?: boolean,
-  loading?: boolean,
+  isSearchable?: boolean,
+  isClearable?: boolean,
+  isLoading?: boolean,
   isMulti?: boolean,
   form?: string,
+  isAsync?: boolean,
+  loadOptions?: (inputValue: string) => Promise<any>, // loadOptions is required if isAsync === true
   onFocus?: (e: any) => void,
   onBlur?: () => void,
 };
@@ -39,10 +42,12 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
     validated,
     errorMessage,
     triedToSubmit,
-    searchable,
-    clearable,
-    loading,
+    isSearchable,
+    isClearable,
+    isLoading,
     isMulti,
+    isAsync,
+    loadOptions,
     form,
     onFocus,
     onBlur,
@@ -110,7 +115,7 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
       position: 'relative',
       color: isSelected ? 'white' : styles.color
     })
-  }
+  };
 
   return (
     <label
@@ -121,25 +126,48 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
         {title}
       </span>
       <div style={{position: 'relative'}}>
-        <Select
-          ref={mySelect}
-          inputId={name}
-          name={name}
-          components={{ Option }}
-          styles={customStyles}
-          placeholder={placeholder}
-          options={options}
-          defaultValue={value}
-          onChange={option => valueChanged(option)}
-          isLoading={loading}
-          isClearable={!readOnly && clearable === undefined ? true : false}
-          isSearchable={!readOnly && searchable}
-          menuIsOpen={readOnly ? false : undefined}
-          isMulti={isMulti}
-          onFocus={onFocus}
-          onBlur={onBlur}
-          filterOption={createFilter({ ignoreAccents: false })}
-        />
+        {isAsync ? (
+          <AsyncSelect
+            ref={mySelect}
+            inputId={name}
+            name={name}
+            components={{ Option }}
+            styles={customStyles}
+            placeholder={placeholder}
+            cacheOptions
+            defaultOptions
+            loadOptions={loadOptions}
+            defaultValue={value}
+            onChange={option => valueChanged(option)}
+            isClearable={!readOnly && isClearable === undefined ? true : false}
+            isSearchable={!readOnly && isSearchable}
+            menuIsOpen={readOnly ? false : undefined}
+            isMulti={isMulti}
+            onFocus={onFocus}
+            onBlur={onBlur}
+            filterOption={createFilter({ ignoreAccents: false })}
+          />
+        ) : (
+          <Select
+            ref={mySelect}
+            inputId={name}
+            name={name}
+            components={{ Option }}
+            styles={customStyles}
+            placeholder={placeholder}
+            options={options}
+            defaultValue={value}
+            onChange={option => valueChanged(option)}
+            isLoading={isLoading}
+            isClearable={!readOnly && isClearable === undefined ? true : false}
+            isSearchable={!readOnly && isSearchable}
+            menuIsOpen={readOnly ? false : undefined}
+            isMulti={isMulti}
+            onFocus={onFocus}
+            onBlur={onBlur}
+            filterOption={createFilter({ ignoreAccents: false })}
+          />
+        )}
         {/* Hidden input field to apply HTML custom validation */}
         <input
           ref={myInput}

@@ -81,7 +81,7 @@ const Form: React.FC<FormProps> = ({ onSubmit }) => {
         valueChanged={value => handleValueChange('color1', value)}
         validated={!!values.color1}
         errorMessage={'Please select a color'}
-        searchable={false}
+        isSearchable={false}
         readOnly
       />
       <SelectDropdown
@@ -121,7 +121,7 @@ const Form: React.FC<FormProps> = ({ onSubmit }) => {
         }))}
         valueChanged={value => handleValueChange('beer', value)}
         validated
-        loading={beers.isFetching}
+        isLoading={beers.isFetching}
       />
       <br/>
       <SubmitButton />

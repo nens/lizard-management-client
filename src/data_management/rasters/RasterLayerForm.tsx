@@ -18,7 +18,6 @@ import { minLength, required } from '../../form/validators';
 import {
   getColorMaps,
   getDatasets,
-  getObservationTypes,
   getOrganisations,
   getRasterSourceUUID,
   getSelectedOrganisation,
@@ -35,7 +34,6 @@ import ConfirmModal from '../../components/Modal';
 import { ModalDeleteContent } from '../../components/ModalDeleteContent'
 import { SelectDropdown } from '../../form/SelectDropdown';
 
-
 interface Props {
   currentRasterLayer?: RasterLayerFromAPI,
   rasterSources?: RasterSourceFromAPI[] | null,
@@ -46,13 +44,45 @@ interface PropsFromDispatch {
   addNotification: (message: string | number, timeout: number) => void,
 };
 
+// Helper function to fetch paginated observation types with search query
+const fetchObservationTypes = async (searchQuery: string) => {
+  const urlQuery = searchQuery ? `?code__icontains=${searchQuery}` : '';
+  const response = await fetch(
+    `/api/v4/observationtypes/${urlQuery}`
+  );
+  const responseJSON = await response.json();
+
+  return responseJSON.results.map((obsT: any) => {
+    let parameterString = obsT.parameter + '';
+
+    if (obsT.unit || obsT.reference_frame) {
+      parameterString += ' (';
+      if (obsT.unit) {
+        parameterString += obsT.unit;
+      };
+      if (obsT.unit && obsT.reference_frame) {
+        parameterString += ' ';
+      };
+      if (obsT.reference_frame) {
+        parameterString += obsT.reference_frame;
+      };
+      parameterString += ')';
+    };
+
+    return {
+      value: obsT.id,
+      label: obsT.code,
+      subLabel: parameterString
+    }
+  });
+};
+
 const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (props) => {
   const { currentRasterLayer, rasterSources, removeRasterSourceUUID } = props;
   const supplierIds = useSelector(getSupplierIds).available;
   const organisationsToSharedWith = useSelector(getOrganisations).availableForRasterSharedWith;
   const organisations = useSelector(getOrganisations).available;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
-  const observationTypes = useSelector(getObservationTypes).available;
   const colorMaps = useSelector(getColorMaps).available;
   const datasets = useSelector(getDatasets).available;
   const rasterSourceUUID = useSelector(getRasterSourceUUID);
@@ -200,7 +230,6 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
   const [accessModifier, setAccessModifier] = useState<string | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-
   useEffect(() => {
     if (!currentRasterLayer && rasterSource) {
       fetchRasterSourceV4(rasterSource.value).then(
@@ -297,7 +326,6 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           form={"raster_layer_form_id"}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          searchable
           readOnly={!!currentRasterLayer || !!rasterSourceUUID}
         />
         <SelectDropdown
@@ -339,6 +367,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           form={"raster_layer_form_id"}
           onFocus={handleFocus}
           onBlur={handleBlur}
+          isSearchable={false}
         />
         <SelectDropdown
           title={'Observation type *'}
@@ -346,34 +375,15 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           placeholder={'- Search and select -'}
           value={values.observationType}
           valueChanged={value => handleValueChange('observationType', value)}
-          options={observationTypes.map((obsT: any) => {
-            let parameterString = obsT.parameter + '';
-            if (obsT.unit || obsT.reference_frame) {
-              parameterString += ' (';
-              if (obsT.unit) {
-                parameterString += obsT.unit;
-              };
-              if (obsT.unit && obsT.reference_frame) {
-                parameterString += ' ';
-              };
-              if (obsT.reference_frame) {
-                parameterString += obsT.reference_frame;
-              };
-              parameterString += ')';
-            };
-            return {
-              value: obsT.id,
-              label: obsT.code,
-              subLabel: parameterString
-            };
-          })}
+          options={[]}
           validated={!required('Please select an observation type', values.observationType)}
           errorMessage={required('Please select an observation type', values.observationType)}
           triedToSubmit={triedToSubmit}
           form={"raster_layer_form_id"}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          searchable
+          isAsync
+          loadOptions={fetchObservationTypes}
         />
         <ColorMapInput
           title={<FormattedMessage id="raster_form.colormap" />}
