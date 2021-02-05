@@ -21,6 +21,7 @@ interface MyProps {
   clearable?: boolean,
   loading?: boolean,
   isMulti?: boolean,
+  form?: string,
 };
 
 export const SelectDropdown: React.FC<MyProps> = (props) => {  
@@ -38,6 +39,7 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
     clearable,
     loading,
     isMulti,
+    form,
     readOnly,
   } = props;
 
@@ -66,14 +68,25 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
 
   // Custom styling for Select component
   const customStyles: StylesConfig<{}, boolean> = {
-    control: (styles, { isFocused }) => ({
-      ...styles,
-      borderColor: isFocused? '#73C9B2' : styles.borderColor,
-      boxShadow: isFocused? '0 0 1px 1px #73C9B2' : styles.boxShadow,
-      ':hover': {
-        borderColor: isFocused? '#73C9B2' : styles[':hover']?.borderColor
+    control: (styles, { isFocused }) => {
+      let borderColor: string = styles.borderColor as string;
+      let boxShadow: string = styles.boxShadow as string;
+      if (triedToSubmit && !validated) {
+        borderColor =  '#AE0000';
+        boxShadow = 'none';
+      } else if (isFocused) {
+        borderColor = '#73C9B2';
+        boxShadow = '0 0 1px 1px #73C9B2';
+      };
+      return {
+        ...styles,
+        borderColor: borderColor,
+        boxShadow: boxShadow,
+        ':hover': {
+          borderColor: borderColor
+        }
       }
-    })
+    }
   }
 
   return (
@@ -108,6 +121,7 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
           tabIndex={-1}
           autoComplete='off'
           onFocus={() => mySelect.current && mySelect.current.focus()}
+          form={form}
           style={{
             position: 'absolute',
             opacity: 0,

@@ -69,7 +69,7 @@ export const Dropdown: React.FC<MyProps> = (props) => {
         {title}
       </span>
       <div style={{position: 'relative'}}>
-        {/* <span
+        <span
           style={{
             position: 'absolute',
             top: 0,
@@ -78,7 +78,7 @@ export const Dropdown: React.FC<MyProps> = (props) => {
           }}
         >
           {value}
-        </span> */}
+        </span>
         <input
           ref={myInput}
           name={name}

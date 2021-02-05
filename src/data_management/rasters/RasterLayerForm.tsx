@@ -120,7 +120,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
         description: values.description,
         observation_type: values.observationType,
         supplier: values.supplier,
-        aggregation_type: values.aggregationType,
+        aggregation_type: values.aggregationType.value,
         options: values.colorMap.options,
         colormap: JSON.stringify(values.colorMap.customColormap) ==="{}"? undefined : values.colorMap.customColormap,
         rescalable: values.colorMap.rescalable,
@@ -149,7 +149,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
         description: values.description,
         observation_type: values.observationType,
         supplier: values.supplier,
-        aggregation_type: values.aggregationType,
+        aggregation_type: values.aggregationType.value,
         options: values.colorMap.options,
         colormap: JSON.stringify(values.colorMap.customColormap) ==="{}"? undefined : values.colorMap.customColormap,
         rescalable: values.colorMap.rescalable,
@@ -329,7 +329,10 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
               subLabel: 'something'
             },
           ]}
-          validated
+          validated={!!values.aggregationType}
+          errorMessage={'Please select an option'}
+          triedToSubmit={triedToSubmit}
+          form={"raster_layer_form_id"}
         />
         {/* <SelectBox
           title={'Aggregation type *'}
