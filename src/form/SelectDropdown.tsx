@@ -84,6 +84,8 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
       };
       return {
         ...styles,
+        backgroundColor: readOnly ?  'rgb(216, 216, 216)' : styles.backgroundColor,
+        cursor: readOnly ? 'not-allowed' : styles.cursor,
         borderColor: borderColor,
         boxShadow: boxShadow,
         ':hover': {
@@ -112,9 +114,9 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
           defaultValue={value}
           onChange={option => valueChanged(option)}
           isLoading={loading}
-          isClearable={clearable === undefined ? true : false}
-          isSearchable={searchable}
-          isDisabled={readOnly}
+          isClearable={!readOnly && clearable === undefined ? true : false}
+          isSearchable={!readOnly && searchable}
+          menuIsOpen={readOnly ? false : undefined}
           isMulti={isMulti}
           formatOptionLabel={optionSubLabel}
           onFocus={onFocus}

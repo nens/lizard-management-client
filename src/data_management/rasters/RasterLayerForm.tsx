@@ -345,6 +345,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           form={"raster_layer_form_id"}
           onFocus={handleFocus}
           onBlur={handleBlur}
+          // readOnly
         />
         {/* <SelectBox
           title={'Aggregation type *'}
