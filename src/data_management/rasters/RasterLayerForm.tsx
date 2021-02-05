@@ -343,6 +343,8 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           errorMessage={'Please select an option'}
           triedToSubmit={triedToSubmit}
           form={"raster_layer_form_id"}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         {/* <SelectBox
           title={'Aggregation type *'}

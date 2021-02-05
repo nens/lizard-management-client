@@ -22,6 +22,8 @@ interface MyProps {
   loading?: boolean,
   isMulti?: boolean,
   form?: string,
+  onFocus?: (e: any) => void,
+  onBlur?: () => void,
 };
 
 export const SelectDropdown: React.FC<MyProps> = (props) => {  
@@ -40,6 +42,8 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
     loading,
     isMulti,
     form,
+    onFocus,
+    onBlur,
     readOnly,
   } = props;
 
@@ -62,7 +66,7 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
   const optionSubLabel: React.FC<{[key: string]: string}> = ({ label, subLabel }) => (
     <div style={{ display: "flex", position: 'relative' }}>
       <div>{label}</div>
-      <div style={{ position: 'absolute', left: 400, color: "#ccc" }}>{subLabel}</div>
+      <div style={{ position: 'absolute', left: '40%', color: "#ccc" }}>{subLabel}</div>
     </div>
   );
 
@@ -100,6 +104,7 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
       <div style={{position: 'relative'}}>
         <Select
           ref={mySelect}
+          inputId={name}
           name={name}
           styles={customStyles}
           placeholder={placeholder}
@@ -112,6 +117,8 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
           isDisabled={readOnly}
           isMulti={isMulti}
           formatOptionLabel={optionSubLabel}
+          onFocus={onFocus}
+          onBlur={onBlur}
           filterOption={createFilter({ ignoreAccents: false })}
         />
         {/* Hidden input field to apply HTML custom validation */}
