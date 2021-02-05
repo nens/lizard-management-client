@@ -3,14 +3,16 @@ import Select, { components, createFilter, StylesConfig, ValueType, OptionProps 
 import formStyles from "../styles/Forms.module.css";
 
 type Value = {
-  [key: string]: string
+  value: string,
+  label: string,
+  subLabel?: string | JSX.Element
 };
 
 interface MyProps {
   title: string,
   name: string,
   value: Value,
-  valueChanged: (value: ValueType<Value, boolean>) => void,
+  valueChanged: (value: ValueType<Value, boolean> | {}) => void,
   options: Value[],
   validated: boolean,
   errorMessage?: string | false,

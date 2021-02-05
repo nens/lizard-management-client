@@ -316,28 +316,28 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
             {
               value: 'none',
               label: 'none',
-              subLabel: 'no aggregation'
+              subLabel: <FormattedMessage id="raster_form.aggregation_type_none" />
             },
             {
               value: 'counts',
               label: 'counts',
-              subLabel: 'area per category'
+              subLabel: <FormattedMessage id="raster_form.aggregation_type_counts" />
             },
             {
               value: 'curve',
               label: 'curve',
-              subLabel: 'cumulative distribution'
+              subLabel: <FormattedMessage id="raster_form.aggregation_type_curve" />
             },
             {
               value: 'sum',
               label: 'sum',
-              subLabel: 'values in the region are summed'
+              subLabel: <FormattedMessage id="raster_form.aggregation_type_sum" />
             },
             {
               value: 'average',
               label: 'average',
-              subLabel: 'values in the region are averaged'
-            },
+              subLabel: <FormattedMessage id="raster_form.aggregation_type_average" />
+            }
           ]}
           validated={!!values.aggregationType}
           errorMessage={'Please select an option'}
@@ -345,48 +345,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           form={"raster_layer_form_id"}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          // readOnly
         />
-        {/* <SelectBox
-          title={'Aggregation type *'}
-          name={'aggregationType'}
-          placeholder={'- Select -'}
-          value={values.aggregationType}
-          valueChanged={value => handleValueChange('aggregationType', value)}
-          choices={[
-            [
-              "none",
-              "none",
-              <FormattedMessage id="raster_form.aggregation_type_none" />
-            ],
-            [
-              "counts",
-              "counts",
-              <FormattedMessage id="raster_form.aggregation_type_counts" />
-            ],
-            [
-              "curve",
-              "curve",
-              <FormattedMessage id="raster_form.aggregation_type_curve" />
-            ],
-            [
-              "sum",
-              "sum",
-              <FormattedMessage id="raster_form.aggregation_type_sum" />
-            ],
-            [
-              "average",
-              "average",
-              <FormattedMessage id="raster_form.aggregation_type_average" />
-            ]
-          ]}
-          validated={!required('Please select an option', values.aggregationType)}
-          errorMessage={required('Please select an option', values.aggregationType)}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-          triedToSubmit={triedToSubmit}
-          form={"raster_layer_form_id"}
-        /> */}
         <SelectBox
           title={'Observation type *'}
           name={'observationType'}
