@@ -89,7 +89,10 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
     name: currentRasterLayer.name,
     description: currentRasterLayer.description,
     datasets: currentRasterLayer.datasets.map(dataset => ({value: dataset.slug, label: dataset.slug})) || [],
-    rasterSource: (currentRasterLayer.raster_sources && currentRasterLayer.raster_sources[0] && getUuidFromUrl(currentRasterLayer.raster_sources[0])) || null,
+    rasterSource: currentRasterLayer.raster_sources && currentRasterLayer.raster_sources.map(rasterSource => ({
+      value: getUuidFromUrl(rasterSource),
+      label: getUuidFromUrl(rasterSource)
+    }))[0],
     aggregationType: {value: currentRasterLayer.aggregation_type, label: currentRasterLayer.aggregation_type} || null,
     observationType: (currentRasterLayer.observation_type && currentRasterLayer.observation_type.id + '') || null,
     colorMap: {options: currentRasterLayer.options, rescalable: currentRasterLayer.rescalable, customColormap: currentRasterLayer.colormap || {}},
@@ -102,7 +105,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
     name: null,
     description: null,
     datasets: [],
-    rasterSource: rasterSourceUUID || null,
+    rasterSource: rasterSourceUUID ? { value: rasterSourceUUID, label: rasterSourceUUID } : null,
     aggregationType: null,
     observationType: null,
     colorMap: {options: {}, rescalable: true, customColormap: {}},
@@ -128,7 +131,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
         datasets: values.datasets.map((data: any) => data.value)
       };
 
-      createRasterLayer(rasterLayer, values.rasterSource)
+      createRasterLayer(rasterLayer, values.rasterSource.value)
         .then(response => {
           const status = response.status;
           if (status === 201) {
@@ -200,7 +203,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
 
   useEffect(() => {
     if (!currentRasterLayer && rasterSource) {
-      fetchRasterSourceV4(rasterSource).then(
+      fetchRasterSourceV4(rasterSource.value).then(
         rasterSourceData => setAccessModifier(rasterSourceData.access_modifier || 'Private')
       ).catch(e => console.error(e));
     };
@@ -278,38 +281,25 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
         <span className={formStyles.FormFieldTitle}>
           2: Data
         </span>
-        {!currentRasterLayer && !rasterSourceUUID && rasterSources ?
-          <SelectBox
-            title={'Source *'}
-            name={'rasterSource'}
-            placeholder={'- Search and select -'}
-            value={values.rasterSource}
-            valueChanged={value => handleValueChange('rasterSource', value)}
-            choices={rasterSources.map(rasterSource => [rasterSource.uuid!, rasterSource.name])}
-            validated={!required('Please select a raster source', values.rasterSource)}
-            errorMessage={required('Please select a raster source', values.rasterSource)}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-            triedToSubmit={triedToSubmit}
-            readOnly={!!currentRasterLayer || !!rasterSourceUUID}
-            showSearchField
-            form={"raster_layer_form_id"}
-          />
-          :
-          <TextInput
-            title={'Source *'}
-            name={'rasterSource'}
-            value={values.rasterSource}
-            valueChanged={handleInputChange}
-            clearInput={clearInput}
-            validated
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-            readOnly
-            triedToSubmit={triedToSubmit}
-            form={"raster_layer_form_id"}
-          />
-        }
+        <SelectDropdown
+          title={'Source *'}
+          name={'rasterSource'}
+          placeholder={'- Search and select -'}
+          value={values.rasterSource}
+          valueChanged={value => handleValueChange('rasterSource', value)}
+          options={rasterSources ? rasterSources.map(rasterSource => ({
+            value: rasterSource.uuid!,
+            label: rasterSource.name
+          })) : []}
+          validated={!required('Please select a raster source', values.rasterSource)}
+          errorMessage={required('Please select a raster source', values.rasterSource)}
+          triedToSubmit={triedToSubmit}
+          form={"raster_layer_form_id"}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          searchable
+          readOnly={!!currentRasterLayer || !!rasterSourceUUID}
+        />
         <SelectDropdown
           title={'Aggregation type *'}
           name={'aggregationType'}
