@@ -94,7 +94,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
       label: getUuidFromUrl(rasterSource)
     }))[0],
     aggregationType: {value: currentRasterLayer.aggregation_type, label: currentRasterLayer.aggregation_type} || null,
-    observationType: (currentRasterLayer.observation_type && currentRasterLayer.observation_type.id + '') || null,
+    observationType: currentRasterLayer.observation_type ? {value: currentRasterLayer.observation_type.id, label: currentRasterLayer.observation_type.code} : null,
     colorMap: {options: currentRasterLayer.options, rescalable: currentRasterLayer.rescalable, customColormap: currentRasterLayer.colormap || {}},
     accessModifier: currentRasterLayer.access_modifier,
     sharedWith: currentRasterLayer.shared_with.length === 0 ? false : true,
@@ -121,7 +121,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
         organisation: values.organisation,
         access_modifier: accessModifier || 'Private',
         description: values.description,
-        observation_type: values.observationType,
+        observation_type: values.observationType.value,
         supplier: values.supplier,
         aggregation_type: values.aggregationType.value,
         options: values.colorMap.options,
@@ -150,7 +150,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
         organisation: values.organisation,
         access_modifier: values.accessModifier,
         description: values.description,
-        observation_type: values.observationType,
+        observation_type: values.observationType.value,
         supplier: values.supplier,
         aggregation_type: values.aggregationType.value,
         options: values.colorMap.options,
@@ -340,37 +340,40 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
-        <SelectBox
+        <SelectDropdown
           title={'Observation type *'}
           name={'observationType'}
           placeholder={'- Search and select -'}
           value={values.observationType}
           valueChanged={value => handleValueChange('observationType', value)}
-          choices={observationTypes.map((obsT: any) => {
+          options={observationTypes.map((obsT: any) => {
             let parameterString = obsT.parameter + '';
             if (obsT.unit || obsT.reference_frame) {
-              parameterString += ' ('
+              parameterString += ' (';
               if (obsT.unit) {
                 parameterString += obsT.unit;
-              }
+              };
               if (obsT.unit && obsT.reference_frame) {
                 parameterString += ' ';
-              }
+              };
               if (obsT.reference_frame) {
                 parameterString += obsT.reference_frame;
-              }
-              parameterString += ')'
-            }
-  
-            return [obsT.id, obsT.code, parameterString];
+              };
+              parameterString += ')';
+            };
+            return {
+              value: obsT.id,
+              label: obsT.code,
+              subLabel: parameterString
+            };
           })}
           validated={!required('Please select an observation type', values.observationType)}
           errorMessage={required('Please select an observation type', values.observationType)}
+          triedToSubmit={triedToSubmit}
+          form={"raster_layer_form_id"}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          triedToSubmit={triedToSubmit}
-          showSearchField
-          form={"raster_layer_form_id"}
+          searchable
         />
         <ColorMapInput
           title={<FormattedMessage id="raster_form.colormap" />}
