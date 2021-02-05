@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import FormActionButtons from '../components/FormActionButtons';
+import { Dropdown } from '../form/Dropdown';
 import { SubmitButton } from '../form/SubmitButton';
 import { TextInput } from '../form/TextInput';
 import { useForm } from '../form/useForm';
@@ -59,6 +60,15 @@ const Form: React.FC<FormProps> = ({ onSubmit }) => {
         validated={values.text && values.text.length >= 3}
         errorMessage={'Please insert at least 3 characters'}
         valueChanged={handleInputChange}
+      />
+      <Dropdown
+        title='Select dropdown'
+        name='color'
+        value={values.color}
+        options={colors}
+        valueChanged={value => handleValueChange('color', value)}
+        validated={!!values.color}
+        errorMessage={'Please select a color'}
       />
       <SelectDropdown
         title='Select dropdown'

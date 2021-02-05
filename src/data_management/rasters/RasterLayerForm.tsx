@@ -90,7 +90,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
     description: currentRasterLayer.description,
     dataset: (currentRasterLayer.datasets && currentRasterLayer.datasets[0] && currentRasterLayer.datasets[0].slug) || null,
     rasterSource: (currentRasterLayer.raster_sources && currentRasterLayer.raster_sources[0] && getUuidFromUrl(currentRasterLayer.raster_sources[0])) || null,
-    aggregationType: currentRasterLayer.aggregation_type || null,
+    aggregationType: {value: currentRasterLayer.aggregation_type, label: currentRasterLayer.aggregation_type} || null,
     observationType: (currentRasterLayer.observation_type && currentRasterLayer.observation_type.id + '') || null,
     colorMap: {options: currentRasterLayer.options, rescalable: currentRasterLayer.rescalable, customColormap: currentRasterLayer.colormap || {}},
     accessModifier: currentRasterLayer.access_modifier,
