@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import Select, { createFilter, StylesConfig, ValueType } from 'react-select';
+import Select, { components, createFilter, StylesConfig, ValueType, OptionProps } from 'react-select';
 import formStyles from "../styles/Forms.module.css";
 
 type Value = {
@@ -47,6 +47,9 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
     readOnly,
   } = props;
 
+  // useRef for Select component to set focus on
+  const mySelect = useRef<any>(null);
+
   // Set validity of the input field
   const myInput = useRef<HTMLInputElement>(null);
   useEffect(() => {
@@ -59,19 +62,24 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
     };
   });
 
-  // useRef for Select component to set focus on
-  const mySelect = useRef<any>(null);
-
-  // Optional sub-labels for the Option container
-  const optionSubLabel: React.FC<{[key: string]: string}> = ({ label, subLabel }) => (
-    <div style={{ display: "flex", position: 'relative' }}>
-      <div>{label}</div>
-      <div style={{ position: 'absolute', left: '40%', color: "#ccc" }}>{subLabel}</div>
-    </div>
+  const Option: React.FC<OptionProps<{}, boolean>> = (props) => (
+    <components.Option {...props}>
+      <div>{props.data.label}</div>
+      <div
+        style={{
+          color: props.isSelected ? undefined : '#ccc',
+          position: 'absolute',
+          left: '40%'
+        }}
+      >
+        {props.data.subLabel}
+      </div>
+    </components.Option>
   );
 
-  // Custom styling for Select component
+  // Custom styling for different Select's child components
   const customStyles: StylesConfig<{}, boolean> = {
+    // Custom styling for Control component
     control: (styles, { isFocused }) => {
       let borderColor: string = styles.borderColor as string;
       let boxShadow: string = styles.boxShadow as string;
@@ -92,7 +100,14 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
           borderColor: borderColor
         }
       }
-    }
+    },
+    // Custom styling for Option list component
+    option: (styles, { isSelected }) => ({
+      ...styles,
+      display: 'flex',
+      position: 'relative',
+      color: isSelected ? 'white' : styles.color
+    })
   }
 
   return (
@@ -108,6 +123,7 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
           ref={mySelect}
           inputId={name}
           name={name}
+          components={{ Option }}
           styles={customStyles}
           placeholder={placeholder}
           options={options}
@@ -118,7 +134,6 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
           isSearchable={!readOnly && searchable}
           menuIsOpen={readOnly ? false : undefined}
           isMulti={isMulti}
-          formatOptionLabel={optionSubLabel}
           onFocus={onFocus}
           onBlur={onBlur}
           filterOption={createFilter({ ignoreAccents: false })}
