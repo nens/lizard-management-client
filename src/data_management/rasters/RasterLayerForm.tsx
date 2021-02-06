@@ -388,9 +388,13 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
         <ColorMapInput
           title={<FormattedMessage id="raster_form.colormap" />}
           name={'colorMap'}
-          value={values.colorMap}
+          colorMapValue={values.colorMap}
           valueChanged={value => handleValueChange('colorMap', value)}
-          colorMaps={colorMaps.map((colM: any) => [colM.name, colM.name, colM.description])}
+          colorMaps={colorMaps.map((colM: any) => ({
+            value: colM.name,
+            label: colM.name,
+            subLabel: colM.description
+          }))}
           validated={!colorMapValidator(values.colorMap)}
           errorMessage={colorMapValidator(values.colorMap)}
           triedToSubmit={triedToSubmit}

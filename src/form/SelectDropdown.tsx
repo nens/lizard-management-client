@@ -3,7 +3,7 @@ import Select, { components, createFilter, StylesConfig, ValueType, OptionProps 
 import AsyncSelect from 'react-select/async';
 import formStyles from "../styles/Forms.module.css";
 
-type Value = {
+export type Value = {
   value: string,
   label: string,
   subLabel?: string | JSX.Element
