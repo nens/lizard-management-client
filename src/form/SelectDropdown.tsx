@@ -109,11 +109,16 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
       }
     },
     // Custom styling for Option list component
-    option: (styles, { isSelected }) => ({
+    option: (styles) => ({
       ...styles,
       display: 'flex',
-      position: 'relative',
-      color: isSelected ? 'white' : styles.color
+      position: 'relative'
+    }),
+    // Custom styling for Value container component (Input field)
+    valueContainer: (styles) => ({
+      ...styles,
+      paddingTop: 7,
+      paddingBottom: 7
     })
   };
 

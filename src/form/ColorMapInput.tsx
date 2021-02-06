@@ -326,7 +326,7 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
             onBlur={onBlur}
           />
           {JSON.stringify(colorMapValue.customColormap) !=="{}" && JSON.stringify(colorMapValue.options) ==="{}"?
-            <div style={{position:"absolute", left: "164px", top: "18px"}}>
+            <div style={{position:"absolute", left: 164, top: 20}}>
               <button
                 onClick={()=>setShowCustomColormapModal(true)}
                 className={styles.ColormapEditButton}
