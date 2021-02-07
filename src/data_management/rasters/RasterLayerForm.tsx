@@ -146,15 +146,15 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
     if (!currentRasterLayer) {
       const rasterLayer = {
         name: values.name,
-        organisation: values.organisation.value,
+        organisation: values.organisation && values.organisation.value,
         access_modifier: accessModifier || 'Private',
         description: values.description,
-        observation_type: values.observationType.value,
-        supplier: values.supplier.value,
-        aggregation_type: values.aggregationType.value,
-        options: values.colorMap.options,
+        observation_type: values.observationType && values.observationType.value,
+        supplier: values.supplier && values.supplier.value,
+        aggregation_type: values.aggregationType && values.aggregationType.value,
+        options: values.colorMap && values.colorMap.options,
         colormap: JSON.stringify(values.colorMap.customColormap) ==="{}"? undefined : values.colorMap.customColormap,
-        rescalable: values.colorMap.rescalable,
+        rescalable: values.colorMap && values.colorMap.rescalable,
         shared_with: values.organisationsToSharedWith.map((organisation: any) => organisation.value),
         datasets: values.datasets.map((data: any) => data.value)
       };
@@ -175,15 +175,15 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
     } else {
       const body = {
         name: values.name,
-        organisation: values.organisation.value,
+        organisation: values.organisation && values.organisation.value,
         access_modifier: values.accessModifier,
         description: values.description,
-        observation_type: values.observationType.value,
-        supplier: values.supplier.value,
-        aggregation_type: values.aggregationType.value,
-        options: values.colorMap.options,
+        observation_type: values.observationType && values.observationType.value,
+        supplier: values.supplier && values.supplier.value,
+        aggregation_type: values.aggregationType && values.aggregationType.value,
+        options: values.colorMap && values.colorMap.options,
         colormap: JSON.stringify(values.colorMap.customColormap) ==="{}"? undefined : values.colorMap.customColormap,
-        rescalable: values.colorMap.rescalable,
+        rescalable: values.colorMap && values.colorMap.rescalable,
         shared_with: values.organisationsToSharedWith.map((organisation: any) => organisation.value),
         datasets: values.datasets.map((dataset: any) => dataset.value)
       };
