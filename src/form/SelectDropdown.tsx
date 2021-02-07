@@ -99,6 +99,8 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
       };
       return {
         ...styles,
+        paddingTop: 4,
+        paddingBottom: 4,
         backgroundColor: readOnly ?  'rgb(216, 216, 216)' : styles.backgroundColor,
         cursor: readOnly ? 'not-allowed' : styles.cursor,
         borderColor: borderColor,
@@ -114,11 +116,10 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
       display: 'flex',
       position: 'relative'
     }),
-    // Custom styling for Value container component (Input field)
-    valueContainer: (styles) => ({
+    // Custom styling for the Indicator component
+    indicatorsContainer: (styles) => ({
       ...styles,
-      paddingTop: 7,
-      paddingBottom: 7
+      cursor: 'pointer'
     })
   };
 
