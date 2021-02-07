@@ -121,14 +121,14 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
       value: getUuidFromUrl(rasterSource),
       label: getUuidFromUrl(rasterSource)
     }))[0],
-    aggregationType: {value: currentRasterLayer.aggregation_type, label: currentRasterLayer.aggregation_type} || null,
+    aggregationType: currentRasterLayer.aggregation_type ? {value: currentRasterLayer.aggregation_type, label: currentRasterLayer.aggregation_type} : null,
     observationType: currentRasterLayer.observation_type ? {value: currentRasterLayer.observation_type.id, label: currentRasterLayer.observation_type.code} : null,
     colorMap: {options: currentRasterLayer.options, rescalable: currentRasterLayer.rescalable, customColormap: currentRasterLayer.colormap || {}},
     accessModifier: currentRasterLayer.access_modifier,
     sharedWith: currentRasterLayer.shared_with.length === 0 ? false : true,
     organisationsToSharedWith: currentRasterLayer.shared_with.map(organisation => ({value: organisation.uuid.replace(/-/g, ""), label: organisation.name})) || [],
-    organisation: {value: currentRasterLayer.organisation.uuid.replace(/-/g, ""), label: currentRasterLayer.organisation.name} || null,
-    supplier: {value: currentRasterLayer.supplier, label: currentRasterLayer.supplier} || null,
+    organisation: currentRasterLayer.organisation ? {value: currentRasterLayer.organisation.uuid.replace(/-/g, ""), label: currentRasterLayer.organisation.name} : null,
+    supplier: currentRasterLayer.supplier ? {value: currentRasterLayer.supplier, label: currentRasterLayer.supplier} : null,
   } : {
     name: null,
     description: null,
@@ -139,7 +139,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
     colorMap: {options: {}, rescalable: true, customColormap: {}},
     sharedWith: false,
     organisationsToSharedWith: [],
-    organisation: {value: selectedOrganisation.uuid.replace(/-/g, ""), label: selectedOrganisation.name} || null,
+    organisation: selectedOrganisation ? {value: selectedOrganisation.uuid.replace(/-/g, ""), label: selectedOrganisation.name} : null,
     supplier: null,
   };
   const onSubmit = (values: Values) => {
