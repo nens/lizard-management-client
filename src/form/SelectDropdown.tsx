@@ -71,12 +71,21 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
 
   const Option: React.FC<OptionProps<{}, boolean>> = (props) => (
     <components.Option {...props}>
-      <div>{props.data.label}</div>
+      <div
+        style={{
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap'
+        }}
+      >
+        {props.data.label}
+      </div>
       <div
         style={{
           color: props.isSelected ? undefined : '#ccc',
-          position: 'absolute',
-          left: '40%'
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap'
         }}
       >
         {props.data.subLabel}
@@ -111,10 +120,10 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
       }
     },
     // Custom styling for Option list component
-    option: (styles) => ({
+    option: (styles, { data }) => ({
       ...styles,
-      display: 'flex',
-      position: 'relative'
+      display: 'grid',
+      gridTemplateColumns: data.subLabel ? '35% 65%' : '100%'
     }),
     // Custom styling for the Indicator component
     indicatorsContainer: (styles) => ({
