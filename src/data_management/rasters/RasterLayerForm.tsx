@@ -9,8 +9,6 @@ import { TextArea } from './../../form/TextArea';
 import { TextInput } from './../../form/TextInput';
 import { SubmitButton } from '../../form/SubmitButton';
 import { CancelButton } from '../../form/CancelButton';
-import { SelectBox } from '../../form/SelectBox';
-import { SlushBucket } from '../../form/SlushBucket';
 import { AccessModifier } from '../../form/AccessModifier';
 import ColorMapInput, { colorMapValidator } from '../../form/ColorMapInput';
 import { useForm, Values } from '../../form/useForm';
@@ -128,9 +126,9 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
     colorMap: {options: currentRasterLayer.options, rescalable: currentRasterLayer.rescalable, customColormap: currentRasterLayer.colormap || {}},
     accessModifier: currentRasterLayer.access_modifier,
     sharedWith: currentRasterLayer.shared_with.length === 0 ? false : true,
-    organisationsToSharedWith: currentRasterLayer.shared_with.map(organisation => organisation.uuid.replace(/-/g, "")) || [],
-    organisation: currentRasterLayer.organisation.uuid.replace(/-/g, "") || null,
-    supplier: currentRasterLayer.supplier,
+    organisationsToSharedWith: currentRasterLayer.shared_with.map(organisation => ({value: organisation.uuid.replace(/-/g, ""), label: organisation.name})) || [],
+    organisation: {value: currentRasterLayer.organisation.uuid.replace(/-/g, ""), label: currentRasterLayer.organisation.name} || null,
+    supplier: {value: currentRasterLayer.supplier, label: currentRasterLayer.supplier} || null,
   } : {
     name: null,
     description: null,
@@ -141,23 +139,23 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
     colorMap: {options: {}, rescalable: true, customColormap: {}},
     sharedWith: false,
     organisationsToSharedWith: [],
-    organisation: selectedOrganisation.uuid.replace(/-/g, "") || null,
+    organisation: {value: selectedOrganisation.uuid.replace(/-/g, ""), label: selectedOrganisation.name} || null,
     supplier: null,
   };
   const onSubmit = (values: Values) => {
     if (!currentRasterLayer) {
       const rasterLayer = {
         name: values.name,
-        organisation: values.organisation,
+        organisation: values.organisation.value,
         access_modifier: accessModifier || 'Private',
         description: values.description,
         observation_type: values.observationType.value,
-        supplier: values.supplier,
+        supplier: values.supplier.value,
         aggregation_type: values.aggregationType.value,
         options: values.colorMap.options,
         colormap: JSON.stringify(values.colorMap.customColormap) ==="{}"? undefined : values.colorMap.customColormap,
         rescalable: values.colorMap.rescalable,
-        shared_with: values.organisationsToSharedWith,
+        shared_with: values.organisationsToSharedWith.map((organisation: any) => organisation.value),
         datasets: values.datasets.map((data: any) => data.value)
       };
 
@@ -177,16 +175,16 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
     } else {
       const body = {
         name: values.name,
-        organisation: values.organisation,
+        organisation: values.organisation.value,
         access_modifier: values.accessModifier,
         description: values.description,
         observation_type: values.observationType.value,
-        supplier: values.supplier,
+        supplier: values.supplier.value,
         aggregation_type: values.aggregationType.value,
         options: values.colorMap.options,
         colormap: JSON.stringify(values.colorMap.customColormap) ==="{}"? undefined : values.colorMap.customColormap,
         rescalable: values.colorMap.rescalable,
-        shared_with: values.organisationsToSharedWith,
+        shared_with: values.organisationsToSharedWith.map((organisation: any) => organisation.value),
         datasets: values.datasets.map((dataset: any) => dataset.value)
       };
       // only add colormap in options if not multiple layers
@@ -294,7 +292,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
         <SelectDropdown
           title={'Dataset'}
           name={'datasets'}
-          placeholder={'- Select -'}
+          placeholder={'- Search and select -'}
           value={values.datasets}
           valueChanged={value => handleValueChange('datasets', value)}
           options={datasets.map((dataset: any) => ({
@@ -425,32 +423,33 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           onBlur={handleBlur}
         />
         {values.sharedWith ? (
-          <SlushBucket
+          <SelectDropdown
             title={'Organisations'}
             name={'organisationsToSharedWith'}
-            placeholder={'Search organisations'}
+            placeholder={'- Search and select -'}
             value={values.organisationsToSharedWith}
-            choices={organisationsToSharedWith.map((organisation: any) => {
-              return {
-                display: organisation.name,
-                value: organisation.uuid
-              }
-            })}
+            options={organisationsToSharedWith.map((organisation: any) => ({
+              value: organisation.uuid,
+              label: organisation.name
+            }))}
             valueChanged={(value: any) => handleValueChange('organisationsToSharedWith', value)}
             validated
             form={"raster_layer_form_id"}
             onFocus={handleFocus}
             onBlur={handleBlur}
+            isMulti
           />
         ) : null}
-        <SelectBox
+        <SelectDropdown
           title={'Organisation'}
           name={'organisation'}
           placeholder={'- Search and select -'}
           value={values.organisation}
           valueChanged={value => handleValueChange('organisation', value)}
-          choices={organisations.map((organisation: any) => [organisation.uuid, organisation.name])}
-          showSearchField
+          options={organisations.map((organisation: any) => ({
+            value: organisation.uuid,
+            label: organisation.name
+          }))}
           validated={values.organisation !== null && values.organisation !== ''}
           errorMessage={'Please select an organisation'}
           triedToSubmit={triedToSubmit}
@@ -459,14 +458,16 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           readOnly={true}
           form={"raster_layer_form_id"}
         />
-        <SelectBox
+        <SelectDropdown
           title={'Supplier'}
           name={'supplier'}
           placeholder={'- Search and select -'}
           value={values.supplier}
           valueChanged={value => handleValueChange('supplier', value)}
-          choices={supplierIds.map((suppl:any) => [suppl.username, suppl.username])}
-          showSearchField
+          options={supplierIds.map((suppl:any) => ({
+            value: suppl.username,
+            label: suppl.username
+          }))}
           validated
           onFocus={handleFocus}
           onBlur={handleBlur}

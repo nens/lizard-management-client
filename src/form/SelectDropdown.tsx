@@ -119,7 +119,8 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
     // Custom styling for the Indicator component
     indicatorsContainer: (styles) => ({
       ...styles,
-      cursor: 'pointer'
+      cursor: 'pointer',
+      visibility: readOnly ? 'hidden' : styles.visibility
     })
   };
 
