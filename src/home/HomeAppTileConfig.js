@@ -49,7 +49,7 @@ const appTiles = [
     icon: alarmIcon
   },
   {
-    requiredRoles: ["user"],
+    requiredRoles: ["user", "admin", "supplier", "manager"],
     key: 3,
     linksTo: {
       external: false,
