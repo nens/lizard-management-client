@@ -4,7 +4,7 @@ import AsyncSelect from 'react-select/async';
 import formStyles from "../styles/Forms.module.css";
 
 export type Value = {
-  value: string,
+  value: string | number,
   label: string,
   subLabel?: string | JSX.Element
 };

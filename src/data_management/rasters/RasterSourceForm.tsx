@@ -9,7 +9,7 @@ import { TextArea } from './../../form/TextArea';
 import { TextInput } from './../../form/TextInput';
 import { SubmitButton } from '../../form/SubmitButton';
 import { CancelButton } from '../../form/CancelButton';
-import { SelectBox } from '../../form/SelectBox';
+import { SelectDropdown } from '../../form/SelectDropdown';
 import { AcceptedFile, UploadRasterData } from './../../form/UploadRasterData';
 import Modal from '../../components/Modal';
 import { getOrganisations, getSelectedOrganisation, getSupplierIds } from '../../reducers';
@@ -22,6 +22,7 @@ import rasterSourceIcon from "../../images/raster_source_icon.svg";
 import formStyles from './../../styles/Forms.module.css';
 import { sendDataToLizardRecursive } from '../../utils/sendDataToLizard';
 import { rasterSourceFormHelpText } from '../../utils/helpTextForForms';
+import { convertToSelectObject } from '../../utils/convertToSelectObject';
 
 interface Props {
   currentRasterSource?: RasterSourceFromAPI
@@ -47,11 +48,11 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
     name: currentRasterSource.name,
     description: currentRasterSource.description,
     supplierCode: currentRasterSource.supplier_code,
-    supplier: currentRasterSource.supplier,
+    supplier: currentRasterSource.supplier ? convertToSelectObject(currentRasterSource.supplier) : null,
     temporal: currentRasterSource.temporal,
     interval: currentRasterSource.interval ? toISOValue(rasterIntervalStringServerToDurationObject(currentRasterSource.interval)) : '',
     accessModifier: currentRasterSource.access_modifier,
-    organisation: currentRasterSource.organisation.uuid.replace(/-/g, "") || null,
+    organisation: currentRasterSource.organisation ? convertToSelectObject(currentRasterSource.organisation.uuid.replace(/-/g, ""), currentRasterSource.organisation.name) : null,
     data: [],
   } : {
     name: null,
@@ -61,7 +62,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
     temporal: false,
     interval: null,
     accessModifier: 'Private',
-    organisation: selectedOrganisation.uuid.replace(/-/g, "") || null,
+    organisation: selectedOrganisation ? convertToSelectObject(selectedOrganisation.uuid.replace(/-/g, ""), selectedOrganisation.name) : null,
     data: []
   };
 
@@ -69,10 +70,10 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
     if (!currentRasterSource) {
       const rasterSource = {
         name: values.name,
-        organisation: values.organisation,
+        organisation: values.organisation && values.organisation.value,
         access_modifier: values.accessModifier,
         description: values.description,
-        supplier: values.supplier,
+        supplier: values.supplier && values.supplier.value,
         supplier_code: values.supplierCode,
         temporal: values.temporal,
         interval: values.interval,
@@ -103,10 +104,10 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
     } else {
       const body = {
         name: values.name,
-        organisation: values.organisation,
+        organisation: values.organisation && values.organisation.value,
         access_modifier: values.accessModifier,
         description: values.description,
-        supplier: values.supplier,
+        supplier: values.supplier && values.supplier.value,
         supplier_code: values.supplierCode,
         temporal: values.temporal,
         interval: values.interval,
@@ -244,14 +245,13 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           onBlur={handleBlur}
           readOnly={!!currentRasterSource}
         />
-        <SelectBox
+        <SelectDropdown
           title={'Organisation'}
           name={'organisation'}
           placeholder={'- Search and select -'}
           value={values.organisation}
           valueChanged={value => handleValueChange('organisation', value)}
-          choices={organisations.map((organisation: any) => [organisation.uuid, organisation.name])}
-          showSearchField
+          options={organisations.map((organisation: any) => convertToSelectObject(organisation.uuid, organisation.name))}
           validated={values.organisation !== null && values.organisation !== ''}
           errorMessage={'Please select an organisation'}
           triedToSubmit={triedToSubmit}
@@ -259,14 +259,13 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           onBlur={handleBlur}
           readOnly={!(!currentRasterSource && organisationsToSwitchTo.length > 0 && selectedOrganisation.roles.includes('admin'))}
         />
-        <SelectBox
+        <SelectDropdown
           title={'Supplier'}
           name={'supplier'}
           placeholder={'- Search and select -'}
           value={values.supplier}
           valueChanged={value => handleValueChange('supplier', value)}
-          choices={supplierIds.map((suppl:any) => [suppl.username, suppl.username])}
-          showSearchField
+          options={supplierIds.map((suppl: any) => convertToSelectObject(suppl.username))}
           validated
           onFocus={handleFocus}
           onBlur={handleBlur}
