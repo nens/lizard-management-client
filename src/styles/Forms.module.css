@@ -63,15 +63,15 @@
 }
 .FormControl:focus {
   outline: none;
-  border-color: #73C9B2;
-  box-shadow: 0 0 1px 1px #73C9B2;
+  border-color: var(--color-border-input);
+  box-shadow: 0 0 1px 1px var(--color-border-input);
 }
 .FormControl:read-only {
-  background-color: rgb(216, 216, 216);
+  background-color: var(--color-input-disabled);
   cursor: not-allowed;
 }
 .FormSubmitted:invalid {
-  border-color: #AE0000;
+  border-color: var(--color-border-input-invalid);
 }
 .FormSubmitted:invalid:focus {
   box-shadow: none;
@@ -95,7 +95,7 @@
   transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
 }
 .FormControlSmall:focus {
-  border-color: #73C9B2;
+  border-color: var(--color-border-input);
   outline: 0;
 }
 

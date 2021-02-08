@@ -14,12 +14,12 @@
   justify-content: center;
 }
 .AccessModifier:focus {
-  border-color: #73C9B2 !important;
-  box-shadow: 0 0 1px 1px #73C9B2;
+  border-color: var(--color-border-input) !important;
+  box-shadow: 0 0 1px 1px var(--color-border-input);
   outline: none;
 }
 .AccessModifierSelected {
-  border: 1px solid #73C9B2;
+  border: 1px solid var(--color-border-input);
   background-color: #55BFA226;
 }
 

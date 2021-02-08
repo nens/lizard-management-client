@@ -69,6 +69,7 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
     };
   });
 
+  // Custom Option field to add sub-label
   const Option: React.FC<OptionProps<{}, boolean>> = (props) => (
     <components.Option {...props}>
       <div
@@ -82,7 +83,7 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
       </div>
       <div
         style={{
-          color: props.isSelected ? undefined : '#ccc',
+          fontStyle: 'italic',
           overflow: 'hidden',
           textOverflow: 'ellipsis',
           whiteSpace: 'nowrap'
@@ -100,17 +101,17 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
       let borderColor: string = styles.borderColor as string;
       let boxShadow: string = styles.boxShadow as string;
       if (triedToSubmit && !validated) {
-        borderColor =  '#AE0000';
+        borderColor =  'var(--color-border-input-invalid)';
         boxShadow = 'none';
       } else if (isFocused) {
-        borderColor = '#73C9B2';
-        boxShadow = '0 0 1px 1px #73C9B2';
+        borderColor = 'var(--color-border-input)';
+        boxShadow = '0 0 1px 1px var(--color-border-input)';
       };
       return {
         ...styles,
         paddingTop: 4,
         paddingBottom: 4,
-        backgroundColor: readOnly ?  'rgb(216, 216, 216)' : styles.backgroundColor,
+        backgroundColor: readOnly ?  'var(--color-input-disabled)' : styles.backgroundColor,
         cursor: readOnly ? 'not-allowed' : styles.cursor,
         borderColor: borderColor,
         boxShadow: boxShadow,

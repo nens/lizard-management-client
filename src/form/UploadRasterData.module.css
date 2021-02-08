@@ -8,7 +8,7 @@
 }
 
 .DropZoneContainer:focus {
-  border-color: #73C9B2;
+  border-color: var(--color-border-input);
   outline: none;
 }
 

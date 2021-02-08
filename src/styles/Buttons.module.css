@@ -19,7 +19,7 @@
   transform: translateY(2px);
 }
 .NewButton:focus {
-  outline-color: #73C9B2;
+  outline-color: var(--color-border-input);
 }
 .NewButton:disabled {
   background-color: var(--color-button-disabled);
@@ -53,7 +53,7 @@
   cursor: pointer;
 }
 .ButtonLink:focus {
-  outline-color: #73C9B2;
+  outline-color: var(--color-border-input);
 }
 
 
@@ -198,7 +198,7 @@
   background-color: transparent;
 }
 .IconButton:focus {
-  outline-color: #73C9B2;
+  outline-color: var(--color-border-input);
 }
 .IconButton:active {
   transform: translateY(2px);

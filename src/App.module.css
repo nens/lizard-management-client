@@ -8,6 +8,9 @@
   --color-button:  #009F86;
   --color-button-disabled: #878787;
   --font-weight-button: 600;
+  --color-border-input: #73C9B2;
+  --color-border-input-invalid: #AE0000;
+  --color-input-disabled: rgb(216, 216, 216);
 }
 
 button {
