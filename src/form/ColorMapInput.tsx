@@ -264,7 +264,7 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
 
   return (
     <label
-      htmlFor={name}
+      htmlFor={name+'colormapInput'}
       className={formStyles.Label}
     >
       {showCustomColormapModal? 
@@ -320,7 +320,6 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
             readOnly={readOnly}
             form={form}
             onFocus={onFocus}
-            onBlur={onBlur}
           />
           {
             JSON.stringify(colorMapValue.customColormap) !=="{}" && JSON.stringify(colorMapValue.options) ==="{}"?
