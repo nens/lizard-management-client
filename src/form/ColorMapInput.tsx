@@ -266,7 +266,10 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
   const placeholderMaximumColorRange = intl.formatMessage({ id: "placeholder_maximum_color_range" })
 
   return (
-    <div>
+    <div
+      // we need this className for the margin-botom
+      className={formStyles.Label}
+    >
       
         {showCustomColormapModal? 
           <ModalBackground
@@ -339,42 +342,48 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
               }
             </div>
           </label>
-          <br />
-          <span className={`${"text-muted"} ${formStyles.LabelTitle}`}>
-            <FormattedMessage id="color_map.minimum_color_range" />
-          </span>
-          <br />
-          <input
-            id={"colormap_minimum"}
-            type="number"
-            autoComplete="off"
-            onChange={e => handleValueChanged('min', toFloat(e.target.value))}
-            value={(colorMapType && colorMapType.min) || ""}
-            placeholder={placeholderMinimumColorRange}
-            className={formStyles.FormControl}
-            onFocus={onFocus}
-            onBlur={onBlur}
-            readOnly={readOnly}
-            form={form}
-          />
-          <br />
-          <span className={`${"text-muted"} ${formStyles.LabelTitle}`}>
-          <FormattedMessage id="color_map.maximum_color_range" />
-          </span>
-          <input
-            id={"colormap_maximum"}
-            type="number"
-            autoComplete="off"
-            value={(colorMapType && colorMapType.max) || ""}
-            onChange={e => handleValueChanged('max', toFloat(e.target.value))}
-            placeholder={placeholderMaximumColorRange}
-            className={formStyles.FormControl}
-            onFocus={onFocus}
-            onBlur={onBlur}
-            readOnly={readOnly}
-            form={form}
-          />
-          <br/>
+          <label
+            htmlFor={"colormap_minimum"}
+            className={formStyles.Label}
+          >
+            <span className={`${"text-muted"} ${formStyles.LabelTitle}`}>
+              <FormattedMessage id="color_map.minimum_color_range" />
+            </span>
+            <input
+              id={"colormap_minimum"}
+              type="number"
+              autoComplete="off"
+              onChange={e => handleValueChanged('min', toFloat(e.target.value))}
+              value={(colorMapType && colorMapType.min) || ""}
+              placeholder={placeholderMinimumColorRange}
+              className={formStyles.FormControl}
+              onFocus={onFocus}
+              onBlur={onBlur}
+              readOnly={readOnly}
+              form={form}
+            />
+          </label>
+          <label
+            htmlFor={"colormap_maximum"}
+            className={formStyles.Label}
+          >
+            <span className={`${"text-muted"} ${formStyles.LabelTitle}`}>
+            <FormattedMessage id="color_map.maximum_color_range" />
+            </span>
+            <input
+              id={"colormap_maximum"}
+              type="number"
+              autoComplete="off"
+              value={(colorMapType && colorMapType.max) || ""}
+              onChange={e => handleValueChanged('max', toFloat(e.target.value))}
+              placeholder={placeholderMaximumColorRange}
+              className={formStyles.FormControl}
+              onFocus={onFocus}
+              onBlur={onBlur}
+              readOnly={readOnly}
+              form={form}
+            />
+          </label>
           <CheckBox
             title={'Rescalable'}
             name={name+'_rescalable'}
