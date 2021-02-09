@@ -24,3 +24,9 @@
 .ActionList > li:hover {
   background-color: rgba(0,0,0,.05);
 }
+
+/* CSS to render ActionList dropdown on top of the last ActionButton in Table */
+.LastItemInTable .ActionList {
+  bottom: 100%;
+  top: unset;
+}
