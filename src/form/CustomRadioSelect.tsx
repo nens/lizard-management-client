@@ -39,13 +39,11 @@ export const CustomRadioSelect: React.FC<Props> = (props) => {
 
           return (
               <label 
-                htmlFor={name+option.value}
                 className={styles.Label}
                 key={option.value}
               >
                 <input 
                   type="radio" 
-                  id={name+option.value} 
                   name={name} 
                   value={option.value}
                   onChange={(event:any)=>{

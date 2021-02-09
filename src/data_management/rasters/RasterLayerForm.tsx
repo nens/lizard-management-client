@@ -392,7 +392,10 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           triedToSubmit={triedToSubmit}
           form={"raster_layer_form_id"}
           onFocus={handleFocus}
-          onBlur={()=>{!showColormapModal && handleBlur()}}
+          onBlur={()=>{
+            !showColormapModal && 
+            handleBlur()
+          }}
           setShowCustomColormapModal={setShowColormapModal}
           showCustomColormapModal={showColormapModal}
         />
