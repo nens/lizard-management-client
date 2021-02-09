@@ -51,8 +51,8 @@
   justify-content: flex-start;
   min-width: 0;
 }
-/* CSS to render ActionList dropdown on top of the last ActionButton */
-.Table > div > span:last-child > div > ul {
+/* CSS to render ActionList dropdown on top of the last ActionButton in Table */
+.LastItem > div > ul {
   bottom: 100%;
   top: unset;
 }
