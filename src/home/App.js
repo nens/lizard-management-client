@@ -8,6 +8,10 @@ import doArraysHaveEqualElement from '../utils/doArraysHaveEqualElement';
 
 import {appTiles} from './HomeAppTileConfig';
 
+const tileData = [
+  {}
+]
+
 class App extends Component {
   constructor(props) {
     super(props);
