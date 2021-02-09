@@ -16,11 +16,8 @@ const FormActionButtons: React.FC<Props> = ({ actions }) => {
     <ActionButton
       actions={actions.map(action=>action.displayValue)}
       onChange={actionDisplayValue=>{
-          const currentAction = actions.find(action => action.displayValue === actionDisplayValue)
-          if (currentAction) {
-            // use a timeout to allow the select box to close so the confirm box of the delete option is not blocked by it
-            window.setTimeout(()=>{currentAction.actionFunction();},0)
-          }
+          const currentAction = actions.find(action => action.displayValue === actionDisplayValue);
+          if (currentAction) currentAction.actionFunction();
       }}
       display={'ACTIONS'}
       forParent={'Form'}
