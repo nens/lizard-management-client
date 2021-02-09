@@ -46,7 +46,8 @@ interface ColorMapProps {
   form?: string,
   onFocus?: (e: React.ChangeEvent<HTMLInputElement>) => void,
   onBlur?: () => void,
-  setShowCustomColormapModalProp?: (bool:boolean) => void
+  setShowCustomColormapModal: (bool:boolean) => void,
+  showCustomColormapModal: boolean,
 };
 
 export const colorMapValidator = (options: ColorMapOptions | null): validatorResult => {
@@ -94,7 +95,8 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
     onFocus,
     onBlur,
     intl,
-    setShowCustomColormapModalProp,
+    setShowCustomColormapModal,
+    showCustomColormapModal,
   } = props;
 
   // Set validity of the input field
@@ -115,12 +117,6 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
     rescalable: false,
     customColormap: {},
   });
-  const [showCustomColormapModal, setShowCustomColormapModal] = useState(false);
-
-  const setShowCustomColormapModalWithCallback = (bool:boolean) => {
-    setShowCustomColormapModalProp && setShowCustomColormapModalProp(bool);
-    setShowCustomColormapModal(bool);
-  };
 
   const { options } = colorMapValue;
   const prevStyles = usePrevious(options.styles);
@@ -166,7 +162,7 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
   const colorMapChanged = (colorMap: string | null) => {
 
     if (colorMap === "Custom colormap") {
-      setShowCustomColormapModalWithCallback(true);
+      setShowCustomColormapModal(true);
       return;
     }
 
@@ -275,7 +271,7 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
         {showCustomColormapModal? 
           <ModalBackground
             title={'CUSTOM COLORMAP'}
-            handleClose={() => setShowCustomColormapModalWithCallback(false)}
+            handleClose={() => setShowCustomColormapModal(false)}
             // previously this value was precisely hardcoded to pixels, because some of the content has a fixed minheight
             // height={'816px'}
             height={'90%'}
@@ -286,10 +282,10 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
             >
               <ColormapForm
                 currentRecord={value.customColormap.data? value.customColormap: undefined}
-                cancelAction={()=>{setShowCustomColormapModalWithCallback(false)}}
+                cancelAction={()=>{setShowCustomColormapModal(false)}}
                 confirmAction={(customColormap:any)=>{
                   customColormapChanged(customColormap);
-                  setShowCustomColormapModalWithCallback(false);
+                  setShowCustomColormapModal(false);
                 }}
               />
             </div>
@@ -331,7 +327,7 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
                 JSON.stringify(colorMapValue.customColormap) !=="{}" && JSON.stringify(colorMapValue.options) ==="{}"?
                 <div style={{position:"absolute", left: "164px", top: "18px"}}>
                   <button
-                    onClick={()=>setShowCustomColormapModalWithCallback(true)}
+                    onClick={()=>setShowCustomColormapModal(true)}
                     className={styles.ColormapEditButton}
                   >
                     <i className='fa fa-edit' title='Undo' /> 

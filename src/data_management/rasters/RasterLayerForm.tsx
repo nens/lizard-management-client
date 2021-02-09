@@ -394,7 +394,8 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           form={"raster_layer_form_id"}
           onFocus={handleFocus}
           onBlur={()=>{!showColormapModal && handleBlur()}}
-          setShowCustomColormapModalProp={setShowColormapModal}
+          setShowCustomColormapModal={setShowColormapModal}
+          showCustomColormapModal={showColormapModal}
         />
         <span className={formStyles.FormFieldTitle}>
           3: Rights
