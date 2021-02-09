@@ -195,9 +195,8 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
   const { rasterSource } = values;
   const [accessModifier, setAccessModifier] = useState<string | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  // we keep the showColormapModal state in both the colormapinput component and in this raster-layerform because:
-  // - the colormapinput component is not complete without this state: it cannot be used as a self containing unit otherwise.
-  // - this rasterlayer form unfortuenedly needs to know if this modal is open, in order to not trigger the onblur event if modal is open:
+  // we keep the showColormapModal state in the raster-layerform.
+  // IMO (Tom) keeping it in colormapinput would have been better, but we had to solve this bug:
   // https://github.com/nens/threedi-live-site/issues/861
   const [showColormapModal, setShowColormapModal] = useState(false)
 
