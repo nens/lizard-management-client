@@ -14,9 +14,8 @@ const ActionList: React.FC<Props> = ({ actions, onChange, showActionList, render
       className={styles.ActionList}
       style={{
         display: showActionList ? 'block' : 'none',
-        position: 'absolute',
         bottom: renderUp ? '100%' : undefined,
-        top: renderUp ? undefined : '100%'
+        top: renderUp ? 'unset' : undefined
       }}
     >
       {actions.map((action, i) => (

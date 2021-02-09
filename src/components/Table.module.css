@@ -36,6 +36,7 @@
   grid-auto-rows: max-content;
   overflow-y: auto;
   display: grid;
+  height: 100%;
 }
 
 /* cells */
@@ -49,6 +50,11 @@
   align-items: center;
   justify-content: flex-start;
   min-width: 0;
+}
+/* CSS to render ActionList dropdown on top of the last ActionButton */
+.Table > div > span:last-child > div > ul {
+  bottom: 100%;
+  top: unset;
 }
 
 .CellEllipsis {
