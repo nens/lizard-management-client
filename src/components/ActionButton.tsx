@@ -5,7 +5,7 @@ import ActionList from './ActionList';
 
 interface Props {
   actions: string[];
-  onChange: ((string:string)=>void);
+  onChange: (value: string) => void;
   display: string | JSX.Element;
   forParent: 'Table' | 'Form';
 }
@@ -14,11 +14,11 @@ const ActionButtons: React.FC<Props> = ({actions, onChange, display, forParent }
   const [showActionList, setShowActionList] = useState<boolean>(false);
 
   useEffect(() => {
-    const closeModalOnEsc = (e: any) => {
+    const closeActionListOnEsc = (e: any) => {
       if (e.key === 'Escape') setShowActionList(false);
     };
-    window.addEventListener('keydown', closeModalOnEsc);
-    return () => window.removeEventListener('keydown', closeModalOnEsc);
+    window.addEventListener('keydown', closeActionListOnEsc);
+    return () => window.removeEventListener('keydown', closeActionListOnEsc);
   });
 
   return (
