@@ -46,8 +46,6 @@ interface ColorMapProps {
   form?: string,
   onFocus?: (e: React.ChangeEvent<HTMLInputElement>) => void,
   onBlur?: () => void,
-  setShowCustomColormapModal: (bool:boolean) => void,
-  showCustomColormapModal: boolean,
 };
 
 export const colorMapValidator = (options: ColorMapOptions | null): validatorResult => {
@@ -95,8 +93,6 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
     onFocus,
     onBlur,
     intl,
-    setShowCustomColormapModal,
-    showCustomColormapModal,
   } = props;
 
   // Set validity of the input field
@@ -111,6 +107,7 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
     };
   })
 
+  const [showCustomColormapModal, setShowCustomColormapModal] = useState(false);
   const [previewColor, setPreviewColor] = useState<LegendResponse | null>(null);
   const [colorMapValue, setColorMapValue] = useState<ColorMapOptions>({
     options: {},

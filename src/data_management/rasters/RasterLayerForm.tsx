@@ -195,11 +195,6 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
   const { rasterSource } = values;
   const [accessModifier, setAccessModifier] = useState<string | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  // we keep the showColormapModal state in the raster-layerform.
-  // IMO (Tom) keeping it in colormapinput would have been better, but we had to solve this bug:
-  // https://github.com/nens/threedi-live-site/issues/861
-  const [showColormapModal, setShowColormapModal] = useState(false)
-
 
   useEffect(() => {
     if (!currentRasterLayer && rasterSource) {
@@ -393,8 +388,6 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           form={"raster_layer_form_id"}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          setShowCustomColormapModal={setShowColormapModal}
-          showCustomColormapModal={showColormapModal}
         />
         <span className={formStyles.FormFieldTitle}>
           3: Rights
