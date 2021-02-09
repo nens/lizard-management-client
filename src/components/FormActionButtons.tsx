@@ -1,5 +1,4 @@
 import React from 'react';
-import styles from './FormActionButtons.module.css';
 import ActionButton from './ActionButton';
 
 
@@ -12,7 +11,7 @@ interface Props {
   actions: Action[];
 }
 
-const FormActionButtons: React.FC<Props> = ({actions, }) => {
+const FormActionButtons: React.FC<Props> = ({ actions }) => {
   return (
     <ActionButton
       actions={actions.map(action=>action.displayValue)}
@@ -23,7 +22,8 @@ const FormActionButtons: React.FC<Props> = ({actions, }) => {
             window.setTimeout(()=>{currentAction.actionFunction();},0)
           }
       }}
-      clickableComponent={<button className={styles.ActionButton}>ACTIONS</button>}
+      display={'ACTIONS'}
+      forParent={'Form'}
     />
   );
 };

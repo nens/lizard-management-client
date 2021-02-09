@@ -1,14 +1,26 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './ActionButton.module.css';
+import ActionList from './ActionList';
 
 
 interface Props {
   actions: string[];
-  onChange: ((string:string)=>void)
-  clickableComponent: JSX.Element
+  onChange: ((string:string)=>void);
+  display: string | JSX.Element;
+  forParent: 'Table' | 'Form';
 }
 
-const ActionButtons: React.FC<Props> = ({actions, onChange, clickableComponent }) => {
+const ActionButtons: React.FC<Props> = ({actions, onChange, display, forParent }) => {
+  const [showActionList, setShowActionList] = useState<boolean>(false);
+
+  useEffect(() => {
+    const closeModalOnEsc = (e: any) => {
+      if (e.key === 'Escape') setShowActionList(false);
+    };
+    window.addEventListener('keydown', closeModalOnEsc);
+    return () => window.removeEventListener('keydown', closeModalOnEsc);
+  });
+
   return (
     <div
       className={styles.ActionButtons}
@@ -20,20 +32,19 @@ const ActionButtons: React.FC<Props> = ({actions, onChange, clickableComponent }
         justifyContent: "flex-end",
       }}
     >
-      <select
-        // set the default value so clicking on another value is counted as a "onchange" by react.
-        value={"Actions"}
-        onChange={event=>{
-          onChange(event.target.value+'')
-        }}
+      <button
+        className={forParent === 'Table' ? styles.TableActionButton : styles.FormActionButton}
+        onClick={() => setShowActionList(!showActionList)}
+        onBlur={() => setShowActionList(false)}
       >
-        {
-          actions.map(action => <option key={action} value={action}>{action}</option>)
-        }
-        {/* use this hidden option */}
-        <option hidden value="Actions">Actions</option>
-      </select>
-      {clickableComponent}
+        {display}
+      </button>
+      <ActionList
+        actions={actions}
+        onChange={value => onChange(value)}
+        showActionList={showActionList}
+        renderUp={forParent === 'Form'}
+      />
     </div>
   )
 };
