@@ -5,46 +5,23 @@
   align-items: center;
 }
 
-.OptionContainer {
-  position: relative;
-}
-
-/* radio-button */
-.OptionContainer > *:nth-child(1) {
-  opacity: 0;
-  position: absolute;
-  /* top: 0;
-  left: 0; */
-}
-
-/* selectedLabel component needs be placed at same location as normal label */
-.OptionContainer > *:nth-child(2) > *:nth-child(2) {
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-.Label {
+.OptionsRow > label {
   cursor: pointer;
   margin-right: 16px;
 }
 
-/* Show selected, hide normal label */
-input[type="radio"]:checked+label.Label > *:nth-child(1) {
+/* hide everything inside the label */
+.OptionsRow > label > * {
   visibility: hidden;
   opacity: 0;
-}
-input[type="radio"]:checked+label.Label > *:nth-child(2) {
-  visibility: visible;
-  opacity: 1;
+  position: absolute;
 }
 
-/* Hide selected, show normal label */
-input[type="radio"]:not(:checked)+label.Label > *:nth-child(2) {
-  visibility: hidden;
-  opacity: 0;
-}
-input[type="radio"]:not(:checked)+label.Label > *:nth-child(1) {
+/* show selected items next to a selected checkbox, unselected items next to a undelected checkbox */
+.OptionsRow > label > input[type="radio"]:checked ~ .Selected,
+.OptionsRow > label > input[type="radio"]:not(:checked) ~ .NotSelected {
   visibility: visible;
   opacity: 1;
+  /* This relative position is needed otherwise so that component gets the height of its content. */
+  position: relative;
 }
