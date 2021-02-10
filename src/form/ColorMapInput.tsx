@@ -160,6 +160,10 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
 
     if (colorMap === "Custom colormap") {
       setShowCustomColormapModal(true);
+      window.setTimeout(()=>{
+        // @ts-ignore
+        document.activeElement && document.activeElement.blur && document.activeElement.blur();
+      },0)
       return;
     }
 
@@ -264,7 +268,7 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
 
   return (
     <label
-      htmlFor={name}
+      htmlFor={name+'colormapInput'}
       className={formStyles.Label}
     >
       {showCustomColormapModal? 
