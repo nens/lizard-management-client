@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './Table.module.css';
+import actionListStyles from './ActionList.module.css';
 import {DataRetrievalState} from '../types/retrievingDataTypes';
 import MDSpinner from "react-md-spinner";
 
@@ -50,7 +51,10 @@ const Table: React.FC<Props> = ({tableData, setTableData, gridTemplateColumns, c
               return (
                 <React.Fragment key={idx}>
                   {columnDefinitions.map((definition, i)=>
-                    <span className={rowIsSelected? styles.Selected: styles.NotSelected} key={idx + i}>
+                    <span
+                      className={`${rowIsSelected ? styles.Selected : ''} ${tableData.length > 1 && idx === (tableData.length -1) && i === (columnDefinitions.length - 1) ? actionListStyles.LastItemInTable : ''}`}
+                      key={idx + i}
+                    >
                       {definition.renderFunction(tableRow, updateTableRow, triggerReloadWithCurrentPage, triggerReloadWithBasePage)}
                     </span>
                   )}

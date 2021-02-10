@@ -1,5 +1,4 @@
 import React from 'react';
-import styles from './FormActionButtons.module.css';
 import ActionButton from './ActionButton';
 
 
@@ -12,18 +11,16 @@ interface Props {
   actions: Action[];
 }
 
-const FormActionButtons: React.FC<Props> = ({actions, }) => {
+const FormActionButtons: React.FC<Props> = ({ actions }) => {
   return (
     <ActionButton
       actions={actions.map(action=>action.displayValue)}
       onChange={actionDisplayValue=>{
-          const currentAction = actions.find(action => action.displayValue === actionDisplayValue)
-          if (currentAction) {
-            // use a timeout to allow the select box to close so the confirm box of the delete option is not blocked by it
-            window.setTimeout(()=>{currentAction.actionFunction();},0)
-          }
+          const currentAction = actions.find(action => action.displayValue === actionDisplayValue);
+          if (currentAction) currentAction.actionFunction();
       }}
-      clickableComponent={<button className={styles.ActionButton}>ACTIONS</button>}
+      display={'ACTIONS'}
+      forForm
     />
   );
 };

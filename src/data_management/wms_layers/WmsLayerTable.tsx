@@ -120,7 +120,7 @@ export const WmsLayerTable = (props:any) =>  {
               triggerReloadWithBasePage={triggerReloadWithBasePage}
               actions={[
                 {
-                  displayValue: "delete",
+                  displayValue: "Delete",
                   actionFunction: deleteAction,
                 },
               ]}

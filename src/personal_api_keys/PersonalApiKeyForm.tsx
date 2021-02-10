@@ -183,16 +183,15 @@ const PersonalApiKeyFormModel: React.FC<Props & PropsFromDispatch & RouteCompone
                   actions={[
                     {
                       displayValue: "Delete",
-                      actionFunction: () => { setShowDeleteModal(true); }
+                      actionFunction: () => setShowDeleteModal(true)
                     },
                   ]} 
                 />
-            :null}
-            {!currentRecord?
-            <SubmitButton
-              onClick={tryToSubmitForm} 
-            />
-            :null}
+            :
+              <SubmitButton
+                onClick={tryToSubmitForm}
+              />
+            }
         </div>
         </div>
       </form>

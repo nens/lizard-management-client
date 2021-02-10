@@ -168,7 +168,7 @@ export const RasterSourceTable = (props:any) =>  {
               triggerReloadWithBasePage={triggerReloadWithBasePage}
               actions={[
                 {
-                  displayValue: "delete",
+                  displayValue: "Delete",
                   actionFunction: deleteActionRaster,
                 },
                 // implement later
