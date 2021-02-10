@@ -91,7 +91,7 @@ export const PersonalApiKeysTable = (props:any) =>  {
               triggerReloadWithBasePage={triggerReloadWithBasePage}
               actions={[
                 {
-                  displayValue: "delete",
+                  displayValue: "Delete",
                   actionFunction: deleteAction,
                 },
               ]}

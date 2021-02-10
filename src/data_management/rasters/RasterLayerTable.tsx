@@ -137,7 +137,7 @@ export const RasterLayerTable: React.FC<RouteComponentProps> = (props) =>  {
               triggerReloadWithBasePage={triggerReloadWithBasePage}
               actions={[
                 {
-                  displayValue: "delete",
+                  displayValue: "Delete",
                   actionFunction: deleteActionRaster,
                 },
               ]}
