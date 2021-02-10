@@ -5,17 +5,17 @@ interface Props {
   actions: string[];
   onChange: (value: string) => void;
   showActionList: boolean;
-  renderUp?: boolean;
+  dropUp?: boolean;
 }
 
-const ActionList: React.FC<Props> = ({ actions, onChange, showActionList, renderUp }) => {
+const ActionList: React.FC<Props> = ({ actions, onChange, showActionList, dropUp }) => {
   return (
     <ul
       className={styles.ActionList}
       style={{
         display: showActionList ? 'block' : 'none',
-        bottom: renderUp ? '100%' : undefined,
-        top: renderUp ? 'unset' : undefined
+        bottom: dropUp ? '100%' : undefined,
+        top: dropUp ? 'unset' : undefined
       }}
     >
       {actions.map((action, i) => (

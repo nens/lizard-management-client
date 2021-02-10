@@ -20,7 +20,7 @@ const FormActionButtons: React.FC<Props> = ({ actions }) => {
           if (currentAction) currentAction.actionFunction();
       }}
       display={'ACTIONS'}
-      forParent={'Form'}
+      forForm
     />
   );
 };

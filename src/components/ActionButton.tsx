@@ -7,10 +7,10 @@ interface Props {
   actions: string[];
   onChange: (value: string) => void;
   display: string | JSX.Element;
-  forParent: 'Table' | 'Form';
+  forForm?: boolean;
 }
 
-const ActionButtons: React.FC<Props> = ({actions, onChange, display, forParent }) => {
+const ActionButtons: React.FC<Props> = ({actions, onChange, display, forForm }) => {
   const [showActionList, setShowActionList] = useState<boolean>(false);
 
   useEffect(() => {
@@ -33,7 +33,7 @@ const ActionButtons: React.FC<Props> = ({actions, onChange, display, forParent }
       }}
     >
       <button
-        className={forParent === 'Table' ? styles.TableActionButton : styles.FormActionButton}
+        className={forForm ? styles.FormActionButton : styles.TableActionButton}
         onClick={() => setShowActionList(!showActionList)}
         onBlur={() => setShowActionList(false)}
       >
@@ -43,7 +43,7 @@ const ActionButtons: React.FC<Props> = ({actions, onChange, display, forParent }
         actions={actions}
         onChange={value => onChange(value)}
         showActionList={showActionList}
-        renderUp={forParent === 'Form'}
+        dropUp={forForm} // render drop-up for Form
       />
     </div>
   )
