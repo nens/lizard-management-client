@@ -6,6 +6,7 @@ import formStyles from "../styles/Forms.module.css";
 interface Option {
   value: string,
   component: JSX.Element,
+  // pass selected conponent seperately so it can be styles by the user of this component freely
   selectedComponent: JSX.Element,
 }
 
