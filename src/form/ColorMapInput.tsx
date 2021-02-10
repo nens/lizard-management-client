@@ -160,6 +160,10 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
 
     if (colorMap === "Custom colormap") {
       setShowCustomColormapModal(true);
+      window.setTimeout(()=>{
+        // @ts-ignore
+        document.activeElement && document.activeElement.blur && document.activeElement.blur();
+      },0)
       return;
     }
 
@@ -320,6 +324,7 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
             readOnly={readOnly}
             form={form}
             onFocus={onFocus}
+            onBlur={onBlur}
           />
           {
             JSON.stringify(colorMapValue.customColormap) !=="{}" && JSON.stringify(colorMapValue.options) ==="{}"?
