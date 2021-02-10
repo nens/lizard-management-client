@@ -44,7 +44,9 @@ export interface Dataset {
 }
 
 export interface ObservationType {
-  id: number
+  id: number,
+  code: string,
+  parameter: string
 }
 
 interface RasterSourceInstance {

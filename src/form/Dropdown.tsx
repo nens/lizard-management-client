@@ -7,7 +7,7 @@ interface MyProps {
   name: string,
   value: string,
   options: string[],
-  valueChanged: (e: React.ChangeEvent<HTMLInputElement>) => void,
+  valueChanged: (value: string | null) => void,
   validated: boolean,
   clearInput?: (name: string) => void,
   errorMessage?: string | false,
@@ -32,8 +32,9 @@ export const Dropdown: React.FC<MyProps> = (props) => {
     readOnly
   } = props;
 
-  // Temporary state to reset input field on mouseOver and mouseOut
-  const [oldInputValue, setOldInputValue] = useState<string>('');
+  const [menuIsOpen, setMenuIsOpen] = useState<boolean>(false);
+  const [searchString, setSearchString] = useState<string>('');
+  const [filteredOptions, setFilteredOptions] = useState<string[]>(options);
 
   // Set validity of the input field
   const myInput = useRef<HTMLInputElement>(null);
@@ -47,6 +48,34 @@ export const Dropdown: React.FC<MyProps> = (props) => {
     };
   });
 
+  // Filter options
+  useEffect(() => {
+    setFilteredOptions(options.filter(
+      option => option.toLowerCase().includes(searchString.toLowerCase())
+    ));
+  }, [name, options, searchString]);
+
+  const handleKeyUp = (e: any) => {
+    if (e.key === "Escape") {
+      setMenuIsOpen(false);
+    };
+  };
+  
+  // const handleClickOutside = (event: Event) => {
+  //   if (
+  //       myInput.current &&
+  //       !myInput.current.contains(event.target as Node)
+  //   ) {
+  //       setMenuIsOpen(false);
+  //   }
+  // };
+  // useEffect(() => {
+  //   document.addEventListener('click', handleClickOutside, true);
+  //   return () => {
+  //     document.removeEventListener('click', handleClickOutside, true);
+  //   };
+  // });
+
   return (
     <label
       htmlFor={name}
@@ -56,32 +85,77 @@ export const Dropdown: React.FC<MyProps> = (props) => {
         {title}
       </span>
       <div style={{position: 'relative'}}>
+        <span
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            padding: 10,
+            height: '100%',
+            width: '100%',
+            overflow: 'hidden',
+            whiteSpace: 'nowrap',
+            textOverflow: 'ellipsis',
+            display: 'flex',
+            alignItems: 'center',
+            visibility: searchString ? 'hidden' : 'visible'
+          }}
+        >
+          {value}
+        </span>
         <input
           ref={myInput}
           name={name}
           id={name}
-          value={value}
           autoComplete={'off'}
           className={`${formStyles.FormControl} ${triedToSubmit ? formStyles.FormSubmitted : ''}`}
-          list={`${name}-list`}
-          placeholder={placeholder}
-          onChange={valueChanged}
-          onMouseOver={e => {
-            setOldInputValue(e.currentTarget.value);
-            e.currentTarget.value = '';
+          placeholder={!value ? placeholder : ''}
+          onClick={() => setMenuIsOpen(!menuIsOpen)}
+          onKeyUp={e => handleKeyUp(e)}
+          onKeyDown={() => setMenuIsOpen(true)}
+          onChange={e => setSearchString(e.target.value)}
+          style={{
+            position: 'relative',
+            zIndex: -1
           }}
-          onMouseOut={e => e.currentTarget.value = oldInputValue}
+          onBlur={() => setMenuIsOpen(false)}
         />
         {!readOnly && clearInput ? <ClearInputButton onClick={() => clearInput(name)}/> : null}
-        <datalist id={`${name}-list`}>
-          {options.map((option, i) => (
-            <option
-              key={i}
-              value={option}
-              label={option}
-            />
-          ))}
-        </datalist>
+        {menuIsOpen && (
+          <ul
+            style={{
+              position: 'absolute',
+              listStyle: 'none',
+              paddingLeft: 10,
+              top: '100%',
+              left: 0,
+              zIndex: 1,
+              backgroundColor: 'grey',
+              maxHeight: 250,
+              width: '100%',
+              overflowY: 'auto',
+              marginTop: 10,
+              marginBottom: 10,
+            }}
+          >
+            {filteredOptions.map((option, i) => (
+              <li
+                key={i}
+                style={{
+                  padding: '2px 0'
+                }}
+                onMouseDown={e => {
+                  e.preventDefault();
+                  setMenuIsOpen(false);
+                  valueChanged(option);
+                  if (myInput && myInput.current) myInput.current.focus();
+                }}
+              >
+                {option}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </label>
   );

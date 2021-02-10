@@ -8,8 +8,7 @@ import { TextInput } from './../../form/TextInput';
 import { IntegerInput } from '../../form/IntegerInput';
 import { SubmitButton } from '../../form/SubmitButton';
 import { CancelButton } from '../../form/CancelButton';
-import { SelectBox } from '../../form/SelectBox';
-import { SlushBucket } from '../../form/SlushBucket';
+import { SelectDropdown } from '../../form/SelectDropdown';
 import { AccessModifier } from '../../form/AccessModifier';
 import { useForm, Values } from '../../form/useForm';
 import { greaterThanMin, minLength, rangeCheck, jsonValidator} from '../../form/validators';
@@ -27,6 +26,7 @@ import formStyles from './../../styles/Forms.module.css';
 import SpatialBoundsField from "../../form/SpatialBoundsField";
 import { WmsLayerReceivedFromApi, wmsLayerReceivedFromApiToForm, WmsLayerFormType, wmsLayerGetDefaultFormValues, wmsLayerFormToFormSendToApi} from '../../types/WmsLayerType';
 import { wmsFormHelpText } from '../../utils/helpTextForForms';
+import { convertToSelectObject } from '../../utils/convertToSelectObject';
 
 interface Props {
   currentWmsLayer?: WmsLayerReceivedFromApi, 
@@ -47,7 +47,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
   const datasets = useSelector(getDatasets).available;
   const organisationsToSwitchTo = organisations.filter((org:any) => org.roles.includes('admin'));
 
-  const initialValues: WmsLayerFormType = currentWmsLayer ? wmsLayerReceivedFromApiToForm(currentWmsLayer) : wmsLayerGetDefaultFormValues(selectedOrganisation.uuid);
+  const initialValues: WmsLayerFormType = currentWmsLayer ? wmsLayerReceivedFromApiToForm(currentWmsLayer) : wmsLayerGetDefaultFormValues(selectedOrganisation);
   
   const onSubmit = (values: Values) => {
 
@@ -150,21 +150,15 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
-        <SlushBucket
+        <SelectDropdown
           title={'Tags / Datasets'}
           name={'datasets'}
-          placeholder={'Search datasets'}
+          placeholder={'- Search and select -'}
           value={values.datasets}
-          choices={datasets.map((dataset: any) => {
-            return {
-              display: dataset.slug,
-              value: dataset.slug,
-            }
-          })}
-          valueChanged={(value: any) => {
-            handleValueChange('datasets', value)
-          }}
+          valueChanged={value => handleValueChange('datasets', value)}
+          options={datasets.map((dataset: any) => convertToSelectObject(dataset.slug))}
           validated
+          isMulti
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
@@ -331,31 +325,26 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           onBlur={handleBlur}
         />
         {values.sharedWithCheckbox ? (
-          <SlushBucket
-            title={'Organisations'}
+          <SelectDropdown
+            title={'Organisations to share with'}
             name={'shared_with'}
             placeholder={'Search organisations'}
-            // str.replace is needed because we still use uuid without dashes everywhere. If possible we should remove this everywhere.
-            value={(values.shared_with).map((str: string)=>str.replace(/-/g, ""))}
-            choices={organisationsToSharedWith.map((organisation: any) => {
-              return {
-                display: organisation.name,
-                value: organisation.uuid
-              }
-            })}
-            valueChanged={(value: any) => handleValueChange('shared_with', value)}
+            value={values.shared_with}
+            options={organisationsToSharedWith.map((organisation: any) => convertToSelectObject(organisation.uuid, organisation.name))}
+            valueChanged={value => handleValueChange('shared_with', value)}
             validated
+            isMulti
             onFocus={handleFocus}
             onBlur={handleBlur}
           />
         ) : null}
-        <SelectBox
+        <SelectDropdown
           title={'Organisation'}
           name={'organisation'}
           placeholder={'- Search and select -'}
           value={typeof values.organisation === "string" ? values.organisation.replace(/-/g, ""): (values.organisation) }
           valueChanged={value => handleValueChange('organisation', value)}
-          choices={organisationsToSwitchTo.map((organisation: any) => [organisation.uuid, organisation.name])}
+          options={organisations.map((organisation: any) => convertToSelectObject(organisation.uuid, organisation.name))}
           validated={values.organisation !== null && values.organisation !== ""}
           errorMessage={'Please select an organisation'}
           readOnly={!(organisationsToSwitchTo.length > 0 && selectedOrganisation.roles.includes("admin"))}
@@ -363,16 +352,13 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
-        <SelectBox
+        <SelectDropdown
           title={'Supplier'}
           name={'supplier'}
           placeholder={'- Search and select -'}
           value={values.supplier}
           valueChanged={value => handleValueChange('supplier', value)}
-          choices={supplierIds.map((suppl:any)=>
-            [suppl.username, suppl.username]
-          )}
-          showSearchField={true}
+          options={supplierIds.map((suppl: any) => convertToSelectObject(suppl.username))}
           validated
           onFocus={handleFocus}
           onBlur={handleBlur}

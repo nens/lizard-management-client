@@ -2,7 +2,7 @@
 // {"styles": "transparent", "HEIGHT": 512, "ZINDEX": 20, "WIDTH": 1024, "effects": "radar:0:0.008", "TRANSPARENT": false}
 import React, { useEffect, useRef, useState } from "react";
 import { FormattedMessage, injectIntl, InjectedIntlProps } from "react-intl";
-import { SelectBox, choicesT } from "./SelectBox";
+import { SelectDropdown, Value } from "./SelectDropdown";
 import { CheckBox } from "./CheckBox";
 import { validatorResult } from "./validators";
 import styles from "./ColorMapInput.module.css";
@@ -13,11 +13,8 @@ import {
   validateStyleObj,
   colorMapTypeFromOptions
 } from "../utils/rasterOptionFunctions";
-// import Modal from '../components/Modal';
 import ModalBackground from '../components/ModalBackground';
-
 import { ColormapForm } from '../data_management/colormap/ColormapForm';
-
 
 export interface ColorMapOptions {
   options: {
@@ -35,9 +32,9 @@ interface LegendResponse {
 interface ColorMapProps {
   title: string | JSX.Element,
   name: string,
-  value: ColorMapOptions,
+  colorMapValue: ColorMapOptions,
   valueChanged: (value: ColorMapOptions) => void,
-  colorMaps: choicesT,
+  colorMaps: Value[],
   validated: boolean,
   errorMessage?: string | false,
   triedToSubmit?: boolean,
@@ -84,7 +81,7 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
     title,
     name,
     colorMaps,
-    value,
+    colorMapValue,
     valueChanged,
     validated,
     errorMessage,
@@ -108,21 +105,10 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
   })
 
   const [previewColor, setPreviewColor] = useState<LegendResponse | null>(null);
-  const [colorMapValue, setColorMapValue] = useState<ColorMapOptions>({
-    options: {},
-    rescalable: false,
-    customColormap: {},
-  });
   const [showCustomColormapModal, setShowCustomColormapModal] = useState(false);
 
   const { options } = colorMapValue;
   const prevStyles = usePrevious(options.styles);
-
-  useEffect(() => {
-    if (value !== undefined && value !== null) {
-      setColorMapValue(value);
-    };
-  }, [value]);
 
   useEffect(() => {
     const getRGBAGradient = (value: any | null) => {
@@ -287,7 +273,7 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
             style={{padding: "30px", flexGrow: 1, minHeight: 0,}}
           >
             <ColormapForm
-              currentRecord={value.customColormap.data? value.customColormap: undefined}
+              currentRecord={colorMapValue.customColormap.data? colorMapValue.customColormap: undefined}
               cancelAction={()=>{setShowCustomColormapModal(false)}}
               confirmAction={(customColormap:any)=>{
                 customColormapChanged(customColormap);
@@ -308,27 +294,43 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
           <span>{maxValue}</span>
         </div>
         <div style={{position: "relative"}}>
-          <SelectBox
+          <SelectDropdown
             title={''}
-            choices={[["Custom colormap","Custom colormap","+ Create new colormap for this raster"],...colorMaps]}
-            value={JSON.stringify(colorMapValue.customColormap) !=="{}" && JSON.stringify(colorMapValue.options) ==="{}" ? "Custom colormap" : (colorMapType && colorMapType.colorMap) || null}
             name={name}
+            options={[
+              {
+                value: "Custom colormap",
+                label: "Custom colormap",
+                subLabel: "+ Create new colormap for this raster"
+              },
+              ...colorMaps
+            ]}
+            value={JSON.stringify(colorMapValue.customColormap) !== "{}" && JSON.stringify(colorMapValue.options) === "{}" ? (
+              {
+                value: "Custom colormap",
+                label: "Custom colormap"
+              }
+            ) : (
+              {
+                value: colorMapType.colorMap,
+                label: colorMapType.colorMap
+              }
+            ) || null}
             validated={validated}
             errorMessage={errorMessage}
             triedToSubmit={triedToSubmit}
-            valueChanged={(colormap)=>{ 
-              colorMapChanged(colormap); 
+            valueChanged={option => {
+              // @ts-ignore
+              colorMapChanged(option? option.value : null);
             }}
             placeholder={placeholderColorMapSelection}
-            showSearchField={true}
             readOnly={readOnly}
             form={form}
             onFocus={onFocus}
             onBlur={onBlur}
           />
-          {
-            JSON.stringify(colorMapValue.customColormap) !=="{}" && JSON.stringify(colorMapValue.options) ==="{}"?
-            <div style={{position:"absolute", left: "164px", top: "18px"}}>
+          {JSON.stringify(colorMapValue.customColormap) !=="{}" && JSON.stringify(colorMapValue.options) ==="{}"?
+            <div style={{position:"absolute", left: 164, top: 20}}>
               <button
                 onClick={()=>setShowCustomColormapModal(true)}
                 className={styles.ColormapEditButton}
@@ -341,8 +343,6 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
             null
           }
         </div>
-        
-  
         <br />
         <span className={`${"text-muted"} ${formStyles.LabelTitle}`}>
           <FormattedMessage id="color_map.minimum_color_range" />

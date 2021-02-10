@@ -51,7 +51,7 @@ export const rasterLayerFormHelpText: HelpText = {
       <p><i>If this raster was created automatically from a source, there will be a reference to it.</i></p>
     </>
   ),
-  dataset: (
+  datasets: (
     <>
       <p>Choose a dataset for this object.</p>
       <p><i>Datasets are used to group objects together and can be seen as tag or label.</i></p>

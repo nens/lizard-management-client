@@ -1,3 +1,5 @@
+import { Value } from '../form/SelectDropdown';
+import { convertToSelectObject } from '../utils/convertToSelectObject';
 import { SpatialBounds } from './mapTypes';
 
 // TODO: reuse organisation type for rasterlayer in api/rasters.ts and this file from ./types/organisationType
@@ -34,13 +36,14 @@ export interface WmsLayerReceivedFromApi {
 
 export const wmsLayerReceivedFromApiToForm = (wmsLayer: WmsLayerReceivedFromApi): WmsLayerFormType => {
   return { 
-      ...wmsLayer,
-      sharedWithCheckbox: wmsLayer.shared_with.length > 1? true : false,
-      organisation: wmsLayer.organisation.uuid,
-      shared_with: wmsLayer.shared_with.map(orga=>orga.uuid),
-      datasets: wmsLayer.datasets.map(dataset=>dataset.slug),
-      options: JSON.stringify(wmsLayer.options)
-    }
+    ...wmsLayer,
+    sharedWithCheckbox: wmsLayer.shared_with.length > 1? true : false,
+    organisation: convertToSelectObject(wmsLayer.organisation.uuid.replace(/-/g, ""), wmsLayer.organisation.name),
+    shared_with: wmsLayer.shared_with.map(org => convertToSelectObject(org.uuid.replace(/-/g, ""), org.name)),
+    datasets: wmsLayer.datasets.map(dataset => convertToSelectObject(dataset.slug)),
+    supplier: wmsLayer.supplier ? convertToSelectObject(wmsLayer.supplier) : null,
+    options: JSON.stringify(wmsLayer.options)
+  }
 }
 
 export type WmsLayerFormType = {
@@ -48,7 +51,7 @@ export type WmsLayerFormType = {
   uuid?: string,
   slug: string;
   description: string;
-  datasets: string[];
+  datasets: Value[];
   
   wms_url: string;
   download_url: string;
@@ -61,17 +64,17 @@ export type WmsLayerFormType = {
   spatial_bounds: SpatialBounds | null;
   options: string;
 
-  organisation: string;
+  organisation: Value;
   sharedWithCheckbox: boolean;
-  shared_with: string[];
+  shared_with: Value[];
   access_modifier: string;
-  supplier: string;
+  supplier: Value | null;
   supplier_code: string;
 }
 
-export const wmsLayerGetDefaultFormValues = (organisationUuid: string): WmsLayerFormType => {
+export const wmsLayerGetDefaultFormValues = (organisation: Organisation): WmsLayerFormType => {
   return {
-    name: "",
+  name: "",
   uuid: "",
   slug: "",
   description: "",
@@ -90,11 +93,11 @@ export const wmsLayerGetDefaultFormValues = (organisationUuid: string): WmsLayer
   spatial_bounds: null,
   options: '{"transparent": "True"}',
 
-  organisation: organisationUuid,
+  organisation: convertToSelectObject(organisation.uuid.replace(/-/g, ""), organisation.name),
   sharedWithCheckbox: false,
   shared_with: [],
   access_modifier: "Private",
-  supplier: "",
+  supplier: null,
   supplier_code: "",
   }
   
@@ -107,6 +110,10 @@ export const wmsLayerFormToFormSendToApi = (wmsLayer: WmsLayerFormType) => {
       ...wmsLayer,
       uuid: wmsLayer.uuid === "" ? undefined :  wmsLayer.uuid,
       sharedWithCheckbox: undefined,
-      get_feature_info: wmsLayer.get_feature_info_url === ""? false: true
+      get_feature_info: wmsLayer.get_feature_info_url === ""? false: true,
+      organisation: wmsLayer.organisation && wmsLayer.organisation.value,
+      supplier: wmsLayer.supplier && wmsLayer.supplier.value,
+      shared_with: wmsLayer.shared_with.map(org => org.value),
+      datasets: wmsLayer.datasets.map(dataset => dataset.value),
     }
 }
