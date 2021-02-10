@@ -34,7 +34,10 @@ const ActionButtons: React.FC<Props> = ({actions, onChange, display, forForm }) 
     >
       <button
         className={forForm ? styles.FormActionButton : styles.TableActionButton}
-        onClick={() => setShowActionList(!showActionList)}
+        onClick={(e) => {
+          e.preventDefault(); // to prevent submitting the form
+          setShowActionList(!showActionList);
+        }}
         onBlur={() => setShowActionList(false)}
       >
         {display}
