@@ -6,6 +6,7 @@ import formStyles from "../styles/Forms.module.css";
 interface Option {
   value: string,
   component: JSX.Element,
+  // pass selected conponent seperately so it can be styles by the user of this component freely
   selectedComponent: JSX.Element,
 }
 
@@ -33,32 +34,28 @@ export const CustomRadioSelect: React.FC<Props> = (props) => {
   return (
     <div>
       <label><span className={`${formStyles.LabelTitle}`}>{title}</span></label>
-      {/* <br/> */}
       <div className={styles.OptionsRow}>
       {
         options.map((option: Option)=>{
 
           return (
-            <div key={option.value} className={styles.OptionContainer}>
-              <input 
-                type="radio" 
-                id={title+name+option.value} 
-                name={name} 
-                value={option.value}
-                onChange={(event:any)=>{
-                  valueChanged(event);
-                }}
-                checked={option.value === value}
-                readOnly={readonly}
-              />
               <label 
-                htmlFor={title+name+option.value}
                 className={styles.Label}
+                key={option.value}
               >
-                {option.component}
-                {option.selectedComponent}
+                <input 
+                  type="radio" 
+                  name={name} 
+                  value={option.value}
+                  onChange={(event:any)=>{
+                    valueChanged(event);
+                  }}
+                  checked={option.value === value}
+                  readOnly={readonly}
+                />
+                <div className={styles.NotSelected}>{option.component}</div>
+                <div className={styles.Selected}>{option.selectedComponent}</div>
               </label>
-            </div>
           );
         })
       }
