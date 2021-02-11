@@ -408,7 +408,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
         />
         {values.sharedWith ? (
           <SelectDropdown
-            title={'Organisations'}
+            title={'Organisations to share with'}
             name={'organisationsToSharedWith'}
             placeholder={'- Search and select -'}
             value={values.organisationsToSharedWith}
