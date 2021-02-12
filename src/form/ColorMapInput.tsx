@@ -310,12 +310,12 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
                 value: "Custom colormap",
                 label: "Custom colormap"
               }
-            ) : (
+            ) : colorMapType.colorMap ? (
               {
                 value: colorMapType.colorMap,
                 label: colorMapType.colorMap
               }
-            ) || null}
+            ) : null}
             validated={validated}
             errorMessage={errorMessage}
             triedToSubmit={triedToSubmit}

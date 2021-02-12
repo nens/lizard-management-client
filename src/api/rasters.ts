@@ -96,11 +96,11 @@ export type RasterLayerFromAPI = RasterLayerInstance & {
   datasets: Dataset[];
 }
 
-export const fetchRasterSourcesV4BySelectedOrganisation = async (organisationUuid: string, optionalQueries?: string) => {
-  const url = optionalQueries ? (
-    `/api/v4/rastersources/?page_size=100000&organisation__uuid=${organisationUuid}&${optionalQueries}`
+export const fetchRasterSourcesV4 = async (query?: string) => {
+  const url = query ? (
+    `/api/v4/rastersources/?${query}`
   ) : (
-    `/api/v4/rastersources/?page_size=100000&organisation__uuid=${organisationUuid}`
+    `/api/v4/rastersources/`
   );
   const response = await fetch(url, {
     credentials: "same-origin",

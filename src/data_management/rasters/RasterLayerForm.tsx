@@ -2,7 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { FormattedMessage } from 'react-intl';
 import { connect, useSelector } from 'react-redux';
-import { createRasterLayer, fetchRasterSourceV4, patchRasterLayer, RasterLayerFromAPI, RasterSourceFromAPI } from '../../api/rasters';
+import {
+  createRasterLayer,
+  fetchRasterSourcesV4,
+  fetchRasterSourceV4,
+  patchRasterLayer,
+  RasterLayerFromAPI
+} from '../../api/rasters';
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import { CheckBox } from './../../form/CheckBox';
 import { TextArea } from './../../form/TextArea';
@@ -35,12 +41,31 @@ import { convertToSelectObject } from '../../utils/convertToSelectObject';
 
 interface Props {
   currentRasterLayer?: RasterLayerFromAPI,
-  rasterSources?: RasterSourceFromAPI[] | null,
 };
 
 interface PropsFromDispatch {
   removeRasterSourceUUID: () => void,
   addNotification: (message: string | number, timeout: number) => void,
+};
+
+// Helper function to fetch paginated raster sources with search query
+const fetchRasterSources = async (uuid: string, searchQuery: string) => {
+  const params=[`organisation__uuid=${uuid}`, "scenario__isnull=true"];
+
+  // Regex expression to check if search input is UUID of raster source
+  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+  if (searchQuery) {
+    if (uuidRegex.test(searchQuery)) {
+      params.push(`uuid=${searchQuery}`);
+    } else {
+      params.push(`name__icontains=${searchQuery}`);
+    };
+  };
+
+  const urlQuery = params.join('&');
+  const response = await fetchRasterSourcesV4(urlQuery);
+
+  return response.results.map((rasterSource: any) => convertToSelectObject(rasterSource.uuid, rasterSource.name));
 };
 
 // Helper function to fetch paginated observation types with search query
@@ -73,7 +98,7 @@ const fetchObservationTypes = async (searchQuery: string) => {
 };
 
 const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (props) => {
-  const { currentRasterLayer, rasterSources, removeRasterSourceUUID } = props;
+  const { currentRasterLayer, removeRasterSourceUUID } = props;
   const supplierIds = useSelector(getSupplierIds).available;
   const organisationsToSharedWith = useSelector(getOrganisations).availableForRasterSharedWith;
   const organisations = useSelector(getOrganisations).available;
@@ -305,7 +330,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           placeholder={'- Search and select -'}
           value={values.rasterSource}
           valueChanged={value => handleValueChange('rasterSource', value)}
-          options={rasterSources ? rasterSources.map(rasterSource => convertToSelectObject(rasterSource.uuid!, rasterSource.name)) : []}
+          options={[]}
           validated={!required('Please select a raster source', values.rasterSource)}
           errorMessage={required('Please select a raster source', values.rasterSource)}
           triedToSubmit={triedToSubmit}
@@ -313,6 +338,8 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           onFocus={handleFocus}
           onBlur={handleBlur}
           readOnly={!!currentRasterLayer || !!rasterSourceUUID}
+          isAsync={!rasterSourceUUID && !currentRasterLayer}
+          loadOptions={searchInput => fetchRasterSources(selectedOrganisation.uuid, searchInput)}
         />
         <SelectDropdown
           title={'Aggregation type *'}
