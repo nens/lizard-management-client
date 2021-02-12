@@ -1,5 +1,6 @@
 import React from "react";
 import { FormattedMessage } from "react-intl";
+
 import alarmIcon from "../images/alarm@3x.svg";
 import userManagementIcon from "../images/userManagement.svg";
 import dataManagementIcon from "../images/database.svg";
@@ -9,6 +10,8 @@ import wmsIcon from "../images/wms@3x.svg";
 import threediIcon from "../images/3di@3x.svg";
 import backArrowIcon from "../images/backArrow.svg";
 import labelIcon from "../images/labels_icon.svg";
+import rasterSourcesIcon from "../images/raster_source_icon.svg";
+import rasterLayersIcon from "../images/raster_layer_icon.svg";
 
 const appTiles = [
   { 
@@ -131,9 +134,51 @@ const appTiles = [
     order: 400,
     onPage: "/data_management",
     linksTo: "/",
-    requiresOneOfRoles: ["admin", "supplier",],
+    requiresOneOfRoles: ["admin", "supplier","user", "manager"],
     icon: backArrowIcon
-  }
+  },
+  {
+    title: "Rasters Sources",
+    // title: (
+    //   <FormattedMessage
+    //     id="data_management.rasters_sources"
+    //     defaultMessage="Rasters Sources"
+    //   />
+    // ),
+    order: 100,
+    onPage: "/data_management/rasters",
+    linksTo: "/data_management/rasters/sources",
+    requiresOneOfRoles: ["admin", "supplier",],
+    icon: rasterSourcesIcon
+  },
+  {
+    title: "Rasters Layers",
+    // title: (
+    //   <FormattedMessage
+    //     id="data_management.raster_layers"
+    //     defaultMessage="Raster Layers"
+    //   />
+    // ),
+    order: 200,
+    onPage: "/data_management/rasters",
+    linksTo: "/data_management/rasters/layers",
+    requiresOneOfRoles: ["admin", "supplier",],
+    icon: rasterLayersIcon,
+  },
+  {
+    title: "Go Back",
+    // title: (
+    //   <FormattedMessage
+    //     id="go_back"
+    //     defaultMessage="Go Back"
+    //   />
+    // ),
+    order: 400,
+    onPage: "/data_management/rasters",
+    linksTo: "/data_management",
+    requiresOneOfRoles: ["admin", "supplier","user", "manager"],
+    icon: backArrowIcon
+  },
 ];
 /*
 {

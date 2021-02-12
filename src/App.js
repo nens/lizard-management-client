@@ -310,13 +310,20 @@ class App extends Component {
                 {/* <Route path="/data_management" component={DataManagementApp} /> */}
                 {/* <Route path="/data_management" component={Home} /> */}
                 {
-                  appTiles.map(appTile=> appTile.onPage).filter((value, index, self) => {
+                  appTiles.map(appTile=> appTile.linksTo).concat(appTiles.map(appTile=> appTile.onPage)).filter((value, index, self) => {
+                    return self.indexOf(value) === index;
+                  }).map(appTilePage=>{
+                    return <Route exact path={appTilePage} component={Home} />
+                  })
+                }
+                {/* {
+                  appTiles.map(appTile=> appTile.linksTo).filter((value, index, self) => {
                     return self.indexOf(value) === index;
                   }).map(appTilePage=>{
                     console.log('appTilePage router', appTilePage)
                     return <Route exact path={appTilePage} component={Home} />
                   })
-                }
+                } */}
                 
                 <Switch>
                   <Route exact path="/personal_api_keys" component={PersonalApiKeysTable} />

@@ -85,8 +85,8 @@ class App extends Component {
       <div>
         {/* <Route exact path="/data_management" component={DataManagementHome} /> */}
         {/* <Route exact path="/data_management" component={App} /> */}
-        <Route exact path="/data_management/rasters" component={RasterManagement} />
-        <Route exact path="/data_management/old_rasters" component={RasterApp} /> 
+        {/* <Route exact path="/data_management/rasters" component={RasterManagement} />
+        <Route exact path="/data_management/old_rasters" component={RasterApp} />  */}
         <Route exact path="/data_management/rasters/sources" component={RasterSourceTable} />
         <Route exact path="/data_management/rasters/layers" component={RasterLayerTable} />
         <Route exact path="/data_management/wms_layers_old" component={WmsLayerApp} />
