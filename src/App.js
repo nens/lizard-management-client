@@ -304,9 +304,19 @@ class App extends Component {
                 }}
                 className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
               > */}
-                <Route exact path="/" component={Home} />
+                {/* <Route path="/" component={Home} /> */}
+                {/* <Route path="/:rest_path" component={Home} /> */}
                 <Route path="/alarms" component={AlarmsApp} />
-                <Route path="/data_management" component={DataManagementApp} />
+                {/* <Route path="/data_management" component={DataManagementApp} /> */}
+                {/* <Route path="/data_management" component={Home} /> */}
+                {
+                  appTiles.map(appTile=> appTile.onPage).filter((value, index, self) => {
+                    return self.indexOf(value) === index;
+                  }).map(appTilePage=>{
+                    console.log('appTilePage router', appTilePage)
+                    return <Route exact path={appTilePage} component={Home} />
+                  })
+                }
                 
                 <Switch>
                   <Route exact path="/personal_api_keys" component={PersonalApiKeysTable} />

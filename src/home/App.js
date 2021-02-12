@@ -5,52 +5,45 @@ import AppTile from "../components/AppTile";
 import { withRouter } from "react-router-dom";
 import { Trail, animated } from "react-spring";
 import doArraysHaveEqualElement from '../utils/doArraysHaveEqualElement';
-
 import {appTiles} from './HomeAppTileConfig';
 
-const tileData = [
-  { 
-    title: "data",
-    order: 100,
-    onPage: "/management/",
-    linksTo: "/data_management/",
-    requiresOneOfRoles: ["user", "admin", "supplier", "manager"],
-    icon: "",
-  },
-  { 
-    title: "rasters",
-    order: 300,
-    onPage: "/management/",
-    linksTo: "/data_management/rasters/",
-    requiresOneOfRoles: ["user", "admin", "supplier", "manager"],
-    icon: "",
-  },
-  { 
-    title: "users",
-    order: 200,
-    onPage: "management",
-    linksTo: "management/users/",
-    requiresOneOfRoles: ["user", "admin", "supplier", "manager"],
-    icon: "",
-  }
-]
-/*
-{
-    requiredRoles: ["manager"],
-    key: 0,
-    linksTo: {
-      external: true,
-      path: "/management/users/"
-    },
-    title: (
-      <FormattedMessage
-        id="home.users"
-        defaultMessage="Users"
-      />
-    ),
-    icon: userManagementIcon
-  },
-*/
+// import { FormattedMessage } from "react-intl";
+// import alarmIcon from "../images/alarm@3x.svg";
+// import userManagementIcon from "../images/userManagement.svg";
+// import dataManagementIcon from "../images/database.svg";
+// import personalApiKeysIcon from "../images/personal_api_key_icon.svg";
+// import rasterIcon from "../images/raster_icon.svg";
+// import wmsIcon from "../images/wms@3x.svg";
+// import threediIcon from "../images/3di@3x.svg";
+// import backArrowIcon from "../images/backArrow.svg";
+// import labelIcon from "../images/labels_icon.svg";
+
+import RasterManagement from "../data_management/rasters/RasterManagement";
+import LabelManagement from "../data_management/labels/LabelManagement";
+import { Raster as RasterApp } from "../data_management/rasters/Raster";
+import { RasterSourceTable} from "../data_management/rasters/RasterSourceTable";
+import { RasterLayerTable} from "../data_management/rasters/RasterLayerTable";
+import { WmsLayerTable } from '../data_management/wms_layers/WmsLayerTable';
+import { LabeltypesTable} from "../data_management/labels/LabeltypesTable";
+
+import { WmsLayer as WmsLayerApp } from "../data_management/wms_layers/WmsLayer";
+import { Scenarios as ScenariosApp } from "../data_management/scenarios/Scenarios";
+import { NewRasterSource } from "../data_management/rasters/NewRasterSource";
+import { NewRasterLayer } from "../data_management/rasters/NewRasterLayer";
+import { EditRasterSource } from "../data_management/rasters/EditRasterSource";
+import { EditRasterLayer } from "../data_management/rasters/EditRasterLayer";
+import { ScenarioTable } from "../data_management/scenarios/ScenarioTable";
+import { EditScenario } from "../data_management/scenarios/EditScenario";
+import { EditWmsLayer } from "../data_management/wms_layers/EditWmsLayer";
+import { NewWmsLayer } from "../data_management/wms_layers/NewWmsLayer";
+import { UploadRasterData } from "../data_management/rasters/UploadRasterData";
+import {EditLabeltype} from "../data_management/labels/EditLabeltype";
+
+import { Route, Switch, /* withRouter */ } from "react-router-dom";
+
+
+
+
 
 
 class App extends Component {
@@ -77,15 +70,78 @@ class App extends Component {
   }
 
   render() {
+
+    const currentRelativeUrl = this.props.location.pathname;
+    console.log('currentRelativeUrl app', currentRelativeUrl);
+
     const currentOrganisationRoles = (this.props.selectedOrganisation && this.props.selectedOrganisation.roles) || [];
-    const appTilesWithReadOnlyInfo = appTiles.map(appTile=>{
-      return {
-        ...appTile,
-        readonly: !doArraysHaveEqualElement(appTile.requiredRoles, currentOrganisationRoles)
-      }
-    });
+    // const appTilesWithReadOnlyInfo = appTiles.map(appTile=>{
+    //   return {
+    //     ...appTile,
+    //     readonly: !doArraysHaveEqualElement(appTile.requiredRoles, currentOrganisationRoles)
+    //   }
+    // });
     return (
       <div>
+        {/* <Route exact path="/data_management" component={DataManagementHome} /> */}
+        {/* <Route exact path="/data_management" component={App} /> */}
+        <Route exact path="/data_management/rasters" component={RasterManagement} />
+        <Route exact path="/data_management/old_rasters" component={RasterApp} /> 
+        <Route exact path="/data_management/rasters/sources" component={RasterSourceTable} />
+        <Route exact path="/data_management/rasters/layers" component={RasterLayerTable} />
+        <Route exact path="/data_management/wms_layers_old" component={WmsLayerApp} />
+        <Route exact path="/data_management/wms_layers" component={WmsLayerTable} />
+        <Route exact path="/data_management/scenarios_old" component={ScenariosApp} />
+        <Route exact path="/data_management/scenarios" component={ScenarioTable} />
+        <Route exact path="/data_management/labels" component={LabelManagement} />
+        <Route exact path="/data_management/labels/label_types" component={LabeltypesTable} />
+        <Switch>
+          <Route
+            exact
+            path={`/data_management/rasters/sources/new`}
+            component={NewRasterSource}
+          />
+          <Route
+            exact
+            path={`/data_management/rasters/layers/new`}
+            component={NewRasterLayer}
+          />
+          <Route
+            exact
+            path="/data_management/rasters/sources/:uuid"
+            component={EditRasterSource}
+          />
+          <Route
+            exact
+            path="/data_management/rasters/layers/:uuid"
+            component={EditRasterLayer}
+          />
+          <Route
+            exact
+            path="/data_management/rasters/:id/data"
+            component={UploadRasterData}
+          />
+          <Route
+            exact
+            path="/data_management/wms_layers/new"
+            component={NewWmsLayer}
+          />
+          <Route
+            exact
+            path="/data_management/wms_layers/:id"
+            component={EditWmsLayer}
+          />
+          <Route
+            exact
+            path="/data_management/scenarios/:uuid"
+            component={EditScenario}
+          />
+          <Route
+            exact
+            path="/data_management/labels/label_types/:uuid"
+            component={EditLabeltype}
+          />
+        </Switch>
         <div className="container">
           <div className="row">
             <div className={styles.Apps}>
@@ -95,7 +151,15 @@ class App extends Component {
                 to={{ opacity: 1, x: 0 }}
                 keys={appTiles.map(item => item.key)}
               >
-                {tileData.map((appTile) => ({ x, opacity }) => (
+                {appTiles.filter(appTile=>{
+                  return ( 
+                    appTile.onPage === currentRelativeUrl ||
+                    (appTile.onPage + '/') === currentRelativeUrl ||
+                    appTile.onPage === ( currentRelativeUrl + '/')
+                  );
+                }).sort((appTileA, appTileB)=>{
+                  return appTileA.order - appTileB.order;
+                }).map((appTile) => ({ x, opacity }) => (
                   <animated.div
                     style={{
                       opacity,
@@ -104,7 +168,7 @@ class App extends Component {
                   >
                     <AppTile
                       handleClick={()=>{ this.handleLink({
-                        external: false,
+                        external: appTile.linksTo === "/management/users/" ? true : false,
                         path: appTile.linksTo
                       })}}
                       key={appTile.title + appTile.order + ""}
