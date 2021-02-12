@@ -12,6 +12,7 @@ import backArrowIcon from "../images/backArrow.svg";
 import labelIcon from "../images/labels_icon.svg";
 import rasterSourcesIcon from "../images/raster_source_icon.svg";
 import rasterLayersIcon from "../images/raster_layer_icon.svg";
+import labeltypesIcon from "../images/labeltypes_icon.svg";
 
 const appTiles = [
   { 
@@ -111,12 +112,12 @@ const appTiles = [
   },
   {
     title: "Labels",
-    title: (
-      <FormattedMessage
-        id="home.labels"
-        defaultMessage="Labels"
-      />
-    ),
+    // title: (
+    //   <FormattedMessage
+    //     id="home.labels"
+    //     defaultMessage="Labels"
+    //   />
+    // ),
     order: 400,
     onPage: "/data_management",
     linksTo: "/data_management/labels",
@@ -179,51 +180,35 @@ const appTiles = [
     requiresOneOfRoles: ["admin", "supplier","user", "manager"],
     icon: backArrowIcon
   },
+  {
+    title: "Label types",
+    // title: (
+    //   <FormattedMessage
+    //     id="data_management.labeltypes"
+    //     defaultMessage="Label types"
+    //   />
+    // ),
+    order: 100,
+    onPage: "/data_management/labels",
+    linksTo: "/data_management/labels/label_types",
+    requiresOneOfRoles: ["admin", "supplier",],
+    icon: labeltypesIcon
+  },
+  {
+    title: "Go Back",
+    // title: (
+    //   <FormattedMessage
+    //     id="go_back"
+    //     defaultMessage="Go Back"
+    //   />
+    // ),
+    order: 400,
+    onPage: "/data_management/labels",
+    linksTo: "/data_management",
+    requiresOneOfRoles: ["admin", "supplier","user", "manager"],
+    icon: backArrowIcon
+  },
 ];
-/*
-{
-    requiredRoles: ["user", "admin", "supplier", "manager"],
-    key: 3,
-    linksTo: {
-      external: false,
-      path: "/personal_api_keys"
-    },
-    title: (
-      <FormattedMessage
-        id="home.personal_api_keys"
-        defaultMessage="Personal API keys"
-      />
-    ),
-    icon: personalApiKeysIcon,
-  },
- {
-    requiredRoles: ["admin"],
-    key: 2,
-    linksTo: {
-      external: false,
-      path: "/alarms"
-    },
-    title: (
-      <FormattedMessage id="home.alarms" defaultMessage="Alarms" />
-    ),
-    icon: alarmIcon
-  },
-{
-    requiredRoles: ["manager"],
-    key: 0,
-    linksTo: {
-      external: true,
-      path: "/management/users/"
-    },
-    title: (
-      <FormattedMessage
-        id="home.users"
-        defaultMessage="Users"
-      />
-    ),
-    icon: userManagementIcon
-  },
-*/
 
 
 // const appTiles = [
