@@ -9,8 +9,49 @@ import doArraysHaveEqualElement from '../utils/doArraysHaveEqualElement';
 import {appTiles} from './HomeAppTileConfig';
 
 const tileData = [
-  {}
+  { 
+    title: "data",
+    order: 100,
+    onPage: "/management/",
+    linksTo: "/data_management/",
+    requiresOneOfRoles: ["user", "admin", "supplier", "manager"],
+    icon: "",
+  },
+  { 
+    title: "rasters",
+    order: 300,
+    onPage: "/management/",
+    linksTo: "/data_management/rasters/",
+    requiresOneOfRoles: ["user", "admin", "supplier", "manager"],
+    icon: "",
+  },
+  { 
+    title: "users",
+    order: 200,
+    onPage: "management",
+    linksTo: "management/users/",
+    requiresOneOfRoles: ["user", "admin", "supplier", "manager"],
+    icon: "",
+  }
 ]
+/*
+{
+    requiredRoles: ["manager"],
+    key: 0,
+    linksTo: {
+      external: true,
+      path: "/management/users/"
+    },
+    title: (
+      <FormattedMessage
+        id="home.users"
+        defaultMessage="Users"
+      />
+    ),
+    icon: userManagementIcon
+  },
+*/
+
 
 class App extends Component {
   constructor(props) {
@@ -54,7 +95,7 @@ class App extends Component {
                 to={{ opacity: 1, x: 0 }}
                 keys={appTiles.map(item => item.key)}
               >
-                {appTilesWithReadOnlyInfo.map((appTile) => ({ x, opacity }) => (
+                {tileData.map((appTile) => ({ x, opacity }) => (
                   <animated.div
                     style={{
                       opacity,
@@ -62,12 +103,15 @@ class App extends Component {
                     }}
                   >
                     <AppTile
-                      handleClick={()=>{ this.handleLink(appTile.linksTo)}}
-                      key={+new Date()}
+                      handleClick={()=>{ this.handleLink({
+                        external: false,
+                        path: appTile.linksTo
+                      })}}
+                      key={appTile.title + appTile.order + ""}
                       title={appTile.title}
                       icon={appTile.icon}
-                      readonly={appTile.readonly}
-                      requiredRoles={appTile.requiredRoles}
+                      readonly={!doArraysHaveEqualElement(appTile.requiresOneOfRoles, currentOrganisationRoles)}
+                      requiredRoles={appTile.requiresOneOfRoles}
                     />
                   </animated.div>
                 ))}
