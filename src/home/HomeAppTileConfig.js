@@ -1,5 +1,5 @@
-import React from "react";
-import { FormattedMessage } from "react-intl";
+// import React from "react";
+// import { FormattedMessage } from "react-intl";
 
 import alarmIcon from "../images/alarm@3x.svg";
 import userManagementIcon from "../images/userManagement.svg";
@@ -13,6 +13,10 @@ import labelIcon from "../images/labels_icon.svg";
 import rasterSourcesIcon from "../images/raster_source_icon.svg";
 import rasterLayersIcon from "../images/raster_layer_icon.svg";
 import labeltypesIcon from "../images/labeltypes_icon.svg";
+import alarmsIcon from "../images/alarm@3x.svg";
+import groupsIcon from "../images/group.svg";
+import contactsIcon from "../images/contacts@3x.svg";
+import templatesIcon from "../images/templates@3x.svg";
 
 const appTiles = [
   { 
@@ -208,6 +212,76 @@ const appTiles = [
     requiresOneOfRoles: ["admin", "supplier","user", "manager"],
     icon: backArrowIcon
   },
+  {
+    title: "Notifications",
+    // title: (
+    //   <FormattedMessage
+    //     id="alarms.notifications"
+    //     defaultMessage="Notifications"
+    //   />
+    // ),
+    order: 100,
+    onPage: "/alarms",
+    linksTo: "/alarms/notifications",
+    requiresOneOfRoles: ["admin",],
+    icon: alarmsIcon,
+  },
+  {
+    title: "Groups",
+    // title: (
+    //   <FormattedMessage
+    //     id="alarms.recipients"
+    //     defaultMessage="Recipients"
+    //   />
+    // ),
+    order: 200,
+    onPage: "/alarms",
+    linksTo: "/alarms/groups",
+    requiresOneOfRoles: ["admin",],
+    icon: groupsIcon
+  },
+  {
+    title: "Contacts",
+    // title: (
+    //   <FormattedMessage
+    //     id="alarms.alarms_contacts"
+    //     defaultMessage="Contacts"
+    //   />
+    // ),
+    order: 300,
+    onPage: "/alarms",
+    linksTo: "/alarms/contacts",
+    requiresOneOfRoles: ["admin",],
+    icon: contactsIcon
+  },
+  {
+    title: "Templates",
+    // title: (
+    //   <FormattedMessage
+    //     id="alarms.alarms_templates"
+    //     defaultMessage="Templates"
+    //   />
+    // ),
+    order: 400,
+    onPage: "/alarms",
+    linksTo: "/alarms/templates",
+    requiresOneOfRoles: ["admin",],
+    icon: templatesIcon,
+  },
+  {
+    title: "Go Back",
+    // title: (
+    //   <FormattedMessage
+    //     id="go_back"
+    //     defaultMessage="Go Back"
+    //   />
+    // ),
+    order: 500,
+    onPage: "/alarms",
+    linksTo: "/",
+    requiresOneOfRoles: ["admin", "supplier","user", "manager"],
+    icon: backArrowIcon
+  }
 ];
 
 

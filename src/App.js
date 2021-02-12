@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import { App as Home } from "./home/App";
-import { App as AlarmsApp } from "./alarms/App";
-import { App as DataManagementApp } from "./data_management/App";
+// import { App as AlarmsApp } from "./alarms/App";
+// import { App as DataManagementApp } from "./data_management/App";
 import MDSpinner from "react-md-spinner";
 import { fetchTaskInstance } from "./api/tasks";
 import {
@@ -306,7 +306,7 @@ class App extends Component {
               > */}
                 {/* <Route path="/" component={Home} /> */}
                 {/* <Route path="/:rest_path" component={Home} /> */}
-                <Route path="/alarms" component={AlarmsApp} />
+                {/* <Route path="/alarms" component={AlarmsApp} /> */}
                 {/* <Route path="/data_management" component={DataManagementApp} /> */}
                 {/* <Route path="/data_management" component={Home} /> */}
                 {
