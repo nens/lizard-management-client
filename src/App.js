@@ -1,9 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
-import { App as Home } from "./home/App";
-// import { App as AlarmsApp } from "./alarms/App";
-// import { App as DataManagementApp } from "./data_management/App";
 import MDSpinner from "react-md-spinner";
 import { fetchTaskInstance } from "./api/tasks";
 import {
@@ -19,7 +16,7 @@ import {
   removeFileFromQueue
 } from "./actions";
 import {Routes} from './home/Routes';
-import { Route, Switch, NavLink } from "react-router-dom";
+import {NavLink } from "react-router-dom";
 import LanguageSwitcher from "./components/LanguageSwitcher";
 import OrganisationSwitcher from "./components/OrganisationSwitcher";
 import Snackbar from "./components/Snackbar";
@@ -37,45 +34,6 @@ import helpIcon from './images/help.svg'
 import documentIcon from './images/document.svg';
 import logoutIcon from './images/logout.svg';
 import editIcon from './images/edit.svg';
-import {PersonalApiKeysTable} from './personal_api_keys/PersonalApiKeysTable';
-import { EditPersonalApiKey } from './personal_api_keys/EditPersonalApiKey';
-import { NewPersonalApiKey } from './personal_api_keys/NewPersonalApiKey';
-
-// import RasterManagement from "../data_management/rasters/RasterManagement";
-// import LabelManagement from "../data_management/labels/LabelManagement";
-// import { Raster as RasterApp } from "../data_management/rasters/Raster";
-import { RasterSourceTable} from "./data_management/rasters/RasterSourceTable";
-import { RasterLayerTable} from "./data_management/rasters/RasterLayerTable";
-import { WmsLayerTable } from './data_management/wms_layers/WmsLayerTable';
-import { LabeltypesTable} from "./data_management/labels/LabeltypesTable";
-
-// import { WmsLayer as WmsLayerApp } from "../data_management/wms_layers/WmsLayer";
-// import { Scenarios as ScenariosApp } from "../data_management/scenarios/Scenarios";
-import { NewRasterSource } from "./data_management/rasters/NewRasterSource";
-import { NewRasterLayer } from "./data_management/rasters/NewRasterLayer";
-import { EditRasterSource } from "./data_management/rasters/EditRasterSource";
-import { EditRasterLayer } from "./data_management/rasters/EditRasterLayer";
-import { ScenarioTable } from "./data_management/scenarios/ScenarioTable";
-import { EditScenario } from "./data_management/scenarios/EditScenario";
-import { EditWmsLayer } from "./data_management/wms_layers/EditWmsLayer";
-import { NewWmsLayer } from "./data_management/wms_layers/NewWmsLayer";
-import { UploadRasterData } from "./data_management/rasters/UploadRasterData";
-import {EditLabeltype} from "./data_management/labels/EditLabeltype";
-
-import { App as AlarmContactApp } from "./alarms/contacts/App";
-import { App as AlarmGroupsApp } from "./alarms/alarmgroups/App";
-import { App as AlarmTemplatesApp } from "./alarms/alarmtemplates/App";
-import { App as NewAlarmGroupApp } from "./alarms/alarmgroups/NewAlarmGroup";
-import { App as NewContactApp } from "./alarms/contacts/NewContact";
-import { App as NewNotificationApp } from "./alarms/notifications/NewNotification";
-import { App as NewTemplateApp } from "./alarms/alarmtemplates/NewTemplate";
-import { App as NotificationsApp } from "./alarms/notifications/App";
-import { App as EditNotificationApp } from "./alarms/notifications/EditNotification";
-import { Detail as AlarmGroupsDetail } from "./alarms/alarmgroups/Detail";
-import { Detail as AlarmTemplatesDetail } from "./alarms/alarmtemplates/Detail";
-import { Detail as ContactDetail } from "./alarms/contacts/Detail";
-
-
 
 class App extends Component {
   constructor(props) {
