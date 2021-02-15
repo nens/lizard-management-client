@@ -289,39 +289,7 @@ class App extends Component {
             </div>
           </div>
           <div className={gridStyles.Container + " " + styles.AppContent}>
-            {/* <div className={gridStyles.Row}>
-              <div
-                style={{ 
-                  margin: "25px 0 25px 0",
-                  width: "100%" 
-                }}
-                className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
-              > */}
-                {/* <Route path="/" component={Home} /> */}
-                {/* <Route path="/:rest_path" component={Home} /> */}
-                {/* <Route path="/alarms" component={AlarmsApp} /> */}
-                {/* <Route path="/data_management" component={DataManagementApp} /> */}
-                {/* <Route path="/data_management" component={Home} /> */}
-                {/* {
-                  appTiles.map(appTile=> appTile.linksTo).concat(appTiles.map(appTile=> appTile.onPage)).filter((value, index, self) => {
-                    return self.indexOf(value) === index;
-                  }).map(appTilePage=>{
-                    return <Route exact path={appTilePage} component={Home} />
-                  })
-                } */}
-                {/* {
-                  appTiles.map(appTile=> appTile.linksTo).filter((value, index, self) => {
-                    return self.indexOf(value) === index;
-                  }).map(appTilePage=>{
-                    console.log('appTilePage router', appTilePage)
-                    return <Route exact path={appTilePage} component={Home} />
-                  })
-                } */}
                 <Routes/>
-                
-                
-              {/* </div>
-            </div> */}
           </div>
           <footer className={styles.Footer}>
             <div className={gridStyles.Container}>

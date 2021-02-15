@@ -33,15 +33,9 @@ class App extends Component {
   render() {
 
     const currentRelativeUrl = this.props.location.pathname;
-    console.log('currentRelativeUrl app', currentRelativeUrl);
 
     const currentOrganisationRoles = (this.props.selectedOrganisation && this.props.selectedOrganisation.roles) || [];
-    // const appTilesWithReadOnlyInfo = appTiles.map(appTile=>{
-    //   return {
-    //     ...appTile,
-    //     readonly: !doArraysHaveEqualElement(appTile.requiredRoles, currentOrganisationRoles)
-    //   }
-    // });
+    
     return (
       <div>
         
