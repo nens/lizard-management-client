@@ -360,36 +360,41 @@ export const createRasterLayer = (rasterLayer: RasterLayerFromForm, rasterSource
     headers: { "Content-Type": "application/json" },
   };
 
-  const rasterLayerBody = {
-    name: rasterLayer.name,
-    organisation: rasterLayer.organisation,
-    observation_type: rasterLayer.observation_type,
-    description: rasterLayer.description,
-    supplier: rasterLayer.supplier,
-    aggregation_type: rasterLayer.aggregation_type,
-    options: rasterLayer.options,
-    colormap: rasterLayer.colormap,
-    shared_with: rasterLayer.shared_with,
-    rescalable: rasterLayer.rescalable,
-    access_modifier: rasterLayer.access_modifier,
-    datasets: rasterLayer.datasets,
-    source: {
-      graph: {
-        raster: [
-          "lizard_nxt.blocks.LizardRasterSource",
-          rasterSourceUuid
-        ]
+  return fetch(`/api/v4/rastersources/${rasterSourceUuid}`, {}).then(response=>response.json()).then(parsed=>{
+    const rasterLayerBody = {
+      name: rasterLayer.name,
+      organisation: rasterLayer.organisation,
+      observation_type: rasterLayer.observation_type,
+      description: rasterLayer.description,
+      supplier: rasterLayer.supplier,
+      aggregation_type: rasterLayer.aggregation_type,
+      options: rasterLayer.options,
+      colormap: rasterLayer.colormap,
+      shared_with: rasterLayer.shared_with,
+      rescalable: rasterLayer.rescalable,
+      access_modifier: rasterLayer.access_modifier,
+      datasets: rasterLayer.datasets,
+      source: {
+        graph: {
+          raster: [
+            "lizard_nxt.blocks.LizardRasterSource",
+            rasterSourceUuid
+          ]
+        },
+        name: "raster"
       },
-      name: "raster"
-    }
-  };
-
-  const rasterLayerResponse = fetch('/api/v4/rasters/', {
-    ...defaultOpts,
-    body: JSON.stringify(rasterLayerBody)
+      temporal: parsed.temporal,
+    };
+  
+    const rasterLayerResponse = fetch('/api/v4/rasters/', {
+      ...defaultOpts,
+      body: JSON.stringify(rasterLayerBody)
+    });
+  
+    return rasterLayerResponse;
   });
 
-  return rasterLayerResponse;
+  
 };
 
 export const createRaster = async (raster: OldRaster) => {
