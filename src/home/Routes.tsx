@@ -34,20 +34,23 @@ import { Detail as AlarmGroupsDetail } from "../alarms/alarmgroups/Detail";
 import { Detail as AlarmTemplatesDetail } from "../alarms/alarmtemplates/Detail";
 import { Detail as ContactDetail } from "../alarms/contacts/Detail";
 
-interface Props {
-}
+interface Props {}
 
 export const Routes: React.FC<Props> = () => {
+
+  // The AppTileConfig.ts contains all the Tiles in the app. (in the future this list should come from backend, become data driven instead of hardcoded)
+  // The  router should show the 'Home' component if:
+  // the current-url is in the 'onPage' field for one or more tile. Namely this means those tile(s) need to be shown on current page 
+
   return ( 
-    <>
-      {
-        appTiles.map(appTile=> appTile.linksTo).concat(appTiles.map(appTile=> appTile.onPage)).filter((value, index, self) => {
-          return self.indexOf(value) === index;
-        }).map(appTilePage=>{
-          return <Route exact path={appTilePage} component={Home} />
-        })
-      }
       <Switch>
+        {
+          appTiles.map(appTile=> appTile.onPage).filter((value, index, self) => {
+            return self.indexOf(value) === index;
+          }).map(appTilePage=>{
+            return <Route key={appTilePage} exact path={appTilePage} component={Home} />
+          })
+        }
         <Route exact path="/personal_api_keys" component={PersonalApiKeysTable} />
         <Route exact path="/personal_api_keys/new" component={NewPersonalApiKey} />
         <Route exact path="/personal_api_keys/:uuid" component={EditPersonalApiKey} />
@@ -78,6 +81,5 @@ export const Routes: React.FC<Props> = () => {
         <Route exact path="/alarms/templates/new" component={NewTemplateApp} />
         <Route exact path="/alarms/templates/:id" component={AlarmTemplatesDetail} />
       </Switch>
-    </>
   );
 }
