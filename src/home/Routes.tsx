@@ -60,17 +60,10 @@ export const Routes: React.FC<Props> = () => {
           component={EditPersonalApiKey}
         />
       </Switch>
-      {/* <Route exact path="/data_management" component={DataManagementHome} /> */}
-      {/* <Route exact path="/data_management" component={App} /> */}
-      {/* <Route exact path="/data_management/rasters" component={RasterManagement} />
-      <Route exact path="/data_management/old_rasters" component={RasterApp} />  */}
       <Route exact path="/data_management/rasters/sources" component={RasterSourceTable} />
       <Route exact path="/data_management/rasters/layers" component={RasterLayerTable} />
-      {/* <Route exact path="/data_management/wms_layers_old" component={WmsLayerApp} /> */}
       <Route exact path="/data_management/wms_layers" component={WmsLayerTable} />
-      {/* <Route exact path="/data_management/scenarios_old" component={ScenariosApp} /> */}
       <Route exact path="/data_management/scenarios" component={ScenarioTable} />
-      {/* <Route exact path="/data_management/labels" component={LabelManagement} /> */}
       <Route exact path="/data_management/labels/label_types" component={LabeltypesTable} />
       <Switch>
         <Route
