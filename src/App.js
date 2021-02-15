@@ -18,6 +18,7 @@ import {
   updateTaskStatus,
   removeFileFromQueue
 } from "./actions";
+import {Routes} from './home/Routes';
 import { Route, Switch, NavLink } from "react-router-dom";
 import LanguageSwitcher from "./components/LanguageSwitcher";
 import OrganisationSwitcher from "./components/OrganisationSwitcher";
@@ -29,7 +30,7 @@ import gridStyles from "./styles/Grid.module.css";
 import buttonStyles from "./styles/Buttons.module.css";
 import lizardIcon from "./images/lizard.svg";
 import { withRouter } from "react-router-dom";
-import {appTiles} from './home/HomeAppTileConfig';
+import {appTiles} from './home/AppTileConfig';
 import doArraysHaveEqualElement from './utils/doArraysHaveEqualElement';
 
 import helpIcon from './images/help.svg'
@@ -343,13 +344,13 @@ class App extends Component {
                 {/* <Route path="/alarms" component={AlarmsApp} /> */}
                 {/* <Route path="/data_management" component={DataManagementApp} /> */}
                 {/* <Route path="/data_management" component={Home} /> */}
-                {
+                {/* {
                   appTiles.map(appTile=> appTile.linksTo).concat(appTiles.map(appTile=> appTile.onPage)).filter((value, index, self) => {
                     return self.indexOf(value) === index;
                   }).map(appTilePage=>{
                     return <Route exact path={appTilePage} component={Home} />
                   })
-                }
+                } */}
                 {/* {
                   appTiles.map(appTile=> appTile.linksTo).filter((value, index, self) => {
                     return self.indexOf(value) === index;
@@ -358,125 +359,9 @@ class App extends Component {
                     return <Route exact path={appTilePage} component={Home} />
                   })
                 } */}
+                <Routes/>
                 
-                <Switch>
-                  <Route exact path="/personal_api_keys" component={PersonalApiKeysTable} />
-                  <Route
-                    exact
-                    path={`/personal_api_keys/new`}
-                    component={NewPersonalApiKey}
-                  />
-                  <Route
-                    exact
-                    path="/personal_api_keys/:uuid"
-                    component={EditPersonalApiKey}
-                  />
-                </Switch>
-                {/* <Route exact path="/data_management" component={DataManagementHome} /> */}
-        {/* <Route exact path="/data_management" component={App} /> */}
-        {/* <Route exact path="/data_management/rasters" component={RasterManagement} />
-        <Route exact path="/data_management/old_rasters" component={RasterApp} />  */}
-        <Route exact path="/data_management/rasters/sources" component={RasterSourceTable} />
-        <Route exact path="/data_management/rasters/layers" component={RasterLayerTable} />
-        {/* <Route exact path="/data_management/wms_layers_old" component={WmsLayerApp} /> */}
-        <Route exact path="/data_management/wms_layers" component={WmsLayerTable} />
-        {/* <Route exact path="/data_management/scenarios_old" component={ScenariosApp} /> */}
-        <Route exact path="/data_management/scenarios" component={ScenarioTable} />
-        {/* <Route exact path="/data_management/labels" component={LabelManagement} /> */}
-        <Route exact path="/data_management/labels/label_types" component={LabeltypesTable} />
-        <Switch>
-          <Route
-            exact
-            path={`/data_management/rasters/sources/new`}
-            component={NewRasterSource}
-          />
-          <Route
-            exact
-            path={`/data_management/rasters/layers/new`}
-            component={NewRasterLayer}
-          />
-          <Route
-            exact
-            path="/data_management/rasters/sources/:uuid"
-            component={EditRasterSource}
-          />
-          <Route
-            exact
-            path="/data_management/rasters/layers/:uuid"
-            component={EditRasterLayer}
-          />
-          <Route
-            exact
-            path="/data_management/rasters/:id/data"
-            component={UploadRasterData}
-          />
-          <Route
-            exact
-            path="/data_management/wms_layers/new"
-            component={NewWmsLayer}
-          />
-          <Route
-            exact
-            path="/data_management/wms_layers/:id"
-            component={EditWmsLayer}
-          />
-          <Route
-            exact
-            path="/data_management/scenarios/:uuid"
-            component={EditScenario}
-          />
-          <Route
-            exact
-            path="/data_management/labels/label_types/:uuid"
-            component={EditLabeltype}
-          />
-        </Switch>
-        <Route
-          exact
-          path="/alarms/notifications"
-          component={NotificationsApp}
-        />
-        <Switch>
-          <Route
-            exact
-            path="/alarms/notifications/new"
-            component={NewNotificationApp}
-          />
-          <Route
-            exact
-            path="/alarms/notifications/:id"
-            component={EditNotificationApp}
-          />
-        </Switch>
-        <Route exact path="/alarms/groups" component={AlarmGroupsApp} />
-        <Switch>
-          <Route exact path="/alarms/groups/new" component={NewAlarmGroupApp} />
-          <Route
-            exact
-            path="/alarms/groups/:id"
-            component={AlarmGroupsDetail}
-          />
-        </Switch>
-
-        <Route exact path="/alarms/contacts" component={AlarmContactApp} />
-        <Switch>
-          <Route exact path="/alarms/contacts/new" component={NewContactApp} />
-          <Route exact path="/alarms/contacts/:id" component={ContactDetail} />
-        </Switch>
-
-        <Route exact path="/alarms/templates" component={AlarmTemplatesApp} />
-        <Switch>
-          <Route
-            exact
-            path="/alarms/templates/new"
-            component={NewTemplateApp}
-          />
-          <Route
-            exact
-            path="/alarms/templates/:id"
-            component={AlarmTemplatesDetail}
-          />
-        </Switch>
+                
               {/* </div>
             </div> */}
           </div>

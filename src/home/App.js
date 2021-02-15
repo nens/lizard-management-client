@@ -5,7 +5,7 @@ import AppTile from "../components/AppTile";
 import { Route, Switch, withRouter } from "react-router-dom";
 import { Trail, animated } from "react-spring";
 import doArraysHaveEqualElement from '../utils/doArraysHaveEqualElement';
-import {appTiles} from './HomeAppTileConfig';
+import {appTiles} from './AppTileConfig';
 
 // import { FormattedMessage } from "react-intl";
 // import alarmIcon from "../images/alarm@3x.svg";
