@@ -48,33 +48,28 @@ class App extends Component {
                 to={{ opacity: 1, x: 0 }}
                 keys={appTiles.map(item => item.key)}
               >
-                {appTiles.filter(appTile=>{
-                  return ( 
-                    appTile.onPage === currentRelativeUrl ||
-                    (appTile.onPage + '/') === currentRelativeUrl ||
-                    appTile.onPage === ( currentRelativeUrl + '/')
-                  );
-                }).sort((appTileA, appTileB)=>{
-                  return appTileA.order - appTileB.order;
-                }).map((appTile) => ({ x, opacity }) => (
-                  <animated.div
-                    style={{
-                      opacity,
-                      transform: x.interpolate(x => `translate3d(${x}%,0,0)`)
-                    }}
-                  >
-                    <AppTile
-                      handleClick={()=>{ this.handleLink({
-                        external: appTile.linksToExternal? true : false,
-                        path: appTile.linksTo
-                      })}}
-                      key={appTile.title + appTile.order + ""}
-                      title={appTile.title}
-                      icon={appTile.icon}
-                      readonly={!doArraysHaveEqualElement(appTile.requiresOneOfRoles, currentOrganisationRoles)}
-                      requiredRoles={appTile.requiresOneOfRoles}
-                    />
-                  </animated.div>
+                {appTiles
+                  .filter(appTile=> appTile.onPage === currentRelativeUrl )
+                  .sort((appTileA, appTileB)=> appTileA.order - appTileB.order )
+                  .map((appTile) => ({ x, opacity }) => (
+                    <animated.div
+                      style={{
+                        opacity,
+                        transform: x.interpolate(x => `translate3d(${x}%,0,0)`)
+                      }}
+                    >
+                      <AppTile
+                        handleClick={()=>{ this.handleLink({
+                          external: appTile.linksToExternal? true : false,
+                          path: appTile.linksTo
+                        })}}
+                        key={appTile.title + appTile.order + ""}
+                        title={appTile.title}
+                        icon={appTile.icon}
+                        readonly={!doArraysHaveEqualElement(appTile.requiresOneOfRoles, currentOrganisationRoles)}
+                        requiredRoles={appTile.requiresOneOfRoles}
+                      />
+                    </animated.div>
                 ))}
               </Trail>
             </div>
