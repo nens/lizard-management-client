@@ -41,6 +41,7 @@ export const appTiles = [
     order: 200,
     onPage: "/",
     linksTo: "/management/users",
+    linksToExternal: true,
     requiresOneOfRoles: ["manager"],
     icon: userManagementIcon,
   },

@@ -65,7 +65,7 @@ class App extends Component {
                   >
                     <AppTile
                       handleClick={()=>{ this.handleLink({
-                        external: appTile.linksTo === "/management/users/" ? true : false,
+                        external: appTile.linksToExternal? true : false,
                         path: appTile.linksTo
                       })}}
                       key={appTile.title + appTile.order + ""}
