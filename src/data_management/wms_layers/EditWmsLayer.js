@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import MDSpinner from "react-md-spinner";
 
-import { WmsLayerForm } from "./WmsLayerForm";
+import WmsLayerForm  from "./WmsLayerForm";
 
 class EditWmsLayerModel extends Component {
   constructor(props) {
@@ -29,13 +29,10 @@ class EditWmsLayerModel extends Component {
     if (
       this.state.currentWmsLayer &&
       this.props.organisations.isFetching === false &&
-      this.props.observationTypes.isFetching === false &&
-      this.props.colorMaps.isFetching === false &&
       this.props.supplierIds.isFetching === false
     ) {
       return <WmsLayerForm 
         currentWmsLayer={this.state.currentWmsLayer}
-        wizardStyle={false} 
       />;
     }
     else {

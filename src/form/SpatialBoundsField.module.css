@@ -1,0 +1,15 @@
+.GetFromGeoServer {
+    display: flex;
+    align-items: center;
+}
+
+.GetFromGeoServerError {
+    color: red;
+}
+
+.InputFields {
+    margin-left: 5px;
+    margin-right: 5px;
+    display: inline-block;
+  }
+  

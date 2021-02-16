@@ -1,0 +1,42 @@
+.Pagination {
+  margin-top: 16px;
+  /* take all remaining whitespace to fit exactly 10 items in table. Maybe this margin should actually be on whole table state container instead */
+  /* remove this line because now buttons of pagination are bigger and this value is different on chrome then firefox */
+  /* margin-Bottom: 34px; */
+}
+
+.Pagination label {
+  margin-left: 32px;
+}
+.Pagination label select {
+  margin-left: 12px;
+}
+
+.Pagination > div > button {
+  background-color: white;
+  border-style: solid;
+  border-width: 0.5px;
+  border-color: #2C3E50;
+}
+
+.Pagination > div > button:disabled {
+  background-color:#E8E8E8;
+  border-color:  #E8E8E8;
+}
+
+.Pagination > div > button:nth-child(1) {
+  border-radius: 3px 0 0 3px;
+  margin-right: 8px;
+}
+.Pagination > div > button:nth-child(2) {
+  border-radius: 3px 0 0 3px;
+  margin-right: 4px;
+}
+.Pagination > div > button:nth-child(3) {
+  border-radius: 0 3px 3px 0;
+}
+
+.Pagination button,
+.Pagination select {
+  height: 32px;
+}

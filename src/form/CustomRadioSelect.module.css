@@ -1,0 +1,28 @@
+.OptionsRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.OptionsRow > label {
+  cursor: pointer;
+  margin-right: 16px;
+}
+
+/* hide everything inside the label (reveal those visible in later css rule) */
+.OptionsRow > label > * {
+  visibility: hidden;
+  opacity: 0;
+  /* position absolute so that items within label show on top of each other (not next to each other) */
+  position: absolute;
+}
+
+/* show selected items next to a selected checkbox, unselected items next to a undelected checkbox */
+.OptionsRow > label > input[type="radio"]:checked ~ .Selected,
+.OptionsRow > label > input[type="radio"]:not(:checked) ~ .NotSelected {
+  visibility: visible;
+  opacity: 1;
+  /* This relative position is needed so that component gets the height of its content. */
+  position: relative;
+}

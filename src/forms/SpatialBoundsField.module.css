@@ -1,8 +1,0 @@
-.GetFromGeoServer {
-    display: flex;
-    align-items: center;
-}
-
-.GetFromGeoServerError {
-    color: red;
-}

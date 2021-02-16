@@ -1,0 +1,39 @@
+
+.SelectGeneralClass {
+  position: relative;
+}
+.Results {
+  position: absolute;
+  background-color: #fff;
+  width: 100%;
+  box-shadow: rgba(0, 0, 0, 0.3) 1px 1px 9px -1px;
+  z-index: 2;
+}
+.ResultRow {
+  height: 50px;
+  padding: 13px;
+  border-bottom: 1px solid #ccc;
+  cursor: pointer;
+}
+
+.ResultRow:hover {
+  background-color: #00cdab;
+  color: #fff;
+}
+
+.Inactive:hover a,
+.Active a {
+   color: #fff;
+   text-decoration: none;
+}
+.Inactive a {
+  color: #00cdab;
+  text-decoration: none;
+}
+
+.Active {
+  background-color: #00cdab;
+  color: #fff;
+}
+
+

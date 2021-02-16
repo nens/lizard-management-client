@@ -1,0 +1,14 @@
+- can we in the rastersource table show interval instead of temporal ?
+- it does not make sense to order on temporal, should we filter on it instead?
+- include 3di scenarios (hoe gaat de gebruiker dit nu filteren?)
+
+- colormap ticket
+- uuid for observation type in api
+
+- simplify table design?
+- useQuery for datafetching https://react-query.tanstack.com/docs/overview
+I am not yet convinced about using components like this to encapsulate state that we would otherwise encapsulate in function closures:
+<ReactQueryCacheProvider queryCache={queryCache}>
+      <Example />
+    </ReactQueryCacheProvider>
+

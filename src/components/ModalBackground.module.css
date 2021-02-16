@@ -1,0 +1,45 @@
+.ModalBackground {
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999999;
+  background-color: hsla(210, 11%, 15%, 0.49);
+}
+.ModalBox {
+  height: 70%; /* default height */
+  width: 70%; /* default width */
+  position: relative;
+  overflow: auto;
+  border-radius: 16px;
+  background-color: #ffffff;
+  box-shadow: 3px 3px 6px rgba(0,0,0,0.16);
+  display: flex;
+  flex-direction: column;
+}
+.ModalTitle {
+  /* 
+  added min-height for this bug:
+  https://github.com/nens/lizard-management-client/issues/622
+  */
+  min-height: 60px;
+  height: 60px;
+  
+
+  padding: 0 40px;
+  font-size: 18px;
+  font-weight: 500;
+  text-transform: capitalize;
+  color: #ffffff;
+  background-color: var(--color-header);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.CloseButton {
+  cursor: pointer;
+}

@@ -9,7 +9,7 @@
 
 .ReadOnly {
   cursor: not-allowed;
-  background-color: rgb(216, 216, 216);
+  background-color: var(--color-input-disabled);
 }
 
 .SubmitSpan {

@@ -1,0 +1,28 @@
+.ModalHeader {
+  display: flex;
+  justify-content: space-between;
+  font-size: 19px;
+  font-weight: 500;
+  border-bottom: 0.5px solid #00000029;
+  padding: 30px;
+}
+.ModalHeader button {
+  border: none;
+  border-color: transparent;
+  background-color: transparent;
+  
+}
+
+.ModalBody {
+  background-color: #EFEFEF;
+  border-bottom: 0.5px solid #00000029;
+  padding: 30px;
+  padding-bottom: 50px;
+  word-wrap: break-word;
+  overflow-y: auto;
+}
+
+.ModalFooter {
+  display: flex;
+  padding: 30px;
+}

@@ -1,12 +1,50 @@
+:root {  
+  --color-dark-main: #354B61;
+  --color-ligth-main: #FFFFFF;
+  --color-ligth-main-second:#F6F6F6;
+  --color-border-table: #2C3E50;
+  --color-header: #008080;
+  --color-header-hover: #017676;
+  --color-button:  #009F86;
+  --color-button-disabled: #878787;
+  --font-weight-button: 600;
+  --color-border-input: #73C9B2;
+  --color-border-input-invalid: #AE0000;
+  --color-input-disabled: rgb(216, 216, 216);
+}
+
+button {
+  cursor: pointer;
+}
+button:disabled {
+  cursor: not-allowed;
+}
+
+html,
+body {
+  height: 98vh;
+  width: 100vw;
+  color: #2C3E50;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  overflow-y: hidden;
+}
+
 .App {
+  height: 100%;
+  width: 100%;
   display: flex;
-  min-height: 100vh;
   flex-direction: column;
   font-family: Montserrat;
+  overflow-y: auto;
 }
 
 .AppContent {
+  height: 100%;
+  width:86%;
   flex: 1;
+  min-height: 0;
 }
 
 .AppIcon {
@@ -18,25 +56,27 @@
 
 
 .Primary {
-  background-color: #009F86;
+  background-color: var(--color-header);
   color: #fff;
   text-transform: uppercase;
 }
 .Secondary {
-  background-color: #2FCBAB;
+  background-color: #F6F6F6;
   text-transform: uppercase;
 }
 .Secondary a {
   text-decoration: none;
-  color: #fff;
+  color: var(--color-header);
 }
 
 .Footer {
+  /* hide footer untill we decide what to do with it */
+  display: none;
   background-color: #D8D8D8;
   text-transform: uppercase;
 }
 .Footer a {
-  color: #009F86;
+  color:var(--color-header);
   text-decoration: none;
 }
 .FooterLeft {
@@ -111,13 +151,11 @@
   text-transform: uppercase;
 }
 .OrganisationLinkContainer:hover {
-  background-color: rgb(3, 139, 119);
+  background-color: var(--color-header-hover);
 }
 
 .Profile {
-  width: 160px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  width: 174px;
   cursor: pointer;
   position: relative;
   height: 100%;
@@ -126,7 +164,7 @@
 }
 
 .Profile:hover {
-  background-color: rgb(3, 139, 119);
+  background-color: var(--color-header-hover);
 }
 
 .TopNav {
@@ -138,17 +176,26 @@
 .TopNav div {
   margin: 5px;
 }
-.TopNav div:last-child {
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
 .TopNav a {
   color: #fff;
   text-decoration: none;
 }
+.UserProfile {
+  width: 100%;
+  margin: 0;
+  padding-right: 10px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  overflow: hidden;
+}
+.UserName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 .DropdownMenu {
-  font-size: 14px;
+  font-size: 16px;
   display: flex;
   flex-direction: column;
   z-index: 1;
@@ -156,20 +203,41 @@
 
   position: absolute;
   top: 100%;
-  left: 0;
-  width: 100%;
+  right: 0;
+  width: 210px;
 
   border: 1px solid rgba(0, 0, 0, .15);
   background-color: #fafafa;
   box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
 }
-
 .DropdownMenu a {
   text-decoration: none;
   color: #333;
   padding: 6px 10px;
+  padding-left: 14px;
 }
-
 .DropdownMenu a:hover {
   background-color: #e5e5e5;
+}
+.DropdownMenuRow {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.NavNotification {
+  font-size: 13px;
+  font-weight: 500;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background-color: orangered;
+  position: absolute;
+  top: 4px;
+  left: 12px;
+
+  display: flex;
+  justify-content: center;
 }

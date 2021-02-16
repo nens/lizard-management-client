@@ -1,27 +1,80 @@
+/* CSS for form layout and text */
+.Form {
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 60px);
+  margin: 30px 0;
+  padding-bottom: 20px;
+  padding-right: 20px;
+  padding-left: 5px;
+  overflow-y: auto;
+}
+.FormFieldTitle {
+  font-size: 19px;
+  font-weight: 500;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+.Label {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+}
+.LabelTitle {
+  margin-bottom: 8px;
+  font-weight: 500;
+
+  /* font-style: normal;
+  font-variant: normal;
+  font-size: 16px;
+  line-height: 16px;
+  color: #2C3E50; */
+}
+.Form input {
+  font-weight: normal;
+}
+
+.ButtonContainer {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* CSS for form input fields */
 .FormControl {
   display: block;
   width: 100%;
   padding: 10px;
   font-size: 1rem;
   line-height: 1.5;
-  color: #495057;
+  color: #333333;
   background-color: #fff;
   background-image: none;
   background-clip: padding-box;
   border: 1px solid #ced4da;
-  border-radius: .25rem;
+  border-radius: 4px;
   transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 .FormControl:focus {
-  color: #495057;
-  background-color: #fff;
-  border-color: #80bdff;
-  outline: 0;
-  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  outline: none;
+  border-color: var(--color-border-input);
+  box-shadow: 0 0 1px 1px var(--color-border-input);
 }
 .FormControl:read-only {
-  background-color: rgb(216, 216, 216);
+  background-color: var(--color-input-disabled);
   cursor: not-allowed;
+}
+.FormSubmitted:invalid {
+  border-color: var(--color-border-input-invalid);
+}
+.FormSubmitted:invalid:focus {
+  box-shadow: none;
 }
 .FormGroup {
   margin-bottom: 10px;
@@ -42,11 +95,8 @@
   transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
 }
 .FormControlSmall:focus {
-  color: #495057;
-  background-color: #fff;
-  border-color: #80bdff;
+  border-color: var(--color-border-input);
   outline: 0;
-  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
 
 .Large {
@@ -67,4 +117,17 @@
 
 .Errors {
   color: red;
+}
+
+
+
+input::-webkit-outer-spin-button.HideNumberUpDownArrows,
+input::-webkit-inner-spin-button.HideNumberUpDownArrows {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number].HideNumberUpDownArrows {
+  -moz-appearance: textfield;
 }

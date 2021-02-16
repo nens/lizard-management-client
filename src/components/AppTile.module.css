@@ -32,6 +32,7 @@
   margin-left: 50%; /* From parent width */
   transform: translateX(-50%); /* use self width which can be unknown */
   -ms-transform: translateX(-50%); /* For IE9 */
+  height: 70px;
 }
 .Title {
   position: absolute;

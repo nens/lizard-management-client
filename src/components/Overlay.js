@@ -43,7 +43,11 @@ class Overlay extends Component {
             appearActive: styles.AppearActive
           }}
         >
-          <div className={styles.ErrorOverlay}>{this.props.children}</div>
+          <div
+            className={this.props.confirmModal ? styles.ConfirmOverlay : styles.ErrorOverlay}
+          >
+            {this.props.children}
+          </div>
         </CSSTransition>
       </div>
     );

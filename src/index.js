@@ -4,6 +4,7 @@ import { Provider } from "react-redux";
 import configureStore from "./configureStore";
 import { addLocaleData, IntlProvider } from "react-intl";
 import { HashRouter as Router } from "react-router-dom";
+import ScrollToTop from "./components/ScrollToTop";
 import App from "./App";
 
 import nl from "./translations/locales/nl.json";
@@ -12,6 +13,7 @@ import nldata from "react-intl/locale-data/nl";
 
 // Initialize Redux store
 let store = configureStore();
+export const storeDispatch = store.dispatch;
 
 // Add localisation data to translations
 addLocaleData([...nldata]);
@@ -26,13 +28,15 @@ const localeData = {
 };
 
 const preferredLocale =
-  localStorage.getItem("lizard-preferred-language") || "en";
+  // localStorage.getItem("lizard-preferred-language") || "en";
+  "en";
 const messages = localeData[preferredLocale];
 
 const Root = ({ store }) => (
   <IntlProvider locale={preferredLocale} messages={messages}>
     <Provider store={store}>
       <Router basename={basename}>
+        <ScrollToTop />
         <App preferredLocale={preferredLocale} />
       </Router>
     </Provider>

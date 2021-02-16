@@ -19,7 +19,7 @@ class Breadcrumbs extends Component {
         // Slice from 1 and not from 0, because 0 is an empty string caused by
         // splitting on /.
         const navLinkRelativeUrl = `/${splitPathnames.slice(1, i + 1).join("/")}`;
-        let title = sp.replace("_", " ");
+        let title = sp.replace(/_/g, ' ');
         return (
           <NavLink to={navLinkRelativeUrl} key={navLinkRelativeUrl} className={this.uuidRegex.test(sp) ? styles.NavLinkUuid : null}>
             {" "}
@@ -29,9 +29,8 @@ class Breadcrumbs extends Component {
               // for users that it is the uuid.
               title={this.uuidRegex.test(sp) ? "uuid" : ""}
             >
-              &nbsp;
-                {title}
-              {i === splitPathnames.length - 1 ? null : " /"}
+              {title}
+              {i === splitPathnames.length - 1 ? null : <span style={{ margin: 5 }}>&#062;</span>}
             </span>
           </NavLink>
         );

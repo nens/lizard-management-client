@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="196.183" height="147.529" viewBox="0 0 69.44 59.45">
+  <g id="Group_329" data-name="Group 329" transform="translate(-1782 -308.35)">
+    <g id="icon-alarms" transform="translate(1721.37 320.9)">
+      <path id="Path_705" data-name="Path 705" d="M69,81.56,52.85,65.45l-25,.23,10.2,9.044L27.63,90.68l16.11,16.11L59.85,122.9l12.61-12.62L85.07,97.67ZM45.24,83.07a5.09,5.09,0,1,1,0-7.21,5.09,5.09,0,0,1,0,7.21Z" transform="translate(45 -76)" fill="teal"/>
+    </g>
+    <g id="icon-alarms-2" data-name="icon-alarms" transform="translate(1709.37 318.9)">
+      <path id="Path_705-2" data-name="Path 705" d="M69,81.56,52.85,65.45l-25,.23-.22,25,16.11,16.11L59.85,122.9l12.61-12.62L85.07,97.67ZM45.24,83.07a5.09,5.09,0,1,1,0-7.21,5.09,5.09,0,0,1,0,7.21Z" transform="translate(45 -76)" fill="#86eab8"/>
+    </g>
+  </g>
+</svg>
+

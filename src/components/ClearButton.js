@@ -7,6 +7,7 @@ class ClearButton extends Component {
       <div
         className={this.props.className}
         onClick={this.props.onClick}
+        onMouseDown={e => e.preventDefault()} // to prevent focus on this element
         style={Object.assign(
           {},
           {

@@ -1,0 +1,10 @@
+.KeyCopyButton {
+  border: none;
+  border-width: none;
+  background-color: transparent;
+}
+
+.KeyCopyButton:active {
+  transform: translateY(1px);
+  outline: none;
+}

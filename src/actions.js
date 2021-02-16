@@ -52,7 +52,7 @@ export function dismissNotification(idx) {
   };
 }
 
-export function addNotification(message, timeout = false) {
+export function addNotification(message, timeout) {
   return (dispatch, getState) => {
     if (timeout) {
       const idx = getState().notifications.notifications.length;
@@ -97,6 +97,7 @@ export function fetchOrganisations() {
         })
         const availableOrganisations = allOrganisations.filter(e => {
           return (
+            e.roles.find(e => e === "user") ||
             e.roles.find(e => e === "manager") ||
             e.roles.find(e => e === "admin") ||
             e.roles.find(e => e === "supplier") 
@@ -266,5 +267,97 @@ export function updateAlarmType(alarmType) {
   return {
     type: UPDATE_ALARM_TYPE,
     alarmType
+  };
+}
+
+// MARK: Datasets
+export const REQUEST_DATASETS = "REQUEST_DATASETS";
+export const RECEIVE_DATASETS_SUCCESS = "RECEIVE_DATASETS_SUCCESS";
+export const RECEIVE_DATASETS_ERROR = "RECEIVE_DATASETS_ERROR";
+
+export function fetchDatasets() {
+  return dispatch => {
+    const url = `/api/v4/datasets/`;
+    const opts = { credentials: "same-origin" };
+
+    dispatch({ type: REQUEST_DATASETS });
+
+    fetch(url, opts)
+      .then(responseObj => {
+        if (!responseObj.ok) {
+          const errorMessage = `HTTP error ${responseObj.status} while fetching Datasets: ${responseObj.statusText}`;
+          dispatch({ type: RECEIVE_DATASETS_ERROR, errorMessage });
+          console.error("[E]", errorMessage, responseObj);
+          return Promise.reject(errorMessage);
+        } else {
+          return responseObj.json();
+        }
+      })
+      .then(responseData => {
+        const data = responseData.results;
+        dispatch({ type: RECEIVE_DATASETS_SUCCESS, data });
+      });
+  };
+}
+
+// MARK: Raster source uuid
+export const UPDATE_RASTER_SOURCE_UUID = "UPDATE_RASTER_SOURCE_UUID";
+export const REMOVE_RASTER_SOURCE_UUID = "REMOVE_RASTER_SOURCE_UUID";
+
+export function updateRasterSourceUUID(uuid) {
+  return {
+    type: UPDATE_RASTER_SOURCE_UUID,
+    uuid
+  };
+}
+
+export function removeRasterSourceUUID() {
+  return {
+    type: REMOVE_RASTER_SOURCE_UUID
+  };
+}
+
+// MARK: Uploads
+export const ADD_FILES_TO_QUEUE = "ADD_FILES_TO_QUEUE";
+export const ADD_TASK_UUID_TO_FILE = "ADD_TASK_UUID_TO_FILE"
+export const UPDATE_TASK_STATUS = "UPDATE_TASK_STATUS";
+export const UPDATE_FILE_STATUS = "UPDATE_FILE_STATUS";
+export const REMOVE_FILE_FROM_QUEUE = "REMOVE_FILE";
+
+export function addFilesToQueue(files) {
+  return {
+    type: ADD_FILES_TO_QUEUE,
+    files
+  };
+}
+
+export function updateFileStatus(file, status) {
+  return {
+    type: UPDATE_FILE_STATUS,
+    file,
+    status
+  };
+}
+
+export function addTaskUuidToFile(file, uuid) {
+  return {
+    type: ADD_TASK_UUID_TO_FILE,
+    file,
+    uuid
+  };
+}
+
+export function updateTaskStatus(uuid, status) {
+  return {
+    type: UPDATE_TASK_STATUS,
+    uuid,
+    status
+  };
+}
+
+export function removeFileFromQueue(file) {
+  return {
+    type: REMOVE_FILE_FROM_QUEUE,
+    file
   };
 }
