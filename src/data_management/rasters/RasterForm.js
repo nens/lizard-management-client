@@ -290,7 +290,7 @@ class RasterFormModel extends Component {
               parameterString += ')'
             }
 
-            return [obsT.code, obsT.code, parameterString]
+            return [obsT.id, obsT.code, parameterString]
 
           })}
           validators={[required("Please select an observation type.")]}
@@ -299,7 +299,7 @@ class RasterFormModel extends Component {
             (
             currentRaster && 
             currentRaster.observation_type && 
-            currentRaster.observation_type.code
+            currentRaster.observation_type.id
             ) || null 
           }
         />

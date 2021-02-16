@@ -360,7 +360,7 @@ export const createRasterLayer = (rasterLayer: RasterLayerFromForm, rasterSource
     headers: { "Content-Type": "application/json" },
   };
 
-  return fetch(`/api/v4/rastersources/${rasterSourceUuid}`, {}).then(response=>response.json()).then(parsed=>{
+  return fetchRasterSourceV4(rasterSourceUuid).then(rasterSource => {
     const rasterLayerBody = {
       name: rasterLayer.name,
       organisation: rasterLayer.organisation,
@@ -383,7 +383,7 @@ export const createRasterLayer = (rasterLayer: RasterLayerFromForm, rasterSource
         },
         name: "raster"
       },
-      temporal: parsed.temporal,
+      temporal: rasterSource.temporal,
     };
   
     const rasterLayerResponse = fetch('/api/v4/rasters/', {
