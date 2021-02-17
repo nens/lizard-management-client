@@ -168,7 +168,7 @@ export const ContactTable: React.FC<any> = (props) =>  {
       backUrl={"/alarms"}
     >
         <TableStateContainer 
-          gridTemplateColumns={"10% 20% 20% 20% 20% 10%"} 
+          gridTemplateColumns={"6% 18% 18% 32% 18% 8%"} 
           columnDefinitions={columnDefinitions}
           baseUrl={`${baseUrl}?`} 
           checkBoxActions={[
