@@ -8,9 +8,7 @@ import { ModalDeleteContent } from '../../components/ModalDeleteContent'
 import Modal from '../../components/Modal';
 import wmsIcon from "../../images/wms@3x.svg";
 
-
 export const ContactTable: React.FC<any> = (props) =>  {
-
   const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
   const [rowToBeDeleted, setRowToBeDeleted] = useState<any | null>(null);
   const [deleteFunction, setDeleteFunction] = useState<null | Function>(null);
@@ -159,8 +157,6 @@ export const ContactTable: React.FC<any> = (props) =>  {
       orderingField: null,
     },
   ];
-
-
 
   const handleNewContactClick  = () => {
     const { history } = props;
