@@ -31,7 +31,7 @@ class App extends Component {
 
   render() {
     return (
-      <div>
+      <>
         <Route exact path="/alarms" component={AlarmsHome} />
         <Route
           exact
@@ -79,7 +79,7 @@ class App extends Component {
             component={AlarmTemplatesDetail}
           />
         </Switch>
-      </div>
+      </>
     );
   }
 }
