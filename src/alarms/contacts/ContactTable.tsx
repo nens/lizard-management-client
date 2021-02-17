@@ -84,15 +84,23 @@ export const ContactTable: React.FC<any> = (props) =>  {
     })
   }
 
+  // Helper function to get Django User or Contact User
+  const getDjangoUserOrContactUser = (contact: any) => {
+    // If contact.user is not null, that means a Django User is linked to this contact
+    // so show contact.user.first_name etcetera
+    // otherwise, no Django User is linked, so show contact.first_name etc.
+    return contact.user ? contact.user : contact;
+  };
+
   const columnDefinitions = [
     {
       titleRenderFunction: () => "First name",
       renderFunction: (row: any) => 
         <span
           className={tableStyles.CellEllipsis}
-          title={row.first_name}
+          title={getDjangoUserOrContactUser(row).first_name}
         >
-          <NavLink to={`${navigationUrl}/${row.id}/`}>{row.first_name}</NavLink>
+          <NavLink to={`${navigationUrl}/${row.id}/`}>{getDjangoUserOrContactUser(row).first_name}</NavLink>
         </span>,
       orderingField: "first_name",
     },
@@ -101,9 +109,9 @@ export const ContactTable: React.FC<any> = (props) =>  {
       renderFunction: (row: any) => 
         <span
           className={tableStyles.CellEllipsis}
-          title={row.last_name}
+          title={getDjangoUserOrContactUser(row).last_name}
         >
-          <NavLink to={`${navigationUrl}/${row.id}/`}>{row.last_name}</NavLink>
+          <NavLink to={`${navigationUrl}/${row.id}/`}>{getDjangoUserOrContactUser(row).last_name}</NavLink>
         </span>,
       orderingField: "last_name",
     },
@@ -112,9 +120,9 @@ export const ContactTable: React.FC<any> = (props) =>  {
       renderFunction: (row: any) => 
         <span
           className={tableStyles.CellEllipsis}
-          title={row.email}
+          title={getDjangoUserOrContactUser(row).email}
         >
-          {row.email}
+          {getDjangoUserOrContactUser(row).email}
         </span>,
       orderingField: null,
     },
@@ -123,9 +131,9 @@ export const ContactTable: React.FC<any> = (props) =>  {
       renderFunction: (row: any) => 
         <span
           className={tableStyles.CellEllipsis}
-          title={row.phone_number}
+          title={getDjangoUserOrContactUser(row).phone_number}
         >
-          {row.phone_number}
+          {getDjangoUserOrContactUser(row).phone_number}
         </span>,
       orderingField: null,
     },
