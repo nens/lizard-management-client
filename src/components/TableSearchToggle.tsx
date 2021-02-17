@@ -1,5 +1,5 @@
 import React from 'react';
-import Select from 'react-select';
+import Select, { StylesConfig } from 'react-select';
 import { Value } from '../form/SelectDropdown';
 
 interface MyProps {
@@ -13,18 +13,40 @@ const TableSearchToggle: React.FC<MyProps> = ({
   value,
   valueChanged
 }) => {
+  // Custom styling for different Select's child components
+  const customStyles: StylesConfig<{}, boolean> = {
+    // Custom styling for Control component
+    control: styles => ({
+      ...styles,
+      width: 150,
+      backgroundColor: 'var(--color-dark-main)',
+      cursor: 'pointer'
+    }),
+    // Custom styling for input value
+    singleValue: styles => ({
+      ...styles,
+      color: 'var(--color-ligth-main)'
+    }),
+    // Custom styling for the Indicator components
+    indicatorSeparator: () => ({
+      display: 'none'
+    }),
+    dropdownIndicator: styles => ({
+      ...styles,
+      ':hover': {
+        color: 'var(--color-ligth-main)'
+      }
+    })
+  };
+
   return (
     <Select
       options={options}
       defaultValue={value}
+      // @ts-ignore
       onChange={valueChanged}
       isSearchable={false}
-      styles={{
-        control: styles => ({
-          ...styles,
-          width: 150
-        })
-      }}
+      styles={customStyles}
     />
   )
 }
