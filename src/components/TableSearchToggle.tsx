@@ -25,7 +25,7 @@ const TableSearchToggle: React.FC<MyProps> = ({
     // Custom styling for input value
     singleValue: styles => ({
       ...styles,
-      color: 'var(--color-ligth-main)'
+      color: 'var(--color-light-main)'
     }),
     // Custom styling for the Indicator components
     indicatorSeparator: () => ({
@@ -34,7 +34,7 @@ const TableSearchToggle: React.FC<MyProps> = ({
     dropdownIndicator: styles => ({
       ...styles,
       ':hover': {
-        color: 'var(--color-ligth-main)'
+        color: 'var(--color-light-main)'
       }
     })
   };

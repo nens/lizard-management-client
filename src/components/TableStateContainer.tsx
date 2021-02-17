@@ -304,7 +304,7 @@ const TableStateContainer: React.FC<Props> = ({ gridTemplateColumns, columnDefin
           display: checkBoxActions.length === 0? "none" :"flex",
           justifyContent: "space-between",
           backgroundColor: "var(--color-header)",
-          color: "var(--color-ligth-main-second)",
+          color: "var(--color-light-main-second)",
           // @ts-ignore
           fontWeight: "var(--font-weight-button)",
         }}
