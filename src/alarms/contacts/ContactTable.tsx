@@ -172,7 +172,7 @@ export const ContactTable: React.FC<any> = (props) =>  {
       imgUrl={wmsIcon}
       imgAltDescription={"Contact icon"}
       headerText={"Contacts"}
-      explanationText={"Contacts"} 
+      explanationText={"Your contacts contain an email address, phone number and a name. Add these contacts to group to send them alarm messages when your thresholds are triggered."} 
       backUrl={"/alarms"}
     >
         <TableStateContainer 
