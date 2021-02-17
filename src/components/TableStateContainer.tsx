@@ -30,6 +30,12 @@ interface Props {
   defaultUrlParams?: string;
 }
 
+// Helper function to get row identifier (by uuid or id)
+// because sometimes tableData does not contain uuid but only id (e.g. alarm contacts)
+const getRowIdentifier = (row: any): string => {
+  return row.uuid || row.id + '';
+};
+
 const TableStateContainer: React.FC<Props> = ({ gridTemplateColumns, columnDefinitions, baseUrl, checkBoxActions, textSearchBox, newItemOnClick, queryCheckBox/*action*/, defaultUrlParams }) => {
 
   const [tableData, setTableData] = useState<any[]>([]);
@@ -64,7 +70,7 @@ const TableStateContainer: React.FC<Props> = ({ gridTemplateColumns, columnDefin
     if (currentUrl !== "" && currentUrl === apiResponse.currentUrl) {
       apiResponse.response.results && setTableData(apiResponse.response.results);
       // make sure no checkboxes are checked outside of current page !
-      apiResponse.response.results && setCheckBoxes(checkBoxesPar=>checkBoxesPar.filter(value => (apiResponse.response.results.map((item:any)=>item.uuid)).includes(value)));
+      apiResponse.response.results && setCheckBoxes(checkBoxesPar=>checkBoxesPar.filter(value => (apiResponse.response.results.map((item:any)=>getRowIdentifier(item))).includes(value)));
       setDataRetrievalState(apiResponse.dataRetrievalState)
       // we need to split on "lizard.net" because both nxt3.staging.lizard.net/api/v4 and demo.lizard.net/api/v4 both should parse out "/api/v4"
       if (apiResponse.response.next) setNextUrl(apiResponse.response.next.split("lizard.net")[1]);
@@ -108,7 +114,7 @@ const TableStateContainer: React.FC<Props> = ({ gridTemplateColumns, columnDefin
   }
 
   const checkAllCheckBoxesOnCurrentPage = () => {
-    const allCurrentPageUuids = tableData.map(row=>row.uuid as string);
+    const allCurrentPageUuids = tableData.map(row => getRowIdentifier(row));
     const mergedArrays = [...new Set([...checkBoxes ,...allCurrentPageUuids])];
     setCheckBoxes(mergedArrays);
   }
@@ -119,12 +125,12 @@ const TableStateContainer: React.FC<Props> = ({ gridTemplateColumns, columnDefin
 
   const areAllOnCurrentPageChecked = () => {
     return tableData.length > 0 && tableData.every(row=>{
-      return checkBoxes.find(uuid=>uuid===row.uuid)
+      return checkBoxes.find(uuid => uuid === getRowIdentifier(row))
     })
   }
 
   const dataWithCheckBoxes = tableData.map((tableRow:any) => {
-    if (isChecked(tableRow.uuid)) {
+    if (isChecked(getRowIdentifier(tableRow))) {
       return {...tableRow, checkboxChecked: true};
     } else {
       return {...tableRow, checkboxChecked: false};
@@ -147,8 +153,8 @@ const TableStateContainer: React.FC<Props> = ({ gridTemplateColumns, columnDefin
       <Checkbox 
         checked={row.checkboxChecked} 
         onChange={()=>{
-          if (row.checkboxChecked) removeUuidFromCheckBoxes(row.uuid)
-          else addUuidToCheckBoxes(row.uuid)
+          if (row.checkboxChecked) removeUuidFromCheckBoxes(getRowIdentifier(row))
+          else addUuidToCheckBoxes(getRowIdentifier(row))
         }} 
       />,
       orderingField: null,
@@ -302,9 +308,9 @@ const TableStateContainer: React.FC<Props> = ({ gridTemplateColumns, columnDefin
           checkBoxActions.map((checkboxAction, i) => {
             const { displayValue, actionFunction, checkIfActionIsApplicable } = checkboxAction;
             const selectedRows = checkIfActionIsApplicable ? (
-              tableData.filter(row => getIfCheckBoxOfUuidIsSelected(row.uuid) && checkIfActionIsApplicable(row))
+              tableData.filter(row => getIfCheckBoxOfUuidIsSelected(getRowIdentifier(row)) && checkIfActionIsApplicable(row))
             ) : (
-              tableData.filter(row => getIfCheckBoxOfUuidIsSelected(row.uuid))
+              tableData.filter(row => getIfCheckBoxOfUuidIsSelected(getRowIdentifier(row)))
             );
             return (
               <button
