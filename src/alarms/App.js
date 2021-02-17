@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Alarms as AlarmsHome } from "./Alarms";
-import { App as AlarmContactApp } from "./contacts/App";
+import { ContactTable } from "./contacts/ContactTable";
 import { App as AlarmGroupsApp } from "./alarmgroups/App";
 import { App as AlarmTemplatesApp } from "./alarmtemplates/App";
 import { App as NewAlarmGroupApp } from "./alarmgroups/NewAlarmGroup";
@@ -60,7 +60,7 @@ class App extends Component {
           />
         </Switch>
 
-        <Route exact path="/alarms/contacts" component={AlarmContactApp} />
+        <Route exact path="/alarms/contacts" component={ContactTable} />
         <Switch>
           <Route exact path="/alarms/contacts/new" component={NewContactApp} />
           <Route exact path="/alarms/contacts/:id" component={ContactDetail} />
