@@ -1,10 +1,11 @@
-import React from 'react';
-import {useState, useEffect,}  from 'react';
+import React, { useState, useEffect } from 'react';
 import Table from './Table';
 import {ColumnDefinition} from './Table';
 import Pagination from './Pagination';
 import Checkbox from './Checkbox';
 import TableSearchBox from './TableSearchBox';
+import TableSearchToggle from './TableSearchToggle';
+import { Value } from '../form/SelectDropdown';
 import { useSelector } from "react-redux";
 import { getSelectedOrganisation } from '../reducers';
 import {DataRetrievalState} from '../types/retrievingDataTypes';
@@ -24,7 +25,7 @@ interface Props {
   columnDefinitions: ColumnDefinition[];
   baseUrl: string; 
   checkBoxActions: checkboxAction[];
-  textSearchBox?: boolean; // default true
+  filterOptions?: Value[];
   newItemOnClick?: () => void | null;
   queryCheckBox?: {text: string, adaptUrlFunction: (url:string)=>string} | null;
   defaultUrlParams?: string;
@@ -36,7 +37,7 @@ const getRowIdentifier = (row: any): string => {
   return row.uuid || row.id + '';
 };
 
-const TableStateContainer: React.FC<Props> = ({ gridTemplateColumns, columnDefinitions, baseUrl, checkBoxActions, textSearchBox, newItemOnClick, queryCheckBox/*action*/, defaultUrlParams }) => {
+const TableStateContainer: React.FC<Props> = ({ gridTemplateColumns, columnDefinitions, baseUrl, checkBoxActions, filterOptions, newItemOnClick, queryCheckBox/*action*/, defaultUrlParams }) => {
 
   const [tableData, setTableData] = useState<any[]>([]);
   const [checkBoxes, setCheckBoxes] = useState<string[]>([]);
@@ -45,7 +46,8 @@ const TableStateContainer: React.FC<Props> = ({ gridTemplateColumns, columnDefin
   const [previousUrl, setPreviousUrl] = useState("");
   const [itemsPerPage, setItemsPerPage] = useState("10");
   const [ordering, setOrdering] = useState<string | null>("last_modified");
-  const [nameContains, setNameContains] = useState("");
+  const [searchInput, setSearchInput] = useState<string>("");
+  const [selectedFilterOption, setSelectedFilterOption] = useState<Value | null>(filterOptions && filterOptions.length > 0 ? filterOptions[0] : null)
   const [dataRetrievalState, setDataRetrievalState] = useState<DataRetrievalState>("NEVER_DID_RETRIEVE");
   const [apiResponse, setApiResponse] = useState<{response:any, currentUrl: string, dataRetrievalState: DataRetrievalState}>({response: {}, currentUrl: "", dataRetrievalState: "NEVER_DID_RETRIEVE"});
   const [queryCheckBoxState, setQueryCheckBoxState] = useState(false);
@@ -59,7 +61,7 @@ const TableStateContainer: React.FC<Props> = ({ gridTemplateColumns, columnDefin
     "writable=true" +
     "&page_size=" + itemsPerPage +
     "&page=1" +
-    (nameContains !==""? "&name__icontains=" + nameContains: "") +
+    (selectedFilterOption && searchInput ? "&" + selectedFilterOption.value + searchInput : "") +
     "&ordering=" + ordering +
     "&organisation__uuid=" + selectedOrganisationUuid +
     (defaultUrlParams ? defaultUrlParams : '');
@@ -234,16 +236,29 @@ const TableStateContainer: React.FC<Props> = ({ gridTemplateColumns, columnDefin
         }}
       >
         {
-          textSearchBox?
-          <TableSearchBox
-            onChange={event=>{
-              const newValue = event.target.value;
-              setNameContains(newValue);
+          filterOptions && filterOptions.length > 0 ?
+          <div
+            style={{
+              display: 'flex'
             }}
-            onClear={()=>setNameContains("")}
-            value={nameContains}
-            placeholder={"Type to search for name"}
-          />
+          >
+            <TableSearchBox
+              onChange={event=>{
+                const newValue = event.target.value;
+                setSearchInput(newValue);
+              }}
+              onClear={()=>setSearchInput("")}
+              value={searchInput}
+              placeholder={"Type to search for name"}
+            />
+            {filterOptions.length > 1 ? (
+              <TableSearchToggle
+                options={filterOptions}
+                value={selectedFilterOption}
+                valueChanged={option => setSelectedFilterOption(option)}
+              />
+            ) : null}
+          </div>
           :
           <div />
         }

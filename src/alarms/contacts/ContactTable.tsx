@@ -186,7 +186,16 @@ export const ContactTable: React.FC<any> = (props) =>  {
             }
           ]}
           newItemOnClick={handleNewContactClick}
-          textSearchBox={true}
+          filterOptions={[
+            {
+              value: 'first_name__icontains=',
+              label: 'First name'
+            },
+            {
+              value: 'last_name__icontains=',
+              label: 'Last name'
+            }
+          ]}
         />
         { 
         rowsToBeDeleted.length > 0?

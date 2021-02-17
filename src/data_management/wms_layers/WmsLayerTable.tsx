@@ -157,7 +157,7 @@ export const WmsLayerTable = (props:any) =>  {
             }
           ]}
           newItemOnClick={handleNewRasterClick}
-          textSearchBox={true}
+          filterOptions={[{value: 'name__icontains=', label: 'Name'}]}
         />
         { 
         rowsToBeDeleted.length > 0?
