@@ -211,7 +211,7 @@ export const ContactTable: React.FC<any> = (props) =>  {
           disableButtons={busyDeleting}
          >
            
-           <p>Are you sure? You are deleting the following contactss:</p>
+           <p>Are you sure? You are deleting the following contacts:</p>
            {ModalDeleteContent(rowsToBeDeleted, busyDeleting, [{name: "first_name", width: 20}, {name: "email", width: 50}, {name: "id", width: 30}])}
            
          </Modal>
