@@ -174,13 +174,20 @@ export const personalApiKeysFormHelpText: HelpText = {
   default:  
   (
     <>
-      <p>Personal API keys can be used to authenticate external applications in Lizard with <a target="_blank" rel="noopener noreferrer" href="https://en.wikipedia.org/wiki/Basic_access_authentication">basic authentication</a>:</p>
-      <br/>
+      <p>
+        Personal API keys are used to authenticate external applications with <a target="_blank" rel="noopener noreferrer" href="https://en.wikipedia.org/wiki/Basic_access_authentication">basic authentication</a> as follows: 
+        <ul>
+          <li>Username is literally  __key__ (with double underscores on bothsides of the word "key")</li>
+          <li>Password is {"{your api key}"}</li>
+        </ul>
+      </p>
       <div style={{
           backgroundColor: "#EEEEEE",
           fontFamily: "Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New",
       }}>
-      <span>&lt;username&gt;:&lt;key&gt;</span>
+        username: __key__
+        <br/>
+        password: abcd.examplekey
       </div>
       <br/>
       <p>The key itself is only visible once you create the api key. They can not be looked up later.</p>
