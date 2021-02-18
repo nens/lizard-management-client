@@ -174,7 +174,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
         options: values.colorMap && values.colorMap.options,
         colormap: JSON.stringify(values.colorMap.customColormap) ==="{}"? undefined : values.colorMap.customColormap,
         rescalable: values.colorMap && values.colorMap.rescalable,
-        shared_with: values.organisationsToSharedWith.map((organisation: any) => organisation.value),
+        shared_with: values.sharedWith ? values.organisationsToSharedWith.map((organisation: any) => organisation.value) : [],
         datasets: values.datasets.map((data: any) => data.value)
       };
 
@@ -203,7 +203,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
         options: values.colorMap && values.colorMap.options,
         colormap: JSON.stringify(values.colorMap.customColormap) ==="{}"? undefined : values.colorMap.customColormap,
         rescalable: values.colorMap && values.colorMap.rescalable,
-        shared_with: values.organisationsToSharedWith.map((organisation: any) => organisation.value),
+        shared_with: values.sharedWith ? values.organisationsToSharedWith.map((organisation: any) => organisation.value) : [],
         datasets: values.datasets.map((dataset: any) => dataset.value)
       };
       // only add colormap in options if not multiple layers
