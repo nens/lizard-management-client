@@ -6,7 +6,7 @@ import tableStyles from "../../components/Table.module.css";
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import { ModalDeleteContent } from '../../components/ModalDeleteContent'
 import Modal from '../../components/Modal';
-import wmsIcon from "../../images/wms@3x.svg";
+import templateIcon from "../../images/templates@3x.svg";
 
 export const TemplateTable: React.FC<any> = (props) =>  {
   const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
@@ -134,7 +134,7 @@ export const TemplateTable: React.FC<any> = (props) =>  {
 
   return (
     <ExplainSideColumn
-      imgUrl={wmsIcon}
+      imgUrl={templateIcon}
       imgAltDescription={"Template icon"}
       headerText={"Templates"}
       explanationText={"Templates are used to create messages for your alarms. You can choose between an email or text message."} 

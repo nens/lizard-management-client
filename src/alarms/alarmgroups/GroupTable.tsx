@@ -6,7 +6,7 @@ import tableStyles from "../../components/Table.module.css";
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import { ModalDeleteContent } from '../../components/ModalDeleteContent'
 import Modal from '../../components/Modal';
-import wmsIcon from "../../images/wms@3x.svg";
+import groupIcon from "../../images/group.svg";
 
 export const GroupTable: React.FC<any> = (props) =>  {
   const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
@@ -133,7 +133,7 @@ export const GroupTable: React.FC<any> = (props) =>  {
 
   return (
     <ExplainSideColumn
-      imgUrl={wmsIcon}
+      imgUrl={groupIcon}
       imgAltDescription={"Group icon"}
       headerText={"Groups"}
       explanationText={"Groups are made of your contacts. In this screen, you can manage them by adding or deleting contacts. You can also add or delete groups for your alarm messages."}
