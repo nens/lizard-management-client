@@ -5,8 +5,7 @@ import AppTile from "../components/AppTile";
 import { withRouter } from "react-router-dom";
 import { Trail, animated } from "react-spring";
 import doArraysHaveEqualElement from '../utils/doArraysHaveEqualElement';
-
-import {appTiles} from './HomeAppTileConfig';
+import {appTiles} from './AppTileConfig';
 
 class App extends Component {
   constructor(props) {
@@ -32,15 +31,14 @@ class App extends Component {
   }
 
   render() {
+
+    const currentRelativeUrl = this.props.location.pathname;
+
     const currentOrganisationRoles = (this.props.selectedOrganisation && this.props.selectedOrganisation.roles) || [];
-    const appTilesWithReadOnlyInfo = appTiles.map(appTile=>{
-      return {
-        ...appTile,
-        readonly: !doArraysHaveEqualElement(appTile.requiredRoles, currentOrganisationRoles)
-      }
-    });
+    
     return (
       <div>
+        
         <div className="container">
           <div className="row">
             <div className={styles.Apps}>
@@ -50,22 +48,28 @@ class App extends Component {
                 to={{ opacity: 1, x: 0 }}
                 keys={appTiles.map(item => item.key)}
               >
-                {appTilesWithReadOnlyInfo.map((appTile) => ({ x, opacity }) => (
-                  <animated.div
-                    style={{
-                      opacity,
-                      transform: x.interpolate(x => `translate3d(${x}%,0,0)`)
-                    }}
-                  >
-                    <AppTile
-                      handleClick={()=>{ this.handleLink(appTile.linksTo)}}
-                      key={+new Date()}
-                      title={appTile.title}
-                      icon={appTile.icon}
-                      readonly={appTile.readonly}
-                      requiredRoles={appTile.requiredRoles}
-                    />
-                  </animated.div>
+                {appTiles
+                  .filter(appTile=> appTile.onPage === currentRelativeUrl )
+                  .sort((appTileA, appTileB)=> appTileA.order - appTileB.order )
+                  .map((appTile) => ({ x, opacity }) => (
+                    <animated.div
+                      style={{
+                        opacity,
+                        transform: x.interpolate(x => `translate3d(${x}%,0,0)`)
+                      }}
+                    >
+                      <AppTile
+                        handleClick={()=>{ this.handleLink({
+                          external: appTile.linksToExternal? true : false,
+                          path: appTile.linksTo
+                        })}}
+                        key={appTile.title + appTile.order + ""}
+                        title={appTile.title}
+                        icon={appTile.icon}
+                        readonly={!doArraysHaveEqualElement(appTile.requiresOneOfRoles, currentOrganisationRoles)}
+                        requiredRoles={appTile.requiresOneOfRoles}
+                      />
+                    </animated.div>
                 ))}
               </Trail>
             </div>

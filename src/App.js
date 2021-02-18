@@ -1,9 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
-import { App as Home } from "./home/App";
-import { App as AlarmsApp } from "./alarms/App";
-import { App as DataManagementApp } from "./data_management/App";
 import MDSpinner from "react-md-spinner";
 import { fetchTaskInstance } from "./api/tasks";
 import {
@@ -18,7 +15,8 @@ import {
   updateTaskStatus,
   removeFileFromQueue
 } from "./actions";
-import { Route, Switch, NavLink } from "react-router-dom";
+import {Routes} from './home/Routes';
+import {NavLink } from "react-router-dom";
 import LanguageSwitcher from "./components/LanguageSwitcher";
 import OrganisationSwitcher from "./components/OrganisationSwitcher";
 import Snackbar from "./components/Snackbar";
@@ -29,18 +27,13 @@ import gridStyles from "./styles/Grid.module.css";
 import buttonStyles from "./styles/Buttons.module.css";
 import lizardIcon from "./images/lizard.svg";
 import { withRouter } from "react-router-dom";
-import {appTiles} from './home/HomeAppTileConfig';
+import {appTiles} from './home/AppTileConfig';
 import doArraysHaveEqualElement from './utils/doArraysHaveEqualElement';
 
 import helpIcon from './images/help.svg'
 import documentIcon from './images/document.svg';
 import logoutIcon from './images/logout.svg';
 import editIcon from './images/edit.svg';
-import {PersonalApiKeysTable} from './personal_api_keys/PersonalApiKeysTable';
-import { EditPersonalApiKey } from './personal_api_keys/EditPersonalApiKey';
-import { NewPersonalApiKey } from './personal_api_keys/NewPersonalApiKey';
-
-
 
 class App extends Component {
   constructor(props) {
@@ -187,9 +180,9 @@ class App extends Component {
     }
 
     const currentHomeAppTile = appTiles.find(tile => {
-      return window.location.href.includes(tile.linksTo.path)
+      return window.location.href.includes(tile.linksTo)
     });
-    if (currentHomeAppTile && !doArraysHaveEqualElement(this.props.selectedOrganisation.roles, currentHomeAppTile.requiredRoles)) {
+    if (currentHomeAppTile && !doArraysHaveEqualElement(this.props.selectedOrganisation.roles, currentHomeAppTile.requiresOneOfRoles)) {
       const redirectMessage = this.props.intl.formatMessage({ id: "authorization.redirected_based_onrole", defaultMessage: "You do not have the rights to access this data under the selected organisation. \nYou will be redirected." });
       alert(redirectMessage);
       // should redirect to <customer_url>.lizard.net/management/ on prod
@@ -296,33 +289,7 @@ class App extends Component {
             </div>
           </div>
           <div className={gridStyles.Container + " " + styles.AppContent}>
-            {/* <div className={gridStyles.Row}>
-              <div
-                style={{ 
-                  margin: "25px 0 25px 0",
-                  width: "100%" 
-                }}
-                className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
-              > */}
-                <Route exact path="/" component={Home} />
-                <Route path="/alarms" component={AlarmsApp} />
-                <Route path="/data_management" component={DataManagementApp} />
-                
-                <Switch>
-                  <Route exact path="/personal_api_keys" component={PersonalApiKeysTable} />
-                  <Route
-                    exact
-                    path={`/personal_api_keys/new`}
-                    component={NewPersonalApiKey}
-                  />
-                  <Route
-                    exact
-                    path="/personal_api_keys/:uuid"
-                    component={EditPersonalApiKey}
-                  />
-                </Switch>
-              {/* </div>
-            </div> */}
+                <Routes/>
           </div>
           <footer className={styles.Footer}>
             <div className={gridStyles.Container}>
