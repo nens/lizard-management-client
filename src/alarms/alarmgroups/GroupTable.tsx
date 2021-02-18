@@ -8,14 +8,14 @@ import { ModalDeleteContent } from '../../components/ModalDeleteContent'
 import Modal from '../../components/Modal';
 import wmsIcon from "../../images/wms@3x.svg";
 
-export const TemplateTable: React.FC<any> = (props) =>  {
+export const GroupTable: React.FC<any> = (props) =>  {
   const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
   const [rowToBeDeleted, setRowToBeDeleted] = useState<any | null>(null);
   const [deleteFunction, setDeleteFunction] = useState<null | Function>(null);
   const [busyDeleting, setBusyDeleting] = useState<boolean>(false);
 
-  const baseUrl = "/api/v4/messages/";
-  const navigationUrl = "/alarms/templates";
+  const baseUrl = "/api/v4/contactgroups/";
+  const navigationUrl = "/alarms/groups";
 
   const fetchTemplatesWithOptions = (ids: string[], fetchOptions:any) => {
     const fetches = ids.map (id => {
@@ -94,15 +94,14 @@ export const TemplateTable: React.FC<any> = (props) =>  {
       orderingField: "name",
     },
     {
-      titleRenderFunction: () =>  "Type",
+      titleRenderFunction: () =>  "Size",
       renderFunction: (row: any) => 
         <span
           className={tableStyles.CellEllipsis}
-          title={row.type}
         >
-          {row.type.toUpperCase()}
+          {row.contacts.length} {row.contacts.length > 1 ? 'Contacts' : 'Contact'}
         </span>,
-      orderingField: "type",
+      orderingField: null,
     },
     {
       titleRenderFunction: () =>  "",//"Actions",
@@ -135,13 +134,13 @@ export const TemplateTable: React.FC<any> = (props) =>  {
   return (
     <ExplainSideColumn
       imgUrl={wmsIcon}
-      imgAltDescription={"Template icon"}
-      headerText={"Templates"}
-      explanationText={"Templates are used to create messages for your alarms. You can choose between an email or text message."} 
+      imgAltDescription={"Group icon"}
+      headerText={"Groups"}
+      explanationText={"Groups are made of your contacts. In this screen, you can manage them by adding or deleting contacts. You can also add or delete groups for your alarm messages."}
       backUrl={"/alarms"}
     >
         <TableStateContainer 
-          gridTemplateColumns={"10% 70% 10% 10%"} 
+          gridTemplateColumns={"10% 60% 20% 10%"} 
           columnDefinitions={columnDefinitions}
           baseUrl={`${baseUrl}?`} 
           checkBoxActions={[
@@ -176,8 +175,8 @@ export const TemplateTable: React.FC<any> = (props) =>  {
           disableButtons={busyDeleting}
          >
            
-           <p>Are you sure? You are deleting the following templates:</p>
-           {ModalDeleteContent(rowsToBeDeleted, busyDeleting, [{name: "name", width: 30}, {name: "type", width: 20}, {name: "id", width: 50}])}
+           <p>Are you sure? You are deleting the following contact groups:</p>
+           {ModalDeleteContent(rowsToBeDeleted, busyDeleting, [{name: "name", width: 30}, {name: "id", width: 70}])}
            
          </Modal>
         :
@@ -202,8 +201,8 @@ export const TemplateTable: React.FC<any> = (props) =>  {
            }}
            disableButtons={busyDeleting}
          >
-           <p>Are you sure? You are deleting the following template:</p>
-           {ModalDeleteContent([rowToBeDeleted], busyDeleting, [{name: "name", width: 30}, {name: "type", width: 20}, {name: "id", width: 50}])}
+           <p>Are you sure? You are deleting the following contact group:</p>
+           {ModalDeleteContent([rowToBeDeleted], busyDeleting, [{name: "name", width: 30}, {name: "id", width: 70}])}
 
          </Modal>
         :

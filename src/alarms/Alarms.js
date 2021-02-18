@@ -37,8 +37,8 @@ class Alarms extends Component {
         handleClick: () => this.handleLink("alarms/groups"),
         title: (
           <FormattedMessage
-            id="alarms.recipients"
-            defaultMessage="Recipients"
+            id="alarms.groups"
+            defaultMessage="Groups"
           />
         ),
         icon: groupsIcon
