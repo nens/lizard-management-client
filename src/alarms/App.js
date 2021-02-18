@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Alarms as AlarmsHome } from "./Alarms";
 import { ContactTable } from "./contacts/ContactTable";
-import { App as AlarmGroupsApp } from "./alarmgroups/App";
+import { GroupTable } from "./alarmgroups/GroupTable";
 import { TemplateTable } from "./alarmtemplates/TemplateTable";
 import { App as NewAlarmGroupApp } from "./alarmgroups/NewAlarmGroup";
 import { App as NewContactApp } from "./contacts/NewContact";
@@ -50,7 +50,7 @@ class App extends Component {
             component={EditNotificationApp}
           />
         </Switch>
-        <Route exact path="/alarms/groups" component={AlarmGroupsApp} />
+        <Route exact path="/alarms/groups" component={GroupTable} />
         <Switch>
           <Route exact path="/alarms/groups/new" component={NewAlarmGroupApp} />
           <Route
