@@ -51,32 +51,42 @@ export const Routes: React.FC<Props> = () => {
             return <Route key={appTilePage} exact path={appTilePage} component={Home} />
           })
         }
+
         <Route exact path="/personal_api_keys" component={PersonalApiKeysTable} />
         <Route exact path="/personal_api_keys/new" component={NewPersonalApiKey} />
         <Route exact path="/personal_api_keys/:uuid" component={EditPersonalApiKey} />
+
         <Route exact path="/data_management/rasters/sources" component={RasterSourceTable} />
-        <Route exact path="/data_management/rasters/layers" component={RasterLayerTable} />
-        <Route exact path="/data_management/wms_layers" component={WmsLayerTable} />
-        <Route exact path="/data_management/scenarios" component={ScenarioTable} />
-        <Route exact path="/data_management/labels/label_types" component={LabeltypesTable} />
         <Route exact path="/data_management/rasters/sources/new" component={NewRasterSource} />
-        <Route exact path="/data_management/rasters/layers/new" component={NewRasterLayer} />
         <Route exact path="/data_management/rasters/sources/:uuid" component={EditRasterSource} />
-        <Route exact path="/data_management/rasters/layers/:uuid" component={EditRasterLayer} />
         <Route exact path="/data_management/rasters/:id/data" component={UploadRasterData} />
+
+        <Route exact path="/data_management/rasters/layers" component={RasterLayerTable} />
+        <Route exact path="/data_management/rasters/layers/new" component={NewRasterLayer} />
+        <Route exact path="/data_management/rasters/layers/:uuid" component={EditRasterLayer} />
+
+        <Route exact path="/data_management/wms_layers" component={WmsLayerTable} />
         <Route exact path="/data_management/wms_layers/new" component={NewWmsLayer} />
         <Route exact path="/data_management/wms_layers/:id" component={EditWmsLayer} />
+
+        <Route exact path="/data_management/scenarios" component={ScenarioTable} />
         <Route exact path="/data_management/scenarios/:uuid" component={EditScenario} />
+
+        <Route exact path="/data_management/labels/label_types" component={LabeltypesTable} />
         <Route exact path="/data_management/labels/label_types/:uuid" component={EditLabeltype} />
+
         <Route exact path="/alarms/notifications" component={NotificationsApp} />
         <Route exact path="/alarms/notifications/new" component={NewNotificationApp} />
         <Route exact path="/alarms/notifications/:id" component={EditNotificationApp} />
+
         <Route exact path="/alarms/groups" component={GroupTable} />
         <Route exact path="/alarms/groups/new" component={NewAlarmGroupApp} />
         <Route exact path="/alarms/groups/:id" component={AlarmGroupsDetail} />
+
         <Route exact path="/alarms/contacts" component={ContactTable} />
         <Route exact path="/alarms/contacts/new" component={NewContactApp} />
         <Route exact path="/alarms/contacts/:id" component={ContactDetail} />
+
         <Route exact path="/alarms/templates" component={TemplateTable} />
         <Route exact path="/alarms/templates/new" component={NewTemplateApp} />
         <Route exact path="/alarms/templates/:id" component={AlarmTemplatesDetail} />
