@@ -14,13 +14,12 @@ export const ContactTable: React.FC<any> = (props) =>  {
   const [deleteFunction, setDeleteFunction] = useState<null | Function>(null);
   const [busyDeleting, setBusyDeleting] = useState<boolean>(false);
 
-  const baseUrl = "/api/v3/contacts/";
+  const baseUrl = "/api/v4/contacts/";
   const navigationUrl = "/alarms/contacts";
 
   const fetchContactsWithOptions = (ids: string[], fetchOptions:any) => {
-    const url = "/api/v3/contacts/";
     const fetches = ids.map (id => {
-      return (fetch(url + id + "/", fetchOptions));
+      return (fetch(baseUrl + id + "/", fetchOptions));
     });
     return Promise.all(fetches)
   }
