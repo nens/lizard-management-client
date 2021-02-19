@@ -24,6 +24,8 @@ const ContactForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (
   const selectedOrganisation = useSelector(getSelectedOrganisation);
 
   const initialValues = currentContact ? {
+    // if currentContact.user is not null, that means a Django User is linked to this contact
+    // then show the infos of the Django User, otherwise show the current contact
     firstName: currentContact.user ? currentContact.user.first_name : currentContact.first_name,
     lastName: currentContact.user ? currentContact.user.last_name : currentContact.last_name,
     email: currentContact.user ? currentContact.user.email : currentContact.email,
@@ -69,6 +71,7 @@ const ContactForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (
       .catch(console.error);
     } else {
       if (currentContact.user) {
+        // if currentContact.user is not null then update the contact of the linked Django User
         fetch(`/api/v4/contacts/${currentContact.id}/`, {
           credentials: "same-origin",
           method: "PATCH",

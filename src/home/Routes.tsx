@@ -24,15 +24,15 @@ import {EditLabeltype} from "../data_management/labels/EditLabeltype";
 import { TemplateTable } from "../alarms/alarmtemplates/TemplateTable";
 import { ContactTable } from "../alarms/contacts/ContactTable";
 import { GroupTable } from "../alarms/alarmgroups/GroupTable";
-import { App as NewAlarmGroupApp } from "../alarms/alarmgroups/NewAlarmGroup";
 import { App as NewNotificationApp } from "../alarms/notifications/NewNotification";
 import { App as NewTemplateApp } from "../alarms/alarmtemplates/NewTemplate";
 import { App as NotificationsApp } from "../alarms/notifications/App";
 import { App as EditNotificationApp } from "../alarms/notifications/EditNotification";
-import { Detail as AlarmGroupsDetail } from "../alarms/alarmgroups/Detail";
 import { Detail as AlarmTemplatesDetail } from "../alarms/alarmtemplates/Detail";
 import  { NewContact } from "../alarms/contacts/NewContact"
 import { EditContact } from "../alarms/contacts/EditContact";
+import { NewGroup } from "../alarms/alarmgroups/NewGroup";
+import { EditGroup } from "../alarms/alarmgroups/EditGroup";
 
 interface Props {}
 
@@ -80,8 +80,8 @@ export const Routes: React.FC<Props> = () => {
         <Route exact path="/alarms/notifications/:id" component={EditNotificationApp} />
 
         <Route exact path="/alarms/groups" component={GroupTable} />
-        <Route exact path="/alarms/groups/new" component={NewAlarmGroupApp} />
-        <Route exact path="/alarms/groups/:id" component={AlarmGroupsDetail} />
+        <Route exact path="/alarms/groups/new" component={NewGroup} />
+        <Route exact path="/alarms/groups/:id" component={EditGroup} />
 
         <Route exact path="/alarms/contacts" component={ContactTable} />
         <Route exact path="/alarms/contacts/new" component={NewContact} />
