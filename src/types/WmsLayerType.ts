@@ -37,7 +37,7 @@ export interface WmsLayerReceivedFromApi {
 export const wmsLayerReceivedFromApiToForm = (wmsLayer: WmsLayerReceivedFromApi): WmsLayerFormType => {
   return { 
     ...wmsLayer,
-    sharedWithCheckbox: wmsLayer.shared_with.length > 1? true : false,
+    sharedWithCheckbox: wmsLayer.shared_with.length > 0? true : false,
     organisation: convertToSelectObject(wmsLayer.organisation.uuid.replace(/-/g, ""), wmsLayer.organisation.name),
     shared_with: wmsLayer.shared_with.map(org => convertToSelectObject(org.uuid.replace(/-/g, ""), org.name)),
     datasets: wmsLayer.datasets.map(dataset => convertToSelectObject(dataset.slug)),
@@ -113,7 +113,7 @@ export const wmsLayerFormToFormSendToApi = (wmsLayer: WmsLayerFormType) => {
       get_feature_info: wmsLayer.get_feature_info_url === ""? false: true,
       organisation: wmsLayer.organisation && wmsLayer.organisation.value,
       supplier: wmsLayer.supplier && wmsLayer.supplier.value,
-      shared_with: wmsLayer.shared_with.map(org => org.value),
+      shared_with: wmsLayer.sharedWithCheckbox ? wmsLayer.shared_with.map(org => org.value) : [],
       datasets: wmsLayer.datasets.map(dataset => dataset.value),
     }
 }

@@ -60,7 +60,7 @@ export const jsonValidator =  (jsonStr: string) => {
   try{
     JSON.parse(jsonStr as string)
   } catch(e) {
-    return "needs to be valid JSON";
+    return "Please fill in valid JSON format";
   }
   return false;
 }
