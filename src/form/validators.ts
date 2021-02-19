@@ -56,11 +56,18 @@ export const greaterThanMin = (minValue: number, maxValue: number): validatorRes
   return false;
 };
 
-export const jsonValidator =  (jsonStr: string) => {
+export const jsonValidator = (jsonStr: string) => {
   try{
     JSON.parse(jsonStr as string)
   } catch(e) {
     return "needs to be valid JSON";
   }
   return false;
-}
+};
+
+export const emailValidator = (address: string) => {
+  if (/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(address)) {
+    return false;
+  };
+  return 'Please enter a valid email address';
+};
