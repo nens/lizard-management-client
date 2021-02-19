@@ -156,13 +156,13 @@ const ContactForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (
           triedToSubmit={triedToSubmit}
         />
         <TextInput
-          title={'Email *'}
+          title={'Email'}
           name={'email'}
           type={'email'}
           value={values.email}
           valueChanged={handleInputChange}
           clearInput={clearInput}
-          validated={!emailValidator(values.email)}
+          validated={!values.email || !emailValidator(values.email)}
           errorMessage={emailValidator(values.email)}
           triedToSubmit={triedToSubmit}
         />
