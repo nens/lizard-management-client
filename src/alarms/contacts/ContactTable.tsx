@@ -97,7 +97,7 @@ export const ContactTable: React.FC<any> = (props) =>  {
           className={tableStyles.CellEllipsis}
           title={getDjangoUserOrContactUser(row).first_name}
         >
-          <NavLink to={`${navigationUrl}/${row.id}/`}>{getDjangoUserOrContactUser(row).first_name}</NavLink>
+          <NavLink to={`${navigationUrl}/${row.id}`}>{getDjangoUserOrContactUser(row).first_name}</NavLink>
         </span>,
       orderingField: "first_name",
     },
@@ -108,7 +108,7 @@ export const ContactTable: React.FC<any> = (props) =>  {
           className={tableStyles.CellEllipsis}
           title={getDjangoUserOrContactUser(row).last_name}
         >
-          <NavLink to={`${navigationUrl}/${row.id}/`}>{getDjangoUserOrContactUser(row).last_name}</NavLink>
+          <NavLink to={`${navigationUrl}/${row.id}`}>{getDjangoUserOrContactUser(row).last_name}</NavLink>
         </span>,
       orderingField: "last_name",
     },
