@@ -399,7 +399,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           loadOptions={fetchObservationTypes}
         />
         <ColorMapInput
-          title={<FormattedMessage id="raster_form.colormap" />}
+          title={'Choose a color map *'}
           name={'colorMap'}
           colorMapValue={values.colorMap}
           valueChanged={value => handleValueChange('colorMap', value)}

@@ -11,7 +11,7 @@ import { CancelButton } from '../../form/CancelButton';
 import { SelectDropdown } from '../../form/SelectDropdown';
 import { AccessModifier } from '../../form/AccessModifier';
 import { useForm, Values } from '../../form/useForm';
-import { greaterThanMin, minLength, rangeCheck, jsonValidator} from '../../form/validators';
+import { greaterThanMin, minLength, rangeCheck, jsonValidator, required} from '../../form/validators';
 import wmsIcon from "../../images/wms@3x.svg";
 import {
   getDatasets,
@@ -250,26 +250,38 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
         /> */}
         <div style={{ display: 'flex' }}>
           <IntegerInput
-            title={'Min Zoom'}
+            title={'Min Zoom *'}
             name={'min_zoom'}
             value={values.min_zoom + ''}
             valueChanged={handleInputChange}
-            clearInput={clearInput}
-            validated={!rangeCheck(Number(values.min_zoom), 0, 31)}
-            errorMessage={rangeCheck(Number(values.min_zoom), 0, 31)}
+            validated={
+              !required('Please enter a value', values.min_zoom) &&
+              !rangeCheck(Number(values.min_zoom), 0, 31)
+            }
+            errorMessage={
+              required('Please enter a value', values.min_zoom) ||
+              rangeCheck(Number(values.min_zoom), 0, 31)
+            }
             triedToSubmit={triedToSubmit}
             onFocus={handleFocus}
             onBlur={handleBlur}
           />
           <span style={{ width: 20 }}/>
           <IntegerInput
-            title={'Max Zoom'}
+            title={'Max Zoom *'}
             name={'max_zoom'}
             value={values.max_zoom + ''}
             valueChanged={handleInputChange}
-            clearInput={clearInput}
-            validated={!rangeCheck(Number(values.max_zoom), 0, 31) && !greaterThanMin(Number(values.min_zoom), Number(values.max_zoom))}
-            errorMessage={rangeCheck(Number(values.max_zoom), 0, 31) || greaterThanMin(Number(values.min_zoom), Number(values.max_zoom))}
+            validated={
+              !required('Please enter a value', values.max_zoom) &&
+              !rangeCheck(Number(values.max_zoom), 0, 31) &&
+              !greaterThanMin(Number(values.min_zoom), Number(values.max_zoom))
+            }
+            errorMessage={
+              required('Please enter a value', values.max_zoom) ||
+              rangeCheck(Number(values.max_zoom), 0, 31) ||
+              greaterThanMin(Number(values.min_zoom), Number(values.max_zoom))
+            }
             triedToSubmit={triedToSubmit}
             onFocus={handleFocus}
             onBlur={handleBlur}
@@ -293,7 +305,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
            onBlur={handleBlur}
         />
         <TextArea
-          title={'Options (JSON)'}
+          title={'Options (JSON) *'}
           name={'options'}
           placeholder={'Enter valid JSON'}
           value={values.options}
