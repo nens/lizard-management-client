@@ -12,25 +12,25 @@ export const required = (errorMessage: string, value: any): validatorResult => {
 
 export const nonEmptyString = (str: string): validatorResult => {
   if (typeof str !== 'string') {
-    return "Please enter a string.";
+    return "Please enter a string";
   }
 
   if (str.length === 0) {
-    return "Please enter a value.";
+    return "Please enter a value";
   }
   return false;
 }
 
 export const minLength = (length: number, s: string): validatorResult => {
   if (!s || s.length < length) {
-    return `Please enter at least ${length} characters.`;
+    return `Please enter at least ${length} ${length === 1 ? 'character' : 'characters'}`;
   }
   return false;
 };
 
 export const maxLength = (length: number, s: string): validatorResult => {
   if (!s || s.length > length) {
-    return `Please enter no more than ${length} characters.`;
+    return `Please enter no more than ${length} ${length === 1 ? 'character' : 'characters'}`;
   }
   return false;
 };
@@ -70,4 +70,11 @@ export const emailValidator = (address: string) => {
     return false;
   };
   return 'Please enter a valid email address';
+};
+
+export const phoneNumberValidator = (phoneNumber: string) => {
+  if (/^[+]?[0-9]{9,15}$/.test(phoneNumber)) {
+    return false;
+  };
+  return 'Please enter a valid phone number';
 };

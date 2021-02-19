@@ -6,7 +6,7 @@ import { TextInput } from './../../form/TextInput';
 import { SubmitButton } from '../../form/SubmitButton';
 import { CancelButton } from '../../form/CancelButton';
 import { useForm, Values } from '../../form/useForm';
-import { emailValidator, minLength } from '../../form/validators';
+import { emailValidator, minLength, phoneNumberValidator } from '../../form/validators';
 import { addNotification } from '../../actions';
 import { getSelectedOrganisation } from '../../reducers';
 import formStyles from './../../styles/Forms.module.css';
@@ -172,7 +172,9 @@ const ContactForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (
           value={values.phoneNumber}
           valueChanged={handleInputChange}
           clearInput={clearInput}
-          validated
+          validated={!values.phoneNumber || !phoneNumberValidator(values.phoneNumber)}
+          errorMessage={phoneNumberValidator(values.phoneNumber)}
+          triedToSubmit={triedToSubmit}
         />
         <div
           className={formStyles.ButtonContainer}
