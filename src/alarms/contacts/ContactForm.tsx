@@ -40,8 +40,7 @@ const ContactForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (
       first_name: values.firstName,
       last_name: values.lastName,
       email: values.email,
-      phone_number: values.phoneNumber,
-      organisation: selectedOrganisation.uuid
+      phone_number: values.phoneNumber
     };
 
     if (!currentContact) {
@@ -49,7 +48,10 @@ const ContactForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (
         credentials: "same-origin",
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body)
+        body: JSON.stringify({
+          ...body,
+          organisation: selectedOrganisation.uuid
+        })
       })
       .then(response => {
         const status = response.status;
@@ -61,10 +63,10 @@ const ContactForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (
           console.error(response);
         } else {
           props.addNotification(status, 2000);
-          console.error(response)
+          console.error(response);
         };
       })
-      .catch(console.error)
+      .catch(console.error);
     } else {
       if (currentContact.user) {
         fetch(`/api/v4/contacts/${currentContact.id}/`, {
@@ -85,7 +87,7 @@ const ContactForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (
             console.error(response);
           }
         })
-        .catch(console.error)
+        .catch(console.error);
       } else {
         fetch(`/api/v4/contacts/${currentContact.id}/`, {
           credentials: "same-origin",
@@ -103,7 +105,7 @@ const ContactForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (
             console.error(response);
           }
         })
-        .catch(console.error)
+        .catch(console.error);
       }
     }
   }
