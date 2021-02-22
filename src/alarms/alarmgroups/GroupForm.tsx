@@ -9,10 +9,12 @@ import { useForm, Values } from '../../form/useForm';
 import { minLength } from '../../form/validators';
 import { addNotification } from '../../actions';
 import { getSelectedOrganisation } from '../../reducers';
-import formStyles from './../../styles/Forms.module.css';
-import contactIcon from "../../images/contacts@3x.svg";
 import { SelectDropdown, Value } from '../../form/SelectDropdown';
 import { convertToSelectObject } from '../../utils/convertToSelectObject';
+import FormActionButtons from '../../components/FormActionButtons';
+import GroupMessage from './GroupMessage';
+import formStyles from './../../styles/Forms.module.css';
+import contactIcon from "../../images/contacts@3x.svg";
 
 interface Props {
   currentGroup?: any
@@ -98,6 +100,9 @@ const GroupForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pr
     .catch(console.error);
   }, [selectedOrganisationUuid, currentGroup]);
 
+  // Modal to send message to all contacts in group
+  const [showGroupMessageModal, setShowGroupMessageModal] = useState<boolean>(false);
+
   const {
     values,
     triedToSubmit,
@@ -153,10 +158,32 @@ const GroupForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pr
           <CancelButton
             url={'/alarms/groups'}
           />
-          <SubmitButton
-            onClick={tryToSubmitForm}
-          />
+          <div style={{
+            display: "flex"
+          }}>
+            {currentGroup ? (
+              <div style={{marginRight: "16px"}}>
+                <FormActionButtons
+                  actions={[
+                    {
+                      displayValue: "Send message",
+                      actionFunction: () => setShowGroupMessageModal(true)
+                    }
+                  ]}
+                />
+              </div>
+            ) : null}
+            <SubmitButton
+              onClick={tryToSubmitForm}
+            />
+          </div>
         </div>
+        {showGroupMessageModal ? (
+          <GroupMessage
+            groupId={currentGroup.id}
+            handleClose={() => setShowGroupMessageModal(false)}
+          />
+        ) :null}
       </form>
     </ExplainSideColumn>
   );
