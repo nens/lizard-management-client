@@ -14,6 +14,7 @@ import { convertToSelectObject } from '../../utils/convertToSelectObject';
 import { minLength } from '../../form/validators';
 import { FormattedMessage } from 'react-intl';
 import formStyles from './../../styles/Forms.module.css';
+import buttonStyles from './../../styles/Buttons.module.css';
 import templateIcon from "../../images/templates@3x.svg";
 
 interface Props {
@@ -25,51 +26,65 @@ interface PropsFromDispatch {
 
 export const availableParameters = [
   {
+    parameter: "first_name",
+    parameterText: "[[var:first_name]]",
+    label: "first name recipient",
+    description: "First name of the recipient"
+  },
+  {
+    parameter: "last_name",
+    parameterText: "[[var:last_name]]",
+    label: "last name recipient",
+    description: "Last name of the recipient"
+  },
+  {
     parameter: "email",
     parameterText: "[[var:email]]",
+    label: "email recipient",
     description: "E-mail address of the recipient",
     templateType: "email"
   },
   {
     parameter: "alarm_name",
     parameterText: "[[var:alarm_name]]",
+    label: "name alarm",
     description: "Name of the alarm"
   },
   {
     parameter: "warning_value",
     parameterText: "[[var:warning_value]]",
+    label: "value threshold",
     description: "Numerical value of the threshold"
   },
   {
     parameter: "warning_level",
     parameterText: "[[var:warning_level]]",
+    label: "status threshold",
     description: "Name of the threshold"
   },
   {
     parameter: "threshold_timestamp",
     parameterText: "[[var:threshold_timestamp]]",
+    label: "timestamp threshold",
     description: "Time the threshold was crossed"
   },
   {
     parameter: "trigger_timestamp",
     parameterText: "[[var:trigger_timestamp]]",
+    label: "trigger timestamp",
     description: "Moment the alarm was analysed"
   },
   {
     parameter: "warning_timestamp",
     parameterText: "[[var:warning_timestamp]]",
+    label: "warning timestamp",
     description: "Time the peak or trough is reached"
   },
   {
     parameter: "first_timestamp",
     parameterText: "[[var:first_timestamp]]",
+    label: "first timestamp",
     description: "First time the alarm was triggered"
-  },
-  {
-    parameter: "phone_number",
-    parameterText: "[[var:phone_number]]",
-    description: "Telephone number of recipient",
-    templateType: "sms"
   }
 ];
 
@@ -284,13 +299,18 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
                 if (!parameter.templateType || parameter.templateType === values.type.value) {
                   return (
                     <button
+                      className={buttonStyles.BlockButton}
                       key={parameter.parameter}
                       onClick={e => {
                         e.preventDefault();
                         insertTextInTemplateText(values.message || '', parameter.parameterText);
                       }}
+                      style={{
+                        marginRight: 10,
+                        marginBottom: 10
+                      }}
                     >
-                      {parameter.parameter}
+                      {parameter.label}
                     </button>
                   );
                 };
