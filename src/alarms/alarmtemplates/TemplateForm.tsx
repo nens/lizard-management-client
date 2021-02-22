@@ -12,6 +12,7 @@ import { TextArea } from '../../form/TextArea';
 import { SelectDropdown } from '../../form/SelectDropdown';
 import { convertToSelectObject } from '../../utils/convertToSelectObject';
 import { minLength } from '../../form/validators';
+import { FormattedMessage } from 'react-intl';
 import formStyles from './../../styles/Forms.module.css';
 import templateIcon from "../../images/templates@3x.svg";
 
@@ -105,7 +106,7 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
     message: currentTemplate.type === 'sms' ? currentTemplate.text : currentTemplate.html // if email, read html field
   } : {
     name: null,
-    type: 'email',
+    type: convertToSelectObject('email', 'EMAIL'),
     subject: null,
     message: null
   };
@@ -236,7 +237,27 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           valueChanged={handleInputChange}
           clearInput={clearInput}
           validated
+          rows={10}
         />
+        <small>
+          <FormattedMessage
+            id="alarmtemplates_app.template"
+            defaultMessage="Template"
+          />{" "}
+          ({(values.message || '').length}{" "}
+          <FormattedMessage
+            id="alarmtemplates_new.characters"
+            defaultMessage="characters"
+          />)<br />
+          {values.type.value === "sms" ? (
+            <i>
+              <FormattedMessage
+                id="alarmtemplates_new.sms_max_char_warning"
+                defaultMessage="SMS messages have a limit of 160 characters after substituting the parameter tags"
+              />
+            </i>
+          ) : null}
+        </small>
         <div
           className={formStyles.ButtonContainer}
         >
