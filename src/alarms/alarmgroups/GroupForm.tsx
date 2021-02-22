@@ -134,6 +134,7 @@ const GroupForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pr
         <TextInput
           title={'Name *'}
           name={'name'}
+          placeholder={'Please enter at least 1 character'}
           value={values.name}
           valueChanged={handleInputChange}
           clearInput={clearInput}
