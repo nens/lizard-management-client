@@ -170,6 +170,7 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
     };
 
     handleValueChange('message', newTemplateText);
+    element.focus(); // set focus back to the text area element
   };
 
   return (
