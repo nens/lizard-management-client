@@ -24,28 +24,6 @@ interface PropsFromDispatch {
 };
 
 export const availableParameters = [
-  // {
-  //   parameter: "from",
-  //   parameterText: "[[var:from]]",
-  //   description: "Name of the sender",
-  //   templateType: "email"
-  // },
-  // {
-  //   parameter: "from_email",
-  //   parameterText: "[[var:from_email]]",
-  //   description: "E-mail address of the sender",
-  //   templateType: "email"
-  // },
-  // {
-  //   parameter: "organisation_name",
-  //   parameterText: "[[var:organisation_name]]",
-  //   description: "Name of the sending organisation"
-  // },
-  // {
-  //   parameter: "name",
-  //   parameterText: "[[var:name]]",
-  //   description: "First and last name of recipient"
-  // },
   {
     parameter: "email",
     parameterText: "[[var:email]]",
@@ -108,15 +86,15 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
     name: null,
     type: convertToSelectObject('email', 'EMAIL'),
     subject: null,
-    message: null
+    message: ''
   };
 
   const onSubmit = (values: Values) => {
     const body = {
       name: values.name,
       subject: values.subject,
-      text: values.type.value === 'sms' ? values.message : undefined,
-      html: values.type.value === 'email' ? values.message : undefined
+      text: values.message,
+      html: values.message
     };
 
     if (!currentTemplate) {
@@ -219,7 +197,7 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           triedToSubmit={triedToSubmit}
         />
         <SelectDropdown
-          title={'Type'}
+          title={'Type *'}
           name={'type'}
           value={values.type}
           valueChanged={value => handleValueChange('type', value)}
@@ -235,6 +213,7 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           ]}
           validated
           readOnly={currentTemplate}
+          isClearable={false}
         />
         <TextInput
           title={'Subject'}
@@ -253,11 +232,13 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
         >
           <div>
             <TextArea
-              title={'Message'}
+              title={'Message *'}
               name={'message'}
               value={values.message}
               valueChanged={handleInputChange}
-              validated
+              validated={!minLength(1, values.message)}
+              errorMessage={minLength(1, values.message)}
+              triedToSubmit={triedToSubmit}
               rows={10}
             />
             <small>
@@ -293,7 +274,7 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
                 whiteSpace: 'nowrap',
                 textOverflow: 'ellipsis'
               }}
-              title={'Click blocks to add to message'}
+              title={'Add variables to message'}
             >
               Blocks (click to add to message)
             </span>
@@ -305,7 +286,7 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
                       key={parameter.parameter}
                       onClick={e => {
                         e.preventDefault();
-                        insertTextInTemplateText(values.message, parameter.parameterText);
+                        insertTextInTemplateText(values.message || '', parameter.parameterText);
                       }}
                     >
                       {parameter.parameter}
