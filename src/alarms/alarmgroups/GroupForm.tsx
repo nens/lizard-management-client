@@ -14,7 +14,7 @@ import { convertToSelectObject } from '../../utils/convertToSelectObject';
 import FormActionButtons from '../../components/FormActionButtons';
 import GroupMessage from './GroupMessage';
 import formStyles from './../../styles/Forms.module.css';
-import contactIcon from "../../images/contacts@3x.svg";
+import groupIcon from "../../images/group.svg";
 
 interface Props {
   currentGroup?: any
@@ -120,7 +120,7 @@ const GroupForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pr
 
   return (
     <ExplainSideColumn
-      imgUrl={contactIcon}
+      imgUrl={groupIcon}
       imgAltDescription={"Group icon"}
       headerText={"Groups"}
       explanationText={"Groups are made of your contacts. In this screen, you can manage them by adding or deleting contacts. You can also add or delete groups for your alarm messages."}
