@@ -235,7 +235,6 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           name={'message'}
           value={values.message}
           valueChanged={handleInputChange}
-          clearInput={clearInput}
           validated
           rows={10}
         />
