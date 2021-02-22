@@ -102,16 +102,20 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
     name: currentTemplate.name,
     type: convertToSelectObject(currentTemplate.type, currentTemplate.type.toUpperCase()),
     subject: currentTemplate.subject,
-    text: currentTemplate.text
+    message: currentTemplate.type === 'sms' ? currentTemplate.text : currentTemplate.html // if email, read html field
   } : {
     name: null,
     type: 'email',
     subject: null,
-    text: null
+    message: null
   };
 
   const onSubmit = (values: Values) => {
     const body = {
+      name: values.name,
+      subject: values.subject,
+      text: values.type.value === 'sms' ? values.message : undefined,
+      html: values.type.value === 'email' ? values.message : undefined
     };
 
     if (!currentTemplate) {
@@ -121,6 +125,7 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...body,
+          type: values.type.value,
           organisation: selectedOrganisation.uuid
         })
       })
@@ -213,6 +218,7 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
             }
           ]}
           validated
+          readOnly={currentTemplate}
         />
         <TextInput
           title={'Subject'}
@@ -224,8 +230,8 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
         />
         <TextArea
           title={'Message'}
-          name={'text'}
-          value={values.text}
+          name={'message'}
+          value={values.message}
           valueChanged={handleInputChange}
           clearInput={clearInput}
           validated
