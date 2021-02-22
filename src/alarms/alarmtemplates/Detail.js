@@ -72,7 +72,8 @@ class Detail extends Component {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           subject: subject,
-          text: body
+          text: body,
+          html: body
         })
       })
         .then(response => response.json())

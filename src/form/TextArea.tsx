@@ -73,7 +73,7 @@ export const TextArea: React.FC<MyProps> = (props) => {
           readOnly={!!readOnly}
           form={form}
         />
-        {!readOnly && value !== null && value.length ? <ClearInputButton onClick={() => clearInput(name)}/> : null}
+        {!readOnly && value !== null && (value + '').length ? <ClearInputButton onClick={() => clearInput(name)}/> : null}
       </div>
     </label>
   );
