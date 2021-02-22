@@ -180,6 +180,20 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
     // handleFocus,
   } = useForm({initialValues, onSubmit});
 
+  const insertTextInTemplateText = (templateText: string, addedText: string) => {
+    let newTemplateText = "";
+    const element = document.getElementById("message") as HTMLTextAreaElement;
+
+    if (element.selectionStart || element.selectionStart === 0) {
+      newTemplateText = templateText.substring(0, element.selectionStart) +
+        addedText + templateText.substring(element.selectionEnd);
+    } else {
+      newTemplateText = templateText + addedText;
+    };
+
+    handleValueChange('message', newTemplateText);
+  };
+
   return (
     <ExplainSideColumn
       imgUrl={templateIcon}
@@ -230,33 +244,79 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           clearInput={clearInput}
           validated
         />
-        <TextArea
-          title={'Message'}
-          name={'message'}
-          value={values.message}
-          valueChanged={handleInputChange}
-          validated
-          rows={10}
-        />
-        <small>
-          <FormattedMessage
-            id="alarmtemplates_app.template"
-            defaultMessage="Template"
-          />{" "}
-          ({(values.message || '').length}{" "}
-          <FormattedMessage
-            id="alarmtemplates_new.characters"
-            defaultMessage="characters"
-          />)<br />
-          {values.type.value === "sms" ? (
-            <i>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: '60% 40%',
+            columnGap: 20
+          }}
+        >
+          <div>
+            <TextArea
+              title={'Message'}
+              name={'message'}
+              value={values.message}
+              valueChanged={handleInputChange}
+              validated
+              rows={10}
+            />
+            <small>
               <FormattedMessage
-                id="alarmtemplates_new.sms_max_char_warning"
-                defaultMessage="SMS messages have a limit of 160 characters after substituting the parameter tags"
-              />
-            </i>
-          ) : null}
-        </small>
+                id="alarmtemplates_app.template"
+                defaultMessage="Template"
+              />{" "}
+              ({(values.message || '').length}{" "}
+              <FormattedMessage
+                id="alarmtemplates_new.characters"
+                defaultMessage="characters"
+              />)<br />
+              {values.type.value === "sms" ? (
+                <i>
+                  <FormattedMessage
+                    id="alarmtemplates_new.sms_max_char_warning"
+                    defaultMessage="SMS messages have a limit of 160 characters after substituting the parameter tags"
+                  />
+                </i>
+              ) : null}
+            </small>
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column'
+            }}
+          >
+            <span
+              className={formStyles.LabelTitle}
+              style={{
+                overflow: 'hidden',
+                whiteSpace: 'nowrap',
+                textOverflow: 'ellipsis'
+              }}
+              title={'Click blocks to add to message'}
+            >
+              Blocks (click to add to message)
+            </span>
+            <div>
+              {availableParameters.map(parameter => {
+                if (!parameter.templateType || parameter.templateType === values.type.value) {
+                  return (
+                    <button
+                      key={parameter.parameter}
+                      onClick={e => {
+                        e.preventDefault();
+                        insertTextInTemplateText(values.message, parameter.parameterText);
+                      }}
+                    >
+                      {parameter.parameter}
+                    </button>
+                  );
+                };
+                return null;
+              })}
+            </div>
+          </div>
+        </div>
         <div
           className={formStyles.ButtonContainer}
         >
