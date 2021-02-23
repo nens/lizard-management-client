@@ -75,9 +75,13 @@ export const Routes: React.FC<Props> = () => {
         <Route exact path="/data_management/labels/label_types" component={LabeltypesTable} />
         <Route exact path="/data_management/labels/label_types/:uuid" component={EditLabeltype} />
 
-        <Route exact path="/alarms/notifications" component={NotificationsApp} />
-        <Route exact path="/alarms/notifications/new" component={NewNotificationApp} />
-        <Route exact path="/alarms/notifications/:id" component={EditNotificationApp} />
+        <Route exact path="/alarms/notifications/raster_alarms" component={NotificationsApp} />
+        <Route exact path="/alarms/notifications/raster_alarms/new" component={NewNotificationApp} />
+        <Route exact path="/alarms/notifications/raster_alarms/:id" component={EditNotificationApp} />
+
+        <Route exact path="/alarms/notifications/timeseries_alarms" component={NotificationsApp} />
+        <Route exact path="/alarms/notifications/timeseries_alarms/new" component={NewNotificationApp} />
+        <Route exact path="/alarms/notifications/timeseries_alarms/:id" component={EditNotificationApp} />
 
         <Route exact path="/alarms/groups" component={GroupTable} />
         <Route exact path="/alarms/groups/new" component={NewGroup} />
