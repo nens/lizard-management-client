@@ -6,7 +6,7 @@ module.exports = function(app) {
 
   if (!password || !username) {
     console.log("Please set PROXY_PASSWORD and PROXY_USERNAME variables!");
-    process.exit(1);
+    // process.exit(1);
   }
 
   const proxyMiddleware = createProxyMiddleware({
@@ -14,7 +14,7 @@ module.exports = function(app) {
     // target: 'https://demo.lizard.net/',
     changeOrigin: true,
     // Use HTTP basic auth, works with Lizard only
-    auth: `${username}:${password}`
+    // auth: `${username}:${password}`
   });
 
   app.use('/api', proxyMiddleware);
