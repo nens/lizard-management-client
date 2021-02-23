@@ -213,7 +213,7 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
               <button
                 className={buttonStyles.BlockButton}
                 key={parameter.parameter}
-                title={parameter.parameterText}
+                title={parameter.description}
                 onClick={e => {
                   e.preventDefault();
                   insertTextInTemplateText(values.message || '', parameter.parameterText);
@@ -223,7 +223,7 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
                   marginBottom: 10
                 }}
               >
-                {parameter.label}
+                {parameter.parameter}
               </button>
             );
           };
