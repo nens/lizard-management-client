@@ -188,6 +188,50 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
     element.focus(); // set focus back to the text area element
   };
 
+  const RenderBlocks = () => (
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column'
+      }}
+    >
+      <span
+        className={formStyles.LabelTitle}
+        style={{
+          overflow: 'hidden',
+          whiteSpace: 'nowrap',
+          textOverflow: 'ellipsis'
+        }}
+        title={'Add variables to message'}
+      >
+        Blocks (click to add to message)
+      </span>
+      <div>
+        {availableParameters.map(parameter => {
+          if (!parameter.templateType || parameter.templateType === values.type.value) {
+            return (
+              <button
+                className={buttonStyles.BlockButton}
+                key={parameter.parameter}
+                onClick={e => {
+                  e.preventDefault();
+                  insertTextInTemplateText(values.message || '', parameter.parameterText);
+                }}
+                style={{
+                  marginRight: 10,
+                  marginBottom: 10
+                }}
+              >
+                {parameter.label}
+              </button>
+            );
+          };
+          return null;
+        })}
+      </div>
+    </div>
+  );
+
   return (
     <ExplainSideColumn
       imgUrl={templateIcon}
@@ -277,47 +321,7 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
               ) : null}
             </small>
           </div>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column'
-            }}
-          >
-            <span
-              className={formStyles.LabelTitle}
-              style={{
-                overflow: 'hidden',
-                whiteSpace: 'nowrap',
-                textOverflow: 'ellipsis'
-              }}
-              title={'Add variables to message'}
-            >
-              Blocks (click to add to message)
-            </span>
-            <div>
-              {availableParameters.map(parameter => {
-                if (!parameter.templateType || parameter.templateType === values.type.value) {
-                  return (
-                    <button
-                      className={buttonStyles.BlockButton}
-                      key={parameter.parameter}
-                      onClick={e => {
-                        e.preventDefault();
-                        insertTextInTemplateText(values.message || '', parameter.parameterText);
-                      }}
-                      style={{
-                        marginRight: 10,
-                        marginBottom: 10
-                      }}
-                    >
-                      {parameter.label}
-                    </button>
-                  );
-                };
-                return null;
-              })}
-            </div>
-          </div>
+          <RenderBlocks />
         </div>
         <div
           className={formStyles.ButtonContainer}
