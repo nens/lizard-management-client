@@ -89,7 +89,7 @@ export const TemplateTable: React.FC<any> = (props) =>  {
           className={tableStyles.CellEllipsis}
           title={row.name}
         >
-          <NavLink to={`${navigationUrl}/${row.id}/`}>{row.name}</NavLink>
+          <NavLink to={`${navigationUrl}/${row.id}`}>{row.name}</NavLink>
         </span>,
       orderingField: "name",
     },

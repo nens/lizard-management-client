@@ -25,14 +25,14 @@ import { TemplateTable } from "../alarms/alarmtemplates/TemplateTable";
 import { ContactTable } from "../alarms/contacts/ContactTable";
 import { GroupTable } from "../alarms/alarmgroups/GroupTable";
 import { App as NewNotificationApp } from "../alarms/notifications/NewNotification";
-import { App as NewTemplateApp } from "../alarms/alarmtemplates/NewTemplate";
 import { App as NotificationsApp } from "../alarms/notifications/App";
 import { App as EditNotificationApp } from "../alarms/notifications/EditNotification";
-import { Detail as AlarmTemplatesDetail } from "../alarms/alarmtemplates/Detail";
 import  { NewContact } from "../alarms/contacts/NewContact"
 import { EditContact } from "../alarms/contacts/EditContact";
 import { NewGroup } from "../alarms/alarmgroups/NewGroup";
 import { EditGroup } from "../alarms/alarmgroups/EditGroup";
+import { NewTemplate } from "../alarms/alarmtemplates/NewAlarmTemplate";
+import { EditTemplate } from "../alarms/alarmtemplates/EditTemplate";
 
 interface Props {}
 
@@ -88,8 +88,8 @@ export const Routes: React.FC<Props> = () => {
         <Route exact path="/alarms/contacts/:id" component={EditContact} />
 
         <Route exact path="/alarms/templates" component={TemplateTable} />
-        <Route exact path="/alarms/templates/new" component={NewTemplateApp} />
-        <Route exact path="/alarms/templates/:id" component={AlarmTemplatesDetail} />
+        <Route exact path="/alarms/templates/new" component={NewTemplate} />
+        <Route exact path="/alarms/templates/:id" component={EditTemplate} />
       </Switch>
   );
 }

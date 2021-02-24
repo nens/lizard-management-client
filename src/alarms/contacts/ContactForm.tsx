@@ -143,6 +143,7 @@ const ContactForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (
         <TextInput
           title={'First name *'}
           name={'firstName'}
+          placeholder={'Please enter at least 1 character'}
           value={values.firstName}
           valueChanged={handleInputChange}
           clearInput={clearInput}
@@ -153,6 +154,7 @@ const ContactForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (
         <TextInput
           title={'Last name *'}
           name={'lastName'}
+          placeholder={'Please enter at least 1 character'}
           value={values.lastName}
           valueChanged={handleInputChange}
           clearInput={clearInput}
