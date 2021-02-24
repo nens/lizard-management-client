@@ -4,6 +4,20 @@ interface HelpText {
   [name: string]: string | JSX.Element
 }
 
+export const defaultRasterSourceExplanationTextTable = (usedSpaceString:string) => {
+  return (
+    <div>
+      <div style={{marginBottom: "16px"}}>Raster Sources are the containers for your raster data. When your raster data is uploaded to a Raster Source, it can be published as a Raster Layer to be visualized in the Catalogue and the Portal or it can be used in a GeoBlocks model.</div>
+      <div 
+        style={{display:"flex", justifyContent: "space-between",}}
+      >
+        <span>Used storage: </span>
+        <span style={{fontWeight: "bold",}}>{usedSpaceString}</span>
+      </div>
+    </div>
+  );
+}
+
 export const rasterSourceFormHelpText: HelpText = {
   default: 'Fill in the form to create a new Raster Source.',
   name: 'Choose a name that is findable and not too difficult.',
