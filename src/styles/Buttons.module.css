@@ -203,3 +203,16 @@
 .IconButton:active {
   transform: translateY(2px);
 }
+
+.BlockButton {
+  border: 2px solid var(--color-button);
+  border-radius: 3px;
+  background-color: transparent;
+  padding: 2px 6px;
+}
+.BlockButton:focus {
+  outline: none;
+}
+.BlockButton:active {
+  transform: translateY(2px);
+}
