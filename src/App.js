@@ -180,9 +180,15 @@ class App extends Component {
     }
 
     const currentHomeAppTile = appTiles.find(tile => {
-      return window.location.href.includes(tile.linksTo)
+      return window.location.href.split("#")[1] === tile.linksTo
     });
-    if (currentHomeAppTile && !doArraysHaveEqualElement(this.props.selectedOrganisation.roles, currentHomeAppTile.requiresOneOfRoles)) {
+    if (
+      // only link back if it is not already the home page tile
+      ((currentHomeAppTile && currentHomeAppTile.linksTo !== "/") || !currentHomeAppTile)  &&
+      // only link back if the user is actually already autheniticated
+      this.props.bootstrap && this.props.bootstrap.isAuthenticated &&
+      !doArraysHaveEqualElement(((this.props.selectedOrganisation && this.props.selectedOrganisation.roles) || []), currentHomeAppTile.requiresOneOfRoles)
+      ) {
       const redirectMessage = this.props.intl.formatMessage({ id: "authorization.redirected_based_onrole", defaultMessage: "You do not have the rights to access this data under the selected organisation. \nYou will be redirected." });
       alert(redirectMessage);
       // should redirect to <customer_url>.lizard.net/management/ on prod
