@@ -10,7 +10,9 @@ import tableStyles from "../../components/Table.module.css";
 import {getUsername} from "../../reducers";
 import { bytesToDisplayValue } from '../../utils/byteUtils';
 import Modal from '../../components/Modal';
-import { ModalDeleteContent } from '../../components/ModalDeleteContent'
+import { ModalDeleteContent } from '../../components/ModalDeleteContent';
+import { defaultScenarioExplanationTextTable } from '../../utils/helpTextForForms';
+import {getScenarioTotalSize} from '../../reducers';
 
 export const ScenarioTable = () =>  {
 
@@ -225,7 +227,7 @@ export const ScenarioTable = () =>  {
   const [busyDeleting, setBusyDeleting] = useState<boolean>(false);
   const [deleteFunction, setDeleteFunction] = useState<null | Function>(null);
   const [deleteRawFunction, setDeleteRawFunction] = useState<null | Function>(null);
-
+  const scenarioTotalSize = useSelector(getScenarioTotalSize);
 
   const userName = useSelector(getUsername);
 
@@ -234,7 +236,7 @@ export const ScenarioTable = () =>  {
       imgUrl={threediIcon}
       imgAltDescription={"3Di icon"}
       headerText={"3Di Scenarios"}
-      explanationText={"Scenarios are created in 3di."} 
+      explanationText={defaultScenarioExplanationTextTable(bytesToDisplayValue(scenarioTotalSize))}
       backUrl={"/data_management"}
     >
         <TableStateContainer 

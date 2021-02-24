@@ -12,7 +12,9 @@ import { minLength } from '../../form/validators';
 import { addNotification } from '../../actions';
 import threediIcon from "../../images/3di@3x.svg";
 import formStyles from './../../styles/Forms.module.css';
-import { scenarioFormHelpText } from '../../utils/helpTextForForms';
+import { scenarioFormHelpText, defaultScenarioExplanationText } from '../../utils/helpTextForForms';
+import {getScenarioTotalSize} from '../../reducers';
+import {bytesToDisplayValue} from '../../utils/byteUtils';
 
 interface Props {
   currentScenario: any
@@ -26,6 +28,7 @@ interface RouteParams {
 
 const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProps<RouteParams>> = (props) => {
   const { currentScenario } = props;
+  const scenarioTotalSize = useSelector(getScenarioTotalSize);
   const organisations = useSelector(getOrganisations).available;
   const scenarioOrganisation = organisations.find((org: any) => org.uuid === currentScenario.organisation.uuid.replace(/-/g, ""));
   const username = useSelector(getUsername);
@@ -80,7 +83,7 @@ const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProp
       imgUrl={threediIcon}
       imgAltDescription={"3Di icon"}
       headerText={"3Di Scenarios"}
-      explanationText={scenarioFormHelpText[fieldOnFocus] || scenarioFormHelpText['default']}
+      explanationText={scenarioFormHelpText[fieldOnFocus] || defaultScenarioExplanationText(bytesToDisplayValue(scenarioTotalSize))}
       backUrl={"/data_management/scenarios/"}
     >
       <form

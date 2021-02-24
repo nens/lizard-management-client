@@ -6,6 +6,8 @@ import {
   REQUEST_ORGANISATIONS,
   RECEIVE_ORGANISATIONS,
   SELECT_ORGANISATION,
+  REQUEST_USAGE,
+  SET_USAGE,
   REQUEST_OBSERVATION_TYPES,
   RECEIVE_OBSERVATION_TYPES_SUCCESS,
   RECEIVE_OBSERVATION_TYPES_ERROR,
@@ -98,6 +100,29 @@ function organisations(
     default:
       return state;
   }
+}
+
+function usage (
+  state = {
+    raster_count: 0,
+    raster_total_size: 0,
+    scenario_count: 0,
+    scenario_total_size: 0,
+    timeseries_count: 0,
+    timeseries_total_size: 0,
+    isFetching: false,
+    timesFetched: 0,
+  },
+  action
+) {
+switch (action.type) {
+  case REQUEST_USAGE:
+    return {...state, isFetching: true}
+  case SET_USAGE:
+    return {...action.usage, isFetching: false, timesFetched: state.timesFetched + 1}
+  default:
+      return state;
+  } 
 }
 
 function observationTypes(
@@ -376,6 +401,12 @@ export const getNotifications = (state) => {
 export const getOrganisations = (state) => {
   return state.organisations;
 };
+export const getScenarioTotalSize = (state) => {
+  return state.usage.scenario_total_size;
+};
+export const getRasterTotalSize = (state) => {
+  return state.usage.raster_total_size;
+};
 export const getSelectedOrganisation = (state) => {
   return state.organisations.selected;
 };
@@ -405,6 +436,7 @@ export const getFinsihedFiles = (state) => {
 const rootReducer = combineReducers({
   bootstrap,
   organisations,
+  usage,
   observationTypes,
   supplierIds,
   colorMaps,

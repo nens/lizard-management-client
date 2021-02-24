@@ -138,8 +138,34 @@ export const wmsFormHelpText: HelpText = {
   supplier: 'The supplier of this object.',
 }
 
+export const defaultScenarioExplanationTextTable = (usedSpaceString:string) => {
+  return (
+    <div>
+      <div style={{marginBottom: "16px"}}>Scenarios are created in 3di.</div>
+      <div 
+        style={{display:"flex", justifyContent: "space-between",}}
+      >
+        <span>Used storage: </span>
+        <span style={{fontWeight: "bold",}}>{usedSpaceString}</span>
+      </div>
+    </div>
+  );
+}
+
+export const defaultScenarioExplanationText = (usedSpaceString:string) => {
+  return (
+    <div>
+      <div style={{marginBottom: "16px"}}>Form to edit 3Di scenario.</div>
+      <div>
+        <span>Total used storage all scenario's: </span>
+        <span style={{fontWeight: "bold",}}>{usedSpaceString}</span>
+      </div>
+    </div>
+  );
+}
+
+
 export const scenarioFormHelpText: HelpText = {
-  default: 'Form to edit 3Di scenario.',
   name: 'The scenario name comes from 3Di. This name can be changed for your convenience.',
   modelName: 'The model that was used to create this scenario.',
   resultDeleteButton: (

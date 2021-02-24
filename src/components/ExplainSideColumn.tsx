@@ -11,6 +11,23 @@ interface MyProps {
   backUrl: string,
 }
 
+// From here:
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Errors/Cyclic_object_value
+// because I get this error
+// https://stackoverflow.com/questions/50965551/typeerror-cyclic-object-value-in-react
+const getCircularReplacer = () => {
+  const seen = new WeakSet();
+  return (key:any, value:any) => {
+    if (typeof value === "object" && value !== null) {
+      if (seen.has(value)) {
+        return;
+      }
+      seen.add(value);
+    }
+    return value;
+  };
+};
+
 export const ExplainSideColumn: React.FC<MyProps> = ({
   imgUrl, imgAltDescription, headerText, explanationText, backUrl, children
 }) => {
@@ -63,7 +80,7 @@ export const ExplainSideColumn: React.FC<MyProps> = ({
           {headerText}
         </h2>
         <div
-          key={JSON.stringify(explanationText)}
+          key={JSON.stringify(explanationText, getCircularReplacer)}
           className={styles.ExplainBoxEffect}
           style={{
             backgroundColor: "#FCFCFC",
