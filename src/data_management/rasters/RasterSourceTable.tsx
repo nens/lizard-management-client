@@ -29,7 +29,7 @@ export const RasterSourceTable = (props:any) =>  {
   const [deleteFunction, setDeleteFunction] = useState<null | Function>(null);
   const [busyDeleting, setBusyDeleting] = useState<boolean>(false);
   const [showDeleteFailedModal, setShowDeleteFailedModal] = useState<boolean>(false);
-  const scenarioTotalSize = useSelector(getScenarioTotalSize);
+  const rastersTotalSize = useSelector(getScenarioTotalSize);
 
 
   const baseUrl = "/api/v4/rastersources/";
@@ -210,7 +210,7 @@ export const RasterSourceTable = (props:any) =>  {
       imgUrl={rasterSourcesIcon}
       imgAltDescription={"Raster-Source icon"}
       headerText={"Raster Sources"}
-      explanationText={defaultRasterSourceExplanationTextTable(bytesToDisplayValue(scenarioTotalSize))} 
+      explanationText={defaultRasterSourceExplanationTextTable(bytesToDisplayValue(rastersTotalSize))} 
       backUrl={"/data_management/rasters"}
     >
       <TableStateContainer 
