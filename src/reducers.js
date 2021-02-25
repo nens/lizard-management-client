@@ -62,7 +62,7 @@ function organisations(
     timesFetched: 0,
     available: [],
     availableForRasterSharedWith: [],
-    selected: getLocalStorage("lizard-management-current-organisation", null),
+    selected: null,
   },
   action
 ) {
