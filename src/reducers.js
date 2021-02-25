@@ -1,5 +1,4 @@
 import { combineReducers } from "redux";
-import {getLocalStorage} from "./utils/localStorageUtils";
 import {
   REQUEST_LIZARD_BOOTSTRAP,
   RECEIVE_LIZARD_BOOTSTRAP,
