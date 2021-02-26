@@ -10,13 +10,14 @@ import { useForm, Values } from '../../../form/useForm';
 import { minLength, required } from '../../../form/validators';
 import { addNotification } from '../../../actions';
 import { getSelectedOrganisation } from '../../../reducers';
-import { fetchRasterLayersV4 } from '../../../api/rasters';
+import { fetchRasterLayersV4, RasterLayerFromAPI } from '../../../api/rasters';
 import { convertToSelectObject } from '../../../utils/convertToSelectObject';
 import formStyles from './../../../styles/Forms.module.css';
 import rasterAlarmIcon from "../../../images/alarm@3x.svg";
 
 interface Props {
-  currentRasterAlarm?: any
+  currentRasterAlarm?: any,
+  raster?: RasterLayerFromAPI
 };
 
 // Helper function to fetch paginated observation types with search query
@@ -40,16 +41,22 @@ const fetchRasterLayers = async (uuid: string, searchQuery: string) => {
 };
 
 const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (props) => {
-  const { currentRasterAlarm } = props;
+  const { currentRasterAlarm, raster } = props;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const navigationUrl = "/alarms/notifications/raster_alarms";
 
-  const initialValues = currentRasterAlarm ? {
+  const initialValues = currentRasterAlarm && raster ? {
+    name: currentRasterAlarm.name,
+    raster: convertToSelectObject(raster.uuid!, raster.name)
   } : {
+    name: null,
+    raster: null
   };
 
   const onSubmit = (values: Values) => {
     const body = {
+      name: values.name,
+      raster: values.raster.value
     };
 
     if (!currentRasterAlarm) {

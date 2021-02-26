@@ -4,7 +4,7 @@
 export type validatorResult = string | false;
 
 export const required = (errorMessage: string, value: any): validatorResult => {
-  if (value === null || value === '') {
+  if (value === undefined || value === null || value === '') {
     return errorMessage;
   }
   return false;
