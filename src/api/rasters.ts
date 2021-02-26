@@ -111,6 +111,21 @@ export const fetchRasterSourcesV4 = async (query?: string) => {
   return response.json();
 };
 
+export const fetchRasterLayersV4 = async (query?: string) => {
+  const url = query ? (
+    `/api/v4/rasters/?${query}`
+  ) : (
+    `/api/v4/rasters/`
+  );
+  const response = await fetch(url, {
+    credentials: "same-origin",
+    method: "GET",
+    headers: {"Content-Type": "application/json"}
+  });
+
+  return response.json();
+};
+
 export const fetchRasterV3 = async (uuid: string) => {
   const response = await fetch(`/api/v3/rasters/${uuid}/`, {
     credentials: "same-origin"
