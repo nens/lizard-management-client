@@ -13,7 +13,7 @@ import { getSelectedOrganisation } from '../../../reducers';
 import { fetchRasterLayersV4 } from '../../../api/rasters';
 import { convertToSelectObject } from '../../../utils/convertToSelectObject';
 import formStyles from './../../../styles/Forms.module.css';
-import contactIcon from "../../../images/contacts@3x.svg";
+import rasterAlarmIcon from "../../../images/alarm@3x.svg";
 
 interface Props {
   currentRasterAlarm?: any
@@ -114,7 +114,7 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
 
   return (
     <ExplainSideColumn
-      imgUrl={contactIcon}
+      imgUrl={rasterAlarmIcon}
       imgAltDescription={"Raster alarm icon"}
       headerText={"Raster alarms"}
       explanationText={"Select a field to get more information."}

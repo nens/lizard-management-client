@@ -1,7 +1,7 @@
 import React from "react";
 
-import { NotificationForm } from "./../NotificationForm";
+import RasterAlarmForm from "./RasterAlarmForm";
 
 export const NewRasterAlarm: React.FC = () => {
-  return <NotificationForm wizardStyle />;
+  return <RasterAlarmForm />;
 };
