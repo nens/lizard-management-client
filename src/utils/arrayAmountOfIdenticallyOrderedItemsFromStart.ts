@@ -1,4 +1,4 @@
-const arrayAmountOfIdenticallyOrderedItemsFromStart = function (arr1, arr2) {
+const arrayAmountOfIdenticallyOrderedItemsFromStart = function (arr1:string[], arr2:string[]) {
   let i = 0;
   let equalItems = 0;
   let foundDifference = false
