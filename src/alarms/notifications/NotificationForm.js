@@ -109,7 +109,7 @@ class NotificationFormModel extends Component {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body)
       };
-      const alarmUuid = this.props.match.params.id;
+      const alarmUuid = this.props.match.params.uuid;
       fetch(url + alarmUuid + "/", opts)
         .then(responseParsed => {
           this.handleResponse(responseParsed);
