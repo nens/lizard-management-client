@@ -1,10 +1,11 @@
-import React from 'react';
-import {useState, useEffect,}  from 'react';
+import React, { useState, useEffect } from 'react';
 import Table from './Table';
 import {ColumnDefinition} from './Table';
 import Pagination from './Pagination';
 import Checkbox from './Checkbox';
 import TableSearchBox from './TableSearchBox';
+import TableSearchToggle from './TableSearchToggle';
+import { Value } from '../form/SelectDropdown';
 import { useSelector } from "react-redux";
 import { getSelectedOrganisation } from '../reducers';
 import {DataRetrievalState} from '../types/retrievingDataTypes';
@@ -24,13 +25,19 @@ interface Props {
   columnDefinitions: ColumnDefinition[];
   baseUrl: string; 
   checkBoxActions: checkboxAction[];
-  textSearchBox?: boolean; // default true
+  filterOptions?: Value[];
   newItemOnClick?: () => void | null;
   queryCheckBox?: {text: string, adaptUrlFunction: (url:string)=>string} | null;
   defaultUrlParams?: string;
 }
 
-const TableStateContainer: React.FC<Props> = ({ gridTemplateColumns, columnDefinitions, baseUrl, checkBoxActions, textSearchBox, newItemOnClick, queryCheckBox/*action*/, defaultUrlParams }) => {
+// Helper function to get row identifier (by uuid or id)
+// because sometimes tableData does not contain uuid but only id (e.g. alarm contacts)
+const getRowIdentifier = (row: any): string => {
+  return row.uuid || row.id + '';
+};
+
+const TableStateContainer: React.FC<Props> = ({ gridTemplateColumns, columnDefinitions, baseUrl, checkBoxActions, filterOptions, newItemOnClick, queryCheckBox/*action*/, defaultUrlParams }) => {
 
   const [tableData, setTableData] = useState<any[]>([]);
   const [checkBoxes, setCheckBoxes] = useState<string[]>([]);
@@ -39,7 +46,8 @@ const TableStateContainer: React.FC<Props> = ({ gridTemplateColumns, columnDefin
   const [previousUrl, setPreviousUrl] = useState("");
   const [itemsPerPage, setItemsPerPage] = useState("10");
   const [ordering, setOrdering] = useState<string | null>("last_modified");
-  const [nameContains, setNameContains] = useState("");
+  const [searchInput, setSearchInput] = useState<string>("");
+  const [selectedFilterOption, setSelectedFilterOption] = useState<Value | null>(filterOptions && filterOptions.length > 0 ? filterOptions[0] : null)
   const [dataRetrievalState, setDataRetrievalState] = useState<DataRetrievalState>("NEVER_DID_RETRIEVE");
   const [apiResponse, setApiResponse] = useState<{response:any, currentUrl: string, dataRetrievalState: DataRetrievalState}>({response: {}, currentUrl: "", dataRetrievalState: "NEVER_DID_RETRIEVE"});
   const [queryCheckBoxState, setQueryCheckBoxState] = useState(false);
@@ -53,7 +61,7 @@ const TableStateContainer: React.FC<Props> = ({ gridTemplateColumns, columnDefin
     "writable=true" +
     "&page_size=" + itemsPerPage +
     "&page=1" +
-    (nameContains !==""? "&name__icontains=" + nameContains: "") +
+    (selectedFilterOption && searchInput ? "&" + selectedFilterOption.value + searchInput : "") +
     "&ordering=" + ordering +
     "&organisation__uuid=" + selectedOrganisationUuid +
     (defaultUrlParams ? defaultUrlParams : '');
@@ -64,7 +72,7 @@ const TableStateContainer: React.FC<Props> = ({ gridTemplateColumns, columnDefin
     if (currentUrl !== "" && currentUrl === apiResponse.currentUrl) {
       apiResponse.response.results && setTableData(apiResponse.response.results);
       // make sure no checkboxes are checked outside of current page !
-      apiResponse.response.results && setCheckBoxes(checkBoxesPar=>checkBoxesPar.filter(value => (apiResponse.response.results.map((item:any)=>item.uuid)).includes(value)));
+      apiResponse.response.results && setCheckBoxes(checkBoxesPar=>checkBoxesPar.filter(value => (apiResponse.response.results.map((item:any)=>getRowIdentifier(item))).includes(value)));
       setDataRetrievalState(apiResponse.dataRetrievalState)
       // we need to split on "lizard.net" because both nxt3.staging.lizard.net/api/v4 and demo.lizard.net/api/v4 both should parse out "/api/v4"
       if (apiResponse.response.next) setNextUrl(apiResponse.response.next.split("lizard.net")[1]);
@@ -108,7 +116,7 @@ const TableStateContainer: React.FC<Props> = ({ gridTemplateColumns, columnDefin
   }
 
   const checkAllCheckBoxesOnCurrentPage = () => {
-    const allCurrentPageUuids = tableData.map(row=>row.uuid as string);
+    const allCurrentPageUuids = tableData.map(row => getRowIdentifier(row));
     const mergedArrays = [...new Set([...checkBoxes ,...allCurrentPageUuids])];
     setCheckBoxes(mergedArrays);
   }
@@ -119,12 +127,12 @@ const TableStateContainer: React.FC<Props> = ({ gridTemplateColumns, columnDefin
 
   const areAllOnCurrentPageChecked = () => {
     return tableData.length > 0 && tableData.every(row=>{
-      return checkBoxes.find(uuid=>uuid===row.uuid)
+      return checkBoxes.find(uuid => uuid === getRowIdentifier(row))
     })
   }
 
   const dataWithCheckBoxes = tableData.map((tableRow:any) => {
-    if (isChecked(tableRow.uuid)) {
+    if (isChecked(getRowIdentifier(tableRow))) {
       return {...tableRow, checkboxChecked: true};
     } else {
       return {...tableRow, checkboxChecked: false};
@@ -147,8 +155,8 @@ const TableStateContainer: React.FC<Props> = ({ gridTemplateColumns, columnDefin
       <Checkbox 
         checked={row.checkboxChecked} 
         onChange={()=>{
-          if (row.checkboxChecked) removeUuidFromCheckBoxes(row.uuid)
-          else addUuidToCheckBoxes(row.uuid)
+          if (row.checkboxChecked) removeUuidFromCheckBoxes(getRowIdentifier(row))
+          else addUuidToCheckBoxes(getRowIdentifier(row))
         }} 
       />,
       orderingField: null,
@@ -228,16 +236,29 @@ const TableStateContainer: React.FC<Props> = ({ gridTemplateColumns, columnDefin
         }}
       >
         {
-          textSearchBox?
-          <TableSearchBox
-            onChange={event=>{
-              const newValue = event.target.value;
-              setNameContains(newValue);
+          filterOptions && filterOptions.length > 0 ?
+          <div
+            style={{
+              display: 'flex'
             }}
-            onClear={()=>setNameContains("")}
-            value={nameContains}
-            placeholder={"Type to search for name"}
-          />
+          >
+            <TableSearchBox
+              onChange={event=>{
+                const newValue = event.target.value;
+                setSearchInput(newValue);
+              }}
+              onClear={()=>setSearchInput("")}
+              value={searchInput}
+              placeholder={"Type to search for name"}
+            />
+            {filterOptions.length > 1 ? (
+              <TableSearchToggle
+                options={filterOptions}
+                value={selectedFilterOption}
+                valueChanged={option => setSelectedFilterOption(option)}
+              />
+            ) : null}
+          </div>
           :
           <div />
         }
@@ -283,7 +304,7 @@ const TableStateContainer: React.FC<Props> = ({ gridTemplateColumns, columnDefin
           display: checkBoxActions.length === 0? "none" :"flex",
           justifyContent: "space-between",
           backgroundColor: "var(--color-header)",
-          color: "var(--color-ligth-main-second)",
+          color: "var(--color-light-main-second)",
           // @ts-ignore
           fontWeight: "var(--font-weight-button)",
         }}
@@ -302,9 +323,9 @@ const TableStateContainer: React.FC<Props> = ({ gridTemplateColumns, columnDefin
           checkBoxActions.map((checkboxAction, i) => {
             const { displayValue, actionFunction, checkIfActionIsApplicable } = checkboxAction;
             const selectedRows = checkIfActionIsApplicable ? (
-              tableData.filter(row => getIfCheckBoxOfUuidIsSelected(row.uuid) && checkIfActionIsApplicable(row))
+              tableData.filter(row => getIfCheckBoxOfUuidIsSelected(getRowIdentifier(row)) && checkIfActionIsApplicable(row))
             ) : (
-              tableData.filter(row => getIfCheckBoxOfUuidIsSelected(row.uuid))
+              tableData.filter(row => getIfCheckBoxOfUuidIsSelected(getRowIdentifier(row)))
             );
             return (
               <button

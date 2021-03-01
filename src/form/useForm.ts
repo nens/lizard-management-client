@@ -63,7 +63,7 @@ export const useForm = ({ initialValues, onSubmit }: FormInput): FormOutput => {
   const clearInput = (name: string) => {
     setValues({
       ...values,
-      [name]: ''
+      [name]: null
     });
   };
 

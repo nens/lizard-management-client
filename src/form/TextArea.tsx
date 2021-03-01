@@ -7,7 +7,7 @@ interface MyProps {
   name: string,
   value: string | null,
   valueChanged: (e: React.ChangeEvent<HTMLTextAreaElement>) => void,
-  clearInput: (name: string) => void,
+  clearInput?: (name: string) => void,
   validated: boolean,
   errorMessage?: string | false,
   placeholder?: string,
@@ -17,6 +17,7 @@ interface MyProps {
   triedToSubmit?: boolean,
   readOnly?: boolean,
   form?: string,
+  rows?: number
 };
 
 export const TextArea: React.FC<MyProps> = (props) => {  
@@ -35,6 +36,7 @@ export const TextArea: React.FC<MyProps> = (props) => {
     triedToSubmit,
     readOnly,
     form,
+    rows
   } = props;
 
   // Set validity of the input field
@@ -72,8 +74,13 @@ export const TextArea: React.FC<MyProps> = (props) => {
           onKeyUp={handleEnter}
           readOnly={!!readOnly}
           form={form}
+          rows={rows}
+          spellCheck={false}
+          style={{
+            whiteSpace: 'normal'
+          }}
         />
-        {!readOnly && value !== null && value.length ? <ClearInputButton onClick={() => clearInput(name)}/> : null}
+        {clearInput && !readOnly && value !== null && (value + '').length ? <ClearInputButton onClick={() => clearInput(name)}/> : null}
       </div>
     </label>
   );

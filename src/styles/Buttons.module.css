@@ -3,7 +3,7 @@
   padding-bottom: 8px;
   padding-left: 32px;
   padding-right: 40px;
-  color: var(--color-ligth-main);
+  color: var(--color-light-main);
   background-color: var(--color-button);
   text-transform: uppercase;
   border: none;
@@ -201,5 +201,18 @@
   outline-color: var(--color-border-input);
 }
 .IconButton:active {
+  transform: translateY(2px);
+}
+
+.BlockButton {
+  border: 2px solid var(--color-button);
+  border-radius: 3px;
+  background-color: transparent;
+  padding: 2px 6px;
+}
+.BlockButton:focus {
+  outline: none;
+}
+.BlockButton:active {
   transform: translateY(2px);
 }

@@ -23,7 +23,7 @@
 .Table > div:nth-child(1) {
   display: grid;
   background-color: var(--color-dark-main);
-  color: var(--color-ligth-main);
+  color: var(--color-light-main);
 }
 .Table > div:nth-child(1) > span {
   padding-top: 12px;
@@ -65,8 +65,9 @@
 /* header ordering buttons */
 .Table > div:nth-child(1) button {
   background-color: transparent;
-  color: var(--color-ligth-main);
+  color: var(--color-light-main);
   border: none;
+  padding: 0;
 }
 .Table > div:nth-child(1) button > img {
   margin-left: 8px;
@@ -88,7 +89,7 @@
 button.TableActionButton {
   border: none;
   background-color: transparent;
-  color: var(--color-ligth-main-second);
+  color: var(--color-light-main-second);
   font-weight: var(--font-weight-button);
   padding-top: 17px;
   padding-bottom: 17px;

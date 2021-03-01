@@ -1,40 +1,36 @@
-import React from 'react';
-import TableStateContainer from '../../components/TableStateContainer';
+import React, { useState } from 'react';
 import { NavLink } from "react-router-dom";
-import {ExplainSideColumn} from '../../components/ExplainSideColumn';
-import wmsIcon from "../../images/wms@3x.svg";
-import tableStyles from "../../components/Table.module.css";
+import TableStateContainer from '../../components/TableStateContainer';
 import TableActionButtons from '../../components/TableActionButtons';
-import {useState, }  from 'react';
-import Modal from '../../components/Modal';
+import tableStyles from "../../components/Table.module.css";
+import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import { ModalDeleteContent } from '../../components/ModalDeleteContent'
+import Modal from '../../components/Modal';
+import contactIcon from "../../images/contacts@3x.svg";
 
-
-export const WmsLayerTable = (props:any) =>  {
-
+export const ContactTable: React.FC<any> = (props) =>  {
   const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
   const [rowToBeDeleted, setRowToBeDeleted] = useState<any | null>(null);
   const [deleteFunction, setDeleteFunction] = useState<null | Function>(null);
   const [busyDeleting, setBusyDeleting] = useState<boolean>(false);
 
-  const baseUrl = "/api/v4/wmslayers/";
-  const navigationUrl = "/data_management/wms_layers";
+  const baseUrl = "/api/v4/contacts/";
+  const navigationUrl = "/alarms/contacts";
 
-  const fetchWmsLayerUuidsWithOptions = (uuids: string[], fetchOptions:any) => {
-    const url = "/api/v4/wmslayers/";
-    const fetches = uuids.map (wmsLayerUuid => {
-      return (fetch(url + wmsLayerUuid + "/", fetchOptions));
+  const fetchContactsWithOptions = (ids: string[], fetchOptions:any) => {
+    const fetches = ids.map (id => {
+      return (fetch(baseUrl + id + "/", fetchOptions));
     });
     return Promise.all(fetches)
   }
 
   const deleteActions = (rows: any[], tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any, setCheckboxes: any)=>{
     setRowsToBeDeleted(rows);
-    const uuids = rows.map(row=> row.uuid);
+    const ids = rows.map(row=> row.id);
     setDeleteFunction(()=>()=>{
       setBusyDeleting(true);
       const tableDataDeletedmarker = tableData.map((rowAllTables:any)=>{
-        if (uuids.find((uuid)=> uuid === rowAllTables.uuid)) {
+        if (ids.find(id => id === rowAllTables.id)) {
           return {...rowAllTables, markAsDeleted: true}
         } else{
           return {...rowAllTables};
@@ -47,7 +43,7 @@ export const WmsLayerTable = (props:any) =>  {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({})
       };
-      return fetchWmsLayerUuidsWithOptions(uuids, opts)
+      return fetchContactsWithOptions(ids, opts)
       .then((_result) => {
         if (setCheckboxes) {
           setCheckboxes([]);
@@ -72,7 +68,7 @@ export const WmsLayerTable = (props:any) =>  {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({})
       };
-      return fetchWmsLayerUuidsWithOptions([row.uuid], opts)
+      return fetchContactsWithOptions([row.id], opts)
       .then((_result) => {
         setBusyDeleting(false);
         // TODO: do we need this callback or should we otherwise indicate that the record is deleted ?
@@ -85,26 +81,56 @@ export const WmsLayerTable = (props:any) =>  {
     })
   }
 
+  // Helper function to get Django User or Contact User
+  const getDjangoUserOrContactUser = (contact: any) => {
+    // If contact.user is not null, that means a Django User is linked to this contact
+    // so show contact.user.first_name etcetera
+    // otherwise, no Django User is linked, so show contact.first_name etc.
+    return contact.user ? contact.user : contact;
+  };
+
   const columnDefinitions = [
     {
-      titleRenderFunction: () => "Name",
+      titleRenderFunction: () => "First name",
       renderFunction: (row: any) => 
         <span
           className={tableStyles.CellEllipsis}
-          title={row.name}
+          title={getDjangoUserOrContactUser(row).first_name}
         >
-          <NavLink to={`${navigationUrl}/${row.uuid}/`}>{row.name}</NavLink>
+          <NavLink to={`${navigationUrl}/${row.id}`}>{getDjangoUserOrContactUser(row).first_name}</NavLink>
         </span>,
-      orderingField: "name",
+      orderingField: "first_name",
     },
     {
-      titleRenderFunction: () =>  "Description",
+      titleRenderFunction: () =>  "Last name",
       renderFunction: (row: any) => 
         <span
           className={tableStyles.CellEllipsis}
-          title={row.description}
+          title={getDjangoUserOrContactUser(row).last_name}
         >
-          {row.description}
+          <NavLink to={`${navigationUrl}/${row.id}`}>{getDjangoUserOrContactUser(row).last_name}</NavLink>
+        </span>,
+      orderingField: "last_name",
+    },
+    {
+      titleRenderFunction: () => "Email",
+      renderFunction: (row: any) => 
+        <span
+          className={tableStyles.CellEllipsis}
+          title={getDjangoUserOrContactUser(row).email}
+        >
+          {getDjangoUserOrContactUser(row).email}
+        </span>,
+      orderingField: null,
+    },
+    {
+      titleRenderFunction: () =>  "Telephone",
+      renderFunction: (row: any) => 
+        <span
+          className={tableStyles.CellEllipsis}
+          title={getDjangoUserOrContactUser(row).phone_number}
+        >
+          {getDjangoUserOrContactUser(row).phone_number}
         </span>,
       orderingField: null,
     },
@@ -131,23 +157,21 @@ export const WmsLayerTable = (props:any) =>  {
     },
   ];
 
-
-
-  const handleNewRasterClick  = () => {
+  const handleNewContactClick  = () => {
     const { history } = props;
     history.push(`${navigationUrl}/new`);
   }
 
   return (
     <ExplainSideColumn
-      imgUrl={wmsIcon}
-      imgAltDescription={"WMS-Layer icon"}
-      headerText={"WMS Layers"}
-      explanationText={"WMS-Layers allow to configure layers in lizard even if they are hosted on another platform"} 
-      backUrl={"/data_management"}
+      imgUrl={contactIcon}
+      imgAltDescription={"Contact icon"}
+      headerText={"Contacts"}
+      explanationText={"Your contacts contain an email address, phone number and a name. Add these contacts to group to send them alarm messages when your thresholds are triggered."} 
+      backUrl={"/alarms"}
     >
         <TableStateContainer 
-          gridTemplateColumns={"8% 29% 55% 8%"} 
+          gridTemplateColumns={"6% 18% 18% 32% 18% 8%"} 
           columnDefinitions={columnDefinitions}
           baseUrl={`${baseUrl}?`} 
           checkBoxActions={[
@@ -156,11 +180,16 @@ export const WmsLayerTable = (props:any) =>  {
               actionFunction: deleteActions,
             }
           ]}
-          newItemOnClick={handleNewRasterClick}
+          newItemOnClick={handleNewContactClick}
           filterOptions={[
-            {value: 'name__icontains=', label: 'Name'},
-            {value: 'datasets__slug__icontains=', label: 'Datasets slug'},
-            {value: 'uuid=', label: 'UUID'},
+            {
+              value: 'first_name__icontains=',
+              label: 'First name'
+            },
+            {
+              value: 'last_name__icontains=',
+              label: 'Last name'
+            }
           ]}
         />
         { 
@@ -181,8 +210,8 @@ export const WmsLayerTable = (props:any) =>  {
           disableButtons={busyDeleting}
          >
            
-           <p>Are you sure? You are deleting the following WMS-layers:</p>
-           {ModalDeleteContent(rowsToBeDeleted, busyDeleting, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
+           <p>Are you sure? You are deleting the following contacts:</p>
+           {ModalDeleteContent(rowsToBeDeleted, busyDeleting, [{name: "first_name", width: 20}, {name: "email", width: 50}, {name: "id", width: 30}])}
            
          </Modal>
         :
@@ -207,8 +236,8 @@ export const WmsLayerTable = (props:any) =>  {
            }}
            disableButtons={busyDeleting}
          >
-           <p>Are you sure? You are deleting the following WMS-layer:</p>
-           {ModalDeleteContent([rowToBeDeleted], busyDeleting, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
+           <p>Are you sure? You are deleting the following contact:</p>
+           {ModalDeleteContent([rowToBeDeleted], busyDeleting, [{name: "first_name", width: 20}, {name: "email", width: 50}, {name: "id", width: 30}])}
 
          </Modal>
         :

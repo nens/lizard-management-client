@@ -18,7 +18,7 @@
 }
 
 .FormActionButton {
-  background-color: var(--color-ligth-main);
+  background-color: var(--color-light-main);
   color: var(--color-header-hover);
   border-color: var(--color-header-hover);
 

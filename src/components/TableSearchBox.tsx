@@ -15,7 +15,8 @@ const TableSearchBox: React.FC<Props> = ({value, onChange, onClear, placeholder}
           // align search button on same line as input search field
           display: "flex",
           flexDirection: "row",
-          alignItems: "flex-start"
+          alignItems: "flex-start",
+          marginRight: 10,
         }}
       >
         <div

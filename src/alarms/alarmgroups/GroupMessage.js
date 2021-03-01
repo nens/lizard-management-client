@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-// import Ink from "react-ink";
 import { FormattedMessage } from "react-intl";
 import { connect } from "react-redux";
 import styles from "./GroupMessage.module.css";
@@ -63,18 +62,12 @@ class GroupMessage extends Component {
   sendMessageToGroup(groupId, subject, message) {
     const { addNotification } = this.props;
     const messageData = {
-      email: {
-        subject,
-        html: message,
-        text: message,
-        template_vars: {}
-      },
-      sms: {
-        content: message,
-        template_vars: {}
-      }
+      email_html: message,
+      email_text: message,
+      email_subject: subject,
+      sms_content: message
     };
-    fetch(`/api/v3/contactgroups/${groupId}/send/`, {
+    fetch(`/api/v4/contactgroups/${groupId}/send/`, {
       credentials: "same-origin",
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -206,16 +199,8 @@ class GroupMessage extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  return {};
-};
+const mapDispatchToProps = (dispatch) => ({
+    addNotification: (message, timeout) => dispatch(addNotification(message, timeout))
+});
 
-const mapDispatchToProps = (dispatch, ownProps) => {
-  return {
-    addNotification: (message, timeout) => {
-      dispatch(addNotification(message, timeout));
-    }
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(GroupMessage);
+export default connect(null, mapDispatchToProps)(GroupMessage);

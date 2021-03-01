@@ -120,7 +120,6 @@ export const PersonalApiKeysTable = (props:any) =>  {
         columnDefinitions={columnDefinitions}
         baseUrl={`${baseUrl}?`} 
         checkBoxActions={[]}
-        textSearchBox={false}
         newItemOnClick={handleNewClick}
       />
       { 
