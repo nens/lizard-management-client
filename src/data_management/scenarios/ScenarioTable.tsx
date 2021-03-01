@@ -258,7 +258,7 @@ export const ScenarioTable = () =>  {
             adaptUrlFunction: (url:string) => {return userName? url + `&username__contains=${userName}` : url},
           }}
           filterOptions={[
-            {value: 'name__icontains=', label: 'Name'}, // 6597385f-4389-45e9-9b3a-0f42a9ec2467
+            {value: 'name__icontains=', label: 'Name'},
             {value: 'uuid=', label: 'UUID'},
             {value: 'username__icontains=', label: 'Username'},
             {value: 'model_name__icontains=', label: 'Model name'},
