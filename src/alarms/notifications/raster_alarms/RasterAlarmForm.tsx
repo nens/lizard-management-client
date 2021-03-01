@@ -133,7 +133,7 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
         onReset={handleReset}
       >
         <TextInput
-          title={'name *'}
+          title={'Name *'}
           name={'name'}
           placeholder={'Please enter at least 1 character'}
           value={values.name}
