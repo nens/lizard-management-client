@@ -262,6 +262,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
       headerText={"Raster Layers"}
       explanationText={rasterLayerFormHelpText[fieldOnFocus] || rasterLayerFormHelpText['default']}
       backUrl={"/data_management/rasters/layers"}
+      fieldName={fieldOnFocus}
     >
       {/* 
       I also use a form inside the colormap modal.

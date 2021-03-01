@@ -1,4 +1,7 @@
 // MARK: Bootstrap
+
+import {getLocalStorage} from "./utils/localStorageUtils";
+
 export const RECEIVE_LIZARD_BOOTSTRAP = "RECEIVE_LIZARD_BOOTSTRAP";
 export const REQUEST_LIZARD_BOOTSTRAP = "REQUEST_LIZARD_BOOTSTRAP";
 
@@ -68,13 +71,11 @@ export function addNotification(message, timeout) {
 export const RECEIVE_ORGANISATIONS = "RECEIVE_ORGANISATIONS";
 export const REQUEST_ORGANISATIONS = "REQUEST_ORGANISATIONS";
 export const SELECT_ORGANISATION = "SELECT_ORGANISATION";
+export const REQUEST_USAGE = "REQUEST_USAGE";
+export const SET_USAGE = "SET_USAGE";
 
 export function fetchOrganisations() {
   return (dispatch, getState) => {
-    const state = getState();
-
-    
-
     dispatch({ type: REQUEST_ORGANISATIONS });
 
     const url =
@@ -86,7 +87,7 @@ export function fetchOrganisations() {
     fetch(url, opts)
       .then(responseObj => responseObj.json())
       .then(responseData => {
-        const organisation = state.organisations.selected;
+        const selectedOrganisationLocalStorage = getLocalStorage("lizard-management-current-organisation", null);
         const data = responseData.results;
         const allOrganisations = data.map(organisation => {
           //use organisation uuid without dashes only
@@ -106,30 +107,52 @@ export function fetchOrganisations() {
         })
 
         dispatch({ type: RECEIVE_ORGANISATIONS, all:allOrganisations, available: availableOrganisations});
-
+        
         if (
-          !organisation ||
-          availableOrganisations.map(orga=>orga.uuid).indexOf(organisation.uuid) === -1
+          !selectedOrganisationLocalStorage ||
+          availableOrganisations.map(orga=>orga.uuid).indexOf(selectedOrganisationLocalStorage.uuid) === -1
         ) {
           const selectedOrganisation = availableOrganisations[0];
-          dispatch(selectOrganisation(selectedOrganisation));
+          dispatch(selectOrganisation(selectedOrganisation, true));
+        } else {
+          dispatch(selectOrganisation(selectedOrganisationLocalStorage, false));
         }
       });
   };
 }
 
-export function selectOrganisation(organisation) {
+export function selectOrganisation(organisation, mustAddNotification) {
   return (dispatch) => {
     localStorage.setItem(
       "lizard-management-current-organisation",
       JSON.stringify(organisation)
     );
-    dispatch(
-      addNotification(
-        `Organisation "${(organisation && organisation.name) || "none"}" selected`,
-        2000
-      )
-    );
+    if (mustAddNotification) {
+      dispatch(
+        addNotification(
+          `Organisation "${(organisation && organisation.name) || "none"}" selected`,
+          2000
+        )
+      );
+    }
+    
+    if (organisation && organisation.uuid) {
+      dispatch({
+        type: REQUEST_USAGE,
+      });
+      const url = `/api/v4/organisations/${organisation.uuid}/usage/`;
+      fetch(url, {
+          credentials: "same-origin"
+      })
+      .then(response => response.json())
+      .then(data => {
+          dispatch({
+            type: SET_USAGE,
+            usage: data,
+          });
+      });
+    }
+
     dispatch({
       type: SELECT_ORGANISATION,
       organisation

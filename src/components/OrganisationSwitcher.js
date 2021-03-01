@@ -54,7 +54,7 @@ class OrganisationSwitcher extends Component {
     });
   }
   selectOrganisation(organisation) {
-    this.props.selectOrganisation(organisation);
+    this.props.selectOrganisation(organisation, true);
   }
   render() {
     const {
@@ -177,8 +177,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    selectOrganisation: organisation => {
-      dispatch(selectOrganisation(organisation));
+    selectOrganisation: (organisation, addNotification) => {
+      dispatch(selectOrganisation(organisation, addNotification));
       dispatch(fetchSupplierIds());
     }
   };
