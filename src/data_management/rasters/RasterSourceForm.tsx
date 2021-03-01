@@ -160,6 +160,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
       headerText={"Raster Sources"}
       explanationText={rasterSourceFormHelpText[fieldOnFocus] || rasterSourceFormHelpText['default']}
       backUrl={"/data_management/rasters/sources"}
+      fieldName={fieldOnFocus}
     >
       <form
         className={formStyles.Form}

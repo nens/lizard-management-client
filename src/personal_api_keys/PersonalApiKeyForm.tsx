@@ -125,6 +125,7 @@ const PersonalApiKeyFormModel: React.FC<Props & PropsFromDispatch & RouteCompone
       headerText={"Personal API keys"}
       explanationText={personalApiKeysFormHelpText[fieldOnFocus] || personalApiKeysFormHelpText['default']}
       backUrl={"/personal_api_keys"}
+      fieldName={fieldOnFocus}
     >
       <form
         className={formStyles.Form}

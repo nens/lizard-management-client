@@ -155,7 +155,7 @@ export const wmsFormHelpText: HelpText = {
 export const defaultScenarioExplanationTextTable = (usedSpaceString:string) => {
   return (
     <div>
-      <div style={{marginBottom: "16px"}}>Scenarios are created in 3di.</div>
+      <div style={{marginBottom: "16px"}}>Scenarios are created in 3Di.</div>
       <div 
         style={{display:"flex", justifyContent: "space-between",}}
       >

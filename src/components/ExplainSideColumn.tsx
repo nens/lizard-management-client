@@ -9,27 +9,11 @@ interface MyProps {
   headerText: string,
   explanationText: string | JSX.Element,
   backUrl: string,
+  fieldName?: string, // for the animation effect of explain box to work when moving to a new field in form
 }
 
-// From here:
-// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Errors/Cyclic_object_value
-// because I get this error
-// https://stackoverflow.com/questions/50965551/typeerror-cyclic-object-value-in-react
-const getCircularReplacer = () => {
-  const seen = new WeakSet();
-  return (key:any, value:any) => {
-    if (typeof value === "object" && value !== null) {
-      if (seen.has(value)) {
-        return;
-      }
-      seen.add(value);
-    }
-    return value;
-  };
-};
-
 export const ExplainSideColumn: React.FC<MyProps> = ({
-  imgUrl, imgAltDescription, headerText, explanationText, backUrl, children
+  imgUrl, imgAltDescription, headerText, explanationText, backUrl, fieldName, children
 }) => {
   return (
     <div 
@@ -80,7 +64,7 @@ export const ExplainSideColumn: React.FC<MyProps> = ({
           {headerText}
         </h2>
         <div
-          key={JSON.stringify(explanationText, getCircularReplacer)}
+          key={fieldName}
           className={styles.ExplainBoxEffect}
           style={{
             backgroundColor: "#FCFCFC",

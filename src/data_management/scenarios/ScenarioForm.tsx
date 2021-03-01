@@ -85,6 +85,7 @@ const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProp
       headerText={"3Di Scenarios"}
       explanationText={scenarioFormHelpText[fieldOnFocus] || defaultScenarioExplanationText(bytesToDisplayValue(scenarioTotalSize))}
       backUrl={"/data_management/scenarios/"}
+      fieldName={fieldOnFocus}
     >
       <form
         className={formStyles.Form}
