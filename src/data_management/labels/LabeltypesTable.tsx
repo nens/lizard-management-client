@@ -56,7 +56,10 @@ export const LabeltypesTable = (props:any) =>  {
         columnDefinitions={columnDefinitions}
         baseUrl={`${baseUrl}?`} 
         checkBoxActions={[]}
-        filterOptions={[{value: 'name__icontains=', label: 'Name'}]}
+        filterOptions={[
+          {value: 'name__icontains=', label: 'Name'},
+          {value: 'uuid=', label: 'UUID'},
+        ]}
       />
     </ExplainSideColumn>
   );
