@@ -13,6 +13,9 @@
 /build
 /dist
 
+# authentication
+startauth
+
 # misc
 .DS_Store
 .env.local
