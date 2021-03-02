@@ -69,8 +69,8 @@
     "x2js": "^3.4.0"
   },
   "scripts": {
-    "start-apikey": "./startauth",
-    "start": "react-scripts start",
+    "start": "./startauth",
+    "start-minimal": "react-scripts start",
     "build": "mkdir -p dist/ && rm -rf dist/*.zip && react-scripts build && scripts/makedist.sh",
     "test": "react-scripts test",
     "eject": "react-scripts eject",

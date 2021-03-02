@@ -27,8 +27,8 @@ Installation
 - Required: A working nodejs and yarn installation.
 - In the root directory of the repository: `$ yarn install`
 - make a copy of the file 'startauth.example' and call it 'startauth'
-- replace the '<personal_api_key>' with your personal api key requested in the [api-key-management-pag](https://nxt3.staging.lizard.net/management)
-- Now you can start while authenticated with `yarn run start-apikey` or withouth being authenticated `yarn run start`    
+- replace the '<personal_api_key>' with your personal api key requested in the [api-key-management-page](https://nxt3.staging.lizard.net/management)
+- Now you can start with basic-auth by doing `yarn start` or withouth basic-auth `yarn run start-minimal`    
 - in case you run into the following error: postcss@8.2.1: The engine "node" is incompatible with this module. Expected version "^10 || ^12 || >=14". Got "13.7.0"  
 use nvm to use nodeJS version 12
 - nvm install 12
