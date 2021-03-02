@@ -45,6 +45,7 @@ export const TemplateTable: React.FC<any> = (props) =>  {
       };
       return fetchTemplatesWithOptions(ids, opts)
       .then((_result) => {
+        setBusyDeleting(false);
         if (setCheckboxes) {
           setCheckboxes([]);
         }
@@ -170,6 +171,7 @@ export const TemplateTable: React.FC<any> = (props) =>  {
              });
            }}
            cancelAction={()=>{
+            setBusyDeleting(false);
             setRowsToBeDeleted([]);
             setDeleteFunction(null);
           }}
@@ -197,6 +199,7 @@ export const TemplateTable: React.FC<any> = (props) =>  {
              
            }}
            cancelAction={()=>{
+             setBusyDeleting(false);
              setRowToBeDeleted(null);
              setDeleteFunction(null);
            }}

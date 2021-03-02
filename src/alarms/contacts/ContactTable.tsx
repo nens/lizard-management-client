@@ -45,6 +45,7 @@ export const ContactTable: React.FC<any> = (props) =>  {
       };
       return fetchContactsWithOptions(ids, opts)
       .then((_result) => {
+        setBusyDeleting(false);
         if (setCheckboxes) {
           setCheckboxes([]);
         }
@@ -204,6 +205,7 @@ export const ContactTable: React.FC<any> = (props) =>  {
              });
            }}
            cancelAction={()=>{
+            setBusyDeleting(false);
             setRowsToBeDeleted([]);
             setDeleteFunction(null);
           }}
@@ -231,6 +233,7 @@ export const ContactTable: React.FC<any> = (props) =>  {
              
            }}
            cancelAction={()=>{
+             setBusyDeleting(false);
              setRowToBeDeleted(null);
              setDeleteFunction(null);
            }}
