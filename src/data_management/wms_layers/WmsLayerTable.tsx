@@ -49,6 +49,7 @@ export const WmsLayerTable = (props:any) =>  {
       };
       return fetchWmsLayerUuidsWithOptions(uuids, opts)
       .then((_result) => {
+        setBusyDeleting(false);
         if (setCheckboxes) {
           setCheckboxes([]);
         }
