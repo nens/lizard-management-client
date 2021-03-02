@@ -170,7 +170,6 @@ export const GroupTable: React.FC<any> = (props) =>  {
              });
            }}
            cancelAction={()=>{
-            setBusyDeleting(false);
             setRowsToBeDeleted([]);
             setDeleteFunction(null);
           }}
@@ -198,7 +197,6 @@ export const GroupTable: React.FC<any> = (props) =>  {
              
            }}
            cancelAction={()=>{
-             setBusyDeleting(false);
              setRowToBeDeleted(null);
              setDeleteFunction(null);
            }}
