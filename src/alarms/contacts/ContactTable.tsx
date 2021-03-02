@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavLink } from "react-router-dom";
 import TableStateContainer from '../../components/TableStateContainer';
 import TableActionButtons from '../../components/TableActionButtons';
 import tableStyles from "../../components/Table.module.css";
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
-import { ModalDeleteContent } from '../../components/ModalDeleteContent'
+import { ModalDeleteContent } from '../../components/ModalDeleteContent';
 import Modal from '../../components/Modal';
 import contactIcon from "../../images/contacts@3x.svg";
 
@@ -13,6 +13,13 @@ export const ContactTable: React.FC<any> = (props) =>  {
   const [rowToBeDeleted, setRowToBeDeleted] = useState<any | null>(null);
   const [deleteFunction, setDeleteFunction] = useState<null | Function>(null);
   const [busyDeleting, setBusyDeleting] = useState<boolean>(false);
+
+  // Reset busyDeleting state when there is no row to be deleted
+  useEffect(() => {
+    if (!rowToBeDeleted && rowsToBeDeleted.length === 0 && busyDeleting) {
+      setBusyDeleting(false);
+    };
+  }, [rowToBeDeleted, rowsToBeDeleted.length, busyDeleting])
 
   const baseUrl = "/api/v4/contacts/";
   const navigationUrl = "/alarms/contacts";
@@ -212,7 +219,7 @@ export const ContactTable: React.FC<any> = (props) =>  {
            
            <p>Are you sure? You are deleting the following contacts:</p>
            {ModalDeleteContent(rowsToBeDeleted, busyDeleting, [{name: "first_name", width: 20}, {name: "email", width: 50}, {name: "id", width: 30}])}
-           
+
          </Modal>
         :
           null
