@@ -14,15 +14,15 @@ export const ContactTable: React.FC<any> = (props) =>  {
   const [deleteFunction, setDeleteFunction] = useState<null | Function>(null);
   const [busyDeleting, setBusyDeleting] = useState<boolean>(false);
 
+  const baseUrl = "/api/v4/contacts/";
+  const navigationUrl = "/alarms/contacts";
+
   // Reset busyDeleting state when there is no row to be deleted
   useEffect(() => {
     if (!rowToBeDeleted && rowsToBeDeleted.length === 0 && busyDeleting) {
       setBusyDeleting(false);
     };
-  }, [rowToBeDeleted, rowsToBeDeleted.length, busyDeleting])
-
-  const baseUrl = "/api/v4/contacts/";
-  const navigationUrl = "/alarms/contacts";
+  }, [rowToBeDeleted, rowsToBeDeleted.length, busyDeleting]);
 
   const fetchContactsWithOptions = (ids: string[], fetchOptions:any) => {
     const fetches = ids.map (id => {

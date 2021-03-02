@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink } from "react-router-dom";
 import TableStateContainer from '../../components/TableStateContainer';
 import TableActionButtons from '../../components/TableActionButtons';
 import tableStyles from "../../components/Table.module.css";
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
-import { ModalDeleteContent } from '../../components/ModalDeleteContent'
+import { ModalDeleteContent } from '../../components/ModalDeleteContent';
 import Modal from '../../components/Modal';
 import groupIcon from "../../images/group.svg";
 
@@ -16,6 +16,13 @@ export const GroupTable: React.FC<any> = (props) =>  {
 
   const baseUrl = "/api/v4/contactgroups/";
   const navigationUrl = "/alarms/groups";
+
+  // Reset busyDeleting state when there is no row to be deleted
+  useEffect(() => {
+    if (!rowToBeDeleted && rowsToBeDeleted.length === 0 && busyDeleting) {
+      setBusyDeleting(false);
+    };
+  }, [rowToBeDeleted, rowsToBeDeleted.length, busyDeleting]);
 
   const fetchTemplatesWithOptions = (ids: string[], fetchOptions:any) => {
     const fetches = ids.map (id => {
