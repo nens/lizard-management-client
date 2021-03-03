@@ -15,6 +15,10 @@ import Modal from '../../components/Modal';
 import { ModalDeleteContent } from '../../components/ModalDeleteContent';
 import DeleteRasterSourceNotAllowed  from './DeleteRasterSourceNotAllowed';
 import MDSpinner from "react-md-spinner";
+import { defaultRasterSourceExplanationTextTable } from '../../utils/helpTextForForms';
+import {useSelector} from 'react-redux';
+import {getScenarioTotalSize} from '../../reducers';
+
 
 
 export const RasterSourceTable = (props:any) =>  {
@@ -25,6 +29,8 @@ export const RasterSourceTable = (props:any) =>  {
   const [deleteFunction, setDeleteFunction] = useState<null | Function>(null);
   const [busyDeleting, setBusyDeleting] = useState<boolean>(false);
   const [showDeleteFailedModal, setShowDeleteFailedModal] = useState<boolean>(false);
+  const rastersTotalSize = useSelector(getScenarioTotalSize);
+
 
   const baseUrl = "/api/v4/rastersources/";
   const navigationUrlRasters = "/data_management/rasters/sources";
@@ -204,7 +210,7 @@ export const RasterSourceTable = (props:any) =>  {
       imgUrl={rasterSourcesIcon}
       imgAltDescription={"Raster-Source icon"}
       headerText={"Raster Sources"}
-      explanationText={"Raster Sources are the containers for your raster data. When your raster data is uploaded to a Raster Source, it can be published as a Raster Layer to be visualized in the Catalogue and the Portal or it can be used in a GeoBlocks model."} 
+      explanationText={defaultRasterSourceExplanationTextTable(bytesToDisplayValue(rastersTotalSize))} 
       backUrl={"/data_management/rasters"}
     >
       <TableStateContainer 
@@ -225,7 +231,10 @@ export const RasterSourceTable = (props:any) =>  {
           // },
         ]}
         newItemOnClick={handleNewRasterClick}
-        filterOptions={[{value: 'name__icontains=', label: 'Name'}]}
+        filterOptions={[
+          {value: 'name__icontains=', label: 'Name'},
+          {value: 'uuid=', label: 'UUID'},
+        ]}
         defaultUrlParams={'&scenario__isnull=true'} // to exclude 3Di scenario rasters
       />
       {

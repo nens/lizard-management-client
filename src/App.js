@@ -27,13 +27,12 @@ import gridStyles from "./styles/Grid.module.css";
 import buttonStyles from "./styles/Buttons.module.css";
 import lizardIcon from "./images/lizard.svg";
 import { withRouter } from "react-router-dom";
-import {appTiles} from './home/AppTileConfig';
-import doArraysHaveEqualElement from './utils/doArraysHaveEqualElement';
 
 import helpIcon from './images/help.svg'
 import documentIcon from './images/document.svg';
 import logoutIcon from './images/logout.svg';
 import editIcon from './images/edit.svg';
+import shouldRedirectBasedOnAuthorization from './home/shouldRedirectBasedOnAuthorization';
 
 class App extends Component {
   constructor(props) {
@@ -179,16 +178,14 @@ class App extends Component {
       window.location = "/";
     }
 
-    const currentHomeAppTile = appTiles.find(tile => {
-      return window.location.href.includes(tile.linksTo)
-    });
-    if (currentHomeAppTile && !doArraysHaveEqualElement(this.props.selectedOrganisation.roles, currentHomeAppTile.requiresOneOfRoles)) {
+    if (shouldRedirectBasedOnAuthorization(this.props.bootstrap, this.props.selectedOrganisation)) {
       const redirectMessage = this.props.intl.formatMessage({ id: "authorization.redirected_based_onrole", defaultMessage: "You do not have the rights to access this data under the selected organisation. \nYou will be redirected." });
       alert(redirectMessage);
       // should redirect to <customer_url>.lizard.net/management/ on prod
       this.props.history.push("/");
     }
-    if (!this.props.isAuthenticated) {
+    
+    if (!this.props.isAuthenticated || !this.props.selectedOrganisation) {
       return (
         <div className={styles.MDSpinner}>
           <MDSpinner size={24} />

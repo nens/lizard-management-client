@@ -146,6 +146,7 @@ const LabeltypeModel: React.FC<Props & PropsFromDispatch & RouteComponentProps<R
       headerText={"Label types"}
       explanationText={lableTypeFormHelpText[fieldOnFocus] || lableTypeFormHelpText['default']}
       backUrl={"/data_management/labels/label_types/"}
+      fieldName={fieldOnFocus}
     >
       <form
         className={formStyles.Form}

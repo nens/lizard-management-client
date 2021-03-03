@@ -49,6 +49,7 @@ export const WmsLayerTable = (props:any) =>  {
       };
       return fetchWmsLayerUuidsWithOptions(uuids, opts)
       .then((_result) => {
+        setBusyDeleting(false);
         if (setCheckboxes) {
           setCheckboxes([]);
         }
@@ -157,7 +158,11 @@ export const WmsLayerTable = (props:any) =>  {
             }
           ]}
           newItemOnClick={handleNewRasterClick}
-          filterOptions={[{value: 'name__icontains=', label: 'Name'}]}
+          filterOptions={[
+            {value: 'name__icontains=', label: 'Name'},
+            {value: 'datasets__slug__icontains=', label: 'Datasets slug'},
+            {value: 'uuid=', label: 'UUID'},
+          ]}
         />
         { 
         rowsToBeDeleted.length > 0?

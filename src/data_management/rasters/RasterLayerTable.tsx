@@ -172,7 +172,10 @@ export const RasterLayerTable: React.FC<RouteComponentProps> = (props) =>  {
             }
           ]}
           newItemOnClick={handleNewRasterClick}
-          filterOptions={[{value: 'name__icontains=', label: 'Name'}]}
+          filterOptions={[
+            {value: 'name__icontains=', label: 'Name'},
+            {value: 'uuid=', label: 'UUID'},
+          ]}
           defaultUrlParams={'&scenario__isnull=true'} // to exclude 3Di scenario rasters
         />
         { 
