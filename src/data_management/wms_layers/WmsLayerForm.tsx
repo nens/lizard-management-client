@@ -117,6 +117,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
       headerText={"WMS Layers"}
       explanationText={wmsFormHelpText[fieldOnFocus] || wmsFormHelpText['default']}
       backUrl={"/data_management/wms_layers"}
+      fieldName={fieldOnFocus}
     >
       <form
         className={formStyles.Form}

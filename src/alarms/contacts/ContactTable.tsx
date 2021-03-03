@@ -45,6 +45,7 @@ export const ContactTable: React.FC<any> = (props) =>  {
       };
       return fetchContactsWithOptions(ids, opts)
       .then((_result) => {
+        setBusyDeleting(false);
         if (setCheckboxes) {
           setCheckboxes([]);
         }

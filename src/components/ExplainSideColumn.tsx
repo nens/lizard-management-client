@@ -9,10 +9,11 @@ interface MyProps {
   headerText: string,
   explanationText: string | JSX.Element,
   backUrl: string,
+  fieldName?: string, // for the animation effect of explain box to work when moving to a new field in form
 }
 
 export const ExplainSideColumn: React.FC<MyProps> = ({
-  imgUrl, imgAltDescription, headerText, explanationText, backUrl, children
+  imgUrl, imgAltDescription, headerText, explanationText, backUrl, fieldName, children
 }) => {
   return (
     <div 
@@ -63,7 +64,7 @@ export const ExplainSideColumn: React.FC<MyProps> = ({
           {headerText}
         </h2>
         <div
-          key={JSON.stringify(explanationText)}
+          key={fieldName}
           className={styles.ExplainBoxEffect}
           style={{
             backgroundColor: "#FCFCFC",

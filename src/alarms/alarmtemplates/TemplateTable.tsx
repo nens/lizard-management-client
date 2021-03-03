@@ -45,6 +45,7 @@ export const TemplateTable: React.FC<any> = (props) =>  {
       };
       return fetchTemplatesWithOptions(ids, opts)
       .then((_result) => {
+        setBusyDeleting(false);
         if (setCheckboxes) {
           setCheckboxes([]);
         }

@@ -66,7 +66,7 @@ export const jsonValidator = (jsonStr: string) => {
 };
 
 export const emailValidator = (address: string) => {
-  if (/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(address)) {
+  if (/^\w+([.-]\w+)*@\w+([.-]\w+)*(\.\w{2,3})+$/.test(address)) {
     return false;
   };
   return 'Please enter a valid email address';
