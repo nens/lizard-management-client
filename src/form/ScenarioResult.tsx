@@ -19,6 +19,7 @@ interface Result {
   id: number,
   name: string,
   scheduledForDeletion: boolean,
+  raster: string;
 };
 interface Results {
   results: Result[],
@@ -119,6 +120,11 @@ const ResultRow: React.FC<ResultRowProps> = ({
   onFocus,
   onBlur
 }) => {
+  let resultUrl;
+  if (result.raster) {
+    const rasterLayerUuid = result.raster.split('/')[result.raster.split('/').length-2]; // retrieve uuid from api url of raster layer 
+    resultUrl = `/management#/data_management/rasters/layers/${rasterLayerUuid}`
+  }
   return (
     <div
       className={scenarioResultStyles.ResultRow}
@@ -126,7 +132,15 @@ const ResultRow: React.FC<ResultRowProps> = ({
         color: scheduledForBulkDeletion || result.scheduledForDeletion ? 'lightgrey' : ''
       }}
     >
-      <span>{result.name}</span>
+      {resultUrl?
+        <a
+          href={resultUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+        >{result.name}</a>
+        :
+        <span>{result.name}</span>
+      }
       {!scheduledForBulkDeletion ? (
         <DeleteButton
           scheduledForDeletion={result.scheduledForDeletion}
@@ -190,7 +204,8 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
           return {
             id: result.id,
             name: result.result_type.name,
-            scheduledForDeletion: false
+            scheduledForDeletion: false,
+            raster: result.raster,
           };
         })
       })
@@ -204,7 +219,8 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
           return {
             id: result.id,
             name: result.result_type.name,
-            scheduledForDeletion: false
+            scheduledForDeletion: false,
+            raster: result.raster,
           };
         })
       })
@@ -218,7 +234,8 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
           return {
             id: result.id,
             name: result.result_type.name,
-            scheduledForDeletion: false
+            scheduledForDeletion: false,
+            raster: result.raster,
           };
         })
       })
@@ -232,7 +249,8 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
           return {
             id: result.id,
             name: result.result_type.name,
-            scheduledForDeletion: false
+            scheduledForDeletion: false,
+            raster: result.raster,
           };
         })
       })

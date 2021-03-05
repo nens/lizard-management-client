@@ -7,7 +7,8 @@ import {
   fetchRasterSourcesV4,
   fetchRasterSourceV4,
   patchRasterLayer,
-  RasterLayerFromAPI
+  RasterLayerFromAPI,
+  rasterLayerFromAPIBelongsToScenario,
 } from '../../api/rasters';
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import { CheckBox } from './../../form/CheckBox';
@@ -106,6 +107,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
   const colorMaps = useSelector(getColorMaps).available;
   const datasets = useSelector(getDatasets).available;
   const rasterSourceUUID = useSelector(getRasterSourceUUID);
+  const belongsToScenario = (currentRasterLayer && rasterLayerFromAPIBelongsToScenario(currentRasterLayer)) || false;
 
   useEffect(() => {
     return () => {
@@ -309,6 +311,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           validated
           form={"raster_layer_form_id"}
         />
+        {!belongsToScenario?
         <SelectDropdown
           title={'Dataset'}
           name={'datasets'}
@@ -321,7 +324,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           form={"raster_layer_form_id"}
           onFocus={handleFocus}
           onBlur={handleBlur}
-        />
+        />:null}
         <span className={formStyles.FormFieldTitle}>
           2: Data
         </span>
@@ -433,6 +436,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           form={"raster_layer_form_id"}
           onFocus={handleFocus}
           onBlur={handleBlur}
+          readOnly={belongsToScenario}
         />
         {values.sharedWith ? (
           <SelectDropdown
@@ -447,6 +451,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
             onFocus={handleFocus}
             onBlur={handleBlur}
             isMulti
+            readOnly={belongsToScenario}
           />
         ) : null}
         <SelectDropdown
@@ -474,7 +479,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           validated
           onFocus={handleFocus}
           onBlur={handleBlur}
-          readOnly={!(supplierIds.length > 0 && selectedOrganisation.roles.includes('admin'))}
+          readOnly={(!(supplierIds.length > 0 && selectedOrganisation.roles.includes('admin')) || belongsToScenario)}
           form={"raster_layer_form_id"}
         />
         <div
