@@ -82,6 +82,10 @@ interface RasterLayerInstance {
   uuid?: string,
 }
 
+export const rasterLayerFromAPIBelongsToScenario = (raster: RasterLayerFromAPI) => {
+  return raster.wms_info && raster.wms_info.layer && raster.wms_info.layer.includes('scenarios:')
+}
+
 export type RasterLayerFromForm = RasterLayerInstance & {
   organisation: string;
   shared_with: string[];
@@ -94,6 +98,10 @@ export type RasterLayerFromAPI = RasterLayerInstance & {
   shared_with: Organisation[];
   observation_type: ObservationType;
   datasets: Dataset[];
+  wms_info: {
+    endpoint: string;
+    layer: string;
+  }
 }
 
 export const fetchRasterSourcesV4 = async (query?: string) => {
