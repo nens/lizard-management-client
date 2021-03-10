@@ -18,7 +18,7 @@ export const toISOValue = (duration: durationObject): string | null => {
 export const rasterIntervalStringServerToDurationObject = (str: string): durationObject => {
   if (str.split(" ")[1] ) { // "2 03:04:05"
     return {
-      days: parseInt(str.split(" ")[0]),
+      days: Math.abs(parseInt(str.split(" ")[0])),
       hours: parseInt(str.split(" ")[1].split(":")[0]) ,
       minutes: parseInt(str.split(" ")[1].split(":")[1]) ,
       seconds: parseInt(str.split(" ")[1].split(":")[2]),

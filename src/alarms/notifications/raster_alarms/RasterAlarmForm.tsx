@@ -14,6 +14,10 @@ import { fetchRasterLayersV4, RasterLayerFromAPI } from '../../../api/rasters';
 import { convertToSelectObject } from '../../../utils/convertToSelectObject';
 import formStyles from './../../../styles/Forms.module.css';
 import rasterAlarmIcon from "../../../images/alarm@3x.svg";
+import { CheckBox } from '../../../form/CheckBox';
+import { DurationField } from '../../../form/DurationField';
+import { IntegerInput } from '../../../form/IntegerInput';
+import { rasterIntervalStringServerToDurationObject, toISOValue } from '../../../utils/isoUtils';
 
 interface Props {
   currentRasterAlarm?: any,
@@ -47,10 +51,28 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
 
   const initialValues = currentRasterAlarm && raster ? {
     name: currentRasterAlarm.name,
-    raster: convertToSelectObject(raster.uuid!, raster.name)
+    raster: convertToSelectObject(raster.uuid!, raster.name),
+    coordinates: currentRasterAlarm.geometry.coordinates,
+    relative: !!currentRasterAlarm.relative_start || !!currentRasterAlarm.relative_end,
+    relativeStart: currentRasterAlarm.relative_start ? toISOValue(rasterIntervalStringServerToDurationObject(currentRasterAlarm.relative_start)) : null,
+    relativeEnd: currentRasterAlarm.relative_end ? toISOValue(rasterIntervalStringServerToDurationObject(currentRasterAlarm.relative_end)) : null,
+    snoozeOn: currentRasterAlarm.snooze_sign_on,
+    snoozeOff: currentRasterAlarm.snooze_sign_off,
+    comparison: convertToSelectObject(currentRasterAlarm.comparison),
+    thresholds: currentRasterAlarm.thresholds,
+    messages: currentRasterAlarm.messages
   } : {
     name: null,
-    raster: null
+    raster: null,
+    coordinates: null,
+    relative: false,
+    relativeStart: null,
+    relativeEnd: null,
+    snoozeOn: 1,
+    snoozeOff: 1,
+    comparison: convertToSelectObject('>'),
+    thresholds: [],
+    messages: []
   };
 
   const onSubmit = (values: Values) => {
@@ -132,6 +154,9 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
         onSubmit={handleSubmit}
         onReset={handleReset}
       >
+        <span className={formStyles.FormFieldTitle}>
+          1: General
+        </span>
         <TextInput
           title={'Name *'}
           name={'name'}
@@ -143,8 +168,11 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           errorMessage={minLength(1, values.name)}
           triedToSubmit={triedToSubmit}
         />
+        <span className={formStyles.FormFieldTitle}>
+          2: Data
+        </span>
         <SelectDropdown
-          title={'Raster selection *'}
+          title={'Temporal raster *'}
           name={'raster'}
           placeholder={'- Search and select -'}
           value={values.raster}
@@ -158,6 +186,66 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           isAsync
           loadOptions={searchInput => fetchRasterLayers(selectedOrganisation.uuid, searchInput)}
         />
+        <CheckBox
+          title={'Use relative data'}
+          name={'relative'}
+          value={values.relative}
+          valueChanged={bool => handleValueChange('relative', bool)}
+        />
+        <DurationField
+          title={'Relative start'}
+          name={'relativeStart'}
+          value={values.relativeStart}
+          valueChanged={value => handleValueChange('relativeStart', value)}
+          validated
+          readOnly={!values.relative}
+        />
+        <DurationField
+          title={'Relative end'}
+          name={'relativeEnd'}
+          value={values.relativeEnd}
+          valueChanged={value => handleValueChange('relativeEnd', value)}
+          validated
+          readOnly={!values.relative}
+        />
+        <IntegerInput
+          title={'Snooze alarm after breaking threshold'}
+          name={'snoozeOn'}
+          value={values.snoozeOn}
+          valueChanged={handleInputChange}
+          validated
+        />
+        <IntegerInput
+          title={'Snooze alarm after no further impact'}
+          name={'snoozeOff'}
+          value={values.snoozeOff}
+          valueChanged={handleInputChange}
+          validated
+        />
+        <SelectDropdown
+          title={'Threshold comparison'}
+          name={'comparison'}
+          value={values.comparison}
+          valueChanged={value => handleValueChange('comparison', value)}
+          options={[
+            {
+              value: '>',
+              label: '>',
+              subLabel: 'higher than'
+            },
+            {
+              value: '<',
+              label: '<',
+              subLabel: 'lower than'
+            }
+          ]}
+          validated
+          isSearchable={false}
+          isClearable={false}
+        />
+        <span className={formStyles.FormFieldTitle}>
+          3: Rights
+        </span>
         <div
           className={formStyles.ButtonContainer}
         >
