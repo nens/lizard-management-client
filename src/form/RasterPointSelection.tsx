@@ -26,7 +26,11 @@ export const RasterPointSelection: React.FC<MyProps> = (props) => {
     name,
     title,
     rasterUuid,
-    point
+    point,
+    valueChanged,
+    validated,
+    errorMessage,
+    triedToSubmit,
   } = props;
 
   const [raster, setRaster] = useState<RasterLayerFromAPI | null>(null);
@@ -55,7 +59,7 @@ export const RasterPointSelection: React.FC<MyProps> = (props) => {
       if (!inBounds) return;
     };
 
-    props.valueChanged(location);
+    valueChanged(location);
   };
 
   return (
@@ -67,9 +71,13 @@ export const RasterPointSelection: React.FC<MyProps> = (props) => {
         {title}
       </span>
       <RasterPreview
+        name={name}
         raster={raster}
         location={point}
         setLocation={setLocation}
+        validated={validated}
+        errorMessage={errorMessage}
+        triedToSubmit={triedToSubmit}
       />
     </label>
   )

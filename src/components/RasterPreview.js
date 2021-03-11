@@ -36,7 +36,15 @@ const fetchAssets = async (raster, searchInput) => {
 };
 
 const RasterPreview = (props) => {
-  const { raster, location, setLocation } = props;
+  const {
+    name,
+    raster,
+    location,
+    setLocation,
+    validated,
+    errorMessage,
+    triedToSubmit
+  } = props;
 
   const chooseLocation = !!setLocation;
 
@@ -109,7 +117,7 @@ const RasterPreview = (props) => {
         >
           <SelectDropdown
             title={''}
-            name={'asset'}
+            name={name}
             placeholder={'- Search and select an asset -'}
             value={selectedAsset}
             valueChanged={value => {
@@ -121,7 +129,9 @@ const RasterPreview = (props) => {
               };
             }}
             options={[]}
-            validated
+            validated={validated}
+            errorMessage={errorMessage}
+            triedToSubmit={triedToSubmit}
             isAsync
             loadOptions={searchInput => fetchAssets(raster, searchInput)}
           />
