@@ -6,7 +6,8 @@ import formStyles from "../styles/Forms.module.css";
 export type Value = {
   value: string | number,
   label: string,
-  subLabel?: string | JSX.Element
+  subLabel?: string | JSX.Element,
+  subLabel2?: string | JSX.Element,
 };
 
 interface MyProps {
@@ -91,6 +92,16 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
       >
         {props.data.subLabel}
       </div>
+      <div
+        style={{
+          fontStyle: 'italic',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap'
+        }}
+      >
+        {props.data.subLabel2}
+      </div>
     </components.Option>
   );
 
@@ -124,7 +135,10 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
     option: (styles, { data }) => ({
       ...styles,
       display: 'grid',
-      gridTemplateColumns: data.subLabel ? '35% 65%' : '100%'
+      gridTemplateColumns: (
+        data.subLabel2 ? '35% 35% 30%' :
+        data.subLabel ? '35% 65%' : '100%'
+      )
     }),
     // Custom styling for the Indicator component
     indicatorsContainer: (styles) => ({
