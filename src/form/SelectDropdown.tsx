@@ -136,7 +136,7 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
       ...styles,
       display: 'grid',
       gridTemplateColumns: (
-        data.subLabel2 ? '35% 35% 30%' :
+        data.subLabel2 ? '35% 45% 20%' :
         data.subLabel ? '35% 65%' : '100%'
       )
     }),
