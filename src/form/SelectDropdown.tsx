@@ -120,6 +120,10 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
         }
       }
     },
+    menu: (styles) => ({
+      ...styles,
+      zIndex: 100 // to always show the menu dropdown
+    }),
     // Custom styling for Option list component
     option: (styles, { data }) => ({
       ...styles,
