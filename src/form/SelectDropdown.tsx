@@ -154,7 +154,7 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
             cacheOptions
             defaultOptions
             loadOptions={loadOptions}
-            defaultValue={value}
+            value={value}
             onChange={option => valueChanged(option)}
             isClearable={!readOnly && isClearable === undefined ? true : false}
             isSearchable={!readOnly && isSearchable}
@@ -173,7 +173,7 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
             styles={customStyles}
             placeholder={placeholder}
             options={options}
-            defaultValue={value}
+            value={value}
             onChange={option => valueChanged(option)}
             isLoading={isLoading}
             isClearable={!readOnly && isClearable === undefined ? true : false}
