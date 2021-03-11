@@ -2,50 +2,67 @@
 // And optionally let the user select a point on it (maybe
 // by searching for an asset and using its point)
 
-// If raster is passed it needs to be in the format of our /rasters/
-// endpoint, preferably the detail page; fields used are
-//   spatial_bounds
-//   options
-//   wms_info
-
 // Optional property 'setLocation' should be a function that sets the
-// location, in the form {'lat': <lat>, 'lon': <lon>}; if it is not
+// location, in the form {'lat': <lat>, 'lng': <lng>}; if it is not
 // passed, user cannot choose a location and this component is for
 // raster preview only.
 
-// That same location should be passed in as the 'location' prop.
-
-import React, { Component } from "react";
-import { FormattedMessage, injectIntl } from "react-intl";
-import { Map, Marker, TileLayer, WMSTileLayer } from "react-leaflet";
-import SelectAsset from "../components/SelectAsset";
-import styles from "./RasterPreview.module.css";
+import React, { useState } from "react";
+import { Map, Marker, TileLayer, WMSTileLayer, ZoomControl } from "react-leaflet";
+import { SelectDropdown } from "../form/SelectDropdown";
 import { mapBoxAccesToken} from '../mapboxConfig';
+import { convertToSelectObject } from "../utils/convertToSelectObject";
+import styles from "./RasterPreview.module.css";
 
-// Center of the map if no raster yet
-const DEFAULT_POSITION = [52.1858, 5.2677];
+// Helper function to fetch assets in async select dropdown
+const fetchAssets = async (raster, searchInput) => {
+  if (!searchInput) return;
 
+  const NUMBER_OF_RESULTS = 20;
+  const params=[`page_size=${NUMBER_OF_RESULTS}`, `q=${searchInput}`];
 
-class RasterPreview extends Component {
-  handleMapClick(e) {
-    if (!this.props.setLocation) {
-      return; // No map clicks if no setLocation
-    }
+  if (raster && raster.spatial_bounds) {
+    const { west, east, north, south } = raster.spatial_bounds;
+    params.push(`in_bbox=${west},${south},${east},${north}`);
+  };
 
-    this.props.setLocation({
+  const urlQuery = params.join('&');
+  const response = await fetch(`/api/v3/search/?${urlQuery}`, {
+    credentials: "same-origin"
+  });
+  const responseJSON = await response.json();
+
+  return responseJSON.results.map(asset => convertToSelectObject({lat: asset.view[0], lng: asset.view[1]}, asset.title))
+};
+
+const RasterPreview = (props) => {
+  const { raster, location, setLocation } = props;
+
+  const chooseLocation = !!setLocation;
+
+  // useState to temporarily store the selected asset
+  // from the asset select dropdown
+  const [selectedAsset, setSelectedAsset] = useState(null);
+
+  const handleMapClick = (e) => {
+    setLocation({
       lat: e.latlng.lat,
-      lon: e.latlng.lng
+      lng: e.latlng.lng
     });
-  }
 
-  formatWMSStyles(rawStyles) {
+    // if there is a selected asset from the dropdown, reset it
+    if (selectedAsset) setSelectedAsset(null);
+  };
+
+  const formatWMSStyles = (rawStyles) => {
     /*
        Needed for compound WMS styling, i.e. 'rain' which has three seperate raster stores
        behind the screens.
      */
     return typeof rawStyles === typeof {} ? rawStyles[0][0] : rawStyles;
-  }
-  formatWMSLayers(rawLayerNames) {
+  };
+
+  const formatWMSLayers = (rawLayerNames) => {
     /*
        Needed for compound WMS styling, i.e. 'rain' which has three seperate raster stores
        behind the screens.
@@ -53,83 +70,93 @@ class RasterPreview extends Component {
     return rawLayerNames.split(",")[0];
   }
 
-  render() {
-    const { raster, location, setLocation } = this.props;
-    const placeholderAssetSelection = this.props.intl.formatMessage({ id: "notification_apps.placeholder_asset_selection" });
+  // Center of the map if no raster yet
+  const DEFAULT_POSITION = [52.1858, 5.2677];
 
-    const marker = (
-      location ? [location.lat, location.lon] : DEFAULT_POSITION);
+  const marker = (
+    location ? [location.lat, location.lng] : DEFAULT_POSITION
+  );
 
-    const chooseLocation = !!setLocation;
+  let mapLocation;
 
-    let mapLocation;
-
-    if (raster && raster.spatial_bounds) {
-      mapLocation = {
-        bounds: [
-          [
-            raster.spatial_bounds.south,
-            raster.spatial_bounds.west
-          ],
-          [
-            raster.spatial_bounds.north,
-            raster.spatial_bounds.east
-          ]
+  if (raster && raster.spatial_bounds) {
+    mapLocation = {
+      bounds: [
+        [
+          raster.spatial_bounds.south,
+          raster.spatial_bounds.west
+        ],
+        [
+          raster.spatial_bounds.north,
+          raster.spatial_bounds.east
         ]
-      };
-    } else {
-      mapLocation = {
-        center: marker,
-        zoom: 8
-      };
-    }
+      ]
+    };
+  } else {
+    mapLocation = {
+      center: marker,
+      zoom: 8
+    };
+  };
 
-    return (
-      <div>
-        {chooseLocation ? (
-          <p className="text-muted">
-            <FormattedMessage
-              id="notifications_app.set_the_location"
-              defaultMessage="Set the location of this alarm by placing a marker (tap/click on the map)"
-            />
-          </p>) : null}
-
-        {chooseLocation ? (
-          <SelectAsset
-            placeholderText={placeholderAssetSelection}
-            setAsset={this.handleSetAsset}
-            spatialBounds={raster ? raster.spatial_bounds : null}
-            setLocation={setLocation}
-          />) : null}
-
-        <Map
-          onClick={this.handleMapClick.bind(this)}
-          className={styles.MapStyle}
-          {...mapLocation}
+  return (
+    <div
+      className={styles.MapContainer}
+    >
+      {chooseLocation ?
+        <div
+          className={styles.AssetSelect}
         >
-          <TileLayer
-            url={`https://api.mapbox.com/styles/v1/nelenschuurmans/ck8sgpk8h25ql1io2ccnueuj6/tiles/256/{z}/{x}/{y}@2x?access_token=${mapBoxAccesToken}`}
-            attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-            setLocation={this.props.setLocation}
+          <SelectDropdown
+            title={''}
+            name={'asset'}
+            placeholder={'- Search and select an asset -'}
+            value={selectedAsset}
+            valueChanged={value => {
+              setSelectedAsset(value);
+              if (value) {
+                setLocation(value.value);
+              } else {
+                setLocation(null);
+              };
+            }}
+            options={[]}
+            validated
+            isAsync
+            loadOptions={searchInput => fetchAssets(raster, searchInput)}
           />
-          {raster ? (
-            <WMSTileLayer
-              url="/wms/"
-              styles={this.formatWMSStyles(raster.options.styles)}
-              layers={this.formatWMSLayers(raster.wms_info.layer)}
-              opacity={0.9}
-            />) : null}
-          <TileLayer
-            url={`https://api.mapbox.com/styles/v1/nelenschuurmans/ck8sgpk8h25ql1io2ccnueuj6/tiles/256/{z}/{x}/{y}@2x?access_token=${mapBoxAccesToken}`}
-            attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-          />
-          {location ?
-           <Marker position={marker} />
-          : null}
-        </Map>
-      </div>
-    );
-  }
+        </div>
+      : null}
+      <Map
+        onClick={handleMapClick}
+        className={styles.MapStyle}
+        zoomControl={false}
+        {...mapLocation}
+      >
+        <ZoomControl position="bottomright"/>
+        <TileLayer
+          url={`https://api.mapbox.com/styles/v1/nelenschuurmans/ck8sgpk8h25ql1io2ccnueuj6/tiles/256/{z}/{x}/{y}@2x?access_token=${mapBoxAccesToken}`}
+          attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+          setLocation={setLocation}
+        />
+        {raster ? (
+          <WMSTileLayer
+            url="/wms/"
+            // @ts-ignore
+            styles={formatWMSStyles(raster.options.styles)}
+            layers={formatWMSLayers(raster.wms_info.layer)}
+            opacity={0.9}
+          />) : null}
+        <TileLayer
+          url={`https://api.mapbox.com/styles/v1/nelenschuurmans/ck8sgpk8h25ql1io2ccnueuj6/tiles/256/{z}/{x}/{y}@2x?access_token=${mapBoxAccesToken}`}
+          attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+        />
+        {location ?
+          <Marker position={marker} />
+        : null}
+      </Map>
+    </div>
+  );
 }
 
-export default injectIntl(RasterPreview);
+export default RasterPreview;

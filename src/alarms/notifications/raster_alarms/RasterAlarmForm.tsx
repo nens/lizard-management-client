@@ -3,6 +3,7 @@ import { connect, useSelector } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { ExplainSideColumn } from '../../../components/ExplainSideColumn';
 import { TextInput } from './../../../form/TextInput';
+import { RasterPointSelection } from '../../../form/RasterPointSelection';
 import { SelectDropdown } from '../../../form/SelectDropdown';
 import { SubmitButton } from '../../../form/SubmitButton';
 import { CancelButton } from '../../../form/CancelButton';
@@ -52,7 +53,7 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
   const initialValues = currentRasterAlarm && raster ? {
     name: currentRasterAlarm.name,
     raster: convertToSelectObject(raster.uuid!, raster.name),
-    coordinates: currentRasterAlarm.geometry.coordinates,
+    point: currentRasterAlarm.geometry ? {lat: currentRasterAlarm.geometry.coordinates[1], lng: currentRasterAlarm.geometry.coordinates[0]} : null, // point in format of {lat: number, lng: number}
     relative: !!currentRasterAlarm.relative_start || !!currentRasterAlarm.relative_end,
     relativeStart: currentRasterAlarm.relative_start ? toISOValue(rasterIntervalStringServerToDurationObject(currentRasterAlarm.relative_start)) : null,
     relativeEnd: currentRasterAlarm.relative_end ? toISOValue(rasterIntervalStringServerToDurationObject(currentRasterAlarm.relative_end)) : null,
@@ -64,7 +65,7 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
   } : {
     name: null,
     raster: null,
-    coordinates: null,
+    point: null,
     relative: false,
     relativeStart: null,
     relativeEnd: null,
@@ -181,10 +182,18 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           validated={!required('Please select a raster', values.raster)}
           errorMessage={required('Please select a raster', values.raster)}
           triedToSubmit={triedToSubmit}
-          // onFocus={handleFocus}
-          // onBlur={handleBlur}
           isAsync
           loadOptions={searchInput => fetchRasterLayers(selectedOrganisation.uuid, searchInput)}
+        />
+        <RasterPointSelection
+          title={'Map location *'}
+          name={'point'}
+          rasterUuid={values.raster ? values.raster.value : null}
+          point={values.point}
+          valueChanged={value => handleValueChange('point', value)}
+          validated={!required('Please select a location', values.point)}
+          errorMessage={required('Please select a location', values.point)}
+          triedToSubmit={triedToSubmit}
         />
         <CheckBox
           title={'Use relative data'}
