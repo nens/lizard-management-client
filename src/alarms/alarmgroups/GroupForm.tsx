@@ -29,7 +29,7 @@ const GroupForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pr
 
   const initialValues = currentGroup ? {
     name: currentGroup.name,
-    contacts: currentGroup.contacts.map((contact: any) => convertToSelectObject(contact.id, contact.first_name + ' ' + contact.last_name, contact.email))
+    contacts: currentGroup.contacts.map((contact: any) => convertToSelectObject(contact.id, contact.first_name + ' ' + contact.last_name))
   } : {
     name: null,
     contacts: []
@@ -94,7 +94,7 @@ const GroupForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pr
     })
     .then(response => response.json())
     .then(data => {
-      const contacts = data.results.map((contact: any) => convertToSelectObject(contact.id, contact.first_name + ' ' + contact.last_name, contact.email));
+      const contacts = data.results.map((contact: any) => convertToSelectObject(contact.id, contact.first_name + ' ' + contact.last_name, contact.email, contact.phone_number));
       setContacts(contacts);
     })
     .catch(console.error);
