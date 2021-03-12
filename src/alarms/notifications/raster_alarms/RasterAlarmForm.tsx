@@ -5,6 +5,9 @@ import { ExplainSideColumn } from '../../../components/ExplainSideColumn';
 import { TextInput } from './../../../form/TextInput';
 import { RasterPointSelection } from '../../../form/RasterPointSelection';
 import { SelectDropdown } from '../../../form/SelectDropdown';
+import { CheckBox } from '../../../form/CheckBox';
+import { RelativeField } from '../../../form/RelativeField';
+import { IntegerInput } from '../../../form/IntegerInput';
 import { SubmitButton } from '../../../form/SubmitButton';
 import { CancelButton } from '../../../form/CancelButton';
 import { useForm, Values } from '../../../form/useForm';
@@ -13,12 +16,10 @@ import { addNotification } from '../../../actions';
 import { getSelectedOrganisation } from '../../../reducers';
 import { fetchRasterLayersV4, RasterLayerFromAPI } from '../../../api/rasters';
 import { convertToSelectObject } from '../../../utils/convertToSelectObject';
+import { convertDurationObjToSeconds } from '../../../utils/dateUtils';
+import { rasterIntervalStringServerToDurationObject } from '../../../utils/isoUtils';
 import formStyles from './../../../styles/Forms.module.css';
 import rasterAlarmIcon from "../../../images/alarm@3x.svg";
-import { CheckBox } from '../../../form/CheckBox';
-import { DurationField } from '../../../form/DurationField';
-import { IntegerInput } from '../../../form/IntegerInput';
-import { rasterIntervalStringServerToDurationObject, toISOValue } from '../../../utils/isoUtils';
 
 interface Props {
   currentRasterAlarm?: any,
@@ -55,8 +56,8 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
     raster: convertToSelectObject(raster.uuid!, raster.name),
     point: currentRasterAlarm.geometry ? {lat: currentRasterAlarm.geometry.coordinates[1], lng: currentRasterAlarm.geometry.coordinates[0]} : null, // point in format of {lat: number, lng: number}
     relative: !!currentRasterAlarm.relative_start || !!currentRasterAlarm.relative_end,
-    relativeStart: currentRasterAlarm.relative_start ? toISOValue(rasterIntervalStringServerToDurationObject(currentRasterAlarm.relative_start)) : null,
-    relativeEnd: currentRasterAlarm.relative_end ? toISOValue(rasterIntervalStringServerToDurationObject(currentRasterAlarm.relative_end)) : null,
+    relativeStart: currentRasterAlarm.relative_start ? convertDurationObjToSeconds(rasterIntervalStringServerToDurationObject(currentRasterAlarm.relative_start)) : null,
+    relativeEnd: currentRasterAlarm.relative_end ? convertDurationObjToSeconds(rasterIntervalStringServerToDurationObject(currentRasterAlarm.relative_end)) : null,
     snoozeOn: currentRasterAlarm.snooze_sign_on,
     snoozeOff: currentRasterAlarm.snooze_sign_off,
     comparison: convertToSelectObject(currentRasterAlarm.comparison),
@@ -78,8 +79,20 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
 
   const onSubmit = (values: Values) => {
     const body = {
+      active: true,
       name: values.name,
-      raster: values.raster.value
+      raster: values.raster.value,
+      geometry: {
+        type: "Point",
+        coordinates: [values.point.lng, values.point.lat, 0.0]
+      },
+      relative_start: values.relativeStart,
+      relative_end: values.relativeEnd,
+      comparison: values.comparison.value,
+      thresholds: values.thresholds,
+      snooze_sign_on: values.snoozeOn,
+      snooze_sign_off: values.snoozeOff,
+      messages: []
     };
 
     if (!currentRasterAlarm) {
@@ -107,7 +120,7 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
       })
       .catch(console.error);
     } else {
-      fetch(`/api/v4/contacts/${currentRasterAlarm.uuid}/`, {
+      fetch(`/api/v4/rasteralarms/${currentRasterAlarm.uuid}/`, {
         credentials: "same-origin",
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -201,22 +214,33 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           value={values.relative}
           valueChanged={bool => handleValueChange('relative', bool)}
         />
-        <DurationField
-          title={'Relative start'}
-          name={'relativeStart'}
-          value={values.relativeStart}
-          valueChanged={value => handleValueChange('relativeStart', value)}
-          validated
-          readOnly={!values.relative}
-        />
-        <DurationField
-          title={'Relative end'}
-          name={'relativeEnd'}
-          value={values.relativeEnd}
-          valueChanged={value => handleValueChange('relativeEnd', value)}
-          validated
-          readOnly={!values.relative}
-        />
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: '50% 50%',
+            columnGap: 10
+          }}
+        >
+          <RelativeField
+            title={'Relative start'}
+            name={'relativeStart'}
+            value={values.relativeStart}
+            valueChanged={value => handleValueChange('relativeStart', value)}
+            validated
+            triedToSubmit={triedToSubmit}
+            readOnly={!values.relative}
+          />
+          <RelativeField
+            title={'Relative end'}
+            name={'relativeEnd'}
+            value={values.relativeEnd}
+            valueChanged={value => handleValueChange('relativeEnd', value)}
+            validated={values.relativeEnd > values.relativeStart}
+            errorMessage={'Error!'}
+            triedToSubmit={triedToSubmit}
+            readOnly={!values.relative}
+          />
+        </div>
         <IntegerInput
           title={'Snooze alarm after breaking threshold'}
           name={'snoozeOn'}
