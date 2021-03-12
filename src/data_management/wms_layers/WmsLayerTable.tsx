@@ -160,7 +160,8 @@ export const WmsLayerTable = (props:any) =>  {
           newItemOnClick={handleNewRasterClick}
           filterOptions={[
             {value: 'name__icontains=', label: 'Name'},
-            {value: 'datasets__slug__icontains=', label: 'Datasets slug'},
+            // not needed for now
+            // {value: 'datasets__slug__icontains=', label: 'Datasets slug'},
             {value: 'uuid=', label: 'UUID'},
           ]}
         />

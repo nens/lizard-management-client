@@ -264,7 +264,8 @@ export const ScenarioTable = () =>  {
             {value: 'uuid=', label: 'UUID'},
             {value: 'username__icontains=', label: 'Username'},
             {value: 'model_name__icontains=', label: 'Model name'},
-            {value: 'model_revision__icontains=', label: 'Model revision'},
+            // not needed for now
+            // {value: 'model_revision__icontains=', label: 'Model revision'},
           ]}
         />
         { 
