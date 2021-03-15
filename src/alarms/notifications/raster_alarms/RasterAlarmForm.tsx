@@ -236,22 +236,29 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
             readOnly={!values.relative}
           />
         </div>
-        <div className={styles.GridContainer}>
-          <IntegerInput
-            title={'Snooze alarm after breaking threshold'}
-            name={'snoozeOn'}
-            value={values.snoozeOn}
-            valueChanged={handleInputChange}
-            validated
-          />
-          <IntegerInput
-            title={'Snooze alarm after no further impact'}
-            name={'snoozeOff'}
-            value={values.snoozeOff}
-            valueChanged={handleInputChange}
-            validated
-          />
-        </div>
+        <label
+          className={formStyles.Label}
+        >
+          <span className={formStyles.LabelTitle}>
+            Snoozing
+          </span>
+          <div className={styles.GridContainer}>
+            <IntegerInput
+              title={'After breaking threshold'}
+              name={'snoozeOn'}
+              value={values.snoozeOn}
+              valueChanged={handleInputChange}
+              validated
+            />
+            <IntegerInput
+              title={'After no further impact'}
+              name={'snoozeOff'}
+              value={values.snoozeOff}
+              valueChanged={handleInputChange}
+              validated
+            />
+          </div>
+        </label>
         <SelectDropdown
           title={'Threshold comparison'}
           name={'comparison'}
