@@ -18,6 +18,7 @@ import { fetchRasterLayersV4, RasterLayerFromAPI } from '../../../api/rasters';
 import { convertToSelectObject } from '../../../utils/convertToSelectObject';
 import { convertDurationObjToSeconds } from '../../../utils/dateUtils';
 import { rasterIntervalStringServerToDurationObject } from '../../../utils/isoUtils';
+import styles from './RasterAlarmForm.module.css';
 import formStyles from './../../../styles/Forms.module.css';
 import rasterAlarmIcon from "../../../images/alarm@3x.svg";
 
@@ -214,13 +215,7 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           value={values.relative}
           valueChanged={bool => handleValueChange('relative', bool)}
         />
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '50% 50%',
-            columnGap: 10
-          }}
-        >
+        <div className={styles.GridContainer}>
           <RelativeField
             title={'Relative start'}
             name={'relativeStart'}
@@ -241,20 +236,22 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
             readOnly={!values.relative}
           />
         </div>
-        <IntegerInput
-          title={'Snooze alarm after breaking threshold'}
-          name={'snoozeOn'}
-          value={values.snoozeOn}
-          valueChanged={handleInputChange}
-          validated
-        />
-        <IntegerInput
-          title={'Snooze alarm after no further impact'}
-          name={'snoozeOff'}
-          value={values.snoozeOff}
-          valueChanged={handleInputChange}
-          validated
-        />
+        <div className={styles.GridContainer}>
+          <IntegerInput
+            title={'Snooze alarm after breaking threshold'}
+            name={'snoozeOn'}
+            value={values.snoozeOn}
+            valueChanged={handleInputChange}
+            validated
+          />
+          <IntegerInput
+            title={'Snooze alarm after no further impact'}
+            name={'snoozeOff'}
+            value={values.snoozeOff}
+            valueChanged={handleInputChange}
+            validated
+          />
+        </div>
         <SelectDropdown
           title={'Threshold comparison'}
           name={'comparison'}

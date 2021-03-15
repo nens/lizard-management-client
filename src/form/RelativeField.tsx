@@ -5,6 +5,7 @@ import { fromISOValue, toISOValue } from '../utils/isoUtils';
 import { convertDurationObjToSeconds, convertSecondsToDurationObject } from '../utils/dateUtils';
 import { convertToSelectObject } from '../utils/convertToSelectObject';
 import formStyles from "../styles/Forms.module.css";
+import styles from './RelativeField.module.css';
 
 interface Props {
   title: string,
@@ -33,7 +34,6 @@ export function RelativeField (props: Props) {
     triedToSubmit,
     readOnly
   } = props;
-  console.log(validated)
 
   const [selection, setSelection] = useState<Value>(convertToSelectObject('Before'));
   useEffect(() => {
@@ -52,50 +52,50 @@ export function RelativeField (props: Props) {
       <span className={formStyles.LabelTitle}>
         {title}
       </span>
-      <SelectDropdown
-        title={''}
-        name={name}
-        value={selection}
-        valueChanged={e => {
-          if (!e) return;
-
-          // @ts-ignore
-          setSelection(e);
-
-          if (value) {
-            // @ts-ignore
-            if (e.value === 'Before') {
-              valueChanged(-Math.abs(value));
+      <div className={styles.RelativeFieldContainer}>
+        <div className={styles.SelectionContainer}>
+          <SelectDropdown
+            title={''}
+            name={name}
+            value={selection}
+            valueChanged={e => {
+              if (!e) return;
               // @ts-ignore
-            } else if (e.value === 'After') {
-              valueChanged(Math.abs(value));
-            };
-          };
-        }}
-        options={options}
-        validated={validated}
-        isSearchable={false}
-        isClearable={false}
-        triedToSubmit={triedToSubmit}
-        errorMessage={errorMessage}
-        readOnly={readOnly}
-      />
-      <DurationField
-        title={''}
-        name={name}
-        value={value ? toISOValue(convertSecondsToDurationObject(value)) : null}
-        valueChanged={e => {
-          if (selection) {
+              setSelection(e);
+              if (value) {
+                // @ts-ignore
+                if (e.value === 'Before') {
+                  valueChanged(-Math.abs(value));
+                  // @ts-ignore
+                } else if (e.value === 'After') {
+                  valueChanged(Math.abs(value));
+                };
+              };
+            }}
+            options={options}
+            validated={validated}
+            isSearchable={false}
+            isClearable={false}
+            triedToSubmit={triedToSubmit}
+            errorMessage={errorMessage}
+            readOnly={readOnly}
+          />
+        </div>
+        <DurationField
+          title={''}
+          name={name}
+          value={value ? toISOValue(convertSecondsToDurationObject(value)) : null}
+          valueChanged={e => {
             if (selection.value === 'Before') {
               valueChanged(-convertDurationObjToSeconds(fromISOValue(e)));
-            } else { // selection.value === 'After'
+            } else if (selection.value === 'After')  {
               valueChanged(convertDurationObjToSeconds(fromISOValue(e)));
             };
-          };
-        }}
-        validated={validated}
-        readOnly={readOnly}
-      />
+          }}
+          validated={validated}
+          readOnly={readOnly}
+        />
+      </div>
     </label>
   )
 };
