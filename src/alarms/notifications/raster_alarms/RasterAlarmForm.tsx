@@ -7,6 +7,7 @@ import { RasterPointSelection } from '../../../form/RasterPointSelection';
 import { SelectDropdown } from '../../../form/SelectDropdown';
 import { CheckBox } from '../../../form/CheckBox';
 import { RelativeField } from '../../../form/RelativeField';
+import { AlarmThresholds } from '../../../form/AlarmThresholds';
 import { IntegerInput } from '../../../form/IntegerInput';
 import { SubmitButton } from '../../../form/SubmitButton';
 import { CancelButton } from '../../../form/CancelButton';
@@ -260,7 +261,7 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           </div>
         </label>
         <SelectDropdown
-          title={'Threshold comparison'}
+          title={'Alarm thresholds'}
           name={'comparison'}
           value={values.comparison}
           valueChanged={value => handleValueChange('comparison', value)}
@@ -279,6 +280,15 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           validated
           isSearchable={false}
           isClearable={false}
+        />
+        <AlarmThresholds
+          title={'Threshold values'}
+          name={'thresholds'}
+          comparison={values.comparison.value}
+          thresholds={values.thresholds}
+          valueChanged={threshold => handleValueChange('thresholds', [...values.thresholds, threshold])}
+          valueRemoved={thresholds => handleValueChange('thresholds', thresholds)}
+          validated
         />
         <span className={formStyles.FormFieldTitle}>
           3: Rights
