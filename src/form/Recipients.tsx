@@ -1,17 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { getSelectedOrganisation } from '../reducers';
 import { SelectDropdown, Value } from './SelectDropdown';
-import formStyles from "../styles/Forms.module.css";
 import { convertToSelectObject } from '../utils/convertToSelectObject';
-import { getUuidFromUrl } from '../utils/getUuidFromUrl';
+import formStyles from "../styles/Forms.module.css";
+import buttonStyles from "../styles/Buttons.module.css";
 
-interface Message {
-  contact_group: string, // url
-  message: string // url
-}
-
-interface Recipient {
+export interface Message {
   contact_group: Value,
   message: Value
 };
@@ -19,9 +12,10 @@ interface Recipient {
 interface MyProps {
   title: string,
   name: string,
+  organisation: string,
   messages: Message[],
-  valueChanged: (recipients: Recipient[]) => void,
-  valueRemoved: (recipients: Recipient[]) => void,
+  valueChanged: (recipients: Message[]) => void,
+  valueRemoved: (recipients: Message[]) => void,
   clearInput?: (name: string) => void,
   validated: boolean,
   errorMessage?: string | false,
@@ -36,6 +30,7 @@ export function Recipients (props: MyProps) {
   const {
     title,
     name,
+    organisation,
     messages,
     valueChanged,
     valueRemoved,
@@ -47,52 +42,54 @@ export function Recipients (props: MyProps) {
     // readOnly
   } = props;
 
-  const selectedOrganisation = useSelector(getSelectedOrganisation);
-
   const [availableGroups, setAvailableGroups] = useState<Value[]>([]);
   const [availableTemplates, setAvailableTemplates] = useState<Value[]>([]);
 
+  // useEffect to fetch available contact groups and messages
+  // and to update the list of recipients when component first mounted
   useEffect(() => {
-    // Fetch list of available contact groups when component first mounted
-    fetch(`/api/v4/contactgroups/?organisation__uuid=${selectedOrganisation.uuid}&page_size=1000`, {
-      credentials: 'same-origin'
-    }).then(
-      response => response.json()
-    ).then(data => {
-      setAvailableGroups(data.results.map((group: any) => convertToSelectObject(group.id, group.name)));
-    }).catch(console.error);
+    (async () => {
+      // Fetch list of available groups
+      const groupJSON = await fetch(`/api/v4/contactgroups/?organisation__uuid=${organisation}&page_size=1000`, {
+        credentials: 'same-origin'
+      }).then(
+        response => response.json()
+      );
 
+      // Fetch list of available templates
+      const templateJSON = await fetch(`/api/v4/messages/?organisation__uuid=${organisation}&page_size=1000`, {
+        credentials: 'same-origin'
+      }).then(
+        response => response.json()
+      );
 
-    // Fetch list of available templates when component first mounted
-    fetch(`/api/v4/messages/?organisation__uuid=${selectedOrganisation.uuid}&page_size=1000`, {
-      credentials: 'same-origin'
-    }).then(
-      response => response.json()
-    ).then(data => {
-      setAvailableTemplates(data.results.map((message: any) => convertToSelectObject(message.id, message.name)));
-    }).catch(console.error);
-  }, [selectedOrganisation]);
+      const listOfGroups: Value[] = groupJSON.results.map((group: any) => convertToSelectObject(group.id, group.name));
+      const listOfTemplates: Value[] = templateJSON.results.map((template: any) => convertToSelectObject(template.id, template.name));
 
-  const [recipients, setRecipients] = useState<Recipient[]>([]);
+      setAvailableGroups(listOfGroups);
+      setAvailableTemplates(listOfTemplates);
 
-  useEffect(() => {
-    const listOfRecipients = messages.map(message => {
-      const groupId = parseInt(getUuidFromUrl(message.contact_group));
-      const templateId = parseInt(getUuidFromUrl(message.message));
+      // Update the initial list of recipients by adding group name and template name as labels
+      const listOfRecipients = messages.map(message => {
+        const groupId = message.contact_group.value;
+        const templateId = message.message.value;
 
-      const selectedGroup = availableGroups.find(group => group.value === groupId);
-      const groupName = selectedGroup ? selectedGroup.label : '';
+        const selectedGroup = listOfGroups.find(group => group.value === groupId);
+        const groupName = selectedGroup ? selectedGroup.label : '';
 
-      const selectedTemplate = availableTemplates.find(template => template.value === templateId);
-      const templateName = selectedTemplate ? selectedTemplate.label : '';
-      
-      return {
-        contact_group: convertToSelectObject(groupId, groupName),
-        message: convertToSelectObject(templateId, templateName)
-      };
-    });
-    setRecipients(listOfRecipients);
-  }, [messages, availableGroups, availableTemplates]);
+        const selectedTemplate = listOfTemplates.find(template => template.value === templateId);
+        const templateName = selectedTemplate ? selectedTemplate.label : '';
+
+        return {
+          contact_group: convertToSelectObject(groupId, groupName),
+          message: convertToSelectObject(templateId, templateName)
+        };
+      });
+
+      return valueChanged(listOfRecipients);
+    })();
+    // eslint-disable-next-line
+  }, [organisation]); // re-fetch list of available groups and templates when selected organisation is changed for new alarm
 
   return (
     <label
@@ -105,20 +102,21 @@ export function Recipients (props: MyProps) {
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: '50% 50%',
-          columnGap: 10
+          gridTemplateColumns: '45fr 45fr 10fr',
+          columnGap: 20
         }}
       >
         <div>Group</div>
         <div>Template message</div>
-        {recipients.map((recipient, i) => (
+        <div />
+        {messages.map((recipient, i) => (
           <React.Fragment key={i}>
             <SelectDropdown
               title={''}
               name={'contactGroup' + i}
               value={recipient.contact_group}
               valueChanged={value => {
-                setRecipients(recipients.map((re, idx) => {
+                const newRecipientList = messages.map((re, idx) => {
                   if (idx === i) {
                     return {
                       ...re,
@@ -126,7 +124,8 @@ export function Recipients (props: MyProps) {
                     };
                   };
                   return re;
-                }))
+                });
+                valueChanged(newRecipientList);
               }}
               options={availableGroups}
               validated
@@ -138,7 +137,7 @@ export function Recipients (props: MyProps) {
               name={'message' + i}
               value={recipient.message}
               valueChanged={value => {
-                setRecipients(recipients.map((re, idx) => {
+                const newRecipientList = messages.map((re, idx) => {
                   if (idx === i) {
                     return {
                       ...re,
@@ -146,20 +145,30 @@ export function Recipients (props: MyProps) {
                     };
                   };
                   return re;
-                }))
+                });
+                valueChanged(newRecipientList);
               }}
               options={availableTemplates}
               validated
               dropUp
               isClearable={false}
             />
+            <button
+              className={`${buttonStyles.Button} ${buttonStyles.Link}`}
+              onClick={e => {
+                e.preventDefault();
+                valueRemoved(messages.filter((_, idx) => idx !== i))
+              }}
+            >
+              REMOVE
+            </button>
           </React.Fragment>
         ))}
         <button
           onClick={e => {
             e.preventDefault();
-            setRecipients([
-              ...recipients,
+            valueChanged([
+              ...messages,
               {
                 contact_group: convertToSelectObject(''),
                 message: convertToSelectObject('')

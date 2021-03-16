@@ -8,7 +8,7 @@ import { SelectDropdown } from '../../../form/SelectDropdown';
 import { CheckBox } from '../../../form/CheckBox';
 import { RelativeField } from '../../../form/RelativeField';
 import { AlarmThresholds } from '../../../form/AlarmThresholds';
-import { Recipients } from '../../../form/Recipients';
+import { Message, Recipients } from '../../../form/Recipients';
 import { IntegerInput } from '../../../form/IntegerInput';
 import { SubmitButton } from '../../../form/SubmitButton';
 import { CancelButton } from '../../../form/CancelButton';
@@ -20,6 +20,7 @@ import { fetchRasterLayersV4, RasterLayerFromAPI } from '../../../api/rasters';
 import { convertToSelectObject } from '../../../utils/convertToSelectObject';
 import { convertDurationObjToSeconds } from '../../../utils/dateUtils';
 import { rasterIntervalStringServerToDurationObject } from '../../../utils/isoUtils';
+import { getUuidFromUrl } from '../../../utils/getUuidFromUrl';
 import styles from './RasterAlarmForm.module.css';
 import formStyles from './../../../styles/Forms.module.css';
 import rasterAlarmIcon from "../../../images/alarm@3x.svg";
@@ -65,7 +66,14 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
     snoozeOff: currentRasterAlarm.snooze_sign_off,
     comparison: convertToSelectObject(currentRasterAlarm.comparison),
     thresholds: currentRasterAlarm.thresholds,
-    messages: currentRasterAlarm.messages
+    messages: currentRasterAlarm.messages.map((message: any) => {
+      const groupId = parseInt(getUuidFromUrl(message.contact_group));
+      const templateId = parseInt(getUuidFromUrl(message.message));
+      return {
+        contact_group: convertToSelectObject(groupId),
+        message: convertToSelectObject(templateId)
+      };
+    })
   } : {
     name: null,
     raster: null,
@@ -95,7 +103,10 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
       thresholds: values.thresholds,
       snooze_sign_on: values.snoozeOn,
       snooze_sign_off: values.snoozeOff,
-      messages: []
+      messages: values.messages.map((message: Message) => ({
+        contact_group: message.contact_group.value,
+        message: message.message.value
+      }))
     };
 
     if (!currentRasterAlarm) {
@@ -297,9 +308,10 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
         <Recipients
           title={'Recipients'}
           name={'messages'}
-          messages={currentRasterAlarm.messages}
-          valueChanged={recipients => console.log(recipients)}
-          valueRemoved={recipients => console.log(recipients)}
+          organisation={currentRasterAlarm ? currentRasterAlarm.organisation.uuid : selectedOrganisation.uuid}
+          messages={values.messages}
+          valueChanged={recipients => handleValueChange('messages', recipients)}
+          valueRemoved={recipients => handleValueChange('messages', recipients)}
           validated
         />
         <div

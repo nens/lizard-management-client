@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { TextInput } from '../form/TextInput';
 import formStyles from "../styles/Forms.module.css";
+import buttonStyles from "../styles/Buttons.module.css";
 
 interface Threshold {
   value: number,
@@ -53,33 +54,26 @@ export function AlarmThresholds (props: MyProps) {
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: '50% 50%',
-          columnGap: 10
+          gridTemplateColumns: '45fr 45fr 10fr',
+          columnGap: 20
         }}
       >
         <div>Value</div>
         <div>Name</div>
+        <div />
         {thresholds.map((threshold, i) => (
           <React.Fragment key={i}>
             <div>{comparison} {threshold.value}</div>
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between'
+            <div>{threshold.warning_level}</div>
+            <button
+              className={`${buttonStyles.Button} ${buttonStyles.Link}`}
+              onClick={e => {
+                e.preventDefault();
+                valueRemoved(thresholds.filter((_, idx) => idx !== i))
               }}
             >
-              <span>{threshold.warning_level}</span>
-              <span
-                onClick={() => valueRemoved(thresholds.filter((_, idx) => idx !== i))}
-                style={{
-                  cursor: 'pointer',
-                  color: '#707070',
-                  fontWeight: 'bold'
-                }}
-              >
-                &#10007;
-              </span>
-            </div>
+              REMOVE
+            </button>
           </React.Fragment>
         ))}
         <TextInput
@@ -110,6 +104,7 @@ export function AlarmThresholds (props: MyProps) {
           clearInput={() => setThreshold({...threshold, warning_level: ''})}
           validated
         />
+        <div />
         <button
           onClick={e => {
             e.preventDefault();
