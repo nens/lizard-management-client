@@ -1,25 +1,25 @@
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
 module.exports = function(app) {
-  const password = process.env.PROXY_PASSWORD;
-  const username = process.env.PROXY_USERNAME;
-
-  const stagingUrl = 'https://nxt3.staging.lizard.net/';
-  // const prodUrl = 'https://demo.lizard.net/';
+  const env_prefix = process.env.PROXY_PREFIX || 'LIZARD';
+  const url = process.env[env_prefix + '_URL'] || 'https://nens.lizard.net/';
+  const apiKey = process.env[env_prefix + '_API_KEY'];
 
   let proxyMiddleware;
-  if (!password || !username) {
-    console.log("Proceeding without username password !");
+  console.log(`Proxying to ${url}.`);
+
+  if (!apiKey) {
+    console.log('Without authentication.');
     proxyMiddleware = createProxyMiddleware({
-      target: stagingUrl,
+      target: url,
       changeOrigin: true,
     });
   } else {
     // Use HTTP basic auth, works with Lizard only
     proxyMiddleware = createProxyMiddleware({
-      target: stagingUrl,
+      target: url,
       changeOrigin: true,
-      auth: `${username}:${password}`,
+      auth: `__KEY__:${apiKey}`,
     });
   }
 
