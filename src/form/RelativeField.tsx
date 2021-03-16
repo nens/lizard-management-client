@@ -60,14 +60,12 @@ export function RelativeField (props: Props) {
             value={selection}
             valueChanged={e => {
               if (!e) return;
-              // @ts-ignore
-              setSelection(e);
+              const event = e as Value;
+              setSelection(event);
               if (value) {
-                // @ts-ignore
-                if (e.value === 'Before') {
+                if (event.value === 'Before') {
                   valueChanged(-Math.abs(value));
-                  // @ts-ignore
-                } else if (e.value === 'After') {
+                } else if (event.value === 'After') {
                   valueChanged(Math.abs(value));
                 };
               };

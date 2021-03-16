@@ -24,6 +24,7 @@ interface MyProps {
   isClearable?: boolean,
   isLoading?: boolean,
   isMulti?: boolean,
+  dropUp?: boolean,
   form?: string,
   isAsync?: boolean,
   loadOptions?: (inputValue: string) => Promise<any>, // loadOptions is required if isAsync === true
@@ -46,6 +47,7 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
     isClearable,
     isLoading,
     isMulti,
+    dropUp,
     isAsync,
     loadOptions,
     form,
@@ -164,6 +166,7 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
             isSearchable={!readOnly && isSearchable}
             menuIsOpen={readOnly ? false : undefined}
             isMulti={isMulti}
+            menuPlacement={dropUp ? 'top' : undefined}
             onFocus={onFocus}
             onBlur={onBlur}
             filterOption={createFilter({ ignoreAccents: false })}
@@ -184,6 +187,7 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
             isSearchable={!readOnly && isSearchable}
             menuIsOpen={readOnly ? false : undefined}
             isMulti={isMulti}
+            menuPlacement={dropUp ? 'top' : undefined}
             onFocus={onFocus}
             onBlur={onBlur}
             filterOption={createFilter({ ignoreAccents: false })}

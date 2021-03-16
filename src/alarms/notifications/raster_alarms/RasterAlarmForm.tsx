@@ -8,6 +8,7 @@ import { SelectDropdown } from '../../../form/SelectDropdown';
 import { CheckBox } from '../../../form/CheckBox';
 import { RelativeField } from '../../../form/RelativeField';
 import { AlarmThresholds } from '../../../form/AlarmThresholds';
+import { Recipients } from '../../../form/Recipients';
 import { IntegerInput } from '../../../form/IntegerInput';
 import { SubmitButton } from '../../../form/SubmitButton';
 import { CancelButton } from '../../../form/CancelButton';
@@ -293,6 +294,14 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
         <span className={formStyles.FormFieldTitle}>
           3: Rights
         </span>
+        <Recipients
+          title={'Recipients'}
+          name={'messages'}
+          messages={currentRasterAlarm.messages}
+          valueChanged={recipients => console.log(recipients)}
+          valueRemoved={recipients => console.log(recipients)}
+          validated
+        />
         <div
           className={formStyles.ButtonContainer}
         >
