@@ -52,33 +52,31 @@ export function RelativeField (props: Props) {
       <span className={formStyles.SecondLabel}>
         {title}
       </span>
-      <div className={styles.RelativeFieldContainer}>
-        <div className={styles.SelectionContainer}>
-          <SelectDropdown
-            title={''}
-            name={name}
-            value={selection}
-            valueChanged={e => {
-              if (!e) return;
-              const event = e as Value;
-              setSelection(event);
-              if (value) {
-                if (event.value === 'Before') {
-                  valueChanged(-Math.abs(value));
-                } else if (event.value === 'After') {
-                  valueChanged(Math.abs(value));
-                };
+      <div>
+        <SelectDropdown
+          title={''}
+          name={name}
+          value={selection}
+          valueChanged={e => {
+            if (!e) return;
+            const event = e as Value;
+            setSelection(event);
+            if (value) {
+              if (event.value === 'Before') {
+                valueChanged(-Math.abs(value));
+              } else if (event.value === 'After') {
+                valueChanged(Math.abs(value));
               };
-            }}
-            options={options}
-            validated={validated}
-            isSearchable={false}
-            isClearable={false}
-            triedToSubmit={triedToSubmit}
-            errorMessage={errorMessage}
-            readOnly={readOnly}
-          />
-        </div>
+            };
+          }}
+          options={options}
+          validated={validated}
+          isSearchable={false}
+          isClearable={false}
+          triedToSubmit={triedToSubmit}
+          errorMessage={errorMessage}
+          readOnly={readOnly}
+        />
         <DurationField
           title={''}
           name={name}

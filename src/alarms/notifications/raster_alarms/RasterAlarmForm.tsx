@@ -242,7 +242,7 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
               name={'relativeEnd'}
               value={values.relativeEnd}
               valueChanged={value => handleValueChange('relativeEnd', value)}
-              validated={values.relativeEnd > values.relativeStart}
+              validated={values.relativeEnd >= values.relativeStart}
               errorMessage={'Please select "Relative End" after "Relative Start"'}
               triedToSubmit={triedToSubmit}
               readOnly={!values.relative}
@@ -294,7 +294,7 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
               value={values.snoozeOn}
               valueChanged={handleInputChange}
               validated={values.snoozeOn >= 1}
-              errorMessage={'Ensure this value is greater than or equal to 1'}
+              errorMessage={'Please ensure this value is greater than or equal to 1'}
               triedToSubmit={triedToSubmit}
             />
             <IntegerInput
@@ -303,7 +303,7 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
               value={values.snoozeOff}
               valueChanged={handleInputChange}
               validated={values.snoozeOff >= 1}
-              errorMessage={'Ensure this value is greater than or equal to 1'}
+              errorMessage={'Please ensure this value is greater than or equal to 1'}
               triedToSubmit={triedToSubmit}
             />
           </div>
