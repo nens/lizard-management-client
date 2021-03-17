@@ -276,7 +276,9 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           thresholds={values.thresholds}
           valueChanged={threshold => handleValueChange('thresholds', [...values.thresholds, threshold])}
           valueRemoved={thresholds => handleValueChange('thresholds', thresholds)}
-          validated
+          validated={values.thresholds.length > 0}
+          errorMessage={'Please add at least one threshold to the alarm'}
+          triedToSubmit={triedToSubmit}
         />
         <label
           className={formStyles.Label}
@@ -312,6 +314,7 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           valueChanged={recipients => handleValueChange('messages', recipients)}
           valueRemoved={recipients => handleValueChange('messages', recipients)}
           validated
+          triedToSubmit={triedToSubmit}
         />
         <div
           className={formStyles.ButtonContainer}

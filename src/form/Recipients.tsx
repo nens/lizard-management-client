@@ -36,10 +36,8 @@ export function Recipients (props: MyProps) {
     valueRemoved,
     // onFocus,
     // onBlur,
-    // validated,
-    // errorMessage,
-    // triedToSubmit,
-    // readOnly
+    triedToSubmit,
+    readOnly
   } = props;
 
   const [availableGroups, setAvailableGroups] = useState<Value[]>([]);
@@ -122,9 +120,12 @@ export function Recipients (props: MyProps) {
                 valueChanged(newRecipientList);
               }}
               options={availableGroups}
-              validated
+              validated={!!recipient.contact_group.value}
+              errorMessage={'Please select a group'}
+              triedToSubmit={triedToSubmit}
               dropUp
               isClearable={false}
+              readOnly={readOnly}
             />
             <SelectDropdown
               title={''}
@@ -143,9 +144,12 @@ export function Recipients (props: MyProps) {
                 valueChanged(newRecipientList);
               }}
               options={availableTemplates}
-              validated
+              validated={!!recipient.message.value}
+              errorMessage={'Please select a template'}
+              triedToSubmit={triedToSubmit}
               dropUp
               isClearable={false}
+              readOnly={readOnly}
             />
             <button
               className={`${buttonStyles.Button} ${buttonStyles.Link}`}

@@ -35,10 +35,10 @@ export function AlarmThresholds (props: MyProps) {
     valueRemoved,
     // onFocus,
     // onBlur,
-    // validated,
-    // errorMessage,
-    // triedToSubmit,
-    // readOnly
+    validated,
+    errorMessage,
+    triedToSubmit,
+    readOnly
   } = props;
 
   const [threshold, setThreshold] = useState<Threshold>({value: 0, warning_level: ''});
@@ -83,6 +83,7 @@ export function AlarmThresholds (props: MyProps) {
             });
           }}
           validated
+          readOnly={readOnly}
         />
         <TextInput
           title={''}
@@ -96,7 +97,10 @@ export function AlarmThresholds (props: MyProps) {
             });
           }}
           clearInput={() => setThreshold({...threshold, warning_level: ''})}
-          validated
+          validated={validated}
+          errorMessage={errorMessage}
+          triedToSubmit={triedToSubmit}
+          readOnly={readOnly}
         />
         <div />
         <button
