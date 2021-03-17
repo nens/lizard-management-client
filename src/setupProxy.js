@@ -5,9 +5,10 @@ module.exports = function(app) {
   const url = process.env[env_prefix + '_URL'] || 'https://nens.lizard.net/';
   const apiKey = process.env[env_prefix + '_API_KEY'];
 
-  console.log("env_prefix", env_prefix)
-  console.log("url", url, process.env.STAGING_URL);
-  console.log("apiKey", apiKey);
+  // console.log("env_prefix", env_prefix)
+  // console.log("url", url, process.env.STAGING_URL);
+  // // exit if needed to view logs
+  // process.exit(1);
   
 
   let proxyMiddleware;
@@ -27,9 +28,6 @@ module.exports = function(app) {
       auth: `__key__:${apiKey}`,
     });
   }
-
-  // exit if needed to view logs
-  // process.exit(1);
 
   app.use('/api', proxyMiddleware);
   app.use('/bootstrap', proxyMiddleware);
