@@ -5,7 +5,6 @@ import { fromISOValue, toISOValue } from '../utils/isoUtils';
 import { convertDurationObjToSeconds, convertSecondsToDurationObject } from '../utils/dateUtils';
 import { convertToSelectObject } from '../utils/convertToSelectObject';
 import formStyles from "../styles/Forms.module.css";
-import styles from './RelativeField.module.css';
 
 interface Props {
   title: string,
@@ -35,12 +34,16 @@ export function RelativeField (props: Props) {
     readOnly
   } = props;
 
-  const [selection, setSelection] = useState<Value>(convertToSelectObject('Before'));
+  // Selection state can be "Before", "After" or null
+  const [selection, setSelection] = useState<Value | null>(null);
+
   useEffect(() => {
-    if (value && value < 0) {
+    if (value !== null && value < 0) {
       setSelection(convertToSelectObject('Before'));
-    } else if (value && value > 0) {
+    } else if (value !== null && value >= 0) {
       setSelection(convertToSelectObject('After'));
+    } else {
+      setSelection(null);
     };
   }, [value]);
 
@@ -58,21 +61,21 @@ export function RelativeField (props: Props) {
           name={name}
           value={selection}
           valueChanged={e => {
-            if (!e) return;
-            const event = e as Value;
+            const event = e as Value | null;
             setSelection(event);
-            if (value) {
-              if (event.value === 'Before') {
-                valueChanged(-Math.abs(value));
-              } else if (event.value === 'After') {
-                valueChanged(Math.abs(value));
-              };
+            if (!event) {
+              valueChanged(null);
+            } else if (value === null) {
+              valueChanged(0);
+            } else if (event.value === 'Before') {
+              valueChanged(-Math.abs(value));
+            } else if (event.value === 'After') {
+              valueChanged(Math.abs(value));
             };
           }}
           options={options}
           validated={validated}
           isSearchable={false}
-          isClearable={false}
           triedToSubmit={triedToSubmit}
           errorMessage={errorMessage}
           readOnly={readOnly}
@@ -82,14 +85,16 @@ export function RelativeField (props: Props) {
           name={name}
           value={value ? toISOValue(convertSecondsToDurationObject(value)) : null}
           valueChanged={e => {
-            if (selection.value === 'Before') {
+            if (!selection) {
+              valueChanged(null);
+            } else if (selection.value === 'Before') {
               valueChanged(-convertDurationObjToSeconds(fromISOValue(e)));
             } else if (selection.value === 'After')  {
               valueChanged(convertDurationObjToSeconds(fromISOValue(e)));
             };
           }}
           validated={validated}
-          readOnly={readOnly}
+          readOnly={readOnly || !selection}
         />
       </div>
     </label>

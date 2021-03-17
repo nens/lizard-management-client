@@ -78,3 +78,15 @@ export const phoneNumberValidator = (phoneNumber: string) => {
   };
   return 'Please enter a valid phone number';
 };
+
+export const relativeEndValidator = (relativeStart: number | null, relativeEnd: number | null) => {
+  if (
+    (relativeStart !== null) &&
+    (relativeEnd !== null) &&
+    relativeStart > relativeEnd
+  ) {
+    return 'Please select "Relative End" after "Relative Start"'
+  } else {
+    return false
+  };
+}

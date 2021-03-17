@@ -13,7 +13,7 @@ import { IntegerInput } from '../../../form/IntegerInput';
 import { SubmitButton } from '../../../form/SubmitButton';
 import { CancelButton } from '../../../form/CancelButton';
 import { useForm, Values } from '../../../form/useForm';
-import { minLength, required } from '../../../form/validators';
+import { minLength, relativeEndValidator, required } from '../../../form/validators';
 import { addNotification } from '../../../actions';
 import { getSelectedOrganisation } from '../../../reducers';
 import { fetchRasterLayersV4, RasterLayerFromAPI } from '../../../api/rasters';
@@ -96,8 +96,8 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
         type: "Point",
         coordinates: [values.point.lng, values.point.lat, 0.0]
       },
-      relative_start: values.relativeStart,
-      relative_end: values.relativeEnd,
+      relative_start: values.relative ? values.relativeStart : null,
+      relative_end: values.relative ? values.relativeEnd : null,
       comparison: values.comparison.value,
       thresholds: values.thresholds,
       snooze_sign_on: values.snoozeOn,
@@ -242,8 +242,8 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
               name={'relativeEnd'}
               value={values.relativeEnd}
               valueChanged={value => handleValueChange('relativeEnd', value)}
-              validated={values.relativeEnd >= values.relativeStart}
-              errorMessage={'Please select "Relative End" after "Relative Start"'}
+              validated={!relativeEndValidator(values.relativeStart, values.relativeEnd)}
+              errorMessage={relativeEndValidator(values.relativeStart, values.relativeEnd)}
               triedToSubmit={triedToSubmit}
               readOnly={!values.relative}
             />
@@ -285,7 +285,7 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           className={formStyles.Label}
         >
           <span className={formStyles.LabelTitle}>
-            Snoozing
+            Snoozing *
           </span>
           <div className={formStyles.GridContainer}>
             <IntegerInput
