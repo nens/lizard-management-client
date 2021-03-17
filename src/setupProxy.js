@@ -1,9 +1,14 @@
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
 module.exports = function(app) {
-  const env_prefix = process.env.PROXY_PREFIX || 'LIZARD';
+  const env_prefix = process.env.PROXY_PREFIX || 'STAGING';
   const url = process.env[env_prefix + '_URL'] || 'https://nens.lizard.net/';
   const apiKey = process.env[env_prefix + '_API_KEY'];
+
+  console.log("env_prefix", env_prefix)
+  console.log("url", url, process.env.STAGING_URL);
+  console.log("apiKey", apiKey);
+  
 
   let proxyMiddleware;
   console.log(`Proxying to ${url}.`);
@@ -19,9 +24,12 @@ module.exports = function(app) {
     proxyMiddleware = createProxyMiddleware({
       target: url,
       changeOrigin: true,
-      auth: `__KEY__:${apiKey}`,
+      auth: `__key__:${apiKey}`,
     });
   }
+
+  // exit if needed to view logs
+  // process.exit(1);
 
   app.use('/api', proxyMiddleware);
   app.use('/bootstrap', proxyMiddleware);
