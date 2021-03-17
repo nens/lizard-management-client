@@ -227,29 +227,30 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           value={values.relative}
           valueChanged={bool => handleValueChange('relative', bool)}
         />
-        <div className={formStyles.GridContainer}>
-          <RelativeField
-            title={'Relative start'}
-            name={'relativeStart'}
-            value={values.relativeStart}
-            valueChanged={value => handleValueChange('relativeStart', value)}
-            validated
-            triedToSubmit={triedToSubmit}
-            readOnly={!values.relative}
-          />
-          <RelativeField
-            title={'Relative end'}
-            name={'relativeEnd'}
-            value={values.relativeEnd}
-            valueChanged={value => handleValueChange('relativeEnd', value)}
-            validated={values.relativeEnd > values.relativeStart}
-            errorMessage={'Error!'}
-            triedToSubmit={triedToSubmit}
-            readOnly={!values.relative}
-          />
-        </div>
+        {values.relative ? (
+          <div className={formStyles.GridContainer}>
+            <RelativeField
+              title={'Relative start'}
+              name={'relativeStart'}
+              value={values.relativeStart}
+              valueChanged={value => handleValueChange('relativeStart', value)}
+              validated
+              readOnly={!values.relative}
+            />
+            <RelativeField
+              title={'Relative end'}
+              name={'relativeEnd'}
+              value={values.relativeEnd}
+              valueChanged={value => handleValueChange('relativeEnd', value)}
+              validated={values.relativeEnd > values.relativeStart}
+              errorMessage={'Please select "Relative End" after "Relative Start"'}
+              triedToSubmit={triedToSubmit}
+              readOnly={!values.relative}
+            />
+          </div>
+        ) : null}
         <SelectDropdown
-          title={'Alarm thresholds'}
+          title={'Alarm thresholds *'}
           name={'comparison'}
           value={values.comparison}
           valueChanged={value => handleValueChange('comparison', value)}
@@ -270,7 +271,7 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           isClearable={false}
         />
         <AlarmThresholds
-          title={'Threshold values'}
+          title={'Threshold values *'}
           name={'thresholds'}
           comparison={values.comparison.value}
           thresholds={values.thresholds}
@@ -292,14 +293,18 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
               name={'snoozeOn'}
               value={values.snoozeOn}
               valueChanged={handleInputChange}
-              validated
+              validated={values.snoozeOn >= 1}
+              errorMessage={'Ensure this value is greater than or equal to 1'}
+              triedToSubmit={triedToSubmit}
             />
             <IntegerInput
               title={'After no further impact'}
               name={'snoozeOff'}
               value={values.snoozeOff}
               valueChanged={handleInputChange}
-              validated
+              validated={values.snoozeOff >= 1}
+              errorMessage={'Ensure this value is greater than or equal to 1'}
+              triedToSubmit={triedToSubmit}
             />
           </div>
         </label>
