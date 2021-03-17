@@ -249,29 +249,6 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
             readOnly={!values.relative}
           />
         </div>
-        <label
-          className={formStyles.Label}
-        >
-          <span className={formStyles.LabelTitle}>
-            Snoozing
-          </span>
-          <div className={styles.GridContainer}>
-            <IntegerInput
-              title={'After breaking threshold'}
-              name={'snoozeOn'}
-              value={values.snoozeOn}
-              valueChanged={handleInputChange}
-              validated
-            />
-            <IntegerInput
-              title={'After no further impact'}
-              name={'snoozeOff'}
-              value={values.snoozeOff}
-              valueChanged={handleInputChange}
-              validated
-            />
-          </div>
-        </label>
         <SelectDropdown
           title={'Alarm thresholds'}
           name={'comparison'}
@@ -302,6 +279,29 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           valueRemoved={thresholds => handleValueChange('thresholds', thresholds)}
           validated
         />
+        <label
+          className={formStyles.Label}
+        >
+          <span className={formStyles.LabelTitle}>
+            Snoozing
+          </span>
+          <div className={styles.GridContainer}>
+            <IntegerInput
+              title={'After breaking threshold'}
+              name={'snoozeOn'}
+              value={values.snoozeOn}
+              valueChanged={handleInputChange}
+              validated
+            />
+            <IntegerInput
+              title={'After no further impact'}
+              name={'snoozeOff'}
+              value={values.snoozeOff}
+              valueChanged={handleInputChange}
+              validated
+            />
+          </div>
+        </label>
         <span className={formStyles.FormFieldTitle}>
           3: Rights
         </span>
