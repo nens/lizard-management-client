@@ -21,7 +21,6 @@ import { convertToSelectObject } from '../../../utils/convertToSelectObject';
 import { convertDurationObjToSeconds } from '../../../utils/dateUtils';
 import { rasterIntervalStringServerToDurationObject } from '../../../utils/isoUtils';
 import { getUuidFromUrl } from '../../../utils/getUuidFromUrl';
-import styles from './RasterAlarmForm.module.css';
 import formStyles from './../../../styles/Forms.module.css';
 import rasterAlarmIcon from "../../../images/alarm@3x.svg";
 
@@ -228,7 +227,7 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           value={values.relative}
           valueChanged={bool => handleValueChange('relative', bool)}
         />
-        <div className={styles.GridContainer}>
+        <div className={formStyles.GridContainer}>
           <RelativeField
             title={'Relative start'}
             name={'relativeStart'}
@@ -285,7 +284,7 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           <span className={formStyles.LabelTitle}>
             Snoozing
           </span>
-          <div className={styles.GridContainer}>
+          <div className={formStyles.GridContainer}>
             <IntegerInput
               title={'After breaking threshold'}
               name={'snoozeOn'}

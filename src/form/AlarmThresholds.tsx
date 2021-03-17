@@ -51,15 +51,9 @@ export function AlarmThresholds (props: MyProps) {
       <span className={formStyles.LabelTitle}>
         {title}
       </span>
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: '45fr 45fr 10fr',
-          columnGap: 20
-        }}
-      >
-        <div>Value</div>
-        <div>Name</div>
+      <div className={formStyles.GridContainer}>
+        <div className={formStyles.SecondLabel}>Value</div>
+        <div className={formStyles.SecondLabel}>Name</div>
         <div />
         {thresholds.map((threshold, i) => (
           <React.Fragment key={i}>
@@ -106,6 +100,8 @@ export function AlarmThresholds (props: MyProps) {
         />
         <div />
         <button
+          className={buttonStyles.NewButton}
+          title={!threshold.warning_level ? 'Please enter a name for the new threshold' : undefined}
           onClick={e => {
             e.preventDefault();
             valueChanged(threshold);

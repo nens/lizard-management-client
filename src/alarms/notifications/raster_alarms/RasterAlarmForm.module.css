@@ -1,5 +1,0 @@
-.GridContainer {
-  display: grid;
-  grid-template-columns: 45fr 45fr 10fr;
-  column-gap: 20px;
-}

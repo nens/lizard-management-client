@@ -99,15 +99,9 @@ export function Recipients (props: MyProps) {
       <span className={formStyles.LabelTitle}>
         {title}
       </span>
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: '45fr 45fr 10fr',
-          columnGap: 20
-        }}
-      >
-        <div>Group</div>
-        <div>Template message</div>
+      <div className={formStyles.GridContainer}>
+        <div className={formStyles.SecondLabel}>Group</div>
+        <div className={formStyles.SecondLabel}>Template message</div>
         <div />
         {messages.map((recipient, i) => (
           <React.Fragment key={i}>
@@ -165,6 +159,7 @@ export function Recipients (props: MyProps) {
           </React.Fragment>
         ))}
         <button
+          className={buttonStyles.NewButton}
           onClick={e => {
             e.preventDefault();
             valueChanged([

@@ -49,7 +49,7 @@ export function RelativeField (props: Props) {
       htmlFor={name}
       className={formStyles.Label}
     >
-      <span className={formStyles.LabelTitle}>
+      <span className={formStyles.SecondLabel}>
         {title}
       </span>
       <div className={styles.RelativeFieldContainer}>
