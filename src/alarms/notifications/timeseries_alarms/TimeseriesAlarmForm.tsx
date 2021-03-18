@@ -3,6 +3,7 @@ import { connect, useSelector } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { ExplainSideColumn } from '../../../components/ExplainSideColumn';
 import { TextInput } from './../../../form/TextInput';
+import { TimeseriesSelection } from '../../../form/TimeseriesSelection';
 import { SelectDropdown } from '../../../form/SelectDropdown';
 import { CheckBox } from '../../../form/CheckBox';
 import { RelativeField } from '../../../form/RelativeField';
@@ -32,7 +33,6 @@ const TimeseriesAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps>
   const { currentTimeseriesAlarm, timeseries } = props;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const navigationUrl = "/alarms/notifications/raster_alarms";
-  console.log(currentTimeseriesAlarm, timeseries)
 
   const initialValues = currentTimeseriesAlarm && timeseries ? {
     name: currentTimeseriesAlarm.name,
@@ -172,19 +172,12 @@ const TimeseriesAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps>
         <span className={formStyles.FormFieldTitle}>
           2: Data
         </span>
-        {/* <SelectDropdown
-          title={'Temporal raster *'}
-          name={'raster'}
-          placeholder={'- Search and select -'}
-          value={values.raster}
-          valueChanged={value => handleValueChange('raster', value)}
-          options={[]}
-          validated={!required('Please select a raster', values.raster)}
-          errorMessage={required('Please select a raster', values.raster)}
+        <TimeseriesSelection
+          name={'timeseries'}
+          timeseries={values.timeseries}
+          valueChanged={value => handleValueChange('timeseries', value)}
           triedToSubmit={triedToSubmit}
-          isAsync
-          loadOptions={searchInput => fetchRasterLayers(selectedOrganisation.uuid, searchInput)}
-        /> */}
+        />
         <CheckBox
           title={'Use relative data'}
           name={'relative'}

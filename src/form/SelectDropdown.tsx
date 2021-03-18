@@ -12,7 +12,7 @@ export type Value = {
 interface MyProps {
   title: string,
   name: string,
-  value: Value | null,
+  value?: Value | null,
   valueChanged: (value: ValueType<Value, boolean> | {}) => void,
   options: Value[],
   validated: boolean,
