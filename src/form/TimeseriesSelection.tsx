@@ -74,6 +74,7 @@ export function TimeseriesSelection (props: MyProps) {
     timeseries,
     triedToSubmit
   } = props;
+
   const [selectedAsset, setSelectedAsset] = useState<AssetFromAssetEndpoint | null>(null);
   const [selectedNestedAsset, setSelectedNestedAsset] = useState<NestedAsset | null>(null);
 
@@ -141,7 +142,9 @@ export function TimeseriesSelection (props: MyProps) {
         value={timeseries}
         valueChanged={value => props.valueChanged(value)}
         options={
+          // Show timeseries of nested asset if a nested asset is selected
           selectedNestedAsset ? selectedNestedAsset.timeseries.map(ts => convertToSelectObject(ts.uuid, ts.name, ts.uuid)) :
+          // Show timeseries of only the asset and not also the nested assets if no nested asset is selected
           selectedAsset ? selectedAsset.timeseries.map(ts => convertToSelectObject(ts.uuid, ts.name, ts.uuid)) :
           []
         }
