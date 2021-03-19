@@ -144,23 +144,15 @@ const RasterPreview = (props) => {
         {...mapLocation}
       >
         <ZoomControl position="bottomright"/>
-        <TileLayer
-          url={`https://api.mapbox.com/styles/v1/nelenschuurmans/ck8sgpk8h25ql1io2ccnueuj6/tiles/256/{z}/{x}/{y}@2x?access_token=${mapBoxAccesToken}`}
-          attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-          setLocation={setLocation}
-        />
+        <TileLayer url={`https://api.mapbox.com/styles/v1/nelenschuurmans/ck8sgpk8h25ql1io2ccnueuj6/tiles/256/{z}/{x}/{y}@2x?access_token=${mapBoxAccesToken}`} />
         {raster ? (
           <WMSTileLayer
             url="/wms/"
-            // @ts-ignore
             styles={formatWMSStyles(raster.options.styles)}
             layers={formatWMSLayers(raster.wms_info.layer)}
             opacity={0.9}
-          />) : null}
-        <TileLayer
-          url={`https://api.mapbox.com/styles/v1/nelenschuurmans/ck8sgpk8h25ql1io2ccnueuj6/tiles/256/{z}/{x}/{y}@2x?access_token=${mapBoxAccesToken}`}
-          attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-        />
+          />
+        ) : null}
         {location ?
           <Marker position={marker} />
         : null}
