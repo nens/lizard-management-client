@@ -55,7 +55,10 @@ export function AlarmThresholds (props: MyProps) {
         <div className={formStyles.SecondLabel}>Value</div>
         <div className={formStyles.SecondLabel}>Name</div>
         <div />
-        {thresholds.map((threshold, i) => (
+        {thresholds.sort((a, b) =>
+          // sort threshold value from low to high
+          a.value - b.value
+        ).map((threshold, i) => (
           <React.Fragment key={i}>
             <div>{comparison} {threshold.value}</div>
             <div>{threshold.warning_level}</div>
