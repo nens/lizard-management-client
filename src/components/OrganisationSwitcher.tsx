@@ -1,3 +1,4 @@
+import {useSelector,} from 'react-redux';
 import CSSTransition from "react-transition-group/CSSTransition";
 import formStyles from "../styles/Forms.module.css";
 import MDSpinner from "react-md-spinner";
@@ -12,7 +13,7 @@ import {appTiles} from '../home/AppTileConfig';
 
 
 class OrganisationSwitcher extends Component {
-  constructor(props) {
+  constructor(props:any) {
     super(props);
     this.state = {
       width: window.innerWidth,
@@ -27,7 +28,8 @@ class OrganisationSwitcher extends Component {
   componentDidMount() {
     window.addEventListener("resize", this.handleResize, false);
     document.addEventListener("keydown", this.hideOrganisationSwitcher, false);
-    document.getElementById("organisationName").focus();
+    const organisationNameElement = document.getElementById("organisationName");
+    organisationNameElement && organisationNameElement.focus();
   }
   componentWillUnmount() {
     window.removeEventListener("resize", this.handleResize, false);
@@ -37,8 +39,9 @@ class OrganisationSwitcher extends Component {
       false
     );
   }
-  hideOrganisationSwitcher(e) {
+  hideOrganisationSwitcher(e: any) {
     if (e.key === "Escape") {
+      // @ts-ignore
       this.props.handleClose();
     }
   }
@@ -48,25 +51,32 @@ class OrganisationSwitcher extends Component {
       height: window.innerHeight
     });
   }
-  handleInput(e) {
+  handleInput(e: any) {
     this.setState({
       filterValue: e.target.value
     });
   }
-  selectOrganisation(organisation) {
+  selectOrganisation(organisation:any) {
+    // @ts-ignore
     this.props.selectOrganisation(organisation, true);
   }
   render() {
     const {
+      // @ts-ignore
       handleClose,
+      // @ts-ignore
       organisations,
+      // @ts-ignore
       selectedOrganisation,
+      // @ts-ignore
       isFetching
     } = this.props;
 
+    // @ts-ignore
     const filteredOrganisations = this.state.filterValue
-      ? organisations.filter(org => {
-          if (org.name.toLowerCase().indexOf(this.state.filterValue) !== -1) {
+      ? organisations.filter((org:any) => {
+        // @ts-ignore  
+        if (org.name.toLowerCase().indexOf(this.state.filterValue) !== -1) {
             return org;
           }
           return false;
@@ -76,6 +86,7 @@ class OrganisationSwitcher extends Component {
     const currentHomeAppTile = appTiles.find(icon => {
       return window.location.href.includes(icon.linksTo)
     });
+    // @ts-ignore
     const authorisationText = this.props.intl.formatMessage({ id: "authorization.organisation_not_allowed_current_page", defaultMessage: "! Organisation not authorized to visit current page !" });
 
         
@@ -89,6 +100,7 @@ class OrganisationSwitcher extends Component {
           classNames={{
             enter: styles.Enter,
             enterActive: styles.EnterActive,
+            // @ts-ignore
             leave: styles.Leave,
             leaveActive: styles.LeaveActive,
             appear: styles.Appear,
@@ -109,6 +121,7 @@ class OrganisationSwitcher extends Component {
             <div className={formStyles.FormGroup}>
               <input
                 id="organisationName"
+                // @ts-ignore
                 tabIndex="-1"
                 type="text"
                 className={formStyles.FormControl}
@@ -130,9 +143,11 @@ class OrganisationSwitcher extends Component {
               </div>
             ) : (
               <Scrollbars
+                // @ts-ignore
                 style={{ width: "100%", height: this.state.height - 400 }}
               >
                 {filteredOrganisations
+                  // @ts-ignore
                   ? filteredOrganisations.map((organisation, i) => {
                       const hasRequiredRoles = !currentHomeAppTile || doArraysHaveEqualElement(organisation.roles, currentHomeAppTile.requiresOneOfRoles);
                       return (
@@ -167,6 +182,7 @@ class OrganisationSwitcher extends Component {
   }
 }
 
+// @ts-ignore
 const mapStateToProps = (state, ownProps) => {
   return {
     selectedOrganisation: state.organisations.selected,
@@ -175,8 +191,10 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
+// @ts-ignore
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
+    // @ts-ignore
     selectOrganisation: (organisation, addNotification) => {
       dispatch(selectOrganisation(organisation, addNotification));
       dispatch(fetchSupplierIds());
@@ -185,5 +203,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(
+  // @ts-ignore
   injectIntl(OrganisationSwitcher)
 );
