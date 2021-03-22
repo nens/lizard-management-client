@@ -1,4 +1,19 @@
+.MapContainer {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .MapStyle {
   width: 100%;
   height: 400px;
+  z-index: 0;
+}
+
+.AssetSelect {
+  width: 98%;
+  position: absolute;
+  top: 0;
+  z-Index: 1;
 }

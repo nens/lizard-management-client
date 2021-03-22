@@ -279,5 +279,47 @@ export const appTiles = [
     linksTo: "/",
     requiresOneOfRoles: ["admin", "supplier","user", "manager"],
     icon: backArrowIcon
-  }
+  },
+  {
+    title: "Raster Alarms",
+    // title: (
+    //   <FormattedMessage
+    //     id="alarms.raster_alarms"
+    //     defaultMessage="Raster Alarms"
+    //   />
+    // ),
+    order: 100,
+    onPage: "/alarms/notifications",
+    linksTo: "/alarms/notifications/raster_alarms",
+    requiresOneOfRoles: ["admin",],
+    icon: alarmsIcon,
+  },
+  {
+    title: "Time-series Alarms",
+    // title: (
+    //   <FormattedMessage
+    //     id="alarms.timeseries_alarms"
+    //     defaultMessage="Timeseries Alarms"
+    //   />
+    // ),
+    order: 200,
+    onPage: "/alarms/notifications",
+    linksTo: "/alarms/notifications/timeseries_alarms",
+    requiresOneOfRoles: ["admin",],
+    icon: alarmsIcon,
+  },
+  {
+    title: "Go Back",
+    // title: (
+    //   <FormattedMessage
+    //     id="go_back"
+    //     defaultMessage="Go Back"
+    //   />
+    // ),
+    order: 300,
+    onPage: "/alarms/notifications",
+    linksTo: "/alarms",
+    requiresOneOfRoles: ["admin", "supplier","user", "manager"],
+    icon: backArrowIcon
+  },
 ];

@@ -4,7 +4,7 @@ import { Route, Switch, } from "react-router-dom";
 import {appTiles} from './AppTileConfig';
 import { App as Home } from "./App";
 
-import {PersonalApiKeysTable} from '../personal_api_keys/PersonalApiKeysTable';
+import { PersonalApiKeysTable } from '../personal_api_keys/PersonalApiKeysTable';
 import { EditPersonalApiKey } from '../personal_api_keys/EditPersonalApiKey';
 import { NewPersonalApiKey } from '../personal_api_keys/NewPersonalApiKey';
 import { RasterSourceTable} from "../data_management/rasters/RasterSourceTable";
@@ -19,15 +19,17 @@ import { ScenarioTable } from "../data_management/scenarios/ScenarioTable";
 import { EditScenario } from "../data_management/scenarios/EditScenario";
 import { EditWmsLayer } from "../data_management/wms_layers/EditWmsLayer";
 import { NewWmsLayer } from "../data_management/wms_layers/NewWmsLayer";
-import { UploadRasterData } from "../data_management/rasters/UploadRasterData";
-import {EditLabeltype} from "../data_management/labels/EditLabeltype";
+import { EditLabeltype } from "../data_management/labels/EditLabeltype";
+import { RasterAlarmTable } from "../alarms/notifications/raster_alarms/RasterAlarmTable";
+import { TimeseriesAlarmTable } from "../alarms/notifications/timeseries_alarms/TimeseriesAlarmTable";
+import { NewRasterAlarm } from "../alarms/notifications/raster_alarms/NewRasterAlarm";
+import { NewTimeseriesAlarm } from "../alarms/notifications/timeseries_alarms/NewTimeseriesAlarm";
+import { EditRasterAlarm } from "../alarms/notifications/raster_alarms/EditRasterAlarm";
+import { EditTimeseriesAlarm } from "../alarms/notifications/timeseries_alarms/EditTimeseriesAlarm";
 import { TemplateTable } from "../alarms/alarmtemplates/TemplateTable";
 import { ContactTable } from "../alarms/contacts/ContactTable";
 import { GroupTable } from "../alarms/alarmgroups/GroupTable";
-import { App as NewNotificationApp } from "../alarms/notifications/NewNotification";
-import { App as NotificationsApp } from "../alarms/notifications/App";
-import { App as EditNotificationApp } from "../alarms/notifications/EditNotification";
-import  { NewContact } from "../alarms/contacts/NewContact"
+import { NewContact } from "../alarms/contacts/NewContact"
 import { EditContact } from "../alarms/contacts/EditContact";
 import { NewGroup } from "../alarms/alarmgroups/NewGroup";
 import { EditGroup } from "../alarms/alarmgroups/EditGroup";
@@ -59,7 +61,6 @@ export const Routes: React.FC<Props> = () => {
         <Route exact path="/data_management/rasters/sources" component={RasterSourceTable} />
         <Route exact path="/data_management/rasters/sources/new" component={NewRasterSource} />
         <Route exact path="/data_management/rasters/sources/:uuid" component={EditRasterSource} />
-        <Route exact path="/data_management/rasters/:id/data" component={UploadRasterData} />
 
         <Route exact path="/data_management/rasters/layers" component={RasterLayerTable} />
         <Route exact path="/data_management/rasters/layers/new" component={NewRasterLayer} />
@@ -75,9 +76,13 @@ export const Routes: React.FC<Props> = () => {
         <Route exact path="/data_management/labels/label_types" component={LabeltypesTable} />
         <Route exact path="/data_management/labels/label_types/:uuid" component={EditLabeltype} />
 
-        <Route exact path="/alarms/notifications" component={NotificationsApp} />
-        <Route exact path="/alarms/notifications/new" component={NewNotificationApp} />
-        <Route exact path="/alarms/notifications/:id" component={EditNotificationApp} />
+        <Route exact path="/alarms/notifications/raster_alarms" component={RasterAlarmTable} />
+        <Route exact path="/alarms/notifications/raster_alarms/new" component={NewRasterAlarm} />
+        <Route exact path="/alarms/notifications/raster_alarms/:uuid" component={EditRasterAlarm} />
+
+        <Route exact path="/alarms/notifications/timeseries_alarms" component={TimeseriesAlarmTable} />
+        <Route exact path="/alarms/notifications/timeseries_alarms/new" component={NewTimeseriesAlarm} />
+        <Route exact path="/alarms/notifications/timeseries_alarms/:uuid" component={EditTimeseriesAlarm} />
 
         <Route exact path="/alarms/groups" component={GroupTable} />
         <Route exact path="/alarms/groups/new" component={NewGroup} />
