@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { RouteComponentProps } from 'react-router';
+import RasterAlarmForm from "./RasterAlarmForm";
+import { fetchRasterV4, RasterLayerFromAPI } from "../../../api/rasters";
+import { getUuidFromUrl } from "../../../utils/getUuidFromUrl";
 import MDSpinner from "react-md-spinner";
-import { NotificationForm } from "./../NotificationForm";
 
 interface RouteParams {
   uuid: string;
@@ -9,6 +11,7 @@ interface RouteParams {
 
 export const EditRasterAlarm: React.FC<RouteComponentProps<RouteParams>> = (props) => {
   const [currentRasterAlarm, setCurrentRasterAlarm] = useState<Object | null>(null);
+  const [raster, setRaster] = useState<RasterLayerFromAPI | null>(null);
 
   const { uuid } = props.match.params;
   useEffect(() => {
@@ -18,15 +21,23 @@ export const EditRasterAlarm: React.FC<RouteComponentProps<RouteParams>> = (prop
       }).then(
         response => response.json()
       );
+
+      const rasterUrl = rasterAlarm.raster;
+      const rasterUuid = getUuidFromUrl(rasterUrl);
+      const raster = await fetchRasterV4(rasterUuid);
+
       setCurrentRasterAlarm(rasterAlarm);
+      setRaster(raster);
     })();
   }, [uuid]);
 
-  if (currentRasterAlarm) {
-    return <NotificationForm
-      currentNotification={currentRasterAlarm}
-      wizardStyle={false}
-    />;
+  if (currentRasterAlarm && raster) {
+    return (
+      <RasterAlarmForm
+        currentRasterAlarm={currentRasterAlarm}
+        raster={raster}
+      />
+    )
   }
   else {
     return (

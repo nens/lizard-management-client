@@ -19,7 +19,6 @@ import { ScenarioTable } from "../data_management/scenarios/ScenarioTable";
 import { EditScenario } from "../data_management/scenarios/EditScenario";
 import { EditWmsLayer } from "../data_management/wms_layers/EditWmsLayer";
 import { NewWmsLayer } from "../data_management/wms_layers/NewWmsLayer";
-import { UploadRasterData } from "../data_management/rasters/UploadRasterData";
 import { EditLabeltype } from "../data_management/labels/EditLabeltype";
 import { RasterAlarmTable } from "../alarms/notifications/raster_alarms/RasterAlarmTable";
 import { TimeseriesAlarmTable } from "../alarms/notifications/timeseries_alarms/TimeseriesAlarmTable";
@@ -62,7 +61,6 @@ export const Routes: React.FC<Props> = () => {
         <Route exact path="/data_management/rasters/sources" component={RasterSourceTable} />
         <Route exact path="/data_management/rasters/sources/new" component={NewRasterSource} />
         <Route exact path="/data_management/rasters/sources/:uuid" component={EditRasterSource} />
-        <Route exact path="/data_management/rasters/:id/data" component={UploadRasterData} />
 
         <Route exact path="/data_management/rasters/layers" component={RasterLayerTable} />
         <Route exact path="/data_management/rasters/layers/new" component={NewRasterLayer} />
