@@ -3,7 +3,7 @@
 import React from "react";
 // import { FormattedMessage } from "react-intl";
 
-import styles from "../forms/DurationField.module.css";
+import styles from "../form/DurationField.module.css";
 import formStyles from "../styles/Forms.module.css";
 import inputStyles from "../styles/Input.module.css";
 

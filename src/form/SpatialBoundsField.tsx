@@ -1,12 +1,12 @@
 import React, { useEffect, useRef } from "react";
 import { FormattedMessage } from "react-intl";
 import { getBoundsFromWmsLayer } from "../utils/getBoundsFromGeoServer";
-import ClearInputButton from "../forms/ClearInputButton";
+import { ClearInputButton } from "../form/ClearInputButton";
 import styles from "./SpatialBoundsField.module.css";
 import formStyles from "../styles/Forms.module.css";
 import inputStyles from "../styles/Input.module.css";
 import thresholdsStyles from './ThresholdsSelection.module.css';
-import {SpatialBounds} from '../types/mapTypes';
+import { SpatialBounds } from '../types/mapTypes';
 
 
 interface SpatialBoundsProps {

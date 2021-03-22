@@ -1,7 +1,6 @@
 import React from "react";
-
-import { NotificationForm } from "./../NotificationForm";
+import TimeseriesAlarmForm from "./TimeseriesAlarmForm";
 
 export const NewTimeseriesAlarm: React.FC = () => {
-  return <NotificationForm wizardStyle />;
+  return <TimeseriesAlarmForm />;
 };
