@@ -5,7 +5,6 @@ import { ClearInputButton } from "../form/ClearInputButton";
 import styles from "./SpatialBoundsField.module.css";
 import formStyles from "../styles/Forms.module.css";
 import inputStyles from "../styles/Input.module.css";
-import thresholdsStyles from './ThresholdsSelection.module.css';
 import { SpatialBounds } from '../types/mapTypes';
 
 
@@ -280,7 +279,7 @@ const SpatialBoundsField  =  (props: SpatialBoundsProps) => {
             </div>
             <div className={styles.GetFromGeoServer}>
                 <button
-                    className={thresholdsStyles.AddThresholdButton}
+                    className={styles.AddThresholdButton}
                     style={{
                         display: (wmsLayerSlug && wmsLayerUrl) ? 'block' : 'none'
                     }}
