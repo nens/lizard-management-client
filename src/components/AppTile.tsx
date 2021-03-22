@@ -1,17 +1,27 @@
-import React, { Component } from "react";
+import React from "react";
 import Ink from "react-ink";
 import styles from "./AppTile.module.css";
-import { withRouter } from "react-router-dom";
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { injectIntl } from "react-intl";
 
+interface Props {
+  title: string, 
+  icon: string, 
+  handleClick: ()=> void, 
+  readonly: boolean,
+  requiredRoles: string[]
+};
 
-class AppTile extends Component {
-  render() {
+const AppTile = (props: (Props & RouteComponentProps)) => {
+  
     const {
       title, icon, handleClick, readonly,
       requiredRoles // eslint-disable-line no-unused-vars
-    } = this.props;
-    const requiresRoleMessage = this.props.intl.formatMessage({
+    } = props;
+    
+    // ts ignore because how to use intl with typescript in props? Maybe look at how it is done in 3di-livesite  or here https://stackoverflow.com/questions/40784817/react-intl-use-api-with-typescript
+    // @ts-ignore
+    const requiresRoleMessage = props.intl.formatMessage({
         id: "authorization.requires_role",
         defaultMessage: "Requires {requiredRolesLength, plural,  one {role} other {one of the following roles} }: ",
       },
@@ -28,6 +38,5 @@ class AppTile extends Component {
       </div>
     );
   }
-}
 
 export default withRouter(injectIntl(AppTile));

@@ -39,29 +39,26 @@ const AppComponent = (props: RouteComponentProps) => {
         <div className="container">
           <div className="row">
             <div className={styles.Apps}>
+              {/* Not sure why this ts-ignore is needed. Compiler complaints <Trail needs multiple children?  */}
               {/*  
               // @ts-ignore */}
               <Trail
                 native
                 from={{ opacity: 0, x: -5 }}
                 to={{ opacity: 1, x: 0 }}
-                // @ts-ignore
-                keys={appTiles.map(item => item.key)}
+                keys={appTiles.map(item => item.title)}
               >
                 {appTiles
                   .filter(appTile=> appTile.onPage === currentRelativeUrl )
                   .sort((appTileA, appTileB)=> appTileA.order - appTileB.order )
-                  // @ts-ignore
-                  .map((appTile) => ({ x, opacity }) => (
+                  .map((appTile) => (obj:{ x:any, opacity:number }) => (
                     <animated.div
                       style={{
-                        opacity,
-                        // @ts-ignore
-                        transform: x.interpolate(x => `translate3d(${x}%,0,0)`)
+                        opacity: obj.opacity,
+                        transform: obj.x.interpolate((x:number) => `translate3d(${x}%,0,0)`)
                       }}
                     >
                       <AppTile
-                        // @ts-ignore
                         handleClick={()=>{ handleLink({
                           external: appTile.linksToExternal? true : false,
                           path: appTile.linksTo
