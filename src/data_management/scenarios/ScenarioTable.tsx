@@ -147,7 +147,7 @@ export const ScenarioTable = () =>  {
             wordBreak: 'break-all'
           }}
         >
-          <NavLink to={`${navigationUrl}/${row.uuid}/`}>{row.name}</NavLink>
+          <NavLink to={`${navigationUrl}/${row.uuid}`}>{row.name}</NavLink>
         </span>,
       orderingField: "name",
     },
@@ -200,6 +200,7 @@ export const ScenarioTable = () =>  {
               setTableData={setTableData} 
               triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
               triggerReloadWithBasePage={triggerReloadWithBasePage}
+              navigationUrl={`${navigationUrl}/${row.uuid}`}
               actions={row.has_raw_results ? [
                 {
                   displayValue: "Delete raw data",

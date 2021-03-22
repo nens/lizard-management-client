@@ -144,6 +144,7 @@ export const RasterAlarmTableComponent: React.FC<DispatchProps & RouteComponentP
               setTableData={setTableData} 
               triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
               triggerReloadWithBasePage={triggerReloadWithBasePage}
+              navigationUrl={`${navigationUrl}/${row.uuid}`}
               actions={[
                 {
                   displayValue: row.active ? 'Deactivate' : 'Activate',

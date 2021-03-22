@@ -122,7 +122,7 @@ export const RasterSourceTable = (props:any) =>  {
           className={tableStyles.CellEllipsis}
           title={row.name}
         >
-          <NavLink to={`${navigationUrlRasters}/${row.uuid}/`}>{!row.name? "(empty name)" : row.name }</NavLink>
+          <NavLink to={`${navigationUrlRasters}/${row.uuid}`}>{!row.name? "(empty name)" : row.name }</NavLink>
         </span>
       ,
       orderingField: "name",
@@ -172,6 +172,7 @@ export const RasterSourceTable = (props:any) =>  {
               setTableData={setTableData} 
               triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
               triggerReloadWithBasePage={triggerReloadWithBasePage}
+              navigationUrl={`${navigationUrlRasters}/${row.uuid}`}
               actions={[
                 {
                   displayValue: "Delete",
