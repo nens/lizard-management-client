@@ -1,8 +1,11 @@
+import React from "react";
+import {useState, useEffect} from 'react';
 import {useSelector,} from 'react-redux';
+import {getSelectedOrganisation, getOrganisations} from '../reducers'
 import CSSTransition from "react-transition-group/CSSTransition";
 import formStyles from "../styles/Forms.module.css";
 import MDSpinner from "react-md-spinner";
-import React, { Component } from "react";
+
 import styles from "./OrganisationSwitcher.module.css";
 import { connect } from "react-redux";
 import { fetchSupplierIds, selectOrganisation } from "../actions";
@@ -12,71 +15,62 @@ import doArraysHaveEqualElement from '../utils/doArraysHaveEqualElement';
 import {appTiles} from '../home/AppTileConfig';
 
 
-class OrganisationSwitcher extends Component {
-  constructor(props:any) {
-    super(props);
-    this.state = {
-      width: window.innerWidth,
-      height: window.innerHeight,
-      filterValue: null
-    };
-    this.handleResize = this.handleResize.bind(this);
-    this.handleInput = this.handleInput.bind(this);
-    this.selectOrganisation = this.selectOrganisation.bind(this);
-    this.hideOrganisationSwitcher = this.hideOrganisationSwitcher.bind(this);
-  }
-  componentDidMount() {
-    window.addEventListener("resize", this.handleResize, false);
-    document.addEventListener("keydown", this.hideOrganisationSwitcher, false);
+const OrganisationSwitcher = (props:any) => {
+  
+
+  const [width, setWidth] = useState(window.innerWidth);
+  const [height, setHeight] = useState(window.innerHeight);
+  const [filterValue, setFilterValue] = useState<null | string>(null);
+
+  useEffect(() => {
+    window.addEventListener("resize", handleResize, false);
+    document.addEventListener("keydown", hideOrganisationSwitcher, false);
     const organisationNameElement = document.getElementById("organisationName");
     organisationNameElement && organisationNameElement.focus();
-  }
-  componentWillUnmount() {
-    window.removeEventListener("resize", this.handleResize, false);
-    document.removeEventListener(
-      "keydown",
-      this.hideOrganisationSwitcher,
-      false
-    );
-  }
-  hideOrganisationSwitcher(e: any) {
+    return () => {
+      window.removeEventListener("resize", handleResize, false);
+      document.removeEventListener(
+        "keydown",
+        hideOrganisationSwitcher,
+        false
+      );
+    };
+  });
+
+  const hideOrganisationSwitcher = (e: any) => {
     if (e.key === "Escape") {
       // @ts-ignore
-      this.props.handleClose();
+      props.handleClose();
     }
   }
-  handleResize() {
-    this.setState({
-      width: window.innerWidth,
-      height: window.innerHeight
-    });
+  const handleResize = () => {
+    setWidth(window.innerWidth);
+    setHeight(window.innerHeight);
   }
-  handleInput(e: any) {
-    this.setState({
-      filterValue: e.target.value
-    });
+  
+  const handleInput = (e: any) => {
+    setFilterValue( e.target.value);
   }
-  selectOrganisation(organisation:any) {
+  
+  const selectOrganisation = (organisation:any) => {
     // @ts-ignore
-    this.props.selectOrganisation(organisation, true);
+    props.selectOrganisation(organisation, true);
   }
-  render() {
     const {
       // @ts-ignore
-      handleClose,
-      // @ts-ignore
-      organisations,
-      // @ts-ignore
-      selectedOrganisation,
-      // @ts-ignore
-      isFetching
-    } = this.props;
+      handleClose,      
+    } = props;
+
+    const selectedOrganisation = useSelector(getSelectedOrganisation);
+    const reduxOrganisations = useSelector(getOrganisations);
+    const isFetching = reduxOrganisations.isFetching;
+    const organisations = reduxOrganisations.available;
 
     // @ts-ignore
-    const filteredOrganisations = this.state.filterValue
+    const filteredOrganisations = filterValue
       ? organisations.filter((org:any) => {
         // @ts-ignore  
-        if (org.name.toLowerCase().indexOf(this.state.filterValue) !== -1) {
+        if (org.name.toLowerCase().indexOf(filterValue) !== -1) {
             return org;
           }
           return false;
@@ -87,7 +81,7 @@ class OrganisationSwitcher extends Component {
       return window.location.href.includes(icon.linksTo)
     });
     // @ts-ignore
-    const authorisationText = this.props.intl.formatMessage({ id: "authorization.organisation_not_allowed_current_page", defaultMessage: "! Organisation not authorized to visit current page !" });
+    const authorisationText = props.intl.formatMessage({ id: "authorization.organisation_not_allowed_current_page", defaultMessage: "! Organisation not authorized to visit current page !" });
 
         
 
@@ -126,7 +120,7 @@ class OrganisationSwitcher extends Component {
                 type="text"
                 className={formStyles.FormControl}
                 placeholder="Type here to filter the list of organisations..."
-                onChange={this.handleInput}
+                onChange={handleInput}
               />
             </div>
             {isFetching ? (
@@ -144,7 +138,7 @@ class OrganisationSwitcher extends Component {
             ) : (
               <Scrollbars
                 // @ts-ignore
-                style={{ width: "100%", height: this.state.height - 400 }}
+                style={{ width: "100%", height: height - 400 }}
               >
                 {filteredOrganisations
                   // @ts-ignore
@@ -158,7 +152,7 @@ class OrganisationSwitcher extends Component {
                             ? styles.Active
                             : styles.InActive}`}
                           onClick={() => {
-                            this.selectOrganisation(organisation);
+                            selectOrganisation(organisation);
                             handleClose();
                           }}
                         >
@@ -180,14 +174,11 @@ class OrganisationSwitcher extends Component {
       </div>
     );
   }
-}
 
 // @ts-ignore
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = () => {
   return {
-    selectedOrganisation: state.organisations.selected,
-    organisations: state.organisations.available,
-    isFetching: state.organisations.isFetching
+    
   };
 };
 
