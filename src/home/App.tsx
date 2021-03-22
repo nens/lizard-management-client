@@ -51,6 +51,7 @@ const AppComponent = (props: RouteComponentProps) => {
                 {appTiles
                   .filter(appTile=> appTile.onPage === currentRelativeUrl )
                   .sort((appTileA, appTileB)=> appTileA.order - appTileB.order )
+                  // todo resolve any. x:any because x needs to support  x.interpolate
                   .map((appTile) => (obj:{ x:any, opacity:number }) => (
                     <animated.div
                       style={{
