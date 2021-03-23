@@ -41,7 +41,8 @@ const OrganisationSwitcher = (props:Props) => {
     };
   });
 
-  const hideOrganisationSwitcher = (e: any) => {
+  // Todo howto remove this any
+  const hideOrganisationSwitcher:any = (e: React.KeyboardEvent) => {
     if (e.key === "Escape") {
       props.handleClose();
     }
@@ -50,10 +51,12 @@ const OrganisationSwitcher = (props:Props) => {
     setHeight(window.innerHeight);
   }
   
+  // todo fix this any
   const handleInput = (e: any) => {
     setFilterValue( e.target.value);
   }
   
+  // todo fix this any
   const selectOrganisation = (organisation:any) => {
     props.selectOrganisation(organisation, true);
   }
@@ -67,6 +70,7 @@ const OrganisationSwitcher = (props:Props) => {
     const organisations = reduxOrganisations.available;
 
     const filteredOrganisations = filterValue
+    // todo: fix this any
       ? organisations.filter((org:any) => {
         if (org.name.toLowerCase().indexOf(filterValue) !== -1) {
             return org;
