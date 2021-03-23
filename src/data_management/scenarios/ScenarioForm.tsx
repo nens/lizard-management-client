@@ -1,7 +1,7 @@
 import React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { connect, useSelector } from 'react-redux';
-import { getOrganisations, getUsername } from '../../reducers';
+import { getOrganisations, getSelectedOrganisation, getUsername } from '../../reducers';
 import { ScenarioResult } from '../../form/ScenarioResult';
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import { TextInput } from './../../form/TextInput';
@@ -32,6 +32,7 @@ const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProp
   const organisations = useSelector(getOrganisations).available;
   const scenarioOrganisation = organisations.find((org: any) => org.uuid === currentScenario.organisation.uuid.replace(/-/g, ""));
   const username = useSelector(getUsername);
+  const selectedOrganisation = useSelector(getSelectedOrganisation);
 
   const initialValues = {
     name: currentScenario.name || '',
@@ -83,7 +84,7 @@ const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProp
       imgUrl={threediIcon}
       imgAltDescription={"3Di icon"}
       headerText={"3Di Scenarios"}
-      explanationText={scenarioFormHelpText[fieldOnFocus] || defaultScenarioExplanationText(bytesToDisplayValue(scenarioTotalSize))}
+      explanationText={scenarioFormHelpText[fieldOnFocus] || defaultScenarioExplanationText(bytesToDisplayValue(scenarioTotalSize), selectedOrganisation.name)}
       backUrl={"/data_management/scenarios/"}
       fieldName={fieldOnFocus}
     >

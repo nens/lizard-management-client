@@ -7,11 +7,11 @@ import TableActionButtons from '../../components/TableActionButtons';
 import {ExplainSideColumn} from '../../components/ExplainSideColumn';
 import threediIcon from "../../images/3di@3x.svg";
 import tableStyles from "../../components/Table.module.css";
-import {getUsername} from "../../reducers";
+import {getSelectedOrganisation, getUsername} from "../../reducers";
 import { bytesToDisplayValue } from '../../utils/byteUtils';
 import Modal from '../../components/Modal';
 import { ModalDeleteContent } from '../../components/ModalDeleteContent';
-import { defaultScenarioExplanationTextTable } from '../../utils/helpTextForForms';
+import { defaultScenarioExplanationText } from '../../utils/helpTextForForms';
 import {getScenarioTotalSize} from '../../reducers';
 
 export const ScenarioTable = () =>  {
@@ -231,17 +231,18 @@ export const ScenarioTable = () =>  {
   const scenarioTotalSize = useSelector(getScenarioTotalSize);
 
   const userName = useSelector(getUsername);
+  const selectedOrganisation = useSelector(getSelectedOrganisation);
 
   return (
     <ExplainSideColumn
       imgUrl={threediIcon}
       imgAltDescription={"3Di icon"}
       headerText={"3Di Scenarios"}
-      explanationText={defaultScenarioExplanationTextTable(bytesToDisplayValue(scenarioTotalSize))}
+      explanationText={defaultScenarioExplanationText(bytesToDisplayValue(scenarioTotalSize), selectedOrganisation.name)}
       backUrl={"/data_management"}
     >
         <TableStateContainer 
-          gridTemplateColumns={"4% 40% 20% 16% 8% 8% 4%"}
+          gridTemplateColumns={"4fr 38fr 19fr 15fr 10fr 10fr 4fr"}
           columnDefinitions={columnDefinitions}
           baseUrl={`${baseUrl}?`} 
           checkBoxActions={[
