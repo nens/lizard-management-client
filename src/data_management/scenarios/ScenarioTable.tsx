@@ -242,7 +242,7 @@ export const ScenarioTable = () =>  {
       backUrl={"/data_management"}
     >
         <TableStateContainer 
-          gridTemplateColumns={"4% 40% 20% 16% 8% 8% 4%"}
+          gridTemplateColumns={"4fr 38fr 19fr 15fr 10fr 10fr 4fr"}
           columnDefinitions={columnDefinitions}
           baseUrl={`${baseUrl}?`} 
           checkBoxActions={[
