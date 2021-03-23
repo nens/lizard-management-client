@@ -1,4 +1,6 @@
 import { combineReducers } from "redux";
+// Todo: add type defenitions to redux. Check threedi-livesite for examples. Next line imports redux thunk types
+// import thunk, { ThunkDispatch, ThunkAction } from 'redux-thunk';
 import {
   REQUEST_LIZARD_BOOTSTRAP,
   RECEIVE_LIZARD_BOOTSTRAP,
@@ -446,5 +448,8 @@ const rootReducer = combineReducers({
   rasterSourceUUID,
   uploadFiles
 });
+
+// Todo: add type defenitions to redux. Check threedi-livesite for examples. Next line defines AppDispatch for mapDispatchToProps
+// export type AppDispatch = ThunkDispatch<AppState, undefined, AnyAction>;
 
 export default rootReducer;

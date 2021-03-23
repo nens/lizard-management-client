@@ -14,10 +14,15 @@ import { Scrollbars } from "react-custom-scrollbars";
 import doArraysHaveEqualElement from '../utils/doArraysHaveEqualElement';
 import {appTiles} from '../home/AppTileConfig';
 
-// Todo fix any
-const OrganisationSwitcher = (props:any) => {
-  
+interface PropsArgs {
+  handleClose: () => void,
+}
 
+type Props = PropsArgs & DispatchProps
+
+// todo: add type defenitions props.intl.formatMessage
+const OrganisationSwitcher = (props:Props) => {
+  
   const [height, setHeight] = useState(window.innerHeight);
   const [filterValue, setFilterValue] = useState<null | string>(null);
 
@@ -73,6 +78,7 @@ const OrganisationSwitcher = (props:any) => {
     const currentHomeAppTile = appTiles.find(icon => {
       return window.location.href.includes(icon.linksTo)
     });
+    // todo add type defenitions for props.intl.formatMessage
     // @ts-ignore
     const authorisationText = props.intl.formatMessage({ id: "authorization.organisation_not_allowed_current_page", defaultMessage: "! Organisation not authorized to visit current page !" });
 
@@ -87,6 +93,7 @@ const OrganisationSwitcher = (props:any) => {
           classNames={{
             enter: styles.Enter,
             enterActive: styles.EnterActive,
+            // Todo find out how to solve this
             // @ts-ignore
             leave: styles.Leave,
             leaveActive: styles.LeaveActive,
@@ -108,8 +115,7 @@ const OrganisationSwitcher = (props:any) => {
             <div className={formStyles.FormGroup}>
               <input
                 id="organisationName"
-                // @ts-ignore
-                tabIndex="-1"
+                tabIndex={-1}
                 type="text"
                 className={formStyles.FormControl}
                 placeholder="Type here to filter the list of organisations..."
@@ -133,8 +139,8 @@ const OrganisationSwitcher = (props:any) => {
                 style={{ width: "100%", height: height - 400 }}
               >
                 {filteredOrganisations
-                  // @ts-ignore
-                  ? filteredOrganisations.map((organisation, i) => {
+                // Todo fix any og organisation
+                  ? filteredOrganisations.map((organisation:any, i:number) => {
                       const hasRequiredRoles = !currentHomeAppTile || doArraysHaveEqualElement(organisation.roles, currentHomeAppTile.requiresOneOfRoles);
                       return (
                         <div
@@ -168,18 +174,19 @@ const OrganisationSwitcher = (props:any) => {
   }
 
 
-// @ts-ignore
-const mapDispatchToProps = (dispatch) => {
+  // todo: fix any of dispatch
+const mapDispatchToProps = (dispatch:any) => {
   return {
-    // @ts-ignore
-    selectOrganisation: (organisation, addNotification) => {
+    // todo: fix :any organisation
+    selectOrganisation: (organisation:any, addNotification: boolean) => {
       dispatch(selectOrganisation(organisation, addNotification));
       dispatch(fetchSupplierIds());
     }
   };
 };
 
+type DispatchProps = ReturnType<typeof mapDispatchToProps>;
+
 export default connect(null, mapDispatchToProps)(
-  // @ts-ignore
   injectIntl(OrganisationSwitcher)
 );
