@@ -1,7 +1,0 @@
-.date-time-picker-month-arrow-prev::after {
-    content: "<";
-  
-  }
-  .date-time-picker-month-arrow-next::after {
-    content: ">";
-  }

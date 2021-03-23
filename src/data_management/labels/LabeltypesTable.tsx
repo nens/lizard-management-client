@@ -22,7 +22,7 @@ const columnDefinitions = [
         className={tableStyles.CellEllipsis}
         title={row.name}
       >
-        <NavLink to={`${navigationUrl}/${row.uuid}/`}>{!row.name? "(empty name)" : row.name }</NavLink>
+        <NavLink to={`${navigationUrl}/${row.uuid}`}>{!row.name? "(empty name)" : row.name }</NavLink>
       </span>
     ,
     orderingField: "name",

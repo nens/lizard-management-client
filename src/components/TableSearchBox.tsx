@@ -1,5 +1,5 @@
 import React from 'react';
-import clearInputStyles from "./ClearInputButton.module.css";
+import clearInputStyles from "./../form/ClearInputButton.module.css";
 
 interface Props {
   value: string;

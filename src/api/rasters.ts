@@ -101,7 +101,13 @@ export type RasterLayerFromAPI = RasterLayerInstance & {
   wms_info: {
     endpoint: string;
     layer: string;
-  }
+  },
+  spatial_bounds: {
+    north: number,
+    east: number,
+    south: number,
+    west: number
+  } | null
 }
 
 export const fetchRasterSourcesV4 = async (query?: string) => {
@@ -109,6 +115,21 @@ export const fetchRasterSourcesV4 = async (query?: string) => {
     `/api/v4/rastersources/?${query}`
   ) : (
     `/api/v4/rastersources/`
+  );
+  const response = await fetch(url, {
+    credentials: "same-origin",
+    method: "GET",
+    headers: {"Content-Type": "application/json"}
+  });
+
+  return response.json();
+};
+
+export const fetchRasterLayersV4 = async (query?: string) => {
+  const url = query ? (
+    `/api/v4/rasters/?${query}`
+  ) : (
+    `/api/v4/rasters/`
   );
   const response = await fetch(url, {
     credentials: "same-origin",

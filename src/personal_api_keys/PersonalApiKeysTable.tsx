@@ -50,7 +50,7 @@ export const PersonalApiKeysTable = (props:any) =>  {
           className={tableStyles.CellEllipsis}
           title={row.name}
         >
-          <NavLink to={`${navigationUrl}/${row.prefix}/`}>{!row.name? "(empty name)" : row.name }</NavLink>
+          <NavLink to={`${navigationUrl}/${row.prefix}`}>{!row.name? "(empty name)" : row.name }</NavLink>
         </span>
       ,
       orderingField: null,
@@ -89,6 +89,7 @@ export const PersonalApiKeysTable = (props:any) =>  {
               setTableData={setTableData} 
               triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
               triggerReloadWithBasePage={triggerReloadWithBasePage}
+              editUrl={`${navigationUrl}/${row.prefix}`}
               actions={[
                 {
                   displayValue: "Delete",

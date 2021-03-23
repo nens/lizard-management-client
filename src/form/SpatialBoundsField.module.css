@@ -1,15 +1,42 @@
 .GetFromGeoServer {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .GetFromGeoServerError {
-    color: red;
+  color: red;
 }
 
 .InputFields {
-    margin-left: 5px;
-    margin-right: 5px;
-    display: inline-block;
-  }
-  
+  margin-left: 5px;
+  margin-right: 5px;
+  display: inline-block;
+}
+
+.AddThresholdButton {
+  /* max-width: 400px; */
+  text-transform: uppercase;
+  cursor: pointer;
+  font-weight: bold;
+  padding: 10px 20px;
+  margin: 10px 0;
+  background-color: #00cdab;
+  color: #fff;
+  border-radius: 8px;
+  border: none;
+  box-shadow: 0px 3px 6px #00000029;
+}
+.AddThresholdButton:hover {
+  background-color: #00a78b;
+}
+.AddThresholdButton:focus {
+  outline: none;
+}
+.InactiveAddThresholdButton {
+  cursor: not-allowed;
+  background-color: #C9C9C9;
+  color: #fff;
+}
+.InactiveAddThresholdButton:hover {
+  background-color: #C9C9C9;
+}

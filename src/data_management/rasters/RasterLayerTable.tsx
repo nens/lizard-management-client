@@ -86,7 +86,7 @@ export const RasterLayerTable: React.FC<RouteComponentProps> = (props) =>  {
           className={tableStyles.CellEllipsis}
           title={row.name}
         >
-          <NavLink to={`${navigationUrlRasters}/${row.uuid}/`}>{row.name}</NavLink>
+          <NavLink to={`${navigationUrlRasters}/${row.uuid}`}>{row.name}</NavLink>
         </span>,
       orderingField: "name",
     },
@@ -135,6 +135,7 @@ export const RasterLayerTable: React.FC<RouteComponentProps> = (props) =>  {
               setTableData={setTableData} 
               triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
               triggerReloadWithBasePage={triggerReloadWithBasePage}
+              editUrl={`${navigationUrlRasters}/${row.uuid}`}
               actions={[
                 {
                   displayValue: "Delete",

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import durationStyles from "../forms/DurationField.module.css";
+import durationStyles from "../form/DurationField.module.css";
 import formStyles from "../styles/Forms.module.css";
 import inputStyles from "../styles/Input.module.css";
 

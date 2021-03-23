@@ -1,40 +1,38 @@
-import React from 'react';
-import TableStateContainer from '../../components/TableStateContainer';
-import { NavLink } from "react-router-dom";
-import {ExplainSideColumn} from '../../components/ExplainSideColumn';
-import wmsIcon from "../../images/wms@3x.svg";
-import tableStyles from "../../components/Table.module.css";
-import TableActionButtons from '../../components/TableActionButtons';
-import {useState, }  from 'react';
-import Modal from '../../components/Modal';
-import { ModalDeleteContent } from '../../components/ModalDeleteContent'
+import React, { useState } from 'react';
+import { connect } from 'react-redux';
+import { NavLink, RouteComponentProps } from "react-router-dom";
+import TableStateContainer from '../../../components/TableStateContainer';
+import TableActionButtons from '../../../components/TableActionButtons';
+import tableStyles from "../../../components/Table.module.css";
+import { ExplainSideColumn } from '../../../components/ExplainSideColumn';
+import { ModalDeleteContent } from '../../../components/ModalDeleteContent';
+import { addNotification } from '../../../actions';
+import Modal from '../../../components/Modal';
+import alarmIcon from "../../../images/alarm@3x.svg";
 
-
-export const WmsLayerTable = (props:any) =>  {
-
+export const RasterAlarmTableComponent: React.FC<DispatchProps & RouteComponentProps> = (props) =>  {
   const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
   const [rowToBeDeleted, setRowToBeDeleted] = useState<any | null>(null);
   const [deleteFunction, setDeleteFunction] = useState<null | Function>(null);
   const [busyDeleting, setBusyDeleting] = useState<boolean>(false);
 
-  const baseUrl = "/api/v4/wmslayers/";
-  const navigationUrl = "/data_management/wms_layers";
+  const baseUrl = "/api/v4/rasteralarms/";
+  const navigationUrl = "/alarms/notifications/raster_alarms";
 
-  const fetchWmsLayerUuidsWithOptions = (uuids: string[], fetchOptions:any) => {
-    const url = "/api/v4/wmslayers/";
-    const fetches = uuids.map (wmsLayerUuid => {
-      return (fetch(url + wmsLayerUuid + "/", fetchOptions));
+  const fetchRasterAlarmsWithOptions = (uuids: string[], fetchOptions:any) => {
+    const fetches = uuids.map (uuid => {
+      return (fetch(baseUrl + uuid + "/", fetchOptions));
     });
-    return Promise.all(fetches)
-  }
+    return Promise.all(fetches);
+  };
 
   const deleteActions = (rows: any[], tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any, setCheckboxes: any)=>{
     setRowsToBeDeleted(rows);
-    const uuids = rows.map(row=> row.uuid);
+    const uuids = rows.map(row=> row.id);
     setDeleteFunction(()=>()=>{
       setBusyDeleting(true);
       const tableDataDeletedmarker = tableData.map((rowAllTables:any)=>{
-        if (uuids.find((uuid)=> uuid === rowAllTables.uuid)) {
+        if (uuids.find(uuid => uuid === rowAllTables.uuid)) {
           return {...rowAllTables, markAsDeleted: true}
         } else{
           return {...rowAllTables};
@@ -47,9 +45,8 @@ export const WmsLayerTable = (props:any) =>  {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({})
       };
-      return fetchWmsLayerUuidsWithOptions(uuids, opts)
+      return fetchRasterAlarmsWithOptions(uuids, opts)
       .then((_result) => {
-        setBusyDeleting(false);
         if (setCheckboxes) {
           setCheckboxes([]);
         }
@@ -62,7 +59,6 @@ export const WmsLayerTable = (props:any) =>  {
   }
 
   const deleteAction = (row: any, updateTableRow:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any)=>{
-    
     setRowToBeDeleted(row);
     setDeleteFunction(()=>()=>{
       setBusyDeleting(true);
@@ -73,7 +69,7 @@ export const WmsLayerTable = (props:any) =>  {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({})
       };
-      return fetchWmsLayerUuidsWithOptions([row.uuid], opts)
+      return fetchRasterAlarmsWithOptions([row.uuid], opts)
       .then((_result) => {
         setBusyDeleting(false);
         // TODO: do we need this callback or should we otherwise indicate that the record is deleted ?
@@ -82,9 +78,29 @@ export const WmsLayerTable = (props:any) =>  {
             resolve();
           });
         })
-      
     })
   }
+
+  const setAlarmActive = (row: any, updateTableRow: any, triggerReloadWithCurrentPage: any) => {
+    fetchRasterAlarmsWithOptions([row.uuid], {
+      credentials: "same-origin",
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        active: !row.active
+      })
+    })
+    .then(response => {
+      const alarmResponse = response[0];
+      if (alarmResponse.status === 200) {
+        triggerReloadWithCurrentPage();
+        props.addNotification(`Alarm ${row.active ? 'Deactivated' : 'Activated'}`, 2000);
+      } else {
+        console.error(response);
+        props.addNotification(`Failed to ${row.active ? 'deactivate' : 'activate'} alarm`, 2000);
+      };
+    });
+  };
 
   const columnDefinitions = [
     {
@@ -99,13 +115,22 @@ export const WmsLayerTable = (props:any) =>  {
       orderingField: "name",
     },
     {
-      titleRenderFunction: () =>  "Description",
+      titleRenderFunction: () =>  "Recipients",
       renderFunction: (row: any) => 
         <span
           className={tableStyles.CellEllipsis}
-          title={row.description}
         >
-          {row.description}
+          {row.messages.length}
+        </span>,
+      orderingField: null,
+    },
+    {
+      titleRenderFunction: () => "Status",
+      renderFunction: (row: any) => 
+        <span
+          className={tableStyles.CellEllipsis}
+        >
+          {row.active ? 'ON' : 'OFF'}
         </span>,
       orderingField: null,
     },
@@ -122,9 +147,13 @@ export const WmsLayerTable = (props:any) =>  {
               editUrl={`${navigationUrl}/${row.uuid}`}
               actions={[
                 {
+                  displayValue: row.active ? 'Deactivate' : 'Activate',
+                  actionFunction: setAlarmActive
+                },
+                {
                   displayValue: "Delete",
                   actionFunction: deleteAction,
-                },
+                }
               ]}
             />
         );
@@ -133,23 +162,21 @@ export const WmsLayerTable = (props:any) =>  {
     },
   ];
 
-
-
-  const handleNewRasterClick  = () => {
+  const handleNewContactClick  = () => {
     const { history } = props;
     history.push(`${navigationUrl}/new`);
   }
 
   return (
     <ExplainSideColumn
-      imgUrl={wmsIcon}
-      imgAltDescription={"WMS-Layer icon"}
-      headerText={"WMS Layers"}
-      explanationText={"WMS-Layers allow to configure layers in lizard even if they are hosted on another platform"} 
-      backUrl={"/data_management"}
+      imgUrl={alarmIcon}
+      imgAltDescription={"Alarm icon"}
+      headerText={"Raster Alarms"}
+      explanationText={"Alarms consist of a name, template, thresholds and recipients. You can create, (de)activate or delete your alarms here."} 
+      backUrl={"/alarms/notifications"}
     >
         <TableStateContainer 
-          gridTemplateColumns={"8% 29% 55% 8%"} 
+          gridTemplateColumns={"10% 40% 20% 20% 10%"} 
           columnDefinitions={columnDefinitions}
           baseUrl={`${baseUrl}?`} 
           checkBoxActions={[
@@ -158,12 +185,12 @@ export const WmsLayerTable = (props:any) =>  {
               actionFunction: deleteActions,
             }
           ]}
-          newItemOnClick={handleNewRasterClick}
+          newItemOnClick={handleNewContactClick}
           filterOptions={[
-            {value: 'name__icontains=', label: 'Name'},
-            // not needed for now
-            // {value: 'datasets__slug__icontains=', label: 'Datasets slug'},
-            {value: 'uuid=', label: 'UUID'},
+            {
+              value: 'name__icontains=',
+              label: 'Name'
+            }
           ]}
         />
         { 
@@ -184,8 +211,8 @@ export const WmsLayerTable = (props:any) =>  {
           disableButtons={busyDeleting}
          >
            
-           <p>Are you sure? You are deleting the following WMS-layers:</p>
-           {ModalDeleteContent(rowsToBeDeleted, busyDeleting, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
+           <p>Are you sure? You are deleting the following raster alarms:</p>
+           {ModalDeleteContent(rowsToBeDeleted, busyDeleting, [{name: "name", width: 40}, {name: "uuid", width: 60}])}
            
          </Modal>
         :
@@ -210,8 +237,8 @@ export const WmsLayerTable = (props:any) =>  {
            }}
            disableButtons={busyDeleting}
          >
-           <p>Are you sure? You are deleting the following WMS-layer:</p>
-           {ModalDeleteContent([rowToBeDeleted], busyDeleting, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
+           <p>Are you sure? You are deleting the following raster alarm:</p>
+           {ModalDeleteContent([rowToBeDeleted], busyDeleting, [{name: "name", width: 40}, {name: "uuid", width: 60}])}
 
          </Modal>
         :
@@ -220,3 +247,10 @@ export const WmsLayerTable = (props:any) =>  {
      </ExplainSideColumn>
   );
 }
+
+const mapDispatchToProps = (dispatch: any) => ({
+  addNotification: (message: string, timeout: number) => dispatch(addNotification(message, timeout))
+});
+type DispatchProps = ReturnType<typeof mapDispatchToProps>;
+
+export const RasterAlarmTable = connect(null, mapDispatchToProps)(RasterAlarmTableComponent);

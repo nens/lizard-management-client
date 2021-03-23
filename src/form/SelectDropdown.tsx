@@ -13,7 +13,7 @@ export type Value = {
 interface MyProps {
   title: string,
   name: string,
-  value: Value | null,
+  value?: Value | null,
   valueChanged: (value: ValueType<Value, boolean> | {}) => void,
   options: Value[],
   validated: boolean,
@@ -25,6 +25,7 @@ interface MyProps {
   isClearable?: boolean,
   isLoading?: boolean,
   isMulti?: boolean,
+  dropUp?: boolean,
   form?: string,
   isAsync?: boolean,
   loadOptions?: (inputValue: string) => Promise<any>, // loadOptions is required if isAsync === true
@@ -47,6 +48,7 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
     isClearable,
     isLoading,
     isMulti,
+    dropUp,
     isAsync,
     loadOptions,
     form,
@@ -131,6 +133,10 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
         }
       }
     },
+    menu: (styles) => ({
+      ...styles,
+      zIndex: 100 // to always show the menu dropdown
+    }),
     // Custom styling for Option list component
     option: (styles, { data }) => ({
       ...styles,
@@ -168,12 +174,13 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
             cacheOptions
             defaultOptions
             loadOptions={loadOptions}
-            defaultValue={value}
+            value={value}
             onChange={option => valueChanged(option)}
             isClearable={!readOnly && isClearable === undefined ? true : false}
             isSearchable={!readOnly && isSearchable}
             menuIsOpen={readOnly ? false : undefined}
             isMulti={isMulti}
+            menuPlacement={dropUp ? 'top' : undefined}
             onFocus={onFocus}
             onBlur={onBlur}
             filterOption={createFilter({ ignoreAccents: false })}
@@ -187,13 +194,14 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
             styles={customStyles}
             placeholder={placeholder}
             options={options}
-            defaultValue={value}
+            value={value}
             onChange={option => valueChanged(option)}
             isLoading={isLoading}
             isClearable={!readOnly && isClearable === undefined ? true : false}
             isSearchable={!readOnly && isSearchable}
             menuIsOpen={readOnly ? false : undefined}
             isMulti={isMulti}
+            menuPlacement={dropUp ? 'top' : undefined}
             onFocus={onFocus}
             onBlur={onBlur}
             filterOption={createFilter({ ignoreAccents: false })}
