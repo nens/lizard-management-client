@@ -36,9 +36,7 @@ import { EditGroup } from "../alarms/alarmgroups/EditGroup";
 import { NewTemplate } from "../alarms/alarmtemplates/NewAlarmTemplate";
 import { EditTemplate } from "../alarms/alarmtemplates/EditTemplate";
 
-interface Props {}
-
-export const Routes: React.FC<Props> = () => {
+export const Routes = () => {
 
   // The AppTileConfig.ts contains all the Tiles in the app. (in the future this list should come from backend, become data driven instead of hardcoded)
   // The  router should show the 'Home' component if:

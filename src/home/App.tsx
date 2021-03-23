@@ -1,40 +1,37 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
+import React from "react";
+import {  useSelector } from "react-redux";
 import styles from "./App.module.css";
 import AppTile from "../components/AppTile";
-import { withRouter } from "react-router-dom";
 import { Trail, animated } from "react-spring";
 import doArraysHaveEqualElement from '../utils/doArraysHaveEqualElement';
 import {appTiles} from './AppTileConfig';
+import {getSelectedOrganisation} from '../reducers';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 
-class App extends Component {
-  constructor(props) {
-    super(props);
-    this.handleLink = this.handleLink.bind(this);
-    this.handleExternalLink = this.handleExternalLink.bind(this);
-  }
 
-  handleInternalLink(destination) {
-    this.props.history.push(destination);
-  }
+const AppComponent = (props: RouteComponentProps) => {
 
-  handleExternalLink(destination) {
-    window.location.href = destination;
-  }
-
-  handleLink (linksToObject) {
-    if (linksToObject.external === true) {
-      this.handleExternalLink(linksToObject.path);
-    } else {
-      this.handleInternalLink(linksToObject.path);
+    const handleInternalLink = (destination:string) => {
+      props.history.push(destination);
     }
-  }
+  
+    const handleExternalLink = (destination:string) => {
+      window.location.href = destination;
+    }
+  
+    const handleLink = (linksToObject: {path:string; external:boolean}) => {
+      if (linksToObject.external === true) {
+        handleExternalLink(linksToObject.path);
+      } else {
+        handleInternalLink(linksToObject.path);
+      }
+    }
 
-  render() {
+    const currentRelativeUrl = props.location.pathname;
 
-    const currentRelativeUrl = this.props.location.pathname;
+    const selectedOrganisation = useSelector(getSelectedOrganisation)
 
-    const currentOrganisationRoles = (this.props.selectedOrganisation && this.props.selectedOrganisation.roles) || [];
+    const currentOrganisationRoles = (selectedOrganisation && selectedOrganisation.roles) || [];
     
     return (
       <div>
@@ -42,24 +39,28 @@ class App extends Component {
         <div className="container">
           <div className="row">
             <div className={styles.Apps}>
+              {/* Not sure why this ts-ignore is needed. Compiler complaints <Trail needs multiple children?  */}
+              {/*  
+              // @ts-ignore */}
               <Trail
                 native
                 from={{ opacity: 0, x: -5 }}
                 to={{ opacity: 1, x: 0 }}
-                keys={appTiles.map(item => item.key)}
+                keys={appTiles.map(item => item.title)}
               >
                 {appTiles
                   .filter(appTile=> appTile.onPage === currentRelativeUrl )
                   .sort((appTileA, appTileB)=> appTileA.order - appTileB.order )
-                  .map((appTile) => ({ x, opacity }) => (
+                  // todo resolve any. x:any because x needs to support  x.interpolate
+                  .map((appTile) => (obj:{ x:any, opacity:number }) => (
                     <animated.div
                       style={{
-                        opacity,
-                        transform: x.interpolate(x => `translate3d(${x}%,0,0)`)
+                        opacity: obj.opacity,
+                        transform: obj.x.interpolate((x:number) => `translate3d(${x}%,0,0)`)
                       }}
                     >
                       <AppTile
-                        handleClick={()=>{ this.handleLink({
+                        handleClick={()=>{ handleLink({
                           external: appTile.linksToExternal? true : false,
                           path: appTile.linksTo
                         })}}
@@ -78,16 +79,8 @@ class App extends Component {
       </div>
     );
   }
-}
 
-const mapStateToProps = (state) => {
-  return {
-    selectedOrganisation: state.organisations.selected,
-  };
-};
 
-App = withRouter(connect(mapStateToProps, null)(
-  App
-));
+const App = withRouter(AppComponent);
 
 export { App };
