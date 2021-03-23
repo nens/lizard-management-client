@@ -172,7 +172,7 @@ export const RasterSourceTable = (props:any) =>  {
               setTableData={setTableData} 
               triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
               triggerReloadWithBasePage={triggerReloadWithBasePage}
-              navigationUrl={`${navigationUrlRasters}/${row.uuid}`}
+              editUrl={`${navigationUrlRasters}/${row.uuid}`}
               actions={[
                 {
                   displayValue: "Delete",

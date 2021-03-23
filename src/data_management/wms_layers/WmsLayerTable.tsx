@@ -119,7 +119,7 @@ export const WmsLayerTable = (props:any) =>  {
               setTableData={setTableData} 
               triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
               triggerReloadWithBasePage={triggerReloadWithBasePage}
-              navigationUrl={`${navigationUrl}/${row.uuid}`}
+              editUrl={`${navigationUrl}/${row.uuid}`}
               actions={[
                 {
                   displayValue: "Delete",

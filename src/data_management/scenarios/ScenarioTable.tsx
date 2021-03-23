@@ -200,7 +200,7 @@ export const ScenarioTable = () =>  {
               setTableData={setTableData} 
               triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
               triggerReloadWithBasePage={triggerReloadWithBasePage}
-              navigationUrl={`${navigationUrl}/${row.uuid}`}
+              editUrl={`${navigationUrl}/${row.uuid}`}
               actions={row.has_raw_results ? [
                 {
                   displayValue: "Delete raw data",

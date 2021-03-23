@@ -89,7 +89,7 @@ export const PersonalApiKeysTable = (props:any) =>  {
               setTableData={setTableData} 
               triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
               triggerReloadWithBasePage={triggerReloadWithBasePage}
-              navigationUrl={`${navigationUrl}/${row.prefix}`}
+              editUrl={`${navigationUrl}/${row.prefix}`}
               actions={[
                 {
                   displayValue: "Delete",

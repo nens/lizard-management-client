@@ -135,7 +135,7 @@ export const RasterLayerTable: React.FC<RouteComponentProps> = (props) =>  {
               setTableData={setTableData} 
               triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
               triggerReloadWithBasePage={triggerReloadWithBasePage}
-              navigationUrl={`${navigationUrlRasters}/${row.uuid}`}
+              editUrl={`${navigationUrlRasters}/${row.uuid}`}
               actions={[
                 {
                   displayValue: "Delete",

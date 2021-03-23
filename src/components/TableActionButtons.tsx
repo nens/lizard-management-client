@@ -17,15 +17,15 @@ interface Props {
   setTableData:any;
   triggerReloadWithCurrentPage:any; 
   triggerReloadWithBasePage:any;
-  navigationUrl: string;
+  editUrl: string;
 }
 
-const TableActionButtons: React.FC<Props & RouteComponentProps> = ({actions, tableRow,tableData,setTableData,triggerReloadWithCurrentPage, triggerReloadWithBasePage, history, navigationUrl }) => {
+const TableActionButtons: React.FC<Props & RouteComponentProps> = ({actions, tableRow,tableData,setTableData,triggerReloadWithCurrentPage, triggerReloadWithBasePage, editUrl, history }) => {
   // Edit action to open the object in the form
   // The edit action is always available for all the tables
   const editAction = {
     displayValue: 'Edit',
-    actionFunction: () => history.push(navigationUrl)
+    actionFunction: () => history.push(editUrl)
   };
 
   // Add the edit action to the list of available actions for table

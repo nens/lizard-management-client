@@ -114,7 +114,7 @@ export const GroupTable: React.FC<any> = (props) =>  {
               setTableData={setTableData} 
               triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
               triggerReloadWithBasePage={triggerReloadWithBasePage}
-              navigationUrl={`${navigationUrl}/${row.id}`}
+              editUrl={`${navigationUrl}/${row.id}`}
               actions={[
                 {
                   displayValue: "Delete",
