@@ -17,19 +17,19 @@ interface Props {
   setTableData:any;
   triggerReloadWithCurrentPage:any; 
   triggerReloadWithBasePage:any;
-  editUrl: string;
+  editUrl?: string; // optional parameter for EDIT action
 }
 
 const TableActionButtons: React.FC<Props & RouteComponentProps> = ({actions, tableRow,tableData,setTableData,triggerReloadWithCurrentPage, triggerReloadWithBasePage, editUrl, history }) => {
-  // Edit action to open the object in the form
-  // The edit action is always available for all the tables
-  const editAction = {
-    displayValue: 'Edit',
-    actionFunction: () => history.push(editUrl)
-  };
-
-  // Add the edit action to the list of available actions for table
-  const actionList = [...actions, editAction];
+  const actionList = editUrl ? [
+    ...actions,
+    // Edit action to open the object in the form
+    // and is optional based on parameter "editUrl"
+    {
+      displayValue: 'Edit',
+      actionFunction: () => history.push(editUrl)
+    }
+  ] : actions;
 
   return (
     <ActionButton
