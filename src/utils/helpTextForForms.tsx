@@ -152,31 +152,20 @@ export const wmsFormHelpText: HelpText = {
   supplier: 'The supplier of this object.',
 }
 
-export const defaultScenarioExplanationTextTable = (usedSpaceString:string) => {
-  return (
-    <div>
-      <div style={{marginBottom: "16px"}}>Scenarios are created in 3Di.</div>
-      <div 
-        style={{display:"flex", justifyContent: "space-between",}}
-      >
-        <span>Used storage: </span>
-        <span style={{fontWeight: "bold",}}>{usedSpaceString}</span>
-      </div>
-    </div>
-  );
-}
-
-export const defaultScenarioExplanationText = (usedSpaceString:string) => {
-  return (
-    <div>
-      <div style={{marginBottom: "16px"}}>Form to edit 3Di scenario.</div>
-      <div>
-        <span>Total used storage all scenario's: </span>
-        <span style={{fontWeight: "bold",}}>{usedSpaceString}</span>
-      </div>
-    </div>
-  );
-}
+export const defaultScenarioExplanationText = (usedSpaceString:string, organisation: string) => (
+  <div
+    style={{
+      display:"grid",
+      gridTemplateColumns: "1fr 1fr",
+      columnGap: 5
+    }}
+  >
+    <span>Organisation:</span>
+    <span style={{ fontWeight: "bold" }}>{organisation}</span>
+    <span>Used storage:</span>
+    <span style={{ fontWeight: "bold" }}>{usedSpaceString}</span>
+  </div>
+);
 
 
 export const scenarioFormHelpText: HelpText = {
