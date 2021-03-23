@@ -145,6 +145,7 @@ export const ContactTable: React.FC<any> = (props) =>  {
               setTableData={setTableData} 
               triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
               triggerReloadWithBasePage={triggerReloadWithBasePage}
+              editUrl={`${navigationUrl}/${row.id}`}
               actions={[
                 {
                   displayValue: "Delete",

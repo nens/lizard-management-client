@@ -94,7 +94,7 @@ export const WmsLayerTable = (props:any) =>  {
           className={tableStyles.CellEllipsis}
           title={row.name}
         >
-          <NavLink to={`${navigationUrl}/${row.uuid}/`}>{row.name}</NavLink>
+          <NavLink to={`${navigationUrl}/${row.uuid}`}>{row.name}</NavLink>
         </span>,
       orderingField: "name",
     },
@@ -119,6 +119,7 @@ export const WmsLayerTable = (props:any) =>  {
               setTableData={setTableData} 
               triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
               triggerReloadWithBasePage={triggerReloadWithBasePage}
+              editUrl={`${navigationUrl}/${row.uuid}`}
               actions={[
                 {
                   displayValue: "Delete",

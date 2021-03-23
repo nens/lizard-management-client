@@ -144,6 +144,7 @@ export const TimeseriesAlarmTableComponent: React.FC<DispatchProps & RouteCompon
               setTableData={setTableData} 
               triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
               triggerReloadWithBasePage={triggerReloadWithBasePage}
+              editUrl={`${navigationUrl}/${row.uuid}`}
               actions={[
                 {
                   displayValue: row.active ? 'Deactivate' : 'Activate',
