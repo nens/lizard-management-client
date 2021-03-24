@@ -5,6 +5,8 @@ import { NavLink } from "react-router-dom";
 import {ExplainSideColumn} from '../../components/ExplainSideColumn';
 import tableStyles from "../../components/Table.module.css";
 import timeseriesIcon from "../../images/timeseries_icon.svg";
+import TableActionButtons from '../../components/TableActionButtons';
+
 
 
 const baseUrl = "/api/v4/timeseries/";
@@ -72,6 +74,28 @@ const columnDefinitions = [
   //   ,
   //   orderingField: null,
   // },
+  {
+    titleRenderFunction: () =>  "",//"Actions",
+    renderFunction: (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any) => {
+      return (
+          <TableActionButtons
+            tableRow={row} 
+            tableData={tableData}
+            setTableData={setTableData} 
+            triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
+            triggerReloadWithBasePage={triggerReloadWithBasePage}
+            editUrl={`${navigationUrl}/${row.uuid}`}
+            actions={[
+              // {
+              //   displayValue: "Delete",
+              //   actionFunction: deleteActionRaster,
+              // },
+            ]}
+          />
+      );
+    },
+    orderingField: null,
+  },
 ];
 
 export const TimeseriesTable = (props:any) =>  {
@@ -85,7 +109,7 @@ export const TimeseriesTable = (props:any) =>  {
       backUrl={"/data_management/timeseries"}
     >
       <TableStateContainer 
-        gridTemplateColumns={"24% 22% 24% 22%"} 
+        gridTemplateColumns={"24% 22% 24% 22% 8%"} 
         columnDefinitions={columnDefinitions}
         baseUrl={`${baseUrl}?`} 
         checkBoxActions={[]}
