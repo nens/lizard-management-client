@@ -1,4 +1,5 @@
 // feature branch for timeseries
+// starting timeseries tiles
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
