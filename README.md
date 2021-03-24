@@ -24,54 +24,28 @@ Installation
 ============
 
 
-- Required: A working nodejs and yarn installation.
-- In the root directory of the repository: `$ yarn install`
-- start the app using `$ yarn start`
-- By default, the proxy sends requests to https://nxt3.staging.lizard.net/
-  (for selected URLs), without authentication.
+- Required: A working nodejs and yarn installation.  
+- In the root directory of the repository: `$ yarn install`  
+- start the app using `$ yarn start`  
+- By default, the proxy sends requests to https://nxt3.staging.lizard.net/  
+  (for selected URLs), without authentication.  
+- Set up proxy and basic authentication by following the steps [here](./BASIC_AUTH.md)
+- start the app by running one of (depending on your choice in previous step) :  
 
-- To use authentication, request a personal API key at the [api-key-management-page](https://nxt3.staging.lizard.net/management)
-  and set it in the variable `STAGING_API_KEY`, with e.g.
+`PROXY_PREFIX=STAGING STAGING_URL=https://nxt3.staging.lizard.net/ STAGING_API_KEY=123456789STAGINGKEY yarn start`  
+or  
+`yarn start`  
+or    
+`yarn run startauth`  
 
-    `STAGING_API_KEY=423232423424b yarn start`
+Installation problems
+=====================
 
-  (note that you can only get a particular key *once* from that page, so store it somewhere safe)
-
-- Additionally you can set the following environment variables in yarn start:
-    `STAGING_API_KEY`   (your key)
-    `STAGING_URL`     (defaults to 'https://nxt3.staging.lizard.net/')
-
-  It is also possible to set extra sets of URLs and keys, for instance for production:
-
-    `LIZARD_URL`
-    `LIZARD_API_KEY`
-
-  And to use them by choosing a different PROXY_PREFIX setting (default is "STAGING"):
-
-     `PROXY_PREFIX=LIZARD yarn start` (uses the two variables above)
-
-  This can be used to set a key for production, to use different
-  Lizard portals in different situations, or to not use a key at all
-  by setting a nonexisting prefix (`PROXY_PREFIX=NONE yarn start`).
-
-- Typing all these variables in yarn start every time is a lot of work.
-  Alternatively you can put these variables once in your personal `~/.profile` file with lines like:
-
-    `export LIZARD_URL='https://parramatta.lizard.net/'`
-    `export LIZARD_API_KEY=.....`
-    `export STAGING_URL='https://nxt3.staging.lizard.net/'`
-    `export STAGING_API_KEY=....`
-
-IMPORTANT: You need to restart your computer after editing the ~./profile file for the new environment variables to work.
-You can test your environment variables by opening a new shell and do `$ echo $LIZARD_URL`
-It should log the environment variable.
-Inside /src/setupProxy.js you can enable the logging and process.exit by uncommenting those lines.
-
-- in case you run into the following error:
-postcss@8.2.1: The engine "node" is incompatible with this module. Expected version "^10 || ^12 || >=14". Got "13.7.0"
-Use nvm to use nodeJS version 12:
-`$ nvm install 12`
-`$ nvm use 12`
+- in case you run into the following error:  
+postcss@8.2.1: The engine "node" is incompatible with this module. Expected version "^10 || ^12 || >=14". Got "13.7.0"  
+Use nvm to use nodeJS version 12:  
+`$ nvm install 12`  
+`$ nvm use 12`  
 
 
 create-react-app
