@@ -33,7 +33,10 @@ const columnDefinitions = [
       <span
         className={tableStyles.CellEllipsis}
       >
-        {!row.observation_type? "(empty observation type)" : row.observation_type.unit? `${row.observation_type.code} (${row.observation_type.unit})` : row.observation_type.code }
+        {!row.observation_type? "(empty observation type)" : 
+          row.observation_type.unit? <>{row.observation_type.code}{" "} <span style={{fontWeight:600,}}>{`(${row.observation_type.unit})`}</span></> : 
+          row.observation_type.code 
+        }
       </span>
     ,
     orderingField: "observation_type",
