@@ -4,11 +4,11 @@ import TableStateContainer from '../../components/TableStateContainer';
 import { NavLink } from "react-router-dom";
 import {ExplainSideColumn} from '../../components/ExplainSideColumn';
 import tableStyles from "../../components/Table.module.css";
-import monitoringNetworkIcon from "../../images/monitoring_network_icon.svg";
+import locationIcon from "../../images/locations_icon.svg";
 
 
-const baseUrl = "/api/v4/monitoringnetworks/";
-const navigationUrl = "/data_management/timeseries/monitoring_networks";
+const baseUrl = "/api/v4/locations/";
+const navigationUrl = "/data_management/timeseries/locations";
 
 
 
@@ -39,15 +39,15 @@ const columnDefinitions = [
   },
 ];
 
-export const MonitoringNetworksTable = (props:any) =>  {
+export const LocationsTable = (props:any) =>  {
 
   return (
     <ExplainSideColumn
-      imgUrl={monitoringNetworkIcon}
-      imgAltDescription={"Monitoring-Network icon"}
-      headerText={"Monitoring Networks"}
-      explanationText={"Search or sort your monitoring-networks here."}
-      backUrl={"/data_management/timeseries"}
+      imgUrl={locationIcon}
+      imgAltDescription={"Locations icon"}
+      headerText={"Locations"}
+      explanationText={"Search or sort your locations here."}
+      backUrl={"/data_management/locations"}
     >
       <TableStateContainer 
         gridTemplateColumns={"60% 40%"} 
