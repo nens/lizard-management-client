@@ -18,7 +18,7 @@ const columnDefinitions = [
     renderFunction: (row: any) => 
       <span
         className={tableStyles.CellEllipsis}
-        title={row.name}
+        title={`${row.name} - UUID: ${row.uuid}`}
       >
         <NavLink to={`${navigationUrl}/${row.uuid}`}>{!row.name? "(empty name)" : row.name }</NavLink>
       </span>
@@ -26,17 +26,52 @@ const columnDefinitions = [
     orderingField: "name",
   },
   {
-    titleRenderFunction: () =>  "Uuid",
-    renderFunction: (row: any) =>
+    titleRenderFunction: () => "Observation type",
+    renderFunction: (row: any) => 
       <span
         className={tableStyles.CellEllipsis}
-        title={row.uuid}
       >
-        {row.uuid}
+        {!row.observation_type? "(empty observation type)" : row.observation_type.unit? `${row.observation_type.code} (${row.observation_type.unit})` : row.observation_type.code }
       </span>
     ,
-    orderingField: null,
+    orderingField: "observation_type",
   },
+  {
+    titleRenderFunction: () => "Location",
+    renderFunction: (row: any) => 
+      <span
+        className={tableStyles.CellEllipsis}
+      >
+        {!row.location? "(empty location)" : row.location.name + " - " + row.location.code }
+      </span>
+    ,
+    orderingField: "location",
+  },
+  {
+    titleRenderFunction: () => "Accessibility",
+    renderFunction: (row: any) => 
+      <span
+        className={tableStyles.CellEllipsis}
+        title={row.access_modifier}
+      >
+        {row.access_modifier }
+      </span>
+    ,
+    orderingField: "access_modifier",
+  },
+  // // uuid for now not needed
+  // {
+  //   titleRenderFunction: () =>  "Uuid",
+  //   renderFunction: (row: any) =>
+  //     <span
+  //       className={tableStyles.CellEllipsis}
+  //       title={row.uuid}
+  //     >
+  //       {row.uuid}
+  //     </span>
+  //   ,
+  //   orderingField: null,
+  // },
 ];
 
 export const TimeseriesTable = (props:any) =>  {
@@ -50,7 +85,7 @@ export const TimeseriesTable = (props:any) =>  {
       backUrl={"/data_management/timeseries"}
     >
       <TableStateContainer 
-        gridTemplateColumns={"60% 40%"} 
+        gridTemplateColumns={"24% 22% 24% 22%"} 
         columnDefinitions={columnDefinitions}
         baseUrl={`${baseUrl}?`} 
         checkBoxActions={[]}
