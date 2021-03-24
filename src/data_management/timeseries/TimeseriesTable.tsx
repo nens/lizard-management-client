@@ -90,7 +90,7 @@ export const TimeseriesTable = (props:any) =>  {
         baseUrl={`${baseUrl}?`} 
         checkBoxActions={[]}
         filterOptions={[
-          {value: 'name__icontains=', label: 'Name'},
+          {value: 'name__startswith=', label: 'Name'},
           {value: 'uuid=', label: 'UUID'},
         ]}
       />
