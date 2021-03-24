@@ -69,6 +69,7 @@
     "x2js": "^3.4.0"
   },
   "scripts": {
+    "startauth": "./startauth.sh",
     "start": "react-scripts start",
     "build": "mkdir -p dist/ && rm -rf dist/*.zip && react-scripts build && scripts/makedist.sh",
     "test": "react-scripts test",
