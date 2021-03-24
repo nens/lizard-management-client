@@ -20,6 +20,7 @@ import { EditScenario } from "../data_management/scenarios/EditScenario";
 import { EditWmsLayer } from "../data_management/wms_layers/EditWmsLayer";
 import { NewWmsLayer } from "../data_management/wms_layers/NewWmsLayer";
 import { TimeseriesTable } from "../data_management/timeseries/TimeseriesTable";
+import { EditTimeseries } from "../data_management/timeseries/EditTimeseries";
 import { MonitoringNetworksTable } from "../data_management/timeseries/MonitoringNetworksTable";
 import { LocationsTable } from "../data_management/timeseries/LocationsTable";
 import { EditLabeltype } from "../data_management/labels/EditLabeltype";
@@ -72,6 +73,7 @@ export const Routes = () => {
         <Route exact path="/data_management/wms_layers/:id" component={EditWmsLayer} />
 
         <Route exact path="/data_management/timeseries/timeseries" component={TimeseriesTable} />
+        <Route exact path="/data_management/timeseries/timeseries/:uuid" component={EditTimeseries} />
         <Route exact path="/data_management/timeseries/monitoring_networks" component={MonitoringNetworksTable} />
         <Route exact path="/data_management/timeseries/locations" component={LocationsTable} />
 

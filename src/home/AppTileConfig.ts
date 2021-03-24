@@ -14,6 +14,7 @@ import alarmsIcon from "../images/alarm@3x.svg";
 import groupsIcon from "../images/group.svg";
 import contactsIcon from "../images/contacts@3x.svg";
 import templatesIcon from "../images/templates@3x.svg";
+import timeseriesManagementIcon from "../images/timeseries_management_icon.svg";
 import timeseriesIcon from "../images/timeseries_icon.svg";
 import monitoringsNetworkicon from "../images/monitoring_network_icon.svg";
 import locationsIcon from "../images/locations_icon.svg";
@@ -114,7 +115,7 @@ export const appTiles = [
     onPage: "/data_management",
     linksTo: "/data_management/timeseries",
     requiresOneOfRoles: ["admin", "supplier",],
-    icon: timeseriesIcon,
+    icon: timeseriesManagementIcon,
   },
   {
     title: "3Di Scenarios",
