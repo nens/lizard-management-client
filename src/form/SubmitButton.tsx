@@ -21,6 +21,7 @@ export const SubmitButton: React.FC<MyProps> = (props) => {
       className={buttonStyles.NewButton}
       onClick={onClick}
       readOnly={!!readOnly}
+      disabled={!!readOnly}
       form={form}
     />
   );
