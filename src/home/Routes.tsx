@@ -19,6 +19,9 @@ import { ScenarioTable } from "../data_management/scenarios/ScenarioTable";
 import { EditScenario } from "../data_management/scenarios/EditScenario";
 import { EditWmsLayer } from "../data_management/wms_layers/EditWmsLayer";
 import { NewWmsLayer } from "../data_management/wms_layers/NewWmsLayer";
+import { TimeseriesTable } from "../data_management/timeseries/TimeseriesTable";
+import { MonitoringNetworksTable } from "../data_management/timeseries/MonitoringNetworksTable";
+import { LocationsTable } from "../data_management/timeseries/LocationsTable";
 import { EditLabeltype } from "../data_management/labels/EditLabeltype";
 import { RasterAlarmTable } from "../alarms/notifications/raster_alarms/RasterAlarmTable";
 import { TimeseriesAlarmTable } from "../alarms/notifications/timeseries_alarms/TimeseriesAlarmTable";
@@ -67,6 +70,10 @@ export const Routes = () => {
         <Route exact path="/data_management/wms_layers" component={WmsLayerTable} />
         <Route exact path="/data_management/wms_layers/new" component={NewWmsLayer} />
         <Route exact path="/data_management/wms_layers/:id" component={EditWmsLayer} />
+
+        <Route exact path="/data_management/timeseries/timeseries" component={TimeseriesTable} />
+        <Route exact path="/data_management/timeseries/monitoring_networks" component={MonitoringNetworksTable} />
+        <Route exact path="/data_management/timeseries/locations" component={LocationsTable} />
 
         <Route exact path="/data_management/scenarios" component={ScenarioTable} />
         <Route exact path="/data_management/scenarios/:uuid" component={EditScenario} />
