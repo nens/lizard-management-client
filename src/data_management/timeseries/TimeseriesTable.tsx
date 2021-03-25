@@ -138,6 +138,11 @@ const columnDefinitions = [
 
 export const TimeseriesTable = (props:any) =>  {
 
+  const handleNewClick  = () => {
+    const { history } = props;
+    history.push(`${navigationUrl}/new`);
+  }
+
   return (
     <ExplainSideColumn
       imgUrl={timeseriesIcon}
@@ -151,6 +156,7 @@ export const TimeseriesTable = (props:any) =>  {
         columnDefinitions={columnDefinitions}
         baseUrl={`${baseUrl}?`} 
         checkBoxActions={[]}
+        newItemOnClick={handleNewClick}
         filterOptions={[
           {value: 'name__startswith=', label: 'Name'},
           {value: 'uuid=', label: 'UUID'},
