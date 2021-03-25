@@ -24,6 +24,8 @@ import { EditTimeseries } from "../data_management/timeseries/EditTimeseries";
 import { NewTimeseries } from "../data_management/timeseries/NewTimeseries";
 import { MonitoringNetworksTable } from "../data_management/timeseries/monitoring_networks/MonitoringNetworksTable";
 import { LocationsTable } from "../data_management/timeseries/locations/LocationsTable";
+import { EditLocation } from "../data_management/timeseries/locations/EditLocation";
+import { NewLocation } from "../data_management/timeseries/locations/NewLocation";
 import { EditLabeltype } from "../data_management/labels/EditLabeltype";
 import { RasterAlarmTable } from "../alarms/notifications/raster_alarms/RasterAlarmTable";
 import { TimeseriesAlarmTable } from "../alarms/notifications/timeseries_alarms/TimeseriesAlarmTable";
@@ -78,6 +80,8 @@ export const Routes = () => {
         <Route exact path="/data_management/timeseries/timeseries/:uuid" component={EditTimeseries} />
         <Route exact path="/data_management/timeseries/monitoring_networks" component={MonitoringNetworksTable} />
         <Route exact path="/data_management/timeseries/locations" component={LocationsTable} />
+        <Route exact path="/data_management/timeseries/locations/new" component={NewLocation} />
+        <Route exact path="/data_management/timeseries/locations/:uuid" component={EditLocation} />
 
         <Route exact path="/data_management/scenarios" component={ScenarioTable} />
         <Route exact path="/data_management/scenarios/:uuid" component={EditScenario} />
