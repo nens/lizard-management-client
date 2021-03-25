@@ -55,3 +55,12 @@ Since `PROXY_PREFIX` defaults to 'PROXY' the default names of the last 2 environ
 The `PROXY_PREFIX` can be used to set a key for production, to use different  
 Lizard portals in different situations, or to not use a key at all  
 by setting a nonexisting prefix (`PROXY_PREFIX=NONE yarn start`).  
+
+Running unauthenticated
+=======================
+
+Sometimes you need to test what happens when a user is not authenticated.  
+This can be done by explicitly setting the api key as an empty string.  
+  
+For example:  
+`PROXY_URL=https://nxt3.staging.lizard.net/ PROXY_API_KEY= yarn start`
