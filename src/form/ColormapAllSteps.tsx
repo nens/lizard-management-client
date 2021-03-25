@@ -115,9 +115,35 @@ export const ColormapAllSteps: React.FC<Props> = (props) => {
               <div
                 style={{position: "relative"}}
               >
-                <button 
-                  onClick={()=> {if (visiblepickerIndex === ind) {setVisiblepickerIndex(null)} else {setVisiblepickerIndex(ind)} }}
-                  type="button"
+                {/* 
+                  following div should act as a button.
+                  Button was turned into div, because it needs nested divs for the colorpicker.
+                  These divs need to be nested because clicking on them need to keep this div in focus 
+                  The div now namely uses a onblur to close the colorpicker (as replacement of the overlay with onclick previously used)
+                */}
+                <div 
+                  tabIndex={0}
+                  onBlur={(event)=> {
+                    console.log('event', event)
+                    setVisiblepickerIndex(null);
+                  }}
+                  // Todo:
+                  // I added the keypress so user can also tab enter open this colorpicker.
+                  // anyway now the user might expect that excape closes it.
+                  // Not only does this not work (see next line, does not distinct between keypresses), 
+                  // also the event listener on <ModalBackground/> closes the entire modal on escape
+                  onKeyPress={()=>setVisiblepickerIndex(ind)}
+                  onClick={(event)=> {
+                    if (
+                      visiblepickerIndex === ind &&
+                      event.currentTarget === event.target
+                    ) {
+                      setVisiblepickerIndex(null)
+                    } 
+                    else {setVisiblepickerIndex(ind)} 
+                  }}
+                  // type= button no longer valid since this is now a div
+                  // type="button"
                   className={styles.ColormapStepToggleColorpicker}
                   style={{
                     backgroundColor: `rgba(${step.rgba.r},${step.rgba.g},${step.rgba.b},${step.rgba.a})`,
@@ -128,37 +154,23 @@ export const ColormapAllSteps: React.FC<Props> = (props) => {
                     boxShadow: "none",
                   }}
                 >
-                </button>
-                { visiblepickerIndex === ind && (
-                  <div style={{ position: 'absolute', zIndex: 9996 }}>
-                    <div
-                      style={{ 
-                        position: 'fixed', 
-                        zIndex: 9998,
-                        height: "100%",
-                        width: "100%",
-                        top: 0,
-                        left: 0,
-                        // for debugging fixed background
-                        // backgroundColor: "blue", 
-                      }}
-                      onClick={()=>{
-                        setVisiblepickerIndex(null);
-                      }}
-                    ></div>
-                    <div
-                      style={{zIndex: 9999, position: "fixed"}}
-                    >
-                      <ChromePicker 
-                        color={rgba} 
-                        onChangeComplete={(color)=>{
-                          handleColorChange(color.rgb,ind);
-                        }}
-                      />
+                  { visiblepickerIndex === ind && (
+                    <div style={{ position: 'absolute', zIndex: 9996, top: "40px" }}>
+                      <div
+                        style={{zIndex: 9999, position: "absolute"}}
+                      >
+                        <ChromePicker 
+                          color={rgba} 
+                          onChangeComplete={(color)=>{
+                            handleColorChange(color.rgb,ind);
+                          }}
+                        />
+                      </div>
+                      
                     </div>
-                    
-                  </div>
-                )}
+                  )}
+                </div>
+                
               </div>
               
               {/* Lateron add labels */}
