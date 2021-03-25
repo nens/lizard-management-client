@@ -21,7 +21,7 @@ import { EditWmsLayer } from "../data_management/wms_layers/EditWmsLayer";
 import { NewWmsLayer } from "../data_management/wms_layers/NewWmsLayer";
 import { TimeseriesTable } from "../data_management/timeseries/TimeseriesTable";
 import { EditTimeseries } from "../data_management/timeseries/EditTimeseries";
-import { MonitoringNetworksTable } from "../data_management/timeseries/MonitoringNetworksTable";
+import { MonitoringNetworksTable } from "../data_management/timeseries/monitoring_networks/MonitoringNetworksTable";
 import { LocationsTable } from "../data_management/timeseries/LocationsTable";
 import { EditLabeltype } from "../data_management/labels/EditLabeltype";
 import { RasterAlarmTable } from "../alarms/notifications/raster_alarms/RasterAlarmTable";
