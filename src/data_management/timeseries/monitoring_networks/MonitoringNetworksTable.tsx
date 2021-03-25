@@ -24,12 +24,12 @@ export const MonitoringNetworksTable = (props: any) =>  {
   const [deleteFunction, setDeleteFunction] = useState<Function | null>(null);
   const [busyDeleting, setBusyDeleting] = useState<boolean>(false);
 
-  const deleteActions = (rows: any[], tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any, setCheckboxes: any)=>{
+  const deleteActions = (rows: any[], tableData: any, setTableData: any, triggerReloadWithCurrentPage: any, triggerReloadWithBasePage: any, setCheckboxes: any) => {
     setRowsToBeDeleted(rows);
-    const uuids = rows.map(row=> row.id);
-    setDeleteFunction(()=>()=>{
+    const uuids = rows.map(row=> row.uuid);
+    setDeleteFunction(() => () => {
       setBusyDeleting(true);
-      const tableDataDeletedmarker = tableData.map((rowAllTables:any)=>{
+      const tableDataDeletedmarker = tableData.map((rowAllTables: any) => {
         if (uuids.find(uuid => uuid === rowAllTables.uuid)) {
           return {...rowAllTables, markAsDeleted: true}
         } else{
@@ -56,9 +56,9 @@ export const MonitoringNetworksTable = (props: any) =>  {
     });
   }
 
-  const deleteAction = (row: any, updateTableRow:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any)=>{
+  const deleteAction = (row: any, updateTableRow: any, triggerReloadWithCurrentPage: any, triggerReloadWithBasePage: any) => {
     setRowToBeDeleted(row);
-    setDeleteFunction(()=>()=>{
+    setDeleteFunction(() => () => {
       setBusyDeleting(true);
       updateTableRow({...row, markAsDeleted: true});
       const opts = {
@@ -118,7 +118,7 @@ export const MonitoringNetworksTable = (props: any) =>  {
               actions={[
                 {
                   displayValue: "Delete",
-                  actionFunction: () => deleteAction,
+                  actionFunction: deleteAction
                 }
               ]}
             />
@@ -143,12 +143,12 @@ export const MonitoringNetworksTable = (props: any) =>  {
         checkBoxActions={[
           {
             displayValue: "Delete",
-            actionFunction: () => deleteActions,
+            actionFunction: deleteActions
           }
         ]}
         filterOptions={[
           {value: 'name__icontains=', label: 'Name'},
-          {value: 'uuid=', label: 'UUID'},
+          {value: 'uuid=', label: 'UUID'}
         ]}
       />
 
@@ -168,7 +168,7 @@ export const MonitoringNetworksTable = (props: any) =>  {
           }}
           disableButtons={busyDeleting}
         >
-          <p>Are you sure? You are deleting the following raster alarms:</p>
+          <p>Are you sure? You are deleting the following monitoring networks:</p>
           {ModalDeleteContent(rowsToBeDeleted, busyDeleting, [{name: "name", width: 40}, {name: "uuid", width: 60}])}
         </Modal>
       ) : null}
@@ -190,7 +190,7 @@ export const MonitoringNetworksTable = (props: any) =>  {
           }}
           disableButtons={busyDeleting}
         >
-          <p>Are you sure? You are deleting the following raster alarm:</p>
+          <p>Are you sure? You are deleting the following monitoring network:</p>
           {ModalDeleteContent([rowToBeDeleted], busyDeleting, [{name: "name", width: 40}, {name: "uuid", width: 60}])}
         </Modal>
       ) : null}
