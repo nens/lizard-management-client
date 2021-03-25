@@ -1,5 +1,15 @@
 import React from 'react';
-import { HelpText, organisationHelpText } from './defaultHelpText';
+import {
+  accessModifierHelpText,
+  datasetHelpText,
+  descriptionHelpText,
+  HelpText,
+  nameHelpText,
+  organisationHelpText,
+  organisationsToSharedWithHelpText,
+  sharedWithCheckboxHelpText,
+  supplierHelpText
+} from './defaultHelpText';
 
 export const defaultRasterSourceExplanationTextTable = (usedSpaceString:string) => {
   return (
@@ -19,8 +29,8 @@ export const defaultRasterLayerHelpTextTable = "Raster Layers are visual present
 
 export const rasterSourceFormHelpText: HelpText = {
   default: 'Fill in the form to create a new Raster Source.',
-  name: 'Choose a name that is findable and not too difficult.',
-  description: 'Please give an accurate description of this object and its uses.',
+  name: nameHelpText,
+  description: descriptionHelpText,
   supplierCode: (
     <>
       <p>The FTP or Supplier code is used as reference to your own system.</p>
@@ -40,31 +50,21 @@ export const rasterSourceFormHelpText: HelpText = {
       <p><i>(e.g. "20210101T0101.tiff" will be translated to "01/01/2021 01:01")</i></p>
     </>
   ),
-  accessModifier: (
-    <>
-      <p>Choose an accessibility to decide who has access to this object. The default is private.</p>
-      <p><i>Once the object is created, this field cannot be changed anymore.</i></p>
-    </>
-  ),
+  accessModifier: accessModifierHelpText,
   organisation: organisationHelpText,
-  supplier: 'The supplier of this object.',
+  supplier: supplierHelpText,
 }
 
 export const rasterLayerFormHelpText: HelpText = {
   default: 'Create a layer to view your raster data in the portal.',
-  name: 'Choose a name that is findable and not too difficult.',
+  name: nameHelpText,
   description: (
     <>
       <p>Please give an accurate description of this object and its uses.</p>
       <p><i>If this raster was created automatically from a source, there will be a reference to it.</i></p>
     </>
   ),
-  datasets: (
-    <>
-      <p>Choose a dataset for this object.</p>
-      <p><i>Datasets are used to group objects together and can be seen as tag or label.</i></p>
-    </>
-  ),
+  datasets: datasetHelpText,
   rasterSource: (
     <>
       <p>Choose a (raster) source for this object.</p>
@@ -83,8 +83,8 @@ export const rasterLayerFormHelpText: HelpText = {
   colormap_maximum: 'Highest value in the colorscale',
   colorMap_rescalable: 'Make color map rescalable.',
   accessModifier: 'The accessibility of a layer is inherited from the selected source by default.',
-  sharedWith: 'Specify if this object should be accessible by other organisations.',
-  organisationsToSharedWith: 'Search and select organisations to share with.',
+  sharedWith: sharedWithCheckboxHelpText,
+  organisationsToSharedWith: organisationsToSharedWithHelpText,
   organisation: organisationHelpText,
-  supplier: 'The supplier of this object.',
+  supplier: supplierHelpText,
 }
