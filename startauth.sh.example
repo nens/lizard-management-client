@@ -1,11 +1,10 @@
 # at all times have only one line uncommented
-# PROXY_PREFIX value defines the name of the other 2 environmnet variables
 
 # example to proxy to staging
-PROXY_PREFIX=STAGING STAGING_URL=https://nxt3.staging.lizard.net/ STAGING_API_KEY=123456789STAGINGKEY yarn start
+PROXY_URL=https://nxt3.staging.lizard.net/ PROXY_API_KEY=123456789STAGINGKEY yarn start
 
 # example to proxy to production
-# PROXY_PREFIX=LIZARD LIZARD_URL=https://demo.lizard.net/ LIZARD_API_KEY=123456789PRODUCTIONKEY yarn start
+# PROXY_URL=https://demo.lizard.net/ PROXY_API_KEY=123456789PRODUCTIONKEY yarn start
 
-# example to proxy to other droduction domain
-# PROXY_PREFIX=UTRECHT UTRECHT_URL=https://utrecht.lizard.net/ UTRECHT_API_KEY=123456789PRODUCTIONKEY yarn start
+# example to proxy to other production domain
+# PROXY_URL=https://utrecht.lizard.net/ PROXY_API_KEY=123456789PRODUCTIONKEY yarn start

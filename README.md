@@ -32,9 +32,9 @@ Installation
 - Set up proxy and basic authentication by following the steps [here](./BASIC_AUTH.md)
 - start the app by running one of (depending on your choice in previous step) :  
 
-`PROXY_PREFIX=STAGING STAGING_URL=https://nxt3.staging.lizard.net/ STAGING_API_KEY=123456789STAGINGKEY yarn start`  
-or  
 `yarn start`  
+or  
+`PROXY_URL=https://nxt3.staging.lizard.net/ PROXY_API_KEY=123456789STAGINGKEY yarn start`  
 or    
 `yarn run startauth`  
 

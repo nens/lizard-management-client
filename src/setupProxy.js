@@ -1,7 +1,7 @@
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
 module.exports = function(app) {
-  const env_prefix = process.env.PROXY_PREFIX || 'STAGING';
+  const env_prefix = process.env.PROXY_PREFIX || 'PROXY';
   const url = process.env[env_prefix + '_URL'] || 'https://nxt3.staging.lizard.net/';
   const apiKey = process.env[env_prefix + '_API_KEY'];
 

@@ -7,7 +7,7 @@ For basic authentication you can choose from following 3 options:
 ===============
 
 Instead of `yarn start` run:   
-`PROXY_PREFIX=STAGING STAGING_URL=https://nxt3.staging.lizard.net/ STAGING_API_KEY=123456789STAGINGKEY yarn start`  
+`PROXY_URL=https://nxt3.staging.lizard.net/ PROXY_API_KEY=123456789STAGINGKEY yarn start`  
   
 but replace `123456789STAGINGKEY` with a key you created with [api-key-management-page](https://nxt3.staging.lizard.net/management/#/personal_api_keys)  
 
@@ -20,8 +20,8 @@ In your `~/.bashrc` file add the following lines:
 
 `export LIZARD_URL='https://parramatta.lizard.net/'`   
 `export LIZARD_API_KEY=123456789STAGINGKEY`  
-`export STAGING_URL='https://nxt3.staging.lizard.net/'`  
-`export STAGING_API_KEY=123456789PRODKEY`  
+`export PROXY_URL='https://nxt3.staging.lizard.net/'`  
+`export PROXY_API_KEY=123456789PRODKEY`  
 
 But change the `123456789STAGINGKEY` with a key you created with [api-key-management-page](https://nxt3.staging.lizard.net/management/#/personal_api_keys).  
 Also change the `123456789PRODKEY` with a key you created with [production_api-key-management-page](https://demo.lizard.net/management/#/personal_api_keys). 
@@ -45,12 +45,12 @@ Also you need to be authenticated.
 
 The proxy and authentication depends on the following 3 environment variables
 
-`PROXY_PREFIX` # defaults to `STAGING`  
+`PROXY_PREFIX` # defaults to `PROXY`  
 `${PROXY_PREFIX}_URL` # defaults to `https://nxt3.staging.lizard.net/`  
 `${PROXY_PREFIX}_API_KEY` # has no default  
 
 The last 2 of these environment variables names depend on the value of the first one.  
-Since `PROXY_PREFIX` defaults to 'STAGING' the default names of the last 2 environment variables are `STAGING_URL` and `STAGING_API_KEY`.  
+Since `PROXY_PREFIX` defaults to 'PROXY' the default names of the last 2 environment variables are `PROXY_URL` and `PROXY_API_KEY`.  
 
 The `PROXY_PREFIX` can be used to set a key for production, to use different  
 Lizard portals in different situations, or to not use a key at all  
