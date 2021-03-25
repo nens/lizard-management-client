@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { RouteComponentProps, /*withRouter*/ } from "react-router-dom";
-import { getOrganisations } from "../../reducers";
+import { RouteComponentProps } from "react-router-dom";
 import { TimeseriesForm } from "./TimeseriesForm";
 import MDSpinner from "react-md-spinner";
 
@@ -9,30 +7,29 @@ interface RouteProps {
   uuid: string
 }
 
-const EditTimeseries = (props: RouteProps & RouteComponentProps) => {
-  const organisations = useSelector(getOrganisations);
-  const [currentRecord, setCurrentRecord] = useState(null);
-  // @ts-ignore
+export const EditTimeseries = (props: RouteComponentProps<RouteProps>) => {
+  const [currentTimeseries, setCurrentTimeseries] = useState<Object | null>(null);
   const { uuid } = props.match.params;
+
   useEffect (() => {
     (async () => {
-      const currentRecord = await fetch(`/api/v4/timeseries/${uuid}/`, {
+      const timeseries = await fetch(`/api/v4/timeseries/${uuid}/`, {
         credentials: "same-origin"
-      }).then(response => response.json());
+      }).then(
+        response => response.json()
+      );
 
-      setCurrentRecord(currentRecord);
+      setCurrentTimeseries(timeseries);
     })();
   }, [uuid])
 
-  if (
-    currentRecord &&
-    organisations.isFetching === false
-  ) {
-    return <TimeseriesForm
-      currentRecord={currentRecord}
-    />;
-  }
-  else {
+  if (currentTimeseries) {
+    return (
+      <TimeseriesForm
+        currentTimeseries={currentTimeseries}
+      />
+    )
+  } else {
     return (
       <div
         style={{
@@ -46,7 +43,5 @@ const EditTimeseries = (props: RouteProps & RouteComponentProps) => {
         <MDSpinner size={24} />
       </div>
     );
-  }
+  };
 }
-
-export { EditTimeseries };

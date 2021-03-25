@@ -3,7 +3,6 @@ import { RouteComponentProps, withRouter } from 'react-router';
 import { connect, useSelector } from 'react-redux';
 // import { getOrganisations, getUsername } from '../../reducers';
 import { getSelectedOrganisation } from '../../reducers';
-// import { ScenarioResult } from '../../form/ScenarioResult';
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import { TextInput } from './../../form/TextInput';
 // import { SubmitButton } from '../../form/SubmitButton';
@@ -20,10 +19,8 @@ import { ModalDeleteContent } from '../../components/ModalDeleteContent';
 // import { lableTypeFormHelpText } from '../../utils/helpTextForForms';
 import { convertToSelectObject } from '../../utils/convertToSelectObject';
 
-
-
 interface Props {
-  currentRecord?: any
+  currentTimeseries?: any
 };
 interface PropsFromDispatch {
   addNotification: (message: string | number, timeout: number) => void
@@ -33,7 +30,7 @@ interface RouteParams {
 };
 
 const TimeseriesFormModel = (props:Props & PropsFromDispatch & RouteComponentProps<RouteParams>) => {
-  const { currentRecord } = props;
+  const { currentTimeseries } = props;
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const selectedOrganisation = useSelector(getSelectedOrganisation);
 
@@ -44,14 +41,14 @@ const TimeseriesFormModel = (props:Props & PropsFromDispatch & RouteComponentPro
 
   let initialValues;
   
-  if (currentRecord) {
+  if (currentTimeseries) {
     initialValues = {
-      name: currentRecord.name || '',
-      uuid: currentRecord.uuid || '',
-      description: currentRecord.description || '',
+      name: currentTimeseries.name || '',
+      uuid: currentTimeseries.uuid || '',
+      description: currentTimeseries.description || '',
       // modelName: currentRecord.model_name || '',
       // supplier: currentRecord.username || '',
-      organisation: (currentRecord.location && currentRecord.location.organisation && currentRecord.location.organisation.name) || '',
+      organisation: (currentTimeseries.location && currentTimeseries.location.organisation && currentTimeseries.location.organisation.name) || '',
     };
   } else {
     initialValues = {
@@ -123,7 +120,7 @@ const TimeseriesFormModel = (props:Props & PropsFromDispatch & RouteComponentPro
   const onDelete = () => {
     const body = {};
 
-    fetch(`/api/v4/timeseries/${currentRecord.uuid}/`, {
+    fetch(`/api/v4/timeseries/${currentTimeseries.uuid}/`, {
       credentials: 'same-origin',
       method: 'DELETE',
       headers: {'Content-Type': 'application/json'},
@@ -223,7 +220,7 @@ const TimeseriesFormModel = (props:Props & PropsFromDispatch & RouteComponentPro
         <div
           className={formStyles.ButtonContainer}
         >
-          { currentRecord?
+          { currentTimeseries?
           <div
             style={{marginLeft: "auto"}}
           >
@@ -245,7 +242,7 @@ const TimeseriesFormModel = (props:Props & PropsFromDispatch & RouteComponentPro
         </div>
       </form>
       { 
-        currentRecord && showDeleteModal?
+        currentTimeseries && showDeleteModal?
            <Modal
            title={'Are you sure?'}
            buttonConfirmName={'Delete'}
@@ -261,7 +258,7 @@ const TimeseriesFormModel = (props:Props & PropsFromDispatch & RouteComponentPro
            
            <p>Are you sure? You are deleting the following Timeseries:</p>
            
-           {ModalDeleteContent([currentRecord], false, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
+           {ModalDeleteContent([currentTimeseries], false, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
            
          </Modal>
         :
