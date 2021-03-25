@@ -1,11 +1,11 @@
 import React from 'react';
 
-import TableStateContainer from '../../components/TableStateContainer';
+import TableStateContainer from '../../../components/TableStateContainer';
 import { NavLink } from "react-router-dom";
-import {ExplainSideColumn} from '../../components/ExplainSideColumn';
-import tableStyles from "../../components/Table.module.css";
-import locationIcon from "../../images/locations_icon.svg";
-import TableActionButtons from '../../components/TableActionButtons';
+import {ExplainSideColumn} from '../../../components/ExplainSideColumn';
+import tableStyles from "../../../components/Table.module.css";
+import locationIcon from "../../../images/locations_icon.svg";
+import TableActionButtons from '../../../components/TableActionButtons';
 
 const baseUrl = "/api/v4/locations/";
 const navigationUrl = "/data_management/timeseries/locations";

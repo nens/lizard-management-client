@@ -23,7 +23,7 @@ import { TimeseriesTable } from "../data_management/timeseries/TimeseriesTable";
 import { EditTimeseries } from "../data_management/timeseries/EditTimeseries";
 import { NewTimeseries } from "../data_management/timeseries/NewTimeseries";
 import { MonitoringNetworksTable } from "../data_management/timeseries/monitoring_networks/MonitoringNetworksTable";
-import { LocationsTable } from "../data_management/timeseries/LocationsTable";
+import { LocationsTable } from "../data_management/timeseries/locations/LocationsTable";
 import { EditLabeltype } from "../data_management/labels/EditLabeltype";
 import { RasterAlarmTable } from "../alarms/notifications/raster_alarms/RasterAlarmTable";
 import { TimeseriesAlarmTable } from "../alarms/notifications/timeseries_alarms/TimeseriesAlarmTable";
