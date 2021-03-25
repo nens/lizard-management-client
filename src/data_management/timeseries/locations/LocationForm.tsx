@@ -259,7 +259,7 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
           disableButtons={false}
          >
            
-           <p>Are you sure? You are deleting the following Timeseries:</p>
+           <p>Are you sure? You are deleting the following Location:</p>
            
            {ModalDeleteContent([currentRecord], false, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
            
