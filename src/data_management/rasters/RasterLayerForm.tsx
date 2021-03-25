@@ -30,7 +30,7 @@ import {
 } from '../../reducers';
 import { optionsHasLayers } from '../../utils/rasterOptionFunctions';
 import { getUuidFromUrl } from '../../utils/getUuidFromUrl';
-import { rasterLayerFormHelpText } from '../../utils/form_help_texts/helpTextForRasters';
+import { rasterLayerFormHelpText } from '../../utils/help_texts/helpTextForRasters';
 import { addNotification, removeRasterSourceUUID } from './../../actions';
 import rasterLayerIcon from "../../images/raster_layer_icon.svg";
 import formStyles from './../../styles/Forms.module.css';

@@ -15,7 +15,7 @@ import Modal from '../../components/Modal';
 import { ModalDeleteContent } from '../../components/ModalDeleteContent';
 import DeleteRasterSourceNotAllowed  from './DeleteRasterSourceNotAllowed';
 import MDSpinner from "react-md-spinner";
-import { defaultRasterSourceExplanationTextTable } from '../../utils/form_help_texts/helpTextForRasters';
+import { defaultRasterSourceExplanationTextTable } from '../../utils/help_texts/helpTextForRasters';
 import {useSelector} from 'react-redux';
 import {getScenarioTotalSize} from '../../reducers';
 
