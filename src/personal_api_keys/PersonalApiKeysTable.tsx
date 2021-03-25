@@ -8,7 +8,7 @@ import personalApiKeysIcon from "../images/personal_api_key_icon.svg";
 import Modal from '../components/Modal';
 import { ModalDeleteContent } from '../components/ModalDeleteContent';
 import TableActionButtons from '../components/TableActionButtons';
-import { personalApiKeysFormHelpText } from '../utils/helpTextForForms';
+import { personalApiKeysFormHelpText } from '../utils/form_help_texts/helpTextForPersonalAPIKeys';
 
 const baseUrl = "/api/v4/personalapikeys/";
 const navigationUrl = "/personal_api_keys";

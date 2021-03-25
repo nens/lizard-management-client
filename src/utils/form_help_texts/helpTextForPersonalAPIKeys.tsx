@@ -1,8 +1,5 @@
 import React from 'react';
-
-interface HelpText {
-  [name: string]: string | JSX.Element
-}
+import { HelpText } from './defaultHelpText';
 
 export const personalApiKeysFormHelpText: HelpText = {
   default:  
@@ -28,7 +25,6 @@ export const personalApiKeysFormHelpText: HelpText = {
       <span>The API key itself is only visible on creation. It can not be looked up after.</span>
     </>
   ),
-  // default: "Personal API keys can be used to authenticate external applications in Lizard",
   name: "Name of the personal api key",
   scopeWildcardReadWrite: "Defines if the key can be used to read and write data",
   scopeFtpReadWrite: "Defines if the key can be used with the FTP sever. Only one 'Personal API key' with FTP scope enabled is allowed per person.",
