@@ -32,7 +32,7 @@ interface Props {
 const TimeseriesAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (props) => {
   const { currentTimeseriesAlarm, timeseries } = props;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
-  const navigationUrl = "/alarms/notifications/raster_alarms";
+  const navigationUrl = "/alarms/notifications/timeseries_alarms";
 
   const initialValues = currentTimeseriesAlarm && timeseries ? {
     name: currentTimeseriesAlarm.name,
@@ -146,9 +146,9 @@ const TimeseriesAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps>
     <ExplainSideColumn
       imgUrl={rasterAlarmIcon}
       imgAltDescription={"Raster alarm icon"}
-      headerText={"Raster alarms"}
+      headerText={"Time-series alarms"}
       explanationText={"Select a field to get more information."}
-      backUrl={"/alarms/notifications/raster_alarms"}
+      backUrl={navigationUrl}
     >
       <form
         className={formStyles.Form}
