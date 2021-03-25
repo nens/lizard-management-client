@@ -13,7 +13,7 @@ interface MyProps {
   handleClose: () => void
 }
 
-interface SelectedGroup {
+interface ContactGroupSelectObject {
   value: number,
   label: string,
   contacts: number[]
@@ -23,8 +23,8 @@ function AddToGroupModal (props: MyProps & DispatchProps) {
   const { contact } = props;
 
   const selectedOrganisation = useSelector(getSelectedOrganisation);
-  const [groups, setGroups] = useState<SelectedGroup[] | null>(null);
-  const [selectedGroups, setSelectedGroups] = useState<SelectedGroup[]>([]);
+  const [availableGroups, setAvailableGroups] = useState<ContactGroupSelectObject[] | null>(null);
+  const [selectedGroups, setSelectedGroups] = useState<ContactGroupSelectObject[]>([]);
 
   // useEffect to load the list of available groups for the selected organisation
   useEffect(() => {
@@ -39,12 +39,11 @@ function AddToGroupModal (props: MyProps & DispatchProps) {
         contacts: group.contacts.map((contact: any) => contact.id)
       }));
 
+      // filter list of available groups with only groups that the contact has not yet been added to
       const listOfGroupsWithoutCurrentContact = listOfGroups.filter(
         (group: any) => !group.contacts.includes(contact.id)
       );
-
-      // Only show in the Dropdown groups in which the selected contact has not yet been added to
-      setGroups(listOfGroupsWithoutCurrentContact);
+      setAvailableGroups(listOfGroupsWithoutCurrentContact);
     }).catch(console.error);
   }, [selectedOrganisation, contact.id]);
 
@@ -70,7 +69,7 @@ function AddToGroupModal (props: MyProps & DispatchProps) {
         props.handleClose();
       } else {
         props.addNotification('An error occurred! Please try again!', 2000);
-        console.error('Error adding contact(s) to group: ', results);
+        console.error('Error adding contact to group(s): ', results);
       };
     } catch (message_1) {
       return console.error(message_1);
@@ -100,10 +99,10 @@ function AddToGroupModal (props: MyProps & DispatchProps) {
           name={'groups'}
           placeholder={'- Search and select -'}
           valueChanged={value => setSelectedGroups(value as [])}
-          options={groups || []}
+          options={availableGroups || []}
           validated
           isMulti
-          isLoading={!groups}
+          isLoading={!availableGroups}
         />
       </div>
       <div className={formStyles.ButtonContainer}>
