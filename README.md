@@ -24,17 +24,25 @@ Installation
 ============
 
 
-- Required: A working nodejs and yarn installation.
-- In the root directory of the repository: `$ yarn install`
-- make a copy of the file 'startauth.example' and call it 'startauth'
-- replace the '<personal_api_key>' with your personal api key requested in the [api-key-management-page](https://nxt3.staging.lizard.net/management)
-- Now you can start with basic-auth by doing `yarn start` or withouth basic-auth `yarn run start-minimal`    
-- In case you run into the followinf error on unbuntu:  
-"/bin/sh: 1: ./startauth: Permission denied  
-error Command failed with exit code 126."  
-Make the file 'startauth' executable as described here: https://askubuntu.com/questions/484718/how-to-make-a-file-executable
+- Required: A working nodejs and yarn installation.  
+- In the root directory of the repository: `$ yarn install`  
+- start the app using `$ yarn start`  
+- By default, the proxy sends requests to https://nxt3.staging.lizard.net/  
+  (for selected URLs), without authentication.  
+- Set up proxy and basic authentication by following the steps [here](./BASIC_AUTH.md)
+- start the app by running one of (depending on your choice in previous step) :  
+
+`yarn start`  
+or  
+`PROXY_URL=https://nxt3.staging.lizard.net/ PROXY_API_KEY=123456789STAGINGKEY yarn start`  
+or    
+`yarn run startauth`  
+
+Installation problems
+=====================
+
 - in case you run into the following error:  
-postcss@8.2.1: The engine "node" is incompatible with this module. Expected version "^10 || ^12 || >=14". Got "13.7.0"   
+postcss@8.2.1: The engine "node" is incompatible with this module. Expected version "^10 || ^12 || >=14". Got "13.7.0"  
 Use nvm to use nodeJS version 12:  
 `$ nvm install 12`  
 `$ nvm use 12`  
