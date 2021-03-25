@@ -11,7 +11,7 @@ import {getSelectedOrganisation, getUsername} from "../../reducers";
 import { bytesToDisplayValue } from '../../utils/byteUtils';
 import Modal from '../../components/Modal';
 import { ModalDeleteContent } from '../../components/ModalDeleteContent';
-import { defaultScenarioExplanationText } from '../../utils/helpTextForForms';
+import { defaultScenarioExplanationText } from '../../utils/form_help_texts/helpTextForScenarios';
 import {getScenarioTotalSize} from '../../reducers';
 
 export const ScenarioTable = () =>  {

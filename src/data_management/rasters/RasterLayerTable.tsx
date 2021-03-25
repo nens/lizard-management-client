@@ -10,7 +10,7 @@ import buttonStyles from "../../styles/Buttons.module.css";
 import Modal from '../../components/Modal';
 import { ModalDeleteContent } from '../../components/ModalDeleteContent';
 import { RasterSourceModal } from './RasterSourceModal';
-import { defaultRasterLayerHelpTextTable } from '../../utils/form_help_texts/helpTextForRasterForms';
+import { defaultRasterLayerHelpTextTable } from '../../utils/form_help_texts/helpTextForRasters';
 
 export const RasterLayerTable: React.FC<RouteComponentProps> = (props) =>  {
 
