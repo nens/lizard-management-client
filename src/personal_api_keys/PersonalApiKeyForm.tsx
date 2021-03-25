@@ -11,7 +11,7 @@ import { minLength } from '../form/validators';
 import { addNotification } from '../actions';
 import personalApiKeysIcon from "../images/personal_api_key_icon.svg";
 import formStyles from './../styles/Forms.module.css';
-import { personalApiKeysFormHelpText } from '../utils/helpTextForForms';
+import { personalApiKeysFormHelpText } from '../utils/help_texts/helpTextForPersonalAPIKeys';
 import { CheckBox } from './../form/CheckBox';
 import Modal from '../components/Modal';
 import { ModalDeleteContent } from '../components/ModalDeleteContent';

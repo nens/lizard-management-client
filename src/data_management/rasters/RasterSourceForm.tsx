@@ -21,7 +21,7 @@ import { addFilesToQueue, addNotification, updateRasterSourceUUID } from '../../
 import rasterSourceIcon from "../../images/raster_source_icon.svg";
 import formStyles from './../../styles/Forms.module.css';
 import { sendDataToLizardRecursive } from '../../utils/sendDataToLizard';
-import { rasterSourceFormHelpText } from '../../utils/helpTextForForms';
+import { rasterSourceFormHelpText } from '../../utils/help_texts/helpTextForRasters';
 import { convertToSelectObject } from '../../utils/convertToSelectObject';
 
 interface Props {

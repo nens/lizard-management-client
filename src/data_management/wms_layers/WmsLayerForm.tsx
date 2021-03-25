@@ -25,7 +25,7 @@ import formStyles from './../../styles/Forms.module.css';
 // import MinMaxZoomField, {MinMax} from '../../components/MinMaxZoomField';
 import SpatialBoundsField from "../../form/SpatialBoundsField";
 import { WmsLayerReceivedFromApi, wmsLayerReceivedFromApiToForm, WmsLayerFormType, wmsLayerGetDefaultFormValues, wmsLayerFormToFormSendToApi} from '../../types/WmsLayerType';
-import { wmsFormHelpText } from '../../utils/helpTextForForms';
+import { wmsFormHelpText } from '../../utils/help_texts/helpTextForWMS';
 import { convertToSelectObject } from '../../utils/convertToSelectObject';
 
 interface Props {

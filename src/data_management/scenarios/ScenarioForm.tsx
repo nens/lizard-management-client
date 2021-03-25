@@ -12,7 +12,7 @@ import { minLength } from '../../form/validators';
 import { addNotification } from '../../actions';
 import threediIcon from "../../images/3di@3x.svg";
 import formStyles from './../../styles/Forms.module.css';
-import { scenarioFormHelpText, defaultScenarioExplanationText } from '../../utils/helpTextForForms';
+import { scenarioFormHelpText, defaultScenarioExplanationText } from '../../utils/help_texts/helpTextForScenarios';
 import {getScenarioTotalSize} from '../../reducers';
 import {bytesToDisplayValue} from '../../utils/byteUtils';
 
