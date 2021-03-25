@@ -122,6 +122,7 @@ export const ColormapAllSteps: React.FC<Props> = (props) => {
                   The div now namely uses a onblur to close the colorpicker (as replacement of the overlay with onclick previously used)
                 */}
                 <div 
+                  // this tabIndex is needed to make sure the div (that should actually be a button, but was made div for above reasons) does receive onfocus and onblur event
                   tabIndex={0}
                   onBlur={(event)=> {
                     console.log('event', event)
