@@ -1,7 +1,8 @@
 import React, {useState,} from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
-import { connect, /*useSelector*/ } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 // import { getOrganisations, getUsername } from '../../reducers';
+import { getSelectedOrganisation } from '../../reducers';
 // import { ScenarioResult } from '../../form/ScenarioResult';
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import { TextInput } from './../../form/TextInput';
@@ -17,11 +18,12 @@ import FormActionButtons from '../../components/FormActionButtons';
 import Modal from '../../components/Modal';
 import { ModalDeleteContent } from '../../components/ModalDeleteContent';
 // import { lableTypeFormHelpText } from '../../utils/helpTextForForms';
+import { convertToSelectObject } from '../../utils/convertToSelectObject';
 
 
 
 interface Props {
-  currentRecord: any
+  currentRecord?: any
 };
 interface PropsFromDispatch {
   addNotification: (message: string | number, timeout: number) => void
@@ -30,23 +32,38 @@ interface RouteParams {
   uuid: string;
 };
 
-const TimeseriesFormModel= (props:Props & PropsFromDispatch & RouteComponentProps<RouteParams>) => {
+const TimeseriesFormModel = (props:Props & PropsFromDispatch & RouteComponentProps<RouteParams>) => {
   const { currentRecord } = props;
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const selectedOrganisation = useSelector(getSelectedOrganisation);
 
   // const organisations = useSelector(getOrganisations).available;
   // next line doesnot work, because organisation has no uuid, but unique_id instead. Thus I do not use it
   // const thisRecordOrganisation = organisations.find((org: any) => org.uuid === currentRecord.organisation.uuid.replace(/-/g, ""));
   // const username = useSelector(getUsername);
 
-  const initialValues = {
-    name: currentRecord.name || '',
-    uuid: currentRecord.uuid || '',
-    description: currentRecord.description || '',
-    // modelName: currentRecord.model_name || '',
-    // supplier: currentRecord.username || '',
-    organisation: (currentRecord.location && currentRecord.location.organisation && currentRecord.location.organisation.name) || '',
-  };
+  let initialValues;
+  
+  if (currentRecord) {
+    initialValues = {
+      name: currentRecord.name || '',
+      uuid: currentRecord.uuid || '',
+      description: currentRecord.description || '',
+      // modelName: currentRecord.model_name || '',
+      // supplier: currentRecord.username || '',
+      organisation: (currentRecord.location && currentRecord.location.organisation && currentRecord.location.organisation.name) || '',
+    };
+  } else {
+    initialValues = {
+      name: null,
+      description: null,
+      // modelName: currentRecord.model_name || '',
+      // supplier: currentRecord.username || '',
+      organisation: selectedOrganisation ? convertToSelectObject(selectedOrganisation.uuid.replace(/-/g, ""), selectedOrganisation.name) : null,
+    }
+  }
+  
+  
 
   const onSubmit = (values: Values) => {
     // const body = {
@@ -260,4 +277,4 @@ const mapPropsToDispatch = (dispatch: any) => ({
 
 const TimeseriesForm = connect(null, mapPropsToDispatch)(withRouter(TimeseriesFormModel));
 
-export { TimeseriesForm };
+export { TimeseriesForm  };
