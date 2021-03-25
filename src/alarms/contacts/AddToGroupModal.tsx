@@ -82,42 +82,42 @@ function AddToGroupModal (props: MyProps & DispatchProps) {
       handleClose={props.handleClose}
       width={'50%'}
     >
-    <div
-      style={{
-        padding: '20px 40px',
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between'
-      }}
-    >
-      <div>
-        <p>Which group(s) would you like to add <b>{contact.first_name} {contact.last_name}</b> to?</p>
-        <p><i>Note: only groups that the contact has not yet been added to are shown in the list</i></p>
-        <SelectDropdown
-          title={'Groups'}
-          name={'groups'}
-          placeholder={'- Search and select -'}
-          valueChanged={value => setSelectedGroups(value as [])}
-          options={availableGroups || []}
-          validated
-          isMulti
-          isLoading={!availableGroups}
-        />
+      <div
+        style={{
+          padding: '20px 40px',
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between'
+        }}
+      >
+        <div>
+          <p>Which group(s) would you like to add <b>{contact.first_name} {contact.last_name}</b> to?</p>
+          <p><i>Note: only groups that the contact has not yet been added to are shown in the list</i></p>
+          <SelectDropdown
+            title={'Groups'}
+            name={'groups'}
+            placeholder={'- Search and select -'}
+            valueChanged={value => setSelectedGroups(value as [])}
+            options={availableGroups || []}
+            validated
+            isMulti
+            isLoading={!availableGroups}
+          />
+        </div>
+        <div className={formStyles.ButtonContainer}>
+          <button
+            className={`${buttonStyles.Button} ${buttonStyles.LinkCancel}`}
+            onClick={props.handleClose}
+          >
+            Cancel
+          </button>
+          <SubmitButton
+            onClick={handleSubmit}
+            readOnly={!selectedGroups.length}
+          />
+        </div>
       </div>
-      <div className={formStyles.ButtonContainer}>
-        <button
-          className={`${buttonStyles.Button} ${buttonStyles.LinkCancel}`}
-          onClick={props.handleClose}
-        >
-          Cancel
-        </button>
-        <SubmitButton
-          onClick={handleSubmit}
-          readOnly={!selectedGroups.length}
-        />
-      </div>
-    </div>
     </ModalBackground>
   )
 }
