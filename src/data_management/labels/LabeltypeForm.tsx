@@ -16,7 +16,7 @@ import labeltypesIcon from "../../images/labeltypes_icon.svg";
 import FormActionButtons from '../../components/FormActionButtons';
 import Modal from '../../components/Modal';
 import { ModalDeleteContent } from '../../components/ModalDeleteContent';
-import { lableTypeFormHelpText } from '../../utils/helpTextForForms';
+import { lableTypeFormHelpText } from '../../utils/form_help_texts/helpTextForLabelTypes';
 
 
 

@@ -4,19 +4,6 @@ interface HelpText {
   [name: string]: string | JSX.Element
 }
 
-export const lableTypeFormHelpText: HelpText = {
-  default: "Label types are different types of labels that can exist in the system.",
-  name: "Name of the label type.",
-  uuid: "Unique identifier of this label type.",
-  description: 'Please give an accurate description of this object and its uses.',
-  organisation: (
-    <>
-      <p>The organisation which this object belongs to.</p>
-      <p><i>If you are not an administrator, this field is always pre-filled with the current organisation.</i></p>
-    </>
-  ),
-}
-
 export const personalApiKeysFormHelpText: HelpText = {
   default:  
   (
