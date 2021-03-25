@@ -13,7 +13,7 @@ import { minLength } from '../../../form/validators';
 import { addNotification } from '../../../actions';
 import formStyles from './../../../styles/Forms.module.css';
 // import { TextArea } from './../../form/TextArea';
-import timeseriesIcon from "../../../images/timeseries_icon.svg";
+import LocationIcon from "../../../images/locations_icon.svg";
 import FormActionButtons from '../../../components/FormActionButtons';
 import Modal from '../../../components/Modal';
 import { ModalDeleteContent } from '../../../components/ModalDeleteContent';
@@ -123,7 +123,7 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
   const onDelete = () => {
     const body = {};
 
-    fetch(`/api/v4/timeseries/${currentRecord.uuid}/`, {
+    fetch(`/api/v4/locations/${currentRecord.uuid}/`, {
       credentials: 'same-origin',
       method: 'DELETE',
       headers: {'Content-Type': 'application/json'},
@@ -132,8 +132,8 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
       .then(data => {
         const status = data.status;
         if (status === 204) {
-          props.addNotification('Success! Timeseries deleted', 2000);
-          props.history.push('/data_management/timeseries/timeseries/');
+          props.addNotification('Success! Location deleted', 2000);
+          props.history.push('/data_management/timeseries/locations/');
         } else {
           props.addNotification(status, 2000);
           console.error(data);
@@ -158,12 +158,12 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
 
   return (
     <ExplainSideColumn
-      imgUrl={timeseriesIcon}
-      imgAltDescription={"Timeseries icon"}
-      headerText={"Timeseries"}
+      imgUrl={LocationIcon}
+      imgAltDescription={"Location icon"}
+      headerText={"Locations"}
       // explanationText={lableTypeFormHelpText[fieldOnFocus] || lableTypeFormHelpText['default']}
-      explanationText={"Timeseries is for now read only"}
-      backUrl={"/data_management/timeseries/timeseries"}
+      explanationText={"Location is for now read only"}
+      backUrl={"/data_management/timeseries/locations"}
       fieldName={fieldOnFocus}
     >
       <form
@@ -172,7 +172,7 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
         onReset={handleReset}
       >
         <TextInput
-          title={'Timeseries name'}
+          title={'Location name'}
           name={'name'}
           value={values.name}
           valueChanged={handleInputChange}
