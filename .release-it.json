@@ -12,6 +12,6 @@
     "publish": false
   },
   "hooks": {
-    "after:bump": "GENERATE_SOURCEMAP=false yarn build"
+    "after:version:bump": "GENERATE_SOURCEMAP=false yarn build"
   }
 }
