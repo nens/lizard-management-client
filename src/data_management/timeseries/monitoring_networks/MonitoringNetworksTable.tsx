@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NavLink } from "react-router-dom";
+import { NavLink, RouteComponentProps } from "react-router-dom";
 import TableStateContainer from '../../../components/TableStateContainer';
 import TableActionButtons from '../../../components/TableActionButtons';
 import { ExplainSideColumn } from '../../../components/ExplainSideColumn';
@@ -18,7 +18,7 @@ const fetchMonitoringNetworksWithOptions = (uuids: string[], fetchOptions:any) =
   return Promise.all(fetches);
 };
 
-export const MonitoringNetworksTable = (props: any) =>  {
+export const MonitoringNetworksTable = (props: RouteComponentProps) =>  {
   const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
   const [rowToBeDeleted, setRowToBeDeleted] = useState<any | null>(null);
   const [deleteFunction, setDeleteFunction] = useState<Function | null>(null);
@@ -128,6 +128,11 @@ export const MonitoringNetworksTable = (props: any) =>  {
     }
   ];
 
+  const handleNewClick  = () => {
+    const { history } = props;
+    history.push(`${navigationUrl}/new`);
+  };
+
   return (
     <ExplainSideColumn
       imgUrl={monitoringNetworkIcon}
@@ -136,10 +141,11 @@ export const MonitoringNetworksTable = (props: any) =>  {
       explanationText={"Search or sort your monitoring-networks here."}
       backUrl={"/data_management/timeseries"}
     >
-      <TableStateContainer 
-        gridTemplateColumns={"10fr 60fr 20fr 10fr"} 
+      <TableStateContainer
+        gridTemplateColumns={"10fr 60fr 20fr 10fr"}
         columnDefinitions={columnDefinitions}
-        baseUrl={`${baseUrl}?`} 
+        baseUrl={`${baseUrl}?`}
+        newItemOnClick={handleNewClick}
         checkBoxActions={[
           {
             displayValue: "Delete",
