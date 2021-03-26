@@ -74,7 +74,7 @@
     "build": "mkdir -p dist/ && rm -rf dist/*.zip && react-scripts build && scripts/makedist.sh",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "release": "release-it --verbose --no-npm",
+    "release": "release-it --verbose",
     "i18n:extract": "NODE_ENV=production npx extract-messages --flat --locales=nl,en -d --output src/translations/locales 'src/**/*.js' 'src/**/*.jsx' 'src/**/*.ts*'",
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public"
