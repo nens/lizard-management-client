@@ -1,18 +1,13 @@
 import React from 'react';
-
-import TableStateContainer from '../../components/TableStateContainer';
 import { NavLink } from "react-router-dom";
-import {ExplainSideColumn} from '../../components/ExplainSideColumn';
-import tableStyles from "../../components/Table.module.css";
-import timeseriesIcon from "../../images/timeseries_icon.svg";
-import TableActionButtons from '../../components/TableActionButtons';
-
-
+import TableStateContainer from '../../../components/TableStateContainer';
+import TableActionButtons from '../../../components/TableActionButtons';
+import {ExplainSideColumn} from '../../../components/ExplainSideColumn';
+import tableStyles from "../../../components/Table.module.css";
+import timeseriesIcon from "../../../images/timeseries_icon.svg";
 
 const baseUrl = "/api/v4/timeseries/";
 const navigationUrl = "/data_management/timeseries/timeseries";
-
-
 
 const columnDefinitions = [
   {
