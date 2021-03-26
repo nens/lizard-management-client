@@ -152,31 +152,20 @@ export const wmsFormHelpText: HelpText = {
   supplier: 'The supplier of this object.',
 }
 
-export const defaultScenarioExplanationTextTable = (usedSpaceString:string) => {
-  return (
-    <div>
-      <div style={{marginBottom: "16px"}}>Scenarios are created in 3Di.</div>
-      <div 
-        style={{display:"flex", justifyContent: "space-between",}}
-      >
-        <span>Used storage: </span>
-        <span style={{fontWeight: "bold",}}>{usedSpaceString}</span>
-      </div>
-    </div>
-  );
-}
-
-export const defaultScenarioExplanationText = (usedSpaceString:string) => {
-  return (
-    <div>
-      <div style={{marginBottom: "16px"}}>Form to edit 3Di scenario.</div>
-      <div>
-        <span>Total used storage all scenario's: </span>
-        <span style={{fontWeight: "bold",}}>{usedSpaceString}</span>
-      </div>
-    </div>
-  );
-}
+export const defaultScenarioExplanationText = (usedSpaceString:string, organisation: string) => (
+  <div
+    style={{
+      display:"grid",
+      gridTemplateColumns: "1fr 1fr",
+      columnGap: 5
+    }}
+  >
+    <span>Organisation:</span>
+    <span style={{ fontWeight: "bold" }}>{organisation}</span>
+    <span>Used storage:</span>
+    <span style={{ fontWeight: "bold" }}>{usedSpaceString}</span>
+  </div>
+);
 
 
 export const scenarioFormHelpText: HelpText = {
@@ -214,23 +203,24 @@ export const personalApiKeysFormHelpText: HelpText = {
   default:  
   (
     <>
-      <p style={{marginBottom: 0}}>
-        Personal API keys are used to authenticate external applications with <a target="_blank" rel="noopener noreferrer" href="https://en.wikipedia.org/wiki/Basic_access_authentication">basic authentication</a> as follows: 
-        <ul style={{marginBottom: 0}}>
-          <li>Username is literally  __key__ (with double underscores on bothsides of the word "key")</li>
-          <li>Password is {"{your api key}"}</li>
-        </ul>
-      </p>
-      For example:
-      <div style={{
+      <p>Personal API keys are used to authenticate external applications with <a target="_blank" rel="noopener noreferrer" href="https://en.wikipedia.org/wiki/Basic_access_authentication">basic authentication</a> as follows:</p> 
+      <ul>
+        <li>Username is literally  __key__ (with double underscores on bothsides of the word "key")</li>
+        <li>Password is {"{your api key}"}</li>
+      </ul>
+      <span>For example:</span>
+      <div
+        style={{
           backgroundColor: "#EEEEEE",
           fontFamily: "Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New",
-      }}>
-        username: __key__
+          margin: "10px 0"
+        }}
+      >
+        <span>username: __key__</span>
         <br/>
-        password: example.apikey
+        <span>password: example.apikey</span>
       </div>
-      <p>The API key itself is only visible on creation. It can not be looked up after.</p>
+      <span>The API key itself is only visible on creation. It can not be looked up after.</span>
     </>
   ),
   // default: "Personal API keys can be used to authenticate external applications in Lizard",

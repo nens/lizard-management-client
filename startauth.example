@@ -1,8 +1,0 @@
-#!/usr/bin/env python
-
-import getpass
-import sys
-import os
-
-
-os.system(' PROXY_USERNAME=__key__ PROXY_PASSWORD=<personal_api_key> yarn start-minimal')

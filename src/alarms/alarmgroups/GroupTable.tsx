@@ -17,7 +17,7 @@ export const GroupTable: React.FC<any> = (props) =>  {
   const baseUrl = "/api/v4/contactgroups/";
   const navigationUrl = "/alarms/groups";
 
-  const fetchTemplatesWithOptions = (ids: string[], fetchOptions:any) => {
+  const fetchGroupsWithOptions = (ids: string[], fetchOptions:any) => {
     const fetches = ids.map (id => {
       return (fetch(baseUrl + id + "/", fetchOptions));
     });
@@ -43,7 +43,7 @@ export const GroupTable: React.FC<any> = (props) =>  {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({})
       };
-      return fetchTemplatesWithOptions(ids, opts)
+      return fetchGroupsWithOptions(ids, opts)
       .then((_result) => {
         setBusyDeleting(false);
         if (setCheckboxes) {
@@ -69,7 +69,7 @@ export const GroupTable: React.FC<any> = (props) =>  {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({})
       };
-      return fetchTemplatesWithOptions([row.id], opts)
+      return fetchGroupsWithOptions([row.id], opts)
       .then((_result) => {
         setBusyDeleting(false);
         // TODO: do we need this callback or should we otherwise indicate that the record is deleted ?
@@ -114,6 +114,7 @@ export const GroupTable: React.FC<any> = (props) =>  {
               setTableData={setTableData} 
               triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
               triggerReloadWithBasePage={triggerReloadWithBasePage}
+              editUrl={`${navigationUrl}/${row.id}`}
               actions={[
                 {
                   displayValue: "Delete",
