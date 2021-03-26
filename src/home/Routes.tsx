@@ -23,6 +23,8 @@ import { TimeseriesTable } from "../data_management/timeseries/TimeseriesTable";
 import { EditTimeseries } from "../data_management/timeseries/EditTimeseries";
 import { NewTimeseries } from "../data_management/timeseries/NewTimeseries";
 import { MonitoringNetworksTable } from "../data_management/timeseries/monitoring_networks/MonitoringNetworksTable";
+import { EditMonitoringNetwork } from "../data_management/timeseries/monitoring_networks/EditMonitoringNetwork";
+import { NewMonitoringNetwork } from "../data_management/timeseries/monitoring_networks/NewMonitoringNetwork";
 import { LocationsTable } from "../data_management/timeseries/locations/LocationsTable";
 import { EditLocation } from "../data_management/timeseries/locations/EditLocation";
 import { NewLocation } from "../data_management/timeseries/locations/NewLocation";
@@ -78,7 +80,11 @@ export const Routes = () => {
         <Route exact path="/data_management/timeseries/timeseries" component={TimeseriesTable} />
         <Route exact path="/data_management/timeseries/timeseries/new" component={NewTimeseries} />
         <Route exact path="/data_management/timeseries/timeseries/:uuid" component={EditTimeseries} />
+
         <Route exact path="/data_management/timeseries/monitoring_networks" component={MonitoringNetworksTable} />
+        <Route exact path="/data_management/timeseries/monitoring_networks/new" component={NewMonitoringNetwork} />
+        <Route exact path="/data_management/timeseries/monitoring_networks/:uuid" component={EditMonitoringNetwork} />
+
         <Route exact path="/data_management/timeseries/locations" component={LocationsTable} />
         <Route exact path="/data_management/timeseries/locations/new" component={NewLocation} />
         <Route exact path="/data_management/timeseries/locations/:uuid" component={EditLocation} />
