@@ -7,7 +7,8 @@ import { TextInput } from './../../../form/TextInput';
 import { SubmitButton } from '../../../form/SubmitButton';
 import { CancelButton } from '../../../form/CancelButton';
 import { useForm, Values } from '../../../form/useForm';
-import { minLength } from '../../../form/validators';
+import { minLength, required } from '../../../form/validators';
+import { fetchObservationTypes } from '../../rasters/RasterLayerForm';
 import { addNotification } from '../../../actions';
 import { convertToSelectObject } from '../../../utils/convertToSelectObject';
 import formStyles from './../../../styles/Forms.module.css';
@@ -30,25 +31,26 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
   const initialValues = currentTimeseries ? {
     name: currentTimeseries.name,
     code: currentTimeseries.code,
+    observationType: currentTimeseries.observation_type ? convertToSelectObject(currentTimeseries.observation_type.id, currentTimeseries.observation_type.code) : null,
     accessModifier: currentTimeseries.access_modifier,
     supplier: currentTimeseries.supplier ? convertToSelectObject(currentTimeseries.supplier) : null,
     supplierCode: currentTimeseries.supplier_code,
   } : {
     name: null,
     code: null,
+    observationType: null,
     accessModifier: 'Private',
     supplier: convertToSelectObject(username),
     supplierCode: null
   };
 
   const onSubmit = (values: Values) => {
-    console.log(values);
-
     const body = {
       name: values.name,
       code: values.code,
+      observation_type: values.observationType && values.observationType.value,
       access_modifier: values.accessModifier,
-      supplier: values.supplier.value,
+      supplier: values.supplier && values.supplier.value,
       supplier_code: values.supplierCode,
     };
 
@@ -152,6 +154,19 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
         <span className={formStyles.FormFieldTitle}>
           2: Data
         </span>
+        <SelectDropdown
+          title={'Observation type *'}
+          name={'observationType'}
+          placeholder={'- Search and select -'}
+          value={values.observationType}
+          valueChanged={value => handleValueChange('observationType', value)}
+          options={[]}
+          validated={!required('Please select an observation type', values.observationType)}
+          errorMessage={required('Please select an observation type', values.observationType)}
+          triedToSubmit={triedToSubmit}
+          isAsync
+          loadOptions={fetchObservationTypes}
+        />
         <span className={formStyles.FormFieldTitle}>
           3: Rights
         </span>
