@@ -1,17 +1,17 @@
 import React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { connect, useSelector } from 'react-redux';
-import { getSelectedOrganisation, getUsername } from '../../reducers';
-import { ExplainSideColumn } from '../../components/ExplainSideColumn';
-import { TextInput } from './../../form/TextInput';
-import { SubmitButton } from '../../form/SubmitButton';
-import { CancelButton } from '../../form/CancelButton';
-import { useForm, Values } from '../../form/useForm';
-import { minLength } from '../../form/validators';
-import { addNotification } from '../../actions';
-import { convertToSelectObject } from '../../utils/convertToSelectObject';
-import formStyles from './../../styles/Forms.module.css';
-import timeseriesIcon from "../../images/timeseries_icon.svg";
+import { getSelectedOrganisation, getUsername } from '../../../reducers';
+import { ExplainSideColumn } from '../../../components/ExplainSideColumn';
+import { TextInput } from './../../../form/TextInput';
+import { SubmitButton } from '../../../form/SubmitButton';
+import { CancelButton } from '../../../form/CancelButton';
+import { useForm, Values } from '../../../form/useForm';
+import { minLength } from '../../../form/validators';
+import { addNotification } from '../../../actions';
+import { convertToSelectObject } from '../../../utils/convertToSelectObject';
+import formStyles from './../../../styles/Forms.module.css';
+import timeseriesIcon from "../../../images/timeseries_icon.svg";
 
 interface Props {
   currentTimeseries?: any
