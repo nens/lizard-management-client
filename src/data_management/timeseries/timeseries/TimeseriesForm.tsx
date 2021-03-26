@@ -22,6 +22,22 @@ interface Props {
 
 const backUrl = "/data_management/timeseries/timeseries";
 
+// Helper function to fetch locations in async select dropdown
+const fetchLocations = async (searchInput: string) => {
+  if (!searchInput) return;
+
+  const NUMBER_OF_RESULTS = 10;
+  const params=[`page_size=${NUMBER_OF_RESULTS}`, `name__startswith=${searchInput}`];
+
+  const urlQuery = params.join('&');
+  const response = await fetch(`/api/v4/locations/?${urlQuery}`, {
+    credentials: "same-origin"
+  });
+  const responseJSON = await response.json();
+
+  return responseJSON.results.map((location: any) => convertToSelectObject(location.uuid, location.name));
+};
+
 const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
   const { currentTimeseries } = props;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
@@ -32,6 +48,8 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
     name: currentTimeseries.name,
     code: currentTimeseries.code,
     observationType: currentTimeseries.observation_type ? convertToSelectObject(currentTimeseries.observation_type.id, currentTimeseries.observation_type.code) : null,
+    location: currentTimeseries.location ? convertToSelectObject(currentTimeseries.location.uuid, currentTimeseries.location.name) : null,
+    valueType: currentTimeseries.value_type ? convertToSelectObject(currentTimeseries.value_type) : null,
     accessModifier: currentTimeseries.access_modifier,
     supplier: currentTimeseries.supplier ? convertToSelectObject(currentTimeseries.supplier) : null,
     supplierCode: currentTimeseries.supplier_code,
@@ -39,6 +57,8 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
     name: null,
     code: null,
     observationType: null,
+    location: null,
+    value_type: null,
     accessModifier: 'Private',
     supplier: convertToSelectObject(username),
     supplierCode: null
@@ -49,6 +69,8 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
       name: values.name,
       code: values.code,
       observation_type: values.observationType && values.observationType.value,
+      location: values.location && values.location.value,
+      value_type: values.valueType && values.valueType.value,
       access_modifier: values.accessModifier,
       supplier: values.supplier && values.supplier.value,
       supplier_code: values.supplierCode,
@@ -166,6 +188,64 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
           triedToSubmit={triedToSubmit}
           isAsync
           loadOptions={fetchObservationTypes}
+        />
+        <SelectDropdown
+          title={'Location'}
+          name={'location'}
+          placeholder={'- Search and select -'}
+          value={values.location}
+          valueChanged={value => handleValueChange('location', value)}
+          options={[]}
+          validated={!required('Please select a location', values.location)}
+          errorMessage={required('Please select a location', values.location)}
+          triedToSubmit={triedToSubmit}
+          isAsync
+          loadOptions={fetchLocations}
+        />
+        <SelectDropdown
+          title={'Value type *'}
+          name={'valueType'}
+          placeholder={'- Select -'}
+          value={values.valueType}
+          valueChanged={value => handleValueChange('valueType', value)}
+          options={[
+            {
+              value: 'integer',
+              label: 'integer'
+            },
+            {
+              value: 'float',
+              label: 'float'
+            },
+            {
+              value: 'boolean',
+              label: 'boolean'
+            },
+            {
+              value: 'text',
+              label: 'text'
+            },
+            {
+              value: 'image',
+              label: 'image'
+            },
+            {
+              value: 'movie',
+              label: 'movie'
+            },
+            {
+              value: 'file',
+              label: 'file'
+            },
+            {
+              value: 'float array',
+              label: 'float array'
+            }
+          ]}
+          validated={!!values.valueType}
+          errorMessage={'Please select an option'}
+          triedToSubmit={triedToSubmit}
+          isSearchable={false}
         />
         <span className={formStyles.FormFieldTitle}>
           3: Rights
