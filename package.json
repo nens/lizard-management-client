@@ -1,6 +1,6 @@
 {
   "name": "lizard-management-client",
-  "version": "0.2.34",
+  "version": "0.2.34-8",
   "private": true,
   "repository": {
     "type": "git",
@@ -74,7 +74,7 @@
     "build": "mkdir -p dist/ && rm -rf dist/*.zip && react-scripts build && scripts/makedist.sh",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "release": "release-it --verbose",
+    "release": "release-it --verbose --npm.skipChecks",
     "i18n:extract": "NODE_ENV=production npx extract-messages --flat --locales=nl,en -d --output src/translations/locales 'src/**/*.js' 'src/**/*.jsx' 'src/**/*.ts*'",
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public"
@@ -105,7 +105,7 @@
     "@storybook/react": "^6.0.26",
     "extract-react-intl-messages": "^4.1.1",
     "react-is": "^16.13.1",
-    "release-it": "^14.2.2",
+    "release-it": "14.5.0",
     "webpack-cli": "^3.3.0"
   }
 }

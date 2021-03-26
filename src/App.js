@@ -33,6 +33,7 @@ import documentIcon from './images/document.svg';
 import logoutIcon from './images/logout.svg';
 import editIcon from './images/edit.svg';
 import shouldRedirectBasedOnAuthorization from './home/shouldRedirectBasedOnAuthorization';
+import packageJson from '../package.json';
 
 class App extends Component {
   constructor(props) {
@@ -207,7 +208,7 @@ class App extends Component {
                   style={{ height: "55px" }}
                   className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${gridStyles.colSm4} ${gridStyles.colXs12}`}
                 >
-                  <NavLink to="/">
+                  <NavLink to="/" title={"client-version: " +packageJson.version}>
                     <img src={`${lizardIcon}`} alt="Lizard logo" className={styles.LizardLogo} />
                   </NavLink>
                 </div>
