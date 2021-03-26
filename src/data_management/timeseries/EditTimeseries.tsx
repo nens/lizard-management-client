@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { RouteComponentProps } from "react-router-dom";
-import { TimeseriesForm } from "./TimeseriesForm";
+import TimeseriesForm from "./TimeseriesForm";
 import MDSpinner from "react-md-spinner";
 
 interface RouteProps {
