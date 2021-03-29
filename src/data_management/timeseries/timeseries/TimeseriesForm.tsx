@@ -63,7 +63,7 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
     intervalCheckbox: false,
     interval: null,
     accessModifier: 'Private',
-    supplier: convertToSelectObject(username),
+    supplier: username ? convertToSelectObject(username) : null,
     supplierCode: null
   };
 
