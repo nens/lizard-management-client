@@ -7,6 +7,7 @@ import { TextInput } from './../../../form/TextInput';
 import { AccessModifier } from '../../../form/AccessModifier';
 import { SelectDropdown } from '../../../form/SelectDropdown';
 import { DurationField } from '../../../form/DurationField';
+import { CheckBox } from '../../../form/CheckBox';
 import { SubmitButton } from '../../../form/SubmitButton';
 import { CancelButton } from '../../../form/CancelButton';
 import { useForm, Values } from '../../../form/useForm';
@@ -18,7 +19,6 @@ import { fromISOValue, toISOValue } from '../../../utils/isoUtils';
 import { convertDurationObjToSeconds, convertSecondsToDurationObject } from '../../../utils/dateUtils';
 import formStyles from './../../../styles/Forms.module.css';
 import timeseriesIcon from "../../../images/timeseries_icon.svg";
-import { CheckBox } from '../../../form/CheckBox';
 
 interface Props {
   currentTimeseries?: any
