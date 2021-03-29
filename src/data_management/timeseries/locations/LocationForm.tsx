@@ -2,7 +2,7 @@ import React, {useState,} from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { connect, useSelector } from 'react-redux';
 // import { getOrganisations, getUsername } from '../../reducers';
-import { getSelectedOrganisation } from '../../../reducers';
+import { getSelectedOrganisation, getSupplierIds } from '../../../reducers';
 // import { ScenarioResult } from '../../form/ScenarioResult';
 import { ExplainSideColumn } from '../../../components/ExplainSideColumn';
 import { TextInput } from './../../../form/TextInput';
@@ -40,6 +40,7 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
   const { currentRecord } = props;
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const selectedOrganisation = useSelector(getSelectedOrganisation);
+  const supplierIds = useSelector(getSupplierIds).available;
 
   // const organisations = useSelector(getOrganisations).available;
   // next line doesnot work, because organisation has no uuid, but unique_id instead. Thus I do not use it
@@ -52,7 +53,8 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
     initialValues = {
       name: currentRecord.name || '',
       code: currentRecord.code || '',
-      accessModifier: currentRecord.accessModifier,
+      accessModifier: currentRecord.access_modifier,
+      supplier: currentRecord.supplier ? convertToSelectObject(currentRecord.supplier) : null,
       uuid: currentRecord.uuid || '',
       description: currentRecord.description || '',
       // modelName: currentRecord.model_name || '',
@@ -64,6 +66,7 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
       name: null,
       code: null,
       accessModifier: 'Private',
+      supplier: null,
       description: null,
       // modelName: currentRecord.model_name || '',
       // supplier: currentRecord.username || '',
@@ -248,7 +251,7 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
-        {/* <SelectDropdown
+        <SelectDropdown
           title={'Supplier'}
           name={'supplier'}
           placeholder={'- Search and select -'}
@@ -258,9 +261,8 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
           validated
           onFocus={handleFocus}
           onBlur={handleBlur}
-          readOnly={(!(supplierIds.length > 0 && selectedOrganisation.roles.includes('admin')) || belongsToScenario)}
-          form={"raster_layer_form_id"}
-        /> */}
+          readOnly={(!(supplierIds.length > 0 && selectedOrganisation.roles.includes('admin')))}
+        />
         {/* <TextInput
           title={'Label type Uuid'}
           name={'uuid'}
