@@ -38,14 +38,15 @@ export function RelativeField (props: Props) {
   const [selection, setSelection] = useState<Value | null>(null);
 
   useEffect(() => {
+    // call setSelection only when component first mounted
+    // to set selection based on the interval value
     if (value !== null && value < 0) {
       setSelection(convertToSelectObject('Before'));
     } else if (value !== null && value >= 0) {
       setSelection(convertToSelectObject('After'));
-    } else {
-      setSelection(null);
     };
-  }, [value]);
+  // eslint-disable-next-line
+  }, []);
 
   return (
     <label
