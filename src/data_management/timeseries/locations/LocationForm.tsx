@@ -9,10 +9,10 @@ import { TextInput } from './../../../form/TextInput';
 import { SubmitButton } from '../../../form/SubmitButton';
 import { CancelButton } from '../../../form/CancelButton';
 import { useForm, Values } from '../../../form/useForm';
-import { minLength } from '../../../form/validators';
+import { minLength, jsonValidator, /*required*/ } from '../../../form/validators';
 import { addNotification } from '../../../actions';
 import formStyles from './../../../styles/Forms.module.css';
-// import { TextArea } from './../../form/TextArea';
+import { TextArea } from '../../../form/TextArea';
 import LocationIcon from "../../../images/locations_icon.svg";
 import FormActionButtons from '../../../components/FormActionButtons';
 import Modal from '../../../components/Modal';
@@ -21,6 +21,7 @@ import { ModalDeleteContent } from '../../../components/ModalDeleteContent';
 import { convertToSelectObject } from '../../../utils/convertToSelectObject';
 import { SelectDropdown } from '../../../form/SelectDropdown';
 import { AccessModifier } from '../../../form/AccessModifier';
+
 
 
 
@@ -39,6 +40,21 @@ interface RouteParams {
 const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps<RouteParams>) => {
   const { currentRecord } = props;
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const assetTypeOptions = [
+    {
+      value: "measuring_station",
+      label: "Measuringstation",
+      subLabel: "(Default)",
+      subLabel2: undefined,
+    },
+    {
+      value: "pump_station",
+      label: "Pumpstation",
+      subLabel: undefined,
+      subLabel2: undefined,
+    },
+  ];
+  const [selectedAssetType, setSelectedAssetType] = useState(assetTypeOptions[0]);
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const supplierIds = useSelector(getSupplierIds).available;
 
@@ -53,6 +69,7 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
     initialValues = {
       name: currentRecord.name || '',
       code: currentRecord.code || '',
+      extraMetadata: currentRecord.extra_metadata,
       accessModifier: currentRecord.access_modifier,
       supplier: currentRecord.supplier ? convertToSelectObject(currentRecord.supplier) : null,
       uuid: currentRecord.uuid || '',
@@ -65,6 +82,7 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
     initialValues = {
       name: null,
       code: null,
+      extraMetadata: null,
       accessModifier: 'Private',
       supplier: null,
       description: null,
@@ -240,6 +258,35 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
         <span className={formStyles.FormFieldTitle}>
           2: Data
         </span>
+        <SelectDropdown
+          title={'Asset type'}
+          name={'asset_type'}
+          placeholder={'- Search and select -'}
+          // @ts-ignore
+          value={selectedAssetType}
+          valueChanged={valueObj => { 
+            console.log("value", valueObj)
+            // @ts-ignore
+            setSelectedAssetType (valueObj);
+          }}
+          options={assetTypeOptions}
+          validated
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+        />
+        <TextArea
+          title={'Extra metadata (JSON) *'}
+          name={'extraMetadata'}
+          placeholder={'Enter valid JSON'}
+          value={values.extraMetadata}
+          valueChanged={handleInputChange}
+          clearInput={clearInput}
+          validated={!jsonValidator(values.extraMetadata)}
+          errorMessage={jsonValidator(values.extraMetadata)}
+          triedToSubmit={triedToSubmit}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+        />
         <span className={formStyles.FormFieldTitle}>
           3: Rights
         </span>
