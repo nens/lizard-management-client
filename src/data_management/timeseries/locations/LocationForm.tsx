@@ -47,6 +47,7 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
   if (currentRecord) {
     initialValues = {
       name: currentRecord.name || '',
+      code: currentRecord.code || '',
       uuid: currentRecord.uuid || '',
       description: currentRecord.description || '',
       // modelName: currentRecord.model_name || '',
@@ -56,6 +57,7 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
   } else {
     initialValues = {
       name: null,
+      code: null,
       description: null,
       // modelName: currentRecord.model_name || '',
       // supplier: currentRecord.username || '',
@@ -66,30 +68,58 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
   
 
   const onSubmit = (values: Values) => {
-    const body = {
-      name: values.name,
-      // description: values.description,
-      // organisation: values.organisation.unique_id,
-      // object_type: values.object_type,
-    };
 
-    fetch(`/api/v4/locations/${currentRecord.uuid}/`, {
-      credentials: 'same-origin',
-      method: 'PATCH',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(body)
-    })
-      .then(data => {
-        const status = data.status;
-        if (status === 200) {
-          props.addNotification('Success! Location updated', 2000);
-          props.history.push('/data_management/timeseries/locations/');
-        } else {
-          props.addNotification(status, 2000);
-          console.error(data);
-        };
+    if (currentRecord) {
+      const body = {
+        name: values.name,
+        // description: values.description,
+        // organisation: values.organisation.unique_id,
+        // object_type: values.object_type,
+      };
+  
+      fetch(`/api/v4/locations/${currentRecord.uuid}/`, {
+        credentials: 'same-origin',
+        method: 'PATCH',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(body)
       })
-      .catch(console.error);
+        .then(data => {
+          const status = data.status;
+          if (status === 200) {
+            props.addNotification('Success! Location updated', 2000);
+            props.history.push('/data_management/timeseries/locations/');
+          } else {
+            props.addNotification(status, 2000);
+            console.error(data);
+          };
+        })
+        .catch(console.error);
+    } else {
+      const body = {
+        name: values.name,
+        // description: values.description,
+        // organisation: values.organisation.unique_id,
+        // object_type: values.object_type,
+      };
+  
+      fetch(`/api/v4/locations`, {
+        credentials: 'same-origin',
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(body)
+      })
+        .then(data => {
+          const status = data.status;
+          if (status === 200) {
+            props.addNotification('Success! Location creatd', 2000);
+            props.history.push('/data_management/timeseries/locations/');
+          } else {
+            props.addNotification(status, 2000);
+            console.error(data);
+          };
+        })
+        .catch(console.error);
+    }
   };
 
   // dummie function to test creation
@@ -171,6 +201,9 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
         onSubmit={handleSubmit}
         onReset={handleReset}
       >
+        <span className={formStyles.FormFieldTitle}>
+          1: General
+        </span>
         <TextInput
           title={'Location name'}
           name={'name'}
@@ -183,6 +216,23 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
+        <TextInput
+          title={'Code'}
+          name={'code'}
+          value={values.code}
+          valueChanged={handleInputChange}
+          clearInput={clearInput}
+          validated={true}
+          triedToSubmit={triedToSubmit}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+        />
+        <span className={formStyles.FormFieldTitle}>
+          2: Data
+        </span>
+        <span className={formStyles.FormFieldTitle}>
+          3: Rights
+        </span>
         {/* <TextInput
           title={'Label type Uuid'}
           name={'uuid'}
