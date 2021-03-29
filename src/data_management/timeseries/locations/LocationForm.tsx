@@ -19,6 +19,10 @@ import Modal from '../../../components/Modal';
 import { ModalDeleteContent } from '../../../components/ModalDeleteContent';
 // import { lableTypeFormHelpText } from '../../utils/helpTextForForms';
 import { convertToSelectObject } from '../../../utils/convertToSelectObject';
+import { SelectDropdown } from '../../../form/SelectDropdown';
+import { AccessModifier } from '../../../form/AccessModifier';
+
+
 
 
 
@@ -48,6 +52,7 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
     initialValues = {
       name: currentRecord.name || '',
       code: currentRecord.code || '',
+      accessModifier: currentRecord.accessModifier,
       uuid: currentRecord.uuid || '',
       description: currentRecord.description || '',
       // modelName: currentRecord.model_name || '',
@@ -58,6 +63,7 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
     initialValues = {
       name: null,
       code: null,
+      accessModifier: 'Private',
       description: null,
       // modelName: currentRecord.model_name || '',
       // supplier: currentRecord.username || '',
@@ -178,6 +184,7 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
     // formSubmitted,
     tryToSubmitForm,
     handleInputChange,
+    handleValueChange,
     handleSubmit,
     handleReset,
     clearInput,
@@ -233,6 +240,27 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
         <span className={formStyles.FormFieldTitle}>
           3: Rights
         </span>
+        <AccessModifier
+          title={'Accessibility'}
+          name={'accessModifier'}
+          value={values.accessModifier}
+          valueChanged={value => handleValueChange('accessModifier', value)}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+        />
+        {/* <SelectDropdown
+          title={'Supplier'}
+          name={'supplier'}
+          placeholder={'- Search and select -'}
+          value={values.supplier}
+          valueChanged={value => handleValueChange('supplier', value)}
+          options={supplierIds.map((suppl:any) => convertToSelectObject(suppl.username))}
+          validated
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          readOnly={(!(supplierIds.length > 0 && selectedOrganisation.roles.includes('admin')) || belongsToScenario)}
+          form={"raster_layer_form_id"}
+        /> */}
         {/* <TextInput
           title={'Label type Uuid'}
           name={'uuid'}
