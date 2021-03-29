@@ -6,8 +6,8 @@ import { getSelectedOrganisation } from '../../../reducers';
 // import { ScenarioResult } from '../../form/ScenarioResult';
 import { ExplainSideColumn } from '../../../components/ExplainSideColumn';
 import { TextInput } from './../../../form/TextInput';
-// import { SubmitButton } from '../../form/SubmitButton';
-// import { CancelButton } from '../../form/CancelButton';
+import { SubmitButton } from '../../../form/SubmitButton';
+import { CancelButton } from '../../../form/CancelButton';
 import { useForm, Values } from '../../../form/useForm';
 import { minLength } from '../../../form/validators';
 import { addNotification } from '../../../actions';
@@ -146,7 +146,7 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
     values,
     triedToSubmit,
     // formSubmitted,
-    // tryToSubmitForm,
+    tryToSubmitForm,
     handleInputChange,
     handleSubmit,
     handleReset,
@@ -223,25 +223,29 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
         <div
           className={formStyles.ButtonContainer}
         >
-          { currentRecord?
-          <div
-            style={{marginLeft: "auto"}}
-          >
-            <FormActionButtons
-              actions={[
-                {
-                  displayValue: "Delete",
-                  actionFunction: () => {setShowDeleteModal(true);}
-                },
-                // {
-                //   displayValue: "Create",
-                //   actionFunction: onCreate,
-                // }
-              ]}
+          <CancelButton
+            url={'/data_management/timeseries/locations'}
+          />
+          <div style={{
+            display: "flex"
+          }}>
+            {currentRecord?
+             <div style={{marginRight: "16px"}}> 
+              <FormActionButtons
+                actions={[
+                  {
+                    displayValue: "Delete",
+                    actionFunction: () => {setShowDeleteModal(true)}
+                  },
+                ]}
+              />
+            </div>
+            :null}
+            <SubmitButton
+              onClick={tryToSubmitForm}
             />
           </div>
-          :null}
-          
+          {/* ________________________________ */}
         </div>
       </form>
       { 
