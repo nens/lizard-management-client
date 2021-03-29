@@ -66,30 +66,30 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
   
 
   const onSubmit = (values: Values) => {
-    // const body = {
-    //   name: values.name,
-    //   description: values.description,
-  //     organisation: values.organisation.unique_id,
-  //     object_type: values.object_type,
-    // };
+    const body = {
+      name: values.name,
+      // description: values.description,
+      // organisation: values.organisation.unique_id,
+      // object_type: values.object_type,
+    };
 
-    // fetch(`/api/v3/labeltypes/${currentRecord.uuid}/`, {
-    //   credentials: 'same-origin',
-    //   method: 'PATCH',
-    //   headers: {'Content-Type': 'application/json'},
-    //   body: JSON.stringify(body)
-    // })
-    //   .then(data => {
-    //     const status = data.status;
-    //     if (status === 200) {
-    //       props.addNotification('Success! Labeltype updated', 2000);
-    //       props.history.push('/data_management/labels/labeltypes/');
-    //     } else {
-    //       props.addNotification(status, 2000);
-    //       console.error(data);
-    //     };
-    //   })
-    //   .catch(console.error);
+    fetch(`/api/v4/locations/${currentRecord.uuid}/`, {
+      credentials: 'same-origin',
+      method: 'PATCH',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(body)
+    })
+      .then(data => {
+        const status = data.status;
+        if (status === 200) {
+          props.addNotification('Success! Location updated', 2000);
+          props.history.push('/data_management/timeseries/locations/');
+        } else {
+          props.addNotification(status, 2000);
+          console.error(data);
+        };
+      })
+      .catch(console.error);
   };
 
   // dummie function to test creation
@@ -182,7 +182,6 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
           triedToSubmit={triedToSubmit}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          readOnly={true}
         />
         {/* <TextInput
           title={'Label type Uuid'}
