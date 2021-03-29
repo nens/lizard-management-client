@@ -4,6 +4,9 @@ import { connect, useSelector } from 'react-redux';
 import { getSelectedOrganisation, getSupplierIds, getUsername } from '../../../reducers';
 import { ExplainSideColumn } from '../../../components/ExplainSideColumn';
 import { TextInput } from './../../../form/TextInput';
+import { AccessModifier } from '../../../form/AccessModifier';
+import { SelectDropdown } from '../../../form/SelectDropdown';
+import { DurationField } from '../../../form/DurationField';
 import { SubmitButton } from '../../../form/SubmitButton';
 import { CancelButton } from '../../../form/CancelButton';
 import { useForm, Values } from '../../../form/useForm';
@@ -11,10 +14,11 @@ import { minLength, required } from '../../../form/validators';
 import { fetchObservationTypes } from '../../rasters/RasterLayerForm';
 import { addNotification } from '../../../actions';
 import { convertToSelectObject } from '../../../utils/convertToSelectObject';
+import { fromISOValue, toISOValue } from '../../../utils/isoUtils';
+import { convertDurationObjToSeconds, convertSecondsToDurationObject } from '../../../utils/dateUtils';
 import formStyles from './../../../styles/Forms.module.css';
 import timeseriesIcon from "../../../images/timeseries_icon.svg";
-import { AccessModifier } from '../../../form/AccessModifier';
-import { SelectDropdown } from '../../../form/SelectDropdown';
+import { CheckBox } from '../../../form/CheckBox';
 
 interface Props {
   currentTimeseries?: any
@@ -24,13 +28,8 @@ const backUrl = "/data_management/timeseries/timeseries";
 
 // Helper function to fetch locations in async select dropdown
 const fetchLocations = async (searchInput: string) => {
-  if (!searchInput) return;
-
-  const NUMBER_OF_RESULTS = 10;
-  const params=[`page_size=${NUMBER_OF_RESULTS}`, `name__startswith=${searchInput}`];
-
-  const urlQuery = params.join('&');
-  const response = await fetch(`/api/v4/locations/?${urlQuery}`, {
+  const urlQuery = searchInput ? `?name__startswith=${searchInput}` : '';
+  const response = await fetch(`/api/v4/locations/${urlQuery}`, {
     credentials: "same-origin"
   });
   const responseJSON = await response.json();
@@ -50,6 +49,8 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
     observationType: currentTimeseries.observation_type ? convertToSelectObject(currentTimeseries.observation_type.id, currentTimeseries.observation_type.code) : null,
     location: currentTimeseries.location ? convertToSelectObject(currentTimeseries.location.uuid, currentTimeseries.location.name) : null,
     valueType: currentTimeseries.value_type ? convertToSelectObject(currentTimeseries.value_type) : null,
+    intervalCheckbox: !(currentTimeseries.interval === null),
+    interval: currentTimeseries.interval ? toISOValue(convertSecondsToDurationObject(currentTimeseries.interval)) : '',
     accessModifier: currentTimeseries.access_modifier,
     supplier: currentTimeseries.supplier ? convertToSelectObject(currentTimeseries.supplier) : null,
     supplierCode: currentTimeseries.supplier_code,
@@ -59,6 +60,8 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
     observationType: null,
     location: null,
     value_type: null,
+    intervalCheckbox: false,
+    interval: null,
     accessModifier: 'Private',
     supplier: convertToSelectObject(username),
     supplierCode: null
@@ -71,6 +74,7 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
       observation_type: values.observationType && values.observationType.value,
       location: values.location && values.location.value,
       value_type: values.valueType && values.valueType.value,
+      interval: values.intervalCheckbox ? convertDurationObjToSeconds(fromISOValue(values.interval)) : null,
       access_modifier: values.accessModifier,
       supplier: values.supplier && values.supplier.value,
       supplier_code: values.supplierCode,
@@ -247,6 +251,28 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
           triedToSubmit={triedToSubmit}
           isSearchable={false}
         />
+        <label
+          htmlFor={'interval'}
+          className={formStyles.Label}
+        >
+          <span className={formStyles.LabelTitle}>
+            Interval
+          </span>
+          <CheckBox
+            title={''}
+            name={'intervalCheckbox'}
+            value={values.intervalCheckbox}
+            valueChanged={bool => handleValueChange('intervalCheckbox', bool)}
+          />
+          <DurationField
+            title={''}
+            name={'interval'}
+            value={values.interval}
+            valueChanged={value => handleValueChange('interval', value)}
+            validated
+            readOnly={!values.intervalCheckbox}
+          />
+        </label>
         <span className={formStyles.FormFieldTitle}>
           3: Rights
         </span>
