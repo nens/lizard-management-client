@@ -125,7 +125,6 @@ export const ColormapAllSteps: React.FC<Props> = (props) => {
                   // this tabIndex is needed to make sure the div (that should actually be a button, but was made div for above reasons) does receive onfocus and onblur event
                   tabIndex={0}
                   onBlur={(event)=> {
-                    console.log('event', event)
                     setVisiblepickerIndex(null);
                   }}
                   // Todo:
@@ -133,7 +132,9 @@ export const ColormapAllSteps: React.FC<Props> = (props) => {
                   // anyway now the user might expect that excape closes it.
                   // Not only does this not work (see next line, does not distinct between keypresses), 
                   // also the event listener on <ModalBackground/> closes the entire modal on escape
-                  onKeyPress={()=>setVisiblepickerIndex(ind)}
+                  // To avoid confusion I comment out for now
+                  // https://github.com/nens/lizard-management-client/pull/747#discussion_r603177736
+                  // onKeyPress={()=>setVisiblepickerIndex(ind)}
                   onClick={(event)=> {
                     if (
                       visiblepickerIndex === ind &&
