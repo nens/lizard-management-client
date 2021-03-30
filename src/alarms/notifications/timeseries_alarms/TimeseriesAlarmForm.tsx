@@ -20,7 +20,7 @@ import { convertToSelectObject } from '../../../utils/convertToSelectObject';
 import { convertDurationObjToSeconds } from '../../../utils/dateUtils';
 import { rasterIntervalStringServerToDurationObject } from '../../../utils/isoUtils';
 import { getUuidFromUrl } from '../../../utils/getUuidFromUrl';
-import { Timeseries } from '../../../types/timeseriesType';
+import { getTimeseriesLabel, Timeseries } from '../../../types/timeseriesType';
 import formStyles from './../../../styles/Forms.module.css';
 import rasterAlarmIcon from "../../../images/alarm@3x.svg";
 
@@ -36,7 +36,7 @@ const TimeseriesAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps>
 
   const initialValues = currentTimeseriesAlarm && timeseries ? {
     name: currentTimeseriesAlarm.name,
-    timeseries: convertToSelectObject(timeseries.uuid!, timeseries.name),
+    timeseries: convertToSelectObject(timeseries.uuid!, getTimeseriesLabel(timeseries)),
     relative: !!currentTimeseriesAlarm.relative_start || !!currentTimeseriesAlarm.relative_end,
     relativeStart: currentTimeseriesAlarm.relative_start ? convertDurationObjToSeconds(rasterIntervalStringServerToDurationObject(currentTimeseriesAlarm.relative_start)) : null,
     relativeEnd: currentTimeseriesAlarm.relative_end ? convertDurationObjToSeconds(rasterIntervalStringServerToDurationObject(currentTimeseriesAlarm.relative_end)) : null,
