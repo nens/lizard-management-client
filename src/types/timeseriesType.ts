@@ -4,7 +4,7 @@ export interface Timeseries {
   parameter: string,
   unit: string,
   reference_frame: string,
-  observation_type?: {
+  observation_type: {
     code: string,
     parameter: string,
     unit: string,
