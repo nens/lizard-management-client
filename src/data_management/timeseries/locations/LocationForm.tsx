@@ -21,6 +21,7 @@ import { ModalDeleteContent } from '../../../components/ModalDeleteContent';
 import { convertToSelectObject } from '../../../utils/convertToSelectObject';
 import { SelectDropdown } from '../../../form/SelectDropdown';
 import { AccessModifier } from '../../../form/AccessModifier';
+import MapSelectAssetOrPoint from '../../../form/MapSelectAssetOrPoint';
 
 
 
@@ -72,11 +73,16 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
       extraMetadata: currentRecord.extra_metadata,
       accessModifier: currentRecord.access_modifier,
       supplier: currentRecord.supplier ? convertToSelectObject(currentRecord.supplier) : null,
-      uuid: currentRecord.uuid || '',
-      description: currentRecord.description || '',
+      object: currentRecord.object,
+      selectedAssetObj: {
+        location: null,
+        asset: null,
+      }
+      // uuid: currentRecord.uuid || '',
+      // description: currentRecord.description || '',
       // modelName: currentRecord.model_name || '',
       // supplier: currentRecord.username || '',
-      organisation: (currentRecord.location && currentRecord.location.organisation && currentRecord.location.organisation.name) || '',
+      // organisation: (currentRecord.location && currentRecord.location.organisation && currentRecord.location.organisation.name) || '',
     };
   } else {
     initialValues = {
@@ -85,10 +91,18 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
       extraMetadata: null,
       accessModifier: 'Private',
       supplier: null,
-      description: null,
+      object: {
+        type: null,
+        id: null,
+      },
+      selectedAssetObj: {
+        location: null,
+        asset: null,
+      }
+      // description: null,
       // modelName: currentRecord.model_name || '',
       // supplier: currentRecord.username || '',
-      organisation: selectedOrganisation ? convertToSelectObject(selectedOrganisation.uuid.replace(/-/g, ""), selectedOrganisation.name) : null,
+      // organisation: selectedOrganisation ? convertToSelectObject(selectedOrganisation.uuid.replace(/-/g, ""), selectedOrganisation.name) : null,
     }
   }
   
@@ -273,6 +287,16 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
           validated
           onFocus={handleFocus}
           onBlur={handleBlur}
+        />
+        <MapSelectAssetOrPoint
+          title={'Asset location'}
+          name={'selectedAssetObj'}
+          // placeholder={'- Search and select -'}
+          value={values.selectedAssetObj}
+          // @ts-ignore
+          valueChanged={handleValueChange}
+          validated={true}
+          triedToSubmit={triedToSubmit}
         />
         <TextArea
           title={'Extra metadata (JSON) *'}
