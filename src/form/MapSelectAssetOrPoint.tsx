@@ -14,7 +14,7 @@ import { mapBoxAccesToken} from '../mapboxConfig';
 import { convertToSelectObject } from "../utils/convertToSelectObject";
 import styles from "../components/RasterPreview.module.css";
 import { fetchRasterV4, RasterLayerFromAPI } from '../api/rasters';
-import { latLng } from "leaflet";
+// import { latLng } from "leaflet";
 import formStyles from "../styles/Forms.module.css";
 
 
@@ -115,14 +115,19 @@ const MapSelectAssetOrPoint = (props:Props) => {
 
   const chooseLocation = !!setLocation;
 
-  const setAsset = (asset: Asset | null) => {
+  const setAsset = (option: { value: Asset } | null) => {
+    const asset = option && option.value;
+    console.log('valuechange 2', asset);
     if (asset && asset.view) {
+      console.log('valuechange 3', asset);
       const lat = asset.view[0];
       const lng = asset.view[1];
       if (raster !== null) {
         if ( !raster.spatial_bounds) {
+          console.log('valuechange 4', asset);
           return;
         }
+        console.log('valuechange 5', asset);
         const inBounds = (
           lat >= raster.spatial_bounds.south && lat <= raster.spatial_bounds.north &&
           lng >= raster.spatial_bounds.west && lng <= raster.spatial_bounds.east
@@ -131,8 +136,9 @@ const MapSelectAssetOrPoint = (props:Props) => {
           return; 
         }
       }
+      console.log('valuechange 6', asset);
       // @ts-ignore
-      valueChanged({ asset: asset, location: {lat:latLng,lng:lng}});
+      valueChanged({ asset: option, location: {lat:lat,lng:lng}});
     } else {
       // @ts-ignore
       valueChanged({ asset: null, location: null});
@@ -218,8 +224,10 @@ const MapSelectAssetOrPoint = (props:Props) => {
             title={''}
             name={name}
             placeholder={'- Search and select an asset -'}
-            value={selectedAsset}
+            value={value.asset}
             valueChanged={value => {
+              console.log('valuechange 1', value);
+              // @ts-ignore
               setAsset(value);
             }}
             options={[]}

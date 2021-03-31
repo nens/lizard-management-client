@@ -29,7 +29,8 @@ import MapSelectAssetOrPoint from '../../../form/MapSelectAssetOrPoint';
 
 
 interface Props {
-  currentRecord?: any
+  currentRecord?: any;
+  relatedAsset?: any;
 };
 interface PropsFromDispatch {
   addNotification: (message: string | number, timeout: number) => void
@@ -39,7 +40,7 @@ interface RouteParams {
 };
 
 const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps<RouteParams>) => {
-  const { currentRecord } = props;
+  const { currentRecord, relatedAsset } = props;
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const assetTypeOptions = [
     {
@@ -67,16 +68,38 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
   let initialValues;
   
   if (currentRecord) {
+
+    const geometryCurrentRecord = 
+      currentRecord && 
+      currentRecord.geometry && 
+      currentRecord.geometry.coordinates && 
+      currentRecord.geometry.coordinates[1] !== undefined && 
+      currentRecord.geometry.coordinates[0] !== undefined &&
+      {
+        lat: currentRecord.geometry.coordinates[1],
+        lng: currentRecord.geometry.coordinates[0],
+      };
+    const geometryRelatedAsset = 
+      relatedAsset && 
+      relatedAsset.view && 
+      relatedAsset.view[1] !== undefined && 
+      relatedAsset.view[0] !== undefined &&
+      {
+        lat: relatedAsset.view[1],
+        lng: relatedAsset.view[0],
+      };
+
+
     initialValues = {
       name: currentRecord.name || '',
       code: currentRecord.code || '',
       extraMetadata: currentRecord.extra_metadata,
       accessModifier: currentRecord.access_modifier,
-      supplier: currentRecord.supplier ? convertToSelectObject(currentRecord.supplier) : null,
-      object: currentRecord.object,
+      supplier: currentRecord.supplier ? convertToSelectObject(currentRecord.supplier) : geometryRelatedAsset? geometryRelatedAsset: null,
+      // object: currentRecord.object,
       selectedAssetObj: {
-        location: null,
-        asset: null,
+        location: geometryCurrentRecord? geometryCurrentRecord : null,
+        asset: relatedAsset?convertToSelectObject(relatedAsset, relatedAsset.code): null,
       }
       // uuid: currentRecord.uuid || '',
       // description: currentRecord.description || '',
@@ -294,7 +317,7 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
           // placeholder={'- Search and select -'}
           value={values.selectedAssetObj}
           // @ts-ignore
-          valueChanged={handleValueChange}
+          valueChanged={(value)=>handleValueChange('selectedAssetObj', value)}
           validated={true}
           triedToSubmit={triedToSubmit}
         />

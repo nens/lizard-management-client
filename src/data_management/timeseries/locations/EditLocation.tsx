@@ -12,6 +12,8 @@ interface RouteProps {
 const EditLocation = (props: RouteProps & RouteComponentProps) => {
   const organisations = useSelector(getOrganisations);
   const [currentRecord, setCurrentRecord] = useState(null);
+  const [relatedAssetRequired, setRelatedAssetRequired] = useState(true);
+  const [relatedAsset, setRelatedAsset] = useState(null);
   // @ts-ignore
   const { uuid } = props.match.params;
   useEffect (() => {
@@ -20,16 +22,40 @@ const EditLocation = (props: RouteProps & RouteComponentProps) => {
         credentials: "same-origin"
       }).then(response => response.json());
 
+      if (currentRecord.object && currentRecord.object.type !== null && currentRecord.object.id !== null) {
+        setRelatedAssetRequired(true);
+      } else {
+        setRelatedAssetRequired(false);
+      }
+      setRelatedAsset(null);
       setCurrentRecord(currentRecord);
     })();
   }, [uuid])
 
+  useEffect (() => {
+    
+      (async () => {
+        // @ts-ignore
+        if (relatedAssetRequired && currentRecord !==null && currentRecord.object) {
+          // @ts-ignore
+          const relatedAsset = await fetch(`/api/v3/${currentRecord.object.type}s/${currentRecord.object.id}/`, {
+            credentials: "same-origin"
+          }).then(response => response.json());
+
+          setRelatedAsset(relatedAsset);
+        }
+      })();
+    
+  }, [currentRecord, relatedAssetRequired])
+
   if (
     currentRecord &&
+    (relatedAsset || !relatedAssetRequired) &&
     organisations.isFetching === false
   ) {
     return <LocationForm
       currentRecord={currentRecord}
+      relatedAsset={relatedAsset}
     />;
   }
   else {
