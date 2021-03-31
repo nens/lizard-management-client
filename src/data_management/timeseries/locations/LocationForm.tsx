@@ -95,10 +95,10 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
       code: currentRecord.code || '',
       extraMetadata: currentRecord.extra_metadata,
       accessModifier: currentRecord.access_modifier,
-      supplier: currentRecord.supplier ? convertToSelectObject(currentRecord.supplier) : geometryRelatedAsset? geometryRelatedAsset: null,
+      supplier: currentRecord.supplier ? convertToSelectObject(currentRecord.supplier) :  null,
       // object: currentRecord.object,
       selectedAssetObj: {
-        location: geometryCurrentRecord? geometryCurrentRecord : null,
+        location: geometryCurrentRecord? geometryCurrentRecord : geometryRelatedAsset? geometryRelatedAsset: null,
         asset: relatedAsset?convertToSelectObject(relatedAsset, relatedAsset.code): null,
       }
       // uuid: currentRecord.uuid || '',
@@ -114,10 +114,10 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
       extraMetadata: null,
       accessModifier: 'Private',
       supplier: null,
-      object: {
-        type: null,
-        id: null,
-      },
+      // object: {
+      //   type: null,
+      //   id: null,
+      // },
       selectedAssetObj: {
         location: null,
         asset: null,
@@ -136,9 +136,22 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
     if (currentRecord) {
       const body = {
         name: values.name,
-        // description: values.description,
-        // organisation: values.organisation.unique_id,
-        // object_type: values.object_type,
+        code: values.code,
+        extra_metadata: values.extraMetadata,
+        access_modifier: values.accessModifier,
+        supplier: values.supplier,
+        geometry: {
+          "type":"Point",
+          "coordinates":[values.selectedAssetObj.location.lng,values.selectedAssetObj.location.lat,0.0]
+        },
+        object: values.selectedAssetObj.asset.enity_name? {
+          type: values.selectedAssetObj.asset.enity_name,
+          id: values.selectedAssetObj.asset.enity_id,
+        }:
+        {
+          type: currentRecord.object.type,
+          id: currentRecord.object.id, 
+        },
       };
   
       fetch(`/api/v4/locations/${currentRecord.uuid}/`, {
@@ -161,9 +174,18 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
     } else {
       const body = {
         name: values.name,
-        // description: values.description,
-        // organisation: values.organisation.unique_id,
-        // object_type: values.object_type,
+        code: values.code,
+        extra_metadata: values.extraMetadata,
+        access_modifier: values.accessModifier,
+        supplier: values.supplier,
+        geometry: {
+          "type":"Point",
+          "coordinates":[values.selectedAssetObj.location.lng,values.selectedAssetObj.location.lat,0.0]
+        },
+        object: {
+          type: values.selectedAssetObj.asset.enity_name,
+          id: values.selectedAssetObj.asset.enity_id,
+        },
       };
   
       fetch(`/api/v4/locations`, {
