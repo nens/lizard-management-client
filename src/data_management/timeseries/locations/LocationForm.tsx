@@ -24,10 +24,6 @@ import { AccessModifier } from '../../../form/AccessModifier';
 import MapSelectAssetOrPoint from '../../../form/MapSelectAssetOrPoint';
 
 
-
-
-
-
 interface Props {
   currentRecord?: any;
   relatedAsset?: any;
@@ -144,9 +140,9 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
           "type":"Point",
           "coordinates":[values.selectedAssetObj.location.lng,values.selectedAssetObj.location.lat,0.0]
         },
-        object: values.selectedAssetObj.asset.enity_name? {
-          type: values.selectedAssetObj.asset.enity_name,
-          id: values.selectedAssetObj.asset.enity_id,
+        object: values.selectedAssetObj.asset.value.enity_name? {
+          type: values.selectedAssetObj.asset.value.enity_name,
+          id: values.selectedAssetObj.asset.value.enity_id,
         }:
         {
           type: currentRecord.object.type,
@@ -172,6 +168,7 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
         })
         .catch(console.error);
     } else {
+      console.log('values.selectedAssetObj', values.selectedAssetObj);
       const body = {
         name: values.name,
         code: values.code,
@@ -183,8 +180,8 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
           "coordinates":[values.selectedAssetObj.location.lng,values.selectedAssetObj.location.lat,0.0]
         },
         object: {
-          type: values.selectedAssetObj.asset.enity_name,
-          id: values.selectedAssetObj.asset.enity_id,
+          type: values.selectedAssetObj.asset.value.entity_name,
+          id: values.selectedAssetObj.asset.value.entity_id,
         },
       };
   
