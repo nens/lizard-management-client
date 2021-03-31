@@ -419,7 +419,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           3: Rights
         </span>
         <AccessModifier
-          title={'Accessibility'}
+          title={'Accessibility *'}
           name={'accessModifier'}
           value={values.accessModifier || accessModifier}
           valueChanged={() => null}
@@ -455,7 +455,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           />
         ) : null}
         <SelectDropdown
-          title={'Organisation'}
+          title={'Organisation *'}
           name={'organisation'}
           placeholder={'- Search and select -'}
           value={values.organisation}

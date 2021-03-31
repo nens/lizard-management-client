@@ -8,9 +8,13 @@ import { CancelButton } from '../../../form/CancelButton';
 import { useForm, Values } from '../../../form/useForm';
 import { minLength } from '../../../form/validators';
 import { addNotification } from '../../../actions';
-import { getSelectedOrganisation } from '../../../reducers';
+import { getOrganisations, getSelectedOrganisation } from '../../../reducers';
 import formStyles from './../../../styles/Forms.module.css';
 import monitoringNetworkIcon from "../../../images/monitoring_network_icon.svg";
+import { TextArea } from '../../../form/TextArea';
+import { convertToSelectObject } from '../../../utils/convertToSelectObject';
+import { AccessModifier } from '../../../form/AccessModifier';
+import { SelectDropdown } from '../../../form/SelectDropdown';
 
 interface Props {
   currentNetwork?: any
@@ -21,16 +25,27 @@ const backUrl = "/data_management/timeseries/monitoring_networks";
 const MonitoringNetworkForm = (props: Props & DispatchProps & RouteComponentProps) => {
   const { currentNetwork } = props;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
+  const organisations = useSelector(getOrganisations).available;
+  const organisationsToSwitchTo = organisations.filter((org: any) => org.roles.includes('admin'));
 
   const initialValues = currentNetwork ? {
     name: currentNetwork.name,
+    description: currentNetwork.description,
+    accessModifier: currentNetwork.access_modifier,
+    organisation: currentNetwork.organisation ? convertToSelectObject(currentNetwork.organisation.uuid.replace(/-/g, ""), currentNetwork.organisation.name) : null
   } : {
     name: null,
+    description: null,
+    accessModifier: 'Private',
+    organisation: selectedOrganisation ? convertToSelectObject(selectedOrganisation.uuid.replace(/-/g, ""), selectedOrganisation.name) : null
   };
 
   const onSubmit = (values: Values) => {
     const body = {
       name: values.name,
+      description: values.description,
+      access_modifier: values.accessModifier,
+      organisation: values.organisation && values.organisation.value
     };
 
     if (!currentNetwork) {
@@ -38,10 +53,7 @@ const MonitoringNetworkForm = (props: Props & DispatchProps & RouteComponentProp
         credentials: "same-origin",
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...body,
-          organisation: selectedOrganisation.uuid
-        })
+        body: JSON.stringify(body)
       })
       .then(response => {
         const status = response.status;
@@ -58,7 +70,7 @@ const MonitoringNetworkForm = (props: Props & DispatchProps & RouteComponentProp
       })
       .catch(console.error);
     } else {
-      fetch(`/api/v4/contacts/${currentNetwork.uuid}/`, {
+      fetch(`/api/v4/monitoringnetworks/${currentNetwork.uuid}/`, {
         credentials: "same-origin",
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -84,10 +96,11 @@ const MonitoringNetworkForm = (props: Props & DispatchProps & RouteComponentProp
     // formSubmitted,
     tryToSubmitForm,
     handleInputChange,
+    handleValueChange,
     handleSubmit,
     handleReset,
     clearInput,
-    // fieldOnFocus,
+    fieldOnFocus,
     // handleBlur,
     // handleFocus,
   } = useForm({initialValues, onSubmit});
@@ -99,12 +112,16 @@ const MonitoringNetworkForm = (props: Props & DispatchProps & RouteComponentProp
       headerText={"Monitoring Networks"}
       explanationText={"Select a field to get more information."}
       backUrl={backUrl}
+      fieldName={fieldOnFocus}
     >
       <form
         className={formStyles.Form}
         onSubmit={handleSubmit}
         onReset={handleReset}
       >
+        <span className={formStyles.FormFieldTitle}>
+          1: General
+        </span>
         <TextInput
           title={'Name *'}
           name={'name'}
@@ -112,9 +129,42 @@ const MonitoringNetworkForm = (props: Props & DispatchProps & RouteComponentProp
           value={values.name}
           valueChanged={handleInputChange}
           clearInput={clearInput}
-          validated={!minLength(3, values.firstName)}
-          errorMessage={minLength(3, values.firstName)}
+          validated={!minLength(3, values.name)}
+          errorMessage={minLength(3, values.name)}
           triedToSubmit={triedToSubmit}
+        />
+        <TextArea
+          title={'Description'}
+          name={'description'}
+          value={values.description}
+          valueChanged={handleInputChange}
+          clearInput={clearInput}
+          validated
+        />
+        <span className={formStyles.FormFieldTitle}>
+          2: Data
+        </span>
+        <span className={formStyles.FormFieldTitle}>
+          3: Rights
+        </span>
+        <AccessModifier
+          title={'Accessibility *'}
+          name={'accessModifier'}
+          value={values.accessModifier}
+          valueChanged={value => handleValueChange('accessModifier', value)}
+          readOnly={!!currentNetwork}
+        />
+        <SelectDropdown
+          title={'Organisation *'}
+          name={'organisation'}
+          placeholder={'- Search and select -'}
+          value={values.organisation}
+          valueChanged={value => handleValueChange('organisation', value)}
+          options={organisations.map((organisation: any) => convertToSelectObject(organisation.uuid, organisation.name))}
+          validated={values.organisation !== null && values.organisation !== ''}
+          errorMessage={'Please select an organisation'}
+          triedToSubmit={triedToSubmit}
+          readOnly={!(!currentNetwork && organisationsToSwitchTo.length > 0 && selectedOrganisation.roles.includes('admin'))}
         />
         <div
           className={formStyles.ButtonContainer}
