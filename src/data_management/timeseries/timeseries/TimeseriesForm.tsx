@@ -27,9 +27,9 @@ interface Props {
 const backUrl = "/data_management/timeseries/timeseries";
 
 // Helper function to fetch locations in async select dropdown
-const fetchLocations = async (searchInput: string) => {
-  const urlQuery = searchInput ? `?name__startswith=${searchInput}` : '';
-  const response = await fetch(`/api/v4/locations/${urlQuery}`, {
+const fetchLocations = async (searchInput: string, organisationUuid: string) => {
+  const urlQuery = searchInput ? `organisation__uuid=${organisationUuid}&name__startswith=${searchInput}` : `organisation__uuid=${organisationUuid}`;
+  const response = await fetch(`/api/v4/locations/?${urlQuery}`, {
     credentials: "same-origin"
   });
   const responseJSON = await response.json();
@@ -204,7 +204,7 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
           errorMessage={required('Please select a location', values.location)}
           triedToSubmit={triedToSubmit}
           isAsync
-          loadOptions={fetchLocations}
+          loadOptions={searchInput => fetchLocations(searchInput, selectedOrganisation.uuid)}
         />
         <SelectDropdown
           title={'Value type *'}
