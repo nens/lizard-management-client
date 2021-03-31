@@ -13,6 +13,7 @@ import { minLength, jsonValidator, /*required*/ } from '../../../form/validators
 import { addNotification } from '../../../actions';
 import formStyles from './../../../styles/Forms.module.css';
 import { TextArea } from '../../../form/TextArea';
+import {GeometryField} from '../../../form/GeometryField';
 import LocationIcon from "../../../images/locations_icon.svg";
 import FormActionButtons from '../../../components/FormActionButtons';
 import Modal from '../../../components/Modal';
@@ -141,14 +142,23 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
           "type":"Point",
           "coordinates":[values.selectedAssetObj.location.lng,values.selectedAssetObj.location.lat,0.0]
         },
-        object: values.selectedAssetObj.asset && values.selectedAssetObj.asset.value.entity_name? {
-          type: values.selectedAssetObj.asset.value.entity_name,
-          id: values.selectedAssetObj.asset.value.entity_id,
-        }:
-        {
-          type: currentRecord.object.type,
-          id: currentRecord.object.id, 
-        },
+        object: 
+          // it was set by the dropdown
+          values.selectedAssetObj.asset && values.selectedAssetObj.asset.value.entity_name? 
+          {
+            type: values.selectedAssetObj.asset.value.entity_name,
+            id: values.selectedAssetObj.asset.value.entity_id,
+          }
+          // it was set when loading the form and not changed by the dropdown
+          : values.selectedAssetObj.asset ?
+          {
+            type: currentRecord.object.type,
+            id: currentRecord.object.id, 
+          } : // it is empty eather because it iwas made empty by the user or because it was already empty when loaded
+          {
+            type: null,
+            id: null, 
+          },
       };
       console.log('values.selectedAssetObj', values.selectedAssetObj, body.object, values.selectedAssetObj.asset && values.selectedAssetObj.asset.value.entity_name);
       fetch(`/api/v4/locations/${currentRecord.uuid}/`, {
@@ -348,6 +358,38 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
           validated={true}
           triedToSubmit={triedToSubmit}
         />
+       
+        
+        <div style={{display: "flex"}}>
+           {/* 
+          // @ts-ignore  */}
+          Geometry field placeholder
+          {/* <GeometryField
+          
+          /> */}
+          <label
+            className={formStyles.Label}
+          >
+            <span className={formStyles.LabelTitle}>
+              Selected asset
+            </span>
+            <a 
+              href={
+                values.selectedAssetObj.asset && 
+                values.selectedAssetObj.asset.value &&  
+                values.selectedAssetObj.asset.value.entity_name ? 
+                `/api/v3/${values.selectedAssetObj.asset.value.entity_name}s/${values.selectedAssetObj.asset.value.entity_id}`
+                : values.selectedAssetObj.asset?
+                `/api/v3/${currentRecord.object.type}s/${currentRecord.object.id}`
+                :
+                '/api/v3/'
+              }
+            >
+              {values.selectedAssetObj.asset? values.selectedAssetObj.asset.label : "None selected. See all endpoints" }
+            </a>
+          </label>
+        </div>
+       
         <TextArea
           title={'Extra metadata (JSON) *'}
           name={'extraMetadata'}
