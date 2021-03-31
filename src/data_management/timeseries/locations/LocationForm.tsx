@@ -141,16 +141,16 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
           "type":"Point",
           "coordinates":[values.selectedAssetObj.location.lng,values.selectedAssetObj.location.lat,0.0]
         },
-        object: values.selectedAssetObj.asset.value.enity_name? {
-          type: values.selectedAssetObj.asset.value.enity_name,
-          id: values.selectedAssetObj.asset.value.enity_id,
+        object: values.selectedAssetObj.asset && values.selectedAssetObj.asset.value.entity_name? {
+          type: values.selectedAssetObj.asset.value.entity_name,
+          id: values.selectedAssetObj.asset.value.entity_id,
         }:
         {
           type: currentRecord.object.type,
           id: currentRecord.object.id, 
         },
       };
-  
+      console.log('values.selectedAssetObj', values.selectedAssetObj, body.object, values.selectedAssetObj.asset && values.selectedAssetObj.asset.value.entity_name);
       fetch(`/api/v4/locations/${currentRecord.uuid}/`, {
         credentials: 'same-origin',
         method: 'PATCH',
@@ -181,10 +181,16 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
           "type":"Point",
           "coordinates":[values.selectedAssetObj.location.lng,values.selectedAssetObj.location.lat,0.0]
         },
-        object: {
-          type: values.selectedAssetObj.asset.value.entity_name,
-          id: values.selectedAssetObj.asset.value.entity_id,
-        },
+        object: 
+          values.selectedAssetObj.asset && values.selectedAssetObj.asset.value? 
+          {
+            type: values.selectedAssetObj.asset.value.entity_name,
+            id: values.selectedAssetObj.asset.value.entity_id,
+          }:
+          {
+            type: null,
+            id: null,
+          },
       };
   
       fetch(`/api/v4/locations/`, {
@@ -195,7 +201,7 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
       })
         .then(data => {
           const status = data.status;
-          if (status === 200) {
+          if (status === 201) {
             props.addNotification('Success! Location creatd', 2000);
             props.history.push('/data_management/timeseries/locations/');
           } else {
