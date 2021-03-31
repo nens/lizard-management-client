@@ -3,18 +3,18 @@ import { connect, useSelector } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { ExplainSideColumn } from '../../../components/ExplainSideColumn';
 import { TextInput } from './../../../form/TextInput';
+import { TextArea } from '../../../form/TextArea';
+import { AccessModifier } from '../../../form/AccessModifier';
+import { SelectDropdown } from '../../../form/SelectDropdown';
 import { SubmitButton } from '../../../form/SubmitButton';
 import { CancelButton } from '../../../form/CancelButton';
 import { useForm, Values } from '../../../form/useForm';
 import { minLength } from '../../../form/validators';
 import { addNotification } from '../../../actions';
 import { getOrganisations, getSelectedOrganisation } from '../../../reducers';
+import { convertToSelectObject } from '../../../utils/convertToSelectObject';
 import formStyles from './../../../styles/Forms.module.css';
 import monitoringNetworkIcon from "../../../images/monitoring_network_icon.svg";
-import { TextArea } from '../../../form/TextArea';
-import { convertToSelectObject } from '../../../utils/convertToSelectObject';
-import { AccessModifier } from '../../../form/AccessModifier';
-import { SelectDropdown } from '../../../form/SelectDropdown';
 
 interface Props {
   currentNetwork?: any
