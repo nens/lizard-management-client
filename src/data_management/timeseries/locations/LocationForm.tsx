@@ -132,6 +132,7 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
     if (currentRecord) {
       const body = {
         name: values.name,
+        organisation: selectedOrganisation.uuid,
         code: values.code,
         extra_metadata: values.extraMetadata,
         access_modifier: values.accessModifier,
@@ -171,6 +172,7 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
       console.log('values.selectedAssetObj', values.selectedAssetObj);
       const body = {
         name: values.name,
+        organisation: selectedOrganisation.uuid,
         code: values.code,
         extra_metadata: values.extraMetadata,
         access_modifier: values.accessModifier,
@@ -185,7 +187,7 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
         },
       };
   
-      fetch(`/api/v4/locations`, {
+      fetch(`/api/v4/locations/`, {
         credentials: 'same-origin',
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
