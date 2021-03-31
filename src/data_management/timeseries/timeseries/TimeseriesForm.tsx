@@ -194,7 +194,7 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
           loadOptions={fetchObservationTypes}
         />
         <SelectDropdown
-          title={'Location'}
+          title={'Location *'}
           name={'location'}
           placeholder={'- Search and select -'}
           value={values.location}
@@ -277,7 +277,7 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
           3: Rights
         </span>
         <AccessModifier
-          title={'Accessibility'}
+          title={'Accessibility *'}
           name={'accessModifier'}
           value={values.accessModifier}
           valueChanged={value => handleValueChange('accessModifier', value)}

@@ -238,7 +238,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           3: Rights
         </span>
         <AccessModifier
-          title={'Accessibility'}
+          title={'Accessibility *'}
           name={'accessModifier'}
           value={values.accessModifier}
           valueChanged={value => handleValueChange('accessModifier', value)}
@@ -247,7 +247,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           readOnly={!!currentRasterSource}
         />
         <SelectDropdown
-          title={'Organisation'}
+          title={'Organisation *'}
           name={'organisation'}
           placeholder={'- Search and select -'}
           value={values.organisation}
