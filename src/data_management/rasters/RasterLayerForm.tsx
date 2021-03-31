@@ -70,7 +70,7 @@ const fetchRasterSources = async (uuid: string, searchQuery: string) => {
 };
 
 // Helper function to fetch paginated observation types with search query
-const fetchObservationTypes = async (searchQuery: string) => {
+export const fetchObservationTypes = async (searchQuery: string) => {
   const urlQuery = searchQuery ? `?code__icontains=${searchQuery}` : '';
   const response = await fetch(
     `/api/v4/observationtypes/${urlQuery}`
