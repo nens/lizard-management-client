@@ -6,9 +6,9 @@ import { TextInput } from './TextInput';
 interface MyProps {
   title: string,
   name: string,
-  value: string,
+  value: number,
   validated: boolean,
-  valueChanged: (e: React.ChangeEvent<HTMLInputElement>) => void,
+  valueChanged: (value:number) => void,
   clearInput?: (e: any) => void,
   errorMessage?: string | false,
   placeholder?: string,
@@ -36,29 +36,30 @@ export const FloatInput: React.FC<MyProps> = (props) => {
     readOnly
   } = props;
 
+  const handleStepChange = (event:React.ChangeEvent<HTMLInputElement>)=>{
+    const value = parseFloat(event.target.value);
+    valueChanged(value);
+  }
+
   return (
-    <TextInput
+    <TextInput 
       title={title}
       name={name}
       placeholder={placeholder}
-      value={value}
       validated={validated}
-      type={"number"}
-      valueChanged={(e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
-        var reg = /^\d+$/;
-        if (reg.test(value) || value === '' || value === null) {
-          valueChanged(e);
-        };
+      errorMessage={errorMessage}
+      type="number" 
+      value={value} 
+      valueChanged={(event:React.ChangeEvent<HTMLInputElement>)=>{
+        handleStepChange(event);
       }}
-      clearInput={clearInput}
+      required={true}
       onFocus={onFocus}
       onBlur={onBlur}
-      handleEnter={handleEnter}
-      errorMessage={errorMessage}
-      readOnly={readOnly}
       triedToSubmit={triedToSubmit}
-      showUpDownArrows={true}
+      readOnly={readOnly}
+      clearInput={clearInput}
+      handleEnter={handleEnter}
     />
   );
 }

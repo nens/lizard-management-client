@@ -16,26 +16,14 @@ import styles from "../components/RasterPreview.module.css";
 import { fetchRasterV4, RasterLayerFromAPI } from '../api/rasters';
 // import { latLng } from "leaflet";
 import formStyles from "../styles/Forms.module.css";
-
-
-interface Location {
-  lat: number,
-  lng: number
-}
-
-type Asset = any | null;
-
-interface Value {
-  asset: Asset;
-  point: Location;
-}
+import {Location, Asset, AssetLocationValue} from "../types/locationFormTypes"
 
 interface Props {
   title: string,
-  value: Value;
+  value: AssetLocationValue;
   name: string;
   rasterUuid?:string;
-  valueChanged: (value: Value)=> void,
+  valueChanged: (value: AssetLocationValue)=> void,
   validated: boolean;
   errorMessage?: string;
   triedToSubmit: boolean;

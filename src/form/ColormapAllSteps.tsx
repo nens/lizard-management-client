@@ -75,6 +75,7 @@ export const ColormapAllSteps: React.FC<Props> = (props) => {
   //   onChange(fakeEvent);
   // }
   const handleStepChange = (event:React.ChangeEvent<HTMLInputElement>, ind:number)=>{
+    console.log("event.target.value", event.target.value, parseFloat(event.target.value));
     const oldSteps = JSON.parse(JSON.stringify(steps));
     oldSteps[ind].step = parseFloat(event.target.value);
     const fakeEvent = {target:{name: name, value: oldSteps}}

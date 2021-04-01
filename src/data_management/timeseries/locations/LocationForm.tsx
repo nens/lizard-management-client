@@ -364,9 +364,16 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
            {/* 
           // @ts-ignore  */}
           Geometry field placeholder
-          {/* <GeometryField
-          
-          /> */}
+          <GeometryField
+            title={'Asset location'}
+            name={'selectedAssetObj'}
+            // placeholder={'- Search and select -'}
+            value={values.selectedAssetObj}
+            // @ts-ignore
+            valueChanged={(value)=>handleValueChange('selectedAssetObj', value)}
+            validated={true}
+            triedToSubmit={triedToSubmit}
+          />
           <label
             className={formStyles.Label}
           >
