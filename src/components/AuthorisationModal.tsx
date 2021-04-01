@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
+import { RequestOptions } from 'https';
 import { SubmitButton } from '../form/SubmitButton';
 import { addNotification } from '../actions';
 import ModalBackground from './ModalBackground';
@@ -9,6 +10,7 @@ import { AccessModifier } from '../form/AccessModifier';
 
 interface MyProps {
   rows: any[],
+  fetchFunction: (uuids: string[], fetchOptions: RequestOptions) => Promise<Response[]>,
   handleClose: () => void
 }
 
@@ -17,6 +19,31 @@ function AuthorisationModal (props: MyProps & DispatchProps) {
   console.log(rows)
 
   const [accessModifier, setAccessModifier] = useState<string | null>(null);
+
+  // PATCH requests
+  const handleSubmit = async () => {
+    const uuids = rows.map(row => row.uuid);
+    const options = {
+      credentials: "same-origin",
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        access_modifier: accessModifier
+      })
+    };
+    try {
+      const results = await props.fetchFunction(uuids, options);
+      if (results.every(res => res.status === 200)) {
+        props.addNotification('Success! Accessibility has been modified', 2000);
+        props.handleClose();
+      } else {
+        props.addNotification('An error occurred! Please try again!', 2000);
+        console.error('Error modifying access modifier for: ', results);
+      };
+    } catch (message_1) {
+      return console.error(message_1);
+    };
+  };
 
   return (
     <ModalBackground
@@ -58,7 +85,7 @@ function AuthorisationModal (props: MyProps & DispatchProps) {
             Cancel
           </button>
           <SubmitButton
-            onClick={() => console.log(123)}
+            onClick={handleSubmit}
             readOnly={!accessModifier}
           />
         </div>

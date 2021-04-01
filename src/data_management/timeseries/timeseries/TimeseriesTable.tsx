@@ -277,6 +277,7 @@ export const TimeseriesTable = (props:any) =>  {
         <AuthorisationModal
           rows={[selectedRow]}
           handleClose={() => setSelectedRow(null)}
+          fetchFunction={fetchTimeseriesWithOptions}
         />
       ) : null}
 
@@ -284,6 +285,7 @@ export const TimeseriesTable = (props:any) =>  {
         <AuthorisationModal
           rows={selectedRows}
           handleClose={() => setSelectedRows([])}
+          fetchFunction={fetchTimeseriesWithOptions}
         />
       ) : null}
     </ExplainSideColumn>
