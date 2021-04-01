@@ -45,6 +45,7 @@ export const MonitoringNetworksTable = (props: RouteComponentProps) =>  {
       };
       return fetchMonitoringNetworksWithOptions(uuids, opts)
       .then((_result) => {
+        setBusyDeleting(false);
         if (setCheckboxes) {
           setCheckboxes([]);
         }
