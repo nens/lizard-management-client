@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { NavLink } from "react-router-dom";
 import TableStateContainer from '../../../components/TableStateContainer';
 import TableActionButtons from '../../../components/TableActionButtons';
+import AuthorisationModal from '../../../components/AuthorisationModal';
 import Modal from '../../../components/Modal';
 import { ModalDeleteContent } from '../../../components/ModalDeleteContent';
 import { ExplainSideColumn } from '../../../components/ExplainSideColumn';
@@ -23,6 +24,8 @@ export const TimeseriesTable = (props:any) =>  {
   const [rowToBeDeleted, setRowToBeDeleted] = useState<any | null>(null);
   const [deleteFunction, setDeleteFunction] = useState<Function | null>(null);
   const [busyDeleting, setBusyDeleting] = useState<boolean>(false);
+  const [selectedRow, setSelectedRow] = useState<any | null>(null);
+  const [selectedRows, setSelectedRows] = useState<any[]>([]);
 
   const deleteActions = (rows: any[], tableData: any, setTableData: any, triggerReloadWithCurrentPage: any, triggerReloadWithBasePage: any, setCheckboxes: any) => {
     setRowsToBeDeleted(rows);
@@ -178,6 +181,10 @@ export const TimeseriesTable = (props:any) =>  {
               editUrl={`${navigationUrl}/${row.uuid}`}
               actions={[
                 {
+                  displayValue: "Change right",
+                  actionFunction: (row: any) => setSelectedRow(row)
+                },
+                {
                   displayValue: "Delete",
                   actionFunction: deleteAction,
                 },
@@ -208,6 +215,10 @@ export const TimeseriesTable = (props:any) =>  {
         baseUrl={`${baseUrl}?`} 
         newItemOnClick={handleNewClick}
         checkBoxActions={[
+          {
+            displayValue: "Change rights",
+            actionFunction: (rows: any[]) => setSelectedRows(rows)
+          },
           {
             displayValue: "Delete",
             actionFunction: deleteActions
@@ -260,6 +271,20 @@ export const TimeseriesTable = (props:any) =>  {
           <p>Are you sure? You are deleting the following time-series:</p>
           {ModalDeleteContent([rowToBeDeleted], busyDeleting, [{name: "name", width: 40}, {name: "uuid", width: 60}])}
         </Modal>
+      ) : null}
+
+      {selectedRow ? (
+        <AuthorisationModal
+          rows={[selectedRow]}
+          handleClose={() => setSelectedRow(null)}
+        />
+      ) : null}
+
+      {selectedRows.length > 0 ? (
+        <AuthorisationModal
+          rows={selectedRows}
+          handleClose={() => setSelectedRows([])}
+        />
       ) : null}
     </ExplainSideColumn>
   );
