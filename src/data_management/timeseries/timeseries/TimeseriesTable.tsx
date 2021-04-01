@@ -179,10 +179,10 @@ export const TimeseriesTable = (props:any) =>  {
               triggerReloadWithBasePage={triggerReloadWithBasePage}
               editUrl={`${navigationUrl}/${row.uuid}`}
               actions={[
-                {
-                  displayValue: "Add to MN",
-                  actionFunction: (row: any) => setSelectedRows([row])
-                },
+                // {
+                //   displayValue: "Add to MN",
+                //   actionFunction: (row: any) => setSelectedRows([row])
+                // },
                 {
                   displayValue: "Delete",
                   actionFunction: deleteAction,
