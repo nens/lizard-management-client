@@ -4,7 +4,8 @@ import TableStateContainer from '../../components/TableStateContainer';
 import TableActionButtons from '../../components/TableActionButtons';
 import tableStyles from "../../components/Table.module.css";
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
-import { ModalDeleteContent } from '../../components/ModalDeleteContent'
+import { ModalDeleteContent } from '../../components/ModalDeleteContent';
+import AddToGroupModal from './AddToGroupModal';
 import Modal from '../../components/Modal';
 import contactIcon from "../../images/contacts@3x.svg";
 
@@ -13,6 +14,7 @@ export const ContactTable: React.FC<any> = (props) =>  {
   const [rowToBeDeleted, setRowToBeDeleted] = useState<any | null>(null);
   const [deleteFunction, setDeleteFunction] = useState<null | Function>(null);
   const [busyDeleting, setBusyDeleting] = useState<boolean>(false);
+  const [selectedRow, setSelectedRow] = useState<any | null>(null); // for adding contact to group modal
 
   const baseUrl = "/api/v4/contacts/";
   const navigationUrl = "/alarms/contacts";
@@ -148,9 +150,13 @@ export const ContactTable: React.FC<any> = (props) =>  {
               editUrl={`${navigationUrl}/${row.id}`}
               actions={[
                 {
-                  displayValue: "Delete",
-                  actionFunction: deleteAction,
+                  displayValue: "Add to group",
+                  actionFunction: (row: any) => setSelectedRow(row)
                 },
+                {
+                  displayValue: "Delete",
+                  actionFunction: deleteAction
+                }
               ]}
             />
         );
@@ -245,6 +251,13 @@ export const ContactTable: React.FC<any> = (props) =>  {
         :
           null
         }
+
+        {selectedRow ? (
+          <AddToGroupModal
+            contact={selectedRow}
+            handleClose={() => setSelectedRow(null)}
+          />
+        ) : null}
      </ExplainSideColumn>
   );
 }

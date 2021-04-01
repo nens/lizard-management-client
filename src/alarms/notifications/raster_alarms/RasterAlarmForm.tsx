@@ -222,7 +222,7 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           triedToSubmit={triedToSubmit}
         />
         <CheckBox
-          title={'Use relative data'}
+          title={'Limit to relative period'}
           name={'relative'}
           value={values.relative}
           valueChanged={bool => handleValueChange('relative', bool)}
@@ -289,7 +289,7 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           </span>
           <div className={formStyles.GridContainer}>
             <IntegerInput
-              title={'After breaking threshold'}
+              title={'Triggered after N times'}
               name={'snoozeOn'}
               value={values.snoozeOn}
               valueChanged={handleInputChange}
@@ -298,7 +298,7 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
               triedToSubmit={triedToSubmit}
             />
             <IntegerInput
-              title={'After no further impact'}
+              title={'Withdrawn after N times'}
               name={'snoozeOff'}
               value={values.snoozeOff}
               valueChanged={handleInputChange}

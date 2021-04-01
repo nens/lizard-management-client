@@ -28,7 +28,7 @@ export const TimeseriesAlarmTableComponent: React.FC<DispatchProps & RouteCompon
 
   const deleteActions = (rows: any[], tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any, setCheckboxes: any)=>{
     setRowsToBeDeleted(rows);
-    const uuids = rows.map(row=> row.id);
+    const uuids = rows.map(row=> row.uuid);
     setDeleteFunction(()=>()=>{
       setBusyDeleting(true);
       const tableDataDeletedmarker = tableData.map((rowAllTables:any)=>{
