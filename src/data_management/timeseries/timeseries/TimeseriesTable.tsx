@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { NavLink } from "react-router-dom";
 import TableStateContainer from '../../../components/TableStateContainer';
 import TableActionButtons from '../../../components/TableActionButtons';
-import {ExplainSideColumn} from '../../../components/ExplainSideColumn';
-import tableStyles from "../../../components/Table.module.css";
-import timeseriesIcon from "../../../images/timeseries_icon.svg";
 import Modal from '../../../components/Modal';
 import { ModalDeleteContent } from '../../../components/ModalDeleteContent';
+import { ExplainSideColumn } from '../../../components/ExplainSideColumn';
+import tableStyles from "../../../components/Table.module.css";
+import timeseriesIcon from "../../../images/timeseries_icon.svg";
 
 const baseUrl = "/api/v4/timeseries/";
 const navigationUrl = "/data_management/timeseries/timeseries";
