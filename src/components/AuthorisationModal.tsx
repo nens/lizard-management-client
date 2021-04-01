@@ -16,7 +16,6 @@ interface MyProps {
 
 function AuthorisationModal (props: MyProps & DispatchProps) {
   const { rows } = props;
-  console.log(rows)
 
   const [accessModifier, setAccessModifier] = useState<string | null>(null);
 
