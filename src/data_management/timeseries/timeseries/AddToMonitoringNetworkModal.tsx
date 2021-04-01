@@ -4,6 +4,7 @@ import { SelectDropdown, Value } from '../../../form/SelectDropdown';
 import { SubmitButton } from '../../../form/SubmitButton';
 import { getSelectedOrganisation } from '../../../reducers';
 import { addNotification } from '../../../actions';
+import { convertToSelectObject } from '../../../utils/convertToSelectObject';
 import ModalBackground from '../../../components/ModalBackground';
 import formStyles from '../../../styles/Forms.module.css';
 import buttonStyles from '../../../styles/Buttons.module.css';
@@ -26,34 +27,24 @@ function AddToMonitoringNetworkModal (props: MyProps & DispatchProps) {
       credentials: 'same-origin'
     }).then(
       response => response.json()
-    ).then(data =>{
-      const listOfMonitoringNetworks = data.results.map((network: any) => ({
-        value: network.uuid,
-        label: network.name,
-        // contacts: group.contacts.map((contact: any) => contact.id)
-      }));
+    ).then(
+      data => setAvailableMonitoringNetworks(data.results.map((network: any) => convertToSelectObject(network.uuid, network.name)))
+    ).catch(
+      console.error
+    );
+  }, [selectedOrganisation.uuid]);
 
-      // filter list of available groups with only groups that the contact has not yet been added to
-      // const listOfGroupsWithoutCurrentContact = listOfGroups.filter(
-      //   (group: any) => !group.contacts.includes(contact.id)
-      // );
-      setAvailableMonitoringNetworks(listOfMonitoringNetworks);
-    }).catch(console.error);
-  }, [selectedOrganisation]);
-
-  // PATCH requests to update selected monitoring network(s) with the selected timeseries
+  // POST requests to update selected monitoring network with the selected timeseries
   const handleSubmit = () => {
     if (!selectedMonitoringNetwork) return;
 
-    fetch(`/api/v4/monitoringnetworks/${selectedMonitoringNetwork.value}/`, {
+    fetch(`/api/v4/monitoringnetworks/${selectedMonitoringNetwork.value}/timeseries/`, {
       credentials: "same-origin",
-      method: "PATCH",
+      method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        timeseries: timeseries.map(ts => ts.uuid)
-      })
+      body: JSON.stringify(timeseries.map(ts => ts.uuid))
     }).then(res => {
-      if (res.status === 200) {
+      if (res.status === 204) {
         props.addNotification('Success! Time-series added to monitoring network', 2000);
         props.handleClose();
       } else {
@@ -65,7 +56,7 @@ function AddToMonitoringNetworkModal (props: MyProps & DispatchProps) {
 
   return (
     <ModalBackground
-      title={'Add Contact to Group'}
+      title={'Add to Monitoring Network'}
       handleClose={props.handleClose}
       width={'50%'}
     >
@@ -79,13 +70,13 @@ function AddToMonitoringNetworkModal (props: MyProps & DispatchProps) {
         }}
       >
         <div>
-          <p>Which monitoring network(s) would you like to add the selected time-series to?</p>
+          <p>Adding time-series to a monitoring network will group them and they can be seen in the Lizard Catalogue.</p>
+          <p>Which monitoring network would you like to add the selected time-series to?</p>
           <SelectDropdown
-            title={'Groups'}
-            name={'groups'}
+            title={'Monitoring networks'}
+            name={'monitoringNetworks'}
             placeholder={'- Search and select -'}
-            // @ts-ignore
-            valueChanged={value => setSelectedMonitoringNetwork(value)}
+            valueChanged={value => setSelectedMonitoringNetwork(value as Value)}
             options={availableMonitoringNetworks || []}
             validated
             isLoading={!availableMonitoringNetworks}
