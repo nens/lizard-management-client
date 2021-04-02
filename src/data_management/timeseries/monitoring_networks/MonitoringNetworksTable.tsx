@@ -115,7 +115,6 @@ export const MonitoringNetworksTable = (props: RouteComponentProps) =>  {
           {value: 'uuid=', label: 'UUID'}
         ]}
       />
-
       {rowsToBeDeleted.length > 0 ? (
         <DeleteModal
           rows={rowsToBeDeleted}

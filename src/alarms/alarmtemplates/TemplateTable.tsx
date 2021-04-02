@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NavLink } from "react-router-dom";
+import { NavLink, RouteComponentProps } from "react-router-dom";
 import TableStateContainer from '../../components/TableStateContainer';
 import TableActionButtons from '../../components/TableActionButtons';
 import tableStyles from "../../components/Table.module.css";
@@ -17,7 +17,7 @@ const fetchTemplatesWithOptions = (ids: string[], fetchOptions:any) => {
   return Promise.all(fetches)
 };
 
-export const TemplateTable: React.FC<any> = (props) =>  {
+export const TemplateTable: React.FC<RouteComponentProps> = (props) =>  {
   const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
   const [resetTable, setResetTable] = useState<Function | null>(null);
 
@@ -115,7 +115,6 @@ export const TemplateTable: React.FC<any> = (props) =>  {
             }
           ]}
         />
-
         {rowsToBeDeleted.length > 0 ? (
           <DeleteModal
             rows={rowsToBeDeleted}

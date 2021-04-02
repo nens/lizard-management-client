@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NavLink } from "react-router-dom";
+import { NavLink, RouteComponentProps } from "react-router-dom";
 import TableStateContainer from '../../components/TableStateContainer';
 import TableActionButtons from '../../components/TableActionButtons';
 import DeleteModal from '../../components/DeleteModal';
@@ -18,7 +18,7 @@ const fetchWmsLayerUuidsWithOptions = (uuids: string[], fetchOptions:any) => {
   return Promise.all(fetches)
 };
 
-export const WmsLayerTable = (props:any) =>  {
+export const WmsLayerTable = (props: RouteComponentProps) =>  {
   const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
   const [resetTable, setResetTable] = useState<Function | null>(null);
 

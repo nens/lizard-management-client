@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NavLink } from "react-router-dom";
+import { NavLink, RouteComponentProps } from "react-router-dom";
 import TableStateContainer from '../../../components/TableStateContainer';
 import TableActionButtons from '../../../components/TableActionButtons';
 import DeleteModal from '../../../components/DeleteModal';
@@ -17,7 +17,7 @@ const fetchTimeseriesWithOptions = (uuids: string[], fetchOptions:any) => {
   return Promise.all(fetches);
 };
 
-export const TimeseriesTable = (props:any) =>  {
+export const TimeseriesTable = (props: RouteComponentProps) =>  {
   const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
   const [resetTable, setResetTable] = useState<Function | null>(null);
 
@@ -175,7 +175,6 @@ export const TimeseriesTable = (props:any) =>  {
           {value: 'uuid=', label: 'UUID'},
         ]}
       />
-
       {rowsToBeDeleted.length > 0 ? (
         <DeleteModal
           rows={rowsToBeDeleted}

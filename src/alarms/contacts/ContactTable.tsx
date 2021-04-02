@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NavLink } from "react-router-dom";
+import { NavLink, RouteComponentProps } from "react-router-dom";
 import TableStateContainer from '../../components/TableStateContainer';
 import TableActionButtons from '../../components/TableActionButtons';
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
@@ -18,7 +18,7 @@ const fetchContactsWithOptions = (ids: string[], fetchOptions:any) => {
   return Promise.all(fetches)
 }
 
-export const ContactTable: React.FC<any> = (props) =>  {
+export const ContactTable: React.FC<RouteComponentProps> = (props) =>  {
   const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
   const [resetTable, setResetTable] = useState<Function | null>(null);
   const [selectedRow, setSelectedRow] = useState<any | null>(null); // for adding contact to group modal
@@ -155,7 +155,6 @@ export const ContactTable: React.FC<any> = (props) =>  {
             }
           ]}
         />
-
         {rowsToBeDeleted.length > 0 ? (
           <DeleteModal
             rows={rowsToBeDeleted}
@@ -168,7 +167,6 @@ export const ContactTable: React.FC<any> = (props) =>  {
             }}
           />
         ) : null}
-
         {selectedRow ? (
           <AddToGroupModal
             contact={selectedRow}
