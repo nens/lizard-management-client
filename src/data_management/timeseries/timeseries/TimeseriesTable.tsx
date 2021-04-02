@@ -24,8 +24,9 @@ export const TimeseriesTable = (props:any) =>  {
   const [rowToBeDeleted, setRowToBeDeleted] = useState<any | null>(null);
   const [deleteFunction, setDeleteFunction] = useState<Function | null>(null);
   const [busyDeleting, setBusyDeleting] = useState<boolean>(false);
-  const [selectedRow, setSelectedRow] = useState<any | null>(null);
+
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
+  const [resetTable, setResetTable] = useState<Function | null>(null);
 
   const deleteActions = (rows: any[], tableData: any, setTableData: any, triggerReloadWithCurrentPage: any, triggerReloadWithBasePage: any, setCheckboxes: any) => {
     setRowsToBeDeleted(rows);
@@ -180,10 +181,10 @@ export const TimeseriesTable = (props:any) =>  {
               triggerReloadWithBasePage={triggerReloadWithBasePage}
               editUrl={`${navigationUrl}/${row.uuid}`}
               actions={[
-                {
-                  displayValue: "Change right",
-                  actionFunction: (row: any) => setSelectedRow(row)
-                },
+                // {
+                //   displayValue: "Change right",
+                //   actionFunction: (row: any) => setSelectedRows([row])
+                // },
                 {
                   displayValue: "Delete",
                   actionFunction: deleteAction,
@@ -217,7 +218,13 @@ export const TimeseriesTable = (props:any) =>  {
         checkBoxActions={[
           {
             displayValue: "Change rights",
-            actionFunction: (rows: any[]) => setSelectedRows(rows)
+            actionFunction: (rows: any[], _tableData: any, _setTableData: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any, setCheckboxes: any) => {
+              setSelectedRows(rows);
+              setResetTable(() => () => {
+                triggerReloadWithCurrentPage();
+                setCheckboxes([]);
+              });
+            }
           },
           {
             displayValue: "Delete",
@@ -273,19 +280,15 @@ export const TimeseriesTable = (props:any) =>  {
         </Modal>
       ) : null}
 
-      {selectedRow ? (
-        <AuthorisationModal
-          rows={[selectedRow]}
-          handleClose={() => setSelectedRow(null)}
-          fetchFunction={fetchTimeseriesWithOptions}
-        />
-      ) : null}
-
       {selectedRows.length > 0 ? (
         <AuthorisationModal
           rows={selectedRows}
-          handleClose={() => setSelectedRows([])}
           fetchFunction={fetchTimeseriesWithOptions}
+          resetTable={resetTable}
+          handleClose={() => {
+            setSelectedRows([]);
+            setResetTable(null);
+          }}
         />
       ) : null}
     </ExplainSideColumn>

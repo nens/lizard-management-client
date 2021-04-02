@@ -11,7 +11,8 @@ import { AccessModifier } from '../form/AccessModifier';
 interface MyProps {
   rows: any[],
   fetchFunction: (uuids: string[], fetchOptions: RequestOptions) => Promise<Response[]>,
-  handleClose: () => void
+  resetTable: Function | null,
+  handleClose: () => void,
 }
 
 function AuthorisationModal (props: MyProps & DispatchProps) {
@@ -35,6 +36,7 @@ function AuthorisationModal (props: MyProps & DispatchProps) {
       if (results.every(res => res.status === 200)) {
         props.addNotification('Success! Accessibility has been modified', 2000);
         props.handleClose();
+        props.resetTable && props.resetTable();
       } else {
         props.addNotification('An error occurred! Please try again!', 2000);
         console.error('Error modifying access modifier for: ', results);
