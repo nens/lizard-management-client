@@ -20,7 +20,11 @@ function DeleteModal (props: MyProps & DispatchProps) {
 
   const handleDelete = async () => {
     setBusyDeleting(true);
-    const uuids = rows.map(row => row.uuid || row.id);
+    const uuids = rows.map(row =>
+      row.uuid ||
+      row.id ||
+      row.prefix // for personalApiKeysTable
+    );
     const options = {
       credentials: "same-origin",
       method: "DELETE",
@@ -30,14 +34,14 @@ function DeleteModal (props: MyProps & DispatchProps) {
 
     try {
       const results = await props.fetchFunction(uuids, options);
+      setBusyDeleting(false);
       if (results.every(res => res.status === 204)) {
-        props.addNotification('Deleted successfully!', 2000);
-        setBusyDeleting(false);
         props.handleClose();
         props.resetTable && props.resetTable();
+        props.addNotification('Deleted successfully!', 2000);
       } else {
-        props.addNotification('An error occurred! Please try again!', 2000);
         console.error('Error deleting items: ', results);
+        props.addNotification('An error occurred! Please try again!', 2000);
       };
     } catch (message_1) {
       return console.error(message_1);
