@@ -1,90 +1,38 @@
-import React from 'react';
-import TableStateContainer from '../../components/TableStateContainer';
+import React, { useState } from 'react';
 import { NavLink } from "react-router-dom";
-import {ExplainSideColumn} from '../../components/ExplainSideColumn';
+import TableStateContainer from '../../components/TableStateContainer';
+import TableActionButtons from '../../components/TableActionButtons';
+import DeleteModal from '../../components/DeleteModal';
+import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import wmsIcon from "../../images/wms@3x.svg";
 import tableStyles from "../../components/Table.module.css";
-import TableActionButtons from '../../components/TableActionButtons';
-import {useState, }  from 'react';
-import Modal from '../../components/Modal';
-import { ModalDeleteContent } from '../../components/ModalDeleteContent'
 
+const baseUrl = "/api/v4/wmslayers/";
+const navigationUrl = "/data_management/wms_layers";
+
+const fetchWmsLayerUuidsWithOptions = (uuids: string[], fetchOptions:any) => {
+  const url = "/api/v4/wmslayers/";
+  const fetches = uuids.map (wmsLayerUuid => {
+    return (fetch(url + wmsLayerUuid + "/", fetchOptions));
+  });
+  return Promise.all(fetches)
+};
 
 export const WmsLayerTable = (props:any) =>  {
-
   const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
-  const [rowToBeDeleted, setRowToBeDeleted] = useState<any | null>(null);
-  const [deleteFunction, setDeleteFunction] = useState<null | Function>(null);
-  const [busyDeleting, setBusyDeleting] = useState<boolean>(false);
+  const [resetTable, setResetTable] = useState<Function | null>(null);
 
-  const baseUrl = "/api/v4/wmslayers/";
-  const navigationUrl = "/data_management/wms_layers";
-
-  const fetchWmsLayerUuidsWithOptions = (uuids: string[], fetchOptions:any) => {
-    const url = "/api/v4/wmslayers/";
-    const fetches = uuids.map (wmsLayerUuid => {
-      return (fetch(url + wmsLayerUuid + "/", fetchOptions));
-    });
-    return Promise.all(fetches)
-  }
-
-  const deleteActions = (rows: any[], tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any, setCheckboxes: any)=>{
+  const deleteActions = (
+    rows: any[],
+    triggerReloadWithCurrentPage: Function,
+    setCheckboxes: Function | null
+  ) => {
     setRowsToBeDeleted(rows);
-    const uuids = rows.map(row=> row.uuid);
-    setDeleteFunction(()=>()=>{
-      setBusyDeleting(true);
-      const tableDataDeletedmarker = tableData.map((rowAllTables:any)=>{
-        if (uuids.find((uuid)=> uuid === rowAllTables.uuid)) {
-          return {...rowAllTables, markAsDeleted: true}
-        } else{
-          return {...rowAllTables};
-        }
-      })
-      setTableData(tableDataDeletedmarker);
-      const opts = {
-        credentials: "same-origin",
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({})
-      };
-      return fetchWmsLayerUuidsWithOptions(uuids, opts)
-      .then((_result) => {
-        setBusyDeleting(false);
-        if (setCheckboxes) {
-          setCheckboxes([]);
-        }
-        triggerReloadWithCurrentPage();
-        return new Promise((resolve, _reject) => {
-          resolve();
-        });
-      })
+    setResetTable(() => () => {
+      triggerReloadWithCurrentPage();
+      setCheckboxes && setCheckboxes([]);
     });
-  }
-
-  const deleteAction = (row: any, updateTableRow:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any)=>{
-    
-    setRowToBeDeleted(row);
-    setDeleteFunction(()=>()=>{
-      setBusyDeleting(true);
-      updateTableRow({...row, markAsDeleted: true});
-      const opts = {
-        credentials: "same-origin",
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({})
-      };
-      return fetchWmsLayerUuidsWithOptions([row.uuid], opts)
-      .then((_result) => {
-        setBusyDeleting(false);
-        // TODO: do we need this callback or should we otherwise indicate that the record is deleted ?
-        triggerReloadWithCurrentPage();
-        return new Promise((resolve, _reject) => {
-            resolve();
-          });
-        })
-      
-    })
-  }
+  };
 
   const columnDefinitions = [
     {
@@ -123,7 +71,9 @@ export const WmsLayerTable = (props:any) =>  {
               actions={[
                 {
                   displayValue: "Delete",
-                  actionFunction: deleteAction,
+                  actionFunction: (row: any, _updateTableRow: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any) => {
+                    deleteActions([row], triggerReloadWithCurrentPage, null)
+                  }
                 },
               ]}
             />
@@ -155,7 +105,9 @@ export const WmsLayerTable = (props:any) =>  {
           checkBoxActions={[
             {
               displayValue: "Delete",
-              actionFunction: deleteActions,
+              actionFunction: (rows: any[], _tableData: any, _setTableData: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any, setCheckboxes: any) => {
+                deleteActions(rows, triggerReloadWithCurrentPage, setCheckboxes)
+              }
             }
           ]}
           newItemOnClick={handleNewRasterClick}
@@ -166,57 +118,18 @@ export const WmsLayerTable = (props:any) =>  {
             {value: 'uuid=', label: 'UUID'},
           ]}
         />
-        { 
-        rowsToBeDeleted.length > 0?
-           <Modal
-           title={'Are you sure?'}
-           buttonConfirmName={'Delete'}
-           onClickButtonConfirm={() => {
-              deleteFunction && deleteFunction().then(()=>{
+        {rowsToBeDeleted.length > 0 ? (
+          <DeleteModal
+            rows={rowsToBeDeleted}
+            displayContent={[{name: "name", width: 65}, {name: "uuid", width: 35}]}
+            fetchFunction={fetchWmsLayerUuidsWithOptions}
+            resetTable={resetTable}
+            handleClose={() => {
               setRowsToBeDeleted([]);
-              setDeleteFunction(null);
-             });
-           }}
-           cancelAction={()=>{
-            setRowsToBeDeleted([]);
-            setDeleteFunction(null);
-          }}
-          disableButtons={busyDeleting}
-         >
-           
-           <p>Are you sure? You are deleting the following WMS-layers:</p>
-           {ModalDeleteContent(rowsToBeDeleted, busyDeleting, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
-           
-         </Modal>
-        :
-          null
-        }
-
-        { 
-        rowToBeDeleted?
-           <Modal
-           title={'Are you sure?'}
-           buttonConfirmName={'Delete'}
-           onClickButtonConfirm={() => {
-             deleteFunction && deleteFunction().then(()=>{
-              setRowToBeDeleted(null);
-              setDeleteFunction(null);
-             });
-             
-           }}
-           cancelAction={()=>{
-             setRowToBeDeleted(null);
-             setDeleteFunction(null);
-           }}
-           disableButtons={busyDeleting}
-         >
-           <p>Are you sure? You are deleting the following WMS-layer:</p>
-           {ModalDeleteContent([rowToBeDeleted], busyDeleting, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
-
-         </Modal>
-        :
-          null
-        }
+              setResetTable(null);
+            }}
+          />
+        ) : null}
      </ExplainSideColumn>
   );
 }
