@@ -5,83 +5,37 @@ import TableStateContainer from '../../../components/TableStateContainer';
 import TableActionButtons from '../../../components/TableActionButtons';
 import tableStyles from "../../../components/Table.module.css";
 import { ExplainSideColumn } from '../../../components/ExplainSideColumn';
-import { ModalDeleteContent } from '../../../components/ModalDeleteContent';
 import { addNotification } from '../../../actions';
-import Modal from '../../../components/Modal';
+import DeleteModal from '../../../components/DeleteModal';
 import alarmIcon from "../../../images/alarm@3x.svg";
+
+const baseUrl = "/api/v4/rasteralarms/";
+const navigationUrl = "/alarms/notifications/raster_alarms";
+
+const fetchRasterAlarmsWithOptions = (uuids: string[], fetchOptions:any) => {
+  const fetches = uuids.map (uuid => {
+    return (fetch(baseUrl + uuid + "/", fetchOptions));
+  });
+  return Promise.all(fetches);
+};
 
 export const RasterAlarmTableComponent: React.FC<DispatchProps & RouteComponentProps> = (props) =>  {
   const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
-  const [rowToBeDeleted, setRowToBeDeleted] = useState<any | null>(null);
-  const [deleteFunction, setDeleteFunction] = useState<null | Function>(null);
-  const [busyDeleting, setBusyDeleting] = useState<boolean>(false);
+  const [resetTable, setResetTable] = useState<Function | null>(null);
 
-  const baseUrl = "/api/v4/rasteralarms/";
-  const navigationUrl = "/alarms/notifications/raster_alarms";
-
-  const fetchRasterAlarmsWithOptions = (uuids: string[], fetchOptions:any) => {
-    const fetches = uuids.map (uuid => {
-      return (fetch(baseUrl + uuid + "/", fetchOptions));
+  const deleteActions = (
+    rows: any[],
+    triggerReloadWithCurrentPage: Function,
+    setCheckboxes: Function | null
+  ) => {
+    setRowsToBeDeleted(rows);
+    setResetTable(() => () => {
+      triggerReloadWithCurrentPage();
+      setCheckboxes && setCheckboxes([]);
     });
-    return Promise.all(fetches);
   };
 
-  const deleteActions = (rows: any[], tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any, setCheckboxes: any)=>{
-    setRowsToBeDeleted(rows);
-    const uuids = rows.map(row=> row.uuid);
-    setDeleteFunction(()=>()=>{
-      setBusyDeleting(true);
-      const tableDataDeletedmarker = tableData.map((rowAllTables:any)=>{
-        if (uuids.find(uuid => uuid === rowAllTables.uuid)) {
-          return {...rowAllTables, markAsDeleted: true}
-        } else{
-          return {...rowAllTables};
-        }
-      })
-      setTableData(tableDataDeletedmarker);
-      const opts = {
-        credentials: "same-origin",
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({})
-      };
-      return fetchRasterAlarmsWithOptions(uuids, opts)
-      .then((_result) => {
-        if (setCheckboxes) {
-          setCheckboxes([]);
-        }
-        triggerReloadWithCurrentPage();
-        return new Promise((resolve, _reject) => {
-          resolve();
-        });
-      })
-    });
-  }
-
-  const deleteAction = (row: any, updateTableRow:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any)=>{
-    setRowToBeDeleted(row);
-    setDeleteFunction(()=>()=>{
-      setBusyDeleting(true);
-      updateTableRow({...row, markAsDeleted: true});
-      const opts = {
-        credentials: "same-origin",
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({})
-      };
-      return fetchRasterAlarmsWithOptions([row.uuid], opts)
-      .then((_result) => {
-        setBusyDeleting(false);
-        // TODO: do we need this callback or should we otherwise indicate that the record is deleted ?
-        triggerReloadWithCurrentPage();
-        return new Promise((resolve, _reject) => {
-            resolve();
-          });
-        })
-    })
-  }
-
-  const setAlarmActive = (row: any, updateTableRow: any, triggerReloadWithCurrentPage: any) => {
+  const setAlarmActive = (row: any, _updateTableRow: any, triggerReloadWithCurrentPage: any) => {
     fetchRasterAlarmsWithOptions([row.uuid], {
       credentials: "same-origin",
       method: "PATCH",
@@ -152,7 +106,9 @@ export const RasterAlarmTableComponent: React.FC<DispatchProps & RouteComponentP
                 },
                 {
                   displayValue: "Delete",
-                  actionFunction: deleteAction,
+                  actionFunction: (row: any, _updateTableRow: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any) => {
+                    deleteActions([row], triggerReloadWithCurrentPage, null)
+                  }
                 }
               ]}
             />
@@ -182,7 +138,9 @@ export const RasterAlarmTableComponent: React.FC<DispatchProps & RouteComponentP
           checkBoxActions={[
             {
               displayValue: "Delete",
-              actionFunction: deleteActions,
+              actionFunction: (rows: any[], _tableData: any, _setTableData: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any, setCheckboxes: any) => {
+                deleteActions(rows, triggerReloadWithCurrentPage, setCheckboxes)
+              }
             }
           ]}
           newItemOnClick={handleNewContactClick}
@@ -193,57 +151,18 @@ export const RasterAlarmTableComponent: React.FC<DispatchProps & RouteComponentP
             }
           ]}
         />
-        { 
-        rowsToBeDeleted.length > 0?
-           <Modal
-           title={'Are you sure?'}
-           buttonConfirmName={'Delete'}
-           onClickButtonConfirm={() => {
-              deleteFunction && deleteFunction().then(()=>{
+        {rowsToBeDeleted.length > 0 ? (
+          <DeleteModal
+            rows={rowsToBeDeleted}
+            displayContent={[{name: "name", width: 40}, {name: "uuid", width: 60}]}
+            fetchFunction={fetchRasterAlarmsWithOptions}
+            resetTable={resetTable}
+            handleClose={() => {
               setRowsToBeDeleted([]);
-              setDeleteFunction(null);
-             });
-           }}
-           cancelAction={()=>{
-            setRowsToBeDeleted([]);
-            setDeleteFunction(null);
-          }}
-          disableButtons={busyDeleting}
-         >
-           
-           <p>Are you sure? You are deleting the following raster alarms:</p>
-           {ModalDeleteContent(rowsToBeDeleted, busyDeleting, [{name: "name", width: 40}, {name: "uuid", width: 60}])}
-           
-         </Modal>
-        :
-          null
-        }
-
-        { 
-        rowToBeDeleted?
-           <Modal
-           title={'Are you sure?'}
-           buttonConfirmName={'Delete'}
-           onClickButtonConfirm={() => {
-             deleteFunction && deleteFunction().then(()=>{
-              setRowToBeDeleted(null);
-              setDeleteFunction(null);
-             });
-             
-           }}
-           cancelAction={()=>{
-             setRowToBeDeleted(null);
-             setDeleteFunction(null);
-           }}
-           disableButtons={busyDeleting}
-         >
-           <p>Are you sure? You are deleting the following raster alarm:</p>
-           {ModalDeleteContent([rowToBeDeleted], busyDeleting, [{name: "name", width: 40}, {name: "uuid", width: 60}])}
-
-         </Modal>
-        :
-          null
-        }
+              setResetTable(null);
+            }}
+          />
+        ) : null}
      </ExplainSideColumn>
   );
 }
