@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
+import { RouteComponentProps, withRouter } from 'react-router';
 import { RequestOptions } from 'https';
 import Modal from './Modal';
 import { ModalDeleteContent } from './ModalDeleteContent';
@@ -9,12 +10,13 @@ interface MyProps {
   rows: any[],
   displayContent: any[],
   fetchFunction: (uuids: string[], fetchOptions: RequestOptions) => Promise<Response[]>,
-  resetTable: Function | null,
   handleClose: () => void,
+  resetTable?: Function | null, // for Table to reload after deletion
+  tableUrl?: string, // for Form to redirect backs to the Table after deletion of object
 }
 
-function DeleteModal (props: MyProps & DispatchProps) {
-  const { rows, displayContent } = props;
+function DeleteModal (props: MyProps & DispatchProps & RouteComponentProps) {
+  const { rows, displayContent, tableUrl } = props;
 
   const [busyDeleting, setBusyDeleting] = useState<boolean>(false);
 
@@ -39,6 +41,7 @@ function DeleteModal (props: MyProps & DispatchProps) {
         props.handleClose();
         props.resetTable && props.resetTable();
         props.addNotification('Deleted successfully!', 2000);
+        tableUrl && props.history.push(tableUrl);
       } else {
         console.error('Error deleting items: ', results);
         props.addNotification('An error occurred! Please try again!', 2000);
@@ -67,4 +70,4 @@ const mapDispatchToProps = (dispatch: any) => ({
 });
 type DispatchProps = ReturnType<typeof mapDispatchToProps>;
 
-export default connect(null, mapDispatchToProps)(DeleteModal);
+export default connect(null, mapDispatchToProps)(withRouter(DeleteModal));
