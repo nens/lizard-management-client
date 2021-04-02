@@ -1,91 +1,100 @@
-import React from 'react';
-
+import React, { useState } from 'react';
 import TableStateContainer from '../../../components/TableStateContainer';
-import { NavLink } from "react-router-dom";
-import {ExplainSideColumn} from '../../../components/ExplainSideColumn';
+import { NavLink, RouteComponentProps } from "react-router-dom";
+import { ExplainSideColumn } from '../../../components/ExplainSideColumn';
+import TableActionButtons from '../../../components/TableActionButtons';
+import DeleteModal from '../../../components/DeleteModal';
 import tableStyles from "../../../components/Table.module.css";
 import locationIcon from "../../../images/locations_icon.svg";
-import TableActionButtons from '../../../components/TableActionButtons';
 
 const baseUrl = "/api/v4/locations/";
 const navigationUrl = "/data_management/timeseries/locations";
 
+const fetchLocationsWithOptions = (uuids: string[], fetchOptions:any) => {
+  const fetches = uuids.map (uuid => {
+    return (fetch(baseUrl + uuid + "/", fetchOptions));
+  });
+  return Promise.all(fetches);
+};
 
+export const LocationsTable = (props: RouteComponentProps) =>  {
+  const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
+  const [resetTable, setResetTable] = useState<Function | null>(null);
 
-const columnDefinitions = [
-  {
-    titleRenderFunction: () => "Name",
-    renderFunction: (row: any) => 
-      <span
-        className={tableStyles.CellEllipsis}
-        title={row.name}
-      >
-        <NavLink to={`${navigationUrl}/${row.uuid}`}>{!row.name? "(empty name)" : row.name }</NavLink>
-      </span>
-    ,
-    orderingField: "name",
-  },
-  {
-    titleRenderFunction: () => "Code",
-    renderFunction: (row: any) => 
-      <span
-        className={tableStyles.CellEllipsis}
-        title={row.code}
-      >
-        {row.code}
-      </span>
-    ,
-    orderingField: "code",
-  },
-  {
-    titleRenderFunction: () => "Accessibility",
-    renderFunction: (row: any) => 
-      <span
-        className={tableStyles.CellEllipsis}
-        title={row.access_modifier}
-      >
-        {row.access_modifier }
-      </span>
-    ,
-    orderingField: "access_modifier",
-  },
-  // {
-  //   titleRenderFunction: () =>  "Uuid",
-  //   renderFunction: (row: any) =>
-  //     <span
-  //       className={tableStyles.CellEllipsis}
-  //       title={row.uuid}
-  //     >
-  //       {row.uuid}
-  //     </span>
-  //   ,
-  //   orderingField: null,
-  // },
-  {
-    titleRenderFunction: () =>  "",//"Actions",
-    renderFunction: (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any) => {
-      return (
-          <TableActionButtons
-            tableRow={row} 
-            tableData={tableData}
-            setTableData={setTableData} 
-            triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
-            triggerReloadWithBasePage={triggerReloadWithBasePage}
-            editUrl={`${navigationUrl}/${row.uuid}`}
-            actions={[
-              // {
-              //   displayValue: "Delete",
-              //   actionFunction: deleteActionRaster,
-              // },
-            ]}
-          />
-      );
+  const deleteActions = (
+    rows: any[],
+    triggerReloadWithCurrentPage: Function,
+    setCheckboxes: Function | null
+  ) => {
+    setRowsToBeDeleted(rows);
+    setResetTable(() => () => {
+      triggerReloadWithCurrentPage();
+      setCheckboxes && setCheckboxes([]);
+    });
+  };
+
+  const columnDefinitions = [
+    {
+      titleRenderFunction: () => "Name",
+      renderFunction: (row: any) => 
+        <span
+          className={tableStyles.CellEllipsis}
+          title={row.name}
+        >
+          <NavLink to={`${navigationUrl}/${row.uuid}`}>{!row.name? "(empty name)" : row.name }</NavLink>
+        </span>
+      ,
+      orderingField: "name",
     },
-    orderingField: null,
-  },
-];
-
-export const LocationsTable = (props:any) =>  {
+    {
+      titleRenderFunction: () => "Code",
+      renderFunction: (row: any) => 
+        <span
+          className={tableStyles.CellEllipsis}
+          title={row.code}
+        >
+          {row.code}
+        </span>
+      ,
+      orderingField: "code",
+    },
+    {
+      titleRenderFunction: () => "Accessibility",
+      renderFunction: (row: any) => 
+        <span
+          className={tableStyles.CellEllipsis}
+          title={row.access_modifier}
+        >
+          {row.access_modifier }
+        </span>
+      ,
+      orderingField: "access_modifier",
+    },
+    {
+      titleRenderFunction: () =>  "",//"Actions",
+      renderFunction: (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any) => {
+        return (
+            <TableActionButtons
+              tableRow={row} 
+              tableData={tableData}
+              setTableData={setTableData} 
+              triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
+              triggerReloadWithBasePage={triggerReloadWithBasePage}
+              editUrl={`${navigationUrl}/${row.uuid}`}
+              actions={[
+                {
+                  displayValue: "Delete",
+                  actionFunction: (row: any, _updateTableRow: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any) => {
+                    deleteActions([row], triggerReloadWithCurrentPage, null)
+                  }
+                },
+              ]}
+            />
+        );
+      },
+      orderingField: null,
+    },
+  ];
 
   const handleNewClick  = () => {
     const { history } = props;
@@ -101,16 +110,35 @@ export const LocationsTable = (props:any) =>  {
       backUrl={"/data_management/locations"}
     >
       <TableStateContainer 
-        gridTemplateColumns={"40% 40% 12% 8%"} 
+        gridTemplateColumns={"4fr 36fr 36fr 16fr 8fr"} 
         columnDefinitions={columnDefinitions}
         baseUrl={`${baseUrl}?`} 
-        checkBoxActions={[]}
+        checkBoxActions={[
+          {
+            displayValue: "Delete",
+            actionFunction: (rows: any[], _tableData: any, _setTableData: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any, setCheckboxes: any) => {
+              deleteActions(rows, triggerReloadWithCurrentPage, setCheckboxes)
+            }
+          }
+        ]}
         newItemOnClick={handleNewClick}
         filterOptions={[
           {value: 'name__startswith=', label: 'Name'},
           {value: 'uuid=', label: 'UUID'},
         ]}
       />
+      {rowsToBeDeleted.length > 0 ? (
+        <DeleteModal
+          rows={rowsToBeDeleted}
+          displayContent={[{name: "name", width: 40}, {name: "uuid", width: 60}]}
+          fetchFunction={fetchLocationsWithOptions}
+          resetTable={resetTable}
+          handleClose={() => {
+            setRowsToBeDeleted([]);
+            setResetTable(null);
+          }}
+        />
+      ) : null}
     </ExplainSideColumn>
   );
 }
