@@ -179,6 +179,7 @@ export const TimeseriesTable = (props:any) =>  {
       {rowsToBeDeleted.length > 0 ? (
         <DeleteModal
           rows={rowsToBeDeleted}
+          displayContent={[{name: "name", width: 40}, {name: "uuid", width: 60}]}
           fetchFunction={fetchTimeseriesWithOptions}
           resetTable={resetTable}
           handleClose={() => {

@@ -7,13 +7,14 @@ import { addNotification } from '../actions';
 
 interface MyProps {
   rows: any[],
+  displayContent: any[],
   fetchFunction: (uuids: string[], fetchOptions: RequestOptions) => Promise<Response[]>,
   resetTable: Function | null,
   handleClose: () => void,
 }
 
 function DeleteModal (props: MyProps & DispatchProps) {
-  const { rows } = props;
+  const { rows, displayContent } = props;
 
   const [busyDeleting, setBusyDeleting] = useState<boolean>(false);
 
@@ -52,7 +53,7 @@ function DeleteModal (props: MyProps & DispatchProps) {
       disableButtons={busyDeleting}
     >
       <p>Are you sure? You are deleting the following item(s):</p>
-      {ModalDeleteContent(rows, busyDeleting, [{name: "name", width: 40}, {name: "uuid", width: 60}])}
+      {ModalDeleteContent(rows, busyDeleting, displayContent)}
     </Modal>
   )
 }
