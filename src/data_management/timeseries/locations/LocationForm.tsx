@@ -23,6 +23,7 @@ import { convertToSelectObject } from '../../../utils/convertToSelectObject';
 // import { SelectDropdown } from '../../../form/SelectDropdown';
 import { AccessModifier } from '../../../form/AccessModifier';
 import MapSelectAssetOrPoint from '../../../form/MapSelectAssetOrPoint';
+import {locationFormHelpText} from '../../../utils/help_texts/helpTextsForLocations';
 
 
 interface Props {
@@ -227,34 +228,6 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
     }
   };
 
-  // dummie function to test creation
-  // const onCreate = () => {
-  //   const body = {
-  //     name: "test labeltype",
-  //     description: "test labeltype",
-  //     organisation: currentRecord.organisation.unique_id,
-  //     object_type: currentRecord.object_type,
-  //   };
-
-  //   fetch(`/api/v3/labeltypes/`, {
-  //     credentials: 'same-origin',
-  //     method: 'POST',
-  //     headers: {'Content-Type': 'application/json'},
-  //     body: JSON.stringify(body)
-  //   })
-  //     .then(data => {
-  //       const status = data.status;
-  //       if (status === 201) {
-  //         props.addNotification('Success! Labeltype created', 2000);
-  //         props.history.push('/data_management/labels/labeltypes/');
-  //       } else {
-  //         props.addNotification(status, 2000);
-  //         console.error(data);
-  //       };
-  //     })
-  //     .catch(console.error);
-  // }
-
   const onDelete = () => {
     const body = {};
 
@@ -292,13 +265,14 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
     handleFocus,
   } = useForm({initialValues, onSubmit});
 
+  console.log("fieldOnFocus", fieldOnFocus)
+
   return (
     <ExplainSideColumn
       imgUrl={LocationIcon}
       imgAltDescription={"Location icon"}
       headerText={"Locations"}
-      // explanationText={lableTypeFormHelpText[fieldOnFocus] || lableTypeFormHelpText['default']}
-      explanationText={"Location is for now read only"}
+      explanationText={locationFormHelpText[fieldOnFocus] || locationFormHelpText['default']}
       backUrl={"/data_management/timeseries/locations"}
       fieldName={fieldOnFocus}
     >
@@ -375,6 +349,8 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
               valueChanged={(value)=>handleValueChange('selectedAssetObj', value)}
               validated={true}
               triedToSubmit={triedToSubmit}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
             />
           </div>
           <div>
