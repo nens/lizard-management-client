@@ -177,7 +177,7 @@ const PersonalApiKeyFormModel: React.FC<Props & PropsFromDispatch & RouteCompone
           buttonConfirmName={'Close'}
           onClickButtonConfirm={() => {
             setApiKeyString("");
-            props.history.push('/personal_api_keys/');
+            props.history.push('/personal_api_keys');
           }}
         >
           <p>
@@ -223,7 +223,7 @@ const PersonalApiKeyFormModel: React.FC<Props & PropsFromDispatch & RouteCompone
           displayContent={[{name: "name", width: 65}, {name: "prefix", width: 35}]}
           fetchFunction={fetchWithOptions}
           handleClose={() => setShowDeleteModal(false)}
-          tableUrl={'/personal_api_keys/'}
+          tableUrl={'/personal_api_keys'}
         />
       ) : null}
     </ExplainSideColumn>
