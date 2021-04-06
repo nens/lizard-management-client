@@ -12,7 +12,7 @@ const navigationUrl = "/alarms/groups";
 
 const fetchGroupsWithOptions = (ids: string[], fetchOptions: RequestInit) => {
   const fetches = ids.map (id => {
-    return (fetch(baseUrl + id + "/", fetchOptions));
+    return fetch(baseUrl + id + "/", fetchOptions);
   });
   return Promise.all(fetches)
 };

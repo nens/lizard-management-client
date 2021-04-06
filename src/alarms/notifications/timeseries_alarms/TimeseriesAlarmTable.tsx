@@ -14,7 +14,7 @@ const navigationUrl = "/alarms/notifications/timeseries_alarms";
 
 const fetchTimeseriesAlarmsWithOptions = (uuids: string[], fetchOptions: RequestInit) => {
   const fetches = uuids.map (uuid => {
-    return (fetch(baseUrl + uuid + "/", fetchOptions));
+    return fetch(baseUrl + uuid + "/", fetchOptions);
   });
   return Promise.all(fetches)
 };

@@ -10,12 +10,11 @@ import tableStyles from "../../components/Table.module.css";
 const baseUrl = "/api/v4/wmslayers/";
 const navigationUrl = "/data_management/wms_layers";
 
-const fetchWmsLayerUuidsWithOptions = (uuids: string[], fetchOptions:any) => {
-  const url = "/api/v4/wmslayers/";
-  const fetches = uuids.map (wmsLayerUuid => {
-    return (fetch(url + wmsLayerUuid + "/", fetchOptions));
+const fetchWmsLayerUuidsWithOptions = (uuids: string[], fetchOptions: RequestInit) => {
+  const fetches = uuids.map (uuid => {
+    return fetch(baseUrl + uuid + "/", fetchOptions);
   });
-  return Promise.all(fetches)
+  return Promise.all(fetches);
 };
 
 export const WmsLayerTable = (props: RouteComponentProps) =>  {

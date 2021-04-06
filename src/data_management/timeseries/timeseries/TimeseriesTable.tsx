@@ -12,7 +12,7 @@ const navigationUrl = "/data_management/timeseries/timeseries";
 
 const fetchTimeseriesWithOptions = (uuids: string[], fetchOptions: RequestInit) => {
   const fetches = uuids.map (uuid => {
-    return (fetch(baseUrl + uuid + "/", fetchOptions));
+    return fetch(baseUrl + uuid + "/", fetchOptions);
   });
   return Promise.all(fetches);
 };

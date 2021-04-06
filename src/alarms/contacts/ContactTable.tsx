@@ -13,7 +13,7 @@ const navigationUrl = "/alarms/contacts";
 
 const fetchContactsWithOptions = (ids: string[], fetchOptions: RequestInit) => {
   const fetches = ids.map (id => {
-    return (fetch(baseUrl + id + "/", fetchOptions));
+    return fetch(baseUrl + id + "/", fetchOptions);
   });
   return Promise.all(fetches)
 }

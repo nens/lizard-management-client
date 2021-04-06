@@ -14,7 +14,7 @@ const navigationUrl = "/alarms/notifications/raster_alarms";
 
 const fetchRasterAlarmsWithOptions = (uuids: string[], fetchOptions: RequestInit) => {
   const fetches = uuids.map (uuid => {
-    return (fetch(baseUrl + uuid + "/", fetchOptions));
+    return fetch(baseUrl + uuid + "/", fetchOptions);
   });
   return Promise.all(fetches);
 };

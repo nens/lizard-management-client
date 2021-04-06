@@ -12,7 +12,7 @@ const navigationUrl = "/data_management/timeseries/monitoring_networks";
 
 const fetchMonitoringNetworksWithOptions = (uuids: string[], fetchOptions: RequestInit) => {
   const fetches = uuids.map (uuid => {
-    return (fetch(baseUrl + uuid + "/", fetchOptions));
+    return fetch(baseUrl + uuid + "/", fetchOptions);
   });
   return Promise.all(fetches);
 };

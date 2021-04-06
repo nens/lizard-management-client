@@ -13,7 +13,7 @@ const navigationUrl = "/personal_api_keys";
 
 export const fetchWithOptions = (uuids: string[], fetchOptions: RequestInit) => {
   const fetches = uuids.map (uuid => {
-    return (fetch(baseUrl + uuid + "/", fetchOptions));
+    return fetch(baseUrl + uuid + "/", fetchOptions);
   });
   return Promise.all(fetches);
 };
