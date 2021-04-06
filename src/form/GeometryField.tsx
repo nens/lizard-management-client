@@ -1,6 +1,6 @@
 // The main Form class
 
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {FloatInput} from './FloatInput';
 import {
   // Location, 
@@ -42,20 +42,45 @@ export const GeometryField: React.FC<MyProps> = (props) => {
     readOnly
   } = props;
 
-  // @ts-ignore
-  let lat;
-  // @ts-ignore
-  let lng; 
-  if ( value.asset && value.asset.value && value.asset.value.view ) {
-    lat = value.asset.value.view[0] as number;
-    lng = value.asset.value.view[1] as number;
-  } else if (value.location) {
-    lat = value.location.lat as number;
-    lng = value.location.lng as number; 
-  } else {
-    lat = NaN as number;
-    lng = NaN as number;
-  }
+  // TODO:
+  // allow location lat lng fields to be empty
+  // probably best to do this by storing local state in geometry field (try this first)
+  // otherwise we can make the location type defenition allow to be empty and check for this in the oter component as well (MapSelectAssetOrPoint)
+
+  const [lat, setLat] = useState(NaN);
+  const [lng, setLng] = useState(NaN);
+
+
+  useEffect(() => {
+    // @ts-ignore
+    // let lat;
+    // @ts-ignore
+    // let lng; 
+    if ( value.asset && value.asset.value && value.asset.value.view ) {
+      setLat(value.asset.value.view[0]);
+      setLng(value.asset.value.view[1])
+    } else if (value.location) {
+      setLat(value.location.lat);
+      setLng(value.location.lng); 
+    } else {
+      setLat(NaN);// as number;
+      setLng(NaN)// as number;
+    }
+  }, [value.asset, value.location]);
+  // // @ts-ignore
+  // let lat;
+  // // @ts-ignore
+  // let lng; 
+  // if ( value.asset && value.asset.value && value.asset.value.view ) {
+  //   lat = value.asset.value.view[0] as number;
+  //   lng = value.asset.value.view[1] as number;
+  // } else if (value.location) {
+  //   lat = value.location.lat as number;
+  //   lng = value.location.lng as number; 
+  // } else {
+  //   lat = NaN as number;
+  //   lng = NaN as number;
+  // }
 
   const valueChangedLat = (value:number) => {
     if (value) {
@@ -84,7 +109,14 @@ export const GeometryField: React.FC<MyProps> = (props) => {
         placeholder={placeholder}
         value={lat}
         validated={validated}
-        valueChanged={valueChangedLat}
+        valueChanged={(value)=>{
+          if (isNaN(value)) {
+            setLat(NaN);
+          } else {
+            valueChangedLat(value);
+          }
+          
+        }}
         onFocus={onFocus}
         onBlur={onBlur}
         handleEnter={handleEnter}
@@ -100,7 +132,14 @@ export const GeometryField: React.FC<MyProps> = (props) => {
         placeholder={placeholder}
         value={lng}
         validated={validated}
-        valueChanged={valueChangedLng}
+        valueChanged={(value)=>{
+          if (isNaN(value)) {
+            setLng(NaN);
+          } else {
+            valueChangedLng(value);
+          }
+          
+        }}
         onFocus={onFocus}
         onBlur={onBlur}
         handleEnter={handleEnter}
