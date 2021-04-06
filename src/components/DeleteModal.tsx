@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
-import { RequestOptions } from 'https';
 import Modal from './Modal';
 import { ModalDeleteContent } from './ModalDeleteContent';
 import { addNotification } from '../actions';
@@ -9,7 +8,7 @@ import { addNotification } from '../actions';
 interface MyProps {
   rows: any[],
   displayContent: any[],
-  fetchFunction: (uuids: string[], fetchOptions: RequestOptions) => Promise<Response[]>,
+  fetchFunction: (uuids: string[], fetchOptions: RequestInit) => Promise<Response[]>,
   handleClose: () => void,
   resetTable?: Function | null, // for Table to reload after deletion
   tableUrl?: string, // for Form to redirect backs to the Table after deletion of object
@@ -35,7 +34,7 @@ function DeleteModal (props: MyProps & DispatchProps & RouteComponentProps) {
     };
 
     try {
-      const results = await props.fetchFunction(uuids, options);
+      const results = await props.fetchFunction(uuids, options as RequestInit);
       setBusyDeleting(false);
       if (results.every(res => res.status === 204)) {
         props.handleClose();

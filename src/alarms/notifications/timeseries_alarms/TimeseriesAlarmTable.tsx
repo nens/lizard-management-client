@@ -12,7 +12,7 @@ import alarmIcon from "../../../images/alarm@3x.svg";
 const baseUrl = "/api/v4/timeseriesalarms/";
 const navigationUrl = "/alarms/notifications/timeseries_alarms";
 
-const fetchTimeseriesAlarmsWithOptions = (uuids: string[], fetchOptions:any) => {
+const fetchTimeseriesAlarmsWithOptions = (uuids: string[], fetchOptions: RequestInit) => {
   const fetches = uuids.map (uuid => {
     return (fetch(baseUrl + uuid + "/", fetchOptions));
   });

@@ -10,7 +10,7 @@ import templateIcon from "../../images/templates@3x.svg";
 const baseUrl = "/api/v4/messages/";
 const navigationUrl = "/alarms/templates";
 
-const fetchTemplatesWithOptions = (ids: string[], fetchOptions:any) => {
+const fetchTemplatesWithOptions = (ids: string[], fetchOptions: RequestInit) => {
   const fetches = ids.map (id => {
     return (fetch(baseUrl + id + "/", fetchOptions));
   });

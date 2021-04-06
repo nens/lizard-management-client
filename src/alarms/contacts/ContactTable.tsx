@@ -11,7 +11,7 @@ import tableStyles from "../../components/Table.module.css";
 const baseUrl = "/api/v4/contacts/";
 const navigationUrl = "/alarms/contacts";
 
-const fetchContactsWithOptions = (ids: string[], fetchOptions:any) => {
+const fetchContactsWithOptions = (ids: string[], fetchOptions: RequestInit) => {
   const fetches = ids.map (id => {
     return (fetch(baseUrl + id + "/", fetchOptions));
   });

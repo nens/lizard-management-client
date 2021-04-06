@@ -10,7 +10,7 @@ import timeseriesIcon from "../../../images/timeseries_icon.svg";
 const baseUrl = "/api/v4/timeseries/";
 const navigationUrl = "/data_management/timeseries/timeseries";
 
-const fetchTimeseriesWithOptions = (uuids: string[], fetchOptions:any) => {
+const fetchTimeseriesWithOptions = (uuids: string[], fetchOptions: RequestInit) => {
   const fetches = uuids.map (uuid => {
     return (fetch(baseUrl + uuid + "/", fetchOptions));
   });

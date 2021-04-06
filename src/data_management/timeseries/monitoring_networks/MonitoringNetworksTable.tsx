@@ -10,7 +10,7 @@ import tableStyles from "../../../components/Table.module.css";
 const baseUrl = "/api/v4/monitoringnetworks/";
 const navigationUrl = "/data_management/timeseries/monitoring_networks";
 
-const fetchMonitoringNetworksWithOptions = (uuids: string[], fetchOptions:any) => {
+const fetchMonitoringNetworksWithOptions = (uuids: string[], fetchOptions: RequestInit) => {
   const fetches = uuids.map (uuid => {
     return (fetch(baseUrl + uuid + "/", fetchOptions));
   });

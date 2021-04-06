@@ -10,7 +10,7 @@ import locationIcon from "../../../images/locations_icon.svg";
 const baseUrl = "/api/v4/locations/";
 const navigationUrl = "/data_management/timeseries/locations";
 
-const fetchLocationsWithOptions = (uuids: string[], fetchOptions:any) => {
+const fetchLocationsWithOptions = (uuids: string[], fetchOptions: RequestInit) => {
   const fetches = uuids.map (uuid => {
     return (fetch(baseUrl + uuid + "/", fetchOptions));
   });

@@ -12,7 +12,7 @@ import alarmIcon from "../../../images/alarm@3x.svg";
 const baseUrl = "/api/v4/rasteralarms/";
 const navigationUrl = "/alarms/notifications/raster_alarms";
 
-const fetchRasterAlarmsWithOptions = (uuids: string[], fetchOptions:any) => {
+const fetchRasterAlarmsWithOptions = (uuids: string[], fetchOptions: RequestInit) => {
   const fetches = uuids.map (uuid => {
     return (fetch(baseUrl + uuid + "/", fetchOptions));
   });

@@ -11,7 +11,7 @@ import DeleteModal from '../components/DeleteModal';
 const baseUrl = "/api/v4/personalapikeys/";
 const navigationUrl = "/personal_api_keys";
 
-export const fetchWithOptions = (uuids: string[], fetchOptions:any) => {
+export const fetchWithOptions = (uuids: string[], fetchOptions: RequestInit) => {
   const fetches = uuids.map (uuid => {
     return (fetch(baseUrl + uuid + "/", fetchOptions));
   });

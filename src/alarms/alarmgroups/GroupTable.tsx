@@ -10,7 +10,7 @@ import groupIcon from "../../images/group.svg";
 const baseUrl = "/api/v4/contactgroups/";
 const navigationUrl = "/alarms/groups";
 
-const fetchGroupsWithOptions = (ids: string[], fetchOptions:any) => {
+const fetchGroupsWithOptions = (ids: string[], fetchOptions: RequestInit) => {
   const fetches = ids.map (id => {
     return (fetch(baseUrl + id + "/", fetchOptions));
   });
