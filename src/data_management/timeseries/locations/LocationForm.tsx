@@ -472,7 +472,6 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
               onClick={tryToSubmitForm}
             />
           </div>
-          {/* ________________________________ */}
         </div>
       </form>
       { 
