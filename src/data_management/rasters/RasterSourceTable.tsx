@@ -1,28 +1,24 @@
-import React from 'react';
-import {useState, useEffect}  from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSelector} from 'react-redux';
 import TableStateContainer from '../../components/TableStateContainer';
 import { NavLink } from "react-router-dom";
-import {  deleteRasterSource, 
-  // deleteRasterSources, flushRasters, flushRaster 
-} from "../../api/rasters";
+import { deleteRasterSource } from "../../api/rasters";
 import TableActionButtons from '../../components/TableActionButtons';
-import {ExplainSideColumn} from '../../components/ExplainSideColumn';
+import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import rasterSourcesIcon from "../../images/raster_source_icon.svg";
 import tableStyles from "../../components/Table.module.css";
 import { bytesToDisplayValue } from '../../utils/byteUtils';
 import Modal from '../../components/Modal';
-
 import { ModalDeleteContent } from '../../components/ModalDeleteContent';
 import DeleteRasterSourceNotAllowed  from './DeleteRasterSourceNotAllowed';
 import MDSpinner from "react-md-spinner";
 import { defaultRasterSourceExplanationTextTable } from '../../utils/help_texts/helpTextForRasters';
-import {useSelector} from 'react-redux';
-import {getScenarioTotalSize} from '../../reducers';
+import { getScenarioTotalSize } from '../../reducers';
 
-
+const baseUrl = "/api/v4/rastersources/";
+const navigationUrlRasters = "/data_management/rasters/sources";
 
 export const RasterSourceTable = (props:any) =>  {
-
   // const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
   const [rowToBeDeleted, setRowToBeDeleted] = useState<any | null>(null);
   const [currentRowDetailView, setCurrentRowDetailView] = useState<null | any>(null);
@@ -30,10 +26,6 @@ export const RasterSourceTable = (props:any) =>  {
   const [busyDeleting, setBusyDeleting] = useState<boolean>(false);
   const [showDeleteFailedModal, setShowDeleteFailedModal] = useState<boolean>(false);
   const rastersTotalSize = useSelector(getScenarioTotalSize);
-
-
-  const baseUrl = "/api/v4/rastersources/";
-  const navigationUrlRasters = "/data_management/rasters/sources";
 
   useEffect(() => { 
     if (rowToBeDeleted) {
@@ -44,7 +36,7 @@ export const RasterSourceTable = (props:any) =>  {
         .then((detailView:any)=>{
           setCurrentRowDetailView(detailView);
         })
-    }
+    };
   }, [rowToBeDeleted]);
 
   const deleteActionRaster = (row: any, updateTableRow:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any)=>{
@@ -60,9 +52,8 @@ export const RasterSourceTable = (props:any) =>  {
             resolve({result:result, row:row});
           });
         })
-    })
-    
-  }
+    });
+  };
 
   // implement later
   // const deleteActionRasters = (rows: any[], tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any, setCheckboxes: any)=>{
