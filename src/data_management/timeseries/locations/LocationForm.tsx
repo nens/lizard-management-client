@@ -9,10 +9,10 @@ import { TextInput } from './../../../form/TextInput';
 import { SubmitButton } from '../../../form/SubmitButton';
 import { CancelButton } from '../../../form/CancelButton';
 import { useForm, Values } from '../../../form/useForm';
-import { minLength, jsonValidator, /*required*/ } from '../../../form/validators';
+import { minLength, /*jsonValidator, */ /*required*/ } from '../../../form/validators';
 import { addNotification } from '../../../actions';
 import formStyles from './../../../styles/Forms.module.css';
-import { TextArea } from '../../../form/TextArea';
+// import { TextArea } from '../../../form/TextArea';
 import {GeometryField} from '../../../form/GeometryField';
 import LocationIcon from "../../../images/locations_icon.svg";
 import FormActionButtons from '../../../components/FormActionButtons';
@@ -361,43 +361,46 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
        
         
         <div style={{display: "flex"}}>
+          <div style={{width: "58%", marginRight: "40px"}}>
            {/* 
-          // @ts-ignore  */}
-          Geometry field placeholder
-          <GeometryField
-            title={'Asset location'}
-            name={'selectedAssetObj'}
-            // placeholder={'- Search and select -'}
-            value={values.selectedAssetObj}
-            // @ts-ignore
-            valueChanged={(value)=>handleValueChange('selectedAssetObj', value)}
-            validated={true}
-            triedToSubmit={triedToSubmit}
-          />
-          <label
-            className={formStyles.Label}
-          >
-            <span className={formStyles.LabelTitle}>
-              Selected asset
-            </span>
-            <a 
-              href={
-                values.selectedAssetObj.asset && 
-                values.selectedAssetObj.asset.value &&  
-                values.selectedAssetObj.asset.value.entity_name ? 
-                `/api/v3/${values.selectedAssetObj.asset.value.entity_name}s/${values.selectedAssetObj.asset.value.entity_id}`
-                : values.selectedAssetObj.asset?
-                `/api/v3/${currentRecord.object.type}s/${currentRecord.object.id}`
-                :
-                '/api/v3/'
-              }
+            // @ts-ignore  */}
+            <GeometryField
+              title={'Geometry'}
+              name={'selectedAssetObj'}
+              // placeholder={'- Search and select -'}
+              value={values.selectedAssetObj}
+              // @ts-ignore
+              valueChanged={(value)=>handleValueChange('selectedAssetObj', value)}
+              validated={true}
+              triedToSubmit={triedToSubmit}
+            />
+          </div>
+          <div>
+            <label
+              className={formStyles.Label}
             >
-              {values.selectedAssetObj.asset? values.selectedAssetObj.asset.label : "None selected. See all endpoints" }
-            </a>
-          </label>
+              <span className={formStyles.LabelTitle}>
+                Selected asset
+              </span>
+              <a 
+                href={
+                  values.selectedAssetObj.asset && 
+                  values.selectedAssetObj.asset.value &&  
+                  values.selectedAssetObj.asset.value.entity_name ? 
+                  `/api/v3/${values.selectedAssetObj.asset.value.entity_name}s/${values.selectedAssetObj.asset.value.entity_id}`
+                  : values.selectedAssetObj.asset?
+                  `/api/v3/${currentRecord.object.type}s/${currentRecord.object.id}`
+                  :
+                  '/api/v3/'
+                }
+              >
+                {values.selectedAssetObj.asset? values.selectedAssetObj.asset.label : "None selected. See all endpoints" }
+              </a>
+            </label>
+          </div>
         </div>
        
-        <TextArea
+        {/* <TextArea
           title={'Extra metadata (JSON) *'}
           name={'extraMetadata'}
           placeholder={'Enter valid JSON'}
@@ -409,7 +412,7 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
           triedToSubmit={triedToSubmit}
           onFocus={handleFocus}
           onBlur={handleBlur}
-        />
+        /> */}
         <span className={formStyles.FormFieldTitle}>
           3: Rights
         </span>

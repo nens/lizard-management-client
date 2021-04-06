@@ -6,7 +6,9 @@ import {
   // Location, 
   // Asset, 
   AssetLocationValue
-} from "../types/locationFormTypes"
+} from "../types/locationFormTypes";
+import formStyles from "../styles/Forms.module.css";
+
  
 
 interface MyProps {
@@ -101,54 +103,67 @@ export const GeometryField: React.FC<MyProps> = (props) => {
   }
 
   return (
-    <div>
-      {/* lat */}
-      <FloatInput
-        title={title}
-        name={name}
-        placeholder={placeholder}
-        value={lat}
-        validated={validated}
-        valueChanged={(value)=>{
-          if (isNaN(value)) {
-            setLat(NaN);
-          } else {
-            valueChangedLat(value);
-          }
-          
-        }}
-        onFocus={onFocus}
-        onBlur={onBlur}
-        handleEnter={handleEnter}
-        clearInput={clearInput}
-        errorMessage={errorMessage}
-        triedToSubmit={triedToSubmit}
-        readOnly={readOnly}
-      />
-      {/* lng */}
-      <FloatInput
-        title={title}
-        name={name}
-        placeholder={placeholder}
-        value={lng}
-        validated={validated}
-        valueChanged={(value)=>{
-          if (isNaN(value)) {
-            setLng(NaN);
-          } else {
-            valueChangedLng(value);
-          }
-          
-        }}
-        onFocus={onFocus}
-        onBlur={onBlur}
-        handleEnter={handleEnter}
-        clearInput={clearInput}
-        errorMessage={errorMessage}
-        triedToSubmit={triedToSubmit}
-        readOnly={readOnly}
-      />
+    <label
+      htmlFor={name}
+      className={formStyles.Label}
+    >
+      <span className={formStyles.LabelTitle}>
+        {title}
+      </span>
+      <div style={{display: "flex", }}>
+        
+        {/* lng */}
+        <div style={{marginRight: "16px", }}>
+          <FloatInput
+            title={"x"}
+            name={name}
+            placeholder={placeholder}
+            value={lng}
+            validated={validated}
+            valueChanged={(value)=>{
+              if (isNaN(value)) {
+                setLng(NaN);
+              } else {
+                valueChangedLng(value);
+              }
+              
+            }}
+            onFocus={onFocus}
+            onBlur={onBlur}
+            handleEnter={handleEnter}
+            clearInput={clearInput}
+            errorMessage={errorMessage}
+            triedToSubmit={triedToSubmit}
+            readOnly={readOnly}
+          />
+        </div>
+        {/* lat */}
+        <div>
+          <FloatInput
+            title={"y"}
+            name={name}
+            placeholder={placeholder}
+            value={lat}
+            validated={validated}
+            valueChanged={(value)=>{
+              if (isNaN(value)) {
+                setLat(NaN);
+              } else {
+                valueChangedLat(value);
+              }
+              
+            }}
+            onFocus={onFocus}
+            onBlur={onBlur}
+            handleEnter={handleEnter}
+            clearInput={clearInput}
+            errorMessage={errorMessage}
+            triedToSubmit={triedToSubmit}
+            readOnly={readOnly}
+          />
+        </div>
 
-    </div>
+      </div>
+    </label>
   );
 }
