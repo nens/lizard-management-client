@@ -12,10 +12,11 @@ interface MyProps {
   handleClose: () => void,
   resetTable?: Function | null, // for Table to reload after deletion
   tableUrl?: string, // for Form to redirect backs to the Table after deletion of object
+  text?: string,
 }
 
 function DeleteModal (props: MyProps & DispatchProps & RouteComponentProps) {
-  const { rows, displayContent, tableUrl } = props;
+  const { rows, displayContent, tableUrl, text } = props;
 
   const [busyDeleting, setBusyDeleting] = useState<boolean>(false);
 
@@ -58,7 +59,7 @@ function DeleteModal (props: MyProps & DispatchProps & RouteComponentProps) {
       cancelAction={props.handleClose}
       disableButtons={busyDeleting}
     >
-      <p>Are you sure? You are deleting the following item(s):</p>
+      <p>{text ? text : "Are you sure? You are deleting the following item(s):"}</p>
       {ModalDeleteContent(rows, busyDeleting, displayContent)}
     </Modal>
   )

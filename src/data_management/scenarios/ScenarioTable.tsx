@@ -202,7 +202,7 @@ export const ScenarioTable = () =>  {
         {rowsToBeDeleted.length > 0 ? (
           <DeleteModal
             rows={rowsToBeDeleted}
-            displayContent={[{name: "name", width: 40}, {name: "uuid", width: 60}]}
+            displayContent={[{name: "name", width: 65}, {name: "uuid", width: 35}]}
             fetchFunction={fetchScenariosWithOptions}
             resetTable={resetTable}
             handleClose={() => {
@@ -214,13 +214,14 @@ export const ScenarioTable = () =>  {
         {rowsWithRawDataToBeDeleted.length > 0 ? (
           <DeleteModal
             rows={rowsWithRawDataToBeDeleted}
-            displayContent={[{name: "name", width: 40}, {name: "uuid", width: 60}]}
+            displayContent={[{name: "name", width: 65}, {name: "uuid", width: 35}]}
             fetchFunction={fetchRawDataWithOptions}
             resetTable={resetTable}
             handleClose={() => {
               setRowsWithRawDataToBeDeleted([]);
               setResetTable(null);
             }}
+            text={"Are you sure? You are deleting the RAW results of the following scenario(s):"}
           />
         ) : null}
      </ExplainSideColumn>
