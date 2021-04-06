@@ -3,9 +3,9 @@ export interface Location {
   lng: number
 }
 
-export type Asset = any | null;
+export type Asset = any ;
 
 export interface AssetLocationValue {
-  asset: Asset;
-  location: Location;
+  asset: Asset | null;
+  location: Location | null;
 }

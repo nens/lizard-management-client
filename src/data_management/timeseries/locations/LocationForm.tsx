@@ -368,6 +368,8 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
                   :
                   '/api/v3/'
                 }
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 {values.selectedAssetObj.asset? values.selectedAssetObj.asset.label : "None selected. See all endpoints" }
               </a>

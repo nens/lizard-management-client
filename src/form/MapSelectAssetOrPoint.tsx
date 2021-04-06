@@ -1,11 +1,8 @@
-// Component to preview raster on a map.
-// And optionally let the user select a point on it (maybe
-// by searching for an asset and using its point)
+// Todo: This component should probably also be used for the raster alarms
 
-// Optional property 'setLocation' should be a function that sets the
-// location, in the form {'lat': <lat>, 'lng': <lng>}; if it is not
-// passed, user cannot choose a location and this component is for
-// raster preview only.
+// Component to preview raster on a map.
+// And optionally let the user select a point on it 
+// by searching for an asset and using its point
 
 import React, { useState, useEffect } from "react";
 import { Map, Marker, TileLayer, WMSTileLayer, ZoomControl } from "react-leaflet";
@@ -14,7 +11,6 @@ import { mapBoxAccesToken} from '../mapboxConfig';
 import { convertToSelectObject } from "../utils/convertToSelectObject";
 import styles from "../components/RasterPreview.module.css";
 import { fetchRasterV4, RasterLayerFromAPI } from '../api/rasters';
-// import { latLng } from "leaflet";
 import formStyles from "../styles/Forms.module.css";
 import {Location, Asset, AssetLocationValue} from "../types/locationFormTypes"
 
@@ -97,7 +93,6 @@ const MapSelectAssetOrPoint = (props:Props) => {
 
       if (!inBounds) return;
     };
-    // @ts-ignore
     valueChanged({ asset: null, location: location});
   };
 
@@ -105,17 +100,13 @@ const MapSelectAssetOrPoint = (props:Props) => {
 
   const setAsset = (option: { value: Asset } | null) => {
     const asset = option && option.value;
-    console.log('valuechange 2', asset);
     if (asset && asset.view) {
-      console.log('valuechange 3', asset);
       const lat = asset.view[0];
       const lng = asset.view[1];
       if (raster !== null) {
         if ( !raster.spatial_bounds) {
-          console.log('valuechange 4', asset);
           return;
         }
-        console.log('valuechange 5', asset);
         const inBounds = (
           lat >= raster.spatial_bounds.south && lat <= raster.spatial_bounds.north &&
           lng >= raster.spatial_bounds.west && lng <= raster.spatial_bounds.east
@@ -124,11 +115,8 @@ const MapSelectAssetOrPoint = (props:Props) => {
           return; 
         }
       }
-      console.log('valuechange 6', asset);
-      // @ts-ignore
       valueChanged({ asset: option, location: {lat:lat,lng:lng}});
     } else {
-      // @ts-ignore
       valueChanged({ asset: null, location: null});
     }
   };
@@ -167,7 +155,6 @@ const MapSelectAssetOrPoint = (props:Props) => {
   const DEFAULT_POSITION = [52.1858, 5.2677];
 
   const marker = (
-    // @ts-ignore
     value.location ? [value.location.lat, value.location.lng] : DEFAULT_POSITION
   );
 
@@ -214,7 +201,6 @@ const MapSelectAssetOrPoint = (props:Props) => {
             placeholder={'- Search and select an asset -'}
             value={value.asset}
             valueChanged={value => {
-              console.log('valuechange 1', value);
               // @ts-ignore
               setAsset(value);
             }}
@@ -247,7 +233,6 @@ const MapSelectAssetOrPoint = (props:Props) => {
         ) : null}
         
         {
-        // @ts-ignore
         value.location ?
           // @ts-ignore
           <Marker position={marker} />
