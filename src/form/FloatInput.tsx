@@ -1,5 +1,3 @@
-// The main Form class
-
 import React from 'react';
 import { TextInput } from './TextInput';
 
