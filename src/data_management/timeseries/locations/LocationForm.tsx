@@ -2,7 +2,7 @@ import React, {useState,} from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { connect, useSelector } from 'react-redux';
 // import { getOrganisations, getUsername } from '../../reducers';
-import { getSelectedOrganisation, getSupplierIds } from '../../../reducers';
+import { getSelectedOrganisation, /*getSupplierIds*/ } from '../../../reducers';
 // import { ScenarioResult } from '../../form/ScenarioResult';
 import { ExplainSideColumn } from '../../../components/ExplainSideColumn';
 import { TextInput } from './../../../form/TextInput';
@@ -20,7 +20,7 @@ import Modal from '../../../components/Modal';
 import { ModalDeleteContent } from '../../../components/ModalDeleteContent';
 // import { lableTypeFormHelpText } from '../../utils/helpTextForForms';
 import { convertToSelectObject } from '../../../utils/convertToSelectObject';
-import { SelectDropdown } from '../../../form/SelectDropdown';
+// import { SelectDropdown } from '../../../form/SelectDropdown';
 import { AccessModifier } from '../../../form/AccessModifier';
 import MapSelectAssetOrPoint from '../../../form/MapSelectAssetOrPoint';
 
@@ -39,24 +39,28 @@ interface RouteParams {
 const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps<RouteParams>) => {
   const { currentRecord, relatedAsset } = props;
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const assetTypeOptions = [
-    {
-      value: "measuring_station",
-      label: "Measuringstation",
-      subLabel: "(Default)",
-      subLabel2: undefined,
-    },
-    {
-      value: "pump_station",
-      label: "Pumpstation",
-      subLabel: undefined,
-      subLabel2: undefined,
-    },
-  ];
-  const [selectedAssetType, setSelectedAssetType] = useState(assetTypeOptions[0]);
+  // we need this later
+  // const assetTypeOptions = [
+  //   {
+  //     value: "measuring_station",
+  //     label: "Measuringstation",
+  //     subLabel: "(Default)",
+  //     subLabel2: undefined,
+  //   },
+  //   {
+  //     value: "pump_station",
+  //     label: "Pumpstation",
+  //     subLabel: undefined,
+  //     subLabel2: undefined,
+  //   },
+  // ];
+  // We need this later
+  // const [selectedAssetType, setSelectedAssetType] = useState(assetTypeOptions[0]);
   const selectedOrganisation = useSelector(getSelectedOrganisation);
-  const supplierIds = useSelector(getSupplierIds).available;
+  // Need this later if we support supplier ids
+  // const supplierIds = useSelector(getSupplierIds).available;
 
+  // Need this later if we support organisations
   // const organisations = useSelector(getOrganisations).available;
   // next line doesnot work, because organisation has no uuid, but unique_id instead. Thus I do not use it
   // const thisRecordOrganisation = organisations.find((org: any) => org.uuid === currentRecord.organisation.uuid.replace(/-/g, ""));
@@ -332,14 +336,16 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
         <span className={formStyles.FormFieldTitle}>
           2: Data
         </span>
-        <SelectDropdown
+        {/*  This fields adds nothing for now. Comment it out 
+        TODO: make sure that below field is added to the search query in asset selection
+        */}
+        {/* <SelectDropdown
           title={'Asset type'}
           name={'asset_type'}
           placeholder={'- Search and select -'}
-          // @ts-ignore
           value={selectedAssetType}
           valueChanged={valueObj => { 
-            console.log("value", valueObj)
+            // TODO: remove this ts ignore
             // @ts-ignore
             setSelectedAssetType (valueObj);
           }}
@@ -347,13 +353,12 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
           validated
           onFocus={handleFocus}
           onBlur={handleBlur}
-        />
+        /> */}
         <MapSelectAssetOrPoint
           title={'Asset location'}
           name={'selectedAssetObj'}
           // placeholder={'- Search and select -'}
           value={values.selectedAssetObj}
-          // @ts-ignore
           valueChanged={(value)=>handleValueChange('selectedAssetObj', value)}
           validated={true}
           triedToSubmit={triedToSubmit}
@@ -362,14 +367,11 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
         
         <div style={{display: "flex"}}>
           <div style={{width: "58%", marginRight: "40px"}}>
-           {/* 
-            // @ts-ignore  */}
             <GeometryField
               title={'Geometry'}
               name={'selectedAssetObj'}
               // placeholder={'- Search and select -'}
               value={values.selectedAssetObj}
-              // @ts-ignore
               valueChanged={(value)=>handleValueChange('selectedAssetObj', value)}
               validated={true}
               triedToSubmit={triedToSubmit}
@@ -424,7 +426,7 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
-        <SelectDropdown
+        {/* <SelectDropdown
           title={'Supplier'}
           name={'supplier'}
           placeholder={'- Search and select -'}
@@ -435,7 +437,7 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
           onFocus={handleFocus}
           onBlur={handleBlur}
           readOnly={(!(supplierIds.length > 0 && selectedOrganisation.roles.includes('admin')))}
-        />
+        /> */}
         {/* <TextInput
           title={'Label type Uuid'}
           name={'uuid'}

@@ -44,11 +44,6 @@ export const GeometryField: React.FC<MyProps> = (props) => {
     readOnly
   } = props;
 
-  // TODO:
-  // allow location lat lng fields to be empty
-  // probably best to do this by storing local state in geometry field (try this first)
-  // otherwise we can make the location type defenition allow to be empty and check for this in the oter component as well (MapSelectAssetOrPoint)
-
   const [lat, setLat] = useState(NaN);
   const [lng, setLng] = useState(NaN);
 
@@ -65,24 +60,11 @@ export const GeometryField: React.FC<MyProps> = (props) => {
       setLat(value.location.lat);
       setLng(value.location.lng); 
     } else {
-      setLat(NaN);// as number;
-      setLng(NaN)// as number;
+      setLat(NaN);
+      setLng(NaN);
     }
   }, [value.asset, value.location]);
-  // // @ts-ignore
-  // let lat;
-  // // @ts-ignore
-  // let lng; 
-  // if ( value.asset && value.asset.value && value.asset.value.view ) {
-  //   lat = value.asset.value.view[0] as number;
-  //   lng = value.asset.value.view[1] as number;
-  // } else if (value.location) {
-  //   lat = value.location.lat as number;
-  //   lng = value.location.lng as number; 
-  // } else {
-  //   lat = NaN as number;
-  //   lng = NaN as number;
-  // }
+  
 
   const valueChangedLat = (value:number) => {
     if (value) {
