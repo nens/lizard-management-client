@@ -13,7 +13,7 @@ import DeleteModal from '../../components/DeleteModal';
 const baseUrl = "/api/v4/rasters/";
 const navigationUrlRasters = "/data_management/rasters/layers";
 
-const fetchRasterLayersWithOptions = (uuids: string[], fetchOptions: RequestInit) => {
+export const fetchRasterLayersWithOptions = (uuids: string[], fetchOptions: RequestInit) => {
   const fetches = uuids.map (uuid => {
     return fetch(baseUrl + uuid + "/", fetchOptions);
   });
