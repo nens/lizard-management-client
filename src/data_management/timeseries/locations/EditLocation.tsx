@@ -14,6 +14,7 @@ const EditLocation = (props: RouteProps & RouteComponentProps) => {
   const [currentRecord, setCurrentRecord] = useState(null);
   const [relatedAssetRequired, setRelatedAssetRequired] = useState(true);
   const [relatedAsset, setRelatedAsset] = useState(null);
+  // Todo fix this ts ignore
   // @ts-ignore
   const { uuid } = props.match.params;
   useEffect (() => {
@@ -35,15 +36,18 @@ const EditLocation = (props: RouteProps & RouteComponentProps) => {
   useEffect (() => {
     
       (async () => {
-        // @ts-ignore
-        if (relatedAssetRequired && currentRecord !==null && currentRecord.object) {
+          // Todo: how to fix this error? I already check if currentRecord === null
           // @ts-ignore
-          const relatedAsset = await fetch(`/api/v3/${currentRecord.object.type}s/${currentRecord.object.id}/`, {
-            credentials: "same-origin"
-          }).then(response => response.json());
-
-          setRelatedAsset(relatedAsset);
-        }
+          if (relatedAssetRequired && currentRecord && currentRecord !== null && currentRecord !== undefined && currentRecord.object) {
+            // Todo: how to fix this error? I already check if currentRecord === null
+            // @ts-ignore
+            const relatedAsset = await fetch(`/api/v3/${currentRecord.object.type}s/${currentRecord.object.id}/`, {
+              credentials: "same-origin"
+            }).then(response => response.json());
+  
+            setRelatedAsset(relatedAsset);
+          }
+        
       })();
     
   }, [currentRecord, relatedAssetRequired])
