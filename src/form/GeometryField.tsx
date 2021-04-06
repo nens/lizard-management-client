@@ -1,10 +1,6 @@
-// The main Form class
-
 import React, {useState, useEffect} from 'react';
 import {FloatInput} from './FloatInput';
 import {
-  // Location, 
-  // Asset, 
   AssetLocationValue
 } from "../types/locationFormTypes";
 import formStyles from "../styles/Forms.module.css";
@@ -68,14 +64,12 @@ export const GeometryField: React.FC<MyProps> = (props) => {
     }
     valueChanged({
       asset: null,
-      // @ts-ignore
       location:{lat:value, lng:lng}
     })
   }
   const valueChangedLng = (value:number) => {
     valueChanged({
       asset: null,
-      // @ts-ignore
       location:{lat:lat, lng:value}
     })
   }
