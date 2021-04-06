@@ -165,7 +165,6 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
             id: null, 
           },
       };
-      console.log('values.selectedAssetObj', values.selectedAssetObj, body.object, values.selectedAssetObj.asset && values.selectedAssetObj.asset.value.entity_name);
       fetch(`/api/v4/locations/${currentRecord.uuid}/`, {
         credentials: 'same-origin',
         method: 'PATCH',
@@ -184,7 +183,6 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
         })
         .catch(console.error);
     } else {
-      console.log('values.selectedAssetObj', values.selectedAssetObj);
       const body = {
         name: values.name,
         organisation: selectedOrganisation.uuid,
@@ -265,7 +263,6 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
     handleFocus,
   } = useForm({initialValues, onSubmit});
 
-  console.log("fieldOnFocus", fieldOnFocus)
 
   return (
     <ExplainSideColumn

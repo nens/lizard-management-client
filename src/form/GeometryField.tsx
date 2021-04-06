@@ -49,10 +49,6 @@ export const GeometryField: React.FC<MyProps> = (props) => {
 
 
   useEffect(() => {
-    // @ts-ignore
-    // let lat;
-    // @ts-ignore
-    // let lng; 
     if ( value.asset && value.asset.value && value.asset.value.view ) {
       setLat(value.asset.value.view[0]);
       setLng(value.asset.value.view[1])
