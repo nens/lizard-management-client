@@ -205,7 +205,6 @@ export const TimeseriesTable = (props: RouteComponentProps) =>  {
           }}
         />
       ) : null}
-
       {selectedRows.length > 0 ? (
         <AuthorisationModal
           rows={selectedRows}
