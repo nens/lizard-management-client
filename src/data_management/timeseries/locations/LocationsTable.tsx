@@ -107,7 +107,7 @@ export const LocationsTable = (props: RouteComponentProps) =>  {
       imgAltDescription={"Locations icon"}
       headerText={"Locations"}
       explanationText={"Search or sort your locations here."}
-      backUrl={"/data_management/locations"}
+      backUrl={"/data_management/timeseries"}
     >
       <TableStateContainer 
         gridTemplateColumns={"4fr 36fr 36fr 16fr 8fr"} 
