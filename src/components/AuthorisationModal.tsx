@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { RequestOptions } from 'https';
 import { SubmitButton } from '../form/SubmitButton';
 import { addNotification } from '../actions';
 import ModalBackground from './ModalBackground';
@@ -10,7 +9,7 @@ import { AccessModifier } from '../form/AccessModifier';
 
 interface MyProps {
   rows: any[],
-  fetchFunction: (uuids: string[], fetchOptions: RequestOptions) => Promise<Response[]>,
+  fetchFunction: (uuids: string[], fetchOptions: RequestInit) => Promise<Response[]>,
   resetTable: Function | null,
   handleClose: () => void,
 }
@@ -32,7 +31,7 @@ function AuthorisationModal (props: MyProps & DispatchProps) {
       })
     };
     try {
-      const results = await props.fetchFunction(uuids, options);
+      const results = await props.fetchFunction(uuids, options as RequestInit);
       if (results.every(res => res.status === 200)) {
         props.addNotification('Success! Accessibility has been modified', 2000);
         props.handleClose();
