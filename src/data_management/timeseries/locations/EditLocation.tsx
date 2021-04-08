@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { RouteComponentProps } from "react-router-dom";
-import { LocationForm } from "./LocationForm";
+import LocationForm from "./LocationForm";
 import MDSpinner from "react-md-spinner";
 
 interface RouteProps {
