@@ -84,7 +84,10 @@ const LocationForm = (props: Props & DispatchProps & RouteComponentProps<RoutePa
     extraMetadata: null,
     accessModifier: 'Private',
     object: null,
-    selectedAssetObj: null
+    selectedAssetObj: {
+      location: null,
+      asset: null
+    }
   };
 
   const onSubmit = (values: Values) => {
