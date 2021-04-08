@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { connect, useSelector } from 'react-redux';
-import { getSelectedOrganisation, getSupplierIds, getUsername } from '../../../reducers';
+import { getSelectedOrganisation } from '../../../reducers';
 import { ExplainSideColumn } from '../../../components/ExplainSideColumn';
 import { TextInput } from './../../../form/TextInput';
 import { SubmitButton } from '../../../form/SubmitButton';
@@ -31,8 +31,8 @@ interface RouteParams {
 const LocationForm = (props: Props & DispatchProps & RouteComponentProps<RouteParams>) => {
   const { currentRecord, relatedAsset } = props;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
-  const supplierIds = useSelector(getSupplierIds).available;
-  const username = useSelector(getUsername);
+
+  console.log(relatedAsset)
 
   const assetTypeOptions: Value[] = [
     {
@@ -73,7 +73,6 @@ const LocationForm = (props: Props & DispatchProps & RouteComponentProps<RoutePa
     code: currentRecord.code,
     extraMetadata: currentRecord.extra_metadata,
     accessModifier: currentRecord.access_modifier,
-    supplier: currentRecord.supplier ? convertToSelectObject(currentRecord.supplier) :  null,
     object: currentRecord.object,
     selectedAssetObj: {
       location: geometryCurrentRecord ? geometryCurrentRecord : geometryRelatedAsset ? geometryRelatedAsset: null,
@@ -84,7 +83,6 @@ const LocationForm = (props: Props & DispatchProps & RouteComponentProps<RoutePa
     code: null,
     extraMetadata: null,
     accessModifier: 'Private',
-    supplier: username ? convertToSelectObject(username) : null,
     object: null,
     selectedAssetObj: null
   };
@@ -313,19 +311,6 @@ const LocationForm = (props: Props & DispatchProps & RouteComponentProps<RoutePa
           valueChanged={value => handleValueChange('accessModifier', value)}
           onFocus={handleFocus}
           onBlur={handleBlur}
-        />
-        <SelectDropdown
-          title={'Username of supplier'}
-          name={'supplier'}
-          placeholder={'- Search and select -'}
-          value={values.supplier}
-          valueChanged={value => handleValueChange('supplier', value)}
-          options={supplierIds.map((suppl: any) => convertToSelectObject(suppl.username))}
-          validated
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-          readOnly={!(supplierIds.length > 0 && selectedOrganisation.roles.includes('admin'))}
-          dropUp
         />
         <div
           className={formStyles.ButtonContainer}
