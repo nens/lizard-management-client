@@ -4,135 +4,64 @@ import {useSelector} from 'react-redux';
 import TableStateContainer from '../../components/TableStateContainer';
 import { NavLink } from "react-router-dom";
 import TableActionButtons from '../../components/TableActionButtons';
-import {ExplainSideColumn} from '../../components/ExplainSideColumn';
+import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import threediIcon from "../../images/3di@3x.svg";
 import tableStyles from "../../components/Table.module.css";
-import {getSelectedOrganisation, getUsername} from "../../reducers";
+import { getSelectedOrganisation, getUsername } from "../../reducers";
 import { bytesToDisplayValue } from '../../utils/byteUtils';
-import Modal from '../../components/Modal';
-import { ModalDeleteContent } from '../../components/ModalDeleteContent';
 import { defaultScenarioExplanationText } from '../../utils/help_texts/helpTextForScenarios';
-import {getScenarioTotalSize} from '../../reducers';
+import { getScenarioTotalSize } from '../../reducers';
+import DeleteModal from '../../components/DeleteModal';
+
+const baseUrl = "/api/v4/scenarios/";
+const navigationUrl = "/data_management/scenarios";
+
+const fetchScenariosWithOptions = (uuids: string[], fetchOptions: RequestInit) => {
+  const fetches = uuids.map (uuid => {
+    return fetch(baseUrl + uuid + "/", fetchOptions);
+  });
+  return Promise.all(fetches);
+};
+
+const fetchRawDataWithOptions = (uuids: string[], fetchOptions: RequestInit) => {
+  const fetches = uuids.map (uuid => {
+    return fetch(baseUrl + uuid + "/results/raw/", fetchOptions);
+  });
+  return Promise.all(fetches);
+};
 
 export const ScenarioTable = () =>  {
+  const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
+  const [rowsWithRawDataToBeDeleted, setRowsWithRawDataToBeDeleted] = useState<any[]>([]);
+  const [resetTable, setResetTable] = useState<Function | null>(null);
+  const scenarioTotalSize = useSelector(getScenarioTotalSize);
 
-  const baseUrl = "/api/v4/scenarios/";
-  const navigationUrl = "/data_management/scenarios";
+  const userName = useSelector(getUsername);
+  const selectedOrganisation = useSelector(getSelectedOrganisation);
 
-  const deleteSingle = (row: any, updateTableRow:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any)=>{
-    setRowToBeDeleted(row);
-    setDeleteFunction(()=>()=>{
-      setBusyDeleting(true);
-      updateTableRow({...row, markAsDeleted: true});
-        const fetchOptions = {
-          credentials: "same-origin",
-          method: "DELETE",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({})
-        };
-      return fetch(baseUrl + row.uuid + "/", fetchOptions as RequestInit)
-      .then((_result) => {
-        setBusyDeleting(false);
-        triggerReloadWithCurrentPage();
-        return new Promise((resolve, _reject) => {
-            resolve();
-          });
-        })
-    })
-  }
-
-  const deleteRawDataSingle = (row: any, updateTableRow:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any)=>{
-    setRowToBeDeleted(row);
-    setDeleteRawFunction(()=>()=>{
-      setBusyDeleting(true);
-      updateTableRow({...row, markAsDeleted: true});
-        const fetchOptions = {
-          credentials: "same-origin",
-          method: "DELETE",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({})
-        };
-      return fetch(baseUrl + row.uuid + "/results/raw", fetchOptions as RequestInit)
-      .then((_result) => {
-        setBusyDeleting(false);
-        triggerReloadWithCurrentPage();
-        return new Promise((resolve, _reject) => {
-            resolve();
-          });
-        })
-    })
-  }
-
-  const deleteRawDataMultiple = (rows: any[], tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any, setCheckboxes: any)=>{
-
+  const deleteActions = (
+    rows: any[],
+    triggerReloadWithCurrentPage: Function,
+    setCheckboxes: Function | null
+  ) => {
     setRowsToBeDeleted(rows);
-    const uuids = rows.map(row=> row.uuid);
-    setDeleteRawFunction(()=>()=>{
-      setBusyDeleting(true);
-      const tableDataDeletedmarker = tableData.map((rowAllTables:any)=>{
-        if (uuids.find((uuid)=> uuid === rowAllTables.uuid)) {
-          return {...rowAllTables, markAsDeleted: true}
-        } else{
-          return {...rowAllTables};
-        }
-      })
-      setTableData(tableDataDeletedmarker);
-      return Promise.all(uuids.map((uuid)=>{
-            const fetchOptions = {
-              credentials: "same-origin",
-              method: "DELETE",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({})
-            };
-            return fetch(baseUrl + uuid + "/results/raw", fetchOptions as RequestInit)
-      }))
-      .then((_result) => {
-        setBusyDeleting(false);
-        if (setCheckboxes) {
-          setCheckboxes([]);
-        }
-        triggerReloadWithCurrentPage();
-        return new Promise((resolve, _reject) => {
-          resolve();
-        });
-      })
+    setResetTable(() => () => {
+      triggerReloadWithCurrentPage();
+      setCheckboxes && setCheckboxes([]);
     });
-  }
+  };
 
-  const deleteMultiple =  (rows: any[], tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any, setCheckboxes: any)=>{
-    setRowsToBeDeleted(rows);
-    const uuids = rows.map(row=> row.uuid);
-    setDeleteFunction(()=>()=>{
-      setBusyDeleting(true);
-      const tableDataDeletedmarker = tableData.map((rowAllTables:any)=>{
-        if (uuids.find((uuid)=> uuid === rowAllTables.uuid)) {
-          return {...rowAllTables, markAsDeleted: true}
-        } else{
-          return {...rowAllTables};
-        }
-      })
-      setTableData(tableDataDeletedmarker);
-      return Promise.all(uuids.map((uuid)=>{
-            const fetchOptions = {
-              credentials: "same-origin",
-              method: "DELETE",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({})
-            };
-            return fetch(baseUrl + uuid + "/", fetchOptions as RequestInit)
-      }))
-      .then((_result) => {
-        setBusyDeleting(false);
-        if (setCheckboxes) {
-          setCheckboxes([]);
-        }
-        triggerReloadWithCurrentPage();
-        return new Promise((resolve, _reject) => {
-          resolve();
-        });
-      })
+  const deleteRawActions = (
+    rows: any[],
+    triggerReloadWithCurrentPage: Function,
+    setCheckboxes: Function | null
+  ) => {
+    setRowsWithRawDataToBeDeleted(rows);
+    setResetTable(() => () => {
+      triggerReloadWithCurrentPage();
+      setCheckboxes && setCheckboxes([]);
     });
-  }
+  };
 
   const columnDefinitions = [
     {
@@ -204,16 +133,22 @@ export const ScenarioTable = () =>  {
               actions={row.has_raw_results ? [
                 {
                   displayValue: "Delete raw data",
-                  actionFunction: deleteRawDataSingle,
+                  actionFunction: (row: any, _updateTableRow: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any) => {
+                    deleteRawActions([row], triggerReloadWithCurrentPage, null)
+                  }
                 },
                 {
                   displayValue: "Delete",
-                  actionFunction: deleteSingle,
+                  actionFunction: (row: any, _updateTableRow: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any) => {
+                    deleteActions([row], triggerReloadWithCurrentPage, null)
+                  }
                 }
               ] : [
                 {
                   displayValue: "Delete",
-                  actionFunction: deleteSingle,
+                  actionFunction: (row: any, _updateTableRow: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any) => {
+                    deleteActions([row], triggerReloadWithCurrentPage, null)
+                  }
                 }
               ]}
             />
@@ -222,16 +157,6 @@ export const ScenarioTable = () =>  {
       orderingField: null,
     },
   ];
-
-  const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
-  const [rowToBeDeleted, setRowToBeDeleted] = useState<any | null>(null);
-  const [busyDeleting, setBusyDeleting] = useState<boolean>(false);
-  const [deleteFunction, setDeleteFunction] = useState<null | Function>(null);
-  const [deleteRawFunction, setDeleteRawFunction] = useState<null | Function>(null);
-  const scenarioTotalSize = useSelector(getScenarioTotalSize);
-
-  const userName = useSelector(getUsername);
-  const selectedOrganisation = useSelector(getSelectedOrganisation);
 
   return (
     <ExplainSideColumn
@@ -248,10 +173,14 @@ export const ScenarioTable = () =>  {
           checkBoxActions={[
             {
               displayValue: "Delete",
-              actionFunction: deleteMultiple,
+              actionFunction: (rows: any[], _tableData: any, _setTableData: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any, setCheckboxes: any) => {
+                deleteActions(rows, triggerReloadWithCurrentPage, setCheckboxes)
+              }
             },{
               displayValue: "Delete raw",
-              actionFunction: deleteRawDataMultiple,
+              actionFunction: (rows: any[], _tableData: any, _setTableData: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any, setCheckboxes: any) => {
+                deleteRawActions(rows, triggerReloadWithCurrentPage, setCheckboxes)
+              },
               checkIfActionIsApplicable: (row: any) => row.has_raw_results === true
             },
           ]}
@@ -270,109 +199,31 @@ export const ScenarioTable = () =>  {
             // {value: 'model_revision__icontains=', label: 'Model revision'},
           ]}
         />
-        { 
-        rowsToBeDeleted.length > 0 && deleteFunction?
-           <Modal
-           title={'Are you sure?'}
-           buttonConfirmName={'Delete'}
-           onClickButtonConfirm={() => {
-              deleteFunction && deleteFunction().then(()=>{
+        {rowsToBeDeleted.length > 0 ? (
+          <DeleteModal
+            rows={rowsToBeDeleted}
+            displayContent={[{name: "name", width: 65}, {name: "uuid", width: 35}]}
+            fetchFunction={fetchScenariosWithOptions}
+            resetTable={resetTable}
+            handleClose={() => {
               setRowsToBeDeleted([]);
-              setDeleteFunction(null);
-             });
-           }}
-           cancelAction={()=>{
-            setRowsToBeDeleted([]);
-            setDeleteFunction(null);
-          }}
-          disableButtons={busyDeleting}
-         >
-           
-           <p>Are you sure? You are deleting the following scenario's:</p>
-           
-           {ModalDeleteContent(rowsToBeDeleted, busyDeleting, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
-           
-         </Modal>
-        :
-          null
-        }
-
-        { 
-        rowToBeDeleted && deleteFunction?
-           <Modal
-           title={'Are you sure?'}
-           buttonConfirmName={'Delete'}
-           onClickButtonConfirm={() => {
-             deleteFunction && deleteFunction().then(()=>{
-              setRowToBeDeleted(null);
-              setDeleteFunction(null);
-             });
-             
-           }}
-           cancelAction={()=>{
-             setRowToBeDeleted(null);
-             setDeleteFunction(null);
-           }}
-           disableButtons={busyDeleting}
-         >
-           <p>Are you sure? You are deleting the following scenario:</p>
-           {ModalDeleteContent([rowToBeDeleted], busyDeleting, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
-         </Modal>
-        :
-          null
-        }
-
-        { 
-        rowsToBeDeleted.length > 0 && deleteRawFunction?
-           <Modal
-           title={'Are you sure?'}
-           buttonConfirmName={'Delete'}
-           onClickButtonConfirm={() => {
-            deleteRawFunction && deleteRawFunction().then(()=>{
-              setRowsToBeDeleted([]);
-              setDeleteRawFunction(null);
-             });
-           }}
-           cancelAction={()=>{
-            setRowsToBeDeleted([]);
-            setDeleteRawFunction(null);
-          }}
-          disableButtons={busyDeleting}
-         >
-           
-           <p>Are you sure? You are deleting the RAW results of the following scenario's:</p>
-           
-           {ModalDeleteContent(rowsToBeDeleted, busyDeleting, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
-           
-         </Modal>
-        :
-          null
-        }
-
-        { 
-        rowToBeDeleted && deleteRawFunction?
-           <Modal
-           title={'Are you sure?'}
-           buttonConfirmName={'Delete'}
-           onClickButtonConfirm={() => {
-             deleteRawFunction && deleteRawFunction().then(()=>{
-              setRowToBeDeleted(null);
-              setDeleteRawFunction(null);
-             });
-             
-           }}
-           cancelAction={()=>{
-             setRowToBeDeleted(null);
-             setDeleteRawFunction(null);
-           }}
-           disableButtons={busyDeleting}
-         >
-           <p>Are you sure? You are deleting the RAW results of the following scenario::</p>
-           {ModalDeleteContent([rowToBeDeleted], busyDeleting, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
-         </Modal>
-        :
-          null
-        }
+              setResetTable(null);
+            }}
+          />
+        ) : null}
+        {rowsWithRawDataToBeDeleted.length > 0 ? (
+          <DeleteModal
+            rows={rowsWithRawDataToBeDeleted}
+            displayContent={[{name: "name", width: 65}, {name: "uuid", width: 35}]}
+            fetchFunction={fetchRawDataWithOptions}
+            resetTable={resetTable}
+            handleClose={() => {
+              setRowsWithRawDataToBeDeleted([]);
+              setResetTable(null);
+            }}
+            text={"Are you sure? You are deleting the RAW results of the following scenario(s):"}
+          />
+        ) : null}
      </ExplainSideColumn>
   );
 }

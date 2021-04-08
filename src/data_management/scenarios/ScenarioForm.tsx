@@ -97,7 +97,7 @@ const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProp
           1: General
         </span>
         <TextInput
-          title={'Scenario name'}
+          title={'Scenario name *'}
           name={'name'}
           value={values.name}
           valueChanged={handleInputChange}

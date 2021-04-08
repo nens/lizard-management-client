@@ -19,6 +19,7 @@
 
 .StepContainer {
   overflow-y: auto;
-  min-height: 0;
+  /* to make sure that colorpicker always fits without scroll */
+  min-height: 400px;
   flex-grow: 1;
 }
