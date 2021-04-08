@@ -82,12 +82,16 @@ export const GeometryField: React.FC<MyProps> = (props) => {
       <span className={formStyles.LabelTitle}>
         {title}
       </span>
-      <div style={{display: "flex", }}>
-        
+      <div
+        style={{
+          display: "flex",
+          color: "#C9C9C9"
+        }}
+      >
         {/* lng */}
         <div style={{marginRight: "16px", }}>
           <FloatInput
-            title={"x"}
+            title={"X"}
             name={name}
             placeholder={placeholder}
             value={lng}
@@ -112,7 +116,7 @@ export const GeometryField: React.FC<MyProps> = (props) => {
         {/* lat */}
         <div>
           <FloatInput
-            title={"y"}
+            title={"Y"}
             name={name}
             placeholder={placeholder}
             value={lat}
