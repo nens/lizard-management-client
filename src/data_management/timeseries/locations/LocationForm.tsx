@@ -32,8 +32,6 @@ const LocationForm = (props: Props & DispatchProps & RouteComponentProps<RoutePa
   const { currentRecord, relatedAsset } = props;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
 
-  console.log(relatedAsset)
-
   const assetTypeOptions: Value[] = [
     {
       value: "measuring_station",
@@ -71,7 +69,7 @@ const LocationForm = (props: Props & DispatchProps & RouteComponentProps<RoutePa
   const initialValues = currentRecord ? {
     name: currentRecord.name,
     code: currentRecord.code,
-    extraMetadata: currentRecord.extra_metadata,
+    extraMetadata: currentRecord.extra_metadata ? JSON.stringify(currentRecord.extra_metadata) : null,
     accessModifier: currentRecord.access_modifier,
     object: currentRecord.object,
     selectedAssetObj: {
@@ -292,7 +290,7 @@ const LocationForm = (props: Props & DispatchProps & RouteComponentProps<RoutePa
           </div>
         </div>
         <TextArea
-          title={'Extra metadata (JSON) *'}
+          title={'Extra metadata (JSON)'}
           name={'extraMetadata'}
           placeholder={'Enter valid JSON'}
           value={values.extraMetadata}
