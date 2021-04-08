@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Timeseries } from '../types/timeseriesType';
+import { getTimeseriesLabel, Timeseries } from '../types/timeseriesType';
 import { convertToSelectObject } from '../utils/convertToSelectObject';
 import { SelectDropdown, Value } from './SelectDropdown';
 
@@ -143,9 +143,9 @@ export function TimeseriesSelection (props: MyProps) {
         valueChanged={value => props.valueChanged(value)}
         options={
           // Show timeseries of nested asset if a nested asset is selected
-          selectedNestedAsset ? selectedNestedAsset.timeseries.map(ts => convertToSelectObject(ts.uuid, ts.name, ts.uuid)) :
+          selectedNestedAsset ? selectedNestedAsset.timeseries.map(ts => convertToSelectObject(ts.uuid, getTimeseriesLabel(ts), ts.uuid)) :
           // Show timeseries of only the asset and not also the nested assets if no nested asset is selected
-          selectedAsset ? selectedAsset.timeseries.map(ts => convertToSelectObject(ts.uuid, ts.name, ts.uuid)) :
+          selectedAsset ? selectedAsset.timeseries.map(ts => convertToSelectObject(ts.uuid, getTimeseriesLabel(ts), ts.uuid)) :
           []
         }
         validated={!!timeseries}

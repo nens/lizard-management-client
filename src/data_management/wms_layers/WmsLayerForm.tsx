@@ -322,7 +322,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           3: Rights
         </span>
         <AccessModifier
-          title={'Accessibility'}
+          title={'Accessibility *'}
           name={'access_modifier'}
           value={values.access_modifier}
           valueChanged={value => handleValueChange('access_modifier', value)}
@@ -352,7 +352,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           />
         ) : null}
         <SelectDropdown
-          title={'Organisation'}
+          title={'Organisation *'}
           name={'organisation'}
           placeholder={'- Search and select -'}
           value={typeof values.organisation === "string" ? values.organisation.replace(/-/g, ""): (values.organisation) }

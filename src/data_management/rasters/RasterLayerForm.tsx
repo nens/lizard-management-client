@@ -35,8 +35,8 @@ import { addNotification, removeRasterSourceUUID } from './../../actions';
 import rasterLayerIcon from "../../images/raster_layer_icon.svg";
 import formStyles from './../../styles/Forms.module.css';
 import FormActionButtons from '../../components/FormActionButtons';
-import ConfirmModal from '../../components/Modal';
-import { ModalDeleteContent } from '../../components/ModalDeleteContent'
+import DeleteModal from '../../components/DeleteModal';
+import { fetchRasterLayersWithOptions } from './RasterLayerTable';
 import { SelectDropdown } from '../../form/SelectDropdown';
 import { convertToSelectObject } from '../../utils/convertToSelectObject';
 
@@ -70,7 +70,7 @@ const fetchRasterSources = async (uuid: string, searchQuery: string) => {
 };
 
 // Helper function to fetch paginated observation types with search query
-const fetchObservationTypes = async (searchQuery: string) => {
+export const fetchObservationTypes = async (searchQuery: string) => {
   const urlQuery = searchQuery ? `?code__icontains=${searchQuery}` : '';
   const response = await fetch(
     `/api/v4/observationtypes/${urlQuery}`
@@ -114,28 +114,6 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
       removeRasterSourceUUID();
     };
   }, [removeRasterSourceUUID]);
-
-  const onDelete = () => {
-    const body = {};
-
-    currentRasterLayer && fetch(`/api/v4/rasters/${currentRasterLayer.uuid}/`, {
-      credentials: 'same-origin',
-      method: 'DELETE',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(body)
-    })
-      .then(data => {
-        const status = data.status;
-        if (status === 204) {
-          props.addNotification('Success! Raster-layer deleted', 2000);
-          props.history.push('/data_management/rasters/layers/');
-        } else {
-          props.addNotification(status, 2000);
-          console.error(data);
-        };
-      })
-      .catch(console.error);
-  }
 
   const initialValues = currentRasterLayer ? {
     name: currentRasterLayer.name,
@@ -419,7 +397,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           3: Rights
         </span>
         <AccessModifier
-          title={'Accessibility'}
+          title={'Accessibility *'}
           name={'accessModifier'}
           value={values.accessModifier || accessModifier}
           valueChanged={() => null}
@@ -455,7 +433,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           />
         ) : null}
         <SelectDropdown
-          title={'Organisation'}
+          title={'Organisation *'}
           name={'organisation'}
           placeholder={'- Search and select -'}
           value={values.organisation}
@@ -512,29 +490,15 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           
         </div>
       </div>
-      { 
-        currentRasterLayer && showDeleteModal?
-           <ConfirmModal
-           title={'Are you sure?'}
-           buttonConfirmName={'Delete'}
-           onClickButtonConfirm={() => {
-              onDelete();
-              setShowDeleteModal(false);
-           }}
-           cancelAction={()=>{
-            setShowDeleteModal(false)
-          }}
-          disableButtons={false}
-         >
-           
-           <p>Are you sure? You are deleting the following raster layer:</p>
-           
-           {ModalDeleteContent([currentRasterLayer], false, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
-           
-         </ConfirmModal>
-        :
-          null
-        }
+      {currentRasterLayer && showDeleteModal ? (
+        <DeleteModal
+          rows={[currentRasterLayer]}
+          displayContent={[{name: "name", width: 65}, {name: "prefix", width: 35}]}
+          fetchFunction={fetchRasterLayersWithOptions}
+          handleClose={() => setShowDeleteModal(false)}
+          tableUrl={'/data_management/rasters/layers'}
+        />
+      ) : null}
     </ExplainSideColumn>
   );
 };

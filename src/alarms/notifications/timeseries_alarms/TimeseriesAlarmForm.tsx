@@ -20,7 +20,7 @@ import { convertToSelectObject } from '../../../utils/convertToSelectObject';
 import { convertDurationObjToSeconds } from '../../../utils/dateUtils';
 import { rasterIntervalStringServerToDurationObject } from '../../../utils/isoUtils';
 import { getUuidFromUrl } from '../../../utils/getUuidFromUrl';
-import { Timeseries } from '../../../types/timeseriesType';
+import { getTimeseriesLabel, Timeseries } from '../../../types/timeseriesType';
 import formStyles from './../../../styles/Forms.module.css';
 import rasterAlarmIcon from "../../../images/alarm@3x.svg";
 
@@ -32,11 +32,11 @@ interface Props {
 const TimeseriesAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (props) => {
   const { currentTimeseriesAlarm, timeseries } = props;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
-  const navigationUrl = "/alarms/notifications/raster_alarms";
+  const navigationUrl = "/alarms/notifications/timeseries_alarms";
 
   const initialValues = currentTimeseriesAlarm && timeseries ? {
     name: currentTimeseriesAlarm.name,
-    timeseries: convertToSelectObject(timeseries.uuid!, timeseries.name),
+    timeseries: convertToSelectObject(timeseries.uuid!, getTimeseriesLabel(timeseries)),
     relative: !!currentTimeseriesAlarm.relative_start || !!currentTimeseriesAlarm.relative_end,
     relativeStart: currentTimeseriesAlarm.relative_start ? convertDurationObjToSeconds(rasterIntervalStringServerToDurationObject(currentTimeseriesAlarm.relative_start)) : null,
     relativeEnd: currentTimeseriesAlarm.relative_end ? convertDurationObjToSeconds(rasterIntervalStringServerToDurationObject(currentTimeseriesAlarm.relative_end)) : null,
@@ -146,9 +146,9 @@ const TimeseriesAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps>
     <ExplainSideColumn
       imgUrl={rasterAlarmIcon}
       imgAltDescription={"Raster alarm icon"}
-      headerText={"Raster alarms"}
+      headerText={"Time-series alarms"}
       explanationText={"Select a field to get more information."}
-      backUrl={"/alarms/notifications/raster_alarms"}
+      backUrl={navigationUrl}
     >
       <form
         className={formStyles.Form}
@@ -179,7 +179,7 @@ const TimeseriesAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps>
           triedToSubmit={triedToSubmit}
         />
         <CheckBox
-          title={'Use relative data'}
+          title={'Limit to relative period'}
           name={'relative'}
           value={values.relative}
           valueChanged={bool => handleValueChange('relative', bool)}
@@ -246,7 +246,7 @@ const TimeseriesAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps>
           </span>
           <div className={formStyles.GridContainer}>
             <IntegerInput
-              title={'After breaking threshold'}
+              title={'Triggered after N times'}
               name={'snoozeOn'}
               value={values.snoozeOn}
               valueChanged={handleInputChange}
@@ -255,7 +255,7 @@ const TimeseriesAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps>
               triedToSubmit={triedToSubmit}
             />
             <IntegerInput
-              title={'After no further impact'}
+              title={'Withdrawn after N times'}
               name={'snoozeOff'}
               value={values.snoozeOff}
               valueChanged={handleInputChange}
