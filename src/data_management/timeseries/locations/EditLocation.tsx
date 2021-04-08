@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { RouteComponentProps, /*withRouter*/ } from "react-router-dom";
-import { getOrganisations } from "../../../reducers";
+import { RouteComponentProps } from "react-router-dom";
 import { LocationForm } from "./LocationForm";
 import MDSpinner from "react-md-spinner";
 
@@ -9,13 +7,11 @@ interface RouteProps {
   uuid: string
 }
 
-const EditLocation = (props: RouteProps & RouteComponentProps) => {
-  const organisations = useSelector(getOrganisations);
-  const [currentRecord, setCurrentRecord] = useState(null);
-  const [relatedAssetRequired, setRelatedAssetRequired] = useState(true);
-  const [relatedAsset, setRelatedAsset] = useState(null);
-  // Todo fix this ts ignore
-  // @ts-ignore
+export const EditLocation = (props: RouteProps & RouteComponentProps<RouteProps>) => {
+  const [currentRecord, setCurrentRecord] = useState<any>(null);
+  const [relatedAssetRequired, setRelatedAssetRequired] = useState<boolean>(true);
+  const [relatedAsset, setRelatedAsset] = useState<any>(null);
+
   const { uuid } = props.match.params;
   useEffect (() => {
     (async () => {
@@ -27,42 +23,32 @@ const EditLocation = (props: RouteProps & RouteComponentProps) => {
         setRelatedAssetRequired(true);
       } else {
         setRelatedAssetRequired(false);
-      }
+      };
       setRelatedAsset(null);
       setCurrentRecord(currentRecord);
     })();
-  }, [uuid])
+  }, [uuid]);
 
   useEffect (() => {
-    
-      (async () => {
-          // Todo: how to fix this error? I already check if currentRecord === null
-          // @ts-ignore
-          if (relatedAssetRequired && currentRecord && currentRecord !== null && currentRecord !== undefined && currentRecord.object) {
-            // Todo: how to fix this error? I already check if currentRecord === null
-            // @ts-ignore
-            const relatedAsset = await fetch(`/api/v3/${currentRecord.object.type}s/${currentRecord.object.id}/`, {
-              credentials: "same-origin"
-            }).then(response => response.json());
-  
-            setRelatedAsset(relatedAsset);
-          }
-        
-      })();
-    
-  }, [currentRecord, relatedAssetRequired])
+    (async () => {
+      if (relatedAssetRequired && currentRecord && currentRecord.object) {
+        const relatedAsset = await fetch(`/api/v3/${currentRecord.object.type}s/${currentRecord.object.id}/`, {
+          credentials: "same-origin"
+        }).then(response => response.json());
+        setRelatedAsset(relatedAsset);
+      }
+    })();
+  }, [currentRecord, relatedAssetRequired]);
 
   if (
     currentRecord &&
-    (relatedAsset || !relatedAssetRequired) &&
-    organisations.isFetching === false
+    (relatedAsset || !relatedAssetRequired)
   ) {
     return <LocationForm
       currentRecord={currentRecord}
       relatedAsset={relatedAsset}
     />;
-  }
-  else {
+  } else {
     return (
       <div
         style={{
@@ -78,5 +64,3 @@ const EditLocation = (props: RouteProps & RouteComponentProps) => {
     );
   }
 }
-
-export { EditLocation };
