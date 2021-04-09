@@ -12,7 +12,7 @@ import { convertToSelectObject } from "../utils/convertToSelectObject";
 import styles from "../components/RasterPreview.module.css";
 import { fetchRasterV4, RasterLayerFromAPI } from '../api/rasters';
 import formStyles from "../styles/Forms.module.css";
-import {Location, Asset, AssetLocationValue} from "../types/locationFormTypes"
+import { Location, Asset, AssetLocationValue } from "../types/locationFormTypes"
 
 interface Props {
   title: string,
@@ -46,8 +46,7 @@ const fetchAssets = async (raster:any | null, searchInput: string, type: string 
   });
   const responseJSON = await response.json();
 
-  // @ts-ignore
-  return responseJSON.results.map(asset => convertToSelectObject(asset, asset.title))
+  return responseJSON.results.map((asset: any) => convertToSelectObject(asset, asset.title))
 };
 
 const MapSelectAssetOrPoint = (props:Props) => {
@@ -62,13 +61,7 @@ const MapSelectAssetOrPoint = (props:Props) => {
     triedToSubmit
   } = props;
 
-  
-
   const [raster, setRaster] = useState<RasterLayerFromAPI | null>(null);
-
-  // useState to temporarily store the selected asset
-  // from the asset select dropdown
-  const [selectedAsset, setSelectedAsset] = useState(null);
 
   useEffect(() => {
     if (rasterUuid) {
@@ -132,7 +125,7 @@ const MapSelectAssetOrPoint = (props:Props) => {
     });
 
     // if there is a selected asset from the dropdown, reset it
-    if (selectedAsset) setSelectedAsset(null);
+    // if (selectedAsset) setSelectedAsset(null);
   };
 
   const formatWMSStyles = (rawStyles:any) => {

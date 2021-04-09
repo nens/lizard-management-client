@@ -11,13 +11,15 @@ import { minLength, jsonValidator } from '../../../form/validators';
 import { addNotification } from '../../../actions';
 import formStyles from './../../../styles/Forms.module.css';
 import { TextArea } from '../../../form/TextArea';
-import { GeometryField } from '../../../form/GeometryField';
+// import { GeometryField } from '../../../form/GeometryField';
 import LocationIcon from "../../../images/locations_icon.svg";
 import { convertToSelectObject } from '../../../utils/convertToSelectObject';
-import { SelectDropdown, Value } from '../../../form/SelectDropdown';
+// import { SelectDropdown, Value } from '../../../form/SelectDropdown';
 import { AccessModifier } from '../../../form/AccessModifier';
-import MapSelectAssetOrPoint from '../../../form/MapSelectAssetOrPoint';
+// import MapSelectAssetOrPoint from '../../../form/MapSelectAssetOrPoint';
 import { locationFormHelpText } from '../../../utils/help_texts/helpTextsForLocations';
+import { AssetPointSelection } from '../../../form/AssetPointSelection';
+import { assetTypes } from '../../../types/locationFormTypes';
 
 interface Props {
   currentRecord?: any;
@@ -31,22 +33,6 @@ interface RouteParams {
 const LocationForm = (props: Props & DispatchProps & RouteComponentProps<RouteParams>) => {
   const { currentRecord, relatedAsset } = props;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
-
-  const assetTypeOptions: Value[] = [
-    {
-      value: "measuring_station",
-      label: "Measuring station",
-      subLabel: "Default"
-    },
-    {
-      value: "pump_station",
-      label: "Pump station"
-    },
-    {
-      value: "monitoringwell",
-      label: "Monitoring Well"
-    }
-  ];
 
   const geometryCurrentRecord = (
     currentRecord && 
@@ -74,23 +60,25 @@ const LocationForm = (props: Props & DispatchProps & RouteComponentProps<RoutePa
     code: currentRecord.code,
     extraMetadata: currentRecord.extra_metadata ? JSON.stringify(currentRecord.extra_metadata) : null,
     accessModifier: currentRecord.access_modifier,
-    object: currentRecord.object,
-    assetType: currentRecord.object.id && currentRecord.object.type ? convertToSelectObject(currentRecord.object.type) : null,
-    selectedAssetObj: {
-      location: geometryCurrentRecord ? geometryCurrentRecord : geometryRelatedAsset ? geometryRelatedAsset: null,
-      asset: relatedAsset ? convertToSelectObject(relatedAsset, relatedAsset.code) : null,
-    }
+    coordinates: geometryCurrentRecord ? geometryCurrentRecord : geometryRelatedAsset ? geometryRelatedAsset : null,
+    assetType: currentRecord.object ? assetTypes.find(assetType => assetType.value === currentRecord.object.type) : null,
+    selectedAsset: relatedAsset ? convertToSelectObject(relatedAsset, relatedAsset.code) : null,
+    // selectedAssetObj: {
+    //   location: geometryCurrentRecord ? geometryCurrentRecord : geometryRelatedAsset ? geometryRelatedAsset: null,
+    //   asset: relatedAsset ? convertToSelectObject(relatedAsset, relatedAsset.code) : null,
+    // }
   } : {
     name: null,
     code: null,
     extraMetadata: null,
     accessModifier: 'Private',
+    coordinates: null,
     assetType: null,
-    object: null,
-    selectedAssetObj: {
-      location: null,
-      asset: null
-    }
+    selectedAsset: null,
+    // selectedAssetObj: {
+    //   location: null,
+    //   asset: null
+    // }
   };
 
   const onSubmit = (values: Values) => {
@@ -102,8 +90,12 @@ const LocationForm = (props: Props & DispatchProps & RouteComponentProps<RoutePa
       supplier: values.supplier,
       geometry: {
         "type":"Point",
-        "coordinates":[values.selectedAssetObj.location.lng, values.selectedAssetObj.location.lat, 0.0]
+        "coordinates":[values.coordinates.lng, values.coordinates.lat, 0.0]
       },
+      object: {
+        type: values.selectedAsset.value.type,
+        id: values.selectedAsset.value.id
+      }
     };
 
     if (currentRecord) {
@@ -113,23 +105,23 @@ const LocationForm = (props: Props & DispatchProps & RouteComponentProps<RoutePa
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
           ...body,
-          object: 
-            // it was set by the dropdown
-            values.selectedAssetObj.asset && values.selectedAssetObj.asset.value.entity_name? 
-            {
-              type: values.selectedAssetObj.asset.value.entity_name,
-              id: values.selectedAssetObj.asset.value.entity_id,
-            }
-            // it was set when loading the form and not changed by the dropdown
-            : values.selectedAssetObj.asset ?
-            {
-              type: currentRecord.object.type,
-              id: currentRecord.object.id, 
-            } : // it is empty eather because it iwas made empty by the user or because it was already empty when loaded
-            {
-              type: null,
-              id: null, 
-            }
+          // object: 
+          //   // it was set by the dropdown
+          //   values.selectedAssetObj.asset && values.selectedAssetObj.asset.value.entity_name? 
+          //   {
+          //     type: values.selectedAssetObj.asset.value.entity_name,
+          //     id: values.selectedAssetObj.asset.value.entity_id,
+          //   }
+          //   // it was set when loading the form and not changed by the dropdown
+          //   : values.selectedAssetObj.asset ?
+          //   {
+          //     type: currentRecord.object.type,
+          //     id: currentRecord.object.id, 
+          //   } : // it is empty eather because it iwas made empty by the user or because it was already empty when loaded
+          //   {
+          //     type: null,
+          //     id: null, 
+          //   }
         })
       })
       .then(data => {
@@ -151,16 +143,16 @@ const LocationForm = (props: Props & DispatchProps & RouteComponentProps<RoutePa
         body: JSON.stringify({
           ...body,
           organisation: selectedOrganisation.uuid,
-          object: 
-            values.selectedAssetObj.asset && values.selectedAssetObj.asset.value? 
-            {
-              type: values.selectedAssetObj.asset.value.entity_name,
-              id: values.selectedAssetObj.asset.value.entity_id,
-            }:
-            {
-              type: null,
-              id: null,
-            },
+          // object: 
+          //   values.selectedAssetObj.asset && values.selectedAssetObj.asset.value? 
+          //   {
+          //     type: values.selectedAssetObj.asset.value.entity_name,
+          //     id: values.selectedAssetObj.asset.value.entity_id,
+          //   }:
+          //   {
+          //     type: null,
+          //     id: null,
+          //   },
         })
       })
       .then(data => {
@@ -191,7 +183,7 @@ const LocationForm = (props: Props & DispatchProps & RouteComponentProps<RoutePa
     handleBlur,
     handleFocus,
   } = useForm({initialValues, onSubmit});
-  console.log(values.selectedAssetObj)
+  console.log(values.selectedAsset)
 
   return (
     <ExplainSideColumn
@@ -236,7 +228,16 @@ const LocationForm = (props: Props & DispatchProps & RouteComponentProps<RoutePa
         <span className={formStyles.FormFieldTitle}>
           2: Data
         </span>
-        <SelectDropdown
+        <AssetPointSelection
+          relatedAsset={values.assetSelectObj}
+          coordinates={values.coordinates}
+          assetType={values.assetType}
+          handleCoordinatesChanged={value => handleValueChange('coordinates', value)}
+          handleAssetTypeChanged={value => handleValueChange('assetType', value)}
+          handleAssetObjectChanged={value => handleValueChange('selectedAssetObj', value)}
+          triedToSubmit={triedToSubmit}
+        />
+        {/* <SelectDropdown
           title={'Asset type'}
           name={'assetType'}
           placeholder={'- Search and select -'}
@@ -294,7 +295,7 @@ const LocationForm = (props: Props & DispatchProps & RouteComponentProps<RoutePa
               </a>
             </label>
           </div>
-        </div>
+        </div> */}
         <TextArea
           title={'Extra metadata (JSON)'}
           name={'extraMetadata'}
