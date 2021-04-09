@@ -1,11 +1,7 @@
-import React, {useState, useEffect} from 'react';
-import {FloatInput} from './FloatInput';
-import {
-  AssetLocationValue
-} from "../types/locationFormTypes";
+import React, { useState, useEffect } from 'react';
+import { FloatInput } from './FloatInput';
+import { AssetLocationValue } from "../types/locationFormTypes";
 import formStyles from "../styles/Forms.module.css";
-
- 
 
 interface MyProps {
   title: string,
@@ -34,15 +30,14 @@ export const GeometryField: React.FC<MyProps> = (props) => {
     onFocus,
     onBlur,
     handleEnter,
-    clearInput,
+    // clearInput,
     errorMessage,
     triedToSubmit,
     readOnly
   } = props;
 
-  const [lat, setLat] = useState(NaN);
-  const [lng, setLng] = useState(NaN);
-
+  const [lat, setLat] = useState<number>(NaN);
+  const [lng, setLng] = useState<number>(NaN);
 
   useEffect(() => {
     if ( value.asset && value.asset.value && value.asset.value.view ) {
@@ -54,25 +49,27 @@ export const GeometryField: React.FC<MyProps> = (props) => {
     } else {
       setLat(NaN);
       setLng(NaN);
-    }
+    };
   }, [value.asset, value.location]);
-  
 
   const valueChangedLat = (value:number) => {
-    if (value) {
-
-    }
     valueChanged({
       asset: null,
-      location:{lat:value, lng:lng}
-    })
-  }
+      location:{
+        lat: value,
+        lng: lng
+      }
+    });
+  };
   const valueChangedLng = (value:number) => {
     valueChanged({
       asset: null,
-      location:{lat:lat, lng:value}
-    })
-  }
+      location:{
+        lat: lat,
+        lng: value
+      }
+    });
+  };
 
   return (
     <label
@@ -107,7 +104,7 @@ export const GeometryField: React.FC<MyProps> = (props) => {
             onFocus={onFocus}
             onBlur={onBlur}
             handleEnter={handleEnter}
-            clearInput={clearInput}
+            // clearInput={clearInput}
             errorMessage={errorMessage}
             triedToSubmit={triedToSubmit}
             readOnly={readOnly}
@@ -132,7 +129,7 @@ export const GeometryField: React.FC<MyProps> = (props) => {
             onFocus={onFocus}
             onBlur={onBlur}
             handleEnter={handleEnter}
-            clearInput={clearInput}
+            // clearInput={clearInput}
             errorMessage={errorMessage}
             triedToSubmit={triedToSubmit}
             readOnly={readOnly}
