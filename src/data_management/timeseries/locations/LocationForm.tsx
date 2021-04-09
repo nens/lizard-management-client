@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { connect, useSelector } from 'react-redux';
 import { getSelectedOrganisation } from '../../../reducers';
@@ -42,8 +42,11 @@ const LocationForm = (props: Props & DispatchProps & RouteComponentProps<RoutePa
       value: "pump_station",
       label: "Pump station"
     },
+    {
+      value: "monitoringwell",
+      label: "Monitoring Well"
+    }
   ];
-  const [selectedAssetType, setSelectedAssetType] = useState<Value | null>(assetTypeOptions[0]);
 
   const geometryCurrentRecord = (
     currentRecord && 
@@ -72,6 +75,7 @@ const LocationForm = (props: Props & DispatchProps & RouteComponentProps<RoutePa
     extraMetadata: currentRecord.extra_metadata ? JSON.stringify(currentRecord.extra_metadata) : null,
     accessModifier: currentRecord.access_modifier,
     object: currentRecord.object,
+    assetType: currentRecord.object.id && currentRecord.object.type ? convertToSelectObject(currentRecord.object.type) : null,
     selectedAssetObj: {
       location: geometryCurrentRecord ? geometryCurrentRecord : geometryRelatedAsset ? geometryRelatedAsset: null,
       asset: relatedAsset ? convertToSelectObject(relatedAsset, relatedAsset.code) : null,
@@ -81,6 +85,7 @@ const LocationForm = (props: Props & DispatchProps & RouteComponentProps<RoutePa
     code: null,
     extraMetadata: null,
     accessModifier: 'Private',
+    assetType: null,
     object: null,
     selectedAssetObj: {
       location: null,
@@ -186,7 +191,7 @@ const LocationForm = (props: Props & DispatchProps & RouteComponentProps<RoutePa
     handleBlur,
     handleFocus,
   } = useForm({initialValues, onSubmit});
-
+  console.log(values.selectedAssetObj)
 
   return (
     <ExplainSideColumn
@@ -233,10 +238,10 @@ const LocationForm = (props: Props & DispatchProps & RouteComponentProps<RoutePa
         </span>
         <SelectDropdown
           title={'Asset type'}
-          name={'asset_type'}
+          name={'assetType'}
           placeholder={'- Search and select -'}
-          value={selectedAssetType}
-          valueChanged={valueObj => setSelectedAssetType(valueObj as Value)}
+          value={values.assetType}
+          valueChanged={value => handleValueChange('assetType', value)}
           options={assetTypeOptions}
           validated
           onFocus={handleFocus}
@@ -259,6 +264,7 @@ const LocationForm = (props: Props & DispatchProps & RouteComponentProps<RoutePa
               valueChanged={value => handleValueChange('selectedAssetObj', value)}
               validated
               triedToSubmit={triedToSubmit}
+              clearInput={clearInput}
               onFocus={handleFocus}
               onBlur={handleBlur}
             />
