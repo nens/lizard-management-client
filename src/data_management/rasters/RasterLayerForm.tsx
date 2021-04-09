@@ -145,7 +145,6 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
     aggregationType: currentRasterLayer.aggregation_type ? convertToSelectObject(currentRasterLayer.aggregation_type) : null,
     observationType: currentRasterLayer.observation_type ? convertToSelectObject(currentRasterLayer.observation_type.id, currentRasterLayer.observation_type.code) : null,
     colorMap: {options: currentRasterLayer.options, rescalable: currentRasterLayer.rescalable, customColormap: currentRasterLayer.colormap || {}},
-    accessModifier: currentRasterLayer.access_modifier,
     sharedWith: currentRasterLayer.shared_with.length === 0 ? false : true,
     organisationsToSharedWith: currentRasterLayer.shared_with.map(organisation => convertToSelectObject(organisation.uuid.replace(/-/g, ""), organisation.name)) || [],
     organisation: currentRasterLayer.organisation ? convertToSelectObject(currentRasterLayer.organisation.uuid.replace(/-/g, ""), currentRasterLayer.organisation.name) : null,
@@ -197,7 +196,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
       const body = {
         name: values.name,
         organisation: values.organisation && values.organisation.value,
-        access_modifier: values.accessModifier,
+        access_modifier: accessModifier || 'Private',
         description: values.description,
         observation_type: values.observationType && values.observationType.value,
         supplier: values.supplier && values.supplier.value,
@@ -243,11 +242,10 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
     clearInput,
   } = useForm({initialValues, onSubmit});
 
-  // For Access Modifier of a new Raster Layer, we need to keep it in sync
-  // with each new selected raster source by user by using useEffect
+  // Access Modifier of a raster layer is kept in the react hook state instead of the form state
+  // to keep it in sync with new selected raster source in useEffect
   const { rasterSource } = values;
-  const [accessModifier, setAccessModifier] = useState<string | null>(null);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [accessModifier, setAccessModifier] = useState<string>(currentRasterLayer ? currentRasterLayer.access_modifier : 'Private');
 
   useEffect(() => {
     if (!currentRasterLayer && rasterSource) {
@@ -256,6 +254,9 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
       ).catch(e => console.error(e));
     };
   }, [currentRasterLayer, rasterSource]);
+
+  // Delete modal
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   return (
     <ExplainSideColumn
@@ -421,11 +422,10 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
         <AccessModifier
           title={'Accessibility'}
           name={'accessModifier'}
-          value={values.accessModifier || accessModifier}
-          valueChanged={() => null}
+          value={accessModifier}
+          valueChanged={value => setAccessModifier(value || 'Private')}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          readOnly
           form={"raster_layer_form_id"}
         />
         <CheckBox
