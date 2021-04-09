@@ -22,7 +22,7 @@ interface Props {
   valueChanged: (value: AssetLocationValue)=> void,
   validated: boolean;
   errorMessage?: string;
-  triedToSubmit: boolean;
+  triedToSubmit?: boolean;
 }
 
 // Helper function to fetch assets in async select dropdown
