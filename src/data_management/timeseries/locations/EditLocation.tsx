@@ -9,7 +9,6 @@ interface RouteProps {
 
 export const EditLocation = (props: RouteProps & RouteComponentProps<RouteProps>) => {
   const [currentRecord, setCurrentRecord] = useState<any>(null);
-  const [relatedAssetRequired, setRelatedAssetRequired] = useState<boolean>(true);
   const [relatedAsset, setRelatedAsset] = useState<any>(null);
 
   const { uuid } = props.match.params;
@@ -18,32 +17,23 @@ export const EditLocation = (props: RouteProps & RouteComponentProps<RouteProps>
       const currentRecord = await fetch(`/api/v4/locations/${uuid}/`, {
         credentials: "same-origin"
       }).then(response => response.json());
-
-      if (currentRecord.object && currentRecord.object.type !== null && currentRecord.object.id !== null) {
-        setRelatedAssetRequired(true);
-      } else {
-        setRelatedAssetRequired(false);
-      };
-      setRelatedAsset(null);
       setCurrentRecord(currentRecord);
+
+      const assetObject = currentRecord.object;
+      if (assetObject && assetObject.type !== null && assetObject.id !== null) {
+        const currentRelatedAsset = await fetch(`/api/v3/${assetObject.type}s/${assetObject.id}/`, {
+          credentials: "same-origin"
+        }).then(response => response.json());
+        setRelatedAsset({
+          value: assetObject.id,
+          label: currentRelatedAsset.code,
+          type: assetObject.type
+        });
+      };
     })();
   }, [uuid]);
 
-  useEffect (() => {
-    (async () => {
-      if (relatedAssetRequired && currentRecord && currentRecord.object) {
-        const relatedAsset = await fetch(`/api/v3/${currentRecord.object.type}s/${currentRecord.object.id}/`, {
-          credentials: "same-origin"
-        }).then(response => response.json());
-        setRelatedAsset(relatedAsset);
-      }
-    })();
-  }, [currentRecord, relatedAssetRequired]);
-
-  if (
-    currentRecord &&
-    (relatedAsset || !relatedAssetRequired)
-  ) {
+  if (currentRecord && relatedAsset) {
     return <LocationForm
       currentRecord={currentRecord}
       relatedAsset={relatedAsset}
