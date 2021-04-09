@@ -312,20 +312,21 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           validated
           form={"raster_layer_form_id"}
         />
-        {!belongsToScenario?
-        <SelectDropdown
-          title={'Dataset'}
-          name={'datasets'}
-          placeholder={'- Search and select -'}
-          value={values.datasets}
-          valueChanged={value => handleValueChange('datasets', value)}
-          options={datasets.map((dataset: any) => convertToSelectObject(dataset.slug))}
-          validated
-          isMulti
-          form={"raster_layer_form_id"}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-        />:null}
+        {!belongsToScenario ? (
+          <SelectDropdown
+            title={'Dataset'}
+            name={'datasets'}
+            placeholder={'- Search and select -'}
+            value={values.datasets}
+            valueChanged={value => handleValueChange('datasets', value)}
+            options={datasets.map((dataset: any) => convertToSelectObject(dataset.slug))}
+            validated
+            isMulti
+            form={"raster_layer_form_id"}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+          />
+        ) : null}
         <span className={formStyles.FormFieldTitle}>
           2: Data
         </span>
@@ -426,6 +427,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           valueChanged={value => setAccessModifier(value || 'Private')}
           onFocus={handleFocus}
           onBlur={handleBlur}
+          readOnly={belongsToScenario}
           form={"raster_layer_form_id"}
         />
         <CheckBox
