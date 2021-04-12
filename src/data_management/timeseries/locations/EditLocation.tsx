@@ -11,7 +11,6 @@ const EditLocation = (props: RouteProps & RouteComponentProps<RouteProps>) => {
   const [currentRecord, setCurrentRecord] = useState<any>(null);
   const [relatedAssetRequired, setRelatedAssetRequired] = useState<boolean>(false);
   const [relatedAsset, setRelatedAsset] = useState<any>(null);
-  console.log(relatedAsset)
 
   const { uuid } = props.match.params;
   useEffect (() => {
