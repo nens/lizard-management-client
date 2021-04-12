@@ -1,11 +1,7 @@
-import React, {useState, useEffect} from 'react';
-import {FloatInput} from './FloatInput';
-import {
-  AssetLocationValue
-} from "../types/locationFormTypes";
+import React, { useState, useEffect} from 'react';
+import { FloatInput } from './FloatInput';
+import { AssetLocationValue } from "../types/locationFormTypes";
 import formStyles from "../styles/Forms.module.css";
-
- 
 
 interface MyProps {
   title: string,
@@ -40,9 +36,8 @@ export const GeometryField: React.FC<MyProps> = (props) => {
     readOnly
   } = props;
 
-  const [lat, setLat] = useState(NaN);
-  const [lng, setLng] = useState(NaN);
-
+  const [lat, setLat] = useState<number>(NaN);
+  const [lng, setLng] = useState<number>(NaN);
 
   useEffect(() => {
     if ( value.asset && value.asset.value && value.asset.value.view ) {
@@ -56,7 +51,6 @@ export const GeometryField: React.FC<MyProps> = (props) => {
       setLng(NaN);
     }
   }, [value.asset, value.location]);
-  
 
   const valueChangedLat = (value:number) => {
     if (value) {
@@ -82,12 +76,16 @@ export const GeometryField: React.FC<MyProps> = (props) => {
       <span className={formStyles.LabelTitle}>
         {title}
       </span>
-      <div style={{display: "flex", }}>
-        
+      <div
+        style={{
+          display: "flex",
+          color: "#C9C9C9"
+        }}
+      >
         {/* lng */}
         <div style={{marginRight: "16px", }}>
           <FloatInput
-            title={"x"}
+            title={"X"}
             name={name}
             placeholder={placeholder}
             value={lng}
@@ -112,7 +110,7 @@ export const GeometryField: React.FC<MyProps> = (props) => {
         {/* lat */}
         <div>
           <FloatInput
-            title={"y"}
+            title={"Y"}
             name={name}
             placeholder={placeholder}
             value={lat}
@@ -134,7 +132,6 @@ export const GeometryField: React.FC<MyProps> = (props) => {
             readOnly={readOnly}
           />
         </div>
-
       </div>
     </label>
   );

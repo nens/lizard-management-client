@@ -1,26 +1,19 @@
-import React, {useState,} from 'react';
+import React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { connect, useSelector } from 'react-redux';
-// import { getOrganisations, getUsername } from '../../reducers';
-import { getSelectedOrganisation, /*getSupplierIds*/ } from '../../../reducers';
-// import { ScenarioResult } from '../../form/ScenarioResult';
+import { getSelectedOrganisation } from '../../../reducers';
 import { ExplainSideColumn } from '../../../components/ExplainSideColumn';
 import { TextInput } from './../../../form/TextInput';
 import { SubmitButton } from '../../../form/SubmitButton';
 import { CancelButton } from '../../../form/CancelButton';
 import { useForm, Values } from '../../../form/useForm';
-import { minLength, /*jsonValidator, */ /*required*/ } from '../../../form/validators';
+import { jsonValidator, minLength } from '../../../form/validators';
 import { addNotification } from '../../../actions';
 import formStyles from './../../../styles/Forms.module.css';
-// import { TextArea } from '../../../form/TextArea';
+import { TextArea } from '../../../form/TextArea';
 import {GeometryField} from '../../../form/GeometryField';
 import LocationIcon from "../../../images/locations_icon.svg";
-import FormActionButtons from '../../../components/FormActionButtons';
-import Modal from '../../../components/Modal';
-import { ModalDeleteContent } from '../../../components/ModalDeleteContent';
-// import { lableTypeFormHelpText } from '../../utils/helpTextForForms';
 import { convertToSelectObject } from '../../../utils/convertToSelectObject';
-// import { SelectDropdown } from '../../../form/SelectDropdown';
 import { AccessModifier } from '../../../form/AccessModifier';
 import MapSelectAssetOrPoint from '../../../form/MapSelectAssetOrPoint';
 import {locationFormHelpText} from '../../../utils/help_texts/helpTextsForLocations';
@@ -36,38 +29,11 @@ interface RouteParams {
 
 const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RouteParams>) => {
   const { currentRecord, relatedAsset } = props;
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  // we need this later
-  // const assetTypeOptions = [
-  //   {
-  //     value: "measuring_station",
-  //     label: "Measuringstation",
-  //     subLabel: "(Default)",
-  //     subLabel2: undefined,
-  //   },
-  //   {
-  //     value: "pump_station",
-  //     label: "Pumpstation",
-  //     subLabel: undefined,
-  //     subLabel2: undefined,
-  //   },
-  // ];
-  // We need this later
-  // const [selectedAssetType, setSelectedAssetType] = useState(assetTypeOptions[0]);
   const selectedOrganisation = useSelector(getSelectedOrganisation);
-  // Need this later if we support supplier ids
-  // const supplierIds = useSelector(getSupplierIds).available;
-
-  // Need this later if we support organisations
-  // const organisations = useSelector(getOrganisations).available;
-  // next line doesnot work, because organisation has no uuid, but unique_id instead. Thus I do not use it
-  // const thisRecordOrganisation = organisations.find((org: any) => org.uuid === currentRecord.organisation.uuid.replace(/-/g, ""));
-  // const username = useSelector(getUsername);
 
   let initialValues;
   
   if (currentRecord) {
-
     const geometryCurrentRecord = 
       currentRecord && 
       currentRecord.geometry && 
@@ -88,7 +54,6 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
         lng: relatedAsset.view[0],
       };
 
-
     initialValues = {
       name: currentRecord.name || '',
       code: currentRecord.code || '',
@@ -100,11 +65,6 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
         location: geometryCurrentRecord? geometryCurrentRecord : geometryRelatedAsset? geometryRelatedAsset: null,
         asset: relatedAsset?convertToSelectObject(relatedAsset, relatedAsset.code): null,
       }
-      // uuid: currentRecord.uuid || '',
-      // description: currentRecord.description || '',
-      // modelName: currentRecord.model_name || '',
-      // supplier: currentRecord.username || '',
-      // organisation: (currentRecord.location && currentRecord.location.organisation && currentRecord.location.organisation.name) || '',
     };
   } else {
     initialValues = {
@@ -121,17 +81,10 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
         location: null,
         asset: null,
       }
-      // description: null,
-      // modelName: currentRecord.model_name || '',
-      // supplier: currentRecord.username || '',
-      // organisation: selectedOrganisation ? convertToSelectObject(selectedOrganisation.uuid.replace(/-/g, ""), selectedOrganisation.name) : null,
     }
   }
-  
-  
 
   const onSubmit = (values: Values) => {
-
     if (currentRecord) {
       const body = {
         name: values.name,
@@ -223,28 +176,6 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
     }
   };
 
-  const onDelete = () => {
-    const body = {};
-
-    fetch(`/api/v4/locations/${currentRecord.uuid}/`, {
-      credentials: 'same-origin',
-      method: 'DELETE',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(body)
-    })
-      .then(data => {
-        const status = data.status;
-        if (status === 204) {
-          props.addNotification('Success! Location deleted', 2000);
-          props.history.push('/data_management/timeseries/locations/');
-        } else {
-          props.addNotification(status, 2000);
-          console.error(data);
-        };
-      })
-      .catch(console.error);
-  }
-
   const {
     values,
     triedToSubmit,
@@ -325,20 +256,16 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
         <MapSelectAssetOrPoint
           title={'Asset location'}
           name={'selectedAssetObj'}
-          // placeholder={'- Search and select -'}
           value={values.selectedAssetObj}
           valueChanged={(value)=>handleValueChange('selectedAssetObj', value)}
           validated={true}
           triedToSubmit={triedToSubmit}
         />
-       
-        
         <div style={{display: "flex"}}>
           <div style={{width: "58%", marginRight: "40px"}}>
             <GeometryField
               title={'Geometry'}
               name={'selectedAssetObj'}
-              // placeholder={'- Search and select -'}
               value={values.selectedAssetObj}
               valueChanged={(value)=>handleValueChange('selectedAssetObj', value)}
               validated={true}
@@ -373,9 +300,8 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
             </label>
           </div>
         </div>
-       
-        {/* <TextArea
-          title={'Extra metadata (JSON) *'}
+        <TextArea
+          title={'Extra metadata (JSON)'}
           name={'extraMetadata'}
           placeholder={'Enter valid JSON'}
           value={values.extraMetadata}
@@ -386,7 +312,7 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
           triedToSubmit={triedToSubmit}
           onFocus={handleFocus}
           onBlur={handleBlur}
-        /> */}
+        />
         <span className={formStyles.FormFieldTitle}>
           3: Rights
         </span>
@@ -398,104 +324,17 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
-        {/* <SelectDropdown
-          title={'Supplier'}
-          name={'supplier'}
-          placeholder={'- Search and select -'}
-          value={values.supplier}
-          valueChanged={value => handleValueChange('supplier', value)}
-          options={supplierIds.map((suppl:any) => convertToSelectObject(suppl.username))}
-          validated
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-          readOnly={(!(supplierIds.length > 0 && selectedOrganisation.roles.includes('admin')))}
-        /> */}
-        {/* <TextInput
-          title={'Label type Uuid'}
-          name={'uuid'}
-          value={values.uuid}
-          valueChanged={handleInputChange}
-          clearInput={clearInput}
-          validated={!minLength(3, values.uuid)}
-          errorMessage={minLength(3, values.uuid)}
-          triedToSubmit={triedToSubmit}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-          readOnly={true}
-        />
-        <TextArea
-          title={'Description'}
-          name={'description'}
-          placeholder={'Description here..'}
-          value={values.description}
-          valueChanged={handleInputChange}
-          clearInput={clearInput}
-          validated
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-          readOnly={true}
-        />
-        <TextInput
-          title={'Organisation'}
-          name={'organisation'}
-          value={values.organisation}
-          valueChanged={handleInputChange}
-          clearInput={clearInput}
-          validated
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-          readOnly
-        /> */}
         <div
           className={formStyles.ButtonContainer}
         >
           <CancelButton
             url={'/data_management/timeseries/locations'}
           />
-          <div style={{
-            display: "flex"
-          }}>
-            {currentRecord?
-             <div style={{marginRight: "16px"}}> 
-              <FormActionButtons
-                actions={[
-                  {
-                    displayValue: "Delete",
-                    actionFunction: () => {setShowDeleteModal(true)}
-                  },
-                ]}
-              />
-            </div>
-            :null}
-            <SubmitButton
-              onClick={tryToSubmitForm}
-            />
-          </div>
+          <SubmitButton
+            onClick={tryToSubmitForm}
+          />
         </div>
       </form>
-      { 
-        currentRecord && showDeleteModal?
-           <Modal
-           title={'Are you sure?'}
-           buttonConfirmName={'Delete'}
-           onClickButtonConfirm={() => {
-              onDelete();
-              setShowDeleteModal(false);
-           }}
-           cancelAction={()=>{
-            setShowDeleteModal(false)
-          }}
-          disableButtons={false}
-         >
-           
-           <p>Are you sure? You are deleting the following Location:</p>
-           
-           {ModalDeleteContent([currentRecord], false, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
-           
-         </Modal>
-        :
-          null
-        }
     </ExplainSideColumn>
   );
 };
