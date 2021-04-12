@@ -5,13 +5,21 @@ export interface Location {
   lng: number
 }
 
-export type Asset = any;
+export type AssetObject = {
+  value: number, // id
+  label: string, // code
+  location: Location | null,
+  id?: number,
+  code?: string,
+  type?: string,
+};
 
 export interface AssetLocationValue {
-  asset: Asset | null;
+  asset: AssetObject | null;
   location: Location | null;
 }
 
+// List of asset types available in the search endpoint
 export const assetTypes: Value[] = [
   {
     value: 'culvert',

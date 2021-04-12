@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import LocationForm from "./LocationForm";
 import MDSpinner from "react-md-spinner";
+// import { Asset } from "../../../types/locationFormTypes";
 
 interface RouteProps {
   uuid: string
@@ -9,8 +10,8 @@ interface RouteProps {
 
 const EditLocation = (props: RouteProps & RouteComponentProps<RouteProps>) => {
   const [currentRecord, setCurrentRecord] = useState<any>(null);
-  const [relatedAssetRequired, setRelatedAssetRequired] = useState<boolean>(false);
-  const [relatedAsset, setRelatedAsset] = useState<any>(null);
+  // const [relatedAssetRequired, setRelatedAssetRequired] = useState<boolean>(false);
+  // const [relatedAsset, setRelatedAsset] = useState<Asset | null>(null);
 
   const { uuid } = props.match.params;
   useEffect (() => {
@@ -20,24 +21,30 @@ const EditLocation = (props: RouteProps & RouteComponentProps<RouteProps>) => {
       }).then(response => response.json());
       setCurrentRecord(currentRecord);
 
-      const assetObject = currentRecord.object;
-      if (assetObject && assetObject.type !== null && assetObject.id !== null) {
-        setRelatedAssetRequired(true);
-        const currentRelatedAsset = await fetch(`/api/v3/${assetObject.type}s/${assetObject.id}/`, {
-          credentials: "same-origin"
-        }).then(response => response.json());
-        setRelatedAsset(currentRelatedAsset);
-      };
+      // const assetObject = currentRecord.object;
+      // if (assetObject && assetObject.type !== null && assetObject.id !== null) {
+      //   setRelatedAssetRequired(true);
+      //   const currentRelatedAsset = await fetch(`/api/v3/${assetObject.type}s/${assetObject.id}/`, {
+      //     credentials: "same-origin"
+      //   }).then(response => response.json());
+      //   setRelatedAsset({
+      //     id: currentRelatedAsset.id,
+      //     code: currentRelatedAsset.code,
+      //     latLngObject: {
+      //       lat: currentRelatedAsset.geo
+      //     }
+      //   });
+      // };
     })();
   }, [uuid]);
 
   if (
-    currentRecord &&
-    (!relatedAssetRequired || relatedAsset)
+    currentRecord
+    // && (!relatedAssetRequired || relatedAsset)
   ) {
     return <LocationForm
       currentRecord={currentRecord}
-      relatedAsset={relatedAsset}
+      // relatedAsset={relatedAsset}
     />;
   }
   else {

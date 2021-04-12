@@ -8,11 +8,10 @@ import React, { useState, useEffect } from "react";
 import { Map, Marker, TileLayer, WMSTileLayer, ZoomControl } from "react-leaflet";
 import { SelectDropdown } from "./SelectDropdown";
 import { mapBoxAccesToken} from '../mapboxConfig';
-import { convertToSelectObject } from "../utils/convertToSelectObject";
 import styles from "../components/RasterPreview.module.css";
 import { fetchRasterV4, RasterLayerFromAPI } from '../api/rasters';
 import formStyles from "../styles/Forms.module.css";
-import {Location, Asset, AssetLocationValue, assetTypes} from "../types/locationFormTypes"
+import { AssetObject, AssetLocationValue, assetTypes } from "../types/locationFormTypes"
 
 interface Props {
   title: string,
@@ -26,7 +25,7 @@ interface Props {
 }
 
 // Helper function to fetch assets in async select dropdown
-const fetchAssets = async (raster:any | null, searchInput: string, type: string | null) => {
+const fetchAssets = async (raster: any, searchInput: string, type?: string) => {
   if (!searchInput) return;
 
   const NUMBER_OF_RESULTS = 20;
@@ -38,7 +37,7 @@ const fetchAssets = async (raster:any | null, searchInput: string, type: string 
   };
   if (type) {
     params.push(`type=${type}`);
-  }
+  };
 
   const urlQuery = params.join('&');
   const response = await fetch(`/api/v3/search/?${urlQuery}`, {
@@ -46,8 +45,15 @@ const fetchAssets = async (raster:any | null, searchInput: string, type: string 
   });
   const responseJSON = await response.json();
 
-  // @ts-ignore
-  return responseJSON.results.map(asset => convertToSelectObject(asset, asset.title))
+  return responseJSON.results.map((asset: any) => ({
+    value: asset.entity_id,
+    label: asset.title,
+    location: asset.view ? {
+      lat: asset.view[0],
+      lng: asset.view[1]
+    } : null,
+    type: asset.entity_name
+  }));
 };
 
 const MapSelectAssetOrPoint = (props:Props) => {
@@ -61,13 +67,12 @@ const MapSelectAssetOrPoint = (props:Props) => {
     errorMessage,
     triedToSubmit
   } = props;
-  console.log('asset value', value)
 
   const [raster, setRaster] = useState<RasterLayerFromAPI | null>(null);
 
   // asset type selection dropdown
   const [assetType, setAssetType] = useState<any>(null);
-  console.log('assetType', assetType)
+  // console.log('assetType', assetType)
 
   useEffect(() => {
     if (rasterUuid) {
@@ -77,53 +82,54 @@ const MapSelectAssetOrPoint = (props:Props) => {
     };
   }, [rasterUuid]);
 
-  const setLocation = (location: Location | null) => {
-    if (location !== null && raster !== null) {
-      // Check if location fits within the raster
-      const { lat, lng } = location;
-      const bounds = raster.spatial_bounds;
+  // const setLocation = (location: Location | null) => {
+  //   if (location !== null && raster !== null) {
+  //     // Check if location fits within the raster
+  //     const { lat, lng } = location;
+  //     const bounds = raster.spatial_bounds;
 
-      if (!bounds) return;
+  //     if (!bounds) return;
 
-      const inBounds = (
-        lat >= bounds.south && lat <= bounds.north &&
-        lng >= bounds.west && lng <= bounds.east
-      );
+  //     const inBounds = (
+  //       lat >= bounds.south && lat <= bounds.north &&
+  //       lng >= bounds.west && lng <= bounds.east
+  //     );
 
-      if (!inBounds) return;
-    };
-    valueChanged({ asset: null, location: location});
-  };
+  //     if (!inBounds) return;
+  //   };
+  //   valueChanged({ asset: null, location: location});
+  // };
 
-  const chooseLocation = !!setLocation;
+  // const chooseLocation = !!setLocation;
 
-  const setAsset = (option: { value: Asset } | null) => {
-    const asset = option && option.value;
-    if (asset && asset.view) {
-      const lat = asset.view[0];
-      const lng = asset.view[1];
-      if (raster !== null) {
-        if ( !raster.spatial_bounds) {
-          return;
-        }
-        const inBounds = (
-          lat >= raster.spatial_bounds.south && lat <= raster.spatial_bounds.north &&
-          lng >= raster.spatial_bounds.west && lng <= raster.spatial_bounds.east
-        );
-        if (!inBounds) { 
-          return; 
-        }
+  // const setAsset = (asset: Asset | null) => {
+  //   if (asset && asset.location) {
+  //     const { lat, lng } = asset.location;
+  //     // if (raster !== null) {
+  //     //   if ( !raster.spatial_bounds) {
+  //     //     return;
+  //     //   }
+  //     //   const inBounds = (
+  //     //     lat >= raster.spatial_bounds.south && lat <= raster.spatial_bounds.north &&
+  //     //     lng >= raster.spatial_bounds.west && lng <= raster.spatial_bounds.east
+  //     //   );
+  //     //   if (!inBounds) { 
+  //     //     return; 
+  //     //   }
+  //     // }
+  //     valueChanged({ asset: asset, location: {lat ,lng}});
+  //   } else {
+  //     valueChanged({ asset: null, location: null});
+  //   }
+  // };
+
+  const handleMapClick = (e: any) => {
+    valueChanged({
+      asset: null,
+      location: {
+        lat: e.latlng.lat,
+        lng: e.latlng.lng
       }
-      valueChanged({ asset: option, location: {lat:lat,lng:lng}});
-    } else {
-      valueChanged({ asset: null, location: null});
-    }
-  };
-
-  const handleMapClick = (e:any) => {
-    setLocation({
-      lat: e.latlng.lat,
-      lng: e.latlng.lng
     });
 
     // if there is a selected asset type from the dropdown, reset it
@@ -196,28 +202,36 @@ const MapSelectAssetOrPoint = (props:Props) => {
         <div
           className={styles.MapContainer}
         >
-          {chooseLocation ?
-            <div
-              className={styles.AssetSelect}
-            >
-              <SelectDropdown
-                title={''}
-                name={name}
-                placeholder={'- Search and select an asset -'}
-                value={value.asset}
-                valueChanged={value => {
-                  // @ts-ignore
-                  setAsset(value);
-                }}
-                options={[]}
-                validated={validated}
-                errorMessage={errorMessage}
-                triedToSubmit={triedToSubmit}
-                isAsync
-                loadOptions={searchInput => fetchAssets(raster, searchInput, null)}
-              />
-            </div>
-          : null}
+          <div
+            className={styles.AssetSelect}
+          >
+            <SelectDropdown
+              title={''}
+              name={name}
+              placeholder={'- Search and select an asset -'}
+              value={value.asset}
+              valueChanged={e => {
+                if (!e) {
+                  valueChanged({
+                    ...value,
+                    asset: null
+                  });
+                  return;
+                };
+                const selectedAssetFromDropdown = e as AssetObject;
+                valueChanged({
+                  asset: selectedAssetFromDropdown,
+                  location: selectedAssetFromDropdown.location
+                });
+              }}
+              options={[]}
+              validated={validated}
+              errorMessage={errorMessage}
+              triedToSubmit={triedToSubmit}
+              isAsync
+              loadOptions={searchInput => fetchAssets(raster, searchInput, assetType)}
+            />
+          </div>
           <Map
             // @ts-ignore
             onClick={handleMapClick}
@@ -236,11 +250,10 @@ const MapSelectAssetOrPoint = (props:Props) => {
                 opacity={0.9}
               />
             ) : null}
-            {
-            value.location ?
+            {value.location ? (
               // @ts-ignore
               <Marker position={marker} />
-            : null}
+            ) : null}
           </Map>
         </div>
       </label>

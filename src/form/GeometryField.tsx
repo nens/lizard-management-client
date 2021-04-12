@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from 'react';
+import React from 'react';
 import { FloatInput } from './FloatInput';
 import { AssetLocationValue } from "../types/locationFormTypes";
 import formStyles from "../styles/Forms.module.css";
@@ -36,38 +36,6 @@ export const GeometryField: React.FC<MyProps> = (props) => {
     readOnly
   } = props;
 
-  const [lat, setLat] = useState<number>(NaN);
-  const [lng, setLng] = useState<number>(NaN);
-
-  useEffect(() => {
-    if ( value.asset && value.asset.value && value.asset.value.view ) {
-      setLat(value.asset.value.view[0]);
-      setLng(value.asset.value.view[1])
-    } else if (value.location) {
-      setLat(value.location.lat);
-      setLng(value.location.lng); 
-    } else {
-      setLat(NaN);
-      setLng(NaN);
-    }
-  }, [value.asset, value.location]);
-
-  const valueChangedLat = (value:number) => {
-    if (value) {
-
-    }
-    valueChanged({
-      asset: null,
-      location:{lat:value, lng:lng}
-    })
-  }
-  const valueChangedLng = (value:number) => {
-    valueChanged({
-      asset: null,
-      location:{lat:lat, lng:value}
-    })
-  }
-
   return (
     <label
       htmlFor={name}
@@ -88,15 +56,17 @@ export const GeometryField: React.FC<MyProps> = (props) => {
             title={"X"}
             name={name}
             placeholder={placeholder}
-            value={lng}
+            value={value.location ? value.location.lng : NaN}
             validated={validated}
-            valueChanged={(value)=>{
-              if (isNaN(value)) {
-                setLng(NaN);
-              } else {
-                valueChangedLng(value);
-              }
-              
+            valueChanged={e => {
+              if (isNaN(e)) return;
+              valueChanged({
+                asset: null,
+                location: {
+                  lat: value.location ? value.location.lat : NaN,
+                  lng: e
+                }
+              });
             }}
             onFocus={onFocus}
             onBlur={onBlur}
@@ -113,15 +83,17 @@ export const GeometryField: React.FC<MyProps> = (props) => {
             title={"Y"}
             name={name}
             placeholder={placeholder}
-            value={lat}
+            value={value.location ? value.location.lat : NaN}
             validated={validated}
-            valueChanged={(value)=>{
-              if (isNaN(value)) {
-                setLat(NaN);
-              } else {
-                valueChangedLat(value);
-              }
-              
+            valueChanged={e => {
+              if (isNaN(e)) return;
+              valueChanged({
+                asset: null,
+                location: {
+                  lng: value.location ? value.location.lng : NaN,
+                  lat: e
+                }
+              });
             }}
             onFocus={onFocus}
             onBlur={onBlur}

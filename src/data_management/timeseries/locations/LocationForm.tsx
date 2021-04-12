@@ -11,30 +11,29 @@ import { jsonValidator, minLength } from '../../../form/validators';
 import { addNotification } from '../../../actions';
 import formStyles from './../../../styles/Forms.module.css';
 import { TextArea } from '../../../form/TextArea';
-import {GeometryField} from '../../../form/GeometryField';
+import { GeometryField } from '../../../form/GeometryField';
 import LocationIcon from "../../../images/locations_icon.svg";
-import { convertToSelectObject } from '../../../utils/convertToSelectObject';
+// import { convertToSelectObject } from '../../../utils/convertToSelectObject';
 import { AccessModifier } from '../../../form/AccessModifier';
 import MapSelectAssetOrPoint from '../../../form/MapSelectAssetOrPoint';
-import {locationFormHelpText} from '../../../utils/help_texts/helpTextsForLocations';
+import { locationFormHelpText } from '../../../utils/help_texts/helpTextsForLocations';
 
 
 interface Props {
   currentRecord?: any;
-  relatedAsset?: any;
 };
 interface RouteParams {
   uuid: string;
 };
 
 const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RouteParams>) => {
-  const { currentRecord, relatedAsset } = props;
+  const { currentRecord } = props;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
 
   let initialValues;
   
   if (currentRecord) {
-    const geometryCurrentRecord = 
+    const geometryCurrentRecord = (
       currentRecord && 
       currentRecord.geometry && 
       currentRecord.geometry.coordinates && 
@@ -43,27 +42,23 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
       {
         lat: currentRecord.geometry.coordinates[1],
         lng: currentRecord.geometry.coordinates[0],
-      };
-    const geometryRelatedAsset = 
-      relatedAsset && 
-      relatedAsset.view && 
-      relatedAsset.view[1] !== undefined && 
-      relatedAsset.view[0] !== undefined &&
-      {
-        lat: relatedAsset.view[1],
-        lng: relatedAsset.view[0],
-      };
+      }
+    );
 
     initialValues = {
       name: currentRecord.name || '',
       code: currentRecord.code || '',
       extraMetadata: JSON.stringify(currentRecord.extra_metadata),
       accessModifier: currentRecord.access_modifier,
-      supplier: currentRecord.supplier ? convertToSelectObject(currentRecord.supplier) :  null,
-      // object: currentRecord.object,
-      selectedAssetObj: {
-        location: geometryCurrentRecord? geometryCurrentRecord : geometryRelatedAsset? geometryRelatedAsset: null,
-        asset: relatedAsset?convertToSelectObject(relatedAsset, relatedAsset.code): null,
+      selectedAsset: {
+        asset: currentRecord.object && currentRecord.object.type && currentRecord.object.id ? {
+          value: currentRecord.object.id,
+          label: currentRecord.code,
+          id: currentRecord.object.id,
+          code: currentRecord.code,
+          type: currentRecord.object.type
+        } : null,
+        location: geometryCurrentRecord ? geometryCurrentRecord : null,
       }
     };
   } else {
@@ -72,15 +67,10 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
       code: null,
       extraMetadata: null,
       accessModifier: 'Private',
-      supplier: null,
-      // object: {
-      //   type: null,
-      //   id: null,
-      // },
-      selectedAssetObj: {
-        location: null,
+      selectedAsset: {
         asset: null,
-      }
+        location: null,
+      },
     }
   }
 
@@ -95,17 +85,17 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
         supplier: values.supplier,
         geometry: {
           "type":"Point",
-          "coordinates":[values.selectedAssetObj.location.lng,values.selectedAssetObj.location.lat,0.0]
+          "coordinates":[values.selectedAsset.location.lng,values.selectedAsset.location.lat,0.0]
         },
         object: 
           // it was set by the dropdown
-          values.selectedAssetObj.asset && values.selectedAssetObj.asset.value.entity_name? 
+          values.selectedAsset.asset && values.selectedAsset.asset.value.entity_name? 
           {
-            type: values.selectedAssetObj.asset.value.entity_name,
-            id: values.selectedAssetObj.asset.value.entity_id,
+            type: values.selectedAsset.asset.value.entity_name,
+            id: values.selectedAsset.asset.value.entity_id,
           }
           // it was set when loading the form and not changed by the dropdown
-          : values.selectedAssetObj.asset ?
+          : values.selectedAsset.asset ?
           {
             type: currentRecord.object.type,
             id: currentRecord.object.id, 
@@ -142,13 +132,13 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
         supplier: values.supplier,
         geometry: {
           "type":"Point",
-          "coordinates":[values.selectedAssetObj.location.lng,values.selectedAssetObj.location.lat,0.0]
+          "coordinates":[values.selectedAsset.location.lng,values.selectedAsset.location.lat,0.0]
         },
         object: 
-          values.selectedAssetObj.asset && values.selectedAssetObj.asset.value? 
+          values.selectedAsset.asset && values.selectedAsset.asset.value? 
           {
-            type: values.selectedAssetObj.asset.value.entity_name,
-            id: values.selectedAssetObj.asset.value.entity_id,
+            type: values.selectedAsset.asset.value.entity_name,
+            id: values.selectedAsset.asset.value.entity_id,
           }:
           {
             type: null,
@@ -190,7 +180,6 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
     handleBlur,
     handleFocus,
   } = useForm({initialValues, onSubmit});
-
 
   return (
     <ExplainSideColumn
@@ -255,19 +244,19 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
         /> */}
         <MapSelectAssetOrPoint
           title={'Asset location'}
-          name={'selectedAssetObj'}
-          value={values.selectedAssetObj}
-          valueChanged={(value)=>handleValueChange('selectedAssetObj', value)}
-          validated={true}
+          name={'selectedAsset'}
+          value={values.selectedAsset}
+          valueChanged={value => handleValueChange('selectedAsset', value)}
+          validated
           triedToSubmit={triedToSubmit}
         />
         <div style={{display: "flex"}}>
           <div style={{width: "58%", marginRight: "40px"}}>
             <GeometryField
               title={'Geometry'}
-              name={'selectedAssetObj'}
-              value={values.selectedAssetObj}
-              valueChanged={(value)=>handleValueChange('selectedAssetObj', value)}
+              name={'selectedAsset'}
+              value={values.selectedAsset}
+              valueChanged={(value)=>handleValueChange('selectedAsset', value)}
               validated={true}
               triedToSubmit={triedToSubmit}
               onFocus={handleFocus}
@@ -283,11 +272,11 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
               </span>
               <a 
                 href={
-                  values.selectedAssetObj.asset && 
-                  values.selectedAssetObj.asset.value &&  
-                  values.selectedAssetObj.asset.value.entity_name ? 
-                  `/api/v3/${values.selectedAssetObj.asset.value.entity_name}s/${values.selectedAssetObj.asset.value.entity_id}`
-                  : values.selectedAssetObj.asset?
+                  values.selectedAsset.asset && 
+                  values.selectedAsset.asset.value &&  
+                  values.selectedAsset.asset.value.entity_name ? 
+                  `/api/v3/${values.selectedAsset.asset.value.entity_name}s/${values.selectedAsset.asset.value.entity_id}`
+                  : values.selectedAsset.asset?
                   `/api/v3/${currentRecord.object.type}s/${currentRecord.object.id}`
                   :
                   '/api/v3/'
@@ -295,7 +284,7 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                {values.selectedAssetObj.asset? values.selectedAssetObj.asset.label : "None selected. See all endpoints" }
+                {values.selectedAsset.asset? values.selectedAsset.asset.label : "None selected. See all endpoints" }
               </a>
             </label>
           </div>
