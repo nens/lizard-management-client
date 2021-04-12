@@ -57,7 +57,7 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
     initialValues = {
       name: currentRecord.name || '',
       code: currentRecord.code || '',
-      extraMetadata: currentRecord.extra_metadata,
+      extraMetadata: JSON.stringify(currentRecord.extra_metadata),
       accessModifier: currentRecord.access_modifier,
       supplier: currentRecord.supplier ? convertToSelectObject(currentRecord.supplier) :  null,
       // object: currentRecord.object,
