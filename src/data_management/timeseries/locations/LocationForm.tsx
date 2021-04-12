@@ -13,13 +13,12 @@ import formStyles from './../../../styles/Forms.module.css';
 import { TextArea } from '../../../form/TextArea';
 // import { GeometryField } from '../../../form/GeometryField';
 import LocationIcon from "../../../images/locations_icon.svg";
-import { convertToSelectObject } from '../../../utils/convertToSelectObject';
+// import { convertToSelectObject } from '../../../utils/convertToSelectObject';
 // import { SelectDropdown, Value } from '../../../form/SelectDropdown';
 import { AccessModifier } from '../../../form/AccessModifier';
 // import MapSelectAssetOrPoint from '../../../form/MapSelectAssetOrPoint';
 import { locationFormHelpText } from '../../../utils/help_texts/helpTextsForLocations';
 import { AssetPointSelection } from '../../../form/AssetPointSelection';
-import { assetTypes } from '../../../types/locationFormTypes';
 
 interface Props {
   currentRecord?: any;
@@ -60,25 +59,15 @@ const LocationForm = (props: Props & DispatchProps & RouteComponentProps<RoutePa
     code: currentRecord.code,
     extraMetadata: currentRecord.extra_metadata ? JSON.stringify(currentRecord.extra_metadata) : null,
     accessModifier: currentRecord.access_modifier,
-    coordinates: geometryCurrentRecord ? geometryCurrentRecord : geometryRelatedAsset ? geometryRelatedAsset : null,
-    assetType: currentRecord.object ? assetTypes.find(assetType => assetType.value === currentRecord.object.type) : null,
-    selectedAsset: relatedAsset ? convertToSelectObject(relatedAsset, relatedAsset.code) : null,
-    // selectedAssetObj: {
-    //   location: geometryCurrentRecord ? geometryCurrentRecord : geometryRelatedAsset ? geometryRelatedAsset: null,
-    //   asset: relatedAsset ? convertToSelectObject(relatedAsset, relatedAsset.code) : null,
-    // }
+    location: geometryCurrentRecord ? geometryCurrentRecord : geometryRelatedAsset ? geometryRelatedAsset : null,
+    asset: relatedAsset,
   } : {
     name: null,
     code: null,
     extraMetadata: null,
     accessModifier: 'Private',
-    coordinates: null,
-    assetType: null,
-    selectedAsset: null,
-    // selectedAssetObj: {
-    //   location: null,
-    //   asset: null
-    // }
+    location: null,
+    asset: null,
   };
 
   const onSubmit = (values: Values) => {
@@ -90,11 +79,11 @@ const LocationForm = (props: Props & DispatchProps & RouteComponentProps<RoutePa
       supplier: values.supplier,
       geometry: {
         "type":"Point",
-        "coordinates":[values.coordinates.lng, values.coordinates.lat, 0.0]
+        "coordinates":[values.location.lng, values.location.lat, 0.0]
       },
       object: {
-        type: values.selectedAsset.value.type,
-        id: values.selectedAsset.value.id
+        id: values.asset.value,
+        type: values.asset.type
       }
     };
 
@@ -183,7 +172,6 @@ const LocationForm = (props: Props & DispatchProps & RouteComponentProps<RoutePa
     handleBlur,
     handleFocus,
   } = useForm({initialValues, onSubmit});
-  console.log(values.selectedAsset)
 
   return (
     <ExplainSideColumn
@@ -229,12 +217,14 @@ const LocationForm = (props: Props & DispatchProps & RouteComponentProps<RoutePa
           2: Data
         </span>
         <AssetPointSelection
-          relatedAsset={values.assetSelectObj}
-          coordinates={values.coordinates}
-          assetType={values.assetType}
-          handleCoordinatesChanged={value => handleValueChange('coordinates', value)}
-          handleAssetTypeChanged={value => handleValueChange('assetType', value)}
-          handleAssetObjectChanged={value => handleValueChange('selectedAssetObj', value)}
+          asset={values.asset}
+          location={values.location}
+          handleLocationChanged={value => handleValueChange('location', value)}
+          handleAssetChanged={value => {
+            console.log('value', value)
+            handleValueChange('asset', value.asset);
+            handleValueChange('location', value.location);
+          }}
           triedToSubmit={triedToSubmit}
         />
         {/* <SelectDropdown

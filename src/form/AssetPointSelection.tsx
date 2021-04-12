@@ -1,30 +1,36 @@
-import React from 'react';
-import { assetTypes, Location } from '../types/locationFormTypes';
+import React, { useState } from 'react';
+import { AssetLocationValue, assetTypes, Location } from '../types/locationFormTypes';
 import { GeometryField } from './GeometryField';
 import MapSelectAssetOrPoint from './MapSelectAssetOrPoint';
 import { SelectDropdown, Value } from './SelectDropdown';
 import formStyles from './../styles/Forms.module.css';
 
+export interface AssetObject {
+  value: number,
+  label: string,
+  type: string,
+  location: number[],
+}
+
 interface MyProps {
-  relatedAsset: any,
-  coordinates: Location | null,
-  assetType: Value,
-  handleCoordinatesChanged: (value: Location | null) => void,
-  handleAssetTypeChanged: (value: Value) => void,
-  handleAssetObjectChanged: (value: any) => void,
+  asset: AssetObject,
+  location: Location | null,
+  handleLocationChanged: (value: Location | null) => void,
+  handleAssetChanged: (value: AssetLocationValue) => void,
   triedToSubmit?: boolean,
 }
 
 export const AssetPointSelection = (props: MyProps) => {
   const {
-    relatedAsset,
-    coordinates,
-    assetType,
-    handleAssetTypeChanged,
-    handleCoordinatesChanged,
-    handleAssetObjectChanged,
+    asset,
+    location,
+    handleLocationChanged,
+    handleAssetChanged,
     triedToSubmit
   } = props;
+  console.log('asset', asset)
+
+  const [assetType, setAssetType] = useState<Value | null | undefined>(asset ? assetTypes.find(assetType => assetType.value === asset.type) : null);
 
   return (
     <div>
@@ -33,7 +39,7 @@ export const AssetPointSelection = (props: MyProps) => {
         name={'assetType'}
         placeholder={'- Search and select -'}
         value={assetType}
-        valueChanged={value => handleAssetTypeChanged(value as Value)}
+        valueChanged={value => setAssetType(value as Value)}
         options={assetTypes}
         validated
       />
@@ -41,10 +47,10 @@ export const AssetPointSelection = (props: MyProps) => {
         title={'Asset location'}
         name={'selectedAssetObj'}
         value={{
-          asset: relatedAsset,
-          location: coordinates
+          asset: asset,
+          location: location
         }}
-        valueChanged={value => handleAssetObjectChanged(value)}
+        valueChanged={value => handleAssetChanged(value)}
         validated={true}
         triedToSubmit={triedToSubmit}
       />
@@ -54,10 +60,10 @@ export const AssetPointSelection = (props: MyProps) => {
             title={'Geometry'}
             name={'selectedAssetObj'}
             value={{
-              asset: assetType,
-              location: coordinates
+              asset: asset,
+              location: location
             }}
-            valueChanged={value => handleCoordinatesChanged(value.location)}
+            valueChanged={value => handleLocationChanged(value.location)}
             validated
             triedToSubmit={triedToSubmit}
           />
@@ -83,7 +89,7 @@ export const AssetPointSelection = (props: MyProps) => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              {assetType ? assetType.label : "None selected. See all endpoints"}
+              {asset ? asset.label : "None selected. See all endpoints"}
             </a>
           </label>
         </div>

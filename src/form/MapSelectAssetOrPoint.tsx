@@ -8,16 +8,16 @@ import React, { useState, useEffect } from "react";
 import { Map, Marker, TileLayer, WMSTileLayer, ZoomControl } from "react-leaflet";
 import { SelectDropdown } from "./SelectDropdown";
 import { mapBoxAccesToken} from '../mapboxConfig';
-import { convertToSelectObject } from "../utils/convertToSelectObject";
 import styles from "../components/RasterPreview.module.css";
 import { fetchRasterV4, RasterLayerFromAPI } from '../api/rasters';
 import formStyles from "../styles/Forms.module.css";
-import { Location, Asset, AssetLocationValue } from "../types/locationFormTypes"
+import { Location, AssetLocationValue } from "../types/locationFormTypes"
+import { AssetObject } from "./AssetPointSelection";
 
 interface Props {
   title: string,
-  value: AssetLocationValue;
   name: string;
+  value: AssetLocationValue;
   rasterUuid?:string;
   valueChanged: (value: AssetLocationValue)=> void,
   validated: boolean;
@@ -26,7 +26,7 @@ interface Props {
 }
 
 // Helper function to fetch assets in async select dropdown
-const fetchAssets = async (raster:any | null, searchInput: string, type: string | null) => {
+const fetchAssets = async (raster: any, searchInput: string, type?: string) => {
   if (!searchInput) return;
 
   const NUMBER_OF_RESULTS = 20;
@@ -38,7 +38,7 @@ const fetchAssets = async (raster:any | null, searchInput: string, type: string 
   };
   if (type) {
     params.push(`type=${type}`);
-  }
+  };
 
   const urlQuery = params.join('&');
   const response = await fetch(`/api/v3/search/?${urlQuery}`, {
@@ -46,7 +46,12 @@ const fetchAssets = async (raster:any | null, searchInput: string, type: string 
   });
   const responseJSON = await response.json();
 
-  return responseJSON.results.map((asset: any) => convertToSelectObject(asset, asset.title))
+  return responseJSON.results.map((asset: any) => ({
+    value: asset.entity_id,
+    label: asset.title,
+    type: asset.entity_name,
+    location: asset.view
+  }));
 };
 
 const MapSelectAssetOrPoint = (props:Props) => {
@@ -60,6 +65,7 @@ const MapSelectAssetOrPoint = (props:Props) => {
     errorMessage,
     triedToSubmit
   } = props;
+  console.log('mapValue', value)
 
   const [raster, setRaster] = useState<RasterLayerFromAPI | null>(null);
 
@@ -91,11 +97,10 @@ const MapSelectAssetOrPoint = (props:Props) => {
 
   const chooseLocation = !!setLocation;
 
-  const setAsset = (option: { value: Asset } | null) => {
-    const asset = option && option.value;
-    if (asset && asset.view) {
-      const lat = asset.view[0];
-      const lng = asset.view[1];
+  const setAsset = (asset: AssetObject | null) => {
+    if (asset && asset.location) {
+      const lat = asset.location[0];
+      const lng = asset.location[1];
       if (raster !== null) {
         if ( !raster.spatial_bounds) {
           return;
@@ -107,8 +112,8 @@ const MapSelectAssetOrPoint = (props:Props) => {
         if (!inBounds) { 
           return; 
         }
-      }
-      valueChanged({ asset: option, location: {lat:lat,lng:lng}});
+      };
+      valueChanged({ asset: asset, location: {lat,lng}});
     } else {
       valueChanged({ asset: null, location: null});
     }
@@ -122,6 +127,10 @@ const MapSelectAssetOrPoint = (props:Props) => {
     setLocation({
       lat: e.latlng.lat,
       lng: e.latlng.lng
+    });
+    valueChanged({
+      ...value,
+      asset: null
     });
 
     // if there is a selected asset from the dropdown, reset it
@@ -193,16 +202,13 @@ const MapSelectAssetOrPoint = (props:Props) => {
             name={name}
             placeholder={'- Search and select an asset -'}
             value={value.asset}
-            valueChanged={value => {
-              // @ts-ignore
-              setAsset(value);
-            }}
+            valueChanged={value => setAsset(value as any)}
             options={[]}
             validated={validated}
             errorMessage={errorMessage}
             triedToSubmit={triedToSubmit}
             isAsync
-            loadOptions={searchInput => fetchAssets(raster, searchInput, null)}
+            loadOptions={searchInput => fetchAssets(raster, searchInput, value.asset.type)}
           />
         </div>
       : null}
