@@ -30,14 +30,11 @@ interface Props {
   currentRecord?: any;
   relatedAsset?: any;
 };
-interface PropsFromDispatch {
-  addNotification: (message: string | number, timeout: number) => void
-};
 interface RouteParams {
   uuid: string;
 };
 
-const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps<RouteParams>) => {
+const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RouteParams>) => {
   const { currentRecord, relatedAsset } = props;
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   // we need this later
@@ -506,7 +503,6 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
 const mapPropsToDispatch = (dispatch: any) => ({
   addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout))
 });
+type DispatchProps = ReturnType<typeof mapPropsToDispatch>;
 
-const LocationForm = connect(null, mapPropsToDispatch)(withRouter(LocationFormModel));
-
-export { LocationForm  };
+export default connect(null, mapPropsToDispatch)(withRouter(LocationForm));
