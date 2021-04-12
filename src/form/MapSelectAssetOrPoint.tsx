@@ -12,7 +12,7 @@ import { convertToSelectObject } from "../utils/convertToSelectObject";
 import styles from "../components/RasterPreview.module.css";
 import { fetchRasterV4, RasterLayerFromAPI } from '../api/rasters';
 import formStyles from "../styles/Forms.module.css";
-import {Location, Asset, AssetLocationValue} from "../types/locationFormTypes"
+import {Location, Asset, AssetLocationValue, assetTypes} from "../types/locationFormTypes"
 
 interface Props {
   title: string,
@@ -61,14 +61,13 @@ const MapSelectAssetOrPoint = (props:Props) => {
     errorMessage,
     triedToSubmit
   } = props;
-
-  
+  console.log('asset value', value)
 
   const [raster, setRaster] = useState<RasterLayerFromAPI | null>(null);
 
-  // useState to temporarily store the selected asset
-  // from the asset select dropdown
-  const [selectedAsset, setSelectedAsset] = useState(null);
+  // asset type selection dropdown
+  const [assetType, setAssetType] = useState<any>(null);
+  console.log('assetType', assetType)
 
   useEffect(() => {
     if (rasterUuid) {
@@ -121,18 +120,14 @@ const MapSelectAssetOrPoint = (props:Props) => {
     }
   };
 
-   
-
-  
-
   const handleMapClick = (e:any) => {
     setLocation({
       lat: e.latlng.lat,
       lng: e.latlng.lng
     });
 
-    // if there is a selected asset from the dropdown, reset it
-    if (selectedAsset) setSelectedAsset(null);
+    // if there is a selected asset type from the dropdown, reset it
+    if (assetType) setAssetType(null);
   };
 
   const formatWMSStyles = (rawStyles:any) => {
@@ -181,65 +176,75 @@ const MapSelectAssetOrPoint = (props:Props) => {
   };
 
   return (
-    <label
-      htmlFor={name}
-      className={formStyles.Label}
-    >
-      <span className={formStyles.LabelTitle}>
-        {title}
-      </span>
-    <div
-      className={styles.MapContainer}
-    >
-      {chooseLocation ?
-        <div
-          className={styles.AssetSelect}
-        >
-          <SelectDropdown
-            title={''}
-            name={name}
-            placeholder={'- Search and select an asset -'}
-            value={value.asset}
-            valueChanged={value => {
-              // @ts-ignore
-              setAsset(value);
-            }}
-            options={[]}
-            validated={validated}
-            errorMessage={errorMessage}
-            triedToSubmit={triedToSubmit}
-            isAsync
-            loadOptions={searchInput => fetchAssets(raster, searchInput, null)}
-          />
-        </div>
-      : null}
-      <Map
-        // @ts-ignore
-        onClick={handleMapClick}
-        className={styles.MapStyle}
-        zoomControl={false}
-        {...mapLocation}
+    <>
+      <SelectDropdown
+        title={'Asset type'}
+        name={'assetType'}
+        placeholder={'- Search and select -'}
+        value={assetType}
+        valueChanged={value => setAssetType(value)}
+        options={assetTypes}
+        validated
+      />
+      <label
+        htmlFor={name}
+        className={formStyles.Label}
       >
-        <ZoomControl position="bottomright"/>
-        <TileLayer url={`https://api.mapbox.com/styles/v1/nelenschuurmans/ck8sgpk8h25ql1io2ccnueuj6/tiles/256/{z}/{x}/{y}@2x?access_token=${mapBoxAccesToken}`} />
-        {raster ? (
-          <WMSTileLayer
-            url="/wms/"
+        <span className={formStyles.LabelTitle}>
+          {title}
+        </span>
+        <div
+          className={styles.MapContainer}
+        >
+          {chooseLocation ?
+            <div
+              className={styles.AssetSelect}
+            >
+              <SelectDropdown
+                title={''}
+                name={name}
+                placeholder={'- Search and select an asset -'}
+                value={value.asset}
+                valueChanged={value => {
+                  // @ts-ignore
+                  setAsset(value);
+                }}
+                options={[]}
+                validated={validated}
+                errorMessage={errorMessage}
+                triedToSubmit={triedToSubmit}
+                isAsync
+                loadOptions={searchInput => fetchAssets(raster, searchInput, null)}
+              />
+            </div>
+          : null}
+          <Map
             // @ts-ignore
-            styles={formatWMSStyles(raster.options.styles)}
-            layers={formatWMSLayers(raster.wms_info.layer)}
-            opacity={0.9}
-          />
-        ) : null}
-        
-        {
-        value.location ?
-          // @ts-ignore
-          <Marker position={marker} />
-        : null}
-      </Map>
-    </div>
-    </label>
+            onClick={handleMapClick}
+            className={styles.MapStyle}
+            zoomControl={false}
+            {...mapLocation}
+          >
+            <ZoomControl position="bottomright"/>
+            <TileLayer url={`https://api.mapbox.com/styles/v1/nelenschuurmans/ck8sgpk8h25ql1io2ccnueuj6/tiles/256/{z}/{x}/{y}@2x?access_token=${mapBoxAccesToken}`} />
+            {raster ? (
+              <WMSTileLayer
+                url="/wms/"
+                // @ts-ignore
+                styles={formatWMSStyles(raster.options.styles)}
+                layers={formatWMSLayers(raster.wms_info.layer)}
+                opacity={0.9}
+              />
+            ) : null}
+            {
+            value.location ?
+              // @ts-ignore
+              <Marker position={marker} />
+            : null}
+          </Map>
+        </div>
+      </label>
+    </>
   );
 }
 
