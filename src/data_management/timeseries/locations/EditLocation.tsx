@@ -9,7 +9,9 @@ interface RouteProps {
 
 const EditLocation = (props: RouteProps & RouteComponentProps<RouteProps>) => {
   const [currentRecord, setCurrentRecord] = useState<any>(null);
+  const [relatedAssetRequired, setRelatedAssetRequired] = useState<boolean>(false);
   const [relatedAsset, setRelatedAsset] = useState<any>(null);
+  console.log(relatedAsset)
 
   const { uuid } = props.match.params;
   useEffect (() => {
@@ -21,19 +23,19 @@ const EditLocation = (props: RouteProps & RouteComponentProps<RouteProps>) => {
 
       const assetObject = currentRecord.object;
       if (assetObject && assetObject.type !== null && assetObject.id !== null) {
+        setRelatedAssetRequired(true);
         const currentRelatedAsset = await fetch(`/api/v3/${assetObject.type}s/${assetObject.id}/`, {
           credentials: "same-origin"
         }).then(response => response.json());
-        setRelatedAsset({
-          value: assetObject.id,
-          label: currentRelatedAsset.code,
-          type: assetObject.type
-        });
+        setRelatedAsset(currentRelatedAsset);
       };
     })();
   }, [uuid]);
 
-  if (currentRecord && relatedAsset) {
+  if (
+    currentRecord &&
+    (!relatedAssetRequired || relatedAsset)
+  ) {
     return <LocationForm
       currentRecord={currentRecord}
       relatedAsset={relatedAsset}
