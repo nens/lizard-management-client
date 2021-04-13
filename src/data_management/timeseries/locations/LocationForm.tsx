@@ -163,6 +163,7 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
         <TextInput
           title={'Location name'}
           name={'name'}
+          placeholder={'Please enter at least 3 characters'}
           value={values.name}
           valueChanged={handleInputChange}
           clearInput={clearInput}
@@ -175,10 +176,12 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
         <TextInput
           title={'Code'}
           name={'code'}
+          placeholder={'Please enter at least 1 character'}
           value={values.code}
           valueChanged={handleInputChange}
           clearInput={clearInput}
-          validated={true}
+          validated={!minLength(1, values.code)}
+          errorMessage={minLength(1, values.code)}
           triedToSubmit={triedToSubmit}
           onFocus={handleFocus}
           onBlur={handleBlur}
