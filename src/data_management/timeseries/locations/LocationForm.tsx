@@ -251,7 +251,7 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
           triedToSubmit={triedToSubmit}
         />
         <div style={{display: "flex"}}>
-          <div style={{width: "58%", marginRight: "40px"}}>
+          <div style={{flex: 3, marginRight: "40px"}}>
             <GeometryField
               title={'Geometry'}
               name={'selectedAsset'}
@@ -263,7 +263,7 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
               onBlur={handleBlur}
             />
           </div>
-          <div>
+          <div style={{flex: 2}}>
             <label
               className={formStyles.Label}
             >
