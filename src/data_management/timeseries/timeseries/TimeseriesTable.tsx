@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { NavLink, RouteComponentProps } from "react-router-dom";
 import TableStateContainer from '../../../components/TableStateContainer';
 import TableActionButtons from '../../../components/TableActionButtons';
+import AddToMonitoringNetworkModal from './AddToMonitoringNetworkModal';
 import AuthorisationModal from '../../../components/AuthorisationModal';
 import DeleteModal from '../../../components/DeleteModal';
 import { ExplainSideColumn } from '../../../components/ExplainSideColumn';
@@ -24,6 +25,9 @@ export const TimeseriesTable = (props: RouteComponentProps) =>  {
 
   // selected rows for set accessibility action
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
+
+  // selected rows for adding timeseries to Monitoring network action
+  const [selectedRowsToAddMN, setSelectedRowsToAddMN] = useState<any[]>([]);
 
   const deleteActions = (
     rows: any[],
@@ -139,6 +143,10 @@ export const TimeseriesTable = (props: RouteComponentProps) =>  {
                 //   actionFunction: (row: any) => setSelectedRows([row])
                 // },
                 {
+                  displayValue: "Add to MN",
+                  actionFunction: (row: any) => setSelectedRowsToAddMN([row])
+                },
+                {
                   displayValue: "Delete",
                   actionFunction: (row: any, _updateTableRow: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any) => {
                     deleteActions([row], triggerReloadWithCurrentPage, null)
@@ -182,6 +190,16 @@ export const TimeseriesTable = (props: RouteComponentProps) =>  {
             }
           },
           {
+            displayValue: "Add to MN",
+            actionFunction: (rows: any[], _tableData: any, _setTableData: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any, setCheckboxes: any) => {
+              setSelectedRowsToAddMN(rows);
+              setResetTable(() => () => {
+                // triggerReloadWithCurrentPage();
+                setCheckboxes([]);
+              });
+            }
+          },
+          {
             displayValue: "Delete",
             actionFunction: (rows: any[], _tableData: any, _setTableData: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any, setCheckboxes: any) => {
               deleteActions(rows, triggerReloadWithCurrentPage, setCheckboxes)
@@ -212,6 +230,16 @@ export const TimeseriesTable = (props: RouteComponentProps) =>  {
           resetTable={resetTable}
           handleClose={() => {
             setSelectedRows([]);
+            setResetTable(null);
+          }}
+        />
+      ) : null}
+      {selectedRowsToAddMN.length > 0 ? (
+        <AddToMonitoringNetworkModal
+          timeseries={selectedRowsToAddMN}
+          resetTable={resetTable}
+          handleClose={() => {
+            setSelectedRowsToAddMN([]);
             setResetTable(null);
           }}
         />
