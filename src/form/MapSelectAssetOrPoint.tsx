@@ -148,10 +148,13 @@ const MapSelectAssetOrPoint = (props:Props) => {
   }
 
   // Center of the map if no raster yet
-  const DEFAULT_POSITION = [52.1858, 5.2677];
+  const DEFAULT_POSITION = {
+    lat: 52.1858,
+    lng: 5.2677
+  };
 
   const marker = (
-    value.location ? [value.location.lat, value.location.lng] : DEFAULT_POSITION
+    value.location && value.location.lat && value.location.lng ? value.location : DEFAULT_POSITION
   );
 
   let mapLocation;
@@ -235,8 +238,7 @@ const MapSelectAssetOrPoint = (props:Props) => {
               opacity={0.9}
             />
           ) : null}
-          {value.location ? (
-            // @ts-ignore
+          {value.location && value.location.lat && value.location.lng ? (
             <Marker position={marker} />
           ) : null}
         </Map>

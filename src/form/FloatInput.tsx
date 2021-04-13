@@ -51,7 +51,7 @@ export const FloatInput: React.FC<MyProps> = (props) => {
       valueChanged={(event:React.ChangeEvent<HTMLInputElement>)=>{
         handleStepChange(event);
       }}
-      required={true}
+      required
       onFocus={onFocus}
       onBlur={onBlur}
       triedToSubmit={triedToSubmit}

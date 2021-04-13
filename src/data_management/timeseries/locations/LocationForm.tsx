@@ -191,7 +191,6 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
         <AssetPointSelection
           value={values.selectedAsset}
           valueChanged={value => handleValueChange('selectedAsset', value)}
-          validated
           triedToSubmit={triedToSubmit}
           onFocus={handleFocus}
           onBlur={handleBlur}

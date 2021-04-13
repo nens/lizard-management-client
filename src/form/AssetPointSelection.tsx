@@ -8,8 +8,6 @@ import { SelectDropdown, Value } from './SelectDropdown';
 interface MyProps {
   value: AssetLocationValue,
   valueChanged: (value: AssetLocationValue) => void,
-  validated: boolean,
-  errorMessage?: string | false,
   triedToSubmit?: boolean,
   onFocus?: (e: React.ChangeEvent<HTMLInputElement>) => void,
   onBlur?: () => void,
@@ -19,8 +17,6 @@ export const AssetPointSelection: React.FC<MyProps> = (props) => {
   const {
     value,
     valueChanged,
-    validated,
-    errorMessage,
     triedToSubmit,
     // onFocus,
     // onBlur,
@@ -64,8 +60,7 @@ export const AssetPointSelection: React.FC<MyProps> = (props) => {
             name={'geometry'}
             value={value}
             valueChanged={valueChanged}
-            validated={validated}
-            errorMessage={errorMessage}
+            validated
             triedToSubmit={triedToSubmit}
           />
         </div>
