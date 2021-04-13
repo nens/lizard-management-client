@@ -28,6 +28,7 @@ interface MyProps {
   dropUp?: boolean,
   form?: string,
   isAsync?: boolean,
+  isCached?: boolean,
   loadOptions?: (inputValue: string) => Promise<any>, // loadOptions is required if isAsync === true
   onFocus?: (e: any) => void,
   onBlur?: () => void,
@@ -50,6 +51,7 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
     isMulti,
     dropUp,
     isAsync,
+    isCached,
     loadOptions,
     form,
     onFocus,
@@ -171,7 +173,7 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
             components={{ Option }}
             styles={customStyles}
             placeholder={placeholder}
-            cacheOptions
+            cacheOptions={isCached}
             defaultOptions
             loadOptions={loadOptions}
             value={value}

@@ -133,6 +133,7 @@ const RasterPreview = (props) => {
             errorMessage={errorMessage}
             triedToSubmit={triedToSubmit}
             isAsync
+            isCached
             loadOptions={searchInput => fetchAssets(raster, searchInput)}
           />
         </div>

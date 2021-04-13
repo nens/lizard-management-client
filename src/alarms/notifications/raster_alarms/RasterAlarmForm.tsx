@@ -209,6 +209,7 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           errorMessage={required('Please select a raster', values.raster)}
           triedToSubmit={triedToSubmit}
           isAsync
+          isCached
           loadOptions={searchInput => fetchRasterLayers(selectedOrganisation.uuid, searchInput)}
         />
         <RasterPointSelection

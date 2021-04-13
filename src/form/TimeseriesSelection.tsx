@@ -107,6 +107,7 @@ export function TimeseriesSelection (props: MyProps) {
         options={[]}
         validated
         isAsync
+        isCached
         loadOptions={fetchAssets}
       />
       <SelectDropdown
