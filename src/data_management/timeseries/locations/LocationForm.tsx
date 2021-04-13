@@ -52,8 +52,6 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
         asset: currentRecord.object && currentRecord.object.type && currentRecord.object.id ? {
           value: currentRecord.object.id,
           label: currentRecord.code,
-          id: currentRecord.object.id,
-          code: currentRecord.code,
           type: currentRecord.object.type
         } : null,
         location: geometryCurrentRecord ? geometryCurrentRecord : null,
@@ -73,36 +71,21 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
   };
 
   const onSubmit = (values: Values) => {
+    const body = {
+      name: values.name,
+      code: values.code,
+      extra_metadata: values.extraMetadata,
+      access_modifier: values.accessModifier,
+      geometry: {
+        "type":"Point",
+        "coordinates": values.selectedAsset.location ? [values.selectedAsset.location.lng, values.selectedAsset.location.lat, 0.0] : null
+      },
+      object: {
+        id: values.selectedAsset.asset ? values.selectedAsset.asset.value : null,
+        type: values.selectedAsset.asset ? values.selectedAsset.asset.type : null
+      }
+    };
     if (currentRecord) {
-      const body = {
-        name: values.name,
-        organisation: selectedOrganisation.uuid,
-        code: values.code,
-        extra_metadata: values.extraMetadata,
-        access_modifier: values.accessModifier,
-        supplier: values.supplier,
-        geometry: {
-          "type":"Point",
-          "coordinates":[values.selectedAsset.location.lng,values.selectedAsset.location.lat,0.0]
-        },
-        object: 
-          // it was set by the dropdown
-          values.selectedAsset.asset && values.selectedAsset.asset.value.entity_name? 
-          {
-            type: values.selectedAsset.asset.value.entity_name,
-            id: values.selectedAsset.asset.value.entity_id,
-          }
-          // it was set when loading the form and not changed by the dropdown
-          : values.selectedAsset.asset ?
-          {
-            type: currentRecord.object.type,
-            id: currentRecord.object.id, 
-          } : // it is empty eather because it iwas made empty by the user or because it was already empty when loaded
-          {
-            type: null,
-            id: null, 
-          },
-      };
       fetch(`/api/v4/locations/${currentRecord.uuid}/`, {
         credentials: 'same-origin',
         method: 'PATCH',
@@ -121,34 +104,14 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
         })
         .catch(console.error);
     } else {
-      const body = {
-        name: values.name,
-        organisation: selectedOrganisation.uuid,
-        code: values.code,
-        extra_metadata: values.extraMetadata,
-        access_modifier: values.accessModifier,
-        supplier: values.supplier,
-        geometry: {
-          "type":"Point",
-          "coordinates":[values.selectedAsset.location.lng,values.selectedAsset.location.lat,0.0]
-        },
-        object: 
-          values.selectedAsset.asset && values.selectedAsset.asset.value? 
-          {
-            type: values.selectedAsset.asset.value.entity_name,
-            id: values.selectedAsset.asset.value.entity_id,
-          }:
-          {
-            type: null,
-            id: null,
-          },
-      };
-  
       fetch(`/api/v4/locations/`, {
         credentials: 'same-origin',
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(body)
+        body: JSON.stringify({
+          ...body,
+          organisation: selectedOrganisation.uuid
+        })
       })
         .then(data => {
           const status = data.status;
@@ -161,7 +124,7 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
           };
         })
         .catch(console.error);
-    }
+    };
   };
 
   const {
