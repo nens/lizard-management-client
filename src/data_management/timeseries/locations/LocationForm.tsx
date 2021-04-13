@@ -20,13 +20,14 @@ import { locationFormHelpText } from '../../../utils/help_texts/helpTextsForLoca
 
 interface Props {
   currentRecord?: any;
+  relatedAsset?: any;
 };
 interface RouteParams {
   uuid: string;
 };
 
 const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RouteParams>) => {
-  const { currentRecord } = props;
+  const { currentRecord, relatedAsset } = props;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
 
   let initialValues;
@@ -49,9 +50,9 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
       extraMetadata: currentRecord.extra_metadata ? JSON.stringify(currentRecord.extra_metadata) : null,
       accessModifier: currentRecord.access_modifier,
       selectedAsset: {
-        asset: currentRecord.object && currentRecord.object.type && currentRecord.object.id ? {
-          value: currentRecord.object.id,
-          label: currentRecord.code,
+        asset: relatedAsset && currentRecord.object && currentRecord.object.type && currentRecord.object.id ? {
+          value: relatedAsset.id,
+          label: relatedAsset.name || relatedAsset.code,
           type: currentRecord.object.type
         } : null,
         location: geometryCurrentRecord ? geometryCurrentRecord : null,
