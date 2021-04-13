@@ -76,10 +76,10 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
       code: values.code,
       extra_metadata: values.extraMetadata,
       access_modifier: values.accessModifier,
-      geometry: {
+      geometry: values.selectedAsset.location && values.selectedAsset.location.lat && values.selectedAsset.location.lng ? {
         "type":"Point",
-        "coordinates": values.selectedAsset.location ? [values.selectedAsset.location.lng, values.selectedAsset.location.lat, 0.0] : null
-      },
+        "coordinates": [values.selectedAsset.location.lng, values.selectedAsset.location.lat, 0.0]
+      } : null,
       object: {
         id: values.selectedAsset.asset ? values.selectedAsset.asset.value : null,
         type: values.selectedAsset.asset ? values.selectedAsset.asset.type : null
@@ -96,7 +96,7 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
           const status = data.status;
           if (status === 200) {
             props.addNotification('Success! Location updated', 2000);
-            props.history.push('/data_management/timeseries/locations/');
+            props.history.push('/data_management/timeseries/locations');
           } else {
             props.addNotification(status, 2000);
             console.error(data);
@@ -117,7 +117,7 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
           const status = data.status;
           if (status === 201) {
             props.addNotification('Success! Location creatd', 2000);
-            props.history.push('/data_management/timeseries/locations/');
+            props.history.push('/data_management/timeseries/locations');
           } else {
             props.addNotification(status, 2000);
             console.error(data);
@@ -160,7 +160,7 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
           1: General
         </span>
         <TextInput
-          title={'Location name'}
+          title={'Location name *'}
           name={'name'}
           placeholder={'Please enter at least 3 characters'}
           value={values.name}
@@ -173,7 +173,7 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
           onBlur={handleBlur}
         />
         <TextInput
-          title={'Code'}
+          title={'Code *'}
           name={'code'}
           placeholder={'Please enter at least 1 character'}
           value={values.code}
@@ -212,7 +212,7 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
           3: Rights
         </span>
         <AccessModifier
-          title={'Accessibility'}
+          title={'Accessibility *'}
           name={'accessModifier'}
           value={values.accessModifier}
           valueChanged={value => handleValueChange('accessModifier', value)}
