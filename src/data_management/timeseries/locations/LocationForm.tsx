@@ -198,7 +198,7 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
         <TextArea
           title={'Extra metadata (JSON)'}
           name={'extraMetadata'}
-          placeholder={'Enter valid JSON'}
+          placeholder={'Please enter in valid JSON format'}
           value={values.extraMetadata}
           valueChanged={handleInputChange}
           clearInput={clearInput}
