@@ -11,10 +11,9 @@ import { jsonValidator, minLength } from '../../../form/validators';
 import { addNotification } from '../../../actions';
 import formStyles from './../../../styles/Forms.module.css';
 import { TextArea } from '../../../form/TextArea';
-import { GeometryField } from '../../../form/GeometryField';
 import LocationIcon from "../../../images/locations_icon.svg";
 import { AccessModifier } from '../../../form/AccessModifier';
-import MapSelectAssetOrPoint from '../../../form/MapSelectAssetOrPoint';
+import { AssetPointSelection } from '../../../form/AssetPointSelection';
 import { locationFormHelpText } from '../../../utils/help_texts/helpTextsForLocations';
 
 
@@ -189,53 +188,14 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
         <span className={formStyles.FormFieldTitle}>
           2: Data
         </span>
-        <MapSelectAssetOrPoint
-          title={'Asset location'}
-          name={'selectedAsset'}
+        <AssetPointSelection
           value={values.selectedAsset}
           valueChanged={value => handleValueChange('selectedAsset', value)}
           validated
           triedToSubmit={triedToSubmit}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
-        <div style={{display: "flex"}}>
-          <div style={{flex: 3, marginRight: "40px"}}>
-            <GeometryField
-              title={'Geometry'}
-              name={'selectedAsset'}
-              value={values.selectedAsset}
-              valueChanged={(value)=>handleValueChange('selectedAsset', value)}
-              validated={true}
-              triedToSubmit={triedToSubmit}
-              onFocus={handleFocus}
-              onBlur={handleBlur}
-            />
-          </div>
-          <div style={{flex: 2}}>
-            <label
-              className={formStyles.Label}
-            >
-              <span className={formStyles.LabelTitle}>
-                Selected asset
-              </span>
-              <a 
-                href={
-                  values.selectedAsset.asset && 
-                  values.selectedAsset.asset.value &&  
-                  values.selectedAsset.asset.value.entity_name ? 
-                  `/api/v3/${values.selectedAsset.asset.value.entity_name}s/${values.selectedAsset.asset.value.entity_id}`
-                  : values.selectedAsset.asset?
-                  `/api/v3/${currentRecord.object.type}s/${currentRecord.object.id}`
-                  :
-                  '/api/v3/'
-                }
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {values.selectedAsset.asset? values.selectedAsset.asset.label : "None selected. See all endpoints" }
-              </a>
-            </label>
-          </div>
-        </div>
         <TextArea
           title={'Extra metadata (JSON)'}
           name={'extraMetadata'}
