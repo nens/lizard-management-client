@@ -12,6 +12,7 @@ import styles from "../components/RasterPreview.module.css";
 import { fetchRasterV4, RasterLayerFromAPI } from '../api/rasters';
 import formStyles from "../styles/Forms.module.css";
 import { AssetObject, AssetLocationValue } from "../types/locationFormTypes";
+import { geometryValidator } from "./validators";
 
 interface Props {
   title: string,
@@ -154,7 +155,7 @@ const MapSelectAssetOrPoint = (props:Props) => {
   };
 
   const marker = (
-    value.location && !isNaN(value.location.lat) && !isNaN(value.location.lng) ? value.location : DEFAULT_POSITION
+    value.location && geometryValidator(value.location) ? value.location : DEFAULT_POSITION
   );
 
   let mapLocation;
@@ -238,7 +239,7 @@ const MapSelectAssetOrPoint = (props:Props) => {
               opacity={0.9}
             />
           ) : null}
-          {value.location && !isNaN(value.location.lat) && !isNaN(value.location.lng) ? (
+          {geometryValidator(value.location) ? (
             <Marker position={marker} />
           ) : null}
         </Map>

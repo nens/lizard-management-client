@@ -7,7 +7,7 @@ import { TextInput } from './../../../form/TextInput';
 import { SubmitButton } from '../../../form/SubmitButton';
 import { CancelButton } from '../../../form/CancelButton';
 import { useForm, Values } from '../../../form/useForm';
-import { jsonValidator, minLength } from '../../../form/validators';
+import { geometryValidator, jsonValidator, minLength } from '../../../form/validators';
 import { addNotification } from '../../../actions';
 import formStyles from './../../../styles/Forms.module.css';
 import { TextArea } from '../../../form/TextArea';
@@ -76,7 +76,7 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
       code: values.code,
       extra_metadata: values.extraMetadata,
       access_modifier: values.accessModifier,
-      geometry: values.selectedAsset.location && !isNaN(values.selectedAsset.location.lat) && !isNaN(values.selectedAsset.location.lng) ? {
+      geometry: values.selectedAsset && geometryValidator(values.selectedAsset.location) ? {
         "type":"Point",
         "coordinates": [values.selectedAsset.location.lng, values.selectedAsset.location.lat, 0.0]
       } : null,
