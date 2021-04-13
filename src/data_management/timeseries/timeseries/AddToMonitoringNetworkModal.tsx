@@ -11,6 +11,7 @@ import buttonStyles from '../../../styles/Buttons.module.css';
 
 interface MyProps {
   timeseries: any[],
+  resetTable: Function | null,
   handleClose: () => void
 }
 
@@ -47,6 +48,7 @@ function AddToMonitoringNetworkModal (props: MyProps & DispatchProps) {
       if (res.status === 204) {
         props.addNotification('Success! Time-series added to monitoring network', 2000);
         props.handleClose();
+        props.resetTable && props.resetTable();
       } else {
         props.addNotification('An error occurred! Please try again!', 2000);
         console.error('Error adding time-series to monitoring network: ', res);

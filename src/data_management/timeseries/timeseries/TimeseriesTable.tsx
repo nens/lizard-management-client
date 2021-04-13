@@ -237,7 +237,11 @@ export const TimeseriesTable = (props: RouteComponentProps) =>  {
       {selectedRowsToAddMN.length > 0 ? (
         <AddToMonitoringNetworkModal
           timeseries={selectedRowsToAddMN}
-          handleClose={() => setSelectedRowsToAddMN([])}
+          resetTable={resetTable}
+          handleClose={() => {
+            setSelectedRowsToAddMN([]);
+            setResetTable(null);
+          }}
         />
       ) : null}
     </ExplainSideColumn>
