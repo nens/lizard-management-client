@@ -13,7 +13,6 @@ import formStyles from './../../../styles/Forms.module.css';
 import { TextArea } from '../../../form/TextArea';
 import { GeometryField } from '../../../form/GeometryField';
 import LocationIcon from "../../../images/locations_icon.svg";
-// import { convertToSelectObject } from '../../../utils/convertToSelectObject';
 import { AccessModifier } from '../../../form/AccessModifier';
 import MapSelectAssetOrPoint from '../../../form/MapSelectAssetOrPoint';
 import { locationFormHelpText } from '../../../utils/help_texts/helpTextsForLocations';
@@ -31,7 +30,6 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
   const selectedOrganisation = useSelector(getSelectedOrganisation);
 
   let initialValues;
-  
   if (currentRecord) {
     const geometryCurrentRecord = (
       currentRecord && 
@@ -71,8 +69,8 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
         asset: null,
         location: null,
       },
-    }
-  }
+    };
+  };
 
   const onSubmit = (values: Values) => {
     if (currentRecord) {
@@ -224,24 +222,6 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
         <span className={formStyles.FormFieldTitle}>
           2: Data
         </span>
-        {/*  This fields adds nothing for now. Comment it out 
-        TODO: make sure that below field is added to the search query in asset selection
-        */}
-        {/* <SelectDropdown
-          title={'Asset type'}
-          name={'asset_type'}
-          placeholder={'- Search and select -'}
-          value={selectedAssetType}
-          valueChanged={valueObj => { 
-            // TODO: remove this ts ignore
-            // @ts-ignore
-            setSelectedAssetType (valueObj);
-          }}
-          options={assetTypeOptions}
-          validated
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-        /> */}
         <MapSelectAssetOrPoint
           title={'Asset location'}
           name={'selectedAsset'}

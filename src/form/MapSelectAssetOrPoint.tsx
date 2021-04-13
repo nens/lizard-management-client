@@ -6,12 +6,12 @@
 
 import React, { useState, useEffect } from "react";
 import { Map, Marker, TileLayer, WMSTileLayer, ZoomControl } from "react-leaflet";
-import { SelectDropdown } from "./SelectDropdown";
+import { SelectDropdown, Value } from "./SelectDropdown";
 import { mapBoxAccesToken} from '../mapboxConfig';
 import styles from "../components/RasterPreview.module.css";
 import { fetchRasterV4, RasterLayerFromAPI } from '../api/rasters';
 import formStyles from "../styles/Forms.module.css";
-import { AssetObject, AssetLocationValue, assetTypes } from "../types/locationFormTypes"
+import { AssetObject, AssetLocationValue, assetTypes } from "../types/locationFormTypes";
 
 interface Props {
   title: string,
@@ -25,7 +25,7 @@ interface Props {
 }
 
 // Helper function to fetch assets in async select dropdown
-const fetchAssets = async (raster: any, searchInput: string, type?: string) => {
+const fetchAssets = async (raster: any, searchInput: string, type?: string | null) => {
   if (!searchInput) return;
 
   const NUMBER_OF_RESULTS = 20;
@@ -70,9 +70,16 @@ const MapSelectAssetOrPoint = (props:Props) => {
 
   const [raster, setRaster] = useState<RasterLayerFromAPI | null>(null);
 
+  useEffect(() => {
+    if (value.asset && value.asset.type) {
+      const currentAssetType = value.asset.type;
+      const assetTypeObject = assetTypes.find(type => type.value === currentAssetType);
+      setAssetType(assetTypeObject ? assetTypeObject : null);
+    };
+  }, [value.asset])
+
   // asset type selection dropdown
-  const [assetType, setAssetType] = useState<any>(null);
-  // console.log('assetType', assetType)
+  const [assetType, setAssetType] = useState<Value | null>(null);
 
   useEffect(() => {
     if (rasterUuid) {
@@ -188,7 +195,7 @@ const MapSelectAssetOrPoint = (props:Props) => {
         name={'assetType'}
         placeholder={'- Search and select -'}
         value={assetType}
-        valueChanged={value => setAssetType(value)}
+        valueChanged={value => setAssetType(value as Value)}
         options={assetTypes}
         validated
       />
@@ -229,7 +236,7 @@ const MapSelectAssetOrPoint = (props:Props) => {
               errorMessage={errorMessage}
               triedToSubmit={triedToSubmit}
               isAsync
-              loadOptions={searchInput => fetchAssets(raster, searchInput, assetType)}
+              loadOptions={searchInput => fetchAssets(raster, searchInput, assetType && assetType.value as string)}
             />
           </div>
           <Map
