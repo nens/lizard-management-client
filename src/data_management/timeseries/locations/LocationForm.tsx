@@ -76,7 +76,7 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
       code: values.code,
       extra_metadata: values.extraMetadata,
       access_modifier: values.accessModifier,
-      geometry: values.selectedAsset.location && values.selectedAsset.location.lat && values.selectedAsset.location.lng ? {
+      geometry: values.selectedAsset.location && !isNaN(values.selectedAsset.location.lat) && !isNaN(values.selectedAsset.location.lng) ? {
         "type":"Point",
         "coordinates": [values.selectedAsset.location.lng, values.selectedAsset.location.lat, 0.0]
       } : null,

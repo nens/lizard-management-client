@@ -154,7 +154,7 @@ const MapSelectAssetOrPoint = (props:Props) => {
   };
 
   const marker = (
-    value.location && value.location.lat && value.location.lng ? value.location : DEFAULT_POSITION
+    value.location && !isNaN(value.location.lat) && !isNaN(value.location.lng) ? value.location : DEFAULT_POSITION
   );
 
   let mapLocation;
@@ -238,7 +238,7 @@ const MapSelectAssetOrPoint = (props:Props) => {
               opacity={0.9}
             />
           ) : null}
-          {value.location && value.location.lat && value.location.lng ? (
+          {value.location && !isNaN(value.location.lat) && !isNaN(value.location.lng) ? (
             <Marker position={marker} />
           ) : null}
         </Map>

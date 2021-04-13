@@ -25,13 +25,11 @@ export const GeometryField: React.FC<MyProps> = (props) => {
     name,
     placeholder,
     value,
-    validated,
     valueChanged,
     onFocus,
     onBlur,
     handleEnter,
     clearInput,
-    errorMessage,
     triedToSubmit,
     readOnly
   } = props;
@@ -57,7 +55,6 @@ export const GeometryField: React.FC<MyProps> = (props) => {
             name={name}
             placeholder={placeholder}
             value={value.location ? value.location.lng : NaN}
-            validated={validated}
             valueChanged={e => {
               if (isNaN(e)) return;
               valueChanged({
@@ -68,11 +65,12 @@ export const GeometryField: React.FC<MyProps> = (props) => {
                 }
               });
             }}
+            validated={!value.location || !isNaN(value.location.lng)} // either leave both X and Y fields empty or fill in both fields
+            errorMessage={'Please fill in this field'}
             onFocus={onFocus}
             onBlur={onBlur}
             handleEnter={handleEnter}
             clearInput={clearInput}
-            errorMessage={errorMessage}
             triedToSubmit={triedToSubmit}
             readOnly={readOnly}
           />
@@ -84,7 +82,6 @@ export const GeometryField: React.FC<MyProps> = (props) => {
             name={name}
             placeholder={placeholder}
             value={value.location ? value.location.lat : NaN}
-            validated={validated}
             valueChanged={e => {
               if (isNaN(e)) return;
               valueChanged({
@@ -95,11 +92,12 @@ export const GeometryField: React.FC<MyProps> = (props) => {
                 }
               });
             }}
+            validated={!value.location || !isNaN(value.location.lat)} // either leave both X and Y fields empty or fill in both fields
+            errorMessage={'Please fill in this field'}
             onFocus={onFocus}
             onBlur={onBlur}
             handleEnter={handleEnter}
             clearInput={clearInput}
-            errorMessage={errorMessage}
             triedToSubmit={triedToSubmit}
             readOnly={readOnly}
           />
