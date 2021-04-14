@@ -4,21 +4,20 @@
 // And optionally let the user select a point on it 
 // by searching for an asset and using its point
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Map, Marker, TileLayer, WMSTileLayer, ZoomControl } from "react-leaflet";
 import { SelectDropdown } from "./SelectDropdown";
 import { mapBoxAccesToken} from '../mapboxConfig';
-import styles from "../components/RasterPreview.module.css";
-import { fetchRasterV4, RasterLayerFromAPI } from '../api/rasters';
-import formStyles from "../styles/Forms.module.css";
 import { AssetObject, AssetLocationValue } from "../types/locationFormTypes";
 import { geometryValidator } from "./validators";
+import styles from "../components/RasterPreview.module.css";
+import formStyles from "../styles/Forms.module.css";
 
 interface Props {
   title: string,
   name: string,
-  assetType: string | null,
-  rasterUuid?: string,
+  assetType?: string | null,
+  raster?: any,
   value: AssetLocationValue;
   valueChanged: (value: AssetLocationValue)=> void,
   validated: boolean,
@@ -63,64 +62,13 @@ const MapSelectAssetOrPoint = (props:Props) => {
     title,
     name,
     assetType,
-    rasterUuid,
+    raster,
     value,
     valueChanged,
     validated,
     errorMessage,
     triedToSubmit
   } = props;
-
-  const [raster, setRaster] = useState<RasterLayerFromAPI | null>(null);
-
-  useEffect(() => {
-    if (rasterUuid) {
-      fetchRasterV4(rasterUuid).then(
-        raster => setRaster(raster)
-      ).catch(console.error);
-    };
-  }, [rasterUuid]);
-
-  // const setLocation = (location: Location | null) => {
-  //   if (location !== null && raster !== null) {
-  //     // Check if location fits within the raster
-  //     const { lat, lng } = location;
-  //     const bounds = raster.spatial_bounds;
-
-  //     if (!bounds) return;
-
-  //     const inBounds = (
-  //       lat >= bounds.south && lat <= bounds.north &&
-  //       lng >= bounds.west && lng <= bounds.east
-  //     );
-
-  //     if (!inBounds) return;
-  //   };
-  //   valueChanged({ asset: null, location: location});
-  // };
-
-  // const chooseLocation = !!setLocation;
-
-  // const setAsset = (asset: Asset | null) => {
-  //   if (asset && asset.location) {
-  //     const { lat, lng } = asset.location;
-  //     // if (raster !== null) {
-  //     //   if ( !raster.spatial_bounds) {
-  //     //     return;
-  //     //   }
-  //     //   const inBounds = (
-  //     //     lat >= raster.spatial_bounds.south && lat <= raster.spatial_bounds.north &&
-  //     //     lng >= raster.spatial_bounds.west && lng <= raster.spatial_bounds.east
-  //     //   );
-  //     //   if (!inBounds) { 
-  //     //     return; 
-  //     //   }
-  //     // }
-  //     valueChanged({ asset: asset, location: {lat ,lng}});
-  //   } else {
-  //     valueChanged({ asset: null, location: null});
-  //   }
-  // };
 
   const handleMapClick = (e: any) => {
     valueChanged({

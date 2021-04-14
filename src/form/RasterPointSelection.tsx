@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { fetchRasterV4, RasterLayerFromAPI } from '../api/rasters';
-import RasterPreview from '../components/RasterPreview';
-import formStyles from "../styles/Forms.module.css";
 import { GeometryField } from './GeometryField';
+import MapSelectAssetOrPoint from './MapSelectAssetOrPoint';
+// import RasterPreview from '../components/RasterPreview';
+import formStyles from "../styles/Forms.module.css";
 
 interface Location {
   lat: number,
@@ -30,7 +31,7 @@ export const RasterPointSelection: React.FC<MyProps> = (props) => {
     point,
     valueChanged,
     validated,
-    errorMessage,
+    // errorMessage,
     triedToSubmit,
   } = props;
   console.log(point)
@@ -65,20 +66,19 @@ export const RasterPointSelection: React.FC<MyProps> = (props) => {
   };
 
   return (
-    <label
-      htmlFor={name}
-      className={formStyles.Label}
-    >
-      <span className={formStyles.LabelTitle}>
-        {title}
-      </span>
-      <RasterPreview
+    <div>
+      <MapSelectAssetOrPoint
+        title={title}
         name={name}
         raster={raster}
-        location={point}
-        setLocation={setLocation}
+        assetType={null}
+        value={{
+          asset: null,
+          location: point
+        }}
+        valueChanged={value => setLocation(value.location)}
         validated={validated}
-        errorMessage={errorMessage}
+        // errorMessage={errorMessage}
         triedToSubmit={triedToSubmit}
       />
       <GeometryField
@@ -89,6 +89,6 @@ export const RasterPointSelection: React.FC<MyProps> = (props) => {
         validated
         triedToSubmit={triedToSubmit}
       />
-    </label>
+    </div>
   )
 };
