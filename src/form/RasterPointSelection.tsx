@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { fetchRasterV4, RasterLayerFromAPI } from '../api/rasters';
 import { GeometryField } from './GeometryField';
 import MapSelectAssetOrPoint from './MapSelectAssetOrPoint';
-// import RasterPreview from '../components/RasterPreview';
-import formStyles from "../styles/Forms.module.css";
+import { geometryValidator } from './validators';
 
 interface Location {
   lat: number,
@@ -16,8 +15,6 @@ interface MyProps {
   rasterUuid: string | null,
   point: Location | null,
   valueChanged: (value: Location | null) => void,
-  validated: boolean,
-  errorMessage?: string | false,
   triedToSubmit?: boolean,
   onFocus?: (e: React.ChangeEvent<HTMLInputElement>) => void,
   onBlur?: () => void,
@@ -30,11 +27,8 @@ export const RasterPointSelection: React.FC<MyProps> = (props) => {
     rasterUuid,
     point,
     valueChanged,
-    validated,
-    // errorMessage,
     triedToSubmit,
   } = props;
-  console.log(point)
 
   const [raster, setRaster] = useState<RasterLayerFromAPI | null>(null);
 
@@ -71,22 +65,19 @@ export const RasterPointSelection: React.FC<MyProps> = (props) => {
         title={title}
         name={name}
         raster={raster}
-        assetType={null}
         value={{
-          asset: null,
+          asset: null, // no related asset
           location: point
         }}
         valueChanged={value => setLocation(value.location)}
-        validated={validated}
-        // errorMessage={errorMessage}
-        triedToSubmit={triedToSubmit}
       />
       <GeometryField
         title={'Geometry'}
         name={'geometry'}
         value={point}
         valueChanged={valueChanged}
-        validated
+        validated={geometryValidator(point)}
+        errorMessage={'Please fill in both X and Y fields'}
         triedToSubmit={triedToSubmit}
       />
     </div>

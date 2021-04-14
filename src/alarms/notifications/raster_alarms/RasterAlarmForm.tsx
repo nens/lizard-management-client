@@ -218,8 +218,6 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           rasterUuid={values.raster ? values.raster.value : null}
           point={values.point}
           valueChanged={value => handleValueChange('point', value)}
-          validated={!required('Please select a location on the map', values.point)}
-          errorMessage={required('Please select a location on the map', values.point)}
           triedToSubmit={triedToSubmit}
         />
         <CheckBox

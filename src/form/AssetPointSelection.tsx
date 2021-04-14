@@ -51,7 +51,6 @@ export const AssetPointSelection: React.FC<MyProps> = (props) => {
         assetType={assetType ? assetType.value as string : null}
         value={value}
         valueChanged={valueChanged}
-        validated
       />
       <div style={{display: "flex"}}>
         <div style={{flex: 3, marginRight: "40px"}}>
@@ -64,6 +63,7 @@ export const AssetPointSelection: React.FC<MyProps> = (props) => {
               location: value
             })}
             validated
+            errorMessage={'Please fill in both X and Y fields'}
             triedToSubmit={triedToSubmit}
           />
         </div>

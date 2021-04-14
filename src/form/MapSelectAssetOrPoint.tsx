@@ -20,9 +20,6 @@ interface Props {
   raster?: any,
   value: AssetLocationValue;
   valueChanged: (value: AssetLocationValue)=> void,
-  validated: boolean,
-  errorMessage?: string,
-  triedToSubmit?: boolean,
 }
 
 // Helper function to fetch assets in async select dropdown
@@ -64,10 +61,7 @@ const MapSelectAssetOrPoint = (props:Props) => {
     assetType,
     raster,
     value,
-    valueChanged,
-    validated,
-    errorMessage,
-    triedToSubmit
+    valueChanged
   } = props;
 
   const handleMapClick = (e: any) => {
@@ -162,9 +156,7 @@ const MapSelectAssetOrPoint = (props:Props) => {
               });
             }}
             options={[]}
-            validated={validated}
-            errorMessage={errorMessage}
-            triedToSubmit={triedToSubmit}
+            validated
             isAsync
             loadOptions={searchInput => fetchAssets(raster, searchInput, assetType)}
           />

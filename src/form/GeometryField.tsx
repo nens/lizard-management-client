@@ -26,6 +26,8 @@ export const GeometryField: React.FC<MyProps> = (props) => {
     placeholder,
     value,
     valueChanged,
+    validated,
+    errorMessage,
     onFocus,
     onBlur,
     handleEnter,
@@ -62,8 +64,10 @@ export const GeometryField: React.FC<MyProps> = (props) => {
                 lng: lng
               });
             }}
-            validated={!value || !isNaN(value.lng)} // either leave both X and Y fields empty or fill in both fields
-            errorMessage={'Please fill in this field'}
+            validated={validated && (
+              !value || !isNaN(value.lng) // either leave both X and Y fields empty or fill in both fields
+            )}
+            errorMessage={errorMessage}
             onFocus={onFocus}
             onBlur={onBlur}
             handleEnter={handleEnter}
@@ -86,8 +90,10 @@ export const GeometryField: React.FC<MyProps> = (props) => {
                 lat: lat
               });
             }}
-            validated={!value || !isNaN(value.lat)} // either leave both X and Y fields empty or fill in both fields
-            errorMessage={'Please fill in this field'}
+            validated={validated && (
+              !value || !isNaN(value.lat) // either leave both X and Y fields empty or fill in both fields
+            )}
+            errorMessage={errorMessage}
             onFocus={onFocus}
             onBlur={onBlur}
             handleEnter={handleEnter}
