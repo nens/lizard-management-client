@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import MapSelectAssetOrPoint from './MapSelectAssetOrPoint';
+import MapAssetAndPointSelection from './MapAssetAndPointSelection';
 import { AssetLocationValue, assetTypes } from '../types/locationFormTypes';
-import formStyles from "../styles/Forms.module.css";
 import { GeometryField } from './GeometryField';
 import { SelectDropdown, Value } from './SelectDropdown';
+import formStyles from "../styles/Forms.module.css";
 
 interface MyProps {
   value: AssetLocationValue,
@@ -45,7 +45,7 @@ export const AssetPointSelection: React.FC<MyProps> = (props) => {
         options={assetTypes}
         validated
       />
-      <MapSelectAssetOrPoint
+      <MapAssetAndPointSelection
         title={'Asset location'}
         name={'assetLocation'}
         assetType={assetType ? assetType.value as string : null}

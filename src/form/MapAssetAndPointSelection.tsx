@@ -10,7 +10,7 @@ import { SelectDropdown } from "./SelectDropdown";
 import { mapBoxAccesToken} from '../mapboxConfig';
 import { AssetObject, AssetLocationValue } from "../types/locationFormTypes";
 import { geometryValidator } from "./validators";
-import styles from "../components/RasterPreview.module.css";
+import styles from "./MapAssetAndPointSelection.module.css";
 import formStyles from "../styles/Forms.module.css";
 
 interface Props {
@@ -54,7 +54,7 @@ const fetchAssets = async (raster: any, searchInput: string, type?: string | nul
   }));
 };
 
-const MapSelectAssetOrPoint = (props:Props) => {
+const MapAssetAndPointSelection = (props:Props) => {
   const {
     title,
     name,
@@ -196,4 +196,4 @@ const MapSelectAssetOrPoint = (props:Props) => {
   );
 }
 
-export default MapSelectAssetOrPoint;
+export default MapAssetAndPointSelection;

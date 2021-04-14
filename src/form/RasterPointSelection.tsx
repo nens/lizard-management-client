@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { fetchRasterV4, RasterLayerFromAPI } from '../api/rasters';
 import { GeometryField } from './GeometryField';
-import MapSelectAssetOrPoint from './MapSelectAssetOrPoint';
+import MapAssetAndPointSelection from './MapAssetAndPointSelection';
 
 interface Location {
   lat: number,
@@ -60,7 +60,7 @@ export const RasterPointSelection: React.FC<MyProps> = (props) => {
 
   return (
     <div>
-      <MapSelectAssetOrPoint
+      <MapAssetAndPointSelection
         title={title}
         name={name}
         raster={raster}
