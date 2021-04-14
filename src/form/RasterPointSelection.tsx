@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { fetchRasterV4, RasterLayerFromAPI } from '../api/rasters';
+import { MapAssetAndPointSelection } from './MapAssetAndPointSelection';
 import { GeometryField } from './GeometryField';
-import MapAssetAndPointSelection from './MapAssetAndPointSelection';
 
 interface Location {
   lat: number,

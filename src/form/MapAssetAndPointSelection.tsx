@@ -1,8 +1,6 @@
-// Todo: This component should probably also be used for the raster alarms
-
-// Component to preview raster on a map.
-// And optionally let the user select a point on it 
-// by searching for an asset and using its point
+// Component to preview a map and optionally with a raster layer on top.
+// User can select a point by searching for an asset and using its point
+// or by directly clicking on the map
 
 import React, { useState } from "react";
 import { Map, Marker, TileLayer, WMSTileLayer, ZoomControl } from "react-leaflet";
@@ -54,7 +52,7 @@ const fetchAssets = async (raster: any, searchInput: string, type?: string | nul
   }));
 };
 
-const MapAssetAndPointSelection = (props:Props) => {
+export const MapAssetAndPointSelection = (props: Props) => {
   const {
     title,
     name,
@@ -64,8 +62,8 @@ const MapAssetAndPointSelection = (props:Props) => {
     valueChanged
   } = props;
 
-  // useState to temporarily store the selected asset
-  // from the asset select dropdown
+  // useState to temporarily store the selected asset from the asset select dropdown.
+  // This is required for the RasterPointSelection as it does not contain information about its related asset.
   const [selectedAsset, setSelectedAsset] = useState<AssetObject | null>(null);
 
   const handleMapClick = (e: any) => {
@@ -77,7 +75,7 @@ const MapAssetAndPointSelection = (props:Props) => {
       }
     });
 
-    // if there is a selected asset from the dropdown, reset it
+    // Reset the selectedAsset state
     if (selectedAsset) setSelectedAsset(null);
   };
 
@@ -195,5 +193,3 @@ const MapAssetAndPointSelection = (props:Props) => {
     </label>
   );
 }
-
-export default MapAssetAndPointSelection;

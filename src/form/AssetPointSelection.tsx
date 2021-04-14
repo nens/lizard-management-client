@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import MapAssetAndPointSelection from './MapAssetAndPointSelection';
+import { MapAssetAndPointSelection } from './MapAssetAndPointSelection';
 import { AssetLocationValue, assetTypes } from '../types/locationFormTypes';
 import { GeometryField } from './GeometryField';
 import { SelectDropdown, Value } from './SelectDropdown';
