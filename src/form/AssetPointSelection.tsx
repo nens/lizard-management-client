@@ -58,8 +58,11 @@ export const AssetPointSelection: React.FC<MyProps> = (props) => {
           <GeometryField
             title={'Geometry'}
             name={'geometry'}
-            value={value}
-            valueChanged={valueChanged}
+            value={value.location}
+            valueChanged={value => valueChanged({
+              asset: null,
+              location: value
+            })}
             validated
             triedToSubmit={triedToSubmit}
           />

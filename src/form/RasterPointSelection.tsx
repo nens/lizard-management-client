@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { fetchRasterV4, RasterLayerFromAPI } from '../api/rasters';
 import RasterPreview from '../components/RasterPreview';
 import formStyles from "../styles/Forms.module.css";
+import { GeometryField } from './GeometryField';
 
 interface Location {
   lat: number,
@@ -32,6 +33,7 @@ export const RasterPointSelection: React.FC<MyProps> = (props) => {
     errorMessage,
     triedToSubmit,
   } = props;
+  console.log(point)
 
   const [raster, setRaster] = useState<RasterLayerFromAPI | null>(null);
 
@@ -77,6 +79,14 @@ export const RasterPointSelection: React.FC<MyProps> = (props) => {
         setLocation={setLocation}
         validated={validated}
         errorMessage={errorMessage}
+        triedToSubmit={triedToSubmit}
+      />
+      <GeometryField
+        title={'Geometry'}
+        name={'geometry'}
+        value={point}
+        valueChanged={valueChanged}
+        validated
         triedToSubmit={triedToSubmit}
       />
     </label>

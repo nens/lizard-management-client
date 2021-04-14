@@ -1,14 +1,14 @@
 import React from 'react';
 import { FloatInput } from './FloatInput';
-import { AssetLocationValue } from "../types/locationFormTypes";
+import { Location } from "../types/locationFormTypes";
 import formStyles from "../styles/Forms.module.css";
 
 interface MyProps {
   title: string,
   name: string,
-  value: AssetLocationValue,
+  value: Location | null,
   validated: boolean,
-  valueChanged: (value: AssetLocationValue) => void,
+  valueChanged: (value: Location | null) => void,
   clearInput?: (e: any) => void,
   errorMessage?: string | false,
   placeholder?: string,
@@ -54,18 +54,15 @@ export const GeometryField: React.FC<MyProps> = (props) => {
             title={"X"}
             name={name}
             placeholder={placeholder}
-            value={value.location ? value.location.lng : NaN}
-            valueChanged={e => {
-              if (isNaN(e)) return;
+            value={value ? value.lng : NaN}
+            valueChanged={lng => {
+              if (isNaN(lng)) return;
               valueChanged({
-                asset: null,
-                location: {
-                  lat: value.location ? value.location.lat : NaN,
-                  lng: e
-                }
+                lat: value ? value.lat : NaN,
+                lng: lng
               });
             }}
-            validated={!value.location || !isNaN(value.location.lng)} // either leave both X and Y fields empty or fill in both fields
+            validated={!value || !isNaN(value.lng)} // either leave both X and Y fields empty or fill in both fields
             errorMessage={'Please fill in this field'}
             onFocus={onFocus}
             onBlur={onBlur}
@@ -81,18 +78,15 @@ export const GeometryField: React.FC<MyProps> = (props) => {
             title={"Y"}
             name={name}
             placeholder={placeholder}
-            value={value.location ? value.location.lat : NaN}
-            valueChanged={e => {
-              if (isNaN(e)) return;
+            value={value ? value.lat : NaN}
+            valueChanged={lat => {
+              if (isNaN(lat)) return;
               valueChanged({
-                asset: null,
-                location: {
-                  lng: value.location ? value.location.lng : NaN,
-                  lat: e
-                }
+                lng: value ? value.lng : NaN,
+                lat: lat
               });
             }}
-            validated={!value.location || !isNaN(value.location.lat)} // either leave both X and Y fields empty or fill in both fields
+            validated={!value || !isNaN(value.lat)} // either leave both X and Y fields empty or fill in both fields
             errorMessage={'Please fill in this field'}
             onFocus={onFocus}
             onBlur={onBlur}
