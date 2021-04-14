@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { fetchRasterV4, RasterLayerFromAPI } from '../api/rasters';
 import { MapAssetAndPointSelection } from './MapAssetAndPointSelection';
 import { GeometryField } from './GeometryField';
+import { geometryValidator } from './validators';
 
 interface Location {
   lat: number,
@@ -21,7 +22,7 @@ interface MyProps {
 
 // Helper function to validate if selected point is inside Raster's bounds
 const pointWithinRasterBoundsValidator = (raster: RasterLayerFromAPI | null, location: Location | null) => {
-  if (location !== null && raster !== null) {
+  if (location !== null && geometryValidator(location) && raster !== null) {
     // Check if location fits within the raster
     const { lat, lng } = location;
     const bounds = raster.spatial_bounds;
