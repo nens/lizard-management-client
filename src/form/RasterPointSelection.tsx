@@ -19,6 +19,30 @@ interface MyProps {
   onBlur?: () => void,
 }
 
+// Helper function to validate if selected point is inside Raster's bounds
+const pointWithinRasterBoundsValidator = (raster: RasterLayerFromAPI | null, location: Location | null) => {
+  if (location !== null && raster !== null) {
+    // Check if location fits within the raster
+    const { lat, lng } = location;
+    const bounds = raster.spatial_bounds;
+
+    if (!bounds) return 'No spatial bounds on Raster';
+
+    const inBounds = (
+      lat >= bounds.south && lat <= bounds.north &&
+      lng >= bounds.west && lng <= bounds.east
+    );
+
+    if (!inBounds) {
+      return "Please select a point within the Raster's bounds";
+    };
+
+    return false;
+  } else {
+    return false;
+  };
+};
+
 export const RasterPointSelection: React.FC<MyProps> = (props) => {
   const {
     name,
@@ -40,22 +64,9 @@ export const RasterPointSelection: React.FC<MyProps> = (props) => {
   }, [rasterUuid]);
 
   const setLocation = (location: Location | null) => {
-    if (location !== null && raster !== null) {
-      // Check if location fits within the raster
-      const { lat, lng } = location;
-      const bounds = raster.spatial_bounds;
-
-      if (!bounds) return;
-
-      const inBounds = (
-        lat >= bounds.south && lat <= bounds.north &&
-        lng >= bounds.west && lng <= bounds.east
-      );
-
-      if (!inBounds) return;
+    if (!pointWithinRasterBoundsValidator(raster, location)) {
+      valueChanged(location);
     };
-
-    valueChanged(location);
   };
 
   return (
@@ -75,8 +86,8 @@ export const RasterPointSelection: React.FC<MyProps> = (props) => {
         name={'geometry'}
         value={point}
         valueChanged={valueChanged}
-        validated={!!point}
-        errorMessage={'Please fill in both X and Y fields'}
+        validated={!!point && !pointWithinRasterBoundsValidator(raster, point)}
+        errorMessage={pointWithinRasterBoundsValidator(raster, point) || 'Please fill in both X and Y fields'}
         triedToSubmit={triedToSubmit}
       />
     </div>
