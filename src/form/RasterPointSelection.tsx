@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { fetchRasterV4, RasterLayerFromAPI } from '../api/rasters';
 import { GeometryField } from './GeometryField';
 import MapSelectAssetOrPoint from './MapSelectAssetOrPoint';
-import { geometryValidator } from './validators';
 
 interface Location {
   lat: number,
@@ -76,7 +75,7 @@ export const RasterPointSelection: React.FC<MyProps> = (props) => {
         name={'geometry'}
         value={point}
         valueChanged={valueChanged}
-        validated={geometryValidator(point)}
+        validated={!!point}
         errorMessage={'Please fill in both X and Y fields'}
         triedToSubmit={triedToSubmit}
       />

@@ -4,7 +4,7 @@
 // And optionally let the user select a point on it 
 // by searching for an asset and using its point
 
-import React from "react";
+import React, { useState } from "react";
 import { Map, Marker, TileLayer, WMSTileLayer, ZoomControl } from "react-leaflet";
 import { SelectDropdown } from "./SelectDropdown";
 import { mapBoxAccesToken} from '../mapboxConfig';
@@ -64,6 +64,10 @@ const MapSelectAssetOrPoint = (props:Props) => {
     valueChanged
   } = props;
 
+  // useState to temporarily store the selected asset
+  // from the asset select dropdown
+  const [selectedAsset, setSelectedAsset] = useState<AssetObject | null>(null);
+
   const handleMapClick = (e: any) => {
     valueChanged({
       asset: null,
@@ -72,6 +76,9 @@ const MapSelectAssetOrPoint = (props:Props) => {
         lng: e.latlng.lng
       }
     });
+
+    // if there is a selected asset from the dropdown, reset it
+    if (selectedAsset) setSelectedAsset(null);
   };
 
   const formatWMSStyles = (rawStyles:any) => {
@@ -140,16 +147,17 @@ const MapSelectAssetOrPoint = (props:Props) => {
             title={''}
             name={name}
             placeholder={'- Search and select an asset -'}
-            value={value.asset}
-            valueChanged={e => {
-              if (!e) {
+            value={value.asset || selectedAsset}
+            valueChanged={asset => {
+              setSelectedAsset(asset as AssetObject | null);
+              if (!asset) {
                 valueChanged({
                   ...value,
                   asset: null
                 });
                 return;
               };
-              const selectedAssetFromDropdown = e as AssetObject;
+              const selectedAssetFromDropdown = asset as AssetObject;
               valueChanged({
                 asset: selectedAssetFromDropdown,
                 location: selectedAssetFromDropdown.location
