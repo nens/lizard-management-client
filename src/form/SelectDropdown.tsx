@@ -74,14 +74,12 @@ export const SelectDropdown = (props: MyProps) => {
     };
   });
 
-  const SingleValue = (props: any) => {
-    return (
-      <components.SingleValue {...props}>
-        {props.children}
-        {props.data.subValue ? ` - ${props.data.subValue}` : null}
-      </components.SingleValue>
-    )
-  };
+  const SingleValue = (props: any) => (
+    <components.SingleValue {...props}>
+      {props.children}
+      {props.data.subInputInfo ? ` - ${props.data.subInputInfo}` : null}
+    </components.SingleValue>
+  );
 
   // Custom Option field to add sub-label
   const Option = (props: OptionProps<{}, boolean>) => (
