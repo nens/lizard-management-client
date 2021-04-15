@@ -63,7 +63,10 @@ const TableStateContainer: React.FC<Props> = ({ gridTemplateColumns, columnDefin
     "&page=1" +
     (selectedFilterOption && searchInput ? "&" + selectedFilterOption.value + searchInput : "") +
     "&ordering=" + ordering +
-    "&organisation__uuid=" + selectedOrganisationUuid +
+    // https://github.com/nens/lizard-management-client/issues/784
+    // for timeseries table organisation is filtered on via location
+    // Todo, should we instead put the logic for the organisation filter in the components using TableStateContainer?
+    (baseUrl === "/api/v4/timeseries/?" ? ("&location__organisation__uuid=" + selectedOrganisationUuid) : ("&organisation__uuid=" + selectedOrganisationUuid)) +
     (defaultUrlParams ? defaultUrlParams : '');
 
   const url = queryCheckBox && queryCheckBoxState? queryCheckBox.adaptUrlFunction(preUrl) : preUrl
