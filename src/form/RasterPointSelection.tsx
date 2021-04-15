@@ -27,7 +27,7 @@ const pointWithinRasterBoundsValidator = (raster: RasterLayerFromAPI | null, loc
     const { lat, lng } = location;
     const bounds = raster.spatial_bounds;
 
-    if (!bounds) return 'No spatial bounds on Raster';
+    if (!bounds) return false; // do not check if raster has no spatial bounds
 
     const inBounds = (
       lat >= bounds.south && lat <= bounds.north &&
