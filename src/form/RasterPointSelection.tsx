@@ -83,7 +83,7 @@ export const RasterPointSelection: React.FC<MyProps> = (props) => {
         valueChanged={value => setLocation(value.location)}
       />
       <GeometryField
-        title={'Geometry'}
+        title={'Geometry *'}
         name={'geometry'}
         value={point}
         valueChanged={valueChanged}
