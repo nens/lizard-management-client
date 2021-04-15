@@ -7,10 +7,10 @@ import { TextInput } from './../../../form/TextInput';
 import { SubmitButton } from '../../../form/SubmitButton';
 import { CancelButton } from '../../../form/CancelButton';
 import { useForm, Values } from '../../../form/useForm';
-import { geometryValidator, jsonValidator, minLength } from '../../../form/validators';
+import { geometryValidator, minLength } from '../../../form/validators';
 import { addNotification } from '../../../actions';
 import formStyles from './../../../styles/Forms.module.css';
-import { TextArea } from '../../../form/TextArea';
+// import { TextArea } from '../../../form/TextArea';
 import LocationIcon from "../../../images/locations_icon.svg";
 import { AccessModifier } from '../../../form/AccessModifier';
 import { AssetPointSelection } from '../../../form/AssetPointSelection';
@@ -74,7 +74,7 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
     const body = {
       name: values.name,
       code: values.code,
-      extra_metadata: values.extraMetadata,
+      // extra_metadata: values.extraMetadata,
       access_modifier: values.accessModifier,
       geometry: values.selectedAsset && geometryValidator(values.selectedAsset.location) ? {
         "type":"Point",
@@ -195,7 +195,7 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
-        <TextArea
+        {/* <TextArea
           title={'Extra metadata (JSON)'}
           name={'extraMetadata'}
           placeholder={'Please enter in valid JSON format'}
@@ -207,7 +207,7 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
           triedToSubmit={triedToSubmit}
           onFocus={handleFocus}
           onBlur={handleBlur}
-        />
+        /> */}
         <span className={formStyles.FormFieldTitle}>
           3: Rights
         </span>

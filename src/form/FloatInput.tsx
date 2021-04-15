@@ -43,7 +43,7 @@ export const FloatInput: React.FC<MyProps> = (props) => {
       errorMessage={errorMessage}
       type="number" 
       value={value} 
-      valueChanged={e => valueChanged(Number(e.target.value))}
+      valueChanged={e => valueChanged(parseFloat(e.target.value))}
       onFocus={onFocus}
       onBlur={onBlur}
       triedToSubmit={triedToSubmit}
