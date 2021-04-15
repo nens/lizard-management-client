@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { getTimeseriesLabel, Timeseries } from '../types/timeseriesType';
+import { getTimeseriesLabel, TimeseriesFromAssetEndpoint } from '../types/timeseriesType';
 import { convertToSelectObject } from '../utils/convertToSelectObject';
 import { SelectDropdown, Value } from './SelectDropdown';
 
@@ -9,7 +9,7 @@ interface AssetFromSearchEndpoint {
 }
 
 interface AssetFromAssetEndpoint {
-  timeseries: Timeseries[],
+  timeseries: TimeseriesFromAssetEndpoint[],
   filters?: NestedAsset[],
   pumps?: NestedAsset[]
 }
@@ -19,7 +19,7 @@ interface NestedAsset {
   label: string,
   code: string,
   name: string,
-  timeseries: Timeseries[]
+  timeseries: TimeseriesFromAssetEndpoint[]
 }
 
 interface MyProps {
@@ -143,9 +143,9 @@ export function TimeseriesSelection (props: MyProps) {
         valueChanged={value => props.valueChanged(value)}
         options={
           // Show timeseries of nested asset if a nested asset is selected
-          selectedNestedAsset ? selectedNestedAsset.timeseries.map(ts => convertToSelectObject(ts.uuid, getTimeseriesLabel(ts), ts.uuid)) :
+          selectedNestedAsset ? selectedNestedAsset.timeseries.map(ts => convertToSelectObject(ts.uuid, getTimeseriesLabel(ts), ts.uuid, '', ts.location || '')) :
           // Show timeseries of only the asset and not also the nested assets if no nested asset is selected
-          selectedAsset ? selectedAsset.timeseries.map(ts => convertToSelectObject(ts.uuid, getTimeseriesLabel(ts), ts.uuid)) :
+          selectedAsset ? selectedAsset.timeseries.map(ts => convertToSelectObject(ts.uuid, getTimeseriesLabel(ts), ts.uuid, '', ts.location || '')) :
           []
         }
         validated={!!timeseries}

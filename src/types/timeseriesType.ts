@@ -1,4 +1,4 @@
-export interface Timeseries {
+interface Timeseries {
   uuid: string,
   name: string,
   parameter: string,
@@ -10,6 +10,19 @@ export interface Timeseries {
     unit: string,
     reference_frame: string
   }
+}
+
+export type TimeseriesFromTimeseriesEndpoint = Timeseries & {
+  location: {
+    uuid: string,
+    url: string,
+    code: string,
+    name: string
+  }
+}
+
+export type TimeseriesFromAssetEndpoint = Timeseries & {
+  location: string
 }
 
 export const getTimeseriesLabel = (ts: Timeseries) => {
