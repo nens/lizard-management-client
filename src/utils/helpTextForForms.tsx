@@ -184,6 +184,7 @@ export const scenarioFormHelpText: HelpText = {
     </>
   ),
   supplier: 'The supplier of this object.',
+  accessModifier: 'Choose an accessibility to decide who has access to this object. The default is private.',
 }
 
 export const lableTypeFormHelpText: HelpText = {

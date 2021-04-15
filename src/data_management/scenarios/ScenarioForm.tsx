@@ -101,8 +101,9 @@ const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProp
           1: General
         </span>
         <TextInput
-          title={'Scenario name'}
+          title={'Scenario name *'}
           name={'name'}
+          placeholder={'Please enter at least 3 characters'}
           value={values.name}
           valueChanged={handleInputChange}
           clearInput={clearInput}
@@ -138,7 +139,7 @@ const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProp
           3: Rights
         </span>
         <AccessModifier
-          title={'Accessibility'}
+          title={'Accessibility *'}
           name={'accessModifier'}
           value={values.accessModifier}
           valueChanged={value => handleValueChange('accessModifier', value)}
@@ -146,7 +147,7 @@ const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProp
           onBlur={handleBlur}
         />
         <TextInput
-          title={'Organisation'}
+          title={'Organisation *'}
           name={'organisation'}
           value={values.organisation}
           valueChanged={handleInputChange}
