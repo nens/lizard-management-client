@@ -34,7 +34,7 @@ interface MyProps {
   onBlur?: () => void,
 };
 
-export const SelectDropdown: React.FC<MyProps> = (props) => {  
+export const SelectDropdown = (props: MyProps) => {
   const {
     title,
     name,
@@ -74,8 +74,17 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
     };
   });
 
+  const SingleValue = (props: any) => {
+    return (
+      <components.SingleValue {...props}>
+        {props.children}
+        {props.data.subValue ? ` - ${props.data.subValue}` : null}
+      </components.SingleValue>
+    )
+  };
+
   // Custom Option field to add sub-label
-  const Option: React.FC<OptionProps<{}, boolean>> = (props) => (
+  const Option = (props: OptionProps<{}, boolean>) => (
     <components.Option {...props}>
       <div
         style={{
@@ -170,7 +179,7 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
             ref={mySelect}
             inputId={name}
             name={name}
-            components={{ Option }}
+            components={{ Option, SingleValue }}
             styles={customStyles}
             placeholder={placeholder}
             cacheOptions={isCached}
@@ -192,7 +201,7 @@ export const SelectDropdown: React.FC<MyProps> = (props) => {
             ref={mySelect}
             inputId={name}
             name={name}
-            components={{ Option }}
+            components={{ Option, SingleValue }}
             styles={customStyles}
             placeholder={placeholder}
             options={options}

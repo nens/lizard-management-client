@@ -1,6 +1,7 @@
 import React from 'react';
 
 import {
+  accessModifierHelpText,
   HelpText,
   organisationHelpText,
   supplierHelpText
@@ -33,4 +34,5 @@ export const scenarioFormHelpText: HelpText = {
   ),
   organisation: organisationHelpText,
   supplier: supplierHelpText,
+  accessModifier: accessModifierHelpText,
 }
