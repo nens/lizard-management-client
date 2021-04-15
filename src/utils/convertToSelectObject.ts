@@ -3,13 +3,13 @@ export const convertToSelectObject = (
   label?: string, // label to display in input and dropdown list
   subLabel?: string, // sub-label next to the label in the dropdown
   subLabel2?: string, // 2nd sub-lable next to the sub-label in the dropdown
-  subValue?: string // additional value added next to the input value
+  subInputInfo?: string // additional info added next to the input value
 ) => {
   return {
     value,
     label: label || value+'',
     subLabel,
     subLabel2,
-    subValue
+    subInputInfo
   };
 };
