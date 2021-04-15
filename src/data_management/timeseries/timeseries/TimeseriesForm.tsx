@@ -191,6 +191,7 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
           errorMessage={required('Please select an observation type', values.observationType)}
           triedToSubmit={triedToSubmit}
           isAsync
+          isCached
           loadOptions={fetchObservationTypes}
         />
         <SelectDropdown
@@ -204,6 +205,7 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
           errorMessage={required('Please select a location', values.location)}
           triedToSubmit={triedToSubmit}
           isAsync
+          isCached
           loadOptions={searchInput => fetchLocations(searchInput, selectedOrganisation.uuid)}
         />
         <SelectDropdown

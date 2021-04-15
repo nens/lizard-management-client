@@ -321,6 +321,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           onBlur={handleBlur}
           readOnly={!!currentRasterLayer || !!rasterSourceUUID}
           isAsync={!rasterSourceUUID && !currentRasterLayer}
+          isCached
           loadOptions={searchInput => fetchRasterSources(selectedOrganisation.uuid, searchInput)}
         />
         <SelectDropdown
@@ -378,6 +379,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           onFocus={handleFocus}
           onBlur={handleBlur}
           isAsync
+          isCached
           loadOptions={fetchObservationTypes}
         />
         <ColorMapInput

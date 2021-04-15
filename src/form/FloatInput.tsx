@@ -6,7 +6,7 @@ interface MyProps {
   name: string,
   value: number,
   validated: boolean,
-  valueChanged: (value:number) => void,
+  valueChanged: (value: number) => void,
   clearInput?: (e: any) => void,
   errorMessage?: string | false,
   placeholder?: string,
@@ -34,11 +34,6 @@ export const FloatInput: React.FC<MyProps> = (props) => {
     readOnly
   } = props;
 
-  const handleStepChange = (event:React.ChangeEvent<HTMLInputElement>)=>{
-    const value = parseFloat(event.target.value);
-    valueChanged(value);
-  }
-
   return (
     <TextInput 
       title={title}
@@ -48,10 +43,7 @@ export const FloatInput: React.FC<MyProps> = (props) => {
       errorMessage={errorMessage}
       type="number" 
       value={value} 
-      valueChanged={(event:React.ChangeEvent<HTMLInputElement>)=>{
-        handleStepChange(event);
-      }}
-      required={true}
+      valueChanged={e => valueChanged(parseFloat(e.target.value))}
       onFocus={onFocus}
       onBlur={onBlur}
       triedToSubmit={triedToSubmit}
