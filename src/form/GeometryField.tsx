@@ -1,14 +1,14 @@
 import React from 'react';
 import { FloatInput } from './FloatInput';
-import { AssetLocationValue } from "../types/locationFormTypes";
+import { Location } from "../types/locationFormTypes";
 import formStyles from "../styles/Forms.module.css";
 
 interface MyProps {
   title: string,
   name: string,
-  value: AssetLocationValue,
+  value: Location | null,
   validated: boolean,
-  valueChanged: (value: AssetLocationValue) => void,
+  valueChanged: (value: Location | null) => void,
   clearInput?: (e: any) => void,
   errorMessage?: string | false,
   placeholder?: string,
@@ -26,6 +26,8 @@ export const GeometryField: React.FC<MyProps> = (props) => {
     placeholder,
     value,
     valueChanged,
+    validated,
+    errorMessage,
     onFocus,
     onBlur,
     handleEnter,
@@ -54,18 +56,17 @@ export const GeometryField: React.FC<MyProps> = (props) => {
             title={"X"}
             name={name}
             placeholder={placeholder}
-            value={value.location ? value.location.lng : NaN}
-            valueChanged={e => {
+            value={value ? value.lng : NaN}
+            valueChanged={lng => {
               valueChanged({
-                asset: null,
-                location: {
-                  lat: value.location ? value.location.lat : NaN,
-                  lng: !isNaN(e) ? e : NaN
-                }
+                lat: value ? value.lat : NaN,
+                lng: !isNaN(lng) ? lng : NaN
               });
             }}
-            validated={!value.location || !isNaN(value.location.lng)} // either leave both X and Y fields empty or fill in both fields
-            errorMessage={'Please fill in this field'}
+            validated={validated && (
+              !value || !isNaN(value.lng) // either leave both X and Y fields empty or fill in both fields
+            )}
+            errorMessage={errorMessage}
             onFocus={onFocus}
             onBlur={onBlur}
             handleEnter={handleEnter}
@@ -80,18 +81,17 @@ export const GeometryField: React.FC<MyProps> = (props) => {
             title={"Y"}
             name={name}
             placeholder={placeholder}
-            value={value.location ? value.location.lat : NaN}
-            valueChanged={e => {
+            value={value ? value.lat : NaN}
+            valueChanged={lat => {
               valueChanged({
-                asset: null,
-                location: {
-                  lng: value.location ? value.location.lng : NaN,
-                  lat: !isNaN(e) ? e : NaN
-                }
+                lng: value ? value.lng : NaN,
+                lat: !isNaN(lat) ? lat : NaN
               });
             }}
-            validated={!value.location || !isNaN(value.location.lat)} // either leave both X and Y fields empty or fill in both fields
-            errorMessage={'Please fill in this field'}
+            validated={validated && (
+              !value || !isNaN(value.lat) // either leave both X and Y fields empty or fill in both fields
+            )}
+            errorMessage={errorMessage}
             onFocus={onFocus}
             onBlur={onBlur}
             handleEnter={handleEnter}

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import MapSelectAssetOrPoint from './MapSelectAssetOrPoint';
+import { MapAssetAndPointSelection } from './MapAssetAndPointSelection';
 import { AssetLocationValue, assetTypes } from '../types/locationFormTypes';
-import formStyles from "../styles/Forms.module.css";
 import { GeometryField } from './GeometryField';
 import { SelectDropdown, Value } from './SelectDropdown';
+import formStyles from "../styles/Forms.module.css";
 
 interface MyProps {
   value: AssetLocationValue,
@@ -45,22 +45,25 @@ export const AssetPointSelection: React.FC<MyProps> = (props) => {
         options={assetTypes}
         validated
       />
-      <MapSelectAssetOrPoint
+      <MapAssetAndPointSelection
         title={'Asset location'}
         name={'assetLocation'}
         assetType={assetType ? assetType.value as string : null}
         value={value}
         valueChanged={valueChanged}
-        validated
       />
       <div style={{display: "flex"}}>
         <div style={{flex: 3, marginRight: "40px"}}>
           <GeometryField
             title={'Geometry'}
             name={'geometry'}
-            value={value}
-            valueChanged={valueChanged}
+            value={value.location}
+            valueChanged={value => valueChanged({
+              asset: null,
+              location: value
+            })}
             validated
+            errorMessage={'Please fill in both X and Y fields'}
             triedToSubmit={triedToSubmit}
           />
         </div>

@@ -1,33 +1,28 @@
-// Todo: This component should probably also be used for the raster alarms
+// Component to preview a map and optionally with a raster layer on top.
+// User can select a point by searching for an asset and using its point
+// or by directly clicking on the map
 
-// Component to preview raster on a map.
-// And optionally let the user select a point on it 
-// by searching for an asset and using its point
-
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Map, Marker, TileLayer, WMSTileLayer, ZoomControl } from "react-leaflet";
 import { SelectDropdown } from "./SelectDropdown";
 import { mapBoxAccesToken} from '../mapboxConfig';
-import styles from "../components/RasterPreview.module.css";
-import { fetchRasterV4, RasterLayerFromAPI } from '../api/rasters';
-import formStyles from "../styles/Forms.module.css";
 import { AssetObject, AssetLocationValue } from "../types/locationFormTypes";
 import { geometryValidator } from "./validators";
+import { RasterLayerFromAPI } from "../api/rasters";
+import styles from "./MapAssetAndPointSelection.module.css";
+import formStyles from "../styles/Forms.module.css";
 
 interface Props {
   title: string,
   name: string,
-  assetType: string | null,
-  rasterUuid?: string,
+  assetType?: string | null,
+  raster?: RasterLayerFromAPI | null,
   value: AssetLocationValue;
   valueChanged: (value: AssetLocationValue)=> void,
-  validated: boolean,
-  errorMessage?: string,
-  triedToSubmit?: boolean,
 }
 
 // Helper function to fetch assets in async select dropdown
-const fetchAssets = async (raster: any, searchInput: string, type?: string | null) => {
+const fetchAssets = async (searchInput: string, raster?: RasterLayerFromAPI | null, type?: string | null) => {
   if (!searchInput) return;
 
   const NUMBER_OF_RESULTS = 20;
@@ -58,69 +53,19 @@ const fetchAssets = async (raster: any, searchInput: string, type?: string | nul
   }));
 };
 
-const MapSelectAssetOrPoint = (props:Props) => {
+export const MapAssetAndPointSelection = (props: Props) => {
   const {
     title,
     name,
     assetType,
-    rasterUuid,
+    raster,
     value,
-    valueChanged,
-    validated,
-    errorMessage,
-    triedToSubmit
+    valueChanged
   } = props;
 
-  const [raster, setRaster] = useState<RasterLayerFromAPI | null>(null);
-
-  useEffect(() => {
-    if (rasterUuid) {
-      fetchRasterV4(rasterUuid).then(
-        raster => setRaster(raster)
-      ).catch(console.error);
-    };
-  }, [rasterUuid]);
-
-  // const setLocation = (location: Location | null) => {
-  //   if (location !== null && raster !== null) {
-  //     // Check if location fits within the raster
-  //     const { lat, lng } = location;
-  //     const bounds = raster.spatial_bounds;
-
-  //     if (!bounds) return;
-
-  //     const inBounds = (
-  //       lat >= bounds.south && lat <= bounds.north &&
-  //       lng >= bounds.west && lng <= bounds.east
-  //     );
-
-  //     if (!inBounds) return;
-  //   };
-  //   valueChanged({ asset: null, location: location});
-  // };
-
-  // const chooseLocation = !!setLocation;
-
-  // const setAsset = (asset: Asset | null) => {
-  //   if (asset && asset.location) {
-  //     const { lat, lng } = asset.location;
-  //     // if (raster !== null) {
-  //     //   if ( !raster.spatial_bounds) {
-  //     //     return;
-  //     //   }
-  //     //   const inBounds = (
-  //     //     lat >= raster.spatial_bounds.south && lat <= raster.spatial_bounds.north &&
-  //     //     lng >= raster.spatial_bounds.west && lng <= raster.spatial_bounds.east
-  //     //   );
-  //     //   if (!inBounds) { 
-  //     //     return; 
-  //     //   }
-  //     // }
-  //     valueChanged({ asset: asset, location: {lat ,lng}});
-  //   } else {
-  //     valueChanged({ asset: null, location: null});
-  //   }
-  // };
+  // useState to temporarily store the selected asset from the asset select dropdown.
+  // This is required for the RasterPointSelection as it does not contain information about its related asset.
+  const [selectedAsset, setSelectedAsset] = useState<AssetObject | null>(null);
 
   const handleMapClick = (e: any) => {
     valueChanged({
@@ -130,6 +75,9 @@ const MapSelectAssetOrPoint = (props:Props) => {
         lng: e.latlng.lng
       }
     });
+
+    // Reset the selectedAsset state
+    if (selectedAsset) setSelectedAsset(null);
   };
 
   const formatWMSStyles = (rawStyles:any) => {
@@ -198,27 +146,26 @@ const MapSelectAssetOrPoint = (props:Props) => {
             title={''}
             name={name}
             placeholder={'- Search and select an asset -'}
-            value={value.asset}
-            valueChanged={e => {
-              if (!e) {
+            value={value.asset || selectedAsset}
+            valueChanged={asset => {
+              setSelectedAsset(asset as AssetObject | null);
+              if (!asset) {
                 valueChanged({
                   ...value,
                   asset: null
                 });
                 return;
               };
-              const selectedAssetFromDropdown = e as AssetObject;
+              const selectedAssetFromDropdown = asset as AssetObject;
               valueChanged({
                 asset: selectedAssetFromDropdown,
                 location: selectedAssetFromDropdown.location
               });
             }}
             options={[]}
-            validated={validated}
-            errorMessage={errorMessage}
-            triedToSubmit={triedToSubmit}
+            validated
             isAsync
-            loadOptions={searchInput => fetchAssets(raster, searchInput, assetType)}
+            loadOptions={searchInput => fetchAssets(searchInput, raster, assetType)}
           />
         </div>
         <Map
@@ -247,5 +194,3 @@ const MapSelectAssetOrPoint = (props:Props) => {
     </label>
   );
 }
-
-export default MapSelectAssetOrPoint;
