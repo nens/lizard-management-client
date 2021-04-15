@@ -5,6 +5,7 @@ import { getOrganisations, getSelectedOrganisation, getUsername } from '../../re
 import { ScenarioResult } from '../../form/ScenarioResult';
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import { TextInput } from './../../form/TextInput';
+import { AccessModifier } from '../../form/AccessModifier';
 import { SubmitButton } from '../../form/SubmitButton';
 import { CancelButton } from '../../form/CancelButton';
 import { useForm, Values } from '../../form/useForm';
@@ -13,8 +14,8 @@ import { addNotification } from '../../actions';
 import threediIcon from "../../images/3di@3x.svg";
 import formStyles from './../../styles/Forms.module.css';
 import { scenarioFormHelpText, defaultScenarioExplanationText } from '../../utils/helpTextForForms';
-import {getScenarioTotalSize} from '../../reducers';
-import {bytesToDisplayValue} from '../../utils/byteUtils';
+import { getScenarioTotalSize } from '../../reducers';
+import { bytesToDisplayValue } from '../../utils/byteUtils';
 
 interface Props {
   currentScenario: any
@@ -39,11 +40,13 @@ const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProp
     modelName: currentScenario.model_name || '',
     supplier: currentScenario.username || '',
     organisation: currentScenario.organisation.name || '',
+    accessModifier: currentScenario.access_modifier
   };
 
   const onSubmit = (values: Values) => {
     const body = {
-      name: values.name
+      name: values.name,
+      access_modifier: values.accessModifier
     };
 
     fetch(`/api/v4/scenarios/${currentScenario.uuid}/`, {
@@ -71,6 +74,7 @@ const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProp
     formSubmitted,
     tryToSubmitForm,
     handleInputChange,
+    handleValueChange,
     fieldOnFocus,
     handleFocus,
     handleBlur,
@@ -97,8 +101,9 @@ const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProp
           1: General
         </span>
         <TextInput
-          title={'Scenario name'}
+          title={'Scenario name *'}
           name={'name'}
+          placeholder={'Please enter at least 3 characters'}
           value={values.name}
           valueChanged={handleInputChange}
           clearInput={clearInput}
@@ -133,8 +138,16 @@ const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProp
         <span className={formStyles.FormFieldTitle}>
           3: Rights
         </span>
+        <AccessModifier
+          title={'Accessibility *'}
+          name={'accessModifier'}
+          value={values.accessModifier}
+          valueChanged={value => handleValueChange('accessModifier', value)}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+        />
         <TextInput
-          title={'Organisation'}
+          title={'Organisation *'}
           name={'organisation'}
           value={values.organisation}
           valueChanged={handleInputChange}
