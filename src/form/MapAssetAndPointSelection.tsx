@@ -8,6 +8,7 @@ import { SelectDropdown } from "./SelectDropdown";
 import { mapBoxAccesToken} from '../mapboxConfig';
 import { AssetObject, AssetLocationValue } from "../types/locationFormTypes";
 import { geometryValidator } from "./validators";
+import { RasterLayerFromAPI } from "../api/rasters";
 import styles from "./MapAssetAndPointSelection.module.css";
 import formStyles from "../styles/Forms.module.css";
 
@@ -15,13 +16,13 @@ interface Props {
   title: string,
   name: string,
   assetType?: string | null,
-  raster?: any,
+  raster?: RasterLayerFromAPI | null,
   value: AssetLocationValue;
   valueChanged: (value: AssetLocationValue)=> void,
 }
 
 // Helper function to fetch assets in async select dropdown
-const fetchAssets = async (raster: any, searchInput: string, type?: string | null) => {
+const fetchAssets = async (searchInput: string, raster?: RasterLayerFromAPI | null, type?: string | null) => {
   if (!searchInput) return;
 
   const NUMBER_OF_RESULTS = 20;
@@ -164,7 +165,7 @@ export const MapAssetAndPointSelection = (props: Props) => {
             options={[]}
             validated
             isAsync
-            loadOptions={searchInput => fetchAssets(raster, searchInput, assetType)}
+            loadOptions={searchInput => fetchAssets(searchInput, raster, assetType)}
           />
         </div>
         <Map
