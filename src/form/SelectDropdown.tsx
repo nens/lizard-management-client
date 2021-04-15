@@ -76,7 +76,7 @@ export const SelectDropdown = (props: MyProps) => {
     return (
       <components.SingleValue {...props}>
         {props.children}
-        {props.data.subValue ? ` - ${props.data.subValue}` : ''}
+        {props.data.subValue ? ` - ${props.data.subValue}` : null}
       </components.SingleValue>
     )
   };
