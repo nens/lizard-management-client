@@ -1,4 +1,5 @@
 // Functions to use as validators
+import { Location } from "../types/locationFormTypes";
 
 // A Validator returns either an error message or false (if no errors)
 export type validatorResult = string | false;
@@ -85,8 +86,20 @@ export const relativeEndValidator = (relativeStart: number | null, relativeEnd: 
     (relativeEnd !== null) &&
     relativeStart > relativeEnd
   ) {
-    return 'Please select "Relative End" after "Relative Start"'
+    return 'Please select "Relative End" after "Relative Start"';
   } else {
-    return false
+    return false;
   };
-}
+};
+
+export const geometryValidator = (location: Location | null) => {
+  if (
+    location &&
+    !isNaN(location.lat) &&
+    !isNaN(location.lng)
+  ) {
+    return true;
+  } else {
+    return false;
+  };
+};

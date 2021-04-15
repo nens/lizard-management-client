@@ -1,153 +1,139 @@
-import React, {useState,} from 'react';
+import React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { connect, useSelector } from 'react-redux';
-// import { getOrganisations, getUsername } from '../../reducers';
 import { getSelectedOrganisation } from '../../../reducers';
-// import { ScenarioResult } from '../../form/ScenarioResult';
 import { ExplainSideColumn } from '../../../components/ExplainSideColumn';
 import { TextInput } from './../../../form/TextInput';
-// import { SubmitButton } from '../../form/SubmitButton';
-// import { CancelButton } from '../../form/CancelButton';
+import { SubmitButton } from '../../../form/SubmitButton';
+import { CancelButton } from '../../../form/CancelButton';
 import { useForm, Values } from '../../../form/useForm';
-import { minLength } from '../../../form/validators';
+import { geometryValidator, minLength } from '../../../form/validators';
 import { addNotification } from '../../../actions';
 import formStyles from './../../../styles/Forms.module.css';
-// import { TextArea } from './../../form/TextArea';
+// import { TextArea } from '../../../form/TextArea';
 import LocationIcon from "../../../images/locations_icon.svg";
-import FormActionButtons from '../../../components/FormActionButtons';
-import Modal from '../../../components/Modal';
-import { ModalDeleteContent } from '../../../components/ModalDeleteContent';
-// import { lableTypeFormHelpText } from '../../utils/helpTextForForms';
-import { convertToSelectObject } from '../../../utils/convertToSelectObject';
-
+import { AccessModifier } from '../../../form/AccessModifier';
+import { AssetPointSelection } from '../../../form/AssetPointSelection';
+import { locationFormHelpText } from '../../../utils/help_texts/helpTextsForLocations';
 
 
 interface Props {
-  currentRecord?: any
-};
-interface PropsFromDispatch {
-  addNotification: (message: string | number, timeout: number) => void
+  currentRecord?: any;
+  relatedAsset?: any;
 };
 interface RouteParams {
   uuid: string;
 };
 
-const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps<RouteParams>) => {
-  const { currentRecord } = props;
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
+const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RouteParams>) => {
+  const { currentRecord, relatedAsset } = props;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
 
-  // const organisations = useSelector(getOrganisations).available;
-  // next line doesnot work, because organisation has no uuid, but unique_id instead. Thus I do not use it
-  // const thisRecordOrganisation = organisations.find((org: any) => org.uuid === currentRecord.organisation.uuid.replace(/-/g, ""));
-  // const username = useSelector(getUsername);
-
   let initialValues;
-  
   if (currentRecord) {
+    const geometryCurrentRecord = (
+      currentRecord && 
+      currentRecord.geometry && 
+      currentRecord.geometry.coordinates && 
+      currentRecord.geometry.coordinates[1] !== undefined && 
+      currentRecord.geometry.coordinates[0] !== undefined &&
+      {
+        lat: currentRecord.geometry.coordinates[1],
+        lng: currentRecord.geometry.coordinates[0],
+      }
+    );
+
     initialValues = {
       name: currentRecord.name || '',
-      uuid: currentRecord.uuid || '',
-      description: currentRecord.description || '',
-      // modelName: currentRecord.model_name || '',
-      // supplier: currentRecord.username || '',
-      organisation: (currentRecord.location && currentRecord.location.organisation && currentRecord.location.organisation.name) || '',
+      code: currentRecord.code || '',
+      extraMetadata: currentRecord.extra_metadata ? JSON.stringify(currentRecord.extra_metadata) : null,
+      accessModifier: currentRecord.access_modifier,
+      selectedAsset: {
+        asset: relatedAsset && currentRecord.object && currentRecord.object.type && currentRecord.object.id ? {
+          value: relatedAsset.id,
+          label: relatedAsset.name || relatedAsset.code,
+          type: currentRecord.object.type
+        } : null,
+        location: geometryCurrentRecord ? geometryCurrentRecord : null,
+      }
     };
   } else {
     initialValues = {
       name: null,
-      description: null,
-      // modelName: currentRecord.model_name || '',
-      // supplier: currentRecord.username || '',
-      organisation: selectedOrganisation ? convertToSelectObject(selectedOrganisation.uuid.replace(/-/g, ""), selectedOrganisation.name) : null,
-    }
-  }
-  
-  
-
-  const onSubmit = (values: Values) => {
-    // const body = {
-    //   name: values.name,
-    //   description: values.description,
-  //     organisation: values.organisation.unique_id,
-  //     object_type: values.object_type,
-    // };
-
-    // fetch(`/api/v3/labeltypes/${currentRecord.uuid}/`, {
-    //   credentials: 'same-origin',
-    //   method: 'PATCH',
-    //   headers: {'Content-Type': 'application/json'},
-    //   body: JSON.stringify(body)
-    // })
-    //   .then(data => {
-    //     const status = data.status;
-    //     if (status === 200) {
-    //       props.addNotification('Success! Labeltype updated', 2000);
-    //       props.history.push('/data_management/labels/labeltypes/');
-    //     } else {
-    //       props.addNotification(status, 2000);
-    //       console.error(data);
-    //     };
-    //   })
-    //   .catch(console.error);
+      code: null,
+      extraMetadata: null,
+      accessModifier: 'Private',
+      selectedAsset: {
+        asset: null,
+        location: null,
+      },
+    };
   };
 
-  // dummie function to test creation
-  // const onCreate = () => {
-  //   const body = {
-  //     name: "test labeltype",
-  //     description: "test labeltype",
-  //     organisation: currentRecord.organisation.unique_id,
-  //     object_type: currentRecord.object_type,
-  //   };
-
-  //   fetch(`/api/v3/labeltypes/`, {
-  //     credentials: 'same-origin',
-  //     method: 'POST',
-  //     headers: {'Content-Type': 'application/json'},
-  //     body: JSON.stringify(body)
-  //   })
-  //     .then(data => {
-  //       const status = data.status;
-  //       if (status === 201) {
-  //         props.addNotification('Success! Labeltype created', 2000);
-  //         props.history.push('/data_management/labels/labeltypes/');
-  //       } else {
-  //         props.addNotification(status, 2000);
-  //         console.error(data);
-  //       };
-  //     })
-  //     .catch(console.error);
-  // }
-
-  const onDelete = () => {
-    const body = {};
-
-    fetch(`/api/v4/locations/${currentRecord.uuid}/`, {
-      credentials: 'same-origin',
-      method: 'DELETE',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(body)
-    })
-      .then(data => {
-        const status = data.status;
-        if (status === 204) {
-          props.addNotification('Success! Location deleted', 2000);
-          props.history.push('/data_management/timeseries/locations/');
-        } else {
-          props.addNotification(status, 2000);
-          console.error(data);
-        };
+  const onSubmit = (values: Values) => {
+    const body = {
+      name: values.name,
+      code: values.code,
+      // extra_metadata: values.extraMetadata,
+      access_modifier: values.accessModifier,
+      geometry: values.selectedAsset && geometryValidator(values.selectedAsset.location) ? {
+        "type":"Point",
+        "coordinates": [values.selectedAsset.location.lng, values.selectedAsset.location.lat, 0.0]
+      } : null,
+      object: {
+        id: values.selectedAsset.asset ? values.selectedAsset.asset.value : null,
+        type: values.selectedAsset.asset ? values.selectedAsset.asset.type : null
+      }
+    };
+    if (currentRecord) {
+      fetch(`/api/v4/locations/${currentRecord.uuid}/`, {
+        credentials: 'same-origin',
+        method: 'PATCH',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(body)
       })
-      .catch(console.error);
-  }
+        .then(data => {
+          const status = data.status;
+          if (status === 200) {
+            props.addNotification('Success! Location updated', 2000);
+            props.history.push('/data_management/timeseries/locations');
+          } else {
+            props.addNotification(status, 2000);
+            console.error(data);
+          };
+        })
+        .catch(console.error);
+    } else {
+      fetch(`/api/v4/locations/`, {
+        credentials: 'same-origin',
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          ...body,
+          organisation: selectedOrganisation.uuid
+        })
+      })
+        .then(data => {
+          const status = data.status;
+          if (status === 201) {
+            props.addNotification('Success! Location creatd', 2000);
+            props.history.push('/data_management/timeseries/locations');
+          } else {
+            props.addNotification(status, 2000);
+            console.error(data);
+          };
+        })
+        .catch(console.error);
+    };
+  };
 
   const {
     values,
     triedToSubmit,
     // formSubmitted,
-    // tryToSubmitForm,
+    tryToSubmitForm,
     handleInputChange,
+    handleValueChange,
     handleSubmit,
     handleReset,
     clearInput,
@@ -161,8 +147,7 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
       imgUrl={LocationIcon}
       imgAltDescription={"Location icon"}
       headerText={"Locations"}
-      // explanationText={lableTypeFormHelpText[fieldOnFocus] || lableTypeFormHelpText['default']}
-      explanationText={"Location is for now read only"}
+      explanationText={locationFormHelpText[fieldOnFocus] || locationFormHelpText['default']}
       backUrl={"/data_management/timeseries/locations"}
       fieldName={fieldOnFocus}
     >
@@ -171,9 +156,13 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
         onSubmit={handleSubmit}
         onReset={handleReset}
       >
+        <span className={formStyles.FormFieldTitle}>
+          1: General
+        </span>
         <TextInput
-          title={'Location name'}
+          title={'Location name *'}
           name={'name'}
+          placeholder={'Please enter at least 3 characters'}
           value={values.name}
           valueChanged={handleInputChange}
           clearInput={clearInput}
@@ -182,91 +171,65 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
           triedToSubmit={triedToSubmit}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          readOnly={true}
         />
-        {/* <TextInput
-          title={'Label type Uuid'}
-          name={'uuid'}
-          value={values.uuid}
+        <TextInput
+          title={'Code *'}
+          name={'code'}
+          placeholder={'Please enter at least 1 character'}
+          value={values.code}
           valueChanged={handleInputChange}
           clearInput={clearInput}
-          validated={!minLength(3, values.uuid)}
-          errorMessage={minLength(3, values.uuid)}
+          validated={!minLength(1, values.code)}
+          errorMessage={minLength(1, values.code)}
           triedToSubmit={triedToSubmit}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          readOnly={true}
         />
-        <TextArea
-          title={'Description'}
-          name={'description'}
-          placeholder={'Description here..'}
-          value={values.description}
-          valueChanged={handleInputChange}
-          clearInput={clearInput}
-          validated
+        <span className={formStyles.FormFieldTitle}>
+          2: Data
+        </span>
+        <AssetPointSelection
+          value={values.selectedAsset}
+          valueChanged={value => handleValueChange('selectedAsset', value)}
+          triedToSubmit={triedToSubmit}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          readOnly={true}
         />
-        <TextInput
-          title={'Organisation'}
-          name={'organisation'}
-          value={values.organisation}
+        {/* <TextArea
+          title={'Extra metadata (JSON)'}
+          name={'extraMetadata'}
+          placeholder={'Please enter in valid JSON format'}
+          value={values.extraMetadata}
           valueChanged={handleInputChange}
           clearInput={clearInput}
-          validated
+          validated={!jsonValidator(values.extraMetadata)}
+          errorMessage={jsonValidator(values.extraMetadata)}
+          triedToSubmit={triedToSubmit}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          readOnly
         /> */}
+        <span className={formStyles.FormFieldTitle}>
+          3: Rights
+        </span>
+        <AccessModifier
+          title={'Accessibility *'}
+          name={'accessModifier'}
+          value={values.accessModifier}
+          valueChanged={value => handleValueChange('accessModifier', value)}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+        />
         <div
           className={formStyles.ButtonContainer}
         >
-          { currentRecord?
-          <div
-            style={{marginLeft: "auto"}}
-          >
-            <FormActionButtons
-              actions={[
-                {
-                  displayValue: "Delete",
-                  actionFunction: () => {setShowDeleteModal(true);}
-                },
-                // {
-                //   displayValue: "Create",
-                //   actionFunction: onCreate,
-                // }
-              ]}
-            />
-          </div>
-          :null}
-          
+          <CancelButton
+            url={'/data_management/timeseries/locations'}
+          />
+          <SubmitButton
+            onClick={tryToSubmitForm}
+          />
         </div>
       </form>
-      { 
-        currentRecord && showDeleteModal?
-           <Modal
-           title={'Are you sure?'}
-           buttonConfirmName={'Delete'}
-           onClickButtonConfirm={() => {
-              onDelete();
-              setShowDeleteModal(false);
-           }}
-           cancelAction={()=>{
-            setShowDeleteModal(false)
-          }}
-          disableButtons={false}
-         >
-           
-           <p>Are you sure? You are deleting the following Location:</p>
-           
-           {ModalDeleteContent([currentRecord], false, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
-           
-         </Modal>
-        :
-          null
-        }
     </ExplainSideColumn>
   );
 };
@@ -274,7 +237,6 @@ const LocationFormModel = (props:Props & PropsFromDispatch & RouteComponentProps
 const mapPropsToDispatch = (dispatch: any) => ({
   addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout))
 });
+type DispatchProps = ReturnType<typeof mapPropsToDispatch>;
 
-const LocationForm = connect(null, mapPropsToDispatch)(withRouter(LocationFormModel));
-
-export { LocationForm  };
+export default connect(null, mapPropsToDispatch)(withRouter(LocationForm));
