@@ -56,12 +56,11 @@ export const GeometryField: React.FC<MyProps> = (props) => {
             placeholder={placeholder}
             value={value.location ? value.location.lng : NaN}
             valueChanged={e => {
-              if (isNaN(e)) return;
               valueChanged({
                 asset: null,
                 location: {
                   lat: value.location ? value.location.lat : NaN,
-                  lng: e
+                  lng: !isNaN(e) ? e : NaN
                 }
               });
             }}
@@ -83,12 +82,11 @@ export const GeometryField: React.FC<MyProps> = (props) => {
             placeholder={placeholder}
             value={value.location ? value.location.lat : NaN}
             valueChanged={e => {
-              if (isNaN(e)) return;
               valueChanged({
                 asset: null,
                 location: {
                   lng: value.location ? value.location.lng : NaN,
-                  lat: e
+                  lat: !isNaN(e) ? e : NaN
                 }
               });
             }}
