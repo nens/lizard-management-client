@@ -36,7 +36,7 @@ const TimeseriesAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps>
 
   const initialValues = currentTimeseriesAlarm && timeseries ? {
     name: currentTimeseriesAlarm.name,
-    timeseries: convertToSelectObject(timeseries.uuid, getTimeseriesLabel(timeseries), timeseries.uuid, '', timeseries.location ? timeseries.location.name : ''),
+    timeseries: convertToSelectObject(timeseries.uuid, getTimeseriesLabel(timeseries), timeseries.uuid, '', timeseries.location ? timeseries.location.name || timeseries.location.code : ''),
     relative: !!currentTimeseriesAlarm.relative_start || !!currentTimeseriesAlarm.relative_end,
     relativeStart: currentTimeseriesAlarm.relative_start ? convertDurationObjToSeconds(rasterIntervalStringServerToDurationObject(currentTimeseriesAlarm.relative_start)) : null,
     relativeEnd: currentTimeseriesAlarm.relative_end ? convertDurationObjToSeconds(rasterIntervalStringServerToDurationObject(currentTimeseriesAlarm.relative_end)) : null,
