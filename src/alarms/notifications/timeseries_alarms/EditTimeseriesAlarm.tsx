@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { RouteComponentProps } from 'react-router';
 import MDSpinner from "react-md-spinner";
 import { getUuidFromUrl } from "../../../utils/getUuidFromUrl";
-import { Timeseries } from "../../../types/timeseriesType";
+import { TimeseriesFromTimeseriesEndpoint } from "../../../types/timeseriesType";
 import TimeseriesAlarmForm from "./TimeseriesAlarmForm";
 
 interface RouteParams {
@@ -11,7 +11,7 @@ interface RouteParams {
 
 export const EditTimeseriesAlarm: React.FC<RouteComponentProps<RouteParams>> = (props) => {
   const [currentTimeseriesAlarm, setCurrentTimeseriesAlarm] = useState<Object | null>(null);
-  const [timeseries, setTimeseries] = useState<Timeseries | null>(null);
+  const [timeseries, setTimeseries] = useState<TimeseriesFromTimeseriesEndpoint | null>(null);
 
   const { uuid } = props.match.params;
   useEffect(() => {
