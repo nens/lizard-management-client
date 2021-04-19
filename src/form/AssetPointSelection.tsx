@@ -58,9 +58,9 @@ export const AssetPointSelection: React.FC<MyProps> = (props) => {
             title={'Geometry'}
             name={'geometry'}
             value={value.location}
-            valueChanged={value => valueChanged({
-              asset: null,
-              location: value
+            valueChanged={location => valueChanged({
+              ...value,
+              location: location
             })}
             validated
             errorMessage={'Please fill in both X and Y fields'}

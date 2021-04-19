@@ -69,7 +69,7 @@ export const MapAssetAndPointSelection = (props: Props) => {
 
   const handleMapClick = (e: any) => {
     valueChanged({
-      asset: null,
+      ...value,
       location: {
         lat: e.latlng.lat,
         lng: e.latlng.lng
