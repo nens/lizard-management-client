@@ -28,7 +28,11 @@ const backUrl = "/data_management/timeseries/timeseries";
 
 // Helper function to fetch locations in async select dropdown
 const fetchLocations = async (searchInput: string, organisationUuid: string) => {
-  const urlQuery = searchInput ? `organisation__uuid=${organisationUuid}&name__startswith=${searchInput}` : `organisation__uuid=${organisationUuid}`;
+  const params=[`organisation__uuid=${organisationUuid}`, "writable=true"];
+
+  if (searchInput) params.push(`name__startswith=${searchInput}`);
+  const urlQuery = params.join('&');
+
   const response = await fetch(`/api/v4/locations/?${urlQuery}`, {
     credentials: "same-origin"
   });
