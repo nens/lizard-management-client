@@ -152,7 +152,6 @@ const MonitoringNetworkForm = (props: Props & DispatchProps & RouteComponentProp
           name={'accessModifier'}
           value={values.accessModifier}
           valueChanged={value => handleValueChange('accessModifier', value)}
-          readOnly={!!currentNetwork}
         />
         <SelectDropdown
           title={'Organisation *'}

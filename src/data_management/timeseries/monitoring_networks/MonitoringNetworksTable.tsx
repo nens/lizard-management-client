@@ -51,7 +51,7 @@ export const MonitoringNetworksTable = (props: RouteComponentProps) =>  {
       orderingField: "name",
     },
     {
-      titleRenderFunction: () =>  "Access modifier",
+      titleRenderFunction: () =>  "Accessibility",
       renderFunction: (row: any) =>
         <span
           className={tableStyles.CellEllipsis}
@@ -60,7 +60,7 @@ export const MonitoringNetworksTable = (props: RouteComponentProps) =>  {
           {row.access_modifier}
         </span>
       ,
-      orderingField: "access_modifier",
+      orderingField: null,
     },
     {
       titleRenderFunction: () =>  "",//"Actions",
