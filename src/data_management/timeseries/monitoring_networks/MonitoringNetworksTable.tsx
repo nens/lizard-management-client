@@ -130,7 +130,6 @@ export const MonitoringNetworksTable = (props: RouteComponentProps) =>  {
         ]}
         filterOptions={[
           {value: 'name__icontains=', label: 'Name'},
-          {value: 'uuid=', label: 'UUID'}
         ]}
       />
       {rowsToBeDeleted.length > 0 ? (
