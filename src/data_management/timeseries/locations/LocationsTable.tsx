@@ -60,7 +60,7 @@ export const LocationsTable = (props: RouteComponentProps) =>  {
           {row.code}
         </span>
       ,
-      orderingField: "code",
+      orderingField: null,
     },
     {
       titleRenderFunction: () => "Accessibility",
@@ -72,7 +72,7 @@ export const LocationsTable = (props: RouteComponentProps) =>  {
           {row.access_modifier }
         </span>
       ,
-      orderingField: "access_modifier",
+      orderingField: null,
     },
     {
       titleRenderFunction: () =>  "",//"Actions",
@@ -142,7 +142,7 @@ export const LocationsTable = (props: RouteComponentProps) =>  {
         newItemOnClick={handleNewClick}
         filterOptions={[
           {value: 'name__startswith=', label: 'Name'},
-          {value: 'uuid=', label: 'UUID'},
+          {value: 'code__startswith=', label: 'Code'},
         ]}
       />
       {rowsToBeDeleted.length > 0 ? (
