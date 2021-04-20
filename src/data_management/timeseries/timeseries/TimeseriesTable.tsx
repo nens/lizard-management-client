@@ -112,7 +112,7 @@ export const TimeseriesTable = (props: RouteComponentProps) =>  {
           }
         </span>
       ,
-      orderingField: "location",
+      orderingField: null,
     },
     {
       titleRenderFunction: () => "Accessibility",
@@ -208,7 +208,8 @@ export const TimeseriesTable = (props: RouteComponentProps) =>  {
         ]}
         filterOptions={[
           {value: 'name__startswith=', label: 'Name'},
-          {value: 'uuid=', label: 'UUID'},
+          {value: 'location__name__startswith=', label: 'Location name'},
+          {value: 'location__code__startswith=', label: 'Location code'},
         ]}
       />
       {rowsToBeDeleted.length > 0 ? (
