@@ -12,6 +12,7 @@ import { bytesToDisplayValue } from '../../utils/byteUtils';
 import { defaultScenarioExplanationText } from '../../utils/help_texts/helpTextForScenarios';
 import { getScenarioTotalSize } from '../../reducers';
 import DeleteModal from '../../components/DeleteModal';
+import AuthorisationModal from '../../components/AuthorisationModal';
 
 const baseUrl = "/api/v4/scenarios/";
 const navigationUrl = "/data_management/scenarios";
@@ -34,10 +35,13 @@ export const ScenarioTable = () =>  {
   const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
   const [rowsWithRawDataToBeDeleted, setRowsWithRawDataToBeDeleted] = useState<any[]>([]);
   const [resetTable, setResetTable] = useState<Function | null>(null);
-  const scenarioTotalSize = useSelector(getScenarioTotalSize);
+
+  // selected rows for action to change accessibility
+  const [rowsToChangeAccess, setRowsToChangeAccess] = useState<any[]>([]);
 
   const userName = useSelector(getUsername);
   const selectedOrganisation = useSelector(getSelectedOrganisation);
+  const scenarioTotalSize = useSelector(getScenarioTotalSize);
 
   const deleteActions = (
     rows: any[],
@@ -172,6 +176,16 @@ export const ScenarioTable = () =>  {
           baseUrl={`${baseUrl}?`} 
           checkBoxActions={[
             {
+              displayValue: "Change rights",
+              actionFunction: (rows: any[], _tableData: any, _setTableData: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any, setCheckboxes: any) => {
+                setRowsToChangeAccess(rows);
+                setResetTable(() => () => {
+                  triggerReloadWithCurrentPage();
+                  setCheckboxes([]);
+                });
+              }
+            },
+            {
               displayValue: "Delete",
               actionFunction: (rows: any[], _tableData: any, _setTableData: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any, setCheckboxes: any) => {
                 deleteActions(rows, triggerReloadWithCurrentPage, setCheckboxes)
@@ -184,8 +198,6 @@ export const ScenarioTable = () =>  {
               checkIfActionIsApplicable: (row: any) => row.has_raw_results === true
             },
           ]}
-          // new item not supported for scenarios
-          // newItemOnClick={handleNewRasterClick}
           queryCheckBox={{
             text:"Only show own scenario's",
             adaptUrlFunction: (url:string) => {return userName? url + `&username__contains=${userName}` : url},
@@ -195,8 +207,6 @@ export const ScenarioTable = () =>  {
             {value: 'uuid=', label: 'UUID'},
             {value: 'username__icontains=', label: 'Username'},
             {value: 'model_name__icontains=', label: 'Model name'},
-            // not needed for now
-            // {value: 'model_revision__icontains=', label: 'Model revision'},
           ]}
         />
         {rowsToBeDeleted.length > 0 ? (
@@ -222,6 +232,17 @@ export const ScenarioTable = () =>  {
               setResetTable(null);
             }}
             text={"Are you sure? You are deleting the RAW results of the following scenario(s):"}
+          />
+        ) : null}
+        {rowsToChangeAccess.length > 0 ? (
+          <AuthorisationModal
+            rows={rowsToChangeAccess}
+            fetchFunction={fetchScenariosWithOptions}
+            resetTable={resetTable}
+            handleClose={() => {
+              setRowsToChangeAccess([]);
+              setResetTable(null);
+            }}
           />
         ) : null}
      </ExplainSideColumn>
