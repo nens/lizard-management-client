@@ -142,8 +142,8 @@ export const LocationsTable = (props: RouteComponentProps) =>  {
         ]}
         newItemOnClick={handleNewClick}
         filterOptions={[
-          {value: 'name__startswith=', label: 'Name'},
-          {value: 'code__startswith=', label: 'Code'},
+          {value: 'name__startswith=', label: 'Name *'},
+          {value: 'code__startswith=', label: 'Code *'},
         ]}
       />
       {rowsToBeDeleted.length > 0 ? (

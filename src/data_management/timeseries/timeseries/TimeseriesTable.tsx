@@ -208,9 +208,9 @@ export const TimeseriesTable = (props: RouteComponentProps) =>  {
           }
         ]}
         filterOptions={[
-          {value: 'name__startswith=', label: 'Name'},
-          {value: 'location__name__startswith=', label: 'Location name'},
-          {value: 'location__code__startswith=', label: 'Location code'},
+          {value: 'name__startswith=', label: 'Name *'},
+          {value: 'location__name__startswith=', label: 'Location name *'},
+          {value: 'location__code__startswith=', label: 'Location code *'},
         ]}
       />
       {rowsToBeDeleted.length > 0 ? (

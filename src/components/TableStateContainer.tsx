@@ -238,11 +238,11 @@ const TableStateContainer: React.FC<Props> = ({ gridTemplateColumns, columnDefin
           marginTop: "18px",
         }}
       >
-        {
-          filterOptions && filterOptions.length > 0 ?
+        {filterOptions && filterOptions.length > 0 ?
           <div
             style={{
-              display: 'flex'
+              display: 'flex',
+              position: 'relative',
             }}
           >
             <TableSearchBox
@@ -252,7 +252,7 @@ const TableStateContainer: React.FC<Props> = ({ gridTemplateColumns, columnDefin
               }}
               onClear={()=>setSearchInput("")}
               value={searchInput}
-              placeholder={"Type to search for name"}
+              placeholder={"Type to search"}
             />
             {filterOptions.length > 1 ? (
               <TableSearchToggle
@@ -261,23 +261,31 @@ const TableStateContainer: React.FC<Props> = ({ gridTemplateColumns, columnDefin
                 valueChanged={option => setSelectedFilterOption(option)}
               />
             ) : null}
+            {selectedFilterOption && selectedFilterOption.label.includes('*') ?
+              <div
+                style={{
+                  fontSize: 14,
+                  fontStyle: 'italic',
+                  marginTop: 5,
+                  position: 'absolute',
+                  top: '100%',
+                  left: 0,
+                }}
+              >
+                <span>(*) Only support filtering by first letters and is case sensitive</span>
+              </div>
+            : null}
           </div>
-          :
-          <div />
-        }
-        {
-          newItemOnClick? 
+        : <div />}
+        {newItemOnClick ?
           <button
             onClick={newItemOnClick}
             className={buttonStyles.NewButton}
           >
             + New Item
           </button>
-          :
-          null
-        }
-        {
-          queryCheckBox?
+        : null}
+        {queryCheckBox ?
           <span
             style={{
               display: "flex",
@@ -295,11 +303,8 @@ const TableStateContainer: React.FC<Props> = ({ gridTemplateColumns, columnDefin
                 size={32}
               />
           </span>
-          :
-          null
-        }
+        : null}
       </div>
-      
       <div
         // @ts-ignore
         style={{
@@ -355,8 +360,6 @@ const TableStateContainer: React.FC<Props> = ({ gridTemplateColumns, columnDefin
           getIfCheckBoxOfUuidIsSelected={getIfCheckBoxOfUuidIsSelected}
         />
       </div>
-      
-      
       <Pagination
         page1Url={url}
         previousUrl={previousUrl}
@@ -365,7 +368,6 @@ const TableStateContainer: React.FC<Props> = ({ gridTemplateColumns, columnDefin
         reloadFromUrl={fetchWithUrl}
         setItemsPerPage={setItemsPerPage}
       />
-
     </div>
   )
 };
