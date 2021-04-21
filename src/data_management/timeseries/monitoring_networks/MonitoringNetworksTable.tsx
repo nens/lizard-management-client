@@ -7,6 +7,7 @@ import DeleteModal from '../../../components/DeleteModal';
 import { ExplainSideColumn } from '../../../components/ExplainSideColumn';
 import monitoringNetworkIcon from "../../../images/monitoring_network_icon.svg";
 import tableStyles from "../../../components/Table.module.css";
+import { getAccessibiltyText } from '../../../form/AccessModifier';
 
 const baseUrl = "/api/v4/monitoringnetworks/";
 const navigationUrl = "/data_management/timeseries/monitoring_networks";
@@ -57,7 +58,7 @@ export const MonitoringNetworksTable = (props: RouteComponentProps) =>  {
           className={tableStyles.CellEllipsis}
           title={row.access_modifier}
         >
-          {row.access_modifier}
+          {getAccessibiltyText(row.access_modifier)}
         </span>
       ,
       orderingField: null,

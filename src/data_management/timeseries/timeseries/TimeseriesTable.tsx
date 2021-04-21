@@ -8,6 +8,7 @@ import DeleteModal from '../../../components/DeleteModal';
 import { ExplainSideColumn } from '../../../components/ExplainSideColumn';
 import tableStyles from "../../../components/Table.module.css";
 import timeseriesIcon from "../../../images/timeseries_icon.svg";
+import { getAccessibiltyText } from '../../../form/AccessModifier';
 
 const baseUrl = "/api/v4/timeseries/";
 const navigationUrl = "/data_management/timeseries/timeseries";
@@ -121,7 +122,7 @@ export const TimeseriesTable = (props: RouteComponentProps) =>  {
           className={tableStyles.CellEllipsis}
           title={row.access_modifier}
         >
-          {row.access_modifier }
+          {getAccessibiltyText(row.access_modifier)}
         </span>
       ,
       orderingField: "access_modifier",

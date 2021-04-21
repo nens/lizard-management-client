@@ -7,6 +7,7 @@ import AuthorisationModal from '../../../components/AuthorisationModal';
 import DeleteModal from '../../../components/DeleteModal';
 import tableStyles from "../../../components/Table.module.css";
 import locationIcon from "../../../images/locations_icon.svg";
+import { getAccessibiltyText } from '../../../form/AccessModifier';
 
 const baseUrl = "/api/v4/locations/";
 const navigationUrl = "/data_management/timeseries/locations";
@@ -69,7 +70,7 @@ export const LocationsTable = (props: RouteComponentProps) =>  {
           className={tableStyles.CellEllipsis}
           title={row.access_modifier}
         >
-          {row.access_modifier }
+          {getAccessibiltyText(row.access_modifier)}
         </span>
       ,
       orderingField: null,
