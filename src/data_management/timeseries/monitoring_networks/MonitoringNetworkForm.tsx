@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect, useSelector } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { ExplainSideColumn } from '../../../components/ExplainSideColumn';
@@ -6,6 +6,7 @@ import { TextInput } from './../../../form/TextInput';
 import { TextArea } from '../../../form/TextArea';
 import { AccessModifier } from '../../../form/AccessModifier';
 import { SelectDropdown } from '../../../form/SelectDropdown';
+import { FormButton } from '../../../form/FormButton';
 import { SubmitButton } from '../../../form/SubmitButton';
 import { CancelButton } from '../../../form/CancelButton';
 import { useForm, Values } from '../../../form/useForm';
@@ -13,6 +14,7 @@ import { minLength } from '../../../form/validators';
 import { addNotification } from '../../../actions';
 import { getOrganisations, getSelectedOrganisation } from '../../../reducers';
 import { convertToSelectObject } from '../../../utils/convertToSelectObject';
+import TimeseriesModal from './TimeseriesModal';
 import formStyles from './../../../styles/Forms.module.css';
 import monitoringNetworkIcon from "../../../images/monitoring_network_icon.svg";
 
@@ -27,6 +29,9 @@ const MonitoringNetworkForm = (props: Props & DispatchProps & RouteComponentProp
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const organisations = useSelector(getOrganisations).available;
   const organisationsToSwitchTo = organisations.filter((org: any) => org.roles.includes('admin'));
+
+  // Modal to manage timeseries of a monitoring network
+  const [timeseriesModal, setTimeseriesModal] = useState<boolean>(false);
 
   const initialValues = currentNetwork ? {
     name: currentNetwork.name,
@@ -144,6 +149,15 @@ const MonitoringNetworkForm = (props: Props & DispatchProps & RouteComponentProp
         <span className={formStyles.FormFieldTitle}>
           2: Data
         </span>
+        <FormButton
+          name={'timeseriesModal'}
+          title={'Time Series'}
+          text={'Manage'}
+          onClick={e => {
+            e.preventDefault();
+            setTimeseriesModal(true);
+          }}
+        />
         <span className={formStyles.FormFieldTitle}>
           3: Rights
         </span>
@@ -176,6 +190,12 @@ const MonitoringNetworkForm = (props: Props & DispatchProps & RouteComponentProp
           />
         </div>
       </form>
+      {timeseriesModal ? (
+        <TimeseriesModal
+          currentMonitoringNetwork={currentNetwork ? currentNetwork.uuid : null}
+          handleClose={() => setTimeseriesModal(false)}
+        />
+      ) : null}
     </ExplainSideColumn>
   );
 };
