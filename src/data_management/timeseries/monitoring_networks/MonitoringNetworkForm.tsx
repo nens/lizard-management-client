@@ -192,7 +192,7 @@ const MonitoringNetworkForm = (props: Props & DispatchProps & RouteComponentProp
       </form>
       {timeseriesModal ? (
         <TimeseriesModal
-          currentMonitoringNetwork={currentNetwork ? currentNetwork.uuid : null}
+          currentMonitoringNetworkUuid={currentNetwork ? currentNetwork.uuid : null}
           handleClose={() => setTimeseriesModal(false)}
         />
       ) : null}
