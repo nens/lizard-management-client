@@ -287,7 +287,6 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
           name={'accessModifier'}
           value={values.accessModifier}
           valueChanged={value => handleValueChange('accessModifier', value)}
-          readOnly={!!currentTimeseries}
         />
         <SelectDropdown
           title={'Username of supplier'}
