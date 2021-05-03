@@ -7,9 +7,9 @@ interface Props {
   page1Url: string;
   previousUrl: string | null;
   nextUrl: string | null;
-  itemsPerPage: string;
+  itemsPerPage: number;
   reloadFromUrl: (url: string)=> void;
-  setItemsPerPage: (amountItems: string)=> void;
+  setItemsPerPage: (amountItems: number)=> void;
 }
 
 const Pagination: React.FC<Props> = ({page1Url,previousUrl, nextUrl, itemsPerPage, reloadFromUrl, setItemsPerPage}) => {
@@ -40,9 +40,7 @@ const Pagination: React.FC<Props> = ({page1Url,previousUrl, nextUrl, itemsPerPag
             Items per page:
             <select
               value={itemsPerPage}
-              onChange={event=>{
-                setItemsPerPage(event.target.value)
-              }}
+              onChange={event => setItemsPerPage(parseInt(event.target.value))}
             >
               <option value="10">10</option>
               <option value="20">20</option>

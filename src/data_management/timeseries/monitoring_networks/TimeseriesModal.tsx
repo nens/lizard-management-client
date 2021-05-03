@@ -8,6 +8,7 @@ import Pagination from '../../../components/Pagination';
 import formStyles from '../../../styles/Forms.module.css';
 import buttonStyles from '../../../styles/Buttons.module.css';
 import MDSpinner from 'react-md-spinner';
+import TableSearchToggle from '../../../components/TableSearchToggle';
 
 interface MyProps {
   currentMonitoringNetworkUuid: string | null,
@@ -31,8 +32,15 @@ function TimeseriesModal (props: MyProps & DispatchProps) {
     dataRetrievalState: 'NEVER_DID_RETRIEVE'
   });
 
-  const [itemsPerPage, setItemsPerPage] = useState<string>("10");
-  const [currentUrl, setCurrentUrl] = useState<string | null>(`/api/v4/monitoringnetworks/${currentMonitoringNetworkUuid}/timeseries/`);
+  const baseUrl = `/api/v4/monitoringnetworks/${currentMonitoringNetworkUuid}/timeseries/`;
+  const [itemsPerPage, setItemsPerPage] = useState<number>(10);
+  const [currentUrl, setCurrentUrl] = useState<string | null>(baseUrl + `?page_size=${itemsPerPage}`);
+
+  useEffect(() => {
+    const params = [`page_size=${itemsPerPage}`];
+    const urlQuery = params.join('&');
+    if (params.length > 0) setCurrentUrl(baseUrl + `?${urlQuery}`);
+  }, [itemsPerPage, baseUrl]);
 
   const fetchWithUrl = (url: string | null) => {
     if (!url) return;
@@ -105,6 +113,14 @@ function TimeseriesModal (props: MyProps & DispatchProps) {
         }}
       >
         <div>
+          <input />
+          <TableSearchToggle
+            options={[
+              {value: 'name__icontains=', label: 'Name'},
+            ]}
+            value={null}
+            valueChanged={() => null}
+          />
           <ul>
             {timeseriesApiResponse.dataRetrievalState === 'NEVER_DID_RETRIEVE' ? (
               <div />
@@ -121,7 +137,7 @@ function TimeseriesModal (props: MyProps & DispatchProps) {
             previousUrl={timeseriesApiResponse.previous}
             nextUrl={timeseriesApiResponse.next}
             itemsPerPage={itemsPerPage}
-            reloadFromUrl={url => setCurrentUrl(url)}
+            reloadFromUrl={setCurrentUrl}
             setItemsPerPage={setItemsPerPage}
           />
         </div>
