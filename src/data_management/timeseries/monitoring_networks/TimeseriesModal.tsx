@@ -181,7 +181,7 @@ function TimeseriesModal (props: MyProps & DispatchProps) {
           <div>
             <h4>Add time series</h4>
             <p>To add time series to a monitoring network, please visit the time series management page. There you can search for the time series that you want to add.</p>
-            <p>When you are done with adding new time series, please refresh this page to view you changes.</p>
+            <p>When you are done with adding new time series, please refresh this page to review your changes.</p>
             <button
               className={buttonStyles.NewButton}
               onClick={() => window.open(timeseriesTableUrl, "_blank")}
