@@ -5,8 +5,8 @@ import paginationArrowIcon from '../images/pagination_arrow.svg';
 
 interface Props {
   page1Url: string;
-  previousUrl: string;
-  nextUrl: string;
+  previousUrl: string | null;
+  nextUrl: string | null;
   itemsPerPage: string;
   reloadFromUrl: (url: string)=> void;
   setItemsPerPage: (amountItems: string)=> void;
@@ -25,10 +25,10 @@ const Pagination: React.FC<Props> = ({page1Url,previousUrl, nextUrl, itemsPerPag
             <img alt="" style={{transform:"scaleX(-1"}} src={paginationArrowIcon}/>
             <img alt="to first page" style={{transform:"scaleX(-1"}} src={paginationArrowIcon}/>
           </button>
-          <button disabled={previousUrl===""} onClick={()=>reloadFromUrl(previousUrl)}>
+          <button disabled={!previousUrl} onClick={() => previousUrl && reloadFromUrl(previousUrl)}>
             <img alt="to previous page" style={{transform:"scaleX(-1"}} src={paginationArrowIcon}/>
           </button>
-          <button disabled={nextUrl===""} onClick={()=>reloadFromUrl(nextUrl)}>
+          <button disabled={!nextUrl} onClick={() => nextUrl && reloadFromUrl(nextUrl)}>
             <img alt="to next page" src={paginationArrowIcon}/>
           </button>
           <label>
