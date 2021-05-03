@@ -26,13 +26,14 @@ interface APIResponse {
 function TimeseriesModal (props: MyProps & DispatchProps) {
   const { currentMonitoringNetworkUuid } = props;
 
+  const baseUrl = `/api/v4/monitoringnetworks/${currentMonitoringNetworkUuid}/timeseries/`;
+  const timeseriesTableUrl = '/management#/data_management/timeseries/timeseries';
+
   const [timeseriesApiResponse, setTimeseriesApiResponse] = useState<APIResponse>({
     previous: null,
     next: null,
     results: []
   });
-
-  const baseUrl = `/api/v4/monitoringnetworks/${currentMonitoringNetworkUuid}/timeseries/`;
   const [dataRetrievalState, setDataRetrievalState] = useState<DataRetrievalState>('NEVER_DID_RETRIEVE');
   const [itemsPerPage, setItemsPerPage] = useState<number>(10);
   const [searchInput, setSearchInput] = useState<string>('');
@@ -77,7 +78,7 @@ function TimeseriesModal (props: MyProps & DispatchProps) {
   // POST requests to update selected monitoring network with the selected timeseries
   const handleSubmit = () => {
     if (timeseriesToDelete.length) {
-      fetch(`/api/v4/monitoringnetworks/${currentMonitoringNetworkUuid}/timeseries/`, {
+      fetch(baseUrl, {
         credentials: "same-origin",
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
@@ -169,7 +170,7 @@ function TimeseriesModal (props: MyProps & DispatchProps) {
               </div>
             </div>
             <Pagination
-              page1Url={`/api/v4/monitoringnetworks/${currentMonitoringNetworkUuid}/timeseries/`}
+              page1Url={baseUrl}
               previousUrl={timeseriesApiResponse.previous}
               nextUrl={timeseriesApiResponse.next}
               itemsPerPage={itemsPerPage}
@@ -183,7 +184,7 @@ function TimeseriesModal (props: MyProps & DispatchProps) {
             <p>When you are done with adding new time series, please refresh this page to view you changes.</p>
             <button
               className={buttonStyles.NewButton}
-              onClick={() => window.open("/management#/data_management/timeseries/timeseries", "_blank")}
+              onClick={() => window.open(timeseriesTableUrl, "_blank")}
             >
               Go to Time-Series Management
             </button>
