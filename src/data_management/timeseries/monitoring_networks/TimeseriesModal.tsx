@@ -5,10 +5,12 @@ import { addNotification } from '../../../actions';
 import { DataRetrievalState } from '../../../types/retrievingDataTypes';
 import ModalBackground from '../../../components/ModalBackground';
 import Pagination from '../../../components/Pagination';
+import styles from './TimeseriesModal.module.css';
 import formStyles from '../../../styles/Forms.module.css';
 import buttonStyles from '../../../styles/Buttons.module.css';
+import tableStyles from '../../../components/Table.module.css';
 import MDSpinner from 'react-md-spinner';
-import TableSearchToggle from '../../../components/TableSearchToggle';
+// import TableSearchToggle from '../../../components/TableSearchToggle';
 
 interface MyProps {
   currentMonitoringNetworkUuid: string | null,
@@ -18,8 +20,7 @@ interface MyProps {
 interface APIResponse {
   previous: string | null,
   next: string | null,
-  results: any[],
-  dataRetrievalState: DataRetrievalState
+  results: any[]
 }
 
 function TimeseriesModal (props: MyProps & DispatchProps) {
@@ -28,48 +29,44 @@ function TimeseriesModal (props: MyProps & DispatchProps) {
   const [timeseriesApiResponse, setTimeseriesApiResponse] = useState<APIResponse>({
     previous: null,
     next: null,
-    results: [],
-    dataRetrievalState: 'NEVER_DID_RETRIEVE'
+    results: []
   });
 
   const baseUrl = `/api/v4/monitoringnetworks/${currentMonitoringNetworkUuid}/timeseries/`;
+  const [dataRetrievalState, setDataRetrievalState] = useState<DataRetrievalState>('NEVER_DID_RETRIEVE');
   const [itemsPerPage, setItemsPerPage] = useState<number>(10);
+  const [searchInput, setSearchInput] = useState<string>('');
   const [currentUrl, setCurrentUrl] = useState<string | null>(baseUrl + `?page_size=${itemsPerPage}`);
+  const [timeseriesToDelete, setTimeseriesToDelete] = useState<string[]>([]);
+  console.log(timeseriesToDelete)
 
   useEffect(() => {
     const params = [`page_size=${itemsPerPage}`];
+    if (searchInput) params.push(`name__startswith=${searchInput}`);
     const urlQuery = params.join('&');
     if (params.length > 0) setCurrentUrl(baseUrl + `?${urlQuery}`);
-  }, [itemsPerPage, baseUrl]);
+  }, [baseUrl, itemsPerPage, searchInput]);
 
   const fetchWithUrl = (url: string | null) => {
     if (!url) return;
-    setTimeseriesApiResponse({
-      previous: null,
-      next: null,
-      results: [],
-      dataRetrievalState: 'RETRIEVING'
-    })
+    setDataRetrievalState('RETRIEVING');
     return (
       fetch(url, {
         credentials: "same-origin"
       }).then(
         response => response.json()
       ).then(
-        parsedResponse => setTimeseriesApiResponse({
-          previous: parsedResponse.previous ? parsedResponse.previous.split("lizard.net")[1] : null,
-          next: parsedResponse.next ? parsedResponse.next.split("lizard.net")[1] : null,
-          results: parsedResponse.results,
-          dataRetrievalState: 'RETRIEVED'
-        })
+        parsedResponse => {
+          setDataRetrievalState('RETRIEVED');
+          setTimeseriesApiResponse({
+            previous: parsedResponse.previous ? parsedResponse.previous.split("lizard.net")[1] : null,
+            next: parsedResponse.next ? parsedResponse.next.split("lizard.net")[1] : null,
+            results: parsedResponse.results
+          });
+        }
       ).catch(e => {
         console.error(e);
-        setTimeseriesApiResponse({
-          previous: null,
-          next: null,
-          results: [],
-          dataRetrievalState: {status:"ERROR", errorMesssage: e, url: url}
-        });
+        setDataRetrievalState({status:"ERROR", errorMesssage: e, url: url});
       })
     );
   };
@@ -80,20 +77,24 @@ function TimeseriesModal (props: MyProps & DispatchProps) {
 
   // POST requests to update selected monitoring network with the selected timeseries
   const handleSubmit = () => {
-    // fetch(`/api/v4/monitoringnetworks/${currentMonitoringNetworkUuid}/timeseries/`, {
-    //   credentials: "same-origin",
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify(selectedTimeseries)
-    // }).then(res => {
-    //     if (res.status === 204) {
-    //       props.addNotification('Success! Time-series added to monitoring network', 2000);
-    //       props.handleClose();
-    //     } else {
-    //       props.addNotification('An error occurred! Please try again!', 2000);
-    //       console.error('Error adding time-series to monitoring network: ', res);
-    //     }
-    //   }).catch(console.error);
+    if (timeseriesToDelete.length) {
+      fetch(`/api/v4/monitoringnetworks/${currentMonitoringNetworkUuid}/timeseries/`, {
+        credentials: "same-origin",
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(timeseriesToDelete)
+      }).then(res => {
+        if (res.status === 204) {
+          props.addNotification(`${timeseriesToDelete.length} time-series removed successfully from monitoring network`, 2000);
+          props.handleClose();
+        } else {
+          props.addNotification('An error occurred! Please try again!', 2000);
+          console.error('Error removing time-series from monitoring network: ', res);
+        }
+      }).catch(console.error);
+    } else {
+      props.handleClose();
+    };
   };
 
   return (
@@ -103,43 +104,91 @@ function TimeseriesModal (props: MyProps & DispatchProps) {
       width={'80%'}
       height={'80%'}
     >
-      <div
-        style={{
-          padding: '20px 40px',
-          height: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between'
-        }}
-      >
-        <div>
-          <input />
-          <TableSearchToggle
-            options={[
-              {value: 'name__icontains=', label: 'Name'},
-            ]}
-            value={null}
-            valueChanged={() => null}
-          />
-          <ul>
-            {timeseriesApiResponse.dataRetrievalState === 'NEVER_DID_RETRIEVE' ? (
-              <div />
-            ) : null}
-            {timeseriesApiResponse.dataRetrievalState === 'RETRIEVING' ? (
-              <MDSpinner />
-            ) : null}
-            {timeseriesApiResponse.dataRetrievalState === 'RETRIEVED' ? timeseriesApiResponse.results.map(ts => (
-              <li key={ts.uuid}>{ts.name}</li>
-            )) : null}
-          </ul>
-          <Pagination
-            page1Url={`/api/v4/monitoringnetworks/${currentMonitoringNetworkUuid}/timeseries/`}
-            previousUrl={timeseriesApiResponse.previous}
-            nextUrl={timeseriesApiResponse.next}
-            itemsPerPage={itemsPerPage}
-            reloadFromUrl={setCurrentUrl}
-            setItemsPerPage={setItemsPerPage}
-          />
+      <div className={styles.MainContainer}>
+        <div className={styles.GridContainer}>
+          <div className={styles.TimeseriesContainer}>
+            <div>
+              <h4>Manage time series</h4>
+              <input
+                className={styles.InputField}
+                onChange={e => setSearchInput(e.target.value)}
+              />
+              {/* <TableSearchToggle
+                options={[
+                  {value: 'name__icontains=', label: 'Name'},
+                ]}
+                value={null}
+                valueChanged={() => null}
+              /> */}
+              <ul className={styles.TimeseriesList}>
+                {timeseriesApiResponse.results.map(ts => (
+                  <li
+                    className={styles.TimeseriesRow}
+                    key={ts.uuid}
+                  >
+                    <span
+                      style={{
+                        textDecoration: timeseriesToDelete.includes(ts.uuid) ? 'line-through' : undefined
+                      }}
+                    >
+                      {ts.name}
+                    </span>
+                    <button
+                      className={buttonStyles.IconButton}
+                      style={{
+                        fontSize: 18,
+                        color: timeseriesToDelete.includes(ts.uuid) ? '#2C3E50' : '#D50000',
+                      }}
+                      onClick={() => {
+                        if (timeseriesToDelete.includes(ts.uuid)) {
+                          setTimeseriesToDelete(timeseriesToDelete.filter(tsUuid => tsUuid !== ts.uuid));
+                        } else {
+                          setTimeseriesToDelete([...timeseriesToDelete, ts.uuid]);
+                        };
+                      }}
+                    >
+                      {timeseriesToDelete.includes(ts.uuid) ? (
+                        <i className='fa fa-undo' title='Undo' />
+                      ) : (
+                        <i className='fa fa-trash' title='Delete'/>
+                      )}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+              {timeseriesToDelete.length ? (
+                <span>
+                  <em><b>{timeseriesToDelete.length} time series selected for deletion.</b></em>
+                </span>
+              ) : null}
+              <div className={tableStyles.TableSpinner}>
+                {dataRetrievalState === "NEVER_DID_RETRIEVE" || dataRetrievalState === "RETRIEVING" ? (
+                  <MDSpinner size={96} />
+                ) : dataRetrievalState === "RETRIEVED" && timeseriesApiResponse.results.length === 0 ? (
+                  <span>No data found with current filter</span>
+                ) : null}
+              </div>
+            </div>
+            <Pagination
+              page1Url={`/api/v4/monitoringnetworks/${currentMonitoringNetworkUuid}/timeseries/`}
+              previousUrl={timeseriesApiResponse.previous}
+              nextUrl={timeseriesApiResponse.next}
+              itemsPerPage={itemsPerPage}
+              reloadFromUrl={setCurrentUrl}
+              setItemsPerPage={setItemsPerPage}
+            />
+          </div>
+          <div>
+            <h4>Add time series</h4>
+            <p>To add time series to a monitoring network, please visit the time series management page. There you can search for the time series that you want to add.</p>
+            <p>When you are done with adding new time series, please refresh this page to view you changes.</p>
+            <button
+              className={buttonStyles.NewButton}
+              onClick={() => window.open("/management#/data_management/timeseries/timeseries", "_blank")}
+            >
+              Go to Time-Series Management
+            </button>
+          </div>
         </div>
         <div className={formStyles.ButtonContainer}>
           <button
