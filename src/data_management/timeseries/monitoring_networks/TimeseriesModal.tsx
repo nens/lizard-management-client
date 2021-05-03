@@ -38,7 +38,6 @@ function TimeseriesModal (props: MyProps & DispatchProps) {
   const [searchInput, setSearchInput] = useState<string>('');
   const [currentUrl, setCurrentUrl] = useState<string | null>(baseUrl + `?page_size=${itemsPerPage}`);
   const [timeseriesToDelete, setTimeseriesToDelete] = useState<string[]>([]);
-  console.log(timeseriesToDelete)
 
   useEffect(() => {
     const params = [`page_size=${itemsPerPage}`];
