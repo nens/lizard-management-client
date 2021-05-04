@@ -120,7 +120,7 @@ function TimeseriesModal (props: MyProps & DispatchProps) {
         <div className={styles.GridContainer}>
           <div className={styles.TimeseriesContainer}>
             <div>
-              <h4>Manage time series</h4>
+              <h3>Manage time-series</h3>
               <div className={styles.TimeseriesFilter}>
                 <TableSearchBox
                   placeholder={'Search'}
@@ -187,7 +187,7 @@ function TimeseriesModal (props: MyProps & DispatchProps) {
                   visibility: timeseriesToDelete.length ? 'visible' : 'hidden'
                 }}
               >
-                <em><b>{timeseriesToDelete.length} time series selected for deletion</b></em>
+                <em><b>{timeseriesToDelete.length} time-series selected for deletion</b></em>
               </span>
               <div className={tableStyles.TableSpinner}>
                 {dataRetrievalState === "NEVER_DID_RETRIEVE" || dataRetrievalState === "RETRIEVING" ? (
@@ -207,9 +207,9 @@ function TimeseriesModal (props: MyProps & DispatchProps) {
             />
           </div>
           <div>
-            <h4>Add time series</h4>
-            <p>To add time series to a monitoring network, please visit the time series management page. There you can search for the time series that you want to add.</p>
-            <p>When you are done with adding new time series, please refresh this page to review your changes.</p>
+            <h3>Add time-series</h3>
+            <p>To add time-series to a monitoring network, please visit the time-series management page. There you can search for the time-series that you want to add.</p>
+            <p>When you are done adding new time-series, please refresh this page to review your changes.</p>
             <button
               className={buttonStyles.NewButton}
               onClick={() => window.open(timeseriesTableUrl, "_blank")}
