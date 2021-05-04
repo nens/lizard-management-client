@@ -43,4 +43,5 @@
   align-items: center;
   justify-content: space-between;
   padding: 5px 0;
+  border-bottom: 1px dotted;
 }
