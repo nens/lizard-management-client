@@ -174,7 +174,7 @@ function TimeseriesModal (props: MyProps & DispatchProps) {
               </ul>
               {timeseriesToDelete.length ? (
                 <span>
-                  <em><b>{timeseriesToDelete.length} time series selected for deletion.</b></em>
+                  <em><b>{timeseriesToDelete.length} time series selected for deletion</b></em>
                 </span>
               ) : null}
               <div className={tableStyles.TableSpinner}>
