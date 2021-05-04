@@ -5,6 +5,7 @@ import Pagination from './Pagination';
 import Checkbox from './Checkbox';
 import TableSearchBox from './TableSearchBox';
 import TableSearchToggle from './TableSearchToggle';
+import { TableSearchToggleHelpText } from './TableSearchToggleHelpText';
 import { Value } from '../form/SelectDropdown';
 import { useSelector } from "react-redux";
 import { getSelectedOrganisation } from '../reducers';
@@ -261,20 +262,9 @@ const TableStateContainer: React.FC<Props> = ({ gridTemplateColumns, columnDefin
                 valueChanged={option => setSelectedFilterOption(option)}
               />
             ) : null}
-            {selectedFilterOption && selectedFilterOption.label.includes('*') ?
-              <div
-                style={{
-                  fontSize: 14,
-                  fontStyle: 'italic',
-                  marginTop: 5,
-                  position: 'absolute',
-                  top: '100%',
-                  left: 0,
-                }}
-              >
-                <span>(*) Only support filtering by first letters and is case sensitive</span>
-              </div>
-            : null}
+            <TableSearchToggleHelpText
+              filterOption={selectedFilterOption}
+            />
           </div>
         : <div />}
         {newItemOnClick ?

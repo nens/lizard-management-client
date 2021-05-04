@@ -3,11 +3,12 @@ import { connect } from 'react-redux';
 import { SubmitButton } from '../../../form/SubmitButton';
 import { addNotification } from '../../../actions';
 import { DataRetrievalState } from '../../../types/retrievingDataTypes';
-import { Value } from '../../../form/SelectDropdown';
 import ModalBackground from '../../../components/ModalBackground';
 import Pagination from '../../../components/Pagination';
 import TableSearchBox from '../../../components/TableSearchBox';
 import TableSearchToggle from '../../../components/TableSearchToggle';
+import { TableSearchToggleHelpText } from '../../../components/TableSearchToggleHelpText';
+import { Value } from '../../../form/SelectDropdown';
 import styles from './TimeseriesModal.module.css';
 import formStyles from '../../../styles/Forms.module.css';
 import buttonStyles from '../../../styles/Buttons.module.css';
@@ -131,20 +132,9 @@ function TimeseriesModal (props: MyProps & DispatchProps) {
                   value={selectedFilterOption}
                   valueChanged={value => value && setSelectedFilterOption(value)}
                 />
-                {selectedFilterOption && selectedFilterOption.label.includes('*') ?
-                  <div
-                    style={{
-                      fontSize: 14,
-                      fontStyle: 'italic',
-                      marginTop: 5,
-                      position: 'absolute',
-                      top: '100%',
-                      left: 0,
-                    }}
-                  >
-                    <span>(*) Only support filtering by first letters and is case sensitive</span>
-                  </div>
-                : null}
+                <TableSearchToggleHelpText
+                  filterOption={selectedFilterOption}
+                />
               </div>
               <ul className={styles.TimeseriesList}>
                 {timeseriesApiResponse.results.map(ts => (
