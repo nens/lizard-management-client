@@ -138,6 +138,7 @@ function TimeseriesModal (props: MyProps & DispatchProps) {
                 />
               </div>
               <Scrollbars
+                autoHide
                 style={{
                   height: 420,
                   margin: 10,
