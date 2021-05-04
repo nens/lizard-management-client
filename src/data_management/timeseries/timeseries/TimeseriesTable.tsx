@@ -171,7 +171,7 @@ export const TimeseriesTable = (props: RouteComponentProps) =>  {
       imgUrl={timeseriesIcon}
       imgAltDescription={"Timeseries icon"}
       headerText={"Timeseries"}
-      explanationText={"Search or sort your timeseries here."}
+      explanationText={"List of time-series."}
       backUrl={"/data_management/timeseries"}
     >
       <TableStateContainer 

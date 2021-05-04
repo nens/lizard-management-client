@@ -29,3 +29,10 @@ export const organisationsToSharedWithHelpText = 'Search and select organisation
 export const sharedWithCheckboxHelpText = 'Specify if this object should be accessible by other organisations.';
 
 export const supplierHelpText = 'The supplier of this object.';
+
+export const supplierCodeHelpText = (
+  <>
+    <p>The FTP or Supplier code is used as reference to your own system.</p>
+    <p><i>If this is a manual entry, it can be left empty.</i></p>
+  </>
+);
