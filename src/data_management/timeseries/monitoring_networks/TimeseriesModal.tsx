@@ -3,14 +3,16 @@ import { connect } from 'react-redux';
 import { SubmitButton } from '../../../form/SubmitButton';
 import { addNotification } from '../../../actions';
 import { DataRetrievalState } from '../../../types/retrievingDataTypes';
+import { Value } from '../../../form/SelectDropdown';
 import ModalBackground from '../../../components/ModalBackground';
 import Pagination from '../../../components/Pagination';
+import TableSearchBox from '../../../components/TableSearchBox';
+import TableSearchToggle from '../../../components/TableSearchToggle';
 import styles from './TimeseriesModal.module.css';
 import formStyles from '../../../styles/Forms.module.css';
 import buttonStyles from '../../../styles/Buttons.module.css';
 import tableStyles from '../../../components/Table.module.css';
 import MDSpinner from 'react-md-spinner';
-// import TableSearchToggle from '../../../components/TableSearchToggle';
 
 interface MyProps {
   currentMonitoringNetworkUuid: string | null,
@@ -29,6 +31,13 @@ function TimeseriesModal (props: MyProps & DispatchProps) {
   const baseUrl = `/api/v4/monitoringnetworks/${currentMonitoringNetworkUuid}/timeseries/`;
   const timeseriesTableUrl = '/management#/data_management/timeseries/timeseries';
 
+  // Filter options for timeseries list
+  const filterOptions = [
+    {value: 'name__startswith=', label: 'Name *'},
+    {value: 'location__name__startswith=', label: 'Location name *'},
+    {value: 'location__code__startswith=', label: 'Location code *'},
+  ];
+
   const [timeseriesApiResponse, setTimeseriesApiResponse] = useState<APIResponse>({
     previous: null,
     next: null,
@@ -39,13 +48,14 @@ function TimeseriesModal (props: MyProps & DispatchProps) {
   const [searchInput, setSearchInput] = useState<string>('');
   const [currentUrl, setCurrentUrl] = useState<string | null>(baseUrl + `?page_size=${itemsPerPage}`);
   const [timeseriesToDelete, setTimeseriesToDelete] = useState<string[]>([]);
+  const [selectedFilterOption, setSelectedFilterOption] = useState<Value>(filterOptions[0]);
 
   useEffect(() => {
     const params = [`page_size=${itemsPerPage}`];
-    if (searchInput) params.push(`name__startswith=${searchInput}`);
+    if (searchInput) params.push(`${selectedFilterOption.value}${searchInput}`);
     const urlQuery = params.join('&');
     if (params.length > 0) setCurrentUrl(baseUrl + `?${urlQuery}`);
-  }, [baseUrl, itemsPerPage, searchInput]);
+  }, [baseUrl, itemsPerPage, searchInput, selectedFilterOption]);
 
   const fetchWithUrl = (url: string | null) => {
     if (!url) return;
@@ -109,17 +119,33 @@ function TimeseriesModal (props: MyProps & DispatchProps) {
           <div className={styles.TimeseriesContainer}>
             <div>
               <h4>Manage time series</h4>
-              <input
-                className={styles.InputField}
-                onChange={e => setSearchInput(e.target.value)}
-              />
-              {/* <TableSearchToggle
-                options={[
-                  {value: 'name__icontains=', label: 'Name'},
-                ]}
-                value={null}
-                valueChanged={() => null}
-              /> */}
+              <div className={styles.TimeseriesFilter}>
+                <TableSearchBox
+                  placeholder={'Search'}
+                  value={searchInput}
+                  onChange={e => setSearchInput(e.target.value)}
+                  onClear={() => setSearchInput('')}
+                />
+                <TableSearchToggle
+                  options={filterOptions}
+                  value={selectedFilterOption}
+                  valueChanged={value => value && setSelectedFilterOption(value)}
+                />
+                {selectedFilterOption && selectedFilterOption.label.includes('*') ?
+                  <div
+                    style={{
+                      fontSize: 14,
+                      fontStyle: 'italic',
+                      marginTop: 5,
+                      position: 'absolute',
+                      top: '100%',
+                      left: 0,
+                    }}
+                  >
+                    <span>(*) Only support filtering by first letters and is case sensitive</span>
+                  </div>
+                : null}
+              </div>
               <ul className={styles.TimeseriesList}>
                 {timeseriesApiResponse.results.map(ts => (
                   <li
@@ -190,7 +216,7 @@ function TimeseriesModal (props: MyProps & DispatchProps) {
             </button>
           </div>
         </div>
-        <div className={formStyles.ButtonContainer}>
+        <div className={`${formStyles.ButtonContainer} ${formStyles.FixedButtonContainer}`}>
           <button
             className={`${buttonStyles.Button} ${buttonStyles.LinkCancel}`}
             onClick={props.handleClose}
