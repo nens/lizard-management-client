@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import MDSpinner from 'react-md-spinner';
 import { connect } from 'react-redux';
+import { Scrollbars } from "react-custom-scrollbars";
 import { SubmitButton } from '../../../form/SubmitButton';
 import { addNotification } from '../../../actions';
 import { DataRetrievalState } from '../../../types/retrievingDataTypes';
@@ -13,7 +15,6 @@ import styles from './TimeseriesModal.module.css';
 import formStyles from '../../../styles/Forms.module.css';
 import buttonStyles from '../../../styles/Buttons.module.css';
 import tableStyles from '../../../components/Table.module.css';
-import MDSpinner from 'react-md-spinner';
 
 interface MyProps {
   currentMonitoringNetworkUuid: string | null,
@@ -136,47 +137,57 @@ function TimeseriesModal (props: MyProps & DispatchProps) {
                   filterOption={selectedFilterOption}
                 />
               </div>
-              <ul className={styles.TimeseriesList}>
-                {timeseriesApiResponse.results.map(ts => (
-                  <li
-                    className={styles.TimeseriesRow}
-                    key={ts.uuid}
-                  >
-                    <span
-                      style={{
-                        textDecoration: timeseriesToDelete.includes(ts.uuid) ? 'line-through' : undefined
-                      }}
+              <Scrollbars
+                style={{
+                  height: 420,
+                  margin: 10,
+                  marginTop: 30,
+                }}
+              >
+                <ul className={styles.TimeseriesList}>
+                  {timeseriesApiResponse.results.map(ts => (
+                    <li
+                      className={styles.TimeseriesRow}
+                      key={ts.uuid}
                     >
-                      {ts.name}
-                    </span>
-                    <button
-                      className={buttonStyles.IconButton}
-                      style={{
-                        fontSize: 18,
-                        color: timeseriesToDelete.includes(ts.uuid) ? '#2C3E50' : '#D50000',
-                      }}
-                      onClick={() => {
-                        if (timeseriesToDelete.includes(ts.uuid)) {
-                          setTimeseriesToDelete(timeseriesToDelete.filter(tsUuid => tsUuid !== ts.uuid));
-                        } else {
-                          setTimeseriesToDelete([...timeseriesToDelete, ts.uuid]);
-                        };
-                      }}
-                    >
-                      {timeseriesToDelete.includes(ts.uuid) ? (
-                        <i className='fa fa-undo' title='Undo' />
-                      ) : (
-                        <i className='fa fa-trash' title='Delete'/>
-                      )}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-              {timeseriesToDelete.length ? (
-                <span>
-                  <em><b>{timeseriesToDelete.length} time series selected for deletion</b></em>
-                </span>
-              ) : null}
+                      <span
+                        style={{
+                          textDecoration: timeseriesToDelete.includes(ts.uuid) ? 'line-through' : undefined
+                        }}
+                      >
+                        {ts.name}
+                      </span>
+                      <button
+                        className={buttonStyles.IconButton}
+                        style={{
+                          fontSize: 18,
+                          color: timeseriesToDelete.includes(ts.uuid) ? '#2C3E50' : '#D50000',
+                        }}
+                        onClick={() => {
+                          if (timeseriesToDelete.includes(ts.uuid)) {
+                            setTimeseriesToDelete(timeseriesToDelete.filter(tsUuid => tsUuid !== ts.uuid));
+                          } else {
+                            setTimeseriesToDelete([...timeseriesToDelete, ts.uuid]);
+                          };
+                        }}
+                      >
+                        {timeseriesToDelete.includes(ts.uuid) ? (
+                          <i className='fa fa-undo' title='Undo' />
+                        ) : (
+                          <i className='fa fa-trash' title='Delete'/>
+                        )}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </Scrollbars>
+              <span
+                style={{
+                  visibility: timeseriesToDelete.length ? 'visible' : 'hidden'
+                }}
+              >
+                <em><b>{timeseriesToDelete.length} time series selected for deletion</b></em>
+              </span>
               <div className={tableStyles.TableSpinner}>
                 {dataRetrievalState === "NEVER_DID_RETRIEVE" || dataRetrievalState === "RETRIEVING" ? (
                   <MDSpinner size={96} />
