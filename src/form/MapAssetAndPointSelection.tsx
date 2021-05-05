@@ -19,6 +19,8 @@ interface Props {
   raster?: RasterLayerFromAPI | null,
   value: AssetLocationValue;
   valueChanged: (value: AssetLocationValue)=> void,
+  onFocus?: (e: React.ChangeEvent<HTMLInputElement>) => void,
+  onBlur?: () => void,
 }
 
 // Helper function to fetch assets in async select dropdown
@@ -60,7 +62,9 @@ export const MapAssetAndPointSelection = (props: Props) => {
     assetType,
     raster,
     value,
-    valueChanged
+    valueChanged,
+    onFocus,
+    // onBlur,
   } = props;
 
   // useState to temporarily store the selected asset from the asset select dropdown.
@@ -166,6 +170,8 @@ export const MapAssetAndPointSelection = (props: Props) => {
             validated
             isAsync
             loadOptions={searchInput => fetchAssets(searchInput, raster, assetType)}
+            onFocus={onFocus}
+            // onBlur={onBlur}
           />
         </div>
         <Map

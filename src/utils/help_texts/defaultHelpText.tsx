@@ -6,6 +6,8 @@ export interface HelpText {
 
 export const accessModifierHelpText = 'Choose an accessibility to decide who has access to this object. The default is private.';
 
+export const codeHelpText = 'Choose a code that represents the object within your organisation.';
+
 export const datasetHelpText = (
   <>
     <p>Choose a dataset for this object.</p>

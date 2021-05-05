@@ -1,5 +1,6 @@
 import {
   accessModifierHelpText,
+  codeHelpText,
   HelpText,
   nameHelpText,
   organisationHelpText,
@@ -10,7 +11,7 @@ import {
 export const timeseriesFormHelpText: HelpText = {
   default: 'Form to edit time-series. Please select a field to get more information.',
   name: nameHelpText,
-  code: 'Choose a code that represents the object within your organisation.',
+  code: codeHelpText,
   observationType: 'Choose how the data is measured and its units.',
   location: 'Choose the location you want to add this timeseries to.',
   valueType: 'Specify what kind of data is supplied.',
