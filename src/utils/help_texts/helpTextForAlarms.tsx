@@ -14,4 +14,7 @@ export const rasterAlarmFormHelpText: HelpText = {
 export const timeseriesAlarmFormHelpText: HelpText = {
   default: 'Form to edit a time-series alarm. Please select a field to get more information.',
   name: nameHelpText,
+  timeseries_asset: 'Select a location.',
+  timeseries_nestedAsset: 'Select a nested asset if any.',
+  timeseries: 'Select a time-series.',
 }

@@ -181,6 +181,8 @@ const TimeseriesAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps>
           timeseries={values.timeseries}
           valueChanged={value => handleValueChange('timeseries', value)}
           triedToSubmit={triedToSubmit}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         <CheckBox
           title={'Limit to relative period'}
