@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import TableStateContainer from '../../../components/TableStateContainer';
 import { NavLink, RouteComponentProps } from "react-router-dom";
 import { ExplainSideColumn } from '../../../components/ExplainSideColumn';
+import { getAccessibiltyText } from '../../../form/AccessModifier';
+import { defaultTableHelpText } from '../../../utils/help_texts/defaultHelpText';
 import TableActionButtons from '../../../components/TableActionButtons';
 import AuthorisationModal from '../../../components/AuthorisationModal';
 import DeleteModal from '../../../components/DeleteModal';
 import tableStyles from "../../../components/Table.module.css";
 import locationIcon from "../../../images/locations_icon.svg";
-import { getAccessibiltyText } from '../../../form/AccessModifier';
 
 const baseUrl = "/api/v4/locations/";
 const navigationUrl = "/data_management/timeseries/locations";
@@ -115,7 +116,7 @@ export const LocationsTable = (props: RouteComponentProps) =>  {
       imgUrl={locationIcon}
       imgAltDescription={"Locations icon"}
       headerText={"Locations"}
-      explanationText={"Search or sort your locations here."}
+      explanationText={defaultTableHelpText('locations')}
       backUrl={"/data_management/timeseries"}
     >
       <TableStateContainer 

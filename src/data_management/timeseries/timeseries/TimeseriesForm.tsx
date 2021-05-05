@@ -148,7 +148,6 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
       imgAltDescription={"Timeseries icon"}
       headerText={"Timeseries"}
       explanationText={timeseriesFormHelpText[fieldOnFocus] || timeseriesFormHelpText['default']}
-      // explanationText={"Timeseries is for now read only"}
       backUrl={backUrl}
       fieldName={fieldOnFocus}
     >

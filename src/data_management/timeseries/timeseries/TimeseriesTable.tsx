@@ -6,9 +6,10 @@ import AddToMonitoringNetworkModal from './AddToMonitoringNetworkModal';
 import AuthorisationModal from '../../../components/AuthorisationModal';
 import DeleteModal from '../../../components/DeleteModal';
 import { ExplainSideColumn } from '../../../components/ExplainSideColumn';
+import { getAccessibiltyText } from '../../../form/AccessModifier';
+import { defaultTableHelpText } from '../../../utils/help_texts/defaultHelpText';
 import tableStyles from "../../../components/Table.module.css";
 import timeseriesIcon from "../../../images/timeseries_icon.svg";
-import { getAccessibiltyText } from '../../../form/AccessModifier';
 
 const baseUrl = "/api/v4/timeseries/";
 const navigationUrl = "/data_management/timeseries/timeseries";
@@ -171,7 +172,7 @@ export const TimeseriesTable = (props: RouteComponentProps) =>  {
       imgUrl={timeseriesIcon}
       imgAltDescription={"Timeseries icon"}
       headerText={"Timeseries"}
-      explanationText={"List of time-series."}
+      explanationText={defaultTableHelpText('time-series')}
       backUrl={"/data_management/timeseries"}
     >
       <TableStateContainer 

@@ -4,6 +4,16 @@ export interface HelpText {
   [name: string]: string | JSX.Element
 };
 
+export const defaultTableHelpText = (name: string) => {
+  return (
+    <>
+      <p>Search or sort your {name} here.</p>
+      <p>Check out possible actions by clicking the three dots icon.</p>
+      <p>Create a new object with the <b>New Item</b> button on the top right corner.</p>
+    </>
+  );
+};
+
 export const accessModifierHelpText = 'Choose an accessibility to decide who has access to this object. The default is private.';
 
 export const codeHelpText = 'Choose a code that represents the object within your organisation.';
