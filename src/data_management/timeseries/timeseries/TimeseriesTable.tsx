@@ -172,13 +172,13 @@ export const TimeseriesTable = (props: RouteComponentProps) =>  {
       imgUrl={timeseriesIcon}
       imgAltDescription={"Timeseries icon"}
       headerText={"Timeseries"}
-      explanationText={defaultTableHelpText('time-series')}
+      explanationText={defaultTableHelpText('Search or sort your time-series here.')}
       backUrl={"/data_management/timeseries"}
     >
-      <TableStateContainer 
-        gridTemplateColumns={"4fr 24fr 22fr 26fr 16fr 8fr"} 
+      <TableStateContainer
+        gridTemplateColumns={"4fr 24fr 22fr 26fr 16fr 8fr"}
         columnDefinitions={columnDefinitions}
-        baseUrl={`${baseUrl}?`} 
+        baseUrl={`${baseUrl}?`}
         newItemOnClick={handleNewClick}
         checkBoxActions={[
           {

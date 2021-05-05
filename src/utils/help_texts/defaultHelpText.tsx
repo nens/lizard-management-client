@@ -4,10 +4,10 @@ export interface HelpText {
   [name: string]: string | JSX.Element
 };
 
-export const defaultTableHelpText = (name: string) => {
+export const defaultTableHelpText = (explainText: string) => {
   return (
     <>
-      <p>Search or sort your {name} here.</p>
+      <p>{explainText}</p>
       <p>Check out possible actions by clicking the three dots icon.</p>
       <p>Create a new object with the <b>New Item</b> button on the top right corner.</p>
     </>
