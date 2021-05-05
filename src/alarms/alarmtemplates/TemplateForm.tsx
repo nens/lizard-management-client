@@ -9,6 +9,7 @@ import { useForm, Values } from '../../form/useForm';
 import { addNotification } from '../../actions';
 import { getSelectedOrganisation } from '../../reducers';
 import { TextArea } from '../../form/TextArea';
+import { CheckBox } from '../../form/CheckBox';
 import { SelectDropdown } from '../../form/SelectDropdown';
 import { convertToSelectObject } from '../../utils/convertToSelectObject';
 import { minLength } from '../../form/validators';
@@ -96,12 +97,14 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
     name: currentTemplate.name,
     type: convertToSelectObject(currentTemplate.type, currentTemplate.type.toUpperCase()),
     subject: currentTemplate.subject,
-    message: currentTemplate.type === 'sms' ? currentTemplate.text : currentTemplate.html // if email, read html field
+    message: currentTemplate.type === 'sms' ? currentTemplate.text : currentTemplate.html, // if email, read html field
+    noFurtherImpactOption: currentTemplate.no_further_impact,
   } : {
     name: null,
     type: convertToSelectObject('email', 'EMAIL'),
     subject: null,
-    message: ''
+    message: '',
+    noFurtherImpactOption: false,
   };
 
   const onSubmit = (values: Values) => {
@@ -109,7 +112,8 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
       name: values.name,
       subject: values.subject,
       text: values.message,
-      html: values.message
+      html: values.message,
+      no_further_impact: values.noFurtherImpactOption,
     };
 
     if (!currentTemplate) {
@@ -168,7 +172,7 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
     handleSubmit,
     handleReset,
     clearInput,
-    // fieldOnFocus,
+    fieldOnFocus,
     // handleBlur,
     // handleFocus,
   } = useForm({initialValues, onSubmit});
@@ -240,6 +244,7 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
       headerText={"Templates"}
       explanationText={"Templates are used to create messages for your alarms. You can choose between an email or text message."} 
       backUrl={"/alarms/templates"}
+      fieldName={fieldOnFocus}
     >
       <form
         className={formStyles.Form}
@@ -288,7 +293,8 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           style={{
             display: 'grid',
             gridTemplateColumns: '60% 40%',
-            columnGap: 20
+            columnGap: 20,
+            marginBottom: 16,
           }}
         >
           <div>
@@ -324,6 +330,12 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           </div>
           <RenderBlocks />
         </div>
+        <CheckBox
+          title={'No further impact option'}
+          name={'noFurtherImpactOption'}
+          value={values.noFurtherImpactOption}
+          valueChanged={bool => handleValueChange('noFurtherImpactOption', bool)}
+        />
         <div
           className={formStyles.ButtonContainer}
         >
