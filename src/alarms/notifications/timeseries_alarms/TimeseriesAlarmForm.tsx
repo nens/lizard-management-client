@@ -21,6 +21,7 @@ import { convertDurationObjToSeconds } from '../../../utils/dateUtils';
 import { rasterIntervalStringServerToDurationObject } from '../../../utils/isoUtils';
 import { getUuidFromUrl } from '../../../utils/getUuidFromUrl';
 import { getTimeseriesLabel, TimeseriesFromTimeseriesEndpoint } from '../../../types/timeseriesType';
+import { timeseriesAlarmFormHelpText } from '../../../utils/help_texts/helpTextForAlarms';
 import formStyles from './../../../styles/Forms.module.css';
 import rasterAlarmIcon from "../../../images/alarm@3x.svg";
 
@@ -137,9 +138,9 @@ const TimeseriesAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps>
     handleSubmit,
     handleReset,
     clearInput,
-    // fieldOnFocus,
-    // handleBlur,
-    // handleFocus,
+    fieldOnFocus,
+    handleBlur,
+    handleFocus,
   } = useForm({initialValues, onSubmit});
 
   return (
@@ -147,8 +148,9 @@ const TimeseriesAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps>
       imgUrl={rasterAlarmIcon}
       imgAltDescription={"Raster alarm icon"}
       headerText={"Time-series alarms"}
-      explanationText={"Select a field to get more information."}
+      explanationText={timeseriesAlarmFormHelpText[fieldOnFocus] || timeseriesAlarmFormHelpText['default']}
       backUrl={navigationUrl}
+      fieldName={fieldOnFocus}
     >
       <form
         className={formStyles.Form}
@@ -168,6 +170,8 @@ const TimeseriesAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps>
           validated={!minLength(1, values.name)}
           errorMessage={minLength(1, values.name)}
           triedToSubmit={triedToSubmit}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         <span className={formStyles.FormFieldTitle}>
           2: Data
@@ -183,6 +187,8 @@ const TimeseriesAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps>
           name={'relative'}
           value={values.relative}
           valueChanged={bool => handleValueChange('relative', bool)}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         {values.relative ? (
           <div className={formStyles.GridContainer}>
@@ -226,6 +232,8 @@ const TimeseriesAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps>
           validated
           isSearchable={false}
           isClearable={false}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         <AlarmThresholds
           title={'Threshold values *'}
@@ -237,6 +245,8 @@ const TimeseriesAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps>
           validated={values.thresholds.length > 0}
           errorMessage={'Please add at least one threshold to the alarm'}
           triedToSubmit={triedToSubmit}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         <label
           className={formStyles.Label}
@@ -253,6 +263,8 @@ const TimeseriesAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps>
               validated={values.snoozeOn >= 1}
               errorMessage={'Please ensure this value is greater than or equal to 1'}
               triedToSubmit={triedToSubmit}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
             />
             <IntegerInput
               title={'Withdrawn after N times'}
@@ -262,6 +274,8 @@ const TimeseriesAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps>
               validated={values.snoozeOff >= 1}
               errorMessage={'Please ensure this value is greater than or equal to 1'}
               triedToSubmit={triedToSubmit}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
             />
           </div>
         </label>
@@ -277,6 +291,8 @@ const TimeseriesAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps>
           valueRemoved={recipients => handleValueChange('messages', recipients)}
           validated
           triedToSubmit={triedToSubmit}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         <div
           className={formStyles.ButtonContainer}

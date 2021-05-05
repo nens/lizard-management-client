@@ -52,6 +52,8 @@ export const RasterPointSelection: React.FC<MyProps> = (props) => {
     point,
     valueChanged,
     triedToSubmit,
+    onFocus,
+    onBlur,
   } = props;
 
   const [raster, setRaster] = useState<RasterLayerFromAPI | null>(null);
@@ -81,6 +83,8 @@ export const RasterPointSelection: React.FC<MyProps> = (props) => {
           location: point
         }}
         valueChanged={value => setLocation(value.location)}
+        onFocus={onFocus}
+        onBlur={onBlur}
       />
       <GeometryField
         title={'Geometry *'}
@@ -90,6 +94,8 @@ export const RasterPointSelection: React.FC<MyProps> = (props) => {
         validated={!!point && !pointWithinRasterBoundsValidator(raster, point)}
         errorMessage={pointWithinRasterBoundsValidator(raster, point) || 'Please fill in both X and Y fields'}
         triedToSubmit={triedToSubmit}
+        onFocus={onFocus}
+        onBlur={onBlur}
       />
     </div>
   )
