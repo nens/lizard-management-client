@@ -4,7 +4,19 @@ export interface HelpText {
   [name: string]: string | JSX.Element
 };
 
+export const defaultTableHelpText = (explainText: string) => {
+  return (
+    <>
+      <p>{explainText}</p>
+      <p>Check out possible actions by clicking the three dots icon.</p>
+      <p>Create a new object with the <b>New Item</b> button on the top right corner.</p>
+    </>
+  );
+};
+
 export const accessModifierHelpText = 'Choose an accessibility to decide who has access to this object. The default is private.';
+
+export const codeHelpText = 'Choose a code that represents the object within your organisation.';
 
 export const datasetHelpText = (
   <>
@@ -29,3 +41,10 @@ export const organisationsToSharedWithHelpText = 'Search and select organisation
 export const sharedWithCheckboxHelpText = 'Specify if this object should be accessible by other organisations.';
 
 export const supplierHelpText = 'The supplier of this object.';
+
+export const supplierCodeHelpText = (
+  <>
+    <p>The FTP or Supplier code is used as reference to your own system.</p>
+    <p><i>If this is a manual entry, it can be left empty.</i></p>
+  </>
+);
