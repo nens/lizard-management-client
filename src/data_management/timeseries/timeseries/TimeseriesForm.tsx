@@ -17,6 +17,7 @@ import { addNotification } from '../../../actions';
 import { convertToSelectObject } from '../../../utils/convertToSelectObject';
 import { fromISOValue, toISOValue } from '../../../utils/isoUtils';
 import { convertDurationObjToSeconds, convertSecondsToDurationObject } from '../../../utils/dateUtils';
+import { timeseriesFormHelpText } from '../../../utils/help_texts/helpTextForTimeseries';
 import formStyles from './../../../styles/Forms.module.css';
 import timeseriesIcon from "../../../images/timeseries_icon.svg";
 
@@ -137,8 +138,8 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
     handleReset,
     clearInput,
     fieldOnFocus,
-    // handleBlur,
-    // handleFocus,
+    handleBlur,
+    handleFocus,
   } = useForm({initialValues, onSubmit});
 
   return (
@@ -146,8 +147,7 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
       imgUrl={timeseriesIcon}
       imgAltDescription={"Timeseries icon"}
       headerText={"Timeseries"}
-      // explanationText={lableTypeFormHelpText[fieldOnFocus] || lableTypeFormHelpText['default']}
-      explanationText={"Timeseries is for now read only"}
+      explanationText={timeseriesFormHelpText[fieldOnFocus] || timeseriesFormHelpText['default']}
       backUrl={backUrl}
       fieldName={fieldOnFocus}
     >
@@ -169,6 +169,8 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
           validated={!minLength(3, values.name)}
           errorMessage={minLength(3, values.name)}
           triedToSubmit={triedToSubmit}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         <TextInput
           title={'Code *'}
@@ -180,6 +182,8 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
           validated={!minLength(1, values.code)}
           errorMessage={minLength(1, values.code)}
           triedToSubmit={triedToSubmit}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         <span className={formStyles.FormFieldTitle}>
           2: Data
@@ -197,6 +201,8 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
           isAsync
           isCached
           loadOptions={fetchObservationTypes}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         <SelectDropdown
           title={'Location *'}
@@ -211,6 +217,8 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
           isAsync
           isCached
           loadOptions={searchInput => fetchLocations(searchInput, selectedOrganisation.uuid)}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         <SelectDropdown
           title={'Value type *'}
@@ -256,6 +264,8 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
           errorMessage={'Please select an option'}
           triedToSubmit={triedToSubmit}
           isSearchable={false}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         <label
           htmlFor={'interval'}
@@ -269,6 +279,8 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
             name={'intervalCheckbox'}
             value={values.intervalCheckbox}
             valueChanged={bool => handleValueChange('intervalCheckbox', bool)}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
           />
           <DurationField
             title={''}
@@ -277,6 +289,8 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
             valueChanged={value => handleValueChange('interval', value)}
             validated
             readOnly={!values.intervalCheckbox}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
           />
         </label>
         <span className={formStyles.FormFieldTitle}>
@@ -287,7 +301,8 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
           name={'accessModifier'}
           value={values.accessModifier}
           valueChanged={value => handleValueChange('accessModifier', value)}
-          readOnly={!!currentTimeseries}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         <SelectDropdown
           title={'Username of supplier'}
@@ -299,6 +314,8 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
           validated
           readOnly={!(supplierIds.length > 0 && selectedOrganisation.roles.includes('admin'))}
           dropUp
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         <TextInput
           title={'Supplier code'}
@@ -308,6 +325,8 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
           clearInput={clearInput}
           validated
           readOnly={!selectedOrganisation.roles.includes('admin')}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         <div
           className={formStyles.ButtonContainer}

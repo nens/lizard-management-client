@@ -1,14 +1,16 @@
 import {
-  HelpText,
   accessModifierHelpText,
+  codeHelpText,
+  HelpText,
+  nameHelpText,
 } from './defaultHelpText';
 
 export const locationFormHelpText: HelpText = {
-  default: "Select a field to get more info.",
-  name: "Name of the location.",
-  code: "Code of the location.",
-  selectedAssetObj: "Select an asset or point on the map",
-  // geometry is for now part of "selectedAssetObj". Change this?
-  // gemetry: "Geometry of the location.",
+  default: 'Form to edit a location. Please select a field to get more information.',
+  name: nameHelpText,
+  code: codeHelpText,
+  assetType: 'Specify a type of asset.',
+  assetLocation: 'Select an asset or a point on the map',
+  geometry: 'Geometry of the location.',
   accessModifier: accessModifierHelpText,
 }

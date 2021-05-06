@@ -5,9 +5,10 @@ import TableActionButtons from '../../../components/TableActionButtons';
 import AuthorisationModal from '../../../components/AuthorisationModal';
 import DeleteModal from '../../../components/DeleteModal';
 import { ExplainSideColumn } from '../../../components/ExplainSideColumn';
+import { getAccessibiltyText } from '../../../form/AccessModifier';
+import { defaultTableHelpText } from '../../../utils/help_texts/defaultHelpText';
 import monitoringNetworkIcon from "../../../images/monitoring_network_icon.svg";
 import tableStyles from "../../../components/Table.module.css";
-import { getAccessibiltyText } from '../../../form/AccessModifier';
 
 const baseUrl = "/api/v4/monitoringnetworks/";
 const navigationUrl = "/data_management/timeseries/monitoring_networks";
@@ -103,7 +104,7 @@ export const MonitoringNetworksTable = (props: RouteComponentProps) =>  {
       imgUrl={monitoringNetworkIcon}
       imgAltDescription={"Monitoring-Network icon"}
       headerText={"Monitoring Networks"}
-      explanationText={"Search or sort your monitoring-networks here."}
+      explanationText={defaultTableHelpText('Monitoring networks are used to group and give insights on time-series.')}
       backUrl={"/data_management/timeseries"}
     >
       <TableStateContainer

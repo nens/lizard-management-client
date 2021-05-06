@@ -6,9 +6,10 @@ import AddToMonitoringNetworkModal from './AddToMonitoringNetworkModal';
 import AuthorisationModal from '../../../components/AuthorisationModal';
 import DeleteModal from '../../../components/DeleteModal';
 import { ExplainSideColumn } from '../../../components/ExplainSideColumn';
+import { getAccessibiltyText } from '../../../form/AccessModifier';
+import { defaultTableHelpText } from '../../../utils/help_texts/defaultHelpText';
 import tableStyles from "../../../components/Table.module.css";
 import timeseriesIcon from "../../../images/timeseries_icon.svg";
-import { getAccessibiltyText } from '../../../form/AccessModifier';
 
 const baseUrl = "/api/v4/timeseries/";
 const navigationUrl = "/data_management/timeseries/timeseries";
@@ -171,13 +172,13 @@ export const TimeseriesTable = (props: RouteComponentProps) =>  {
       imgUrl={timeseriesIcon}
       imgAltDescription={"Timeseries icon"}
       headerText={"Timeseries"}
-      explanationText={"Search or sort your timeseries here."}
+      explanationText={defaultTableHelpText('Search or sort your time-series here.')}
       backUrl={"/data_management/timeseries"}
     >
-      <TableStateContainer 
-        gridTemplateColumns={"4fr 24fr 22fr 26fr 16fr 8fr"} 
+      <TableStateContainer
+        gridTemplateColumns={"4fr 24fr 22fr 26fr 16fr 8fr"}
         columnDefinitions={columnDefinitions}
-        baseUrl={`${baseUrl}?`} 
+        baseUrl={`${baseUrl}?`}
         newItemOnClick={handleNewClick}
         checkBoxActions={[
           {

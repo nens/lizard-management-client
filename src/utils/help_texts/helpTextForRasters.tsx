@@ -9,6 +9,7 @@ import {
   organisationHelpText,
   organisationsToSharedWithHelpText,
   sharedWithCheckboxHelpText,
+  supplierCodeHelpText,
   supplierHelpText
 } from './defaultHelpText';
 
@@ -32,12 +33,7 @@ export const rasterSourceFormHelpText: HelpText = {
   default: 'Fill in the form to create a new Raster Source.',
   name: nameHelpText,
   description: descriptionHelpText,
-  supplierCode: (
-    <>
-      <p>The FTP or Supplier code is used as reference to your own system.</p>
-      <p><i>If this is a manual entry, it can be left empty.</i></p>
-    </>
-  ),
+  supplierCode: supplierCodeHelpText,
   temporal: 'Indicates if there are multiple rasters over a time period.',
   interval: (
     <>

@@ -14,6 +14,7 @@ import { minLength } from '../../../form/validators';
 import { addNotification } from '../../../actions';
 import { getOrganisations, getSelectedOrganisation } from '../../../reducers';
 import { convertToSelectObject } from '../../../utils/convertToSelectObject';
+import { monitoringNetworkFormHelpText } from '../../../utils/help_texts/helpTextForMonitoringNetworks';
 import TimeseriesModal from './TimeseriesModal';
 import formStyles from './../../../styles/Forms.module.css';
 import monitoringNetworkIcon from "../../../images/monitoring_network_icon.svg";
@@ -106,8 +107,8 @@ const MonitoringNetworkForm = (props: Props & DispatchProps & RouteComponentProp
     handleReset,
     clearInput,
     fieldOnFocus,
-    // handleBlur,
-    // handleFocus,
+    handleBlur,
+    handleFocus,
   } = useForm({initialValues, onSubmit});
 
   return (
@@ -115,7 +116,7 @@ const MonitoringNetworkForm = (props: Props & DispatchProps & RouteComponentProp
       imgUrl={monitoringNetworkIcon}
       imgAltDescription={"Network icon"}
       headerText={"Monitoring Networks"}
-      explanationText={"Select a field to get more information."}
+      explanationText={monitoringNetworkFormHelpText[fieldOnFocus] || monitoringNetworkFormHelpText['default']}
       backUrl={backUrl}
       fieldName={fieldOnFocus}
     >
@@ -137,6 +138,8 @@ const MonitoringNetworkForm = (props: Props & DispatchProps & RouteComponentProp
           validated={!minLength(3, values.name)}
           errorMessage={minLength(3, values.name)}
           triedToSubmit={triedToSubmit}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         <TextArea
           title={'Description'}
@@ -145,6 +148,8 @@ const MonitoringNetworkForm = (props: Props & DispatchProps & RouteComponentProp
           valueChanged={handleInputChange}
           clearInput={clearInput}
           validated
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         <span className={formStyles.FormFieldTitle}>
           2: Data
@@ -166,6 +171,8 @@ const MonitoringNetworkForm = (props: Props & DispatchProps & RouteComponentProp
           name={'accessModifier'}
           value={values.accessModifier}
           valueChanged={value => handleValueChange('accessModifier', value)}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         <SelectDropdown
           title={'Organisation *'}
@@ -178,6 +185,8 @@ const MonitoringNetworkForm = (props: Props & DispatchProps & RouteComponentProp
           errorMessage={'Please select an organisation'}
           triedToSubmit={triedToSubmit}
           readOnly={!(!currentNetwork && organisationsToSwitchTo.length > 0 && selectedOrganisation.roles.includes('admin'))}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         <div
           className={formStyles.ButtonContainer}
