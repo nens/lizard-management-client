@@ -35,6 +35,7 @@ import { NewGroup } from "../alarms/alarmgroups/NewGroup";
 import { EditGroup } from "../alarms/alarmgroups/EditGroup";
 import { NewTemplate } from "../alarms/alarmtemplates/NewAlarmTemplate";
 import { EditTemplate } from "../alarms/alarmtemplates/EditTemplate";
+import MapViewer from "../components/Mapviewer";
 
 export const Routes = () => {
 
@@ -51,6 +52,8 @@ export const Routes = () => {
             return <Route key={appTilePage} exact path={appTilePage} component={Home} />
           })
         }
+
+        <Route exact path="/map_viewer" component={MapViewer} />
 
         <Route exact path="/personal_api_keys" component={PersonalApiKeysTable} />
         <Route exact path="/personal_api_keys/new" component={NewPersonalApiKey} />
