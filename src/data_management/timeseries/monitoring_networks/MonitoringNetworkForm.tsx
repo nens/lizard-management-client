@@ -162,6 +162,8 @@ const MonitoringNetworkForm = (props: Props & DispatchProps & RouteComponentProp
             e.preventDefault();
             setTimeseriesModal(true);
           }}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         <span className={formStyles.FormFieldTitle}>
           3: Rights
