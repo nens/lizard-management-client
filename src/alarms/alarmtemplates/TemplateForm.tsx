@@ -1,4 +1,5 @@
 import React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { connect, useSelector } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
@@ -9,10 +10,11 @@ import { useForm, Values } from '../../form/useForm';
 import { addNotification } from '../../actions';
 import { getSelectedOrganisation } from '../../reducers';
 import { TextArea } from '../../form/TextArea';
+import { CheckBox } from '../../form/CheckBox';
 import { SelectDropdown } from '../../form/SelectDropdown';
 import { convertToSelectObject } from '../../utils/convertToSelectObject';
 import { minLength } from '../../form/validators';
-import { FormattedMessage } from 'react-intl';
+import { templateFormHelpText } from '../../utils/help_texts/helpTextForAlarmTemplate';
 import formStyles from './../../styles/Forms.module.css';
 import buttonStyles from './../../styles/Buttons.module.css';
 import templateIcon from "../../images/templates@3x.svg";
@@ -96,12 +98,14 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
     name: currentTemplate.name,
     type: convertToSelectObject(currentTemplate.type, currentTemplate.type.toUpperCase()),
     subject: currentTemplate.subject,
-    message: currentTemplate.type === 'sms' ? currentTemplate.text : currentTemplate.html // if email, read html field
+    message: currentTemplate.type === 'sms' ? currentTemplate.text : currentTemplate.html, // if email, read html field
+    noFurtherImpactOption: currentTemplate.no_further_impact,
   } : {
     name: null,
     type: convertToSelectObject('email', 'EMAIL'),
     subject: null,
-    message: ''
+    message: '',
+    noFurtherImpactOption: false,
   };
 
   const onSubmit = (values: Values) => {
@@ -109,7 +113,8 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
       name: values.name,
       subject: values.subject,
       text: values.message,
-      html: values.message
+      html: values.message,
+      no_further_impact: values.noFurtherImpactOption,
     };
 
     if (!currentTemplate) {
@@ -168,9 +173,9 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
     handleSubmit,
     handleReset,
     clearInput,
-    // fieldOnFocus,
-    // handleBlur,
-    // handleFocus,
+    fieldOnFocus,
+    handleBlur,
+    handleFocus,
   } = useForm({initialValues, onSubmit});
 
   const insertTextInTemplateText = (templateText: string, addedText: string) => {
@@ -222,6 +227,7 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
                   marginRight: 10,
                   marginBottom: 10
                 }}
+                tabIndex={-1}
               >
                 {parameter.parameter}
               </button>
@@ -238,8 +244,9 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
       imgUrl={templateIcon}
       imgAltDescription={"Template icon"}
       headerText={"Templates"}
-      explanationText={"Templates are used to create messages for your alarms. You can choose between an email or text message."} 
+      explanationText={templateFormHelpText[fieldOnFocus] || templateFormHelpText['default']}
       backUrl={"/alarms/templates"}
+      fieldName={fieldOnFocus}
     >
       <form
         className={formStyles.Form}
@@ -256,6 +263,8 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           validated={!minLength(1, values.name)}
           errorMessage={minLength(1, values.name)}
           triedToSubmit={triedToSubmit}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         <SelectDropdown
           title={'Type *'}
@@ -275,6 +284,8 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           validated
           readOnly={currentTemplate}
           isClearable={false}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         <TextInput
           title={'Subject'}
@@ -283,12 +294,15 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           valueChanged={handleInputChange}
           clearInput={clearInput}
           validated
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         <div
           style={{
             display: 'grid',
             gridTemplateColumns: '60% 40%',
-            columnGap: 20
+            columnGap: 20,
+            marginBottom: 16,
           }}
         >
           <div>
@@ -301,6 +315,8 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
               errorMessage={minLength(1, values.message)}
               triedToSubmit={triedToSubmit}
               rows={10}
+              onFocus={handleFocus}
+              // onBlur={handleBlur}
             />
             <small>
               <FormattedMessage
@@ -324,6 +340,14 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           </div>
           <RenderBlocks />
         </div>
+        <CheckBox
+          title={'No further impact option'}
+          name={'noFurtherImpactOption'}
+          value={values.noFurtherImpactOption}
+          valueChanged={bool => handleValueChange('noFurtherImpactOption', bool)}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+        />
         <div
           className={formStyles.ButtonContainer}
         >
