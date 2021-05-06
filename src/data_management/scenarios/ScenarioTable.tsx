@@ -157,6 +157,11 @@ export const ScenarioTable = () =>  {
         <span
           className={tableStyles.CellEllipsis}
           title={row.model_name}
+          style={{
+            // Allow model name to break into multiple lines if too long
+            whiteSpace: 'normal',
+            wordBreak: 'break-all'
+          }}
         >
           {row.model_name}
         </span>,
@@ -242,7 +247,7 @@ export const ScenarioTable = () =>  {
       backUrl={"/data_management"}
     >
         <TableStateContainer 
-          gridTemplateColumns={"4fr 38fr 19fr 15fr 10fr 10fr 4fr"}
+          gridTemplateColumns={"4fr 28fr 29fr 15fr 10fr 10fr 4fr"}
           columnDefinitions={columnDefinitions}
           baseUrl={`${baseUrl}?`} 
           checkBoxActions={[
