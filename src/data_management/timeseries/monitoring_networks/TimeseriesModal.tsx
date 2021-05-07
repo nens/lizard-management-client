@@ -156,7 +156,7 @@ function TimeseriesModal (props: MyProps & DispatchProps) {
                           textDecoration: timeseriesToDelete.includes(ts.uuid) ? 'line-through' : undefined
                         }}
                       >
-                        {ts.name}
+                        {ts.location.name} - {ts.name}
                       </span>
                       <button
                         className={buttonStyles.IconButton}
