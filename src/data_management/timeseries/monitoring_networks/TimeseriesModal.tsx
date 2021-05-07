@@ -153,10 +153,11 @@ function TimeseriesModal (props: MyProps & DispatchProps) {
                     >
                       <span
                         style={{
-                          textDecoration: timeseriesToDelete.includes(ts.uuid) ? 'line-through' : undefined
+                          textDecoration: timeseriesToDelete.includes(ts.uuid) ? 'line-through' : undefined,
+                          marginRight: 10
                         }}
                       >
-                        {ts.name}
+                        {ts.location.name} - {ts.name}
                       </span>
                       <button
                         className={buttonStyles.IconButton}
@@ -198,7 +199,7 @@ function TimeseriesModal (props: MyProps & DispatchProps) {
               </div>
             </div>
             <Pagination
-              page1Url={baseUrl}
+              page1Url={baseUrl + `?page_size=${itemsPerPage}`}
               previousUrl={timeseriesApiResponse.previous}
               nextUrl={timeseriesApiResponse.next}
               itemsPerPage={itemsPerPage}
