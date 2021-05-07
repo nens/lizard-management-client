@@ -153,7 +153,8 @@ function TimeseriesModal (props: MyProps & DispatchProps) {
                     >
                       <span
                         style={{
-                          textDecoration: timeseriesToDelete.includes(ts.uuid) ? 'line-through' : undefined
+                          textDecoration: timeseriesToDelete.includes(ts.uuid) ? 'line-through' : undefined,
+                          marginRight: 10
                         }}
                       >
                         {ts.location.name} - {ts.name}
