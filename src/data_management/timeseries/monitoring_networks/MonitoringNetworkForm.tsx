@@ -49,7 +49,7 @@ const MonitoringNetworkForm = (props: Props & DispatchProps & RouteComponentProp
   const onSubmit = (values: Values) => {
     const body = {
       name: values.name,
-      description: values.description,
+      description: values.description || '',
       access_modifier: values.accessModifier,
       organisation: values.organisation && values.organisation.value
     };
