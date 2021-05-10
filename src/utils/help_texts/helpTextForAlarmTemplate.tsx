@@ -6,7 +6,7 @@ import {
 } from './defaultHelpText';
 
 export const templateFormHelpText: HelpText = {
-  default: 'Templates are used to create messages for your alarms. You can choose between an email or text message. Please select a field to get more information.',
+  default: 'Templates are used to create messages for your alarms. You can choose between an email or text message.',
   name: nameHelpText,
   type: (
     <>
