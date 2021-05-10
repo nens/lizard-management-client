@@ -245,6 +245,8 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
               valueChanged={value => handleValueChange('relativeStart', value)}
               validated
               readOnly={!values.relative}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
             />
             <RelativeField
               title={'Relative end'}
@@ -255,6 +257,8 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
               errorMessage={relativeEndValidator(values.relativeStart, values.relativeEnd)}
               triedToSubmit={triedToSubmit}
               readOnly={!values.relative}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
             />
           </div>
         ) : null}

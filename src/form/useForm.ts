@@ -68,8 +68,8 @@ export const useForm = ({ initialValues, onSubmit }: FormInput): FormOutput => {
   };
 
   const handleFocus = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLButtonElement>) => {
-    const id = event.target.id;
-    setFieldOnFocus(id);
+    const nameOrId = event.target.name || event.target.id;
+    setFieldOnFocus(nameOrId);
   };
 
   const handleBlur = () => {

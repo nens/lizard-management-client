@@ -34,8 +34,8 @@ export function Recipients (props: MyProps) {
     messages,
     valueChanged,
     valueRemoved,
-    // onFocus,
-    // onBlur,
+    onFocus,
+    onBlur,
     triedToSubmit,
     readOnly
   } = props;
@@ -126,6 +126,8 @@ export function Recipients (props: MyProps) {
               dropUp
               isClearable={false}
               readOnly={readOnly}
+              onFocus={onFocus}
+              onBlur={onBlur}
             />
             <SelectDropdown
               title={''}
@@ -150,6 +152,8 @@ export function Recipients (props: MyProps) {
               dropUp
               isClearable={false}
               readOnly={readOnly}
+              onFocus={onFocus}
+              onBlur={onBlur}
             />
             <button
               className={`${buttonStyles.Button} ${buttonStyles.Link}`}
