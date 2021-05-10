@@ -296,6 +296,7 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           validated
           onFocus={handleFocus}
           onBlur={handleBlur}
+          readOnly={values.type.value === 'sms'}
         />
         <div
           style={{

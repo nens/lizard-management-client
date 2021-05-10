@@ -26,7 +26,9 @@ interface MyProps {
   name: string,
   timeseries: Value | null,
   valueChanged: (value: Value | {} | null) => void,
-  triedToSubmit: boolean
+  triedToSubmit: boolean,
+  onFocus?: (e: React.ChangeEvent<HTMLInputElement>) => void,
+  onBlur?: () => void,
 }
 
 // Helper function to fetch assets in async select dropdown
@@ -72,7 +74,9 @@ export function TimeseriesSelection (props: MyProps) {
   const {
     name,
     timeseries,
-    triedToSubmit
+    triedToSubmit,
+    onFocus,
+    onBlur,
   } = props;
 
   const [selectedAsset, setSelectedAsset] = useState<AssetFromAssetEndpoint | null>(null);
@@ -109,6 +113,8 @@ export function TimeseriesSelection (props: MyProps) {
         isAsync
         isCached
         loadOptions={fetchAssets}
+        onFocus={onFocus}
+        onBlur={onBlur}
       />
       <SelectDropdown
         title={'Sub-location'}
@@ -135,6 +141,8 @@ export function TimeseriesSelection (props: MyProps) {
         validated
         // field is read-only if no asset is selected or no nested asset found
         readOnly={!selectedAsset || getNestedAssetList(selectedAsset).length === 0}
+        onFocus={onFocus}
+        onBlur={onBlur}
       />
       <SelectDropdown
         title={'Time-series *'}
@@ -152,6 +160,8 @@ export function TimeseriesSelection (props: MyProps) {
         validated={!!timeseries}
         errorMessage={'Please select a timeseries'}
         triedToSubmit={triedToSubmit}
+        onFocus={onFocus}
+        onBlur={onBlur}
       />
     </div>
   )
