@@ -26,8 +26,8 @@ const snoozeFieldHelpText = (
   </>
 );
 
-export const rasterAlarmFormHelpText: HelpText = {
-  default: 'Form to edit a raster alarm. Please select a field to get more information.',
+export const alarmFormHelpText: HelpText = {
+  default: 'Form to edit an alarm. Please select a field to get more information.',
   name: nameHelpText,
   raster: 'Choose a raster layer to apply this alarm to.',
   point: (
@@ -42,31 +42,6 @@ export const rasterAlarmFormHelpText: HelpText = {
     </>
   ),
   geometry: 'Geometry of the location.',
-  relative: relativeFieldHelpText,
-  relativeStart: relativeFieldHelpText,
-  relativeEnd: relativeFieldHelpText,
-  comparison: (
-    <>
-      <p>Determine whether the alarm should check for values above or below the specified thresholds.</p>
-      <p><em>E.g. check for floods (&#62;) or droughts (&#60;).</em></p>
-    </>
-  ),
-  thresholdValue: 'Set the level for which the alarm should be raised.',
-  thresholdLevel: 'Label them with a name to explain the status of the threshold.',
-  addNewThreshold: 'Add a new alarm threshold.',
-  snoozeOn: snoozeFieldHelpText,
-  snoozeOff: snoozeFieldHelpText,
-  messages: (
-    <>
-      <p>Which group of contacts should receive which message when the alarm is triggered?</p>
-      <p><em>Multiple entries are allowed, also to set a withdrawal message.</em></p>
-    </>
-  ),
-}
-
-export const timeseriesAlarmFormHelpText: HelpText = {
-  default: 'Form to edit a time-series alarm. Please select a field to get more information.',
-  name: nameHelpText,
   timeseries_asset: (
     <>
       <p>Search and select the asset to which the timeseries you are looking for is related to.</p>
@@ -89,10 +64,17 @@ export const timeseriesAlarmFormHelpText: HelpText = {
   addNewThreshold: 'Add a new alarm threshold.',
   snoozeOn: snoozeFieldHelpText,
   snoozeOff: snoozeFieldHelpText,
-  messages: (
+  contactGroup: (
     <>
-      <p>Which group of contacts should receive which message when the alarm is triggered?</p>
+      <p>Select a group of contacts to receive message when the alarm is triggered.</p>
       <p><em>Multiple entries are allowed, also to set a withdrawal message.</em></p>
     </>
   ),
+  message: (
+    <>
+      <p>Select a template message to send to the selected group when the alarm is triggered.</p>
+      <p><em>Multiple entries are allowed, also to set a withdrawal message.</em></p>
+    </>
+  ),
+  addRecipient: 'Add a new recipient by selecting a group and a template message for it.',
 }

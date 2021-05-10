@@ -21,7 +21,7 @@ import { convertToSelectObject } from '../../../utils/convertToSelectObject';
 import { convertDurationObjToSeconds } from '../../../utils/dateUtils';
 import { rasterIntervalStringServerToDurationObject } from '../../../utils/isoUtils';
 import { getUuidFromUrl } from '../../../utils/getUuidFromUrl';
-import { rasterAlarmFormHelpText } from '../../../utils/help_texts/helpTextForAlarms';
+import { alarmFormHelpText } from '../../../utils/help_texts/helpTextForAlarms';
 import formStyles from './../../../styles/Forms.module.css';
 import rasterAlarmIcon from "../../../images/alarm@3x.svg";
 
@@ -174,7 +174,7 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
       imgUrl={rasterAlarmIcon}
       imgAltDescription={"Raster alarm icon"}
       headerText={"Raster alarms"}
-      explanationText={rasterAlarmFormHelpText[fieldOnFocus] || rasterAlarmFormHelpText['default']}
+      explanationText={alarmFormHelpText[fieldOnFocus] || alarmFormHelpText['default']}
       backUrl={"/alarms/notifications/raster_alarms"}
       fieldName={fieldOnFocus}
     >

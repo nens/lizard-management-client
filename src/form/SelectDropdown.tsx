@@ -13,6 +13,7 @@ export type Value = {
 interface MyProps {
   title: string,
   name: string,
+  id?: string,
   value?: Value | null,
   valueChanged: (value: ValueType<Value, boolean> | {}) => void,
   options: Value[],
@@ -38,6 +39,7 @@ export const SelectDropdown = (props: MyProps) => {
   const {
     title,
     name,
+    id,
     placeholder,
     value,
     valueChanged,
@@ -175,7 +177,7 @@ export const SelectDropdown = (props: MyProps) => {
         {isAsync ? (
           <AsyncSelect
             ref={mySelect}
-            inputId={name}
+            inputId={id || name}
             name={name}
             components={{ Option, SingleValue }}
             styles={customStyles}
@@ -197,7 +199,7 @@ export const SelectDropdown = (props: MyProps) => {
         ) : (
           <Select
             ref={mySelect}
-            inputId={name}
+            inputId={id || name}
             name={name}
             components={{ Option, SingleValue }}
             styles={customStyles}

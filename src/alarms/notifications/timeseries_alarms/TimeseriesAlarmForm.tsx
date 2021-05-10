@@ -21,7 +21,7 @@ import { convertDurationObjToSeconds } from '../../../utils/dateUtils';
 import { rasterIntervalStringServerToDurationObject } from '../../../utils/isoUtils';
 import { getUuidFromUrl } from '../../../utils/getUuidFromUrl';
 import { getTimeseriesLabel, TimeseriesFromTimeseriesEndpoint } from '../../../types/timeseriesType';
-import { timeseriesAlarmFormHelpText } from '../../../utils/help_texts/helpTextForAlarms';
+import { alarmFormHelpText } from '../../../utils/help_texts/helpTextForAlarms';
 import formStyles from './../../../styles/Forms.module.css';
 import rasterAlarmIcon from "../../../images/alarm@3x.svg";
 
@@ -148,7 +148,7 @@ const TimeseriesAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps>
       imgUrl={rasterAlarmIcon}
       imgAltDescription={"Raster alarm icon"}
       headerText={"Time-series alarms"}
-      explanationText={timeseriesAlarmFormHelpText[fieldOnFocus] || timeseriesAlarmFormHelpText['default']}
+      explanationText={alarmFormHelpText[fieldOnFocus] || alarmFormHelpText['default']}
       backUrl={navigationUrl}
       fieldName={fieldOnFocus}
     >

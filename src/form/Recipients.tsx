@@ -20,7 +20,7 @@ interface MyProps {
   validated: boolean,
   errorMessage?: string | false,
   placeholder?: string,
-  onFocus?: (e: React.ChangeEvent<HTMLInputElement>) => void,
+  onFocus?: (e: React.ChangeEvent<HTMLInputElement | HTMLButtonElement>) => void,
   onBlur?: () => void,
   triedToSubmit?: boolean,
   readOnly?: boolean
@@ -105,6 +105,7 @@ export function Recipients (props: MyProps) {
           <React.Fragment key={i}>
             <SelectDropdown
               title={''}
+              id={'contactGroup'}
               name={'contactGroup' + i}
               value={recipient.contact_group}
               valueChanged={value => {
@@ -131,6 +132,7 @@ export function Recipients (props: MyProps) {
             />
             <SelectDropdown
               title={''}
+              id={'message'}
               name={'message' + i}
               value={recipient.message}
               valueChanged={value => {
@@ -167,6 +169,7 @@ export function Recipients (props: MyProps) {
           </React.Fragment>
         ))}
         <button
+          id={'addRecipient'}
           className={buttonStyles.NewButton}
           onClick={e => {
             e.preventDefault();
@@ -178,6 +181,8 @@ export function Recipients (props: MyProps) {
               }
             ]);
           }}
+          onFocus={onFocus}
+          onBlur={onBlur}
         >
           Add recipient
         </button>
