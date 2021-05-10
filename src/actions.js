@@ -28,7 +28,24 @@ export function fetchLizardBootstrap() {
       .then(response => response.json())
       .then(data => {
         if (data && data.user && data.user.authenticated === true) {
-          dispatch(receiveLizardBootstrap(data));
+          // User ID is not included in the bootstrap response
+          // We need to find the User ID in order to fetch the available organisations
+          fetch(`/api/v4/users/?username=${data.user.username}`, {
+            credentials: "same-origin"
+          }).then(
+            response => response.json()
+          ).then(parsedRes => {
+            const userList = parsedRes.results;
+            const currentUserId = userList[0].id;
+            const bootstrapData = {
+              ...data,
+              user: {
+                ...data.user,
+                id: currentUserId
+              }
+            };
+            dispatch(receiveLizardBootstrap(bootstrapData));
+          })
         } else {
           const nextUrl = window.location.href;
           window.location.href = `${data.sso.login}&next=${nextUrl}`;
@@ -75,49 +92,58 @@ export const REQUEST_USAGE = "REQUEST_USAGE";
 export const SET_USAGE = "SET_USAGE";
 
 export function fetchOrganisations() {
-  return (dispatch, getState) => {
+  return async (dispatch, getState) => {
     dispatch({ type: REQUEST_ORGANISATIONS });
 
-    const url =
-      // we do the filtering for roles now client side
-      // "/api/v4/organisations/?role=supplier&role=admin&page_size=100000";
-      "/api/v4/organisations/?page_size=100000";
-    const opts = { credentials: "same-origin" };
+    // Get User ID from the Redux store and selected organisation from local storage
+    const userId = getState().bootstrap.bootstrap.user.id;
+    const selectedOrganisationLocalStorage = getLocalStorage("lizard-management-current-organisation", null);
 
-    fetch(url, opts)
-      .then(responseObj => responseObj.json())
-      .then(responseData => {
-        const selectedOrganisationLocalStorage = getLocalStorage("lizard-management-current-organisation", null);
-        const data = responseData.results;
-        const allOrganisations = data.map(organisation => {
-          //use organisation uuid without dashes only
-          return {
-            ...organisation,
-            uuid: organisation.uuid.replace(/-/g, "")
-          };
-        })
-        const availableOrganisations = allOrganisations.filter(e => {
-          return (
-            e.roles.find(e => e === "user") ||
-            e.roles.find(e => e === "manager") ||
-            e.roles.find(e => e === "admin") ||
-            e.roles.find(e => e === "supplier") 
-            // users with only role "user" are no longer allowed in the management page. 
-          );
-        })
+    // URL to fetch the list of available organisations with user roles
+    const availableOrganisationsUrl = `/api/v4/users/${userId}/organisations/?page_size=100000`;
 
-        dispatch({ type: RECEIVE_ORGANISATIONS, all:allOrganisations, available: availableOrganisations});
-        
-        if (
-          !selectedOrganisationLocalStorage ||
-          availableOrganisations.map(orga=>orga.uuid).indexOf(selectedOrganisationLocalStorage.uuid) === -1
-        ) {
-          const selectedOrganisation = availableOrganisations[0];
-          dispatch(selectOrganisation(selectedOrganisation, true));
-        } else {
-          dispatch(selectOrganisation(selectedOrganisationLocalStorage, false));
-        }
-      });
+    // URL to fetch all organisations
+    const organisationsUrl = `/api/v4/organisations/?page_size=100000`;
+
+    const allOrganisationsParsedRes = await fetch(organisationsUrl, {
+      credentials: "same-origin"
+    }).then(
+      res => res.json()
+    );
+
+    const availableOrganisationsParsedRes = await fetch(availableOrganisationsUrl, {
+      credentials: "same-origin"
+    }).then(
+      res => res.json()
+    );
+
+    const allOrganisations = allOrganisationsParsedRes.results.map(org => ({
+      ...org,
+      uuid: org.uuid.replace(/-/g, "")
+    }));
+
+    // All user roles are accepted in the management page
+    const availableOrganisations = availableOrganisationsParsedRes.results.map(org => ({
+      ...org,
+      uuid: org.uuid.replace(/-/g, "")
+    }));
+
+    // Dispatch action to update Redux store
+    dispatch({
+      type: RECEIVE_ORGANISATIONS,
+      all: allOrganisations,
+      available: availableOrganisations
+    });
+
+    if (
+      !selectedOrganisationLocalStorage ||
+      availableOrganisations.map(orga=>orga.uuid).indexOf(selectedOrganisationLocalStorage.uuid) === -1
+    ) {
+      const selectedOrganisation = availableOrganisations[0];
+      dispatch(selectOrganisation(selectedOrganisation, true));
+    } else {
+      dispatch(selectOrganisation(selectedOrganisationLocalStorage, false));
+    };
   };
 }
 
