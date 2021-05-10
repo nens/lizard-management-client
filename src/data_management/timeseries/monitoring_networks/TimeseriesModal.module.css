@@ -1,0 +1,42 @@
+.MainContainer {
+  height: calc(100% - 60px);
+  margin: 20px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+}
+
+.GridContainer {
+  height: calc(100% - 60px);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 40px;
+}
+
+.TimeseriesContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+}
+
+.TimeseriesFilter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+.TimeseriesList {
+  list-style: none;
+  padding: 0;
+}
+
+.TimeseriesRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 3px 0;
+  border-bottom: 1px dotted;
+}
