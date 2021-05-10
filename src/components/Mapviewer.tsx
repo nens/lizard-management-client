@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import MDSpinner from 'react-md-spinner';
 import { connect } from 'react-redux';
+import ReactMapGL from 'react-map-gl';
 
 
 interface MyProps {
@@ -15,10 +16,21 @@ interface APIResponse {
 function MapViewer (props: MyProps & DispatchProps) {
   const { } = props;
 
+  const [viewport, setViewport] = React.useState({
+    latitude: 37.7577,
+    longitude: -122.4376,
+    zoom: 8
+  });
+
   
   return (
     <div>
-      Test mapviewer
+      <ReactMapGL
+        {...viewport}
+        width="100%"
+        height="100%"
+        onViewportChange={(viewport:any) => setViewport(viewport)}
+      />
     </div>
   )
 }
