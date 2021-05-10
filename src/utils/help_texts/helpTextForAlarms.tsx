@@ -24,7 +24,7 @@ const snoozeFieldHelpText = (
       Find details about this feature <button className={ButtonStyles.Link} onMouseDown={() => window.open("https://docs.lizard.net/f_alarms.html#snoozing-option", "_blank")} style={{ padding: 0 }}>in our docs</button>.
     </p>
   </>
-)
+);
 
 export const rasterAlarmFormHelpText: HelpText = {
   default: 'Form to edit a raster alarm. Please select a field to get more information.',
@@ -67,7 +67,32 @@ export const rasterAlarmFormHelpText: HelpText = {
 export const timeseriesAlarmFormHelpText: HelpText = {
   default: 'Form to edit a time-series alarm. Please select a field to get more information.',
   name: nameHelpText,
-  timeseries_asset: 'Select a location.',
-  timeseries_nestedAsset: 'Select a nested asset if any.',
-  timeseries: 'Select a time-series.',
+  timeseries_asset: (
+    <>
+      <p>Search and select the asset to which the timeseries you are looking for is related to.</p>
+      <p><em>In case of a groundwater filter or pump, select the related sub-location in the second dropdown.</em></p>
+    </>
+  ),
+  timeseries_nestedAsset: 'Select the related sub-location in case of a groundwater filter or pump.',
+  timeseries: 'Select the timeseries to apply the alarm to from the list of related timeseries of the selected asset.',
+  relative: relativeFieldHelpText,
+  relativeStart: relativeFieldHelpText,
+  relativeEnd: relativeFieldHelpText,
+  comparison: (
+    <>
+      <p>Determine whether the alarm should check for values above or below the specified thresholds.</p>
+      <p><em>E.g. check for floods (&#62;) or droughts (&#60;).</em></p>
+    </>
+  ),
+  thresholdValue: 'Set the level for which the alarm should be raised.',
+  thresholdLevel: 'Label them with a name to explain the status of the threshold.',
+  addNewThreshold: 'Add a new alarm threshold.',
+  snoozeOn: snoozeFieldHelpText,
+  snoozeOff: snoozeFieldHelpText,
+  messages: (
+    <>
+      <p>Which group of contacts should receive which message when the alarm is triggered?</p>
+      <p><em>Multiple entries are allowed, also to set a withdrawal message.</em></p>
+    </>
+  ),
 }
