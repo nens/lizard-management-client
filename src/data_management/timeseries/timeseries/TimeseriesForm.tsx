@@ -95,7 +95,7 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
       .then(response => {
         const status = response.status;
         if (status === 201) {
-          props.addNotification('Success! New time-series created', 2000);
+          props.addNotification('Success! New time series created', 2000);
           props.history.push(backUrl);
         } else if (status === 403) {
           props.addNotification("Not authorized", 2000);
@@ -116,7 +116,7 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
       .then(response => {
         const status = response.status;
         if (status === 200) {
-          props.addNotification('Success! Time-series updated', 2000);
+          props.addNotification('Success! Time series updated', 2000);
           props.history.push(backUrl);
         } else {
           props.addNotification(status, 2000);
@@ -146,7 +146,7 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
     <ExplainSideColumn
       imgUrl={timeseriesIcon}
       imgAltDescription={"Timeseries icon"}
-      headerText={"Timeseries"}
+      headerText={"Time Series"}
       explanationText={timeseriesFormHelpText[fieldOnFocus] || timeseriesFormHelpText['default']}
       backUrl={backUrl}
       fieldName={fieldOnFocus}

@@ -104,7 +104,7 @@ export const MonitoringNetworksTable = (props: RouteComponentProps) =>  {
       imgUrl={monitoringNetworkIcon}
       imgAltDescription={"Monitoring-Network icon"}
       headerText={"Monitoring Networks"}
-      explanationText={defaultTableHelpText('Monitoring networks are used to group and give insights on time-series.')}
+      explanationText={defaultTableHelpText('Monitoring networks are used to group and give insights on time series.')}
       backUrl={"/data_management/timeseries"}
     >
       <TableStateContainer

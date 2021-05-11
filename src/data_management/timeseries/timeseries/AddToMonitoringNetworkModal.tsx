@@ -46,12 +46,12 @@ function AddToMonitoringNetworkModal (props: MyProps & DispatchProps) {
       body: JSON.stringify(timeseries.map(ts => ts.uuid))
     }).then(res => {
       if (res.status === 204) {
-        props.addNotification('Success! Time-series added to monitoring network', 2000);
+        props.addNotification('Success! Time series added to monitoring network', 2000);
         props.handleClose();
         props.resetTable && props.resetTable();
       } else {
         props.addNotification('An error occurred! Please try again!', 2000);
-        console.error('Error adding time-series to monitoring network: ', res);
+        console.error('Error adding time series to monitoring network: ', res);
       }
     }).catch(console.error);
   };
@@ -72,8 +72,8 @@ function AddToMonitoringNetworkModal (props: MyProps & DispatchProps) {
         }}
       >
         <div>
-          <p>Adding time-series to a monitoring network will group them and they can be seen in the Lizard Catalogue.</p>
-          <p>Which monitoring network would you like to add the selected time-series to?</p>
+          <p>Adding time series to a monitoring network will group them and they can be seen in the Lizard Catalogue.</p>
+          <p>Which monitoring network would you like to add the selected time series to?</p>
           <SelectDropdown
             title={'Monitoring networks'}
             name={'monitoringNetworks'}

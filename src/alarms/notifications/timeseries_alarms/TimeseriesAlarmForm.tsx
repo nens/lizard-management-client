@@ -147,7 +147,7 @@ const TimeseriesAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps>
     <ExplainSideColumn
       imgUrl={rasterAlarmIcon}
       imgAltDescription={"Raster alarm icon"}
-      headerText={"Time-series alarms"}
+      headerText={"Time series alarms"}
       explanationText={alarmFormHelpText[fieldOnFocus] || alarmFormHelpText['default']}
       backUrl={navigationUrl}
       fieldName={fieldOnFocus}

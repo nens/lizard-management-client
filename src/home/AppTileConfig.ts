@@ -103,7 +103,7 @@ export const appTiles = [
     icon: wmsIcon
   },
   {
-    title: "Timeseries",
+    title: "Time Series",
     // title: (
     //   <FormattedMessage
     //     id="data_management.wms_layers"
@@ -229,7 +229,7 @@ export const appTiles = [
     icon: backArrowIcon
   },
   {
-    title: "Timeseries",
+    title: "Time Series",
     // title: (
     //   <FormattedMessage
     //     id="go_back"
@@ -369,7 +369,7 @@ export const appTiles = [
     icon: alarmsIcon,
   },
   {
-    title: "Time-series Alarms",
+    title: "Time Series Alarms",
     // title: (
     //   <FormattedMessage
     //     id="alarms.timeseries_alarms"

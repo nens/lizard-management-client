@@ -145,7 +145,7 @@ export function TimeseriesSelection (props: MyProps) {
         onBlur={onBlur}
       />
       <SelectDropdown
-        title={'Time-series *'}
+        title={'Time series *'}
         name={name}
         placeholder={'- Select a time series -'}
         value={timeseries}
