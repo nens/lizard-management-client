@@ -22,13 +22,13 @@ interface Props {
 
 const TableActionButtons: React.FC<Props & RouteComponentProps> = ({actions, tableRow,tableData,setTableData,triggerReloadWithCurrentPage, triggerReloadWithBasePage, editUrl, history }) => {
   const actionList = editUrl ? [
-    ...actions,
     // Edit action to open the object in the form
     // and is optional based on parameter "editUrl"
     {
       displayValue: 'Edit',
       actionFunction: () => history.push(editUrl)
-    }
+    },
+    ...actions
   ] : actions;
 
   return (

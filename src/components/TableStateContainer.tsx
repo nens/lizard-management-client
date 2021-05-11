@@ -5,6 +5,7 @@ import Pagination from './Pagination';
 import Checkbox from './Checkbox';
 import TableSearchBox from './TableSearchBox';
 import TableSearchToggle from './TableSearchToggle';
+import { TableSearchToggleHelpText } from './TableSearchToggleHelpText';
 import { Value } from '../form/SelectDropdown';
 import { useSelector } from "react-redux";
 import { getSelectedOrganisation } from '../reducers';
@@ -44,7 +45,7 @@ const TableStateContainer: React.FC<Props> = ({ gridTemplateColumns, columnDefin
   const [currentUrl, setCurrentUrl] = useState("");
   const [nextUrl, setNextUrl] = useState("");
   const [previousUrl, setPreviousUrl] = useState("");
-  const [itemsPerPage, setItemsPerPage] = useState("10");
+  const [itemsPerPage, setItemsPerPage] = useState(10);
   const [ordering, setOrdering] = useState<string | null>("last_modified");
   const [searchInput, setSearchInput] = useState<string>("");
   const [selectedFilterOption, setSelectedFilterOption] = useState<Value | null>(filterOptions && filterOptions.length > 0 ? filterOptions[0] : null)
@@ -63,7 +64,10 @@ const TableStateContainer: React.FC<Props> = ({ gridTemplateColumns, columnDefin
     "&page=1" +
     (selectedFilterOption && searchInput ? "&" + selectedFilterOption.value + searchInput : "") +
     "&ordering=" + ordering +
-    "&organisation__uuid=" + selectedOrganisationUuid +
+    // https://github.com/nens/lizard-management-client/issues/784
+    // for timeseries table organisation is filtered on via location
+    // Todo, should we instead put the logic for the organisation filter in the components using TableStateContainer?
+    (baseUrl === "/api/v4/timeseries/?" ? ("&location__organisation__uuid=" + selectedOrganisationUuid) : ("&organisation__uuid=" + selectedOrganisationUuid)) +
     (defaultUrlParams ? defaultUrlParams : '');
 
   const url = queryCheckBox && queryCheckBoxState? queryCheckBox.adaptUrlFunction(preUrl) : preUrl
@@ -235,11 +239,11 @@ const TableStateContainer: React.FC<Props> = ({ gridTemplateColumns, columnDefin
           marginTop: "18px",
         }}
       >
-        {
-          filterOptions && filterOptions.length > 0 ?
+        {filterOptions && filterOptions.length > 0 ?
           <div
             style={{
-              display: 'flex'
+              display: 'flex',
+              position: 'relative',
             }}
           >
             <TableSearchBox
@@ -249,7 +253,7 @@ const TableStateContainer: React.FC<Props> = ({ gridTemplateColumns, columnDefin
               }}
               onClear={()=>setSearchInput("")}
               value={searchInput}
-              placeholder={"Type to search for name"}
+              placeholder={"Type to search"}
             />
             {filterOptions.length > 1 ? (
               <TableSearchToggle
@@ -258,23 +262,20 @@ const TableStateContainer: React.FC<Props> = ({ gridTemplateColumns, columnDefin
                 valueChanged={option => setSelectedFilterOption(option)}
               />
             ) : null}
+            <TableSearchToggleHelpText
+              filterOption={selectedFilterOption}
+            />
           </div>
-          :
-          <div />
-        }
-        {
-          newItemOnClick? 
+        : <div />}
+        {newItemOnClick ?
           <button
             onClick={newItemOnClick}
             className={buttonStyles.NewButton}
           >
             + New Item
           </button>
-          :
-          null
-        }
-        {
-          queryCheckBox?
+        : null}
+        {queryCheckBox ?
           <span
             style={{
               display: "flex",
@@ -292,11 +293,8 @@ const TableStateContainer: React.FC<Props> = ({ gridTemplateColumns, columnDefin
                 size={32}
               />
           </span>
-          :
-          null
-        }
+        : null}
       </div>
-      
       <div
         // @ts-ignore
         style={{
@@ -352,8 +350,6 @@ const TableStateContainer: React.FC<Props> = ({ gridTemplateColumns, columnDefin
           getIfCheckBoxOfUuidIsSelected={getIfCheckBoxOfUuidIsSelected}
         />
       </div>
-      
-      
       <Pagination
         page1Url={url}
         previousUrl={previousUrl}
@@ -362,7 +358,6 @@ const TableStateContainer: React.FC<Props> = ({ gridTemplateColumns, columnDefin
         reloadFromUrl={fetchWithUrl}
         setItemsPerPage={setItemsPerPage}
       />
-
     </div>
   )
 };

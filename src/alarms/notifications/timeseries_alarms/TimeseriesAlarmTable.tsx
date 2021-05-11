@@ -5,81 +5,35 @@ import TableStateContainer from '../../../components/TableStateContainer';
 import TableActionButtons from '../../../components/TableActionButtons';
 import tableStyles from "../../../components/Table.module.css";
 import { ExplainSideColumn } from '../../../components/ExplainSideColumn';
-import { ModalDeleteContent } from '../../../components/ModalDeleteContent';
 import { addNotification } from '../../../actions';
-import Modal from '../../../components/Modal';
+import DeleteModal from '../../../components/DeleteModal';
 import alarmIcon from "../../../images/alarm@3x.svg";
+
+const baseUrl = "/api/v4/timeseriesalarms/";
+const navigationUrl = "/alarms/notifications/timeseries_alarms";
+
+const fetchTimeseriesAlarmsWithOptions = (uuids: string[], fetchOptions: RequestInit) => {
+  const fetches = uuids.map (uuid => {
+    return fetch(baseUrl + uuid + "/", fetchOptions);
+  });
+  return Promise.all(fetches)
+};
 
 export const TimeseriesAlarmTableComponent: React.FC<DispatchProps & RouteComponentProps> = (props) =>  {
   const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
-  const [rowToBeDeleted, setRowToBeDeleted] = useState<any | null>(null);
-  const [deleteFunction, setDeleteFunction] = useState<null | Function>(null);
-  const [busyDeleting, setBusyDeleting] = useState<boolean>(false);
+  const [resetTable, setResetTable] = useState<Function | null>(null);
 
-  const baseUrl = "/api/v4/timeseriesalarms/";
-  const navigationUrl = "/alarms/notifications/timeseries_alarms";
-
-  const fetchTimeseriesAlarmsWithOptions = (uuids: string[], fetchOptions:any) => {
-    const fetches = uuids.map (uuid => {
-      return (fetch(baseUrl + uuid + "/", fetchOptions));
-    });
-    return Promise.all(fetches)
-  }
-
-  const deleteActions = (rows: any[], tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any, setCheckboxes: any)=>{
+  const deleteActions = (
+    rows: any[],
+    triggerReloadWithCurrentPage: Function,
+    setCheckboxes: Function | null
+  ) => {
     setRowsToBeDeleted(rows);
-    const uuids = rows.map(row=> row.uuid);
-    setDeleteFunction(()=>()=>{
-      setBusyDeleting(true);
-      const tableDataDeletedmarker = tableData.map((rowAllTables:any)=>{
-        if (uuids.find(uuid => uuid === rowAllTables.uuid)) {
-          return {...rowAllTables, markAsDeleted: true}
-        } else{
-          return {...rowAllTables};
-        }
-      })
-      setTableData(tableDataDeletedmarker);
-      const opts = {
-        credentials: "same-origin",
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({})
-      };
-      return fetchTimeseriesAlarmsWithOptions(uuids, opts)
-      .then((_result) => {
-        if (setCheckboxes) {
-          setCheckboxes([]);
-        }
-        triggerReloadWithCurrentPage();
-        return new Promise((resolve, _reject) => {
-          resolve();
-        });
-      })
+    setResetTable(() => () => {
+      triggerReloadWithCurrentPage();
+      setCheckboxes && setCheckboxes([]);
     });
-  }
-
-  const deleteAction = (row: any, updateTableRow:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any)=>{
-    setRowToBeDeleted(row);
-    setDeleteFunction(()=>()=>{
-      setBusyDeleting(true);
-      updateTableRow({...row, markAsDeleted: true});
-      const opts = {
-        credentials: "same-origin",
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({})
-      };
-      return fetchTimeseriesAlarmsWithOptions([row.uuid], opts)
-      .then((_result) => {
-        setBusyDeleting(false);
-        // TODO: do we need this callback or should we otherwise indicate that the record is deleted ?
-        triggerReloadWithCurrentPage();
-        return new Promise((resolve, _reject) => {
-            resolve();
-          });
-        })
-    })
-  }
+  };
 
   const setAlarmActive = (row: any, updateTableRow: any, triggerReloadWithCurrentPage: any) => {
     fetchTimeseriesAlarmsWithOptions([row.uuid], {
@@ -152,7 +106,9 @@ export const TimeseriesAlarmTableComponent: React.FC<DispatchProps & RouteCompon
                 },
                 {
                   displayValue: "Delete",
-                  actionFunction: deleteAction,
+                  actionFunction: (row: any, _updateTableRow: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any) => {
+                    deleteActions([row], triggerReloadWithCurrentPage, null)
+                  }
                 }
               ]}
             />
@@ -171,7 +127,7 @@ export const TimeseriesAlarmTableComponent: React.FC<DispatchProps & RouteCompon
     <ExplainSideColumn
       imgUrl={alarmIcon}
       imgAltDescription={"Alarm icon"}
-      headerText={"Time-series Alarms"}
+      headerText={"Time series Alarms"}
       explanationText={"Alarms consist of a name, template, thresholds and recipients. You can create, (de)activate or delete your alarms here."} 
       backUrl={"/alarms/notifications"}
     >
@@ -182,7 +138,9 @@ export const TimeseriesAlarmTableComponent: React.FC<DispatchProps & RouteCompon
           checkBoxActions={[
             {
               displayValue: "Delete",
-              actionFunction: deleteActions,
+              actionFunction: (rows: any[], _tableData: any, _setTableData: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any, setCheckboxes: any) => {
+                deleteActions(rows, triggerReloadWithCurrentPage, setCheckboxes)
+              }
             }
           ]}
           newItemOnClick={handleNewContactClick}
@@ -193,57 +151,18 @@ export const TimeseriesAlarmTableComponent: React.FC<DispatchProps & RouteCompon
             }
           ]}
         />
-        { 
-        rowsToBeDeleted.length > 0?
-           <Modal
-           title={'Are you sure?'}
-           buttonConfirmName={'Delete'}
-           onClickButtonConfirm={() => {
-              deleteFunction && deleteFunction().then(()=>{
+        {rowsToBeDeleted.length > 0 ? (
+          <DeleteModal
+            rows={rowsToBeDeleted}
+            displayContent={[{name: "name", width: 40}, {name: "uuid", width: 60}]}
+            fetchFunction={fetchTimeseriesAlarmsWithOptions}
+            resetTable={resetTable}
+            handleClose={() => {
               setRowsToBeDeleted([]);
-              setDeleteFunction(null);
-             });
-           }}
-           cancelAction={()=>{
-            setRowsToBeDeleted([]);
-            setDeleteFunction(null);
-          }}
-          disableButtons={busyDeleting}
-         >
-           
-           <p>Are you sure? You are deleting the following time-series alarms:</p>
-           {ModalDeleteContent(rowsToBeDeleted, busyDeleting, [{name: "name", width: 40}, {name: "uuid", width: 60}])}
-           
-         </Modal>
-        :
-          null
-        }
-
-        { 
-        rowToBeDeleted?
-           <Modal
-           title={'Are you sure?'}
-           buttonConfirmName={'Delete'}
-           onClickButtonConfirm={() => {
-             deleteFunction && deleteFunction().then(()=>{
-              setRowToBeDeleted(null);
-              setDeleteFunction(null);
-             });
-             
-           }}
-           cancelAction={()=>{
-             setRowToBeDeleted(null);
-             setDeleteFunction(null);
-           }}
-           disableButtons={busyDeleting}
-         >
-           <p>Are you sure? You are deleting the following time-series alarm:</p>
-           {ModalDeleteContent([rowToBeDeleted], busyDeleting, [{name: "name", width: 40}, {name: "uuid", width: 60}])}
-
-         </Modal>
-        :
-          null
-        }
+              setResetTable(null);
+            }}
+          />
+        ) : null}
      </ExplainSideColumn>
   );
 }

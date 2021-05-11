@@ -1,8 +1,6 @@
 import React, {useState,} from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
-import { connect, /*useSelector*/ } from 'react-redux';
-// import { getOrganisations, getUsername } from '../../reducers';
-// import { ScenarioResult } from '../../form/ScenarioResult';
+import { connect } from 'react-redux';
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import { TextInput } from './../../form/TextInput';
 // import { SubmitButton } from '../../form/SubmitButton';
@@ -14,11 +12,8 @@ import formStyles from './../../styles/Forms.module.css';
 import { TextArea } from './../../form/TextArea';
 import labeltypesIcon from "../../images/labeltypes_icon.svg";
 import FormActionButtons from '../../components/FormActionButtons';
-import Modal from '../../components/Modal';
-import { ModalDeleteContent } from '../../components/ModalDeleteContent';
-import { lableTypeFormHelpText } from '../../utils/helpTextForForms';
-
-
+import DeleteModal from '../../components/DeleteModal';
+import { lableTypeFormHelpText } from '../../utils/help_texts/helpTextForLabelTypes';
 
 interface Props {
   currentRecord: any
@@ -30,21 +25,21 @@ interface RouteParams {
   uuid: string;
 };
 
+const fetchLabelTypesWithOptions = (uuids: string[], fetchOptions: RequestInit) => {
+  const fetches = uuids.map (uuid => {
+    return fetch('/api/v3/labeltypes/' + uuid + "/", fetchOptions);
+  });
+  return Promise.all(fetches);
+};
+
 const LabeltypeModel: React.FC<Props & PropsFromDispatch & RouteComponentProps<RouteParams>> = (props) => {
   const { currentRecord } = props;
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-
-  // const organisations = useSelector(getOrganisations).available;
-  // next line doesnot work, because organisation has no uuid, but unique_id instead. Thus I do not use it
-  // const thisRecordOrganisation = organisations.find((org: any) => org.uuid === currentRecord.organisation.uuid.replace(/-/g, ""));
-  // const username = useSelector(getUsername);
 
   const initialValues = {
     name: currentRecord.name || '',
     uuid: currentRecord.uuid || '',
     description: currentRecord.description || '',
-    // modelName: currentRecord.model_name || '',
-    // supplier: currentRecord.username || '',
     organisation: currentRecord.organisation.name || '',
   };
 
@@ -102,28 +97,6 @@ const LabeltypeModel: React.FC<Props & PropsFromDispatch & RouteComponentProps<R
   //     })
   //     .catch(console.error);
   // }
-
-  const onDelete = () => {
-    const body = {};
-
-    fetch(`/api/v3/labeltypes/${currentRecord.uuid}/`, {
-      credentials: 'same-origin',
-      method: 'DELETE',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(body)
-    })
-      .then(data => {
-        const status = data.status;
-        if (status === 204) {
-          props.addNotification('Success! Labeltype deleted', 2000);
-          props.history.push('/data_management/labels/labeltypes/');
-        } else {
-          props.addNotification(status, 2000);
-          console.error(data);
-        };
-      })
-      .catch(console.error);
-  }
 
   const {
     values,
@@ -226,29 +199,15 @@ const LabeltypeModel: React.FC<Props & PropsFromDispatch & RouteComponentProps<R
           
         </div>
       </form>
-      { 
-        currentRecord && showDeleteModal?
-           <Modal
-           title={'Are you sure?'}
-           buttonConfirmName={'Delete'}
-           onClickButtonConfirm={() => {
-              onDelete();
-              setShowDeleteModal(false);
-           }}
-           cancelAction={()=>{
-            setShowDeleteModal(false)
-          }}
-          disableButtons={false}
-         >
-           
-           <p>Are you sure? You are deleting the following Label-type:</p>
-           
-           {ModalDeleteContent([currentRecord], false, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
-           
-         </Modal>
-        :
-          null
-        }
+      {currentRecord && showDeleteModal ? (
+        <DeleteModal
+          rows={[currentRecord]}
+          displayContent={[{name: "name", width: 65}, {name: "prefix", width: 35}]}
+          fetchFunction={fetchLabelTypesWithOptions}
+          handleClose={() => setShowDeleteModal(false)}
+          tableUrl={'/data_management/labels/label_types'}
+        />
+      ) : null}
     </ExplainSideColumn>
   );
 };

@@ -14,6 +14,10 @@ import alarmsIcon from "../images/alarm@3x.svg";
 import groupsIcon from "../images/group.svg";
 import contactsIcon from "../images/contacts@3x.svg";
 import templatesIcon from "../images/templates@3x.svg";
+import timeseriesIcon from "../images/timeseries_icon.svg";
+import monitoringsNetworkicon from "../images/monitoring_network_icon.svg";
+import locationsIcon from "../images/locations_icon.svg";
+
 
 export const appTiles = [
   { 
@@ -97,6 +101,20 @@ export const appTiles = [
     linksTo: "/data_management/wms_layers",
     requiresOneOfRoles: ["admin", "supplier",],
     icon: wmsIcon
+  },
+  {
+    title: "Time Series",
+    // title: (
+    //   <FormattedMessage
+    //     id="data_management.wms_layers"
+    //     defaultMessage="WMS layers"
+    //   />
+    // ),
+    order: 250,
+    onPage: "/data_management",
+    linksTo: "/data_management/timeseries",
+    requiresOneOfRoles: ["admin", "supplier",],
+    icon: timeseriesIcon,
   },
   {
     title: "3Di Scenarios",
@@ -211,6 +229,62 @@ export const appTiles = [
     icon: backArrowIcon
   },
   {
+    title: "Time Series",
+    // title: (
+    //   <FormattedMessage
+    //     id="go_back"
+    //     defaultMessage="Go Back"
+    //   />
+    // ),
+    order: 400,
+    onPage: "/data_management/timeseries",
+    linksTo: "/data_management/timeseries/timeseries",
+    requiresOneOfRoles: ["admin", "supplier",],
+    icon: timeseriesIcon
+  },
+  {
+    title: "Monitoring Networks",
+    // title: (
+    //   <FormattedMessage
+    //     id="go_back"
+    //     defaultMessage="Go Back"
+    //   />
+    // ),
+    order: 400,
+    onPage: "/data_management/timeseries",
+    linksTo: "/data_management/timeseries/monitoring_networks",
+    requiresOneOfRoles: ["admin", "supplier",],
+    icon: monitoringsNetworkicon,
+  },
+  {
+    title: "Locations",
+    // title: (
+    //   <FormattedMessage
+    //     id="go_back"
+    //     defaultMessage="Go Back"
+    //   />
+    // ),
+    order: 400,
+    onPage: "/data_management/timeseries",
+    linksTo: "/data_management/timeseries/locations",
+    requiresOneOfRoles: ["admin", "supplier",],
+    icon: locationsIcon,
+  },
+  {
+    title: "Go Back",
+    // title: (
+    //   <FormattedMessage
+    //     id="go_back"
+    //     defaultMessage="Go Back"
+    //   />
+    // ),
+    order: 400,
+    onPage: "/data_management/timeseries",
+    linksTo: "/data_management",
+    requiresOneOfRoles: ["admin", "supplier","user", "manager"],
+    icon: backArrowIcon
+  },
+  {
     title: "Notifications",
     // title: (
     //   <FormattedMessage
@@ -295,7 +369,7 @@ export const appTiles = [
     icon: alarmsIcon,
   },
   {
-    title: "Time-series Alarms",
+    title: "Time Series Alarms",
     // title: (
     //   <FormattedMessage
     //     id="alarms.timeseries_alarms"

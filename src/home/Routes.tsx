@@ -19,6 +19,15 @@ import { ScenarioTable } from "../data_management/scenarios/ScenarioTable";
 import { EditScenario } from "../data_management/scenarios/EditScenario";
 import { EditWmsLayer } from "../data_management/wms_layers/EditWmsLayer";
 import { NewWmsLayer } from "../data_management/wms_layers/NewWmsLayer";
+import { TimeseriesTable } from "../data_management/timeseries/timeseries/TimeseriesTable";
+import { EditTimeseries } from "../data_management/timeseries/timeseries/EditTimeseries";
+import { NewTimeseries } from "../data_management/timeseries/timeseries/NewTimeseries";
+import { MonitoringNetworksTable } from "../data_management/timeseries/monitoring_networks/MonitoringNetworksTable";
+import { EditMonitoringNetwork } from "../data_management/timeseries/monitoring_networks/EditMonitoringNetwork";
+import { NewMonitoringNetwork } from "../data_management/timeseries/monitoring_networks/NewMonitoringNetwork";
+import { LocationsTable } from "../data_management/timeseries/locations/LocationsTable";
+import { EditLocation } from "../data_management/timeseries/locations/EditLocation";
+import { NewLocation } from "../data_management/timeseries/locations/NewLocation";
 import { EditLabeltype } from "../data_management/labels/EditLabeltype";
 import { RasterAlarmTable } from "../alarms/notifications/raster_alarms/RasterAlarmTable";
 import { TimeseriesAlarmTable } from "../alarms/notifications/timeseries_alarms/TimeseriesAlarmTable";
@@ -67,6 +76,18 @@ export const Routes = () => {
         <Route exact path="/data_management/wms_layers" component={WmsLayerTable} />
         <Route exact path="/data_management/wms_layers/new" component={NewWmsLayer} />
         <Route exact path="/data_management/wms_layers/:id" component={EditWmsLayer} />
+
+        <Route exact path="/data_management/timeseries/timeseries" component={TimeseriesTable} />
+        <Route exact path="/data_management/timeseries/timeseries/new" component={NewTimeseries} />
+        <Route exact path="/data_management/timeseries/timeseries/:uuid" component={EditTimeseries} />
+
+        <Route exact path="/data_management/timeseries/monitoring_networks" component={MonitoringNetworksTable} />
+        <Route exact path="/data_management/timeseries/monitoring_networks/new" component={NewMonitoringNetwork} />
+        <Route exact path="/data_management/timeseries/monitoring_networks/:uuid" component={EditMonitoringNetwork} />
+
+        <Route exact path="/data_management/timeseries/locations" component={LocationsTable} />
+        <Route exact path="/data_management/timeseries/locations/new" component={NewLocation} />
+        <Route exact path="/data_management/timeseries/locations/:uuid" component={EditLocation} />
 
         <Route exact path="/data_management/scenarios" component={ScenarioTable} />
         <Route exact path="/data_management/scenarios/:uuid" component={EditScenario} />

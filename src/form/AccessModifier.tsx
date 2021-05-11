@@ -14,6 +14,11 @@ interface MyProps {
   form?: string,
 };
 
+export const getAccessibiltyText = (accessModifier: string) => {
+  if (accessModifier === 'Common') return 'Login';
+  return accessModifier;
+};
+
 export const AccessModifier: React.FC<MyProps> = (props) => {  
   const {
     title,
@@ -56,8 +61,8 @@ export const AccessModifier: React.FC<MyProps> = (props) => {
           onFocus={onFocus}
           onBlur={onBlur}
         >
-          <span>Login required</span>
-          <span>(logged in only)</span>
+          <span>Login</span>
+          <span>(login required)</span>
         </div>
         <div
           id={name}

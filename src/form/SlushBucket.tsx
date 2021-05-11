@@ -8,7 +8,7 @@ import styles from "./SlushBucket.module.css";
 import formStyles from "../styles/Forms.module.css";
 
 type choiceT = {value: string, display: string};
-export type choicesT = [choiceT];
+export type choicesT = choiceT[];
 
 interface MyProps {
   title: string,

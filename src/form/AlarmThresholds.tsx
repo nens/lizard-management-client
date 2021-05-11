@@ -19,7 +19,7 @@ interface MyProps {
   validated: boolean,
   errorMessage?: string | false,
   placeholder?: string,
-  onFocus?: (e: React.ChangeEvent<HTMLInputElement>) => void,
+  onFocus?: (e: React.ChangeEvent<HTMLInputElement | HTMLButtonElement>) => void,
   onBlur?: () => void,
   triedToSubmit?: boolean,
   readOnly?: boolean
@@ -38,6 +38,8 @@ export function AlarmThresholds (props: MyProps) {
     validated,
     errorMessage,
     triedToSubmit,
+    onFocus,
+    onBlur,
     readOnly
   } = props;
 
@@ -86,6 +88,8 @@ export function AlarmThresholds (props: MyProps) {
             });
           }}
           validated
+          onFocus={onFocus}
+          onBlur={onBlur}
           readOnly={readOnly}
         />
         <TextInput
@@ -103,10 +107,13 @@ export function AlarmThresholds (props: MyProps) {
           validated={validated}
           errorMessage={errorMessage}
           triedToSubmit={triedToSubmit}
+          onFocus={onFocus}
+          onBlur={onBlur}
           readOnly={readOnly}
         />
         <div />
         <button
+          id={'addNewThreshold'}
           className={buttonStyles.NewButton}
           title={!threshold.warning_level ? 'Please enter a name for the new threshold' : undefined}
           onClick={e => {
@@ -118,6 +125,8 @@ export function AlarmThresholds (props: MyProps) {
             });
           }}
           disabled={!threshold.warning_level}
+          onFocus={onFocus}
+          onBlur={onBlur}
         >
           Add threshold
         </button>

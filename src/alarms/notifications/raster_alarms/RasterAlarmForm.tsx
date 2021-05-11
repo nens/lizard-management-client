@@ -21,6 +21,7 @@ import { convertToSelectObject } from '../../../utils/convertToSelectObject';
 import { convertDurationObjToSeconds } from '../../../utils/dateUtils';
 import { rasterIntervalStringServerToDurationObject } from '../../../utils/isoUtils';
 import { getUuidFromUrl } from '../../../utils/getUuidFromUrl';
+import { alarmFormHelpText } from '../../../utils/help_texts/helpTextForAlarms';
 import formStyles from './../../../styles/Forms.module.css';
 import rasterAlarmIcon from "../../../images/alarm@3x.svg";
 
@@ -163,9 +164,9 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
     handleSubmit,
     handleReset,
     clearInput,
-    // fieldOnFocus,
-    // handleBlur,
-    // handleFocus,
+    fieldOnFocus,
+    handleBlur,
+    handleFocus,
   } = useForm({initialValues, onSubmit});
 
   return (
@@ -173,8 +174,9 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
       imgUrl={rasterAlarmIcon}
       imgAltDescription={"Raster alarm icon"}
       headerText={"Raster alarms"}
-      explanationText={"Select a field to get more information."}
+      explanationText={alarmFormHelpText[fieldOnFocus] || alarmFormHelpText['default']}
       backUrl={"/alarms/notifications/raster_alarms"}
+      fieldName={fieldOnFocus}
     >
       <form
         className={formStyles.Form}
@@ -194,6 +196,8 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           validated={!minLength(1, values.name)}
           errorMessage={minLength(1, values.name)}
           triedToSubmit={triedToSubmit}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         <span className={formStyles.FormFieldTitle}>
           2: Data
@@ -209,7 +213,10 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           errorMessage={required('Please select a raster', values.raster)}
           triedToSubmit={triedToSubmit}
           isAsync
+          isCached
           loadOptions={searchInput => fetchRasterLayers(selectedOrganisation.uuid, searchInput)}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         <RasterPointSelection
           title={'Map location *'}
@@ -217,15 +224,17 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           rasterUuid={values.raster ? values.raster.value : null}
           point={values.point}
           valueChanged={value => handleValueChange('point', value)}
-          validated={!required('Please select a location on the map', values.point)}
-          errorMessage={required('Please select a location on the map', values.point)}
           triedToSubmit={triedToSubmit}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         <CheckBox
           title={'Limit to relative period'}
           name={'relative'}
           value={values.relative}
           valueChanged={bool => handleValueChange('relative', bool)}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         {values.relative ? (
           <div className={formStyles.GridContainer}>
@@ -236,6 +245,8 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
               valueChanged={value => handleValueChange('relativeStart', value)}
               validated
               readOnly={!values.relative}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
             />
             <RelativeField
               title={'Relative end'}
@@ -246,6 +257,8 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
               errorMessage={relativeEndValidator(values.relativeStart, values.relativeEnd)}
               triedToSubmit={triedToSubmit}
               readOnly={!values.relative}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
             />
           </div>
         ) : null}
@@ -269,6 +282,8 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           validated
           isSearchable={false}
           isClearable={false}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         <AlarmThresholds
           title={'Threshold values *'}
@@ -280,6 +295,8 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           validated={values.thresholds.length > 0}
           errorMessage={'Please add at least one threshold to the alarm'}
           triedToSubmit={triedToSubmit}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         <label
           className={formStyles.Label}
@@ -296,6 +313,8 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
               validated={values.snoozeOn >= 1}
               errorMessage={'Please ensure this value is greater than or equal to 1'}
               triedToSubmit={triedToSubmit}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
             />
             <IntegerInput
               title={'Withdrawn after N times'}
@@ -305,6 +324,8 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
               validated={values.snoozeOff >= 1}
               errorMessage={'Please ensure this value is greater than or equal to 1'}
               triedToSubmit={triedToSubmit}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
             />
           </div>
         </label>
@@ -320,6 +341,8 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           valueRemoved={recipients => handleValueChange('messages', recipients)}
           validated
           triedToSubmit={triedToSubmit}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         <div
           className={formStyles.ButtonContainer}

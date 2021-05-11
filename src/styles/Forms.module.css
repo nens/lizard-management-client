@@ -48,6 +48,12 @@
   justify-content: space-between;
 }
 
+.FixedButtonContainer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
 .GridContainer {
   display: grid;
   grid-template-columns: 45fr 45fr 10fr;
