@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styles from './Table.module.css';
 import actionListStyles from './ActionList.module.css';
 import {DataRetrievalState} from '../types/retrievingDataTypes';
@@ -24,16 +24,46 @@ interface Props {
 }
 
 const Table: React.FC<Props> = ({tableData, setTableData, gridTemplateColumns, columnDefinitions, dataRetrievalState, triggerReloadWithCurrentPage, triggerReloadWithBasePage, getIfCheckBoxOfUuidIsSelected}) => {
+  ///////////////////////////
+  // Below code is to check if table is overflow and scrollbar is visible
+  // Vertical scrollbar takes palce and causes table header and table body no longer alinged with each other
+  // The solution is to check if the table body is overflow and apply a padding-right to the table header
+  // the value of padding-right is the scroll width which is the offsetWidth - clientWidth
+  const tableRef = useRef<HTMLDivElement>(null);
+  const tableRefElement = tableRef.current;
+  const scrollbarWidth = tableRefElement ? (tableRefElement.offsetWidth - tableRefElement.clientWidth) : undefined;
+
+  const [tableIsOverflow, setTableIsOverflow] = useState<boolean>(false);
+
+  // React.useCallback is used to call the setTableIsOverflow as setTableIsOverflow cannot be called directly inside the useEffect
+  const callbackToSetTableOverflow = useCallback(() => setTableIsOverflow(true), []);
+  const callbackToSetTableNotOverflow = useCallback(() => setTableIsOverflow(false), []);
+
+  useEffect(() => {
+    if (tableRefElement) {
+      if (tableRefElement.clientHeight < tableRefElement.scrollHeight) {
+        // table is overflow if clientHeight < scrollHeight
+        callbackToSetTableOverflow();
+      } else {
+        callbackToSetTableNotOverflow();
+      };
+    };
+  });
+  // END OF SOLUTION
+  ///////////////////////////
+
   return (
     <div  className={styles.Table}>
       <div style={{
         gridTemplateColumns: gridTemplateColumns,
+        paddingRight: tableIsOverflow ? scrollbarWidth : undefined
       }}>
         {columnDefinitions.map((definition, i) => <span key={i}>{definition.titleRenderFunction()}</span>)}
       </div>
       <div style={{
           gridTemplateColumns: gridTemplateColumns,
         }}
+        ref={tableRef}
       >
           {
             tableData.map((tableRow, idx) => {
