@@ -36,7 +36,8 @@ const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProp
   const selectedOrganisation = useSelector(getSelectedOrganisation);
 
   const initialValues = {
-    name: currentScenario.name || '',
+    name: currentScenario.name,
+    uuid: currentScenario.uuid,
     modelName: currentScenario.model_name || '',
     supplier: currentScenario.username || '',
     organisation: currentScenario.organisation.name || '',
@@ -114,6 +115,18 @@ const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProp
           onBlur={handleBlur}
           readOnly={!scenarioOrganisation.roles.includes("admin") && !(username === currentScenario.username)}
         />
+        {currentScenario ? (
+          <TextInput
+            title={'UUID'}
+            name={'uuid'}
+            value={values.uuid}
+            valueChanged={handleInputChange}
+            validated
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            readOnly
+          />
+        ) : null}
         <TextInput
           title={'Based on model'}
           name={'modelName'}

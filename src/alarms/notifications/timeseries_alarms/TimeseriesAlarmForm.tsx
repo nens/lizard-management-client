@@ -173,6 +173,18 @@ const TimeseriesAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps>
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
+        {currentTimeseriesAlarm ? (
+          <TextInput
+            title={'UUID'}
+            name={'uuid'}
+            value={currentTimeseriesAlarm.uuid}
+            valueChanged={handleInputChange}
+            validated
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            readOnly
+          />
+        ) : null}
         <span className={formStyles.FormFieldTitle}>
           2: Data
         </span>

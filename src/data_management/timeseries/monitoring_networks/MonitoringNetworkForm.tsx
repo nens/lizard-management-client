@@ -141,6 +141,18 @@ const MonitoringNetworkForm = (props: Props & DispatchProps & RouteComponentProp
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
+        {currentNetwork ? (
+          <TextInput
+            title={'UUID'}
+            name={'uuid'}
+            value={currentNetwork.uuid}
+            valueChanged={handleInputChange}
+            validated
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            readOnly
+          />
+        ) : null}
         <TextArea
           title={'Description'}
           name={'description'}
