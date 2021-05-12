@@ -172,6 +172,18 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
+        {currentTimeseries ? (
+          <TextInput
+            title={'UUID'}
+            name={'uuid'}
+            value={currentTimeseries.uuid}
+            valueChanged={handleInputChange}
+            validated
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            readOnly
+          />
+        ) : null}
         <TextInput
           title={'Code *'}
           name={'code'}
