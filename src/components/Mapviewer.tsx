@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import MDSpinner from 'react-md-spinner';
 import { connect } from 'react-redux';
 import ReactMapGL from 'react-map-gl';
+import {mapBoxAccesToken} from '../mapboxConfig';
 
 
 interface MyProps {
@@ -24,12 +25,18 @@ function MapViewer (props: MyProps & DispatchProps) {
 
   
   return (
-    <div>
+    <div 
+      style={{
+        width:"100%",
+        height:"100%",
+      }}
+    >
       <ReactMapGL
         {...viewport}
         width="100%"
         height="100%"
         onViewportChange={(viewport:any) => setViewport(viewport)}
+        mapboxApiAccessToken={mapBoxAccesToken}
       />
     </div>
   )
