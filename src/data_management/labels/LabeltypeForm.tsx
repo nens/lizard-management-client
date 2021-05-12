@@ -127,7 +127,7 @@ const LabeltypeModel: React.FC<Props & PropsFromDispatch & RouteComponentProps<R
         onReset={handleReset}
       >
         <TextInput
-          title={'Label type name'}
+          title={'Name'}
           name={'name'}
           value={values.name}
           valueChanged={handleInputChange}
