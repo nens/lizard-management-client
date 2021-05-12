@@ -294,7 +294,7 @@ const SpatialBoundsField  =  (props: SpatialBoundsProps) => {
                 >
                     <FormattedMessage
                         id="wms_layer_form.get_from_geoserver"
-                        defaultMessage="Get from GeoServer"
+                        defaultMessage="Get from source"
                     />
                 </button>
                 &nbsp;
@@ -304,7 +304,7 @@ const SpatialBoundsField  =  (props: SpatialBoundsProps) => {
                         display: geoServerError ? 'block' : 'none'
                     }}
                 >
-                    Failed to get extent from GeoServer
+                    Failed to get extent from source
                 </span>
             </div>
         </div>
