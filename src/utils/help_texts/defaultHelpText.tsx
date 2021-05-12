@@ -29,6 +29,8 @@ export const descriptionHelpText = 'Please give an accurate description of this 
 
 export const nameHelpText = 'Choose a name that is findable and not too difficult.';
 
+export const uuidHelpText = 'Universally unique identifier (UUID) of this object.'
+
 export const organisationHelpText = (
   <>
     <p>The organisation which this object belongs to.</p>

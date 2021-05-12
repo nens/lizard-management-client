@@ -4,7 +4,8 @@ import {
   accessModifierHelpText,
   HelpText,
   organisationHelpText,
-  supplierHelpText
+  supplierHelpText,
+  uuidHelpText
 } from './defaultHelpText';
 
 export const defaultScenarioExplanationText = (usedSpaceString:string, organisation: string) => (
@@ -25,6 +26,7 @@ export const defaultScenarioExplanationText = (usedSpaceString:string, organisat
 
 export const scenarioFormHelpText: HelpText = {
   name: 'The scenario name comes from 3Di. This name can be changed for your convenience.',
+  uuid: uuidHelpText,
   modelName: 'The model that was used to create this scenario.',
   resultDeleteButton: (
     <>

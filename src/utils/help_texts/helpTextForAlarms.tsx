@@ -4,6 +4,7 @@ import ButtonStyles from '../../styles/Buttons.module.css';
 import {
   HelpText,
   nameHelpText,
+  uuidHelpText,
 } from './defaultHelpText';
 
 const relativeFieldHelpText = (
@@ -29,6 +30,7 @@ const snoozeFieldHelpText = (
 export const alarmFormHelpText: HelpText = {
   default: 'Form to edit an alarm. Please select a field to get more information.',
   name: nameHelpText,
+  uuid: uuidHelpText,
   raster: 'Choose a raster layer to apply this alarm to.',
   point: (
     <>
