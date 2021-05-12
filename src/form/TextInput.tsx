@@ -80,6 +80,7 @@ export const TextInput: React.FC<MyProps> = (props) => {
           required={required}
           onFocus={onFocus}
           onBlur={onBlur}
+          step={'any'} // no stepping is implied for number input type
         />
         {clearInput && !readOnly && value !== null && (value + '').length ? <ClearInputButton onClick={() => clearInput(name)}/> : null}
       </div>

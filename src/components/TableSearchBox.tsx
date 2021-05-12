@@ -3,7 +3,7 @@ import clearInputStyles from "./../form/ClearInputButton.module.css";
 
 interface Props {
   value: string;
-  onChange: (event:any) => void;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onClear: () => void;
   placeholder: string
 }

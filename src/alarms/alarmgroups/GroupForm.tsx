@@ -11,6 +11,7 @@ import { addNotification } from '../../actions';
 import { getSelectedOrganisation } from '../../reducers';
 import { SelectDropdown, Value } from '../../form/SelectDropdown';
 import { convertToSelectObject } from '../../utils/convertToSelectObject';
+import { groupFormHelpText } from '../../utils/help_texts/helpTextForAlarmGroups';
 import FormActionButtons from '../../components/FormActionButtons';
 import GroupMessage from './GroupMessage';
 import formStyles from './../../styles/Forms.module.css';
@@ -113,9 +114,9 @@ const GroupForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pr
     handleSubmit,
     handleReset,
     clearInput,
-    // fieldOnFocus,
-    // handleBlur,
-    // handleFocus,
+    fieldOnFocus,
+    handleBlur,
+    handleFocus,
   } = useForm({initialValues, onSubmit});
 
   return (
@@ -123,8 +124,9 @@ const GroupForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pr
       imgUrl={groupIcon}
       imgAltDescription={"Group icon"}
       headerText={"Groups"}
-      explanationText={"Groups are made of your contacts. In this screen, you can manage them by adding or deleting contacts. You can also add or delete groups for your alarm messages."}
+      explanationText={groupFormHelpText[fieldOnFocus] || groupFormHelpText['default']}
       backUrl={"/alarms/groups"}
+      fieldName={fieldOnFocus}
     >
       <form
         className={formStyles.Form}
@@ -141,6 +143,8 @@ const GroupForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pr
           validated={!minLength(1, values.name)}
           errorMessage={minLength(1, values.name)}
           triedToSubmit={triedToSubmit}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         <SelectDropdown
           title={'Contacts'}
@@ -152,6 +156,8 @@ const GroupForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pr
           validated
           isMulti
           isLoading={!contacts}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         <div
           className={formStyles.ButtonContainer}

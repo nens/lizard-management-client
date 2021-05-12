@@ -15,6 +15,8 @@ interface Props {
   errorMessage?: string | false,
   triedToSubmit?: boolean,
   readOnly?: boolean,
+  onFocus?: (e: React.ChangeEvent<HTMLInputElement>) => void,
+  onBlur?: () => void,
 }
 
 const options = [
@@ -31,7 +33,9 @@ export function RelativeField (props: Props) {
     validated,
     errorMessage,
     triedToSubmit,
-    readOnly
+    readOnly,
+    onFocus,
+    onBlur,
   } = props;
 
   // Selection state can be "Before", "After" or null
@@ -80,6 +84,8 @@ export function RelativeField (props: Props) {
           triedToSubmit={triedToSubmit}
           errorMessage={errorMessage}
           readOnly={readOnly}
+          onFocus={onFocus}
+          onBlur={onBlur}
         />
         <DurationField
           title={''}
@@ -96,6 +102,8 @@ export function RelativeField (props: Props) {
           }}
           validated={validated}
           readOnly={readOnly || !selection}
+          onFocus={onFocus}
+          onBlur={onBlur}
         />
       </div>
     </label>

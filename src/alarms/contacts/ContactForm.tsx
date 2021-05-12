@@ -9,6 +9,7 @@ import { useForm, Values } from '../../form/useForm';
 import { emailValidator, maxLength, minLength, phoneNumberValidator } from '../../form/validators';
 import { addNotification } from '../../actions';
 import { getSelectedOrganisation } from '../../reducers';
+import { contactFormHelpText } from '../../utils/help_texts/helpTextForAlarmContacts';
 import formStyles from './../../styles/Forms.module.css';
 import contactIcon from "../../images/contacts@3x.svg";
 
@@ -122,9 +123,9 @@ const ContactForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (
     handleSubmit,
     handleReset,
     clearInput,
-    // fieldOnFocus,
-    // handleBlur,
-    // handleFocus,
+    fieldOnFocus,
+    handleBlur,
+    handleFocus,
   } = useForm({initialValues, onSubmit});
 
   return (
@@ -132,8 +133,9 @@ const ContactForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (
       imgUrl={contactIcon}
       imgAltDescription={"Contact icon"}
       headerText={"Contacts"}
-      explanationText={"Your contacts contain an email address, phone number and a name. Add these contacts to group to send them alarm messages when your thresholds are triggered."}
+      explanationText={contactFormHelpText[fieldOnFocus] || contactFormHelpText['default']}
       backUrl={"/alarms/contacts"}
+      fieldName={fieldOnFocus}
     >
       <form
         className={formStyles.Form}
@@ -150,6 +152,8 @@ const ContactForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (
           validated={!minLength(1, values.firstName) && !maxLength(30, values.firstName)}
           errorMessage={minLength(1, values.firstName) || maxLength(30, values.firstName)}
           triedToSubmit={triedToSubmit}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         <TextInput
           title={'Last name *'}
@@ -161,6 +165,8 @@ const ContactForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (
           validated={!minLength(1, values.lastName) && !maxLength(30, values.lastName)}
           errorMessage={minLength(1, values.lastName) || maxLength(30, values.lastName)}
           triedToSubmit={triedToSubmit}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         <TextInput
           title={'Email'}
@@ -172,6 +178,8 @@ const ContactForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (
           validated={!values.email || !emailValidator(values.email)}
           errorMessage={emailValidator(values.email)}
           triedToSubmit={triedToSubmit}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         <TextInput
           title={'Telephone number'}
@@ -182,6 +190,8 @@ const ContactForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (
           validated={!values.phoneNumber || !phoneNumberValidator(values.phoneNumber)}
           errorMessage={phoneNumberValidator(values.phoneNumber)}
           triedToSubmit={triedToSubmit}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         <div
           className={formStyles.ButtonContainer}

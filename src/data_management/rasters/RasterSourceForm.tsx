@@ -21,7 +21,7 @@ import { addFilesToQueue, addNotification, updateRasterSourceUUID } from '../../
 import rasterSourceIcon from "../../images/raster_source_icon.svg";
 import formStyles from './../../styles/Forms.module.css';
 import { sendDataToLizardRecursive } from '../../utils/sendDataToLizard';
-import { rasterSourceFormHelpText } from '../../utils/helpTextForForms';
+import { rasterSourceFormHelpText } from '../../utils/help_texts/helpTextForRasters';
 import { convertToSelectObject } from '../../utils/convertToSelectObject';
 
 interface Props {
@@ -46,6 +46,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
 
   const initialValues = currentRasterSource ? {
     name: currentRasterSource.name,
+    uuid: currentRasterSource.uuid,
     description: currentRasterSource.description,
     supplierCode: currentRasterSource.supplier_code,
     supplier: currentRasterSource.supplier ? convertToSelectObject(currentRasterSource.supplier) : null,
@@ -183,6 +184,18 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           errorMessage={minLength(3, values.name)}
           triedToSubmit={triedToSubmit}
         />
+        {currentRasterSource ? (
+          <TextInput
+            title={'UUID'}
+            name={'uuid'}
+            value={values.uuid}
+            valueChanged={handleInputChange}
+            validated
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            readOnly
+          />
+        ) : null}
         <TextArea
           title={'Description'}
           name={'description'}
@@ -238,7 +251,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           3: Rights
         </span>
         <AccessModifier
-          title={'Accessibility'}
+          title={'Accessibility *'}
           name={'accessModifier'}
           value={values.accessModifier}
           valueChanged={value => handleValueChange('accessModifier', value)}
@@ -247,7 +260,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           readOnly={!!currentRasterSource}
         />
         <SelectDropdown
-          title={'Organisation'}
+          title={'Organisation *'}
           name={'organisation'}
           placeholder={'- Search and select -'}
           value={values.organisation}

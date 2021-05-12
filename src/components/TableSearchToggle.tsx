@@ -18,7 +18,7 @@ const TableSearchToggle: React.FC<MyProps> = ({
     // Custom styling for Control component
     control: styles => ({
       ...styles,
-      width: 150,
+      minWidth: 160,
       backgroundColor: 'var(--color-dark-main)',
       cursor: 'pointer'
     }),

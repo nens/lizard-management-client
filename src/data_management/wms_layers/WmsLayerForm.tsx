@@ -25,7 +25,7 @@ import formStyles from './../../styles/Forms.module.css';
 // import MinMaxZoomField, {MinMax} from '../../components/MinMaxZoomField';
 import SpatialBoundsField from "../../form/SpatialBoundsField";
 import { WmsLayerReceivedFromApi, wmsLayerReceivedFromApiToForm, WmsLayerFormType, wmsLayerGetDefaultFormValues, wmsLayerFormToFormSendToApi} from '../../types/WmsLayerType';
-import { wmsFormHelpText } from '../../utils/helpTextForForms';
+import { wmsFormHelpText } from '../../utils/help_texts/helpTextForWMS';
 import { convertToSelectObject } from '../../utils/convertToSelectObject';
 
 interface Props {
@@ -140,6 +140,18 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           onBlur={handleBlur}
           triedToSubmit={triedToSubmit}
         />
+        {currentWmsLayer ? (
+          <TextInput
+            title={'UUID'}
+            name={'uuid'}
+            value={values.uuid}
+            valueChanged={handleInputChange}
+            validated
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            readOnly
+          />
+        ) : null}
         <TextArea
           title={'Description'}
           name={'description'}
@@ -322,7 +334,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           3: Rights
         </span>
         <AccessModifier
-          title={'Accessibility'}
+          title={'Accessibility *'}
           name={'access_modifier'}
           value={values.access_modifier}
           valueChanged={value => handleValueChange('access_modifier', value)}
@@ -352,7 +364,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           />
         ) : null}
         <SelectDropdown
-          title={'Organisation'}
+          title={'Organisation *'}
           name={'organisation'}
           placeholder={'- Search and select -'}
           value={typeof values.organisation === "string" ? values.organisation.replace(/-/g, ""): (values.organisation) }

@@ -13,7 +13,7 @@ import { minLength } from '../../form/validators';
 import { addNotification } from '../../actions';
 import threediIcon from "../../images/3di@3x.svg";
 import formStyles from './../../styles/Forms.module.css';
-import { scenarioFormHelpText, defaultScenarioExplanationText } from '../../utils/helpTextForForms';
+import { scenarioFormHelpText, defaultScenarioExplanationText } from '../../utils/help_texts/helpTextForScenarios';
 import { getScenarioTotalSize } from '../../reducers';
 import { bytesToDisplayValue } from '../../utils/byteUtils';
 
@@ -36,7 +36,8 @@ const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProp
   const selectedOrganisation = useSelector(getSelectedOrganisation);
 
   const initialValues = {
-    name: currentScenario.name || '',
+    name: currentScenario.name,
+    uuid: currentScenario.uuid,
     modelName: currentScenario.model_name || '',
     supplier: currentScenario.username || '',
     organisation: currentScenario.organisation.name || '',
@@ -114,6 +115,18 @@ const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProp
           onBlur={handleBlur}
           readOnly={!scenarioOrganisation.roles.includes("admin") && !(username === currentScenario.username)}
         />
+        {currentScenario ? (
+          <TextInput
+            title={'UUID'}
+            name={'uuid'}
+            value={values.uuid}
+            valueChanged={handleInputChange}
+            validated
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            readOnly
+          />
+        ) : null}
         <TextInput
           title={'Based on model'}
           name={'modelName'}

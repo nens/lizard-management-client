@@ -1,45 +1,38 @@
 import React, {useState,} from 'react';
-
+import { NavLink, RouteComponentProps } from "react-router-dom";
 import TableStateContainer from '../components/TableStateContainer';
-import { NavLink } from "react-router-dom";
-import {ExplainSideColumn} from '../components/ExplainSideColumn';
+import { ExplainSideColumn } from '../components/ExplainSideColumn';
 import tableStyles from "../components/Table.module.css";
 import personalApiKeysIcon from "../images/personal_api_key_icon.svg";
-import Modal from '../components/Modal';
-import { ModalDeleteContent } from '../components/ModalDeleteContent';
 import TableActionButtons from '../components/TableActionButtons';
-import { personalApiKeysFormHelpText } from '../utils/helpTextForForms';
+import { personalApiKeysFormHelpText } from '../utils/help_texts/helpTextForPersonalAPIKeys';
+import DeleteModal from '../components/DeleteModal';
 
 const baseUrl = "/api/v4/personalapikeys/";
 const navigationUrl = "/personal_api_keys";
 
-export const PersonalApiKeysTable = (props:any) =>  {
+export const fetchWithOptions = (uuids: string[], fetchOptions: RequestInit) => {
+  const fetches = uuids.map (uuid => {
+    return fetch(baseUrl + uuid + "/", fetchOptions);
+  });
+  return Promise.all(fetches);
+};
 
-  const [rowToBeDeleted, setRowToBeDeleted] = useState<any | null>(null);
-  const [deleteFunction, setDeleteFunction] = useState<null | Function>(null);
-  const [busyDeleting, setBusyDeleting] = useState<boolean>(false);
+export const PersonalApiKeysTable = (props: RouteComponentProps) =>  {
+  const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
+  const [resetTable, setResetTable] = useState<Function | null>(null);
 
-  const deleteAction = (row: any, updateTableRow:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any) => {
-    setRowToBeDeleted(row);
-    setDeleteFunction(()=>()=>{
-      setBusyDeleting(true);
-      updateTableRow({...row, markAsDeleted: true});
-      return fetch(`/api/v4/personalapikeys/${row.prefix}/`, {
-        credentials: 'same-origin',
-        method: 'DELETE',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({})
-      })
-        .then(data => {
-          // const status = data.status;
-          setBusyDeleting(false);
-          // TODO: do we need this callback or should we otherwise indicate that the record is deleted ?
-          triggerReloadWithCurrentPage();
-          return new Promise((resolve, _reject) => {
-              resolve();
-            });
-          })
-        })
+  const deleteActions = (
+    rows: any[],
+    triggerReloadWithCurrentPage: Function,
+    setCheckboxes: Function | null
+  ) => {
+    console.log(rows[0])
+    setRowsToBeDeleted(rows);
+    setResetTable(() => () => {
+      triggerReloadWithCurrentPage();
+      setCheckboxes && setCheckboxes([]);
+    });
   };
 
   const columnDefinitions = [
@@ -93,7 +86,9 @@ export const PersonalApiKeysTable = (props:any) =>  {
               actions={[
                 {
                   displayValue: "Delete",
-                  actionFunction: deleteAction,
+                  actionFunction: (row: any, _updateTableRow: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any) => {
+                    deleteActions([row], triggerReloadWithCurrentPage, null)
+                  }
                 },
               ]}
             />
@@ -123,30 +118,18 @@ export const PersonalApiKeysTable = (props:any) =>  {
         checkBoxActions={[]}
         newItemOnClick={handleNewClick}
       />
-      { 
-        rowToBeDeleted?
-           <Modal
-           title={'Are you sure?'}
-           buttonConfirmName={'Delete'}
-           onClickButtonConfirm={() => {
-             deleteFunction && deleteFunction().then(()=>{
-              setRowToBeDeleted(null);
-              setDeleteFunction(null);
-             });
-             
-           }}
-           cancelAction={()=>{
-             setRowToBeDeleted(null);
-             setDeleteFunction(null);
-           }}
-           disableButtons={busyDeleting}
-         >
-           <p>Are you sure? Undoing is not possible. You are deleting the following personal API key:</p>
-           {ModalDeleteContent([rowToBeDeleted], busyDeleting, [{name: "name", width: 65}, {name: "prefix", width: 25}])}
-         </Modal>
-        :
-          null
-        }
+      {rowsToBeDeleted.length > 0 ? (
+        <DeleteModal
+          rows={rowsToBeDeleted}
+          displayContent={[{name: "name", width: 65}, {name: "prefix", width: 35}]}
+          fetchFunction={fetchWithOptions}
+          resetTable={resetTable}
+          handleClose={() => {
+            setRowsToBeDeleted([]);
+            setResetTable(null);
+          }}
+        />
+      ) : null}
     </ExplainSideColumn>
   );
 }
