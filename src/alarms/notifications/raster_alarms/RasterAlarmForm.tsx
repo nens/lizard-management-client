@@ -57,6 +57,7 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
 
   const initialValues = currentRasterAlarm && raster ? {
     name: currentRasterAlarm.name,
+    uuid: currentRasterAlarm.uuid,
     raster: convertToSelectObject(raster.uuid!, raster.name),
     point: currentRasterAlarm.geometry ? {lat: currentRasterAlarm.geometry.coordinates[1], lng: currentRasterAlarm.geometry.coordinates[0]} : null, // point in format of {lat: number, lng: number}
     relative: !!currentRasterAlarm.relative_start || !!currentRasterAlarm.relative_end,
@@ -199,6 +200,18 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
+        {currentRasterAlarm ? (
+          <TextInput
+            title={'UUID'}
+            name={'uuid'}
+            value={values.uuid}
+            valueChanged={handleInputChange}
+            validated
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            readOnly
+          />
+        ) : null}
         <span className={formStyles.FormFieldTitle}>
           2: Data
         </span>

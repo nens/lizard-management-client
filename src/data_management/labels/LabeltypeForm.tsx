@@ -140,17 +140,14 @@ const LabeltypeModel: React.FC<Props & PropsFromDispatch & RouteComponentProps<R
           readOnly={true}
         />
         <TextInput
-          title={'Label type Uuid'}
+          title={'UUID'}
           name={'uuid'}
           value={values.uuid}
           valueChanged={handleInputChange}
-          clearInput={clearInput}
-          validated={!minLength(3, values.uuid)}
-          errorMessage={minLength(3, values.uuid)}
-          triedToSubmit={triedToSubmit}
+          validated
           onFocus={handleFocus}
           onBlur={handleBlur}
-          readOnly={true}
+          readOnly
         />
         <TextArea
           title={'Description'}
