@@ -37,7 +37,6 @@ const TimeseriesAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps>
 
   const initialValues = currentTimeseriesAlarm && timeseries ? {
     name: currentTimeseriesAlarm.name,
-    uuid: currentTimeseriesAlarm.uuid,
     timeseries: convertToSelectObject(timeseries.uuid, getTimeseriesLabel(timeseries), timeseries.uuid, '', timeseries.location ? timeseries.location.name || timeseries.location.code : ''),
     relative: !!currentTimeseriesAlarm.relative_start || !!currentTimeseriesAlarm.relative_end,
     relativeStart: currentTimeseriesAlarm.relative_start ? convertDurationObjToSeconds(rasterIntervalStringServerToDurationObject(currentTimeseriesAlarm.relative_start)) : null,
@@ -178,7 +177,7 @@ const TimeseriesAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps>
           <TextInput
             title={'UUID'}
             name={'uuid'}
-            value={values.uuid}
+            value={currentTimeseriesAlarm.uuid}
             valueChanged={handleInputChange}
             validated
             onFocus={handleFocus}

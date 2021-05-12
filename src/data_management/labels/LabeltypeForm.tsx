@@ -37,8 +37,7 @@ const LabeltypeModel: React.FC<Props & PropsFromDispatch & RouteComponentProps<R
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const initialValues = {
-    name: currentRecord.name || '',
-    uuid: currentRecord.uuid || '',
+    name: currentRecord.name,
     description: currentRecord.description || '',
     organisation: currentRecord.organisation.name || '',
   };
@@ -139,16 +138,18 @@ const LabeltypeModel: React.FC<Props & PropsFromDispatch & RouteComponentProps<R
           onBlur={handleBlur}
           readOnly={true}
         />
-        <TextInput
-          title={'UUID'}
-          name={'uuid'}
-          value={values.uuid}
-          valueChanged={handleInputChange}
-          validated
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-          readOnly
-        />
+        {currentRecord ? (
+          <TextInput
+            title={'UUID'}
+            name={'uuid'}
+            value={currentRecord.uuid}
+            valueChanged={handleInputChange}
+            validated
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            readOnly
+          />
+        ) : null}
         <TextArea
           title={'Description'}
           name={'description'}
