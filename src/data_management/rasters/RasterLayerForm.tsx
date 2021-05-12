@@ -117,6 +117,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
 
   const initialValues = currentRasterLayer ? {
     name: currentRasterLayer.name,
+    uuid: currentRasterLayer.uuid,
     description: currentRasterLayer.description,
     datasets: currentRasterLayer.datasets.map(dataset => convertToSelectObject(dataset.slug)) || [],
     rasterSource: currentRasterLayer.raster_sources && currentRasterLayer.raster_sources.map(rasterSource => convertToSelectObject(getUuidFromUrl(rasterSource)))[0],
@@ -278,6 +279,18 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
           triedToSubmit={triedToSubmit}
           form={"raster_layer_form_id"}
         />
+        {currentRasterLayer ? (
+          <TextInput
+            title={'UUID'}
+            name={'uuid'}
+            value={values.uuid}
+            valueChanged={handleInputChange}
+            validated
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            readOnly
+          />
+        ) : null}
         <TextArea
           title={'Description'}
           name={'description'}
