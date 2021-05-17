@@ -199,6 +199,18 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
+        {currentRasterAlarm ? (
+          <TextInput
+            title={'UUID'}
+            name={'uuid'}
+            value={currentRasterAlarm.uuid}
+            valueChanged={handleInputChange}
+            validated
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            readOnly
+          />
+        ) : null}
         <span className={formStyles.FormFieldTitle}>
           2: Data
         </span>

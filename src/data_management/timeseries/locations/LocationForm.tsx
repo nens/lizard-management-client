@@ -44,7 +44,7 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
     );
 
     initialValues = {
-      name: currentRecord.name || '',
+      name: currentRecord.name,
       code: currentRecord.code || '',
       extraMetadata: currentRecord.extra_metadata ? JSON.stringify(currentRecord.extra_metadata) : null,
       accessModifier: currentRecord.access_modifier,
@@ -172,6 +172,18 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
+        {currentRecord ? (
+          <TextInput
+            title={'UUID'}
+            name={'uuid'}
+            value={currentRecord.uuid}
+            valueChanged={handleInputChange}
+            validated
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            readOnly
+          />
+        ) : null}
         <TextInput
           title={'Code *'}
           name={'code'}

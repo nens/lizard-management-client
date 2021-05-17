@@ -10,7 +10,8 @@ import {
   organisationsToSharedWithHelpText,
   sharedWithCheckboxHelpText,
   supplierCodeHelpText,
-  supplierHelpText
+  supplierHelpText,
+  uuidHelpText
 } from './defaultHelpText';
 
 export const defaultRasterSourceExplanationTextTable = (usedSpaceString:string) => {
@@ -32,6 +33,7 @@ export const defaultRasterLayerHelpTextTable = "Raster Layers are visual present
 export const rasterSourceFormHelpText: HelpText = {
   default: 'Fill in the form to create a new Raster Source.',
   name: nameHelpText,
+  uuid: uuidHelpText,
   description: descriptionHelpText,
   supplierCode: supplierCodeHelpText,
   temporal: 'Indicates if there are multiple rasters over a time period.',
@@ -55,6 +57,7 @@ export const rasterSourceFormHelpText: HelpText = {
 export const rasterLayerFormHelpText: HelpText = {
   default: 'Create a layer to view your raster data in the portal.',
   name: nameHelpText,
+  uuid: uuidHelpText,
   description: (
     <>
       <p>Please give an accurate description of this object and its uses.</p>

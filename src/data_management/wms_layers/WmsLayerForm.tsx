@@ -140,6 +140,18 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           onBlur={handleBlur}
           triedToSubmit={triedToSubmit}
         />
+        {currentWmsLayer ? (
+          <TextInput
+            title={'UUID'}
+            name={'uuid'}
+            value={values.uuid}
+            valueChanged={handleInputChange}
+            validated
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            readOnly
+          />
+        ) : null}
         <TextArea
           title={'Description'}
           name={'description'}

@@ -46,6 +46,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
 
   const initialValues = currentRasterSource ? {
     name: currentRasterSource.name,
+    uuid: currentRasterSource.uuid,
     description: currentRasterSource.description,
     supplierCode: currentRasterSource.supplier_code,
     supplier: currentRasterSource.supplier ? convertToSelectObject(currentRasterSource.supplier) : null,
@@ -183,6 +184,18 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           errorMessage={minLength(3, values.name)}
           triedToSubmit={triedToSubmit}
         />
+        {currentRasterSource ? (
+          <TextInput
+            title={'UUID'}
+            name={'uuid'}
+            value={values.uuid}
+            valueChanged={handleInputChange}
+            validated
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            readOnly
+          />
+        ) : null}
         <TextArea
           title={'Description'}
           name={'description'}

@@ -9,12 +9,14 @@ import {
   organisationHelpText,
   organisationsToSharedWithHelpText,
   sharedWithCheckboxHelpText,
-  supplierHelpText
+  supplierHelpText,
+  uuidHelpText
 } from './defaultHelpText';
 
 export const wmsFormHelpText: HelpText = {
   default: 'WMS layers allow to configure layers in Lizard even if they are hosted on another platform.',
   name: nameHelpText,
+  uuid: uuidHelpText,
   description: descriptionHelpText,
   datasets: datasetHelpText,
   wms_url: 'Specify which URL is used to retrieve the image data.',

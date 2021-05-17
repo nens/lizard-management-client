@@ -5,12 +5,14 @@ import {
   nameHelpText,
   organisationHelpText,
   supplierCodeHelpText,
-  supplierHelpText
+  supplierHelpText,
+  uuidHelpText
 } from './defaultHelpText';
 
 export const timeseriesFormHelpText: HelpText = {
   default: 'Form to edit time series. Please select a field to get more information.',
   name: nameHelpText,
+  uuid: uuidHelpText,
   code: codeHelpText,
   observationType: 'Choose how the data is measured and its units.',
   location: 'Choose the location you want to add this timeseries to.',

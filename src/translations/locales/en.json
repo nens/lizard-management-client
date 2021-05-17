@@ -265,7 +265,7 @@
   "wms_layer_form.options": "Options",
   "wms_layer_form.get_feature_info": "GetFeatureInfo",
   "wms_layer_form.get_feature_info_url": "GetFeatureInfo url",
-  "wms_layer_form.get_from_geoserver": "Get from GeoServer",
+  "wms_layer_form.get_from_geoserver": "Get from source",
   "wms_layer_form.legend_url": "Legend Url",
   "wms_layer_form.spatial_bounds": "Spatial bounds",
   "wms_layer_form.add_spatial_bounds": "Optional: add spatial bounds to WMS layer",
