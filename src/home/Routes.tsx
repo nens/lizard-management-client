@@ -65,8 +65,8 @@ export const Routes = () => {
         }
 
         <Route exact path="/users" component={UserTable} />
-        <Route exact path="/users/:id" component={EditUser} />
         <Route exact path="/users/new" component={NewUser} />
+        <Route exact path="/users/:id" component={EditUser} />
 
         <Route exact path="/personal_api_keys" component={PersonalApiKeysTable} />
         <Route exact path="/personal_api_keys/new" component={NewPersonalApiKey} />

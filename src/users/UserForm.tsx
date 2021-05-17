@@ -3,11 +3,13 @@ import { connect, useSelector } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { ExplainSideColumn } from '../components/ExplainSideColumn';
 import { TextInput } from './../form/TextInput';
+import { SelectDropdown } from '../form/SelectDropdown';
 import { SubmitButton } from '../form/SubmitButton';
 import { CancelButton } from '../form/CancelButton';
 import { useForm, Values } from '../form/useForm';
 import { addNotification } from '../actions';
 import { getSelectedOrganisation } from '../reducers';
+import { convertToSelectObject } from '../utils/convertToSelectObject';
 import formStyles from './../styles/Forms.module.css';
 import userManagementIcon from "../images/userManagement.svg";
 
@@ -18,39 +20,41 @@ interface PropsFromDispatch {
   addNotification: (message: string | number, timeout: number) => void
 };
 
-const GroupForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (props) => {
+const UserForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (props) => {
   const { currentUser } = props;
   const selectedOrganisationUuid = useSelector(getSelectedOrganisation).uuid;
+  const availableRoles = ['admin', 'user', 'supplier', 'manager'].map(role => convertToSelectObject(role));
 
   const initialValues = currentUser ? {
+    firstName: currentUser.first_name,
+    lastName: currentUser.last_name,
     username: currentUser.username,
-    email: currentUser.email
+    email: currentUser.email,
+    roles: currentUser.roles.map((role: any) => convertToSelectObject(role)),
   } : {
-    username: null,
-    email: null
+    email: null,
+    roles: []
   };
 
   const onSubmit = (values: Values) => {
-    const body = {
-      username: values.username,
-      email: values.email
-    };
-
     if (!currentUser) {
-      fetch("/api/v4/contactgroups/", {
+      fetch(`/api/v4/users/new/`, {
         credentials: "same-origin",
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          ...body,
-          organisation: selectedOrganisationUuid
+          email: values.email,
+          user_role: values.roles.find((role: any) => role.value === 'user') ? 'on' : undefined,
+          admin_role: values.roles.find((role: any) => role.value === 'admin') ? 'on' : undefined,
+          supplier_role: values.roles.find((role: any) => role.value === 'supplier') ? 'on' : undefined,
+          manager_role: values.roles.find((role: any) => role.value === 'manager') ? 'on' : undefined,
         })
       })
       .then(response => {
         const status = response.status;
         if (status === 201) {
-          props.addNotification('Success! New group created', 2000);
-          props.history.push("/alarms/groups");
+          props.addNotification(`Success! An invitation email was sent to ${values.email}`, 2000);
+          props.history.push("/users");
         } else if (status === 403) {
           props.addNotification("Not authorized", 2000);
           console.error(response);
@@ -61,17 +65,19 @@ const GroupForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pr
       })
       .catch(console.error);
     } else {
-      fetch(`/api/v4/contactgroups/${currentUser.id}/`, {
+      fetch(`/api/v4/organisations/${selectedOrganisationUuid}/users/${currentUser.id}/`, {
         credentials: "same-origin",
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body)
+        body: JSON.stringify({
+          roles: values.roles.map((role: any) => role.value)
+        })
       })
       .then(response => {
         const status = response.status;
         if (status === 200) {
-          props.addNotification('Success! Group updated', 2000);
-          props.history.push("/alarms/groups");
+          props.addNotification('Success! User role updated', 2000);
+          props.history.push("/users");
         } else {
           props.addNotification(status, 2000);
           console.error(response);
@@ -87,7 +93,7 @@ const GroupForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pr
     // formSubmitted,
     tryToSubmitForm,
     handleInputChange,
-    // handleValueChange,
+    handleValueChange,
     handleSubmit,
     handleReset,
     clearInput,
@@ -110,16 +116,43 @@ const GroupForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pr
         onSubmit={handleSubmit}
         onReset={handleReset}
       >
-        <TextInput
-          title={'Username'}
-          name={'username'}
-          value={values.username}
-          valueChanged={handleInputChange}
-          clearInput={clearInput}
-          validated
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-        />
+        {currentUser ? (
+          <>
+            <TextInput
+              title={'First name'}
+              name={'firstName'}
+              value={values.firstName}
+              valueChanged={handleInputChange}
+              clearInput={clearInput}
+              validated
+              readOnly
+              onFocus={handleFocus}
+              onBlur={handleBlur}
+            />
+            <TextInput
+              title={'Last name'}
+              name={'lastName'}
+              value={values.lastName}
+              valueChanged={handleInputChange}
+              clearInput={clearInput}
+              validated
+              readOnly
+              onFocus={handleFocus}
+              onBlur={handleBlur}
+            />
+            <TextInput
+              title={'Username'}
+              name={'username'}
+              value={values.username}
+              valueChanged={handleInputChange}
+              clearInput={clearInput}
+              validated
+              readOnly
+              onFocus={handleFocus}
+              onBlur={handleBlur}
+            />
+          </>
+        ) : null}
         <TextInput
           title={'Email'}
           name={'email'}
@@ -127,6 +160,19 @@ const GroupForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pr
           valueChanged={handleInputChange}
           clearInput={clearInput}
           validated
+          readOnly={currentUser}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+        />
+        <SelectDropdown
+          title={'Roles'}
+          name={'roles'}
+          placeholder={'- Select -'}
+          value={values.roles}
+          valueChanged={value => handleValueChange('roles', value)}
+          options={availableRoles}
+          validated
+          isMulti
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
@@ -149,4 +195,4 @@ const mapPropsToDispatch = (dispatch: any) => ({
   addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout))
 });
 
-export default connect(null, mapPropsToDispatch)(withRouter(GroupForm));
+export default connect(null, mapPropsToDispatch)(withRouter(UserForm));
