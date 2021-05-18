@@ -63,7 +63,8 @@ export const UserRoles: React.FC<MyProps> = (props) => {
           id={name}
           className={value.includes('user') ? `${styles.Role} ${styles.RoleSelected}` : styles.Role}
           style={{
-            backgroundColor: '#008080'
+            backgroundColor: '#008080',
+            cursor: forTable ? 'default' : undefined
           }}
           onClick={() => editRole('user')}
           tabIndex={0}
@@ -76,7 +77,8 @@ export const UserRoles: React.FC<MyProps> = (props) => {
           id={name}
           className={value.includes('supplier') ? `${styles.Role} ${styles.RoleSelected}` : styles.Role}
           style={{
-            backgroundColor: '#5B4794'
+            backgroundColor: '#5B4794',
+            cursor: forTable ? 'default' : undefined
           }}
           onClick={() => editRole('supplier')}
           tabIndex={0}
@@ -89,7 +91,8 @@ export const UserRoles: React.FC<MyProps> = (props) => {
           id={name}
           className={value.includes('admin') ? `${styles.Role} ${styles.RoleSelected}` : styles.Role}
           style={{
-            backgroundColor: '#D1D100'
+            backgroundColor: '#D1D100',
+            cursor: forTable ? 'default' : undefined
           }}
           onClick={() => editRole('admin')}
           tabIndex={0}
@@ -102,7 +105,8 @@ export const UserRoles: React.FC<MyProps> = (props) => {
           id={name}
           className={value.includes('manager') ? `${styles.Role} ${styles.RoleSelected}` : styles.Role}
           style={{
-            backgroundColor: '#AE0000'
+            backgroundColor: '#AE0000',
+            cursor: forTable ? 'default' : undefined
           }}
           onClick={() => editRole('manager')}
           tabIndex={0}

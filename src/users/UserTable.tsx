@@ -88,7 +88,7 @@ export const UserTable = (props: RouteComponentProps) =>  {
       orderingField: null,
     },
     {
-      titleRenderFunction: () => "Role",
+      titleRenderFunction: () => "Roles",
       renderFunction: (row: any) =>
         <UserRoles
           title={''}
