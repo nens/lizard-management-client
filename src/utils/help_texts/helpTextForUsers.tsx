@@ -31,7 +31,7 @@ export const userFormHelpText: HelpText = {
       {roleLabels}
       <em>
         <span>Tip:</span>
-        <ul>
+        <ul style={{ marginBottom: 0 }}>
           <li>Deselect all roles will remove the user from the organisation but will not delete the user's account.</li>
           <li>You cannot remove your own manager role.</li>
           <li>At least one role is required when invite a new user.</li>
