@@ -120,6 +120,18 @@ export const UserTable = (props: RouteComponentProps) =>  {
           {
             value: 'username__icontains=',
             label: 'Username'
+          },
+          {
+            value: 'first_name__icontains=',
+            label: 'First name'
+          },
+          {
+            value: 'last_name__icontains=',
+            label: 'Last name'
+          },
+          {
+            value: 'email__icontains=',
+            label: 'Email'
           }
         ]}
       />
