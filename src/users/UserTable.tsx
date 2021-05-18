@@ -26,7 +26,7 @@ export const UserTable = (props: RouteComponentProps) =>  {
           <NavLink to={`${navigationUrl}/${row.id}`}>{row.username }</NavLink>
         </span>
       ,
-      orderingField: null,
+      orderingField: 'username',
     },
     {
       titleRenderFunction: () => "First name",
@@ -38,7 +38,7 @@ export const UserTable = (props: RouteComponentProps) =>  {
           {row.first_name}
         </span>
       ,
-      orderingField: null,
+      orderingField: 'first_name',
     },
     {
       titleRenderFunction: () => "Last name",
@@ -50,7 +50,7 @@ export const UserTable = (props: RouteComponentProps) =>  {
           {row.last_name}
         </span>
       ,
-      orderingField: null,
+      orderingField: 'last_name',
     },
     {
       titleRenderFunction: () => "Email",
@@ -62,7 +62,7 @@ export const UserTable = (props: RouteComponentProps) =>  {
           {row.email}
         </span>
       ,
-      orderingField: null,
+      orderingField: 'email',
     },
     {
       titleRenderFunction: () => "Roles",
