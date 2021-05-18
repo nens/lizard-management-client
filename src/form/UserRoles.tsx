@@ -61,7 +61,7 @@ export const UserRoles: React.FC<MyProps> = (props) => {
       >
         <div
           id={name}
-          title={'user'}
+          title={'User'}
           className={value.includes('user') ? `${styles.Role} ${styles.RoleSelected}` : styles.Role}
           style={{
             backgroundColor: '#008080',
@@ -76,7 +76,7 @@ export const UserRoles: React.FC<MyProps> = (props) => {
         </div>
         <div
           id={name}
-          title={'supplier'}
+          title={'Supplier'}
           className={value.includes('supplier') ? `${styles.Role} ${styles.RoleSelected}` : styles.Role}
           style={{
             backgroundColor: '#5B4794',
@@ -91,7 +91,7 @@ export const UserRoles: React.FC<MyProps> = (props) => {
         </div>
         <div
           id={name}
-          title={'admin'}
+          title={'Admin'}
           className={value.includes('admin') ? `${styles.Role} ${styles.RoleSelected}` : styles.Role}
           style={{
             backgroundColor: '#D1D100',
@@ -106,7 +106,7 @@ export const UserRoles: React.FC<MyProps> = (props) => {
         </div>
         <div
           id={name}
-          title={'manager'}
+          title={'Manager'}
           className={value.includes('manager') ? `${styles.Role} ${styles.RoleSelected}` : styles.Role}
           style={{
             backgroundColor: '#AE0000',
