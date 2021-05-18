@@ -65,7 +65,8 @@ export const UserRoles: React.FC<MyProps> = (props) => {
           className={value.includes('user') ? `${styles.Role} ${styles.RoleSelected}` : styles.Role}
           style={{
             backgroundColor: '#008080',
-            cursor: forTable ? 'default' : undefined
+            cursor: forTable ? 'default' : undefined,
+            visibility: forTable && !value.includes('user') ? 'hidden' : undefined,
           }}
           onClick={() => editRole('user')}
           tabIndex={0}
@@ -80,7 +81,8 @@ export const UserRoles: React.FC<MyProps> = (props) => {
           className={value.includes('supplier') ? `${styles.Role} ${styles.RoleSelected}` : styles.Role}
           style={{
             backgroundColor: '#5B4794',
-            cursor: forTable ? 'default' : undefined
+            cursor: forTable ? 'default' : undefined,
+            visibility: forTable && !value.includes('supplier') ? 'hidden' : undefined,
           }}
           onClick={() => editRole('supplier')}
           tabIndex={0}
@@ -95,7 +97,8 @@ export const UserRoles: React.FC<MyProps> = (props) => {
           className={value.includes('admin') ? `${styles.Role} ${styles.RoleSelected}` : styles.Role}
           style={{
             backgroundColor: '#D1D100',
-            cursor: forTable ? 'default' : undefined
+            cursor: forTable ? 'default' : undefined,
+            visibility: forTable && !value.includes('admin') ? 'hidden' : undefined,
           }}
           onClick={() => editRole('admin')}
           tabIndex={0}
@@ -110,7 +113,8 @@ export const UserRoles: React.FC<MyProps> = (props) => {
           className={value.includes('manager') ? `${styles.Role} ${styles.RoleSelected}` : styles.Role}
           style={{
             backgroundColor: '#AE0000',
-            cursor: forTable ? 'default' : undefined
+            cursor: forTable ? 'default' : undefined,
+            visibility: forTable && !value.includes('manager') ? 'hidden' : undefined,
           }}
           onClick={() => editRole('manager')}
           tabIndex={0}
