@@ -174,6 +174,7 @@ const MonitoringNetworkForm = (props: Props & DispatchProps & RouteComponentProp
             e.preventDefault();
             setTimeseriesModal(true);
           }}
+          readOnly={!currentNetwork}
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
