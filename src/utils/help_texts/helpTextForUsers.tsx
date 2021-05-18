@@ -6,7 +6,7 @@ import {
 
 const roleLabels = (
   <em>
-    <p>Role labels:</p>
+    <span>Role labels:</span>
     <ul>
       <li><b style={{ color: '#008080' }}>U</b> - User</li>
       <li><b style={{ color: '#5B4794' }}>S</b> - Supplier</li>
@@ -29,6 +29,14 @@ export const userFormHelpText: HelpText = {
     <>
       <p>Form to edit roles of an existing user or to invite a new user.</p>
       {roleLabels}
+      <em>
+        <span>Tip:</span>
+        <ul>
+          <li>Deselect all roles will remove the user from the organisation but will not delete the user's account.</li>
+          <li>You cannot remove your own manager role.</li>
+          <li>At least one role is required when invite a new user.</li>
+        </ul>
+      </em>
     </>
   ),
   firstName: 'First name of the user.',
