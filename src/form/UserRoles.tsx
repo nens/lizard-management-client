@@ -13,7 +13,7 @@ interface MyProps {
   onFocus?: (e: any) => void,
   onBlur?: () => void,
   readOnly?: boolean,
-  forTable?: boolean,
+  forTable?: boolean, // to reuse this component for the user table with some extra styling
 };
 
 export const UserRoles: React.FC<MyProps> = (props) => {
@@ -29,6 +29,7 @@ export const UserRoles: React.FC<MyProps> = (props) => {
   } = props;
 
   const userId = useSelector(getUserId);
+  const availableRoles = ['user', 'supplier', 'admin', 'manager'];
 
   const editRole = (role: string) => {
     if (value.includes(role)) {
@@ -38,6 +39,34 @@ export const UserRoles: React.FC<MyProps> = (props) => {
     } else {
       return valueChanged([...value, role]);
     };
+  };
+
+  const showRole = (role: string) => {
+    const firstLetterOfRole = role.charAt(0).toUpperCase();
+    return (
+      <div
+        id={name}
+        title={firstLetterOfRole + role.slice(1)} // Role name with first letter capitalized
+        className={value.includes(role) ? `${styles.Role} ${styles.RoleSelected}` : styles.Role}
+        style={{
+          backgroundColor: (
+            role === 'user' ? '#008080' :
+            role === 'supplier' ? '#5B4794' :
+            role === 'admin' ? '#D1D100' :
+            role === 'manager' ? '#AE0000' :
+            undefined
+          ),
+          cursor: forTable ? 'default' : undefined,
+          visibility: forTable && !value.includes(role) ? 'hidden' : undefined,
+        }}
+        onClick={() => editRole(role)}
+        tabIndex={0}
+        onFocus={onFocus}
+        onBlur={onBlur}
+      >
+        <span>{firstLetterOfRole}</span>
+      </div>
+    )
   };
 
   return (
@@ -59,70 +88,7 @@ export const UserRoles: React.FC<MyProps> = (props) => {
       <div
         className={styles.Roles}
       >
-        <div
-          id={name}
-          title={'User'}
-          className={value.includes('user') ? `${styles.Role} ${styles.RoleSelected}` : styles.Role}
-          style={{
-            backgroundColor: '#008080',
-            cursor: forTable ? 'default' : undefined,
-            visibility: forTable && !value.includes('user') ? 'hidden' : undefined,
-          }}
-          onClick={() => editRole('user')}
-          tabIndex={0}
-          onFocus={onFocus}
-          onBlur={onBlur}
-        >
-          <span>U</span>
-        </div>
-        <div
-          id={name}
-          title={'Supplier'}
-          className={value.includes('supplier') ? `${styles.Role} ${styles.RoleSelected}` : styles.Role}
-          style={{
-            backgroundColor: '#5B4794',
-            cursor: forTable ? 'default' : undefined,
-            visibility: forTable && !value.includes('supplier') ? 'hidden' : undefined,
-          }}
-          onClick={() => editRole('supplier')}
-          tabIndex={0}
-          onFocus={onFocus}
-          onBlur={onBlur}
-        >
-          <span>S</span>
-        </div>
-        <div
-          id={name}
-          title={'Admin'}
-          className={value.includes('admin') ? `${styles.Role} ${styles.RoleSelected}` : styles.Role}
-          style={{
-            backgroundColor: '#D1D100',
-            cursor: forTable ? 'default' : undefined,
-            visibility: forTable && !value.includes('admin') ? 'hidden' : undefined,
-          }}
-          onClick={() => editRole('admin')}
-          tabIndex={0}
-          onFocus={onFocus}
-          onBlur={onBlur}
-        >
-          <span>A</span>
-        </div>
-        <div
-          id={name}
-          title={'Manager'}
-          className={value.includes('manager') ? `${styles.Role} ${styles.RoleSelected}` : styles.Role}
-          style={{
-            backgroundColor: '#AE0000',
-            cursor: forTable ? 'default' : undefined,
-            visibility: forTable && !value.includes('manager') ? 'hidden' : undefined,
-          }}
-          onClick={() => editRole('manager')}
-          tabIndex={0}
-          onFocus={onFocus}
-          onBlur={onBlur}
-        >
-          <span>M</span>
-        </div>
+        {availableRoles.map(role => showRole(role))}
       </div>
     </label>
   );
