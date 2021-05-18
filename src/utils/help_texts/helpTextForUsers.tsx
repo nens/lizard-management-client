@@ -6,7 +6,7 @@ import {
 } from './defaultHelpText';
 
 const roleLabels = (
-  <>
+  <em>
     <p>Role labels:</p>
     <ul>
       <li><b style={{ color: '#008080' }}>U</b> - User</li>
@@ -14,12 +14,13 @@ const roleLabels = (
       <li><b style={{ color: '#D1D100' }}>A</b> - Admin</li>
       <li><b style={{ color: '#AE0000' }}>M</b> - Manager</li>
     </ul>
-  </>
+  </em>
 );
 
 export const userTableHelpText = (
   <>
-    <p>List of users. Select an user to edit his/her roles or click on the <b>New Item</b> button on the top right corner to invite a new user.</p>
+    <p>List of users.</p>
+    <p>Select an user to edit his/her roles or click on the <b>New Item</b> button on the top right corner to invite a new user.</p>
     {roleLabels}
   </>
 );
