@@ -3,40 +3,17 @@ import { NavLink, RouteComponentProps } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import { getSelectedOrganisation } from '../reducers';
 import { ExplainSideColumn } from '../components/ExplainSideColumn';
+import { UserRoles } from '../form/UserRoles';
+import { userTableHelpText } from '../utils/help_texts/helpTextForUsers';
 import TableActionButtons from '../components/TableActionButtons';
 import TableStateContainer from '../components/TableStateContainer';
 import tableStyles from "../components/Table.module.css";
 import userManagementIcon from "../images/userManagement.svg";
-import { UserRoles } from '../form/UserRoles';
-// import DeleteModal from '../components/DeleteModal';
 
 export const UserTable = (props: RouteComponentProps) =>  {
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const baseUrl = `/api/v4/organisations/${selectedOrganisation.uuid}/users/`;
   const navigationUrl = "/users";
-
-  // const fetchWithOptions = (uuids: string[], fetchOptions: RequestInit) => {
-  //   const fetches = uuids.map (uuid => {
-  //     return fetch(baseUrl + uuid + "/", fetchOptions);
-  //   });
-  //   return Promise.all(fetches);
-  // };
-
-  // const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
-  // const [resetTable, setResetTable] = useState<Function | null>(null);
-
-  // const deleteActions = (
-  //   rows: any[],
-  //   triggerReloadWithCurrentPage: Function,
-  //   setCheckboxes: Function | null
-  // ) => {
-  //   console.log(rows[0])
-  //   setRowsToBeDeleted(rows);
-  //   setResetTable(() => () => {
-  //     triggerReloadWithCurrentPage();
-  //     setCheckboxes && setCheckboxes([]);
-  //   });
-  // };
 
   const columnDefinitions = [
     {
@@ -130,7 +107,7 @@ export const UserTable = (props: RouteComponentProps) =>  {
       imgUrl={userManagementIcon}
       imgAltDescription={"User icon"}
       headerText={"Users"}
-      explanationText={'User management'}
+      explanationText={userTableHelpText}
       backUrl={"/"}
     >
       <TableStateContainer
@@ -146,18 +123,6 @@ export const UserTable = (props: RouteComponentProps) =>  {
           }
         ]}
       />
-      {/* {rowsToBeDeleted.length > 0 ? (
-        <DeleteModal
-          rows={rowsToBeDeleted}
-          displayContent={[{name: "username", width: 50}, {name: "email", width: 50}]}
-          fetchFunction={fetchWithOptions}
-          resetTable={resetTable}
-          handleClose={() => {
-            setRowsToBeDeleted([]);
-            setResetTable(null);
-          }}
-        />
-      ) : null} */}
     </ExplainSideColumn>
   );
 }
