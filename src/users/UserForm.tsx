@@ -2,14 +2,14 @@ import React from 'react';
 import { connect, useSelector } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { ExplainSideColumn } from '../components/ExplainSideColumn';
+import { UserRoles } from '../form/UserRoles';
 import { TextInput } from './../form/TextInput';
-import { SelectDropdown } from '../form/SelectDropdown';
 import { SubmitButton } from '../form/SubmitButton';
 import { CancelButton } from '../form/CancelButton';
 import { useForm, Values } from '../form/useForm';
 import { addNotification } from '../actions';
 import { getSelectedOrganisation } from '../reducers';
-import { convertToSelectObject } from '../utils/convertToSelectObject';
+import { emailValidator } from '../form/validators';
 import formStyles from './../styles/Forms.module.css';
 import userManagementIcon from "../images/userManagement.svg";
 
@@ -23,17 +23,16 @@ interface PropsFromDispatch {
 const UserForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (props) => {
   const { currentUser } = props;
   const selectedOrganisationUuid = useSelector(getSelectedOrganisation).uuid;
-  const availableRoles = ['admin', 'user', 'supplier', 'manager'].map(role => convertToSelectObject(role));
 
   const initialValues = currentUser ? {
     firstName: currentUser.first_name,
     lastName: currentUser.last_name,
     username: currentUser.username,
     email: currentUser.email,
-    roles: currentUser.roles.map((role: any) => convertToSelectObject(role)),
+    roles: currentUser.roles,
   } : {
     email: null,
-    roles: []
+    roles: ['user'] // give user role to new user by default
   };
 
   const onSubmit = (values: Values) => {
@@ -46,7 +45,7 @@ const UserForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pro
           email: values.email,
           permissions: {
             organisation: `/api/v4/organisations/${selectedOrganisationUuid}/`,
-            roles: values.roles.map((role: any) => role.value)
+            roles: values.roles
           }
         })
       })
@@ -70,7 +69,7 @@ const UserForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pro
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          roles: values.roles.map((role: any) => role.value)
+          roles: values.roles
         })
       })
       .then(response => {
@@ -89,7 +88,7 @@ const UserForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pro
 
   const {
     values,
-    // triedToSubmit,
+    triedToSubmit,
     // formSubmitted,
     tryToSubmitForm,
     handleInputChange,
@@ -154,25 +153,24 @@ const UserForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pro
           </>
         ) : null}
         <TextInput
-          title={'Email'}
+          title={currentUser ? 'Email' : 'Email *'}
           name={'email'}
           value={values.email}
           valueChanged={handleInputChange}
           clearInput={clearInput}
-          validated
+          validated={currentUser || !emailValidator(values.email)}
+          errorMessage={emailValidator(values.email)}
+          triedToSubmit={triedToSubmit}
           readOnly={currentUser}
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
-        <SelectDropdown
-          title={'Roles'}
+        <UserRoles
+          title={currentUser ? 'Roles' : 'Roles *'}
           name={'roles'}
-          placeholder={'- Select -'}
           value={values.roles}
           valueChanged={value => handleValueChange('roles', value)}
-          options={availableRoles}
-          validated
-          isMulti
+          currentUser={currentUser}
           onFocus={handleFocus}
           onBlur={handleBlur}
         />

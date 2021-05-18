@@ -395,6 +395,10 @@ export const getUsername = (state) => {
   return (state.bootstrap && state.bootstrap.bootstrap && state.bootstrap.bootstrap.user &&  state.bootstrap.bootstrap.user.username) || null;
 };
 
+export const getUserId = (state) => {
+  return (state.bootstrap && state.bootstrap.bootstrap && state.bootstrap.bootstrap.user &&  state.bootstrap.bootstrap.user.id) || null;
+};
+
 export const getNotifications = (state) => {
   return state.notifications.notifications;
 };
