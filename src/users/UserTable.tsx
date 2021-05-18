@@ -45,7 +45,31 @@ export const UserTable = (props: RouteComponentProps) =>  {
           className={tableStyles.CellEllipsis}
           title={row.username}
         >
-          <NavLink to={`${navigationUrl}/${row.id}`}>{!row.username? "(empty name)" : row.username }</NavLink>
+          <NavLink to={`${navigationUrl}/${row.id}`}>{row.username }</NavLink>
+        </span>
+      ,
+      orderingField: null,
+    },
+    {
+      titleRenderFunction: () => "First name",
+      renderFunction: (row: any) => 
+        <span
+          className={tableStyles.CellEllipsis}
+          title={row.first_name}
+        >
+          {row.first_name}
+        </span>
+      ,
+      orderingField: null,
+    },
+    {
+      titleRenderFunction: () => "Last name",
+      renderFunction: (row: any) => 
+        <span
+          className={tableStyles.CellEllipsis}
+          title={row.last_name}
+        >
+          {row.last_name}
         </span>
       ,
       orderingField: null,
@@ -95,7 +119,7 @@ export const UserTable = (props: RouteComponentProps) =>  {
       backUrl={"/"}
     >
       <TableStateContainer 
-        gridTemplateColumns={"40% 50% 10%"} 
+        gridTemplateColumns={"20fr 15fr 15fr 42fr 8fr"} 
         columnDefinitions={columnDefinitions}
         baseUrl={`${baseUrl}?`} 
         checkBoxActions={[]}
