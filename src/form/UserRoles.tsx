@@ -13,6 +13,7 @@ interface MyProps {
   onFocus?: (e: any) => void,
   onBlur?: () => void,
   readOnly?: boolean,
+  forTable?: boolean,
 };
 
 export const UserRoles: React.FC<MyProps> = (props) => {
@@ -24,6 +25,7 @@ export const UserRoles: React.FC<MyProps> = (props) => {
     currentUser,
     onFocus,
     onBlur,
+    forTable,
   } = props;
 
   const userId = useSelector(getUserId);
@@ -42,8 +44,16 @@ export const UserRoles: React.FC<MyProps> = (props) => {
     <label
       htmlFor={name}
       className={formStyles.Label}
+      style={{
+        marginBottom: forTable ? 0 : undefined
+      }}
     >
-      <span className={formStyles.LabelTitle}>
+      <span
+        className={formStyles.LabelTitle}
+        style={{
+          marginBottom: forTable ? 0 : undefined
+        }}
+      >
         {title}
       </span>
       <div

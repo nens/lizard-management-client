@@ -7,6 +7,7 @@ import TableActionButtons from '../components/TableActionButtons';
 import TableStateContainer from '../components/TableStateContainer';
 import tableStyles from "../components/Table.module.css";
 import userManagementIcon from "../images/userManagement.svg";
+import { UserRoles } from '../form/UserRoles';
 // import DeleteModal from '../components/DeleteModal';
 
 export const UserTable = (props: RouteComponentProps) =>  {
@@ -87,6 +88,20 @@ export const UserTable = (props: RouteComponentProps) =>  {
       orderingField: null,
     },
     {
+      titleRenderFunction: () => "Role",
+      renderFunction: (row: any) =>
+        <UserRoles
+          title={''}
+          name={'roles'}
+          value={row.roles}
+          valueChanged={() => null}
+          currentUser={row}
+          forTable
+        />
+      ,
+      orderingField: null,
+    },
+    {
       titleRenderFunction: () =>  "",//"Actions",
       renderFunction: (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any) => {
         return (
@@ -118,10 +133,10 @@ export const UserTable = (props: RouteComponentProps) =>  {
       explanationText={'User management'}
       backUrl={"/"}
     >
-      <TableStateContainer 
-        gridTemplateColumns={"20fr 15fr 15fr 42fr 8fr"} 
+      <TableStateContainer
+        gridTemplateColumns={"15fr 12fr 12fr 30fr 27fr 4fr"}
         columnDefinitions={columnDefinitions}
-        baseUrl={`${baseUrl}?`} 
+        baseUrl={`${baseUrl}?`}
         checkBoxActions={[]}
         newItemOnClick={handleNewClick}
         filterOptions={[
