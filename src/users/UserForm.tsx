@@ -38,16 +38,16 @@ const UserForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pro
 
   const onSubmit = (values: Values) => {
     if (!currentUser) {
-      fetch(`/api/v4/users/new/`, {
+      fetch(`/api/v4/invitations/`, {
         credentials: "same-origin",
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email: values.email,
-          user_role: values.roles.find((role: any) => role.value === 'user') ? 'on' : undefined,
-          admin_role: values.roles.find((role: any) => role.value === 'admin') ? 'on' : undefined,
-          supplier_role: values.roles.find((role: any) => role.value === 'supplier') ? 'on' : undefined,
-          manager_role: values.roles.find((role: any) => role.value === 'manager') ? 'on' : undefined,
+          permissions: {
+            organisation: `/api/v4/organisations/${selectedOrganisationUuid}/`,
+            roles: values.roles.map((role: any) => role.value)
+          }
         })
       })
       .then(response => {
