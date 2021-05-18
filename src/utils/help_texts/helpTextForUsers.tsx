@@ -1,5 +1,4 @@
 import React from 'react';
-import styles from './helpTextForUsers.module.css';
 
 import {
   HelpText,
@@ -39,24 +38,24 @@ export const userFormHelpText: HelpText = {
   roles: (
     <>
       <span><b>User:</b></span>
-      <ul className={styles.List}>
-        <li>Can <span>read</span> data</li>
-        <li>Can't <span>write</span> or <span>change</span> data</li>
+      <ul style={{ margin: '5px 0' }}>
+        <li>Can <u>read</u> data</li>
+        <li>Can't <u>write</u> or <u>change</u> data</li>
       </ul>
       <span><b>Supplier:</b></span>
-      <ul className={styles.List}>
-        <li>Can supply (<span>write</span>) data</li>
-        <li>Can't <span>read</span> or <span>write</span> data that they did not supply</li>
+      <ul style={{ margin: '5px 0' }}>
+        <li>Can supply (<u>write</u>) data</li>
+        <li>Can't <u>read</u> or <u>write</u> data that they did not supply</li>
       </ul>
       <span><b>Administrator:</b></span>
-      <ul className={styles.List}>
-        <li>Can <span>read</span> and <span>write</span> data</li>
-        <li>Can't <span>add</span>, <span>change</span> or <span>delete</span> users</li>
+      <ul style={{ margin: '5px 0' }}>
+        <li>Can <u>read</u> and <u>write</u> data</li>
+        <li>Can't <u>add</u>, <u>change</u> or <u>delete</u> users</li>
       </ul>
       <span><b>Managers:</b></span>
-      <ul className={styles.List}>
-        <li>Can <span>add</span>, <span>change</span> or <span>delete</span> user</li>
-        <li>Can't <span>read</span>, <span>write</span> or <span>change</span> data</li>
+      <ul style={{ margin: '5px 0' }}>
+        <li>Can <u>add</u>, <u>change</u> or <u>delete</u> user</li>
+        <li>Can't <u>read</u>, <u>write</u> or <u>change</u> data</li>
       </ul>
     </>
   ),
