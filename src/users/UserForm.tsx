@@ -10,6 +10,7 @@ import { useForm, Values } from '../form/useForm';
 import { addNotification } from '../actions';
 import { getSelectedOrganisation } from '../reducers';
 import { emailValidator } from '../form/validators';
+import { userFormHelpText } from '../utils/help_texts/helpTextForUsers';
 import formStyles from './../styles/Forms.module.css';
 import userManagementIcon from "../images/userManagement.svg";
 
@@ -104,9 +105,9 @@ const UserForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pro
   return (
     <ExplainSideColumn
       imgUrl={userManagementIcon}
-      imgAltDescription={"Group icon"}
-      headerText={"Groups"}
-      explanationText={'User form'}
+      imgAltDescription={"User icon"}
+      headerText={"Users"}
+      explanationText={userFormHelpText[fieldOnFocus] || userFormHelpText['default']}
       backUrl={"/users"}
       fieldName={fieldOnFocus}
     >
