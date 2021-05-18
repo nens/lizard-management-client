@@ -29,8 +29,7 @@ export const EditUser: React.FC<RouteComponentProps<RouteParams>> = (props) => {
     return <UserForm
       currentUser={currentUser}
     />;
-  }
-  else {
+  } else {
     return (
       <div
         style={{
