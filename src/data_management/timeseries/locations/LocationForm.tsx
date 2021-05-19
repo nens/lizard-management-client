@@ -8,7 +8,7 @@ import { SubmitButton } from '../../../form/SubmitButton';
 import { CancelButton } from '../../../form/CancelButton';
 import { useForm, Values } from '../../../form/useForm';
 import { geometryValidator, minLength } from '../../../form/validators';
-import { addNotification } from '../../../actions';
+import { addNotification, updateLocation } from '../../../actions';
 import formStyles from './../../../styles/Forms.module.css';
 // import { TextArea } from '../../../form/TextArea';
 import LocationIcon from "../../../images/locations_icon.svg";
@@ -128,7 +128,7 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
           };
         })
         .then(parsedRes => {
-          console.log(parsedRes);
+          props.updateLocation(parsedRes);
         })
         .catch(console.error);
     };
@@ -265,7 +265,8 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
 };
 
 const mapPropsToDispatch = (dispatch: any) => ({
-  addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout))
+  addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout)),
+  updateLocation: (location: any) => dispatch(updateLocation(location)),
 });
 type DispatchProps = ReturnType<typeof mapPropsToDispatch>;
 

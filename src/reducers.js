@@ -31,7 +31,9 @@ import {
   REMOVE_FILE_FROM_QUEUE,
   UPDATE_FILE_STATUS,
   ADD_TASK_UUID_TO_FILE,
-  UPDATE_TASK_STATUS
+  UPDATE_TASK_STATUS,
+  UPDATE_LOCATION,
+  REMOVE_LOCATION
 } from "./actions";
 
 function bootstrap(
@@ -330,6 +332,17 @@ function rasterSourceUUID(state = null, action) {
   };
 };
 
+function location(state = null, action) {
+  switch (action.type) {
+    case UPDATE_LOCATION:
+      return action.location;
+    case REMOVE_LOCATION:
+      return null;
+    default:
+      return state;
+  };
+};
+
 function uploadFiles(state = null, action) {
   switch (action.type) {
     case ADD_FILES_TO_QUEUE:
@@ -446,6 +459,7 @@ const rootReducer = combineReducers({
   viewport,
   alarmType,
   rasterSourceUUID,
+  location,
   uploadFiles
 });
 
