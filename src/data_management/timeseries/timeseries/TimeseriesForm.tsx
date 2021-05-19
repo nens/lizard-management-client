@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { connect, useSelector } from 'react-redux';
-import { getSelectedOrganisation, getSupplierIds, getUsername } from '../../../reducers';
+import { getLocation, getSelectedOrganisation, getSupplierIds, getUsername } from '../../../reducers';
 import { ExplainSideColumn } from '../../../components/ExplainSideColumn';
 import { TextInput } from './../../../form/TextInput';
 import { AccessModifier } from '../../../form/AccessModifier';
@@ -13,7 +13,7 @@ import { CancelButton } from '../../../form/CancelButton';
 import { useForm, Values } from '../../../form/useForm';
 import { minLength, required } from '../../../form/validators';
 import { fetchObservationTypes } from '../../rasters/RasterLayerForm';
-import { addNotification } from '../../../actions';
+import { addNotification, removeLocation } from '../../../actions';
 import { convertToSelectObject } from '../../../utils/convertToSelectObject';
 import { fromISOValue, toISOValue } from '../../../utils/isoUtils';
 import { convertDurationObjToSeconds, convertSecondsToDurationObject } from '../../../utils/dateUtils';
@@ -43,10 +43,17 @@ const fetchLocations = async (searchInput: string, organisationUuid: string) => 
 };
 
 const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
-  const { currentTimeseries } = props;
+  const { currentTimeseries, removeLocation } = props;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const username = useSelector(getUsername);
   const supplierIds = useSelector(getSupplierIds).available;
+  const location = useSelector(getLocation);
+
+  useEffect(() => {
+    return () => {
+      removeLocation();
+    };
+  }, [removeLocation]);
 
   const initialValues = currentTimeseries ? {
     name: currentTimeseries.name,
@@ -63,7 +70,7 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
     name: null,
     code: null,
     observationType: null,
-    location: null,
+    location: location ? convertToSelectObject(location.uuid, location.name) : null,
     value_type: null,
     intervalCheckbox: false,
     interval: null,
@@ -231,6 +238,7 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
           loadOptions={searchInput => fetchLocations(searchInput, selectedOrganisation.uuid)}
           onFocus={handleFocus}
           onBlur={handleBlur}
+          readOnly={!!location}
         />
         <SelectDropdown
           title={'Value type *'}
@@ -356,6 +364,7 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
 };
 
 const mapPropsToDispatch = (dispatch: any) => ({
+  removeLocation: () => dispatch(removeLocation()),
   addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout))
 });
 type DispatchProps = ReturnType<typeof mapPropsToDispatch>;

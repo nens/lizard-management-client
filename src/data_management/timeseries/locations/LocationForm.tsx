@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { connect, useSelector } from 'react-redux';
 import { getSelectedOrganisation } from '../../../reducers';
@@ -8,13 +8,14 @@ import { SubmitButton } from '../../../form/SubmitButton';
 import { CancelButton } from '../../../form/CancelButton';
 import { useForm, Values } from '../../../form/useForm';
 import { geometryValidator, minLength } from '../../../form/validators';
-import { addNotification } from '../../../actions';
+import { addNotification, removeLocation, updateLocation } from '../../../actions';
 import formStyles from './../../../styles/Forms.module.css';
 // import { TextArea } from '../../../form/TextArea';
 import LocationIcon from "../../../images/locations_icon.svg";
 import { AccessModifier } from '../../../form/AccessModifier';
 import { AssetPointSelection } from '../../../form/AssetPointSelection';
 import { locationFormHelpText } from '../../../utils/help_texts/helpTextsForLocations';
+import Modal from '../../../components/Modal';
 
 
 interface Props {
@@ -28,6 +29,7 @@ interface RouteParams {
 const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RouteParams>) => {
   const { currentRecord, relatedAsset } = props;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
+  const [locationCreatedModal, setLocationCreatedModal] = useState<boolean>(false);
 
   let initialValues;
   if (currentRecord) {
@@ -113,15 +115,20 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
           organisation: selectedOrganisation.uuid
         })
       })
-        .then(data => {
-          const status = data.status;
+        .then(response => {
+          const status = response.status;
           if (status === 201) {
-            props.addNotification('Success! Location creatd', 2000);
-            props.history.push('/data_management/timeseries/locations');
+            // props.addNotification('Success! Location creatd', 2000);
+            // props.history.push('/data_management/timeseries/locations');
+            setLocationCreatedModal(true);
+            return response.json();
           } else {
             props.addNotification(status, 2000);
-            console.error(data);
+            console.error(response);
           };
+        })
+        .then(parsedRes => {
+          props.updateLocation(parsedRes);
         })
         .catch(console.error);
     };
@@ -242,12 +249,28 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
           />
         </div>
       </form>
+      {locationCreatedModal ? (
+        <Modal
+          title={'Location created'}
+          buttonConfirmName={'Continue'}
+          onClickButtonConfirm={() => props.history.push('/data_management/timeseries/timeseries/new')}
+          cancelAction={() => {
+            props.removeLocation();
+            props.history.push('/data_management/timeseries/locations');
+          }}
+        >
+          <p>A new location has been created.</p>
+          <p>You can choose to add a new time series to the location or go back to the location list.</p>
+        </Modal>
+      ) : null}
     </ExplainSideColumn>
   );
 };
 
 const mapPropsToDispatch = (dispatch: any) => ({
-  addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout))
+  addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout)),
+  updateLocation: (location: any) => dispatch(updateLocation(location)),
+  removeLocation: () => dispatch(removeLocation()),
 });
 type DispatchProps = ReturnType<typeof mapPropsToDispatch>;
 
