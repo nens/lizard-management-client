@@ -46,6 +46,7 @@ export const UserRoles: React.FC<MyProps> = (props) => {
     return (
       <div
         id={name}
+        key={role}
         title={firstLetterOfRole + role.slice(1)} // Role name with first letter capitalized
         className={value.includes(role) ? `${styles.Role} ${styles.RoleSelected}` : styles.Role}
         style={{
