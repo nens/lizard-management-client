@@ -366,6 +366,23 @@ export function removeRasterSourceUUID() {
   };
 }
 
+// MARK: Location uuid
+export const UPDATE_LOCATION = "UPDATE_LOCATION";
+export const REMOVE_LOCATION = "REMOVE_LOCATION";
+
+export function updateLocation(location) {
+  return {
+    type: UPDATE_LOCATION,
+    location
+  };
+}
+
+export function removeLocation() {
+  return {
+    type: REMOVE_LOCATION
+  };
+}
+
 // MARK: Uploads
 export const ADD_FILES_TO_QUEUE = "ADD_FILES_TO_QUEUE";
 export const ADD_TASK_UUID_TO_FILE = "ADD_TASK_UUID_TO_FILE"
