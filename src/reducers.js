@@ -439,6 +439,9 @@ export const getDatasets = (state) => {
 export const getRasterSourceUUID = (state) => {
   return state.rasterSourceUUID;
 };
+export const getLocation = (state) => {
+  return state.location;
+};
 
 export const getUploadFiles = (state) => {
   return state.uploadFiles;
