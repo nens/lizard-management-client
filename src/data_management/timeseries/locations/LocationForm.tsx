@@ -8,7 +8,7 @@ import { SubmitButton } from '../../../form/SubmitButton';
 import { CancelButton } from '../../../form/CancelButton';
 import { useForm, Values } from '../../../form/useForm';
 import { geometryValidator, minLength } from '../../../form/validators';
-import { addNotification, updateLocation } from '../../../actions';
+import { addNotification, removeLocation, updateLocation } from '../../../actions';
 import formStyles from './../../../styles/Forms.module.css';
 // import { TextArea } from '../../../form/TextArea';
 import LocationIcon from "../../../images/locations_icon.svg";
@@ -253,8 +253,11 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
         <Modal
           title={'Location created'}
           buttonConfirmName={'Continue'}
-          cancelAction={() => props.history.push('/data_management/timeseries/locations')}
           onClickButtonConfirm={() => props.history.push('/data_management/timeseries/timeseries/new')}
+          cancelAction={() => {
+            props.removeLocation();
+            props.history.push('/data_management/timeseries/locations');
+          }}
         >
           <p>A new location has been created.</p>
           <p>You can choose to add a new time series to the location or go back to the location list.</p>
@@ -267,6 +270,7 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
 const mapPropsToDispatch = (dispatch: any) => ({
   addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout)),
   updateLocation: (location: any) => dispatch(updateLocation(location)),
+  removeLocation: () => dispatch(removeLocation()),
 });
 type DispatchProps = ReturnType<typeof mapPropsToDispatch>;
 
