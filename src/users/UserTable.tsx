@@ -23,15 +23,15 @@ export const UserTable = (props: RouteComponentProps) =>  {
     return Promise.all(fetches);
   };
 
-  const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
+  const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const [resetTable, setResetTable] = useState<Function | null>(null);
 
-  const deleteActions = (
+  const deactivateActions = (
     rows: any[],
     triggerReloadWithCurrentPage: Function,
     setCheckboxes: Function | null
   ) => {
-    setRowsToBeDeleted(rows);
+    setSelectedRows(rows);
     setResetTable(() => () => {
       triggerReloadWithCurrentPage();
       setCheckboxes && setCheckboxes([]);
@@ -90,9 +90,9 @@ export const UserTable = (props: RouteComponentProps) =>  {
               editUrl={`${navigationUrl}/${row.id}`}
               actions={[
                 {
-                  displayValue: "Delete",
+                  displayValue: "Deactivate",
                   actionFunction: (row: any, _updateTableRow: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any) => {
-                    deleteActions([row], triggerReloadWithCurrentPage, null)
+                    deactivateActions([row], triggerReloadWithCurrentPage, null)
                   }
                 },
               ]}
@@ -141,16 +141,17 @@ export const UserTable = (props: RouteComponentProps) =>  {
           }
         ]}
       />
-      {rowsToBeDeleted.length > 0 ? (
+      {selectedRows.length > 0 ? (
         <DeleteModal
-          rows={rowsToBeDeleted}
+          rows={selectedRows}
           displayContent={[{name: "username", width: 35}, {name: "email", width: 65}]}
           fetchFunction={fetchWithOptions}
           resetTable={resetTable}
           handleClose={() => {
-            setRowsToBeDeleted([]);
+            setSelectedRows([]);
             setResetTable(null);
           }}
+          text={'You are deactivating the following user. Please make sure that s/he does not have role in any other organisation before continue.'}
         />
       ) : null}
     </ExplainSideColumn>
