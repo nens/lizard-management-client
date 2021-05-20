@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NavLink, RouteComponentProps } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import { getSelectedOrganisation } from '../reducers';
@@ -7,6 +7,7 @@ import { UserRoles } from '../form/UserRoles';
 import { userTableHelpText } from '../utils/help_texts/helpTextForUsers';
 import TableActionButtons from '../components/TableActionButtons';
 import TableStateContainer from '../components/TableStateContainer';
+import DeleteModal from '../components/DeleteModal';
 import tableStyles from "../components/Table.module.css";
 import userManagementIcon from "../images/userManagement.svg";
 
@@ -14,6 +15,28 @@ export const UserTable = (props: RouteComponentProps) =>  {
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const baseUrl = `/api/v4/organisations/${selectedOrganisation.uuid}/users/`;
   const navigationUrl = "/users";
+
+  const fetchWithOptions = (uuids: string[], fetchOptions: RequestInit) => {
+    const fetches = uuids.map (uuid => {
+      return fetch(baseUrl + uuid + "/", fetchOptions);
+    });
+    return Promise.all(fetches);
+  };
+
+  const [selectedRows, setSelectedRows] = useState<any[]>([]);
+  const [resetTable, setResetTable] = useState<Function | null>(null);
+
+  const deactivateActions = (
+    rows: any[],
+    triggerReloadWithCurrentPage: Function,
+    setCheckboxes: Function | null
+  ) => {
+    setSelectedRows(rows);
+    setResetTable(() => () => {
+      triggerReloadWithCurrentPage();
+      setCheckboxes && setCheckboxes([]);
+    });
+  };
 
   const columnDefinitions = [
     {
@@ -27,30 +50,6 @@ export const UserTable = (props: RouteComponentProps) =>  {
         </span>
       ,
       orderingField: 'username',
-    },
-    {
-      titleRenderFunction: () => "First name",
-      renderFunction: (row: any) => 
-        <span
-          className={tableStyles.CellEllipsis}
-          title={row.first_name}
-        >
-          {row.first_name}
-        </span>
-      ,
-      orderingField: 'first_name',
-    },
-    {
-      titleRenderFunction: () => "Last name",
-      renderFunction: (row: any) => 
-        <span
-          className={tableStyles.CellEllipsis}
-          title={row.last_name}
-        >
-          {row.last_name}
-        </span>
-      ,
-      orderingField: 'last_name',
     },
     {
       titleRenderFunction: () => "Email",
@@ -89,7 +88,14 @@ export const UserTable = (props: RouteComponentProps) =>  {
               triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
               triggerReloadWithBasePage={triggerReloadWithBasePage}
               editUrl={`${navigationUrl}/${row.id}`}
-              actions={[]}
+              actions={[
+                {
+                  displayValue: "Deactivate",
+                  actionFunction: (row: any, _updateTableRow: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any) => {
+                    deactivateActions([row], triggerReloadWithCurrentPage, null)
+                  }
+                },
+              ]}
             />
         );
       },
@@ -111,7 +117,7 @@ export const UserTable = (props: RouteComponentProps) =>  {
       backUrl={"/"}
     >
       <TableStateContainer
-        gridTemplateColumns={"15fr 12fr 12fr 30fr 27fr 4fr"}
+        gridTemplateColumns={"33fr 33fr 30fr 4fr"}
         columnDefinitions={columnDefinitions}
         baseUrl={`${baseUrl}?`}
         checkBoxActions={[]}
@@ -135,6 +141,19 @@ export const UserTable = (props: RouteComponentProps) =>  {
           }
         ]}
       />
+      {selectedRows.length > 0 ? (
+        <DeleteModal
+          rows={selectedRows}
+          displayContent={[{name: "username", width: 40}, {name: "email", width: 60}]}
+          fetchFunction={fetchWithOptions}
+          resetTable={resetTable}
+          handleClose={() => {
+            setSelectedRows([]);
+            setResetTable(null);
+          }}
+          text={'You are deactivating the following user. Please make sure that s/he is not a member of any other organisation before continue.'}
+        />
+      ) : null}
     </ExplainSideColumn>
   );
 }

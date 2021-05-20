@@ -27,7 +27,6 @@ export const PersonalApiKeysTable = (props: RouteComponentProps) =>  {
     triggerReloadWithCurrentPage: Function,
     setCheckboxes: Function | null
   ) => {
-    console.log(rows[0])
     setRowsToBeDeleted(rows);
     setResetTable(() => () => {
       triggerReloadWithCurrentPage();

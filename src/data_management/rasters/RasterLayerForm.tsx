@@ -44,11 +44,6 @@ interface Props {
   currentRasterLayer?: RasterLayerFromAPI,
 };
 
-interface PropsFromDispatch {
-  removeRasterSourceUUID: () => void,
-  addNotification: (message: string | number, timeout: number) => void,
-};
-
 // Helper function to fetch paginated raster sources with search query
 const fetchRasterSources = async (uuid: string, searchQuery: string) => {
   const params=[`organisation__uuid=${uuid}`, "scenario__isnull=true"];
@@ -98,7 +93,7 @@ export const fetchObservationTypes = async (searchQuery: string) => {
   });
 };
 
-const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (props) => {
+const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (props) => {
   const { currentRasterLayer, removeRasterSourceUUID } = props;
   const supplierIds = useSelector(getSupplierIds).available;
   const organisationsToSharedWith = useSelector(getOrganisations).availableForRasterSharedWith;
@@ -524,5 +519,6 @@ const mapDispatchToProps = (dispatch: any) => ({
   removeRasterSourceUUID: () => dispatch(removeRasterSourceUUID()),
   addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout)),
 });
+type DispatchProps = ReturnType<typeof mapDispatchToProps>;
 
 export default connect(null, mapDispatchToProps)(withRouter(RasterLayerForm));
