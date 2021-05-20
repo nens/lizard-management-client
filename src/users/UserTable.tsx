@@ -52,30 +52,6 @@ export const UserTable = (props: RouteComponentProps) =>  {
       orderingField: 'username',
     },
     {
-      titleRenderFunction: () => "First name",
-      renderFunction: (row: any) => 
-        <span
-          className={tableStyles.CellEllipsis}
-          title={row.first_name}
-        >
-          {row.first_name}
-        </span>
-      ,
-      orderingField: 'first_name',
-    },
-    {
-      titleRenderFunction: () => "Last name",
-      renderFunction: (row: any) => 
-        <span
-          className={tableStyles.CellEllipsis}
-          title={row.last_name}
-        >
-          {row.last_name}
-        </span>
-      ,
-      orderingField: 'last_name',
-    },
-    {
       titleRenderFunction: () => "Email",
       renderFunction: (row: any) => 
         <span
@@ -141,17 +117,10 @@ export const UserTable = (props: RouteComponentProps) =>  {
       backUrl={"/"}
     >
       <TableStateContainer
-        gridTemplateColumns={"4fr 15fr 12fr 12fr 30fr 23fr 4fr"}
+        gridTemplateColumns={"33fr 33fr 30fr 4fr"}
         columnDefinitions={columnDefinitions}
         baseUrl={`${baseUrl}?`}
-        checkBoxActions={[
-          {
-            displayValue: "Delete",
-            actionFunction: (rows: any[], _tableData: any, _setTableData: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any, setCheckboxes: any) => {
-              deleteActions(rows, triggerReloadWithCurrentPage, setCheckboxes)
-            }
-          }
-        ]}
+        checkBoxActions={[]}
         newItemOnClick={handleNewClick}
         filterOptions={[
           {
