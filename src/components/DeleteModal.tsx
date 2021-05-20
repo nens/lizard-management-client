@@ -44,11 +44,12 @@ function DeleteModal (props: MyProps & DispatchProps & RouteComponentProps) {
         tableUrl && props.history.push(tableUrl);
       } else if (
         // Handle the case of 403 status when DELETE an user account
-        rows.every(row => row.username && row.roles) &&
-        results.find(res => res.status === 403)
+        // bulk action is not supported for this feature so there is always only 1 item in rows
+        rows[0].username && rows[0].roles &&
+        results[0].status === 403
       ) {
         props.handleClose();
-        props.addNotification(`Permission denied! You do not have permission to deactivate ${rows[0].username}. S/he is a member of other organisations.`, 6000);
+        props.addNotification(`Permission denied! You do not have permission to deactivate ${rows[0].username}. S/he is still a member of other organisations.`, 6000);
       } else {
         console.error('Error deleting items: ', results);
         props.addNotification('An error occurred! Please try again!', 2000);
