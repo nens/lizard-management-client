@@ -144,7 +144,7 @@ export const UserTable = (props: RouteComponentProps) =>  {
       {selectedRows.length > 0 ? (
         <DeleteModal
           rows={selectedRows}
-          displayContent={[{name: "username", width: 35}, {name: "email", width: 65}]}
+          displayContent={[{name: "username", width: 40}, {name: "email", width: 60}]}
           fetchFunction={fetchWithOptions}
           resetTable={resetTable}
           handleClose={() => {

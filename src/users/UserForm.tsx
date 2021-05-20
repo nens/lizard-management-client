@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect, useSelector } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { ExplainSideColumn } from '../components/ExplainSideColumn';
@@ -11,19 +11,29 @@ import { addNotification } from '../actions';
 import { getSelectedOrganisation } from '../reducers';
 import { emailValidator } from '../form/validators';
 import { userFormHelpText } from '../utils/help_texts/helpTextForUsers';
+import FormActionButtons from '../components/FormActionButtons';
+import DeleteModal from '../components/DeleteModal';
 import formStyles from './../styles/Forms.module.css';
 import userManagementIcon from "../images/userManagement.svg";
 
 interface Props {
   currentUser?: any
 };
-interface PropsFromDispatch {
-  addNotification: (message: string | number, timeout: number) => void
-};
 
-const UserForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (props) => {
+const UserForm: React.FC<Props & DispatchProps & RouteComponentProps> = (props) => {
   const { currentUser } = props;
   const selectedOrganisationUuid = useSelector(getSelectedOrganisation).uuid;
+  const baseUrl = `/api/v4/organisations/${selectedOrganisationUuid}/users/`;
+
+  const fetchWithOptions = (uuids: string[], fetchOptions: RequestInit) => {
+    const fetches = uuids.map (uuid => {
+      return fetch(baseUrl + uuid + "/", fetchOptions);
+    });
+    return Promise.all(fetches);
+  };
+
+  // Delete modal
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const initialValues = currentUser ? {
     firstName: currentUser.first_name,
@@ -181,17 +191,44 @@ const UserForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pro
           <CancelButton
             url={'/users'}
           />
-          <SubmitButton
-            onClick={tryToSubmitForm}
-          />
+          <div style={{
+            display: "flex"
+          }}>
+            {currentUser ? (
+              <div style={{marginRight: "16px"}}>
+                <FormActionButtons
+                  actions={[
+                    {
+                      displayValue: "Deactivate",
+                      actionFunction: () => {setShowDeleteModal(true)}
+                    },
+                  ]}
+                />
+              </div>
+            ) : null}
+            <SubmitButton
+              onClick={tryToSubmitForm}
+            />
+          </div>
         </div>
       </form>
+      {currentUser && showDeleteModal ? (
+        <DeleteModal
+          rows={[currentUser]}
+          displayContent={[{name: "username", width: 40}, {name: "email", width: 60}]}
+          fetchFunction={fetchWithOptions}
+          handleClose={() => setShowDeleteModal(false)}
+          tableUrl={'/users'}
+          text={'You are deactivating the following user. Please make sure that s/he does not have role in any other organisation before continue.'}
+        />
+      ) : null}
     </ExplainSideColumn>
   );
 };
 
-const mapPropsToDispatch = (dispatch: any) => ({
+const mapDispatchToProps = (dispatch: any) => ({
   addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout))
 });
+type DispatchProps = ReturnType<typeof mapDispatchToProps>;
 
-export default connect(null, mapPropsToDispatch)(withRouter(UserForm));
+export default connect(null, mapDispatchToProps)(withRouter(UserForm));
