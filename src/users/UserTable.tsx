@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NavLink, RouteComponentProps } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import { getSelectedOrganisation } from '../reducers';
@@ -7,6 +7,7 @@ import { UserRoles } from '../form/UserRoles';
 import { userTableHelpText } from '../utils/help_texts/helpTextForUsers';
 import TableActionButtons from '../components/TableActionButtons';
 import TableStateContainer from '../components/TableStateContainer';
+import DeleteModal from '../components/DeleteModal';
 import tableStyles from "../components/Table.module.css";
 import userManagementIcon from "../images/userManagement.svg";
 
@@ -14,6 +15,28 @@ export const UserTable = (props: RouteComponentProps) =>  {
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const baseUrl = `/api/v4/organisations/${selectedOrganisation.uuid}/users/`;
   const navigationUrl = "/users";
+
+  const fetchWithOptions = (uuids: string[], fetchOptions: RequestInit) => {
+    const fetches = uuids.map (uuid => {
+      return fetch(baseUrl + uuid + "/", fetchOptions);
+    });
+    return Promise.all(fetches);
+  };
+
+  const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
+  const [resetTable, setResetTable] = useState<Function | null>(null);
+
+  const deleteActions = (
+    rows: any[],
+    triggerReloadWithCurrentPage: Function,
+    setCheckboxes: Function | null
+  ) => {
+    setRowsToBeDeleted(rows);
+    setResetTable(() => () => {
+      triggerReloadWithCurrentPage();
+      setCheckboxes && setCheckboxes([]);
+    });
+  };
 
   const columnDefinitions = [
     {
@@ -89,7 +112,14 @@ export const UserTable = (props: RouteComponentProps) =>  {
               triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
               triggerReloadWithBasePage={triggerReloadWithBasePage}
               editUrl={`${navigationUrl}/${row.id}`}
-              actions={[]}
+              actions={[
+                {
+                  displayValue: "Delete",
+                  actionFunction: (row: any, _updateTableRow: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any) => {
+                    deleteActions([row], triggerReloadWithCurrentPage, null)
+                  }
+                },
+              ]}
             />
         );
       },
@@ -111,10 +141,17 @@ export const UserTable = (props: RouteComponentProps) =>  {
       backUrl={"/"}
     >
       <TableStateContainer
-        gridTemplateColumns={"15fr 12fr 12fr 30fr 27fr 4fr"}
+        gridTemplateColumns={"4fr 15fr 12fr 12fr 30fr 23fr 4fr"}
         columnDefinitions={columnDefinitions}
         baseUrl={`${baseUrl}?`}
-        checkBoxActions={[]}
+        checkBoxActions={[
+          {
+            displayValue: "Delete",
+            actionFunction: (rows: any[], _tableData: any, _setTableData: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any, setCheckboxes: any) => {
+              deleteActions(rows, triggerReloadWithCurrentPage, setCheckboxes)
+            }
+          }
+        ]}
         newItemOnClick={handleNewClick}
         filterOptions={[
           {
@@ -135,6 +172,18 @@ export const UserTable = (props: RouteComponentProps) =>  {
           }
         ]}
       />
+      {rowsToBeDeleted.length > 0 ? (
+        <DeleteModal
+          rows={rowsToBeDeleted}
+          displayContent={[{name: "username", width: 35}, {name: "email", width: 65}]}
+          fetchFunction={fetchWithOptions}
+          resetTable={resetTable}
+          handleClose={() => {
+            setRowsToBeDeleted([]);
+            setResetTable(null);
+          }}
+        />
+      ) : null}
     </ExplainSideColumn>
   );
 }
