@@ -48,7 +48,7 @@ function DeleteModal (props: MyProps & DispatchProps & RouteComponentProps) {
         results.find(res => res.status === 403)
       ) {
         props.handleClose();
-        props.addNotification(`Error! You do not have permission to deactivate ${rows[0].username}. S/he still has role in other organisations.`, 6000);
+        props.addNotification(`Error! You do not have permission to deactivate ${rows[0].username}. S/he is a member of other organisations.`, 6000);
       } else {
         console.error('Error deleting items: ', results);
         props.addNotification('An error occurred! Please try again!', 2000);

@@ -219,7 +219,7 @@ const UserForm: React.FC<Props & DispatchProps & RouteComponentProps> = (props) 
           fetchFunction={fetchWithOptions}
           handleClose={() => setShowDeleteModal(false)}
           tableUrl={'/users'}
-          text={'You are deactivating the following user. Please make sure that s/he does not have role in any other organisation before continue.'}
+          text={'You are deactivating the following user. Please make sure that s/he is not a member of any other organisation before continue.'}
         />
       ) : null}
     </ExplainSideColumn>
