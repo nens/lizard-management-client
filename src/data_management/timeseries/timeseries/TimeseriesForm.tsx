@@ -8,10 +8,11 @@ import { AccessModifier } from '../../../form/AccessModifier';
 import { SelectDropdown } from '../../../form/SelectDropdown';
 import { DurationField } from '../../../form/DurationField';
 import { CheckBox } from '../../../form/CheckBox';
+import { TextArea } from '../../../form/TextArea';
 import { SubmitButton } from '../../../form/SubmitButton';
 import { CancelButton } from '../../../form/CancelButton';
 import { useForm, Values } from '../../../form/useForm';
-import { minLength, required } from '../../../form/validators';
+import { jsonValidator, minLength, required } from '../../../form/validators';
 import { fetchObservationTypes } from '../../rasters/RasterLayerForm';
 import { addNotification, removeLocation } from '../../../actions';
 import { convertToSelectObject } from '../../../utils/convertToSelectObject';
@@ -21,8 +22,14 @@ import { timeseriesFormHelpText } from '../../../utils/help_texts/helpTextForTim
 import formStyles from './../../../styles/Forms.module.css';
 import timeseriesIcon from "../../../images/timeseries_icon.svg";
 
+export interface Datasource {
+  id: number,
+  name: string,
+};
+
 interface Props {
-  currentTimeseries?: any
+  currentTimeseries?: any,
+  datasource?: Datasource,
 };
 
 const backUrl = "/data_management/timeseries/timeseries";
@@ -42,8 +49,18 @@ const fetchLocations = async (searchInput: string, organisationUuid: string) => 
   return responseJSON.results.map((location: any) => convertToSelectObject(location.uuid, location.name));
 };
 
+// Helper function to fetch datasources in async select dropdown
+const fetchDatasources = async (searchInput: string) => {
+  const response = await fetch(`/api/v4/datasources/`, {
+    credentials: 'same-origin'
+  });
+  const responseJSON = await response.json();
+
+  return responseJSON.results.map((datasource: any) => convertToSelectObject(datasource.id, datasource.name));
+};
+
 const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
-  const { currentTimeseries, removeLocation } = props;
+  const { currentTimeseries, datasource, removeLocation } = props;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const username = useSelector(getUsername);
   const supplierIds = useSelector(getSupplierIds).available;
@@ -61,8 +78,10 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
     observationType: currentTimeseries.observation_type ? convertToSelectObject(currentTimeseries.observation_type.id, currentTimeseries.observation_type.code) : null,
     location: currentTimeseries.location ? convertToSelectObject(currentTimeseries.location.uuid, currentTimeseries.location.name) : null,
     valueType: currentTimeseries.value_type ? convertToSelectObject(currentTimeseries.value_type) : null,
+    datasource: currentTimeseries.datasource && datasource ? convertToSelectObject(datasource.id, datasource.name) : null,
     intervalCheckbox: !(currentTimeseries.interval === null),
     interval: currentTimeseries.interval ? toISOValue(convertSecondsToDurationObject(currentTimeseries.interval)) : '',
+    extraMetadata: JSON.stringify(currentTimeseries.extra_metadata),
     accessModifier: currentTimeseries.access_modifier,
     supplier: currentTimeseries.supplier ? convertToSelectObject(currentTimeseries.supplier) : null,
     supplierCode: currentTimeseries.supplier_code,
@@ -72,8 +91,10 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
     observationType: null,
     location: location ? convertToSelectObject(location.uuid, location.name) : null,
     value_type: null,
+    datasource: null,
     intervalCheckbox: false,
     interval: null,
+    extraMetadata: null,
     accessModifier: 'Private',
     supplier: username ? convertToSelectObject(username) : null,
     supplierCode: null
@@ -86,7 +107,9 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
       observation_type: values.observationType && values.observationType.value,
       location: values.location && values.location.value,
       value_type: values.valueType && values.valueType.value,
+      datasource: values.datasource && values.datasource.value,
       interval: values.intervalCheckbox ? convertDurationObjToSeconds(fromISOValue(values.interval)) : null,
+      extra_metadata: values.extraMetadata ? JSON.parse(values.extraMetadata) : {},
       access_modifier: values.accessModifier,
       supplier: values.supplier && values.supplier.value,
       supplier_code: values.supplierCode,
@@ -287,6 +310,20 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
+        <SelectDropdown
+          title={'Datasource'}
+          name={'datasource'}
+          placeholder={'- Search and select -'}
+          value={values.datasource}
+          valueChanged={value => handleValueChange('datasource', value)}
+          options={[]}
+          validated
+          isAsync
+          isCached
+          loadOptions={fetchDatasources}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+        />
         <label
           htmlFor={'interval'}
           className={formStyles.Label}
@@ -313,6 +350,19 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
             onBlur={handleBlur}
           />
         </label>
+        <TextArea
+          title={'Extra metadata (JSON)'}
+          name={'extraMetadata'}
+          placeholder={'Please enter in valid JSON format'}
+          value={values.extraMetadata}
+          valueChanged={handleInputChange}
+          clearInput={clearInput}
+          validated={!jsonValidator(values.extraMetadata)}
+          errorMessage={jsonValidator(values.extraMetadata)}
+          triedToSubmit={triedToSubmit}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+        />
         <span className={formStyles.FormFieldTitle}>
           3: Rights
         </span>
