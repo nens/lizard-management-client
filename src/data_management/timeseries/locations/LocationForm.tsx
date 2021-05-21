@@ -48,7 +48,7 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
     initialValues = {
       name: currentRecord.name,
       code: currentRecord.code || '',
-      extraMetadata: currentRecord.extra_metadata ? JSON.stringify(currentRecord.extra_metadata) : null,
+      extraMetadata: JSON.stringify(currentRecord.extra_metadata),
       accessModifier: currentRecord.access_modifier,
       selectedAsset: {
         asset: relatedAsset && currentRecord.object && currentRecord.object.type && currentRecord.object.id ? {
@@ -76,7 +76,7 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
     const body = {
       name: values.name,
       code: values.code,
-      extra_metadata: values.extraMetadata,
+      extra_metadata: values.extraMetadata ? JSON.parse(values.extraMetadata) : {},
       access_modifier: values.accessModifier,
       geometry: values.selectedAsset && geometryValidator(values.selectedAsset.location) ? {
         "type":"Point",

@@ -8,10 +8,11 @@ import { AccessModifier } from '../../../form/AccessModifier';
 import { SelectDropdown } from '../../../form/SelectDropdown';
 import { DurationField } from '../../../form/DurationField';
 import { CheckBox } from '../../../form/CheckBox';
+import { TextArea } from '../../../form/TextArea';
 import { SubmitButton } from '../../../form/SubmitButton';
 import { CancelButton } from '../../../form/CancelButton';
 import { useForm, Values } from '../../../form/useForm';
-import { minLength, required } from '../../../form/validators';
+import { jsonValidator, minLength, required } from '../../../form/validators';
 import { fetchObservationTypes } from '../../rasters/RasterLayerForm';
 import { addNotification, removeLocation } from '../../../actions';
 import { convertToSelectObject } from '../../../utils/convertToSelectObject';
@@ -63,6 +64,7 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
     valueType: currentTimeseries.value_type ? convertToSelectObject(currentTimeseries.value_type) : null,
     intervalCheckbox: !(currentTimeseries.interval === null),
     interval: currentTimeseries.interval ? toISOValue(convertSecondsToDurationObject(currentTimeseries.interval)) : '',
+    extraMetadata: JSON.stringify(currentTimeseries.extra_metadata),
     accessModifier: currentTimeseries.access_modifier,
     supplier: currentTimeseries.supplier ? convertToSelectObject(currentTimeseries.supplier) : null,
     supplierCode: currentTimeseries.supplier_code,
@@ -74,6 +76,7 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
     value_type: null,
     intervalCheckbox: false,
     interval: null,
+    extraMetadata: null,
     accessModifier: 'Private',
     supplier: username ? convertToSelectObject(username) : null,
     supplierCode: null
@@ -87,6 +90,7 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
       location: values.location && values.location.value,
       value_type: values.valueType && values.valueType.value,
       interval: values.intervalCheckbox ? convertDurationObjToSeconds(fromISOValue(values.interval)) : null,
+      extra_metadata: values.extraMetadata ? JSON.parse(values.extraMetadata) : {},
       access_modifier: values.accessModifier,
       supplier: values.supplier && values.supplier.value,
       supplier_code: values.supplierCode,
@@ -313,6 +317,19 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
             onBlur={handleBlur}
           />
         </label>
+        <TextArea
+          title={'Extra metadata (JSON)'}
+          name={'extraMetadata'}
+          placeholder={'Please enter in valid JSON format'}
+          value={values.extraMetadata}
+          valueChanged={handleInputChange}
+          clearInput={clearInput}
+          validated={!jsonValidator(values.extraMetadata)}
+          errorMessage={jsonValidator(values.extraMetadata)}
+          triedToSubmit={triedToSubmit}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+        />
         <span className={formStyles.FormFieldTitle}>
           3: Rights
         </span>
