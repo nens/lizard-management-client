@@ -11,6 +11,7 @@ import { addNotification } from '../actions';
 import { getSelectedOrganisation } from '../reducers';
 import { emailValidator } from '../form/validators';
 import { userFormHelpText } from '../utils/help_texts/helpTextForUsers';
+import { fetchWithOptions } from '../utils/fetchWithOptions';
 import FormActionButtons from '../components/FormActionButtons';
 import DeleteModal from '../components/DeleteModal';
 import formStyles from './../styles/Forms.module.css';
@@ -24,13 +25,6 @@ const UserForm: React.FC<Props & DispatchProps & RouteComponentProps> = (props) 
   const { currentUser } = props;
   const selectedOrganisationUuid = useSelector(getSelectedOrganisation).uuid;
   const baseUrl = `/api/v4/organisations/${selectedOrganisationUuid}/users/`;
-
-  const fetchWithOptions = (uuids: string[], fetchOptions: RequestInit) => {
-    const fetches = uuids.map (uuid => {
-      return fetch(baseUrl + uuid + "/", fetchOptions);
-    });
-    return Promise.all(fetches);
-  };
 
   // Delete modal
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -216,7 +210,7 @@ const UserForm: React.FC<Props & DispatchProps & RouteComponentProps> = (props) 
         <DeleteModal
           rows={[currentUser]}
           displayContent={[{name: "username", width: 40}, {name: "email", width: 60}]}
-          fetchFunction={fetchWithOptions}
+          fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
           handleClose={() => setShowDeleteModal(false)}
           tableUrl={'/users'}
           text={'You are deactivating the following user. Please make sure that s/he is not a member of any other organisation before continue.'}

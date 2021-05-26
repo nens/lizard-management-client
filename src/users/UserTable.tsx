@@ -5,6 +5,7 @@ import { getSelectedOrganisation } from '../reducers';
 import { ExplainSideColumn } from '../components/ExplainSideColumn';
 import { UserRoles } from '../form/UserRoles';
 import { userTableHelpText } from '../utils/help_texts/helpTextForUsers';
+import { fetchWithOptions } from '../utils/fetchWithOptions';
 import TableActionButtons from '../components/TableActionButtons';
 import TableStateContainer from '../components/TableStateContainer';
 import DeleteModal from '../components/DeleteModal';
@@ -15,13 +16,6 @@ export const UserTable = (props: RouteComponentProps) =>  {
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const baseUrl = `/api/v4/organisations/${selectedOrganisation.uuid}/users/`;
   const navigationUrl = "/users";
-
-  const fetchWithOptions = (uuids: string[], fetchOptions: RequestInit) => {
-    const fetches = uuids.map (uuid => {
-      return fetch(baseUrl + uuid + "/", fetchOptions);
-    });
-    return Promise.all(fetches);
-  };
 
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const [resetTable, setResetTable] = useState<Function | null>(null);
@@ -145,7 +139,7 @@ export const UserTable = (props: RouteComponentProps) =>  {
         <DeleteModal
           rows={selectedRows}
           displayContent={[{name: "username", width: 40}, {name: "email", width: 60}]}
-          fetchFunction={fetchWithOptions}
+          fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
           resetTable={resetTable}
           handleClose={() => {
             setSelectedRows([]);
