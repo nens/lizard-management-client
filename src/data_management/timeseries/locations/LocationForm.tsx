@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { connect, useSelector } from 'react-redux';
 import { getSelectedOrganisation } from '../../../reducers';
@@ -20,7 +20,8 @@ import { baseUrl } from './LocationsTable';
 import FormActionButtons from '../../../components/FormActionButtons';
 import Modal from '../../../components/Modal';
 import DeleteModal from '../../../components/DeleteModal';
-
+import DeleteLocationNotAllowed from './DeleteLocationNotAllowed';
+import MDSpinner from 'react-md-spinner';
 
 interface Props {
   currentRecord?: any;
@@ -35,6 +36,19 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const [locationCreatedModal, setLocationCreatedModal] = useState<boolean>(false);
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+  const [dependentTimeseries, setDependentTimeseries] = useState<any[] | null>(null);
+
+  useEffect(() => {
+    if (currentRecord && currentRecord.uuid) {
+      fetch(`/api/v4/timeseries/?page_size=0&location__uuid=${currentRecord.uuid}`, {
+        credentials: "same-origin"
+      }).then(
+        res => res.json()
+      ).then(
+        data => setDependentTimeseries(data)
+      ).catch(console.error);
+    };
+  }, [currentRecord]);
 
   let initialValues;
   if (currentRecord) {
@@ -282,13 +296,31 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
           <p>You can choose to add a new time series to the location or go back to the location list.</p>
         </Modal>
       ) : null}
-      {currentRecord && showDeleteModal ? (
+      {currentRecord && showDeleteModal && !dependentTimeseries ? (
+        <Modal
+          title={'Loading'}
+          cancelAction={() => {
+            setShowDeleteModal(false);
+            setDependentTimeseries(null);
+          }}
+        >
+          <MDSpinner size={24} /><span style={{ marginLeft: 40 }}>Loading dependent time series ...</span>
+        </Modal>
+      ) : null}
+      {currentRecord && showDeleteModal && dependentTimeseries && dependentTimeseries.length === 0 ? (
         <DeleteModal
           rows={[currentRecord]}
           displayContent={[{name: "name", width: 40}, {name: "uuid", width: 60}]}
           fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
           handleClose={() => setShowDeleteModal(false)}
           tableUrl={'/data_management/timeseries/locations'}
+        />
+      ) : null}
+      {currentRecord && showDeleteModal && dependentTimeseries && dependentTimeseries.length ? (
+        <DeleteLocationNotAllowed
+          name={currentRecord.name}
+          uuids={dependentTimeseries.map(ts => ts.uuid)}
+          closeDialogAction={() => setShowDeleteModal(false)}
         />
       ) : null}
     </ExplainSideColumn>

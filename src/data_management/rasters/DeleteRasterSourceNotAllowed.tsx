@@ -32,8 +32,7 @@ const DeleteRasterSourceNotAllowed: React.FC<MyProps> = (props) => {
   //   });
   //   return Promise.all(fetches)
   // }
-  
-  
+
   // const [layers, setLayers] = useState<any[]>([]);
   // const [labelTypes, setLabelTypes] = useState<any[]>([]);
   // const [spinner, ] = useState<any[]>([]);
@@ -56,56 +55,56 @@ const DeleteRasterSourceNotAllowed: React.FC<MyProps> = (props) => {
       title={"Not allowed"}
       closeDialogAction={closeDialogAction}
     >
-          {"You are trying to delete the raster-source "}
-          <a target="_blank" rel="noopener noreferrer" href={`/management#/data_management/rasters/sources/${rowToBeDeleted.uuid}`}>{rowToBeDeleted.name}</a>
-          <br></br>
-          {"but this raster-source still has dependent objects."} 
-          <br></br>
-          <br></br>
-          Please handle dependent objects first by:
-          <br></br>
-          <br></br>
+      {"You are trying to delete the raster-source "}
+      <a target="_blank" rel="noopener noreferrer" href={`/management#/data_management/rasters/sources/${rowToBeDeleted.uuid}`}>{rowToBeDeleted.name}</a>
+      <br></br>
+      {"but this raster-source still has dependent objects."} 
+      <br></br>
+      <br></br>
+      Please handle dependent objects first by either:
+      <br></br>
+      <br></br>
+      <ul>
+        <li>Connecting them to another raster-source</li>
+        <li>Deleting them</li>
+      </ul>
+      <br></br>
+      <div
+        style={{
+          overflowY: "auto",
+          maxHeight: "210px",
+        }}
+      >
+        {layerUrls.length > 0?
+        <div>
+          <label>Dependent raster-layers:</label>
           <ul>
-            <li>Connecting them to another raster-source, or</li>
-            <li>Deleting them</li>
+            {layerUrls.map((url:string)=>{return(
+              <li key={url}>
+                <a target="_blank" rel="noopener noreferrer" href={url}>{url}</a>
+              </li>
+            )})}
           </ul>
-          <br></br>
-          <div
-            style={{
-              overflowY: "auto",
-              maxHeight: "210px",
-            }}
-          >
-            {layerUrls.length > 0?
-            <div>
-              <label>Dependent raster-layers:</label>
-              <ul>
-                {layerUrls.map((url:string)=>{return(
-                  <li>
-                    <a target="_blank" rel="noopener noreferrer" href={url}>{url}</a>
-                  </li>
-                )})}
-              </ul>
-            </div>
-            :
-            null
-            }
-            <br></br>
-            {labelTypeUrls.length > 0?
-            <div>
-              <label>Dependent labeltypes:</label>
-              <ul>
-                {labelTypeUrls.map((url:string)=>{return(
-                  <li>
-                    <a target="_blank" rel="noopener noreferrer" href={url}>{url}</a>
-                  </li>
-                )})}
-              </ul>
-            </div>
-            :
-            null
-            }
-          </div>
+        </div>
+        :
+        null
+        }
+        <br></br>
+        {labelTypeUrls.length > 0?
+        <div>
+          <label>Dependent labeltypes:</label>
+          <ol>
+            {labelTypeUrls.map((url:string)=>{return(
+              <li>
+                <a target="_blank" rel="noopener noreferrer" href={url}>{url}</a>
+              </li>
+            )})}
+          </ol>
+        </div>
+        :
+        null
+        }
+      </div>
     </Modal>
   )
 }
