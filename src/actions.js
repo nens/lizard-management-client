@@ -119,13 +119,13 @@ export function fetchOrganisations() {
 
     const allOrganisations = allOrganisationsParsedRes.results.map(org => ({
       ...org,
-      uuid: org.uuid.replace(/-/g, "")
+      uuid: org.uuid
     }));
 
     // All user roles are accepted in the management page
     const availableOrganisations = availableOrganisationsParsedRes.results.map(org => ({
       ...org,
-      uuid: org.uuid.replace(/-/g, "")
+      uuid: org.uuid
     }));
 
     // Dispatch action to update Redux store

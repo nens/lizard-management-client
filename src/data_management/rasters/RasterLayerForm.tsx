@@ -125,8 +125,8 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
     observationType: currentRasterLayer.observation_type ? convertToSelectObject(currentRasterLayer.observation_type.id, currentRasterLayer.observation_type.code) : null,
     colorMap: {options: currentRasterLayer.options, rescalable: currentRasterLayer.rescalable, customColormap: currentRasterLayer.colormap || {}},
     sharedWith: currentRasterLayer.shared_with.length === 0 ? false : true,
-    organisationsToSharedWith: currentRasterLayer.shared_with.map(organisation => convertToSelectObject(organisation.uuid.replace(/-/g, ""), organisation.name)) || [],
-    organisation: currentRasterLayer.organisation ? convertToSelectObject(currentRasterLayer.organisation.uuid.replace(/-/g, ""), currentRasterLayer.organisation.name) : null,
+    organisationsToSharedWith: currentRasterLayer.shared_with.map(organisation => convertToSelectObject(organisation.uuid, organisation.name)) || [],
+    organisation: currentRasterLayer.organisation ? convertToSelectObject(currentRasterLayer.organisation.uuid, currentRasterLayer.organisation.name) : null,
     supplier: currentRasterLayer.supplier ? convertToSelectObject(currentRasterLayer.supplier) : null,
   } : {
     name: null,
@@ -138,7 +138,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
     colorMap: {options: {}, rescalable: true, customColormap: {}},
     sharedWith: false,
     organisationsToSharedWith: [],
-    organisation: selectedOrganisation ? convertToSelectObject(selectedOrganisation.uuid.replace(/-/g, ""), selectedOrganisation.name) : null,
+    organisation: selectedOrganisation ? convertToSelectObject(selectedOrganisation.uuid, selectedOrganisation.name) : null,
     supplier: null,
   };
   const onSubmit = (values: Values) => {
