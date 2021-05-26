@@ -367,7 +367,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           title={'Organisation *'}
           name={'organisation'}
           placeholder={'- Search and select -'}
-          value={typeof values.organisation === "string" ? values.organisation.replace(/-/g, ""): (values.organisation) }
+          value={typeof values.organisation === "string" ? values.organisation : (values.organisation) }
           valueChanged={value => handleValueChange('organisation', value)}
           options={organisations.map((organisation: any) => convertToSelectObject(organisation.uuid, organisation.name))}
           validated={values.organisation !== null && values.organisation !== ""}

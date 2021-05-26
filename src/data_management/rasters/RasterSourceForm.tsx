@@ -53,7 +53,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
     temporal: currentRasterSource.temporal,
     interval: currentRasterSource.interval ? toISOValue(rasterIntervalStringServerToDurationObject(currentRasterSource.interval)) : '',
     accessModifier: currentRasterSource.access_modifier,
-    organisation: currentRasterSource.organisation ? convertToSelectObject(currentRasterSource.organisation.uuid.replace(/-/g, ""), currentRasterSource.organisation.name) : null,
+    organisation: currentRasterSource.organisation ? convertToSelectObject(currentRasterSource.organisation.uuid, currentRasterSource.organisation.name) : null,
     data: [],
   } : {
     name: null,
@@ -63,7 +63,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
     temporal: false,
     interval: null,
     accessModifier: 'Private',
-    organisation: selectedOrganisation ? convertToSelectObject(selectedOrganisation.uuid.replace(/-/g, ""), selectedOrganisation.name) : null,
+    organisation: selectedOrganisation ? convertToSelectObject(selectedOrganisation.uuid, selectedOrganisation.name) : null,
     data: []
   };
 

@@ -31,7 +31,7 @@ const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProp
   const { currentScenario } = props;
   const scenarioTotalSize = useSelector(getScenarioTotalSize);
   const organisations = useSelector(getOrganisations).available;
-  const scenarioOrganisation = organisations.find((org: any) => org.uuid === currentScenario.organisation.uuid.replace(/-/g, ""));
+  const scenarioOrganisation = organisations.find((org: any) => org.uuid === currentScenario.organisation.uuid);
   const username = useSelector(getUsername);
   const selectedOrganisation = useSelector(getSelectedOrganisation);
 

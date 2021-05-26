@@ -38,12 +38,12 @@ const MonitoringNetworkForm = (props: Props & DispatchProps & RouteComponentProp
     name: currentNetwork.name,
     description: currentNetwork.description,
     accessModifier: currentNetwork.access_modifier,
-    organisation: currentNetwork.organisation ? convertToSelectObject(currentNetwork.organisation.uuid.replace(/-/g, ""), currentNetwork.organisation.name) : null
+    organisation: currentNetwork.organisation ? convertToSelectObject(currentNetwork.organisation.uuid, currentNetwork.organisation.name) : null
   } : {
     name: null,
     description: null,
     accessModifier: 'Private',
-    organisation: selectedOrganisation ? convertToSelectObject(selectedOrganisation.uuid.replace(/-/g, ""), selectedOrganisation.name) : null
+    organisation: selectedOrganisation ? convertToSelectObject(selectedOrganisation.uuid, selectedOrganisation.name) : null
   };
 
   const onSubmit = (values: Values) => {
