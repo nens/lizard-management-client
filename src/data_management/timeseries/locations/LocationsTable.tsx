@@ -172,6 +172,7 @@ export const LocationsTable = (props: RouteComponentProps) =>  {
           resetTable={resetTable}
           handleClose={() => {
             setRowToBeDeleted(null);
+            setDependentTimeseries(null);
             setResetTable(null);
           }}
         />
