@@ -12,6 +12,9 @@ import { getSelectedOrganisation } from '../../reducers';
 import { SelectDropdown, Value } from '../../form/SelectDropdown';
 import { convertToSelectObject } from '../../utils/convertToSelectObject';
 import { groupFormHelpText } from '../../utils/help_texts/helpTextForAlarmGroups';
+import { fetchWithOptions } from '../../utils/fetchWithOptions';
+import { baseUrl } from './GroupTable';
+import DeleteModal from '../../components/DeleteModal';
 import FormActionButtons from '../../components/FormActionButtons';
 import GroupMessage from './GroupMessage';
 import formStyles from './../../styles/Forms.module.css';
@@ -103,6 +106,8 @@ const GroupForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pr
 
   // Modal to send message to all contacts in group
   const [showGroupMessageModal, setShowGroupMessageModal] = useState<boolean>(false);
+  // Modal to delete the selected group
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
 
   const {
     values,
@@ -173,6 +178,10 @@ const GroupForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pr
                 <FormActionButtons
                   actions={[
                     {
+                      displayValue: "Delete",
+                      actionFunction: () => setShowDeleteModal(true)
+                    },
+                    {
                       displayValue: "Send message",
                       actionFunction: () => setShowGroupMessageModal(true)
                     }
@@ -191,6 +200,15 @@ const GroupForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pr
             handleClose={() => setShowGroupMessageModal(false)}
           />
         ) :null}
+        {currentGroup && showDeleteModal ? (
+          <DeleteModal
+            rows={[currentGroup]}
+            displayContent={[{name: "name", width: 30}, {name: "id", width: 70}]}
+            fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
+            handleClose={() => setShowDeleteModal(false)}
+            tableUrl={'/alarms/groups'}
+          />
+        ) : null}
       </form>
     </ExplainSideColumn>
   );

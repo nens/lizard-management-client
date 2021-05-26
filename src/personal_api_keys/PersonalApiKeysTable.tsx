@@ -7,16 +7,10 @@ import personalApiKeysIcon from "../images/personal_api_key_icon.svg";
 import TableActionButtons from '../components/TableActionButtons';
 import { personalApiKeysFormHelpText } from '../utils/help_texts/helpTextForPersonalAPIKeys';
 import DeleteModal from '../components/DeleteModal';
+import { fetchWithOptions } from '../utils/fetchWithOptions';
 
-const baseUrl = "/api/v4/personalapikeys/";
+export const baseUrl = "/api/v4/personalapikeys/";
 const navigationUrl = "/personal_api_keys";
-
-export const fetchWithOptions = (uuids: string[], fetchOptions: RequestInit) => {
-  const fetches = uuids.map (uuid => {
-    return fetch(baseUrl + uuid + "/", fetchOptions);
-  });
-  return Promise.all(fetches);
-};
 
 export const PersonalApiKeysTable = (props: RouteComponentProps) =>  {
   const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
@@ -121,7 +115,7 @@ export const PersonalApiKeysTable = (props: RouteComponentProps) =>  {
         <DeleteModal
           rows={rowsToBeDeleted}
           displayContent={[{name: "name", width: 65}, {name: "prefix", width: 35}]}
-          fetchFunction={fetchWithOptions}
+          fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
           resetTable={resetTable}
           handleClose={() => {
             setRowsToBeDeleted([]);

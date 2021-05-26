@@ -3,20 +3,14 @@ import { NavLink, RouteComponentProps } from "react-router-dom";
 import TableStateContainer from '../../components/TableStateContainer';
 import TableActionButtons from '../../components/TableActionButtons';
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
+import { fetchWithOptions } from '../../utils/fetchWithOptions';
 import DeleteModal from '../../components/DeleteModal';
 import AddToGroupModal from './AddToGroupModal';
 import contactIcon from "../../images/contacts@3x.svg";
 import tableStyles from "../../components/Table.module.css";
 
-const baseUrl = "/api/v4/contacts/";
+export const baseUrl = "/api/v4/contacts/";
 const navigationUrl = "/alarms/contacts";
-
-const fetchContactsWithOptions = (ids: string[], fetchOptions: RequestInit) => {
-  const fetches = ids.map (id => {
-    return fetch(baseUrl + id + "/", fetchOptions);
-  });
-  return Promise.all(fetches)
-}
 
 export const ContactTable: React.FC<RouteComponentProps> = (props) =>  {
   const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
@@ -159,7 +153,7 @@ export const ContactTable: React.FC<RouteComponentProps> = (props) =>  {
           <DeleteModal
             rows={rowsToBeDeleted}
             displayContent={[{name: "first_name", width: 20}, {name: "email", width: 50}, {name: "id", width: 30}]}
-            fetchFunction={fetchContactsWithOptions}
+            fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
             resetTable={resetTable}
             handleClose={() => {
               setRowsToBeDeleted([]);

@@ -15,7 +15,11 @@ import LocationIcon from "../../../images/locations_icon.svg";
 import { AccessModifier } from '../../../form/AccessModifier';
 import { AssetPointSelection } from '../../../form/AssetPointSelection';
 import { locationFormHelpText } from '../../../utils/help_texts/helpTextsForLocations';
+import { fetchWithOptions } from '../../../utils/fetchWithOptions';
+import { baseUrl } from './LocationsTable';
+import FormActionButtons from '../../../components/FormActionButtons';
 import Modal from '../../../components/Modal';
+import DeleteModal from '../../../components/DeleteModal';
 
 
 interface Props {
@@ -30,6 +34,7 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
   const { currentRecord, relatedAsset } = props;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const [locationCreatedModal, setLocationCreatedModal] = useState<boolean>(false);
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
 
   let initialValues;
   if (currentRecord) {
@@ -244,9 +249,23 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
           <CancelButton
             url={'/data_management/timeseries/locations'}
           />
-          <SubmitButton
-            onClick={tryToSubmitForm}
-          />
+          <div style={{display: "flex"}}>
+            {currentRecord ? (
+              <div style={{ marginRight: 16 }}>
+                <FormActionButtons
+                  actions={[
+                    {
+                      displayValue: "Delete",
+                      actionFunction: () => setShowDeleteModal(true)
+                    },
+                  ]} 
+                />
+              </div>
+            ) : null}
+            <SubmitButton
+              onClick={tryToSubmitForm}
+            />
+          </div>
         </div>
       </form>
       {locationCreatedModal ? (
@@ -262,6 +281,15 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
           <p>A new location has been created.</p>
           <p>You can choose to add a new time series to the location or go back to the location list.</p>
         </Modal>
+      ) : null}
+      {currentRecord && showDeleteModal ? (
+        <DeleteModal
+          rows={[currentRecord]}
+          displayContent={[{name: "name", width: 40}, {name: "uuid", width: 60}]}
+          fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
+          handleClose={() => setShowDeleteModal(false)}
+          tableUrl={'/data_management/timeseries/locations'}
+        />
       ) : null}
     </ExplainSideColumn>
   );

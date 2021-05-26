@@ -4,21 +4,15 @@ import { NavLink, RouteComponentProps } from "react-router-dom";
 import { ExplainSideColumn } from '../../../components/ExplainSideColumn';
 import { getAccessibiltyText } from '../../../form/AccessModifier';
 import { defaultTableHelpText } from '../../../utils/help_texts/defaultHelpText';
+import { fetchWithOptions } from '../../../utils/fetchWithOptions';
 import TableActionButtons from '../../../components/TableActionButtons';
 import AuthorisationModal from '../../../components/AuthorisationModal';
 import DeleteModal from '../../../components/DeleteModal';
 import tableStyles from "../../../components/Table.module.css";
 import locationIcon from "../../../images/locations_icon.svg";
 
-const baseUrl = "/api/v4/locations/";
+export const baseUrl = "/api/v4/locations/";
 const navigationUrl = "/data_management/timeseries/locations";
-
-const fetchLocationsWithOptions = (uuids: string[], fetchOptions: RequestInit) => {
-  const fetches = uuids.map (uuid => {
-    return fetch(baseUrl + uuid + "/", fetchOptions);
-  });
-  return Promise.all(fetches);
-};
 
 export const LocationsTable = (props: RouteComponentProps) =>  {
   const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
@@ -151,7 +145,7 @@ export const LocationsTable = (props: RouteComponentProps) =>  {
         <DeleteModal
           rows={rowsToBeDeleted}
           displayContent={[{name: "name", width: 40}, {name: "uuid", width: 60}]}
-          fetchFunction={fetchLocationsWithOptions}
+          fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
           resetTable={resetTable}
           handleClose={() => {
             setRowsToBeDeleted([]);
@@ -162,7 +156,7 @@ export const LocationsTable = (props: RouteComponentProps) =>  {
       {selectedRows.length > 0 ? (
         <AuthorisationModal
           rows={selectedRows}
-          fetchFunction={fetchLocationsWithOptions}
+          fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
           resetTable={resetTable}
           handleClose={() => {
             setSelectedRows([]);

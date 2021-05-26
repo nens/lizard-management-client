@@ -6,18 +6,12 @@ import TableActionButtons from '../../../components/TableActionButtons';
 import tableStyles from "../../../components/Table.module.css";
 import { ExplainSideColumn } from '../../../components/ExplainSideColumn';
 import { addNotification } from '../../../actions';
+import { fetchWithOptions } from '../../../utils/fetchWithOptions';
 import DeleteModal from '../../../components/DeleteModal';
 import alarmIcon from "../../../images/alarm@3x.svg";
 
-const baseUrl = "/api/v4/timeseriesalarms/";
+export const baseUrl = "/api/v4/timeseriesalarms/";
 const navigationUrl = "/alarms/notifications/timeseries_alarms";
-
-const fetchTimeseriesAlarmsWithOptions = (uuids: string[], fetchOptions: RequestInit) => {
-  const fetches = uuids.map (uuid => {
-    return fetch(baseUrl + uuid + "/", fetchOptions);
-  });
-  return Promise.all(fetches)
-};
 
 export const TimeseriesAlarmTableComponent: React.FC<DispatchProps & RouteComponentProps> = (props) =>  {
   const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
@@ -36,7 +30,7 @@ export const TimeseriesAlarmTableComponent: React.FC<DispatchProps & RouteCompon
   };
 
   const setAlarmActive = (row: any, updateTableRow: any, triggerReloadWithCurrentPage: any) => {
-    fetchTimeseriesAlarmsWithOptions([row.uuid], {
+    fetchWithOptions(baseUrl, [row.uuid], {
       credentials: "same-origin",
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -155,7 +149,7 @@ export const TimeseriesAlarmTableComponent: React.FC<DispatchProps & RouteCompon
           <DeleteModal
             rows={rowsToBeDeleted}
             displayContent={[{name: "name", width: 40}, {name: "uuid", width: 60}]}
-            fetchFunction={fetchTimeseriesAlarmsWithOptions}
+            fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
             resetTable={resetTable}
             handleClose={() => {
               setRowsToBeDeleted([]);
