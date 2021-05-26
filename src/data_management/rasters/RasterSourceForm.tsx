@@ -11,18 +11,23 @@ import { SubmitButton } from '../../form/SubmitButton';
 import { CancelButton } from '../../form/CancelButton';
 import { SelectDropdown } from '../../form/SelectDropdown';
 import { AcceptedFile, UploadRasterData } from './../../form/UploadRasterData';
-import Modal from '../../components/Modal';
 import { getOrganisations, getSelectedOrganisation, getSupplierIds } from '../../reducers';
 import { useForm, Values } from '../../form/useForm';
 import { minLength } from '../../form/validators';
 import { AccessModifier } from '../../form/AccessModifier';
 import { rasterIntervalStringServerToDurationObject, toISOValue } from '../../utils/isoUtils';
 import { addFilesToQueue, addNotification, updateRasterSourceUUID } from '../../actions';
-import rasterSourceIcon from "../../images/raster_source_icon.svg";
-import formStyles from './../../styles/Forms.module.css';
 import { sendDataToLizardRecursive } from '../../utils/sendDataToLizard';
 import { rasterSourceFormHelpText } from '../../utils/help_texts/helpTextForRasters';
 import { convertToSelectObject } from '../../utils/convertToSelectObject';
+import { fetchWithOptions } from '../../utils/fetchWithOptions';
+import { baseUrl } from './RasterSourceTable';
+import Modal from '../../components/Modal';
+import FormActionButtons from '../../components/FormActionButtons';
+import DeleteModal from '../../components/DeleteModal';
+import rasterSourceIcon from "../../images/raster_source_icon.svg";
+import formStyles from './../../styles/Forms.module.css';
+import DeleteRasterSourceNotAllowed from './DeleteRasterSourceNotAllowed';
 
 interface Props {
   currentRasterSource?: RasterSourceFromAPI
@@ -43,6 +48,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const organisationsToSwitchTo = organisations.filter((org: any) => org.roles.includes('admin'));
   const [rasterCreatedModal, setRasterCreatedModal] = useState<boolean>(false);
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
 
   const initialValues = currentRasterSource ? {
     name: currentRasterSource.name,
@@ -291,9 +297,23 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           <CancelButton
             url={'/data_management/rasters/sources'}
           />
-          <SubmitButton
-            onClick={tryToSubmitForm}
-          />
+          <div style={{display: "flex"}}>
+            {currentRasterSource ? (
+              <div style={{ marginRight: 16 }}>
+                <FormActionButtons
+                  actions={[
+                    {
+                      displayValue: "Delete",
+                      actionFunction: () => setShowDeleteModal(true)
+                    },
+                  ]}
+                />
+              </div>
+            ) : null}
+            <SubmitButton
+              onClick={tryToSubmitForm}
+            />
+          </div>
         </div>
       </form>
       {rasterCreatedModal ? (
@@ -305,6 +325,21 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           <p>A layer is needed to view the raster in the portal.</p>
           <p>We automatically created a layer for you to compose. You will now be redirected to the layer management.</p>
         </Modal>
+      ) : null}
+      {showDeleteModal && currentRasterSource && currentRasterSource.layers.length === 0 && currentRasterSource.labeltypes.length === 0 ? (
+        <DeleteModal
+          rows={[currentRasterSource]}
+          displayContent={[{name: "name", width: 65}, {name: "uuid", width: 35}]}
+          fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
+          handleClose={() => setShowDeleteModal(false)}
+          tableUrl={'/data_management/rasters/sources'}
+        />
+      ) : null}
+      {showDeleteModal && currentRasterSource && (currentRasterSource.layers.length !== 0 || currentRasterSource.labeltypes.length !== 0) ? (
+        <DeleteRasterSourceNotAllowed
+          closeDialogAction={() => setShowDeleteModal(false)}
+          rowToBeDeleted={currentRasterSource}
+        />
       ) : null}
     </ExplainSideColumn>
   );
