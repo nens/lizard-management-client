@@ -4,18 +4,12 @@ import TableStateContainer from '../../components/TableStateContainer';
 import TableActionButtons from '../../components/TableActionButtons';
 import tableStyles from "../../components/Table.module.css";
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
+import { fetchWithOptions } from '../../utils/fetchWithOptions';
 import DeleteModal from '../../components/DeleteModal';
 import templateIcon from "../../images/templates@3x.svg";
 
-const baseUrl = "/api/v4/messages/";
+export const baseUrl = "/api/v4/messages/";
 const navigationUrl = "/alarms/templates";
-
-const fetchTemplatesWithOptions = (ids: string[], fetchOptions: RequestInit) => {
-  const fetches = ids.map (id => {
-    return fetch(baseUrl + id + "/", fetchOptions);
-  });
-  return Promise.all(fetches)
-};
 
 export const TemplateTable: React.FC<RouteComponentProps> = (props) =>  {
   const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
@@ -119,7 +113,7 @@ export const TemplateTable: React.FC<RouteComponentProps> = (props) =>  {
           <DeleteModal
             rows={rowsToBeDeleted}
             displayContent={[{name: "name", width: 30}, {name: "type", width: 20}, {name: "id", width: 50}]}
-            fetchFunction={fetchTemplatesWithOptions}
+            fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
             resetTable={resetTable}
             handleClose={() => {
               setRowsToBeDeleted([]);

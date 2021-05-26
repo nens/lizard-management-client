@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { connect, useSelector } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -15,9 +15,13 @@ import { SelectDropdown } from '../../form/SelectDropdown';
 import { convertToSelectObject } from '../../utils/convertToSelectObject';
 import { minLength } from '../../form/validators';
 import { templateFormHelpText } from '../../utils/help_texts/helpTextForAlarmTemplate';
+import { fetchWithOptions } from '../../utils/fetchWithOptions';
+import { baseUrl } from './TemplateTable';
+import DeleteModal from '../../components/DeleteModal';
 import formStyles from './../../styles/Forms.module.css';
 import buttonStyles from './../../styles/Buttons.module.css';
 import templateIcon from "../../images/templates@3x.svg";
+import FormActionButtons from '../../components/FormActionButtons';
 
 interface Props {
   currentTemplate?: any
@@ -93,6 +97,7 @@ export const availableParameters = [
 const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (props) => {
   const { currentTemplate } = props;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
 
   const initialValues = currentTemplate ? {
     name: currentTemplate.name,
@@ -355,11 +360,34 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           <CancelButton
             url={'/alarms/templates'}
           />
-          <SubmitButton
-            onClick={tryToSubmitForm}
-          />
+          <div style={{display: "flex"}}>
+            {currentTemplate ? (
+              <div style={{ marginRight: 16 }}>
+                <FormActionButtons
+                  actions={[
+                    {
+                      displayValue: "Delete",
+                      actionFunction: () => setShowDeleteModal(true)
+                    },
+                  ]} 
+                />
+              </div>
+            ) : null}
+            <SubmitButton
+              onClick={tryToSubmitForm}
+            />
+          </div>
         </div>
       </form>
+      {currentTemplate && showDeleteModal ? (
+        <DeleteModal
+          rows={[currentTemplate]}
+          displayContent={[{name: "name", width: 30}, {name: "type", width: 20}, {name: "id", width: 50}]}
+          fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
+          handleClose={() => setShowDeleteModal(false)}
+          tableUrl={'/alarms/templates'}
+        />
+      ) : null}
     </ExplainSideColumn>
   );
 };

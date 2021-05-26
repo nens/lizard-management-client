@@ -9,16 +9,10 @@ import buttonStyles from "../../styles/Buttons.module.css";
 import { RasterSourceModal } from './RasterSourceModal';
 import { defaultRasterLayerHelpTextTable } from '../../utils/help_texts/helpTextForRasters';
 import DeleteModal from '../../components/DeleteModal';
+import { fetchWithOptions } from '../../utils/fetchWithOptions';
 
-const baseUrl = "/api/v4/rasters/";
+export const baseUrl = "/api/v4/rasters/";
 const navigationUrlRasters = "/data_management/rasters/layers";
-
-export const fetchRasterLayersWithOptions = (uuids: string[], fetchOptions: RequestInit) => {
-  const fetches = uuids.map (uuid => {
-    return fetch(baseUrl + uuid + "/", fetchOptions);
-  });
-  return Promise.all(fetches);
-};
 
 export const RasterLayerTable: React.FC<RouteComponentProps> = (props) =>  {
   const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
@@ -147,7 +141,7 @@ export const RasterLayerTable: React.FC<RouteComponentProps> = (props) =>  {
           <DeleteModal
             rows={rowsToBeDeleted}
             displayContent={[{name: "name", width: 40}, {name: "uuid", width: 60}]}
-            fetchFunction={fetchRasterLayersWithOptions}
+            fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
             resetTable={resetTable}
             handleClose={() => {
               setRowsToBeDeleted([]);

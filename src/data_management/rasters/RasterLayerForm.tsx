@@ -36,9 +36,10 @@ import rasterLayerIcon from "../../images/raster_layer_icon.svg";
 import formStyles from './../../styles/Forms.module.css';
 import FormActionButtons from '../../components/FormActionButtons';
 import DeleteModal from '../../components/DeleteModal';
-import { fetchRasterLayersWithOptions } from './RasterLayerTable';
 import { SelectDropdown } from '../../form/SelectDropdown';
 import { convertToSelectObject } from '../../utils/convertToSelectObject';
+import { fetchWithOptions } from '../../utils/fetchWithOptions';
+import { baseUrl } from './RasterLayerTable';
 
 interface Props {
   currentRasterLayer?: RasterLayerFromAPI,
@@ -479,34 +480,31 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
             url={'/data_management/rasters/layers'}
             form={"raster_layer_form_id"}
           />
-          <div style={{
-            display: "flex"
-          }}>
-            {currentRasterLayer?
-             <div style={{marginRight: "16px"}}> 
-              <FormActionButtons
-                actions={[
-                  {
-                    displayValue: "Delete",
-                    actionFunction: () => {setShowDeleteModal(true)}
-                  },
-                ]}
-              />
-            </div>
-            :null}
+          <div style={{ display: "flex" }}>
+            {currentRasterLayer ? (
+              <div style={{ marginRight: 16 }}> 
+                <FormActionButtons
+                  actions={[
+                    {
+                      displayValue: "Delete",
+                      actionFunction: () => setShowDeleteModal(true)
+                    },
+                  ]}
+                />
+              </div>
+            ) : null}
             <SubmitButton
               onClick={tryToSubmitForm}
               form={"raster_layer_form_id"}
             />
           </div>
-          
         </div>
       </div>
       {currentRasterLayer && showDeleteModal ? (
         <DeleteModal
           rows={[currentRasterLayer]}
-          displayContent={[{name: "name", width: 65}, {name: "prefix", width: 35}]}
-          fetchFunction={fetchRasterLayersWithOptions}
+          displayContent={[{name: "name", width: 40}, {name: "uuid", width: 60}]}
+          fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
           handleClose={() => setShowDeleteModal(false)}
           tableUrl={'/data_management/rasters/layers'}
         />
