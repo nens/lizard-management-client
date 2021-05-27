@@ -133,7 +133,7 @@ export const UserTable = (props: RouteComponentProps) =>  {
         checkBoxActions={[]}
         newItemOnClick={handleNewClick}
         customTableButton={{
-          name: invitationList ? `${invitationList.length} Pending Invitations` : '0 Pending Invitations',
+          name: invitationList ? `${invitationList.length} Pending ${invitationList.length > 1 ? 'Users' : 'User'}` : '0 Pending User',
           disabled: !invitationList || invitationList.length === 0,
           onClick: () => setInvitationModal(true)
         }}
