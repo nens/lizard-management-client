@@ -28,6 +28,11 @@ interface Props {
   checkBoxActions: checkboxAction[];
   filterOptions?: Value[];
   newItemOnClick?: () => void | null;
+  customTableButton?: {
+    name: string,
+    disabled?: boolean,
+    onClick: () => void
+  };
   queryCheckBox?: {text: string, adaptUrlFunction: (url:string)=>string} | null;
   defaultUrlParams?: string;
 }
@@ -38,8 +43,17 @@ const getRowIdentifier = (row: any): string => {
   return row.uuid || row.id + '';
 };
 
-const TableStateContainer: React.FC<Props> = ({ gridTemplateColumns, columnDefinitions, baseUrl, checkBoxActions, filterOptions, newItemOnClick, queryCheckBox/*action*/, defaultUrlParams }) => {
-
+const TableStateContainer: React.FC<Props> = ({
+  gridTemplateColumns,
+  columnDefinitions,
+  baseUrl,
+  checkBoxActions,
+  filterOptions,
+  newItemOnClick,
+  customTableButton,
+  queryCheckBox,
+  defaultUrlParams,
+}) => {
   const [tableData, setTableData] = useState<any[]>([]);
   const [checkBoxes, setCheckBoxes] = useState<string[]>([]);
   const [currentUrl, setCurrentUrl] = useState("");
@@ -267,33 +281,46 @@ const TableStateContainer: React.FC<Props> = ({ gridTemplateColumns, columnDefin
             />
           </div>
         : <div />}
-        {newItemOnClick ?
-          <button
-            onClick={newItemOnClick}
-            className={buttonStyles.NewButton}
-          >
-            + New Item
-          </button>
-        : null}
-        {queryCheckBox ?
-          <span
-            style={{
-              display: "flex",
-              alignItems: "center",
-              fontWeight: 500
-            }}
-          >
-            <span style={{marginRight: "8px"}}>{queryCheckBox.text}</span>
-             <Checkbox 
-                checked={queryCheckBoxState} 
-                onChange={()=>{
-                  if (queryCheckBoxState) setQueryCheckBoxState(false);
-                  else setQueryCheckBoxState(true)
-                }} 
-                size={32}
-              />
-          </span>
-        : null}
+        <div>
+          {queryCheckBox ?
+            <span
+              style={{
+                display: "flex",
+                alignItems: "center",
+                fontWeight: 500,
+                marginRight: 10,
+              }}
+            >
+              <span style={{marginRight: "8px"}}>{queryCheckBox.text}</span>
+               <Checkbox
+                  checked={queryCheckBoxState}
+                  onChange={()=>{
+                    if (queryCheckBoxState) setQueryCheckBoxState(false);
+                    else setQueryCheckBoxState(true)
+                  }}
+                  size={32}
+                />
+            </span>
+          : null}
+          {customTableButton ? (
+            <button
+              className={buttonStyles.NewButton}
+              onClick={customTableButton.onClick}
+              disabled={customTableButton.disabled}
+              style={{ marginRight: 10 }}
+            >
+              {customTableButton.name}
+            </button>
+          ) : null}
+          {newItemOnClick ?
+            <button
+              onClick={newItemOnClick}
+              className={buttonStyles.NewButton}
+            >
+              + New Item
+            </button>
+          : null}
+        </div>
       </div>
       <div
         // @ts-ignore
