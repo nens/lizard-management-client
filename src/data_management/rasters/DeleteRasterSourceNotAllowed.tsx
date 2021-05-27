@@ -55,20 +55,17 @@ const DeleteRasterSourceNotAllowed: React.FC<MyProps> = (props) => {
       title={"Not allowed"}
       closeDialogAction={closeDialogAction}
     >
-      {"You are trying to delete the raster-source "}
-      <a target="_blank" rel="noopener noreferrer" href={`/management#/data_management/rasters/sources/${rowToBeDeleted.uuid}`}>{rowToBeDeleted.name}</a>
-      <br></br>
-      {"but this raster-source still has dependent objects."} 
-      <br></br>
-      <br></br>
-      Please handle dependent objects first by either:
-      <br></br>
-      <br></br>
+      <p>
+        {'You are trying to delete the raster source '}
+        <a target="_blank" rel="noopener noreferrer" href={`/management#/data_management/rasters/sources/${rowToBeDeleted.uuid}`}>{rowToBeDeleted.name}</a>
+        <br />
+        but this raster source still has dependent objects.
+      </p>
+      <p>Please handle dependent objects first by either:</p>
       <ul>
-        <li>Connecting them to another raster-source</li>
+        <li>Connecting them to another raster source</li>
         <li>Deleting them</li>
       </ul>
-      <br></br>
       <div
         style={{
           overflowY: "auto",
@@ -77,14 +74,14 @@ const DeleteRasterSourceNotAllowed: React.FC<MyProps> = (props) => {
       >
         {layerUrls.length > 0?
         <div>
-          <label>Dependent raster-layers:</label>
-          <ul>
-            {layerUrls.map((url:string)=>{return(
+          <label>Dependent raster layers:</label>
+          <ol>
+            {layerUrls.map((url: string) => (
               <li key={url}>
                 <a target="_blank" rel="noopener noreferrer" href={url}>{url}</a>
               </li>
-            )})}
-          </ul>
+            ))}
+          </ol>
         </div>
         :
         null
@@ -92,13 +89,13 @@ const DeleteRasterSourceNotAllowed: React.FC<MyProps> = (props) => {
         <br></br>
         {labelTypeUrls.length > 0?
         <div>
-          <label>Dependent labeltypes:</label>
+          <label>Dependent label types:</label>
           <ol>
-            {labelTypeUrls.map((url:string)=>{return(
+            {labelTypeUrls.map((url:string) => (
               <li>
                 <a target="_blank" rel="noopener noreferrer" href={url}>{url}</a>
               </li>
-            )})}
+            ))}
           </ol>
         </div>
         :
