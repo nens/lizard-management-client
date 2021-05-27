@@ -172,6 +172,7 @@ export const UserTable = (props: RouteComponentProps) =>  {
       {invitationModal && invitationList ? (
         <InvitationModal
           invitations={invitationList}
+          setInvitations={setInvitationList}
           handleClose={() => setInvitationModal(false)}
         />
       ) : null}
