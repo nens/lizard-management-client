@@ -25,7 +25,7 @@ export const UserTable = (props: RouteComponentProps) =>  {
   const [invitationList, setInvitationList] = useState<any[] | null>(null);
 
   useEffect(() => {
-    fetch('/api/v4/invitations/?page_size=0', {
+    fetch('/api/v4/invitations/?page_size=0&status=pending', {
       credentials: 'same-origin'
     }).then(
       res => res.json()
