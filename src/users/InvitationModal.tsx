@@ -60,14 +60,14 @@ function InvitationModal (props: MyProps & DispatchProps) {
       renderFunction: (row: any) => {
         const createdDate = new Date(row.created_at).getTime();
         const currentDate = new Date().getTime();
-        const dateDifference = Math.floor((currentDate - createdDate) / (1000 * 60 * 60 * 24));
-        const numberOfDateToBeCleanedUp = 15; // pending invitations which are 15 days old will be cleaned up from the Lizard store
-        const expiresIn = (numberOfDateToBeCleanedUp - dateDifference) >= 0 ? (numberOfDateToBeCleanedUp - dateDifference) : 0;
+        const numberOfDaysCreated = Math.floor((currentDate - createdDate) / (1000 * 60 * 60 * 24));
+        const numberOfDaysToBeCleanedUp = 15; // pending invitations which are 15 days old will be cleaned up from the Lizard store
+        const numberOfDaysToBeExpired = (numberOfDaysToBeCleanedUp - numberOfDaysCreated) >= 0 ? (numberOfDaysToBeCleanedUp - numberOfDaysCreated) : 0;
         return (
           <span
             className={tableStyles.CellEllipsis}
           >
-            {expiresIn} {expiresIn > 1 ? 'days' : 'day'}
+            {numberOfDaysToBeExpired} {numberOfDaysToBeExpired > 1 ? 'days' : 'day'}
           </span>
       )},
       orderingField: null
