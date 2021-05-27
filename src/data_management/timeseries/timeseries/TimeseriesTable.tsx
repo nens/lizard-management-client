@@ -8,18 +8,12 @@ import DeleteModal from '../../../components/DeleteModal';
 import { ExplainSideColumn } from '../../../components/ExplainSideColumn';
 import { getAccessibiltyText } from '../../../form/AccessModifier';
 import { defaultTableHelpText } from '../../../utils/help_texts/defaultHelpText';
+import { fetchWithOptions } from '../../../utils/fetchWithOptions';
 import tableStyles from "../../../components/Table.module.css";
 import timeseriesIcon from "../../../images/timeseries_icon.svg";
 
-const baseUrl = "/api/v4/timeseries/";
+export const baseUrl = "/api/v4/timeseries/";
 const navigationUrl = "/data_management/timeseries/timeseries";
-
-const fetchTimeseriesWithOptions = (uuids: string[], fetchOptions: RequestInit) => {
-  const fetches = uuids.map (uuid => {
-    return fetch(baseUrl + uuid + "/", fetchOptions);
-  });
-  return Promise.all(fetches);
-};
 
 export const TimeseriesTable = (props: RouteComponentProps) =>  {
   const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
@@ -218,7 +212,7 @@ export const TimeseriesTable = (props: RouteComponentProps) =>  {
         <DeleteModal
           rows={rowsToBeDeleted}
           displayContent={[{name: "name", width: 40}, {name: "uuid", width: 60}]}
-          fetchFunction={fetchTimeseriesWithOptions}
+          fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
           resetTable={resetTable}
           handleClose={() => {
             setRowsToBeDeleted([]);
@@ -229,7 +223,7 @@ export const TimeseriesTable = (props: RouteComponentProps) =>  {
       {selectedRows.length > 0 ? (
         <AuthorisationModal
           rows={selectedRows}
-          fetchFunction={fetchTimeseriesWithOptions}
+          fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
           resetTable={resetTable}
           handleClose={() => {
             setSelectedRows([]);

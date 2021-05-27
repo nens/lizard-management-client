@@ -6,18 +6,12 @@ import TableActionButtons from '../../../components/TableActionButtons';
 import tableStyles from "../../../components/Table.module.css";
 import { ExplainSideColumn } from '../../../components/ExplainSideColumn';
 import { addNotification } from '../../../actions';
+import { fetchWithOptions } from '../../../utils/fetchWithOptions';
 import DeleteModal from '../../../components/DeleteModal';
 import alarmIcon from "../../../images/alarm@3x.svg";
 
-const baseUrl = "/api/v4/rasteralarms/";
+export const baseUrl = "/api/v4/rasteralarms/";
 const navigationUrl = "/alarms/notifications/raster_alarms";
-
-const fetchRasterAlarmsWithOptions = (uuids: string[], fetchOptions: RequestInit) => {
-  const fetches = uuids.map (uuid => {
-    return fetch(baseUrl + uuid + "/", fetchOptions);
-  });
-  return Promise.all(fetches);
-};
 
 export const RasterAlarmTableComponent: React.FC<DispatchProps & RouteComponentProps> = (props) =>  {
   const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
@@ -36,7 +30,7 @@ export const RasterAlarmTableComponent: React.FC<DispatchProps & RouteComponentP
   };
 
   const setAlarmActive = (row: any, _updateTableRow: any, triggerReloadWithCurrentPage: any) => {
-    fetchRasterAlarmsWithOptions([row.uuid], {
+    fetchWithOptions(baseUrl, [row.uuid], {
       credentials: "same-origin",
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -155,7 +149,7 @@ export const RasterAlarmTableComponent: React.FC<DispatchProps & RouteComponentP
           <DeleteModal
             rows={rowsToBeDeleted}
             displayContent={[{name: "name", width: 40}, {name: "uuid", width: 60}]}
-            fetchFunction={fetchRasterAlarmsWithOptions}
+            fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
             resetTable={resetTable}
             handleClose={() => {
               setRowsToBeDeleted([]);

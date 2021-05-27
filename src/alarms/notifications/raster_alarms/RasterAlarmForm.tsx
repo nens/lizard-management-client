@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect, useSelector } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { ExplainSideColumn } from '../../../components/ExplainSideColumn';
@@ -22,6 +22,10 @@ import { convertDurationObjToSeconds } from '../../../utils/dateUtils';
 import { rasterIntervalStringServerToDurationObject } from '../../../utils/isoUtils';
 import { getUuidFromUrl } from '../../../utils/getUuidFromUrl';
 import { alarmFormHelpText } from '../../../utils/help_texts/helpTextForAlarms';
+import { fetchWithOptions } from '../../../utils/fetchWithOptions';
+import { baseUrl } from './RasterAlarmTable';
+import FormActionButtons from '../../../components/FormActionButtons';
+import DeleteModal from '../../../components/DeleteModal';
 import formStyles from './../../../styles/Forms.module.css';
 import rasterAlarmIcon from "../../../images/alarm@3x.svg";
 
@@ -54,6 +58,7 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
   const { currentRasterAlarm, raster } = props;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const navigationUrl = "/alarms/notifications/raster_alarms";
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
 
   const initialValues = currentRasterAlarm && raster ? {
     name: currentRasterAlarm.name,
@@ -362,11 +367,34 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           <CancelButton
             url={navigationUrl}
           />
-          <SubmitButton
-            onClick={tryToSubmitForm}
-          />
+          <div style={{display: "flex"}}>
+            {currentRasterAlarm ? (
+              <div style={{ marginRight: 16 }}>
+                <FormActionButtons
+                  actions={[
+                    {
+                      displayValue: "Delete",
+                      actionFunction: () => setShowDeleteModal(true)
+                    },
+                  ]} 
+                />
+              </div>
+            ) : null}
+            <SubmitButton
+              onClick={tryToSubmitForm}
+            />
+          </div>
         </div>
       </form>
+      {currentRasterAlarm && showDeleteModal ? (
+        <DeleteModal
+          rows={[currentRasterAlarm]}
+          displayContent={[{name: "name", width: 40}, {name: "uuid", width: 60}]}
+          fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
+          handleClose={() => setShowDeleteModal(false)}
+          tableUrl={navigationUrl}
+        />
+      ) : null}
     </ExplainSideColumn>
   );
 };

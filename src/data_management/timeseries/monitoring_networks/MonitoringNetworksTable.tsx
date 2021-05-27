@@ -7,18 +7,12 @@ import DeleteModal from '../../../components/DeleteModal';
 import { ExplainSideColumn } from '../../../components/ExplainSideColumn';
 import { getAccessibiltyText } from '../../../form/AccessModifier';
 import { defaultTableHelpText } from '../../../utils/help_texts/defaultHelpText';
+import { fetchWithOptions } from '../../../utils/fetchWithOptions';
 import monitoringNetworkIcon from "../../../images/monitoring_network_icon.svg";
 import tableStyles from "../../../components/Table.module.css";
 
-const baseUrl = "/api/v4/monitoringnetworks/";
+export const baseUrl = "/api/v4/monitoringnetworks/";
 const navigationUrl = "/data_management/timeseries/monitoring_networks";
-
-const fetchMonitoringNetworksWithOptions = (uuids: string[], fetchOptions: RequestInit) => {
-  const fetches = uuids.map (uuid => {
-    return fetch(baseUrl + uuid + "/", fetchOptions);
-  });
-  return Promise.all(fetches);
-};
 
 export const MonitoringNetworksTable = (props: RouteComponentProps) =>  {
   const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
@@ -138,7 +132,7 @@ export const MonitoringNetworksTable = (props: RouteComponentProps) =>  {
         <DeleteModal
           rows={rowsToBeDeleted}
           displayContent={[{name: "name", width: 40}, {name: "uuid", width: 60}]}
-          fetchFunction={fetchMonitoringNetworksWithOptions}
+          fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
           resetTable={resetTable}
           handleClose={() => {
             setRowsToBeDeleted([]);
@@ -149,7 +143,7 @@ export const MonitoringNetworksTable = (props: RouteComponentProps) =>  {
       {selectedRows.length > 0 ? (
         <AuthorisationModal
           rows={selectedRows}
-          fetchFunction={fetchMonitoringNetworksWithOptions}
+          fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
           resetTable={resetTable}
           handleClose={() => {
             setSelectedRows([]);

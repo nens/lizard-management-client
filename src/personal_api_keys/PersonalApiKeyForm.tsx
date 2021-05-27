@@ -3,20 +3,21 @@ import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { ExplainSideColumn } from '../components/ExplainSideColumn';
 import { TextInput } from './../form/TextInput';
+import { CheckBox } from './../form/CheckBox';
 import { SubmitButton } from '../form/SubmitButton';
 import { CancelButton } from '../form/CancelButton';
 import { useForm, Values } from '../form/useForm';
 import { minLength } from '../form/validators';
 import { addNotification } from '../actions';
-import personalApiKeysIcon from "../images/personal_api_key_icon.svg";
-import formStyles from './../styles/Forms.module.css';
 import { personalApiKeysFormHelpText } from '../utils/help_texts/helpTextForPersonalAPIKeys';
-import { CheckBox } from './../form/CheckBox';
+import { fetchWithOptions } from '../utils/fetchWithOptions';
+import { baseUrl } from './PersonalApiKeysTable';
 import Modal from '../components/Modal';
 import DeleteModal from '../components/DeleteModal';
-import { fetchWithOptions } from './PersonalApiKeysTable';
 import FormActionButtons from '../components/FormActionButtons';
 import styles from './PersonalApiKeyForm.module.css';
+import formStyles from './../styles/Forms.module.css';
+import personalApiKeysIcon from "../images/personal_api_key_icon.svg";
 
 interface Props {
   currentRecord?: any;
@@ -221,7 +222,7 @@ const PersonalApiKeyFormModel: React.FC<Props & PropsFromDispatch & RouteCompone
         <DeleteModal
           rows={[currentRecord]}
           displayContent={[{name: "name", width: 65}, {name: "prefix", width: 35}]}
-          fetchFunction={fetchWithOptions}
+          fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
           handleClose={() => setShowDeleteModal(false)}
           tableUrl={'/personal_api_keys'}
         />

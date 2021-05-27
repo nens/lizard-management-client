@@ -4,18 +4,12 @@ import TableStateContainer from '../../components/TableStateContainer';
 import TableActionButtons from '../../components/TableActionButtons';
 import DeleteModal from '../../components/DeleteModal';
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
+import { fetchWithOptions } from '../../utils/fetchWithOptions';
 import wmsIcon from "../../images/wms@3x.svg";
 import tableStyles from "../../components/Table.module.css";
 
-const baseUrl = "/api/v4/wmslayers/";
+export const baseUrl = "/api/v4/wmslayers/";
 const navigationUrl = "/data_management/wms_layers";
-
-const fetchWmsLayerUuidsWithOptions = (uuids: string[], fetchOptions: RequestInit) => {
-  const fetches = uuids.map (uuid => {
-    return fetch(baseUrl + uuid + "/", fetchOptions);
-  });
-  return Promise.all(fetches);
-};
 
 export const WmsLayerTable = (props: RouteComponentProps) =>  {
   const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
@@ -121,7 +115,7 @@ export const WmsLayerTable = (props: RouteComponentProps) =>  {
           <DeleteModal
             rows={rowsToBeDeleted}
             displayContent={[{name: "name", width: 65}, {name: "uuid", width: 35}]}
-            fetchFunction={fetchWmsLayerUuidsWithOptions}
+            fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
             resetTable={resetTable}
             handleClose={() => {
               setRowsToBeDeleted([]);

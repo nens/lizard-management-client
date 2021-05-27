@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect, useSelector } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
@@ -10,6 +10,10 @@ import { emailValidator, maxLength, minLength, phoneNumberValidator } from '../.
 import { addNotification } from '../../actions';
 import { getSelectedOrganisation } from '../../reducers';
 import { contactFormHelpText } from '../../utils/help_texts/helpTextForAlarmContacts';
+import { fetchWithOptions } from '../../utils/fetchWithOptions';
+import { baseUrl } from './ContactTable';
+import FormActionButtons from '../../components/FormActionButtons';
+import DeleteModal from '../../components/DeleteModal';
 import formStyles from './../../styles/Forms.module.css';
 import contactIcon from "../../images/contacts@3x.svg";
 
@@ -23,6 +27,7 @@ interface PropsFromDispatch {
 const ContactForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (props) => {
   const { currentContact } = props;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
 
   const initialValues = currentContact ? {
     // if currentContact.user is not null, that means a Django User is linked to this contact
@@ -199,11 +204,34 @@ const ContactForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (
           <CancelButton
             url={'/alarms/contacts'}
           />
-          <SubmitButton
-            onClick={tryToSubmitForm}
-          />
+          <div style={{display: "flex"}}>
+            {currentContact ? (
+              <div style={{ marginRight: 16 }}>
+                <FormActionButtons
+                  actions={[
+                    {
+                      displayValue: "Delete",
+                      actionFunction: () => setShowDeleteModal(true)
+                    },
+                  ]} 
+                />
+              </div>
+            ) : null}
+            <SubmitButton
+              onClick={tryToSubmitForm}
+            />
+          </div>
         </div>
       </form>
+      {currentContact && showDeleteModal ? (
+        <DeleteModal
+          rows={[currentContact]}
+          displayContent={[{name: "first_name", width: 20}, {name: "email", width: 50}, {name: "id", width: 30}]}
+          fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
+          handleClose={() => setShowDeleteModal(false)}
+          tableUrl={'/alarms/contacts'}
+        />
+      ) : null}
     </ExplainSideColumn>
   );
 };

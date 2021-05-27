@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { connect, useSelector } from 'react-redux';
 import { getLocation, getSelectedOrganisation, getSupplierIds, getUsername } from '../../../reducers';
@@ -19,6 +19,10 @@ import { convertToSelectObject } from '../../../utils/convertToSelectObject';
 import { fromISOValue, toISOValue } from '../../../utils/isoUtils';
 import { convertDurationObjToSeconds, convertSecondsToDurationObject } from '../../../utils/dateUtils';
 import { timeseriesFormHelpText } from '../../../utils/help_texts/helpTextForTimeseries';
+import { fetchWithOptions } from '../../../utils/fetchWithOptions';
+import { baseUrl } from './TimeseriesTable';
+import FormActionButtons from '../../../components/FormActionButtons';
+import DeleteModal from '../../../components/DeleteModal';
 import formStyles from './../../../styles/Forms.module.css';
 import timeseriesIcon from "../../../images/timeseries_icon.svg";
 
@@ -65,6 +69,7 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
   const username = useSelector(getUsername);
   const supplierIds = useSelector(getSupplierIds).available;
   const location = useSelector(getLocation);
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
 
   useEffect(() => {
     return () => {
@@ -404,11 +409,34 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
           <CancelButton
             url={backUrl}
           />
-          <SubmitButton
-            onClick={tryToSubmitForm}
-          />
+          <div style={{display: "flex"}}>
+            {currentTimeseries ? (
+              <div style={{ marginRight: 16 }}>
+                <FormActionButtons
+                  actions={[
+                    {
+                      displayValue: "Delete",
+                      actionFunction: () => setShowDeleteModal(true)
+                    },
+                  ]} 
+                />
+              </div>
+            ) : null}
+            <SubmitButton
+              onClick={tryToSubmitForm}
+            />
+          </div>
         </div>
       </form>
+      {currentTimeseries && showDeleteModal ? (
+        <DeleteModal
+          rows={[currentTimeseries]}
+          displayContent={[{name: "name", width: 40}, {name: "uuid", width: 60}]}
+          fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
+          handleClose={() => setShowDeleteModal(false)}
+          tableUrl={backUrl}
+        />
+      ) : null}
     </ExplainSideColumn>
   );
 };

@@ -57,7 +57,7 @@ interface RasterSourceInstance {
   supplier_code: string;
   temporal: boolean;
   interval?: string;
-  uuid?: string,
+  uuid?: string;
 }
 
 export type RasterSourceFromForm = RasterSourceInstance & {
@@ -65,6 +65,8 @@ export type RasterSourceFromForm = RasterSourceInstance & {
 }
 
 export type RasterSourceFromAPI = RasterSourceInstance & {
+  layers: string[];
+  labeltypes: string[];
   organisation: Organisation;
 }
 
