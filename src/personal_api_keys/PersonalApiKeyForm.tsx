@@ -110,6 +110,9 @@ const PersonalApiKeyFormModel: React.FC<Props & PropsFromDispatch & RouteCompone
         onSubmit={handleSubmit}
         onReset={handleReset}
       >
+        <span className={`${formStyles.FormFieldTitle} ${formStyles.FirstFormFieldTitle}`}>
+          1: General
+        </span>
         <TextInput
           title={'Name *'}
           name={'name'}
@@ -124,7 +127,7 @@ const PersonalApiKeyFormModel: React.FC<Props & PropsFromDispatch & RouteCompone
           readOnly={currentRecord}
         />
         <span className={formStyles.FormFieldTitle}>
-          Scope
+          2. Scope
         </span>
         <CheckBox
           title={'Read / Write'}

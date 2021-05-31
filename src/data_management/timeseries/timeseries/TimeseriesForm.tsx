@@ -191,7 +191,7 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
         onSubmit={handleSubmit}
         onReset={handleReset}
       >
-        <span className={formStyles.FormFieldTitle}>
+        <span className={`${formStyles.FormFieldTitle} ${formStyles.FirstFormFieldTitle}`}>
           1: General
         </span>
         <TextInput

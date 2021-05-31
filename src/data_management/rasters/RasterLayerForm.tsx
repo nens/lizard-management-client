@@ -258,7 +258,7 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
       >
       </form>
       <div className={formStyles.Form}>
-        <span className={formStyles.FormFieldTitle}>
+        <span className={`${formStyles.FormFieldTitle} ${formStyles.FirstFormFieldTitle}`}>
           1: General
         </span>
         <TextInput
