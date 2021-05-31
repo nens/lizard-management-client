@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { addNotification } from '../actions';
-import { DataRetrievalState } from '../types/retrievingDataTypes';
-import Table from '../components/Table';
+import TableStateContainer from '../components/TableStateContainer';
 import TableActionButtons from '../components/TableActionButtons';
 import ModalBackground from '../components/ModalBackground';
 import formStyles from '../styles/Forms.module.css';
@@ -16,23 +15,21 @@ interface MyProps {
 }
 
 function InvitationModal (props: MyProps & DispatchProps) {
-  const { invitations } = props;
-
-  const [dataRetrievalState, setDataRetrievalState] = useState<DataRetrievalState>('RETRIEVED');
-
   // DELETE requests to cancel a pending invitation
-  const deleteAction = (row: any) => {
+  const deleteAction = (
+    row: any,
+    triggerReloadWithCurrentPage: Function,
+  ) => {
     if (!row) return;
-    setDataRetrievalState('RETRIEVING');
     fetch(`/api/v4/invitations/${row.id}/`, {
       credentials: "same-origin",
       method: "DELETE",
       headers: { "Content-Type": "application/json" }
     }).then(res => {
-      setDataRetrievalState('RETRIEVED');
       if (res.status === 204) {
         props.addNotification('Success! Invitation cancelled', 2000);
-        const newInvitationList = invitations.filter(invitation => invitation.id !== row.id);
+        triggerReloadWithCurrentPage();
+        const newInvitationList = props.invitations.filter(invitation => invitation.id !== row.id);
         props.setInvitations(newInvitationList);
         if (newInvitationList.length === 0) props.handleClose(); // close the modal if there is no pending invitation left
       } else {
@@ -74,18 +71,20 @@ function InvitationModal (props: MyProps & DispatchProps) {
     },
     {
       titleRenderFunction: () => '', /* Actions */
-      renderFunction: (row: any, tableData:any) => {
+      renderFunction: (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any) => {
         return (
             <TableActionButtons
               tableRow={row}
               tableData={tableData}
-              setTableData={() => null}
-              triggerReloadWithCurrentPage={() => null}
-              triggerReloadWithBasePage={() => null}
+              setTableData={setTableData}
+              triggerReloadWithCurrentPage={triggerReloadWithCurrentPage}
+              triggerReloadWithBasePage={triggerReloadWithBasePage}
               actions={[
                 {
                   displayValue: "Cancel",
-                  actionFunction: (row: any) => deleteAction(row)
+                  actionFunction: (row: any, _updateTableRow: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any) => {
+                    deleteAction(row, triggerReloadWithCurrentPage);
+                  }
                 },
               ]}
             />
@@ -103,22 +102,19 @@ function InvitationModal (props: MyProps & DispatchProps) {
     >
       <div
         style={{
-          padding: 40,
-          paddingBottom: 20,
-          height: '90%',
+          padding: '20px 40px',
+          height: '100%',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between'
         }}
       >
-        <Table
-          tableData={invitations}
-          setTableData={() => null}
+        <TableStateContainer
           gridTemplateColumns={'60fr 30fr 10fr'}
           columnDefinitions={columnDefinitions}
-          dataRetrievalState={dataRetrievalState}
-          triggerReloadWithCurrentPage={() => null}
-          triggerReloadWithBasePage={()=> null}
+          baseUrl={'/api/v4/invitations/?'}
+          checkBoxActions={[]}
+          filterOptions={[]}
           responsive
         />
         <div className={formStyles.ButtonContainer}>

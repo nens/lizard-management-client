@@ -35,6 +35,7 @@ interface Props {
   };
   queryCheckBox?: {text: string, adaptUrlFunction: (url:string)=>string} | null;
   defaultUrlParams?: string;
+  responsive?: boolean;
 }
 
 // Helper function to get row identifier (by uuid or id)
@@ -53,6 +54,7 @@ const TableStateContainer: React.FC<Props> = ({
   customTableButton,
   queryCheckBox,
   defaultUrlParams,
+  responsive,
 }) => {
   const [tableData, setTableData] = useState<any[]>([]);
   const [checkBoxes, setCheckBoxes] = useState<string[]>([]);
@@ -375,6 +377,7 @@ const TableStateContainer: React.FC<Props> = ({
           triggerReloadWithCurrentPage={()=>{fetchWithUrl(currentUrl)}}
           triggerReloadWithBasePage={()=>{fetchWithUrl(url)}}
           getIfCheckBoxOfUuidIsSelected={getIfCheckBoxOfUuidIsSelected}
+          responsive={responsive}
         />
       </div>
       <Pagination
