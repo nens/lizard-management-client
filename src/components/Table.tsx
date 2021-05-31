@@ -21,9 +21,20 @@ interface Props {
   triggerReloadWithCurrentPage: any;
   triggerReloadWithBasePage: any;
   getIfCheckBoxOfUuidIsSelected?: any;
+  responsive?: boolean;
 }
 
-const Table: React.FC<Props> = ({tableData, setTableData, gridTemplateColumns, columnDefinitions, dataRetrievalState, triggerReloadWithCurrentPage, triggerReloadWithBasePage, getIfCheckBoxOfUuidIsSelected}) => {
+const Table: React.FC<Props> = ({
+  tableData,
+  setTableData,
+  gridTemplateColumns,
+  columnDefinitions,
+  dataRetrievalState,
+  triggerReloadWithCurrentPage,
+  triggerReloadWithBasePage,
+  getIfCheckBoxOfUuidIsSelected,
+  responsive,
+}) => {
   ///////////////////////////
   // Below code is to check if table is overflow and scrollbar is visible
   // Vertical scrollbar takes palce and causes table header and table body no longer alinged with each other
@@ -56,12 +67,14 @@ const Table: React.FC<Props> = ({tableData, setTableData, gridTemplateColumns, c
     <div  className={styles.Table}>
       <div style={{
         gridTemplateColumns: gridTemplateColumns,
-        paddingRight: tableIsOverflow ? scrollbarWidth : undefined
+        paddingRight: tableIsOverflow ? scrollbarWidth : undefined,
+        minWidth: responsive ? 'unset' : undefined,
       }}>
         {columnDefinitions.map((definition, i) => <span key={i}>{definition.titleRenderFunction()}</span>)}
       </div>
       <div style={{
           gridTemplateColumns: gridTemplateColumns,
+          minWidth: responsive ? 'unset' : undefined,
         }}
         ref={tableRef}
       >

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavLink, RouteComponentProps } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import { getSelectedOrganisation } from '../reducers';
@@ -8,6 +8,7 @@ import { userTableHelpText } from '../utils/help_texts/helpTextForUsers';
 import { fetchWithOptions } from '../utils/fetchWithOptions';
 import TableActionButtons from '../components/TableActionButtons';
 import TableStateContainer from '../components/TableStateContainer';
+import InvitationModal from './InvitationModal';
 import DeleteModal from '../components/DeleteModal';
 import tableStyles from "../components/Table.module.css";
 import userManagementIcon from "../images/userManagement.svg";
@@ -19,6 +20,21 @@ export const UserTable = (props: RouteComponentProps) =>  {
 
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const [resetTable, setResetTable] = useState<Function | null>(null);
+
+  const [invitationModal, setInvitationModal] = useState<boolean>(false);
+  const [invitationList, setInvitationList] = useState<any[] | null>(null);
+
+  useEffect(() => {
+    fetch('/api/v4/invitations/?page_size=0&status=pending', {
+      credentials: 'same-origin'
+    }).then(
+      res => res.json()
+    ).then(
+      data => setInvitationList(data)
+    ).catch(
+      console.error
+    );
+  }, []);
 
   const deactivateActions = (
     rows: any[],
@@ -116,6 +132,11 @@ export const UserTable = (props: RouteComponentProps) =>  {
         baseUrl={`${baseUrl}?`}
         checkBoxActions={[]}
         newItemOnClick={handleNewClick}
+        customTableButton={{
+          name: invitationList ? `${invitationList.length} Pending ${invitationList.length > 1 ? 'Users' : 'User'}` : '0 Pending User',
+          disabled: !invitationList || invitationList.length === 0,
+          onClick: () => setInvitationModal(true)
+        }}
         filterOptions={[
           {
             value: 'username__icontains=',
@@ -146,6 +167,13 @@ export const UserTable = (props: RouteComponentProps) =>  {
             setResetTable(null);
           }}
           text={'You are deactivating the following user. Please make sure that s/he is not a member of any other organisation before continue.'}
+        />
+      ) : null}
+      {invitationModal && invitationList ? (
+        <InvitationModal
+          invitations={invitationList}
+          setInvitations={setInvitationList}
+          handleClose={() => setInvitationModal(false)}
         />
       ) : null}
     </ExplainSideColumn>
