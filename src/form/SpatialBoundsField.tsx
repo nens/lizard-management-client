@@ -165,14 +165,13 @@ const SpatialBoundsField  =  (props: SpatialBoundsProps) => {
     }
 
     return (
-        <div>
-            <label
-                htmlFor={name}
-            >
-                <span className={formStyles.LabelTitle}>
-                    {title}
-                </span>
-            </label>
+        <label
+          htmlFor={name}
+          className={formStyles.Label}
+        >
+            <span className={formStyles.LabelTitle}>
+                {title}
+            </span>
             <div
                 className={
                     formStyles.FormGroup +
@@ -307,7 +306,7 @@ const SpatialBoundsField  =  (props: SpatialBoundsProps) => {
                     Failed to get extent from source
                 </span>
             </div>
-        </div>
+        </label>
     );
 }
 
