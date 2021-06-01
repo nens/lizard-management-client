@@ -36,6 +36,20 @@ function MapViewer (props: MyProps & DispatchProps) {
         height:"100vh",
       }}
     >
+      <div
+        style={{
+          position: "absolute",
+          left: 0,
+          top: 0,
+          // bottom: 0,
+          height: "100vh",
+          width: "360px",
+          backgroundColor: "white",
+          zIndex: 10,
+        }}
+      >
+
+      </div>
       <ReactMapGL
         {...viewport}
         width="100%"
