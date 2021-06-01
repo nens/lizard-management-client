@@ -1,3 +1,5 @@
+import React from 'react';
+
 import {
   accessModifierHelpText,
   codeHelpText,
@@ -17,10 +19,34 @@ export const timeseriesFormHelpText: HelpText = {
   observationType: 'Choose how the data is measured and its units.',
   location: 'Choose the location you want to add this timeseries to.',
   valueType: 'Specify what kind of data is supplied.',
+  datasource: 'Choose the datasource this timeseries originates from.',
   intervalCheckbox: 'Specify a time range between each time series step.',
   interval: 'Specify a time range between each time series step.',
+  extraMetadata: (
+    <>
+      <p>Free JSON field to add information to this object.</p>
+      <p><i>e.g. {'{"long_term_average": -1.43}'}</i></p>
+    </>
+  ),
   accessModifier: accessModifierHelpText,
   organisation: organisationHelpText,
   supplier: supplierHelpText,
   supplierCode: supplierCodeHelpText,
+  files: (
+    <>
+      <p>Upload your CSV files here in .csv format to add new events to the time series.</p>
+      <p>The first line of the file should describe the column names, for example:</p>
+      <div
+        style={{
+          backgroundColor: "#EEEEEE",
+          fontFamily: "Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New",
+          margin: "10px 0"
+        }}
+      >
+        <span>time, value</span><br />
+        <span>2020-03-20T01:00:00Z, 3.14</span><br />
+        <span>2020-03-20T01:05:00Z, 2.72</span>
+      </div>
+    </>
+  )
 }

@@ -38,8 +38,8 @@ export const wmsLayerReceivedFromApiToForm = (wmsLayer: WmsLayerReceivedFromApi)
   return { 
     ...wmsLayer,
     sharedWithCheckbox: wmsLayer.shared_with.length > 0? true : false,
-    organisation: convertToSelectObject(wmsLayer.organisation.uuid.replace(/-/g, ""), wmsLayer.organisation.name),
-    shared_with: wmsLayer.shared_with.map(org => convertToSelectObject(org.uuid.replace(/-/g, ""), org.name)),
+    organisation: convertToSelectObject(wmsLayer.organisation.uuid, wmsLayer.organisation.name),
+    shared_with: wmsLayer.shared_with.map(org => convertToSelectObject(org.uuid, org.name)),
     datasets: wmsLayer.datasets.map(dataset => convertToSelectObject(dataset.slug)),
     supplier: wmsLayer.supplier ? convertToSelectObject(wmsLayer.supplier) : null,
     options: JSON.stringify(wmsLayer.options)
@@ -93,7 +93,7 @@ export const wmsLayerGetDefaultFormValues = (organisation: Organisation): WmsLay
   spatial_bounds: null,
   options: '{"transparent": "True"}',
 
-  organisation: convertToSelectObject(organisation.uuid.replace(/-/g, ""), organisation.name),
+  organisation: convertToSelectObject(organisation.uuid, organisation.name),
   sharedWithCheckbox: false,
   shared_with: [],
   access_modifier: "Private",

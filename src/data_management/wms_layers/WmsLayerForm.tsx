@@ -27,6 +27,10 @@ import SpatialBoundsField from "../../form/SpatialBoundsField";
 import { WmsLayerReceivedFromApi, wmsLayerReceivedFromApiToForm, WmsLayerFormType, wmsLayerGetDefaultFormValues, wmsLayerFormToFormSendToApi} from '../../types/WmsLayerType';
 import { wmsFormHelpText } from '../../utils/help_texts/helpTextForWMS';
 import { convertToSelectObject } from '../../utils/convertToSelectObject';
+import { fetchWithOptions } from '../../utils/fetchWithOptions';
+import { baseUrl } from './WmsLayerTable';
+import FormActionButtons from '../../components/FormActionButtons';
+import DeleteModal from '../../components/DeleteModal';
 
 interface Props {
   currentWmsLayer?: WmsLayerReceivedFromApi, 
@@ -38,7 +42,7 @@ interface PropsFromDispatch {
 
 const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (props) => {
   const { currentWmsLayer} = props;
-
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const [geoserverError, setGeoserverError,] = useState(false)
   const organisationsToSharedWith = useSelector(getOrganisations).availableForRasterSharedWith;
   const supplierIds = useSelector(getSupplierIds).available;
@@ -124,7 +128,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
         onSubmit={handleSubmit}
         onReset={handleReset}
       >
-        <span className={formStyles.FormFieldTitle}>
+        <span className={`${formStyles.FormFieldTitle} ${formStyles.FirstFormFieldTitle}`}>
           1: General
         </span>
         <TextInput
@@ -367,7 +371,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           title={'Organisation *'}
           name={'organisation'}
           placeholder={'- Search and select -'}
-          value={typeof values.organisation === "string" ? values.organisation.replace(/-/g, ""): (values.organisation) }
+          value={typeof values.organisation === "string" ? values.organisation : (values.organisation) }
           valueChanged={value => handleValueChange('organisation', value)}
           options={organisations.map((organisation: any) => convertToSelectObject(organisation.uuid, organisation.name))}
           validated={values.organisation !== null && values.organisation !== ""}
@@ -395,11 +399,34 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           <CancelButton
             url={'/data_management/wms_layers'}
           />
-          <SubmitButton
-            onClick={tryToSubmitForm}
-          />
+          <div style={{display: "flex"}}>
+            {currentWmsLayer ? (
+              <div style={{ marginRight: 16 }}>
+                <FormActionButtons
+                  actions={[
+                    {
+                      displayValue: "Delete",
+                      actionFunction: () => setShowDeleteModal(true)
+                    },
+                  ]} 
+                />
+              </div>
+            ) : null}
+            <SubmitButton
+              onClick={tryToSubmitForm}
+            />
+          </div>
         </div>
       </form>
+      {currentWmsLayer && showDeleteModal ? (
+        <DeleteModal
+          rows={[currentWmsLayer]}
+          displayContent={[{name: "name", width: 65}, {name: "uuid", width: 35}]}
+          fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
+          handleClose={() => setShowDeleteModal(false)}
+          tableUrl={'/data_management/wms_layers'}
+        />
+      ) : null}
     </ExplainSideColumn>
   );
 };

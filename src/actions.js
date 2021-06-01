@@ -28,28 +28,11 @@ export function fetchLizardBootstrap() {
       .then(response => response.json())
       .then(data => {
         if (data && data.user && data.user.authenticated === true) {
-          // User ID is not included in the bootstrap response
-          // We need to find the User ID in order to fetch the available organisations
-          fetch(`/api/v4/users/?username=${data.user.username}`, {
-            credentials: "same-origin"
-          }).then(
-            response => response.json()
-          ).then(parsedRes => {
-            const userList = parsedRes.results;
-            const currentUserId = userList[0].id;
-            const bootstrapData = {
-              ...data,
-              user: {
-                ...data.user,
-                id: currentUserId
-              }
-            };
-            dispatch(receiveLizardBootstrap(bootstrapData));
-          })
+          dispatch(receiveLizardBootstrap(data));
         } else {
           const nextUrl = window.location.href;
           window.location.href = `${data.sso.login}&next=${nextUrl}`;
-        }
+        };
       });
   };
 }
@@ -100,10 +83,10 @@ export function fetchOrganisations() {
     const selectedOrganisationLocalStorage = getLocalStorage("lizard-management-current-organisation", null);
 
     // URL to fetch the list of available organisations with user roles
-    const availableOrganisationsUrl = `/api/v4/users/${userId}/organisations/?page_size=100000`;
+    const availableOrganisationsUrl = `/api/v4/users/${userId}/organisations/?page_size=0`;
 
     // URL to fetch all organisations
-    const organisationsUrl = `/api/v4/organisations/?page_size=100000`;
+    const organisationsUrl = `/api/v4/organisations/?page_size=0`;
 
     const allOrganisationsParsedRes = await fetch(organisationsUrl, {
       credentials: "same-origin"
@@ -117,15 +100,15 @@ export function fetchOrganisations() {
       res => res.json()
     );
 
-    const allOrganisations = allOrganisationsParsedRes.results.map(org => ({
+    const allOrganisations = allOrganisationsParsedRes.map(org => ({
       ...org,
-      uuid: org.uuid.replace(/-/g, "")
+      uuid: org.uuid
     }));
 
     // All user roles are accepted in the management page
-    const availableOrganisations = availableOrganisationsParsedRes.results.map(org => ({
+    const availableOrganisations = availableOrganisationsParsedRes.map(org => ({
       ...org,
-      uuid: org.uuid.replace(/-/g, "")
+      uuid: org.uuid
     }));
 
     // Dispatch action to update Redux store
@@ -197,7 +180,7 @@ export function fetchObservationTypes() {
   return dispatch => {
     dispatch({ type: REQUEST_OBSERVATION_TYPES });
 
-    const url = "/api/v4/observationtypes/?page_size=100000";
+    const url = "/api/v4/observationtypes/?page_size=0";
     const opts = { credentials: "same-origin" };
 
     fetch(url, opts)
@@ -219,7 +202,7 @@ export function fetchObservationTypes() {
         }
       })
       .then(responseData => {
-        const data = responseData.results;
+        const data = responseData;
         dispatch({ type: RECEIVE_OBSERVATION_TYPES_SUCCESS, data });
       });
   };
@@ -363,6 +346,23 @@ export function updateRasterSourceUUID(uuid) {
 export function removeRasterSourceUUID() {
   return {
     type: REMOVE_RASTER_SOURCE_UUID
+  };
+}
+
+// MARK: Location uuid
+export const UPDATE_LOCATION = "UPDATE_LOCATION";
+export const REMOVE_LOCATION = "REMOVE_LOCATION";
+
+export function updateLocation(location) {
+  return {
+    type: UPDATE_LOCATION,
+    location
+  };
+}
+
+export function removeLocation() {
+  return {
+    type: REMOVE_LOCATION
   };
 }
 

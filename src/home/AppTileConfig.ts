@@ -44,8 +44,8 @@ export const appTiles = [
     // ),
     order: 200,
     onPage: "/",
-    linksTo: "/management/users",
-    linksToExternal: true,
+    linksTo: "/users",
+    linksToExternal: false,
     requiresOneOfRoles: ["manager"],
     icon: userManagementIcon,
   },
@@ -243,6 +243,20 @@ export const appTiles = [
     icon: backArrowIcon
   },
   {
+    title: "Locations",
+    // title: (
+    //   <FormattedMessage
+    //     id="go_back"
+    //     defaultMessage="Go Back"
+    //   />
+    // ),
+    order: 400,
+    onPage: "/data_management/timeseries",
+    linksTo: "/data_management/timeseries/locations",
+    requiresOneOfRoles: ["admin", "supplier",],
+    icon: locationsIcon,
+  },
+  {
     title: "Time Series",
     // title: (
     //   <FormattedMessage
@@ -269,20 +283,6 @@ export const appTiles = [
     linksTo: "/data_management/timeseries/monitoring_networks",
     requiresOneOfRoles: ["admin", "supplier",],
     icon: monitoringsNetworkicon,
-  },
-  {
-    title: "Locations",
-    // title: (
-    //   <FormattedMessage
-    //     id="go_back"
-    //     defaultMessage="Go Back"
-    //   />
-    // ),
-    order: 400,
-    onPage: "/data_management/timeseries",
-    linksTo: "/data_management/timeseries/locations",
-    requiresOneOfRoles: ["admin", "supplier",],
-    icon: locationsIcon,
   },
   {
     title: "Go Back",

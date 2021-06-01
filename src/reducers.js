@@ -31,7 +31,9 @@ import {
   REMOVE_FILE_FROM_QUEUE,
   UPDATE_FILE_STATUS,
   ADD_TASK_UUID_TO_FILE,
-  UPDATE_TASK_STATUS
+  UPDATE_TASK_STATUS,
+  UPDATE_LOCATION,
+  REMOVE_LOCATION
 } from "./actions";
 
 function bootstrap(
@@ -72,10 +74,6 @@ function organisations(
   if (state.selected && state.selected.unique_id !== undefined) {
     state.selected = null;
   }
-  // the api v3 accepts no dashes in the uuid (this is called unique_id in api v3)
-  if (state.selected) {
-    state.selected.uuid = state.selected.uuid.replace(/-/g, "");
-  }
 
   switch (action.type) {
     case REQUEST_ORGANISATIONS:
@@ -91,12 +89,7 @@ function organisations(
       };
     }
     case SELECT_ORGANISATION:
-      // the api v3 accepts no dashes in the uuid (this is called unique_id in api v3)
       const selectedOrganisation = action.organisation;
-      if (selectedOrganisation) {
-        selectedOrganisation.uuid = selectedOrganisation.uuid.replace(/-/g, "");
-      }
-      
       return { ...state, selected: selectedOrganisation };
     default:
       return state;
@@ -330,6 +323,17 @@ function rasterSourceUUID(state = null, action) {
   };
 };
 
+function location(state = null, action) {
+  switch (action.type) {
+    case UPDATE_LOCATION:
+      return action.location;
+    case REMOVE_LOCATION:
+      return null;
+    default:
+      return state;
+  };
+};
+
 function uploadFiles(state = null, action) {
   switch (action.type) {
     case ADD_FILES_TO_QUEUE:
@@ -395,6 +399,10 @@ export const getUsername = (state) => {
   return (state.bootstrap && state.bootstrap.bootstrap && state.bootstrap.bootstrap.user &&  state.bootstrap.bootstrap.user.username) || null;
 };
 
+export const getUserId = (state) => {
+  return (state.bootstrap && state.bootstrap.bootstrap && state.bootstrap.bootstrap.user &&  state.bootstrap.bootstrap.user.id) || null;
+};
+
 export const getNotifications = (state) => {
   return state.notifications.notifications;
 };
@@ -426,6 +434,9 @@ export const getDatasets = (state) => {
 export const getRasterSourceUUID = (state) => {
   return state.rasterSourceUUID;
 };
+export const getLocation = (state) => {
+  return state.location;
+};
 
 export const getUploadFiles = (state) => {
   return state.uploadFiles;
@@ -446,6 +457,7 @@ const rootReducer = combineReducers({
   viewport,
   alarmType,
   rasterSourceUUID,
+  location,
   uploadFiles
 });
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { connect, useSelector } from 'react-redux';
 import { getSelectedOrganisation } from '../../../reducers';
@@ -7,15 +7,21 @@ import { TextInput } from './../../../form/TextInput';
 import { SubmitButton } from '../../../form/SubmitButton';
 import { CancelButton } from '../../../form/CancelButton';
 import { useForm, Values } from '../../../form/useForm';
-import { geometryValidator, minLength } from '../../../form/validators';
-import { addNotification } from '../../../actions';
+import { geometryValidator, jsonValidator, minLength } from '../../../form/validators';
+import { addNotification, removeLocation, updateLocation } from '../../../actions';
 import formStyles from './../../../styles/Forms.module.css';
-// import { TextArea } from '../../../form/TextArea';
+import { TextArea } from '../../../form/TextArea';
 import LocationIcon from "../../../images/locations_icon.svg";
 import { AccessModifier } from '../../../form/AccessModifier';
 import { AssetPointSelection } from '../../../form/AssetPointSelection';
 import { locationFormHelpText } from '../../../utils/help_texts/helpTextsForLocations';
-
+import { fetchWithOptions } from '../../../utils/fetchWithOptions';
+import { baseUrl } from './LocationsTable';
+import FormActionButtons from '../../../components/FormActionButtons';
+import Modal from '../../../components/Modal';
+import DeleteModal from '../../../components/DeleteModal';
+import DeleteLocationNotAllowed from './DeleteLocationNotAllowed';
+import MDSpinner from 'react-md-spinner';
 
 interface Props {
   currentRecord?: any;
@@ -28,6 +34,21 @@ interface RouteParams {
 const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RouteParams>) => {
   const { currentRecord, relatedAsset } = props;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
+  const [locationCreatedModal, setLocationCreatedModal] = useState<boolean>(false);
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+  const [dependentTimeseries, setDependentTimeseries] = useState<any[] | null>(null);
+
+  useEffect(() => {
+    if (currentRecord && currentRecord.uuid) {
+      fetch(`/api/v4/timeseries/?page_size=0&location__uuid=${currentRecord.uuid}`, {
+        credentials: "same-origin"
+      }).then(
+        res => res.json()
+      ).then(
+        data => setDependentTimeseries(data)
+      ).catch(console.error);
+    };
+  }, [currentRecord]);
 
   let initialValues;
   if (currentRecord) {
@@ -46,7 +67,7 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
     initialValues = {
       name: currentRecord.name,
       code: currentRecord.code || '',
-      extraMetadata: currentRecord.extra_metadata ? JSON.stringify(currentRecord.extra_metadata) : null,
+      extraMetadata: JSON.stringify(currentRecord.extra_metadata),
       accessModifier: currentRecord.access_modifier,
       selectedAsset: {
         asset: relatedAsset && currentRecord.object && currentRecord.object.type && currentRecord.object.id ? {
@@ -74,7 +95,7 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
     const body = {
       name: values.name,
       code: values.code,
-      // extra_metadata: values.extraMetadata,
+      extra_metadata: values.extraMetadata ? JSON.parse(values.extraMetadata) : {},
       access_modifier: values.accessModifier,
       geometry: values.selectedAsset && geometryValidator(values.selectedAsset.location) ? {
         "type":"Point",
@@ -113,15 +134,20 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
           organisation: selectedOrganisation.uuid
         })
       })
-        .then(data => {
-          const status = data.status;
+        .then(response => {
+          const status = response.status;
           if (status === 201) {
-            props.addNotification('Success! Location creatd', 2000);
-            props.history.push('/data_management/timeseries/locations');
+            // props.addNotification('Success! Location creatd', 2000);
+            // props.history.push('/data_management/timeseries/locations');
+            setLocationCreatedModal(true);
+            return response.json();
           } else {
             props.addNotification(status, 2000);
-            console.error(data);
+            console.error(response);
           };
+        })
+        .then(parsedRes => {
+          props.updateLocation(parsedRes);
         })
         .catch(console.error);
     };
@@ -156,7 +182,7 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
         onSubmit={handleSubmit}
         onReset={handleReset}
       >
-        <span className={formStyles.FormFieldTitle}>
+        <span className={`${formStyles.FormFieldTitle} ${formStyles.FirstFormFieldTitle}`}>
           1: General
         </span>
         <TextInput
@@ -207,7 +233,7 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
-        {/* <TextArea
+        <TextArea
           title={'Extra metadata (JSON)'}
           name={'extraMetadata'}
           placeholder={'Please enter in valid JSON format'}
@@ -219,7 +245,7 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
           triedToSubmit={triedToSubmit}
           onFocus={handleFocus}
           onBlur={handleBlur}
-        /> */}
+        />
         <span className={formStyles.FormFieldTitle}>
           3: Rights
         </span>
@@ -237,17 +263,74 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
           <CancelButton
             url={'/data_management/timeseries/locations'}
           />
-          <SubmitButton
-            onClick={tryToSubmitForm}
-          />
+          <div style={{display: "flex"}}>
+            {currentRecord ? (
+              <div style={{ marginRight: 16 }}>
+                <FormActionButtons
+                  actions={[
+                    {
+                      displayValue: "Delete",
+                      actionFunction: () => setShowDeleteModal(true)
+                    },
+                  ]} 
+                />
+              </div>
+            ) : null}
+            <SubmitButton
+              onClick={tryToSubmitForm}
+            />
+          </div>
         </div>
       </form>
+      {locationCreatedModal ? (
+        <Modal
+          title={'Location created'}
+          buttonConfirmName={'Continue'}
+          onClickButtonConfirm={() => props.history.push('/data_management/timeseries/timeseries/new')}
+          cancelAction={() => {
+            props.removeLocation();
+            props.history.push('/data_management/timeseries/locations');
+          }}
+        >
+          <p>A new location has been created.</p>
+          <p>You can choose to add a new time series to the location or go back to the location list.</p>
+        </Modal>
+      ) : null}
+      {currentRecord && showDeleteModal && !dependentTimeseries ? (
+        <Modal
+          title={'Loading'}
+          cancelAction={() => {
+            setShowDeleteModal(false);
+            setDependentTimeseries(null);
+          }}
+        >
+          <MDSpinner size={24} /><span style={{ marginLeft: 40 }}>Loading dependent time series ...</span>
+        </Modal>
+      ) : null}
+      {currentRecord && showDeleteModal && dependentTimeseries && dependentTimeseries.length === 0 ? (
+        <DeleteModal
+          rows={[currentRecord]}
+          displayContent={[{name: "name", width: 40}, {name: "uuid", width: 60}]}
+          fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
+          handleClose={() => setShowDeleteModal(false)}
+          tableUrl={'/data_management/timeseries/locations'}
+        />
+      ) : null}
+      {currentRecord && showDeleteModal && dependentTimeseries && dependentTimeseries.length ? (
+        <DeleteLocationNotAllowed
+          name={currentRecord.name}
+          uuids={dependentTimeseries.map(ts => ts.uuid)}
+          closeDialogAction={() => setShowDeleteModal(false)}
+        />
+      ) : null}
     </ExplainSideColumn>
   );
 };
 
 const mapPropsToDispatch = (dispatch: any) => ({
-  addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout))
+  addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout)),
+  updateLocation: (location: any) => dispatch(updateLocation(location)),
+  removeLocation: () => dispatch(removeLocation()),
 });
 type DispatchProps = ReturnType<typeof mapPropsToDispatch>;
 

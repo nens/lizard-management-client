@@ -15,7 +15,11 @@ import { addNotification } from '../../../actions';
 import { getOrganisations, getSelectedOrganisation } from '../../../reducers';
 import { convertToSelectObject } from '../../../utils/convertToSelectObject';
 import { monitoringNetworkFormHelpText } from '../../../utils/help_texts/helpTextForMonitoringNetworks';
+import { fetchWithOptions } from '../../../utils/fetchWithOptions';
+import { baseUrl } from './MonitoringNetworksTable';
 import TimeseriesModal from './TimeseriesModal';
+import FormActionButtons from '../../../components/FormActionButtons';
+import DeleteModal from '../../../components/DeleteModal';
 import formStyles from './../../../styles/Forms.module.css';
 import monitoringNetworkIcon from "../../../images/monitoring_network_icon.svg";
 
@@ -30,6 +34,7 @@ const MonitoringNetworkForm = (props: Props & DispatchProps & RouteComponentProp
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const organisations = useSelector(getOrganisations).available;
   const organisationsToSwitchTo = organisations.filter((org: any) => org.roles.includes('admin'));
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
 
   // Modal to manage timeseries of a monitoring network
   const [timeseriesModal, setTimeseriesModal] = useState<boolean>(false);
@@ -38,12 +43,12 @@ const MonitoringNetworkForm = (props: Props & DispatchProps & RouteComponentProp
     name: currentNetwork.name,
     description: currentNetwork.description,
     accessModifier: currentNetwork.access_modifier,
-    organisation: currentNetwork.organisation ? convertToSelectObject(currentNetwork.organisation.uuid.replace(/-/g, ""), currentNetwork.organisation.name) : null
+    organisation: currentNetwork.organisation ? convertToSelectObject(currentNetwork.organisation.uuid, currentNetwork.organisation.name) : null
   } : {
     name: null,
     description: null,
     accessModifier: 'Private',
-    organisation: selectedOrganisation ? convertToSelectObject(selectedOrganisation.uuid.replace(/-/g, ""), selectedOrganisation.name) : null
+    organisation: selectedOrganisation ? convertToSelectObject(selectedOrganisation.uuid, selectedOrganisation.name) : null
   };
 
   const onSubmit = (values: Values) => {
@@ -125,7 +130,7 @@ const MonitoringNetworkForm = (props: Props & DispatchProps & RouteComponentProp
         onSubmit={handleSubmit}
         onReset={handleReset}
       >
-        <span className={formStyles.FormFieldTitle}>
+        <span className={`${formStyles.FormFieldTitle} ${formStyles.FirstFormFieldTitle}`}>
           1: General
         </span>
         <TextInput
@@ -174,6 +179,7 @@ const MonitoringNetworkForm = (props: Props & DispatchProps & RouteComponentProp
             e.preventDefault();
             setTimeseriesModal(true);
           }}
+          readOnly={!currentNetwork}
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
@@ -208,15 +214,38 @@ const MonitoringNetworkForm = (props: Props & DispatchProps & RouteComponentProp
           <CancelButton
             url={backUrl}
           />
-          <SubmitButton
-            onClick={tryToSubmitForm}
-          />
+          <div style={{display: "flex"}}>
+            {currentNetwork ? (
+              <div style={{ marginRight: 16 }}>
+                <FormActionButtons
+                  actions={[
+                    {
+                      displayValue: "Delete",
+                      actionFunction: () => setShowDeleteModal(true)
+                    },
+                  ]} 
+                />
+              </div>
+            ) : null}
+            <SubmitButton
+              onClick={tryToSubmitForm}
+            />
+          </div>
         </div>
       </form>
       {timeseriesModal ? (
         <TimeseriesModal
           currentMonitoringNetworkUuid={currentNetwork ? currentNetwork.uuid : null}
           handleClose={() => setTimeseriesModal(false)}
+        />
+      ) : null}
+      {currentNetwork && showDeleteModal ? (
+        <DeleteModal
+          rows={[currentNetwork]}
+          displayContent={[{name: "name", width: 40}, {name: "uuid", width: 60}]}
+          fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
+          handleClose={() => setShowDeleteModal(false)}
+          tableUrl={backUrl}
         />
       ) : null}
     </ExplainSideColumn>

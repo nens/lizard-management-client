@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect, useSelector } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { ExplainSideColumn } from '../../../components/ExplainSideColumn';
@@ -22,6 +22,10 @@ import { rasterIntervalStringServerToDurationObject } from '../../../utils/isoUt
 import { getUuidFromUrl } from '../../../utils/getUuidFromUrl';
 import { getTimeseriesLabel, TimeseriesFromTimeseriesEndpoint } from '../../../types/timeseriesType';
 import { alarmFormHelpText } from '../../../utils/help_texts/helpTextForAlarms';
+import { fetchWithOptions } from '../../../utils/fetchWithOptions';
+import { baseUrl } from './TimeseriesAlarmTable';
+import FormActionButtons from '../../../components/FormActionButtons';
+import DeleteModal from '../../../components/DeleteModal';
 import formStyles from './../../../styles/Forms.module.css';
 import rasterAlarmIcon from "../../../images/alarm@3x.svg";
 
@@ -34,6 +38,7 @@ const TimeseriesAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps>
   const { currentTimeseriesAlarm, timeseries } = props;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const navigationUrl = "/alarms/notifications/timeseries_alarms";
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
 
   const initialValues = currentTimeseriesAlarm && timeseries ? {
     name: currentTimeseriesAlarm.name,
@@ -157,7 +162,7 @@ const TimeseriesAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps>
         onSubmit={handleSubmit}
         onReset={handleReset}
       >
-        <span className={formStyles.FormFieldTitle}>
+        <span className={`${formStyles.FormFieldTitle} ${formStyles.FirstFormFieldTitle}`}>
           1: General
         </span>
         <TextInput
@@ -318,11 +323,34 @@ const TimeseriesAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps>
           <CancelButton
             url={navigationUrl}
           />
-          <SubmitButton
-            onClick={tryToSubmitForm}
-          />
+          <div style={{display: "flex"}}>
+            {currentTimeseriesAlarm ? (
+              <div style={{ marginRight: 16 }}>
+                <FormActionButtons
+                  actions={[
+                    {
+                      displayValue: "Delete",
+                      actionFunction: () => setShowDeleteModal(true)
+                    },
+                  ]} 
+                />
+              </div>
+            ) : null}
+            <SubmitButton
+              onClick={tryToSubmitForm}
+            />
+          </div>
         </div>
       </form>
+      {currentTimeseriesAlarm && showDeleteModal ? (
+        <DeleteModal
+          rows={[currentTimeseriesAlarm]}
+          displayContent={[{name: "name", width: 40}, {name: "uuid", width: 60}]}
+          fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
+          handleClose={() => setShowDeleteModal(false)}
+          tableUrl={navigationUrl}
+        />
+      ) : null}
     </ExplainSideColumn>
   );
 };

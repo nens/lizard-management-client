@@ -15,7 +15,7 @@ import MDSpinner from "react-md-spinner";
 import { defaultRasterSourceExplanationTextTable } from '../../utils/help_texts/helpTextForRasters';
 import { getScenarioTotalSize } from '../../reducers';
 
-const baseUrl = "/api/v4/rastersources/";
+export const baseUrl = "/api/v4/rastersources/";
 const navigationUrlRasters = "/data_management/rasters/sources";
 
 export const RasterSourceTable = (props:any) =>  {

@@ -1,7 +1,7 @@
 import { storeDispatch } from "./../index";
 import { addNotification, addTaskUuidToFile, updateFileStatus } from "../actions";
 import { uploadRasterSourceFile } from "../api/rasters";
-import { AcceptedFile } from "../form/UploadRasterData";
+import { AcceptedFile } from "../form/UploadData";
 
 export const sendDataToLizardRecursive = (uuid: string, data: AcceptedFile[], temporal: boolean) => {
   // make a copy of the original array

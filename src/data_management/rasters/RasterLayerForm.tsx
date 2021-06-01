@@ -36,17 +36,13 @@ import rasterLayerIcon from "../../images/raster_layer_icon.svg";
 import formStyles from './../../styles/Forms.module.css';
 import FormActionButtons from '../../components/FormActionButtons';
 import DeleteModal from '../../components/DeleteModal';
-import { fetchRasterLayersWithOptions } from './RasterLayerTable';
 import { SelectDropdown } from '../../form/SelectDropdown';
 import { convertToSelectObject } from '../../utils/convertToSelectObject';
+import { fetchWithOptions } from '../../utils/fetchWithOptions';
+import { baseUrl } from './RasterLayerTable';
 
 interface Props {
   currentRasterLayer?: RasterLayerFromAPI,
-};
-
-interface PropsFromDispatch {
-  removeRasterSourceUUID: () => void,
-  addNotification: (message: string | number, timeout: number) => void,
 };
 
 // Helper function to fetch paginated raster sources with search query
@@ -98,7 +94,7 @@ export const fetchObservationTypes = async (searchQuery: string) => {
   });
 };
 
-const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (props) => {
+const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (props) => {
   const { currentRasterLayer, removeRasterSourceUUID } = props;
   const supplierIds = useSelector(getSupplierIds).available;
   const organisationsToSharedWith = useSelector(getOrganisations).availableForRasterSharedWith;
@@ -125,8 +121,8 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
     observationType: currentRasterLayer.observation_type ? convertToSelectObject(currentRasterLayer.observation_type.id, currentRasterLayer.observation_type.code) : null,
     colorMap: {options: currentRasterLayer.options, rescalable: currentRasterLayer.rescalable, customColormap: currentRasterLayer.colormap || {}},
     sharedWith: currentRasterLayer.shared_with.length === 0 ? false : true,
-    organisationsToSharedWith: currentRasterLayer.shared_with.map(organisation => convertToSelectObject(organisation.uuid.replace(/-/g, ""), organisation.name)) || [],
-    organisation: currentRasterLayer.organisation ? convertToSelectObject(currentRasterLayer.organisation.uuid.replace(/-/g, ""), currentRasterLayer.organisation.name) : null,
+    organisationsToSharedWith: currentRasterLayer.shared_with.map(organisation => convertToSelectObject(organisation.uuid, organisation.name)) || [],
+    organisation: currentRasterLayer.organisation ? convertToSelectObject(currentRasterLayer.organisation.uuid, currentRasterLayer.organisation.name) : null,
     supplier: currentRasterLayer.supplier ? convertToSelectObject(currentRasterLayer.supplier) : null,
   } : {
     name: null,
@@ -138,7 +134,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
     colorMap: {options: {}, rescalable: true, customColormap: {}},
     sharedWith: false,
     organisationsToSharedWith: [],
-    organisation: selectedOrganisation ? convertToSelectObject(selectedOrganisation.uuid.replace(/-/g, ""), selectedOrganisation.name) : null,
+    organisation: selectedOrganisation ? convertToSelectObject(selectedOrganisation.uuid, selectedOrganisation.name) : null,
     supplier: null,
   };
   const onSubmit = (values: Values) => {
@@ -262,7 +258,7 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
       >
       </form>
       <div className={formStyles.Form}>
-        <span className={formStyles.FormFieldTitle}>
+        <span className={`${formStyles.FormFieldTitle} ${formStyles.FirstFormFieldTitle}`}>
           1: General
         </span>
         <TextInput
@@ -484,34 +480,31 @@ const RasterLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps>
             url={'/data_management/rasters/layers'}
             form={"raster_layer_form_id"}
           />
-          <div style={{
-            display: "flex"
-          }}>
-            {currentRasterLayer?
-             <div style={{marginRight: "16px"}}> 
-              <FormActionButtons
-                actions={[
-                  {
-                    displayValue: "Delete",
-                    actionFunction: () => {setShowDeleteModal(true)}
-                  },
-                ]}
-              />
-            </div>
-            :null}
+          <div style={{ display: "flex" }}>
+            {currentRasterLayer ? (
+              <div style={{ marginRight: 16 }}> 
+                <FormActionButtons
+                  actions={[
+                    {
+                      displayValue: "Delete",
+                      actionFunction: () => setShowDeleteModal(true)
+                    },
+                  ]}
+                />
+              </div>
+            ) : null}
             <SubmitButton
               onClick={tryToSubmitForm}
               form={"raster_layer_form_id"}
             />
           </div>
-          
         </div>
       </div>
       {currentRasterLayer && showDeleteModal ? (
         <DeleteModal
           rows={[currentRasterLayer]}
-          displayContent={[{name: "name", width: 65}, {name: "prefix", width: 35}]}
-          fetchFunction={fetchRasterLayersWithOptions}
+          displayContent={[{name: "name", width: 40}, {name: "uuid", width: 60}]}
+          fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
           handleClose={() => setShowDeleteModal(false)}
           tableUrl={'/data_management/rasters/layers'}
         />
@@ -524,5 +517,6 @@ const mapDispatchToProps = (dispatch: any) => ({
   removeRasterSourceUUID: () => dispatch(removeRasterSourceUUID()),
   addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout)),
 });
+type DispatchProps = ReturnType<typeof mapDispatchToProps>;
 
 export default connect(null, mapDispatchToProps)(withRouter(RasterLayerForm));

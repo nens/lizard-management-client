@@ -4,18 +4,12 @@ import TableStateContainer from '../../components/TableStateContainer';
 import TableActionButtons from '../../components/TableActionButtons';
 import tableStyles from "../../components/Table.module.css";
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
+import { fetchWithOptions } from '../../utils/fetchWithOptions';
 import DeleteModal from '../../components/DeleteModal';
 import groupIcon from "../../images/group.svg";
 
-const baseUrl = "/api/v4/contactgroups/";
+export const baseUrl = "/api/v4/contactgroups/";
 const navigationUrl = "/alarms/groups";
-
-const fetchGroupsWithOptions = (ids: string[], fetchOptions: RequestInit) => {
-  const fetches = ids.map (id => {
-    return fetch(baseUrl + id + "/", fetchOptions);
-  });
-  return Promise.all(fetches)
-};
 
 export const GroupTable: React.FC<RouteComponentProps> = (props) =>  {
   const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
@@ -118,7 +112,7 @@ export const GroupTable: React.FC<RouteComponentProps> = (props) =>  {
         <DeleteModal
           rows={rowsToBeDeleted}
           displayContent={[{name: "name", width: 30}, {name: "id", width: 70}]}
-          fetchFunction={fetchGroupsWithOptions}
+          fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
           resetTable={resetTable}
           handleClose={() => {
             setRowsToBeDeleted([]);

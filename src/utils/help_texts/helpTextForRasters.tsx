@@ -3,7 +3,6 @@ import React from 'react';
 import {
   accessModifierHelpText,
   datasetHelpText,
-  descriptionHelpText,
   HelpText,
   nameHelpText,
   organisationHelpText,
@@ -34,7 +33,7 @@ export const rasterSourceFormHelpText: HelpText = {
   default: 'Fill in the form to create a new Raster Source.',
   name: nameHelpText,
   uuid: uuidHelpText,
-  description: descriptionHelpText,
+  description: 'Please give an accurate description of the content of this raster source.',
   supplierCode: supplierCodeHelpText,
   temporal: 'Indicates if there are multiple rasters over a time period.',
   interval: (

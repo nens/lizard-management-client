@@ -1,38 +1,50 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import TableStateContainer from '../../../components/TableStateContainer';
 import { NavLink, RouteComponentProps } from "react-router-dom";
 import { ExplainSideColumn } from '../../../components/ExplainSideColumn';
 import { getAccessibiltyText } from '../../../form/AccessModifier';
 import { defaultTableHelpText } from '../../../utils/help_texts/defaultHelpText';
+import { fetchWithOptions } from '../../../utils/fetchWithOptions';
 import TableActionButtons from '../../../components/TableActionButtons';
 import AuthorisationModal from '../../../components/AuthorisationModal';
+import DeleteLocationNotAllowed from './DeleteLocationNotAllowed';
 import DeleteModal from '../../../components/DeleteModal';
+import Modal from '../../../components/Modal';
 import tableStyles from "../../../components/Table.module.css";
 import locationIcon from "../../../images/locations_icon.svg";
+import MDSpinner from 'react-md-spinner';
 
-const baseUrl = "/api/v4/locations/";
+export const baseUrl = "/api/v4/locations/";
 const navigationUrl = "/data_management/timeseries/locations";
 
-const fetchLocationsWithOptions = (uuids: string[], fetchOptions: RequestInit) => {
-  const fetches = uuids.map (uuid => {
-    return fetch(baseUrl + uuid + "/", fetchOptions);
-  });
-  return Promise.all(fetches);
-};
-
 export const LocationsTable = (props: RouteComponentProps) =>  {
-  const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
+  const [rowToBeDeleted, setRowToBeDeleted] = useState<any | null>(null);
   const [resetTable, setResetTable] = useState<Function | null>(null);
+  const [dependentTimeseries, setDependentTimeseries] = useState<any[] | null>(null);
 
   // selected rows for set accessibility action
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
 
+  useEffect(() => {
+    if (rowToBeDeleted) {
+      if (!rowToBeDeleted.uuid) return;
+
+      fetch(`/api/v4/timeseries/?page_size=0&location__uuid=${rowToBeDeleted.uuid}`, {
+        credentials: "same-origin"
+      }).then(
+        res => res.json()
+      ).then(
+        data => setDependentTimeseries(data)
+      ).catch(console.error);
+    };
+  }, [rowToBeDeleted]);
+
   const deleteActions = (
-    rows: any[],
+    row: any,
     triggerReloadWithCurrentPage: Function,
     setCheckboxes: Function | null
   ) => {
-    setRowsToBeDeleted(rows);
+    setRowToBeDeleted(row);
     setResetTable(() => () => {
       triggerReloadWithCurrentPage();
       setCheckboxes && setCheckboxes([]);
@@ -95,7 +107,7 @@ export const LocationsTable = (props: RouteComponentProps) =>  {
                 {
                   displayValue: "Delete",
                   actionFunction: (row: any, _updateTableRow: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any) => {
-                    deleteActions([row], triggerReloadWithCurrentPage, null)
+                    deleteActions(row, triggerReloadWithCurrentPage, null)
                   }
                 },
               ]}
@@ -134,12 +146,6 @@ export const LocationsTable = (props: RouteComponentProps) =>  {
               });
             }
           },
-          {
-            displayValue: "Delete",
-            actionFunction: (rows: any[], _tableData: any, _setTableData: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any, setCheckboxes: any) => {
-              deleteActions(rows, triggerReloadWithCurrentPage, setCheckboxes)
-            }
-          }
         ]}
         newItemOnClick={handleNewClick}
         filterOptions={[
@@ -147,22 +153,44 @@ export const LocationsTable = (props: RouteComponentProps) =>  {
           {value: 'code__startswith=', label: 'Code *'},
         ]}
       />
-      {rowsToBeDeleted.length > 0 ? (
+      {rowToBeDeleted && !dependentTimeseries ? (
+        <Modal
+          title={'Loading'}
+          cancelAction={() => {
+            setRowToBeDeleted(null);
+            setDependentTimeseries(null);
+          }}
+        >
+          <MDSpinner size={24} /><span style={{ marginLeft: 40 }}>Loading dependent time series ...</span>
+        </Modal>
+      ) : null}
+      {rowToBeDeleted && dependentTimeseries && dependentTimeseries.length === 0  ? (
         <DeleteModal
-          rows={rowsToBeDeleted}
+          rows={[rowToBeDeleted]}
           displayContent={[{name: "name", width: 40}, {name: "uuid", width: 60}]}
-          fetchFunction={fetchLocationsWithOptions}
+          fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
           resetTable={resetTable}
           handleClose={() => {
-            setRowsToBeDeleted([]);
+            setRowToBeDeleted(null);
+            setDependentTimeseries(null);
             setResetTable(null);
           }}
         />
       ) : null}
-      {selectedRows.length > 0 ? (
+      {rowToBeDeleted && dependentTimeseries && dependentTimeseries.length ? (
+        <DeleteLocationNotAllowed
+          name={rowToBeDeleted.name}
+          uuids={dependentTimeseries.map(ts => ts.uuid)}
+          closeDialogAction={() => {
+            setRowToBeDeleted(null);
+            setDependentTimeseries(null);
+          }}
+        />
+      ) : null}
+      {selectedRows.length ? (
         <AuthorisationModal
           rows={selectedRows}
-          fetchFunction={fetchLocationsWithOptions}
+          fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
           resetTable={resetTable}
           handleClose={() => {
             setSelectedRows([]);
