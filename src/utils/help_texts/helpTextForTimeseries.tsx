@@ -19,9 +19,15 @@ export const timeseriesFormHelpText: HelpText = {
   observationType: 'Choose how the data is measured and its units.',
   location: 'Choose the location you want to add this timeseries to.',
   valueType: 'Specify what kind of data is supplied.',
-  datasource: '',
+  datasource: 'Choose the datasource this timeseries originates from.',
   intervalCheckbox: 'Specify a time range between each time series step.',
   interval: 'Specify a time range between each time series step.',
+  extraMetadata: (
+    <>
+      <p>Free JSON field to add information to this object.</p>
+      <p><i>e.g. {'{"long_term_average": -1.43}'}</i></p>
+    </>
+  ),
   accessModifier: accessModifierHelpText,
   organisation: organisationHelpText,
   supplier: supplierHelpText,
