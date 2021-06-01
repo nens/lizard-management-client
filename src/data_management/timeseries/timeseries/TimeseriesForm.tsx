@@ -9,6 +9,7 @@ import { SelectDropdown } from '../../../form/SelectDropdown';
 import { DurationField } from '../../../form/DurationField';
 import { CheckBox } from '../../../form/CheckBox';
 import { TextArea } from '../../../form/TextArea';
+import { UploadCsv } from '../../../form/UploadCsv';
 import { SubmitButton } from '../../../form/SubmitButton';
 import { CancelButton } from '../../../form/CancelButton';
 import { useForm, Values } from '../../../form/useForm';
@@ -90,6 +91,7 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
     accessModifier: currentTimeseries.access_modifier,
     supplier: currentTimeseries.supplier ? convertToSelectObject(currentTimeseries.supplier) : null,
     supplierCode: currentTimeseries.supplier_code,
+    files: [],
   } : {
     name: null,
     code: null,
@@ -102,7 +104,8 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
     extraMetadata: null,
     accessModifier: 'Private',
     supplier: username ? convertToSelectObject(username) : null,
-    supplierCode: null
+    supplierCode: null,
+    files: [],
   };
 
   const onSubmit = (values: Values) => {
@@ -132,6 +135,7 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
         if (status === 201) {
           props.addNotification('Success! New time series created', 2000);
           props.history.push(backUrl);
+          return response.json();
         } else if (status === 403) {
           props.addNotification("Not authorized", 2000);
           console.error(response);
@@ -139,6 +143,10 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
           props.addNotification(status, 2000);
           console.error(response);
         };
+      })
+      .then(parsedRes => {
+        // Upload .csv files
+        handleCsvFilesUpload(values.files, parsedRes.uuid);
       })
       .catch(console.error);
     } else {
@@ -153,6 +161,8 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
         if (status === 200) {
           props.addNotification('Success! Time series updated', 2000);
           props.history.push(backUrl);
+          // Upload .csv files
+          handleCsvFilesUpload(values.files, currentTimeseries.uuid);
         } else {
           props.addNotification(status, 2000);
           console.error(response);
@@ -160,6 +170,31 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
       })
       .catch(console.error);
     };
+  };
+
+  // Upload .csv files to timeseries by sending a POST request
+  // to the event list endpoint of the timeseries
+  const handleCsvFilesUpload = (files: File[], uuid: string) => {
+    if (!uuid || files.length === 0) return;
+    return files.map(file => {
+      const form = new FormData();
+      form.append("file", file);
+      return fetch(`/api/v4/timeseries/${uuid}/events/`, {
+        credentials: "same-origin",
+        method: "POST",
+        headers: {
+          mimeType: "multipart/form-data"
+        },
+        body: form
+      }).then(res => {
+        if (res.status === 204) {
+          props.addNotification(`${file.name} successfully imported!`, 2000);
+        } else {
+          props.addNotification(res.status, 2000);
+          console.error(file.name, res);
+        };
+      }).catch(console.error);
+    });
   };
 
   const {
@@ -355,6 +390,14 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
             onBlur={handleBlur}
           />
         </label>
+        <UploadCsv
+          title={'CSV Files'}
+          name={'files'}
+          data={values.files}
+          setData={data => handleValueChange('files', data)}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+        />
         <TextArea
           title={'Extra metadata (JSON)'}
           name={'extraMetadata'}
