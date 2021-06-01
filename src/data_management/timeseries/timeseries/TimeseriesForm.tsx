@@ -9,7 +9,7 @@ import { SelectDropdown } from '../../../form/SelectDropdown';
 import { DurationField } from '../../../form/DurationField';
 import { CheckBox } from '../../../form/CheckBox';
 import { TextArea } from '../../../form/TextArea';
-import { UploadCsv } from '../../../form/UploadCsv';
+import { AcceptedFile, UploadData } from '../../../form/UploadData';
 import { SubmitButton } from '../../../form/SubmitButton';
 import { CancelButton } from '../../../form/CancelButton';
 import { useForm, Values } from '../../../form/useForm';
@@ -91,7 +91,7 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
     accessModifier: currentTimeseries.access_modifier,
     supplier: currentTimeseries.supplier ? convertToSelectObject(currentTimeseries.supplier) : null,
     supplierCode: currentTimeseries.supplier_code,
-    files: [],
+    data: [],
   } : {
     name: null,
     code: null,
@@ -105,7 +105,7 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
     accessModifier: 'Private',
     supplier: username ? convertToSelectObject(username) : null,
     supplierCode: null,
-    files: [],
+    data: [],
   };
 
   const onSubmit = (values: Values) => {
@@ -146,7 +146,9 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
       })
       .then(parsedRes => {
         // Upload .csv files
-        handleCsvFilesUpload(values.files, parsedRes.uuid);
+        const acceptedFiles = values.data as AcceptedFile[] || [];
+        const uploadFiles = acceptedFiles.map(f => f.file);
+        handleCsvFilesUpload(uploadFiles, parsedRes.uuid);
       })
       .catch(console.error);
     } else {
@@ -162,7 +164,9 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
           props.addNotification('Success! Time series updated', 2000);
           props.history.push(backUrl);
           // Upload .csv files
-          handleCsvFilesUpload(values.files, currentTimeseries.uuid);
+          const acceptedFiles = values.data as AcceptedFile[] || [];
+          const uploadFiles = acceptedFiles.map(f => f.file);
+          handleCsvFilesUpload(uploadFiles, currentTimeseries.uuid);
         } else {
           props.addNotification(status, 2000);
           console.error(response);
@@ -390,11 +394,13 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
             onBlur={handleBlur}
           />
         </label>
-        <UploadCsv
+        <UploadData
           title={'CSV Files'}
-          name={'files'}
-          data={values.files}
-          setData={data => handleValueChange('files', data)}
+          name={'data'}
+          temporal={false}
+          fileTypes={['.csv']}
+          data={values.data}
+          setData={data => handleValueChange('data', data)}
           onFocus={handleFocus}
           onBlur={handleBlur}
         />

@@ -10,7 +10,7 @@ import { TextInput } from './../../form/TextInput';
 import { SubmitButton } from '../../form/SubmitButton';
 import { CancelButton } from '../../form/CancelButton';
 import { SelectDropdown } from '../../form/SelectDropdown';
-import { AcceptedFile, UploadRasterData } from './../../form/UploadRasterData';
+import { AcceptedFile, UploadData } from '../../form/UploadData';
 import { getOrganisations, getSelectedOrganisation, getSupplierIds } from '../../reducers';
 import { useForm, Values } from '../../form/useForm';
 import { minLength } from '../../form/validators';
@@ -244,10 +244,11 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           onBlur={handleBlur}
           readOnly={!!currentRasterSource || values.temporal === false}
         />
-        <UploadRasterData
+        <UploadData
           title={'Data'}
           name={'data'}
           temporal={values.temporal}
+          fileTypes={["image/tiff", ".geotiff"]}
           data={values.data}
           setData={data => handleValueChange('data', data)}
           onFocus={handleFocus}

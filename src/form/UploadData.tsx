@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDropzone } from "react-dropzone";
 import formStyles from "./../styles/Forms.module.css";
-import uploadStyles from './UploadRasterData.module.css';
+import uploadStyles from './UploadData.module.css';
 import buttonStyles from './../styles/Buttons.module.css';
 
 import moment from "moment";
@@ -19,17 +19,19 @@ interface MyProps {
   title: string,
   name: string,
   temporal: boolean,
+  fileTypes: string[], // array of accepted file types e.g. .tiff .csv
   data: AcceptedFile[],
   setData: (data: AcceptedFile[]) => void,
   onFocus?: (e: any) => void,
   onBlur?: () => void,
 }
 
-export const UploadRasterData: React.FC<MyProps> = (props) => {
+export const UploadData: React.FC<MyProps> = (props) => {
   const {
     title,
     name,
     temporal,
+    fileTypes,
     data,
     setData,
     onFocus,
@@ -99,7 +101,7 @@ export const UploadRasterData: React.FC<MyProps> = (props) => {
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    accept: ["image/tiff", ".geotiff"] // accepted file types
+    accept: fileTypes // accepted file types
   });
 
   const dropZone = (
@@ -115,7 +117,7 @@ export const UploadRasterData: React.FC<MyProps> = (props) => {
       {isDragActive ? (
         <span>Drop selected files here ...</span>
       ) : (
-        <span>Drag and drop .tiff files here or
+        <span>Drag and drop {fileTypes.includes('.csv') ? '.csv' : '.tiff'} files here or
           <span
             className={buttonStyles.NewButton}
             style={{ marginLeft: 10}}
