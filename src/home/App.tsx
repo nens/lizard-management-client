@@ -32,6 +32,16 @@ const AppComponent = (props: RouteComponentProps) => {
     const selectedOrganisation = useSelector(getSelectedOrganisation)
 
     const currentOrganisationRoles = (selectedOrganisation && selectedOrganisation.roles) || [];
+
+    const filteredAppTiles = appTiles.filter((appTile)=>{
+      if (selectedOrganisation.name === "Nelen & Schuurmans") {
+        return true;
+      }
+      if (appTile.linksTo === "/map_viewer") {
+        return false;
+      }
+      return true;
+    })
     
     return (
       <div>
@@ -46,9 +56,9 @@ const AppComponent = (props: RouteComponentProps) => {
                 native
                 from={{ opacity: 0, x: -5 }}
                 to={{ opacity: 1, x: 0 }}
-                keys={appTiles.map(item => item.title)}
+                keys={filteredAppTiles.map(item => item.title)}
               >
-                {appTiles
+                {filteredAppTiles
                   .filter(appTile=> appTile.onPage === currentRelativeUrl )
                   .sort((appTileA, appTileB)=> appTileA.order - appTileB.order )
                   // todo resolve any. x:any because x needs to support  x.interpolate
