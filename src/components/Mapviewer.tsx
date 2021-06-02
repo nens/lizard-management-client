@@ -18,6 +18,34 @@ function MapViewer (props: MyProps & DispatchProps) {
   });
   const [selectedRasters, setSelectedRasters ] = useState<any[]>([]);
   const [showAddRasters, setShowAddRasters ] = useState(false);
+  const [selectedRasterForReOrdering, setSelectedRasterForReOrdering ] = useState<null | string>(null);
+
+  const moveSelectedRasterUp = () => {
+    const ind = selectedRasters.findIndex((item)=>{return item.uuid === selectedRasterForReOrdering})
+    const length = selectedRasters.length;
+    if (ind < (length -1)) {
+      const newArr = arraymove(selectedRasters, ind, ind+1)
+      setSelectedRasters(newArr)
+    }
+  }
+  const moveSelectedRasterDown = () => {
+    const ind = selectedRasters.findIndex((item)=>{return item.uuid === selectedRasterForReOrdering})
+    if (ind > 0) {
+      const newArr = arraymove(selectedRasters, ind, ind-1)
+      setSelectedRasters(newArr)
+    }
+  }
+
+
+  const arraymove = (arrInput: any[], fromIndex: number, toIndex: number) => {
+    const arr = arrInput.map(id=>id)
+    const element = arr[fromIndex];
+    arr.splice(fromIndex, 1);
+    arr.splice(toIndex, 0, element);
+    return arr;
+}
+
+const reversedRasters = selectedRasters.map(id=>id).reverse();
 
   return (
     <div 
@@ -43,11 +71,27 @@ function MapViewer (props: MyProps & DispatchProps) {
       >
        
 
-        {selectedRasters.map((raster)=>{
-          return (
-            <div>{raster.name}</div>
-          );
-        })}
+        <form>
+          {reversedRasters.map((raster)=>{
+            return (
+              <div
+                key={raster.uuid}
+              >{raster.name} 
+                <input 
+                  checked={selectedRasterForReOrdering === raster.uuid} 
+                  onChange={(event)=>{
+                    setSelectedRasterForReOrdering(raster.uuid)
+                  }} 
+                  type="radio" value={raster.uuid} name="select_for_change_order"
+                ></input>
+              </div>
+            );
+          })}
+
+          <button type="button" onClick={moveSelectedRasterUp} disabled={!selectedRasterForReOrdering}> Up</button>
+          <button type="button" onClick={moveSelectedRasterDown} disabled={!selectedRasterForReOrdering}>Down</button>
+        </form>
+        
 
         {!showAddRasters? 
         <button onClick={()=>{setShowAddRasters(true)}}>Add new layer</button>
