@@ -6,23 +6,65 @@ import {mapBoxAccesToken} from '../mapboxConfig';
 import { MapViewerRasterLayerTable} from "./MapViewerRasterLayerTable";
 
 
+const rasterStyle = {
+  "version": 8,
+  "sources": {
+    // 'background': {
+    //   `https://api.mapbox.com/styles/v1/nelenschuurmans/ck8sgpk8h25ql1io2ccnueuj6/tiles/256/{z}/{x}/{y}@2x?access_token=${mapBoxAccesToken}`} />
+    // }
+    'wms-test-source': {
+        'type': 'raster',
+        // use the tiles option to specify a WMS tile source URL
+        // https://docs.mapbox.com/mapbox-gl-js/style-spec/sources/
+        'tiles': [
+        'https://img.nj.gov/imagerywms/Natural2015?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=Natural2015'
+        ],
+        'tileSize': 256,
+      }
+  },
+  "layers": [{
+      'id': 'wms-test-layer',
+      'type': 'raster',
+      'source': 'wms-test-source',
+      'paint': {},
+      "minzoom": 0,
+      "maxzoom": 22
+  }
+  ]
+}
+
+const mapSource1 = {
+  'type': 'raster',
+  // use the tiles option to specify a WMS tile source URL
+  // https://docs.mapbox.com/mapbox-gl-js/style-spec/sources/
+  'tiles': [
+  'https://img.nj.gov/imagerywms/Natural2015?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=Natural2015'
+  ],
+  'tileSize': 256,
+  "id": "wms-test-layer",
+};
+const mapLayer1 = {
+  'id': 'wms-test-layer',
+  'type': 'raster',
+  'source': 'wms-test-source',
+  'paint': {},
+  "minzoom": 0,
+  "maxzoom": 22
+};
 
 
 interface MyProps {
-}
-
-interface APIResponse {
-  previous: string | null,
-  next: string | null,
-  results: any[]
 }
 
 function MapViewer (props: MyProps & DispatchProps) {
   const { } = props;
 
   const [viewport, setViewport] = useState({
-    latitude: 37.7577,
-    longitude: -122.4376,
+    // latitude: 37.7577,
+    // longitude: -122.4376,
+    // zoom: 8
+    latitude: 40.6892,
+    longitude: -74.5447,
     zoom: 8
   });
   const [selectedRasters, setSelectedRasters ] = useState<any[]>([]);
@@ -81,10 +123,17 @@ function MapViewer (props: MyProps & DispatchProps) {
         height="100%"
         onViewportChange={(viewport:any) => setViewport(viewport)}
         mapboxApiAccessToken={mapBoxAccesToken}
+        // mapStyle={rasterStyle}
+        // style= {'mapbox://styles/mapbox/streets-v11'}
       >
     
-        {/* <Source id="source_id" tileJsonSource={RASTER_SOURCE_OPTIONS} />
-        <Layer type="raster" id="layer_id" sourceId="source_id" /> */}
+        <Source {...mapSource1}>
+          {/* 
+          // @ts-ignore */}
+          <Layer {...mapLayer1} />
+        </Source>
+        
+        
       </ReactMapGL>
     </div>
   )
