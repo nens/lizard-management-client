@@ -64,41 +64,86 @@ const reversedRasters = selectedRasters.map(id=>id).reverse();
           top: 0,
           width: "700px",
           height: "100vh",
-          overflowY: "scroll",
+          overflowY: "auto",
           backgroundColor: "white",
           zIndex: 10,
         }}
       >
        
 
-        <form>
-          {reversedRasters.map((raster)=>{
-            return (
-              <div
-                key={raster.uuid}
-              >{raster.name} 
-                <input 
-                  checked={selectedRasterForReOrdering === raster.uuid} 
-                  onChange={(event)=>{
-                    setSelectedRasterForReOrdering(raster.uuid)
-                  }} 
-                  type="radio" value={raster.uuid} name="select_for_change_order"
-                ></input>
-              </div>
-            );
-          })}
+       <h1>Layers</h1>
+        {reversedRasters.length === 0?<div>No layers added yet</div>:null}
+        {!showAddRasters? 
+        <button onClick={()=>{setShowAddRasters(true)}}>+ Add new layer</button>
+        :null}
+        
+        <form
+          style={{
+            display: "flex",
+            flexDirection: "row",
+          }}
+        >
+          <div>
+            
+            {reversedRasters.map((raster)=>{
+              return (
+                <div
+                  key={raster.uuid}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <span style={{width:"280px", /*display: "inline-block",*/ textAlign: "right"}}>{raster.name} </span>
+                  <input 
+                    checked={selectedRasterForReOrdering === raster.uuid} 
+                    onChange={(event)=>{
+                      setSelectedRasterForReOrdering(raster.uuid)
+                    }} 
+                    type="radio" value={raster.uuid} name="select_for_change_order"
+                  ></input>
+                </div>
+              );
+            })}
+          </div>
 
-          <button type="button" onClick={moveSelectedRasterUp} disabled={!selectedRasterForReOrdering}> Up</button>
-          <button type="button" onClick={moveSelectedRasterDown} disabled={!selectedRasterForReOrdering}>Down</button>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+            }}
+          >
+            { reversedRasters.length > 1?
+            <>
+              <button type="button" onClick={moveSelectedRasterUp} disabled={!selectedRasterForReOrdering}> ^</button>
+              <button type="button" onClick={moveSelectedRasterDown} disabled={!selectedRasterForReOrdering}>v</button>
+            </>
+            :null}
+            
+          </div>
+          
         </form>
         
+        <hr/>
 
-        {!showAddRasters? 
-        <button onClick={()=>{setShowAddRasters(true)}}>Add new layer</button>
-        :null}
+        
         {showAddRasters? 
-        <button onClick={()=>{setShowAddRasters(false)}}>Close new layer table</button>
+        <div
+          style={{
+            position: "relative"
+          }}
+        >
+          <button 
+          style={{
+            position: "absolute",
+            right: "10px",
+            top: "18px",
+          }} 
+          onClick={()=>{setShowAddRasters(false)}}>X</button>
+        </div>
         :null}
+        
         
         {showAddRasters? 
         <MapViewerRasterLayerTable

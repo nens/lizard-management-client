@@ -5,7 +5,7 @@ import AppTile from "../components/AppTile";
 import { Trail, animated } from "react-spring";
 import doArraysHaveEqualElement from '../utils/doArraysHaveEqualElement';
 import {appTiles} from './AppTileConfig';
-import {getSelectedOrganisation} from '../reducers';
+import {getSelectedOrganisation, getUsername} from '../reducers';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 
@@ -29,12 +29,23 @@ const AppComponent = (props: RouteComponentProps) => {
 
     const currentRelativeUrl = props.location.pathname;
 
-    const selectedOrganisation = useSelector(getSelectedOrganisation)
+    const username = useSelector(getUsername);
+    const selectedOrganisation = useSelector(getSelectedOrganisation);
 
     const currentOrganisationRoles = (selectedOrganisation && selectedOrganisation.roles) || [];
 
     const filteredAppTiles = appTiles.filter((appTile)=>{
-      if (selectedOrganisation.name === "Nelen & Schuurmans") {
+      if (
+        selectedOrganisation.name === "Nelen & Schuurmans" &&
+        ( username === "tom.deboer" ||
+          username === "lex.vandolderen" ||
+          username === "remco.gerlich" ||
+          username === "hoan.phung" ||
+          username === "joeri.verheijden" ||
+          username === "lirry.pinter" ||
+          username === "tom.deboer"
+        )
+      ) {
         return true;
       }
       if (appTile.linksTo === "/map_viewer") {
