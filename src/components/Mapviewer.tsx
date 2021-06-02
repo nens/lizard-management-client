@@ -41,23 +41,34 @@ function MapViewer (props: MyProps & DispatchProps) {
           zIndex: 10,
         }}
       >
-        {!showAddRasters? 
-        <button onClick={()=>{setShowAddRasters(true)}}>Add</button>
-        :null}
-        {showAddRasters? 
-        <button onClick={()=>{setShowAddRasters(false)}}>Close</button>
-        :null}
+       
 
         {selectedRasters.map((raster)=>{
           return (
             <div>{raster.name}</div>
           );
         })}
+
+        {!showAddRasters? 
+        <button onClick={()=>{setShowAddRasters(true)}}>Add new layer</button>
+        :null}
+        {showAddRasters? 
+        <button onClick={()=>{setShowAddRasters(false)}}>Close new layer table</button>
+        :null}
         
         {showAddRasters? 
         <MapViewerRasterLayerTable
           setSelectedRasters={(rasters)=> {
-            setSelectedRasters(selectedRasters.concat(rasters))
+            const uniqueRasters = rasters.filter((raster)=>{
+              if (selectedRasters.find((selectedRaster)=>{
+                return selectedRaster.uuid === raster.uuid;
+              })) {
+                return false;
+              } else {
+                return true;
+              }
+            });
+            setSelectedRasters(selectedRasters.concat(uniqueRasters))
           }}
         />
         :null}
@@ -76,6 +87,7 @@ function MapViewer (props: MyProps & DispatchProps) {
           {selectedRasters.map((raster)=>{
             return (
               <Source 
+                key={raster.uuid}
                 type={'raster'}
                 tiles={[
                   `${raster.wms_info.endpoint}?SERVICE=WMS&REQUEST=GetMap&VERSION=1.1.1&LAYERS=${raster.wms_info.layer}&FORMAT=image%2Fpng&TRANSPARENT=false&HEIGHT=256&WIDTH=256&TIME=2021-06-01T14%3A38%3A34&SRS=EPSG%3A3857&bbox={bbox-epsg-3857}`
@@ -86,6 +98,7 @@ function MapViewer (props: MyProps & DispatchProps) {
                 {/* 
                 // @ts-ignore */}
                 <Layer
+                  key={raster.uuid}
                   id={raster.uuid}
                   type={'raster'}
                   source={raster.uuid}
