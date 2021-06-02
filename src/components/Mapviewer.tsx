@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import ReactMapGL, {Source, Layer} from 'react-map-gl';
 import {mapBoxAccesToken} from '../mapboxConfig';
@@ -8,7 +8,7 @@ interface MyProps {
 }
 
 function MapViewer (props: MyProps & DispatchProps) {
-  const { } = props;
+  // const { } = props;
 
   const [viewport, setViewport] = useState({
     
@@ -76,7 +76,7 @@ const reversedRasters = selectedRasters.map(id=>id).reverse();
         {!showAddRasters? 
         <button onClick={()=>{setShowAddRasters(true)}}>+ Add new layer</button>
         :null}
-        
+
         <form
           style={{
             display: "flex",

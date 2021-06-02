@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import TableStateContainer from './TableStateContainer';
 // import { NavLink, RouteComponentProps } from "react-router-dom";
 import tableStyles from "./Table.module.css";
-import buttonStyles from "../styles/Buttons.module.css";
+// import buttonStyles from "../styles/Buttons.module.css";
 
 export const baseUrl = "/api/v4/rasters/";
-const navigationUrlRasters = "/data_management/rasters/layers";
+// const navigationUrlRasters = "/data_management/rasters/layers";
 
 interface Props {
   setSelectedRasters: (rasterLayers: any[]) => void
@@ -13,7 +13,7 @@ interface Props {
 
 export const MapViewerRasterLayerTable: React.FC<Props> = ({setSelectedRasters}) =>  {
 
-  const [selectedLayer, setSelectedLayer] = useState<string>('');
+  // const [selectedLayer, setSelectedLayer] = useState<string>('');
 
   const columnDefinitions = [
     {
@@ -35,15 +35,15 @@ export const MapViewerRasterLayerTable: React.FC<Props> = ({setSelectedRasters})
           className={tableStyles.CellEllipsis}
           title={row.is_geoblock ? 'Geoblock' : 'Raster source'}
         >
-          <button
+          {/* <button
             className={buttonStyles.ButtonLink}
             onClick={() => setSelectedLayer(row.uuid)}
             style={{
               color: 'var(--color-button)'
             }}
-          >
+          > */}
             {row.is_geoblock ? 'Geoblock' : 'Raster source'}
-          </button>
+          {/* </button> */}
         </span>,
       orderingField: null,
     },
