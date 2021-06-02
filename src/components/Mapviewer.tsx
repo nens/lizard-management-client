@@ -4,26 +4,6 @@ import ReactMapGL, {Source, Layer} from 'react-map-gl';
 import {mapBoxAccesToken} from '../mapboxConfig';
 import { MapViewerRasterLayerTable} from "./MapViewerRasterLayerTable";
 
-
-const mapSource1 = {
-  'type': 'raster',
-  // https://docs.mapbox.com/mapbox-gl-js/style-spec/sources/
-  'tiles': [
-    "https://nxt3.staging.lizard.net/api/v3/wms/?SERVICE=WMS&REQUEST=GetMap&VERSION=1.1.1&LAYERS=dem%3Anl&STYLES=dem_nl&FORMAT=image%2Fpng&TRANSPARENT=false&HEIGHT=256&WIDTH=256&TIME=2021-06-01T14%3A38%3A34&SRS=EPSG%3A3857&bbox={bbox-epsg-3857}",
-  ],
-  'tileSize': 256,
-  "id": "wms-test-layer",
-};
-const mapLayer1 = {
-  'id': 'wms-test-layer',
-  'type': 'raster',
-  'source': 'wms-test-source',
-  'paint': {},
-  "minzoom": 0,
-  "maxzoom": 22
-};
-
-
 interface MyProps {
 }
 
@@ -54,9 +34,9 @@ function MapViewer (props: MyProps & DispatchProps) {
           position: "absolute",
           left: 0,
           top: 0,
-          // bottom: 0,
-          height: "100vh",
           width: "700px",
+          height: "100vh",
+          overflowY: "scroll",
           backgroundColor: "white",
           zIndex: 10,
         }}
@@ -76,7 +56,9 @@ function MapViewer (props: MyProps & DispatchProps) {
         
         {showAddRasters? 
         <MapViewerRasterLayerTable
-          setSelectedRasters={setSelectedRasters}
+          setSelectedRasters={(rasters)=> {
+            setSelectedRasters(selectedRasters.concat(rasters))
+          }}
         />
         :null}
 
@@ -90,11 +72,30 @@ function MapViewer (props: MyProps & DispatchProps) {
         mapStyle={"mapbox://styles/nelenschuurmans/ck8sgpk8h25ql1io2ccnueuj6"}
       >
     
-        <Source {...mapSource1}>
-          {/* 
-          // @ts-ignore */}
-          <Layer {...mapLayer1} />
-        </Source>
+
+          {selectedRasters.map((raster)=>{
+            return (
+              <Source 
+                type={'raster'}
+                tiles={[
+                  `${raster.wms_info.endpoint}?SERVICE=WMS&REQUEST=GetMap&VERSION=1.1.1&LAYERS=${raster.wms_info.layer}&FORMAT=image%2Fpng&TRANSPARENT=false&HEIGHT=256&WIDTH=256&TIME=2021-06-01T14%3A38%3A34&SRS=EPSG%3A3857&bbox={bbox-epsg-3857}`
+                ]}
+                tileSize={256}
+                id={raster.uuid}
+              >
+                {/* 
+                // @ts-ignore */}
+                <Layer
+                  id={raster.uuid}
+                  type={'raster'}
+                  source={raster.uuid}
+                  paint={{}}
+                  minzoom={0}
+                  maxzoom={22}
+                />
+              </Source>
+            );
+          })}
         
         
       </ReactMapGL>
