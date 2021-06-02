@@ -126,9 +126,22 @@ const reversedRasters = selectedRasters.map(id=>id).reverse();
         mapboxApiAccessToken={mapBoxAccesToken}
         mapStyle={"mapbox://styles/nelenschuurmans/ck8sgpk8h25ql1io2ccnueuj6"}
       >
-    
 
-          {selectedRasters.map((raster)=>{
+          {/* these 100 layers are needed for ordering layers with "beforeId"
+          See answer yurivangeffen here
+          https://github.com/visgl/react-map-gl/issues/939
+           */}
+          {new Array(100).fill(1).map((name,ind) => {
+            return (<Layer
+              key={'GROUP_' + ind}
+              id={'GROUP_' + ind}
+              type='background'
+              layout={{ visibility: 'none' }}
+              paint={{}}
+            />)
+          })}
+
+          {selectedRasters.map((raster, ind)=>{
             return (
               <Source 
                 key={raster.uuid}
@@ -144,6 +157,8 @@ const reversedRasters = selectedRasters.map(id=>id).reverse();
                 <Layer
                   key={raster.uuid}
                   id={raster.uuid}
+                  // beforeId={selectedRasters[ind+1] && selectedRasters[ind+1].uuid}
+                  beforeId={'GROUP_' + ind}
                   type={'raster'}
                   source={raster.uuid}
                   paint={{}}
