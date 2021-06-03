@@ -77,6 +77,8 @@ export const TextArea: React.FC<MyProps> = (props) => {
           rows={rows}
           spellCheck={false}
           style={{
+            // https://bugzilla.mozilla.org/show_bug.cgi?id=1137650
+            // whiteline in firefox
             whiteSpace: 'pre-wrap'
           }}
         />
