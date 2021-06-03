@@ -8,7 +8,7 @@ import { SelectDropdown } from '../../../form/SelectDropdown';
 import { CheckBox } from '../../../form/CheckBox';
 import { RelativeField } from '../../../form/RelativeField';
 import { AlarmThresholds } from '../../../form/AlarmThresholds';
-import { Message, Recipients } from '../../../form/Recipients';
+import { Recipient, Recipients } from '../../../form/Recipients';
 import { IntegerInput } from '../../../form/IntegerInput';
 import { SubmitButton } from '../../../form/SubmitButton';
 import { CancelButton } from '../../../form/CancelButton';
@@ -50,7 +50,7 @@ const TimeseriesAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps>
     snoozeOff: currentTimeseriesAlarm.snooze_sign_off,
     comparison: convertToSelectObject(currentTimeseriesAlarm.comparison),
     thresholds: currentTimeseriesAlarm.thresholds,
-    messages: currentTimeseriesAlarm.messages.map((message: any) => {
+    recipients: currentTimeseriesAlarm.messages.map((message: any) => {
       const groupId = parseInt(getUuidFromUrl(message.contact_group));
       const templateId = parseInt(getUuidFromUrl(message.message));
       return {
@@ -68,7 +68,7 @@ const TimeseriesAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps>
     snoozeOff: 1,
     comparison: convertToSelectObject('>'),
     thresholds: [],
-    messages: []
+    recipients: []
   };
 
   const onSubmit = (values: Values) => {
@@ -82,9 +82,9 @@ const TimeseriesAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps>
       thresholds: values.thresholds,
       snooze_sign_on: values.snoozeOn,
       snooze_sign_off: values.snoozeOff,
-      messages: values.messages.map((message: Message) => ({
-        contact_group: message.contact_group.value,
-        message: message.message.value
+      recipients: values.recipients.map((recipient: Recipient) => ({
+        contact_group: recipient.contact_group.value,
+        message: recipient.message.value
       }))
     };
 
@@ -307,11 +307,11 @@ const TimeseriesAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps>
         </span>
         <Recipients
           title={'Recipients'}
-          name={'messages'}
+          name={'recipients'}
           organisation={currentTimeseriesAlarm ? currentTimeseriesAlarm.organisation.uuid : selectedOrganisation.uuid}
-          messages={values.messages}
-          valueChanged={recipients => handleValueChange('messages', recipients)}
-          valueRemoved={recipients => handleValueChange('messages', recipients)}
+          recipients={values.recipients}
+          valueChanged={recipients => handleValueChange('recipients', recipients)}
+          valueRemoved={recipients => handleValueChange('recipients', recipients)}
           validated
           triedToSubmit={triedToSubmit}
           onFocus={handleFocus}

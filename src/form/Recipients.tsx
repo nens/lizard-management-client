@@ -4,18 +4,23 @@ import { convertToSelectObject } from '../utils/convertToSelectObject';
 import formStyles from "../styles/Forms.module.css";
 import buttonStyles from "../styles/Buttons.module.css";
 
-export interface Message {
+export interface Recipient {
   contact_group: Value,
   message: Value
+};
+
+export interface NewRecipient {
+  contact_group: Value | null,
+  message: Value | null
 };
 
 interface MyProps {
   title: string,
   name: string,
   organisation: string,
-  messages: Message[],
-  valueChanged: (recipients: Message[]) => void,
-  valueRemoved: (recipients: Message[]) => void,
+  recipients: Recipient[],
+  valueChanged: (recipients: Recipient[]) => void,
+  valueRemoved: (recipients: Recipient[]) => void,
   clearInput?: (name: string) => void,
   validated: boolean,
   errorMessage?: string | false,
@@ -31,7 +36,7 @@ export function Recipients (props: MyProps) {
     title,
     name,
     organisation,
-    messages,
+    recipients,
     valueChanged,
     valueRemoved,
     onFocus,
@@ -42,6 +47,10 @@ export function Recipients (props: MyProps) {
 
   const [availableGroups, setAvailableGroups] = useState<Value[]>([]);
   const [availableTemplates, setAvailableTemplates] = useState<Value[]>([]);
+  const [recipient, setRecipient] = useState<NewRecipient>({
+    contact_group: null,
+    message: null
+  });
 
   // useEffect to fetch available contact groups and messages
   // and to update the list of recipients when component first mounted
@@ -68,9 +77,9 @@ export function Recipients (props: MyProps) {
       setAvailableTemplates(listOfTemplates);
 
       // Update the initial list of recipients by adding group name and template name as labels
-      const listOfRecipients = messages.map(message => {
-        const groupId = message.contact_group.value;
-        const templateId = message.message.value;
+      const listOfRecipients = recipients.map(recipient => {
+        const groupId = recipient.contact_group.value;
+        const templateId = recipient.message.value;
 
         const selectedGroup = listOfGroups.find(group => group.value === groupId);
         const groupName = selectedGroup ? selectedGroup.label : '';
@@ -101,7 +110,7 @@ export function Recipients (props: MyProps) {
         <div className={formStyles.SecondLabel}>Group</div>
         <div className={formStyles.SecondLabel}>Template message</div>
         <div />
-        {messages.map((recipient, i) => (
+        {recipients.map((recipient, i) => (
           <React.Fragment key={i}>
             <SelectDropdown
               title={''}
@@ -109,7 +118,7 @@ export function Recipients (props: MyProps) {
               name={'contactGroup' + i}
               value={recipient.contact_group}
               valueChanged={value => {
-                const newRecipientList = messages.map((re, idx) => {
+                const newRecipientList = recipients.map((re, idx) => {
                   if (idx === i) {
                     return {
                       ...re,
@@ -136,7 +145,7 @@ export function Recipients (props: MyProps) {
               name={'message' + i}
               value={recipient.message}
               valueChanged={value => {
-                const newRecipientList = messages.map((re, idx) => {
+                const newRecipientList = recipients.map((re, idx) => {
                   if (idx === i) {
                     return {
                       ...re,
@@ -161,26 +170,61 @@ export function Recipients (props: MyProps) {
               className={`${buttonStyles.Button} ${buttonStyles.Link}`}
               onClick={e => {
                 e.preventDefault();
-                valueRemoved(messages.filter((_, idx) => idx !== i))
+                valueRemoved(recipients.filter((_, idx) => idx !== i))
               }}
             >
               REMOVE
             </button>
           </React.Fragment>
         ))}
+        <SelectDropdown
+          title={''}
+          id={'newContactGroup'}
+          name={'newContactGroup'}
+          value={recipient.contact_group}
+          valueChanged={value => {
+            setRecipient({
+              ...recipient,
+              contact_group: value as Value || null
+            })
+          }}
+          options={availableGroups}
+          validated
+          dropUp
+        />
+        <SelectDropdown
+          title={''}
+          id={'newMessage'}
+          name={'newMessage'}
+          value={recipient.message}
+          valueChanged={value => {
+            setRecipient({
+              ...recipient,
+              message: value as Value || null
+            })
+          }}
+          options={availableTemplates}
+          validated
+          dropUp
+        />
+        <div />
         <button
           id={'addRecipient'}
           className={buttonStyles.NewButton}
           onClick={e => {
             e.preventDefault();
-            valueChanged([
-              ...messages,
-              {
-                contact_group: convertToSelectObject(''),
-                message: convertToSelectObject('')
-              }
-            ]);
+            if (recipient.contact_group && recipient.message) {
+              valueChanged([
+                ...recipients,
+                recipient as Recipient
+              ]);
+            };
+            setRecipient({
+              contact_group: null,
+              message: null
+            });
           }}
+          disabled={!recipient.contact_group || !recipient.message}
           onFocus={onFocus}
           onBlur={onBlur}
         >
