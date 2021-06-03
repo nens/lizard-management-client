@@ -179,7 +179,7 @@ export function Recipients (props: MyProps) {
         ))}
         <SelectDropdown
           title={''}
-          id={'newContactGroup'}
+          id={'contactGroup'}
           name={'newContactGroup'}
           value={recipient.contact_group}
           valueChanged={value => {
@@ -191,10 +191,13 @@ export function Recipients (props: MyProps) {
           options={availableGroups}
           validated
           dropUp
+          readOnly={readOnly}
+          onFocus={onFocus}
+          onBlur={onBlur}
         />
         <SelectDropdown
           title={''}
-          id={'newMessage'}
+          id={'message'}
           name={'newMessage'}
           value={recipient.message}
           valueChanged={value => {
@@ -206,6 +209,9 @@ export function Recipients (props: MyProps) {
           options={availableTemplates}
           validated
           dropUp
+          readOnly={readOnly}
+          onFocus={onFocus}
+          onBlur={onBlur}
         />
         <div />
         <button
