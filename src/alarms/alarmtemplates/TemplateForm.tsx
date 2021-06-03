@@ -186,16 +186,20 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
   const insertTextInTemplateText = (templateText: string, addedText: string) => {
     let newTemplateText = "";
     const element = document.getElementById("message") as HTMLTextAreaElement;
+    let caretPosition = 0;
 
     if (element.selectionStart || element.selectionStart === 0) {
       newTemplateText = templateText.substring(0, element.selectionStart) +
         addedText + templateText.substring(element.selectionEnd);
+      caretPosition = (templateText.substring(0, element.selectionStart) + addedText).length;
     } else {
       newTemplateText = templateText + addedText;
+      caretPosition = (templateText + addedText).length;
     };
 
     handleValueChange('message', newTemplateText);
     element.focus(); // set focus back to the text area element
+    window.setTimeout(()=>{element.setSelectionRange(caretPosition, caretPosition)},0);
   };
 
   const RenderBlocks = () => (

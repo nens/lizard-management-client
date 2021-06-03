@@ -161,6 +161,11 @@ class GroupMessage extends Component {
                         messageText: e.target.value
                       })}
                     disabled={isSending ? true : false}
+                    style={{
+                      // https://bugzilla.mozilla.org/show_bug.cgi?id=1137650
+                      // whiteline in firefox
+                      whiteSpace: 'pre-wrap'
+                    }}
                   />
                   <small className="text-muted">
                     <FormattedMessage
