@@ -77,7 +77,9 @@ export const TextArea: React.FC<MyProps> = (props) => {
           rows={rows}
           spellCheck={false}
           style={{
-            whiteSpace: 'normal'
+            // https://bugzilla.mozilla.org/show_bug.cgi?id=1137650
+            // whiteline in firefox
+            whiteSpace: 'pre-wrap'
           }}
         />
         {clearInput && !readOnly && value !== null && (value + '').length ? <ClearInputButton onClick={() => clearInput(name)}/> : null}
