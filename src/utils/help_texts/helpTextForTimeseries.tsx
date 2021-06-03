@@ -32,7 +32,7 @@ export const timeseriesFormHelpText: HelpText = {
   organisation: organisationHelpText,
   supplier: supplierHelpText,
   supplierCode: supplierCodeHelpText,
-  files: (
+  data: (
     <>
       <p>Upload your CSV files here in .csv format to add new events to the time series.</p>
       <p>The first line of the file should describe the column names, for example:</p>
