@@ -82,7 +82,7 @@ const TimeseriesAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps>
       thresholds: values.thresholds,
       snooze_sign_on: values.snoozeOn,
       snooze_sign_off: values.snoozeOff,
-      recipients: values.recipients.map((recipient: Recipient) => ({
+      messages: values.recipients.map((recipient: Recipient) => ({
         contact_group: recipient.contact_group.value,
         message: recipient.message.value
       }))

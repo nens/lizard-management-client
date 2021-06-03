@@ -172,6 +172,9 @@ export function Recipients (props: MyProps) {
                 e.preventDefault();
                 valueRemoved(recipients.filter((_, idx) => idx !== i))
               }}
+              style={{
+                marginBottom: 24
+              }}
             >
               REMOVE
             </button>
@@ -230,6 +233,7 @@ export function Recipients (props: MyProps) {
               message: null
             });
           }}
+          title={!recipient.contact_group || !recipient.message ? 'Please select a group and a message for the new recipient' : undefined}
           disabled={!recipient.contact_group || !recipient.message}
           onFocus={onFocus}
           onBlur={onBlur}
