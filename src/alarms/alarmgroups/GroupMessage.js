@@ -161,6 +161,9 @@ class GroupMessage extends Component {
                         messageText: e.target.value
                       })}
                     disabled={isSending ? true : false}
+                    style={{
+                      whiteSpace: 'pre-wrap'
+                    }}
                   />
                   <small className="text-muted">
                     <FormattedMessage
