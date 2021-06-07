@@ -33,7 +33,6 @@ export const ExplainSideColumn: React.FC<MyProps> = ({
           alignItems: "stretch",
           margin: "8px",
           marginRight: "16px",
-          
         }}
       >
         <div
@@ -41,10 +40,9 @@ export const ExplainSideColumn: React.FC<MyProps> = ({
             display: "flex",
             justifyContent: "flex-start",
           }}
-          
         >
           <NavLink to={backUrl}><span style={{fontSize:"36px"}}>
-            <img alt="back" src={backArrow}/>
+            <img className={styles.BackArrow} alt="back" src={backArrow}/>
           </span></NavLink>
         </div>
         <div style={{display:"flex", justifyContent: "center"}}>
@@ -58,7 +56,6 @@ export const ExplainSideColumn: React.FC<MyProps> = ({
             textAlign: "center",
             color: "#2C3E50",
             fontSize: "medium",
-            
           }}
         >
           {headerText}
