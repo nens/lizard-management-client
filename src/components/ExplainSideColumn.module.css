@@ -1,3 +1,10 @@
+.BackArrow {
+  transition: transform 0.2s ease-out;
+}
+.BackArrow:hover {
+  transform: translateX(-4px);
+}
+
 .ExplainBoxEffect {
   animation: color 1s ease-out;
 }
