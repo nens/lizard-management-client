@@ -70,42 +70,19 @@ export const TimeseriesTable = (props: RouteComponentProps) =>  {
         <span
           className={tableStyles.CellEllipsis}
           style={{
-            // overflowX: "hidden",
-            // display: "flex",
-            // overwrite default behaviour tableStyles.CellEllipsis 
             whiteSpace: "break-spaces",
           }}
           title={`name: ${row.location.name}, code: ${row.location.code}`}
         >
-          {
-          !row.location? "(empty location)" : 
-          row.location.code && row.location.code !==  row.location.name? 
-          <> 
-            <span
-              // className={tableStyles.CellEllipsis}
-              // style={{
-              //   // display: "flex", 
-              //   // flexBasis: "content", 
-              //   // flexShrink: 0,
-              //   minWidth: "10px",
-              // }}
-            >
-              {row.location.name}
-            </span>
-            <span
-              // className={tableStyles.CellEllipsis}
-              // style={{
-              //   display: "flex", 
-              //   flexBasis: "content", 
-              //   flexShrink: 0,
-              // }}
-            >
-            {` (${row.location.code})`} 
-            </span>
-          </> 
-          :
-          row.location.name
-          }
+          {!row.location ? "(empty location)" :
+            row.location.code && row.location.code !==  row.location.name ? (
+            <>
+              <span>{row.location.name}</span>
+              <span>{` (${row.location.code})`}</span>
+            </>
+          ) : (
+            <span>{row.location.name}</span>
+          )}
         </span>
       ,
       orderingField: null,
