@@ -81,7 +81,7 @@ function InvitationModal (props: MyProps & DispatchProps) {
               triggerReloadWithBasePage={triggerReloadWithBasePage}
               actions={[
                 {
-                  displayValue: "Cancel",
+                  displayValue: "Revoke",
                   actionFunction: (row: any, _updateTableRow: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any) => {
                     deleteAction(row, triggerReloadWithCurrentPage);
                   }
