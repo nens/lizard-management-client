@@ -51,10 +51,31 @@ export const TimeseriesTable = (props: RouteComponentProps) =>  {
       orderingField: "name",
     },
     {
+      titleRenderFunction: () => "Code",
+      renderFunction: (row: any) =>
+        <span
+          className={tableStyles.CellEllipsis}
+          title={row.code}
+          style={{
+            whiteSpace: "break-spaces",
+            wordBreak: "break-all"
+          }}
+        >
+          <span>{row.code || "(empty code)"}</span>
+        </span>
+      ,
+      orderingField: "code",
+    },
+    {
       titleRenderFunction: () => "Observation type",
       renderFunction: (row: any) => 
         <span
           className={tableStyles.CellEllipsis}
+          title={
+            !row.observation_type ? undefined :
+            row.observation_type.unit ? `${row.observation_type.code} (${row.observation_type.unit})` :
+            row.observation_type.code
+          }
         >
           {!row.observation_type? "(empty observation type)" : 
             row.observation_type.unit? <>{row.observation_type.code}{" "} <span style={{fontWeight:600,}}>{`(${row.observation_type.unit})`}</span></> : 
@@ -71,6 +92,7 @@ export const TimeseriesTable = (props: RouteComponentProps) =>  {
           className={tableStyles.CellEllipsis}
           style={{
             whiteSpace: "break-spaces",
+            wordBreak: "break-all"
           }}
           title={`name: ${row.location.name}, code: ${row.location.code}`}
         >
@@ -147,7 +169,7 @@ export const TimeseriesTable = (props: RouteComponentProps) =>  {
       backUrl={"/data_management/timeseries"}
     >
       <TableStateContainer
-        gridTemplateColumns={"4fr 24fr 22fr 26fr 16fr 8fr"}
+        gridTemplateColumns={"4fr 20fr 18fr 18fr 22fr 14fr 4fr"}
         columnDefinitions={columnDefinitions}
         baseUrl={`${baseUrl}?`}
         newItemOnClick={handleNewClick}
