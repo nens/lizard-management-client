@@ -61,7 +61,7 @@ export const TimeseriesTable = (props: RouteComponentProps) =>  {
             wordBreak: "break-all"
           }}
         >
-          <span>{row.code || "(empty code)"}</span>
+          <span>{row.code || ""}</span>
         </span>
       ,
       orderingField: "code",
@@ -77,7 +77,7 @@ export const TimeseriesTable = (props: RouteComponentProps) =>  {
             row.observation_type.code
           }
         >
-          {!row.observation_type? "(empty observation type)" : 
+          {!row.observation_type? "" :
             row.observation_type.unit? <>{row.observation_type.code}{" "} <span style={{fontWeight:600,}}>{`(${row.observation_type.unit})`}</span></> : 
             row.observation_type.code 
           }
@@ -96,7 +96,7 @@ export const TimeseriesTable = (props: RouteComponentProps) =>  {
           }}
           title={`name: ${row.location.name}, code: ${row.location.code}`}
         >
-          {!row.location ? "(empty location)" :
+          {!row.location ? "" :
             row.location.code && row.location.code !==  row.location.name ? (
             <>
               <span>{row.location.name}</span>
