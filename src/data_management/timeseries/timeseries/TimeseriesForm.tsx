@@ -192,7 +192,12 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
         body: form
       }).then(res => {
         if (res.status === 204) {
-          props.addNotification(`${file.name} successfully imported!`, 2000);
+          props.addNotification(
+            <span>
+              <span><b>{file.name}</b> successfully imported! All time series events can be seen here: </span>
+              <a href={`/api/v4/timeseries/${uuid}/events`} target="_blank" rel="noreferrer">Time series Events API</a>
+            </span>
+          );
         } else {
           props.addNotification(res.status, 2000);
           console.error(file.name, res);
@@ -492,7 +497,7 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
 
 const mapPropsToDispatch = (dispatch: any) => ({
   removeLocation: () => dispatch(removeLocation()),
-  addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout))
+  addNotification: (message: string | number | JSX.Element, timeout?: number) => dispatch(addNotification(message, timeout))
 });
 type DispatchProps = ReturnType<typeof mapPropsToDispatch>;
 
