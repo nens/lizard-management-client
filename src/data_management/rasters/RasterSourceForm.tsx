@@ -28,6 +28,7 @@ import DeleteModal from '../../components/DeleteModal';
 import rasterSourceIcon from "../../images/raster_source_icon.svg";
 import formStyles from './../../styles/Forms.module.css';
 import DeleteRasterSourceNotAllowed from './DeleteRasterSourceNotAllowed';
+import DataFlushingModal from './DataFlushingModal';
 
 interface Props {
   currentRasterSource?: RasterSourceFromAPI
@@ -49,6 +50,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
   const organisationsToSwitchTo = organisations.filter((org: any) => org.roles.includes('admin'));
   const [rasterCreatedModal, setRasterCreatedModal] = useState<boolean>(false);
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+  const [showDataFlushingModal, setShowDataFlushingModal] = useState<boolean>(false);
 
   const initialValues = currentRasterSource ? {
     name: currentRasterSource.name,
@@ -307,6 +309,10 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
                       displayValue: "Delete",
                       actionFunction: () => setShowDeleteModal(true)
                     },
+                    {
+                      displayValue: "Flush data",
+                      actionFunction: () => setShowDataFlushingModal(true)
+                    }
                   ]}
                 />
               </div>
@@ -340,6 +346,13 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
         <DeleteRasterSourceNotAllowed
           closeDialogAction={() => setShowDeleteModal(false)}
           rowToBeDeleted={currentRasterSource}
+        />
+      ) : null}
+      {currentRasterSource && showDataFlushingModal ? (
+        <DataFlushingModal
+          row={currentRasterSource}
+          displayContent={[{name: "name", width: 65}, {name: "uuid", width: 35}]}
+          handleClose={() => setShowDataFlushingModal(false)}
         />
       ) : null}
     </ExplainSideColumn>
