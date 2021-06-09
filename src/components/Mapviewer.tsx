@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import ReactMapGL, {Source, Layer} from 'react-map-gl';
-// eslint-disable-next-line import/no-webpack-loader-syntax
 import mapboxgl from "mapbox-gl";
 import {mapBoxAccesToken} from '../mapboxConfig';
 import { MapViewerRasterLayerTable} from "./MapViewerRasterLayerTable";
