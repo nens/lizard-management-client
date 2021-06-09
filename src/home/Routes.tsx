@@ -44,6 +44,7 @@ import { NewGroup } from "../alarms/alarmgroups/NewGroup";
 import { EditGroup } from "../alarms/alarmgroups/EditGroup";
 import { NewTemplate } from "../alarms/alarmtemplates/NewAlarmTemplate";
 import { EditTemplate } from "../alarms/alarmtemplates/EditTemplate";
+import MapViewer from "../components/Mapviewer";
 import { UserTable } from "../users/UserTable";
 import { EditUser } from "../users/EditUser";
 import { NewUser } from "../users/NewUser";
@@ -64,6 +65,7 @@ export const Routes = () => {
           })
         }
 
+        <Route exact path="/map_viewer" component={MapViewer} />
         <Route exact path="/users" component={UserTable} />
         <Route exact path="/users/new" component={NewUser} />
         <Route exact path="/users/:id" component={EditUser} />

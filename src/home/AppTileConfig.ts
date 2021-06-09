@@ -75,6 +75,20 @@ export const appTiles = [
     icon: personalApiKeysIcon,
   },
   { 
+    title: "Map viewer",
+    // title: (
+    //   <FormattedMessage
+    //     id="home.personal_api_keys"
+    //     defaultMessage="Personal API keys"
+    //   />
+    // ),
+    order: 500,
+    onPage: "/",
+    linksTo: "/map_viewer",
+    requiresOneOfRoles: ["user", "admin", "supplier", "manager"],
+    icon: rasterIcon,
+  },
+  { 
     title: "rasters",
     // title: (
     //   <FormattedMessage
