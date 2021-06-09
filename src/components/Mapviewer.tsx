@@ -1,8 +1,14 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import ReactMapGL, {Source, Layer} from 'react-map-gl';
+// eslint-disable-next-line import/no-webpack-loader-syntax
+import mapboxgl from "mapbox-gl";
 import {mapBoxAccesToken} from '../mapboxConfig';
 import { MapViewerRasterLayerTable} from "./MapViewerRasterLayerTable";
+
+/* eslint-disable @typescript-eslint/no-var-requires */
+// eslint-disable-next-line import/no-webpack-loader-syntax
+(mapboxgl as any).workerClass = require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker').default;
 
 interface MyProps {
 }
