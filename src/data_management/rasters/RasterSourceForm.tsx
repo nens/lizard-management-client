@@ -366,7 +366,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
       {currentRasterSource && showDataFlushingModal ? (
         <DataFlushingModal
           row={currentRasterSource}
-          displayContent={[{name: "name", width: 65}, {name: "uuid", width: 35}]}
+          displayContent={[{name: "name", width: 50}, {name: "uuid", width: 50}]}
           handleClose={() => setShowDataFlushingModal(false)}
         />
       ) : null}

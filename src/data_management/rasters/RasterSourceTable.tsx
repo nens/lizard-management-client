@@ -228,7 +228,7 @@ export const RasterSourceTable = (props: any) => {
       {rowToFlushData ? (
         <DataFlushingModal
           row={rowToFlushData}
-          displayContent={[{name: "name", width: 65}, {name: "uuid", width: 35}]}
+          displayContent={[{name: "name", width: 50}, {name: "uuid", width: 50}]}
           handleClose={() => setRowToFlushData(null)}
         />
       ) : null}
