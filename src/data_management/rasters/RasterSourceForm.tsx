@@ -29,6 +29,7 @@ import rasterSourceIcon from "../../images/raster_source_icon.svg";
 import formStyles from './../../styles/Forms.module.css';
 import DeleteRasterSourceNotAllowed from './DeleteRasterSourceNotAllowed';
 import DataFlushingModal from './DataFlushingModal';
+import TemporalDataFlushingModal from './TemporalDataFlushingModal';
 
 interface Props {
   currentRasterSource?: RasterSourceFromAPI
@@ -51,6 +52,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
   const [rasterCreatedModal, setRasterCreatedModal] = useState<boolean>(false);
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const [showDataFlushingModal, setShowDataFlushingModal] = useState<boolean>(false);
+  const [temporalDataFlushingModal, setTemporalDataFlushingModal] = useState<boolean>(false);
 
   const initialValues = currentRasterSource ? {
     name: currentRasterSource.name,
@@ -304,7 +306,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
             {currentRasterSource ? (
               <div style={{ marginRight: 16 }}>
                 <FormActionButtons
-                  actions={[
+                  actions={currentRasterSource.temporal ? [
                     {
                       displayValue: "Delete",
                       actionFunction: () => setShowDeleteModal(true)
@@ -312,7 +314,20 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
                     {
                       displayValue: "Flush data",
                       actionFunction: () => setShowDataFlushingModal(true)
-                    }
+                    },
+                    {
+                      displayValue: "Flush partial data",
+                      actionFunction: () => setTemporalDataFlushingModal(true)
+                    },
+                  ] : [
+                    {
+                      displayValue: "Delete",
+                      actionFunction: () => setShowDeleteModal(true)
+                    },
+                    {
+                      displayValue: "Flush data",
+                      actionFunction: () => setShowDataFlushingModal(true)
+                    },
                   ]}
                 />
               </div>
@@ -353,6 +368,12 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           row={currentRasterSource}
           displayContent={[{name: "name", width: 65}, {name: "uuid", width: 35}]}
           handleClose={() => setShowDataFlushingModal(false)}
+        />
+      ) : null}
+      {currentRasterSource && currentRasterSource.temporal && temporalDataFlushingModal ? (
+        <TemporalDataFlushingModal
+          row={currentRasterSource}
+          handleClose={() => setTemporalDataFlushingModal(false)}
         />
       ) : null}
     </ExplainSideColumn>
