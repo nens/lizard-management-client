@@ -3,9 +3,6 @@ import Overlay from './../components/Overlay';
 import modalStyles from '../styles/Modal.module.css';
 import buttonStyles from './../styles/Buttons.module.css';
 import {useState,}  from 'react';
-// import Checkbox from './Checkbox';
-
-
 
 interface MyProps {
   title: string,
@@ -13,7 +10,6 @@ interface MyProps {
   onClickButtonConfirm?: () => void,
   cancelAction?: () => void,
   disableButtons?: boolean,
-  closeDialogAction?: () => void,
   // requiredCheckboxText works, but is currently not used
   requiredCheckboxText?: string,
   height?: number | string, // height for modal body, default is auto
@@ -26,7 +22,6 @@ const Modal: React.FC<MyProps> = (props) => {
     onClickButtonConfirm,
     cancelAction,
     disableButtons,
-    closeDialogAction,
     requiredCheckboxText,
     height
   } = props;
@@ -38,7 +33,7 @@ const Modal: React.FC<MyProps> = (props) => {
       <div className={modalStyles.Modal}>
         <div className={modalStyles.ModalHeader}>
           {title}
-          {closeDialogAction? <button onClick={(e)=>{closeDialogAction()}}>x</button>:null}
+          {cancelAction ? <button onClick={cancelAction}>x</button> : null}
         </div>
         <div
           className={modalStyles.ModalBody}

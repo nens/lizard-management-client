@@ -344,7 +344,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
       ) : null}
       {showDeleteModal && currentRasterSource && (currentRasterSource.layers.length !== 0 || currentRasterSource.labeltypes.length !== 0) ? (
         <DeleteRasterSourceNotAllowed
-          closeDialogAction={() => setShowDeleteModal(false)}
+          handleClose={() => setShowDeleteModal(false)}
           rowToBeDeleted={currentRasterSource}
         />
       ) : null}

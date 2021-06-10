@@ -17,7 +17,7 @@ const DeleteLocationNotAllowed = (props: MyProps) => {
   return (
     <Modal
       title={"Not allowed"}
-      closeDialogAction={closeDialogAction}
+      cancelAction={closeDialogAction}
     >
       <p>You are trying to delete the <b>{name}</b> location but this location still has dependent time series.</p>
       <p>Please handle dependent time series first by either:</p>

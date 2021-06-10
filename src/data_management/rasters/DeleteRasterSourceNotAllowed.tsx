@@ -2,13 +2,13 @@ import React from 'react';
 import Modal from '../../components/Modal';
 
 interface MyProps {
-  closeDialogAction: () => void,
+  handleClose: () => void,
   rowToBeDeleted: any,
 }
 
 const DeleteRasterSourceNotAllowed: React.FC<MyProps> = (props) => {
   const {
-    closeDialogAction,
+    handleClose,
     rowToBeDeleted,
   } = props;
 
@@ -53,7 +53,7 @@ const DeleteRasterSourceNotAllowed: React.FC<MyProps> = (props) => {
   return (
     <Modal
       title={"Not allowed"}
-      closeDialogAction={closeDialogAction}
+      cancelAction={handleClose}
     >
       <p>
         {'You are trying to delete the raster source '}
