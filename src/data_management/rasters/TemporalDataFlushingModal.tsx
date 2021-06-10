@@ -121,7 +121,7 @@ function TemporalDataFlushingModal (props: MyProps & DispatchProps) {
           // isValidDate={current => current >= firstValueTimestamp}
         />
       </div>
-      <div style={{ color: 'red', marginTop: 5 }}>{startValidator() || stopValidator() || timeValidator()}</div>
+      <div style={{ color: 'red', marginTop: 5 }}>{timeValidator() || startValidator() || stopValidator()}</div>
     </Modal>
   )
 }
