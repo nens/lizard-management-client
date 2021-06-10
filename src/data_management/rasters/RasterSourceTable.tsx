@@ -13,8 +13,9 @@ import DeleteRasterSourceNotAllowed  from './DeleteRasterSourceNotAllowed';
 import MDSpinner from "react-md-spinner";
 import { defaultRasterSourceExplanationTextTable } from '../../utils/help_texts/helpTextForRasters';
 import { getScenarioTotalSize } from '../../reducers';
-import DeleteModal from '../../components/DeleteModal';
 import { fetchWithOptions } from '../../utils/fetchWithOptions';
+import DeleteModal from '../../components/DeleteModal';
+import DataFlushingModal from './DataFlushingModal';
 
 export const baseUrl = "/api/v4/rastersources/";
 const navigationUrlRasters = "/data_management/rasters/sources";
@@ -47,8 +48,16 @@ export const RasterSourceTable = (props: any) => {
     });
   };
 
-  const flushRasterData = (row: any) => {
+  const flushDataAction = (
+    row: any,
+    triggerReloadWithCurrentPage: Function,
+    setCheckboxes: Function | null
+  ) => {
     setRowToFlushData(row);
+    setResetTable(() => () => {
+      triggerReloadWithCurrentPage();
+      setCheckboxes && setCheckboxes([]);
+    });
   };
 
   const rasterSourceColumnDefinitions = [
@@ -119,7 +128,9 @@ export const RasterSourceTable = (props: any) => {
                 },
                 {
                   displayValue: "Flush data",
-                  actionFunction: flushRasterData,
+                  actionFunction: (row: any, _updateTableRow: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any) => {
+                    flushDataAction(row, triggerReloadWithCurrentPage, null);
+                  }
                 },
               ]}
             />
@@ -213,6 +224,13 @@ export const RasterSourceTable = (props: any) => {
             </a>
           </p>             
         </Modal>
+      ) : null}
+      {rowToFlushData ? (
+        <DataFlushingModal
+          row={rowToFlushData}
+          displayContent={[{name: "name", width: 65}, {name: "uuid", width: 35}]}
+          handleClose={() => setRowToFlushData(null)}
+        />
       ) : null}
     </ExplainSideColumn>
   );
