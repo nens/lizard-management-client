@@ -48,6 +48,7 @@ import MapViewer from "../components/Mapviewer";
 import { UserTable } from "../users/UserTable";
 import { EditUser } from "../users/EditUser";
 import { NewUser } from "../users/NewUser";
+import { Test } from "../test/Test";
 
 export const Routes = () => {
 
@@ -65,6 +66,7 @@ export const Routes = () => {
           })
         }
 
+        <Route exact path="/test" component={Test} />
         <Route exact path="/map_viewer" component={MapViewer} />
         <Route exact path="/users" component={UserTable} />
         <Route exact path="/users/new" component={NewUser} />

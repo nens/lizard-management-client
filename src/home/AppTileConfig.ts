@@ -35,6 +35,15 @@ export const appTiles = [
     icon: dataManagementIcon,
   },
   { 
+    title: "test",
+    order: 200,
+    onPage: "/",
+    linksTo: "/test",
+    linksToExternal: false,
+    requiresOneOfRoles: ["manager", "admin", "user"],
+    icon: userManagementIcon,
+  },
+  { 
     title: "users",
     // title: (
     //   <FormattedMessage
