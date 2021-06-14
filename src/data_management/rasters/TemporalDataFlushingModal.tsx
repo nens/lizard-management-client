@@ -22,7 +22,7 @@ function TemporalDataFlushingModal (props: MyProps & DispatchProps) {
   const [busyDeleting, setBusyDeleting] = useState<boolean>(false);
 
   const firstValueTimestamp = moment(row.first_value_timestamp);
-  const lastValueTimestamp = moment(row.last_value_timestamp)
+  const lastValueTimestamp = moment(row.last_value_timestamp);
   const [start, setStart] = useState<Date | undefined>(firstValueTimestamp.toDate());
   const [stop, setStop] = useState<Date | undefined>(lastValueTimestamp.toDate());
 
@@ -78,28 +78,17 @@ function TemporalDataFlushingModal (props: MyProps & DispatchProps) {
     >
       <p>Please select a time range to flush data from <b>{row.name}</b> raster source.</p>
       <em>Note: Selected time range must be in between the first timestamp and the last timestamp of the source.</em>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          margin: '10px 0',
-        }}
-      >
+      <div className={styles.GridContainer}>
         <div>
           <span><b>First timestamp:</b></span><br />
           <span>{firstValueTimestamp.toLocaleString()}</span>
         </div>
-        <div style={{textAlign: 'right'}}>
+        <div>
           <span><b>Last timestamp:</b></span><br />
           <span>{lastValueTimestamp.toLocaleString()}</span>
         </div>
       </div>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between'
-        }}
-      >
+      <div className={styles.GridContainer}>
         <Datetime
           value={start}
           onChange={event => {

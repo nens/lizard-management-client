@@ -1,3 +1,10 @@
 .DateTimeInvalid {
   border: 2px solid red;
 }
+
+.GridContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 20px;
+  margin-top: 10px;
+}
