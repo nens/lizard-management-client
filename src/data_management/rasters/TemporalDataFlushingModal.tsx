@@ -21,10 +21,10 @@ function TemporalDataFlushingModal (props: MyProps & DispatchProps) {
 
   const [busyDeleting, setBusyDeleting] = useState<boolean>(false);
 
-  const firstValueTimestamp = moment(row.first_value_timestamp);
-  const lastValueTimestamp = moment(row.last_value_timestamp);
-  const [start, setStart] = useState<Date | undefined>(firstValueTimestamp.toDate());
-  const [stop, setStop] = useState<Date | undefined>(lastValueTimestamp.toDate());
+  const firstValueTimestamp = row.first_value_timestamp ? moment(row.first_value_timestamp) : null;
+  const lastValueTimestamp = row.last_value_timestamp ? moment(row.last_value_timestamp) : null;
+  const [start, setStart] = useState<Date | undefined>(firstValueTimestamp ? firstValueTimestamp.toDate() : undefined);
+  const [stop, setStop] = useState<Date | undefined>(lastValueTimestamp ? lastValueTimestamp.toDate() : undefined);
 
   // Validators for start and stop date time
   const timeValidator = () => {
@@ -33,11 +33,11 @@ function TemporalDataFlushingModal (props: MyProps & DispatchProps) {
     return false;
   };
   const startValidator = () => {
-    if (start && start > lastValueTimestamp.toDate()) return 'Start date must be before the last timestamp.';
+    if (start && lastValueTimestamp && start > lastValueTimestamp.toDate()) return 'Start date must be before the last timestamp.';
     return false;
   };
   const stopValidator = () => {
-    if (stop && stop < firstValueTimestamp.toDate()) return 'Stop date must be after the first timestamp.';
+    if (stop && firstValueTimestamp && stop < firstValueTimestamp.toDate()) return 'Stop date must be after the first timestamp.';
     return false;
   };
 
@@ -73,7 +73,14 @@ function TemporalDataFlushingModal (props: MyProps & DispatchProps) {
       buttonConfirmName={'Flush data partially'}
       onClickButtonConfirm={fetchWithOptions}
       cancelAction={props.handleClose}
-      disableButtons={busyDeleting || !!timeValidator() || !!startValidator() || !!stopValidator()}
+      disableButtons={
+        busyDeleting ||
+        !start ||
+        !stop ||
+        !!timeValidator() ||
+        !!startValidator() ||
+        !!stopValidator()
+      }
       height={500}
     >
       <p>Please select a time range to flush data from <b>{row.name}</b> raster source.</p>
@@ -81,11 +88,11 @@ function TemporalDataFlushingModal (props: MyProps & DispatchProps) {
       <div className={styles.GridContainer}>
         <div>
           <span><b>First timestamp:</b></span><br />
-          <span>{firstValueTimestamp.toLocaleString()}</span>
+          <span>{firstValueTimestamp ? firstValueTimestamp.toLocaleString() : '(No data)'}</span>
         </div>
         <div>
           <span><b>Last timestamp:</b></span><br />
-          <span>{lastValueTimestamp.toLocaleString()}</span>
+          <span>{lastValueTimestamp ? lastValueTimestamp.toLocaleString() : '(No data)'}</span>
         </div>
       </div>
       <div className={styles.GridContainer}>

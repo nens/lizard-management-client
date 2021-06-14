@@ -16,12 +16,14 @@ import { getScenarioTotalSize } from '../../reducers';
 import { fetchWithOptions } from '../../utils/fetchWithOptions';
 import DeleteModal from '../../components/DeleteModal';
 import DataFlushingModal from './DataFlushingModal';
+import TemporalDataFlushingModal from './TemporalDataFlushingModal';
 
 export const baseUrl = "/api/v4/rastersources/";
 const navigationUrlRasters = "/data_management/rasters/sources";
 
 export const RasterSourceTable = (props: any) => {
   const [rowToFlushData, setRowToFlushData] = useState<any | null>(null);
+  const [rowToFlushDataPartially, setRowToFlushDataPartially] = useState<any | null>(null);
   const [rowToBeDeleted, setRowToBeDeleted] = useState<any | null>(null);
   const [resetTable, setResetTable] = useState<Function | null>(null);
   const [currentRowDetailView, setCurrentRowDetailView] = useState<null | any>(null);
@@ -54,6 +56,18 @@ export const RasterSourceTable = (props: any) => {
     setCheckboxes: Function | null
   ) => {
     setRowToFlushData(row);
+    setResetTable(() => () => {
+      triggerReloadWithCurrentPage();
+      setCheckboxes && setCheckboxes([]);
+    });
+  };
+
+  const flushDataPartiallyAction = (
+    row: any,
+    triggerReloadWithCurrentPage: Function,
+    setCheckboxes: Function | null
+  ) => {
+    setRowToFlushDataPartially(row);
     setResetTable(() => () => {
       triggerReloadWithCurrentPage();
       setCheckboxes && setCheckboxes([]);
@@ -119,7 +133,26 @@ export const RasterSourceTable = (props: any) => {
               triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
               triggerReloadWithBasePage={triggerReloadWithBasePage}
               editUrl={`${navigationUrlRasters}/${row.uuid}`}
-              actions={[
+              actions={row.temporal ? [
+                {
+                  displayValue: "Delete",
+                  actionFunction: (row: any, _updateTableRow: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any) => {
+                    deleteAction(row, triggerReloadWithCurrentPage, null);
+                  }
+                },
+                {
+                  displayValue: "Flush data",
+                  actionFunction: (row: any, _updateTableRow: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any) => {
+                    flushDataAction(row, triggerReloadWithCurrentPage, null);
+                  }
+                },
+                {
+                  displayValue: "Flush partial data",
+                  actionFunction: (row: any, _updateTableRow: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any) => {
+                    flushDataPartiallyAction(row, triggerReloadWithCurrentPage, null);
+                  }
+                },
+              ] : [
                 {
                   displayValue: "Delete",
                   actionFunction: (row: any, _updateTableRow: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any) => {
@@ -229,8 +262,22 @@ export const RasterSourceTable = (props: any) => {
         <DataFlushingModal
           row={rowToFlushData}
           displayContent={[{name: "name", width: 50}, {name: "uuid", width: 50}]}
-          handleClose={() => setRowToFlushData(null)}
+          handleClose={() => {
+            setRowToFlushData(null);
+            setCurrentRowDetailView(null);
+            setResetTable(null);
+          }}
         />
+      ) : null}
+      {rowToFlushDataPartially ? (
+        <TemporalDataFlushingModal
+        row={rowToFlushDataPartially}
+        handleClose={() => {
+          setRowToFlushDataPartially(null);
+          setCurrentRowDetailView(null);
+          setResetTable(null);
+        }}
+      />
       ) : null}
     </ExplainSideColumn>
   );
