@@ -62,7 +62,7 @@ function TemporalDataFlushingModal (props: MyProps & DispatchProps) {
         props.addNotification('Permission denied! You do not have permission to flush data of this raster source.', 2000);
       } else {
         console.error('Error flushing partial data from the raster source: ', res);
-        props.addNotification('An error occurred! Please try again!', 2000);
+        props.addNotification('An error occurred! Please try again.', 2000);
       }
     }).catch(console.error);
   };
