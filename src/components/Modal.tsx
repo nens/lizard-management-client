@@ -9,7 +9,8 @@ interface MyProps {
   buttonConfirmName?: string,
   onClickButtonConfirm?: () => void,
   cancelAction?: () => void,
-  disableButtons?: boolean,
+  disabledCancelAction?: boolean,
+  disabledConfirmAction?: boolean,
   // requiredCheckboxText works, but is currently not used
   requiredCheckboxText?: string,
   height?: number | string, // height for modal body, default is auto
@@ -21,7 +22,8 @@ const Modal: React.FC<MyProps> = (props) => {
     buttonConfirmName,
     onClickButtonConfirm,
     cancelAction,
-    disableButtons,
+    disabledCancelAction,
+    disabledConfirmAction,
     requiredCheckboxText,
     height
   } = props;
@@ -32,7 +34,7 @@ const Modal: React.FC<MyProps> = (props) => {
     <Overlay
       confirmModal={true}
       handleClose={()=>{
-        !disableButtons && // to prevent ESC key to close the modal when buttons are disabled
+        !disabledCancelAction && // to prevent ESC key to close the modal when buttons are disabled
         cancelAction &&
         cancelAction()
       }}
@@ -40,7 +42,7 @@ const Modal: React.FC<MyProps> = (props) => {
       <div className={modalStyles.Modal}>
         <div className={modalStyles.ModalHeader}>
           {title}
-          {cancelAction ? <button onClick={cancelAction} disabled={disableButtons}>x</button> : null}
+          {cancelAction ? <button onClick={cancelAction} disabled={disabledCancelAction}>x</button> : null}
         </div>
         <div
           className={modalStyles.ModalBody}
@@ -81,7 +83,7 @@ const Modal: React.FC<MyProps> = (props) => {
               <button
                 className={`${buttonStyles.Button} ${buttonStyles.LinkCancel}`}
                 onClick={cancelAction}
-                disabled={disableButtons}
+                disabled={disabledCancelAction}
               >
                 Cancel
               </button>
@@ -90,7 +92,7 @@ const Modal: React.FC<MyProps> = (props) => {
               <button
                 className={`${buttonStyles.Button} ${buttonStyles.Danger}`}
                 onClick={onClickButtonConfirm}
-                disabled={disableButtons || (checkboxState===false && requiredCheckboxText !== undefined)}
+                disabled={disabledConfirmAction || (checkboxState===false && requiredCheckboxText !== undefined)}
                 title={checkboxState===false && requiredCheckboxText !== undefined? "First confirm the checkbox that you understood this warning" : "" }
               >
                 {buttonConfirmName}

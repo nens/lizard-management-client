@@ -44,7 +44,8 @@ function DataFlushingModal (props: MyProps & DispatchProps) {
       buttonConfirmName={'Flush data'}
       onClickButtonConfirm={fetchWithOptions}
       cancelAction={props.handleClose}
-      disableButtons={busyDeleting}
+      disabledConfirmAction={busyDeleting}
+      disabledCancelAction={busyDeleting}
     >
       <p>All data of the following raster source will be flushed:</p>
       {ModalDeleteContent([row], busyDeleting, displayContent)}

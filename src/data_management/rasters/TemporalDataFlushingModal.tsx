@@ -73,7 +73,7 @@ function TemporalDataFlushingModal (props: MyProps & DispatchProps) {
       buttonConfirmName={'Flush data partially'}
       onClickButtonConfirm={fetchWithOptions}
       cancelAction={props.handleClose}
-      disableButtons={
+      disabledConfirmAction={
         busyDeleting ||
         !start ||
         !stop ||
@@ -81,6 +81,7 @@ function TemporalDataFlushingModal (props: MyProps & DispatchProps) {
         !!startValidator() ||
         !!stopValidator()
       }
+      disabledCancelAction={busyDeleting}
       height={500}
     >
       <p style={{ marginBottom: 10 }}>Please select a time range to flush data from <b>{row.name}</b> raster source.</p>

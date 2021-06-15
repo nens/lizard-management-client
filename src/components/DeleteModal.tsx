@@ -65,7 +65,8 @@ function DeleteModal (props: MyProps & DispatchProps & RouteComponentProps) {
       buttonConfirmName={'Delete'}
       onClickButtonConfirm={handleDelete}
       cancelAction={props.handleClose}
-      disableButtons={busyDeleting}
+      disabledCancelAction={busyDeleting}
+      disabledConfirmAction={busyDeleting}
     >
       <p>{text ? text : "Are you sure? You are deleting the following item(s):"}</p>
       {ModalDeleteContent(rows, busyDeleting, displayContent)}
