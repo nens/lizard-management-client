@@ -4,6 +4,7 @@ import { RasterSourceFromAPI } from '../../api/rasters';
 import { addNotification } from './../../actions';
 import Modal from './../../components/Modal';
 import styles from './TemporalDataFlushingModal.module.css';
+import MDSpinner from "react-md-spinner";
 
 import moment from "moment";
 import "moment/locale/nl";
@@ -121,6 +122,12 @@ function TemporalDataFlushingModal (props: MyProps & DispatchProps) {
         />
       </div>
       <div style={{ color: 'red', marginTop: 5 }}>{timeValidator() || startValidator() || stopValidator()}</div>
+      {busyDeleting ? (
+        <div style={{position:"absolute", top:0, left:0, width:"100%", height:"100%", display:"flex", justifyContent:"center", alignItems: "center"}} >
+          <MDSpinner size={96} />
+          <span style={{marginLeft: "20px", fontSize: "19px", fontWeight: "bold"}}>Deleting ...</span>
+        </div>
+      ) : null}
     </Modal>
   )
 }
