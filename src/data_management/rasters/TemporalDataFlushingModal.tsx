@@ -83,8 +83,8 @@ function TemporalDataFlushingModal (props: MyProps & DispatchProps) {
       }
       height={500}
     >
-      <p>Please select a time range to flush data from <b>{row.name}</b> raster source.</p>
-      <em>Note: Selected time range must be in between the first timestamp and the last timestamp of the source.</em>
+      <p style={{ marginBottom: 10 }}>Please select a time range to flush data from <b>{row.name}</b> raster source.</p>
+      <em>Note: Selected time range must be in between the first timestamp and the last timestamp.</em>
       <div className={styles.GridContainer}>
         <div>
           <span><b>First timestamp:</b></span><br />
@@ -96,6 +96,8 @@ function TemporalDataFlushingModal (props: MyProps & DispatchProps) {
         </div>
       </div>
       <div className={styles.GridContainer}>
+        <div><b>Start:</b></div>
+        <div><b>Stop:</b></div>
         <Datetime
           value={start}
           onChange={event => {
