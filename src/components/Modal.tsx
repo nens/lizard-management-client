@@ -29,11 +29,18 @@ const Modal: React.FC<MyProps> = (props) => {
   const [checkboxState, /*setCheckboxState*/] = useState<boolean>(false);
 
   return (
-    <Overlay confirmModal={true} handleClose={()=>{cancelAction && cancelAction()}}>
+    <Overlay
+      confirmModal={true}
+      handleClose={()=>{
+        !disableButtons && // to prevent ESC key to close the modal when buttons are disabled
+        cancelAction &&
+        cancelAction()
+      }}
+    >
       <div className={modalStyles.Modal}>
         <div className={modalStyles.ModalHeader}>
           {title}
-          {cancelAction ? <button onClick={cancelAction}>x</button> : null}
+          {cancelAction ? <button onClick={cancelAction} disabled={disableButtons}>x</button> : null}
         </div>
         <div
           className={modalStyles.ModalBody}
