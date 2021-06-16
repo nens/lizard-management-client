@@ -43,6 +43,12 @@ export const sendDataToLizardRecursive = (uuid: string, data: AcceptedFile[], te
         storeDispatch(updateFileStatus(e.file, 'FAILED'));
         storeDispatch(addNotification(`Error uploading ${e.file.name}`, 5000));
         return;
+      } else if (status === 504) { // Gateway Timeout
+        storeDispatch(updateFileStatus(e.file, 'FAILED'));
+        storeDispatch(addNotification(`Gateway Timeout in uploading ${e.file.name}`, 5000));
+      } else {
+        storeDispatch(updateFileStatus(e.file, 'FAILED'));
+        storeDispatch(addNotification(`Error uploading ${e.file.name}`, 5000));
       };
     })
     .then(response => {
