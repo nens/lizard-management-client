@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useSelector} from 'react-redux';
 import TableStateContainer from '../../components/TableStateContainer';
 import { NavLink } from "react-router-dom";
-import { deleteRasterSource } from "../../api/rasters";
 import TableActionButtons from '../../components/TableActionButtons';
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import rasterSourcesIcon from "../../images/raster_source_icon.svg";
@@ -14,96 +13,66 @@ import DeleteRasterSourceNotAllowed  from './DeleteRasterSourceNotAllowed';
 import MDSpinner from "react-md-spinner";
 import { defaultRasterSourceExplanationTextTable } from '../../utils/help_texts/helpTextForRasters';
 import { getScenarioTotalSize } from '../../reducers';
+import { fetchWithOptions } from '../../utils/fetchWithOptions';
+import DeleteModal from '../../components/DeleteModal';
+import DataFlushingModal from './DataFlushingModal';
+import TemporalDataFlushingModal from './TemporalDataFlushingModal';
 
 export const baseUrl = "/api/v4/rastersources/";
 const navigationUrlRasters = "/data_management/rasters/sources";
 
-export const RasterSourceTable = (props:any) =>  {
-  // const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
+export const RasterSourceTable = (props: any) => {
+  const [rowToFlushData, setRowToFlushData] = useState<any | null>(null);
+  const [rowToFlushDataPartially, setRowToFlushDataPartially] = useState<any | null>(null);
   const [rowToBeDeleted, setRowToBeDeleted] = useState<any | null>(null);
+  const [resetTable, setResetTable] = useState<Function | null>(null);
   const [currentRowDetailView, setCurrentRowDetailView] = useState<null | any>(null);
-  const [deleteFunction, setDeleteFunction] = useState<null | Function>(null);
-  const [busyDeleting, setBusyDeleting] = useState<boolean>(false);
   const [showDeleteFailedModal, setShowDeleteFailedModal] = useState<boolean>(false);
   const rastersTotalSize = useSelector(getScenarioTotalSize);
 
   useEffect(() => { 
     if (rowToBeDeleted) {
       fetch(baseUrl + rowToBeDeleted.uuid)
-        .then((result:any)=>{
-          return result.json();
-        })
-        .then((detailView:any)=>{
-          setCurrentRowDetailView(detailView);
-        })
+        .then(res => res.json())
+        .then(detailView => setCurrentRowDetailView(detailView))
     };
   }, [rowToBeDeleted]);
 
-  const deleteActionRaster = (row: any, updateTableRow:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any)=>{
+  const deleteAction = (
+    row: any,
+    triggerReloadWithCurrentPage: Function,
+    setCheckboxes: Function | null
+  ) => {
     setRowToBeDeleted(row);
-    setDeleteFunction(()=>()=>{
-      setBusyDeleting(true);
-      updateTableRow({...row, markAsDeleted: true});
-      return deleteRasterSource(row.uuid)
-      .then((result) => {
-        setBusyDeleting(false);
-        triggerReloadWithCurrentPage();
-        return new Promise((resolve, _reject) => {
-            resolve({result:result, row:row});
-          });
-        })
+    setResetTable(() => () => {
+      triggerReloadWithCurrentPage();
+      setCheckboxes && setCheckboxes([]);
     });
   };
 
-  // implement later
-  // const deleteActionRasters = (rows: any[], tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any, setCheckboxes: any)=>{
-  //   setRowsToBeDeleted(rows);
-  //   const uuids = rows.map(row=> row.uuid);
-  //   setDeleteFunction(()=>()=>{
-  //     setBusyDeleting(true);
-  //     const tableDataDeletedmarker = tableData.map((rowAllTables:any)=>{
-  //       if (uuids.find((uuid)=> uuid === rowAllTables.uuid)) {
-  //         return {...rowAllTables, markAsDeleted: true}
-  //       } else{
-  //         return {...rowAllTables};
-  //       }
-  //     })
-  //     setTableData(tableDataDeletedmarker);
-  //     return deleteRasterSources(uuids)
-  //     .then((result) => {
-  //       setBusyDeleting(false);
-  //       if (setCheckboxes) {
-  //         setCheckboxes([]);
-  //       }
-  //       triggerReloadWithCurrentPage();
-  //       return new Promise((resolve, _reject) => {
-  //         resolve(result);
-  //       });
-  //     })
-  //   });
-  // }
+  const flushDataAction = (
+    row: any,
+    triggerReloadWithCurrentPage: Function,
+    setCheckboxes: Function | null
+  ) => {
+    setRowToFlushData(row);
+    setResetTable(() => () => {
+      triggerReloadWithCurrentPage();
+      setCheckboxes && setCheckboxes([]);
+    });
+  };
 
-  // const flushActionRasters = (rows: any[], tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any, setCheckboxes: any)=>{
-  //   const uuids = rows.map(row=> row.uuid);
-  //   if (window.confirm(`Are you sure you want to flush rasters with uuids? \n ${uuids.join("\n")}`)) {
-  //     const tableDataDeletedmarker = tableData.map((rowAllTables:any)=>{
-  //       if (uuids.find((uuid)=> uuid === rowAllTables.uuid)) {
-  //         return {...rowAllTables, markAsFlushed: true}
-  //       } else{
-  //         return {...rowAllTables};
-  //       }
-  //     })
-  //     setTableData(tableDataDeletedmarker);
-  //     flushRasters(uuids)
-  //     .then((_result) => {
-  //       // TODO: this is not preferred way. see delet function in raster layer table
-  //       if (setCheckboxes) {
-  //         setCheckboxes([]);
-  //       }
-  //       triggerReloadWithCurrentPage();
-  //     })
-  //   }
-  // }
+  const flushDataPartiallyAction = (
+    row: any,
+    triggerReloadWithCurrentPage: Function,
+    setCheckboxes: Function | null
+  ) => {
+    setRowToFlushDataPartially(row);
+    setResetTable(() => () => {
+      triggerReloadWithCurrentPage();
+      setCheckboxes && setCheckboxes([]);
+    });
+  };
 
   const rasterSourceColumnDefinitions = [
     {
@@ -164,26 +133,38 @@ export const RasterSourceTable = (props:any) =>  {
               triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
               triggerReloadWithBasePage={triggerReloadWithBasePage}
               editUrl={`${navigationUrlRasters}/${row.uuid}`}
-              actions={[
+              actions={row.temporal ? [
                 {
                   displayValue: "Delete",
-                  actionFunction: deleteActionRaster,
+                  actionFunction: (row: any, _updateTableRow: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any) => {
+                    deleteAction(row, triggerReloadWithCurrentPage, null);
+                  }
                 },
-                // implement later
-                // {
-                //   displayValue: "flush raster",
-                //   actionFunction: (row: any, updateTableRow:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any)=>{
-                //     if (window.confirm(`Are you sure you want to flush raster-source with uuid: ${row.uuid} ?`)) {
-                //       const uuid = row.uuid;
-                //       const flushedRow =  {...row, markAsFlushed: true}
-                //       updateTableRow(flushedRow);
-                //       flushRaster(uuid)
-                //       .then((_result) => {
-                //         triggerReloadWithCurrentPage();
-                //       })
-                //     }
-                //   },
-                // },
+                {
+                  displayValue: "Flush data",
+                  actionFunction: (row: any, _updateTableRow: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any) => {
+                    flushDataAction(row, triggerReloadWithCurrentPage, null);
+                  }
+                },
+                {
+                  displayValue: "Flush data partially",
+                  actionFunction: (row: any, _updateTableRow: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any) => {
+                    flushDataPartiallyAction(row, triggerReloadWithCurrentPage, null);
+                  }
+                },
+              ] : [
+                {
+                  displayValue: "Delete",
+                  actionFunction: (row: any, _updateTableRow: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any) => {
+                    deleteAction(row, triggerReloadWithCurrentPage, null);
+                  }
+                },
+                {
+                  displayValue: "Flush data",
+                  actionFunction: (row: any, _updateTableRow: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any) => {
+                    flushDataAction(row, triggerReloadWithCurrentPage, null);
+                  }
+                },
               ]}
             />
         );
@@ -205,23 +186,11 @@ export const RasterSourceTable = (props:any) =>  {
       explanationText={defaultRasterSourceExplanationTextTable(bytesToDisplayValue(rastersTotalSize))} 
       backUrl={"/data_management/rasters"}
     >
-      <TableStateContainer 
-        // with checkboxes
-        // gridTemplateColumns={"8% 29% 25% 10% 20% 8%"}
+      <TableStateContainer
         gridTemplateColumns={"37% 25% 10% 20% 8%"}  
         columnDefinitions={rasterSourceColumnDefinitions}
         baseUrl={`${baseUrl}?`} 
-        checkBoxActions={[
-          // implement later
-          // {
-          //   displayValue: "Flush Rasters",
-          //   actionFunction: flushActionRasters,
-          // },
-          // {
-          //   displayValue: "Delete",
-          //   actionFunction: deleteActionRasters,
-          // },
-        ]}
+        checkBoxActions={[]}
         newItemOnClick={handleNewRasterClick}
         filterOptions={[
           {value: 'name__icontains=', label: 'Name'},
@@ -229,8 +198,7 @@ export const RasterSourceTable = (props:any) =>  {
         ]}
         defaultUrlParams={'&scenario__isnull=true'} // to exclude 3Di scenario rasters
       />
-      {
-        rowToBeDeleted && !currentRowDetailView ?
+      {rowToBeDeleted && !currentRowDetailView ? (
         <Modal
            title={'Loading'}
            cancelAction={()=>{
@@ -239,113 +207,78 @@ export const RasterSourceTable = (props:any) =>  {
             setCurrentRowDetailView(null);
            }}
          >
-          <MDSpinner size={24} /><span style={{marginLeft: "40px"}}>Loading dependent objects for delete ..</span>
+          <MDSpinner size={24} />
+          <span style={{marginLeft: "40px"}}>Loading dependent objects for delete ..</span>
          </Modal>
-        :
-        null
-      }
-      {
-        // next line is correctly commented out, use it for testing delete 412 error
-        // false &&
-        currentRowDetailView && (currentRowDetailView.layers.length !== 0 || currentRowDetailView.labeltypes.length !== 0) ?
-
+      ) : null}
+      {rowToBeDeleted && currentRowDetailView && (currentRowDetailView.layers.length !== 0 || currentRowDetailView.labeltypes.length !== 0) ? (
         <DeleteRasterSourceNotAllowed 
-          closeDialogAction={()=>{
+          rowToBeDeleted={rowToBeDeleted}
+          handleClose={() => {
             setRowToBeDeleted(null);
             setCurrentRowDetailView(null);
-            setDeleteFunction(null);
+            setResetTable(null);
             // todo refresh table, because maybe user has in meanwhile deleted items. Or pass row instead and put logic for what modal is show inside modal component?
           }}
-          rowToBeDeleted={rowToBeDeleted}
         />
-        :
-        null
-      }
-      { 
-        currentRowDetailView && deleteFunction 
-        && 
-        (currentRowDetailView.layers.length === 0 && currentRowDetailView.labeltypes.length === 0) 
-        ?
-           <Modal
-           title={'Are you sure?'}
-           buttonConfirmName={'Delete'}
-           onClickButtonConfirm={() => {
-             deleteFunction && deleteFunction().then((resultObj:any)=>{
-              if (resultObj.result.status === 412) {
-                setShowDeleteFailedModal(true);
-                setDeleteFunction(null);
-              } else {
-                setRowToBeDeleted(null);
-                setCurrentRowDetailView(null);
-                setDeleteFunction(null);
-              }
-              
-             });
-             
-           }}
-           cancelAction={()=>{
-             setRowToBeDeleted(null);
-             setCurrentRowDetailView(null);
-             setDeleteFunction(null);
-           }}
-           disableButtons={busyDeleting}
-         >
-           <p>Are you sure? You are deleting the following raster-source:</p>
-           {ModalDeleteContent([currentRowDetailView], busyDeleting, [{name: "name", width: 65}, {name: "uuid", width: 25}])}             
-         </Modal>
-        :
-          null
-        }
-        { 
-        currentRowDetailView &&  showDeleteFailedModal?
-           <Modal
-           title={'Not allowed'}
-           closeDialogAction={()=>{
+      ) : null}
+      {rowToBeDeleted && currentRowDetailView && (currentRowDetailView.layers.length === 0 && currentRowDetailView.labeltypes.length === 0) ? (
+        <DeleteModal
+          rows={[rowToBeDeleted]}
+          displayContent={[{name: "name", width: 40}, {name: "uuid", width: 60}]}
+          fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
+          resetTable={resetTable}
+          handleClose={() => {
+            setRowToBeDeleted(null);
+            setCurrentRowDetailView(null);
+            setResetTable(null);
+          }}
+        />
+      ) : null}
+      {currentRowDetailView && showDeleteFailedModal ? (
+        <Modal
+          title={'Not allowed'}
+          cancelAction={()=>{
             setShowDeleteFailedModal(false);
             setRowToBeDeleted(null);
             setCurrentRowDetailView(null);
-           }}
-         >
-           <p>You are trying to delete the following raster-source:</p>
-           {ModalDeleteContent([currentRowDetailView], busyDeleting, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
-           <p>But this raster-source is still in use by objects outside your organisation.</p>
-           <p>{"Please contact "} 
-             <a
+          }}
+        >
+          <p>You are trying to delete the following raster-source:</p>
+          {ModalDeleteContent([currentRowDetailView], false, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
+          <p>But this raster-source is still in use by objects outside your organisation.</p>
+          <p>{"Please contact "}
+            <a
               href="https://nelen-schuurmans.topdesk.net/tas/public/ssp"
               target="_blank"
               rel="noopener noreferrer"
-            >support</a>
+            >
+              support
+            </a>
           </p>             
-         </Modal>
-        :
-          null
-        }
-        {/* { 
-        rowsToBeDeleted.length > 0?
-           <Modal
-           title={'Are you sure?'}
-           buttonConfirmName={'Delete'}
-           onClickButtonConfirm={() => {
-              deleteFunction && deleteFunction().then(()=>{
-              setRowsToBeDeleted([]);
-              setDeleteFunction(null);
-             });
-           }}
-           cancelAction={()=>{
-            setRowsToBeDeleted([]);
-            setDeleteFunction(null);
+        </Modal>
+      ) : null}
+      {rowToFlushData ? (
+        <DataFlushingModal
+          row={rowToFlushData}
+          displayContent={[{name: "name", width: 50}, {name: "uuid", width: 50}]}
+          handleClose={() => {
+            setRowToFlushData(null);
+            setCurrentRowDetailView(null);
+            setResetTable(null);
           }}
-          disableButtons={busyDeleting}
-         >
-           
-           <p>Are you sure? You are deleting the following raster-sources:</p>
-           
-           {ModalDeleteContent(rowsToBeDeleted, busyDeleting, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
-           
-         </Modal>
-        :
-          null
-        } */}
+        />
+      ) : null}
+      {rowToFlushDataPartially ? (
+        <TemporalDataFlushingModal
+        row={rowToFlushDataPartially}
+        handleClose={() => {
+          setRowToFlushDataPartially(null);
+          setCurrentRowDetailView(null);
+          setResetTable(null);
+        }}
+      />
+      ) : null}
     </ExplainSideColumn>
   );
 }

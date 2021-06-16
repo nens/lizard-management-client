@@ -3,17 +3,14 @@ import Overlay from './../components/Overlay';
 import modalStyles from '../styles/Modal.module.css';
 import buttonStyles from './../styles/Buttons.module.css';
 import {useState,}  from 'react';
-// import Checkbox from './Checkbox';
-
-
 
 interface MyProps {
   title: string,
   buttonConfirmName?: string,
   onClickButtonConfirm?: () => void,
   cancelAction?: () => void,
-  disableButtons?: boolean,
-  closeDialogAction?: () => void,
+  disabledCancelAction?: boolean,
+  disabledConfirmAction?: boolean,
   // requiredCheckboxText works, but is currently not used
   requiredCheckboxText?: string,
   height?: number | string, // height for modal body, default is auto
@@ -25,8 +22,8 @@ const Modal: React.FC<MyProps> = (props) => {
     buttonConfirmName,
     onClickButtonConfirm,
     cancelAction,
-    disableButtons,
-    closeDialogAction,
+    disabledCancelAction,
+    disabledConfirmAction,
     requiredCheckboxText,
     height
   } = props;
@@ -34,11 +31,18 @@ const Modal: React.FC<MyProps> = (props) => {
   const [checkboxState, /*setCheckboxState*/] = useState<boolean>(false);
 
   return (
-    <Overlay confirmModal={true} handleClose={()=>{cancelAction && cancelAction()}}>
+    <Overlay
+      confirmModal={true}
+      handleClose={()=>{
+        !disabledCancelAction && // to prevent ESC key to close the modal when buttons are disabled
+        cancelAction &&
+        cancelAction()
+      }}
+    >
       <div className={modalStyles.Modal}>
         <div className={modalStyles.ModalHeader}>
           {title}
-          {closeDialogAction? <button onClick={(e)=>{closeDialogAction()}}>x</button>:null}
+          {cancelAction ? <button onClick={cancelAction} disabled={disabledCancelAction}>x</button> : null}
         </div>
         <div
           className={modalStyles.ModalBody}
@@ -79,7 +83,7 @@ const Modal: React.FC<MyProps> = (props) => {
               <button
                 className={`${buttonStyles.Button} ${buttonStyles.LinkCancel}`}
                 onClick={cancelAction}
-                disabled={disableButtons}
+                disabled={disabledCancelAction}
               >
                 Cancel
               </button>
@@ -88,7 +92,7 @@ const Modal: React.FC<MyProps> = (props) => {
               <button
                 className={`${buttonStyles.Button} ${buttonStyles.Danger}`}
                 onClick={onClickButtonConfirm}
-                disabled={disableButtons || (checkboxState===false && requiredCheckboxText !== undefined)}
+                disabled={disabledConfirmAction || (checkboxState===false && requiredCheckboxText !== undefined)}
                 title={checkboxState===false && requiredCheckboxText !== undefined? "First confirm the checkbox that you understood this warning" : "" }
               >
                 {buttonConfirmName}

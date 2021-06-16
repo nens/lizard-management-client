@@ -68,6 +68,8 @@ export type RasterSourceFromAPI = RasterSourceInstance & {
   layers: string[];
   labeltypes: string[];
   organisation: Organisation;
+  first_value_timestamp: string | null;
+  last_value_timestamp: string | null;
 }
 
 interface RasterLayerInstance {
