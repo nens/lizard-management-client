@@ -17,7 +17,7 @@ import { TextInput } from './../../form/TextInput';
 import { SubmitButton } from '../../form/SubmitButton';
 import { CancelButton } from '../../form/CancelButton';
 import { AccessModifier } from '../../form/AccessModifier';
-import ColorMapInput, { colorMapValidator } from '../../form/ColorMapInput';
+import ColorMapInput from '../../form/ColorMapInput';
 import { useForm, Values } from '../../form/useForm';
 import { minLength, required } from '../../form/validators';
 import {
