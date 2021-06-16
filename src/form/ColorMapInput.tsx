@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { FormattedMessage, injectIntl, InjectedIntlProps } from "react-intl";
 import { SelectDropdown, Value } from "./SelectDropdown";
 import { CheckBox } from "./CheckBox";
-import { validatorResult } from "./validators";
+import { TextInput } from "./TextInput";
 import styles from "./ColorMapInput.module.css";
 import formStyles from "../styles/Forms.module.css";
 import {
@@ -45,24 +45,28 @@ interface ColorMapProps {
   onBlur?: () => void,
 };
 
-export const colorMapValidator = (options: ColorMapOptions | null): validatorResult => {
+export const colorMapValidator = (options: ColorMapOptions | null): {
+  validated: boolean,
+  minValidated: boolean,
+  maxValidated: boolean,
+  errorMessage?: string,
+} => {
     const initiatedOptions = options || {
       options: {},
       rescalable: false,
       customColormap: {},
     };
     if (JSON.stringify(initiatedOptions.customColormap) !== "{}") {
-      return false;
+      return {
+        validated: true,
+        minValidated: true,
+        maxValidated: true,
+      };
     }
 
     const colorMap = colorMapTypeFromOptions(initiatedOptions.options);
 
-    const result = validateStyleObj(colorMap);
-    if (result.validated === true) {
-      return false;
-    } else {
-      return result.errorMessage + '';
-    };
+    return validateStyleObj(colorMap);
 };
 
 // Make a custom hook to keep previous value between renders
@@ -83,26 +87,12 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
     colorMaps,
     colorMapValue,
     valueChanged,
-    validated,
-    errorMessage,
     triedToSubmit,
     form,
     onFocus,
     onBlur,
     intl
   } = props;
-
-  // Set validity of the input field
-  const myInput = useRef<HTMLInputElement>(null);
-  useEffect(() => {
-    if (myInput && myInput.current) {
-      if (validated) {
-        myInput.current.setCustomValidity('');
-      } else {
-        myInput.current.setCustomValidity(errorMessage || '');
-      };
-    };
-  })
 
   const [previewColor, setPreviewColor] = useState<LegendResponse | null>(null);
   const [showCustomColormapModal, setShowCustomColormapModal] = useState(false);
@@ -258,9 +248,6 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
       className={formStyles.Label}
     >
       {showCustomColormapModal? 
-        // <Modal
-        //   title={'CUSTOM COLORMAP'}
-        // >
         <ModalBackground
           title={'CUSTOM COLORMAP'}
           handleClose={() => setShowCustomColormapModal(false)}
@@ -282,7 +269,6 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
             />
           </div>
         </ModalBackground>
-        // {/* </Modal> */}
       :null}
       <span className={formStyles.LabelTitle}>
         {title}
@@ -316,8 +302,8 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
                 label: colorMapType.colorMap
               }
             ) : null}
-            validated={validated}
-            errorMessage={errorMessage}
+            validated={colorMapValidator(colorMapValue).validated}
+            errorMessage={colorMapValidator(colorMapValue).errorMessage}
             triedToSubmit={triedToSubmit}
             valueChanged={option => {
               // @ts-ignore
@@ -343,42 +329,36 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
             null
           }
         </div>
-        <br />
-        <span className={`${"text-muted"} ${formStyles.LabelTitle}`}>
-          <FormattedMessage id="color_map.minimum_color_range" />
-        </span>
-        <br />
-        <input
-          id={"colormap_minimum"}
-          type="number"
-          autoComplete="off"
-          onChange={e => handleValueChanged('min', toFloat(e.target.value))}
-          value={(colorMapType && colorMapType.min) || ""}
+        <TextInput
+          title={'Minimum of color map range'}
+          name={'colormap_minimum'}
+          type={'number'}
           placeholder={placeholderMinimumColorRange}
-          className={formStyles.FormControl}
+          value={(colorMapType && colorMapType.min) || ""}
+          valueChanged={e => handleValueChanged('min', toFloat(e.target.value))}
+          validated={colorMapValidator(colorMapValue).minValidated}
+          errorMessage={colorMapValidator(colorMapValue).errorMessage}
+          triedToSubmit={triedToSubmit}
           onFocus={onFocus}
           onBlur={onBlur}
           readOnly={readOnly}
           form={form}
         />
-        <br />
-        <span className={`${"text-muted"} ${formStyles.LabelTitle}`}>
-        <FormattedMessage id="color_map.maximum_color_range" />
-        </span>
-        <input
-          id={"colormap_maximum"}
-          type="number"
-          autoComplete="off"
-          value={(colorMapType && colorMapType.max) || ""}
-          onChange={e => handleValueChanged('max', toFloat(e.target.value))}
+        <TextInput
+          title={'Maximum of color map range'}
+          name={'colormap_maximum'}
+          type={'number'}
           placeholder={placeholderMaximumColorRange}
-          className={formStyles.FormControl}
+          value={(colorMapType && colorMapType.max) || ""}
+          valueChanged={e => handleValueChanged('max', toFloat(e.target.value))}
+          validated={colorMapValidator(colorMapValue).maxValidated}
+          errorMessage={colorMapValidator(colorMapValue).errorMessage}
+          triedToSubmit={triedToSubmit}
           onFocus={onFocus}
           onBlur={onBlur}
           readOnly={readOnly}
           form={form}
         />
-        <br/>
         <CheckBox
           title={'Rescalable'}
           name={name+'_rescalable'}

@@ -399,8 +399,7 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           colorMapValue={values.colorMap}
           valueChanged={value => handleValueChange('colorMap', value)}
           colorMaps={colorMaps.map((colM: any) => convertToSelectObject(colM.name, colM.name, colM.description))}
-          validated={!colorMapValidator(values.colorMap)}
-          errorMessage={colorMapValidator(values.colorMap)}
+          validated
           triedToSubmit={triedToSubmit}
           form={"raster_layer_form_id"}
           onFocus={handleFocus}
