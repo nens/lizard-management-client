@@ -64,7 +64,7 @@ export const rasterLayerFormHelpText: HelpText = {
     </>
   ),
   datasets: datasetHelpText,
-  rasterSourceModal: 'Open modal to view connected sources of this layer.',
+  rasterSourceModal: 'Open modal to view connected raster source(s) of this layer.',
   rasterSource: (
     <>
       <p>Choose a (raster) source for this object.</p>

@@ -325,7 +325,7 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
         {currentRasterLayer ? (
           <FormButton
             name={'rasterSourceModal'}
-            title={'Raster sources'}
+            title={'Source'}
             text={'View'}
             onClick={e => {
               e.preventDefault();
@@ -336,7 +336,7 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           />
         ) : (
           <SelectDropdown
-            title={'Raster source *'}
+            title={'Source *'}
             name={'rasterSource'}
             placeholder={'- Search and select -'}
             value={values.rasterSource}
