@@ -24,7 +24,7 @@ interface checkboxAction {
 interface Props {
   gridTemplateColumns: string;
   columnDefinitions: ColumnDefinition[];
-  baseUrl: string; 
+  baseUrl: string;
   checkBoxActions: checkboxAction[];
   filterOptions?: Value[];
   newItemOnClick?: () => void | null;
@@ -87,8 +87,8 @@ const TableStateContainer: React.FC<Props> = ({
     (defaultUrlParams ? defaultUrlParams : '');
 
   const url = queryCheckBox && queryCheckBoxState? queryCheckBox.adaptUrlFunction(preUrl) : preUrl
-    
-  useEffect(() => { 
+
+  useEffect(() => {
     if (currentUrl !== "" && currentUrl === apiResponse.currentUrl) {
       apiResponse.response.results && setTableData(apiResponse.response.results);
       // make sure no checkboxes are checked outside of current page !
@@ -102,7 +102,7 @@ const TableStateContainer: React.FC<Props> = ({
     }
   }, [apiResponse, currentUrl]);
 
-  useEffect(() => { 
+  useEffect(() => {
     fetchWithUrl(url);
   }, [url]);
 
@@ -160,8 +160,8 @@ const TableStateContainer: React.FC<Props> = ({
   })
 
   const checkBoxColumnDefinition: ColumnDefinition = {
-    titleRenderFunction: () => 
-      <Checkbox  
+    titleRenderFunction: () =>
+      <Checkbox
         checked={areAllOnCurrentPageChecked()}
         onChange={()=>{
           if (areAllOnCurrentPageChecked()) {
@@ -171,19 +171,19 @@ const TableStateContainer: React.FC<Props> = ({
           }
         }}
       />,
-    renderFunction: (row: any) => 
-      <Checkbox 
-        checked={row.checkboxChecked} 
+    renderFunction: (row: any) =>
+      <Checkbox
+        checked={row.checkboxChecked}
         onChange={()=>{
           if (row.checkboxChecked) removeUuidFromCheckBoxes(getRowIdentifier(row))
           else addUuidToCheckBoxes(getRowIdentifier(row))
-        }} 
+        }}
       />,
       orderingField: null,
   };
 
-  const columnDefinitionsPlusCheckbox = 
-    checkBoxActions.length > 0 ?  
+  const columnDefinitionsPlusCheckbox =
+    checkBoxActions.length > 0 ?
       [checkBoxColumnDefinition].concat(columnDefinitions)
       :
       columnDefinitions
@@ -256,53 +256,53 @@ const TableStateContainer: React.FC<Props> = ({
         }}
       >
         {filterOptions && filterOptions.length > 0 ?
-          <div
-            style={{
-              display: 'flex',
-              position: 'relative',
-            }}
-          >
-            <TableSearchBox
-              onChange={event=>{
-                const newValue = event.target.value;
-                setSearchInput(newValue);
-              }}
-              onClear={()=>setSearchInput("")}
-              value={searchInput}
-              placeholder={"Type to search"}
-            />
-            {filterOptions.length > 1 ? (
-              <TableSearchToggle
-                options={filterOptions}
-                value={selectedFilterOption}
-                valueChanged={option => setSelectedFilterOption(option)}
-              />
-            ) : null}
-            <TableSearchToggleHelpText
-              filterOption={selectedFilterOption}
-            />
-          </div>
-        : <div />}
+                                                 <div
+                                                   style={{
+                                                     display: 'flex',
+                                                     position: 'relative',
+                                                   }}
+                                                 >
+                                                   <TableSearchBox
+                                                     onChange={event=>{
+                                                       const newValue = event.target.value;
+                                                       setSearchInput(newValue);
+                                                     }}
+                                                     onClear={()=>setSearchInput("")}
+                                                     value={searchInput}
+                                                     placeholder={"Type to search"}
+                                                   />
+                                                   {filterOptions.length > 1 ? (
+                                                     <TableSearchToggle
+                                                       options={filterOptions}
+                                                       value={selectedFilterOption}
+                                                       valueChanged={option => setSelectedFilterOption(option)}
+                                                     />
+                                                   ) : null}
+                                                   <TableSearchToggleHelpText
+                                                     filterOption={selectedFilterOption}
+                                                   />
+                                                 </div>
+                                               : <div />}
         <div>
           {queryCheckBox ?
-            <span
-              style={{
-                display: "flex",
-                alignItems: "center",
-                fontWeight: 500,
-                marginRight: 10,
-              }}
-            >
-              <span style={{marginRight: "8px"}}>{queryCheckBox.text}</span>
-               <Checkbox
-                  checked={queryCheckBoxState}
-                  onChange={()=>{
-                    if (queryCheckBoxState) setQueryCheckBoxState(false);
-                    else setQueryCheckBoxState(true)
-                  }}
-                  size={32}
-                />
-            </span>
+           <span
+             style={{
+               display: "flex",
+               alignItems: "center",
+               fontWeight: 500,
+               marginRight: 10,
+             }}
+           >
+             <span style={{marginRight: "8px"}}>{queryCheckBox.text}</span>
+             <Checkbox
+               checked={queryCheckBoxState}
+               onChange={()=>{
+                 if (queryCheckBoxState) setQueryCheckBoxState(false);
+                 else setQueryCheckBoxState(true)
+               }}
+               size={32}
+             />
+           </span>
           : null}
           {customTableButton ? (
             <button
@@ -315,12 +315,12 @@ const TableStateContainer: React.FC<Props> = ({
             </button>
           ) : null}
           {newItemOnClick ?
-            <button
-              onClick={newItemOnClick}
-              className={buttonStyles.NewButton}
-            >
-              + New Item
-            </button>
+           <button
+             onClick={newItemOnClick}
+             className={buttonStyles.NewButton}
+           >
+             + New Item
+           </button>
           : null}
         </div>
       </div>
@@ -336,7 +336,7 @@ const TableStateContainer: React.FC<Props> = ({
           fontWeight: "var(--font-weight-button)",
         }}
       >
-        <div 
+        <div
           style={{
             paddingTop: "17px",
             paddingBottom: "17px",
@@ -346,32 +346,32 @@ const TableStateContainer: React.FC<Props> = ({
           {`${checkBoxes.length} items selected`}
         </div>
         <div>
-        {
-          checkBoxActions.map((checkboxAction, i) => {
-            const { displayValue, actionFunction, checkIfActionIsApplicable } = checkboxAction;
-            const selectedRows = checkIfActionIsApplicable ? (
-              tableData.filter(row => getIfCheckBoxOfUuidIsSelected(getRowIdentifier(row)) && checkIfActionIsApplicable(row))
-            ) : (
-              tableData.filter(row => getIfCheckBoxOfUuidIsSelected(getRowIdentifier(row)))
-            );
-            return (
-              <button
-                key={i}
-                onClick={() => actionFunction(selectedRows, tableData, setTableData, ()=>fetchWithUrl(currentUrl), ()=>fetchWithUrl(url), setCheckBoxes)}
-                className={styles.TableActionButton}
-              >
-                {`${displayValue} (${selectedRows.length})`}
-              </button>
-            );
-          })
-        }
+          {
+            checkBoxActions.map((checkboxAction, i) => {
+              const { displayValue, actionFunction, checkIfActionIsApplicable } = checkboxAction;
+              const selectedRows = checkIfActionIsApplicable ? (
+                tableData.filter(row => getIfCheckBoxOfUuidIsSelected(getRowIdentifier(row)) && checkIfActionIsApplicable(row))
+              ) : (
+                tableData.filter(row => getIfCheckBoxOfUuidIsSelected(getRowIdentifier(row)))
+              );
+              return (
+                <button
+                  key={i}
+                  onClick={() => actionFunction(selectedRows, tableData, setTableData, ()=>fetchWithUrl(currentUrl), ()=>fetchWithUrl(url), setCheckBoxes)}
+                  className={styles.TableActionButton}
+                >
+                  {`${displayValue} (${selectedRows.length})`}
+                </button>
+              );
+            })
+          }
         </div>
       </div>
       <div style={{flex:1, minHeight: 0}}>
         <Table
-          tableData={dataWithCheckBoxes} 
+          tableData={dataWithCheckBoxes}
           setTableData={setTableData}
-          gridTemplateColumns={gridTemplateColumns} 
+          gridTemplateColumns={gridTemplateColumns}
           columnDefinitions={columnDefinitionsPlusCheckboxSortable}
           dataRetrievalState={dataRetrievalState}
           triggerReloadWithCurrentPage={()=>{fetchWithUrl(currentUrl)}}
@@ -381,11 +381,10 @@ const TableStateContainer: React.FC<Props> = ({
         />
       </div>
       <Pagination
-        page1Url={url}
-        previousUrl={previousUrl}
-        nextUrl={nextUrl}
+        toPage1={() => fetchWithUrl(url)}
+        toNext={nextUrl !== "" ? () => fetchWithUrl(nextUrl) : undefined}
+        toPrevious={previousUrl !== "" ? () => fetchWithUrl(previousUrl) : undefined}
         itemsPerPage={itemsPerPage}
-        reloadFromUrl={fetchWithUrl}
         setItemsPerPage={setItemsPerPage}
       />
     </div>

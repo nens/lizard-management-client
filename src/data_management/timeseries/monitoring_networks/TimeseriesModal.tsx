@@ -199,11 +199,10 @@ function TimeseriesModal (props: MyProps & DispatchProps) {
               </div>
             </div>
             <Pagination
-              page1Url={baseUrl + `?page_size=${itemsPerPage}`}
-              previousUrl={timeseriesApiResponse.previous}
-              nextUrl={timeseriesApiResponse.next}
+              toPage1={() => setCurrentUrl(baseUrl + `?page_size=${itemsPerPage}`)}
+              toNext={timeseriesApiResponse.next ? () => setCurrentUrl(timeseriesApiResponse.next) : undefined}
+              toPrevious={timeseriesApiResponse.previous ? () => setCurrentUrl(timeseriesApiResponse.previous) : undefined}
               itemsPerPage={itemsPerPage}
-              reloadFromUrl={setCurrentUrl}
               setItemsPerPage={setItemsPerPage}
             />
           </div>
