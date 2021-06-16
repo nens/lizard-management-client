@@ -14,6 +14,8 @@ import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import { CheckBox } from './../../form/CheckBox';
 import { TextArea } from './../../form/TextArea';
 import { TextInput } from './../../form/TextInput';
+import { SelectDropdown } from '../../form/SelectDropdown';
+import { FormButton } from './../../form/FormButton';
 import { SubmitButton } from '../../form/SubmitButton';
 import { CancelButton } from '../../form/CancelButton';
 import { AccessModifier } from '../../form/AccessModifier';
@@ -36,7 +38,7 @@ import rasterLayerIcon from "../../images/raster_layer_icon.svg";
 import formStyles from './../../styles/Forms.module.css';
 import FormActionButtons from '../../components/FormActionButtons';
 import DeleteModal from '../../components/DeleteModal';
-import { SelectDropdown } from '../../form/SelectDropdown';
+import { RasterSourceModal } from './RasterSourceModal';
 import { convertToSelectObject } from '../../utils/convertToSelectObject';
 import { fetchWithOptions } from '../../utils/fetchWithOptions';
 import { baseUrl } from './RasterLayerTable';
@@ -233,6 +235,9 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
   // Delete modal
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
+  // Modal to view connected sources of a layer
+  const [rasterSourceModal, setRasterSourceModal] = useState<boolean>(false);
+
   return (
     <ExplainSideColumn
       imgUrl={rasterLayerIcon}
@@ -317,24 +322,38 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
         <span className={formStyles.FormFieldTitle}>
           2: Data
         </span>
-        <SelectDropdown
-          title={'Source *'}
-          name={'rasterSource'}
-          placeholder={'- Search and select -'}
-          value={values.rasterSource}
-          valueChanged={value => handleValueChange('rasterSource', value)}
-          options={[]}
-          validated={!required('Please select a raster source', values.rasterSource)}
-          errorMessage={required('Please select a raster source', values.rasterSource)}
-          triedToSubmit={triedToSubmit}
-          form={"raster_layer_form_id"}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-          readOnly={!!currentRasterLayer || !!rasterSourceUUID}
-          isAsync={!rasterSourceUUID && !currentRasterLayer}
-          isCached
-          loadOptions={searchInput => fetchRasterSources(selectedOrganisation.uuid, searchInput)}
-        />
+        {currentRasterLayer ? (
+          <FormButton
+            name={'rasterSourceModal'}
+            title={'Source'}
+            text={'View'}
+            onClick={e => {
+              e.preventDefault();
+              setRasterSourceModal(true);
+            }}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+          />
+        ) : (
+          <SelectDropdown
+            title={'Source *'}
+            name={'rasterSource'}
+            placeholder={'- Search and select -'}
+            value={values.rasterSource}
+            valueChanged={value => handleValueChange('rasterSource', value)}
+            options={[]}
+            validated={!required('Please select a raster source', values.rasterSource)}
+            errorMessage={required('Please select a raster source', values.rasterSource)}
+            triedToSubmit={triedToSubmit}
+            form={"raster_layer_form_id"}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            readOnly={!!currentRasterLayer || !!rasterSourceUUID}
+            isAsync={!rasterSourceUUID && !currentRasterLayer}
+            isCached
+            loadOptions={searchInput => fetchRasterSources(selectedOrganisation.uuid, searchInput)}
+          />
+        )}
         <SelectDropdown
           title={'Aggregation type *'}
           name={'aggregationType'}
@@ -507,6 +526,12 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
           handleClose={() => setShowDeleteModal(false)}
           tableUrl={'/data_management/rasters/layers'}
+        />
+      ) : null}
+      {currentRasterLayer && currentRasterLayer.uuid && rasterSourceModal ? (
+        <RasterSourceModal
+          selectedLayer={currentRasterLayer.uuid}
+          closeModal={() => setRasterSourceModal(false)}
         />
       ) : null}
     </ExplainSideColumn>
