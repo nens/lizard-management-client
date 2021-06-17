@@ -40,7 +40,7 @@ export const ContactTable: React.FC<RouteComponentProps> = (props) =>  {
   const columnDefinitions = [
     {
       titleRenderFunction: () => "First name",
-      renderFunction: (row: any) => 
+      renderFunction: (row: any) =>
         <span
           className={tableStyles.CellEllipsis}
           title={getDjangoUserOrContactUser(row).first_name}
@@ -51,7 +51,7 @@ export const ContactTable: React.FC<RouteComponentProps> = (props) =>  {
     },
     {
       titleRenderFunction: () =>  "Last name",
-      renderFunction: (row: any) => 
+      renderFunction: (row: any) =>
         <span
           className={tableStyles.CellEllipsis}
           title={getDjangoUserOrContactUser(row).last_name}
@@ -62,7 +62,7 @@ export const ContactTable: React.FC<RouteComponentProps> = (props) =>  {
     },
     {
       titleRenderFunction: () => "Email",
-      renderFunction: (row: any) => 
+      renderFunction: (row: any) =>
         <span
           className={tableStyles.CellEllipsis}
           title={getDjangoUserOrContactUser(row).email}
@@ -73,7 +73,7 @@ export const ContactTable: React.FC<RouteComponentProps> = (props) =>  {
     },
     {
       titleRenderFunction: () =>  "Telephone",
-      renderFunction: (row: any) => 
+      renderFunction: (row: any) =>
         <span
           className={tableStyles.CellEllipsis}
           title={getDjangoUserOrContactUser(row).phone_number}
@@ -87,10 +87,10 @@ export const ContactTable: React.FC<RouteComponentProps> = (props) =>  {
       renderFunction: (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any) => {
         return (
             <TableActionButtons
-              tableRow={row} 
+              tableRow={row}
               tableData={tableData}
-              setTableData={setTableData} 
-              triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
+              setTableData={setTableData}
+              triggerReloadWithCurrentPage={triggerReloadWithCurrentPage}
               triggerReloadWithBasePage={triggerReloadWithBasePage}
               editUrl={`${navigationUrl}/${row.id}`}
               actions={[
@@ -122,13 +122,13 @@ export const ContactTable: React.FC<RouteComponentProps> = (props) =>  {
       imgUrl={contactIcon}
       imgAltDescription={"Contact icon"}
       headerText={"Contacts"}
-      explanationText={"Your contacts contain an email address, phone number and a name. Add these contacts to group to send them alarm messages when your thresholds are triggered."} 
+      explanationText={"Your contacts contain an email address, phone number and a name. Add these contacts to group to send them alarm messages when your thresholds are triggered."}
       backUrl={"/alarms"}
     >
-        <TableStateContainer 
-          gridTemplateColumns={"6% 18% 18% 32% 18% 8%"} 
+        <TableStateContainer
+          gridTemplateColumns={"6% 18% 18% 32% 18% 8%"}
           columnDefinitions={columnDefinitions}
-          baseUrl={`${baseUrl}?`} 
+          baseUrl={`${baseUrl}?`}
           checkBoxActions={[
             {
               displayValue: "Delete",
@@ -140,11 +140,11 @@ export const ContactTable: React.FC<RouteComponentProps> = (props) =>  {
           newItemOnClick={handleNewContactClick}
           filterOptions={[
             {
-              value: 'first_name__icontains=',
+              value: 'first_name__icontains',
               label: 'First name'
             },
             {
-              value: 'last_name__icontains=',
+              value: 'last_name__icontains',
               label: 'Last name'
             }
           ]}

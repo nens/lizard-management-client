@@ -27,7 +27,7 @@ export const RasterSourceTable = (props:any) =>  {
   const [showDeleteFailedModal, setShowDeleteFailedModal] = useState<boolean>(false);
   const rastersTotalSize = useSelector(getScenarioTotalSize);
 
-  useEffect(() => { 
+  useEffect(() => {
     if (rowToBeDeleted) {
       fetch(baseUrl + rowToBeDeleted.uuid)
         .then((result:any)=>{
@@ -108,7 +108,7 @@ export const RasterSourceTable = (props:any) =>  {
   const rasterSourceColumnDefinitions = [
     {
       titleRenderFunction: () => "Name",
-      renderFunction: (row: any) => 
+      renderFunction: (row: any) =>
         <span
           className={tableStyles.CellEllipsis}
           title={row.name}
@@ -132,7 +132,7 @@ export const RasterSourceTable = (props:any) =>  {
     },
     {
       titleRenderFunction: () =>  "Temporal",
-      renderFunction: (row: any) => 
+      renderFunction: (row: any) =>
         <span
           className={tableStyles.CellEllipsis}
         >
@@ -143,7 +143,7 @@ export const RasterSourceTable = (props:any) =>  {
     },
     {
       titleRenderFunction: () =>  "Size",
-      renderFunction: (row: any) => 
+      renderFunction: (row: any) =>
         <span
           className={tableStyles.CellEllipsis}
           title={`${row.size? row.size: 0} Bytes`}
@@ -158,10 +158,10 @@ export const RasterSourceTable = (props:any) =>  {
       renderFunction: (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any) => {
         return (
             <TableActionButtons
-              tableRow={row} 
+              tableRow={row}
               tableData={tableData}
-              setTableData={setTableData} 
-              triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
+              setTableData={setTableData}
+              triggerReloadWithCurrentPage={triggerReloadWithCurrentPage}
               triggerReloadWithBasePage={triggerReloadWithBasePage}
               editUrl={`${navigationUrlRasters}/${row.uuid}`}
               actions={[
@@ -202,15 +202,15 @@ export const RasterSourceTable = (props:any) =>  {
       imgUrl={rasterSourcesIcon}
       imgAltDescription={"Raster-Source icon"}
       headerText={"Raster Sources"}
-      explanationText={defaultRasterSourceExplanationTextTable(bytesToDisplayValue(rastersTotalSize))} 
+      explanationText={defaultRasterSourceExplanationTextTable(bytesToDisplayValue(rastersTotalSize))}
       backUrl={"/data_management/rasters"}
     >
-      <TableStateContainer 
+      <TableStateContainer
         // with checkboxes
         // gridTemplateColumns={"8% 29% 25% 10% 20% 8%"}
-        gridTemplateColumns={"37% 25% 10% 20% 8%"}  
+        gridTemplateColumns={"37% 25% 10% 20% 8%"}
         columnDefinitions={rasterSourceColumnDefinitions}
-        baseUrl={`${baseUrl}?`} 
+        baseUrl={`${baseUrl}?`}
         checkBoxActions={[
           // implement later
           // {
@@ -224,10 +224,10 @@ export const RasterSourceTable = (props:any) =>  {
         ]}
         newItemOnClick={handleNewRasterClick}
         filterOptions={[
-          {value: 'name__icontains=', label: 'Name'},
-          {value: 'uuid=', label: 'UUID'},
+          {value: 'name__icontains', label: 'Name'},
+          {value: 'uuid', label: 'UUID'},
         ]}
-        defaultUrlParams={'&scenario__isnull=true'} // to exclude 3Di scenario rasters
+        defaultUrlParams={{scenario__isnull: 'true'}} // to exclude 3Di scenario rasters
       />
       {
         rowToBeDeleted && !currentRowDetailView ?
@@ -249,7 +249,7 @@ export const RasterSourceTable = (props:any) =>  {
         // false &&
         currentRowDetailView && (currentRowDetailView.layers.length !== 0 || currentRowDetailView.labeltypes.length !== 0) ?
 
-        <DeleteRasterSourceNotAllowed 
+        <DeleteRasterSourceNotAllowed
           closeDialogAction={()=>{
             setRowToBeDeleted(null);
             setCurrentRowDetailView(null);
@@ -261,10 +261,10 @@ export const RasterSourceTable = (props:any) =>  {
         :
         null
       }
-      { 
-        currentRowDetailView && deleteFunction 
-        && 
-        (currentRowDetailView.layers.length === 0 && currentRowDetailView.labeltypes.length === 0) 
+      {
+        currentRowDetailView && deleteFunction
+        &&
+        (currentRowDetailView.layers.length === 0 && currentRowDetailView.labeltypes.length === 0)
         ?
            <Modal
            title={'Are you sure?'}
@@ -279,9 +279,9 @@ export const RasterSourceTable = (props:any) =>  {
                 setCurrentRowDetailView(null);
                 setDeleteFunction(null);
               }
-              
+
              });
-             
+
            }}
            cancelAction={()=>{
              setRowToBeDeleted(null);
@@ -291,12 +291,12 @@ export const RasterSourceTable = (props:any) =>  {
            disableButtons={busyDeleting}
          >
            <p>Are you sure? You are deleting the following raster-source:</p>
-           {ModalDeleteContent([currentRowDetailView], busyDeleting, [{name: "name", width: 65}, {name: "uuid", width: 25}])}             
+           {ModalDeleteContent([currentRowDetailView], busyDeleting, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
          </Modal>
         :
           null
         }
-        { 
+        {
         currentRowDetailView &&  showDeleteFailedModal?
            <Modal
            title={'Not allowed'}
@@ -309,18 +309,18 @@ export const RasterSourceTable = (props:any) =>  {
            <p>You are trying to delete the following raster-source:</p>
            {ModalDeleteContent([currentRowDetailView], busyDeleting, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
            <p>But this raster-source is still in use by objects outside your organisation.</p>
-           <p>{"Please contact "} 
+           <p>{"Please contact "}
              <a
               href="https://nelen-schuurmans.topdesk.net/tas/public/ssp"
               target="_blank"
               rel="noopener noreferrer"
             >support</a>
-          </p>             
+          </p>
          </Modal>
         :
           null
         }
-        {/* { 
+        {/* {
         rowsToBeDeleted.length > 0?
            <Modal
            title={'Are you sure?'}
@@ -337,11 +337,11 @@ export const RasterSourceTable = (props:any) =>  {
           }}
           disableButtons={busyDeleting}
          >
-           
+
            <p>Are you sure? You are deleting the following raster-sources:</p>
-           
+
            {ModalDeleteContent(rowsToBeDeleted, busyDeleting, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
-           
+
          </Modal>
         :
           null

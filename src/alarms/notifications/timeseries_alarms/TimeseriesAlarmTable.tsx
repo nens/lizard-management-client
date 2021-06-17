@@ -53,7 +53,7 @@ export const TimeseriesAlarmTableComponent: React.FC<DispatchProps & RouteCompon
   const columnDefinitions = [
     {
       titleRenderFunction: () => "Name",
-      renderFunction: (row: any) => 
+      renderFunction: (row: any) =>
         <span
           className={tableStyles.CellEllipsis}
           title={row.name}
@@ -64,7 +64,7 @@ export const TimeseriesAlarmTableComponent: React.FC<DispatchProps & RouteCompon
     },
     {
       titleRenderFunction: () =>  "Recipients",
-      renderFunction: (row: any) => 
+      renderFunction: (row: any) =>
         <span
           className={tableStyles.CellEllipsis}
         >
@@ -74,7 +74,7 @@ export const TimeseriesAlarmTableComponent: React.FC<DispatchProps & RouteCompon
     },
     {
       titleRenderFunction: () => "Status",
-      renderFunction: (row: any) => 
+      renderFunction: (row: any) =>
         <span
           className={tableStyles.CellEllipsis}
         >
@@ -87,10 +87,10 @@ export const TimeseriesAlarmTableComponent: React.FC<DispatchProps & RouteCompon
       renderFunction: (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any) => {
         return (
             <TableActionButtons
-              tableRow={row} 
+              tableRow={row}
               tableData={tableData}
-              setTableData={setTableData} 
-              triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
+              setTableData={setTableData}
+              triggerReloadWithCurrentPage={triggerReloadWithCurrentPage}
               triggerReloadWithBasePage={triggerReloadWithBasePage}
               editUrl={`${navigationUrl}/${row.uuid}`}
               actions={[
@@ -122,13 +122,13 @@ export const TimeseriesAlarmTableComponent: React.FC<DispatchProps & RouteCompon
       imgUrl={alarmIcon}
       imgAltDescription={"Alarm icon"}
       headerText={"Time series Alarms"}
-      explanationText={"Alarms consist of a name, template, thresholds and recipients. You can create, (de)activate or delete your alarms here."} 
+      explanationText={"Alarms consist of a name, template, thresholds and recipients. You can create, (de)activate or delete your alarms here."}
       backUrl={"/alarms/notifications"}
     >
-        <TableStateContainer 
-          gridTemplateColumns={"10% 40% 20% 20% 10%"} 
+        <TableStateContainer
+          gridTemplateColumns={"10% 40% 20% 20% 10%"}
           columnDefinitions={columnDefinitions}
-          baseUrl={`${baseUrl}?`} 
+          baseUrl={`${baseUrl}?`}
           checkBoxActions={[
             {
               displayValue: "Delete",
@@ -140,7 +140,7 @@ export const TimeseriesAlarmTableComponent: React.FC<DispatchProps & RouteCompon
           newItemOnClick={handleNewContactClick}
           filterOptions={[
             {
-              value: 'name__icontains=',
+              value: 'name__icontains',
               label: 'Name'
             }
           ]}

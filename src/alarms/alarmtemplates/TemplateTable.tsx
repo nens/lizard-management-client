@@ -30,7 +30,7 @@ export const TemplateTable: React.FC<RouteComponentProps> = (props) =>  {
   const columnDefinitions = [
     {
       titleRenderFunction: () => "Name",
-      renderFunction: (row: any) => 
+      renderFunction: (row: any) =>
         <span
           className={tableStyles.CellEllipsis}
           title={row.name}
@@ -41,7 +41,7 @@ export const TemplateTable: React.FC<RouteComponentProps> = (props) =>  {
     },
     {
       titleRenderFunction: () =>  "Type",
-      renderFunction: (row: any) => 
+      renderFunction: (row: any) =>
         <span
           className={tableStyles.CellEllipsis}
           title={row.type}
@@ -55,10 +55,10 @@ export const TemplateTable: React.FC<RouteComponentProps> = (props) =>  {
       renderFunction: (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any) => {
         return (
             <TableActionButtons
-              tableRow={row} 
+              tableRow={row}
               tableData={tableData}
-              setTableData={setTableData} 
-              triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
+              setTableData={setTableData}
+              triggerReloadWithCurrentPage={triggerReloadWithCurrentPage}
               triggerReloadWithBasePage={triggerReloadWithBasePage}
               editUrl={`${navigationUrl}/${row.id}`}
               actions={[
@@ -86,13 +86,13 @@ export const TemplateTable: React.FC<RouteComponentProps> = (props) =>  {
       imgUrl={templateIcon}
       imgAltDescription={"Template icon"}
       headerText={"Templates"}
-      explanationText={"Templates are used to create messages for your alarms. You can choose between an email or text message."} 
+      explanationText={"Templates are used to create messages for your alarms. You can choose between an email or text message."}
       backUrl={"/alarms"}
     >
-        <TableStateContainer 
-          gridTemplateColumns={"10% 70% 10% 10%"} 
+        <TableStateContainer
+          gridTemplateColumns={"10% 70% 10% 10%"}
           columnDefinitions={columnDefinitions}
-          baseUrl={`${baseUrl}?`} 
+          baseUrl={`${baseUrl}?`}
           checkBoxActions={[
             {
               displayValue: "Delete",
@@ -104,7 +104,7 @@ export const TemplateTable: React.FC<RouteComponentProps> = (props) =>  {
           newItemOnClick={handleNewContactClick}
           filterOptions={[
             {
-              value: 'name__icontains=',
+              value: 'name__icontains',
               label: 'Name'
             }
           ]}

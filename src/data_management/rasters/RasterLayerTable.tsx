@@ -35,7 +35,7 @@ export const RasterLayerTable: React.FC<RouteComponentProps> = (props) =>  {
   const columnDefinitions = [
     {
       titleRenderFunction: () => "Name",
-      renderFunction: (row: any) => 
+      renderFunction: (row: any) =>
         <span
           className={tableStyles.CellEllipsis}
           title={row.name}
@@ -46,7 +46,7 @@ export const RasterLayerTable: React.FC<RouteComponentProps> = (props) =>  {
     },
     {
       titleRenderFunction: () =>  "Based on",
-      renderFunction: (row: any) => 
+      renderFunction: (row: any) =>
         <span
           className={tableStyles.CellEllipsis}
           title={row.is_geoblock ? 'Geoblock' : 'Raster source'}
@@ -65,7 +65,7 @@ export const RasterLayerTable: React.FC<RouteComponentProps> = (props) =>  {
     },
     {
       titleRenderFunction: () =>  "User",
-      renderFunction: (row: any) =>  
+      renderFunction: (row: any) =>
       <span
         className={tableStyles.CellEllipsis}
         title={row.supplier}
@@ -84,10 +84,10 @@ export const RasterLayerTable: React.FC<RouteComponentProps> = (props) =>  {
       renderFunction: (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any) => {
         return (
             <TableActionButtons
-              tableRow={row} 
+              tableRow={row}
               tableData={tableData}
-              setTableData={setTableData} 
-              triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
+              setTableData={setTableData}
+              triggerReloadWithCurrentPage={triggerReloadWithCurrentPage}
               triggerReloadWithBasePage={triggerReloadWithBasePage}
               editUrl={`${navigationUrlRasters}/${row.uuid}`}
               actions={[
@@ -118,10 +118,10 @@ export const RasterLayerTable: React.FC<RouteComponentProps> = (props) =>  {
       explanationText={defaultRasterLayerHelpTextTable}
       backUrl={"/data_management/rasters"}
     >
-        <TableStateContainer 
-          gridTemplateColumns={"8% 28% 22% 18% 16% 8%"} 
+        <TableStateContainer
+          gridTemplateColumns={"8% 28% 22% 18% 16% 8%"}
           columnDefinitions={columnDefinitions}
-          baseUrl={`${baseUrl}?`} 
+          baseUrl={`${baseUrl}?`}
           checkBoxActions={[
             {
               displayValue: "Delete",
@@ -132,10 +132,10 @@ export const RasterLayerTable: React.FC<RouteComponentProps> = (props) =>  {
           ]}
           newItemOnClick={handleNewRasterClick}
           filterOptions={[
-            {value: 'name__icontains=', label: 'Name'},
-            {value: 'uuid=', label: 'UUID'},
+            {value: 'name__icontains', label: 'Name'},
+            {value: 'uuid', label: 'UUID'},
           ]}
-          defaultUrlParams={'&scenario__isnull=true'} // to exclude 3Di scenario rasters
+          defaultUrlParams={{scenario__isnull: 'true'}} // to exclude 3Di scenario rasters
         />
         {rowsToBeDeleted.length > 0 ? (
           <DeleteModal

@@ -3,6 +3,8 @@ import { connect } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import MDSpinner from "react-md-spinner";
 import { fetchTaskInstance } from "./api/tasks";
+import { queryClient } from './api/hooks';
+import { QueryClientProvider } from 'react-query';
 import {
   addNotification,
   fetchLizardBootstrap,
@@ -50,8 +52,8 @@ class App extends Component {
   //Click the user-profile button open the dropdown
   //Click anywhere outside of the user-profile modal will close the modal
   onUserProfileClick = (e) => {
-    return e.target.id === "user-profile" ? 
-      this.setState({ showProfileList: !this.state.showProfileList }) : 
+    return e.target.id === "user-profile" ?
+      this.setState({ showProfileList: !this.state.showProfileList }) :
       this.setState({ showProfileList: false });
   }
 
@@ -168,8 +170,8 @@ class App extends Component {
   };
 
   render() {
-    if ( 
-      this.props.availableOrganisations.length === 0 && 
+    if (
+      this.props.availableOrganisations.length === 0 &&
       this.props.isFetchingOrganisations === false &&
       this.props.timesFetchedOrganisations > 0
     ) {
@@ -185,7 +187,7 @@ class App extends Component {
       // should redirect to <customer_url>.lizard.net/management/ on prod
       this.props.history.push("/");
     }
-    
+
     if (!this.props.isAuthenticated || !this.props.selectedOrganisation) {
       return (
         <div className={styles.MDSpinner}>
@@ -200,167 +202,169 @@ class App extends Component {
       const { showOrganisationSwitcher } = this.state;
 
       return (
-        <div className={styles.App} onClick={this.onUserProfileClick}>
-          <div className={`${styles.Primary}`}>
-            <div className={gridStyles.Container}>
-              <div className={gridStyles.Row}>
-                <div
-                  style={{ height: "55px" }}
-                  className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${gridStyles.colSm4} ${gridStyles.colXs12}`}
-                >
-                  <NavLink to="/" title={"client-version: " +packageJson.version}>
-                    <img src={`${lizardIcon}`} alt="Lizard logo" className={styles.LizardLogo} />
-                  </NavLink>
-                </div>
-                <div
-                  className={`${gridStyles.colLg8} ${gridStyles.colMd8} ${gridStyles.colSm8} ${gridStyles.colXs12}`}
-                >
-                  <div className={styles.TopNav}>
-                    <div style={{ display: "none" }}>
-                      <a href="#apps">
-                        <i className={`material-icons ${styles.AppIcon}`}>
-                          apps
-                        </i>
-                        Apps
-                      </a>
-                    </div>
-                    <div
-                      className={styles.Profile}
-                      onClick={() => {
-                        this.setState({
-                          showUploadQueue: !this.state.showUploadQueue
-                        })
-                      }}
-                    >
-                      <div>
-                        <i className="fa fa-upload" style={{ paddingRight: 8 }} />
-                        {this.props.filesInProcess && this.props.filesInProcess.length > 0 ? <span className={styles.NavNotification}>!</span> : null}
-                        Upload queue
+        <QueryClientProvider client={queryClient}>
+          <div className={styles.App} onClick={this.onUserProfileClick}>
+            <div className={`${styles.Primary}`}>
+              <div className={gridStyles.Container}>
+                <div className={gridStyles.Row}>
+                  <div
+                    style={{ height: "55px" }}
+                    className={`${gridStyles.colLg4} ${gridStyles.colMd4} ${gridStyles.colSm4} ${gridStyles.colXs12}`}
+                  >
+                    <NavLink to="/" title={"client-version: " +packageJson.version}>
+                      <img src={`${lizardIcon}`} alt="Lizard logo" className={styles.LizardLogo} />
+                    </NavLink>
+                  </div>
+                  <div
+                    className={`${gridStyles.colLg8} ${gridStyles.colMd8} ${gridStyles.colSm8} ${gridStyles.colXs12}`}
+                  >
+                    <div className={styles.TopNav}>
+                      <div style={{ display: "none" }}>
+                        <a href="#apps">
+                          <i className={`material-icons ${styles.AppIcon}`}>
+                            apps
+                          </i>
+                          Apps
+                        </a>
                       </div>
-                    </div>
-                    <div
-                      className={styles.OrganisationLinkContainer}
-                      onClick={() =>
-                        this.setState({
-                          showOrganisationSwitcher: true
-                        })
-                      }
-                    >
-                      <button
-                        className={`${buttonStyles.ButtonLink} ${styles.OrganisationLink}`}
-                        title={
-                          selectedOrganisation
-                            ? selectedOrganisation.name
-                            : "Select organisation"
+                      <div
+                        className={styles.Profile}
+                        onClick={() => {
+                          this.setState({
+                            showUploadQueue: !this.state.showUploadQueue
+                          })
+                        }}
+                      >
+                        <div>
+                          <i className="fa fa-upload" style={{ paddingRight: 8 }} />
+                          {this.props.filesInProcess && this.props.filesInProcess.length > 0 ? <span className={styles.NavNotification}>!</span> : null}
+                          Upload queue
+                        </div>
+                      </div>
+                      <div
+                        className={styles.OrganisationLinkContainer}
+                        onClick={() =>
+                          this.setState({
+                            showOrganisationSwitcher: true
+                          })
                         }
                       >
-                        <i className="fa fa-sort" />
-                        &nbsp;&nbsp;
-                        {selectedOrganisation
+                        <button
+                          className={`${buttonStyles.ButtonLink} ${styles.OrganisationLink}`}
+                          title={
+                          selectedOrganisation
                           ? selectedOrganisation.name
-                          : "Select organisation"}
-                      </button>
-                    </div>
-                    <div
-                      className={styles.Profile}
-                      id="user-profile"
-                    >
-                      <div className={styles.UserProfile} id="user-profile">
-                        <i className="fa fa-user" style={{ paddingRight: 8 }} id="user-profile"/>
-                        <span className={styles.UserName} id="user-profile">{firstName}</span>
-                      </div>
-                      {this.state.showProfileList && this.renderProfileList()}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className={`${styles.Secondary}`}>
-            <div className={gridStyles.Container}>
-              <div className={gridStyles.Row}>
-                <Breadcrumbs
-                  // The same location is needed to calculate the breadcrumbs.
-                  location= {this.props.location}
-                />
-              </div>
-            </div>
-          </div>
-          <div className={gridStyles.Container + " " + styles.AppContent}>
-                <Routes/>
-          </div>
-          <footer className={styles.Footer}>
-            <div className={gridStyles.Container}>
-              <div className={gridStyles.Row}>
-                <div
-                  className={`${styles.FooterLeft} ${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs6}`}
-                >
-                  <a
-                    href="https://docs.lizard.net/a_lizard.html"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <FormattedMessage
-                      id="index.documentation"
-                      defaultMessage="Documentation"
-                    />
-                    &nbsp;
-                    <i
-                      className={`${styles.DocumentationHyperlink} material-icons`}
-                    >
-                      local_library
-                    </i>
-                  </a>
-                </div>
-                <div
-                  className={`${styles.FooterRight} ${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs6}`}
-                >
-                  <div className={styles.FooterRightWrapper}>
-                    <div style={{ margin: "0 10px 0 10px" }}>
-                      <LanguageSwitcher
-                        locale={preferredLocale}
-                        languages={[
-                          { code: "nl", language: "Nederlands" },
-                          { code: "en", language: "English" }
-                        ]}
-                      />
-                    </div>
-                    <div>
-                      <a
-                        href="https://nelen-schuurmans.topdesk.net/tas/public/ssp"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <i
-                          className={`${styles.SupportHyperlink} material-icons`}
+                          : "Select organisation"
+                          }
                         >
-                          headset_mic
-                        </i>
-                        &nbsp;
-                        <FormattedMessage
-                          id="index.support"
-                          defaultMessage="Support"
-                        />
-                      </a>
+                          <i className="fa fa-sort" />
+        &nbsp;&nbsp;
+        {selectedOrganisation
+       ? selectedOrganisation.name
+       : "Select organisation"}
+                        </button>
+                      </div>
+                      <div
+                        className={styles.Profile}
+                        id="user-profile"
+                      >
+                        <div className={styles.UserProfile} id="user-profile">
+                          <i className="fa fa-user" style={{ paddingRight: 8 }} id="user-profile"/>
+                          <span className={styles.UserName} id="user-profile">{firstName}</span>
+                        </div>
+                        {this.state.showProfileList && this.renderProfileList()}
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </footer>
-          {showOrganisationSwitcher ? (
-            <OrganisationSwitcher
-              handleClose={() =>
-                this.setState({ showOrganisationSwitcher: false })}
-            />
-          ) : null}
-          <Snackbar />
-          {this.state.showUploadQueue ? (
-            <UploadQueue
-              handleClose={() => this.setState({ showUploadQueue: false })}
-            />
-          ) : null}
+            <div className={`${styles.Secondary}`}>
+              <div className={gridStyles.Container}>
+                <div className={gridStyles.Row}>
+                  <Breadcrumbs
+                  // The same location is needed to calculate the breadcrumbs.
+                    location= {this.props.location}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className={gridStyles.Container + " " + styles.AppContent}>
+              <Routes/>
+            </div>
+            <footer className={styles.Footer}>
+              <div className={gridStyles.Container}>
+                <div className={gridStyles.Row}>
+                  <div
+                    className={`${styles.FooterLeft} ${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs6}`}
+                  >
+                    <a
+                      href="https://docs.lizard.net/a_lizard.html"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <FormattedMessage
+                        id="index.documentation"
+                        defaultMessage="Documentation"
+                      />
+        &nbsp;
+        <i
+          className={`${styles.DocumentationHyperlink} material-icons`}
+        >
+          local_library
+        </i>
+                    </a>
+                  </div>
+                  <div
+                    className={`${styles.FooterRight} ${gridStyles.colLg6} ${gridStyles.colMd6} ${gridStyles.colSm6} ${gridStyles.colXs6}`}
+                  >
+                    <div className={styles.FooterRightWrapper}>
+                      <div style={{ margin: "0 10px 0 10px" }}>
+                        <LanguageSwitcher
+                          locale={preferredLocale}
+                          languages={[
+                            { code: "nl", language: "Nederlands" },
+                            { code: "en", language: "English" }
+                          ]}
+                        />
+                      </div>
+                      <div>
+                        <a
+                          href="https://nelen-schuurmans.topdesk.net/tas/public/ssp"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <i
+                            className={`${styles.SupportHyperlink} material-icons`}
+                          >
+                            headset_mic
+                          </i>
+        &nbsp;
+        <FormattedMessage
+        id="index.support"
+        defaultMessage="Support"
+        />
+        </a>
         </div>
+        </div>
+        </div>
+        </div>
+        </div>
+        </footer>
+        {showOrganisationSwitcher ? (
+          <OrganisationSwitcher
+            handleClose={() =>
+              this.setState({ showOrganisationSwitcher: false })}
+          />
+        ) : null}
+        <Snackbar />
+        {this.state.showUploadQueue ? (
+          <UploadQueue
+            handleClose={() => this.setState({ showUploadQueue: false })}
+          />
+        ) : null}
+                      </div>
+        </QueryClientProvider>
       );
     }
   }

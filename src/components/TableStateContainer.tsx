@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { useTableData, Params } from '../api/hooks';
 import Table from './Table';
 import {ColumnDefinition} from './Table';
 import Pagination from './Pagination';
@@ -9,7 +10,6 @@ import { TableSearchToggleHelpText } from './TableSearchToggleHelpText';
 import { Value } from '../form/SelectDropdown';
 import { useSelector } from "react-redux";
 import { getSelectedOrganisation } from '../reducers';
-import {DataRetrievalState} from '../types/retrievingDataTypes';
 import unorderedIcon from "../images/list_order_icon_unordered.svg";
 import orderedIcon from "../images/list_order_icon_ordered.svg";
 import styles from './Table.module.css';
@@ -33,8 +33,8 @@ interface Props {
     disabled?: boolean,
     onClick: () => void
   };
-  queryCheckBox?: {text: string, adaptUrlFunction: (url:string)=>string} | null;
-  defaultUrlParams?: string;
+  queryCheckBox?: {text: string, extraParamsWhenChecked: Params};
+  defaultUrlParams?: Params;
   responsive?: boolean;
 }
 
@@ -56,70 +56,54 @@ const TableStateContainer: React.FC<Props> = ({
   defaultUrlParams,
   responsive,
 }) => {
-  const [tableData, setTableData] = useState<any[]>([]);
   const [checkBoxes, setCheckBoxes] = useState<string[]>([]);
-  const [currentUrl, setCurrentUrl] = useState("");
-  const [nextUrl, setNextUrl] = useState("");
-  const [previousUrl, setPreviousUrl] = useState("");
-  const [itemsPerPage, setItemsPerPage] = useState(10);
   const [ordering, setOrdering] = useState<string | null>("last_modified");
   const [searchInput, setSearchInput] = useState<string>("");
   const [selectedFilterOption, setSelectedFilterOption] = useState<Value | null>(filterOptions && filterOptions.length > 0 ? filterOptions[0] : null)
-  const [dataRetrievalState, setDataRetrievalState] = useState<DataRetrievalState>("NEVER_DID_RETRIEVE");
-  const [apiResponse, setApiResponse] = useState<{response:any, currentUrl: string, dataRetrievalState: DataRetrievalState}>({response: {}, currentUrl: "", dataRetrievalState: "NEVER_DID_RETRIEVE"});
   const [queryCheckBoxState, setQueryCheckBoxState] = useState(false);
 
-  // todo later: find out how the state of the table can be represented in the url?
+  let params: Params = {
+    writable: "true",
+    ...defaultUrlParams
+  };
+
+  if (ordering) {
+    params.ordering = ordering;
+  }
+
+  if (selectedFilterOption && searchInput) {
+    params['' + selectedFilterOption.value] = searchInput;
+  }
 
   const selectedOrganisation = useSelector(getSelectedOrganisation);
-  const selectedOrganisationUuid = selectedOrganisation ? selectedOrganisation.uuid : "";
 
-  const preUrl = baseUrl +
-    "writable=true" +
-    "&page_size=" + itemsPerPage +
-    "&page=1" +
-    (selectedFilterOption && searchInput ? "&" + selectedFilterOption.value + searchInput : "") +
-    "&ordering=" + ordering +
-    // https://github.com/nens/lizard-management-client/issues/784
-    // for timeseries table organisation is filtered on via location
-    // Todo, should we instead put the logic for the organisation filter in the components using TableStateContainer?
-    (baseUrl === "/api/v4/timeseries/?" ? ("&location__organisation__uuid=" + selectedOrganisationUuid) : ("&organisation__uuid=" + selectedOrganisationUuid)) +
-    (defaultUrlParams ? defaultUrlParams : '');
-
-  const url = queryCheckBox && queryCheckBoxState? queryCheckBox.adaptUrlFunction(preUrl) : preUrl
-
-  useEffect(() => {
-    if (currentUrl !== "" && currentUrl === apiResponse.currentUrl) {
-      apiResponse.response.results && setTableData(apiResponse.response.results);
-      // make sure no checkboxes are checked outside of current page !
-      apiResponse.response.results && setCheckBoxes(checkBoxesPar=>checkBoxesPar.filter(value => (apiResponse.response.results.map((item:any)=>getRowIdentifier(item))).includes(value)));
-      setDataRetrievalState(apiResponse.dataRetrievalState)
-      // we need to split on "lizard.net" because both nxt3.staging.lizard.net/api/v4 and demo.lizard.net/api/v4 both should parse out "/api/v4"
-      if (apiResponse.response.next) setNextUrl(apiResponse.response.next.split("lizard.net")[1]);
-      else if (apiResponse.response.next === null)  setNextUrl("")
-      if (apiResponse.response.previous) setPreviousUrl(apiResponse.response.previous.split("lizard.net")[1]);
-      else if (apiResponse.response.previous === null) setPreviousUrl("")
+  if (selectedOrganisation) {
+    if (baseUrl.startsWith("/api/v4/timeseries/")) {
+      params.location__organisation__uuid = selectedOrganisation.uuid;
+    } else {
+      params.organisation__uuid = selectedOrganisation.uuid;
     }
-  }, [apiResponse, currentUrl]);
-
-  useEffect(() => {
-    fetchWithUrl(url);
-  }, [url]);
-
-  const fetchWithUrl = (url: string) => {
-    setDataRetrievalState("RETRIEVING");
-    setCurrentUrl(url);
-    return fetch(url, {
-      credentials: "same-origin"
-    }).then(response=>{
-      return response.json();
-    }).then(parsedResponse=>{
-      setApiResponse({response: parsedResponse, currentUrl: url, dataRetrievalState: "RETRIEVED"})
-    }).catch(error=>{
-      console.log('fetching table data for url failed with error', url, error);
-      setApiResponse({response: {}, currentUrl: url, dataRetrievalState: {status:"ERROR", errorMesssage: error, url: url}})
-    });
   }
+
+  if (queryCheckBox && queryCheckBoxState) {
+    params = {
+      ...params,
+      ...queryCheckBox.extraParamsWhenChecked
+    };
+  }
+
+  const {
+    status,
+    tableData,
+    error,
+    pageSize,
+    setPageSize,
+    nextPage,
+    previousPage,
+    firstPage,
+    reload,
+    reloadToFirstPage
+  } = useTableData(baseUrl, params);
 
   const addUuidToCheckBoxes = (uuid: string) => {
     const checkBoxesCopy = checkBoxes.map(uuid=>uuid);
@@ -136,7 +120,7 @@ const TableStateContainer: React.FC<Props> = ({
   }
 
   const checkAllCheckBoxesOnCurrentPage = () => {
-    const allCurrentPageUuids = tableData.map(row => getRowIdentifier(row));
+    const allCurrentPageUuids = tableData.map((row: any) => getRowIdentifier(row));
     const mergedArrays = [...new Set([...checkBoxes ,...allCurrentPageUuids])];
     setCheckBoxes(mergedArrays);
   }
@@ -146,7 +130,7 @@ const TableStateContainer: React.FC<Props> = ({
   }
 
   const areAllOnCurrentPageChecked = () => {
-    return tableData.length > 0 && tableData.every(row=>{
+    return tableData.length > 0 && tableData.every((row: any) => {
       return checkBoxes.find(uuid => uuid === getRowIdentifier(row))
     })
   }
@@ -192,7 +176,7 @@ const TableStateContainer: React.FC<Props> = ({
   const getIfCheckBoxOfUuidIsSelected = ((uuid: string) => {return checkBoxes.find(checkBoxUuid=> checkBoxUuid===uuid)});
 
   const columnDefinitionsPlusCheckboxSortable =
-  columnDefinitionsPlusCheckbox.map((columnDefinition, ind)=>{
+  columnDefinitionsPlusCheckbox.map((columnDefinition)=>{
     const originalTitleRenderFunction = columnDefinition.titleRenderFunction;
     const sortedTitleRenderFunction = () => {
       const originalContent = originalTitleRenderFunction();
@@ -350,14 +334,15 @@ const TableStateContainer: React.FC<Props> = ({
             checkBoxActions.map((checkboxAction, i) => {
               const { displayValue, actionFunction, checkIfActionIsApplicable } = checkboxAction;
               const selectedRows = checkIfActionIsApplicable ? (
-                tableData.filter(row => getIfCheckBoxOfUuidIsSelected(getRowIdentifier(row)) && checkIfActionIsApplicable(row))
+                tableData.filter((row: any) => getIfCheckBoxOfUuidIsSelected(getRowIdentifier(row)) && checkIfActionIsApplicable(row))
               ) : (
-                tableData.filter(row => getIfCheckBoxOfUuidIsSelected(getRowIdentifier(row)))
+                tableData.filter((row: any) => getIfCheckBoxOfUuidIsSelected(getRowIdentifier(row)))
               );
               return (
                 <button
                   key={i}
-                  onClick={() => actionFunction(selectedRows, tableData, setTableData, ()=>fetchWithUrl(currentUrl), ()=>fetchWithUrl(url), setCheckBoxes)}
+                  // XXX setTableData
+                  onClick={() => actionFunction(selectedRows, tableData, () => {} , reload, reload, setCheckBoxes)}
                   className={styles.TableActionButton}
                 >
                   {`${displayValue} (${selectedRows.length})`}
@@ -370,22 +355,24 @@ const TableStateContainer: React.FC<Props> = ({
       <div style={{flex:1, minHeight: 0}}>
         <Table
           tableData={dataWithCheckBoxes}
-          setTableData={setTableData}
+          setTableData={() => {}} // XXX
           gridTemplateColumns={gridTemplateColumns}
           columnDefinitions={columnDefinitionsPlusCheckboxSortable}
-          dataRetrievalState={dataRetrievalState}
-          triggerReloadWithCurrentPage={()=>{fetchWithUrl(currentUrl)}}
-          triggerReloadWithBasePage={()=>{fetchWithUrl(url)}}
+          dataRetrievalState={
+          status === 'success' ? 'RETRIEVED' : status === 'loading' ? 'RETRIEVING' : {status: "ERROR", errorMesssage: `${error}`, url: baseUrl}
+          }
+          triggerReloadWithCurrentPage={reload}
+          triggerReloadWithBasePage={reloadToFirstPage}
           getIfCheckBoxOfUuidIsSelected={getIfCheckBoxOfUuidIsSelected}
           responsive={responsive}
         />
       </div>
       <Pagination
-        toPage1={() => fetchWithUrl(url)}
-        toNext={nextUrl !== "" ? () => fetchWithUrl(nextUrl) : undefined}
-        toPrevious={previousUrl !== "" ? () => fetchWithUrl(previousUrl) : undefined}
-        itemsPerPage={itemsPerPage}
-        setItemsPerPage={setItemsPerPage}
+        toPage1={firstPage}
+        toNext={nextPage}
+        toPrevious={previousPage}
+        itemsPerPage={pageSize}
+        setItemsPerPage={setPageSize}
       />
     </div>
   )

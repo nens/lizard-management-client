@@ -30,7 +30,7 @@ export const GroupTable: React.FC<RouteComponentProps> = (props) =>  {
   const columnDefinitions = [
     {
       titleRenderFunction: () => "Name",
-      renderFunction: (row: any) => 
+      renderFunction: (row: any) =>
         <span
           className={tableStyles.CellEllipsis}
           title={row.name}
@@ -41,7 +41,7 @@ export const GroupTable: React.FC<RouteComponentProps> = (props) =>  {
     },
     {
       titleRenderFunction: () =>  "Size",
-      renderFunction: (row: any) => 
+      renderFunction: (row: any) =>
         <span
           className={tableStyles.CellEllipsis}
         >
@@ -54,10 +54,10 @@ export const GroupTable: React.FC<RouteComponentProps> = (props) =>  {
       renderFunction: (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any) => {
         return (
             <TableActionButtons
-              tableRow={row} 
+              tableRow={row}
               tableData={tableData}
-              setTableData={setTableData} 
-              triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
+              setTableData={setTableData}
+              triggerReloadWithCurrentPage={triggerReloadWithCurrentPage}
               triggerReloadWithBasePage={triggerReloadWithBasePage}
               editUrl={`${navigationUrl}/${row.id}`}
               actions={[
@@ -88,10 +88,10 @@ export const GroupTable: React.FC<RouteComponentProps> = (props) =>  {
       explanationText={"Groups are made of your contacts. In this screen, you can manage them by adding or deleting contacts. You can also add or delete groups for your alarm messages."}
       backUrl={"/alarms"}
     >
-      <TableStateContainer 
-        gridTemplateColumns={"10% 60% 20% 10%"} 
+      <TableStateContainer
+        gridTemplateColumns={"10% 60% 20% 10%"}
         columnDefinitions={columnDefinitions}
-        baseUrl={`${baseUrl}?`} 
+        baseUrl={`${baseUrl}?`}
         checkBoxActions={[
           {
             displayValue: "Delete",
@@ -103,7 +103,7 @@ export const GroupTable: React.FC<RouteComponentProps> = (props) =>  {
         newItemOnClick={handleNewContactClick}
         filterOptions={[
           {
-            value: 'name__icontains=',
+            value: 'name__icontains',
             label: 'Name'
           }
         ]}

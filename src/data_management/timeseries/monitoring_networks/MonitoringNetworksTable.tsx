@@ -36,7 +36,7 @@ export const MonitoringNetworksTable = (props: RouteComponentProps) =>  {
   const columnDefinitions = [
     {
       titleRenderFunction: () => "Name",
-      renderFunction: (row: any) => 
+      renderFunction: (row: any) =>
         <span
           className={tableStyles.CellEllipsis}
           title={row.name}
@@ -63,10 +63,10 @@ export const MonitoringNetworksTable = (props: RouteComponentProps) =>  {
       renderFunction: (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any) => {
         return (
             <TableActionButtons
-              tableRow={row} 
+              tableRow={row}
               tableData={tableData}
-              setTableData={setTableData} 
-              triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
+              setTableData={setTableData}
+              triggerReloadWithCurrentPage={triggerReloadWithCurrentPage}
               triggerReloadWithBasePage={triggerReloadWithBasePage}
               editUrl={`${navigationUrl}/${row.uuid}`}
               actions={[
@@ -125,7 +125,7 @@ export const MonitoringNetworksTable = (props: RouteComponentProps) =>  {
           }
         ]}
         filterOptions={[
-          {value: 'name__icontains=', label: 'Name'},
+          {value: 'name__icontains', label: 'Name'},
         ]}
       />
       {rowsToBeDeleted.length > 0 ? (

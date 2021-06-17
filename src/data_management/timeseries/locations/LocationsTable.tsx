@@ -54,7 +54,7 @@ export const LocationsTable = (props: RouteComponentProps) =>  {
   const columnDefinitions = [
     {
       titleRenderFunction: () => "Name",
-      renderFunction: (row: any) => 
+      renderFunction: (row: any) =>
         <span
           className={tableStyles.CellEllipsis}
           title={row.name}
@@ -66,7 +66,7 @@ export const LocationsTable = (props: RouteComponentProps) =>  {
     },
     {
       titleRenderFunction: () => "Code",
-      renderFunction: (row: any) => 
+      renderFunction: (row: any) =>
         <span
           className={tableStyles.CellEllipsis}
           title={row.code}
@@ -78,7 +78,7 @@ export const LocationsTable = (props: RouteComponentProps) =>  {
     },
     {
       titleRenderFunction: () => "Accessibility",
-      renderFunction: (row: any) => 
+      renderFunction: (row: any) =>
         <span
           className={tableStyles.CellEllipsis}
           title={row.access_modifier}
@@ -93,10 +93,10 @@ export const LocationsTable = (props: RouteComponentProps) =>  {
       renderFunction: (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any) => {
         return (
             <TableActionButtons
-              tableRow={row} 
+              tableRow={row}
               tableData={tableData}
-              setTableData={setTableData} 
-              triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
+              setTableData={setTableData}
+              triggerReloadWithCurrentPage={triggerReloadWithCurrentPage}
               triggerReloadWithBasePage={triggerReloadWithBasePage}
               editUrl={`${navigationUrl}/${row.uuid}`}
               actions={[
@@ -131,10 +131,10 @@ export const LocationsTable = (props: RouteComponentProps) =>  {
       explanationText={defaultTableHelpText('Search or sort your locations here.')}
       backUrl={"/data_management/timeseries"}
     >
-      <TableStateContainer 
-        gridTemplateColumns={"4fr 36fr 36fr 16fr 8fr"} 
+      <TableStateContainer
+        gridTemplateColumns={"4fr 36fr 36fr 16fr 8fr"}
         columnDefinitions={columnDefinitions}
-        baseUrl={`${baseUrl}?`} 
+        baseUrl={`${baseUrl}?`}
         checkBoxActions={[
           {
             displayValue: "Change rights",
@@ -149,8 +149,8 @@ export const LocationsTable = (props: RouteComponentProps) =>  {
         ]}
         newItemOnClick={handleNewClick}
         filterOptions={[
-          {value: 'name__startswith=', label: 'Name *'},
-          {value: 'code__startswith=', label: 'Code *'},
+          {value: 'name__startswith', label: 'Name *'},
+          {value: 'code__startswith', label: 'Code *'},
         ]}
       />
       {rowToBeDeleted && !dependentTimeseries ? (

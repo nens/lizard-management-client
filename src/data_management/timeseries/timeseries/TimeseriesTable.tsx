@@ -40,7 +40,7 @@ export const TimeseriesTable = (props: RouteComponentProps) =>  {
   const columnDefinitions = [
     {
       titleRenderFunction: () => "Name",
-      renderFunction: (row: any) => 
+      renderFunction: (row: any) =>
         <span
           className={tableStyles.CellEllipsis}
           title={`${row.name} - UUID: ${row.uuid}`}
@@ -68,7 +68,7 @@ export const TimeseriesTable = (props: RouteComponentProps) =>  {
     },
     {
       titleRenderFunction: () => "Observation type",
-      renderFunction: (row: any) => 
+      renderFunction: (row: any) =>
         <span
           className={tableStyles.CellEllipsis}
           title={
@@ -78,8 +78,8 @@ export const TimeseriesTable = (props: RouteComponentProps) =>  {
           }
         >
           {!row.observation_type? "" :
-            row.observation_type.unit? <>{row.observation_type.code}{" "} <span style={{fontWeight:600,}}>{`(${row.observation_type.unit})`}</span></> : 
-            row.observation_type.code 
+            row.observation_type.unit? <>{row.observation_type.code}{" "} <span style={{fontWeight:600,}}>{`(${row.observation_type.unit})`}</span></> :
+            row.observation_type.code
           }
         </span>
       ,
@@ -87,7 +87,7 @@ export const TimeseriesTable = (props: RouteComponentProps) =>  {
     },
     {
       titleRenderFunction: () => "Location",
-      renderFunction: (row: any) => 
+      renderFunction: (row: any) =>
         <span
           className={tableStyles.CellEllipsis}
           style={{
@@ -111,7 +111,7 @@ export const TimeseriesTable = (props: RouteComponentProps) =>  {
     },
     {
       titleRenderFunction: () => "Accessibility",
-      renderFunction: (row: any) => 
+      renderFunction: (row: any) =>
         <span
           className={tableStyles.CellEllipsis}
           title={row.access_modifier}
@@ -126,10 +126,10 @@ export const TimeseriesTable = (props: RouteComponentProps) =>  {
       renderFunction: (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any) => {
         return (
             <TableActionButtons
-              tableRow={row} 
+              tableRow={row}
               tableData={tableData}
-              setTableData={setTableData} 
-              triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
+              setTableData={setTableData}
+              triggerReloadWithCurrentPage={triggerReloadWithCurrentPage}
               triggerReloadWithBasePage={triggerReloadWithBasePage}
               editUrl={`${navigationUrl}/${row.uuid}`}
               actions={[
@@ -202,9 +202,9 @@ export const TimeseriesTable = (props: RouteComponentProps) =>  {
           }
         ]}
         filterOptions={[
-          {value: 'name__startswith=', label: 'Name *'},
-          {value: 'location__name__startswith=', label: 'Location name *'},
-          {value: 'location__code__startswith=', label: 'Location code *'},
+          {value: 'name__startswith', label: 'Name *'},
+          {value: 'location__name__startswith', label: 'Location name *'},
+          {value: 'location__code__startswith', label: 'Location code *'},
         ]}
       />
       {rowsToBeDeleted.length > 0 ? (

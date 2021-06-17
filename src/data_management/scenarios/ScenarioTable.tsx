@@ -70,7 +70,7 @@ export const ScenarioTable = () =>  {
   const columnDefinitions = [
     {
       titleRenderFunction: () => "Name",
-      renderFunction: (row: any) => 
+      renderFunction: (row: any) =>
         <span
           className={tableStyles.CellEllipsis}
           title={row.name}
@@ -86,7 +86,7 @@ export const ScenarioTable = () =>  {
     },
     {
       titleRenderFunction: () =>  "Based on",
-      renderFunction: (row: any) => 
+      renderFunction: (row: any) =>
         <span
           className={tableStyles.CellEllipsis}
           title={row.model_name}
@@ -102,7 +102,7 @@ export const ScenarioTable = () =>  {
     },
     {
       titleRenderFunction: () =>  "User",
-      renderFunction: (row: any) =>  
+      renderFunction: (row: any) =>
       <span
         className={tableStyles.CellEllipsis}
         title={row.username}
@@ -118,7 +118,7 @@ export const ScenarioTable = () =>  {
     },
     {
       titleRenderFunction: () =>  "Size",
-      renderFunction: (row: any) => 
+      renderFunction: (row: any) =>
         <span
           className={tableStyles.CellEllipsis}
           title={`${row.total_size? row.total_size: 0} Bytes`}
@@ -133,10 +133,10 @@ export const ScenarioTable = () =>  {
       renderFunction: (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any) => {
         return (
             <TableActionButtons
-              tableRow={row} 
+              tableRow={row}
               tableData={tableData}
-              setTableData={setTableData} 
-              triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
+              setTableData={setTableData}
+              triggerReloadWithCurrentPage={triggerReloadWithCurrentPage}
               triggerReloadWithBasePage={triggerReloadWithBasePage}
               editUrl={`${navigationUrl}/${row.uuid}`}
               actions={row.has_raw_results ? [
@@ -175,10 +175,10 @@ export const ScenarioTable = () =>  {
       explanationText={defaultScenarioExplanationText(bytesToDisplayValue(scenarioTotalSize), selectedOrganisation.name)}
       backUrl={"/data_management"}
     >
-        <TableStateContainer 
+        <TableStateContainer
           gridTemplateColumns={"4fr 28fr 29fr 15fr 10fr 10fr 4fr"}
           columnDefinitions={columnDefinitions}
-          baseUrl={`${baseUrl}?`} 
+          baseUrl={`${baseUrl}?`}
           checkBoxActions={[
             {
               displayValue: "Change rights",
@@ -205,13 +205,13 @@ export const ScenarioTable = () =>  {
           ]}
           queryCheckBox={{
             text:"Only show own scenario's",
-            adaptUrlFunction: (url:string) => {return userName? url + `&username__contains=${userName}` : url},
+            extraParamsWhenChecked: {username__contains: userName},
           }}
           filterOptions={[
-            {value: 'name__icontains=', label: 'Name'},
-            {value: 'uuid=', label: 'UUID'},
-            {value: 'username__icontains=', label: 'Username'},
-            {value: 'model_name__icontains=', label: 'Model name'},
+            {value: 'name__icontains', label: 'Name'},
+            {value: 'uuid', label: 'UUID'},
+            {value: 'username__icontains', label: 'Username'},
+            {value: 'model_name__icontains', label: 'Model name'},
           ]}
         />
         {rowsToBeDeleted.length > 0 ? (

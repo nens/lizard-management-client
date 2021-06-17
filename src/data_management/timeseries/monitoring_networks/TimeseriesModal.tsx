@@ -35,9 +35,9 @@ function TimeseriesModal (props: MyProps & DispatchProps) {
 
   // Filter options for timeseries list
   const filterOptions = [
-    {value: 'name__startswith=', label: 'Name *'},
-    {value: 'location__name__startswith=', label: 'Location name *'},
-    {value: 'location__code__startswith=', label: 'Location code *'},
+    {value: 'name__startswith', label: 'Name *'},
+    {value: 'location__name__startswith', label: 'Location name *'},
+    {value: 'location__code__startswith', label: 'Location code *'},
   ];
 
   const [timeseriesApiResponse, setTimeseriesApiResponse] = useState<APIResponse>({

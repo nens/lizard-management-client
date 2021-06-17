@@ -18,7 +18,7 @@ export const MapViewerRasterLayerTable: React.FC<Props> = ({setSelectedRasters})
   const columnDefinitions = [
     {
       titleRenderFunction: () => "Name",
-      renderFunction: (row: any) => 
+      renderFunction: (row: any) =>
         <span
           className={tableStyles.CellEllipsis}
           title={row.name}
@@ -30,7 +30,7 @@ export const MapViewerRasterLayerTable: React.FC<Props> = ({setSelectedRasters})
     },
     {
       titleRenderFunction: () =>  "Based on",
-      renderFunction: (row: any) => 
+      renderFunction: (row: any) =>
         <span
           className={tableStyles.CellEllipsis}
           title={row.is_geoblock ? 'Geoblock' : 'Raster source'}
@@ -49,7 +49,7 @@ export const MapViewerRasterLayerTable: React.FC<Props> = ({setSelectedRasters})
     },
     {
       titleRenderFunction: () =>  "User",
-      renderFunction: (row: any) =>  
+      renderFunction: (row: any) =>
       <span
         className={tableStyles.CellEllipsis}
         title={row.supplier}
@@ -66,10 +66,10 @@ export const MapViewerRasterLayerTable: React.FC<Props> = ({setSelectedRasters})
   ];
 
   return (
-        <TableStateContainer 
-          gridTemplateColumns={"8% 28% 22% 18% 16%"} 
+        <TableStateContainer
+          gridTemplateColumns={"8% 28% 22% 18% 16%"}
           columnDefinitions={columnDefinitions}
-          baseUrl={`${baseUrl}?`} 
+          baseUrl={`${baseUrl}?`}
           checkBoxActions={[
             {
               displayValue: "Add to map",
@@ -79,10 +79,10 @@ export const MapViewerRasterLayerTable: React.FC<Props> = ({setSelectedRasters})
             },
           ]}
           filterOptions={[
-            {value: 'name__icontains=', label: 'Name'},
+            {value: 'name__icontains', label: 'Name'},
             {value: 'uuid=', label: 'UUID'},
           ]}
-          defaultUrlParams={'&scenario__isnull=true'} // to exclude 3Di scenario rasters
+          defaultUrlParams={{scenario__isnull: 'true'}} // to exclude 3Di scenario rasters
         />
   );
 }

@@ -51,7 +51,7 @@ export const UserTable = (props: RouteComponentProps) =>  {
   const columnDefinitions = [
     {
       titleRenderFunction: () => "Username",
-      renderFunction: (row: any) => 
+      renderFunction: (row: any) =>
         <span
           className={tableStyles.CellEllipsis}
           title={row.username}
@@ -63,7 +63,7 @@ export const UserTable = (props: RouteComponentProps) =>  {
     },
     {
       titleRenderFunction: () => "Email",
-      renderFunction: (row: any) => 
+      renderFunction: (row: any) =>
         <span
           className={tableStyles.CellEllipsis}
           title={row.email}
@@ -92,10 +92,10 @@ export const UserTable = (props: RouteComponentProps) =>  {
       renderFunction: (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any) => {
         return (
             <TableActionButtons
-              tableRow={row} 
+              tableRow={row}
               tableData={tableData}
-              setTableData={setTableData} 
-              triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
+              setTableData={setTableData}
+              triggerReloadWithCurrentPage={triggerReloadWithCurrentPage}
               triggerReloadWithBasePage={triggerReloadWithBasePage}
               editUrl={`${navigationUrl}/${row.id}`}
               actions={[
@@ -139,19 +139,19 @@ export const UserTable = (props: RouteComponentProps) =>  {
         }}
         filterOptions={[
           {
-            value: 'username__icontains=',
+            value: 'username__icontains',
             label: 'Username'
           },
           {
-            value: 'first_name__icontains=',
+            value: 'first_name__icontains',
             label: 'First name'
           },
           {
-            value: 'last_name__icontains=',
+            value: 'last_name__icontains',
             label: 'Last name'
           },
           {
-            value: 'email__icontains=',
+            value: 'email__icontains',
             label: 'Email'
           }
         ]}

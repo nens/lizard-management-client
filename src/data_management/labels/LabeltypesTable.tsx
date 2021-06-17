@@ -17,7 +17,7 @@ const navigationUrl = "/data_management/labels/label_types";
 const columnDefinitions = [
   {
     titleRenderFunction: () => "Name",
-    renderFunction: (row: any) => 
+    renderFunction: (row: any) =>
       <span
         className={tableStyles.CellEllipsis}
         title={row.name}
@@ -51,14 +51,14 @@ export const LabeltypesTable = (props:any) =>  {
       explanationText={"Label types are different types of labels that can exist in the system."}
       backUrl={"/data_management/labels"}
     >
-      <TableStateContainer 
-        gridTemplateColumns={"60% 40%"} 
+      <TableStateContainer
+        gridTemplateColumns={"60% 40%"}
         columnDefinitions={columnDefinitions}
-        baseUrl={`${baseUrl}?`} 
+        baseUrl={`${baseUrl}?`}
         checkBoxActions={[]}
         filterOptions={[
-          {value: 'name__icontains=', label: 'Name'},
-          {value: 'uuid=', label: 'UUID'},
+          {value: 'name__icontains', label: 'Name'},
+          {value: 'uuid', label: 'UUID'},
         ]}
       />
     </ExplainSideColumn>

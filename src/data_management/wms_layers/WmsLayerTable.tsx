@@ -30,7 +30,7 @@ export const WmsLayerTable = (props: RouteComponentProps) =>  {
   const columnDefinitions = [
     {
       titleRenderFunction: () => "Name",
-      renderFunction: (row: any) => 
+      renderFunction: (row: any) =>
         <span
           className={tableStyles.CellEllipsis}
           title={row.name}
@@ -41,7 +41,7 @@ export const WmsLayerTable = (props: RouteComponentProps) =>  {
     },
     {
       titleRenderFunction: () =>  "Description",
-      renderFunction: (row: any) => 
+      renderFunction: (row: any) =>
         <span
           className={tableStyles.CellEllipsis}
           title={row.description}
@@ -55,10 +55,10 @@ export const WmsLayerTable = (props: RouteComponentProps) =>  {
       renderFunction: (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any) => {
         return (
             <TableActionButtons
-              tableRow={row} 
+              tableRow={row}
               tableData={tableData}
-              setTableData={setTableData} 
-              triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
+              setTableData={setTableData}
+              triggerReloadWithCurrentPage={triggerReloadWithCurrentPage}
               triggerReloadWithBasePage={triggerReloadWithBasePage}
               editUrl={`${navigationUrl}/${row.uuid}`}
               actions={[
@@ -88,13 +88,13 @@ export const WmsLayerTable = (props: RouteComponentProps) =>  {
       imgUrl={wmsIcon}
       imgAltDescription={"WMS-Layer icon"}
       headerText={"WMS Layers"}
-      explanationText={"WMS-Layers allow to configure layers in lizard even if they are hosted on another platform"} 
+      explanationText={"WMS-Layers allow to configure layers in lizard even if they are hosted on another platform"}
       backUrl={"/data_management"}
     >
-        <TableStateContainer 
-          gridTemplateColumns={"8% 29% 55% 8%"} 
+        <TableStateContainer
+          gridTemplateColumns={"8% 29% 55% 8%"}
           columnDefinitions={columnDefinitions}
-          baseUrl={`${baseUrl}?`} 
+          baseUrl={`${baseUrl}?`}
           checkBoxActions={[
             {
               displayValue: "Delete",
@@ -105,10 +105,10 @@ export const WmsLayerTable = (props: RouteComponentProps) =>  {
           ]}
           newItemOnClick={handleNewRasterClick}
           filterOptions={[
-            {value: 'name__icontains=', label: 'Name'},
+            {value: 'name__icontains', label: 'Name'},
             // not needed for now
             // {value: 'datasets__slug__icontains=', label: 'Datasets slug'},
-            {value: 'uuid=', label: 'UUID'},
+            {value: 'uuid', label: 'UUID'},
           ]}
         />
         {rowsToBeDeleted.length > 0 ? (
