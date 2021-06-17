@@ -56,7 +56,6 @@ export function calculateNewStyleAndOptions(
       min: oldMin,
       max: newStyleSignal.max
     };
-    console.log('oldMin', oldMin, newStyleSignal.max)
     styleString = composeStyleString(
       oldColor,
       styleMinMaxStrToValidString(oldMin),
@@ -159,21 +158,27 @@ export function getStyleFromOptions(options) {
 export function validateStyleObj(style) {
   if (style.colorMap === "") {
     return {
-      validated:false,
+      validated: false,
+      minValidated: true,
+      maxValidated: true,
       errorMessage: "Colormap is required"
     };
   }
   if (style.max && style.max !== "") {
     if (style.min === "" || !style.min) {
       return {
-        validated:false,
+        validated: true,
+        minValidated: false,
+        maxValidated: true,
         errorMessage: "If a maximum is chosen, please also choose a minimum."
       };
     }
   } else if (style.min && style.min !== "") {
     if (style.max === "" || !style.max) {
       return {
-        validated:false,
+        validated: true,
+        minValidated: true,
+        maxValidated: false,
         errorMessage: "If a minimum is chosen, please also choose a maximum."
       };
     }
@@ -185,18 +190,24 @@ export function validateStyleObj(style) {
     parseFloat(style.min) > parseFloat(style.max)
   ) {
     return {
-      validated:false,
+      validated: true,
+      minValidated: false,
+      maxValidated: false,
       errorMessage: "Minimum must be smaller than maximum."
     };
   }
 
   if (style.colorMap && style.colorMap !== "") {
     return {
-      validated:true,
+      validated: true,
+      minValidated: true,
+      maxValidated: true,
     };
   } else {
     return {
-      validated:false,
+      validated: false,
+      minValidated: true,
+      maxValidated: true,
       errorMessage: "Please choose a color map."
     };
   }

@@ -19,7 +19,7 @@ import { FormButton } from './../../form/FormButton';
 import { SubmitButton } from '../../form/SubmitButton';
 import { CancelButton } from '../../form/CancelButton';
 import { AccessModifier } from '../../form/AccessModifier';
-import ColorMapInput, { colorMapValidator } from '../../form/ColorMapInput';
+import ColorMapInput from '../../form/ColorMapInput';
 import { useForm, Values } from '../../form/useForm';
 import { minLength, required } from '../../form/validators';
 import {
@@ -418,8 +418,7 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           colorMapValue={values.colorMap}
           valueChanged={value => handleValueChange('colorMap', value)}
           colorMaps={colorMaps.map((colM: any) => convertToSelectObject(colM.name, colM.name, colM.description))}
-          validated={!colorMapValidator(values.colorMap)}
-          errorMessage={colorMapValidator(values.colorMap)}
+          validated
           triedToSubmit={triedToSubmit}
           form={"raster_layer_form_id"}
           onFocus={handleFocus}
