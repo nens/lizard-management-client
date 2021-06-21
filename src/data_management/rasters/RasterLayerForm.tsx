@@ -27,7 +27,6 @@ import {
   getOrganisations,
   getRasterSourceUUID,
   getSelectedOrganisation,
-  getSupplierIds
 } from '../../reducers';
 import { optionsHasLayers } from '../../utils/rasterOptionFunctions';
 import { getUuidFromUrl } from '../../utils/getUuidFromUrl';
@@ -40,6 +39,7 @@ import DeleteModal from '../../components/DeleteModal';
 import { RasterSourceModal } from './RasterSourceModal';
 import { convertToSelectObject } from '../../utils/convertToSelectObject';
 import { fetchWithOptions } from '../../utils/fetchWithOptions';
+import { fetchSuppliers } from './RasterSourceForm';
 import { baseUrl } from './RasterLayerTable';
 
 interface Props {
@@ -97,7 +97,6 @@ export const fetchObservationTypes = async (searchQuery: string) => {
 
 const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (props) => {
   const { currentRasterLayer, removeRasterSourceUUID } = props;
-  const supplierIds = useSelector(getSupplierIds).available;
   const organisationsToSharedWith = useSelector(getOrganisations).availableForRasterSharedWith;
   const organisations = useSelector(getOrganisations).available;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
@@ -495,11 +494,15 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           placeholder={'- Search and select -'}
           value={values.supplier}
           valueChanged={value => handleValueChange('supplier', value)}
-          options={supplierIds.map((suppl:any) => convertToSelectObject(suppl.username))}
+          options={[]}
           validated
+          isAsync
+          isCached
+          loadOptions={searchInput => fetchSuppliers(selectedOrganisation.uuid, searchInput)}
+          readOnly={!selectedOrganisation.roles.includes('admin') || belongsToScenario}
+          dropUp
           onFocus={handleFocus}
           onBlur={handleBlur}
-          readOnly={(!(supplierIds.length > 0 && selectedOrganisation.roles.includes('admin')) || belongsToScenario)}
           form={"raster_layer_form_id"}
         />
         <div

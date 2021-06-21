@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { RouteComponentProps } from 'react-router';
 import MDSpinner from "react-md-spinner";
 import { fetchRasterV4, RasterLayerFromAPI } from "../../api/rasters";
-import { getOrganisations, getSupplierIds } from "../../reducers";
+import { getOrganisations } from "../../reducers";
 import RasterLayerForm from "./RasterLayerForm";
 
 interface RouteParams {
@@ -13,7 +13,6 @@ interface RouteParams {
 export const EditRasterLayer: React.FC<RouteComponentProps<RouteParams>> = (props) => {
   const [currentRasterLayer, setCurrentRasterLayer] = useState<RasterLayerFromAPI | null>(null);
   const organisations = useSelector(getOrganisations);
-  const supplierIds = useSelector(getSupplierIds);
 
   const { uuid } = props.match.params;
   useEffect(() => {
@@ -25,8 +24,7 @@ export const EditRasterLayer: React.FC<RouteComponentProps<RouteParams>> = (prop
 
   if (
     currentRasterLayer &&
-    organisations.isFetching === false &&
-    supplierIds.isFetching === false
+    organisations.isFetching === false
   ) {
     return <RasterLayerForm
       currentRasterLayer={currentRasterLayer}

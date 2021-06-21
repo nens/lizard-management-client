@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { connect, useSelector } from 'react-redux';
-import { getLocation, getSelectedOrganisation, getSupplierIds, getUsername } from '../../../reducers';
+import { getLocation, getSelectedOrganisation, getUsername } from '../../../reducers';
 import { ExplainSideColumn } from '../../../components/ExplainSideColumn';
 import { TextInput } from './../../../form/TextInput';
 import { AccessModifier } from '../../../form/AccessModifier';
@@ -14,6 +14,7 @@ import { SubmitButton } from '../../../form/SubmitButton';
 import { CancelButton } from '../../../form/CancelButton';
 import { useForm, Values } from '../../../form/useForm';
 import { jsonValidator, minLength, required } from '../../../form/validators';
+import { fetchSuppliers } from '../../rasters/RasterSourceForm';
 import { fetchObservationTypes } from '../../rasters/RasterLayerForm';
 import { addNotification, removeLocation } from '../../../actions';
 import { convertToSelectObject } from '../../../utils/convertToSelectObject';
@@ -68,7 +69,6 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
   const { currentTimeseries, datasource, removeLocation } = props;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const username = useSelector(getUsername);
-  const supplierIds = useSelector(getSupplierIds).available;
   const location = useSelector(getLocation);
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
 
@@ -439,9 +439,12 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
           placeholder={'- Search and select -'}
           value={values.supplier}
           valueChanged={value => handleValueChange('supplier', value)}
-          options={supplierIds.map((suppl: any) => convertToSelectObject(suppl.username))}
+          options={[]}
           validated
-          readOnly={!(supplierIds.length > 0 && selectedOrganisation.roles.includes('admin'))}
+          isAsync
+          isCached
+          loadOptions={searchInput => fetchSuppliers(selectedOrganisation.uuid, searchInput)}
+          readOnly={!selectedOrganisation.roles.includes('admin')}
           dropUp
           onFocus={handleFocus}
           onBlur={handleBlur}

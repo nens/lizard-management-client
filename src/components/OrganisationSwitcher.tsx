@@ -8,7 +8,7 @@ import MDSpinner from "react-md-spinner";
 
 import styles from "./OrganisationSwitcher.module.css";
 import { connect } from "react-redux";
-import { fetchSupplierIds, selectOrganisation } from "../actions";
+import { selectOrganisation } from "../actions";
 import { FormattedMessage, injectIntl } from "react-intl";
 import { Scrollbars } from "react-custom-scrollbars";
 import doArraysHaveEqualElement from '../utils/doArraysHaveEqualElement';
@@ -177,15 +177,9 @@ const OrganisationSwitcher = (props:Props) => {
     );
   }
 
-
-  // todo: fix any of dispatch
 const mapDispatchToProps = (dispatch:any) => {
   return {
-    // todo: fix :any organisation
-    selectOrganisation: (organisation:any, addNotification: boolean) => {
-      dispatch(selectOrganisation(organisation, addNotification));
-      dispatch(fetchSupplierIds());
-    }
+    selectOrganisation: (organisation:any, addNotification: boolean) => dispatch(selectOrganisation(organisation, addNotification))
   };
 };
 

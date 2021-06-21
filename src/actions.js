@@ -169,47 +169,6 @@ export function selectOrganisation(organisation, mustAddNotification) {
   }
 }
 
-// MARK: Supplier IDs
-export const REQUEST_SUPPLIER_IDS = "REQUEST_SUPPLIER_IDS";
-export const RECEIVE_SUPPLIER_IDS_SUCCESS = "RECEIVE_SUPPLIER_IDS_SUCCESS";
-export const RECEIVE_SUPPLIER_IDS_ERROR = "RECEIVE_SUPPLIER_IDS_ERROR";
-
-// TODO only show users that have supplier role for the organisation
-// at the moment roles cannot be queried from the api, thus it cannot be known by client which users have supllier role
-export function fetchSupplierIds() {
-  return (dispatch, getState) => {
-    const state = getState();
-    const selectOrganisation = state.organisations.selected;
-    if (!selectOrganisation) {
-      console.error(
-        "[E] Cannot fetch supplier ids if no organisation is selected",
-        selectOrganisation,
-        state.organisations
-      );
-    }
-    const url = `/api/v4/organisations/${selectOrganisation.uuid}/users/?role=supplier`;
-    const opts = { credentials: "same-origin" };
-
-    dispatch({ type: REQUEST_SUPPLIER_IDS });
-
-    fetch(url, opts)
-      .then(responseObj => {
-        if (!responseObj.ok) {
-          const errorMessage = `HTTP error ${responseObj.status} while fetching Supplier Ids: ${responseObj.statusText}`;
-          dispatch({ type: RECEIVE_SUPPLIER_IDS_ERROR, errorMessage });
-          console.error("[E]", errorMessage, responseObj);
-          return Promise.reject(errorMessage);
-        } else {
-          return responseObj.json();
-        }
-      })
-      .then(responseData => {
-        const data = responseData;
-        dispatch({ type: RECEIVE_SUPPLIER_IDS_SUCCESS, data });
-      });
-  };
-}
-
 // MARK: Viewport
 export const UPDATE_VIEWPORT_DIMENSIONS = "UPDATE_VIEWPORT_DIMENSIONS";
 

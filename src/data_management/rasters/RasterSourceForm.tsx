@@ -11,7 +11,7 @@ import { SubmitButton } from '../../form/SubmitButton';
 import { CancelButton } from '../../form/CancelButton';
 import { SelectDropdown } from '../../form/SelectDropdown';
 import { AcceptedFile, UploadData } from '../../form/UploadData';
-import { getOrganisations, getSelectedOrganisation, getSupplierIds } from '../../reducers';
+import { getOrganisations, getSelectedOrganisation } from '../../reducers';
 import { useForm, Values } from '../../form/useForm';
 import { minLength } from '../../form/validators';
 import { AccessModifier } from '../../form/AccessModifier';
@@ -43,9 +43,23 @@ interface RouteParams {
   uuid: string;
 };
 
+// Helper function to fetch suppliers in async select dropdown
+export const fetchSuppliers = async (uuid: string, searchInput: string) => {
+  const params=["role=supplier"];
+
+  if (searchInput) params.push(`username__icontains=${searchInput}`);
+  const urlQuery = params.join('&');
+
+  const response = await fetch(`/api/v4/organisations/${uuid}/users/?${urlQuery}`, {
+    credentials: 'same-origin'
+  });
+  const responseJSON = await response.json();
+
+  return responseJSON.results.map((supplier: any) => convertToSelectObject(supplier.id, supplier.username));
+};
+
 const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<RouteParams>> = (props) => {
   const { currentRasterSource } = props;
-  const supplierIds = useSelector(getSupplierIds).available;
   const organisations = useSelector(getOrganisations).available;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const organisationsToSwitchTo = organisations.filter((org: any) => org.roles.includes('admin'));
@@ -290,11 +304,15 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           placeholder={'- Search and select -'}
           value={values.supplier}
           valueChanged={value => handleValueChange('supplier', value)}
-          options={supplierIds.map((suppl: any) => convertToSelectObject(suppl.username))}
+          options={[]}
           validated
+          isAsync
+          isCached
+          loadOptions={searchInput => fetchSuppliers(selectedOrganisation.uuid, searchInput)}
+          readOnly={!selectedOrganisation.roles.includes('admin')}
+          dropUp
           onFocus={handleFocus}
           onBlur={handleBlur}
-          readOnly={!(supplierIds.length > 0 && selectedOrganisation.roles.includes('admin'))}
         />
         <div
           className={formStyles.ButtonContainer}

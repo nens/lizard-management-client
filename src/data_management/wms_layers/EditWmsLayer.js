@@ -28,8 +28,7 @@ class EditWmsLayerModel extends Component {
   render() {
     if (
       this.state.currentWmsLayer &&
-      this.props.organisations.isFetching === false &&
-      this.props.supplierIds.isFetching === false
+      this.props.organisations.isFetching === false
     ) {
       return <WmsLayerForm 
         currentWmsLayer={this.state.currentWmsLayer}
@@ -55,10 +54,7 @@ class EditWmsLayerModel extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    organisations: state.organisations,
-    observationTypes: state.observationTypes,
-    colorMaps: state.colorMaps,
-    supplierIds: state.supplierIds
+    organisations: state.organisations
   };
 };
 

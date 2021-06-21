@@ -17,7 +17,6 @@ import {
   getDatasets,
   getOrganisations,
   getSelectedOrganisation,
-  getSupplierIds,
 } from '../../reducers';
 import { addNotification } from './../../actions';
 import formStyles from './../../styles/Forms.module.css';
@@ -28,6 +27,7 @@ import { WmsLayerReceivedFromApi, wmsLayerReceivedFromApiToForm, WmsLayerFormTyp
 import { wmsFormHelpText } from '../../utils/help_texts/helpTextForWMS';
 import { convertToSelectObject } from '../../utils/convertToSelectObject';
 import { fetchWithOptions } from '../../utils/fetchWithOptions';
+import { fetchSuppliers } from '../rasters/RasterSourceForm';
 import { baseUrl } from './WmsLayerTable';
 import FormActionButtons from '../../components/FormActionButtons';
 import DeleteModal from '../../components/DeleteModal';
@@ -45,7 +45,6 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const [geoserverError, setGeoserverError,] = useState(false)
   const organisationsToSharedWith = useSelector(getOrganisations).availableForRasterSharedWith;
-  const supplierIds = useSelector(getSupplierIds).available;
   const organisations = useSelector(getOrganisations).available;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const datasets = useSelector(getDatasets).available;
@@ -387,11 +386,15 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           placeholder={'- Search and select -'}
           value={values.supplier}
           valueChanged={value => handleValueChange('supplier', value)}
-          options={supplierIds.map((suppl: any) => convertToSelectObject(suppl.username))}
+          options={[]}
           validated
+          isAsync
+          isCached
+          loadOptions={searchInput => fetchSuppliers(selectedOrganisation.uuid, searchInput)}
+          readOnly={!selectedOrganisation.roles.includes('admin')}
+          dropUp
           onFocus={handleFocus}
           onBlur={handleBlur}
-          readOnly={!(supplierIds.length > 0 && selectedOrganisation.roles.includes("admin"))}
         />
         <div
           className={formStyles.ButtonContainer}

@@ -9,9 +9,6 @@ import {
   SELECT_ORGANISATION,
   REQUEST_USAGE,
   SET_USAGE,
-  REQUEST_SUPPLIER_IDS,
-  RECEIVE_SUPPLIER_IDS_SUCCESS,
-  RECEIVE_SUPPLIER_IDS_ERROR,
   SHOW_NOTIFICATION,
   DISMISS_NOTIFICATION,
   UPDATE_VIEWPORT_DIMENSIONS,
@@ -111,41 +108,6 @@ switch (action.type) {
   default:
       return state;
   } 
-}
-
-function supplierIds(
-  state = {
-    isFetching: false,
-    timesFetched: 0,
-    hasError: false,
-    errorMessage: "",
-    available: []
-  },
-  action
-) {
-  switch (action.type) {
-    case REQUEST_SUPPLIER_IDS:
-      return { ...state, isFetching: true };
-    case RECEIVE_SUPPLIER_IDS_SUCCESS:
-      return {
-        ...state,
-        available: action.data.results,
-        isFetching: false,
-        hasError: false,
-        timesFetched: state.timesFetched + 1
-      };
-    case RECEIVE_SUPPLIER_IDS_ERROR:
-      return {
-        ...state,
-        available: [],
-        isFetching: false,
-        hasError: true,
-        errorMessage: action.errorMessage,
-        timesFetched: state.timesFetched + 1
-      };
-    default:
-      return state;
-  }
 }
 
 function datasets(
@@ -343,9 +305,6 @@ export const getRasterTotalSize = (state) => {
 export const getSelectedOrganisation = (state) => {
   return state.organisations.selected;
 };
-export const getSupplierIds = (state) => {
-  return state.supplierIds;
-};
 export const getDatasets = (state) => {
   return state.datasets;
 };
@@ -367,7 +326,6 @@ const rootReducer = combineReducers({
   bootstrap,
   organisations,
   usage,
-  supplierIds,
   datasets,
   notifications,
   viewport,
