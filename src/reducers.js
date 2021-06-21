@@ -9,9 +9,6 @@ import {
   SELECT_ORGANISATION,
   REQUEST_USAGE,
   SET_USAGE,
-  REQUEST_OBSERVATION_TYPES,
-  RECEIVE_OBSERVATION_TYPES_SUCCESS,
-  RECEIVE_OBSERVATION_TYPES_ERROR,
   REQUEST_SUPPLIER_IDS,
   RECEIVE_SUPPLIER_IDS_SUCCESS,
   RECEIVE_SUPPLIER_IDS_ERROR,
@@ -117,41 +114,6 @@ switch (action.type) {
   default:
       return state;
   } 
-}
-
-function observationTypes(
-  state = {
-    isFetching: false,
-    timesFetched: 0,
-    hasError: false,
-    errorMessage: "",
-    available: []
-  },
-  action
-) {
-  switch (action.type) {
-    case REQUEST_OBSERVATION_TYPES:
-      return { ...state, isFetching: true };
-    case RECEIVE_OBSERVATION_TYPES_SUCCESS:
-      return {
-        ...state,
-        available: action.data,
-        isFetching: false,
-        hasError: false,
-        timesFetched: state.timesFetched + 1
-      };
-    case RECEIVE_OBSERVATION_TYPES_ERROR:
-      return {
-        ...state,
-        available: [],
-        isFetching: false,
-        hasError: true,
-        errorMessage: action.errorMessage,
-        timesFetched: state.timesFetched + 1
-      };
-    default:
-      return state;
-  }
 }
 
 function supplierIds(
@@ -419,9 +381,6 @@ export const getRasterTotalSize = (state) => {
 export const getSelectedOrganisation = (state) => {
   return state.organisations.selected;
 };
-export const getObservationTypes = (state) => {
-  return state.observationTypes;
-};
 export const getColorMaps = (state) => {
   return state.colorMaps;
 };
@@ -449,7 +408,6 @@ const rootReducer = combineReducers({
   bootstrap,
   organisations,
   usage,
-  observationTypes,
   supplierIds,
   colorMaps,
   datasets,

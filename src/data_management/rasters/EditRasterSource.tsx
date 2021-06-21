@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { RouteComponentProps } from 'react-router';
 import MDSpinner from "react-md-spinner";
 import { fetchRasterSourceV4, RasterSourceFromAPI } from "../../api/rasters";
-import { getColorMaps, getObservationTypes, getOrganisations, getSupplierIds } from "../../reducers";
+import { getOrganisations } from "../../reducers";
 import RasterSourceForm from "./RasterSourceForm";
 
 interface RouteParams {
@@ -13,9 +13,6 @@ interface RouteParams {
 export const EditRasterSource: React.FC<RouteComponentProps<RouteParams>> = (props) => {
   const [currentRasterSource, setCurrentRasterSource] = useState<RasterSourceFromAPI | null>(null);
   const organisations = useSelector(getOrganisations);
-  const observationTypes = useSelector(getObservationTypes);
-  const colorMaps = useSelector(getColorMaps);
-  const supplierIds = useSelector(getSupplierIds);
 
   const { uuid } = props.match.params;
   useEffect(() => {
@@ -27,10 +24,7 @@ export const EditRasterSource: React.FC<RouteComponentProps<RouteParams>> = (pro
 
   if (
     currentRasterSource &&
-    organisations.isFetching === false &&
-    observationTypes.isFetching === false &&
-    colorMaps.isFetching === false &&
-    supplierIds.isFetching === false
+    organisations.isFetching === false
   ) {
     return <RasterSourceForm 
     currentRasterSource={currentRasterSource}

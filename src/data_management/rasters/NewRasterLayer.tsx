@@ -5,7 +5,6 @@ import MDSpinner from "react-md-spinner";
 import RasterLayerForm from "./RasterLayerForm";
 import {
   getColorMaps,
-  getObservationTypes,
   getOrganisations,
   getSupplierIds,
   getDatasets,
@@ -13,14 +12,12 @@ import {
 
 export const NewRasterLayer: React.FC = () => {
   const organisations = useSelector(getOrganisations);
-  const observationTypes = useSelector(getObservationTypes);
   const colorMaps = useSelector(getColorMaps);
   const supplierIds = useSelector(getSupplierIds);
   const datasets = useSelector(getDatasets);
 
   if (
     organisations.isFetching === false &&
-    observationTypes.isFetching === false &&
     colorMaps.isFetching === false &&
     supplierIds.isFetching === false &&
     datasets.isFetching === false

@@ -7,7 +7,6 @@ import {
   addNotification,
   fetchLizardBootstrap,
   fetchOrganisations,
-  fetchObservationTypes,
   fetchSupplierIds,
   fetchColorMaps,
   updateViewportDimensions,
@@ -70,7 +69,6 @@ class App extends Component {
     if (props.isAuthenticated) {
       if (props.mustFetchColorMaps) props.getColorMaps();
       if (props.mustFetchOrganisations) props.getOrganisations();
-      if (props.mustFetchObservationTypes) props.getObservationTypes();
       if (props.mustFetchSupplierIds) props.getSupplierIds();
       if (props.mustFetchDatasets) props.getDatasets();
     }
@@ -391,10 +389,6 @@ const mapStateToProps = (state, ownProps) => {
     isFetchingOrganisations: state.organisations.isFetching,
     timesFetchedOrganisations: state.organisations.timesFetched,
 
-    mustFetchObservationTypes:
-      state.observationTypes.available.length === 0 &&
-      !state.observationTypes.isFetching &&
-      state.observationTypes.timesFetched < 1,
     mustFetchSupplierIds:
       state.organisations.selected &&
       state.supplierIds.available.length === 0 &&
@@ -416,7 +410,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     getLizardBootstrap: () => dispatch(fetchLizardBootstrap()),
     getOrganisations: () => dispatch(fetchOrganisations()),
-    getObservationTypes: () => dispatch(fetchObservationTypes()),
     getSupplierIds: () => dispatch(fetchSupplierIds()),
     getColorMaps: () => dispatch(fetchColorMaps()),
     getDatasets: () => dispatch(fetchDatasets()),

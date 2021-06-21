@@ -169,45 +169,6 @@ export function selectOrganisation(organisation, mustAddNotification) {
   }
 }
 
-// MARK: Observation types
-export const REQUEST_OBSERVATION_TYPES = "REQUEST_OBSERVATION_TYPES";
-export const RECEIVE_OBSERVATION_TYPES_SUCCESS =
-  "RECEIVE_OBSERVATION_TYPES_SUCCESS";
-export const RECEIVE_OBSERVATION_TYPES_ERROR =
-  "RECEIVE_OBSERVATION_TYPES_ERROR";
-
-export function fetchObservationTypes() {
-  return dispatch => {
-    dispatch({ type: REQUEST_OBSERVATION_TYPES });
-
-    const url = "/api/v4/observationtypes/?page_size=0";
-    const opts = { credentials: "same-origin" };
-
-    fetch(url, opts)
-      .then(responseObj => {
-        if (!responseObj.ok) {
-          const errorMessage = `HTTP error ${responseObj.status} while fetching Observation Types: ${responseObj.statusText}`;
-          dispatch({
-            type: RECEIVE_OBSERVATION_TYPES_ERROR,
-            errorMessage
-          });
-          console.error(
-            "[E] error retrieving observation types=",
-            errorMessage,
-            responseObj
-          );
-          return Promise.reject(errorMessage);
-        } else {
-          return responseObj.json();
-        }
-      })
-      .then(responseData => {
-        const data = responseData;
-        dispatch({ type: RECEIVE_OBSERVATION_TYPES_SUCCESS, data });
-      });
-  };
-}
-
 // MARK: Supplier IDs
 export const REQUEST_SUPPLIER_IDS = "REQUEST_SUPPLIER_IDS";
 export const RECEIVE_SUPPLIER_IDS_SUCCESS = "RECEIVE_SUPPLIER_IDS_SUCCESS";
