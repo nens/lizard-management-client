@@ -8,7 +8,6 @@ import {
   fetchLizardBootstrap,
   fetchOrganisations,
   fetchSupplierIds,
-  fetchColorMaps,
   updateViewportDimensions,
   fetchDatasets,
   updateTaskStatus,
@@ -67,7 +66,6 @@ class App extends Component {
   }
   componentWillReceiveProps(props) {
     if (props.isAuthenticated) {
-      if (props.mustFetchColorMaps) props.getColorMaps();
       if (props.mustFetchOrganisations) props.getOrganisations();
       if (props.mustFetchSupplierIds) props.getSupplierIds();
       if (props.mustFetchDatasets) props.getDatasets();
@@ -395,10 +393,6 @@ const mapStateToProps = (state, ownProps) => {
       !state.supplierIds.isFetching &&
       // !state.supplierIds.hasError &&
       state.supplierIds.timesFetched < 1,
-    mustFetchColorMaps:
-      state.colorMaps.available.length === 0 &&
-      !state.colorMaps.isFetching &&
-      state.colorMaps.timesFetched < 1,
     mustFetchDatasets:
       state.datasets.available.length === 0 &&
       !state.datasets.isFetching &&
@@ -411,7 +405,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     getLizardBootstrap: () => dispatch(fetchLizardBootstrap()),
     getOrganisations: () => dispatch(fetchOrganisations()),
     getSupplierIds: () => dispatch(fetchSupplierIds()),
-    getColorMaps: () => dispatch(fetchColorMaps()),
     getDatasets: () => dispatch(fetchDatasets()),
     addNotification: (message, timeout) => {
       dispatch(addNotification(message, timeout));

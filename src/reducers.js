@@ -12,9 +12,6 @@ import {
   REQUEST_SUPPLIER_IDS,
   RECEIVE_SUPPLIER_IDS_SUCCESS,
   RECEIVE_SUPPLIER_IDS_ERROR,
-  REQUEST_COLORMAPS,
-  RECEIVE_COLORMAPS_SUCCESS,
-  RECEIVE_COLORMAPS_ERROR,
   SHOW_NOTIFICATION,
   DISMISS_NOTIFICATION,
   UPDATE_VIEWPORT_DIMENSIONS,
@@ -138,41 +135,6 @@ function supplierIds(
         timesFetched: state.timesFetched + 1
       };
     case RECEIVE_SUPPLIER_IDS_ERROR:
-      return {
-        ...state,
-        available: [],
-        isFetching: false,
-        hasError: true,
-        errorMessage: action.errorMessage,
-        timesFetched: state.timesFetched + 1
-      };
-    default:
-      return state;
-  }
-}
-
-function colorMaps(
-  state = {
-    isFetching: false,
-    timesFetched: 0,
-    hasError: false,
-    errorMessage: "",
-    available: []
-  },
-  action
-) {
-  switch (action.type) {
-    case REQUEST_COLORMAPS:
-      return { ...state, isFetching: true };
-    case RECEIVE_COLORMAPS_SUCCESS:
-      return {
-        ...state,
-        available: action.data,
-        isFetching: false,
-        hasError: false,
-        timesFetched: state.timesFetched + 1
-      };
-    case RECEIVE_COLORMAPS_ERROR:
       return {
         ...state,
         available: [],
@@ -381,9 +343,6 @@ export const getRasterTotalSize = (state) => {
 export const getSelectedOrganisation = (state) => {
   return state.organisations.selected;
 };
-export const getColorMaps = (state) => {
-  return state.colorMaps;
-};
 export const getSupplierIds = (state) => {
   return state.supplierIds;
 };
@@ -409,7 +368,6 @@ const rootReducer = combineReducers({
   organisations,
   usage,
   supplierIds,
-  colorMaps,
   datasets,
   notifications,
   viewport,

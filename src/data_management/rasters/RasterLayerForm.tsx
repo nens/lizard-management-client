@@ -14,7 +14,7 @@ import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import { CheckBox } from './../../form/CheckBox';
 import { TextArea } from './../../form/TextArea';
 import { TextInput } from './../../form/TextInput';
-import { SelectDropdown } from '../../form/SelectDropdown';
+import { SelectDropdown, Value } from '../../form/SelectDropdown';
 import { FormButton } from './../../form/FormButton';
 import { SubmitButton } from '../../form/SubmitButton';
 import { CancelButton } from '../../form/CancelButton';
@@ -23,7 +23,6 @@ import ColorMapInput from '../../form/ColorMapInput';
 import { useForm, Values } from '../../form/useForm';
 import { minLength, required } from '../../form/validators';
 import {
-  getColorMaps,
   getDatasets,
   getOrganisations,
   getRasterSourceUUID,
@@ -102,10 +101,23 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
   const organisationsToSharedWith = useSelector(getOrganisations).availableForRasterSharedWith;
   const organisations = useSelector(getOrganisations).available;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
-  const colorMaps = useSelector(getColorMaps).available;
   const datasets = useSelector(getDatasets).available;
   const rasterSourceUUID = useSelector(getRasterSourceUUID);
   const belongsToScenario = (currentRasterLayer && rasterLayerFromAPIBelongsToScenario(currentRasterLayer)) || false;
+
+  // Fetch list of color maps to add to group
+  const [colorMaps, setColorMaps] = useState<Value[] | null>(null);
+  useEffect(() => {
+    fetch(`/api/v4/colormaps/?page_size=0&format=json`, {
+      credentials: "same-origin"
+    })
+    .then(response => response.json())
+    .then(results => {
+      const colorMaps = results.map((colorMap: any) => convertToSelectObject(colorMap.name, colorMap.name, colorMap.description));
+      setColorMaps(colorMaps);
+    })
+    .catch(console.error);
+  }, []);
 
   useEffect(() => {
     return () => {
@@ -417,9 +429,8 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           name={'colorMap'}
           colorMapValue={values.colorMap}
           valueChanged={value => handleValueChange('colorMap', value)}
-          colorMaps={colorMaps.map((colM: any) => convertToSelectObject(colM.name, colM.name, colM.description))}
+          colorMaps={colorMaps || []}
           validated
-          triedToSubmit={triedToSubmit}
           form={"raster_layer_form_id"}
           onFocus={handleFocus}
           onBlur={handleBlur}

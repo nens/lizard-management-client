@@ -210,38 +210,6 @@ export function fetchSupplierIds() {
   };
 }
 
-// MARK: ColorMaps
-export const REQUEST_COLORMAPS = "REQUEST_COLORMAPS";
-export const RECEIVE_COLORMAPS_SUCCESS = "RECEIVE_COLORMAPS_SUCCESS";
-export const RECEIVE_COLORMAPS_ERROR = "RECEIVE_COLORMAPS_ERROR";
-
-// TODO only show users that have supplier role for the organisation
-// at the moment roles cannot be queried from the api, thus it cannot be known by client which users have supllier role
-export function fetchColorMaps() {
-  return dispatch => {
-    const url = "/api/v3/colormaps/?format=json&page_size=100000";
-    const opts = { credentials: "same-origin" };
-
-    dispatch({ type: REQUEST_COLORMAPS });
-
-    fetch(url, opts)
-      .then(responseObj => {
-        if (!responseObj.ok) {
-          const errorMessage = `HTTP error ${responseObj.status} while fetching ColorMaps: ${responseObj.statusText}`;
-          console.error(errorMessage, responseObj);
-          dispatch({ type: RECEIVE_COLORMAPS_ERROR, errorMessage });
-          return Promise.reject(errorMessage);
-        } else {
-          return responseObj.json();
-        }
-      })
-      .then(responseData => {
-        const data = responseData.results;
-        dispatch({ type: RECEIVE_COLORMAPS_SUCCESS, data });
-      });
-  };
-}
-
 // MARK: Viewport
 export const UPDATE_VIEWPORT_DIMENSIONS = "UPDATE_VIEWPORT_DIMENSIONS";
 
