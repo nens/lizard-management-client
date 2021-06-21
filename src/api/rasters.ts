@@ -279,19 +279,6 @@ export const deleteRasters = (uuids: string[]) => {
   return Promise.all(uuids.map(deleteRaster));
 }
 
-export const listTemporalRastersContainingV3 = async (searchString: string) => {
-  const response = await fetch(
-    // show all temporal rasters the user has access to
-    `/api/v3/rasters/?page_size=0&name__icontains=${searchString}&temporal=true`,
-    {
-      credentials: "same-origin"
-    }
-  );
-
-  return response.json();
-};
-
-
 export const listRastersForTable = async (
   pageSize: number,
   page: number,
