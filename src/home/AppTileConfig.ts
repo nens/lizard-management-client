@@ -21,7 +21,7 @@ import locationsIcon from "../images/locations_icon.svg";
 
 export const appTiles = [
   { 
-    title: "data",
+    title: "management",
     // title: (
     //   <FormattedMessage
     //     id="home.data_management"
@@ -30,7 +30,36 @@ export const appTiles = [
     // ),
     order: 100,
     onPage: "/",
-    linksTo: "/data_management",
+    linksTo: "/management",
+    requiresOneOfRoles: ["admin", "supplier", "manager"],
+    icon: dataManagementIcon,
+  },
+  { 
+    title: "catalogue",
+    // title: (
+    //   <FormattedMessage
+    //     id="home.data_management"
+    //     defaultMessage="Data Management"
+    //   />
+    // ),
+    order: 100,
+    onPage: "/",
+    linksTo: "/catalogue",
+    linksToExternal: true,
+    requiresOneOfRoles: ["user", "admin", "supplier", "manager"],
+    icon: dataManagementIcon,
+  },
+  { 
+    title: "data",
+    // title: (
+    //   <FormattedMessage
+    //     id="home.data_management"
+    //     defaultMessage="Data Management"
+    //   />
+    // ),
+    order: 100,
+    onPage: "/management",
+    linksTo: "/management/data_management",
     requiresOneOfRoles: ["admin", "supplier",],
     icon: dataManagementIcon,
   },
@@ -43,8 +72,8 @@ export const appTiles = [
     //   />
     // ),
     order: 200,
-    onPage: "/",
-    linksTo: "/users",
+    onPage: "/management",
+    linksTo: "/management/users",
     linksToExternal: false,
     requiresOneOfRoles: ["manager"],
     icon: userManagementIcon,
@@ -55,8 +84,8 @@ export const appTiles = [
     //   <FormattedMessage id="home.alarms" defaultMessage="Alarms" />
     // ),
     order: 300,
-    onPage: "/",
-    linksTo: "/alarms",
+    onPage: "/management",
+    linksTo: "/management/alarms",
     requiresOneOfRoles: ["admin"],
     icon: alarmIcon,
   },
@@ -69,8 +98,8 @@ export const appTiles = [
     //   />
     // ),
     order: 400,
-    onPage: "/",
-    linksTo: "/personal_api_keys",
+    onPage: "/management",
+    linksTo: "/management/personal_api_keys",
     requiresOneOfRoles: ["user", "admin", "supplier", "manager"],
     icon: personalApiKeysIcon,
   },
@@ -83,10 +112,24 @@ export const appTiles = [
     //   />
     // ),
     order: 500,
-    onPage: "/",
-    linksTo: "/map_viewer",
+    onPage: "/management",
+    linksTo: "/management/map_viewer",
     requiresOneOfRoles: ["user", "admin", "supplier", "manager"],
     icon: rasterIcon,
+  },
+  {
+    title: "Go Back",
+    // title: (
+    //   <FormattedMessage
+    //     id="go_back"
+    //     defaultMessage="Go Back"
+    //   />
+    // ),
+    order: 600,
+    onPage: "/management",
+    linksTo: "/",
+    requiresOneOfRoles: ["user", "admin", "supplier", "manager"],
+    icon: backArrowIcon
   },
   { 
     title: "rasters",
@@ -97,8 +140,8 @@ export const appTiles = [
     //   />
     // ),
     order: 100,
-    onPage: "/data_management",
-    linksTo: "/data_management/rasters",
+    onPage: "/management/data_management",
+    linksTo: "/management/data_management/rasters",
     requiresOneOfRoles: ["admin", "supplier",],
     icon: rasterIcon,
   },
@@ -111,8 +154,8 @@ export const appTiles = [
     //   />
     // ),
     order: 200,
-    onPage: "/data_management",
-    linksTo: "/data_management/wms_layers",
+    onPage: "/management/data_management",
+    linksTo: "/management/data_management/wms_layers",
     requiresOneOfRoles: ["admin", "supplier",],
     icon: wmsIcon
   },
@@ -125,8 +168,8 @@ export const appTiles = [
     //   />
     // ),
     order: 250,
-    onPage: "/data_management",
-    linksTo: "/data_management/timeseries",
+    onPage: "/management/data_management",
+    linksTo: "/management/data_management/timeseries",
     requiresOneOfRoles: ["admin", "supplier",],
     icon: timeseriesIcon,
   },
@@ -139,8 +182,8 @@ export const appTiles = [
     //   />
     // ),
     order: 300,
-    onPage: "/data_management",
-    linksTo: "/data_management/scenarios",
+    onPage: "/management/data_management",
+    linksTo: "/management/data_management/scenarios",
     requiresOneOfRoles: ["admin", "supplier",],
     icon: threediIcon
   },
@@ -153,8 +196,8 @@ export const appTiles = [
     //   />
     // ),
     order: 400,
-    onPage: "/data_management",
-    linksTo: "/data_management/labels",
+    onPage: "/management/data_management",
+    linksTo: "/management/data_management/labels",
     requiresOneOfRoles: ["admin", "supplier",],
     icon: labelIcon
   },
@@ -167,8 +210,8 @@ export const appTiles = [
     //   />
     // ),
     order: 400,
-    onPage: "/data_management",
-    linksTo: "/",
+    onPage: "/management/data_management",
+    linksTo: "/management",
     requiresOneOfRoles: ["admin", "supplier","user", "manager"],
     icon: backArrowIcon
   },
@@ -181,8 +224,8 @@ export const appTiles = [
     //   />
     // ),
     order: 100,
-    onPage: "/data_management/rasters",
-    linksTo: "/data_management/rasters/sources",
+    onPage: "/management/data_management/rasters",
+    linksTo: "/management/data_management/rasters/sources",
     requiresOneOfRoles: ["admin", "supplier",],
     icon: rasterSourcesIcon
   },
@@ -195,8 +238,8 @@ export const appTiles = [
     //   />
     // ),
     order: 200,
-    onPage: "/data_management/rasters",
-    linksTo: "/data_management/rasters/layers",
+    onPage: "/management/data_management/rasters",
+    linksTo: "/management/data_management/rasters/layers",
     requiresOneOfRoles: ["admin", "supplier",],
     icon: rasterLayersIcon,
   },
@@ -209,8 +252,8 @@ export const appTiles = [
     //   />
     // ),
     order: 400,
-    onPage: "/data_management/rasters",
-    linksTo: "/data_management",
+    onPage: "/management/data_management/rasters",
+    linksTo: "/management/data_management",
     requiresOneOfRoles: ["admin", "supplier","user", "manager"],
     icon: backArrowIcon
   },
@@ -223,8 +266,8 @@ export const appTiles = [
     //   />
     // ),
     order: 100,
-    onPage: "/data_management/labels",
-    linksTo: "/data_management/labels/label_types",
+    onPage: "/management/data_management/labels",
+    linksTo: "/management/data_management/labels/label_types",
     requiresOneOfRoles: ["admin", "supplier",],
     icon: labeltypesIcon
   },
@@ -237,8 +280,8 @@ export const appTiles = [
     //   />
     // ),
     order: 400,
-    onPage: "/data_management/labels",
-    linksTo: "/data_management",
+    onPage: "/management/data_management/labels",
+    linksTo: "/management/data_management",
     requiresOneOfRoles: ["admin", "supplier","user", "manager"],
     icon: backArrowIcon
   },
@@ -251,8 +294,8 @@ export const appTiles = [
     //   />
     // ),
     order: 400,
-    onPage: "/data_management/timeseries",
-    linksTo: "/data_management/timeseries/locations",
+    onPage: "/management/data_management/timeseries",
+    linksTo: "/management/data_management/timeseries/locations",
     requiresOneOfRoles: ["admin", "supplier",],
     icon: locationsIcon,
   },
@@ -265,8 +308,8 @@ export const appTiles = [
     //   />
     // ),
     order: 400,
-    onPage: "/data_management/timeseries",
-    linksTo: "/data_management/timeseries/timeseries",
+    onPage: "/management/data_management/timeseries",
+    linksTo: "/management/data_management/timeseries/timeseries",
     requiresOneOfRoles: ["admin", "supplier",],
     icon: timeseriesIcon
   },
@@ -279,8 +322,8 @@ export const appTiles = [
     //   />
     // ),
     order: 400,
-    onPage: "/data_management/timeseries",
-    linksTo: "/data_management/timeseries/monitoring_networks",
+    onPage: "/management/data_management/timeseries",
+    linksTo: "/management/data_management/timeseries/monitoring_networks",
     requiresOneOfRoles: ["admin", "supplier",],
     icon: monitoringsNetworkicon,
   },
@@ -293,8 +336,8 @@ export const appTiles = [
     //   />
     // ),
     order: 400,
-    onPage: "/data_management/timeseries",
-    linksTo: "/data_management",
+    onPage: "/management/data_management/timeseries",
+    linksTo: "/management/data_management",
     requiresOneOfRoles: ["admin", "supplier","user", "manager"],
     icon: backArrowIcon
   },
@@ -307,8 +350,8 @@ export const appTiles = [
     //   />
     // ),
     order: 100,
-    onPage: "/alarms",
-    linksTo: "/alarms/notifications",
+    onPage: "/management/alarms",
+    linksTo: "/management/alarms/notifications",
     requiresOneOfRoles: ["admin",],
     icon: alarmsIcon,
   },
@@ -321,8 +364,8 @@ export const appTiles = [
     //   />
     // ),
     order: 200,
-    onPage: "/alarms",
-    linksTo: "/alarms/groups",
+    onPage: "/management/alarms",
+    linksTo: "/management/alarms/groups",
     requiresOneOfRoles: ["admin",],
     icon: groupsIcon
   },
@@ -335,8 +378,8 @@ export const appTiles = [
     //   />
     // ),
     order: 300,
-    onPage: "/alarms",
-    linksTo: "/alarms/contacts",
+    onPage: "/management/alarms",
+    linksTo: "/management/alarms/contacts",
     requiresOneOfRoles: ["admin",],
     icon: contactsIcon
   },
@@ -349,8 +392,8 @@ export const appTiles = [
     //   />
     // ),
     order: 400,
-    onPage: "/alarms",
-    linksTo: "/alarms/templates",
+    onPage: "/management/alarms",
+    linksTo: "/management/alarms/templates",
     requiresOneOfRoles: ["admin",],
     icon: templatesIcon,
   },
@@ -363,8 +406,8 @@ export const appTiles = [
     //   />
     // ),
     order: 500,
-    onPage: "/alarms",
-    linksTo: "/",
+    onPage: "/management/alarms",
+    linksTo: "/management",
     requiresOneOfRoles: ["admin", "supplier","user", "manager"],
     icon: backArrowIcon
   },
@@ -377,8 +420,8 @@ export const appTiles = [
     //   />
     // ),
     order: 100,
-    onPage: "/alarms/notifications",
-    linksTo: "/alarms/notifications/raster_alarms",
+    onPage: "/management/alarms/notifications",
+    linksTo: "/management/alarms/notifications/raster_alarms",
     requiresOneOfRoles: ["admin",],
     icon: alarmsIcon,
   },
@@ -391,8 +434,8 @@ export const appTiles = [
     //   />
     // ),
     order: 200,
-    onPage: "/alarms/notifications",
-    linksTo: "/alarms/notifications/timeseries_alarms",
+    onPage: "/management/alarms/notifications",
+    linksTo: "/management/alarms/notifications/timeseries_alarms",
     requiresOneOfRoles: ["admin",],
     icon: alarmsIcon,
   },
@@ -405,8 +448,8 @@ export const appTiles = [
     //   />
     // ),
     order: 300,
-    onPage: "/alarms/notifications",
-    linksTo: "/alarms",
+    onPage: "/management/alarms/notifications",
+    linksTo: "/management/alarms",
     requiresOneOfRoles: ["admin", "supplier","user", "manager"],
     icon: backArrowIcon
   },

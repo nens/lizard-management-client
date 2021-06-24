@@ -48,7 +48,7 @@ const AppComponent = (props: RouteComponentProps) => {
       ) {
         return true;
       }
-      if (appTile.linksTo === "/map_viewer") {
+      if (appTile.linksTo === "/management/map_viewer") {
         return false;
       }
       return true;
