@@ -4,7 +4,7 @@ import styles from "./App.module.css";
 import AppTile from "../components/AppTile";
 import { Trail, animated } from "react-spring";
 import doArraysHaveEqualElement from '../utils/doArraysHaveEqualElement';
-import {appTiles} from './AppTileConfig';
+import {navigationLinkTiles} from './AppTileConfig';
 import {getSelectedOrganisation, getUsername} from '../reducers';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
@@ -19,11 +19,11 @@ const AppComponent = (props: RouteComponentProps) => {
       window.location.href = destination;
     }
   
-    const handleLink = (linksToObject: {path:string; external:boolean}) => {
-      if (linksToObject.external === true) {
-        handleExternalLink(linksToObject.path);
+    const handleLink = (linksToUrlObject: {path:string; external:boolean}) => {
+      if (linksToUrlObject.external === true) {
+        handleExternalLink(linksToUrlObject.path);
       } else {
-        handleInternalLink(linksToObject.path);
+        handleInternalLink(linksToUrlObject.path);
       }
     }
 
@@ -34,8 +34,9 @@ const AppComponent = (props: RouteComponentProps) => {
 
     const currentOrganisationRoles = (selectedOrganisation && selectedOrganisation.roles) || [];
 
-    const filteredAppTiles = appTiles.filter((appTile)=>{
+    const filterednavigationLinkTiles = navigationLinkTiles.filter((appTile)=>{
       if (
+        selectedOrganisation &&
         selectedOrganisation.name === "Nelen & Schuurmans" &&
         ( username === "tom.deboer" ||
           username === "lex.vandolderen" ||
@@ -48,7 +49,7 @@ const AppComponent = (props: RouteComponentProps) => {
       ) {
         return true;
       }
-      if (appTile.linksTo === "/management/map_viewer") {
+      if (appTile.linksToUrl === "/management/map_viewer") {
         return false;
       }
       return true;
@@ -67,10 +68,10 @@ const AppComponent = (props: RouteComponentProps) => {
                 native
                 from={{ opacity: 0, x: -5 }}
                 to={{ opacity: 1, x: 0 }}
-                keys={filteredAppTiles.map(item => item.title)}
+                keys={filterednavigationLinkTiles.map(item => item.title)}
               >
-                {filteredAppTiles
-                  .filter(appTile=> appTile.onPage === currentRelativeUrl )
+                {filterednavigationLinkTiles
+                  .filter(appTile=> appTile.onUrl === currentRelativeUrl )
                   .sort((appTileA, appTileB)=> appTileA.order - appTileB.order )
                   // todo resolve any. x:any because x needs to support  x.interpolate
                   .map((appTile) => (obj:{ x:any, opacity:number }) => (
@@ -82,8 +83,8 @@ const AppComponent = (props: RouteComponentProps) => {
                     >
                       <AppTile
                         handleClick={()=>{ handleLink({
-                          external: appTile.linksToExternal? true : false,
-                          path: appTile.linksTo
+                          external: appTile.linksToUrlExternal? true : false,
+                          path: appTile.linksToUrl
                         })}}
                         key={appTile.title + appTile.order + ""}
                         title={appTile.title}

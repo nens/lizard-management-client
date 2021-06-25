@@ -12,7 +12,7 @@ import { selectOrganisation } from "../actions";
 import { FormattedMessage, injectIntl } from "react-intl";
 import { Scrollbars } from "react-custom-scrollbars";
 import doArraysHaveEqualElement from '../utils/doArraysHaveEqualElement';
-import {appTiles} from '../home/AppTileConfig';
+import {navigationLinkTiles} from '../home/AppTileConfig';
 
 interface PropsArgs {
   handleClose: () => void,
@@ -79,8 +79,8 @@ const OrganisationSwitcher = (props:Props) => {
         })
       : organisations;
 
-    const currentHomeAppTile = appTiles.find(icon => {
-      return window.location.href.includes(icon.linksTo)
+    const currentHomeAppTile = navigationLinkTiles.find(icon => {
+      return window.location.href.includes(icon.linksToUrl)
     });
     // todo add type defenitions for props.intl.formatMessage
     // @ts-ignore

@@ -1,7 +1,7 @@
 import React from "react";
 import { Route, Switch, } from "react-router-dom";
 
-import {appTiles} from './AppTileConfig';
+import {navigationLinkTiles} from './AppTileConfig';
 import { App as Home } from "./App";
 
 import { PersonalApiKeysTable } from '../personal_api_keys/PersonalApiKeysTable';
@@ -53,12 +53,12 @@ export const Routes = () => {
 
   // The AppTileConfig.ts contains all the Tiles in the app. (in the future this list should come from backend, become data driven instead of hardcoded)
   // The  router should show the 'Home' component if:
-  // the current-url is in the 'onPage' field for one or more tile. Namely this means those tile(s) need to be shown on current page 
+  // the current-url is in the 'onUrl' field for one or more tile. Namely this means those tile(s) need to be shown on current page 
 
   return ( 
       <Switch>
         {
-          appTiles.map(appTile=> appTile.onPage).filter((value, index, self) => {
+          navigationLinkTiles.map(appTile=> appTile.onUrl).filter((value, index, self) => {
             return self.indexOf(value) === index;
           }).map(appTilePage=>{
             return <Route key={appTilePage} exact path={appTilePage} component={Home} />
