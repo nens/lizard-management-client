@@ -1,7 +1,7 @@
 import React from "react";
 import { Route, Switch, } from "react-router-dom";
 
-import {navigationLinkTiles} from './AppTileConfig';
+import {navigationLinkPages, navigationLinkTiles} from './AppTileConfig';
 import { App as Home } from "./App";
 
 import { PersonalApiKeysTable } from '../personal_api_keys/PersonalApiKeysTable';
@@ -58,10 +58,8 @@ export const Routes = () => {
   return ( 
       <Switch>
         {
-          navigationLinkTiles.map(appTile=> appTile.onUrl).filter((value, index, self) => {
-            return self.indexOf(value) === index;
-          }).map(appTilePage=>{
-            return <Route key={appTilePage} exact path={appTilePage} component={Home} />
+          navigationLinkPages.map(navigationLinkPage=>{
+            return <Route key={navigationLinkPage.onUrl} exact path={navigationLinkPage.onUrl} component={Home} />
           })
         }
 

@@ -31,7 +31,7 @@ import logoutIcon from './images/logout.svg';
 import editIcon from './images/edit.svg';
 import shouldRedirectBasedOnAuthorization from './home/shouldRedirectBasedOnAuthorization';
 import packageJson from '../package.json';
-import {navigationLinkTiles} from './home/AppTileConfig';
+import {navigationLinkTiles, getCurrentNavigationLinkPage} from './home/AppTileConfig';
 
 
 class App extends Component {
@@ -59,7 +59,7 @@ class App extends Component {
     window.addEventListener("resize", e => this.updateViewportDimensions(e));
     window.addEventListener("beforeunload", this.handleWindowClose);
     // only needs to be done if user is
-    // this.props.getLizardBootstrap();
+    this.props.getLizardBootstrap();
   }
   componentWillUnmount() {
     window.removeEventListener("offline", e => this.updateOnlineStatus(e));
@@ -179,22 +179,23 @@ class App extends Component {
     // Todo make a better function for this, also in organisationSwitcher
     // This find function relies on the ordering of the tiles
     // also the "!icon.onUrl.includes(icon.linksToUrl)" is needed to the back icon is not found
-    const currentHomeAppTile = navigationLinkTiles.find(icon => {
-      return window.location.href.includes(icon.linksToUrl) &&
-        // back icon cannot be current homeAppTile
-        !icon.onUrl.includes(icon.linksToUrl)
-    });
+    // const currentHomeAppTile = navigationLinkTiles.find(icon => {
+    //   return window.location.href.includes(icon.linksToUrl) &&
+    //     // back icon cannot be current homeAppTile
+    //     !icon.onUrl.includes(icon.linksToUrl)
+    // });
+    const currentNavigationLinkPage = getCurrentNavigationLinkPage();
 
-    console.log('currentHomeAppTile', currentHomeAppTile);
+    console.log('currentNavigationLinkPage', currentNavigationLinkPage);
 
-    if (
-      !this.props.bootstrap.isAuthenticated && 
-      !this.props.bootstrap.isFetching &&
-      currentHomeAppTile
+    // if (
+    //   !this.props.bootstrap.isAuthenticated && 
+    //   !this.props.bootstrap.isFetching &&
+    //   currentNavigationLinkPage
       
-      ) {
-      this.props.getLizardBootstrap();
-    }
+    //   ) {
+    //   this.props.getLizardBootstrap();
+    // }
 
     // if (shouldRedirectBasedOnAuthorization(this.props.bootstrap, this.props.selectedOrganisation)) {
     //   const redirectMessage = this.props.intl.formatMessage({ id: "authorization.redirected_based_onrole", defaultMessage: "You do not have the rights to access this data under the selected organisation. \nYou will be redirected." });
@@ -203,13 +204,13 @@ class App extends Component {
     //   this.props.history.push("/");
     // }
     
-    // if (!this.props.isAuthenticated || !this.props.selectedOrganisation) {
-    //   return (
-    //     <div className={styles.MDSpinner}>
-    //       <MDSpinner size={24} />
-    //     </div>
-    //   );
-    // } else {
+    if (!this.props.isAuthenticated || !this.props.selectedOrganisation) {
+      return (
+        <div className={styles.MDSpinner}>
+          <MDSpinner size={24} />
+        </div>
+      );
+    } else {
       const { preferredLocale, bootstrap, selectedOrganisation } = this.props;
       const firstName = bootstrap.bootstrap.user
         ? bootstrap.bootstrap.user.first_name
@@ -379,7 +380,7 @@ class App extends Component {
           ) : null}
         </div>
       );
-    // }
+    }
   }
 }
 

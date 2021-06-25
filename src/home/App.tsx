@@ -4,7 +4,7 @@ import styles from "./App.module.css";
 import AppTile from "../components/AppTile";
 import { Trail, animated } from "react-spring";
 import doArraysHaveEqualElement from '../utils/doArraysHaveEqualElement';
-import {navigationLinkTiles} from './AppTileConfig';
+import {navigationLinkTiles, getCurrentNavigationLinkTiles} from './AppTileConfig';
 import {getSelectedOrganisation, getUsername} from '../reducers';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
@@ -34,7 +34,7 @@ const AppComponent = (props: RouteComponentProps) => {
 
     const currentOrganisationRoles = (selectedOrganisation && selectedOrganisation.roles) || [];
 
-    const filterednavigationLinkTiles = navigationLinkTiles.filter((appTile)=>{
+    const filterednavigationLinkTiles = getCurrentNavigationLinkTiles().filter((navigationLinkTile)=>{
       if (
         selectedOrganisation &&
         selectedOrganisation.name === "Nelen & Schuurmans" &&
@@ -49,7 +49,7 @@ const AppComponent = (props: RouteComponentProps) => {
       ) {
         return true;
       }
-      if (appTile.linksToUrl === "/management/map_viewer") {
+      if (navigationLinkTile.linksToUrl === "/management/map_viewer") {
         return false;
       }
       return true;

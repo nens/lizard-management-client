@@ -18,7 +18,55 @@ import timeseriesIcon from "../images/timeseries_icon.svg";
 import monitoringsNetworkicon from "../images/monitoring_network_icon.svg";
 import locationsIcon from "../images/locations_icon.svg";
 
-export const navigationLinkPages = [
+export type Role = "admin"| "supplier"| "manager"| "user"
+export interface NavigationLinkPage {
+  onUrl: string,
+  needsAuthentication: boolean,
+  needsOneOfRoles: Role[],
+}
+export interface NavigationLinkTile{
+  title: string,
+  // title: (
+  //   <FormattedMessage
+  //     id="home.data_management"
+  //     defaultMessage="Data Management"
+  //   />
+  // ),
+  order: number,
+  onUrl: string,
+  linksToUrl: string,
+  requiresOneOfRoles: Role[],
+  linksToUrlExternal: boolean,
+  icon: string,
+}
+
+
+export const getNavigationLinkPageFromUrlAndAllNavigationLinkPages = (urlPostFix:string, allNavigationLinkPages:NavigationLinkPage[]) => {
+  return allNavigationLinkPages.find(navigationLinkPage => navigationLinkPage.onUrl === urlPostFix);
+}
+
+export const getCurrentNavigationLinkPage = () => {
+  const urlPostfix = window.location.href.split("/#")[1];
+  return getNavigationLinkPageFromUrlAndAllNavigationLinkPages(urlPostfix, navigationLinkPages)
+}
+
+export const getNavigationLinkTilesFromNavigationLinkPageAndAllNavigationLinkTiles = (navigationLinkPage: NavigationLinkPage, navigationLinkTiles: NavigationLinkTile[]) => {
+  return navigationLinkTiles.filter(navigationLinkTile=>navigationLinkTile.onUrl === navigationLinkPage.onUrl)
+}
+
+export const getCurrentNavigationLinkTiles = () => {
+  const currentPage = getCurrentNavigationLinkPage();
+  if (currentPage) {
+    return getNavigationLinkTilesFromNavigationLinkPageAndAllNavigationLinkTiles(currentPage,navigationLinkTiles);
+  } else{
+    return [];
+  }
+}
+
+
+
+
+export const navigationLinkPages: NavigationLinkPage[] = [
   {
     onUrl: "/",
     needsAuthentication: false,
@@ -62,7 +110,7 @@ export const navigationLinkPages = [
 ];
 
 
-export const navigationLinkTiles = [
+export const navigationLinkTiles: NavigationLinkTile[] = [
   { 
     title: "management",
     // title: (
@@ -74,6 +122,7 @@ export const navigationLinkTiles = [
     order: 100,
     onUrl: "/",
     linksToUrl: "/management",
+    linksToUrlExternal: false,
     requiresOneOfRoles: ["admin", "supplier", "manager", "user"],
     icon: dataManagementIcon,
   },
@@ -103,6 +152,7 @@ export const navigationLinkTiles = [
     order: 100,
     onUrl: "/management",
     linksToUrl: "/management/data_management",
+    linksToUrlExternal: false,
     requiresOneOfRoles: ["admin", "supplier",],
     icon: dataManagementIcon,
   },
@@ -129,6 +179,7 @@ export const navigationLinkTiles = [
     order: 300,
     onUrl: "/management",
     linksToUrl: "/management/alarms",
+    linksToUrlExternal: false,
     requiresOneOfRoles: ["admin"],
     icon: alarmIcon,
   },
@@ -143,6 +194,7 @@ export const navigationLinkTiles = [
     order: 400,
     onUrl: "/management",
     linksToUrl: "/management/personal_api_keys",
+    linksToUrlExternal: false,
     requiresOneOfRoles: ["user", "admin", "supplier", "manager"],
     icon: personalApiKeysIcon,
   },
@@ -157,6 +209,7 @@ export const navigationLinkTiles = [
     order: 500,
     onUrl: "/management",
     linksToUrl: "/management/map_viewer",
+    linksToUrlExternal: false,
     requiresOneOfRoles: ["user", "admin", "supplier", "manager"],
     icon: rasterIcon,
   },
@@ -171,6 +224,7 @@ export const navigationLinkTiles = [
     order: 600,
     onUrl: "/management",
     linksToUrl: "/",
+    linksToUrlExternal: false,
     requiresOneOfRoles: ["user", "admin", "supplier", "manager"],
     icon: backArrowIcon
   },
@@ -185,6 +239,7 @@ export const navigationLinkTiles = [
     order: 100,
     onUrl: "/management/data_management",
     linksToUrl: "/management/data_management/rasters",
+    linksToUrlExternal: false,
     requiresOneOfRoles: ["admin", "supplier",],
     icon: rasterIcon,
   },
@@ -199,6 +254,7 @@ export const navigationLinkTiles = [
     order: 200,
     onUrl: "/management/data_management",
     linksToUrl: "/management/data_management/wms_layers",
+    linksToUrlExternal: false,
     requiresOneOfRoles: ["admin", "supplier",],
     icon: wmsIcon
   },
@@ -213,6 +269,7 @@ export const navigationLinkTiles = [
     order: 250,
     onUrl: "/management/data_management",
     linksToUrl: "/management/data_management/timeseries",
+    linksToUrlExternal: false,
     requiresOneOfRoles: ["admin", "supplier",],
     icon: timeseriesIcon,
   },
@@ -227,6 +284,7 @@ export const navigationLinkTiles = [
     order: 300,
     onUrl: "/management/data_management",
     linksToUrl: "/management/data_management/scenarios",
+    linksToUrlExternal: false,
     requiresOneOfRoles: ["admin", "supplier",],
     icon: threediIcon
   },
@@ -241,6 +299,7 @@ export const navigationLinkTiles = [
     order: 400,
     onUrl: "/management/data_management",
     linksToUrl: "/management/data_management/labels",
+    linksToUrlExternal: false,
     requiresOneOfRoles: ["admin", "supplier",],
     icon: labelIcon
   },
@@ -255,6 +314,7 @@ export const navigationLinkTiles = [
     order: 400,
     onUrl: "/management/data_management",
     linksToUrl: "/management",
+    linksToUrlExternal: false,
     requiresOneOfRoles: ["admin", "supplier","user", "manager"],
     icon: backArrowIcon
   },
@@ -269,6 +329,7 @@ export const navigationLinkTiles = [
     order: 100,
     onUrl: "/management/data_management/rasters",
     linksToUrl: "/management/data_management/rasters/sources",
+    linksToUrlExternal: false,
     requiresOneOfRoles: ["admin", "supplier",],
     icon: rasterSourcesIcon
   },
@@ -283,6 +344,7 @@ export const navigationLinkTiles = [
     order: 200,
     onUrl: "/management/data_management/rasters",
     linksToUrl: "/management/data_management/rasters/layers",
+    linksToUrlExternal: false,
     requiresOneOfRoles: ["admin", "supplier",],
     icon: rasterLayersIcon,
   },
@@ -297,6 +359,7 @@ export const navigationLinkTiles = [
     order: 400,
     onUrl: "/management/data_management/rasters",
     linksToUrl: "/management/data_management",
+    linksToUrlExternal: false,
     requiresOneOfRoles: ["admin", "supplier","user", "manager"],
     icon: backArrowIcon
   },
@@ -311,6 +374,7 @@ export const navigationLinkTiles = [
     order: 100,
     onUrl: "/management/data_management/labels",
     linksToUrl: "/management/data_management/labels/label_types",
+    linksToUrlExternal: false,
     requiresOneOfRoles: ["admin", "supplier",],
     icon: labeltypesIcon
   },
@@ -325,6 +389,7 @@ export const navigationLinkTiles = [
     order: 400,
     onUrl: "/management/data_management/labels",
     linksToUrl: "/management/data_management",
+    linksToUrlExternal: false,
     requiresOneOfRoles: ["admin", "supplier","user", "manager"],
     icon: backArrowIcon
   },
@@ -339,6 +404,7 @@ export const navigationLinkTiles = [
     order: 400,
     onUrl: "/management/data_management/timeseries",
     linksToUrl: "/management/data_management/timeseries/locations",
+    linksToUrlExternal: false,
     requiresOneOfRoles: ["admin", "supplier",],
     icon: locationsIcon,
   },
@@ -353,6 +419,7 @@ export const navigationLinkTiles = [
     order: 400,
     onUrl: "/management/data_management/timeseries",
     linksToUrl: "/management/data_management/timeseries/timeseries",
+    linksToUrlExternal: false,
     requiresOneOfRoles: ["admin", "supplier",],
     icon: timeseriesIcon
   },
@@ -367,6 +434,7 @@ export const navigationLinkTiles = [
     order: 400,
     onUrl: "/management/data_management/timeseries",
     linksToUrl: "/management/data_management/timeseries/monitoring_networks",
+    linksToUrlExternal: false,
     requiresOneOfRoles: ["admin", "supplier",],
     icon: monitoringsNetworkicon,
   },
@@ -381,6 +449,7 @@ export const navigationLinkTiles = [
     order: 400,
     onUrl: "/management/data_management/timeseries",
     linksToUrl: "/management/data_management",
+    linksToUrlExternal: false,
     requiresOneOfRoles: ["admin", "supplier","user", "manager"],
     icon: backArrowIcon
   },
@@ -395,6 +464,7 @@ export const navigationLinkTiles = [
     order: 100,
     onUrl: "/management/alarms",
     linksToUrl: "/management/alarms/notifications",
+    linksToUrlExternal: false,
     requiresOneOfRoles: ["admin",],
     icon: alarmsIcon,
   },
@@ -409,6 +479,7 @@ export const navigationLinkTiles = [
     order: 200,
     onUrl: "/management/alarms",
     linksToUrl: "/management/alarms/groups",
+    linksToUrlExternal: false,
     requiresOneOfRoles: ["admin",],
     icon: groupsIcon
   },
@@ -423,6 +494,7 @@ export const navigationLinkTiles = [
     order: 300,
     onUrl: "/management/alarms",
     linksToUrl: "/management/alarms/contacts",
+    linksToUrlExternal: false,
     requiresOneOfRoles: ["admin",],
     icon: contactsIcon
   },
@@ -437,6 +509,7 @@ export const navigationLinkTiles = [
     order: 400,
     onUrl: "/management/alarms",
     linksToUrl: "/management/alarms/templates",
+    linksToUrlExternal: false,
     requiresOneOfRoles: ["admin",],
     icon: templatesIcon,
   },
@@ -451,6 +524,7 @@ export const navigationLinkTiles = [
     order: 500,
     onUrl: "/management/alarms",
     linksToUrl: "/management",
+    linksToUrlExternal: false,
     requiresOneOfRoles: ["admin", "supplier","user", "manager"],
     icon: backArrowIcon
   },
@@ -465,6 +539,7 @@ export const navigationLinkTiles = [
     order: 100,
     onUrl: "/management/alarms/notifications",
     linksToUrl: "/management/alarms/notifications/raster_alarms",
+    linksToUrlExternal: false,
     requiresOneOfRoles: ["admin",],
     icon: alarmsIcon,
   },
@@ -479,6 +554,7 @@ export const navigationLinkTiles = [
     order: 200,
     onUrl: "/management/alarms/notifications",
     linksToUrl: "/management/alarms/notifications/timeseries_alarms",
+    linksToUrlExternal: false,
     requiresOneOfRoles: ["admin",],
     icon: alarmsIcon,
   },
@@ -493,6 +569,7 @@ export const navigationLinkTiles = [
     order: 300,
     onUrl: "/management/alarms/notifications",
     linksToUrl: "/management/alarms",
+    linksToUrlExternal: false,
     requiresOneOfRoles: ["admin", "supplier","user", "manager"],
     icon: backArrowIcon
   },
