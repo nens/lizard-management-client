@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
+import React, { useState, useEffect } from "react";
+import { connect, useSelector } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import MDSpinner from "react-md-spinner";
 import { fetchTaskInstance } from "./api/tasks";
@@ -12,6 +12,7 @@ import {
   updateTaskStatus,
   removeFileFromQueue
 } from "./actions";
+import {getBootstrap} from './reducers';
 import {Routes} from './home/Routes';
 import {NavLink } from "react-router-dom";
 import LanguageSwitcher from "./components/LanguageSwitcher";
@@ -34,80 +35,87 @@ import packageJson from '../package.json';
 import {navigationLinkTiles, getCurrentNavigationLinkPage} from './home/AppTileConfig';
 
 
-class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      showOrganisationSwitcher: false,
-      showProfileList: false,
-      showUploadQueue: false
-    };
-    this.updateOnlineStatus = this.updateOnlineStatus.bind(this);
-    this.updateViewportDimensions = this.updateViewportDimensions.bind(this);
-    this.handleWindowClose = this.handleWindowClose.bind(this);
-  }
-  //Click the user-profile button open the dropdown
-  //Click anywhere outside of the user-profile modal will close the modal
-  onUserProfileClick = (e) => {
-    return e.target.id === "user-profile" ? 
-      this.setState({ showProfileList: !this.state.showProfileList }) : 
-      this.setState({ showProfileList: false });
-  }
+const App = (props) => {
 
-  componentDidMount() {
-    window.addEventListener("offline", e => this.updateOnlineStatus(e));
-    window.addEventListener("resize", e => this.updateViewportDimensions(e));
-    window.addEventListener("beforeunload", this.handleWindowClose);
-    // only needs to be done if user is
-    this.props.getLizardBootstrap();
-  }
-  componentWillUnmount() {
-    window.removeEventListener("offline", e => this.updateOnlineStatus(e));
-    window.removeEventListener("resize", e => this.updateViewportDimensions(e));
-    window.removeEventListener("beforeunload", this.handleWindowClose);
-  }
-  componentWillReceiveProps(props) {
-    if (props.isAuthenticated) {
-      if (props.mustFetchOrganisations) props.getOrganisations();
-      if (props.mustFetchDatasets) props.getDatasets();
-    }
-  }
-  updateOnlineStatus(e) {
-    const { addNotification } = this.props;
-    addNotification(`Your internet connection seems to be ${e.type}`, 2000);
-  }
-  updateViewportDimensions() {
-    const { updateViewportDimensions } = this.props;
-    const { innerWidth, innerHeight } = window;
-    updateViewportDimensions(innerWidth, innerHeight);
-  }
-  handleWindowClose(e) {
-    e.preventDefault();
-    if (this.props.uploadingFiles && this.props.uploadingFiles.length > 0) {
-      return e.returnValue = "";
-    } else {
-      return null;
-    };
-  }
+  const bootstrap = useSelector(getBootstrap);
+  console.log('bootstrap', bootstrap);
 
-  // Poll the task endpoint to update status of uploading/processing files in the queue
-  componentDidUpdate(prevProps) {
-    if (this.props.uploadFiles && prevProps.uploadFiles !== this.props.uploadFiles) {
-      const firstFileInTheQueue = this.props.filesInProcess[0];
+  useEffect(() => {
+    props.fetchLizardBootstrap();
+  }, []);
+  // constructor(props) {
+  //   super(props);
+  //   this.state = {
+  //     showOrganisationSwitcher: false,
+  //     showProfileList: false,
+  //     showUploadQueue: false
+  //   };
+  //   this.updateOnlineStatus = this.updateOnlineStatus.bind(this);
+  //   this.updateViewportDimensions = this.updateViewportDimensions.bind(this);
+  //   this.handleWindowClose = this.handleWindowClose.bind(this);
+  // }
+  // //Click the user-profile button open the dropdown
+  // //Click anywhere outside of the user-profile modal will close the modal
+  // onUserProfileClick = (e) => {
+  //   return e.target.id === "user-profile" ? 
+  //     this.setState({ showProfileList: !this.state.showProfileList }) : 
+  //     this.setState({ showProfileList: false });
+  // }
 
-      if (this.props.filesInProcess.length === 0 || !firstFileInTheQueue || !firstFileInTheQueue.uuid) return;
+  // componentDidMount() {
+  //   window.addEventListener("offline", e => this.updateOnlineStatus(e));
+  //   window.addEventListener("resize", e => this.updateViewportDimensions(e));
+  //   window.addEventListener("beforeunload", this.handleWindowClose);
+  //   // only needs to be done if user is
+  //   this.props.getLizardBootstrap();
+  // }
+  // componentWillUnmount() {
+  //   window.removeEventListener("offline", e => this.updateOnlineStatus(e));
+  //   window.removeEventListener("resize", e => this.updateViewportDimensions(e));
+  //   window.removeEventListener("beforeunload", this.handleWindowClose);
+  // }
+  // componentWillReceiveProps(props) {
+  //   if (props.isAuthenticated) {
+  //     if (props.mustFetchOrganisations) props.getOrganisations();
+  //     if (props.mustFetchDatasets) props.getDatasets();
+  //   }
+  // }
+  // updateOnlineStatus(e) {
+  //   const { addNotification } = this.props;
+  //   addNotification(`Your internet connection seems to be ${e.type}`, 2000);
+  // }
+  // updateViewportDimensions() {
+  //   const { updateViewportDimensions } = this.props;
+  //   const { innerWidth, innerHeight } = window;
+  //   updateViewportDimensions(innerWidth, innerHeight);
+  // }
+  // handleWindowClose(e) {
+  //   e.preventDefault();
+  //   if (this.props.uploadingFiles && this.props.uploadingFiles.length > 0) {
+  //     return e.returnValue = "";
+  //   } else {
+  //     return null;
+  //   };
+  // }
 
-      setTimeout(() => {
-        fetchTaskInstance(firstFileInTheQueue.uuid)
-          .then(response => {
-            this.props.updateTaskStatus(firstFileInTheQueue.uuid, response.status);
-          })
-          .catch(e => console.error(e))
-      }, 5000);
-    };
-  };
+  // // Poll the task endpoint to update status of uploading/processing files in the queue
+  // componentDidUpdate(prevProps) {
+  //   if (this.props.uploadFiles && prevProps.uploadFiles !== this.props.uploadFiles) {
+  //     const firstFileInTheQueue = this.props.filesInProcess[0];
 
-  renderProfileList() {
+  //     if (this.props.filesInProcess.length === 0 || !firstFileInTheQueue || !firstFileInTheQueue.uuid) return;
+
+  //     setTimeout(() => {
+  //       fetchTaskInstance(firstFileInTheQueue.uuid)
+  //         .then(response => {
+  //           this.props.updateTaskStatus(firstFileInTheQueue.uuid, response.status);
+  //         })
+  //         .catch(e => console.error(e))
+  //     }, 5000);
+  //   };
+  // };
+
+  const renderProfileList = () => {
     return (
       <div
         className={styles.DropdownMenu}
@@ -164,17 +172,17 @@ class App extends Component {
     );
   };
 
-  render() {
-    if ( 
-      this.props.availableOrganisations.length === 0 && 
-      this.props.isFetchingOrganisations === false &&
-      this.props.timesFetchedOrganisations > 0
-    ) {
-      const norolesMessage = this.props.intl.formatMessage({ id: "authorization.no_roles_message", defaultMessage: "Dear user, \nYou seem not to be in any organisations that can access the management pages. \nTherefore you are redirected to the mainpage." });
-      alert(norolesMessage);
-      // should redirect to <customer_url>.lizard.net on prod
-      window.location = "/";
-    }
+  
+    // if ( 
+    //   this.props.availableOrganisations.length === 0 && 
+    //   this.props.isFetchingOrganisations === false &&
+    //   this.props.timesFetchedOrganisations > 0
+    // ) {
+    //   const norolesMessage = this.props.intl.formatMessage({ id: "authorization.no_roles_message", defaultMessage: "Dear user, \nYou seem not to be in any organisations that can access the management pages. \nTherefore you are redirected to the mainpage." });
+    //   alert(norolesMessage);
+    //   // should redirect to <customer_url>.lizard.net on prod
+    //   window.location = "/";
+    // }
 
     // Todo make a better function for this, also in organisationSwitcher
     // This find function relies on the ordering of the tiles
@@ -204,21 +212,23 @@ class App extends Component {
     //   this.props.history.push("/");
     // }
     
-    if (!this.props.isAuthenticated || !this.props.selectedOrganisation) {
-      return (
-        <div className={styles.MDSpinner}>
-          <MDSpinner size={24} />
-        </div>
-      );
-    } else {
-      const { preferredLocale, bootstrap, selectedOrganisation } = this.props;
-      const firstName = bootstrap.bootstrap.user
-        ? bootstrap.bootstrap.user.first_name
-        : "...";
-      const { showOrganisationSwitcher } = this.state;
+    // if (!this.props.isAuthenticated || !this.props.selectedOrganisation) {
+    //   return (
+    //     <div className={styles.MDSpinner}>
+    //       <MDSpinner size={24} />
+    //     </div>
+    //   );
+    // } else {
+      // const { preferredLocale, bootstrap, selectedOrganisation } = this.props;
+      // const firstName = bootstrap.bootstrap.user
+      //   ? bootstrap.bootstrap.user.first_name
+      //   : "...";
+      // const { showOrganisationSwitcher } = this.state;
 
       return (
-        <div className={styles.App} onClick={this.onUserProfileClick}>
+        <div className={styles.App} 
+        // onClick={this.onUserProfileClick}
+        >
           <div className={`${styles.Primary}`}>
             <div className={gridStyles.Container}>
               <div className={gridStyles.Row}>
@@ -242,7 +252,7 @@ class App extends Component {
                         Apps
                       </a>
                     </div>
-                    <div
+                    {/* <div
                       className={styles.Profile}
                       onClick={() => {
                         this.setState({
@@ -288,9 +298,9 @@ class App extends Component {
                         <span className={styles.UserName} id="user-profile">{firstName}</span>
                       </div>
                       {this.state.showProfileList && this.renderProfileList()}
-                    </div>
+                        </div>*/}
                   </div>
-                </div>
+                </div> 
               </div>
             </div>
           </div>
@@ -299,7 +309,7 @@ class App extends Component {
               <div className={gridStyles.Row}>
                 <Breadcrumbs
                   // The same location is needed to calculate the breadcrumbs.
-                  location= {this.props.location}
+                  location= {props.location}
                 />
               </div>
             </div>
@@ -335,13 +345,13 @@ class App extends Component {
                 >
                   <div className={styles.FooterRightWrapper}>
                     <div style={{ margin: "0 10px 0 10px" }}>
-                      <LanguageSwitcher
+                      {/* <LanguageSwitcher
                         locale={preferredLocale}
                         languages={[
                           { code: "nl", language: "Nederlands" },
                           { code: "en", language: "English" }
                         ]}
-                      />
+                      /> */}
                     </div>
                     <div>
                       <a
@@ -366,70 +376,69 @@ class App extends Component {
               </div>
             </div>
           </footer>
-          {showOrganisationSwitcher ? (
+          {/* {showOrganisationSwitcher ? (
             <OrganisationSwitcher
               handleClose={() =>
                 this.setState({ showOrganisationSwitcher: false })}
             />
-          ) : null}
-          <Snackbar />
+          ) : null} */}
+          {/* <Snackbar />
           {this.state.showUploadQueue ? (
             <UploadQueue
               handleClose={() => this.setState({ showUploadQueue: false })}
             />
-          ) : null}
+          ) : null} */}
         </div>
       );
-    }
-  }
+  // }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  return {
-    isFetching: state.isFetching,
-    bootstrap: state.bootstrap,
-    isAuthenticated: state.bootstrap.isAuthenticated,
-    uploadFiles: state.uploadFiles,
-    uploadingFiles:
-      state.uploadFiles &&
-      state.uploadFiles.length > 0 &&
-      state.uploadFiles.filter(file => file.status === 'WAITING' || file.status === 'UPLOADING'),
-    filesInProcess:
-      state.uploadFiles &&
-      state.uploadFiles.length > 0 &&
-      state.uploadFiles.filter(file => file.status !== 'SUCCESS' && file.status !== 'FAILED'),
+// const mapStateToProps = (state, ownProps) => {
+//   return {
+    // isFetching: state.isFetching,
+    // bootstrap: state.bootstrap,
+    // isAuthenticated: state.bootstrap.isAuthenticated,
+    // uploadFiles: state.uploadFiles,
+    // uploadingFiles:
+    //   state.uploadFiles &&
+    //   state.uploadFiles.length > 0 &&
+    //   state.uploadFiles.filter(file => file.status === 'WAITING' || file.status === 'UPLOADING'),
+    // filesInProcess:
+    //   state.uploadFiles &&
+    //   state.uploadFiles.length > 0 &&
+    //   state.uploadFiles.filter(file => file.status !== 'SUCCESS' && file.status !== 'FAILED'),
 
-    mustFetchOrganisations:
-      state.organisations.available.length === 0 &&
-      !state.organisations.isFetching &&
-      state.organisations.timesFetched < 1,
+    // mustFetchOrganisations:
+    //   state.organisations.available.length === 0 &&
+    //   !state.organisations.isFetching &&
+    //   state.organisations.timesFetched < 1,
 
-    selectedOrganisation: state.organisations.selected,
-    availableOrganisations: state.organisations.available,
-    isFetchingOrganisations: state.organisations.isFetching,
-    timesFetchedOrganisations: state.organisations.timesFetched,
+    // selectedOrganisation: state.organisations.selected,
+    // availableOrganisations: state.organisations.available,
+    // isFetchingOrganisations: state.organisations.isFetching,
+    // timesFetchedOrganisations: state.organisations.timesFetched,
 
-    mustFetchDatasets:
-      state.datasets.available.length === 0 &&
-      !state.datasets.isFetching &&
-      state.datasets.timesFetched < 1
-  };
-};
+    // mustFetchDatasets:
+    //   state.datasets.available.length === 0 &&
+    //   !state.datasets.isFetching &&
+    //   state.datasets.timesFetched < 1
+//   };
+// };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    getLizardBootstrap: () => dispatch(fetchLizardBootstrap()),
-    getOrganisations: () => dispatch(fetchOrganisations()),
-    getDatasets: () => dispatch(fetchDatasets()),
-    addNotification: (message, timeout) => {
-      dispatch(addNotification(message, timeout));
-    },
-    updateViewportDimensions: (width, height) => {
-      dispatch(updateViewportDimensions(width, height))
-    },
-    updateTaskStatus: (uuid, status) => dispatch(updateTaskStatus(uuid, status)),
-    removeFileFromQueue: (file) => dispatch(removeFileFromQueue(file)),
+    fetchLizardBootstrap: () => dispatch(fetchLizardBootstrap()),
+    // getOrganisations: () => dispatch(fetchOrganisations()),
+    // getDatasets: () => dispatch(fetchDatasets()),
+    // addNotification: (message, timeout) => {
+    //   dispatch(addNotification(message, timeout));
+    // },
+    // updateViewportDimensions: (width, height) => {
+    //   dispatch(updateViewportDimensions(width, height))
+    // },
+    // updateTaskStatus: (uuid, status) => dispatch(updateTaskStatus(uuid, status)),
+    // removeFileFromQueue: (file) => dispatch(removeFileFromQueue(file)),
   };
 };
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(injectIntl(App)));
+export default withRouter(connect(null, mapDispatchToProps)(injectIntl(App)));

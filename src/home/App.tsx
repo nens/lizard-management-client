@@ -89,7 +89,10 @@ const AppComponent = (props: RouteComponentProps) => {
                         key={appTile.title + appTile.order + ""}
                         title={appTile.title}
                         icon={appTile.icon}
-                        readonly={!doArraysHaveEqualElement(appTile.requiresOneOfRoles, currentOrganisationRoles)}
+                        readonly={
+                          !doArraysHaveEqualElement(appTile.requiresOneOfRoles, currentOrganisationRoles) &&
+                          appTile.requiresOneOfRoles.length !== 0
+                        }
                         requiredRoles={appTile.requiresOneOfRoles}
                       />
                     </animated.div>

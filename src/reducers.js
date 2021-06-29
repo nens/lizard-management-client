@@ -30,7 +30,7 @@ import {
 function bootstrap(
   state = {
     bootstrap: {},
-    isAuthenticated: null,
+    isAuthenticated: false,
     isFetching: false
   },
   action

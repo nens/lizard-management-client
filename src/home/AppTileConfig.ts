@@ -138,7 +138,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     onUrl: "/",
     linksToUrl: "/catalogue",
     linksToUrlExternal: true,
-    requiresOneOfRoles: ["user", "admin", "supplier", "manager"],
+    requiresOneOfRoles: [],
     icon: dataManagementIcon,
   },
   { 
@@ -225,7 +225,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     onUrl: "/management",
     linksToUrl: "/",
     linksToUrlExternal: false,
-    requiresOneOfRoles: ["user", "admin", "supplier", "manager"],
+    requiresOneOfRoles: [],
     icon: backArrowIcon
   },
   { 
@@ -315,7 +315,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     onUrl: "/management/data_management",
     linksToUrl: "/management",
     linksToUrlExternal: false,
-    requiresOneOfRoles: ["admin", "supplier","user", "manager"],
+    requiresOneOfRoles: [],
     icon: backArrowIcon
   },
   {
@@ -360,7 +360,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     onUrl: "/management/data_management/rasters",
     linksToUrl: "/management/data_management",
     linksToUrlExternal: false,
-    requiresOneOfRoles: ["admin", "supplier","user", "manager"],
+    requiresOneOfRoles: [],
     icon: backArrowIcon
   },
   {
@@ -390,7 +390,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     onUrl: "/management/data_management/labels",
     linksToUrl: "/management/data_management",
     linksToUrlExternal: false,
-    requiresOneOfRoles: ["admin", "supplier","user", "manager"],
+    requiresOneOfRoles: [],
     icon: backArrowIcon
   },
   {
@@ -450,7 +450,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     onUrl: "/management/data_management/timeseries",
     linksToUrl: "/management/data_management",
     linksToUrlExternal: false,
-    requiresOneOfRoles: ["admin", "supplier","user", "manager"],
+    requiresOneOfRoles: [],
     icon: backArrowIcon
   },
   {
@@ -525,7 +525,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     onUrl: "/management/alarms",
     linksToUrl: "/management",
     linksToUrlExternal: false,
-    requiresOneOfRoles: ["admin", "supplier","user", "manager"],
+    requiresOneOfRoles: [],
     icon: backArrowIcon
   },
   {
@@ -570,7 +570,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     onUrl: "/management/alarms/notifications",
     linksToUrl: "/management/alarms",
     linksToUrlExternal: false,
-    requiresOneOfRoles: ["admin", "supplier","user", "manager"],
+    requiresOneOfRoles: [],
     icon: backArrowIcon
   },
 ];

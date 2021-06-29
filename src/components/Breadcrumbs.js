@@ -43,7 +43,7 @@ class Breadcrumbs extends Component {
         className={`${styles.BreadcrumbsContainer} ${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
       >
         <NavLink to="/" style={{ overflowX: "hidden" }}>
-          Management
+          
         </NavLink>
         {breadcrumbs}
       </div>
