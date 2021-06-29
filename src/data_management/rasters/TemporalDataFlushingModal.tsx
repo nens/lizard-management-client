@@ -55,7 +55,7 @@ function TemporalDataFlushingModal (props: MyProps & DispatchProps) {
       })
     }).then(res => {
       setBusyDeleting(false);
-      if (res.status === 204) {
+      if (res.status === 200) {
         props.handleClose();
         props.addNotification('Raster source partial data flushed successfully!', 2000);
       } else if (res.status === 403) {
