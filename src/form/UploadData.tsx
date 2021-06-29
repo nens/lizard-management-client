@@ -87,19 +87,17 @@ export const UploadData: React.FC<MyProps> = (props) => {
 
       // Use moment.js to re-format the date string from YYYYMMDDTHHMM to YYYY-MM-DDTHH:MM
       const dateStrReformatted = (
+        dateStrFromFile ? dateStrFromFile[0] :
         dateStrFromUTCFile ? moment(dateStrFromUTCFile[0]).format("YYYY-MM-DDTHH:mm:ss") :
         dateStrFromUTCNonISO8601 && dateStrFromUTCNonISO8601WithoutDash ? moment(dateStrFromUTCNonISO8601WithoutDash).format("YYYY-MM-DDTHH:mm:ss") :
         null
       );
 
-      let dateObjFromFile: Date;
-      if (dateStrFromFile) {
-        dateObjFromFile = new Date(dateStrFromFile[0]);
-      } else if (dateStrReformatted) {
-        dateObjFromFile = new Date(dateStrReformatted);
-      } else {
-        dateObjFromFile = new Date();
-      };
+      // Add Z to the end of the date string to specify that the date time is in UTC
+      const dateStrReformattedInUTC = dateStrReformatted && (dateStrReformatted + 'Z');
+
+      // Convert to Date object
+      const dateObjFromFile: Date = dateStrReformattedInUTC ? new Date(dateStrReformattedInUTC) : new Date();
 
       const fileDateValid = isValidDateObj(dateObjFromFile);
       return {
