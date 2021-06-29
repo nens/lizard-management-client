@@ -92,13 +92,13 @@ export const UploadData: React.FC<MyProps> = (props) => {
         null
       );
 
-      let dateObjFromFile;
+      let dateObjFromFile: Date;
       if (dateStrFromFile) {
-        dateObjFromFile = new Date(dateStrFromFile[0])
+        dateObjFromFile = new Date(dateStrFromFile[0]);
       } else if (dateStrReformatted) {
-        dateObjFromFile = new Date(dateStrReformatted)
+        dateObjFromFile = new Date(dateStrReformatted);
       } else {
-        dateObjFromFile = new Date()
+        dateObjFromFile = new Date();
       };
 
       const fileDateValid = isValidDateObj(dateObjFromFile);
