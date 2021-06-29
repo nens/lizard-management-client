@@ -71,14 +71,26 @@ export const UploadData: React.FC<MyProps> = (props) => {
 
     // convert files to Objects with Date
     const filesData = newFilesNonDuplicates.map(file => {
+      // If user uploads a file in the standard ISO 8601 UTC format e.g. 2015-10-29T10:11:40
       const regex = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?/gm;
-      const regexUTC = /\d{8}T(\d{4}|\d{6})?/gm;
       const dateStrFromFile = (file.name + "").match(regex);
 
-      // If user upload a file with file name in UTC format without the dash (-) sign then match it with regexUTC
+      // If user upload a file with file name in UTC format without the dash (-) sign e.g. 20151029T101140
+      const regexUTC = /\d{8}T(\d{6}|\d{4})?/gm;
       const dateStrFromUTCFile = (file.name + "").match(regexUTC);
+
+      // If user uploads a file in YYYY-MM-DDTHHmmss which is valid for the FTP import e.g. 2015-10-29T101140
+      const regexUTCNonISO8601 = /\d{4}-\d{2}-\d{2}T(\d{6}|\d{4})?/gm;
+      const dateStrFromUTCNonISO8601 = (file.name + "").match(regexUTCNonISO8601);
+      // Remove all dashes (-) from dateStrFromUTCNonISO8601 to convert it to YYYYMMDDTHHMM
+      const dateStrFromUTCNonISO8601WithoutDash = dateStrFromUTCNonISO8601 ? dateStrFromUTCNonISO8601[0].replaceAll('-', '') : null;
+
       // Use moment.js to re-format the date string from YYYYMMDDTHHMM to YYYY-MM-DDTHH:MM
-      const dateStrReformatted = dateStrFromUTCFile && moment(dateStrFromUTCFile[0]).format("YYYY-MM-DDTHH:mm")
+      const dateStrReformatted = (
+        dateStrFromUTCFile ? moment(dateStrFromUTCFile[0]).format("YYYY-MM-DDTHH:mm:ss") :
+        dateStrFromUTCNonISO8601 && dateStrFromUTCNonISO8601WithoutDash ? moment(dateStrFromUTCNonISO8601WithoutDash).format("YYYY-MM-DDTHH:mm:ss") :
+        null
+      );
 
       let dateObjFromFile;
       if (dateStrFromFile) {
@@ -117,7 +129,7 @@ export const UploadData: React.FC<MyProps> = (props) => {
       {isDragActive ? (
         <span>Drop selected files here ...</span>
       ) : (
-        <span>Drag and drop {fileTypes.includes('.csv') ? '.csv' : '.tiff'} files here or
+        <span>Drag and drop {fileTypes.includes('.csv') ? '.csv' : '.tif'} files here or
           <span
             className={buttonStyles.NewButton}
             style={{ marginLeft: 10}}
