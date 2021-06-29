@@ -108,7 +108,7 @@ export const UploadData: React.FC<MyProps> = (props) => {
       };
     });
 
-    setData(data.concat(filesData));
+    return setData(data.concat(filesData));
   };
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
