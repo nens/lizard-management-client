@@ -1,0 +1,68 @@
+
+.ProfileIcon {
+  padding-right: 8px;
+}
+
+.UserName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.Profile {
+  width: 174px;
+  cursor: pointer;
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  background-color: transparent;
+  color: white;
+  border: none;
+  padding-right: 10px;
+}
+
+.Profile > a {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.Profile:hover {
+  background-color: var(--color-header-hover);
+}
+
+.DropdownMenu {
+  font-size: 16px;
+  display: flex;
+  flex-direction: column;
+  z-index: 1;
+  margin: 0 !important;
+
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 210px;
+
+  border: 1px solid rgba(0, 0, 0, .15);
+  background-color: #fafafa;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+}
+.DropdownMenu a {
+
+  text-decoration: none;
+  color: #333;
+  padding: 6px 10px;
+  padding-left: 14px;
+}
+.DropdownMenu a:hover {
+  background-color: #e5e5e5;
+}
+.DropdownMenuRow {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}

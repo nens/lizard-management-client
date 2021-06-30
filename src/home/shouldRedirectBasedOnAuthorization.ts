@@ -33,7 +33,7 @@ const shouldRedirectBasedOnAuthorization = function (bootstrap:any, selectedOrga
     // only link back if it is not already the home page tile
     ((currentHomeAppTile && currentHomeAppTile.linksToUrl !== "/") || !currentHomeAppTile)  &&
     // only link back if the user is actually already autheniticated
-    bootstrap && bootstrap.isAuthenticated &&
+    bootstrap && bootstrap.bootstrap && bootstrap.bootstrap.user && bootstrap.bootstrap.user.authenticated &&
     selectedOrganisation &&
     !doArraysHaveEqualElement(((selectedOrganisation.roles) || []), (currentHomeAppTile && currentHomeAppTile.requiresOneOfRoles) || ["user", "manager", "supplier", "admin"])
     ) {

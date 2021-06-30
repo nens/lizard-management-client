@@ -33,6 +33,7 @@ import editIcon from './images/edit.svg';
 import shouldRedirectBasedOnAuthorization from './home/shouldRedirectBasedOnAuthorization';
 import packageJson from '../package.json';
 import {navigationLinkTiles, getCurrentNavigationLinkPage} from './home/AppTileConfig';
+import LoginProfileDropdown from "./components/LoginProfileDropdown";
 
 
 const App = (props) => {
@@ -288,8 +289,9 @@ const App = (props) => {
                           ? selectedOrganisation.name
                           : "Select organisation"}
                       </button>
-                    </div>
-                    <div
+                    </div>*/}
+
+                    {/* <div
                       className={styles.Profile}
                       id="user-profile"
                     >
@@ -299,7 +301,9 @@ const App = (props) => {
                       </div>
                       {this.state.showProfileList && this.renderProfileList()}
                         </div>*/}
-                  </div>
+                    <LoginProfileDropdown/>
+                  </div> 
+
                 </div> 
               </div>
             </div>

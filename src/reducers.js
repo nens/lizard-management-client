@@ -30,8 +30,7 @@ import {
 function bootstrap(
   state = {
     bootstrap: {},
-    isAuthenticated: false,
-    isFetching: false
+    isFetching: true
   },
   action
 ) {
@@ -42,7 +41,6 @@ function bootstrap(
       return {
         ...state,
         bootstrap: action.data,
-        isAuthenticated: action.data.user.authenticated,
         isFetching: false
       };
     default:
@@ -280,6 +278,37 @@ function uploadFiles(state = null, action) {
 export const getBootstrap = (state) => {
   return state.bootstrap;
 };
+export const getUserAuthenticated = (state) => {
+  return !state.bootstrap.isFetching && state.bootstrap.bootstrap.user && state.bootstrap.bootstrap.user.authenticated;
+};
+export const getSsoLogin = (state) => {
+  if (state.bootstrap.isFetching) {
+    return "";
+  } else if (!state.bootstrap.bootstrap.sso) {
+    return ""
+  } else {
+    return state.bootstrap.bootstrap.sso.login;
+  }
+}
+export const getSsoLogout = (state) => {
+  if (state.bootstrap.isFetching) {
+    return "";
+  } else if (!state.bootstrap.bootstrap.sso) {
+    return ""
+  } else {
+    return state.bootstrap.bootstrap.sso.logout;
+  }
+}
+
+export const getUserFirstName = (state) => {
+  if (state.bootstrap.isFetching) {
+    return "";
+  } else if (!state.bootstrap.bootstrap.user) {
+    return ""
+  } else {
+    return state.bootstrap.bootstrap.user.first_name;
+  }
+}
 
 export const getUsername = (state) => {
   return (state.bootstrap && state.bootstrap.bootstrap && state.bootstrap.bootstrap.user &&  state.bootstrap.bootstrap.user.username) || null;
