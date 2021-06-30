@@ -116,64 +116,6 @@ const App = (props) => {
   //   };
   // };
 
-  const renderProfileList = () => {
-    return (
-      <div
-        className={styles.DropdownMenu}
-        onMouseLeave={() => this.setState({showProfileList: false})}
-      >
-        <a
-          className={styles.DropdownMenuRow}
-          href="https://sso.lizard.net/edit_profile/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img src={editIcon} alt={'Profile'} />
-          <span>Profile</span>
-        </a>
-        {/* language switcher no longer needed, but we might need it in future */}
-        {/* <LanguageSwitcher
-          locale={preferredLocale}
-          languages={[
-            { code: "nl", language: "Nederlands" },
-            { code: "en", language: "English" }
-          ]}
-        /> */}
-        <a
-          className={styles.DropdownMenuRow}
-          href="https://nelen-schuurmans.topdesk.net/tas/public/ssp"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img src={helpIcon} alt={'Help'} />
-          <span>Help</span>
-        </a>
-        <a
-          className={styles.DropdownMenuRow}
-          href="https://docs.lizard.net/a_lizard.html"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img src={documentIcon} alt={'Documentation'} />
-          <span>
-            <FormattedMessage
-              id="index.documentation"
-              defaultMessage="Documentation"
-            />
-          </span>
-        </a>
-        <a
-          className={styles.DropdownMenuRow}
-          href="/accounts/logout/"
-        >
-          <img src={logoutIcon} alt={'Logout'} />
-          <span>Logout</span>
-        </a>
-      </div>
-    );
-  };
-
-  
     // if ( 
     //   this.props.availableOrganisations.length === 0 && 
     //   this.props.isFetchingOrganisations === false &&
@@ -291,16 +233,6 @@ const App = (props) => {
                       </button>
                     </div>*/}
 
-                    {/* <div
-                      className={styles.Profile}
-                      id="user-profile"
-                    >
-                      <div className={styles.UserProfile} id="user-profile">
-                        <i className="fa fa-user" style={{ paddingRight: 8 }} id="user-profile"/>
-                        <span className={styles.UserName} id="user-profile">{firstName}</span>
-                      </div>
-                      {this.state.showProfileList && this.renderProfileList()}
-                        </div>*/}
                     <LoginProfileDropdown/>
                   </div> 
 

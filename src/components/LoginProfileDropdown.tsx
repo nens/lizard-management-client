@@ -1,7 +1,7 @@
 import React from 'react';
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import styles from './LoginProfileDropdown.module.css';
-import { connect, useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
 import {
   getBootstrap, 
   getUserAuthenticated,
@@ -9,34 +9,12 @@ import {
   getSsoLogout,
   getUserFirstName,
 } from '../reducers';
-import { FormattedMessage, injectIntl } from "react-intl";
+import { FormattedMessage, } from "react-intl";
 
 import helpIcon from '../images/help.svg'
 import documentIcon from '../images/document.svg';
 import logoutIcon from '../images/logout.svg';
 import editIcon from '../images/edit.svg';
-
-
-// interface BootstrapUser {
-//   first_name: string,
-//   username: string,
-//   authenticated: boolean,
-//   id: string | null
-// }
-
-// interface BootstrapSso {
-//   login: string,
-//   logout: string,
-// }
-
-// interface Bootstrap {
-//   user: BootstrapUser
-//   sso: BootstrapSso
-// }
-
-// interface Props {
-//   bootstrap: Bootstrap
-// }
 
 const LoginProfileDropdown = () => {
 
@@ -46,10 +24,7 @@ const LoginProfileDropdown = () => {
   const ssoLogout = useSelector(getSsoLogout);
   const userFirstName = useSelector(getUserFirstName)
 
-  console.log('bootstrap LoginProfileDropdown', bootstrap, authenticated, ssoLogin, ssoLogout);
-
   const [dropDownOpen, setDropdownOpen] = useState(false);
-
 
   return (
     <div 
@@ -67,7 +42,7 @@ const LoginProfileDropdown = () => {
         <span>Login</span>
       </a>
       
-      <a
+      <button
         onClick={()=>{
           setDropdownOpen(true);
         }}
@@ -75,7 +50,7 @@ const LoginProfileDropdown = () => {
       >
         <i className={`fa fa-user ${styles.ProfileIcon}`}/>
         <span className={styles.UserName} >{userFirstName}</span>
-      </a>
+      </button>
 
       <div
         className={styles.DropdownMenu}
@@ -124,7 +99,6 @@ const LoginProfileDropdown = () => {
         </a>
         <a
           className={styles.DropdownMenuRow}
-          // href="/accounts/logout/"
           href={ssoLogout}
         >
           <img src={logoutIcon} alt={'Logout'} />

@@ -1,3 +1,37 @@
+.Profile {
+  width: 174px;
+  cursor: pointer;
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.Profile > a,
+.Profile > button{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding-right: 10px;
+  /* override button style */
+  background-color: transparent;
+  color: white;
+  border: none;
+
+}
+
+/* remove outline when clicked / focussed */
+.Profile > button:active,
+.Profile > button:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.Profile:hover {
+  background-color: var(--color-header-hover);
+}
 
 .ProfileIcon {
   padding-right: 8px;
@@ -6,31 +40,6 @@
 .UserName {
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-.Profile {
-  width: 174px;
-  cursor: pointer;
-  position: relative;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  background-color: transparent;
-  color: white;
-  border: none;
-  padding-right: 10px;
-}
-
-.Profile > a {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-}
-
-.Profile:hover {
-  background-color: var(--color-header-hover);
 }
 
 .DropdownMenu {
