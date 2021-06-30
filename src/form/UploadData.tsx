@@ -155,7 +155,9 @@ export const UploadData: React.FC<MyProps> = (props) => {
               >
                 {e.file.name}
               </span>
-              <span>
+              <span
+                className={uploadStyles.DateTimeContainer}
+              >
                 <Datetime
                   value={e.dateTime}
                   onChange={event => {
@@ -163,7 +165,10 @@ export const UploadData: React.FC<MyProps> = (props) => {
                     dataCopy[i].dateTime = moment(event).toDate();
                     setData(dataCopy);
                   }}
+                  timeFormat={"HH:mm:ss"}
+                  utc
                 />
+                <span style={{ marginLeft: 10 }}><em>(UTC)</em></span>
               </span>
               <span
                 className={uploadStyles.ClearIcon}
