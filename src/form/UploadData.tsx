@@ -171,7 +171,7 @@ export const UploadData: React.FC<MyProps> = (props) => {
                     // 1. it cannot be left empty
                     // 2. Invalid Date is not validated
                     required: true,
-                    pattern: "[^Invalid\]+",
+                    pattern: "[^Invalid]+",
                   }}
                   timeFormat={"HH:mm:ss"}
                   utc
