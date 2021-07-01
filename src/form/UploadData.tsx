@@ -12,7 +12,7 @@ import "react-datetime/css/react-datetime.css";
 
 export interface AcceptedFile {
   file: File,
-  dateTime: Date
+  dateTime: Date | undefined,
 }
 
 interface MyProps {
@@ -39,8 +39,8 @@ export const UploadData: React.FC<MyProps> = (props) => {
 
   // check for valid date
   // https://stackoverflow.com/questions/1353684/detecting-an-invalid-date-date-instance-in-javascript
-  const isValidDateObj = (d: Date) => {
-    if (Object.prototype.toString.call(d) === "[object Date]") {
+  const isValidDateObj = (d: Date | undefined) => {
+    if (d && Object.prototype.toString.call(d) === "[object Date]") {
       // it is a date
       if (isNaN(d.getTime())) {
         // d.valueOf() could also work
@@ -97,12 +97,12 @@ export const UploadData: React.FC<MyProps> = (props) => {
       const dateStrReformattedInUTC = dateStrReformatted && (dateStrReformatted + 'Z');
 
       // Convert to Date object
-      const dateObjFromFile: Date = dateStrReformattedInUTC ? new Date(dateStrReformattedInUTC) : new Date();
+      const dateObjFromFile: Date | undefined = dateStrReformattedInUTC ? new Date(dateStrReformattedInUTC) : undefined;
 
       const fileDateValid = isValidDateObj(dateObjFromFile);
       return {
         file: file,
-        dateTime: (fileDateValid && dateObjFromFile) || new Date()
+        dateTime: (fileDateValid && dateObjFromFile) || undefined
       };
     });
 
@@ -164,6 +164,14 @@ export const UploadData: React.FC<MyProps> = (props) => {
                     let dataCopy = data;
                     dataCopy[i].dateTime = moment(event).toDate();
                     setData(dataCopy);
+                  }}
+                  inputProps={{
+                    className: `${formStyles.FormControl} ${formStyles.FormSubmitted}`,
+                    // Validations for the date time input field
+                    // 1. it cannot be left empty
+                    // 2. Invalid Date is not validated
+                    required: true,
+                    pattern: "[^Invalid\]+",
                   }}
                   timeFormat={"HH:mm:ss"}
                   utc
