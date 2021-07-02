@@ -12,9 +12,14 @@ import {
   updateTaskStatus,
   removeFileFromQueue
 } from "./actions";
-import {getBootstrap} from './reducers';
+import {
+  getShouldFetchOrganisations,
+  getUserAuthenticated,
+  getSelectedOrganisation,
+  getFilesInProcess,
+} from './reducers';
 import {Routes} from './home/Routes';
-import {NavLink } from "react-router-dom";
+import {NavLink, withRouter, RouteComponentProps } from "react-router-dom";
 import LanguageSwitcher from "./components/LanguageSwitcher";
 import OrganisationSwitcher from "./components/OrganisationSwitcher";
 import Snackbar from "./components/Snackbar";
@@ -24,7 +29,6 @@ import styles from "./App.module.css";
 import gridStyles from "./styles/Grid.module.css";
 import buttonStyles from "./styles/Buttons.module.css";
 import lizardIcon from "./images/lizard.svg";
-import { withRouter } from "react-router-dom";
 
 import helpIcon from './images/help.svg'
 import documentIcon from './images/document.svg';
@@ -36,14 +40,50 @@ import {navigationLinkTiles, getCurrentNavigationLinkPage} from './home/AppTileC
 import LoginProfileDropdown from "./components/LoginProfileDropdown";
 
 
-const App = (props) => {
+const App = (props: RouteComponentProps & DispatchProps) => {
 
-  const bootstrap = useSelector(getBootstrap);
-  console.log('bootstrap', bootstrap);
+  const userAuthenticated = useSelector(getUserAuthenticated);
+  const shouldFetchOrganisations = useSelector(getShouldFetchOrganisations);
+  const selectedOrganisation = useSelector(getSelectedOrganisation);
+  const showOrganisationPicker = userAuthenticated && !shouldFetchOrganisations && selectedOrganisation;
+  const filesInProcess = useSelector( getFilesInProcess);
 
+  const currentRelativeUrl = props.location.pathname;
+  console.log('currentRelativeUrl', currentRelativeUrl)
+  
+
+  const [showOrganisationSwitcher, setShowOrganisationSwitcher] = useState(false);
+  const [showUploadQueue, setShowUploadQueue] = useState(false);
+  
+
+  // fetch if user is authenticated
   useEffect(() => {
     props.fetchLizardBootstrap();
   }, []);
+  useEffect(() => {
+    if (userAuthenticated && getShouldFetchOrganisations) {
+      props.fetchOrganisations();
+    }
+  }, [userAuthenticated, getShouldFetchOrganisations]);
+
+
+  // componentDidUpdate(prevProps) {
+  //   if (this.props.uploadFiles && prevProps.uploadFiles !== this.props.uploadFiles) {
+  //     const firstFileInTheQueue = this.props.filesInProcess[0];
+
+  //     if (this.props.filesInProcess.length === 0 || !firstFileInTheQueue || !firstFileInTheQueue.uuid) return;
+
+  //     setTimeout(() => {
+  //       fetchTaskInstance(firstFileInTheQueue.uuid)
+  //         .then(response => {
+  //           this.props.updateTaskStatus(firstFileInTheQueue.uuid, response.status);
+  //         })
+  //         .catch(e => console.error(e))
+  //     }, 5000);
+  //   };
+  // };
+
+
   // constructor(props) {
   //   super(props);
   //   this.state = {
@@ -195,43 +235,48 @@ const App = (props) => {
                         Apps
                       </a>
                     </div>
-                    {/* <div
+                    { userAuthenticated &&  currentRelativeUrl !== '/'? 
+                    <div
                       className={styles.Profile}
                       onClick={() => {
-                        this.setState({
-                          showUploadQueue: !this.state.showUploadQueue
-                        })
+                        setShowUploadQueue(true)
                       }}
                     >
                       <div>
                         <i className="fa fa-upload" style={{ paddingRight: 8 }} />
-                        {this.props.filesInProcess && this.props.filesInProcess.length > 0 ? <span className={styles.NavNotification}>!</span> : null}
+                        {filesInProcess && filesInProcess.length > 0 ? <span className={styles.NavNotification}>!</span> : null}
                         Upload queue
                       </div>
                     </div>
-                    <div
-                      className={styles.OrganisationLinkContainer}
-                      onClick={() =>
-                        this.setState({
-                          showOrganisationSwitcher: true
-                        })
-                      }
-                    >
-                      <button
-                        className={`${buttonStyles.ButtonLink} ${styles.OrganisationLink}`}
-                        title={
-                          selectedOrganisation
-                            ? selectedOrganisation.name
-                            : "Select organisation"
-                        }
+                    :null}
+                   
+                    { 
+                      showOrganisationPicker?
+                      <div
+                        className={styles.OrganisationLinkContainer}
+                        onClick={() => {
+                          setShowOrganisationSwitcher(true);
+                        }}
                       >
-                        <i className="fa fa-sort" />
-                        &nbsp;&nbsp;
-                        {selectedOrganisation
-                          ? selectedOrganisation.name
-                          : "Select organisation"}
-                      </button>
-                    </div>*/}
+                        <button
+                          className={`${buttonStyles.ButtonLink} ${styles.OrganisationLink}`}
+                          title={
+                            selectedOrganisation
+                              ? selectedOrganisation.name
+                              : "Select organisation"
+                          }
+                        >
+                          <i className="fa fa-sort" />
+                          &nbsp;&nbsp;
+                          {selectedOrganisation
+                            ? selectedOrganisation.name
+                            : "Select organisation"}
+                        </button>
+                      </div>
+                      :
+                      null
+                    }
+                    
 
                     <LoginProfileDropdown/>
                   </div> 
@@ -312,18 +357,18 @@ const App = (props) => {
               </div>
             </div>
           </footer>
-          {/* {showOrganisationSwitcher ? (
+          {showOrganisationSwitcher ? (
             <OrganisationSwitcher
               handleClose={() =>
-                this.setState({ showOrganisationSwitcher: false })}
+                setShowOrganisationSwitcher(false)}
             />
-          ) : null} */}
-          {/* <Snackbar />
-          {this.state.showUploadQueue ? (
+          ) : null}
+          <Snackbar />
+          {showUploadQueue ? (
             <UploadQueue
-              handleClose={() => this.setState({ showUploadQueue: false })}
+              handleClose={() => setShowUploadQueue(false)}
             />
-          ) : null} */}
+          ) : null}
         </div>
       );
   // }
@@ -361,10 +406,10 @@ const App = (props) => {
 //   };
 // };
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = (dispatch: any, ownProps: any) => {
   return {
     fetchLizardBootstrap: () => dispatch(fetchLizardBootstrap()),
-    // getOrganisations: () => dispatch(fetchOrganisations()),
+    fetchOrganisations: () => dispatch(fetchOrganisations()),
     // getDatasets: () => dispatch(fetchDatasets()),
     // addNotification: (message, timeout) => {
     //   dispatch(addNotification(message, timeout));
@@ -376,5 +421,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     // removeFileFromQueue: (file) => dispatch(removeFileFromQueue(file)),
   };
 };
+type DispatchProps = ReturnType<typeof mapDispatchToProps>;
+
 
 export default withRouter(connect(null, mapDispatchToProps)(injectIntl(App)));

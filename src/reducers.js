@@ -325,15 +325,20 @@ export const getNotifications = (state) => {
 export const getOrganisations = (state) => {
   return state.organisations;
 };
+export const getShouldFetchOrganisations = (state) => {
+  return !state.organisations.isFetching && state.organisations.timesFetched < 1;
+};
+export const getSelectedOrganisation = (state) => {
+  return state.organisations.selected;
+};
+
 export const getScenarioTotalSize = (state) => {
   return state.usage.scenario_total_size;
 };
 export const getRasterTotalSize = (state) => {
   return state.usage.raster_total_size;
 };
-export const getSelectedOrganisation = (state) => {
-  return state.organisations.selected;
-};
+
 export const getDatasets = (state) => {
   return state.datasets;
 };
@@ -347,6 +352,13 @@ export const getLocation = (state) => {
 export const getUploadFiles = (state) => {
   return state.uploadFiles;
 };
+
+export const  getFilesInProcess  = (state) => {
+    return state.uploadFiles &&
+      state.uploadFiles.length > 0 &&
+      state.uploadFiles.filter(file => file.status !== 'SUCCESS' && file.status !== 'FAILED');
+};
+
 export const getFinsihedFiles = (state) => {
   return state.uploadFiles && state.uploadFiles.length > 0 && state.uploadFiles.filter(file => file.status === 'SUCCESS' || file.status === 'FAILED');
 };
