@@ -16,6 +16,7 @@ import { AccessModifier } from '../../../form/AccessModifier';
 import { AssetPointSelection } from '../../../form/AssetPointSelection';
 import { locationFormHelpText } from '../../../utils/help_texts/helpTextsForLocations';
 import { fetchWithOptions } from '../../../utils/fetchWithOptions';
+import { usePaginatedFetch } from '../../../utils/usePaginatedFetch';
 import { baseUrl } from './LocationsTable';
 import FormActionButtons from '../../../components/FormActionButtons';
 import Modal from '../../../components/Modal';
@@ -38,17 +39,12 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const [dependentTimeseries, setDependentTimeseries] = useState<any[] | null>(null);
 
+  const { results } = usePaginatedFetch({
+    url: currentRecord && currentRecord.uuid ? `/api/v4/timeseries/?location__uuid=${currentRecord.uuid}` : null
+  });
   useEffect(() => {
-    if (currentRecord && currentRecord.uuid) {
-      fetch(`/api/v4/timeseries/?page_size=0&location__uuid=${currentRecord.uuid}`, {
-        credentials: "same-origin"
-      }).then(
-        res => res.json()
-      ).then(
-        data => setDependentTimeseries(data)
-      ).catch(console.error);
-    };
-  }, [currentRecord]);
+    setDependentTimeseries(results);
+  }, [results]);
 
   let initialValues;
   if (currentRecord) {
