@@ -19,7 +19,7 @@ import DataFlushingModal from './DataFlushingModal';
 import TemporalDataFlushingModal from './TemporalDataFlushingModal';
 
 export const baseUrl = "/api/v4/rastersources/";
-const navigationUrlRasters = "/data_management/rasters/sources";
+const navigationUrlRasters = "/management/data_management/rasters/sources";
 
 export const RasterSourceTable = (props: any) => {
   const [rowToFlushData, setRowToFlushData] = useState<any | null>(null);

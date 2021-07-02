@@ -154,7 +154,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
               values.temporal
             );
             // redirect back to the table of raster sources
-            props.history.push('/data_management/rasters/sources')
+            props.history.push('/management/data_management/rasters/sources')
           } else {
             props.addNotification(status, 2000);
             console.error(data);

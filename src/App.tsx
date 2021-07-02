@@ -47,6 +47,7 @@ const App = (props: RouteComponentProps & DispatchProps) => {
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const showOrganisationPicker = userAuthenticated && !shouldFetchOrganisations && selectedOrganisation;
   const filesInProcess = useSelector( getFilesInProcess);
+  const firstFileInTheQueue = filesInProcess && filesInProcess[0];
 
   const currentRelativeUrl = props.location.pathname;
   console.log('currentRelativeUrl', currentRelativeUrl)
@@ -54,6 +55,7 @@ const App = (props: RouteComponentProps & DispatchProps) => {
 
   const [showOrganisationSwitcher, setShowOrganisationSwitcher] = useState(false);
   const [showUploadQueue, setShowUploadQueue] = useState(false);
+
   
 
   // fetch if user is authenticated
@@ -63,8 +65,21 @@ const App = (props: RouteComponentProps & DispatchProps) => {
   useEffect(() => {
     if (userAuthenticated && getShouldFetchOrganisations) {
       props.fetchOrganisations();
+      props.getDatasets();
     }
   }, [userAuthenticated, getShouldFetchOrganisations]);
+
+  useEffect(() => {
+    if (firstFileInTheQueue && firstFileInTheQueue.uuid) {
+      setTimeout(() => {
+        fetchTaskInstance(firstFileInTheQueue.uuid)
+          .then(response => {
+            props.updateTaskStatus(firstFileInTheQueue.uuid, response.status);
+          })
+          .catch(e => console.error(e))
+      }, 5000);
+    }
+  }, [firstFileInTheQueue]);
 
 
   // componentDidUpdate(prevProps) {
@@ -410,14 +425,14 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => {
   return {
     fetchLizardBootstrap: () => dispatch(fetchLizardBootstrap()),
     fetchOrganisations: () => dispatch(fetchOrganisations()),
-    // getDatasets: () => dispatch(fetchDatasets()),
+    getDatasets: () => dispatch(fetchDatasets()),
     // addNotification: (message, timeout) => {
     //   dispatch(addNotification(message, timeout));
     // },
     // updateViewportDimensions: (width, height) => {
     //   dispatch(updateViewportDimensions(width, height))
     // },
-    // updateTaskStatus: (uuid, status) => dispatch(updateTaskStatus(uuid, status)),
+    updateTaskStatus: (uuid: string, status: number) => dispatch(updateTaskStatus(uuid, status)),
     // removeFileFromQueue: (file) => dispatch(removeFileFromQueue(file)),
   };
 };
