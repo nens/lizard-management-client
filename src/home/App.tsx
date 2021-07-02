@@ -4,7 +4,7 @@ import styles from "./App.module.css";
 import AppTile from "../components/AppTile";
 import { Trail, animated } from "react-spring";
 import doArraysHaveEqualElement from '../utils/doArraysHaveEqualElement';
-import {navigationLinkTiles, getCurrentNavigationLinkTiles} from './AppTileConfig';
+import {getCurrentNavigationLinkTiles} from './AppTileConfig';
 import {getSelectedOrganisation, getUsername} from '../reducers';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 

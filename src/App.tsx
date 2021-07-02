@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { connect, useSelector } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
-import MDSpinner from "react-md-spinner";
+// import MDSpinner from "react-md-spinner";
 import { fetchTaskInstance } from "./api/tasks";
 import {
-  addNotification,
+  // addNotification,
   fetchLizardBootstrap,
   fetchOrganisations,
-  updateViewportDimensions,
+  // updateViewportDimensions,
   fetchDatasets,
   updateTaskStatus,
-  removeFileFromQueue
+  // removeFileFromQueue
 } from "./actions";
 import {
+  getShouldFetchBootstrap,
   getShouldFetchOrganisations,
   getUserAuthenticated,
   getSelectedOrganisation,
@@ -20,7 +21,7 @@ import {
 } from './reducers';
 import {Routes} from './home/Routes';
 import {NavLink, withRouter, RouteComponentProps } from "react-router-dom";
-import LanguageSwitcher from "./components/LanguageSwitcher";
+// import LanguageSwitcher from "./components/LanguageSwitcher";
 import OrganisationSwitcher from "./components/OrganisationSwitcher";
 import Snackbar from "./components/Snackbar";
 import Breadcrumbs from "./components/Breadcrumbs";
@@ -30,19 +31,27 @@ import gridStyles from "./styles/Grid.module.css";
 import buttonStyles from "./styles/Buttons.module.css";
 import lizardIcon from "./images/lizard.svg";
 
-import helpIcon from './images/help.svg'
-import documentIcon from './images/document.svg';
-import logoutIcon from './images/logout.svg';
-import editIcon from './images/edit.svg';
-import shouldRedirectBasedOnAuthorization from './home/shouldRedirectBasedOnAuthorization';
+// import helpIcon from './images/help.svg'
+// import documentIcon from './images/document.svg';
+// import logoutIcon from './images/logout.svg';
+// import editIcon from './images/edit.svg';
+// import shouldRedirectBasedOnAuthorization from './home/shouldRedirectBasedOnAuthorization';
 import packageJson from '../package.json';
-import {navigationLinkTiles, getCurrentNavigationLinkPage} from './home/AppTileConfig';
+// import { getCurrentNavigationLinkPage} from './home/AppTileConfig';
 import LoginProfileDropdown from "./components/LoginProfileDropdown";
 
 
 const App = (props: RouteComponentProps & DispatchProps) => {
 
+  const {
+    fetchLizardBootstrap,
+    fetchOrganisations,
+    getDatasets,
+    updateTaskStatus,
+  } = props;
+
   const userAuthenticated = useSelector(getUserAuthenticated);
+  const shouldFetchBootstrap =  useSelector(getShouldFetchBootstrap);
   const shouldFetchOrganisations = useSelector(getShouldFetchOrganisations);
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const showOrganisationPicker = userAuthenticated && !shouldFetchOrganisations && selectedOrganisation;
@@ -60,26 +69,28 @@ const App = (props: RouteComponentProps & DispatchProps) => {
 
   // fetch if user is authenticated
   useEffect(() => {
-    props.fetchLizardBootstrap();
-  }, []);
-  useEffect(() => {
-    if (userAuthenticated && getShouldFetchOrganisations) {
-      props.fetchOrganisations();
-      props.getDatasets();
+    if (shouldFetchBootstrap) {
+      fetchLizardBootstrap();
     }
-  }, [userAuthenticated, getShouldFetchOrganisations]);
+  }, [fetchLizardBootstrap, shouldFetchBootstrap]);
+  useEffect(() => {
+    if (userAuthenticated && shouldFetchOrganisations) {
+      fetchOrganisations();
+      getDatasets();
+    }
+  }, [userAuthenticated, shouldFetchOrganisations, fetchOrganisations, getDatasets]);
 
   useEffect(() => {
     if (firstFileInTheQueue && firstFileInTheQueue.uuid) {
       setTimeout(() => {
         fetchTaskInstance(firstFileInTheQueue.uuid)
           .then(response => {
-            props.updateTaskStatus(firstFileInTheQueue.uuid, response.status);
+            updateTaskStatus(firstFileInTheQueue.uuid, response.status);
           })
           .catch(e => console.error(e))
       }, 5000);
     }
-  }, [firstFileInTheQueue]);
+  }, [firstFileInTheQueue, updateTaskStatus]);
 
 
   // componentDidUpdate(prevProps) {
@@ -190,9 +201,7 @@ const App = (props: RouteComponentProps & DispatchProps) => {
     //     // back icon cannot be current homeAppTile
     //     !icon.onUrl.includes(icon.linksToUrl)
     // });
-    const currentNavigationLinkPage = getCurrentNavigationLinkPage();
 
-    console.log('currentNavigationLinkPage', currentNavigationLinkPage);
 
     // if (
     //   !this.props.bootstrap.isAuthenticated && 

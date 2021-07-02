@@ -1,7 +1,7 @@
 import React from "react";
 import { Route, Switch, } from "react-router-dom";
 
-import {navigationLinkPages, navigationLinkTiles} from './AppTileConfig';
+import {navigationLinkPages,} from './AppTileConfig';
 import { App as Home } from "./App";
 
 import { PersonalApiKeysTable } from '../personal_api_keys/PersonalApiKeysTable';

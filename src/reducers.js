@@ -30,18 +30,20 @@ import {
 function bootstrap(
   state = {
     bootstrap: {},
-    isFetching: true
+    isFetching: true,
+    startedFetch: false,
   },
   action
 ) {
   switch (action.type) {
     case REQUEST_LIZARD_BOOTSTRAP:
-      return { ...state, isFetching: true };
+      return { ...state, isFetching: true, startedFetch: true, };
     case RECEIVE_LIZARD_BOOTSTRAP:
       return {
         ...state,
         bootstrap: action.data,
-        isFetching: false
+        isFetching: false,
+        
       };
     default:
       return state;
@@ -277,6 +279,9 @@ function uploadFiles(state = null, action) {
 // Selectors
 export const getBootstrap = (state) => {
   return state.bootstrap;
+};
+export const getShouldFetchBootstrap = (state) => {
+  return state.bootstrap.startedFetch === false;
 };
 export const getUserAuthenticated = (state) => {
   return !state.bootstrap.isFetching && state.bootstrap.bootstrap.user && state.bootstrap.bootstrap.user.authenticated;
