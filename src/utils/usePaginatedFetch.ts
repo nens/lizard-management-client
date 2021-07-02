@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 interface InputProps {
-  url: string;
+  url: string | null;
 }
 
 interface Output {
@@ -19,7 +19,9 @@ export const usePaginatedFetch = (props: InputProps): Output => {
 
   useEffect(() => {
     // Recursive function to fetch next URLs
-    const fetchHelper = async (url: string) => {
+    const fetchHelper = async (url: string | null) => {
+      if (!url) return;
+
       setFetchingState('FETCHING');
       try {
         const response = await fetch(url, {
