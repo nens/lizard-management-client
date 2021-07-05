@@ -12,7 +12,9 @@ import { selectOrganisation } from "../actions";
 import { FormattedMessage, injectIntl } from "react-intl";
 import { Scrollbars } from "react-custom-scrollbars";
 import doArraysHaveEqualElement from '../utils/doArraysHaveEqualElement';
-import {navigationLinkTiles} from '../home/AppTileConfig';
+// import {navigationLinkTiles} from '../home/AppTileConfig';
+import { /*getCurrentNavigationLinkPage , */ getCurrentNavigationLinkTile} from '../home/AppTileConfig';
+
 
 interface PropsArgs {
   handleClose: () => void,
@@ -25,6 +27,8 @@ const OrganisationSwitcher = (props:Props) => {
   
   const [height, setHeight] = useState(window.innerHeight);
   const [filterValue, setFilterValue] = useState<null | string>(null);
+  // const currentNavigationLinkPage= getCurrentNavigationLinkPage();
+  const currentHomeAppTile = getCurrentNavigationLinkTile();
 
   useEffect(() => {
     window.addEventListener("resize", handleResize, false);
@@ -79,9 +83,10 @@ const OrganisationSwitcher = (props:Props) => {
         })
       : organisations;
 
-    const currentHomeAppTile = navigationLinkTiles.find(icon => {
-      return window.location.href.includes(icon.linksToUrl)
-    });
+    // const currentHomeAppTile = navigationLinkTiles.find(icon => {
+    //   return window.location.href.includes(icon.linksToUrl)
+    // });
+    console.log("currentHomeAppTile", currentHomeAppTile)
     // todo add type defenitions for props.intl.formatMessage
     // @ts-ignore
     const authorisationText = props.intl.formatMessage({ id: "authorization.organisation_not_allowed_current_page", defaultMessage: "! Organisation not authorized to visit current page !" });
@@ -145,7 +150,8 @@ const OrganisationSwitcher = (props:Props) => {
                 {filteredOrganisations
                 // Todo fix any og organisation
                   ? filteredOrganisations.map((organisation:any, i:number) => {
-                      const hasRequiredRoles = !currentHomeAppTile || doArraysHaveEqualElement(organisation.roles, currentHomeAppTile.requiresOneOfRoles);
+                      // const hasRequiredRoles = !currentHomeAppTile ||currentHomeAppTile.requiresOneOfRoles.length === 0 || doArraysHaveEqualElement(organisation.roles, currentHomeAppTile.requiresOneOfRoles);
+                      const hasRequiredRoles = !currentHomeAppTile || currentHomeAppTile.requiresOneOfRoles.length === 0 || doArraysHaveEqualElement(organisation.roles, currentHomeAppTile.requiresOneOfRoles);
                       return (
                         <div
                           key={organisation.uuid}

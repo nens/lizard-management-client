@@ -45,10 +45,19 @@ export const getNavigationLinkPageFromUrlAndAllNavigationLinkPages = (urlPostFix
   return allNavigationLinkPages.find(navigationLinkPage => navigationLinkPage.onUrl === urlPostFix);
 }
 
+export const getNavigationLinkTileFromUrlAndAllNavigationLinkTiles = (urlPostFix:string, allNavigationLinkTiles:NavigationLinkTile[]) => {
+  return allNavigationLinkTiles.find(navigationLinkTile => navigationLinkTile.linksToUrl === urlPostFix);
+}
+
 export const getCurrentNavigationLinkPage = () => {
   const urlPostfix = window.location.href.split("/#")[1];
   return getNavigationLinkPageFromUrlAndAllNavigationLinkPages(urlPostfix, navigationLinkPages)
 }
+export const getCurrentNavigationLinkTile = () => {
+  const urlPostfix = window.location.href.split("/#")[1];
+  return getNavigationLinkTileFromUrlAndAllNavigationLinkTiles(urlPostfix, navigationLinkTiles)
+}
+
 
 export const getNavigationLinkTilesFromNavigationLinkPageAndAllNavigationLinkTiles = (navigationLinkPage: NavigationLinkPage, navigationLinkTiles: NavigationLinkTile[]) => {
   return navigationLinkTiles.filter(navigationLinkTile=>navigationLinkTile.onUrl === navigationLinkPage.onUrl)
