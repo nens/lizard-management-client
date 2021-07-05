@@ -5,6 +5,7 @@ import { SubmitButton } from '../../../form/SubmitButton';
 import { getSelectedOrganisation } from '../../../reducers';
 import { addNotification } from '../../../actions';
 import { convertToSelectObject } from '../../../utils/convertToSelectObject';
+import { usePaginatedFetch } from '../../../utils/usePaginatedFetch';
 import ModalBackground from '../../../components/ModalBackground';
 import formStyles from '../../../styles/Forms.module.css';
 import buttonStyles from '../../../styles/Buttons.module.css';
@@ -23,17 +24,12 @@ function AddToMonitoringNetworkModal (props: MyProps & DispatchProps) {
   const [selectedMonitoringNetwork, setSelectedMonitoringNetwork] = useState<Value | null>(null);
 
   // useEffect to load the list of available monitoring networks for the selected organisation
+  const { results, fetchingState } = usePaginatedFetch({
+    url: `/api/v4/monitoringnetworks/?organisation__uuid=${selectedOrganisation.uuid}`
+  });
   useEffect(() => {
-    fetch(`/api/v4/monitoringnetworks/?page_size=1000&organisation__uuid=${selectedOrganisation.uuid}`, {
-      credentials: 'same-origin'
-    }).then(
-      response => response.json()
-    ).then(
-      data => setAvailableMonitoringNetworks(data.results.map((network: any) => convertToSelectObject(network.uuid, network.name)))
-    ).catch(
-      console.error
-    );
-  }, [selectedOrganisation.uuid]);
+    setAvailableMonitoringNetworks(results && results.map((network: any) => convertToSelectObject(network.uuid, network.name)));
+  }, [results]);
 
   // POST requests to update selected monitoring network with the selected timeseries
   const handleSubmit = () => {
@@ -81,7 +77,7 @@ function AddToMonitoringNetworkModal (props: MyProps & DispatchProps) {
             valueChanged={value => setSelectedMonitoringNetwork(value as Value)}
             options={availableMonitoringNetworks || []}
             validated
-            isLoading={!availableMonitoringNetworks}
+            isLoading={fetchingState === 'FETCHING'}
           />
         </div>
         <div className={formStyles.ButtonContainer}>
