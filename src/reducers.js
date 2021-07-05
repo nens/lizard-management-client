@@ -263,6 +263,9 @@ export const getBootstrap = (state) => {
 export const getShouldFetchBootstrap = (state) => {
   return state.bootstrap.startedFetch === false;
 };
+export const getIsFetchingBootstrap = (state) => {
+  return state.bootstrap.isFetching === true;
+};
 export const getUserAuthenticated = (state) => {
   return !state.bootstrap.isFetching && state.bootstrap.bootstrap.user && state.bootstrap.bootstrap.user.authenticated;
 };

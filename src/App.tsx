@@ -17,6 +17,7 @@ import {
   getUserAuthenticated,
   getSelectedOrganisation,
   getFilesInProcess,
+  getIsFetchingBootstrap,
 } from './reducers';
 import {Routes} from './home/Routes';
 import {NavLink, withRouter, RouteComponentProps } from "react-router-dom";
@@ -36,8 +37,10 @@ import lizardIcon from "./images/lizard.svg";
 // import editIcon from './images/edit.svg';
 // import shouldRedirectBasedOnAuthorization from './home/shouldRedirectBasedOnAuthorization';
 import packageJson from '../package.json';
-// import { getCurrentNavigationLinkPage} from './home/AppTileConfig';
+import { getCurrentNavigationLinkPage} from './home/AppTileConfig';
 import LoginProfileDropdown from "./components/LoginProfileDropdown";
+import UnAuthenticatedModal from "./components/UnAuthenticatedModal";
+
 
 
 const App = (props: RouteComponentProps & DispatchProps) => {
@@ -51,6 +54,7 @@ const App = (props: RouteComponentProps & DispatchProps) => {
   } = props;
 
   const userAuthenticated = useSelector(getUserAuthenticated);
+  const isBusyFetchingBootstrap = useSelector(getIsFetchingBootstrap);
   const shouldFetchBootstrap =  useSelector(getShouldFetchBootstrap);
   const shouldFetchOrganisations = useSelector(getShouldFetchOrganisations);
   const selectedOrganisation = useSelector(getSelectedOrganisation);
@@ -61,6 +65,7 @@ const App = (props: RouteComponentProps & DispatchProps) => {
   
   const [showOrganisationSwitcher, setShowOrganisationSwitcher] = useState(false);
   const [showUploadQueue, setShowUploadQueue] = useState(false);
+  const [showUnauthenticatedRedirectModal, setShowUnauthenticatedRedirectModal] = useState(false);
 
   
 
@@ -118,6 +123,19 @@ const App = (props: RouteComponentProps & DispatchProps) => {
   }, [updateOnlineStatus, addNotification]);
 
   // //////////////////////////////////////////////////////////////////////////////
+
+  const currentNavigationLinkPage = getCurrentNavigationLinkPage();
+  useEffect(() => {
+    if (
+      ( currentNavigationLinkPage === undefined || // it is not one of the pages that just show tiles
+        currentNavigationLinkPage.onUrl !== '/'  // it is the home
+      ) && !userAuthenticated && !isBusyFetchingBootstrap
+    ) {
+      console.log("user should login or go back to homepage");
+      setShowUnauthenticatedRedirectModal(true);
+    }
+  }, [currentNavigationLinkPage, userAuthenticated, isBusyFetchingBootstrap]);
+  
 
     // if ( 
     //   this.props.availableOrganisations.length === 0 && 
@@ -330,6 +348,15 @@ const App = (props: RouteComponentProps & DispatchProps) => {
               handleClose={() => setShowUploadQueue(false)}
             />
           ) : null}
+          { showUnauthenticatedRedirectModal?
+          <UnAuthenticatedModal
+            handleClose={()=>{setShowUnauthenticatedRedirectModal(false)}}
+            redirectHome={()=>{
+              setShowUnauthenticatedRedirectModal(false);
+              props.history.push("/");
+            }}
+          />
+        :null}
         </div>
       );
   // }
