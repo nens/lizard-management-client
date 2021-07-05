@@ -38,7 +38,7 @@ interface Props {
   datasource?: Datasource,
 };
 
-const backUrl = "/data_management/timeseries/timeseries";
+const backUrl = "/management/data_management/timeseries/timeseries";
 
 // Helper function to fetch locations in async select dropdown
 const fetchLocations = async (searchInput: string, organisationUuid: string) => {

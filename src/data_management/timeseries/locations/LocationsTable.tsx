@@ -15,7 +15,7 @@ import locationIcon from "../../../images/locations_icon.svg";
 import MDSpinner from 'react-md-spinner';
 
 export const baseUrl = "/api/v4/locations/";
-const navigationUrl = "/data_management/timeseries/locations";
+const navigationUrl = "/management/data_management/timeseries/locations";
 
 export const LocationsTable = (props: RouteComponentProps) =>  {
   const [rowToBeDeleted, setRowToBeDeleted] = useState<any | null>(null);
@@ -129,7 +129,7 @@ export const LocationsTable = (props: RouteComponentProps) =>  {
       imgAltDescription={"Locations icon"}
       headerText={"Locations"}
       explanationText={defaultTableHelpText('Search or sort your locations here.')}
-      backUrl={"/data_management/timeseries"}
+      backUrl={"/management/data_management/timeseries"}
     >
       <TableStateContainer 
         gridTemplateColumns={"4fr 36fr 36fr 16fr 8fr"} 

@@ -71,7 +71,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
             const status = data.status;
             props.addNotification(status, 2000);
             if (status === 201) {
-              props.history.push('/data_management/wms_layers');
+              props.history.push('/management/data_management/wms_layers');
             } else {
               console.error(data);
             };
@@ -90,7 +90,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           const status = data.status;
           props.addNotification(status, 2000);
           if (status === 200) {
-            props.history.push('/data_management/wms_layers');
+            props.history.push('/management/data_management/wms_layers');
           } else {
             console.error(data);
           };
@@ -119,7 +119,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
       imgAltDescription={"WMS-Layer icon"}
       headerText={"WMS Layers"}
       explanationText={wmsFormHelpText[fieldOnFocus] || wmsFormHelpText['default']}
-      backUrl={"/data_management/wms_layers"}
+      backUrl={"/management/data_management/wms_layers"}
       fieldName={fieldOnFocus}
     >
       <form
@@ -400,7 +400,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           className={formStyles.ButtonContainer}
         >
           <CancelButton
-            url={'/data_management/wms_layers'}
+            url={'/management/data_management/wms_layers'}
           />
           <div style={{display: "flex"}}>
             {currentWmsLayer ? (
@@ -427,7 +427,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           displayContent={[{name: "name", width: 65}, {name: "uuid", width: 35}]}
           fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
           handleClose={() => setShowDeleteModal(false)}
-          tableUrl={'/data_management/wms_layers'}
+          tableUrl={'/management/data_management/wms_layers'}
         />
       ) : null}
     </ExplainSideColumn>

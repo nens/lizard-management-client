@@ -173,7 +173,7 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           if (status === 201) {
             props.addNotification('Success! Raster layer created', 2000);
             // redirect back to the table of raster layers
-            props.history.push('/data_management/rasters/layers');
+            props.history.push('/management/data_management/rasters/layers');
           } else {
             props.addNotification(status, 2000);
             console.error(response);
@@ -206,7 +206,7 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           if (status === 200) {
             props.addNotification('Success! Raster layer updated', 2000);
             // redirect back to the table of raster layers
-            props.history.push('/data_management/rasters/layers');
+            props.history.push('/management/data_management/rasters/layers');
           } else {
             props.addNotification(status, 2000);
             console.error(data);
@@ -255,7 +255,7 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
       imgAltDescription={"Raster-Layer icon"}
       headerText={"Raster Layers"}
       explanationText={rasterLayerFormHelpText[fieldOnFocus] || rasterLayerFormHelpText['default']}
-      backUrl={"/data_management/rasters/layers"}
+      backUrl={"/management/data_management/rasters/layers"}
       fieldName={fieldOnFocus}
     >
       {/* 
@@ -509,7 +509,7 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           className={formStyles.ButtonContainer}
         >
           <CancelButton
-            url={'/data_management/rasters/layers'}
+            url={'/management/data_management/rasters/layers'}
             form={"raster_layer_form_id"}
           />
           <div style={{ display: "flex" }}>
@@ -538,7 +538,7 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           displayContent={[{name: "name", width: 40}, {name: "uuid", width: 60}]}
           fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
           handleClose={() => setShowDeleteModal(false)}
-          tableUrl={'/data_management/rasters/layers'}
+          tableUrl={'/management/data_management/rasters/layers'}
         />
       ) : null}
       {currentRasterLayer && currentRasterLayer.uuid && rasterSourceModal ? (

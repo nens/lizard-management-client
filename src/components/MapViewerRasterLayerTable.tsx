@@ -5,7 +5,7 @@ import tableStyles from "./Table.module.css";
 // import buttonStyles from "../styles/Buttons.module.css";
 
 export const baseUrl = "/api/v4/rasters/";
-// const navigationUrlRasters = "/data_management/rasters/layers";
+// const navigationUrlRasters = "/management/data_management/rasters/layers";
 
 interface Props {
   setSelectedRasters: (rasterLayers: any[]) => void

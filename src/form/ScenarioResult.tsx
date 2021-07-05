@@ -123,7 +123,7 @@ const ResultRow: React.FC<ResultRowProps> = ({
   let resultUrl;
   if (result.raster) {
     const rasterLayerUuid = result.raster.split('/')[result.raster.split('/').length-2]; // retrieve uuid from api url of raster layer 
-    resultUrl = `/management#/data_management/rasters/layers/${rasterLayerUuid}`
+    resultUrl = `/management/data_management/rasters/layers/${rasterLayerUuid}`
   }
   return (
     <div

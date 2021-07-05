@@ -27,7 +27,7 @@ interface Props {
   currentNetwork?: any
 };
 
-const backUrl = "/data_management/timeseries/monitoring_networks";
+const backUrl = "/management/data_management/timeseries/monitoring_networks";
 
 const MonitoringNetworkForm = (props: Props & DispatchProps & RouteComponentProps) => {
   const { currentNetwork } = props;

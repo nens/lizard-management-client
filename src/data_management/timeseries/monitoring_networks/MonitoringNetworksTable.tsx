@@ -12,7 +12,7 @@ import monitoringNetworkIcon from "../../../images/monitoring_network_icon.svg";
 import tableStyles from "../../../components/Table.module.css";
 
 export const baseUrl = "/api/v4/monitoringnetworks/";
-const navigationUrl = "/data_management/timeseries/monitoring_networks";
+const navigationUrl = "/management/data_management/timeseries/monitoring_networks";
 
 export const MonitoringNetworksTable = (props: RouteComponentProps) =>  {
   const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
@@ -99,7 +99,7 @@ export const MonitoringNetworksTable = (props: RouteComponentProps) =>  {
       imgAltDescription={"Monitoring-Network icon"}
       headerText={"Monitoring Networks"}
       explanationText={defaultTableHelpText('Monitoring networks are used to group and give insights on time series.')}
-      backUrl={"/data_management/timeseries"}
+      backUrl={"/management/data_management/timeseries"}
     >
       <TableStateContainer
         gridTemplateColumns={"10fr 60fr 20fr 10fr"}

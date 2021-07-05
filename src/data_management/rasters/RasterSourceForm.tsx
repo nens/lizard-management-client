@@ -184,7 +184,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
       imgAltDescription={"Raster-Source icon"}
       headerText={"Raster Sources"}
       explanationText={rasterSourceFormHelpText[fieldOnFocus] || rasterSourceFormHelpText['default']}
-      backUrl={"/data_management/rasters/sources"}
+      backUrl={"/management/data_management/rasters/sources"}
       fieldName={fieldOnFocus}
     >
       <form
@@ -318,7 +318,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           className={formStyles.ButtonContainer}
         >
           <CancelButton
-            url={'/data_management/rasters/sources'}
+            url={'/management/data_management/rasters/sources'}
           />
           <div style={{display: "flex"}}>
             {currentRasterSource ? (
@@ -360,7 +360,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
         <Modal
           title={'Raster created'}
           buttonConfirmName={'Continue'}
-          onClickButtonConfirm={() => props.history.push('/data_management/rasters/layers/new')}
+          onClickButtonConfirm={() => props.history.push('/management/data_management/rasters/layers/new')}
         >
           <p>A layer is needed to view the raster in the portal.</p>
           <p>We automatically created a layer for you to compose. You will now be redirected to the layer management.</p>
@@ -372,7 +372,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           displayContent={[{name: "name", width: 65}, {name: "uuid", width: 35}]}
           fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
           handleClose={() => setShowDeleteModal(false)}
-          tableUrl={'/data_management/rasters/sources'}
+          tableUrl={'/management/data_management/rasters/sources'}
         />
       ) : null}
       {showDeleteModal && currentRasterSource && (currentRasterSource.layers.length !== 0 || currentRasterSource.labeltypes.length !== 0) ? (

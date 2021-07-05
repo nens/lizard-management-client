@@ -15,7 +15,7 @@ import DeleteModal from '../../components/DeleteModal';
 import AuthorisationModal from '../../components/AuthorisationModal';
 
 const baseUrl = "/api/v4/scenarios/";
-const navigationUrl = "/data_management/scenarios";
+const navigationUrl = "/management/data_management/scenarios";
 
 const fetchScenariosWithOptions = (uuids: string[], fetchOptions: RequestInit) => {
   const fetches = uuids.map (uuid => {

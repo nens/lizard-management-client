@@ -184,7 +184,7 @@ export const RasterSourceTable = (props: any) => {
       imgAltDescription={"Raster-Source icon"}
       headerText={"Raster Sources"}
       explanationText={defaultRasterSourceExplanationTextTable(bytesToDisplayValue(rastersTotalSize))} 
-      backUrl={"/data_management/rasters"}
+      backUrl={"/management/data_management/rasters"}
     >
       <TableStateContainer
         gridTemplateColumns={"37% 25% 10% 20% 8%"}  

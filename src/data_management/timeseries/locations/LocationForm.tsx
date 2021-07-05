@@ -117,7 +117,7 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
           const status = data.status;
           if (status === 200) {
             props.addNotification('Success! Location updated', 2000);
-            props.history.push('/data_management/timeseries/locations');
+            props.history.push('/management/data_management/timeseries/locations');
           } else {
             props.addNotification(status, 2000);
             console.error(data);
@@ -138,7 +138,7 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
           const status = response.status;
           if (status === 201) {
             // props.addNotification('Success! Location creatd', 2000);
-            // props.history.push('/data_management/timeseries/locations');
+            // props.history.push('/management/data_management/timeseries/locations');
             setLocationCreatedModal(true);
             return response.json();
           } else {
@@ -174,7 +174,7 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
       imgAltDescription={"Location icon"}
       headerText={"Locations"}
       explanationText={locationFormHelpText[fieldOnFocus] || locationFormHelpText['default']}
-      backUrl={"/data_management/timeseries/locations"}
+      backUrl={"/management/data_management/timeseries/locations"}
       fieldName={fieldOnFocus}
     >
       <form
@@ -261,7 +261,7 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
           className={formStyles.ButtonContainer}
         >
           <CancelButton
-            url={'/data_management/timeseries/locations'}
+            url={'/management/data_management/timeseries/locations'}
           />
           <div style={{display: "flex"}}>
             {currentRecord ? (
@@ -286,10 +286,10 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
         <Modal
           title={'Location created'}
           buttonConfirmName={'Continue'}
-          onClickButtonConfirm={() => props.history.push('/data_management/timeseries/timeseries/new')}
+          onClickButtonConfirm={() => props.history.push('/management/data_management/timeseries/timeseries/new')}
           cancelAction={() => {
             props.removeLocation();
-            props.history.push('/data_management/timeseries/locations');
+            props.history.push('/management/data_management/timeseries/locations');
           }}
         >
           <p>A new location has been created.</p>
@@ -313,7 +313,7 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
           displayContent={[{name: "name", width: 40}, {name: "uuid", width: 60}]}
           fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
           handleClose={() => setShowDeleteModal(false)}
-          tableUrl={'/data_management/timeseries/locations'}
+          tableUrl={'/management/data_management/timeseries/locations'}
         />
       ) : null}
       {currentRecord && showDeleteModal && dependentTimeseries && dependentTimeseries.length ? (

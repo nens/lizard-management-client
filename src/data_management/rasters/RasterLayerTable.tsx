@@ -12,7 +12,7 @@ import DeleteModal from '../../components/DeleteModal';
 import { fetchWithOptions } from '../../utils/fetchWithOptions';
 
 export const baseUrl = "/api/v4/rasters/";
-const navigationUrlRasters = "/data_management/rasters/layers";
+const navigationUrlRasters = "/management/data_management/rasters/layers";
 
 export const RasterLayerTable: React.FC<RouteComponentProps> = (props) =>  {
   const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
@@ -116,7 +116,7 @@ export const RasterLayerTable: React.FC<RouteComponentProps> = (props) =>  {
       imgAltDescription={"Raster-Layer icon"}
       headerText={"Raster Layers"}
       explanationText={defaultRasterLayerHelpTextTable}
-      backUrl={"/data_management/rasters"}
+      backUrl={"/management/data_management/rasters"}
     >
         <TableStateContainer 
           gridTemplateColumns={"8% 28% 22% 18% 16% 8%"} 

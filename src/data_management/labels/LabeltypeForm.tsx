@@ -60,7 +60,7 @@ const LabeltypeModel: React.FC<Props & PropsFromDispatch & RouteComponentProps<R
     //     const status = data.status;
     //     if (status === 200) {
     //       props.addNotification('Success! Labeltype updated', 2000);
-    //       props.history.push('/data_management/labels/labeltypes/');
+    //       props.history.push('/management/data_management/labels/labeltypes/');
     //     } else {
     //       props.addNotification(status, 2000);
     //       console.error(data);
@@ -88,7 +88,7 @@ const LabeltypeModel: React.FC<Props & PropsFromDispatch & RouteComponentProps<R
   //       const status = data.status;
   //       if (status === 201) {
   //         props.addNotification('Success! Labeltype created', 2000);
-  //         props.history.push('/data_management/labels/labeltypes/');
+  //         props.history.push('/management/data_management/labels/labeltypes/');
   //       } else {
   //         props.addNotification(status, 2000);
   //         console.error(data);
@@ -117,7 +117,7 @@ const LabeltypeModel: React.FC<Props & PropsFromDispatch & RouteComponentProps<R
       imgAltDescription={"Label-types icon"}
       headerText={"Label types"}
       explanationText={lableTypeFormHelpText[fieldOnFocus] || lableTypeFormHelpText['default']}
-      backUrl={"/data_management/labels/label_types/"}
+      backUrl={"/management/data_management/labels/label_types/"}
       fieldName={fieldOnFocus}
     >
       <form
@@ -203,7 +203,7 @@ const LabeltypeModel: React.FC<Props & PropsFromDispatch & RouteComponentProps<R
           displayContent={[{name: "name", width: 65}, {name: "prefix", width: 35}]}
           fetchFunction={fetchLabelTypesWithOptions}
           handleClose={() => setShowDeleteModal(false)}
-          tableUrl={'/data_management/labels/label_types'}
+          tableUrl={'/management/data_management/labels/label_types'}
         />
       ) : null}
     </ExplainSideColumn>

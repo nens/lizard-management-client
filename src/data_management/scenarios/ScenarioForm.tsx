@@ -60,7 +60,7 @@ const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProp
         const status = data.status;
         if (status === 200) {
           props.addNotification('Success! Scenario updated', 2000);
-          props.history.push('/data_management/scenarios/');
+          props.history.push('/management/data_management/scenarios/');
         } else {
           props.addNotification(status, 2000);
           console.error(data);
@@ -90,7 +90,7 @@ const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProp
       imgAltDescription={"3Di icon"}
       headerText={"3Di Scenarios"}
       explanationText={scenarioFormHelpText[fieldOnFocus] || defaultScenarioExplanationText(bytesToDisplayValue(scenarioTotalSize), selectedOrganisation.name)}
-      backUrl={"/data_management/scenarios/"}
+      backUrl={"/management/data_management/scenarios/"}
       fieldName={fieldOnFocus}
     >
       <form
@@ -185,7 +185,7 @@ const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProp
           className={formStyles.ButtonContainer}
         >
           <CancelButton
-            url={'/data_management/scenarios/'}
+            url={'/management/data_management/scenarios/'}
           />
           <SubmitButton
             onClick={tryToSubmitForm}

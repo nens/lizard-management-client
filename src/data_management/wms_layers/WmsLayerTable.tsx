@@ -9,7 +9,7 @@ import wmsIcon from "../../images/wms@3x.svg";
 import tableStyles from "../../components/Table.module.css";
 
 export const baseUrl = "/api/v4/wmslayers/";
-const navigationUrl = "/data_management/wms_layers";
+const navigationUrl = "/management/data_management/wms_layers";
 
 export const WmsLayerTable = (props: RouteComponentProps) =>  {
   const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
