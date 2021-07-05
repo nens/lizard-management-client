@@ -169,17 +169,6 @@ export function selectOrganisation(organisation, mustAddNotification) {
   }
 }
 
-// MARK: Viewport
-export const UPDATE_VIEWPORT_DIMENSIONS = "UPDATE_VIEWPORT_DIMENSIONS";
-
-export function updateViewportDimensions(width, height) {
-  return {
-    type: UPDATE_VIEWPORT_DIMENSIONS,
-    width,
-    height
-  };
-}
-
 // MARK: Alarm Type update with Raster or Timeseries
 export const UPDATE_ALARM_TYPE = "UPDATE_ALARM_TYPE";
 

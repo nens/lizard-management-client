@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { connect, useSelector } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 // import MDSpinner from "react-md-spinner";
 import { fetchTaskInstance } from "./api/tasks";
 import {
-  // addNotification,
+  addNotification,
   fetchLizardBootstrap,
   fetchOrganisations,
-  // updateViewportDimensions,
   fetchDatasets,
   updateTaskStatus,
   // removeFileFromQueue
@@ -48,6 +47,7 @@ const App = (props: RouteComponentProps & DispatchProps) => {
     fetchOrganisations,
     getDatasets,
     updateTaskStatus,
+    addNotification,
   } = props;
 
   const userAuthenticated = useSelector(getUserAuthenticated);
@@ -57,11 +57,8 @@ const App = (props: RouteComponentProps & DispatchProps) => {
   const showOrganisationPicker = userAuthenticated && !shouldFetchOrganisations && selectedOrganisation;
   const filesInProcess = useSelector( getFilesInProcess);
   const firstFileInTheQueue = filesInProcess && filesInProcess[0];
-
   const currentRelativeUrl = props.location.pathname;
-  console.log('currentRelativeUrl', currentRelativeUrl)
   
-
   const [showOrganisationSwitcher, setShowOrganisationSwitcher] = useState(false);
   const [showUploadQueue, setShowUploadQueue] = useState(false);
 
@@ -92,95 +89,35 @@ const App = (props: RouteComponentProps & DispatchProps) => {
     }
   }, [firstFileInTheQueue, updateTaskStatus]);
 
+  const handleWindowClose = useCallback(event => {
+    event.preventDefault();
+    
+    if (filesInProcess && filesInProcess.length > 0) {
+      return event.returnValue = "";
+    } else {
+      return null;
+    };
+  }, [filesInProcess]);
 
-  // componentDidUpdate(prevProps) {
-  //   if (this.props.uploadFiles && prevProps.uploadFiles !== this.props.uploadFiles) {
-  //     const firstFileInTheQueue = this.props.filesInProcess[0];
+  useEffect(() => {
+    window.addEventListener('beforeunload', handleWindowClose);
 
-  //     if (this.props.filesInProcess.length === 0 || !firstFileInTheQueue || !firstFileInTheQueue.uuid) return;
+    // todo, should other logic concerning a warning on close also be handled here? Or in the forms?
 
-  //     setTimeout(() => {
-  //       fetchTaskInstance(firstFileInTheQueue.uuid)
-  //         .then(response => {
-  //           this.props.updateTaskStatus(firstFileInTheQueue.uuid, response.status);
-  //         })
-  //         .catch(e => console.error(e))
-  //     }, 5000);
-  //   };
-  // };
+    // removing event listener not needed since the logic is in the eventlistener itself?
+    // return () => {
+    //   window.removeEventListener('beforeunload', handleWindowClose);
+    // };
+  }, [handleWindowClose, filesInProcess]);
 
+  const updateOnlineStatus = useCallback(event => {
+    addNotification(`Your internet connection seems to be ${event.type}`, 2000);
+  },[addNotification])
+  useEffect(() => {
+    window.addEventListener('offline', updateOnlineStatus);
+  }, [updateOnlineStatus, addNotification]);
 
-  // constructor(props) {
-  //   super(props);
-  //   this.state = {
-  //     showOrganisationSwitcher: false,
-  //     showProfileList: false,
-  //     showUploadQueue: false
-  //   };
-  //   this.updateOnlineStatus = this.updateOnlineStatus.bind(this);
-  //   this.updateViewportDimensions = this.updateViewportDimensions.bind(this);
-  //   this.handleWindowClose = this.handleWindowClose.bind(this);
-  // }
-  // //Click the user-profile button open the dropdown
-  // //Click anywhere outside of the user-profile modal will close the modal
-  // onUserProfileClick = (e) => {
-  //   return e.target.id === "user-profile" ? 
-  //     this.setState({ showProfileList: !this.state.showProfileList }) : 
-  //     this.setState({ showProfileList: false });
-  // }
-
-  // componentDidMount() {
-  //   window.addEventListener("offline", e => this.updateOnlineStatus(e));
-  //   window.addEventListener("resize", e => this.updateViewportDimensions(e));
-  //   window.addEventListener("beforeunload", this.handleWindowClose);
-  //   // only needs to be done if user is
-  //   this.props.getLizardBootstrap();
-  // }
-  // componentWillUnmount() {
-  //   window.removeEventListener("offline", e => this.updateOnlineStatus(e));
-  //   window.removeEventListener("resize", e => this.updateViewportDimensions(e));
-  //   window.removeEventListener("beforeunload", this.handleWindowClose);
-  // }
-  // componentWillReceiveProps(props) {
-  //   if (props.isAuthenticated) {
-  //     if (props.mustFetchOrganisations) props.getOrganisations();
-  //     if (props.mustFetchDatasets) props.getDatasets();
-  //   }
-  // }
-  // updateOnlineStatus(e) {
-  //   const { addNotification } = this.props;
-  //   addNotification(`Your internet connection seems to be ${e.type}`, 2000);
-  // }
-  // updateViewportDimensions() {
-  //   const { updateViewportDimensions } = this.props;
-  //   const { innerWidth, innerHeight } = window;
-  //   updateViewportDimensions(innerWidth, innerHeight);
-  // }
-  // handleWindowClose(e) {
-  //   e.preventDefault();
-  //   if (this.props.uploadingFiles && this.props.uploadingFiles.length > 0) {
-  //     return e.returnValue = "";
-  //   } else {
-  //     return null;
-  //   };
-  // }
-
-  // // Poll the task endpoint to update status of uploading/processing files in the queue
-  // componentDidUpdate(prevProps) {
-  //   if (this.props.uploadFiles && prevProps.uploadFiles !== this.props.uploadFiles) {
-  //     const firstFileInTheQueue = this.props.filesInProcess[0];
-
-  //     if (this.props.filesInProcess.length === 0 || !firstFileInTheQueue || !firstFileInTheQueue.uuid) return;
-
-  //     setTimeout(() => {
-  //       fetchTaskInstance(firstFileInTheQueue.uuid)
-  //         .then(response => {
-  //           this.props.updateTaskStatus(firstFileInTheQueue.uuid, response.status);
-  //         })
-  //         .catch(e => console.error(e))
-  //     }, 5000);
-  //   };
-  // };
+  // //////////////////////////////////////////////////////////////////////////////
 
     // if ( 
     //   this.props.availableOrganisations.length === 0 && 
@@ -435,12 +372,9 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => {
     fetchLizardBootstrap: () => dispatch(fetchLizardBootstrap()),
     fetchOrganisations: () => dispatch(fetchOrganisations()),
     getDatasets: () => dispatch(fetchDatasets()),
-    // addNotification: (message, timeout) => {
-    //   dispatch(addNotification(message, timeout));
-    // },
-    // updateViewportDimensions: (width, height) => {
-    //   dispatch(updateViewportDimensions(width, height))
-    // },
+    addNotification: (message: string, timeout: number) => {
+      dispatch(addNotification(message, timeout));
+    },
     updateTaskStatus: (uuid: string, status: number) => dispatch(updateTaskStatus(uuid, status)),
     // removeFileFromQueue: (file) => dispatch(removeFileFromQueue(file)),
   };

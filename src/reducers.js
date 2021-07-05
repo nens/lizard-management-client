@@ -11,7 +11,6 @@ import {
   SET_USAGE,
   SHOW_NOTIFICATION,
   DISMISS_NOTIFICATION,
-  UPDATE_VIEWPORT_DIMENSIONS,
   UPDATE_ALARM_TYPE,
   REQUEST_DATASETS,
   RECEIVE_DATASETS_SUCCESS,
@@ -164,25 +163,6 @@ function notifications(
           ...state.notifications.slice(0, action.idx),
           ...state.notifications.slice(action.idx + 1)
         ]
-      };
-    default:
-      return state;
-  }
-}
-
-function viewport(
-  state = {
-    width: window.innerWidth,
-    height: window.innerHeight
-  },
-  action
-) {
-  switch (action.type) {
-    case UPDATE_VIEWPORT_DIMENSIONS:
-      return {
-        ...state,
-        width: action.width,
-        height: action.height
       };
     default:
       return state;
@@ -374,7 +354,6 @@ const rootReducer = combineReducers({
   usage,
   datasets,
   notifications,
-  viewport,
   alarmType,
   rasterSourceUUID,
   location,
