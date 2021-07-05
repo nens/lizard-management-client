@@ -95,9 +95,29 @@ export const fetchObservationTypes = async (searchQuery: string) => {
   });
 };
 
+// Helper function to fetch paginated organisations with search query
+export const fetchOrganisationsToShareWith = async (searchQuery: string) => {
+  const params=[];
+
+  // Regex expression to check if search input is UUID of raster source
+  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+  if (searchQuery) {
+    if (uuidRegex.test(searchQuery)) {
+      params.push(`uuid=${searchQuery}`);
+    } else {
+      params.push(`name__icontains=${searchQuery}`);
+    };
+  };
+
+  const urlQuery = params.join('&');
+  const response = await fetch(`/api/v4/organisations/?${urlQuery}`);
+  const responseJSON = await response.json();
+
+  return responseJSON.results.map((org: any) => convertToSelectObject(org.uuid, org.name));
+};
+
 const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (props) => {
   const { currentRasterLayer, removeRasterSourceUUID } = props;
-  const organisationsToSharedWith = useSelector(getOrganisations).availableForRasterSharedWith;
   const organisations = useSelector(getOrganisations).available;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const datasets = useSelector(getDatasets).available;
@@ -463,13 +483,16 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
             name={'organisationsToSharedWith'}
             placeholder={'- Search and select -'}
             value={values.organisationsToSharedWith}
-            options={organisationsToSharedWith.map((organisation: any) => convertToSelectObject(organisation.uuid, organisation.name))}
+            options={[]}
             valueChanged={value => handleValueChange('organisationsToSharedWith', value)}
             validated
             form={"raster_layer_form_id"}
             onFocus={handleFocus}
             onBlur={handleBlur}
             isMulti
+            isAsync
+            isCached
+            loadOptions={fetchOrganisationsToShareWith}
             readOnly={belongsToScenario}
           />
         ) : null}

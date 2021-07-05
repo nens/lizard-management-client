@@ -85,25 +85,11 @@ export function fetchOrganisations() {
     // URL to fetch the list of available organisations with user roles
     const availableOrganisationsUrl = `/api/v4/users/${userId}/organisations/?page_size=0`;
 
-    // URL to fetch all organisations
-    const organisationsUrl = `/api/v4/organisations/?page_size=0`;
-
-    const allOrganisationsParsedRes = await fetch(organisationsUrl, {
-      credentials: "same-origin"
-    }).then(
-      res => res.json()
-    );
-
     const availableOrganisationsParsedRes = await fetch(availableOrganisationsUrl, {
       credentials: "same-origin"
     }).then(
       res => res.json()
     );
-
-    const allOrganisations = allOrganisationsParsedRes.map(org => ({
-      ...org,
-      uuid: org.uuid
-    }));
 
     // All user roles are accepted in the management page
     const availableOrganisations = availableOrganisationsParsedRes.map(org => ({
@@ -114,7 +100,6 @@ export function fetchOrganisations() {
     // Dispatch action to update Redux store
     dispatch({
       type: RECEIVE_ORGANISATIONS,
-      all: allOrganisations,
       available: availableOrganisations
     });
 

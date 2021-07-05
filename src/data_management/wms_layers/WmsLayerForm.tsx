@@ -28,6 +28,7 @@ import { wmsFormHelpText } from '../../utils/help_texts/helpTextForWMS';
 import { convertToSelectObject } from '../../utils/convertToSelectObject';
 import { fetchWithOptions } from '../../utils/fetchWithOptions';
 import { fetchSuppliers } from '../rasters/RasterSourceForm';
+import { fetchOrganisationsToShareWith } from '../rasters/RasterLayerForm';
 import { baseUrl } from './WmsLayerTable';
 import FormActionButtons from '../../components/FormActionButtons';
 import DeleteModal from '../../components/DeleteModal';
@@ -43,8 +44,7 @@ interface PropsFromDispatch {
 const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (props) => {
   const { currentWmsLayer} = props;
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
-  const [geoserverError, setGeoserverError,] = useState(false)
-  const organisationsToSharedWith = useSelector(getOrganisations).availableForRasterSharedWith;
+  const [geoserverError, setGeoserverError] = useState<boolean>(false);
   const organisations = useSelector(getOrganisations).available;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const datasets = useSelector(getDatasets).available;
@@ -358,10 +358,13 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
             name={'shared_with'}
             placeholder={'Search organisations'}
             value={values.shared_with}
-            options={organisationsToSharedWith.map((organisation: any) => convertToSelectObject(organisation.uuid, organisation.name))}
+            options={[]}
             valueChanged={value => handleValueChange('shared_with', value)}
             validated
             isMulti
+            isAsync
+            isCached
+            loadOptions={fetchOrganisationsToShareWith}
             onFocus={handleFocus}
             onBlur={handleBlur}
           />
