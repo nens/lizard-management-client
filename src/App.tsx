@@ -37,9 +37,10 @@ import lizardIcon from "./images/lizard.svg";
 // import editIcon from './images/edit.svg';
 // import shouldRedirectBasedOnAuthorization from './home/shouldRedirectBasedOnAuthorization';
 import packageJson from '../package.json';
-import { getCurrentNavigationLinkPage} from './home/AppTileConfig';
+import { getCurrentNavigationLinkPage, userHasCorrectRolesForCurrentNavigationLinkTile} from './home/AppTileConfig';
 import LoginProfileDropdown from "./components/LoginProfileDropdown";
 import UnAuthenticatedModal from "./components/UnAuthenticatedModal";
+import UnAuthorizedModal from "./components/UnAuthorizedModal";
 
 
 
@@ -66,6 +67,7 @@ const App = (props: RouteComponentProps & DispatchProps) => {
   const [showOrganisationSwitcher, setShowOrganisationSwitcher] = useState(false);
   const [showUploadQueue, setShowUploadQueue] = useState(false);
   const [showUnauthenticatedRedirectModal, setShowUnauthenticatedRedirectModal] = useState(false);
+  const [showUnAuthorizedRedirectModal, setShowUnAuthorizedRedirectModal] = useState(false);
 
   
 
@@ -134,6 +136,17 @@ const App = (props: RouteComponentProps & DispatchProps) => {
       setShowUnauthenticatedRedirectModal(true);
     }
   }, [currentNavigationLinkPage, userAuthenticated, isBusyFetchingBootstrap]);
+
+  const userHasCorrectRoles = userHasCorrectRolesForCurrentNavigationLinkTile(selectedOrganisation? selectedOrganisation.roles: []);
+  useEffect(() => {
+    if (
+      userAuthenticated &&
+      !userHasCorrectRoles &&
+      !showOrganisationSwitcher
+    ) {
+      setShowUnAuthorizedRedirectModal(true);
+    }
+  }, [userHasCorrectRoles, userAuthenticated, showOrganisationSwitcher]);
   
 
     // if ( 
@@ -353,6 +366,19 @@ const App = (props: RouteComponentProps & DispatchProps) => {
             redirectHome={()=>{
               setShowUnauthenticatedRedirectModal(false);
               props.history.push("/");
+            }}
+          />
+        :null}
+        { showUnAuthorizedRedirectModal?
+          <UnAuthorizedModal
+            handleClose={()=>{setShowUnAuthorizedRedirectModal(false)}}
+            redirectHome={()=>{
+              setShowUnAuthorizedRedirectModal(false);
+              props.history.push("/");
+            }}
+            handleOpenOrganisationSwitcher={()=>{
+              setShowUnAuthorizedRedirectModal(false);
+              setShowOrganisationSwitcher(true);
             }}
           />
         :null}
