@@ -141,12 +141,13 @@ const App = (props: RouteComponentProps & DispatchProps) => {
   useEffect(() => {
     if (
       userAuthenticated &&
+      selectedOrganisation &&
       !userHasCorrectRoles &&
       !showOrganisationSwitcher
     ) {
       setShowUnAuthorizedRedirectModal(true);
     }
-  }, [userHasCorrectRoles, userAuthenticated, showOrganisationSwitcher]);
+  }, [userHasCorrectRoles, userAuthenticated, showOrganisationSwitcher, selectedOrganisation]);
   
 
     // if ( 
@@ -226,7 +227,7 @@ const App = (props: RouteComponentProps & DispatchProps) => {
                         Apps
                       </a>
                     </div>
-                    { userAuthenticated &&  currentRelativeUrl !== '/'? 
+                    { userAuthenticated && selectedOrganisation && currentRelativeUrl !== '/'? 
                     <div
                       className={styles.Profile}
                       onClick={() => {
