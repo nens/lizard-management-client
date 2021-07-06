@@ -131,7 +131,6 @@ const App = (props: RouteComponentProps & DispatchProps) => {
         currentNavigationLinkPage.onUrl !== '/'  // it is the home
       ) && !userAuthenticated && !isBusyFetchingBootstrap
     ) {
-      console.log("user should login or go back to homepage");
       setShowUnauthenticatedRedirectModal(true);
     }
   }, [currentNavigationLinkPage, userAuthenticated, isBusyFetchingBootstrap]);

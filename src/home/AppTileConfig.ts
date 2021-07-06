@@ -46,7 +46,13 @@ export const getNavigationLinkPageFromUrlAndAllNavigationLinkPages = (urlPostFix
 }
 
 export const getNavigationLinkTileFromUrlAndAllNavigationLinkTiles = (urlPostFix:string, allNavigationLinkTiles:NavigationLinkTile[]) => {
-  return allNavigationLinkTiles.find(navigationLinkTile => navigationLinkTile.linksToUrl === urlPostFix);
+  const homeAppTileOnCompleteUrl = allNavigationLinkTiles.find(navigationLinkTile => navigationLinkTile.linksToUrl === urlPostFix);
+  if (homeAppTileOnCompleteUrl) {
+    return homeAppTileOnCompleteUrl;
+  } else {
+    const urlMinusLastPart = urlPostFix.split("/").slice(0,-1).join("/");
+    return allNavigationLinkTiles.find(navigationLinkTile => navigationLinkTile.linksToUrl === urlMinusLastPart); 
+  }
 }
 
 export const getCurrentNavigationLinkPage = () => {
