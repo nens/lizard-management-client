@@ -83,19 +83,36 @@ export function fetchOrganisations() {
     const selectedOrganisationLocalStorage = getLocalStorage("lizard-management-current-organisation", null);
 
     // URL to fetch the list of available organisations with user roles
-    const availableOrganisationsUrl = `/api/v4/users/${userId}/organisations/?page_size=0`;
+    const availableOrganisationsUrl = `/api/v4/users/${userId}/organisations/`;
 
-    const availableOrganisationsParsedRes = await fetch(availableOrganisationsUrl, {
-      credentials: "same-origin"
-    }).then(
-      res => res.json()
-    );
+    // Recursive function to build the list of available organisations
+    // as the custom hook usePaginatedFetch cannot be used in the action.js
+    let results = [];
+    const paginatedFetchHelper = async (url) => {
+      try {
+        const response = await fetch(url, {
+          credentials: "same-origin"
+        });
 
-    // All user roles are accepted in the management page
-    const availableOrganisations = availableOrganisationsParsedRes.map(org => ({
-      ...org,
-      uuid: org.uuid
-    }));
+        if (response.status !== 200) {
+          return console.error(`Failed to send GET request to ${url} with status: `, response.status);
+        };
+
+        const data = await response.json();
+        results = results.concat(data.results);
+
+        if (data.next) {
+          await paginatedFetchHelper(data.next.split("lizard.net")[1])
+        };
+
+        return results;
+      } catch (e) {
+        return console.error(e);
+      };
+    };
+    ////////////////////////////////
+
+    const availableOrganisations = await paginatedFetchHelper(availableOrganisationsUrl);
 
     // Dispatch action to update Redux store
     dispatch({
