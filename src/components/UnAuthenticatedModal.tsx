@@ -28,12 +28,13 @@ const UnAuthenticatedModal = (props: Props) => {
         <span>You need to be logged in to use this page</span>
       </div>
       <div className={styles.ModalFooter}>
-        <button
+        {/* If we want the cancel button, then we need to make sure al forms become read only now as well */}
+        {/* <button
           className={buttonStyles.LinkCancel}
           onClick={()=>{handleClose()}}
         >
           Cancel
-        </button>
+        </button> */}
         <button
           className={buttonStyles.NewButton}
           onClick={redirectHome}
