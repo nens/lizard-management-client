@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { SelectDropdown, Value } from './SelectDropdown';
-import { convertToSelectObject } from '../utils/convertToSelectObject';
 import formStyles from "../styles/Forms.module.css";
 import buttonStyles from "../styles/Buttons.module.css";
 
@@ -19,6 +18,8 @@ interface MyProps {
   name: string,
   organisation: string,
   recipients: Recipient[],
+  availableGroups: any[],
+  availableTemplates: any[],
   valueChanged: (recipients: Recipient[]) => void,
   valueRemoved: (recipients: Recipient[]) => void,
   clearInput?: (name: string) => void,
@@ -35,8 +36,9 @@ export function Recipients (props: MyProps) {
   const {
     title,
     name,
-    organisation,
     recipients,
+    availableGroups,
+    availableTemplates,
     valueChanged,
     valueRemoved,
     onFocus,
@@ -45,58 +47,10 @@ export function Recipients (props: MyProps) {
     readOnly
   } = props;
 
-  const [availableGroups, setAvailableGroups] = useState<Value[]>([]);
-  const [availableTemplates, setAvailableTemplates] = useState<Value[]>([]);
   const [recipient, setRecipient] = useState<NewRecipient>({
     contact_group: null,
     message: null
   });
-
-  // useEffect to fetch available contact groups and messages
-  // and to update the list of recipients when component first mounted
-  useEffect(() => {
-    (async () => {
-      // Fetch list of available groups
-      const groupJSON = await fetch(`/api/v4/contactgroups/?organisation__uuid=${organisation}&page_size=1000`, {
-        credentials: 'same-origin'
-      }).then(
-        response => response.json()
-      );
-
-      // Fetch list of available templates
-      const templateJSON = await fetch(`/api/v4/messages/?organisation__uuid=${organisation}&page_size=1000`, {
-        credentials: 'same-origin'
-      }).then(
-        response => response.json()
-      );
-
-      const listOfGroups: Value[] = groupJSON.results.map((group: any) => convertToSelectObject(group.id, group.name));
-      const listOfTemplates: Value[] = templateJSON.results.map((template: any) => convertToSelectObject(template.id, template.name));
-
-      setAvailableGroups(listOfGroups);
-      setAvailableTemplates(listOfTemplates);
-
-      // Update the initial list of recipients by adding group name and template name as labels
-      const listOfRecipients = recipients.map(recipient => {
-        const groupId = recipient.contact_group.value;
-        const templateId = recipient.message.value;
-
-        const selectedGroup = listOfGroups.find(group => group.value === groupId);
-        const groupName = selectedGroup ? selectedGroup.label : '';
-
-        const selectedTemplate = listOfTemplates.find(template => template.value === templateId);
-        const templateName = selectedTemplate ? selectedTemplate.label : '';
-
-        return {
-          contact_group: convertToSelectObject(groupId, groupName),
-          message: convertToSelectObject(templateId, templateName)
-        };
-      });
-
-      return valueChanged(listOfRecipients);
-    })();
-    // eslint-disable-next-line
-  }, [organisation]); // re-fetch list of available groups and templates when selected organisation is changed for new alarm
 
   return (
     <label
