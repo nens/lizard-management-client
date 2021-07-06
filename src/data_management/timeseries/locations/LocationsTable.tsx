@@ -26,12 +26,12 @@ export const LocationsTable = (props: RouteComponentProps) =>  {
   // selected rows for set accessibility action
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
 
-  const { results } = usePaginatedFetch({
+  const { results: timeseries } = usePaginatedFetch({
     url: rowToBeDeleted && rowToBeDeleted.uuid ? `/api/v4/timeseries/?location__uuid=${rowToBeDeleted.uuid}` : null
   });
   useEffect(() => {
-    setDependentTimeseries(results);
-  }, [results]);
+    setDependentTimeseries(timeseries);
+  }, [timeseries]);
 
   const deleteActions = (
     row: any,

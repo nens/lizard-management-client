@@ -39,12 +39,12 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const [dependentTimeseries, setDependentTimeseries] = useState<any[] | null>(null);
 
-  const { results } = usePaginatedFetch({
+  const { results: timeseries } = usePaginatedFetch({
     url: currentRecord && currentRecord.uuid ? `/api/v4/timeseries/?location__uuid=${currentRecord.uuid}` : null
   });
   useEffect(() => {
-    setDependentTimeseries(results);
-  }, [results]);
+    setDependentTimeseries(timeseries);
+  }, [timeseries]);
 
   let initialValues;
   if (currentRecord) {
