@@ -8,7 +8,7 @@ import WmsLayerForm from "./WmsLayerForm";
 class NewWmsLayerModel extends Component {
   render() {
     if (
-      this.props.organisations.isFetching === false
+      this.props.organisations.selected
     ) {
       return <WmsLayerForm />;
     } else {

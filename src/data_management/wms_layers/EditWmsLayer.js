@@ -28,7 +28,7 @@ class EditWmsLayerModel extends Component {
   render() {
     if (
       this.state.currentWmsLayer &&
-      this.props.organisations.isFetching === false
+      this.props.organisations.selected
     ) {
       return <WmsLayerForm 
         currentWmsLayer={this.state.currentWmsLayer}
