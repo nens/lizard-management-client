@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { getRelativePathFromUrl } from './getRelativePathFromUrl';
 
 interface InputProps {
   url: string | null;
@@ -38,7 +39,7 @@ export const usePaginatedFetch = (props: InputProps): Output => {
           setCount(data.count);
           setResults(results => results ? results.concat(data.results) : data.results);
           if (data.next) {
-            fetchHelper(data.next.split("lizard.net")[1]);
+            fetchHelper(getRelativePathFromUrl(data.next));
           } else {
             // Finish building data based on the "next" param
             setFetchingState('DONE');

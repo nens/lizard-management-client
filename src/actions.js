@@ -1,6 +1,6 @@
 // MARK: Bootstrap
-
-import {getLocalStorage} from "./utils/localStorageUtils";
+import { getLocalStorage } from "./utils/localStorageUtils";
+import { getRelativePathFromUrl } from "./utils/getRelativePathFromUrl";
 
 export const RECEIVE_LIZARD_BOOTSTRAP = "RECEIVE_LIZARD_BOOTSTRAP";
 export const REQUEST_LIZARD_BOOTSTRAP = "REQUEST_LIZARD_BOOTSTRAP";
@@ -102,7 +102,7 @@ export function fetchOrganisations() {
         results = results.concat(data.results);
 
         if (data.next) {
-          await paginatedFetchHelper(data.next.split("lizard.net")[1])
+          await paginatedFetchHelper(getRelativePathFromUrl(data.next))
         };
 
         return results;

@@ -1,17 +1,14 @@
-import React ,{ useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import MDSpinner from "react-md-spinner";
-import {PersonalApiKeyForm} from "./PersonalApiKeyForm";
-import { DataRetrievalState} from '../types/retrievingDataTypes';
-
+import { PersonalApiKeyForm } from "./PersonalApiKeyForm";
+import { DataRetrievalState } from '../types/retrievingDataTypes';
+import { getRelativePathFromUrl } from "../utils/getRelativePathFromUrl";
 
 export const NewPersonalApiKey: React.FC = () => {
   const [allPersonalApiKeys, setAllPersonalApiKeys] = useState([]);
   const [allPersonalApiKeysFetching, setallPersonalApiKeysFetching] = useState<DataRetrievalState>("NEVER_DID_RETRIEVE");
 
-  
-
   useEffect(() => {
-
     const fetchApiKeys = (url:string) => {
       setallPersonalApiKeysFetching("RETRIEVING");
       fetch(url)
@@ -33,7 +30,7 @@ export const NewPersonalApiKey: React.FC = () => {
         if (data && data.next === null) {
           setallPersonalApiKeysFetching("RETRIEVED");
         } else if (data && data.next !== null) {
-          fetchApiKeys((data.next+'').split("lizard.net")[1])
+          fetchApiKeys(getRelativePathFromUrl(data.next))
         }
       })
     }
