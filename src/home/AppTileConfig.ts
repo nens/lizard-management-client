@@ -17,6 +17,8 @@ import templatesIcon from "../images/templates@3x.svg";
 import timeseriesIcon from "../images/timeseries_icon.svg";
 import monitoringsNetworkicon from "../images/monitoring_network_icon.svg";
 import locationsIcon from "../images/locations_icon.svg";
+import doArraysHaveEqualElement from '../utils/doArraysHaveEqualElement';
+
 
 export type Role = "admin"| "supplier"| "manager"| "user"
 export interface NavigationLinkPage {
@@ -76,6 +78,11 @@ export const getCurrentNavigationLinkTiles = () => {
   } else{
     return [];
   }
+}
+
+export const userHasCorrectRolesForCurrentNavigationLinkTile = (userRoles: string[]) => {
+  const currentHomeAppTile = getCurrentNavigationLinkTile();
+  return !currentHomeAppTile || currentHomeAppTile.requiresOneOfRoles.length === 0 || doArraysHaveEqualElement(userRoles, currentHomeAppTile.requiresOneOfRoles);
 }
 
 
