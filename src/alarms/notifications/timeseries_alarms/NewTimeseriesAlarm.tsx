@@ -23,8 +23,8 @@ export const NewTimeseriesAlarm: React.FC = () => {
   });
 
   if (
-    groupsFetchingState && groupsFetchingState !== 'RETRIEVING' &&
-    templatesFetchingState && templatesFetchingState !== 'RETRIEVING'
+    groupsFetchingState === 'RETRIEVED' &&
+    templatesFetchingState === 'RETRIEVED'
   ) {
     return (
       <TimeseriesAlarmForm

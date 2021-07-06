@@ -23,8 +23,8 @@ export const NewRasterAlarm: React.FC = () => {
   });
 
   if (
-    groupsFetchingState && groupsFetchingState !== 'RETRIEVING' &&
-    templatesFetchingState && templatesFetchingState !== 'RETRIEVING'
+    groupsFetchingState === 'RETRIEVED' &&
+    templatesFetchingState === 'RETRIEVED'
   ) {
     return (
       <RasterAlarmForm

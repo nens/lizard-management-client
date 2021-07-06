@@ -53,8 +53,8 @@ export const EditTimeseriesAlarm: React.FC<RouteComponentProps<RouteParams>> = (
   if (
     currentTimeseriesAlarm &&
     timeseries &&
-    groupsFetchingState && groupsFetchingState !== 'RETRIEVING' &&
-    templatesFetchingState && templatesFetchingState !== 'RETRIEVING'
+    groupsFetchingState === 'RETRIEVED' &&
+    templatesFetchingState === 'RETRIEVED'
   ) {
     return (
       <TimeseriesAlarmForm

@@ -49,8 +49,8 @@ export const EditRasterAlarm: React.FC<RouteComponentProps<RouteParams>> = (prop
   if (
     currentRasterAlarm &&
     raster &&
-    groupsFetchingState && groupsFetchingState !== 'RETRIEVING' &&
-    templatesFetchingState && templatesFetchingState !== 'RETRIEVING'
+    groupsFetchingState === 'RETRIEVED' &&
+    templatesFetchingState === 'RETRIEVED'
   ) {
     return (
       <RasterAlarmForm
