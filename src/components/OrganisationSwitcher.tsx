@@ -11,7 +11,7 @@ import { connect } from "react-redux";
 import { selectOrganisation } from "../actions";
 import { FormattedMessage, injectIntl } from "react-intl";
 import { Scrollbars } from "react-custom-scrollbars";
-import { getCurrentNavigationLinkTile, userHasCorrectRolesForCurrentNavigationLinkTile} from '../home/AppTileConfig';
+import { userHasCorrectRolesForCurrentNavigationLinkTile} from '../home/AppTileConfig';
 
 
 interface PropsArgs {
@@ -25,7 +25,6 @@ const OrganisationSwitcher = (props:Props) => {
   
   const [height, setHeight] = useState(window.innerHeight);
   const [filterValue, setFilterValue] = useState<null | string>(null);
-  const currentHomeAppTile = getCurrentNavigationLinkTile();
 
   useEffect(() => {
     window.addEventListener("resize", handleResize, false);
@@ -80,10 +79,6 @@ const OrganisationSwitcher = (props:Props) => {
         })
       : organisations;
 
-    // const currentHomeAppTile = navigationLinkTiles.find(icon => {
-    //   return window.location.href.includes(icon.linksToUrl)
-    // });
-    console.log("currentHomeAppTile", currentHomeAppTile)
     // todo add type defenitions for props.intl.formatMessage
     // @ts-ignore
     const authorisationText = props.intl.formatMessage({ id: "authorization.organisation_not_allowed_current_page", defaultMessage: "! Organisation not authorized to visit current page !" });
