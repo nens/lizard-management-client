@@ -1,31 +1,26 @@
 import React from 'react';
 import ModalBackground from './ModalBackground';
-import styles from './UnAuthenticatedModal.module.css';
+import styles from './UnAuthorizedModal.module.css';
 import buttonStyles from './../styles/Buttons.module.css';
-import {
-  getSsoLogin,
-} from '../reducers';
-import {  useSelector } from "react-redux";
-
 
 interface Props {
   handleClose: () => void;
   redirectHome: () => void;
+  handleOpenOrganisationSwitcher: () => void;
 }
 
-const UnAuthenticatedModal = (props: Props) => {
+const UnAuthorizedModal = (props: Props) => {
 
-  const { redirectHome} = props;
-  const ssoLogin = useSelector(getSsoLogin);
+  const { redirectHome, handleOpenOrganisationSwitcher} = props;
 
   return (
     <ModalBackground
-      title={'Not logged-in'}
+      title={'Not Authorized to view this page'}
       // handleClose={() => handleClose()}
       height={'400px'}
     >
       <div className={styles.ModalBody}>
-        <span>You need to be logged in to use this page</span>
+        <span>You are not authorized to view this page. <br/> Maybe you are authorized with a different organisation?</span>
       </div>
       <div className={styles.ModalFooter}>
         {/* If we want the cancel button, then we need to make sure al forms become read only now as well */}
@@ -44,14 +39,14 @@ const UnAuthenticatedModal = (props: Props) => {
         <button
           className={buttonStyles.NewButton}
           onClick={()=>{
-            window.location.href = `${ssoLogin}&next=${window.location.href}`;
+            handleOpenOrganisationSwitcher()
           }}
         >
-          Login
+          Switch organisation
         </button>
       </div>
     </ModalBackground>
   )
 }
 
-export default UnAuthenticatedModal;
+export default UnAuthorizedModal;
