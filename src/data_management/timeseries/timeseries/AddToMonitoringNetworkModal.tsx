@@ -77,7 +77,7 @@ function AddToMonitoringNetworkModal (props: MyProps & DispatchProps) {
             valueChanged={value => setSelectedMonitoringNetwork(value as Value)}
             options={availableMonitoringNetworks || []}
             validated
-            isLoading={fetchingState === 'FETCHING'}
+            isLoading={fetchingState === 'RETRIEVING'}
           />
         </div>
         <div className={formStyles.ButtonContainer}>

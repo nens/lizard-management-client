@@ -302,7 +302,7 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
               },
               ...colorMaps
             ]}
-            isLoading={colorMapsFetchingState === 'FETCHING'}
+            isLoading={colorMapsFetchingState === 'RETRIEVING'}
             value={JSON.stringify(colorMapValue.customColormap) !== "{}" && JSON.stringify(colorMapValue.options) === "{}" ? (
               {
                 value: "Custom colormap",

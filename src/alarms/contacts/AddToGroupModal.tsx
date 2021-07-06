@@ -102,7 +102,7 @@ function AddToGroupModal (props: MyProps & DispatchProps) {
             options={availableGroups || []}
             validated
             isMulti
-            isLoading={fetchingState === 'FETCHING'}
+            isLoading={fetchingState === 'RETRIEVING'}
           />
         </div>
         <div className={formStyles.ButtonContainer}>

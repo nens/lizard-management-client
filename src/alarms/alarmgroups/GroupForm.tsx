@@ -156,7 +156,7 @@ const GroupForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pr
           options={contacts || []}
           validated
           isMulti
-          isLoading={fetchingState === 'FETCHING'}
+          isLoading={fetchingState === 'RETRIEVING'}
           onFocus={handleFocus}
           onBlur={handleBlur}
         />

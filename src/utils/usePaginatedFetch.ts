@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { DataRetrievalState } from '../types/retrievingDataTypes';
 import { getRelativePathFromUrl } from './getRelativePathFromUrl';
 
 interface InputProps {
@@ -6,7 +7,7 @@ interface InputProps {
 }
 
 interface Output {
-  fetchingState: string | null;
+  fetchingState: DataRetrievalState;
   results: any[] | null;
   count: number;
 }
@@ -15,11 +16,11 @@ export const usePaginatedFetch = (props: InputProps): Output => {
   const { url } = props;
   const [results, setResults] = useState<any[] | null>(null);
   const [count, setCount] = useState<number>(0);
-  const [fetchingState, setFetchingState] = useState<string | null>(null);
+  const [fetchingState, setFetchingState] = useState<DataRetrievalState>('NEVER_DID_RETRIEVE');
 
   const resetAllState = () => {
     setResults(null);
-    setFetchingState(null);
+    setFetchingState('NEVER_DID_RETRIEVE');
     setCount(0);
   };
 
@@ -28,7 +29,7 @@ export const usePaginatedFetch = (props: InputProps): Output => {
     const fetchHelper = async (url: string | null) => {
       if (!url) return; // do nothing
 
-      setFetchingState('FETCHING');
+      setFetchingState('RETRIEVING');
       try {
         const response = await fetch(url, {
           credentials: "same-origin"
@@ -42,15 +43,23 @@ export const usePaginatedFetch = (props: InputProps): Output => {
             fetchHelper(getRelativePathFromUrl(data.next));
           } else {
             // Finish building data based on the "next" param
-            setFetchingState('DONE');
+            setFetchingState('RETRIEVED');
           };
           return data;
         } else {
-          setFetchingState('FAILED');
+          setFetchingState({
+            status: "ERROR",
+            errorMesssage: `Failed to send GET request to ${url} with status: ${response.status}`,
+            url: url
+          });
           return console.error(`Failed to send GET request to ${url} with status: `, response.status);
         }
       } catch (e) {
-        setFetchingState('FAILED');
+        setFetchingState({
+          status: "ERROR",
+          errorMesssage: e,
+          url: url
+        });
         return console.error(e);
       };
     };
