@@ -9,7 +9,6 @@ import {
   fetchOrganisations,
   fetchDatasets,
   updateTaskStatus,
-  // removeFileFromQueue
 } from "./actions";
 import {
   getShouldFetchBootstrap,
@@ -21,7 +20,6 @@ import {
 } from './reducers';
 import {Routes} from './home/Routes';
 import {NavLink, withRouter, RouteComponentProps } from "react-router-dom";
-// import LanguageSwitcher from "./components/LanguageSwitcher";
 import OrganisationSwitcher from "./components/OrganisationSwitcher";
 import Snackbar from "./components/Snackbar";
 import Breadcrumbs from "./components/Breadcrumbs";
@@ -30,12 +28,6 @@ import styles from "./App.module.css";
 import gridStyles from "./styles/Grid.module.css";
 import buttonStyles from "./styles/Buttons.module.css";
 import lizardIcon from "./images/lizard.svg";
-
-// import helpIcon from './images/help.svg'
-// import documentIcon from './images/document.svg';
-// import logoutIcon from './images/logout.svg';
-// import editIcon from './images/edit.svg';
-// import shouldRedirectBasedOnAuthorization from './home/shouldRedirectBasedOnAuthorization';
 import packageJson from '../package.json';
 import { getCurrentNavigationLinkPage, userHasCorrectRolesForCurrentNavigationLinkTile} from './home/AppTileConfig';
 import LoginProfileDropdown from "./components/LoginProfileDropdown";
@@ -149,44 +141,6 @@ const App = (props: RouteComponentProps & DispatchProps) => {
     }
   }, [userHasCorrectRoles, userAuthenticated, showOrganisationSwitcher, selectedOrganisation]);
   
-
-    // if ( 
-    //   this.props.availableOrganisations.length === 0 && 
-    //   this.props.isFetchingOrganisations === false &&
-    //   this.props.timesFetchedOrganisations > 0
-    // ) {
-    //   const norolesMessage = this.props.intl.formatMessage({ id: "authorization.no_roles_message", defaultMessage: "Dear user, \nYou seem not to be in any organisations that can access the management pages. \nTherefore you are redirected to the mainpage." });
-    //   alert(norolesMessage);
-    //   // should redirect to <customer_url>.lizard.net on prod
-    //   window.location = "/";
-    // }
-
-    // Todo make a better function for this, also in organisationSwitcher
-    // This find function relies on the ordering of the tiles
-    // also the "!icon.onUrl.includes(icon.linksToUrl)" is needed to the back icon is not found
-    // const currentHomeAppTile = navigationLinkTiles.find(icon => {
-    //   return window.location.href.includes(icon.linksToUrl) &&
-    //     // back icon cannot be current homeAppTile
-    //     !icon.onUrl.includes(icon.linksToUrl)
-    // });
-
-
-    // if (
-    //   !this.props.bootstrap.isAuthenticated && 
-    //   !this.props.bootstrap.isFetching &&
-    //   currentNavigationLinkPage
-      
-    //   ) {
-    //   this.props.getLizardBootstrap();
-    // }
-
-    // if (shouldRedirectBasedOnAuthorization(this.props.bootstrap, this.props.selectedOrganisation)) {
-    //   const redirectMessage = this.props.intl.formatMessage({ id: "authorization.redirected_based_onrole", defaultMessage: "You do not have the rights to access this data under the selected organisation. \nYou will be redirected." });
-    //   alert(redirectMessage);
-    //   // should redirect to <customer_url>.lizard.net/management/ on prod
-    //   this.props.history.push("/");
-    // }
-    
     // if (!this.props.isAuthenticated || !this.props.selectedOrganisation) {
     //   return (
     //     <div className={styles.MDSpinner}>
@@ -194,15 +148,10 @@ const App = (props: RouteComponentProps & DispatchProps) => {
     //     </div>
     //   );
     // } else {
-      // const { preferredLocale, bootstrap, selectedOrganisation } = this.props;
-      // const firstName = bootstrap.bootstrap.user
-      //   ? bootstrap.bootstrap.user.first_name
-      //   : "...";
-      // const { showOrganisationSwitcher } = this.state;
+      
 
       return (
         <div className={styles.App} 
-        // onClick={this.onUserProfileClick}
         >
           <div className={`${styles.Primary}`}>
             <div className={gridStyles.Container}>
@@ -385,40 +334,9 @@ const App = (props: RouteComponentProps & DispatchProps) => {
         :null}
         </div>
       );
-  // }
 }
 
-// const mapStateToProps = (state, ownProps) => {
-//   return {
-    // isFetching: state.isFetching,
-    // bootstrap: state.bootstrap,
-    // isAuthenticated: state.bootstrap.isAuthenticated,
-    // uploadFiles: state.uploadFiles,
-    // uploadingFiles:
-    //   state.uploadFiles &&
-    //   state.uploadFiles.length > 0 &&
-    //   state.uploadFiles.filter(file => file.status === 'WAITING' || file.status === 'UPLOADING'),
-    // filesInProcess:
-    //   state.uploadFiles &&
-    //   state.uploadFiles.length > 0 &&
-    //   state.uploadFiles.filter(file => file.status !== 'SUCCESS' && file.status !== 'FAILED'),
 
-    // mustFetchOrganisations:
-    //   state.organisations.available.length === 0 &&
-    //   !state.organisations.isFetching &&
-    //   state.organisations.timesFetched < 1,
-
-    // selectedOrganisation: state.organisations.selected,
-    // availableOrganisations: state.organisations.available,
-    // isFetchingOrganisations: state.organisations.isFetching,
-    // timesFetchedOrganisations: state.organisations.timesFetched,
-
-    // mustFetchDatasets:
-    //   state.datasets.available.length === 0 &&
-    //   !state.datasets.isFetching &&
-    //   state.datasets.timesFetched < 1
-//   };
-// };
 
 const mapDispatchToProps = (dispatch: any, ownProps: any) => {
   return {
@@ -429,7 +347,6 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => {
       dispatch(addNotification(message, timeout));
     },
     updateTaskStatus: (uuid: string, status: number) => dispatch(updateTaskStatus(uuid, status)),
-    // removeFileFromQueue: (file) => dispatch(removeFileFromQueue(file)),
   };
 };
 type DispatchProps = ReturnType<typeof mapDispatchToProps>;
