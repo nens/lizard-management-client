@@ -14,7 +14,7 @@ import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import { CheckBox } from './../../form/CheckBox';
 import { TextArea } from './../../form/TextArea';
 import { TextInput } from './../../form/TextInput';
-import { SelectDropdown, Value } from '../../form/SelectDropdown';
+import { SelectDropdown } from '../../form/SelectDropdown';
 import { FormButton } from './../../form/FormButton';
 import { SubmitButton } from '../../form/SubmitButton';
 import { CancelButton } from '../../form/CancelButton';
@@ -124,24 +124,8 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
   const rasterSourceUUID = useSelector(getRasterSourceUUID);
   const belongsToScenario = (currentRasterLayer && rasterLayerFromAPIBelongsToScenario(currentRasterLayer)) || false;
 
-  // Fetch list of color maps to add to group
-  const [colorMaps, setColorMaps] = useState<Value[] | null>(null);
   useEffect(() => {
-    fetch(`/api/v4/colormaps/?page_size=0&format=json`, {
-      credentials: "same-origin"
-    })
-    .then(response => response.json())
-    .then(results => {
-      const colorMaps = results.map((colorMap: any) => convertToSelectObject(colorMap.name, colorMap.name, colorMap.description));
-      setColorMaps(colorMaps);
-    })
-    .catch(console.error);
-  }, []);
-
-  useEffect(() => {
-    return () => {
-      removeRasterSourceUUID();
-    };
+    return () => removeRasterSourceUUID();
   }, [removeRasterSourceUUID]);
 
   const initialValues = currentRasterLayer ? {
@@ -448,7 +432,6 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           name={'colorMap'}
           colorMapValue={values.colorMap}
           valueChanged={value => handleValueChange('colorMap', value)}
-          colorMaps={colorMaps || []}
           validated
           form={"raster_layer_form_id"}
           onFocus={handleFocus}
