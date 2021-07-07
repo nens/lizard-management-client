@@ -71,38 +71,34 @@ export const UploadData: React.FC<MyProps> = (props) => {
 
     // convert files to Objects with Date
     const filesData = newFilesNonDuplicates.map(file => {
-      // If user uploads a file in the standard ISO 8601 UTC format e.g. 2015-10-29T10:11:40
-      const regex = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?/gm;
+      // Look for the timezone information part from the filename
+      const timezoneRegex = /[+-]((\d{2}:\d{2})|(\d{4}))/;
+      const timezoneFromFile = file.name.match(timezoneRegex);
+
+      // If user uploads a file in the standard ISO 8601 format e.g. 2015-10-29T10:11:40
+      const regex = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?/;
       const dateStrFromFile = file.name.match(regex);
 
-      // If user upload a file with file name in UTC format without the dash (-) sign e.g. 20151029T101140
-      const regexUTC = /\d{8}T(\d{6}|\d{4})?/gm;
+      // If user upload a file without the dash (-) sign e.g. 20151029T101140
+      const regexUTC = /\d{8}T(\d{6}|\d{4})?/;
       const dateStrFromUTCFile = file.name.match(regexUTC);
 
       // If user uploads a file in YYYY-MM-DDTHHmmss which is valid for the FTP import e.g. 2015-10-29T101140
-      const regexUTCNonISO8601 = /\d{4}-\d{2}-\d{2}T(\d{6}|\d{4})?/gm;
+      const regexUTCNonISO8601 = /\d{4}-\d{2}-\d{2}T(\d{6}|\d{4})?/;
       const dateStrFromUTCNonISO8601 = file.name.match(regexUTCNonISO8601);
       // Remove all dashes (-) from dateStrFromUTCNonISO8601 to convert it to YYYYMMDDTHHMM
       const dateStrFromUTCNonISO8601WithoutDash = dateStrFromUTCNonISO8601 ? dateStrFromUTCNonISO8601[0].replaceAll('-', '') : null;
 
-      // If user uploads a file not in UTC time e.g. +01:00 which is not supported then leave the field empty
-      // Below are regex expressions to check if + or - signs are included after the time
-      const regexNonUTC1 = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?[+-]/gm;
-      const regexNonUTC2 = /\d{8}T(\d{6}|\d{4})?[+-]/gm;
-      const regexNonUTC3 = /\d{4}-\d{2}-\d{2}T(\d{6}|\d{4})?[+-]/gm;
-      const dateStringFromNonUTC = file.name.match(regexNonUTC1) || file.name.match(regexNonUTC2) || file.name.match(regexNonUTC3);
-
       // Use moment.js to re-format the date string from YYYYMMDDTHHMM to YYYY-MM-DDTHH:MM
       const dateStrReformatted = (
-        dateStringFromNonUTC ? null :
         dateStrFromFile ? dateStrFromFile[0] :
         dateStrFromUTCFile ? moment(dateStrFromUTCFile[0]).format("YYYY-MM-DDTHH:mm:ss") :
         dateStrFromUTCNonISO8601 && dateStrFromUTCNonISO8601WithoutDash ? moment(dateStrFromUTCNonISO8601WithoutDash).format("YYYY-MM-DDTHH:mm:ss") :
         null
       );
 
-      // Add Z to the end of the date string to specify that the date time is in UTC
-      const dateStrReformattedInUTC = dateStrReformatted && (dateStrReformatted + 'Z');
+      // Add timezone information or Z (UTC time) to the end of the date string
+      const dateStrReformattedInUTC = dateStrReformatted && (dateStrReformatted + (timezoneFromFile ? timezoneFromFile[0] : 'Z'));
 
       // Convert to Date object
       const dateObjFromFile: Date | undefined = dateStrReformattedInUTC ? new Date(dateStrReformattedInUTC) : undefined;
