@@ -24,6 +24,12 @@
   font-weight: 500;
 }
 
+.DateTimeContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .ClearIcon {
   display: flex;
   justify-content: flex-end;
