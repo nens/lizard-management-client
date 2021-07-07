@@ -2,6 +2,8 @@ import React from "react";
 import {  useSelector } from "react-redux";
 import styles from "./App.module.css";
 import AppTile from "../components/AppTile";
+import AppTileHomeType from "../components/AppTileHomeType";
+
 import { Trail, animated } from "react-spring";
 import doArraysHaveEqualElement from '../utils/doArraysHaveEqualElement';
 import {getCurrentNavigationLinkTiles} from './AppTileConfig';
@@ -81,20 +83,38 @@ const AppComponent = (props: RouteComponentProps) => {
                         transform: obj.x.interpolate((x:number) => `translate3d(${x}%,0,0)`)
                       }}
                     >
-                      <AppTile
-                        handleClick={()=>{ handleLink({
-                          external: appTile.linksToUrlExternal? true : false,
-                          path: appTile.linksToUrl
-                        })}}
-                        key={appTile.title + appTile.order + ""}
-                        title={appTile.title}
-                        icon={appTile.icon}
-                        readonly={
-                          !doArraysHaveEqualElement(appTile.requiresOneOfRoles, currentOrganisationRoles) &&
-                          appTile.requiresOneOfRoles.length !== 0
-                        }
-                        requiredRoles={appTile.requiresOneOfRoles}
-                      />
+                      {
+                        appTile.homePageIcon?
+                        <AppTileHomeType
+                          handleClick={()=>{ handleLink({
+                            external: appTile.linksToUrlExternal? true : false,
+                            path: appTile.linksToUrl
+                          })}}
+                          key={appTile.title + appTile.order + ""}
+                          title={appTile.title}
+                          icon={appTile.icon}
+                          readonly={
+                            !doArraysHaveEqualElement(appTile.requiresOneOfRoles, currentOrganisationRoles) &&
+                            appTile.requiresOneOfRoles.length !== 0
+                          }
+                          requiredRoles={appTile.requiresOneOfRoles}
+                        />
+                        :
+                        <AppTile
+                          handleClick={()=>{ handleLink({
+                            external: appTile.linksToUrlExternal? true : false,
+                            path: appTile.linksToUrl
+                          })}}
+                          key={appTile.title + appTile.order + ""}
+                          title={appTile.title}
+                          icon={appTile.icon}
+                          readonly={
+                            !doArraysHaveEqualElement(appTile.requiresOneOfRoles, currentOrganisationRoles) &&
+                            appTile.requiresOneOfRoles.length !== 0
+                          }
+                          requiredRoles={appTile.requiresOneOfRoles}
+                        />
+                      }
                     </animated.div>
                 ))}
               </Trail>

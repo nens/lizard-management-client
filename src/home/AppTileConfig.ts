@@ -17,6 +17,8 @@ import templatesIcon from "../images/templates@3x.svg";
 import timeseriesIcon from "../images/timeseries_icon.svg";
 import monitoringsNetworkicon from "../images/monitoring_network_icon.svg";
 import locationsIcon from "../images/locations_icon.svg";
+import catalogIcon from "../images/magnifiying-glass.svg";
+
 import doArraysHaveEqualElement from '../utils/doArraysHaveEqualElement';
 
 
@@ -34,6 +36,7 @@ export interface NavigationLinkTile{
   //     defaultMessage="Data Management"
   //   />
   // ),
+  homePageIcon: boolean,
   order: number,
   onUrl: string,
   linksToUrl: string,
@@ -141,6 +144,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     //     defaultMessage="Data Management"
     //   />
     // ),
+    homePageIcon: false,
     order: 100,
     onUrl: "/",
     linksToUrl: "/management",
@@ -156,12 +160,13 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     //     defaultMessage="Data Management"
     //   />
     // ),
+    homePageIcon: true,
     order: 100,
     onUrl: "/",
     linksToUrl: "/catalogue",
     linksToUrlExternal: true,
     requiresOneOfRoles: [],
-    icon: dataManagementIcon,
+    icon: catalogIcon,
   },
   { 
     title: "data",
@@ -171,6 +176,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     //     defaultMessage="Data Management"
     //   />
     // ),
+    homePageIcon: false,
     order: 100,
     onUrl: "/management",
     linksToUrl: "/management/data_management",
@@ -186,6 +192,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     //     defaultMessage="Users"
     //   />
     // ),
+    homePageIcon: false,
     order: 200,
     onUrl: "/management",
     linksToUrl: "/management/users",
@@ -198,6 +205,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     // title: (
     //   <FormattedMessage id="home.alarms" defaultMessage="Alarms" />
     // ),
+    homePageIcon: false,
     order: 300,
     onUrl: "/management",
     linksToUrl: "/management/alarms",
@@ -213,6 +221,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     //     defaultMessage="Personal API keys"
     //   />
     // ),
+    homePageIcon: false,
     order: 400,
     onUrl: "/management",
     linksToUrl: "/management/personal_api_keys",
@@ -228,6 +237,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     //     defaultMessage="Personal API keys"
     //   />
     // ),
+    homePageIcon: false,
     order: 500,
     onUrl: "/management",
     linksToUrl: "/management/map_viewer",
@@ -243,6 +253,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     //     defaultMessage="Go Back"
     //   />
     // ),
+    homePageIcon: false,
     order: 600,
     onUrl: "/management",
     linksToUrl: "/",
@@ -258,6 +269,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     //     defaultMessage="Rasters"
     //   />
     // ),
+    homePageIcon: false,
     order: 100,
     onUrl: "/management/data_management",
     linksToUrl: "/management/data_management/rasters",
@@ -273,6 +285,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     //     defaultMessage="WMS layers"
     //   />
     // ),
+    homePageIcon: false,
     order: 200,
     onUrl: "/management/data_management",
     linksToUrl: "/management/data_management/wms_layers",
@@ -288,6 +301,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     //     defaultMessage="WMS layers"
     //   />
     // ),
+    homePageIcon: false,
     order: 250,
     onUrl: "/management/data_management",
     linksToUrl: "/management/data_management/timeseries",
@@ -304,6 +318,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     //   />
     // ),
     order: 300,
+    homePageIcon: false,
     onUrl: "/management/data_management",
     linksToUrl: "/management/data_management/scenarios",
     linksToUrlExternal: false,
@@ -318,6 +333,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     //     defaultMessage="Labels"
     //   />
     // ),
+    homePageIcon: false,
     order: 400,
     onUrl: "/management/data_management",
     linksToUrl: "/management/data_management/labels",
@@ -333,6 +349,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     //     defaultMessage="Go Back"
     //   />
     // ),
+    homePageIcon: false,
     order: 400,
     onUrl: "/management/data_management",
     linksToUrl: "/management",
@@ -348,6 +365,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     //     defaultMessage="Rasters Sources"
     //   />
     // ),
+    homePageIcon: false,
     order: 100,
     onUrl: "/management/data_management/rasters",
     linksToUrl: "/management/data_management/rasters/sources",
@@ -363,6 +381,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     //     defaultMessage="Raster Layers"
     //   />
     // ),
+    homePageIcon: false,
     order: 200,
     onUrl: "/management/data_management/rasters",
     linksToUrl: "/management/data_management/rasters/layers",
@@ -378,6 +397,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     //     defaultMessage="Go Back"
     //   />
     // ),
+    homePageIcon: false,
     order: 400,
     onUrl: "/management/data_management/rasters",
     linksToUrl: "/management/data_management",
@@ -393,6 +413,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     //     defaultMessage="Label types"
     //   />
     // ),
+    homePageIcon: false,
     order: 100,
     onUrl: "/management/data_management/labels",
     linksToUrl: "/management/data_management/labels/label_types",
@@ -408,6 +429,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     //     defaultMessage="Go Back"
     //   />
     // ),
+    homePageIcon: false,
     order: 400,
     onUrl: "/management/data_management/labels",
     linksToUrl: "/management/data_management",
@@ -423,6 +445,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     //     defaultMessage="Go Back"
     //   />
     // ),
+    homePageIcon: false,
     order: 400,
     onUrl: "/management/data_management/timeseries",
     linksToUrl: "/management/data_management/timeseries/locations",
@@ -438,6 +461,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     //     defaultMessage="Go Back"
     //   />
     // ),
+    homePageIcon: false,
     order: 400,
     onUrl: "/management/data_management/timeseries",
     linksToUrl: "/management/data_management/timeseries/timeseries",
@@ -453,6 +477,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     //     defaultMessage="Go Back"
     //   />
     // ),
+    homePageIcon: false,
     order: 400,
     onUrl: "/management/data_management/timeseries",
     linksToUrl: "/management/data_management/timeseries/monitoring_networks",
@@ -468,6 +493,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     //     defaultMessage="Go Back"
     //   />
     // ),
+    homePageIcon: false,
     order: 400,
     onUrl: "/management/data_management/timeseries",
     linksToUrl: "/management/data_management",
@@ -483,6 +509,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     //     defaultMessage="Notifications"
     //   />
     // ),
+    homePageIcon: false,
     order: 100,
     onUrl: "/management/alarms",
     linksToUrl: "/management/alarms/notifications",
@@ -498,6 +525,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     //     defaultMessage="Recipients"
     //   />
     // ),
+    homePageIcon: false,
     order: 200,
     onUrl: "/management/alarms",
     linksToUrl: "/management/alarms/groups",
@@ -513,6 +541,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     //     defaultMessage="Contacts"
     //   />
     // ),
+    homePageIcon: false,
     order: 300,
     onUrl: "/management/alarms",
     linksToUrl: "/management/alarms/contacts",
@@ -528,6 +557,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     //     defaultMessage="Templates"
     //   />
     // ),
+    homePageIcon: false,
     order: 400,
     onUrl: "/management/alarms",
     linksToUrl: "/management/alarms/templates",
@@ -543,6 +573,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     //     defaultMessage="Go Back"
     //   />
     // ),
+    homePageIcon: false,
     order: 500,
     onUrl: "/management/alarms",
     linksToUrl: "/management",
@@ -558,6 +589,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     //     defaultMessage="Raster Alarms"
     //   />
     // ),
+    homePageIcon: false,
     order: 100,
     onUrl: "/management/alarms/notifications",
     linksToUrl: "/management/alarms/notifications/raster_alarms",
@@ -573,6 +605,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     //     defaultMessage="Timeseries Alarms"
     //   />
     // ),
+    homePageIcon: false,
     order: 200,
     onUrl: "/management/alarms/notifications",
     linksToUrl: "/management/alarms/notifications/timeseries_alarms",
@@ -588,6 +621,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     //     defaultMessage="Go Back"
     //   />
     // ),
+    homePageIcon: false,
     order: 300,
     onUrl: "/management/alarms/notifications",
     linksToUrl: "/management/alarms",
