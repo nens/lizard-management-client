@@ -31,7 +31,12 @@ export const alarmFormHelpText: HelpText = {
   default: 'Form to edit an alarm. Please select a field to get more information.',
   name: nameHelpText,
   uuid: uuidHelpText,
-  raster: 'Choose a raster layer to apply this alarm to.',
+  raster: (
+    <>
+      <p>Choose a raster layer to apply this alarm to.</p>
+      <p><em>Tip: You can search for raster layer by name or UUID.</em></p>
+    </>
+  ),
   point: (
     <>
       <p>Choose a point location for which the data is used in the alarm.</p>
