@@ -30,12 +30,14 @@ import formStyles from './../../../styles/Forms.module.css';
 import rasterAlarmIcon from "../../../images/alarm@3x.svg";
 
 interface Props {
+  groups: any[],
+  templates: any[],
   currentTimeseriesAlarm?: any,
   timeseries?: TimeseriesFromTimeseriesEndpoint
 };
 
 const TimeseriesAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (props) => {
-  const { currentTimeseriesAlarm, timeseries } = props;
+  const { currentTimeseriesAlarm, timeseries, groups, templates } = props;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const navigationUrl = "/alarms/notifications/timeseries_alarms";
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
@@ -53,9 +55,11 @@ const TimeseriesAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps>
     recipients: currentTimeseriesAlarm.messages.map((message: any) => {
       const groupId = parseInt(getUuidFromUrl(message.contact_group));
       const templateId = parseInt(getUuidFromUrl(message.message));
+      const selectedGroup = groups.find(group => group.id === groupId);
+      const selectedTemplate = templates.find(template => template.id === templateId);
       return {
-        contact_group: convertToSelectObject(groupId),
-        message: convertToSelectObject(templateId)
+        contact_group: selectedGroup ? convertToSelectObject(groupId, selectedGroup.name) : convertToSelectObject(groupId),
+        message: selectedGroup ? convertToSelectObject(templateId, selectedTemplate.name) : convertToSelectObject(templateId)
       };
     })
   } : {
@@ -310,6 +314,8 @@ const TimeseriesAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps>
           name={'recipients'}
           organisation={currentTimeseriesAlarm ? currentTimeseriesAlarm.organisation.uuid : selectedOrganisation.uuid}
           recipients={values.recipients}
+          availableGroups={groups.map(group => convertToSelectObject(group.id, group.name))}
+          availableTemplates={templates.map(template => convertToSelectObject(template.id, template.name))}
           valueChanged={recipients => handleValueChange('recipients', recipients)}
           valueRemoved={recipients => handleValueChange('recipients', recipients)}
           validated

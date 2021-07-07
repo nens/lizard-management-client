@@ -30,6 +30,8 @@ import formStyles from './../../../styles/Forms.module.css';
 import rasterAlarmIcon from "../../../images/alarm@3x.svg";
 
 interface Props {
+  groups: any[],
+  templates: any[],
   currentRasterAlarm?: any,
   raster?: RasterLayerFromAPI
 };
@@ -55,7 +57,7 @@ const fetchRasterLayers = async (uuid: string, searchQuery: string) => {
 };
 
 const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (props) => {
-  const { currentRasterAlarm, raster } = props;
+  const { currentRasterAlarm, raster, groups, templates } = props;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const navigationUrl = "/alarms/notifications/raster_alarms";
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
@@ -74,9 +76,11 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
     recipients: currentRasterAlarm.messages.map((message: any) => {
       const groupId = parseInt(getUuidFromUrl(message.contact_group));
       const templateId = parseInt(getUuidFromUrl(message.message));
+      const selectedGroup = groups.find(group => group.id === groupId);
+      const selectedTemplate = templates.find(template => template.id === templateId);
       return {
-        contact_group: convertToSelectObject(groupId),
-        message: convertToSelectObject(templateId)
+        contact_group: selectedGroup ? convertToSelectObject(groupId, selectedGroup.name) : convertToSelectObject(groupId),
+        message: selectedGroup ? convertToSelectObject(templateId, selectedTemplate.name) : convertToSelectObject(templateId)
       };
     })
   } : {
@@ -354,6 +358,8 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           name={'recipients'}
           organisation={currentRasterAlarm ? currentRasterAlarm.organisation.uuid : selectedOrganisation.uuid}
           recipients={values.recipients}
+          availableGroups={groups.map(group => convertToSelectObject(group.id, group.name))}
+          availableTemplates={templates.map(template => convertToSelectObject(template.id, template.name))}
           valueChanged={recipients => handleValueChange('recipients', recipients)}
           valueRemoved={recipients => handleValueChange('recipients', recipients)}
           validated

@@ -15,6 +15,8 @@ import {
 } from "../utils/rasterOptionFunctions";
 import ModalBackground from '../components/ModalBackground';
 import { ColormapForm } from '../data_management/colormap/ColormapForm';
+import { usePaginatedFetch } from "../utils/usePaginatedFetch";
+import { convertToSelectObject } from "../utils/convertToSelectObject";
 
 export interface ColorMapOptions {
   options: {
@@ -34,7 +36,6 @@ interface ColorMapProps {
   name: string,
   colorMapValue: ColorMapOptions,
   valueChanged: (value: ColorMapOptions) => void,
-  colorMaps: Value[],
   validated: boolean,
   errorMessage?: string | false,
   triedToSubmit?: boolean,
@@ -84,7 +85,6 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
   const {
     title,
     name,
-    colorMaps,
     colorMapValue,
     valueChanged,
     triedToSubmit,
@@ -93,6 +93,18 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
     onBlur,
     intl
   } = props;
+
+  // Fetch list of color maps
+  const [colorMaps, setColorMaps] = useState<Value[]>([]);
+  const {
+    results: allColorMaps,
+    fetchingState: colorMapsFetchingState
+  } = usePaginatedFetch({
+    url: `/api/v4/colormaps/?format=json&page_size=100`
+  });
+  useEffect(() => {
+    setColorMaps(allColorMaps ? allColorMaps.map((colorMap: any) => convertToSelectObject(colorMap.name, colorMap.name, colorMap.description)) : []);
+  }, [allColorMaps]);
 
   const [previewColor, setPreviewColor] = useState<LegendResponse | null>(null);
   const [showCustomColormapModal, setShowCustomColormapModal] = useState(false);
@@ -193,8 +205,7 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
         colorMapValue.options,
         {min: newValue}
       );
-    } 
-    else { //  (field === 'max') {
+    } else { //  (field === 'max') {
       newStyleOptions = calculateNewStyleAndOptions(
         colorMapTypeFromOptions(colorMapValue.options),
         colorMapValue.options,
@@ -291,6 +302,7 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
               },
               ...colorMaps
             ]}
+            isLoading={colorMapsFetchingState === 'RETRIEVING'}
             value={JSON.stringify(colorMapValue.customColormap) !== "{}" && JSON.stringify(colorMapValue.options) === "{}" ? (
               {
                 value: "Custom colormap",

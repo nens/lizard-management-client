@@ -5,6 +5,7 @@ import { ExplainSideColumn } from '../../../components/ExplainSideColumn';
 import { getAccessibiltyText } from '../../../form/AccessModifier';
 import { defaultTableHelpText } from '../../../utils/help_texts/defaultHelpText';
 import { fetchWithOptions } from '../../../utils/fetchWithOptions';
+import { usePaginatedFetch } from '../../../utils/usePaginatedFetch';
 import TableActionButtons from '../../../components/TableActionButtons';
 import AuthorisationModal from '../../../components/AuthorisationModal';
 import DeleteLocationNotAllowed from './DeleteLocationNotAllowed';
@@ -25,19 +26,12 @@ export const LocationsTable = (props: RouteComponentProps) =>  {
   // selected rows for set accessibility action
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
 
+  const { results: timeseries } = usePaginatedFetch({
+    url: rowToBeDeleted && rowToBeDeleted.uuid ? `/api/v4/timeseries/?location__uuid=${rowToBeDeleted.uuid}` : null
+  });
   useEffect(() => {
-    if (rowToBeDeleted) {
-      if (!rowToBeDeleted.uuid) return;
-
-      fetch(`/api/v4/timeseries/?page_size=0&location__uuid=${rowToBeDeleted.uuid}`, {
-        credentials: "same-origin"
-      }).then(
-        res => res.json()
-      ).then(
-        data => setDependentTimeseries(data)
-      ).catch(console.error);
-    };
-  }, [rowToBeDeleted]);
+    setDependentTimeseries(timeseries);
+  }, [timeseries]);
 
   const deleteActions = (
     row: any,

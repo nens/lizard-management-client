@@ -6,6 +6,7 @@ import { ExplainSideColumn } from '../components/ExplainSideColumn';
 import { UserRoles } from '../form/UserRoles';
 import { userTableHelpText } from '../utils/help_texts/helpTextForUsers';
 import { fetchWithOptions } from '../utils/fetchWithOptions';
+import { usePaginatedFetch } from '../utils/usePaginatedFetch';
 import TableActionButtons from '../components/TableActionButtons';
 import TableStateContainer from '../components/TableStateContainer';
 import InvitationModal from './InvitationModal';
@@ -24,17 +25,12 @@ export const UserTable = (props: RouteComponentProps) =>  {
   const [invitationModal, setInvitationModal] = useState<boolean>(false);
   const [invitationList, setInvitationList] = useState<any[] | null>(null);
 
+  const { results } = usePaginatedFetch({
+    url: '/api/v4/invitations/'
+  });
   useEffect(() => {
-    fetch('/api/v4/invitations/?page_size=0&status=pending', {
-      credentials: 'same-origin'
-    }).then(
-      res => res.json()
-    ).then(
-      data => setInvitationList(data)
-    ).catch(
-      console.error
-    );
-  }, []);
+    setInvitationList(results);
+  }, [results]);
 
   const deactivateActions = (
     rows: any[],

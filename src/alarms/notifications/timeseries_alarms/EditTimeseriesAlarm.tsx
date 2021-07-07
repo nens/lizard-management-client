@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { RouteComponentProps } from 'react-router';
 import MDSpinner from "react-md-spinner";
 import { getUuidFromUrl } from "../../../utils/getUuidFromUrl";
+import { usePaginatedFetch } from "../../../utils/usePaginatedFetch";
 import { TimeseriesFromTimeseriesEndpoint } from "../../../types/timeseriesType";
 import TimeseriesAlarmForm from "./TimeseriesAlarmForm";
 
@@ -10,7 +11,7 @@ interface RouteParams {
 };
 
 export const EditTimeseriesAlarm: React.FC<RouteComponentProps<RouteParams>> = (props) => {
-  const [currentTimeseriesAlarm, setCurrentTimeseriesAlarm] = useState<Object | null>(null);
+  const [currentTimeseriesAlarm, setCurrentTimeseriesAlarm] = useState<any | null>(null);
   const [timeseries, setTimeseries] = useState<TimeseriesFromTimeseriesEndpoint | null>(null);
 
   const { uuid } = props.match.params;
@@ -35,15 +36,35 @@ export const EditTimeseriesAlarm: React.FC<RouteComponentProps<RouteParams>> = (
     })();
   }, [uuid]);
 
-  if (currentTimeseriesAlarm && timeseries) {
+  const {
+    results: groups,
+    fetchingState: groupsFetchingState
+  } = usePaginatedFetch({
+    url: currentTimeseriesAlarm ? `/api/v4/contactgroups/?organisation__uuid=${currentTimeseriesAlarm.organisation.uuid}` : ''
+  });
+
+  const {
+    results: templates,
+    fetchingState: templatesFetchingState
+  } = usePaginatedFetch({
+    url: currentTimeseriesAlarm ? `/api/v4/messages/?organisation__uuid=${currentTimeseriesAlarm.organisation.uuid}` : ''
+  });
+
+  if (
+    currentTimeseriesAlarm &&
+    timeseries &&
+    groupsFetchingState === 'RETRIEVED' &&
+    templatesFetchingState === 'RETRIEVED'
+  ) {
     return (
       <TimeseriesAlarmForm
+        groups={groups || []}
+        templates={templates || []}
         currentTimeseriesAlarm={currentTimeseriesAlarm}
         timeseries={timeseries}
       />
     );
-  }
-  else {
+  } else {
     return (
       <div
         style={{

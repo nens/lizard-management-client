@@ -1,6 +1,6 @@
 // MARK: Bootstrap
-
-import {getLocalStorage} from "./utils/localStorageUtils";
+import { getLocalStorage } from "./utils/localStorageUtils";
+import { getRelativePathFromUrl } from "./utils/getRelativePathFromUrl";
 
 export const RECEIVE_LIZARD_BOOTSTRAP = "RECEIVE_LIZARD_BOOTSTRAP";
 export const REQUEST_LIZARD_BOOTSTRAP = "REQUEST_LIZARD_BOOTSTRAP";
@@ -83,38 +83,40 @@ export function fetchOrganisations() {
     const selectedOrganisationLocalStorage = getLocalStorage("lizard-management-current-organisation", null);
 
     // URL to fetch the list of available organisations with user roles
-    const availableOrganisationsUrl = `/api/v4/users/${userId}/organisations/?page_size=0`;
+    const availableOrganisationsUrl = `/api/v4/users/${userId}/organisations/`;
 
-    // URL to fetch all organisations
-    const organisationsUrl = `/api/v4/organisations/?page_size=0`;
+    // Recursive function to build the list of available organisations
+    // as the custom hook usePaginatedFetch cannot be used in the action.js
+    let results = [];
+    const paginatedFetchHelper = async (url) => {
+      try {
+        const response = await fetch(url, {
+          credentials: "same-origin"
+        });
 
-    const allOrganisationsParsedRes = await fetch(organisationsUrl, {
-      credentials: "same-origin"
-    }).then(
-      res => res.json()
-    );
+        if (response.status !== 200) {
+          return console.error(`Failed to send GET request to ${url} with status: `, response.status);
+        };
 
-    const availableOrganisationsParsedRes = await fetch(availableOrganisationsUrl, {
-      credentials: "same-origin"
-    }).then(
-      res => res.json()
-    );
+        const data = await response.json();
+        results = results.concat(data.results);
 
-    const allOrganisations = allOrganisationsParsedRes.map(org => ({
-      ...org,
-      uuid: org.uuid
-    }));
+        if (data.next) {
+          await paginatedFetchHelper(getRelativePathFromUrl(data.next))
+        };
 
-    // All user roles are accepted in the management page
-    const availableOrganisations = availableOrganisationsParsedRes.map(org => ({
-      ...org,
-      uuid: org.uuid
-    }));
+        return results;
+      } catch (e) {
+        return console.error(e);
+      };
+    };
+    ////////////////////////////////
+
+    const availableOrganisations = await paginatedFetchHelper(availableOrganisationsUrl);
 
     // Dispatch action to update Redux store
     dispatch({
       type: RECEIVE_ORGANISATIONS,
-      all: allOrganisations,
       available: availableOrganisations
     });
 

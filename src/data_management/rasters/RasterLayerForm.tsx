@@ -14,7 +14,7 @@ import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import { CheckBox } from './../../form/CheckBox';
 import { TextArea } from './../../form/TextArea';
 import { TextInput } from './../../form/TextInput';
-import { SelectDropdown, Value } from '../../form/SelectDropdown';
+import { SelectDropdown } from '../../form/SelectDropdown';
 import { FormButton } from './../../form/FormButton';
 import { SubmitButton } from '../../form/SubmitButton';
 import { CancelButton } from '../../form/CancelButton';
@@ -95,33 +95,37 @@ export const fetchObservationTypes = async (searchQuery: string) => {
   });
 };
 
+// Helper function to fetch paginated organisations with search query
+export const fetchOrganisationsToShareWith = async (searchQuery: string) => {
+  const params=[];
+
+  // Regex expression to check if search input is UUID of raster source
+  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+  if (searchQuery) {
+    if (uuidRegex.test(searchQuery)) {
+      params.push(`uuid=${searchQuery}`);
+    } else {
+      params.push(`name__icontains=${searchQuery}`);
+    };
+  };
+
+  const urlQuery = params.join('&');
+  const response = await fetch(`/api/v4/organisations/?${urlQuery}`);
+  const responseJSON = await response.json();
+
+  return responseJSON.results.map((org: any) => convertToSelectObject(org.uuid, org.name));
+};
+
 const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (props) => {
   const { currentRasterLayer, removeRasterSourceUUID } = props;
-  const organisationsToSharedWith = useSelector(getOrganisations).availableForRasterSharedWith;
   const organisations = useSelector(getOrganisations).available;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const datasets = useSelector(getDatasets).available;
   const rasterSourceUUID = useSelector(getRasterSourceUUID);
   const belongsToScenario = (currentRasterLayer && rasterLayerFromAPIBelongsToScenario(currentRasterLayer)) || false;
 
-  // Fetch list of color maps to add to group
-  const [colorMaps, setColorMaps] = useState<Value[] | null>(null);
   useEffect(() => {
-    fetch(`/api/v4/colormaps/?page_size=0&format=json`, {
-      credentials: "same-origin"
-    })
-    .then(response => response.json())
-    .then(results => {
-      const colorMaps = results.map((colorMap: any) => convertToSelectObject(colorMap.name, colorMap.name, colorMap.description));
-      setColorMaps(colorMaps);
-    })
-    .catch(console.error);
-  }, []);
-
-  useEffect(() => {
-    return () => {
-      removeRasterSourceUUID();
-    };
+    return () => removeRasterSourceUUID();
   }, [removeRasterSourceUUID]);
 
   const initialValues = currentRasterLayer ? {
@@ -428,7 +432,6 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           name={'colorMap'}
           colorMapValue={values.colorMap}
           valueChanged={value => handleValueChange('colorMap', value)}
-          colorMaps={colorMaps || []}
           validated
           form={"raster_layer_form_id"}
           onFocus={handleFocus}
@@ -463,13 +466,16 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
             name={'organisationsToSharedWith'}
             placeholder={'- Search and select -'}
             value={values.organisationsToSharedWith}
-            options={organisationsToSharedWith.map((organisation: any) => convertToSelectObject(organisation.uuid, organisation.name))}
+            options={[]}
             valueChanged={value => handleValueChange('organisationsToSharedWith', value)}
             validated
             form={"raster_layer_form_id"}
             onFocus={handleFocus}
             onBlur={handleBlur}
             isMulti
+            isAsync
+            isCached
+            loadOptions={fetchOrganisationsToShareWith}
             readOnly={belongsToScenario}
           />
         ) : null}
