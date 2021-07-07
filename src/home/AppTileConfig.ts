@@ -18,6 +18,11 @@ import timeseriesIcon from "../images/timeseries_icon.svg";
 import monitoringsNetworkicon from "../images/monitoring_network_icon.svg";
 import locationsIcon from "../images/locations_icon.svg";
 import catalogIcon from "../images/magnifiying-glass.svg";
+import managementIcon from "../images/settings.svg";
+import viewerIcon from "../images/world.svg";
+import codeIcon from "../images/code.svg";
+import docsIcon from "../images/document2.svg";
+import supportIcon from "../images/support.svg";
 
 import doArraysHaveEqualElement from '../utils/doArraysHaveEqualElement';
 
@@ -136,22 +141,7 @@ export const navigationLinkPages: NavigationLinkPage[] = [
 
 
 export const navigationLinkTiles: NavigationLinkTile[] = [
-  { 
-    title: "management",
-    // title: (
-    //   <FormattedMessage
-    //     id="home.data_management"
-    //     defaultMessage="Data Management"
-    //   />
-    // ),
-    homePageIcon: false,
-    order: 100,
-    onUrl: "/",
-    linksToUrl: "/management",
-    linksToUrlExternal: false,
-    requiresOneOfRoles: ["admin", "supplier", "manager", "user"],
-    icon: dataManagementIcon,
-  },
+  
   { 
     title: "catalogue",
     // title: (
@@ -167,6 +157,86 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     linksToUrlExternal: true,
     requiresOneOfRoles: [],
     icon: catalogIcon,
+  },
+  { 
+    title: "viewer",
+    // title: (
+    //   <FormattedMessage
+    //     id="home.data_management"
+    //     defaultMessage="Data Management"
+    //   />
+    // ),
+    homePageIcon: true,
+    order: 100,
+    onUrl: "/",
+    linksToUrl: "/viewer",
+    linksToUrlExternal: true,
+    requiresOneOfRoles: [],
+    icon: viewerIcon,
+  },
+  { 
+    title: "management",
+    // title: (
+    //   <FormattedMessage
+    //     id="home.data_management"
+    //     defaultMessage="Data Management"
+    //   />
+    // ),
+    homePageIcon: true,
+    order: 100,
+    onUrl: "/",
+    linksToUrl: "/management",
+    linksToUrlExternal: false,
+    requiresOneOfRoles: ["admin", "supplier", "manager", "user"],
+    icon: managementIcon,
+  },
+  { 
+    title: "api",
+    // title: (
+    //   <FormattedMessage
+    //     id="home.data_management"
+    //     defaultMessage="Data Management"
+    //   />
+    // ),
+    homePageIcon: true,
+    order: 100,
+    onUrl: "/",
+    linksToUrl: "/api",
+    linksToUrlExternal: true,
+    requiresOneOfRoles: [],
+    icon: codeIcon,
+  },
+  { 
+    title: "documentation",
+    // title: (
+    //   <FormattedMessage
+    //     id="home.data_management"
+    //     defaultMessage="Data Management"
+    //   />
+    // ),
+    homePageIcon: true,
+    order: 100,
+    onUrl: "/",
+    linksToUrl: "https://docs.lizard.net/a_lizard.html",
+    linksToUrlExternal: true,
+    requiresOneOfRoles: [],
+    icon: docsIcon,
+  },
+  { 
+    title: "support",
+    // title: (
+    //   <FormattedMessage
+    //     id="home.data_management"
+    //     defaultMessage="Data Management"
+    //   />
+    // ),
+    homePageIcon: true,
+    order: 100,
+    onUrl: "/",
+    linksToUrl: "https://nelen-schuurmans.topdesk.net/tas/public/ssp",
+    linksToUrlExternal: true,
+    requiresOneOfRoles: [],
+    icon: supportIcon,
   },
   { 
     title: "data",
