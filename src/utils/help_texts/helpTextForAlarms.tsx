@@ -31,7 +31,12 @@ export const alarmFormHelpText: HelpText = {
   default: 'Form to edit an alarm. Please select a field to get more information.',
   name: nameHelpText,
   uuid: uuidHelpText,
-  raster: 'Choose a raster layer to apply this alarm to.',
+  raster: (
+    <>
+      <p>Choose a raster layer to apply this alarm to.</p>
+      <p><em>Tip: You can search for raster layer by name or UUID.</em></p>
+    </>
+  ),
   point: (
     <>
       <p>Choose a point location for which the data is used in the alarm.</p>
@@ -51,7 +56,12 @@ export const alarmFormHelpText: HelpText = {
     </>
   ),
   timeseries_nestedAsset: 'Select the related sub-location in case of a groundwater filter or pump.',
-  timeseries: 'Select the timeseries to apply the alarm to from the list of related timeseries of the selected asset.',
+  timeseries: (
+    <>
+      <p>Select the timeseries to apply the alarm to from the list of related timeseries of the selected asset.</p>
+      <p><em>Tip: First select a location (and a sub-location if available) to find the related timeseries.</em></p>
+    </>
+  ),
   relative: relativeFieldHelpText,
   relativeStart: relativeFieldHelpText,
   relativeEnd: relativeFieldHelpText,
