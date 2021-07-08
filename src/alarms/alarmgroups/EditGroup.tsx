@@ -16,7 +16,6 @@ export const EditGroup = (props: RouteComponentProps<RouteParams>) => {
       selectorsToWaitFor={[getSelectedOrganisation]}
       FormComponent={GroupForm}
       retrieveCurrentFormDataFunction={createFetchRecordFunctionFromUrl(`/api/v4/contactgroups/${id}/`)}
-      {...props}
     />
   );
 };

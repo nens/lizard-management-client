@@ -31,9 +31,13 @@ export const FormContainer = (props:  Props) => {
     }
   }, [retrieveCurrentFormDataFunction]);
 
-  if (currentRecord && allLoaded) {
+  if (retrieveCurrentFormDataFunction && currentRecord && allLoaded) {
     return <FormComponent
       currentGroup={currentRecord}
+    />;
+  }
+  else if (!retrieveCurrentFormDataFunction && allLoaded) {
+    return <FormComponent
     />;
   }
   else {
