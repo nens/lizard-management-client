@@ -1,6 +1,6 @@
 // MARK: Bootstrap
 import { getLocalStorage } from "./utils/localStorageUtils";
-import { getRelativePathFromUrl } from "./utils/getRelativePathFromUrl";
+import { paginatedFetchHelper } from "./utils/paginatedFetchHelper";
 
 export const RECEIVE_LIZARD_BOOTSTRAP = "RECEIVE_LIZARD_BOOTSTRAP";
 export const REQUEST_LIZARD_BOOTSTRAP = "REQUEST_LIZARD_BOOTSTRAP";
@@ -82,37 +82,9 @@ export function fetchOrganisations() {
     const userId = getState().bootstrap.bootstrap.user.id;
     const selectedOrganisationLocalStorage = getLocalStorage("lizard-management-current-organisation", null);
 
-    // URL to fetch the list of available organisations with user roles
+    // Fetch the list of available organisations with user roles by user ID
     const availableOrganisationsUrl = `/api/v4/users/${userId}/organisations/`;
-
-    // Recursive function to build the list of available organisations
-    // as the custom hook usePaginatedFetch cannot be used in the action.js
-    let results = [];
-    const paginatedFetchHelper = async (url) => {
-      try {
-        const response = await fetch(url, {
-          credentials: "same-origin"
-        });
-
-        if (response.status !== 200) {
-          return console.error(`Failed to send GET request to ${url} with status: `, response.status);
-        };
-
-        const data = await response.json();
-        results = results.concat(data.results);
-
-        if (data.next) {
-          await paginatedFetchHelper(getRelativePathFromUrl(data.next))
-        };
-
-        return results;
-      } catch (e) {
-        return console.error(e);
-      };
-    };
-    ////////////////////////////////
-
-    const availableOrganisations = await paginatedFetchHelper(availableOrganisationsUrl);
+    const availableOrganisations = await paginatedFetchHelper(availableOrganisationsUrl, []);
 
     // Dispatch action to update Redux store
     dispatch({
