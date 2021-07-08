@@ -140,7 +140,8 @@ const App = (props: RouteComponentProps & DispatchProps) => {
       setShowUnAuthorizedRedirectModal(true);
     }
   }, [userHasCorrectRoles, userAuthenticated, showOrganisationSwitcher, selectedOrganisation]);
-  
+
+    // this spinner is for now not needed, since we also show the application if the user is unauthenticated
     // if (!this.props.isAuthenticated || !this.props.selectedOrganisation) {
     //   return (
     //     <div className={styles.MDSpinner}>

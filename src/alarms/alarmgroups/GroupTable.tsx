@@ -9,7 +9,7 @@ import DeleteModal from '../../components/DeleteModal';
 import groupIcon from "../../images/group.svg";
 
 export const baseUrl = "/api/v4/contactgroups/";
-const navigationUrl = "/alarms/groups";
+const navigationUrl = "/management/alarms/groups";
 
 export const GroupTable: React.FC<RouteComponentProps> = (props) =>  {
   const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
