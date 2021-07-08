@@ -102,7 +102,7 @@ export const PersonalApiKeysTable = (props: RouteComponentProps) =>  {
       imgAltDescription={"Personal API keys icon"}
       headerText={"Personal API keys"}
       explanationText={personalApiKeysFormHelpText['default']}
-      backUrl={"/"}
+      backUrl={"/management"}
     >
       <TableStateContainer 
         gridTemplateColumns={"44% 24% 24% 8%"} 

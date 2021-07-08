@@ -112,7 +112,7 @@ const UserForm: React.FC<Props & DispatchProps & RouteComponentProps> = (props) 
       imgAltDescription={"User icon"}
       headerText={"Users"}
       explanationText={userFormHelpText[fieldOnFocus] || userFormHelpText['default']}
-      backUrl={"/users"}
+      backUrl={"/management/users"}
       fieldName={fieldOnFocus}
     >
       <form

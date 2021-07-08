@@ -86,7 +86,7 @@ export const GroupTable: React.FC<RouteComponentProps> = (props) =>  {
       imgAltDescription={"Group icon"}
       headerText={"Groups"}
       explanationText={"Groups are made of your contacts. In this screen, you can manage them by adding or deleting contacts. You can also add or delete groups for your alarm messages."}
-      backUrl={"/alarms"}
+      backUrl={"/management/alarms"}
     >
       <TableStateContainer 
         gridTemplateColumns={"10% 60% 20% 10%"} 

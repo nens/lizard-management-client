@@ -124,7 +124,7 @@ export const UserTable = (props: RouteComponentProps) =>  {
       imgAltDescription={"User icon"}
       headerText={"Users"}
       explanationText={userTableHelpText}
-      backUrl={"/"}
+      backUrl={"/management"}
     >
       <TableStateContainer
         gridTemplateColumns={"33fr 33fr 30fr 4fr"}

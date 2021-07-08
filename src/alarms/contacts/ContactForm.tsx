@@ -139,7 +139,7 @@ const ContactForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (
       imgAltDescription={"Contact icon"}
       headerText={"Contacts"}
       explanationText={contactFormHelpText[fieldOnFocus] || contactFormHelpText['default']}
-      backUrl={"/alarms/contacts"}
+      backUrl={"/management/alarms/contacts"}
       fieldName={fieldOnFocus}
     >
       <form

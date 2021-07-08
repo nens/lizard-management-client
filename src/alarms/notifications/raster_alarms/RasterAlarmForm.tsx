@@ -180,7 +180,7 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
       imgAltDescription={"Raster alarm icon"}
       headerText={"Raster alarms"}
       explanationText={alarmFormHelpText[fieldOnFocus] || alarmFormHelpText['default']}
-      backUrl={"/alarms/notifications/raster_alarms"}
+      backUrl={"/management/alarms/notifications/raster_alarms"}
       fieldName={fieldOnFocus}
     >
       <form

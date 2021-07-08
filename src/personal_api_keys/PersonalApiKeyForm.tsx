@@ -102,7 +102,7 @@ const PersonalApiKeyFormModel: React.FC<Props & PropsFromDispatch & RouteCompone
       imgAltDescription={"Personal API keys icon"}
       headerText={"Personal API keys"}
       explanationText={personalApiKeysFormHelpText[fieldOnFocus] || personalApiKeysFormHelpText['default']}
-      backUrl={"/personal_api_keys"}
+      backUrl={"/management/personal_api_keys"}
       fieldName={fieldOnFocus}
     >
       <form

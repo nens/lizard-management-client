@@ -9,7 +9,7 @@ import DeleteModal from '../../components/DeleteModal';
 import templateIcon from "../../images/templates@3x.svg";
 
 export const baseUrl = "/api/v4/messages/";
-const navigationUrl = "/alarms/templates";
+const navigationUrl = "/management/alarms/templates";
 
 export const TemplateTable: React.FC<RouteComponentProps> = (props) =>  {
   const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
@@ -87,7 +87,7 @@ export const TemplateTable: React.FC<RouteComponentProps> = (props) =>  {
       imgAltDescription={"Template icon"}
       headerText={"Templates"}
       explanationText={"Templates are used to create messages for your alarms. You can choose between an email or text message."} 
-      backUrl={"/alarms"}
+      backUrl={"/management/alarms"}
     >
         <TableStateContainer 
           gridTemplateColumns={"10% 70% 10% 10%"} 

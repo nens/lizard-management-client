@@ -123,7 +123,7 @@ export const TimeseriesAlarmTableComponent: React.FC<DispatchProps & RouteCompon
       imgAltDescription={"Alarm icon"}
       headerText={"Time series Alarms"}
       explanationText={"Alarms consist of a name, template, thresholds and recipients. You can create, (de)activate or delete your alarms here."} 
-      backUrl={"/alarms/notifications"}
+      backUrl={"/management/alarms/notifications"}
     >
         <TableStateContainer 
           gridTemplateColumns={"10% 40% 20% 20% 10%"} 

@@ -123,7 +123,7 @@ export const ContactTable: React.FC<RouteComponentProps> = (props) =>  {
       imgAltDescription={"Contact icon"}
       headerText={"Contacts"}
       explanationText={"Your contacts contain an email address, phone number and a name. Add these contacts to group to send them alarm messages when your thresholds are triggered."} 
-      backUrl={"/alarms"}
+      backUrl={"/management/alarms"}
     >
         <TableStateContainer 
           gridTemplateColumns={"6% 18% 18% 32% 18% 8%"} 
