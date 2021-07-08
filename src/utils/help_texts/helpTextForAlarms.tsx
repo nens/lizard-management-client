@@ -56,7 +56,12 @@ export const alarmFormHelpText: HelpText = {
     </>
   ),
   timeseries_nestedAsset: 'Select the related sub-location in case of a groundwater filter or pump.',
-  timeseries: 'Select the timeseries to apply the alarm to from the list of related timeseries of the selected asset.',
+  timeseries: (
+    <>
+      <p>Select the timeseries to apply the alarm to from the list of related timeseries of the selected asset.</p>
+      <p><em>Tip: First select a location (and a sub-location if available) to find the related timeseries.</em></p>
+    </>
+  ),
   relative: relativeFieldHelpText,
   relativeStart: relativeFieldHelpText,
   relativeEnd: relativeFieldHelpText,
