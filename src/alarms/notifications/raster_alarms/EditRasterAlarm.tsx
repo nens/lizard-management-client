@@ -34,7 +34,7 @@ export const EditRasterAlarm: React.FC<RouteComponentProps<RouteParams>> = (prop
   if (currentRasterAlarm && raster) {
     return (
       <RasterAlarmForm
-        currentRasterAlarm={currentRasterAlarm}
+        currentRecord={currentRasterAlarm}
         raster={raster}
       />
     )
