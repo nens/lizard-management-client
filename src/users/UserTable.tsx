@@ -26,7 +26,7 @@ export const UserTable = (props: RouteComponentProps) =>  {
   const [invitationList, setInvitationList] = useState<any[] | null>(null);
 
   const { results } = usePaginatedFetch({
-    url: '/api/v4/invitations/'
+    url: `/api/v4/invitations/?organisation__uuid=${selectedOrganisation.uuid}`
   });
   useEffect(() => {
     setInvitationList(results);
