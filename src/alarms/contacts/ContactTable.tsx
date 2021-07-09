@@ -10,7 +10,7 @@ import contactIcon from "../../images/contacts@3x.svg";
 import tableStyles from "../../components/Table.module.css";
 
 export const baseUrl = "/api/v4/contacts/";
-const navigationUrl = "/alarms/contacts";
+const navigationUrl = "/management/alarms/contacts";
 
 export const ContactTable: React.FC<RouteComponentProps> = (props) =>  {
   const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);

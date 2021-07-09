@@ -1,45 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { RouteComponentProps } from 'react-router';
-import MDSpinner from "react-md-spinner";
 import ContactForm from "./ContactForm";
+
+import { getSelectedOrganisation} from '../../reducers';
+import FormContainer from '../../components/FormContainer';
+import {createFetchRecordFunctionFromUrl} from '../../utils/createFetchRecordFunctionFromUrl';
 
 interface RouteParams {
   id: string;
 };
 
-export const EditContact: React.FC<RouteComponentProps<RouteParams>> = (props) => {
-  const [currentContact, setCurrentContact] = useState<Object | null>(null);
-
+export const EditContact = (props: RouteComponentProps<RouteParams>) => {
   const { id } = props.match.params;
-  useEffect(() => {
-    (async () => {
-      const contact = await fetch(`/api/v4/contacts/${id}/`, {
-        credentials: "same-origin"
-      }).then(
-        response => response.json()
-      );
-      setCurrentContact(contact);
-    })();
-  }, [id]);
-
-  if (currentContact) {
-    return <ContactForm
-      currentContact={currentContact}
-    />;
-  }
-  else {
-    return (
-      <div
-        style={{
-          position: "relative",
-          top: 50,
-          height: 300,
-          bottom: 50,
-          marginLeft: "50%"
-        }}
-      >
-        <MDSpinner size={24} />
-      </div>
-    );
-  }
+  return (
+    <FormContainer
+      selectorsToWaitFor={[getSelectedOrganisation]}
+      FormComponent={ContactForm}
+      retrieveCurrentFormDataFunction={createFetchRecordFunctionFromUrl(`/api/v4/contacts/${id}/`)}
+    />
+  );
 };
