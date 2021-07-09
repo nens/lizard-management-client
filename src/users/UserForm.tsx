@@ -48,10 +48,10 @@ const UserForm: React.FC<Props & DispatchProps & RouteComponentProps> = (props) 
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email: values.email,
-          permissions: {
+          permissions: [{
             organisation: `/api/v4/organisations/${selectedOrganisationUuid}/`,
             roles: values.roles
-          }
+          }]
         })
       })
       .then(response => {
