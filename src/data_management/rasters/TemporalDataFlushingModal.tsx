@@ -108,6 +108,7 @@ function TemporalDataFlushingModal (props: MyProps & DispatchProps) {
           inputProps={{
             className: timeValidator() || startValidator() ? styles.DateTimeInvalid : undefined,
           }}
+          isValidDate={currentDate => currentDate >= moment(row.first_value_timestamp).subtract(1, 'd') && currentDate <= moment(row.last_value_timestamp)}
         />
         <Datetime
           value={stop}
@@ -117,6 +118,7 @@ function TemporalDataFlushingModal (props: MyProps & DispatchProps) {
           inputProps={{
             className: timeValidator() || stopValidator() ? styles.DateTimeInvalid : undefined,
           }}
+          isValidDate={currentDate => currentDate >= moment(row.first_value_timestamp).subtract(1, 'd') && currentDate <= moment(row.last_value_timestamp)}
         />
       </div>
       <div style={{ color: 'red', marginTop: 5 }}>{timeValidator() || startValidator() || stopValidator()}</div>
