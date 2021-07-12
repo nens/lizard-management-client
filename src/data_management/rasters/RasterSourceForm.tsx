@@ -32,7 +32,7 @@ import DataFlushingModal from './DataFlushingModal';
 import TemporalDataFlushingModal from './TemporalDataFlushingModal';
 
 interface Props {
-  currentRasterSource?: RasterSourceFromAPI
+  currentRecord?: RasterSourceFromAPI
 };
 interface PropsFromDispatch {
   updateRasterSourceUUID: (uuid: string) => void,
@@ -59,7 +59,7 @@ export const fetchSuppliers = async (uuid: string, searchInput: string) => {
 };
 
 const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<RouteParams>> = (props) => {
-  const { currentRasterSource } = props;
+  const { currentRecord } = props;
   const organisations = useSelector(getOrganisations).available;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const organisationsToSwitchTo = organisations.filter((org: any) => org.roles.includes('admin'));
@@ -68,16 +68,16 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
   const [showDataFlushingModal, setShowDataFlushingModal] = useState<boolean>(false);
   const [temporalDataFlushingModal, setTemporalDataFlushingModal] = useState<boolean>(false);
 
-  const initialValues = currentRasterSource ? {
-    name: currentRasterSource.name,
-    uuid: currentRasterSource.uuid,
-    description: currentRasterSource.description,
-    supplierCode: currentRasterSource.supplier_code,
-    supplier: currentRasterSource.supplier ? convertToSelectObject(currentRasterSource.supplier) : null,
-    temporal: currentRasterSource.temporal,
-    interval: currentRasterSource.interval ? toISOValue(rasterIntervalStringServerToDurationObject(currentRasterSource.interval)) : '',
-    accessModifier: currentRasterSource.access_modifier,
-    organisation: currentRasterSource.organisation ? convertToSelectObject(currentRasterSource.organisation.uuid, currentRasterSource.organisation.name) : null,
+  const initialValues = currentRecord ? {
+    name: currentRecord.name,
+    uuid: currentRecord.uuid,
+    description: currentRecord.description,
+    supplierCode: currentRecord.supplier_code,
+    supplier: currentRecord.supplier ? convertToSelectObject(currentRecord.supplier) : null,
+    temporal: currentRecord.temporal,
+    interval: currentRecord.interval ? toISOValue(rasterIntervalStringServerToDurationObject(currentRecord.interval)) : '',
+    accessModifier: currentRecord.access_modifier,
+    organisation: currentRecord.organisation ? convertToSelectObject(currentRecord.organisation.uuid, currentRecord.organisation.name) : null,
     data: [],
   } : {
     name: null,
@@ -92,7 +92,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
   };
 
   const onSubmit = (values: Values) => {
-    if (!currentRasterSource) {
+    if (!currentRecord) {
       const rasterSource = {
         name: values.name,
         organisation: values.organisation && values.organisation.value,
@@ -137,7 +137,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
         temporal: values.temporal,
         interval: values.interval,
       };
-      patchRasterSource(currentRasterSource.uuid as string, body)
+      patchRasterSource(currentRecord.uuid as string, body)
         .then(data => {
           const status = data.response.status;
           if (status === 200) {
@@ -208,7 +208,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           errorMessage={minLength(3, values.name)}
           triedToSubmit={triedToSubmit}
         />
-        {currentRasterSource ? (
+        {currentRecord ? (
           <TextInput
             title={'UUID'}
             name={'uuid'}
@@ -250,7 +250,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           valueChanged={bool => handleValueChange('temporal', bool)}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          readOnly={!!currentRasterSource}
+          readOnly={!!currentRecord}
         />
         <DurationField
           title={'Interval'}
@@ -260,7 +260,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           validated={true}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          readOnly={!!currentRasterSource || values.temporal === false}
+          readOnly={!!currentRecord || values.temporal === false}
         />
         <UploadData
           title={'Data'}
@@ -282,7 +282,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           valueChanged={value => handleValueChange('accessModifier', value)}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          readOnly={!!currentRasterSource}
+          readOnly={!!currentRecord}
         />
         <SelectDropdown
           title={'Organisation *'}
@@ -298,7 +298,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           onBlur={handleBlur}
           readOnly={
             !selectedOrganisation? true:
-            !(!currentRasterSource && organisationsToSwitchTo.length > 0 && selectedOrganisation.roles.includes('admin'))
+            !(!currentRecord && organisationsToSwitchTo.length > 0 && selectedOrganisation.roles.includes('admin'))
           }
         />
         <SelectDropdown
@@ -330,10 +330,10 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
             url={'/management/data_management/rasters/sources'}
           />
           <div style={{display: "flex"}}>
-            {currentRasterSource ? (
+            {currentRecord ? (
               <div style={{ marginRight: 16 }}>
                 <FormActionButtons
-                  actions={currentRasterSource.temporal ? [
+                  actions={currentRecord.temporal ? [
                     {
                       displayValue: "Delete",
                       actionFunction: () => setShowDeleteModal(true)
@@ -375,31 +375,31 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           <p>We automatically created a layer for you to compose. You will now be redirected to the layer management.</p>
         </Modal>
       ) : null}
-      {showDeleteModal && currentRasterSource && currentRasterSource.layers.length === 0 && currentRasterSource.labeltypes.length === 0 ? (
+      {showDeleteModal && currentRecord && currentRecord.layers.length === 0 && currentRecord.labeltypes.length === 0 ? (
         <DeleteModal
-          rows={[currentRasterSource]}
+          rows={[currentRecord]}
           displayContent={[{name: "name", width: 65}, {name: "uuid", width: 35}]}
           fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
           handleClose={() => setShowDeleteModal(false)}
           tableUrl={'/management/data_management/rasters/sources'}
         />
       ) : null}
-      {showDeleteModal && currentRasterSource && (currentRasterSource.layers.length !== 0 || currentRasterSource.labeltypes.length !== 0) ? (
+      {showDeleteModal && currentRecord && (currentRecord.layers.length !== 0 || currentRecord.labeltypes.length !== 0) ? (
         <DeleteRasterSourceNotAllowed
           handleClose={() => setShowDeleteModal(false)}
-          rowToBeDeleted={currentRasterSource}
+          rowToBeDeleted={currentRecord}
         />
       ) : null}
-      {currentRasterSource && showDataFlushingModal ? (
+      {currentRecord && showDataFlushingModal ? (
         <DataFlushingModal
-          row={currentRasterSource}
+          row={currentRecord}
           displayContent={[{name: "name", width: 50}, {name: "uuid", width: 50}]}
           handleClose={() => setShowDataFlushingModal(false)}
         />
       ) : null}
-      {currentRasterSource && currentRasterSource.temporal && temporalDataFlushingModal ? (
+      {currentRecord && currentRecord.temporal && temporalDataFlushingModal ? (
         <TemporalDataFlushingModal
-          row={currentRasterSource}
+          row={currentRecord}
           handleClose={() => setTemporalDataFlushingModal(false)}
         />
       ) : null}

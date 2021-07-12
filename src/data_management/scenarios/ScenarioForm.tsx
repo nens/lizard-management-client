@@ -18,7 +18,7 @@ import { getScenarioTotalSize } from '../../reducers';
 import { bytesToDisplayValue } from '../../utils/byteUtils';
 
 interface Props {
-  currentScenario: any
+  currentRecord: any
 };
 interface PropsFromDispatch {
   addNotification: (message: string | number, timeout: number) => void
@@ -28,20 +28,20 @@ interface RouteParams {
 };
 
 const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProps<RouteParams>> = (props) => {
-  const { currentScenario } = props;
+  const { currentRecord } = props;
   const scenarioTotalSize = useSelector(getScenarioTotalSize);
   const organisations = useSelector(getOrganisations).available;
-  const scenarioOrganisation = organisations.find((org: any) => org.uuid === currentScenario.organisation.uuid);
+  const scenarioOrganisation = organisations.find((org: any) => org.uuid === currentRecord.organisation.uuid);
   const username = useSelector(getUsername);
   const selectedOrganisation = useSelector(getSelectedOrganisation);
 
   const initialValues = {
-    name: currentScenario.name,
-    uuid: currentScenario.uuid,
-    modelName: currentScenario.model_name || '',
-    supplier: currentScenario.username || '',
-    organisation: currentScenario.organisation.name || '',
-    accessModifier: currentScenario.access_modifier
+    name: currentRecord.name,
+    uuid: currentRecord.uuid,
+    modelName: currentRecord.model_name || '',
+    supplier: currentRecord.username || '',
+    organisation: currentRecord.organisation.name || '',
+    accessModifier: currentRecord.access_modifier
   };
 
   const onSubmit = (values: Values) => {
@@ -50,7 +50,7 @@ const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProp
       access_modifier: values.accessModifier
     };
 
-    fetch(`/api/v4/scenarios/${currentScenario.uuid}/`, {
+    fetch(`/api/v4/scenarios/${currentRecord.uuid}/`, {
       credentials: 'same-origin',
       method: 'PATCH',
       headers: {'Content-Type': 'application/json'},
@@ -113,9 +113,9 @@ const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProp
           triedToSubmit={triedToSubmit}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          readOnly={!scenarioOrganisation.roles.includes("admin") && !(username === currentScenario.username)}
+          readOnly={!scenarioOrganisation.roles.includes("admin") && !(username === currentRecord.username)}
         />
-        {currentScenario ? (
+        {currentRecord ? (
           <TextInput
             title={'UUID'}
             name={'uuid'}
@@ -143,7 +143,7 @@ const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProp
         </span>
         <ScenarioResult
           name={'results'}
-          uuid={currentScenario.uuid}
+          uuid={currentRecord.uuid}
           formSubmitted={formSubmitted}
           onFocus={handleFocus}
           onBlur={handleBlur}

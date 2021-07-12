@@ -1,51 +1,33 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import { RouteComponentProps, withRouter } from "react-router-dom";
-import { getOrganisations } from "../../reducers";
 import { ScenarioForm } from "./ScenarioForm";
-import MDSpinner from "react-md-spinner";
+import SpinnerIfStandardSelectorsNotLoaded from '../../components/SpinnerIfStandardSelectorsNotLoaded';
+import {createFetchRecordFunctionFromUrl} from '../../utils/createFetchRecordFunctionFromUrl';
 
 interface RouteProps {
   uuid: string
 }
 
 const EditScenarioModel: React.FC<RouteComponentProps<RouteProps>> = (props) => {
-  const organisations = useSelector(getOrganisations);
-  const [currentScenario, setCurrentScenario] = useState(null);
+  const [currentRecord, setCurrentRecord] = useState(null);
   const { uuid } = props.match.params;
   useEffect (() => {
     (async () => {
-      const currentScenario = await fetch(`/api/v4/scenarios/${uuid}/`, {
-        credentials: "same-origin"
-      }).then(response => response.json());
+      const currentRecord = await createFetchRecordFunctionFromUrl(`/api/v4/scenarios/${uuid}`)();
 
-      setCurrentScenario(currentScenario);
+      setCurrentRecord(currentRecord);
     })();
   }, [uuid])
 
-  if (
-    currentScenario &&
-    organisations.isFetching === false
-  ) {
-    return <ScenarioForm
-      currentScenario={currentScenario}
-    />;
-  }
-  else {
-    return (
-      <div
-        style={{
-          position: "relative",
-          top: 50,
-          height: 300,
-          bottom: 50,
-          marginLeft: "50%"
-        }}
-      >
-        <MDSpinner size={24} />
-      </div>
-    );
-  }
+  return (
+    <SpinnerIfStandardSelectorsNotLoaded
+      loaded={!!currentRecord}
+    >
+      <ScenarioForm
+        currentRecord={currentRecord}
+      />;
+    </SpinnerIfStandardSelectorsNotLoaded>
+  );
 }
 
 const EditScenario = withRouter(EditScenarioModel);
