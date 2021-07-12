@@ -1,17 +1,14 @@
 import React ,{ useEffect, useState } from "react";
-import MDSpinner from "react-md-spinner";
 import {PersonalApiKeyForm} from "./PersonalApiKeyForm";
 import { DataRetrievalState} from '../types/retrievingDataTypes';
+import SpinnerIfStandardSelectorsNotLoaded from '../components/SpinnerIfStandardSelectorsNotLoaded';
 
 
 export const NewPersonalApiKey: React.FC = () => {
   const [allPersonalApiKeys, setAllPersonalApiKeys] = useState([]);
   const [allPersonalApiKeysFetching, setallPersonalApiKeysFetching] = useState<DataRetrievalState>("NEVER_DID_RETRIEVE");
 
-  
-
   useEffect(() => {
-
     const fetchApiKeys = (url:string) => {
       setallPersonalApiKeysFetching("RETRIEVING");
       fetch(url)
@@ -42,41 +39,34 @@ export const NewPersonalApiKey: React.FC = () => {
     }
   },[allPersonalApiKeysFetching])
 
-  if (
-    allPersonalApiKeysFetching === "RETRIEVED"
-  ) {
-    return ( 
-      <PersonalApiKeyForm
-        // @ts-ignore
-        allPersonalApiKeys={allPersonalApiKeys}
-      />
-    );
-  } else if (
-    allPersonalApiKeysFetching === "NEVER_DID_RETRIEVE" ||
-    allPersonalApiKeysFetching === "RETRIEVING"
-    ) {
-    return <div
-      style={{
-        position: "relative",
-        top: 50,
-        height: 300,
-        bottom: 50,
-        marginLeft: "50%"
-      }}
+  return (
+    <SpinnerIfStandardSelectorsNotLoaded
+      loaded={
+        allPersonalApiKeysFetching !== "NEVER_DID_RETRIEVE" &&
+        allPersonalApiKeysFetching !== "RETRIEVING"
+      }
     >
-      <MDSpinner size={48} />
-    </div>
-  } else {
-    return <div
-      style={{
-        position: "relative",
-        top: 50,
-        height: 300,
-        bottom: 50,
-        marginLeft: "50%"
-      }}
-    >
-      <span>Failed to load 'Personal api keys'. Please try refreshing</span>
-    </div>
-  }
+      {
+      allPersonalApiKeysFetching !== "RETRIEVED" &&
+      allPersonalApiKeysFetching !== "NEVER_DID_RETRIEVE" &&
+      allPersonalApiKeysFetching !== "RETRIEVING" ?
+        <div
+          style={{
+            position: "relative",
+            top: 50,
+            height: 300,
+            bottom: 50,
+            marginLeft: "50%"
+          }}
+        >
+          <span>Failed to load 'Personal api keys'. Please try refreshing</span>
+        </div>
+      :
+        <PersonalApiKeyForm
+          // @ts-ignore
+          allPersonalApiKeys={allPersonalApiKeys}
+        />
+      }
+    </SpinnerIfStandardSelectorsNotLoaded>
+  );
 }
