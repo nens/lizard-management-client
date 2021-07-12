@@ -1,15 +1,16 @@
 import React from "react";
 
 import GroupForm from "./GroupForm";
-import { getSelectedOrganisation} from '../../reducers';
-import FormContainer from '../../components/FormContainer';
+import SpinnerIfStandardSelectorsNotLoaded from '../../components/SpinnerIfStandardSelectorsNotLoaded';
 
 
 export const NewGroup = () => {
     return (
-      <FormContainer
-        selectorsToWaitFor={[getSelectedOrganisation]}
-        FormComponent={GroupForm}
-      />
+      <SpinnerIfStandardSelectorsNotLoaded
+        loaded={true}
+      >
+        <GroupForm
+        />
+      </SpinnerIfStandardSelectorsNotLoaded>
     );
 };

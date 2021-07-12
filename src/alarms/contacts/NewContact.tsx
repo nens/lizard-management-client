@@ -1,14 +1,17 @@
 import React from "react";
 
 import ContactForm from "./ContactForm";
-import { getSelectedOrganisation} from '../../reducers';
-import FormContainer from '../../components/FormContainer';
+import SpinnerIfStandardSelectorsNotLoaded from '../../components/SpinnerIfStandardSelectorsNotLoaded';
+
 
 export const NewContact = () => {
   return (
-    <FormContainer
-      selectorsToWaitFor={[getSelectedOrganisation]}
-      FormComponent={ContactForm}
-    />
+    <SpinnerIfStandardSelectorsNotLoaded
+      loaded={true}
+    >
+      <ContactForm
+      />
+    </SpinnerIfStandardSelectorsNotLoaded>
+    
   );
 };
