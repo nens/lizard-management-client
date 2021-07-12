@@ -70,8 +70,8 @@ function TemporalDataFlushingModal (props: MyProps & DispatchProps) {
 
   return (
     <Modal
-      title={'Are you sure?'}
-      buttonConfirmName={'Flush data partially'}
+      title={'Select a time range to flush data'}
+      buttonConfirmName={'Flush range'}
       onClickButtonConfirm={fetchWithOptions}
       cancelAction={props.handleClose}
       disabledConfirmAction={
@@ -86,20 +86,20 @@ function TemporalDataFlushingModal (props: MyProps & DispatchProps) {
       height={500}
     >
       <p style={{ marginBottom: 10 }}>Please select a time range to flush data from <b>{row.name}</b> raster source.</p>
-      <em>Note: Selected time range must be in between the first timestamp and the last timestamp.</em>
+      <em>Note: Selected time range must be in between the first timestamp and the last timestamp of the source.</em>
       <div className={styles.GridContainer}>
         <div>
-          <span><b>First timestamp:</b></span><br />
+          <span><b>First timestamp of the source:</b></span><br />
           <span>{firstValueTimestamp ? firstValueTimestamp.toLocaleString() : '(No data)'}</span>
         </div>
         <div>
-          <span><b>Last timestamp:</b></span><br />
+          <span><b>Last timestamp of the source:</b></span><br />
           <span>{lastValueTimestamp ? lastValueTimestamp.toLocaleString() : '(No data)'}</span>
         </div>
       </div>
       <div className={styles.GridContainer}>
-        <div><b>Start:</b></div>
-        <div><b>Stop:</b></div>
+        <div><b>Start of time range:</b></div>
+        <div><b>End of time range:</b></div>
         <Datetime
           value={start}
           onChange={event => {
@@ -108,7 +108,6 @@ function TemporalDataFlushingModal (props: MyProps & DispatchProps) {
           inputProps={{
             className: timeValidator() || startValidator() ? styles.DateTimeInvalid : undefined,
           }}
-          // isValidDate={currentDate => currentDate <= lastValueTimestamp}
         />
         <Datetime
           value={stop}
@@ -118,7 +117,6 @@ function TemporalDataFlushingModal (props: MyProps & DispatchProps) {
           inputProps={{
             className: timeValidator() || stopValidator() ? styles.DateTimeInvalid : undefined,
           }}
-          // isValidDate={current => current >= firstValueTimestamp}
         />
       </div>
       <div style={{ color: 'red', marginTop: 5 }}>{timeValidator() || startValidator() || stopValidator()}</div>
