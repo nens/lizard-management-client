@@ -34,7 +34,7 @@ export interface Datasource {
 };
 
 interface Props {
-  currentTimeseries?: any,
+  currentRecord?: any,
   datasource?: Datasource,
 };
 
@@ -66,7 +66,7 @@ const fetchDatasources = async (searchInput: string) => {
 };
 
 const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
-  const { currentTimeseries, datasource, removeLocation } = props;
+  const { currentRecord, datasource, removeLocation } = props;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const username = useSelector(getUsername);
   const location = useSelector(getLocation);
@@ -78,19 +78,19 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
     };
   }, [removeLocation]);
 
-  const initialValues = currentTimeseries ? {
-    name: currentTimeseries.name,
-    code: currentTimeseries.code,
-    observationType: currentTimeseries.observation_type ? convertToSelectObject(currentTimeseries.observation_type.id, currentTimeseries.observation_type.code) : null,
-    location: currentTimeseries.location ? convertToSelectObject(currentTimeseries.location.uuid, currentTimeseries.location.name) : null,
-    valueType: currentTimeseries.value_type ? convertToSelectObject(currentTimeseries.value_type) : null,
-    datasource: currentTimeseries.datasource && datasource ? convertToSelectObject(datasource.id, datasource.name) : null,
-    intervalCheckbox: !(currentTimeseries.interval === null),
-    interval: currentTimeseries.interval ? toISOValue(convertSecondsToDurationObject(currentTimeseries.interval)) : '',
-    extraMetadata: JSON.stringify(currentTimeseries.extra_metadata),
-    accessModifier: currentTimeseries.access_modifier,
-    supplier: currentTimeseries.supplier ? convertToSelectObject(currentTimeseries.supplier) : null,
-    supplierCode: currentTimeseries.supplier_code,
+  const initialValues = currentRecord ? {
+    name: currentRecord.name,
+    code: currentRecord.code,
+    observationType: currentRecord.observation_type ? convertToSelectObject(currentRecord.observation_type.id, currentRecord.observation_type.code) : null,
+    location: currentRecord.location ? convertToSelectObject(currentRecord.location.uuid, currentRecord.location.name) : null,
+    valueType: currentRecord.value_type ? convertToSelectObject(currentRecord.value_type) : null,
+    datasource: currentRecord.datasource && datasource ? convertToSelectObject(datasource.id, datasource.name) : null,
+    intervalCheckbox: !(currentRecord.interval === null),
+    interval: currentRecord.interval ? toISOValue(convertSecondsToDurationObject(currentRecord.interval)) : '',
+    extraMetadata: JSON.stringify(currentRecord.extra_metadata),
+    accessModifier: currentRecord.access_modifier,
+    supplier: currentRecord.supplier ? convertToSelectObject(currentRecord.supplier) : null,
+    supplierCode: currentRecord.supplier_code,
     data: [],
   } : {
     name: null,
@@ -123,7 +123,7 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
       supplier_code: values.supplierCode,
     };
 
-    if (!currentTimeseries) {
+    if (!currentRecord) {
       fetch("/api/v4/timeseries/", {
         credentials: "same-origin",
         method: "POST",
@@ -152,7 +152,7 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
       })
       .catch(console.error);
     } else {
-      fetch(`/api/v4/timeseries/${currentTimeseries.uuid}/`, {
+      fetch(`/api/v4/timeseries/${currentRecord.uuid}/`, {
         credentials: "same-origin",
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -166,7 +166,7 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
           // Upload .csv files
           const acceptedFiles = values.data as AcceptedFile[] || [];
           const uploadFiles = acceptedFiles.map(f => f.file);
-          handleCsvFilesUpload(uploadFiles, currentTimeseries.uuid);
+          handleCsvFilesUpload(uploadFiles, currentRecord.uuid);
         } else {
           props.addNotification(status, 2000);
           console.error(response);
@@ -251,11 +251,11 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
-        {currentTimeseries ? (
+        {currentRecord ? (
           <TextInput
             title={'UUID'}
             name={'uuid'}
-            value={currentTimeseries.uuid}
+            value={currentRecord.uuid}
             valueChanged={handleInputChange}
             validated
             onFocus={handleFocus}
@@ -467,7 +467,7 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
             url={backUrl}
           />
           <div style={{display: "flex"}}>
-            {currentTimeseries ? (
+            {currentRecord ? (
               <div style={{ marginRight: 16 }}>
                 <FormActionButtons
                   actions={[
@@ -485,9 +485,9 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
           </div>
         </div>
       </form>
-      {currentTimeseries && showDeleteModal ? (
+      {currentRecord && showDeleteModal ? (
         <DeleteModal
-          rows={[currentTimeseries]}
+          rows={[currentRecord]}
           displayContent={[{name: "name", width: 40}, {name: "uuid", width: 60}]}
           fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
           handleClose={() => setShowDeleteModal(false)}

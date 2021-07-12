@@ -2,37 +2,30 @@ import React, { useEffect, useState } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { getUuidFromUrl } from "../../../utils/getUuidFromUrl";
 import TimeseriesForm, { Datasource } from "./TimeseriesForm";
-import MDSpinner from "react-md-spinner";
+import SpinnerIfStandardSelectorsNotLoaded from '../../../components/SpinnerIfStandardSelectorsNotLoaded';
+import {createFetchRecordFunctionFromUrl} from '../../../utils/createFetchRecordFunctionFromUrl';
 
 interface RouteProps {
   uuid: string
 }
 
 export const EditTimeseries = (props: RouteComponentProps<RouteProps>) => {
-  const [currentTimeseries, setCurrentTimeseries] = useState<Object | null>(null);
+  const [currentRecord, setCurrentRecord] = useState<Object | null>(null);
   const [datasourceIsRequired, setDatasourceIsRequired] = useState<boolean | null>(null);
-  const [datasource, setDatasource] = useState<Datasource | null>(null);
+  const [datasource, setDatasource] = useState<Datasource | undefined>(undefined);
   const { uuid } = props.match.params;
 
   useEffect (() => {
     (async () => {
-      const timeseries = await fetch(`/api/v4/timeseries/${uuid}/`, {
-        credentials: "same-origin"
-      }).then(
-        response => response.json()
-      );
-      setCurrentTimeseries(timeseries);
+      const currentRecord = await createFetchRecordFunctionFromUrl(`/api/v4/timeseries/${uuid}/`)();
+      setCurrentRecord(currentRecord);
 
-      const datasourceField: string | null = timeseries.datasource;
+      const datasourceField: string | null = currentRecord.datasource;
       if (datasourceField) {
         setDatasourceIsRequired(true);
         const datasourceId = getUuidFromUrl(datasourceField);
 
-        const currentDatasource = await fetch(`/api/v4/datasources/${datasourceId}/`, {
-          credentials: "same-origin"
-        }).then(
-          response => response.json()
-        );
+        const currentDatasource = await createFetchRecordFunctionFromUrl(`/api/v4/datasources/${datasourceId}/`)();
         setDatasource(currentDatasource);
       } else {
         setDatasourceIsRequired(false);
@@ -40,39 +33,17 @@ export const EditTimeseries = (props: RouteComponentProps<RouteProps>) => {
     })();
   }, [uuid])
 
-  if (
-    currentTimeseries &&
-    datasourceIsRequired === false
-  ) {
-    return (
+  return (
+    <SpinnerIfStandardSelectorsNotLoaded
+      loaded={!!(
+        currentRecord &&
+        (datasourceIsRequired === false || datasource) 
+      )}
+    >
       <TimeseriesForm
-        currentTimeseries={currentTimeseries}
+        currentRecord={currentRecord}
+        datasource={datasourceIsRequired? datasource: undefined}
       />
-    )
-  } else if (
-    currentTimeseries &&
-    datasourceIsRequired &&
-    datasource
-  ) {
-    return (
-      <TimeseriesForm
-        currentTimeseries={currentTimeseries}
-        datasource={datasource}
-      />
-    )
-  } else {
-    return (
-      <div
-        style={{
-          position: "relative",
-          top: 50,
-          height: 300,
-          bottom: 50,
-          marginLeft: "50%"
-        }}
-      >
-        <MDSpinner size={24} />
-      </div>
-    );
-  };
+    </SpinnerIfStandardSelectorsNotLoaded>
+  );
 }
