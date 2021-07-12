@@ -10,7 +10,7 @@ import DeleteModal from '../components/DeleteModal';
 import { fetchWithOptions } from '../utils/fetchWithOptions';
 
 export const baseUrl = "/api/v4/personalapikeys/";
-const navigationUrl = "/personal_api_keys";
+const navigationUrl = "/management/personal_api_keys";
 
 export const PersonalApiKeysTable = (props: RouteComponentProps) =>  {
   const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
