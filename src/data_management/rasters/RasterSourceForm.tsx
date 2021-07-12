@@ -334,7 +334,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
                       actionFunction: () => setShowDataFlushingModal(true)
                     },
                     {
-                      displayValue: "Flush data partially",
+                      displayValue: "Flush range",
                       actionFunction: () => setTemporalDataFlushingModal(true)
                     },
                   ] : [
