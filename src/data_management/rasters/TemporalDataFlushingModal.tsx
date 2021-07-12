@@ -44,6 +44,11 @@ function TemporalDataFlushingModal (props: MyProps & DispatchProps) {
 
   const fetchWithOptions = () => {
     if (!start || !stop) return; // start & stop are both required
+
+    const confirmToFlushRange = window.confirm('Are you sure?');
+    if (!confirmToFlushRange) return; // don't do anything
+
+    // If user confirms to flush the data
     setBusyDeleting(true);
     return fetch(`/api/v4/rastersources/${row.uuid}/data/`, {
       credentials: "same-origin",
