@@ -30,27 +30,27 @@ import formStyles from './../../../styles/Forms.module.css';
 import rasterAlarmIcon from "../../../images/alarm@3x.svg";
 
 interface Props {
-  currentTimeseriesAlarm?: any,
+  currentRecord?: any,
   timeseries?: TimeseriesFromTimeseriesEndpoint
 };
 
 const TimeseriesAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (props) => {
-  const { currentTimeseriesAlarm, timeseries } = props;
+  const { currentRecord, timeseries } = props;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const navigationUrl = "/alarms/notifications/timeseries_alarms";
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
 
-  const initialValues = currentTimeseriesAlarm && timeseries ? {
-    name: currentTimeseriesAlarm.name,
+  const initialValues = currentRecord && timeseries ? {
+    name: currentRecord.name,
     timeseries: convertToSelectObject(timeseries.uuid, getTimeseriesLabel(timeseries), timeseries.uuid, '', timeseries.location ? timeseries.location.name || timeseries.location.code : ''),
-    relative: !!currentTimeseriesAlarm.relative_start || !!currentTimeseriesAlarm.relative_end,
-    relativeStart: currentTimeseriesAlarm.relative_start ? convertDurationObjToSeconds(rasterIntervalStringServerToDurationObject(currentTimeseriesAlarm.relative_start)) : null,
-    relativeEnd: currentTimeseriesAlarm.relative_end ? convertDurationObjToSeconds(rasterIntervalStringServerToDurationObject(currentTimeseriesAlarm.relative_end)) : null,
-    snoozeOn: currentTimeseriesAlarm.snooze_sign_on,
-    snoozeOff: currentTimeseriesAlarm.snooze_sign_off,
-    comparison: convertToSelectObject(currentTimeseriesAlarm.comparison),
-    thresholds: currentTimeseriesAlarm.thresholds,
-    recipients: currentTimeseriesAlarm.messages.map((message: any) => {
+    relative: !!currentRecord.relative_start || !!currentRecord.relative_end,
+    relativeStart: currentRecord.relative_start ? convertDurationObjToSeconds(rasterIntervalStringServerToDurationObject(currentRecord.relative_start)) : null,
+    relativeEnd: currentRecord.relative_end ? convertDurationObjToSeconds(rasterIntervalStringServerToDurationObject(currentRecord.relative_end)) : null,
+    snoozeOn: currentRecord.snooze_sign_on,
+    snoozeOff: currentRecord.snooze_sign_off,
+    comparison: convertToSelectObject(currentRecord.comparison),
+    thresholds: currentRecord.thresholds,
+    recipients: currentRecord.messages.map((message: any) => {
       const groupId = parseInt(getUuidFromUrl(message.contact_group));
       const templateId = parseInt(getUuidFromUrl(message.message));
       return {
@@ -88,7 +88,7 @@ const TimeseriesAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps>
       }))
     };
 
-    if (!currentTimeseriesAlarm) {
+    if (!currentRecord) {
       fetch("/api/v4/timeseriesalarms/", {
         credentials: "same-origin",
         method: "POST",
@@ -113,7 +113,7 @@ const TimeseriesAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps>
       })
       .catch(console.error);
     } else {
-      fetch(`/api/v4/timeseriesalarms/${currentTimeseriesAlarm.uuid}/`, {
+      fetch(`/api/v4/timeseriesalarms/${currentRecord.uuid}/`, {
         credentials: "same-origin",
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -178,11 +178,11 @@ const TimeseriesAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps>
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
-        {currentTimeseriesAlarm ? (
+        {currentRecord ? (
           <TextInput
             title={'UUID'}
             name={'uuid'}
-            value={currentTimeseriesAlarm.uuid}
+            value={currentRecord.uuid}
             valueChanged={handleInputChange}
             validated
             onFocus={handleFocus}
@@ -308,7 +308,7 @@ const TimeseriesAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps>
         <Recipients
           title={'Recipients'}
           name={'recipients'}
-          organisation={currentTimeseriesAlarm ? currentTimeseriesAlarm.organisation.uuid : selectedOrganisation.uuid}
+          organisation={currentRecord ? currentRecord.organisation.uuid : selectedOrganisation.uuid}
           recipients={values.recipients}
           valueChanged={recipients => handleValueChange('recipients', recipients)}
           valueRemoved={recipients => handleValueChange('recipients', recipients)}
@@ -324,7 +324,7 @@ const TimeseriesAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps>
             url={navigationUrl}
           />
           <div style={{display: "flex"}}>
-            {currentTimeseriesAlarm ? (
+            {currentRecord ? (
               <div style={{ marginRight: 16 }}>
                 <FormActionButtons
                   actions={[
@@ -342,9 +342,9 @@ const TimeseriesAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps>
           </div>
         </div>
       </form>
-      {currentTimeseriesAlarm && showDeleteModal ? (
+      {currentRecord && showDeleteModal ? (
         <DeleteModal
-          rows={[currentTimeseriesAlarm]}
+          rows={[currentRecord]}
           displayContent={[{name: "name", width: 40}, {name: "uuid", width: 60}]}
           fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
           handleClose={() => setShowDeleteModal(false)}

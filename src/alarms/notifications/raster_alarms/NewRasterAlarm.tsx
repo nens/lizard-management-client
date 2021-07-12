@@ -1,7 +1,15 @@
 import React from "react";
-
 import RasterAlarmForm from "./RasterAlarmForm";
+import SpinnerIfStandardSelectorsNotLoaded from '../../../components/SpinnerIfStandardSelectorsNotLoaded';
 
-export const NewRasterAlarm: React.FC = () => {
-  return <RasterAlarmForm />;
+
+export const NewRasterAlarm = () => {
+  return (
+    <SpinnerIfStandardSelectorsNotLoaded
+      loaded={true}
+    >
+      <RasterAlarmForm />
+    </SpinnerIfStandardSelectorsNotLoaded>
+    
+  );
 };

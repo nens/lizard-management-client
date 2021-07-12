@@ -1,61 +1,52 @@
 import React, { useState, useEffect } from "react";
 import { RouteComponentProps } from 'react-router';
-import MDSpinner from "react-md-spinner";
 import { getUuidFromUrl } from "../../../utils/getUuidFromUrl";
 import { TimeseriesFromTimeseriesEndpoint } from "../../../types/timeseriesType";
 import TimeseriesAlarmForm from "./TimeseriesAlarmForm";
+import SpinnerIfStandardSelectorsNotLoaded from '../../../components/SpinnerIfStandardSelectorsNotLoaded';
+import {createFetchRecordFunctionFromUrl} from '../../../utils/createFetchRecordFunctionFromUrl';
 
 interface RouteParams {
   uuid: string;
 };
 
+interface TimeseriesAlarm {
+  timeseries: any
+}
+
 export const EditTimeseriesAlarm: React.FC<RouteComponentProps<RouteParams>> = (props) => {
-  const [currentTimeseriesAlarm, setCurrentTimeseriesAlarm] = useState<Object | null>(null);
-  const [timeseries, setTimeseries] = useState<TimeseriesFromTimeseriesEndpoint | null>(null);
+  const [currentRecord, setCurrentRecord] = useState<TimeseriesAlarm | null>(null);
+  const [timeseries, setTimeseries] = useState<TimeseriesFromTimeseriesEndpoint | undefined>(undefined);
 
   const { uuid } = props.match.params;
+
   useEffect(() => {
     (async () => {
-      const timeseriesAlarm = await fetch(`/api/v4/timeseriesalarms/${uuid}/`, {
-        credentials: "same-origin"
-      }).then(
-        response => response.json()
-      );
-
-      const timeseriesUrl = timeseriesAlarm.timeseries;
-      const timeseriesUuid = getUuidFromUrl(timeseriesUrl);
-      const timeseries = await fetch(`/api/v4/timeseries/${timeseriesUuid}/`, {
-        credentials: 'same-origin'
-      }).then(
-        response => response.json()
-      )
-
-      setTimeseries(timeseries);
-      setCurrentTimeseriesAlarm(timeseriesAlarm);
+      const currentRecord = await createFetchRecordFunctionFromUrl(`/api/v4/timeseriesalarms/${uuid}/`)();
+      setCurrentRecord(currentRecord);
     })();
   }, [uuid]);
+  useEffect(() => {
+    (async () => {
+      if (currentRecord) {
+        const timeseriesUrl = currentRecord.timeseries;
+        const timeseriesUuid = getUuidFromUrl(timeseriesUrl);
+        const timeseries = await createFetchRecordFunctionFromUrl(`/api/v4/timeseriesalarms/${timeseriesUuid}/`)();
+        setTimeseries(timeseries);
+      }
+    })();
+  }, [currentRecord]);
 
-  if (currentTimeseriesAlarm && timeseries) {
     return (
-      <TimeseriesAlarmForm
-        currentTimeseriesAlarm={currentTimeseriesAlarm}
-        timeseries={timeseries}
-      />
-    );
-  }
-  else {
-    return (
-      <div
-        style={{
-          position: "relative",
-          top: 50,
-          height: 300,
-          bottom: 50,
-          marginLeft: "50%"
-        }}
+      <SpinnerIfStandardSelectorsNotLoaded
+        loaded={!!(currentRecord && timeseries)}
       >
-        <MDSpinner size={24} />
-      </div>
+        <TimeseriesAlarmForm
+          currentRecord={currentRecord}
+          timeseries={timeseries}
+        />
+      </SpinnerIfStandardSelectorsNotLoaded>
+      
     );
-  }
+  
 };

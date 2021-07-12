@@ -11,7 +11,7 @@ import DeleteModal from '../../../components/DeleteModal';
 import alarmIcon from "../../../images/alarm@3x.svg";
 
 export const baseUrl = "/api/v4/timeseriesalarms/";
-const navigationUrl = "/alarms/notifications/timeseries_alarms";
+const navigationUrl = "/management/alarms/notifications/timeseries_alarms";
 
 export const TimeseriesAlarmTableComponent: React.FC<DispatchProps & RouteComponentProps> = (props) =>  {
   const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
