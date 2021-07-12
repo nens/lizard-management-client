@@ -16,7 +16,7 @@ import userManagementIcon from "../images/userManagement.svg";
 export const UserTable = (props: RouteComponentProps) =>  {
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const baseUrl = `/api/v4/organisations/${selectedOrganisation.uuid}/users/`;
-  const navigationUrl = "/users";
+  const navigationUrl = "/management/users";
 
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const [resetTable, setResetTable] = useState<Function | null>(null);
