@@ -1,45 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { RouteComponentProps } from "react-router-dom";
-import MDSpinner from "react-md-spinner";
 import MonitoringNetworkForm from "./MonitoringNetworkForm";
+import SpinnerIfStandardSelectorsNotLoaded from '../../../components/SpinnerIfStandardSelectorsNotLoaded';
+import {createFetchRecordFunctionFromUrl} from '../../../utils/createFetchRecordFunctionFromUrl';
 
 interface RouteProps {
   uuid: string
 }
 
 export const EditMonitoringNetwork = (props: RouteComponentProps<RouteProps>) => {
-  const [currentNetwork, setCurrentNetwork] = useState(null);
+  const [currentRecord, setCurrentRecord] = useState(null);
   const { uuid } = props.match.params;
 
   useEffect (() => {
     (async () => {
-      const monitoringNetwork = await fetch(`/api/v4/monitoringnetworks/${uuid}/`, {
-        credentials: "same-origin"
-      }).then(response => response.json());
-
-      setCurrentNetwork(monitoringNetwork);
+      const currentRecord = await createFetchRecordFunctionFromUrl(`/api/v4/monitoringnetworks/${uuid}`)();
+      setCurrentRecord(currentRecord);
     })();
   }, [uuid])
 
-  if (currentNetwork) {
-    return (
+  return (
+    <SpinnerIfStandardSelectorsNotLoaded
+      loaded={!!currentRecord}
+    >
       <MonitoringNetworkForm
-        currentNetwork={currentNetwork}
+        currentRecord={currentRecord}
       />
-    );
-  } else {
-    return (
-      <div
-        style={{
-          position: "relative",
-          top: 50,
-          height: 300,
-          bottom: 50,
-          marginLeft: "50%"
-        }}
-      >
-        <MDSpinner size={24} />
-      </div>
-    );
-  }
+    </SpinnerIfStandardSelectorsNotLoaded>
+  );
 }
