@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Table from './Table';
-import {ColumnDefinition} from './Table';
+import { ColumnDefinition } from './Table';
 import Pagination from './Pagination';
 import Checkbox from './Checkbox';
 import TableSearchBox from './TableSearchBox';
@@ -9,7 +9,8 @@ import { TableSearchToggleHelpText } from './TableSearchToggleHelpText';
 import { Value } from '../form/SelectDropdown';
 import { useSelector } from "react-redux";
 import { getSelectedOrganisation } from '../reducers';
-import {DataRetrievalState} from '../types/retrievingDataTypes';
+import { getRelativePathFromUrl } from '../utils/getRelativePathFromUrl';
+import { DataRetrievalState } from '../types/retrievingDataTypes';
 import unorderedIcon from "../images/list_order_icon_unordered.svg";
 import orderedIcon from "../images/list_order_icon_ordered.svg";
 import styles from './Table.module.css';
@@ -94,10 +95,9 @@ const TableStateContainer: React.FC<Props> = ({
       // make sure no checkboxes are checked outside of current page !
       apiResponse.response.results && setCheckBoxes(checkBoxesPar=>checkBoxesPar.filter(value => (apiResponse.response.results.map((item:any)=>getRowIdentifier(item))).includes(value)));
       setDataRetrievalState(apiResponse.dataRetrievalState)
-      // we need to split on "lizard.net" because both nxt3.staging.lizard.net/api/v4 and demo.lizard.net/api/v4 both should parse out "/api/v4"
-      if (apiResponse.response.next) setNextUrl(apiResponse.response.next.split("lizard.net")[1]);
+      if (apiResponse.response.next) setNextUrl(getRelativePathFromUrl(apiResponse.response.next));
       else if (apiResponse.response.next === null)  setNextUrl("")
-      if (apiResponse.response.previous) setPreviousUrl(apiResponse.response.previous.split("lizard.net")[1]);
+      if (apiResponse.response.previous) setPreviousUrl(getRelativePathFromUrl(apiResponse.response.previous));
       else if (apiResponse.response.previous === null) setPreviousUrl("")
     }
   }, [apiResponse, currentUrl]);

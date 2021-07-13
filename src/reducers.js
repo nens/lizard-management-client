@@ -54,7 +54,6 @@ function organisations(
     isFetching: false,
     timesFetched: 0,
     available: [],
-    availableForRasterSharedWith: [],
     selected: null,
   },
   action
@@ -73,7 +72,6 @@ function organisations(
       return {
         ...state,
         available: action.available,
-        availableForRasterSharedWith: action.all,
         isFetching: false,
         timesFetched: state.timesFetched + 1
       };

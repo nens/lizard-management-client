@@ -44,8 +44,8 @@ export const rasterSourceFormHelpText: HelpText = {
   ),
   data: (
     <>
-      <p>Upload your raster files here in .tif format. Lizard will recognize the timestamp if it is in the filename.</p>
-      <p><i>(e.g. "20210101T0101.tiff" will be translated to "01/01/2021 01:01")</i></p>
+      <p>Upload your raster files here in .tif format. For temporal rasters, Lizard will recognize the timestamp (in <a href={"https://en.wikipedia.org/wiki/ISO_8601"} target="blank">ISO 8601</a> format) if it is in the filename.</p>
+      <p><i>For example: "20210101T1010Z.tif" will be "01-01-2021 10:10:00" in UTC.</i></p>
     </>
   ),
   accessModifier: accessModifierHelpText,

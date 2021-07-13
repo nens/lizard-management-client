@@ -147,7 +147,7 @@ export const RasterSourceTable = (props: any) => {
                   }
                 },
                 {
-                  displayValue: "Flush data partially",
+                  displayValue: "Flush range",
                   actionFunction: (row: any, _updateTableRow: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any) => {
                     flushDataPartiallyAction(row, triggerReloadWithCurrentPage, null);
                   }

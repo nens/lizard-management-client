@@ -25,7 +25,7 @@ function DataFlushingModal (props: MyProps & DispatchProps) {
       body: JSON.stringify({})
     }).then(res => {
       setBusyDeleting(false);
-      if (res.status === 204) {
+      if (res.status === 200) {
         props.handleClose();
         props.addNotification('Raster source data flushed successfully!', 2000);
       } else if (res.status === 403) {

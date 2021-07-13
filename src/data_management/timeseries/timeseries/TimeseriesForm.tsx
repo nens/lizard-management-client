@@ -42,7 +42,7 @@ const backUrl = "/management/data_management/timeseries/timeseries";
 
 // Helper function to fetch locations in async select dropdown
 const fetchLocations = async (searchInput: string, organisationUuid: string) => {
-  const params=[`organisation__uuid=${organisationUuid}`, "writable=true"];
+  const params=[`organisation__uuid=${organisationUuid}`, "writable=true", "page_size=20"];
 
   if (searchInput) params.push(`name__startswith=${searchInput}`);
   const urlQuery = params.join('&');
@@ -57,7 +57,7 @@ const fetchLocations = async (searchInput: string, organisationUuid: string) => 
 
 // Helper function to fetch datasources in async select dropdown
 const fetchDatasources = async (searchInput: string) => {
-  const response = await fetch(`/api/v4/datasources/`, {
+  const response = await fetch(`/api/v4/datasources/?page_size=20`, {
     credentials: 'same-origin'
   });
   const responseJSON = await response.json();

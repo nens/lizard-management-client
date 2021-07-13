@@ -31,12 +31,14 @@ import rasterAlarmIcon from "../../../images/alarm@3x.svg";
 
 interface Props {
   currentRecord?: any,
+  groups: any[],
+  templates: any[],
   raster?: RasterLayerFromAPI
 };
 
 // Helper function to fetch paginated observation types with search query
 const fetchRasterLayers = async (uuid: string, searchQuery: string) => {
-  const params=[`organisation__uuid=${uuid}`, "temporal=true"];
+  const params=[`organisation__uuid=${uuid}`, "temporal=true", "page_size=20"];
 
   // Regex expression to check if search input is UUID of raster source
   const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -55,9 +57,9 @@ const fetchRasterLayers = async (uuid: string, searchQuery: string) => {
 };
 
 const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (props) => {
-  const { currentRecord, raster } = props;
+  const { currentRecord, raster, groups, templates } = props;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
-  const navigationUrl = "/alarms/notifications/raster_alarms";
+  const navigationUrl = "/management/alarms/notifications/raster_alarms";
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
 
   const initialValues = currentRecord && raster ? {
@@ -74,9 +76,11 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
     recipients: currentRecord.messages.map((message: any) => {
       const groupId = parseInt(getUuidFromUrl(message.contact_group));
       const templateId = parseInt(getUuidFromUrl(message.message));
+      const selectedGroup = groups.find(group => group.id === groupId);
+      const selectedTemplate = templates.find(template => template.id === templateId);
       return {
-        contact_group: convertToSelectObject(groupId),
-        message: convertToSelectObject(templateId)
+        contact_group: selectedGroup ? convertToSelectObject(groupId, selectedGroup.name) : convertToSelectObject(groupId),
+        message: selectedGroup ? convertToSelectObject(templateId, selectedTemplate.name) : convertToSelectObject(templateId)
       };
     })
   } : {
@@ -354,6 +358,8 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           name={'recipients'}
           organisation={currentRecord ? currentRecord.organisation.uuid : selectedOrganisation.uuid}
           recipients={values.recipients}
+          availableGroups={groups.map(group => convertToSelectObject(group.id, group.name))}
+          availableTemplates={templates.map(template => convertToSelectObject(template.id, template.name))}
           valueChanged={recipients => handleValueChange('recipients', recipients)}
           valueRemoved={recipients => handleValueChange('recipients', recipients)}
           validated

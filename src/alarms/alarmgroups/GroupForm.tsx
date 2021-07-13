@@ -13,6 +13,7 @@ import { SelectDropdown, Value } from '../../form/SelectDropdown';
 import { convertToSelectObject } from '../../utils/convertToSelectObject';
 import { groupFormHelpText } from '../../utils/help_texts/helpTextForAlarmGroups';
 import { fetchWithOptions } from '../../utils/fetchWithOptions';
+import { usePaginatedFetch } from '../../utils/usePaginatedFetch';
 import { baseUrl } from './GroupTable';
 import DeleteModal from '../../components/DeleteModal';
 import FormActionButtons from '../../components/FormActionButtons';
@@ -92,17 +93,12 @@ const GroupForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pr
 
   // Fetch list of contacts to add to group
   const [contacts, setContacts] = useState<Value[] | null>(null);
+  const { results, fetchingState } = usePaginatedFetch({
+    url: `/api/v4/contacts/?organisation__uuid=${currentRecord ? currentRecord.organisation.uuid : selectedOrganisationUuid}`
+  });
   useEffect(() => {
-    fetch(`/api/v4/contacts/?page_size=1000&organisation__uuid=${currentRecord ? currentRecord.organisation.uuid : selectedOrganisationUuid}`, {
-      credentials: "same-origin"
-    })
-    .then(response => response.json())
-    .then(data => {
-      const contacts = data.results.map((contact: any) => convertToSelectObject(contact.id, contact.first_name + ' ' + contact.last_name, contact.email, contact.phone_number));
-      setContacts(contacts);
-    })
-    .catch(console.error);
-  }, [selectedOrganisationUuid, currentRecord]);
+    setContacts(results && results.map((contact: any) => convertToSelectObject(contact.id, contact.first_name + ' ' + contact.last_name, contact.email, contact.phone_number)));
+  }, [results]);
 
   // Modal to send message to all contacts in group
   const [showGroupMessageModal, setShowGroupMessageModal] = useState<boolean>(false);
@@ -160,7 +156,7 @@ const GroupForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pr
           options={contacts || []}
           validated
           isMulti
-          isLoading={!contacts}
+          isLoading={fetchingState === 'RETRIEVING'}
           onFocus={handleFocus}
           onBlur={handleBlur}
         />

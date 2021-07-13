@@ -5,6 +5,7 @@ import { Scrollbars } from "react-custom-scrollbars";
 import { SubmitButton } from '../../../form/SubmitButton';
 import { addNotification } from '../../../actions';
 import { DataRetrievalState } from '../../../types/retrievingDataTypes';
+import { getRelativePathFromUrl } from '../../../utils/getRelativePathFromUrl';
 import ModalBackground from '../../../components/ModalBackground';
 import Pagination from '../../../components/Pagination';
 import TableSearchBox from '../../../components/TableSearchBox';
@@ -71,8 +72,8 @@ function TimeseriesModal (props: MyProps & DispatchProps) {
         parsedResponse => {
           setDataRetrievalState('RETRIEVED');
           setTimeseriesApiResponse({
-            previous: parsedResponse.previous ? parsedResponse.previous.split("lizard.net")[1] : null,
-            next: parsedResponse.next ? parsedResponse.next.split("lizard.net")[1] : null,
+            previous: parsedResponse.previous ? getRelativePathFromUrl(parsedResponse.previous) : null,
+            next: parsedResponse.next ? getRelativePathFromUrl(parsedResponse.next) : null,
             results: parsedResponse.results
           });
         }

@@ -1,8 +1,8 @@
 import React ,{ useEffect, useState } from "react";
 import {PersonalApiKeyForm} from "./PersonalApiKeyForm";
 import { DataRetrievalState} from '../types/retrievingDataTypes';
+import { getRelativePathFromUrl } from "../utils/getRelativePathFromUrl";
 import SpinnerIfStandardSelectorsNotLoaded from '../components/SpinnerIfStandardSelectorsNotLoaded';
-
 
 export const NewPersonalApiKey: React.FC = () => {
   const [allPersonalApiKeys, setAllPersonalApiKeys] = useState([]);
@@ -30,7 +30,7 @@ export const NewPersonalApiKey: React.FC = () => {
         if (data && data.next === null) {
           setallPersonalApiKeysFetching("RETRIEVED");
         } else if (data && data.next !== null) {
-          fetchApiKeys((data.next+'').split("lizard.net")[1])
+          fetchApiKeys(getRelativePathFromUrl(data.next))
         }
       })
     }

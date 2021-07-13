@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { RouteComponentProps } from 'react-router';
 import { getUuidFromUrl } from "../../../utils/getUuidFromUrl";
+import { usePaginatedFetch } from "../../../utils/usePaginatedFetch";
 import { TimeseriesFromTimeseriesEndpoint } from "../../../types/timeseriesType";
 import TimeseriesAlarmForm from "./TimeseriesAlarmForm";
 import SpinnerIfStandardSelectorsNotLoaded from '../../../components/SpinnerIfStandardSelectorsNotLoaded';
@@ -11,7 +12,8 @@ interface RouteParams {
 };
 
 interface TimeseriesAlarm {
-  timeseries: any
+  timeseries: any;
+  organisation: {uuid: string}
 }
 
 export const EditTimeseriesAlarm: React.FC<RouteComponentProps<RouteParams>> = (props) => {
@@ -37,13 +39,33 @@ export const EditTimeseriesAlarm: React.FC<RouteComponentProps<RouteParams>> = (
     })();
   }, [currentRecord]);
 
+    const {
+      results: groups,
+      fetchingState: groupsFetchingState
+    } = usePaginatedFetch({
+      url: currentRecord ? `/api/v4/contactgroups/?organisation__uuid=${currentRecord.organisation.uuid}` : ''
+    });
+
+    const {
+      results: templates,
+      fetchingState: templatesFetchingState
+    } = usePaginatedFetch({
+      url: currentRecord ? `/api/v4/messages/?organisation__uuid=${currentRecord.organisation.uuid}` : ''
+    });
+
     return (
       <SpinnerIfStandardSelectorsNotLoaded
-        loaded={!!(currentRecord && timeseries)}
+        loaded={!!(
+          currentRecord && timeseries &&
+          groupsFetchingState === 'RETRIEVED' &&
+          templatesFetchingState === 'RETRIEVED'
+        )}
       >
         <TimeseriesAlarmForm
           currentRecord={currentRecord}
           timeseries={timeseries}
+          groups={groups || []}
+          templates={templates || []}
         />
       </SpinnerIfStandardSelectorsNotLoaded>
       

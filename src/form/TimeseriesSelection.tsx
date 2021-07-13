@@ -99,7 +99,7 @@ export function TimeseriesSelection (props: MyProps) {
             console.error('Missing parameters from asset: ', assetObj);
             return;
           } else {
-            const asset = await fetch(`/api/v3/${assetObj.entity_name}s/${assetObj.entity_id}/?page_size=1000`, {
+            const asset = await fetch(`/api/v3/${assetObj.entity_name}s/${assetObj.entity_id}/`, {
               credentials: 'same-origin'
             }).then(
               response => response.json()

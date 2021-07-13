@@ -45,7 +45,7 @@ interface RouteParams {
 
 // Helper function to fetch suppliers in async select dropdown
 export const fetchSuppliers = async (uuid: string, searchInput: string) => {
-  const params=["role=supplier"];
+  const params=["role=supplier", "page_size=20"];
 
   if (searchInput) params.push(`username__icontains=${searchInput}`);
   const urlQuery = params.join('&');
@@ -343,7 +343,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
                       actionFunction: () => setShowDataFlushingModal(true)
                     },
                     {
-                      displayValue: "Flush data partially",
+                      displayValue: "Flush range",
                       actionFunction: () => setTemporalDataFlushingModal(true)
                     },
                   ] : [
