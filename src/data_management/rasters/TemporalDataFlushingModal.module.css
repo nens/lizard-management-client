@@ -9,6 +9,10 @@
   margin-top: 10px;
 }
 
+.ReselectButton {
+  margin-left: 5px;
+  border: none;
+}
 .ReselectButton:active {
   transform: translateY(2px);
 }
