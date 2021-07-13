@@ -132,65 +132,6 @@ export const Routes = () => {
           })
         }
         <Route path="/management" component={authenticatedRoutes} />
-          {/* <Route exact path="/management/map_viewer" component={MapViewer} />
-          <Route exact path="/management/users" component={UserTable} />
-          <Route exact path="/management/users/new" component={NewUser} />
-          <Route exact path="/management/users/:id" component={EditUser} />
-
-          <Route exact path="/management/personal_api_keys" component={PersonalApiKeysTable} />
-          <Route exact path="/management/personal_api_keys/new" component={NewPersonalApiKey} />
-          <Route exact path="/management/personal_api_keys/:uuid" component={EditPersonalApiKey} />
-
-          <Route exact path="/management/data_management/rasters/sources" component={RasterSourceTable} />
-          <Route exact path="/management/data_management/rasters/sources/new" component={NewRasterSource} />
-          <Route exact path="/management/data_management/rasters/sources/:uuid" component={EditRasterSource} />
-
-          <Route exact path="/management/data_management/rasters/layers" component={RasterLayerTable} />
-          <Route exact path="/management/data_management/rasters/layers/new" component={NewRasterLayer} />
-          <Route exact path="/management/data_management/rasters/layers/:uuid" component={EditRasterLayer} />
-
-          <Route exact path="/management/data_management/wms_layers" component={WmsLayerTable} />
-          <Route exact path="/management/data_management/wms_layers/new" component={NewWmsLayer} />
-          <Route exact path="/management/data_management/wms_layers/:id" component={EditWmsLayer} />
-
-          <Route exact path="/management/data_management/timeseries/timeseries" component={TimeseriesTable} />
-          <Route exact path="/management/data_management/timeseries/timeseries/new" component={NewTimeseries} />
-          <Route exact path="/management/data_management/timeseries/timeseries/:uuid" component={EditTimeseries} />
-
-          <Route exact path="/management/data_management/timeseries/monitoring_networks" component={MonitoringNetworksTable} />
-          <Route exact path="/management/data_management/timeseries/monitoring_networks/new" component={NewMonitoringNetwork} />
-          <Route exact path="/management/data_management/timeseries/monitoring_networks/:uuid" component={EditMonitoringNetwork} />
-
-          <Route exact path="/management/data_management/timeseries/locations" component={LocationsTable} />
-          <Route exact path="/management/data_management/timeseries/locations/new" component={NewLocation} />
-          <Route exact path="/management/data_management/timeseries/locations/:uuid" component={EditLocation} />
-
-          <Route exact path="/management/data_management/scenarios" component={ScenarioTable} />
-          <Route exact path="/management/data_management/scenarios/:uuid" component={EditScenario} />
-
-          <Route exact path="/management/data_management/labels/label_types" component={LabeltypesTable} />
-          <Route exact path="/management/data_management/labels/label_types/:uuid" component={EditLabeltype} />
-
-          <Route exact path="/management/alarms/notifications/raster_alarms" component={RasterAlarmTable} />
-          <Route exact path="/management/alarms/notifications/raster_alarms/new" component={NewRasterAlarm} />
-          <Route exact path="/management/alarms/notifications/raster_alarms/:uuid" component={EditRasterAlarm} />
-
-          <Route exact path="/management/alarms/notifications/timeseries_alarms" component={TimeseriesAlarmTable} />
-          <Route exact path="/management/alarms/notifications/timeseries_alarms/new" component={NewTimeseriesAlarm} />
-          <Route exact path="/management/alarms/notifications/timeseries_alarms/:uuid" component={EditTimeseriesAlarm} />
-
-          <Route exact path="/management/alarms/groups" component={GroupTable} />
-          <Route exact path="/management/alarms/groups/new" component={NewGroup} />
-          <Route exact path="/management/alarms/groups/:id" component={EditGroup} />
-
-          <Route exact path="/management/alarms/contacts" component={ContactTable} />
-          <Route exact path="/management/alarms/contacts/new" component={NewContact} />
-          <Route exact path="/management/alarms/contacts/:id" component={EditContact} />
-
-          <Route exact path="/management/alarms/templates" component={TemplateTable} />
-          <Route exact path="/management/alarms/templates/new" component={NewTemplate} />
-          <Route exact path="/management/alarms/templates/:id" component={EditTemplate} /> */}
-        
       </Switch>
   );
 }
