@@ -120,6 +120,7 @@ function TemporalDataFlushingModal (props: MyProps & DispatchProps) {
               <div>
                 <input {...props} />
                 <button
+                  className={styles.ReselectButton}
                   title={'Reselect first timestamp'}
                   onClick={() => props.onChange({ target: { value: firstValueTimestamp } })}
                 >
@@ -143,6 +144,7 @@ function TemporalDataFlushingModal (props: MyProps & DispatchProps) {
               <div>
                 <input {...props} />
                 <button
+                  className={styles.ReselectButton}
                   title={'Reselect last timestamp'}
                   onClick={() => props.onChange({ target: { value: lastValueTimestamp } })}
                 >
