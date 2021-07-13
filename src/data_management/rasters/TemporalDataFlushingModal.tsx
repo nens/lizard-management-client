@@ -108,22 +108,48 @@ function TemporalDataFlushingModal (props: MyProps & DispatchProps) {
         <div><b>Start of time range:</b></div>
         <div><b>End of time range:</b></div>
         <Datetime
-          defaultValue={start}
+          initialValue={start}
           onChange={event => {
             setStart(moment(event).toDate());
           }}
           inputProps={{
             className: startValidator() || timeValidator() ? styles.DateTimeInvalid : undefined,
           }}
+          renderInput={(props) => {
+            return (
+              <div>
+                <input {...props} />
+                <button
+                  title={'Reselect first timestamp'}
+                  onClick={() => props.onChange({ target: { value: firstValueTimestamp } })}
+                >
+                  <i className='fa fa-undo' />
+                </button>
+              </div>
+            )
+          }}
           isValidDate={currentDate => currentDate >= moment(row.first_value_timestamp).subtract(1, 'd') && currentDate <= moment(row.last_value_timestamp)}
         />
         <Datetime
-          defaultValue={stop}
+          initialValue={stop}
           onChange={event => {
             setStop(moment(event).toDate());
           }}
           inputProps={{
             className: stopValidator() || timeValidator() ? styles.DateTimeInvalid : undefined,
+          }}
+          renderInput={(props) => {
+            return (
+              <div>
+                <input {...props} />
+                <button
+                  title={'Reselect last timestamp'}
+                  onClick={() => props.onChange({ target: { value: lastValueTimestamp } })}
+                >
+                  <i className='fa fa-undo' />
+                </button>
+              </div>
+            )
           }}
           isValidDate={currentDate => currentDate >= moment(row.first_value_timestamp).subtract(1, 'd') && currentDate <= moment(row.last_value_timestamp)}
         />
