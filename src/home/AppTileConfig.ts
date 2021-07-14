@@ -65,12 +65,16 @@ export const getNavigationLinkTileFromUrlAndAllNavigationLinkTiles = (urlPostFix
   }
 }
 
+export const getCurrentUrlPostfix = () => {
+  return window.location.href.split("/#")[1];
+}
+
 export const getCurrentNavigationLinkPage = () => {
-  const urlPostfix = window.location.href.split("/#")[1];
+  const urlPostfix = getCurrentUrlPostfix();
   return getNavigationLinkPageFromUrlAndAllNavigationLinkPages(urlPostfix, navigationLinkPages)
 }
 export const getCurrentNavigationLinkTile = () => {
-  const urlPostfix = window.location.href.split("/#")[1];
+  const urlPostfix = getCurrentUrlPostfix();
   return getNavigationLinkTileFromUrlAndAllNavigationLinkTiles(urlPostfix, navigationLinkTiles)
 }
 
