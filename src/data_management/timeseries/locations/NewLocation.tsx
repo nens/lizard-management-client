@@ -1,14 +1,14 @@
 import React from "react";
 import LocationForm from "./LocationForm";
-import SpinnerIfStandardSelectorsNotLoaded from '../../../components/SpinnerIfStandardSelectorsNotLoaded';
+import SpinnerIfNotLoaded from '../../../components/SpinnerIfNotLoaded';
 
 
 export const NewLocation: React.FC = () => {
   return (
-    <SpinnerIfStandardSelectorsNotLoaded
+    <SpinnerIfNotLoaded
       loaded={true}
     >
       <LocationForm />
-    </SpinnerIfStandardSelectorsNotLoaded>
+    </SpinnerIfNotLoaded>
   );
 };

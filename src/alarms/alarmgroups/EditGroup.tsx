@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from "react";
 import { RouteComponentProps } from 'react-router';
 import GroupForm from "./GroupForm";
-import SpinnerIfStandardSelectorsNotLoaded from '../../components/SpinnerIfStandardSelectorsNotLoaded';
+import SpinnerIfNotLoaded from '../../components/SpinnerIfNotLoaded';
 import {createFetchRecordFunctionFromUrl} from '../../utils/createFetchRecordFunctionFromUrl';
 
 interface RouteParams {
@@ -21,13 +21,13 @@ export const EditGroup = (props: RouteComponentProps<RouteParams>) => {
   }, [id]);
 
   return (
-    <SpinnerIfStandardSelectorsNotLoaded
+    <SpinnerIfNotLoaded
       loaded={!!currentRecord}
     >
       <GroupForm
         currentRecord={currentRecord}
       />
-    </SpinnerIfStandardSelectorsNotLoaded>
+    </SpinnerIfNotLoaded>
     
   );
 };

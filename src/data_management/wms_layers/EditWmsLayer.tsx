@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { RouteComponentProps } from "react-router-dom";
-import SpinnerIfStandardSelectorsNotLoaded from '../../components/SpinnerIfStandardSelectorsNotLoaded';
+import SpinnerIfNotLoaded from '../../components/SpinnerIfNotLoaded';
 import {createFetchRecordFunctionFromUrl} from '../../utils/createFetchRecordFunctionFromUrl';
 import WmsLayerForm  from "./WmsLayerForm";
 import { WmsLayerReceivedFromApi} from '../../types/WmsLayerType';
@@ -24,12 +24,12 @@ export const EditWmsLayer = (props: RouteComponentProps<RouteProps>) =>  {
   }, [id])
   
   return (
-    <SpinnerIfStandardSelectorsNotLoaded
+    <SpinnerIfNotLoaded
       loaded={!!currentRecord}
     >
       <WmsLayerForm
         currentRecord={currentRecord}
       />
-    </SpinnerIfStandardSelectorsNotLoaded>
+    </SpinnerIfNotLoaded>
   );
 }

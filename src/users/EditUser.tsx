@@ -3,7 +3,7 @@ import { RouteComponentProps } from 'react-router';
 import { useSelector } from "react-redux";
 import { getSelectedOrganisation } from "../reducers";
 import UserForm from "./UserForm";
-import SpinnerIfStandardSelectorsNotLoaded from '../components/SpinnerIfStandardSelectorsNotLoaded';
+import SpinnerIfNotLoaded from '../components/SpinnerIfNotLoaded';
 import {createFetchRecordFunctionFromUrl} from '../utils/createFetchRecordFunctionFromUrl';
 
 interface RouteParams {
@@ -25,12 +25,12 @@ export const EditUser: React.FC<RouteComponentProps<RouteParams>> = (props) => {
   }, [id, selectedOrganisation]);
 
   return (
-    <SpinnerIfStandardSelectorsNotLoaded
+    <SpinnerIfNotLoaded
       loaded={!!currentRecord}
     >
       <UserForm
         currentRecord={currentRecord}
       />
-    </SpinnerIfStandardSelectorsNotLoaded>
+    </SpinnerIfNotLoaded>
   );
 };

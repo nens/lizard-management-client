@@ -2,7 +2,7 @@ import React,  {useState, useEffect} from "react";
 import { RouteComponentProps } from 'react-router';
 import TemplateForm from "./TemplateForm";
 import {createFetchRecordFunctionFromUrl} from '../../utils/createFetchRecordFunctionFromUrl';
-import SpinnerIfStandardSelectorsNotLoaded from '../../components/SpinnerIfStandardSelectorsNotLoaded';
+import SpinnerIfNotLoaded from '../../components/SpinnerIfNotLoaded';
 
 
 interface RouteParams {
@@ -22,13 +22,13 @@ export const EditTemplate = (props: RouteComponentProps<RouteParams>) => {
   }, [id]);
 
   return (
-    <SpinnerIfStandardSelectorsNotLoaded
+    <SpinnerIfNotLoaded
       loaded={!!currentRecord}
     >
       <TemplateForm
         currentRecord={currentRecord}
       />
-    </SpinnerIfStandardSelectorsNotLoaded>
+    </SpinnerIfNotLoaded>
     
   );
 };

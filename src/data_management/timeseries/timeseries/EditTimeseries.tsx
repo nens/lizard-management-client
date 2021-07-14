@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { getUuidFromUrl } from "../../../utils/getUuidFromUrl";
 import TimeseriesForm, { Datasource } from "./TimeseriesForm";
-import SpinnerIfStandardSelectorsNotLoaded from '../../../components/SpinnerIfStandardSelectorsNotLoaded';
+import SpinnerIfNotLoaded from '../../../components/SpinnerIfNotLoaded';
 import {createFetchRecordFunctionFromUrl} from '../../../utils/createFetchRecordFunctionFromUrl';
 
 interface RouteProps {
@@ -34,7 +34,7 @@ export const EditTimeseries = (props: RouteComponentProps<RouteProps>) => {
   }, [uuid])
 
   return (
-    <SpinnerIfStandardSelectorsNotLoaded
+    <SpinnerIfNotLoaded
       loaded={!!(
         currentRecord &&
         (datasourceIsRequired === false || datasource) 
@@ -44,6 +44,6 @@ export const EditTimeseries = (props: RouteComponentProps<RouteProps>) => {
         currentRecord={currentRecord}
         datasource={datasourceIsRequired? datasource: undefined}
       />
-    </SpinnerIfStandardSelectorsNotLoaded>
+    </SpinnerIfNotLoaded>
   );
 }

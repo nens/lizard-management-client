@@ -2,7 +2,7 @@ import React ,{ useEffect, useState } from "react";
 import {PersonalApiKeyForm} from "./PersonalApiKeyForm";
 import { DataRetrievalState} from '../types/retrievingDataTypes';
 import { getRelativePathFromUrl } from "../utils/getRelativePathFromUrl";
-import SpinnerIfStandardSelectorsNotLoaded from '../components/SpinnerIfStandardSelectorsNotLoaded';
+import SpinnerIfNotLoaded from '../components/SpinnerIfNotLoaded';
 
 export const NewPersonalApiKey: React.FC = () => {
   const [allPersonalApiKeys, setAllPersonalApiKeys] = useState([]);
@@ -40,7 +40,7 @@ export const NewPersonalApiKey: React.FC = () => {
   },[allPersonalApiKeysFetching])
 
   return (
-    <SpinnerIfStandardSelectorsNotLoaded
+    <SpinnerIfNotLoaded
       loaded={
         allPersonalApiKeysFetching !== "NEVER_DID_RETRIEVE" &&
         allPersonalApiKeysFetching !== "RETRIEVING"
@@ -67,6 +67,6 @@ export const NewPersonalApiKey: React.FC = () => {
           allPersonalApiKeys={allPersonalApiKeys}
         />
       }
-    </SpinnerIfStandardSelectorsNotLoaded>
+    </SpinnerIfNotLoaded>
   );
 }

@@ -4,7 +4,7 @@ import { getUuidFromUrl } from "../../../utils/getUuidFromUrl";
 import { usePaginatedFetch } from "../../../utils/usePaginatedFetch";
 import { TimeseriesFromTimeseriesEndpoint } from "../../../types/timeseriesType";
 import TimeseriesAlarmForm from "./TimeseriesAlarmForm";
-import SpinnerIfStandardSelectorsNotLoaded from '../../../components/SpinnerIfStandardSelectorsNotLoaded';
+import SpinnerIfNotLoaded from '../../../components/SpinnerIfNotLoaded';
 import {createFetchRecordFunctionFromUrl} from '../../../utils/createFetchRecordFunctionFromUrl';
 
 interface RouteParams {
@@ -54,7 +54,7 @@ export const EditTimeseriesAlarm: React.FC<RouteComponentProps<RouteParams>> = (
     });
 
     return (
-      <SpinnerIfStandardSelectorsNotLoaded
+      <SpinnerIfNotLoaded
         loaded={!!(
           currentRecord && timeseries &&
           groupsFetchingState === 'RETRIEVED' &&
@@ -67,7 +67,7 @@ export const EditTimeseriesAlarm: React.FC<RouteComponentProps<RouteParams>> = (
           groups={groups || []}
           templates={templates || []}
         />
-      </SpinnerIfStandardSelectorsNotLoaded>
+      </SpinnerIfNotLoaded>
       
     );
   

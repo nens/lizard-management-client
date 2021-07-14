@@ -1,15 +1,15 @@
 import React from "react";
 import TemplateForm from "./TemplateForm";
-import SpinnerIfStandardSelectorsNotLoaded from '../../components/SpinnerIfStandardSelectorsNotLoaded';
+import SpinnerIfNotLoaded from '../../components/SpinnerIfNotLoaded';
 
 
 export const NewTemplate = () => {
   return (
-    <SpinnerIfStandardSelectorsNotLoaded
+    <SpinnerIfNotLoaded
       loaded={true}
     >
       <TemplateForm
       />
-    </SpinnerIfStandardSelectorsNotLoaded>
+    </SpinnerIfNotLoaded>
   );
 };

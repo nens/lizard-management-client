@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from "react";
 import { RouteComponentProps } from 'react-router';
 import ContactForm from "./ContactForm";
-import SpinnerIfStandardSelectorsNotLoaded from '../../components/SpinnerIfStandardSelectorsNotLoaded';
+import SpinnerIfNotLoaded from '../../components/SpinnerIfNotLoaded';
 import {createFetchRecordFunctionFromUrl} from '../../utils/createFetchRecordFunctionFromUrl';
 
 interface RouteParams {
@@ -20,13 +20,13 @@ export const EditContact = (props: RouteComponentProps<RouteParams>) => {
   }, [id]);
 
   return (
-    <SpinnerIfStandardSelectorsNotLoaded
+    <SpinnerIfNotLoaded
       loaded={!!currentRecord}
     >
       <ContactForm
         currentRecord={currentRecord}
       />
-    </SpinnerIfStandardSelectorsNotLoaded>
+    </SpinnerIfNotLoaded>
     
   );
 };

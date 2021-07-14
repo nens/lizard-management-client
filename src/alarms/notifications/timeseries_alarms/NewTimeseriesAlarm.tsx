@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { getSelectedOrganisation } from "../../../reducers";
 import { usePaginatedFetch } from "../../../utils/usePaginatedFetch";
 import TimeseriesAlarmForm from "./TimeseriesAlarmForm";
-import SpinnerIfStandardSelectorsNotLoaded from '../../../components/SpinnerIfStandardSelectorsNotLoaded';
+import SpinnerIfNotLoaded from '../../../components/SpinnerIfNotLoaded';
 
 export const NewTimeseriesAlarm: React.FC = () => {
   
@@ -24,7 +24,7 @@ export const NewTimeseriesAlarm: React.FC = () => {
   });
 
   return (
-    <SpinnerIfStandardSelectorsNotLoaded
+    <SpinnerIfNotLoaded
       loaded={
         groupsFetchingState === 'RETRIEVED' &&
         templatesFetchingState === 'RETRIEVED'
@@ -34,6 +34,6 @@ export const NewTimeseriesAlarm: React.FC = () => {
         groups={groups || []}
         templates={templates || []}
       />
-    </SpinnerIfStandardSelectorsNotLoaded>
+    </SpinnerIfNotLoaded>
     );
 };

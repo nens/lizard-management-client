@@ -4,18 +4,18 @@ import RasterLayerForm from "./RasterLayerForm";
 import {
   getDatasets,
 } from "../../reducers";
-import SpinnerIfStandardSelectorsNotLoaded from '../../components/SpinnerIfStandardSelectorsNotLoaded';
+import SpinnerIfNotLoaded from '../../components/SpinnerIfNotLoaded';
 
 
 export const NewRasterLayer: React.FC = () => {
   const datasets = useSelector(getDatasets);
 
   return (
-    <SpinnerIfStandardSelectorsNotLoaded
+    <SpinnerIfNotLoaded
       loaded={datasets.isFetching === false}
     >
       <RasterLayerForm />
-    </SpinnerIfStandardSelectorsNotLoaded>
+    </SpinnerIfNotLoaded>
 
   );
 }

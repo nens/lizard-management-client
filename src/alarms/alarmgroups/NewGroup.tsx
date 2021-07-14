@@ -1,16 +1,16 @@
 import React from "react";
 
 import GroupForm from "./GroupForm";
-import SpinnerIfStandardSelectorsNotLoaded from '../../components/SpinnerIfStandardSelectorsNotLoaded';
+import SpinnerIfNotLoaded from '../../components/SpinnerIfNotLoaded';
 
 
 export const NewGroup = () => {
     return (
-      <SpinnerIfStandardSelectorsNotLoaded
+      <SpinnerIfNotLoaded
         loaded={true}
       >
         <GroupForm
         />
-      </SpinnerIfStandardSelectorsNotLoaded>
+      </SpinnerIfNotLoaded>
     );
 };

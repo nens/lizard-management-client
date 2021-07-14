@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import LocationForm from "./LocationForm";
-import SpinnerIfStandardSelectorsNotLoaded from '../../../components/SpinnerIfStandardSelectorsNotLoaded';
+import SpinnerIfNotLoaded from '../../../components/SpinnerIfNotLoaded';
 import {createFetchRecordFunctionFromUrl} from '../../../utils/createFetchRecordFunctionFromUrl';
 
 
@@ -30,14 +30,14 @@ const EditLocation = (props: RouteProps & RouteComponentProps<RouteProps>) => {
   }, [uuid]);
 
   return (
-    <SpinnerIfStandardSelectorsNotLoaded
+    <SpinnerIfNotLoaded
       loaded={!!( currentRecord && (!relatedAssetRequired || relatedAsset))}
     >
       <LocationForm
         currentRecord={currentRecord}
         relatedAsset={relatedAsset}
       />;
-    </SpinnerIfStandardSelectorsNotLoaded>
+    </SpinnerIfNotLoaded>
   );
 }
 

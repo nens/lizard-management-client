@@ -3,7 +3,7 @@ import { RouteComponentProps } from 'react-router';
 import RasterAlarmForm from "./RasterAlarmForm";
 import { fetchRasterV4, RasterLayerFromAPI } from "../../../api/rasters";
 import { getUuidFromUrl } from "../../../utils/getUuidFromUrl";
-import SpinnerIfStandardSelectorsNotLoaded from '../../../components/SpinnerIfStandardSelectorsNotLoaded';
+import SpinnerIfNotLoaded from '../../../components/SpinnerIfNotLoaded';
 import {createFetchRecordFunctionFromUrl} from '../../../utils/createFetchRecordFunctionFromUrl';
 import { usePaginatedFetch } from "../../../utils/usePaginatedFetch";
 
@@ -56,7 +56,7 @@ export const EditRasterAlarm = (props: RouteComponentProps<RouteParams>) => {
   }, [currentRecord]);
 
   return (
-    <SpinnerIfStandardSelectorsNotLoaded
+    <SpinnerIfNotLoaded
       loaded={!!(currentRecord &&
         raster &&
         groupsFetchingState === 'RETRIEVED' &&
@@ -68,7 +68,7 @@ export const EditRasterAlarm = (props: RouteComponentProps<RouteParams>) => {
         templates={templates || []}
         raster={raster}
       />
-    </SpinnerIfStandardSelectorsNotLoaded>
+    </SpinnerIfNotLoaded>
     
   );
 };

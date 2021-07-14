@@ -1,13 +1,13 @@
 import React from "react";
 import UserForm from "./UserForm";
-import SpinnerIfStandardSelectorsNotLoaded from '../components/SpinnerIfStandardSelectorsNotLoaded';
+import SpinnerIfNotLoaded from '../components/SpinnerIfNotLoaded';
 
 export const NewUser: React.FC = () => {
   return (
-    <SpinnerIfStandardSelectorsNotLoaded
+    <SpinnerIfNotLoaded
       loaded={true}
     >
       <UserForm />
-    </SpinnerIfStandardSelectorsNotLoaded>
+    </SpinnerIfNotLoaded>
   );
 };

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { RouteComponentProps } from 'react-router';
 import {PersonalApiKeyForm} from "./PersonalApiKeyForm";
-import SpinnerIfStandardSelectorsNotLoaded from '../components/SpinnerIfStandardSelectorsNotLoaded';
+import SpinnerIfNotLoaded from '../components/SpinnerIfNotLoaded';
 import {createFetchRecordFunctionFromUrl} from '../utils/createFetchRecordFunctionFromUrl';
 
 interface RouteParams {
@@ -20,12 +20,12 @@ export const EditPersonalApiKey: React.FC<RouteComponentProps<RouteParams>> = (p
   }, [uuid]);
 
   return (
-    <SpinnerIfStandardSelectorsNotLoaded
+    <SpinnerIfNotLoaded
       loaded={!!currentRecord}
     >
       <PersonalApiKeyForm
         currentRecord={currentRecord}
       />
-    </SpinnerIfStandardSelectorsNotLoaded>
+    </SpinnerIfNotLoaded>
   );
 };

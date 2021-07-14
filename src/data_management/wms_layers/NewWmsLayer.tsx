@@ -1,14 +1,14 @@
 import React from "react";
-import SpinnerIfStandardSelectorsNotLoaded from '../../components/SpinnerIfStandardSelectorsNotLoaded';
+import SpinnerIfNotLoaded from '../../components/SpinnerIfNotLoaded';
 import WmsLayerForm from "./WmsLayerForm";
 
 export const NewWmsLayer = () => {
     return (
-      <SpinnerIfStandardSelectorsNotLoaded
+      <SpinnerIfNotLoaded
         loaded={true}
       >
         <WmsLayerForm />
-      </SpinnerIfStandardSelectorsNotLoaded>
+      </SpinnerIfNotLoaded>
     );    
 }
 

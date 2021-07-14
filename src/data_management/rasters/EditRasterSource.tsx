@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { RouteComponentProps } from 'react-router';
 import { fetchRasterSourceV4, RasterSourceFromAPI } from "../../api/rasters";
 import RasterSourceForm from "./RasterSourceForm";
-import SpinnerIfStandardSelectorsNotLoaded from '../../components/SpinnerIfStandardSelectorsNotLoaded';
+import SpinnerIfNotLoaded from '../../components/SpinnerIfNotLoaded';
 
 
 interface RouteParams {
@@ -21,12 +21,12 @@ export const EditRasterSource: React.FC<RouteComponentProps<RouteParams>> = (pro
   }, [uuid]);
 
   return (
-    <SpinnerIfStandardSelectorsNotLoaded
+    <SpinnerIfNotLoaded
       loaded={!!currentRecord}
     >
       <RasterSourceForm 
         currentRecord={currentRecord}
       />
-    </SpinnerIfStandardSelectorsNotLoaded>
+    </SpinnerIfNotLoaded>
   );
 };
