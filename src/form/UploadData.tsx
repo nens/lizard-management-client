@@ -209,6 +209,7 @@ export const UploadData: React.FC<MyProps> = (props) => {
               >
                 {e.file.name}
               </span>
+              <span />
               <span
                 className={uploadStyles.ClearIcon}
                 onClick={() => {
