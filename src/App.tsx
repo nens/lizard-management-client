@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { connect, useSelector } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
-// import MDSpinner from "react-md-spinner";
 import { fetchTaskInstance } from "./api/tasks";
 import {
   addNotification,
@@ -140,16 +139,6 @@ const App = (props: RouteComponentProps & DispatchProps) => {
       setShowUnAuthorizedRedirectModal(true);
     }
   }, [userHasCorrectRoles, userAuthenticated, showOrganisationSwitcher, selectedOrganisation]);
-
-    // this spinner is for now not needed, since we also show the application if the user is unauthenticated
-    // if (!this.props.isAuthenticated || !this.props.selectedOrganisation) {
-    //   return (
-    //     <div className={styles.MDSpinner}>
-    //       <MDSpinner size={24} />
-    //     </div>
-    //   );
-    // } else {
-      
 
       return (
         <div className={styles.App} 
