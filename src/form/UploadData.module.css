@@ -13,10 +13,9 @@
 }
 
 .File {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
+  display: grid;
+  grid-template-columns: 4fr 4fr 1fr;
+  column-gap: 5px;
   margin-top: 10px;
 }
 
@@ -26,7 +25,7 @@
 
 .DateTimeContainer {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
 }
 
