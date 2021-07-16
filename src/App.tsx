@@ -28,7 +28,7 @@ import gridStyles from "./styles/Grid.module.css";
 import buttonStyles from "./styles/Buttons.module.css";
 import lizardIcon from "./images/lizard.svg";
 import packageJson from '../package.json';
-import {getCurrentUrlPostfix, getCurrentNavigationLinkPage, userHasCorrectRolesForCurrentNavigationLinkTile} from './home/AppTileConfig';
+import {getCurrentNavigationLinkPage, userHasCorrectRolesForCurrentNavigationLinkTile} from './home/AppTileConfig';
 import LoginProfileDropdown from "./components/LoginProfileDropdown";
 import UnAuthenticatedModal from "./components/UnAuthenticatedModal";
 import UnAuthorizedModal from "./components/UnAuthorizedModal";
@@ -44,9 +44,6 @@ const App = (props: RouteComponentProps & DispatchProps) => {
     updateTaskStatus,
     addNotification,
   } = props;
-
-  const urlPostFix = getCurrentUrlPostfix();
-  console.log('urlPostFix', urlPostFix)
 
   const userAuthenticated = useSelector(getUserAuthenticated);
   const isBusyFetchingBootstrap = useSelector(getIsFetchingBootstrap);
@@ -219,7 +216,7 @@ const App = (props: RouteComponentProps & DispatchProps) => {
               </div>
             </div>
           </div>
-          {urlPostFix !== "/"?
+          {currentRelativeUrl !== "/"?
             <div className={`${styles.Secondary}`}>
               <div className={gridStyles.Container}>
                 <div className={gridStyles.Row}>
