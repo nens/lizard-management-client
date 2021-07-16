@@ -61,143 +61,148 @@ const AppComponent = (props: RouteComponentProps) => {
         
         <div className="container">
           <div className="row">
-            <div className={styles.Apps}>
+            <div className={styles.Apps}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+              }}
+            >
               
               {currentRelativeUrl === '/'? 
-              <>
-              <h3>Home</h3>
-              <hr/>
-              </>
+                <div>
+                <h3
+                  className={styles.HomeTilesHeader}
+                >
+                  Home
+                </h3>
+                <hr/>
+                </div>
               :null}
-              <div
-                style={{
-                  // height: "100%"
-                  height: "100px"
-                }}
-              >
-
               
-              {/* Not sure why this ts-ignore is needed. Compiler complaints <Trail needs multiple children?  */}
-              {/*  
-              // @ts-ignore */}
-              <Trail
-                native
-                from={{ opacity: 0, x: -5 }}
-                to={{ opacity: 1, x: 0 }}
-                keys={filterednavigationLinkTiles.map(item => item.title)}
-              >
-                {filterednavigationLinkTiles
-                  .filter(appTile=> appTile.onUrl === currentRelativeUrl )
-                  .sort((appTileA, appTileB)=> appTileA.order - appTileB.order )
-                  // todo resolve any. x:any because x needs to support  x.interpolate
-                  .map((appTile) => (obj:{ x:any, opacity:number }) => (
-                    <animated.div
-                      style={{
-                        opacity: obj.opacity,
-                        transform: obj.x.interpolate((x:number) => `translate3d(${x}%,0,0)`)
-                      }}
-                    >
-                      {
-                        appTile.homePageIcon?
-                        <AppTileHomeType
-                          handleClick={()=>{ handleLink({
-                            external: appTile.linksToUrlExternal? true : false,
-                            path: appTile.linksToUrl
-                          })}}
-                          key={appTile.title + appTile.order + ""}
-                          title={appTile.title}
-                          icon={appTile.icon}
-                          readonly={
-                            !doArraysHaveEqualElement(appTile.requiresOneOfRoles, currentOrganisationRoles) &&
-                            appTile.requiresOneOfRoles.length !== 0
-                          }
-                          requiredRoles={appTile.requiresOneOfRoles}
-                        />
-                        :
-                        <AppTile
-                          handleClick={()=>{ handleLink({
-                            external: appTile.linksToUrlExternal? true : false,
-                            path: appTile.linksToUrl
-                          })}}
-                          key={appTile.title + appTile.order + ""}
-                          title={appTile.title}
-                          icon={appTile.icon}
-                          readonly={
-                            !doArraysHaveEqualElement(appTile.requiresOneOfRoles, currentOrganisationRoles) &&
-                            appTile.requiresOneOfRoles.length !== 0
-                          }
-                          requiredRoles={appTile.requiresOneOfRoles}
-                        />
-                      }
-                    </animated.div>
-                ))}
-              </Trail>
+              <div>
+                {/* Not sure why this ts-ignore is needed. Compiler complaints <Trail needs multiple children?  */}
+                {/*  
+                // @ts-ignore */}
+                <Trail
+                  native
+                  from={{ opacity: 0, x: -5 }}
+                  to={{ opacity: 1, x: 0 }}
+                  keys={filterednavigationLinkTiles.map(item => item.title)}
+                >
+                  {filterednavigationLinkTiles
+                    .filter(appTile=> appTile.onUrl === currentRelativeUrl )
+                    .filter(appTile=> appTile.homePageLinkOrHome === "HOME")
+                    .sort((appTileA, appTileB)=> appTileA.order - appTileB.order )
+                    // todo resolve any. x:any because x needs to support  x.interpolate
+                    .map((appTile) => (obj:{ x:any, opacity:number }) => (
+                      <animated.div
+                        style={{
+                          opacity: obj.opacity,
+                          transform: obj.x.interpolate((x:number) => `translate3d(${x}%,0,0)`)
+                        }}
+                      >
+                        {
+                          appTile.homePageIcon?
+                          <AppTileHomeType
+                            handleClick={()=>{ handleLink({
+                              external: appTile.linksToUrlExternal? true : false,
+                              path: appTile.linksToUrl
+                            })}}
+                            key={appTile.title + appTile.order + ""}
+                            title={appTile.title}
+                            icon={appTile.icon}
+                            readonly={
+                              !doArraysHaveEqualElement(appTile.requiresOneOfRoles, currentOrganisationRoles) &&
+                              appTile.requiresOneOfRoles.length !== 0
+                            }
+                            requiredRoles={appTile.requiresOneOfRoles}
+                          />
+                          :
+                          <AppTile
+                            handleClick={()=>{ handleLink({
+                              external: appTile.linksToUrlExternal? true : false,
+                              path: appTile.linksToUrl
+                            })}}
+                            key={appTile.title + appTile.order + ""}
+                            title={appTile.title}
+                            icon={appTile.icon}
+                            readonly={
+                              !doArraysHaveEqualElement(appTile.requiresOneOfRoles, currentOrganisationRoles) &&
+                              appTile.requiresOneOfRoles.length !== 0
+                            }
+                            requiredRoles={appTile.requiresOneOfRoles}
+                          />
+                        }
+                      </animated.div>
+                  ))}
+                </Trail>
               </div>
               {currentRelativeUrl === '/'? 
-              <>
-              <h3>Links</h3>
-              <hr/>
-              </>
+                <div>
+                  <h3 className={styles.HomeTilesHeader} >Links</h3>
+                  <hr/>
+                </div>
               :null}
 
-              {/*  */}
-              {/* Not sure why this ts-ignore is needed. Compiler complaints <Trail needs multiple children?  */}
-              {/*  
-              // @ts-ignore */}
-              <Trail
-                native
-                from={{ opacity: 0, x: -5 }}
-                to={{ opacity: 1, x: 0 }}
-                keys={filterednavigationLinkTiles.map(item => item.title)}
-              >
-                {filterednavigationLinkTiles
-                  .filter(appTile=> appTile.onUrl === currentRelativeUrl )
-                  .sort((appTileA, appTileB)=> appTileA.order - appTileB.order )
-                  // todo resolve any. x:any because x needs to support  x.interpolate
-                  .map((appTile) => (obj:{ x:any, opacity:number }) => (
-                    <animated.div
-                      style={{
-                        opacity: obj.opacity,
-                        transform: obj.x.interpolate((x:number) => `translate3d(${x}%,0,0)`)
-                      }}
-                    >
-                      {
-                        appTile.homePageIcon?
-                        <AppTileHomeType
-                          handleClick={()=>{ handleLink({
-                            external: appTile.linksToUrlExternal? true : false,
-                            path: appTile.linksToUrl
-                          })}}
-                          key={appTile.title + appTile.order + ""}
-                          title={appTile.title}
-                          icon={appTile.icon}
-                          readonly={
-                            !doArraysHaveEqualElement(appTile.requiresOneOfRoles, currentOrganisationRoles) &&
-                            appTile.requiresOneOfRoles.length !== 0
-                          }
-                          requiredRoles={appTile.requiresOneOfRoles}
-                        />
-                        :
-                        <AppTile
-                          handleClick={()=>{ handleLink({
-                            external: appTile.linksToUrlExternal? true : false,
-                            path: appTile.linksToUrl
-                          })}}
-                          key={appTile.title + appTile.order + ""}
-                          title={appTile.title}
-                          icon={appTile.icon}
-                          readonly={
-                            !doArraysHaveEqualElement(appTile.requiresOneOfRoles, currentOrganisationRoles) &&
-                            appTile.requiresOneOfRoles.length !== 0
-                          }
-                          requiredRoles={appTile.requiresOneOfRoles}
-                        />
-                      }
-                    </animated.div>
-                ))}
-              </Trail>
-              {/*  */}
-
+              <div>
+                {/*  */}
+                {/* Not sure why this ts-ignore is needed. Compiler complaints <Trail needs multiple children?  */}
+                {/*  
+                // @ts-ignore */}
+                <Trail
+                  native
+                  from={{ opacity: 0, x: -5 }}
+                  to={{ opacity: 1, x: 0 }}
+                  keys={filterednavigationLinkTiles.map(item => item.title)}
+                >
+                  {filterednavigationLinkTiles
+                    .filter(appTile=> appTile.onUrl === currentRelativeUrl )
+                    .filter(appTile=> appTile.homePageLinkOrHome === "LINK")
+                    .sort((appTileA, appTileB)=> appTileA.order - appTileB.order )
+                    // todo resolve any. x:any because x needs to support  x.interpolate
+                    .map((appTile) => (obj:{ x:any, opacity:number }) => (
+                      <animated.div
+                        style={{
+                          opacity: obj.opacity,
+                          transform: obj.x.interpolate((x:number) => `translate3d(${x}%,0,0)`)
+                        }}
+                      >
+                        {
+                          appTile.homePageIcon?
+                          <AppTileHomeType
+                            handleClick={()=>{ handleLink({
+                              external: appTile.linksToUrlExternal? true : false,
+                              path: appTile.linksToUrl
+                            })}}
+                            key={appTile.title + appTile.order + ""}
+                            title={appTile.title}
+                            icon={appTile.icon}
+                            readonly={
+                              !doArraysHaveEqualElement(appTile.requiresOneOfRoles, currentOrganisationRoles) &&
+                              appTile.requiresOneOfRoles.length !== 0
+                            }
+                            requiredRoles={appTile.requiresOneOfRoles}
+                          />
+                          :
+                          <AppTile
+                            handleClick={()=>{ handleLink({
+                              external: appTile.linksToUrlExternal? true : false,
+                              path: appTile.linksToUrl
+                            })}}
+                            key={appTile.title + appTile.order + ""}
+                            title={appTile.title}
+                            icon={appTile.icon}
+                            readonly={
+                              !doArraysHaveEqualElement(appTile.requiresOneOfRoles, currentOrganisationRoles) &&
+                              appTile.requiresOneOfRoles.length !== 0
+                            }
+                            requiredRoles={appTile.requiresOneOfRoles}
+                          />
+                        }
+                      </animated.div>
+                  ))}
+                </Trail>
+              </div>
             </div>
           </div>
         </div>

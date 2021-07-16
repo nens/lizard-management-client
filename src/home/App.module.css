@@ -1,0 +1,14 @@
+.HomeTilesHeader {
+  font-size: 30px;
+  line-height: 37px;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: 500; /* adobe design seems to specify medium; */
+  margin-top: 48px;
+  margin-bottom: 15px;
+}
+
+.HomeTilesHeader + hr {
+  margin-bottom: 52px;
+}
+
