@@ -76,16 +76,16 @@ const App = (props: RouteComponentProps & DispatchProps) => {
   }, [userAuthenticated, shouldFetchOrganisations, fetchOrganisations, getDatasets]);
 
   useEffect(() => {
-    console.log('call useEffect', firstFileInTheQueueUuid)
     if (firstFileInTheQueueUuid) {
-      setInterval(() => {
+      const interval = setInterval(() => {
         fetchTaskInstance(firstFileInTheQueueUuid)
           .then(response => {
             updateTaskStatus(firstFileInTheQueueUuid, response.status);
           })
           .catch(e => console.error(e))
       }, 5000);
-    }
+      return () => clearInterval(interval);
+    };
     // updateTaskStatus is excluded from the dependency array
     // because this fuction causes the effect to be called repeatedly
     // eslint-disable-next-line react-hooks/exhaustive-deps
