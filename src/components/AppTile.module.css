@@ -40,7 +40,6 @@
   transform: translateX(-50%); 
   -ms-transform: translateX(-50%);  
   height: 70px;
-
   background-color: #55BFA2;
   width: 96px;
   height: 96px;
@@ -68,21 +67,7 @@
   position: absolute;
   top: 60px;
   left: 50%;
-  /* margin-left: 50%; From parent width */
   transform: translateX(-50%); /* use self width which can be unknown */
   -ms-transform: translateX(-50%); /* For IE9 */
   height: 70px;
 }
-/* .Title {
-  position: absolute;
-  top: 152px;
-  width: 100%;
-  padding-left: 10px;
-  padding-right: 10px;
-  color: #333;
-  font-family: Montserrat;
-  font-size: 17px;
-  text-transform: uppercase;
-  text-align: center;
-  text-decoration: none;
-} */
