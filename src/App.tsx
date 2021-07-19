@@ -15,7 +15,7 @@ import {
   getUserAuthenticated,
   getSelectedOrganisation,
   getFilesInProcess,
-  getIsFetchingBootstrap,
+  getIsNotFinishedFetchingBootstrap,
 } from './reducers';
 import {Routes} from './home/Routes';
 import {NavLink, withRouter, RouteComponentProps } from "react-router-dom";
@@ -46,7 +46,7 @@ const App = (props: RouteComponentProps & DispatchProps) => {
   } = props;
 
   const userAuthenticated = useSelector(getUserAuthenticated);
-  const isBusyFetchingBootstrap = useSelector(getIsFetchingBootstrap);
+  const isNotFinishedFetchingBootstrap = useSelector(getIsNotFinishedFetchingBootstrap);
   const shouldFetchBootstrap =  useSelector(getShouldFetchBootstrap);
   const shouldFetchOrganisations = useSelector(getShouldFetchOrganisations);
   const selectedOrganisation = useSelector(getSelectedOrganisation);
@@ -114,11 +114,11 @@ const App = (props: RouteComponentProps & DispatchProps) => {
     if (
       ( currentNavigationLinkPage === undefined || // it is not one of the pages that just show tiles
         currentNavigationLinkPage.onUrl !== '/'  // it is the home
-      ) && !userAuthenticated && !isBusyFetchingBootstrap
+      ) && !userAuthenticated && !isNotFinishedFetchingBootstrap
     ) {
       setShowUnauthenticatedRedirectModal(true);
     }
-  }, [currentNavigationLinkPage, userAuthenticated, isBusyFetchingBootstrap]);
+  }, [currentNavigationLinkPage, userAuthenticated, isNotFinishedFetchingBootstrap]);
 
   const userHasCorrectRoles = userHasCorrectRolesForCurrentNavigationLinkTile(selectedOrganisation? selectedOrganisation.roles: []);
   useEffect(() => {
