@@ -1,6 +1,6 @@
 import React from 'react';
 import ModalBackground from './ModalBackground';
-import styles from './UnAuthorizedModal.module.css';
+import styles from './UnauthorizedModal.module.css';
 import buttonStyles from './../styles/Buttons.module.css';
 
 interface Props {
@@ -9,7 +9,7 @@ interface Props {
   handleOpenOrganisationSwitcher: () => void;
 }
 
-const UnAuthorizedModal = (props: Props) => {
+const UnauthorizedModal = (props: Props) => {
 
   const { redirectHome, handleOpenOrganisationSwitcher} = props;
 
@@ -41,4 +41,4 @@ const UnAuthorizedModal = (props: Props) => {
   )
 }
 
-export default UnAuthorizedModal;
+export default UnauthorizedModal;
