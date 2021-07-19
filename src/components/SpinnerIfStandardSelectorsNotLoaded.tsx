@@ -4,14 +4,12 @@ import { getSelectedOrganisation} from '../reducers';
 import { useSelector } from "react-redux";
 
 interface Props {
-    loaded: boolean;
     children: any;
 }
 
 export const SpinnerIfStandardSelectorsNotLoaded = (props:  Props) => {
 
 	const {
-    loaded,
     children,
 	} = props;
 
@@ -21,7 +19,7 @@ export const SpinnerIfStandardSelectorsNotLoaded = (props:  Props) => {
   return (
     <SpinnerIfNotLoaded
       loaded={!!(
-        selectedOrganisation && loaded
+        selectedOrganisation
       )}
     >
       {children}
