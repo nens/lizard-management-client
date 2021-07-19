@@ -6,9 +6,11 @@ import AppTileHomeType from "../components/AppTileHomeType";
 
 import { Trail, animated } from "react-spring";
 import doArraysHaveEqualElement from '../utils/doArraysHaveEqualElement';
-import {getCurrentNavigationLinkTiles} from './AppTileConfig';
+import {getCurrentNavigationLinkTiles, NavigationLinkTile} from './AppTileConfig';
 import {getSelectedOrganisation, getUsername} from '../reducers';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
+
+
 
 
 const AppComponent = (props: RouteComponentProps) => {
@@ -28,6 +30,49 @@ const AppComponent = (props: RouteComponentProps) => {
         handleInternalLink(linksToUrlObject.path);
       }
     }
+
+    // todo resolve any. x:any because x needs to support  x.interpolate
+    const AppTileRow = (appTile: NavigationLinkTile) => (obj:{ x:any, opacity:number }) => (
+      <animated.div
+        style={{
+          opacity: obj.opacity,
+          transform: obj.x.interpolate((x:number) => `translate3d(${x}%,0,0)`)
+        }}
+      >
+        {
+          appTile.homePageIcon?
+          <AppTileHomeType
+            handleClick={()=>{ handleLink({
+              external: appTile.linksToUrlExternal? true : false,
+              path: appTile.linksToUrl
+            })}}
+            key={appTile.title + appTile.order + ""}
+            title={appTile.title}
+            icon={appTile.icon}
+            readonly={
+              !doArraysHaveEqualElement(appTile.requiresOneOfRoles, currentOrganisationRoles) &&
+              appTile.requiresOneOfRoles.length !== 0
+            }
+            requiredRoles={appTile.requiresOneOfRoles}
+          />
+          :
+          <AppTile
+            handleClick={()=>{ handleLink({
+              external: appTile.linksToUrlExternal? true : false,
+              path: appTile.linksToUrl
+            })}}
+            key={appTile.title + appTile.order + ""}
+            title={appTile.title}
+            icon={appTile.icon}
+            readonly={
+              !doArraysHaveEqualElement(appTile.requiresOneOfRoles, currentOrganisationRoles) &&
+              appTile.requiresOneOfRoles.length !== 0
+            }
+            requiredRoles={appTile.requiresOneOfRoles}
+          />
+        }
+      </animated.div>
+    );
 
     const currentRelativeUrl = props.location.pathname;
     const username = useSelector(getUsername);
@@ -71,7 +116,7 @@ const AppComponent = (props: RouteComponentProps) => {
               {currentRelativeUrl === '/'? 
                 <div>
                 <h3
-                  className={styles.HomeTilesHeader}
+                  className={`${styles.HomeTilesHeader} ${styles.HomeTilesHeaderFirst}`}
                 >
                   Home
                 </h3>
@@ -94,47 +139,7 @@ const AppComponent = (props: RouteComponentProps) => {
                     .filter(appTile=> appTile.homePageLinkOrHome === "HOME")
                     .sort((appTileA, appTileB)=> appTileA.order - appTileB.order )
                     // todo resolve any. x:any because x needs to support  x.interpolate
-                    .map((appTile) => (obj:{ x:any, opacity:number }) => (
-                      <animated.div
-                        style={{
-                          opacity: obj.opacity,
-                          transform: obj.x.interpolate((x:number) => `translate3d(${x}%,0,0)`)
-                        }}
-                      >
-                        {
-                          appTile.homePageIcon?
-                          <AppTileHomeType
-                            handleClick={()=>{ handleLink({
-                              external: appTile.linksToUrlExternal? true : false,
-                              path: appTile.linksToUrl
-                            })}}
-                            key={appTile.title + appTile.order + ""}
-                            title={appTile.title}
-                            icon={appTile.icon}
-                            readonly={
-                              !doArraysHaveEqualElement(appTile.requiresOneOfRoles, currentOrganisationRoles) &&
-                              appTile.requiresOneOfRoles.length !== 0
-                            }
-                            requiredRoles={appTile.requiresOneOfRoles}
-                          />
-                          :
-                          <AppTile
-                            handleClick={()=>{ handleLink({
-                              external: appTile.linksToUrlExternal? true : false,
-                              path: appTile.linksToUrl
-                            })}}
-                            key={appTile.title + appTile.order + ""}
-                            title={appTile.title}
-                            icon={appTile.icon}
-                            readonly={
-                              !doArraysHaveEqualElement(appTile.requiresOneOfRoles, currentOrganisationRoles) &&
-                              appTile.requiresOneOfRoles.length !== 0
-                            }
-                            requiredRoles={appTile.requiresOneOfRoles}
-                          />
-                        }
-                      </animated.div>
-                  ))}
+                    .map(AppTileRow)}
                 </Trail>
               </div>
               {currentRelativeUrl === '/'? 
@@ -157,50 +162,9 @@ const AppComponent = (props: RouteComponentProps) => {
                 >
                   {filterednavigationLinkTiles
                     .filter(appTile=> appTile.onUrl === currentRelativeUrl )
-                    .filter(appTile=> appTile.homePageLinkOrHome === "LINK")
+                    .filter(appTile=> appTile.homePageLinkOrHome === "LINK" || !appTile.homePageLinkOrHome)
                     .sort((appTileA, appTileB)=> appTileA.order - appTileB.order )
-                    // todo resolve any. x:any because x needs to support  x.interpolate
-                    .map((appTile) => (obj:{ x:any, opacity:number }) => (
-                      <animated.div
-                        style={{
-                          opacity: obj.opacity,
-                          transform: obj.x.interpolate((x:number) => `translate3d(${x}%,0,0)`)
-                        }}
-                      >
-                        {
-                          appTile.homePageIcon?
-                          <AppTileHomeType
-                            handleClick={()=>{ handleLink({
-                              external: appTile.linksToUrlExternal? true : false,
-                              path: appTile.linksToUrl
-                            })}}
-                            key={appTile.title + appTile.order + ""}
-                            title={appTile.title}
-                            icon={appTile.icon}
-                            readonly={
-                              !doArraysHaveEqualElement(appTile.requiresOneOfRoles, currentOrganisationRoles) &&
-                              appTile.requiresOneOfRoles.length !== 0
-                            }
-                            requiredRoles={appTile.requiresOneOfRoles}
-                          />
-                          :
-                          <AppTile
-                            handleClick={()=>{ handleLink({
-                              external: appTile.linksToUrlExternal? true : false,
-                              path: appTile.linksToUrl
-                            })}}
-                            key={appTile.title + appTile.order + ""}
-                            title={appTile.title}
-                            icon={appTile.icon}
-                            readonly={
-                              !doArraysHaveEqualElement(appTile.requiresOneOfRoles, currentOrganisationRoles) &&
-                              appTile.requiresOneOfRoles.length !== 0
-                            }
-                            requiredRoles={appTile.requiresOneOfRoles}
-                          />
-                        }
-                      </animated.div>
-                  ))}
+                    .map(AppTileRow)}
                 </Trail>
               </div>
             </div>
