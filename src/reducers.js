@@ -258,7 +258,11 @@ function uploadFiles(state = null, action) {
         if (f.uuid === action.uuid) {
           // An async task to Lizard can have different statuses. However for the client side,
           // we divide them into 3 main statuses: "PROCESSING", "SUCCESS" and "FAILED"
-          const status = (action.status === 'SUCCESS' || action.status === 'FAILED') ? action.status : 'PROCESSING';
+          const status = (
+            action.status === 'SUCCESS' ? 'SUCCESS' :
+            (action.status === 'FAILURE' || action.status === 'REVOKED' || action.status === 'REJECTED' || action.status === 'IGNORED') ? 'FAILED' :
+            'PROCESSING'
+          );
           return {
             ...f,
             "status": status
