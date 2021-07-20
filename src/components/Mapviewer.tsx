@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import ReactMapGL, {Source, Layer, Popup} from 'react-map-gl';
 import mapboxgl from "mapbox-gl";
@@ -30,6 +30,49 @@ function MapViewer (props: MyProps & DispatchProps) {
   const [showBuildings, setShowBuildings] = useState(false);
 
   const [popupData, setPopupData] = useState<any | null>(null)
+
+  const [ lizardBuildings, setLizardBuildings ] = useState<null | any[]>(null);
+  
+  useEffect(() => {
+    (async () => {
+      // 4.8,52.7,4.9,52.8
+      const response = await fetch(`/api/v4/buildings/?in_bbox=${viewport.longitude-0.005},${viewport.latitude-0.005},${viewport.longitude+0.005},${viewport.latitude+0.005}`, {
+        credentials: "same-origin"
+      });
+      
+      const result = await response.json();
+      console.log('result', result)
+      setLizardBuildings(result);
+    })();
+  }, [viewport]);
+
+  let lizardBuildingGeoJson = null;
+  const geoJsonBasis = {
+    "type" : "FeatureCollection",
+    "features" : []
+  }
+  if (lizardBuildings ) {
+    lizardBuildings.forEach((lizardBuilding)=>{
+      geoJsonBasis.features.push(
+          { 
+            // @ts-ignore
+          "type" : "Feature", 
+          // @ts-ignore
+          "properties" : {  
+            // "capacity" : "10", 
+            // "type" : "U-Rack",
+            // "mount" : "Surface"
+          }, 
+          // @ts-ignore
+          "geometry" : lizardBuilding.geometry
+        }
+      );
+    });
+    lizardBuildingGeoJson = geoJsonBasis;
+  }
+  
+
+  console.log('lizardBuildingGeoJson', lizardBuildingGeoJson)
 
   const moveSelectedRasterUp = () => {
     const ind = selectedRasters.findIndex((item)=>{return item.uuid === selectedRasterForReOrdering})
@@ -424,8 +467,31 @@ const reversedRasters = selectedRasters.map(id=>id).reverse();
             />:null}
 
           </Source>
+
+          {lizardBuildingGeoJson?
+            // buildings work for hofweg Rotterdam. But long loading an flickering retrigger.
+            <Source
+              key={"lizard_building_geojson"}
+              id={"lizard_building_geojson"}
+              type={'geojson'}
+              // @ts-ignore
+              data={lizardBuildingGeoJson}
+            >
+              <Layer
+                id={`lizard_building_geojson`}
+                type={`fill`}
+                source={`lizard_building_geojson`}// reference the data source
+                layout={{}}
+                paint={{
+                  // 'line-opacity': 0.6,
+                  'fill-color': 'rgb(255, 0, 0)',
+                  // 'line-width': 2
+                  }}
+              />                
+            </Source>
+          :null}
         
-        
+            
       </ReactMapGL>
     </div>
   )
