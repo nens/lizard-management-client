@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import ReactMapGL, {Source, Layer} from 'react-map-gl';
+import ReactMapGL, {Source, Layer, Popup} from 'react-map-gl';
 import mapboxgl from "mapbox-gl";
 import {mapBoxAccesToken} from '../mapboxConfig';
 import { MapViewerRasterLayerTable} from "./MapViewerRasterLayerTable";
@@ -24,9 +24,12 @@ function MapViewer (props: MyProps & DispatchProps) {
   const [selectedRasters, setSelectedRasters ] = useState<any[]>([]);
   const [showAddRasters, setShowAddRasters ] = useState(false);
   const [selectedRasterForReOrdering, setSelectedRasterForReOrdering ] = useState<null | string>(null);
+  
   const [showRoads, setShowRoads] = useState(false);
   const [showWaterbodies, setShowWaterbodies] = useState(false);
   const [showBuildings, setShowBuildings] = useState(false);
+
+  const [popupData, setPopupData] = useState<any | null>(null)
 
   const moveSelectedRasterUp = () => {
     const ind = selectedRasters.findIndex((item)=>{return item.uuid === selectedRasterForReOrdering})
@@ -187,9 +190,35 @@ const reversedRasters = selectedRasters.map(id=>id).reverse();
         mapboxApiAccessToken={mapBoxAccesToken}
         mapStyle={"mapbox://styles/nelenschuurmans/ck8sgpk8h25ql1io2ccnueuj6"}
         onClick={(event)=>{
-          console.log('event', event.features)
+          console.log('event', event.features, event);
+          setPopupData(event);
         }}
       >
+        {popupData? <Popup
+          latitude={popupData.lngLat[1]}
+          longitude={popupData.lngLat[0]}
+          closeButton={true}
+          closeOnClick={false}
+          onClose={() => setPopupData(null)}
+          anchor="top" >
+          <div>
+          { popupData.features.map((feature:any)=>{
+            return (
+              <div>
+                <h3>Properties:</h3>
+                <hr/>
+                {Object.keys(feature.properties).map((key:string)=>{
+                  return (
+                    <div>
+                      <span>{key} :  </span>
+                      <span>{feature.properties[key]} :  </span>
+                    </div>
+                  );
+                })}
+              </div>
+            )})}
+          </div>
+        </Popup>:null}
 
           {/* these 100 layers are needed for ordering layers with "beforeId"
           See answer yurivangeffen here
