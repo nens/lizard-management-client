@@ -24,6 +24,9 @@ function MapViewer (props: MyProps & DispatchProps) {
   const [selectedRasters, setSelectedRasters ] = useState<any[]>([]);
   const [showAddRasters, setShowAddRasters ] = useState(false);
   const [selectedRasterForReOrdering, setSelectedRasterForReOrdering ] = useState<null | string>(null);
+  const [showRoads, setShowRoads] = useState(false);
+  const [showWaterbodies, setShowWaterbodies] = useState(false);
+  const [showBuildings, setShowBuildings] = useState(false);
 
   const moveSelectedRasterUp = () => {
     const ind = selectedRasters.findIndex((item)=>{return item.uuid === selectedRasterForReOrdering})
@@ -75,8 +78,16 @@ const reversedRasters = selectedRasters.map(id=>id).reverse();
         }}
       >
        
+       <h1>Mapbox mapbox.mapbox-streets-v7 layers</h1>
+      <br/>
+       <label>ShowRoads <input type="checkbox" checked={showRoads===true} onClick={()=>setShowRoads(!showRoads)}></input></label>
+       <br/>
+       <label>ShowWaterbodies <input type="checkbox" checked={showWaterbodies===true} onClick={()=>setShowWaterbodies(!showWaterbodies)}></input></label>
+       <br/>
+       <label>ShowBuildings <input type="checkbox" checked={showBuildings===true} onClick={()=>setShowBuildings(!showBuildings)}></input></label>
+       <br/> 
 
-       <h1>Layers</h1>
+       <h1>Lizard Rasters</h1>
         {reversedRasters.length === 0?<div>No layers added yet</div>:null}
         {!showAddRasters? 
         <button onClick={()=>{setShowAddRasters(true)}}>+ Add new layer</button>
@@ -175,6 +186,9 @@ const reversedRasters = selectedRasters.map(id=>id).reverse();
         onViewportChange={(viewport:any) => setViewport(viewport)}
         mapboxApiAccessToken={mapBoxAccesToken}
         mapStyle={"mapbox://styles/nelenschuurmans/ck8sgpk8h25ql1io2ccnueuj6"}
+        onClick={(event)=>{
+          console.log('event', event.features)
+        }}
       >
 
           {/* these 100 layers are needed for ordering layers with "beforeId"
@@ -218,6 +232,169 @@ const reversedRasters = selectedRasters.map(id=>id).reverse();
               </Source>
             );
           })}
+
+          <Source 
+            key={"mapbox://mapbox.mapbox-terrain-v2"}
+            id={"mapbox://mapbox.mapbox-terrain-v2"}
+            url={'mapbox://mapbox.mapbox-terrain-v2'}
+            type={'vector'}
+          >
+            {/* <Layer
+              key={'terrain-data'}
+              id={'terrain-data'}
+              beforeId={'GROUP_' + 78}
+              type={'line'}
+              source={"mapbox://mapbox.mapbox-terrain-v2"}
+              source-layer={'contour'}
+              paint={{
+                'line-color': '#ff69b4',
+                'line-width': 1
+                }}
+                layout={{
+                  'line-join': 'round',
+                  'line-cap': 'round'
+                  }}
+              
+            /> */}
+            {/* below does not work */}
+            {/* <Layer
+              key={'terrain-data-fill'}
+              id={'terrain-data-fill'}
+              beforeId={'GROUP_' + 79}
+              type={'fill'}
+              source={"mapbox://mapbox.mapbox-terrain-v2"}
+              source-layer={"polygon"}
+              paint={{
+                'fill-color': '#ff69b4',
+                }}
+                layout={{
+                  }}
+              
+            /> */}
+          </Source>
+          <Source
+            key={"mapillary"}
+            id={"mapillary"}
+            type={'vector'}
+            
+            tiles={[
+            'https://tiles.mapillary.com/maps/vtp/mly1_public/2/{z}/{x}/{y}'
+            ]} // mapbox://styles/nelenschuurmans/ckrbsw9f806k017o9ctzbyr0w
+            minzoom={6}
+            maxzoom={14}
+          >
+            {/* <Layer
+              key={'mapillary'}
+              id={'mapillary'}
+              beforeId={'GROUP_' + 79}
+              type={'line'}
+              source={"mapillary"}
+              source-layer={'sequence'}
+              paint={{
+                'line-opacity': 0.6,
+                'line-color': 'rgb(53, 175, 109)',
+                'line-width': 2
+                }}
+                layout={{
+                  'line-join': 'round',
+                  'line-cap': 'round'
+                  }}
+              
+            /> */}
+
+          </Source>
+
+          {/* Below layer is a style and we cannot ad it as a vector tile? */}
+          {/* <Source
+            key={"copied_standard_1"}
+            id={"copied_standard_1"}
+            type={'vector'}
+            url={"mapbox://styles/nelenschuurmans/ckrbsw9f806k017o9ctzbyr0w"}
+          >
+            <Layer
+              key={'copied_standard_1'}
+              id={'copied_standard_1'}
+              beforeId={'GROUP_' + 80}
+              type={'line'}
+              source={"copied_standard_1"}
+              source-layer={'Buildings'}
+              paint={{
+                'line-opacity': 0.6,
+                'line-color': 'rgb(53, 175, 109)',
+                'line-width': 2
+                }}
+                layout={{
+                  'line-join': 'round',
+                  'line-cap': 'round'
+                  }}
+              
+            />
+
+          </Source> */}
+          <Source
+            key={"mapbox://mapbox.mapbox-streets-v7"}
+            id={"mapbox://mapbox.mapbox-streets-v7"}
+            url={"mapbox://mapbox.mapbox-streets-v7"}
+            type={'vector'}
+          >
+            {showRoads?<Layer
+              key={'mapbox://mapbox.mapbox-streets-v7'}
+              id={'mapbox://mapbox.mapbox-streets-v7'}
+              beforeId={'GROUP_' + 82}
+              type={'line'}
+              source={"mapbox://mapbox.mapbox-streets-v7"}
+              source-layer={'road'}
+              paint={{
+                'line-opacity': 0.6,
+                'line-color': 'rgb(53, 175, 109)',
+                'line-width': 2
+                }}
+                layout={{
+                  'line-join': 'round',
+                  'line-cap': 'round'
+                  }}
+              
+            />:null}
+            {showWaterbodies?<Layer
+              key={'mapbox://mapbox.mapbox-streets-v7_2'}
+              id={'mapbox://mapbox.mapbox-streets-v7_2'}
+              beforeId={'GROUP_' + 82}
+              type={'line'}
+              source={"mapbox://mapbox.mapbox-streets-v7"}
+              // source-layer={'waterway'}
+              source-layer={'water'}
+              // source-layer={'building'}
+              paint={{
+              'line-opacity': 0.6,
+              'line-color': 'rgb(0, 175, 255)',
+              'line-width': 2
+              }}
+              layout={{
+                'line-join': 'round',
+                'line-cap': 'round'
+                }}
+              
+            />:null}
+            {showBuildings?<Layer
+              key={'mapbox://mapbox.mapbox-streets-v7_3'}
+              id={'mapbox://mapbox.mapbox-streets-v7_3'}
+              beforeId={'GROUP_' + 82}
+              type={'fill'}
+              source={"mapbox://mapbox.mapbox-streets-v7"}
+              source-layer={'building'}
+              paint={{
+              // 'line-opacity': 0.6,
+              'fill-color': 'rgb(255, 0, 0)',
+              // 'line-width': 2
+              }}
+              layout={{
+                // 'line-join': 'round',
+                // 'line-cap': 'round'
+                }}
+              
+            />:null}
+
+          </Source>
         
         
       </ReactMapGL>
