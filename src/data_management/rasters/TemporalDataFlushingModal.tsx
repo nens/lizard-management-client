@@ -30,15 +30,17 @@ function TemporalDataFlushingModal (props: MyProps & DispatchProps) {
   // Validators for start and stop date time
   const timeValidator = () => {
     if (!start || !stop) return false;
-    if (start > stop) return 'Stop date must be after start date';
+    if (start > stop) return 'End date must be after start date';
     return false;
   };
   const startValidator = () => {
+    if (start && !moment(start).isValid()) return 'Wrong date format (DD-MM-YYYY hh:mm)';
     if (start && lastValueTimestamp && start > lastValueTimestamp.toDate()) return 'Start date must be before the last timestamp.';
     return false;
   };
   const stopValidator = () => {
-    if (stop && firstValueTimestamp && stop < firstValueTimestamp.toDate()) return 'Stop date must be after the first timestamp.';
+    if (stop && !moment(stop).isValid()) return 'Wrong date format (DD-MM-YYYY hh:mm)';
+    if (stop && firstValueTimestamp && stop < firstValueTimestamp.toDate()) return 'End date must be after the first timestamp.';
     return false;
   };
 
@@ -106,27 +108,56 @@ function TemporalDataFlushingModal (props: MyProps & DispatchProps) {
         <div><b>Start of time range:</b></div>
         <div><b>End of time range:</b></div>
         <Datetime
-          value={start}
+          initialValue={start}
           onChange={event => {
             setStart(moment(event).toDate());
           }}
           inputProps={{
-            className: timeValidator() || startValidator() ? styles.DateTimeInvalid : undefined,
+            className: startValidator() || timeValidator() ? styles.DateTimeInvalid : undefined,
+          }}
+          renderInput={(props) => {
+            return (
+              <div>
+                <input {...props} />
+                <button
+                  className={styles.ReselectButton}
+                  title={'Reselect first timestamp'}
+                  onClick={() => props.onChange({ target: { value: firstValueTimestamp } })}
+                >
+                  <i className='fa fa-undo' />
+                </button>
+              </div>
+            )
           }}
           isValidDate={currentDate => currentDate >= moment(row.first_value_timestamp).subtract(1, 'd') && currentDate <= moment(row.last_value_timestamp)}
         />
         <Datetime
-          value={stop}
+          initialValue={stop}
           onChange={event => {
             setStop(moment(event).toDate());
           }}
           inputProps={{
-            className: timeValidator() || stopValidator() ? styles.DateTimeInvalid : undefined,
+            className: stopValidator() || timeValidator() ? styles.DateTimeInvalid : undefined,
+          }}
+          renderInput={(props) => {
+            return (
+              <div>
+                <input {...props} />
+                <button
+                  className={styles.ReselectButton}
+                  title={'Reselect last timestamp'}
+                  onClick={() => props.onChange({ target: { value: lastValueTimestamp } })}
+                >
+                  <i className='fa fa-undo' />
+                </button>
+              </div>
+            )
           }}
           isValidDate={currentDate => currentDate >= moment(row.first_value_timestamp).subtract(1, 'd') && currentDate <= moment(row.last_value_timestamp)}
         />
+        <div style={{ color: 'red', marginTop: 5 }}>{startValidator() || timeValidator()}</div>
+        <div style={{ color: 'red', marginTop: 5 }}>{stopValidator()}</div>
       </div>
-      <div style={{ color: 'red', marginTop: 5 }}>{timeValidator() || startValidator() || stopValidator()}</div>
       {busyDeleting ? (
         <div style={{position:"absolute", top:0, left:0, width:"100%", height:"100%", display:"flex", justifyContent:"center", alignItems: "center"}} >
           <MDSpinner size={96} />

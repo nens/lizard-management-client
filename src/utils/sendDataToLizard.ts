@@ -45,7 +45,7 @@ export const sendDataToLizardRecursive = (uuid: string, data: AcceptedFile[], te
         return;
       } else if (status === 504) { // Gateway Timeout
         storeDispatch(updateFileStatus(e.file, 'FAILED'));
-        storeDispatch(addNotification(`Gateway Timeout in uploading ${e.file.name}`, 5000));
+        storeDispatch(addNotification(`Gateway Timeout in uploading ${e.file.name}. File is too big, please split into smaller files.`, 5000));
       } else {
         storeDispatch(updateFileStatus(e.file, 'FAILED'));
         storeDispatch(addNotification(`Error uploading ${e.file.name}`, 5000));

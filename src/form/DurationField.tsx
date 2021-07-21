@@ -1,6 +1,4 @@
-// The main Form class
-
-import React from "react";
+import React, { useEffect, useRef } from "react";
 // import { FormattedMessage } from "react-intl";
 
 import styles from "../form/DurationField.module.css";
@@ -15,6 +13,8 @@ interface DurationFieldProps {
   value: string | null,
   valueChanged: (value: string | null) => void,
   validated: boolean,
+  errorMessage?: string | false,
+  triedToSubmit?: boolean,
   onFocus?: (e: React.ChangeEvent<HTMLInputElement>) => void,
   onBlur?: () => void,
   handleEnter?: (e: any) => void,
@@ -44,7 +44,7 @@ const validPerField = (value: string | null) => {
   }
 };
 
-export const durationValidator = (required: boolean) => (value: string | null) => {
+export const durationValidator = (value: string | null, required: boolean) => {
   if (!value) {
     if (required) {
       return "Please enter a duration.";
@@ -78,6 +78,9 @@ export const DurationField: React.FC<DurationFieldProps> = (props) => {
     title,
     name,
     value,
+    validated,
+    errorMessage,
+    triedToSubmit,
     onFocus,
     onBlur,
     readOnly
@@ -95,6 +98,32 @@ export const DurationField: React.FC<DurationFieldProps> = (props) => {
     daysValid, hoursValid, minutesValid, secondsValid
   } = validPerField(value);
 
+  // Set validity of the input field
+  const myDayInput = useRef<HTMLInputElement>(null);
+  const myHourInput = useRef<HTMLInputElement>(null);
+  const myMinInput = useRef<HTMLInputElement>(null);
+  const mySecInput = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    if (
+      myDayInput && myDayInput.current &&
+      myHourInput && myHourInput.current &&
+      myMinInput && myMinInput.current &&
+      mySecInput && mySecInput.current
+    ) {
+      if (validated) {
+        myDayInput.current.setCustomValidity('');
+        myHourInput.current.setCustomValidity('');
+        myMinInput.current.setCustomValidity('');
+        mySecInput.current.setCustomValidity('');
+      } else {
+        myDayInput.current.setCustomValidity(errorMessage || 'Invalid');
+        myHourInput.current.setCustomValidity(errorMessage || 'Invalid');
+        myMinInput.current.setCustomValidity(errorMessage || 'Invalid');
+        mySecInput.current.setCustomValidity(errorMessage || 'Invalid');
+      };
+    };
+  })
+
   return (
     <label
       htmlFor={name}
@@ -103,33 +132,26 @@ export const DurationField: React.FC<DurationFieldProps> = (props) => {
       <span className={formStyles.LabelTitle}>
         {title}
       </span>
-      <div
-        className={
-        formStyles.FormGroup + " " + inputStyles.PositionRelative
-        }
-      >
+      <div className={formStyles.FormGroup + " " + inputStyles.PositionRelative}>
         <div
           className={
-          styles.DurationInputFields +
-                      " " +
-                      styles.DurationInputFieldDays +
-                      " " +
-                      styles.TextAlignRight
+            styles.DurationInputFields + " " +
+            styles.DurationInputFieldDays + " " +
+            styles.TextAlignRight
           }
         >
           {/* <label><FormattedMessage id="duration.days" /></label> */}
           <label>Days</label>
           <input
+            ref={myDayInput}
             id={name}
-            // tabIndex={-2}
             type="text"
             autoComplete="off"
             className={
-            formStyles.FormControl +
-                        " " +
-                        styles.TextAlignRight +
-                          (!daysValid ? " " + styles.Invalid : "") +
-                          (readOnly ? " " + inputStyles.ReadOnly : "")
+              formStyles.FormControl + " " + styles.TextAlignRight +
+              (triedToSubmit ? " " + formStyles.FormSubmitted : "") +
+              (!daysValid ? " " + styles.Invalid : "") +
+              (readOnly ? " " + inputStyles.ReadOnly : "")
             }
             maxLength={3}
             size={4}
@@ -140,24 +162,19 @@ export const DurationField: React.FC<DurationFieldProps> = (props) => {
             readOnly={readOnly}
           />
         </div>
-        <div
-          className={
-          styles.DurationInputFields + " " + styles.TextAlignRight
-          }
-        >
+        <div className={styles.DurationInputFields + " " + styles.TextAlignRight}>
           {/* <label><FormattedMessage id="duration.hours" /></label> */}
           <label>Hours</label>
           <input
+            ref={myHourInput}
             id={name}
-            // tabIndex={-2}
             type="text"
             autoComplete="off"
             className={
-            formStyles.FormControl +
-                        " " +
-                        styles.TextAlignRight +
-                          (!hoursValid ? " " + styles.Invalid : "") +
-                          (readOnly ? " " + inputStyles.ReadOnly : "")
+              formStyles.FormControl + " " + styles.TextAlignRight +
+              (triedToSubmit ? " " + formStyles.FormSubmitted : "") +
+              (!hoursValid ? " " + styles.Invalid : "") +
+              (readOnly ? " " + inputStyles.ReadOnly : "")
             }
             maxLength={2}
             size={2}
@@ -173,14 +190,15 @@ export const DurationField: React.FC<DurationFieldProps> = (props) => {
           {/* <label><FormattedMessage id="duration.mins" /></label> */}
           <label>Mins</label>
           <input
+            ref={myMinInput}
             id={name}
-            // tabIndex={-2}
             type="text"
             autoComplete="off"
             className={
-            formStyles.FormControl +
-                          (!minutesValid ? " " + styles.Invalid : "") +
-                          (readOnly ? " " + inputStyles.ReadOnly : "")
+              formStyles.FormControl +
+              (triedToSubmit ? " " + formStyles.FormSubmitted : "") +
+              (!minutesValid ? " " + styles.Invalid : "") +
+              (readOnly ? " " + inputStyles.ReadOnly : "")
             }
             maxLength={2}
             size={2}
@@ -191,24 +209,19 @@ export const DurationField: React.FC<DurationFieldProps> = (props) => {
             readOnly={readOnly}
           />
         </div>
-        <div
-          className={
-          styles.DurationInputFields +
-                      " " +
-                      styles.DurationInputFieldSeconds
-          }
-        >
+        <div className={styles.DurationInputFields + " " + styles.DurationInputFieldSeconds}>
           {/* <label><FormattedMessage id="duration.seconds" /></label> */}
           <label>Seconds</label>
           <input
+            ref={mySecInput}
             id={name}
-            // tabIndex={-2}
             type="text"
             autoComplete="off"
             className={
-            formStyles.FormControl +
-                          (!secondsValid ? " " + styles.Invalid : "") +
-                          (readOnly ? " " + inputStyles.ReadOnly : "")
+              formStyles.FormControl +
+              (triedToSubmit ? " " + formStyles.FormSubmitted : "") +
+              (!secondsValid ? " " + styles.Invalid : "") +
+              (readOnly ? " " + inputStyles.ReadOnly : "")
             }
             maxLength={2}
             size={4}

@@ -4,7 +4,7 @@ import { connect, useSelector } from 'react-redux';
 import { createRasterSource, patchRasterSource, RasterSourceFromAPI } from '../../api/rasters';
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import { CheckBox } from './../../form/CheckBox';
-import { DurationField } from './../../form/DurationField';
+import { DurationField, durationValidator } from './../../form/DurationField';
 import { TextArea } from './../../form/TextArea';
 import { TextInput } from './../../form/TextInput';
 import { SubmitButton } from '../../form/SubmitButton';
@@ -257,7 +257,9 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           name={'interval'}
           value={values.interval}
           valueChanged={value => handleValueChange('interval', value)}
-          validated={true}
+          validated={values.temporal ? !durationValidator(values.interval, true) : true}
+          errorMessage={durationValidator(values.interval, true)}
+          triedToSubmit={triedToSubmit}
           onFocus={handleFocus}
           onBlur={handleBlur}
           readOnly={!!currentRecord || values.temporal === false}
