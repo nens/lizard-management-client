@@ -15,7 +15,7 @@ import {
   getUserAuthenticated,
   getSelectedOrganisation,
   getFilesInProcess,
-  getIsFetchingBootstrap,
+  getIsNotFinishedFetchingBootstrap,
 } from './reducers';
 import {Routes} from './home/Routes';
 import {NavLink, withRouter, RouteComponentProps } from "react-router-dom";
@@ -28,10 +28,10 @@ import gridStyles from "./styles/Grid.module.css";
 import buttonStyles from "./styles/Buttons.module.css";
 import lizardIcon from "./images/lizard.svg";
 import packageJson from '../package.json';
-import { getCurrentNavigationLinkPage, userHasCorrectRolesForCurrentNavigationLinkTile} from './home/AppTileConfig';
+import {getCurrentNavigationLinkPage, userHasCorrectRolesForCurrentNavigationLinkTile} from './home/AppTileConfig';
 import LoginProfileDropdown from "./components/LoginProfileDropdown";
-import UnAuthenticatedModal from "./components/UnAuthenticatedModal";
-import UnAuthorizedModal from "./components/UnAuthorizedModal";
+import UnauthenticatedModal from "./components/UnauthenticatedModal";
+import UnauthorizedModal from "./components/UnauthorizedModal";
 
 
 
@@ -46,7 +46,7 @@ const App = (props: RouteComponentProps & DispatchProps) => {
   } = props;
 
   const userAuthenticated = useSelector(getUserAuthenticated);
-  const isBusyFetchingBootstrap = useSelector(getIsFetchingBootstrap);
+  const isNotFinishedFetchingBootstrap = useSelector(getIsNotFinishedFetchingBootstrap);
   const shouldFetchBootstrap =  useSelector(getShouldFetchBootstrap);
   const shouldFetchOrganisations = useSelector(getShouldFetchOrganisations);
   const selectedOrganisation = useSelector(getSelectedOrganisation);
@@ -58,7 +58,7 @@ const App = (props: RouteComponentProps & DispatchProps) => {
   const [showOrganisationSwitcher, setShowOrganisationSwitcher] = useState(false);
   const [showUploadQueue, setShowUploadQueue] = useState(false);
   const [showUnauthenticatedRedirectModal, setShowUnauthenticatedRedirectModal] = useState(false);
-  const [showUnAuthorizedRedirectModal, setShowUnAuthorizedRedirectModal] = useState(false);
+  const [showUnauthorizedRedirectModal, setshowUnauthorizedRedirectModal] = useState(false);
 
   
 
@@ -99,34 +99,26 @@ const App = (props: RouteComponentProps & DispatchProps) => {
 
   useEffect(() => {
     window.addEventListener('beforeunload', handleWindowClose);
+  }, [handleWindowClose]);
 
-    // todo, should other logic concerning a warning on close also be handled here? Or in the forms?
-
-    // removing event listener not needed since the logic is in the eventlistener itself?
-    // return () => {
-    //   window.removeEventListener('beforeunload', handleWindowClose);
-    // };
-  }, [handleWindowClose, filesInProcess]);
-
-  const updateOnlineStatus = useCallback(event => {
-    addNotification(`Your internet connection seems to be ${event.type}`, 2000);
-  },[addNotification])
+  
   useEffect(() => {
+    const updateOnlineStatus = ((event: Event) => {
+      addNotification(`Your internet connection seems to be ${event.type}`, 2000);
+    })
     window.addEventListener('offline', updateOnlineStatus);
-  }, [updateOnlineStatus, addNotification]);
-
-  // //////////////////////////////////////////////////////////////////////////////
+  }, [addNotification]);
 
   const currentNavigationLinkPage = getCurrentNavigationLinkPage();
   useEffect(() => {
     if (
       ( currentNavigationLinkPage === undefined || // it is not one of the pages that just show tiles
         currentNavigationLinkPage.onUrl !== '/'  // it is the home
-      ) && !userAuthenticated && !isBusyFetchingBootstrap
+      ) && !userAuthenticated && !isNotFinishedFetchingBootstrap
     ) {
       setShowUnauthenticatedRedirectModal(true);
     }
-  }, [currentNavigationLinkPage, userAuthenticated, isBusyFetchingBootstrap]);
+  }, [currentNavigationLinkPage, userAuthenticated, isNotFinishedFetchingBootstrap]);
 
   const userHasCorrectRoles = userHasCorrectRolesForCurrentNavigationLinkTile(selectedOrganisation? selectedOrganisation.roles: []);
   useEffect(() => {
@@ -136,7 +128,7 @@ const App = (props: RouteComponentProps & DispatchProps) => {
       !userHasCorrectRoles &&
       !showOrganisationSwitcher
     ) {
-      setShowUnAuthorizedRedirectModal(true);
+      setshowUnauthorizedRedirectModal(true);
     }
   }, [userHasCorrectRoles, userAuthenticated, showOrganisationSwitcher, selectedOrganisation]);
 
@@ -216,16 +208,18 @@ const App = (props: RouteComponentProps & DispatchProps) => {
               </div>
             </div>
           </div>
-          <div className={`${styles.Secondary}`}>
-            <div className={gridStyles.Container}>
-              <div className={gridStyles.Row}>
-                <Breadcrumbs
-                  // The same location is needed to calculate the breadcrumbs.
-                  location= {props.location}
-                />
+          {currentRelativeUrl !== "/"?
+            <div className={`${styles.Secondary}`}>
+              <div className={gridStyles.Container}>
+                <div className={gridStyles.Row}>
+                  <Breadcrumbs
+                    // The same location is needed to calculate the breadcrumbs.
+                    location= {props.location}
+                  />
+                </div>
               </div>
             </div>
-          </div>
+          :null}
           <div className={gridStyles.Container + " " + styles.AppContent}>
                 <Routes/>
           </div>
@@ -301,7 +295,7 @@ const App = (props: RouteComponentProps & DispatchProps) => {
             />
           ) : null}
           { showUnauthenticatedRedirectModal?
-          <UnAuthenticatedModal
+          <UnauthenticatedModal
             handleClose={()=>{setShowUnauthenticatedRedirectModal(false)}}
             redirectHome={()=>{
               setShowUnauthenticatedRedirectModal(false);
@@ -309,15 +303,15 @@ const App = (props: RouteComponentProps & DispatchProps) => {
             }}
           />
         :null}
-        { showUnAuthorizedRedirectModal?
-          <UnAuthorizedModal
-            handleClose={()=>{setShowUnAuthorizedRedirectModal(false)}}
+        { showUnauthorizedRedirectModal?
+          <UnauthorizedModal
+            handleClose={()=>{setshowUnauthorizedRedirectModal(false)}}
             redirectHome={()=>{
-              setShowUnAuthorizedRedirectModal(false);
+              setshowUnauthorizedRedirectModal(false);
               props.history.push("/");
             }}
             handleOpenOrganisationSwitcher={()=>{
-              setShowUnAuthorizedRedirectModal(false);
+              setshowUnauthorizedRedirectModal(false);
               setShowOrganisationSwitcher(true);
             }}
           />

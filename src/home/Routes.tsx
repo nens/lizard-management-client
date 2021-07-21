@@ -52,7 +52,7 @@ import SpinnerIfStandardSelectorsNotLoaded from '../components/SpinnerIfStandard
 
 const authenticatedRoutes = () => {
   return (
-    <SpinnerIfStandardSelectorsNotLoaded loaded={true}>
+    <SpinnerIfStandardSelectorsNotLoaded>
       <Switch>
             <Route exact path="/management/map_viewer" component={MapViewer} />
             <Route exact path="/management/users" component={UserTable} />

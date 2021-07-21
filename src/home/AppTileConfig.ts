@@ -33,6 +33,8 @@ export interface NavigationLinkPage {
   needsAuthentication: boolean,
   needsOneOfRoles: Role[],
 }
+
+type LinkOrHome = "LINK" | "HOME"
 export interface NavigationLinkTile{
   title: string,
   // title: (
@@ -42,6 +44,7 @@ export interface NavigationLinkTile{
   //   />
   // ),
   homePageIcon: boolean,
+  homePageLinkOrHome?:  LinkOrHome,
   order: number,
   onUrl: string,
   linksToUrl: string,
@@ -65,12 +68,16 @@ export const getNavigationLinkTileFromUrlAndAllNavigationLinkTiles = (urlPostFix
   }
 }
 
+export const getCurrentUrlPostfix = () => {
+  return window.location.href.split("/#")[1];
+}
+
 export const getCurrentNavigationLinkPage = () => {
-  const urlPostfix = window.location.href.split("/#")[1];
+  const urlPostfix = getCurrentUrlPostfix();
   return getNavigationLinkPageFromUrlAndAllNavigationLinkPages(urlPostfix, navigationLinkPages)
 }
 export const getCurrentNavigationLinkTile = () => {
-  const urlPostfix = window.location.href.split("/#")[1];
+  const urlPostfix = getCurrentUrlPostfix();
   return getNavigationLinkTileFromUrlAndAllNavigationLinkTiles(urlPostfix, navigationLinkTiles)
 }
 
@@ -151,6 +158,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     //   />
     // ),
     homePageIcon: true,
+    homePageLinkOrHome: "HOME",
     order: 100,
     onUrl: "/",
     linksToUrl: "/catalogue",
@@ -167,6 +175,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     //   />
     // ),
     homePageIcon: true,
+    homePageLinkOrHome: "HOME",
     order: 100,
     onUrl: "/",
     linksToUrl: "/viewer",
@@ -183,6 +192,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     //   />
     // ),
     homePageIcon: true,
+    homePageLinkOrHome: "HOME",
     order: 100,
     onUrl: "/",
     linksToUrl: "/management",
@@ -199,6 +209,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     //   />
     // ),
     homePageIcon: true,
+    homePageLinkOrHome: "HOME",
     order: 100,
     onUrl: "/",
     linksToUrl: "/api",
@@ -215,6 +226,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     //   />
     // ),
     homePageIcon: true,
+    homePageLinkOrHome: "LINK",
     order: 100,
     onUrl: "/",
     linksToUrl: "https://docs.lizard.net/a_lizard.html",
@@ -231,6 +243,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     //   />
     // ),
     homePageIcon: true,
+    homePageLinkOrHome: "LINK",
     order: 100,
     onUrl: "/",
     linksToUrl: "https://nelen-schuurmans.topdesk.net/tas/public/ssp",

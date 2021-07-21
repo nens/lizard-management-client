@@ -29,7 +29,7 @@ import {
 function bootstrap(
   state = {
     bootstrap: {},
-    isFetching: true,
+    isFetching: false,
     startedFetch: false,
   },
   action
@@ -261,14 +261,14 @@ export const getBootstrap = (state) => {
 export const getShouldFetchBootstrap = (state) => {
   return state.bootstrap.startedFetch === false;
 };
-export const getIsFetchingBootstrap = (state) => {
-  return state.bootstrap.isFetching === true;
+export const getIsNotFinishedFetchingBootstrap = (state) => {
+  return state.bootstrap.isFetching === true || state.bootstrap.startedFetch === false;
 };
 export const getUserAuthenticated = (state) => {
-  return !state.bootstrap.isFetching && state.bootstrap.bootstrap.user && state.bootstrap.bootstrap.user.authenticated;
+  return state.bootstrap.startedFetch === true && !state.bootstrap.isFetching &&  state.bootstrap.bootstrap.user && state.bootstrap.bootstrap.user.authenticated;
 };
 export const getSsoLogin = (state) => {
-  if (state.bootstrap.isFetching) {
+  if (state.bootstrap.isFetching || state.bootstrap.startedFetch === false) {
     return "";
   } else if (!state.bootstrap.bootstrap.sso) {
     return ""
@@ -277,7 +277,7 @@ export const getSsoLogin = (state) => {
   }
 }
 export const getSsoLogout = (state) => {
-  if (state.bootstrap.isFetching) {
+  if (state.bootstrap.isFetching || state.bootstrap.startedFetch === false) {
     return "";
   } else if (!state.bootstrap.bootstrap.sso) {
     return ""
@@ -287,7 +287,7 @@ export const getSsoLogout = (state) => {
 }
 
 export const getUserFirstName = (state) => {
-  if (state.bootstrap.isFetching) {
+  if (state.bootstrap.isFetching || state.bootstrap.startedFetch === false) {
     return "";
   } else if (!state.bootstrap.bootstrap.user) {
     return ""

@@ -1,6 +1,6 @@
 import React from 'react';
 import ModalBackground from './ModalBackground';
-import styles from './UnAuthenticatedModal.module.css';
+import styles from './UnauthenticatedModal.module.css';
 import buttonStyles from './../styles/Buttons.module.css';
 import {
   getSsoLogin,
@@ -13,7 +13,7 @@ interface Props {
   redirectHome: () => void;
 }
 
-const UnAuthenticatedModal = (props: Props) => {
+const UnauthenticatedModal = (props: Props) => {
 
   const { redirectHome} = props;
   const ssoLogin = useSelector(getSsoLogin);
@@ -46,4 +46,4 @@ const UnAuthenticatedModal = (props: Props) => {
   )
 }
 
-export default UnAuthenticatedModal;
+export default UnauthenticatedModal;

@@ -1,6 +1,6 @@
 import React from "react";
 import Ink from "react-ink";
-import styles from "./AppTileHomeType.module.css";
+import styles from "./AppTile.module.css";
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { injectIntl } from "react-intl";
 
@@ -34,17 +34,8 @@ const AppTileHomeType = (props: (Props & RouteComponentProps)) => {
       >
         <div
 					className={styles.IconCircleContainer}
-					style={{
-						backgroundColor: "#55BFA2",
-						width: "96px",
-						height: "96px",
-						borderRadius: "48px",
-						display: "flex",
-						justifyContent: "center",
-						alignItems: "center",
-					}}
         >
-					<img src={icon} alt={title} className={styles.Img}/>
+					<img src={icon} alt={title}/>
         </div>
         
         <p className={styles.Title}>{title}</p>
