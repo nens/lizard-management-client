@@ -75,3 +75,17 @@ export async function basicFetchFunction(
     throw new FetchError(response, `Received status: ${response.status}`)
   }
 }
+
+export async function recursiveFetchFunction (
+    baseUrl: string,
+    params: Params,
+    previousResults: any[] = []
+): Promise<any[]> {
+  const response = await basicFetchFunction(baseUrl, params);
+
+  const results = previousResults.concat(response.data);
+  if (response.nextUrl) {
+    return await recursiveFetchFunction(response.nextUrl, {}, results);
+  };
+  return results;
+};
