@@ -55,9 +55,11 @@ if (module.hot) {
     ReactDOM.render(
       <IntlProvider locale={navigator.language} messages={messages}>
         <Provider store={store}>
-          <Router basename={basename}>
-            <HotApp preferredLocale={preferredLocale} />
-          </Router>
+          <QueryClientProvider client={queryClient}>
+            <Router basename={basename}>
+              <HotApp preferredLocale={preferredLocale} />
+            </Router>
+          </QueryClientProvider>
         </Provider>
       </IntlProvider>,
       document.getElementById("root")
