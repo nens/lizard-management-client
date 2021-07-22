@@ -8,14 +8,13 @@ export type Params = Record<string, string|number>;
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 5 * 60 * 1000,
-      retry: false as const,
-      refetchOnMount: false as const,
-      // @ts-ignore
-      refetchOnWindowsFocus: false as const,
-      refetchOnReconnect: true as const,
-      refetchIntervalInBackground: true as const,
-      refetchInterval: false as const,
+      staleTime: 0,
+      retry: false,
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: true,
+      refetchIntervalInBackground: true,
+      refetchInterval: false,
     }
   }
 });
