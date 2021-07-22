@@ -1,4 +1,6 @@
 import { QueryClient, useQuery } from 'react-query';
+import { storeDispatch } from '../index';
+import { addNotification } from '../actions';
 
 export type Params = Record<string, string|number>;
 
@@ -72,7 +74,8 @@ export async function basicFetchFunction(
       data: json.results
     };
   } else {
-    throw new FetchError(response, `Received status: ${response.status}`)
+    storeDispatch(addNotification(`Failed to load "${baseUrl}". Received status: ${response.status}`, 2000));
+    throw new FetchError(response, `Received status: ${response.status}`);
   }
 }
 
