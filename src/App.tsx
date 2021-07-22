@@ -52,7 +52,7 @@ const App = (props: RouteComponentProps & DispatchProps) => {
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const showOrganisationPicker = userAuthenticated && !shouldFetchOrganisations && selectedOrganisation;
   const filesInProcess = useSelector( getFilesInProcess);
-  const firstFileInTheQueue = filesInProcess && filesInProcess[0];
+  const firstFileInTheQueueUuid = filesInProcess && filesInProcess[0] && filesInProcess[0].uuid;
   const currentRelativeUrl = props.location.pathname;
   
   const [showOrganisationSwitcher, setShowOrganisationSwitcher] = useState(false);
@@ -76,16 +76,20 @@ const App = (props: RouteComponentProps & DispatchProps) => {
   }, [userAuthenticated, shouldFetchOrganisations, fetchOrganisations, getDatasets]);
 
   useEffect(() => {
-    if (firstFileInTheQueue && firstFileInTheQueue.uuid) {
-      setTimeout(() => {
-        fetchTaskInstance(firstFileInTheQueue.uuid)
+    if (firstFileInTheQueueUuid) {
+      const interval = setInterval(() => {
+        fetchTaskInstance(firstFileInTheQueueUuid)
           .then(response => {
-            updateTaskStatus(firstFileInTheQueue.uuid, response.status);
+            updateTaskStatus(firstFileInTheQueueUuid, response.status);
           })
           .catch(e => console.error(e))
       }, 5000);
-    }
-  }, [firstFileInTheQueue, updateTaskStatus]);
+      return () => clearInterval(interval);
+    };
+    // updateTaskStatus is excluded from the dependency array
+    // because this fuction causes the effect to be called repeatedly
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [firstFileInTheQueueUuid]);
 
   const handleWindowClose = useCallback(event => {
     event.preventDefault();
