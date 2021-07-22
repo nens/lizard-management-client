@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useQuery } from 'react-query';
 import { connect, useSelector } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
@@ -14,7 +13,7 @@ import { SelectDropdown } from '../../form/SelectDropdown';
 import { convertToSelectObject } from '../../utils/convertToSelectObject';
 import { groupFormHelpText } from '../../utils/help_texts/helpTextForAlarmGroups';
 import { fetchWithOptions } from '../../utils/fetchWithOptions';
-import { recursiveFetchFunction } from '../../api/hooks';
+import { useRecursiveFetch } from '../../api/hooks';
 import { baseUrl } from './GroupTable';
 import DeleteModal from '../../components/DeleteModal';
 import FormActionButtons from '../../components/FormActionButtons';
@@ -93,24 +92,12 @@ const GroupForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pr
   };
 
   // Fetch list of contacts to add to group
-  // const [contacts, setContacts] = useState<Value[] | null>(null);
-  // const { results, fetchingState } = usePaginatedFetch({
-  //   url: `/api/v4/contacts/?organisation__uuid=${currentGroup ? currentGroup.organisation.uuid : selectedOrganisationUuid}`
-  // });
-  // useEffect(() => {
-  //   setContacts(results && results.map((contact: any) => convertToSelectObject(contact.id, contact.first_name + ' ' + contact.last_name, contact.email, contact.phone_number)));
-  // }, [results]);
-
-  // use react-query of fetch list of contacts to add to group
   const {
     data: contacts,
-    status: statusOfContactsFetch
-  } = useQuery('contacts' + selectedOrganisationUuid, () => recursiveFetchFunction(
-    "/api/v4/contacts/",
-    {
-      organisation__uuid: currentGroup ? currentGroup.organisation.uuid : selectedOrganisationUuid
-    }
-  ));
+    status: contactsFetchStatus
+  } = useRecursiveFetch('/api/v4/contacts/', {
+    organisation__uuid: currentGroup ? currentGroup.organisation.uuid : selectedOrganisationUuid
+  });
 
   // Modal to send message to all contacts in group
   const [showGroupMessageModal, setShowGroupMessageModal] = useState<boolean>(false);
@@ -168,7 +155,7 @@ const GroupForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pr
           options={contacts ? contacts.map((contact: any) => convertToSelectObject(contact.id, contact.first_name + ' ' + contact.last_name, contact.email, contact.phone_number)) : []}
           validated
           isMulti
-          isLoading={statusOfContactsFetch === 'loading'}
+          isLoading={contactsFetchStatus === 'loading'}
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
