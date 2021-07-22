@@ -69,7 +69,7 @@ export const getNavigationLinkTileFromUrlAndAllNavigationLinkTiles = (urlPostFix
 }
 
 export const getCurrentUrlPostfix = () => {
-  return window.location.href.split("/#")[1];
+  return window.location.pathname;
 }
 
 export const getCurrentNavigationLinkPage = () => {
