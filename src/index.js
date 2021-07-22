@@ -4,6 +4,8 @@ import { Provider } from "react-redux";
 import configureStore from "./configureStore";
 import { addLocaleData, IntlProvider } from "react-intl";
 import { HashRouter as Router } from "react-router-dom";
+import { QueryClientProvider } from "react-query";
+import { queryClient } from "./api/hooks";
 import ScrollToTop from "./components/ScrollToTop";
 import App from "./App";
 
@@ -35,10 +37,12 @@ const messages = localeData[preferredLocale];
 const Root = ({ store }) => (
   <IntlProvider locale={preferredLocale} messages={messages}>
     <Provider store={store}>
-      <Router basename={basename}>
-        <ScrollToTop />
-        <App preferredLocale={preferredLocale} />
-      </Router>
+      <QueryClientProvider client={queryClient}>
+        <Router basename={basename}>
+          <ScrollToTop />
+          <App preferredLocale={preferredLocale} />
+        </Router>
+      </QueryClientProvider>
     </Provider>
   </IntlProvider>
 );
@@ -51,9 +55,11 @@ if (module.hot) {
     ReactDOM.render(
       <IntlProvider locale={navigator.language} messages={messages}>
         <Provider store={store}>
-          <Router basename={basename}>
-            <HotApp preferredLocale={preferredLocale} />
-          </Router>
+          <QueryClientProvider client={queryClient}>
+            <Router basename={basename}>
+              <HotApp preferredLocale={preferredLocale} />
+            </Router>
+          </QueryClientProvider>
         </Provider>
       </IntlProvider>,
       document.getElementById("root")
