@@ -24,11 +24,10 @@ function AddToMonitoringNetworkModal (props: MyProps & DispatchProps) {
   // useEffect to load the list of available monitoring networks for the selected organisation
   const {
     data: availableMonitoringNetworks,
-    status: monitoringNetworkFetchStatus
+    isFetching: monitoringNetworksIsFetching
   } = useRecursiveFetch('/api/v4/monitoringnetworks/', {
     organisation__uuid: selectedOrganisation.uuid
   });
-  console.log(monitoringNetworkFetchStatus, availableMonitoringNetworks)
 
   // POST requests to update selected monitoring network with the selected timeseries
   const handleSubmit = () => {
@@ -76,7 +75,7 @@ function AddToMonitoringNetworkModal (props: MyProps & DispatchProps) {
             valueChanged={value => setSelectedMonitoringNetwork(value as Value)}
             options={availableMonitoringNetworks ? availableMonitoringNetworks.map((network: any) => convertToSelectObject(network.uuid, network.name)) : []}
             validated
-            isLoading={monitoringNetworkFetchStatus === 'loading'}
+            isLoading={monitoringNetworksIsFetching}
           />
         </div>
         <div className={formStyles.ButtonContainer}>

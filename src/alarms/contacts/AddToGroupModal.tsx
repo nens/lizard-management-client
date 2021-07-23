@@ -30,7 +30,7 @@ function AddToGroupModal (props: MyProps & DispatchProps) {
   // usePagniatedFetch and useEffect to load the list of available groups for the selected organisation
   const {
     data: groups,
-    status: groupsFetchStatus
+    isFetching: groupsIsFetching
   } = useRecursiveFetch('/api/v4/contactgroups/', {
     organisation__uuid: selectedOrganisation.uuid
   });
@@ -105,7 +105,7 @@ function AddToGroupModal (props: MyProps & DispatchProps) {
             options={availableGroups || []}
             validated
             isMulti
-            isLoading={groupsFetchStatus === 'loading'}
+            isLoading={groupsIsFetching}
           />
         </div>
         <div className={formStyles.ButtonContainer}>
