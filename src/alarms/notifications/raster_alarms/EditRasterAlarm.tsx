@@ -34,7 +34,8 @@ export const EditRasterAlarm = (props: RouteComponentProps<RouteParams>) => {
     status: groupsFetchStatus
   } = useRecursiveFetch(
     '/api/v4/contactgroups/',
-    currentRecord ? {organisation__uuid: currentRecord.organisation.uuid} : {}
+    { organisation__uuid: currentRecord ? currentRecord.organisation.uuid : '' },
+    { enabled: !!currentRecord }
   );
 
   const {
@@ -42,7 +43,8 @@ export const EditRasterAlarm = (props: RouteComponentProps<RouteParams>) => {
     status: templatesFetchStatus
   } = useRecursiveFetch(
     '/api/v4/messages/',
-    currentRecord ? {organisation__uuid: currentRecord.organisation.uuid} : {}
+    { organisation__uuid: currentRecord ? currentRecord.organisation.uuid : '' },
+    { enabled: !!currentRecord }
   );
 
   useEffect(() => {
@@ -58,10 +60,12 @@ export const EditRasterAlarm = (props: RouteComponentProps<RouteParams>) => {
 
   return (
     <SpinnerIfNotLoaded
-      loaded={!!(currentRecord &&
+      loaded={!!(
+        currentRecord &&
         raster &&
         groupsFetchStatus === 'success' &&
-        templatesFetchStatus === 'success')}
+        templatesFetchStatus === 'success'
+      )}
     >
       <RasterAlarmForm
         currentRecord={currentRecord}

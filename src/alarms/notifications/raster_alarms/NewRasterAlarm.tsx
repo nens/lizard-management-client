@@ -21,8 +21,8 @@ export const NewRasterAlarm = () => {
     data: templates,
     status: templatesFetchStatus
   } = useRecursiveFetch('/api/v4/messages/', {
-      organisation__uuid: selectedOrganisation.uuid
-    });
+    organisation__uuid: selectedOrganisation.uuid
+  });
 
   return (
     <SpinnerIfNotLoaded
