@@ -54,6 +54,7 @@ const App = (props: RouteComponentProps & DispatchProps) => {
   const filesInProcess = useSelector( getFilesInProcess);
   const firstFileInTheQueueUuid = filesInProcess && filesInProcess[0] && filesInProcess[0].uuid;
   const currentRelativeUrl = props.location.pathname;
+  const isLandingPage = currentRelativeUrl === "/"
   
   const [showOrganisationSwitcher, setShowOrganisationSwitcher] = useState(false);
   const [showUploadQueue, setShowUploadQueue] = useState(false);
@@ -162,7 +163,7 @@ const App = (props: RouteComponentProps & DispatchProps) => {
                         Apps
                       </a>
                     </div>
-                    { userAuthenticated && selectedOrganisation && currentRelativeUrl !== '/'? 
+                    { userAuthenticated && selectedOrganisation && !isLandingPage? 
                     <div
                       className={styles.Profile}
                       onClick={() => {
@@ -178,7 +179,7 @@ const App = (props: RouteComponentProps & DispatchProps) => {
                     :null}
                    
                     { 
-                      showOrganisationPicker?
+                      showOrganisationPicker && !isLandingPage?
                       <div
                         className={styles.OrganisationLinkContainer}
                         onClick={() => {
