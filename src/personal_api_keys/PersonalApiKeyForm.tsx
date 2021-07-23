@@ -21,7 +21,7 @@ import personalApiKeysIcon from "../images/personal_api_key_icon.svg";
 
 interface Props {
   currentRecord?: any;
-  allPersonalApiKeys?: [];
+  allPersonalApiKeys?: any[];
 };
 interface PropsFromDispatch {
   addNotification: (message: string | number, timeout: number) => void
