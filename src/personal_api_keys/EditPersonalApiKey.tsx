@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { RouteComponentProps } from 'react-router';
-import {PersonalApiKeyForm} from "./PersonalApiKeyForm";
+import { PersonalApiKeyForm } from "./PersonalApiKeyForm";
 import SpinnerIfNotLoaded from '../components/SpinnerIfNotLoaded';
-import {createFetchRecordFunctionFromUrl} from '../utils/createFetchRecordFunctionFromUrl';
+import { createFetchRecordFunctionFromUrl } from '../utils/createFetchRecordFunctionFromUrl';
 
 interface RouteParams {
   uuid: string;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { connect, useSelector } from 'react-redux';
 import { getSelectedOrganisation } from '../../../reducers';
@@ -16,7 +16,7 @@ import { AccessModifier } from '../../../form/AccessModifier';
 import { AssetPointSelection } from '../../../form/AssetPointSelection';
 import { locationFormHelpText } from '../../../utils/help_texts/helpTextsForLocations';
 import { fetchWithOptions } from '../../../utils/fetchWithOptions';
-import { usePaginatedFetch } from '../../../utils/usePaginatedFetch';
+import { useRecursiveFetch } from '../../../api/hooks';
 import { baseUrl } from './LocationsTable';
 import FormActionButtons from '../../../components/FormActionButtons';
 import Modal from '../../../components/Modal';
@@ -37,14 +37,12 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const [locationCreatedModal, setLocationCreatedModal] = useState<boolean>(false);
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
-  const [dependentTimeseries, setDependentTimeseries] = useState<any[] | null>(null);
 
-  const { results: timeseries } = usePaginatedFetch({
-    url: currentRecord && currentRecord.uuid ? `/api/v4/timeseries/?location__uuid=${currentRecord.uuid}` : null
-  });
-  useEffect(() => {
-    setDependentTimeseries(timeseries);
-  }, [timeseries]);
+  const { data: dependentTimeseries } = useRecursiveFetch(
+    '/api/v4/timeseries/',
+    { location__uuid: currentRecord ? currentRecord.uuid : '' },
+    { enabled: !!currentRecord }
+  );
 
   let initialValues;
   if (currentRecord) {
@@ -295,10 +293,7 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
       {currentRecord && showDeleteModal && !dependentTimeseries ? (
         <Modal
           title={'Loading'}
-          cancelAction={() => {
-            setShowDeleteModal(false);
-            setDependentTimeseries(null);
-          }}
+          cancelAction={() => setShowDeleteModal(false)}
         >
           <MDSpinner size={24} /><span style={{ marginLeft: 40 }}>Loading dependent time series ...</span>
         </Modal>
