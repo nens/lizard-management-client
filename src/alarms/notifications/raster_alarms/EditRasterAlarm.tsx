@@ -44,7 +44,6 @@ export const EditRasterAlarm = (props: RouteComponentProps<RouteParams>) => {
     '/api/v4/messages/',
     currentRecord ? {organisation__uuid: currentRecord.organisation.uuid} : {}
   );
-  
 
   useEffect(() => {
     (async () => {
