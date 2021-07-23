@@ -1,6 +1,6 @@
 {
-  "short_name": "Lizard Management",
-  "name": "Management interface for Lizard",
+  "short_name": "Lizard",
+  "name": "Landing-page and management interface for Lizard",
   "icons": [
     {
       "src": "favicon.ico",
