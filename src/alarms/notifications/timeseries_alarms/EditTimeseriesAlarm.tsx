@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { RouteComponentProps } from 'react-router';
 import { getUuidFromUrl } from "../../../utils/getUuidFromUrl";
-import { usePaginatedFetch } from "../../../utils/usePaginatedFetch";
+import { useRecursiveFetch } from "../../../api/hooks";
 import { TimeseriesFromTimeseriesEndpoint } from "../../../types/timeseriesType";
+import { createFetchRecordFunctionFromUrl } from '../../../utils/createFetchRecordFunctionFromUrl';
 import TimeseriesAlarmForm from "./TimeseriesAlarmForm";
 import SpinnerIfNotLoaded from '../../../components/SpinnerIfNotLoaded';
-import {createFetchRecordFunctionFromUrl} from '../../../utils/createFetchRecordFunctionFromUrl';
 
 interface RouteParams {
   uuid: string;
@@ -39,26 +39,30 @@ export const EditTimeseriesAlarm: React.FC<RouteComponentProps<RouteParams>> = (
     })();
   }, [currentRecord]);
 
-    const {
-      results: groups,
-      fetchingState: groupsFetchingState
-    } = usePaginatedFetch({
-      url: currentRecord ? `/api/v4/contactgroups/?organisation__uuid=${currentRecord.organisation.uuid}` : ''
-    });
+  const {
+    data: groups,
+    status: groupsFetchStatus
+  } = useRecursiveFetch(
+    '/api/v4/contactgroups/',
+    { organisation__uuid: currentRecord ? currentRecord.organisation.uuid : '' },
+    { enabled: !!currentRecord }
+  );
 
-    const {
-      results: templates,
-      fetchingState: templatesFetchingState
-    } = usePaginatedFetch({
-      url: currentRecord ? `/api/v4/messages/?organisation__uuid=${currentRecord.organisation.uuid}` : ''
-    });
+  const {
+    data: templates,
+    status: templatesFetchStatus
+  } = useRecursiveFetch(
+    '/api/v4/messages/',
+    { organisation__uuid: currentRecord ? currentRecord.organisation.uuid : '' },
+    { enabled: !!currentRecord }
+  );
 
     return (
       <SpinnerIfNotLoaded
         loaded={!!(
           currentRecord && timeseries &&
-          groupsFetchingState === 'RETRIEVED' &&
-          templatesFetchingState === 'RETRIEVED'
+          groupsFetchStatus === 'success' &&
+          templatesFetchStatus === 'success'
         )}
       >
         <TimeseriesAlarmForm

@@ -1,6 +1,6 @@
 // MARK: Bootstrap
+import { recursiveFetchFunction } from "./api/hooks";
 import { getLocalStorage } from "./utils/localStorageUtils";
-import { paginatedFetchHelper } from "./utils/paginatedFetchHelper";
 
 export const RECEIVE_LIZARD_BOOTSTRAP = "RECEIVE_LIZARD_BOOTSTRAP";
 export const REQUEST_LIZARD_BOOTSTRAP = "REQUEST_LIZARD_BOOTSTRAP";
@@ -79,7 +79,7 @@ export function fetchOrganisations() {
 
     // Fetch the list of available organisations with user roles by user ID
     const availableOrganisationsUrl = `/api/v4/users/${userId}/organisations/`;
-    const availableOrganisations = await paginatedFetchHelper(availableOrganisationsUrl, []);
+    const availableOrganisations = await recursiveFetchFunction(availableOrganisationsUrl, []);
 
     // Dispatch action to update Redux store
     dispatch({

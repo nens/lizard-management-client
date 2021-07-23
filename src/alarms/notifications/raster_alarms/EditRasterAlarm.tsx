@@ -4,14 +4,15 @@ import RasterAlarmForm from "./RasterAlarmForm";
 import { fetchRasterV4, RasterLayerFromAPI } from "../../../api/rasters";
 import { getUuidFromUrl } from "../../../utils/getUuidFromUrl";
 import SpinnerIfNotLoaded from '../../../components/SpinnerIfNotLoaded';
-import {createFetchRecordFunctionFromUrl} from '../../../utils/createFetchRecordFunctionFromUrl';
-import { usePaginatedFetch } from "../../../utils/usePaginatedFetch";
+import { createFetchRecordFunctionFromUrl } from '../../../utils/createFetchRecordFunctionFromUrl';
+import { useRecursiveFetch } from "../../../api/hooks";
 
 interface RouteParams {
   uuid: string;
 };
 
 interface RasterAlarm {
+  raster: string, // raster url
   organisation: {uuid: string}
 }
 
@@ -29,24 +30,26 @@ export const EditRasterAlarm = (props: RouteComponentProps<RouteParams>) => {
   }, [uuid]);
 
   const {
-    results: groups,
-    fetchingState: groupsFetchingState
-  } = usePaginatedFetch({
-    url: currentRecord ? `/api/v4/contactgroups/?organisation__uuid=${currentRecord.organisation.uuid}` : ''
-  });
+    data: groups,
+    status: groupsFetchStatus
+  } = useRecursiveFetch(
+    '/api/v4/contactgroups/',
+    { organisation__uuid: currentRecord ? currentRecord.organisation.uuid : '' },
+    { enabled: !!currentRecord }
+  );
 
   const {
-    results: templates,
-    fetchingState: templatesFetchingState
-  } = usePaginatedFetch({
-    url: currentRecord ? `/api/v4/messages/?organisation__uuid=${currentRecord.organisation.uuid}` : ''
-  });
-  
+    data: templates,
+    status: templatesFetchStatus
+  } = useRecursiveFetch(
+    '/api/v4/messages/',
+    { organisation__uuid: currentRecord ? currentRecord.organisation.uuid : '' },
+    { enabled: !!currentRecord }
+  );
 
   useEffect(() => {
     (async () => {
       if (currentRecord) {
-        // @ts-ignore
         const rasterUrl = currentRecord.raster;
         const rasterUuid = getUuidFromUrl(rasterUrl);
         const raster = await fetchRasterV4(rasterUuid);
@@ -57,10 +60,12 @@ export const EditRasterAlarm = (props: RouteComponentProps<RouteParams>) => {
 
   return (
     <SpinnerIfNotLoaded
-      loaded={!!(currentRecord &&
+      loaded={!!(
+        currentRecord &&
         raster &&
-        groupsFetchingState === 'RETRIEVED' &&
-        templatesFetchingState === 'RETRIEVED')}
+        groupsFetchStatus === 'success' &&
+        templatesFetchStatus === 'success'
+      )}
     >
       <RasterAlarmForm
         currentRecord={currentRecord}

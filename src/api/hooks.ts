@@ -95,15 +95,16 @@ export async function recursiveFetchFunction (
 export function useRecursiveFetch (
   baseUrl: string,
   params: Params,
+  queryOptions: {
+    enabled?: boolean,
+    cacheTime?: number,
+  } = {},
   previousResults: any[] = []
 ) {
   const fetchKey = combineUrlAndParams(baseUrl, params);
   const queryFunction = () => recursiveFetchFunction(baseUrl, params, previousResults);
 
-  const query = useQuery(fetchKey, queryFunction);
+  const query = useQuery(fetchKey, queryFunction, queryOptions);
 
-  return {
-    status: query.status,
-    data: query.data
-  };
+  return query;
 };

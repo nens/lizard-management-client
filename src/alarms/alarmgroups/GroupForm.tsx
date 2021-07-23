@@ -94,7 +94,7 @@ const GroupForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pr
   // Fetch list of contacts to add to group
   const {
     data: contacts,
-    status: contactsFetchStatus
+    isFetching: contactsIsFetching
   } = useRecursiveFetch('/api/v4/contacts/', {
     organisation__uuid: currentRecord ? currentRecord.organisation.uuid : selectedOrganisationUuid
   });
@@ -155,7 +155,7 @@ const GroupForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pr
           options={contacts ? contacts.map((contact: any) => convertToSelectObject(contact.id, contact.first_name + ' ' + contact.last_name, contact.email, contact.phone_number)) : []}
           validated
           isMulti
-          isLoading={contactsFetchStatus === 'loading'}
+          isLoading={contactsIsFetching}
           onFocus={handleFocus}
           onBlur={handleBlur}
         />

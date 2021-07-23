@@ -2,7 +2,7 @@
 // {"styles": "transparent", "HEIGHT": 512, "ZINDEX": 20, "WIDTH": 1024, "effects": "radar:0:0.008", "TRANSPARENT": false}
 import React, { useEffect, useRef, useState } from "react";
 import { FormattedMessage, injectIntl, InjectedIntlProps } from "react-intl";
-import { SelectDropdown, Value } from "./SelectDropdown";
+import { SelectDropdown } from "./SelectDropdown";
 import { CheckBox } from "./CheckBox";
 import { TextInput } from "./TextInput";
 import styles from "./ColorMapInput.module.css";
@@ -15,7 +15,7 @@ import {
 } from "../utils/rasterOptionFunctions";
 import ModalBackground from '../components/ModalBackground';
 import { ColormapForm } from '../data_management/colormap/ColormapForm';
-import { usePaginatedFetch } from "../utils/usePaginatedFetch";
+import { useRecursiveFetch } from "../api/hooks";
 import { convertToSelectObject } from "../utils/convertToSelectObject";
 
 export interface ColorMapOptions {
@@ -95,16 +95,20 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
   } = props;
 
   // Fetch list of color maps
-  const [colorMaps, setColorMaps] = useState<Value[]>([]);
   const {
-    results: allColorMaps,
-    fetchingState: colorMapsFetchingState
-  } = usePaginatedFetch({
-    url: `/api/v4/colormaps/?format=json&page_size=100`
+    data: colorMaps,
+    isFetching: colorMapsIsFetching
+  } = useRecursiveFetch('/api/v4/colormaps/', {
+    format: 'json',
+    page_size: 100
   });
-  useEffect(() => {
-    setColorMaps(allColorMaps ? allColorMaps.map((colorMap: any) => convertToSelectObject(colorMap.name, colorMap.name, colorMap.description)) : []);
-  }, [allColorMaps]);
+
+  // Option to select a custom color map from the color map dropdown
+  const customColorMapOption = {
+    value: "Custom colormap",
+    label: "Custom colormap",
+    subLabel: "+ Create new colormap for this raster"
+  };
 
   const [previewColor, setPreviewColor] = useState<LegendResponse | null>(null);
   const [showCustomColormapModal, setShowCustomColormapModal] = useState(false);
@@ -294,15 +298,13 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
           <SelectDropdown
             title={''}
             name={name}
-            options={[
-              {
-                value: "Custom colormap",
-                label: "Custom colormap",
-                subLabel: "+ Create new colormap for this raster"
-              },
-              ...colorMaps
+            options={colorMaps ? [
+              customColorMapOption,
+              ...colorMaps.map((colorMap: any) => convertToSelectObject(colorMap.name, colorMap.name, colorMap.description))
+            ] : [
+              customColorMapOption
             ]}
-            isLoading={colorMapsFetchingState === 'RETRIEVING'}
+            isLoading={colorMapsIsFetching}
             value={JSON.stringify(colorMapValue.customColormap) !== "{}" && JSON.stringify(colorMapValue.options) === "{}" ? (
               {
                 value: "Custom colormap",
