@@ -32,7 +32,6 @@ interface RouteParams {
 
 const PersonalApiKeyFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProps<RouteParams>> = (props) => {
   const { currentRecord, allPersonalApiKeys } = props;
-  // @ts-ignore
   const recordWithFtpExists = ((allPersonalApiKeys || []).filter(record=>(record.scope+'').includes("ftp:readwrite"))).length > 0;
   const [apiKeyString, setApiKeyString ] = useState("");
   const [showDeleteModal, setShowDeleteModal ] = useState(false);
