@@ -7,7 +7,7 @@ export const NewPersonalApiKey: React.FC = () => {
   const {
     data: allPersonalApiKeys,
     isSuccess
-  } = useRecursiveFetch('/api/v4/personalapikeyss/', {});
+  } = useRecursiveFetch('/api/v4/personalapikeys/', {});
 
   return (
     <SpinnerIfNotLoaded loaded={isSuccess}>
