@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { connect, useSelector } from 'react-redux';
 import { SelectDropdown, Value } from '../../../form/SelectDropdown';
 import { SubmitButton } from '../../../form/SubmitButton';
 import { getSelectedOrganisation } from '../../../reducers';
 import { addNotification } from '../../../actions';
 import { convertToSelectObject } from '../../../utils/convertToSelectObject';
-import { usePaginatedFetch } from '../../../utils/usePaginatedFetch';
+import { useRecursiveFetch } from '../../../api/hooks';
 import ModalBackground from '../../../components/ModalBackground';
 import formStyles from '../../../styles/Forms.module.css';
 import buttonStyles from '../../../styles/Buttons.module.css';
@@ -18,18 +18,17 @@ interface MyProps {
 
 function AddToMonitoringNetworkModal (props: MyProps & DispatchProps) {
   const { timeseries } = props;
-
   const selectedOrganisation = useSelector(getSelectedOrganisation);
-  const [availableMonitoringNetworks, setAvailableMonitoringNetworks] = useState<Value[] | null>(null);
   const [selectedMonitoringNetwork, setSelectedMonitoringNetwork] = useState<Value | null>(null);
 
   // useEffect to load the list of available monitoring networks for the selected organisation
-  const { results, fetchingState } = usePaginatedFetch({
-    url: `/api/v4/monitoringnetworks/?organisation__uuid=${selectedOrganisation.uuid}`
+  const {
+    data: availableMonitoringNetworks,
+    status: monitoringNetworkFetchStatus
+  } = useRecursiveFetch('/api/v4/monitoringnetworks/', {
+    organisation__uuid: selectedOrganisation.uuid
   });
-  useEffect(() => {
-    setAvailableMonitoringNetworks(results && results.map((network: any) => convertToSelectObject(network.uuid, network.name)));
-  }, [results]);
+  console.log(monitoringNetworkFetchStatus, availableMonitoringNetworks)
 
   // POST requests to update selected monitoring network with the selected timeseries
   const handleSubmit = () => {
@@ -75,9 +74,9 @@ function AddToMonitoringNetworkModal (props: MyProps & DispatchProps) {
             name={'monitoringNetworks'}
             placeholder={'- Search and select -'}
             valueChanged={value => setSelectedMonitoringNetwork(value as Value)}
-            options={availableMonitoringNetworks || []}
+            options={availableMonitoringNetworks ? availableMonitoringNetworks.map((network: any) => convertToSelectObject(network.uuid, network.name)) : []}
             validated
-            isLoading={fetchingState === 'RETRIEVING'}
+            isLoading={monitoringNetworkFetchStatus === 'loading'}
           />
         </div>
         <div className={formStyles.ButtonContainer}>
