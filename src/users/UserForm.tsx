@@ -58,7 +58,7 @@ const UserForm: React.FC<Props & DispatchProps & RouteComponentProps> = (props) 
         const status = response.status;
         if (status === 201) {
           props.addNotification(`Success! An invitation email was sent to ${values.email}`, 2000);
-          props.history.push("/users");
+          props.history.push("/management/users");
         } else if (status === 403) {
           props.addNotification("Not authorized", 2000);
           console.error(response);
@@ -81,7 +81,7 @@ const UserForm: React.FC<Props & DispatchProps & RouteComponentProps> = (props) 
         const status = response.status;
         if (status === 200) {
           props.addNotification('Success! User role updated', 2000);
-          props.history.push("/users");
+          props.history.push("/management/users");
         } else {
           props.addNotification(status, 2000);
           console.error(response);

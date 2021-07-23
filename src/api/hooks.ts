@@ -96,7 +96,8 @@ export function useRecursiveFetch (
   baseUrl: string,
   params: Params,
   queryOptions: {
-    enabled?: boolean
+    enabled?: boolean,
+    cacheTime?: number,
   } = {},
   previousResults: any[] = []
 ) {
@@ -105,8 +106,5 @@ export function useRecursiveFetch (
 
   const query = useQuery(fetchKey, queryFunction, queryOptions);
 
-  return {
-    status: query.status,
-    data: query.data
-  };
+  return query;
 };
