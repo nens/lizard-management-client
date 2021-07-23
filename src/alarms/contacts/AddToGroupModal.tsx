@@ -4,7 +4,7 @@ import { SelectDropdown } from '../../form/SelectDropdown';
 import { SubmitButton } from '../../form/SubmitButton';
 import { getSelectedOrganisation } from '../../reducers';
 import { addNotification } from '../../actions';
-import { usePaginatedFetch } from '../../utils/usePaginatedFetch';
+import { useRecursiveFetch } from '../../api/hooks';
 import ModalBackground from '../../components/ModalBackground';
 import formStyles from '../../styles/Forms.module.css';
 import buttonStyles from '../../styles/Buttons.module.css';
@@ -28,13 +28,16 @@ function AddToGroupModal (props: MyProps & DispatchProps) {
   const [selectedGroups, setSelectedGroups] = useState<ContactGroupSelectObject[]>([]);
 
   // usePagniatedFetch and useEffect to load the list of available groups for the selected organisation
-  const { results, fetchingState } = usePaginatedFetch({
-    url: `/api/v4/contactgroups/?organisation__uuid=${selectedOrganisation.uuid}`
+  const {
+    data: groups,
+    status: groupsFetchStatus
+  } = useRecursiveFetch('/api/v4/contactgroups/', {
+    organisation__uuid: selectedOrganisation.uuid
   });
   useEffect(() => {
-    if (!results) return;
+    if (!groups) return;
 
-    const listOfGroups = results.map((group: any) => ({
+    const listOfGroups = groups.map((group: any) => ({
       value: group.id,
       label: group.name,
       contacts: group.contacts.map((contact: any) => contact.id)
@@ -45,7 +48,7 @@ function AddToGroupModal (props: MyProps & DispatchProps) {
       (group: any) => !group.contacts.includes(contact.id)
     );
     setAvailableGroups(listOfGroupsWithoutCurrentContact);
-  }, [results, contact.id]);
+  }, [groups, contact.id]);
 
   // PATCH requests to update group(s) with the new contact
   const handleSubmit = async () => {
@@ -102,7 +105,7 @@ function AddToGroupModal (props: MyProps & DispatchProps) {
             options={availableGroups || []}
             validated
             isMulti
-            isLoading={fetchingState === 'RETRIEVING'}
+            isLoading={groupsFetchStatus === 'loading'}
           />
         </div>
         <div className={formStyles.ButtonContainer}>
