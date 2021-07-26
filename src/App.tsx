@@ -33,12 +33,6 @@ import LoginProfileDropdown from "./components/LoginProfileDropdown";
 import UnauthenticatedModal from "./components/UnauthenticatedModal";
 import UnauthorizedModal from "./components/UnauthorizedModal";
 
-const windowOnbeforeLoad = (event: any) => {   
-  event.preventDefault();
-  return event.returnValue = "";
-} 
-
-
 const App = (props: RouteComponentProps & DispatchProps) => {
 
   const {
@@ -97,10 +91,18 @@ const App = (props: RouteComponentProps & DispatchProps) => {
   }, [firstFileInTheQueueUuid]);
 
   useEffect(() => {
-    window.removeEventListener("beforeunload", windowOnbeforeLoad);  
+    window.onbeforeunload = function() {};
     if (filesInProcess && filesInProcess.length > 0) {
-      window.addEventListener('beforeunload', windowOnbeforeLoad);
+      window.onbeforeunload = function(event: BeforeUnloadEvent) {
+        event.preventDefault();
+        setShowUploadQueue(true);
+        return event.returnValue = "";
+      };
     }
+    // window.removeEventListener("beforeunload", windowOnbeforeLoad);  
+    // if (filesInProcess && filesInProcess.length > 0) {
+    //   window.addEventListener('beforeunload', windowOnbeforeLoad);
+    // }
   }, [filesInProcess]);
 
   
