@@ -112,7 +112,7 @@ export const wmsLayerFormToFormSendToApi = (wmsLayer: WmsLayerFormType) => {
       sharedWithCheckbox: undefined,
       get_feature_info: wmsLayer.get_feature_info_url === ""? false: true,
       organisation: wmsLayer.organisation && wmsLayer.organisation.value,
-      supplier: wmsLayer.supplier && wmsLayer.supplier.value,
+      supplier: wmsLayer.supplier && wmsLayer.supplier.label,
       shared_with: wmsLayer.sharedWithCheckbox ? wmsLayer.shared_with.map(org => org.value) : [],
       datasets: wmsLayer.datasets.map(dataset => dataset.value),
     }
