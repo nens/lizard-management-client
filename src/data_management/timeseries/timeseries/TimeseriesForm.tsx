@@ -119,7 +119,7 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
       interval: values.intervalCheckbox ? convertDurationObjToSeconds(fromISOValue(values.interval)) : null,
       extra_metadata: values.extraMetadata ? JSON.parse(values.extraMetadata) : {},
       access_modifier: values.accessModifier,
-      supplier: values.supplier && values.supplier.value,
+      supplier: values.supplier && values.supplier.label,
       supplier_code: values.supplierCode,
     };
 
