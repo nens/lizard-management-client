@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { connect, useSelector } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import { fetchTaskInstance } from "./api/tasks";
@@ -33,6 +33,10 @@ import LoginProfileDropdown from "./components/LoginProfileDropdown";
 import UnauthenticatedModal from "./components/UnauthenticatedModal";
 import UnauthorizedModal from "./components/UnauthorizedModal";
 
+const windowOnbeforeLoad = (event: any) => {   
+  event.preventDefault();
+  return event.returnValue = "";
+} 
 
 
 const App = (props: RouteComponentProps & DispatchProps) => {
@@ -92,19 +96,12 @@ const App = (props: RouteComponentProps & DispatchProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [firstFileInTheQueueUuid]);
 
-  const handleWindowClose = useCallback(event => {
-    event.preventDefault();
-    
-    if (filesInProcess && filesInProcess.length > 0) {
-      return event.returnValue = "";
-    } else {
-      return null;
-    };
-  }, [filesInProcess]);
-
   useEffect(() => {
-    window.addEventListener('beforeunload', handleWindowClose);
-  }, [handleWindowClose]);
+    window.removeEventListener("beforeunload", windowOnbeforeLoad);  
+    if (filesInProcess && filesInProcess.length > 0) {
+      window.addEventListener('beforeunload', windowOnbeforeLoad);
+    }
+  }, [filesInProcess]);
 
   
   useEffect(() => {
