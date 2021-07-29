@@ -8,6 +8,7 @@ import {
   fetchOrganisations,
   fetchDatasets,
   updateTaskStatus,
+  openCloseUploadQueueModal,
 } from "./actions";
 import {
   getShouldFetchBootstrap,
@@ -16,6 +17,7 @@ import {
   getSelectedOrganisation,
   getFilesInProcess,
   getIsNotFinishedFetchingBootstrap,
+  getShowUploadQueueModal,
 } from './reducers';
 import {Routes} from './home/Routes';
 import {NavLink, withRouter, RouteComponentProps } from "react-router-dom";
@@ -52,12 +54,13 @@ const App = (props: RouteComponentProps & DispatchProps) => {
   const filesInProcess = useSelector( getFilesInProcess);
   const firstFileInTheQueueUuid = filesInProcess && filesInProcess[0] && filesInProcess[0].uuid;
   const currentRelativeUrl = props.location.pathname;
-  const isLandingPage = currentRelativeUrl === "/"
+  const isLandingPage = currentRelativeUrl === "/";
+  const showUploadQueue = useSelector(getShowUploadQueueModal);
   
   const [showOrganisationSwitcher, setShowOrganisationSwitcher] = useState(false);
-  const [showUploadQueue, setShowUploadQueue] = useState(false);
   const [showUnauthenticatedRedirectModal, setShowUnauthenticatedRedirectModal] = useState(false);
   const [showUnauthorizedRedirectModal, setshowUnauthorizedRedirectModal] = useState(false);
+
 
   
 
@@ -89,21 +92,6 @@ const App = (props: RouteComponentProps & DispatchProps) => {
     // because this fuction causes the effect to be called repeatedly
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [firstFileInTheQueueUuid]);
-
-  useEffect(() => {
-    window.onbeforeunload = function() {};
-    if (filesInProcess && filesInProcess.length > 0) {
-      window.onbeforeunload = function(event: BeforeUnloadEvent) {
-        event.preventDefault();
-        setShowUploadQueue(true);
-        return event.returnValue = "";
-      };
-    }
-    // window.removeEventListener("beforeunload", windowOnbeforeLoad);  
-    // if (filesInProcess && filesInProcess.length > 0) {
-    //   window.addEventListener('beforeunload', windowOnbeforeLoad);
-    // }
-  }, [filesInProcess]);
 
   
   useEffect(() => {
@@ -166,7 +154,7 @@ const App = (props: RouteComponentProps & DispatchProps) => {
                     <div
                       className={styles.Profile}
                       onClick={() => {
-                        setShowUploadQueue(true)
+                        props.openCloseUploadQueueModal(true);
                       }}
                     >
                       <div>
@@ -295,7 +283,7 @@ const App = (props: RouteComponentProps & DispatchProps) => {
           <Snackbar />
           {showUploadQueue ? (
             <UploadQueue
-              handleClose={() => setShowUploadQueue(false)}
+              handleClose={()=> props.openCloseUploadQueueModal(false)}
             />
           ) : null}
           { showUnauthenticatedRedirectModal?
@@ -324,8 +312,6 @@ const App = (props: RouteComponentProps & DispatchProps) => {
       );
 }
 
-
-
 const mapDispatchToProps = (dispatch: any, ownProps: any) => {
   return {
     fetchLizardBootstrap: () => dispatch(fetchLizardBootstrap()),
@@ -335,6 +321,7 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => {
       dispatch(addNotification(message, timeout));
     },
     updateTaskStatus: (uuid: string, status: number) => dispatch(updateTaskStatus(uuid, status)),
+    openCloseUploadQueueModal: (isOpen: boolean) => dispatch(openCloseUploadQueueModal(isOpen)),
   };
 };
 type DispatchProps = ReturnType<typeof mapDispatchToProps>;

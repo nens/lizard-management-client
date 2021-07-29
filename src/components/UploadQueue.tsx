@@ -1,7 +1,7 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { connect } from 'react-redux';
 import { useSelector } from 'react-redux';
-import { getFinsihedFiles, getUploadFiles } from '../reducers';
+import { getFinsihedFiles, getUploadFiles, getFilesInProcess } from '../reducers';
 import { removeFileFromQueue } from '../actions';
 import { bytesToMb } from '../utils/byteUtils';
 import ModalBackground from './ModalBackground';
@@ -51,13 +51,45 @@ const UploadQueue: React.FC<MyProps & PropsFromDispatch> = (props) => {
   const uploadFiles: any[] = useSelector(getUploadFiles);
   const finishedFiles: any[] = useSelector(getFinsihedFiles);
 
+  const waitingOrUploadingFiles = (uploadFiles || []).filter(file=> file.status === "WAITING" || file.status === "UPLOADING");
+  const mustWaitForFiles = waitingOrUploadingFiles.length !== 0;
+
+  const filesInProcess = useSelector(getFilesInProcess);
+  const hasFilesInProcess = (filesInProcess || []).length !== 0;
+
+  useEffect(() => {
+    window.onbeforeunload = function() {};
+    if (mustWaitForFiles) {
+      window.onbeforeunload = function(event: BeforeUnloadEvent) {
+        event.preventDefault();
+        return event.returnValue = "";
+      };
+    }
+  }, [mustWaitForFiles]);
+
   return (
     <ModalBackground
-      title={'Upload Queue'}
-      handleClose={() => props.handleClose()}
+      title={mustWaitForFiles? "Do not close! Upload Queue Busy" :'Upload Queue'}
+      handleClose={mustWaitForFiles ? undefined : () => props.handleClose()}
       height={'600px'}
     >
       <div className={styles.ModalBody}>
+        {mustWaitForFiles?
+          <span>
+            The upload queue is currently busy uploading files. <br/>
+            Do not close your browser-tab untill this text disappears. <br/>
+            Closing this tab means the uploads will abort! 
+          </span>
+        : hasFilesInProcess?
+        <span>
+          The upload queue is finished uploading, but the backend is still busy. <br/>
+          If you want to keep track of the progress of your files then keep this browser-tab open. <br/>
+          Closing the this browser-tab will not abort the files, but you will no longer be able to follow the progress. 
+        </span>
+          :
+          null  
+        }
+
         <div className={`${styles.GridContainer} ${styles.GridContainerHeader}`}>
           <div className={styles.GridItem}>Filename</div>
           <div className={styles.GridItem}>Filesize</div>
@@ -65,6 +97,20 @@ const UploadQueue: React.FC<MyProps & PropsFromDispatch> = (props) => {
           <div className={styles.GridItem}/>
           <div className={styles.GridItem}/>
         </div>
+        {(uploadFiles || []).length === 0?
+          <div
+            style={{
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              marginTop: "24px",
+            }}
+          >
+            <span>No files currently uploading</span>
+          </div>
+        :null}
         {uploadFiles && uploadFiles.length > 0 ? (
           <div className={`${styles.GridContainer} ${styles.GridContainerBody}`}>
             {uploadFiles.map(file => (
