@@ -256,3 +256,12 @@ export function removeFileFromQueue(file) {
     file
   };
 }
+
+export const SET_OPEN_CLOSE_UPLOADQUEUE_MODAL = "SET_OPEN_CLOSE_UPLOADQUEUE_MODAL";
+
+export function openCloseUploadQueueModal(isOpen) {
+  return {
+    type: SET_OPEN_CLOSE_UPLOADQUEUE_MODAL,
+    isOpen
+  };
+}

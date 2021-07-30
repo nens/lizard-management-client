@@ -23,7 +23,8 @@ import {
   ADD_TASK_UUID_TO_FILE,
   UPDATE_TASK_STATUS,
   UPDATE_LOCATION,
-  REMOVE_LOCATION
+  REMOVE_LOCATION,
+  SET_OPEN_CLOSE_UPLOADQUEUE_MODAL,
 } from "./actions";
 
 function bootstrap(
@@ -257,6 +258,15 @@ function uploadFiles(state = null, action) {
       return state;
   };
 };
+function uploadQueueModalOpen(state = false, action) {
+  switch (action.type) {
+    case SET_OPEN_CLOSE_UPLOADQUEUE_MODAL:
+      return action.isOpen;
+    default:
+      return state;
+  }
+}
+  
 
 // Selectors
 export const getBootstrap = (state) => {
@@ -353,6 +363,10 @@ export const getFinsihedFiles = (state) => {
   return state.uploadFiles && state.uploadFiles.length > 0 && state.uploadFiles.filter(file => file.status === 'SUCCESS' || file.status === 'FAILED');
 };
 
+export const getShowUploadQueueModal = (state) => {
+  return state.uploadQueueModalOpen;
+}
+
 const rootReducer = combineReducers({
   bootstrap,
   organisations,
@@ -362,7 +376,8 @@ const rootReducer = combineReducers({
   alarmType,
   rasterSourceUUID,
   location,
-  uploadFiles
+  uploadFiles,
+  uploadQueueModalOpen,
 });
 
 // Todo: add type defenitions to redux. Check threedi-livesite for examples. Next line defines AppDispatch for mapDispatchToProps

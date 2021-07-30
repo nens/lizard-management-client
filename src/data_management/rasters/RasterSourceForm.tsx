@@ -11,12 +11,12 @@ import { SubmitButton } from '../../form/SubmitButton';
 import { CancelButton } from '../../form/CancelButton';
 import { SelectDropdown } from '../../form/SelectDropdown';
 import { AcceptedFile, UploadData } from '../../form/UploadData';
-import { getOrganisations, getSelectedOrganisation } from '../../reducers';
+import { getOrganisations, getSelectedOrganisation} from '../../reducers';
 import { useForm, Values } from '../../form/useForm';
 import { minLength } from '../../form/validators';
 import { AccessModifier } from '../../form/AccessModifier';
 import { rasterIntervalStringServerToDurationObject, toISOValue } from '../../utils/isoUtils';
-import { addFilesToQueue, addNotification, updateRasterSourceUUID } from '../../actions';
+import { addFilesToQueue, addNotification, updateRasterSourceUUID, openCloseUploadQueueModal } from '../../actions';
 import { sendDataToLizardRecursive } from '../../utils/sendDataToLizard';
 import { rasterSourceFormHelpText } from '../../utils/help_texts/helpTextForRasters';
 import { convertToSelectObject } from '../../utils/convertToSelectObject';
@@ -38,6 +38,7 @@ interface PropsFromDispatch {
   updateRasterSourceUUID: (uuid: string) => void,
   addNotification: (message: string | number, timeout: number) => void,
   addFilesToQueue: (files: File[]) => void,
+  openCloseUploadQueueModal: (isOpen:boolean) => void;
 };
 interface RouteParams {
   uuid: string;
@@ -120,6 +121,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           const uploadFiles = acceptedFiles.map(f => f.file);
           if (uploadFiles.length > 0) props.addNotification('Upload started', 1000);
           props.addFilesToQueue(uploadFiles);
+          props.openCloseUploadQueueModal(true);
           sendDataToLizardRecursive(
             parsedBody.uuid,
             values.data,
@@ -148,6 +150,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
             const uploadFiles = acceptedFiles.map(f => f.file);
             if (uploadFiles.length > 0) props.addNotification('Upload started', 1000);
             props.addFilesToQueue(uploadFiles);
+            props.openCloseUploadQueueModal(true);
             sendDataToLizardRecursive(
               props.match.params.uuid,
               values.data,
@@ -413,6 +416,7 @@ const mapPropsToDispatch = (dispatch: any) => ({
   updateRasterSourceUUID: (uuid: string) => dispatch(updateRasterSourceUUID(uuid)),
   addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout)),
   addFilesToQueue: (files: File[]) => dispatch(addFilesToQueue(files)),
+  openCloseUploadQueueModal: (isOpen: boolean) => dispatch(openCloseUploadQueueModal(isOpen)),
 });
 
 export default connect(null, mapPropsToDispatch)(withRouter(RasterSourceForm));
