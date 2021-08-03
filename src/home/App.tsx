@@ -135,7 +135,6 @@ const AppComponent = (props: RouteComponentProps) => {
                   keys={filterednavigationLinkTiles.map(item => item.title)}
                 >
                   {filterednavigationLinkTiles
-                    .filter(appTile=> appTile.onUrl === currentRelativeUrl )
                     .filter(appTile=> appTile.homePageLinkOrHome === "HOME")
                     .sort((appTileA, appTileB)=> appTileA.order - appTileB.order )
                     // todo resolve any. x:any because x needs to support  x.interpolate
@@ -161,7 +160,6 @@ const AppComponent = (props: RouteComponentProps) => {
                   keys={filterednavigationLinkTiles.map(item => item.title)}
                 >
                   {filterednavigationLinkTiles
-                    .filter(appTile=> appTile.onUrl === currentRelativeUrl )
                     .filter(appTile=> appTile.homePageLinkOrHome === "LINK" || !appTile.homePageLinkOrHome)
                     .sort((appTileA, appTileB)=> appTileA.order - appTileB.order )
                     .map(AppTileRow)}

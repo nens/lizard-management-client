@@ -69,7 +69,11 @@ export const getNavigationLinkTileFromUrlAndAllNavigationLinkTiles = (urlPostFix
 }
 
 export const getCurrentUrlPostfix = () => {
-  return window.location.pathname;
+  let urlPostfix = window.location.pathname;
+  if (urlPostfix !== "/" && urlPostfix[urlPostfix.length-1] === "/")  {
+    urlPostfix = urlPostfix.substring(0, urlPostfix.length-1)
+  }
+  return urlPostfix;
 }
 
 export const getCurrentNavigationLinkPage = () => {
