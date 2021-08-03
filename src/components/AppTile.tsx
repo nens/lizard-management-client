@@ -34,7 +34,7 @@ const AppTile = (props: (Props & RouteComponentProps)) => {
       >
         <img src={icon} alt={title} className={styles.Img}/>
         <p className={styles.Title}>{title}</p>
-        { !readonly ? <Ink/> : null }
+        { !readonly ? <Ink recenter={true}/> : null }
       </div>
     );
   }
