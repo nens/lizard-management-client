@@ -14,7 +14,7 @@ import { useForm, Values } from '../../form/useForm';
 import { greaterThanMin, minLength, rangeCheck, jsonValidator, required} from '../../form/validators';
 import wmsIcon from "../../images/wms@3x.svg";
 import {
-  getDatasets,
+  getLayercollections,
   getOrganisations,
   getSelectedOrganisation,
 } from '../../reducers';
@@ -47,7 +47,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
   const [geoserverError, setGeoserverError] = useState<boolean>(false);
   const organisations = useSelector(getOrganisations).available;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
-  const datasets = useSelector(getDatasets).available;
+  const layercollections = useSelector(getLayercollections).available;
   const organisationsToSwitchTo = organisations.filter((org:any) => org.roles.includes('admin'));
 
   const initialValues: WmsLayerFormType = currentWmsLayer ? wmsLayerReceivedFromApiToForm(currentWmsLayer) : wmsLayerGetDefaultFormValues(selectedOrganisation);
@@ -167,12 +167,12 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           onBlur={handleBlur}
         />
         <SelectDropdown
-          title={'Tags / Datasets'}
-          name={'datasets'}
+          title={'Layer-collections'}
+          name={'layercollections'}
           placeholder={'- Search and select -'}
-          value={values.datasets}
-          valueChanged={value => handleValueChange('datasets', value)}
-          options={datasets.map((dataset: any) => convertToSelectObject(dataset.slug))}
+          value={values.layercollections}
+          valueChanged={value => handleValueChange('layercollections', value)}
+          options={layercollections.map((layercollection: any) => convertToSelectObject(layercollection.slug))}
           validated
           isMulti
           onFocus={handleFocus}
