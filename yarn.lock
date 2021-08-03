@@ -13927,10 +13927,10 @@ react-hotkeys@2.0.0:
   dependencies:
     prop-types "^15.6.1"
 
-react-ink@^6.4.0:
-  version "6.4.0"
-  resolved "https://registry.yarnpkg.com/react-ink/-/react-ink-6.4.0.tgz#fa1573104237d3c08bcbf06108f3197b16762f76"
-  integrity sha512-CucEgFtGVFd0yJ8a+fic7FRHPv8QDba7UOoTvg4ezaRLGA7/FitwiQMIydBfiaZ7v+mrCsqWaH2ZpmthZRMxgQ==
+react-ink@^6.5.1:
+  version "6.5.1"
+  resolved "https://registry.yarnpkg.com/react-ink/-/react-ink-6.5.1.tgz#0476652c9de16826889070d76154271e3e9f2282"
+  integrity sha512-hDrMagL8Zjn79NoNSFMWcAZDj6MruUIa5P+cHKleCDu2khX93VepQ6FBRHWCE3rWYl+HkehJV1o13BZFwDuIaw==
 
 react-input-autosize@^2.2.2:
   version "2.2.2"
