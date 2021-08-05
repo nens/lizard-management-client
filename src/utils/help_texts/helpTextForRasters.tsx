@@ -2,7 +2,7 @@ import React from 'react';
 
 import {
   accessModifierHelpText,
-  datasetHelpText,
+  layercollectionHelpText,
   HelpText,
   nameHelpText,
   organisationHelpText,
@@ -63,7 +63,7 @@ export const rasterLayerFormHelpText: HelpText = {
       <p><i>If this raster was created automatically from a source, there will be a reference to it.</i></p>
     </>
   ),
-  datasets: datasetHelpText,
+  layercollections: layercollectionHelpText,
   rasterSourceModal: 'Open modal to view connected raster source(s) of this layer.',
   rasterSource: (
     <>

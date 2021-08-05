@@ -23,7 +23,7 @@ import ColorMapInput from '../../form/ColorMapInput';
 import { useForm, Values } from '../../form/useForm';
 import { minLength, required } from '../../form/validators';
 import {
-  getDatasets,
+  getLayercollections,
   getOrganisations,
   getRasterSourceUUID,
   getSelectedOrganisation,
@@ -120,7 +120,7 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
   const { currentRecord, removeRasterSourceUUID } = props;
   const organisations = useSelector(getOrganisations).available;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
-  const datasets = useSelector(getDatasets).available;
+  const layercollections = useSelector(getLayercollections).available;
   const rasterSourceUUID = useSelector(getRasterSourceUUID);
   const belongsToScenario = (currentRecord && rasterLayerFromAPIBelongsToScenario(currentRecord)) || false;
 
@@ -132,7 +132,7 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
     name: currentRecord.name,
     uuid: currentRecord.uuid,
     description: currentRecord.description,
-    datasets: currentRecord.datasets.map(dataset => convertToSelectObject(dataset.slug)) || [],
+    layercollections: currentRecord.layer_collections.map(layercollection => convertToSelectObject(layercollection.slug)) || [],
     rasterSource: currentRecord.raster_sources && currentRecord.raster_sources.map(rasterSource => convertToSelectObject(getUuidFromUrl(rasterSource)))[0],
     aggregationType: currentRecord.aggregation_type ? convertToSelectObject(currentRecord.aggregation_type) : null,
     observationType: currentRecord.observation_type ? convertToSelectObject(currentRecord.observation_type.id, currentRecord.observation_type.code) : null,
@@ -144,7 +144,7 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
   } : {
     name: null,
     description: null,
-    datasets: [],
+    layercollections: [],
     rasterSource: rasterSourceUUID ? convertToSelectObject(rasterSourceUUID) : null,
     aggregationType: null,
     observationType: null,
@@ -168,7 +168,7 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
         colormap: JSON.stringify(values.colorMap.customColormap) ==="{}"? undefined : values.colorMap.customColormap,
         rescalable: values.colorMap && values.colorMap.rescalable,
         shared_with: values.sharedWith ? values.organisationsToSharedWith.map((organisation: any) => organisation.value) : [],
-        datasets: values.datasets.map((data: any) => data.value)
+        layer_collections: values.layercollections.map((data: any) => data.value)
       };
 
       createRasterLayer(rasterLayer, values.rasterSource.value)
@@ -197,7 +197,7 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
         colormap: JSON.stringify(values.colorMap.customColormap) ==="{}"? undefined : values.colorMap.customColormap,
         rescalable: values.colorMap && values.colorMap.rescalable,
         shared_with: values.sharedWith ? values.organisationsToSharedWith.map((organisation: any) => organisation.value) : [],
-        datasets: values.datasets.map((dataset: any) => dataset.value)
+        layer_collections: values.layercollections.map((layercollection: any) => layercollection.value)
       };
       // only add colormap in options if not multiple layers
       if (!optionsHasLayers(values.colorMap.options)) {
@@ -321,12 +321,12 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
         />
         {!belongsToScenario ? (
           <SelectDropdown
-            title={'Dataset'}
-            name={'datasets'}
+            title={'Layer-collections'}
+            name={'layercollections'}
             placeholder={'- Search and select -'}
-            value={values.datasets}
-            valueChanged={value => handleValueChange('datasets', value)}
-            options={datasets.map((dataset: any) => convertToSelectObject(dataset.slug))}
+            value={values.layercollections}
+            valueChanged={value => handleValueChange('layercollections', value)}
+            options={layercollections.map((layercollection: any) => convertToSelectObject(layercollection.slug))}
             validated
             isMulti
             form={"raster_layer_form_id"}

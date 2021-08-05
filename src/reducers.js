@@ -12,9 +12,9 @@ import {
   SHOW_NOTIFICATION,
   DISMISS_NOTIFICATION,
   UPDATE_ALARM_TYPE,
-  REQUEST_DATASETS,
-  RECEIVE_DATASETS_SUCCESS,
-  RECEIVE_DATASETS_ERROR,
+  REQUEST_LAYERCOLLECTIONS,
+  RECEIVE_LAYERCOLLECTIONS_SUCCESS,
+  RECEIVE_LAYERCOLLECTIONS_ERROR,
   UPDATE_RASTER_SOURCE_UUID,
   REMOVE_RASTER_SOURCE_UUID,
   ADD_FILES_TO_QUEUE,
@@ -108,7 +108,7 @@ switch (action.type) {
   } 
 }
 
-function datasets(
+function layercollections(
   state = {
     isFetching: false,
     timesFetched: 0,
@@ -119,9 +119,9 @@ function datasets(
   action
 ) {
   switch (action.type) {
-    case REQUEST_DATASETS:
+    case REQUEST_LAYERCOLLECTIONS:
       return { ...state, isFetching: true };
-    case RECEIVE_DATASETS_SUCCESS:
+    case RECEIVE_LAYERCOLLECTIONS_SUCCESS:
       return {
         ...state,
         available: action.data,
@@ -129,7 +129,7 @@ function datasets(
         hasError: false,
         timesFetched: state.timesFetched + 1
       };
-    case RECEIVE_DATASETS_ERROR:
+    case RECEIVE_LAYERCOLLECTIONS_ERROR:
       return {
         ...state,
         available: [],
@@ -338,9 +338,8 @@ export const getScenarioTotalSize = (state) => {
 export const getRasterTotalSize = (state) => {
   return state.usage.raster_total_size;
 };
-
-export const getDatasets = (state) => {
-  return state.datasets;
+export const getLayercollections = (state) => {
+  return state.layercollections;
 };
 export const getRasterSourceUUID = (state) => {
   return state.rasterSourceUUID;
@@ -371,7 +370,7 @@ const rootReducer = combineReducers({
   bootstrap,
   organisations,
   usage,
-  datasets,
+  layercollections,
   notifications,
   alarmType,
   rasterSourceUUID,

@@ -148,23 +148,23 @@ export function updateAlarmType(alarmType) {
   };
 }
 
-// MARK: Datasets
-export const REQUEST_DATASETS = "REQUEST_DATASETS";
-export const RECEIVE_DATASETS_SUCCESS = "RECEIVE_DATASETS_SUCCESS";
-export const RECEIVE_DATASETS_ERROR = "RECEIVE_DATASETS_ERROR";
+// MARK: Layercollections
+export const REQUEST_LAYERCOLLECTIONS = "REQUEST_LAYERCOLLECTIONS";
+export const RECEIVE_LAYERCOLLECTIONS_SUCCESS = "RECEIVE_LAYERCOLLECTIONS_SUCCESS";
+export const RECEIVE_LAYERCOLLECTIONS_ERROR = "RECEIVE_LAYERCOLLECTIONS_ERROR";
 
-export function fetchDatasets() {
+export function fetchLayercollections() {
   return dispatch => {
-    const url = `/api/v4/datasets/`;
+    const url = `/api/v4/layercollections/`;
     const opts = { credentials: "same-origin" };
 
-    dispatch({ type: REQUEST_DATASETS });
+    dispatch({ type: REQUEST_LAYERCOLLECTIONS });
 
     fetch(url, opts)
       .then(responseObj => {
         if (!responseObj.ok) {
-          const errorMessage = `HTTP error ${responseObj.status} while fetching Datasets: ${responseObj.statusText}`;
-          dispatch({ type: RECEIVE_DATASETS_ERROR, errorMessage });
+          const errorMessage = `HTTP error ${responseObj.status} while fetching Layer-collections: ${responseObj.statusText}`;
+          dispatch({ type: RECEIVE_LAYERCOLLECTIONS_ERROR, errorMessage });
           console.error("[E]", errorMessage, responseObj);
           return Promise.reject(errorMessage);
         } else {
@@ -173,7 +173,7 @@ export function fetchDatasets() {
       })
       .then(responseData => {
         const data = responseData.results;
-        dispatch({ type: RECEIVE_DATASETS_SUCCESS, data });
+        dispatch({ type: RECEIVE_LAYERCOLLECTIONS_SUCCESS, data });
       });
   };
 }

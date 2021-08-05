@@ -2,7 +2,7 @@ import React from 'react';
 
 import {
   accessModifierHelpText,
-  datasetHelpText,
+  layercollectionHelpText,
   descriptionHelpText,
   HelpText,
   nameHelpText,
@@ -18,7 +18,7 @@ export const wmsFormHelpText: HelpText = {
   name: nameHelpText,
   uuid: uuidHelpText,
   description: descriptionHelpText,
-  datasets: datasetHelpText,
+  layercollections: layercollectionHelpText,
   wms_url: 'Specify which URL is used to retrieve the image data.',
   slug: '',
   download_url: 'Specify which URL is used to download the data. This will enable the download button in the Lizard Catalogue.',

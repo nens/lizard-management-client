@@ -2,17 +2,17 @@ import React from "react";
 import { useSelector } from "react-redux";
 import RasterLayerForm from "./RasterLayerForm";
 import {
-  getDatasets,
+  getLayercollections,
 } from "../../reducers";
 import SpinnerIfNotLoaded from '../../components/SpinnerIfNotLoaded';
 
 
 export const NewRasterLayer: React.FC = () => {
-  const datasets = useSelector(getDatasets);
+  const layerCollections = useSelector(getLayercollections);
 
   return (
     <SpinnerIfNotLoaded
-      loaded={datasets.isFetching === false}
+      loaded={layerCollections.isFetching === false}
     >
       <RasterLayerForm />
     </SpinnerIfNotLoaded>
