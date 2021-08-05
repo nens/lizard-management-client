@@ -6,7 +6,7 @@ import {
   addNotification,
   fetchLizardBootstrap,
   fetchOrganisations,
-  fetchDatasets,
+  fetchLayercollections,
   updateTaskStatus,
   openCloseUploadQueueModal,
 } from "./actions";
@@ -40,7 +40,7 @@ const App = (props: RouteComponentProps & DispatchProps) => {
   const {
     fetchLizardBootstrap,
     fetchOrganisations,
-    getDatasets,
+    fetchLayercollections,
     updateTaskStatus,
     addNotification,
   } = props;
@@ -73,9 +73,9 @@ const App = (props: RouteComponentProps & DispatchProps) => {
   useEffect(() => {
     if (userAuthenticated && shouldFetchOrganisations) {
       fetchOrganisations();
-      getDatasets();
+      fetchLayercollections();
     }
-  }, [userAuthenticated, shouldFetchOrganisations, fetchOrganisations, getDatasets]);
+  }, [userAuthenticated, shouldFetchOrganisations, fetchOrganisations, fetchLayercollections]);
 
   useEffect(() => {
     if (firstFileInTheQueueUuid) {
@@ -316,7 +316,7 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => {
   return {
     fetchLizardBootstrap: () => dispatch(fetchLizardBootstrap()),
     fetchOrganisations: () => dispatch(fetchOrganisations()),
-    getDatasets: () => dispatch(fetchDatasets()),
+    fetchLayercollections: () => dispatch(fetchLayercollections()),
     addNotification: (message: string, timeout: number) => {
       dispatch(addNotification(message, timeout));
     },
