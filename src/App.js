@@ -8,7 +8,7 @@ import {
   fetchLizardBootstrap,
   fetchOrganisations,
   updateViewportDimensions,
-  fetchDatasets,
+  fetchLayercollections,
   updateTaskStatus,
   removeFileFromQueue
 } from "./actions";
@@ -66,7 +66,7 @@ class App extends Component {
   componentWillReceiveProps(props) {
     if (props.isAuthenticated) {
       if (props.mustFetchOrganisations) props.getOrganisations();
-      if (props.mustFetchDatasets) props.getDatasets();
+      if (props.mustFetchLayercollections) props.getLayercollections();
     }
   }
   updateOnlineStatus(e) {
@@ -385,10 +385,10 @@ const mapStateToProps = (state, ownProps) => {
     isFetchingOrganisations: state.organisations.isFetching,
     timesFetchedOrganisations: state.organisations.timesFetched,
 
-    mustFetchDatasets:
-      state.datasets.available.length === 0 &&
-      !state.datasets.isFetching &&
-      state.datasets.timesFetched < 1
+    mustFetchLayercollections:
+      state.layercollections.available.length === 0 &&
+      !state.layercollections.isFetching &&
+      state.layercollections.timesFetched < 1
   };
 };
 
@@ -396,7 +396,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     getLizardBootstrap: () => dispatch(fetchLizardBootstrap()),
     getOrganisations: () => dispatch(fetchOrganisations()),
-    getDatasets: () => dispatch(fetchDatasets()),
+    getLayercollections: () => dispatch(fetchLayercollections()),
     addNotification: (message, timeout) => {
       dispatch(addNotification(message, timeout));
     },

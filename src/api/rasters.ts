@@ -39,7 +39,7 @@ export interface Organisation {
   url: string,
 }
 
-export interface Dataset {
+export interface Layercollection {
   slug: string
 }
 
@@ -94,14 +94,14 @@ export type RasterLayerFromForm = RasterLayerInstance & {
   organisation: string;
   shared_with: string[];
   observation_type: string;
-  datasets: string[];
+  layer_collections: string[];
 }
 
 export type RasterLayerFromAPI = RasterLayerInstance & {
   organisation: Organisation;
   shared_with: Organisation[];
   observation_type: ObservationType;
-  datasets: Dataset[];
+  layer_collections: Layercollection[];
   wms_info: {
     endpoint: string;
     layer: string;
@@ -393,7 +393,7 @@ export const createRasterLayer = (rasterLayer: RasterLayerFromForm, rasterSource
       shared_with: rasterLayer.shared_with,
       rescalable: rasterLayer.rescalable,
       access_modifier: rasterLayer.access_modifier,
-      datasets: rasterLayer.datasets,
+      layer_collections: rasterLayer.layer_collections,
       source: {
         graph: {
           raster: [

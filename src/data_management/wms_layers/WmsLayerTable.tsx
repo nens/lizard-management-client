@@ -107,7 +107,7 @@ export const WmsLayerTable = (props: RouteComponentProps) =>  {
           filterOptions={[
             {value: 'name__icontains=', label: 'Name'},
             // not needed for now
-            // {value: 'datasets__slug__icontains=', label: 'Datasets slug'},
+            // {value: 'layer_collections__slug__icontains=', label: 'Layer-collections slug'},
             {value: 'uuid=', label: 'UUID'},
           ]}
         />

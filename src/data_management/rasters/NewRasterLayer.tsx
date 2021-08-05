@@ -5,16 +5,16 @@ import MDSpinner from "react-md-spinner";
 import RasterLayerForm from "./RasterLayerForm";
 import {
   getOrganisations,
-  getDatasets,
+  getLayercollections,
 } from "../../reducers";
 
 export const NewRasterLayer: React.FC = () => {
   const organisations = useSelector(getOrganisations);
-  const datasets = useSelector(getDatasets);
+  const layercollections = useSelector(getLayercollections);
 
   if (
     organisations.isFetching === false &&
-    datasets.isFetching === false
+    layercollections.isFetching === false
   ) {
     return <RasterLayerForm />;
   } else {
