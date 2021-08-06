@@ -163,7 +163,7 @@ export function fetchLayercollections() {
     fetch(url, opts)
       .then(responseObj => {
         if (!responseObj.ok) {
-          const errorMessage = `HTTP error ${responseObj.status} while fetching Layer-collections: ${responseObj.statusText}`;
+          const errorMessage = `HTTP error ${responseObj.status} while fetching Layer collections: ${responseObj.statusText}`;
           dispatch({ type: RECEIVE_LAYERCOLLECTIONS_ERROR, errorMessage });
           console.error("[E]", errorMessage, responseObj);
           return Promise.reject(errorMessage);

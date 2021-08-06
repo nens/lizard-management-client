@@ -167,7 +167,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           onBlur={handleBlur}
         />
         <SelectDropdown
-          title={'Layer-collections'}
+          title={'Layer collections'}
           name={'layercollections'}
           placeholder={'- Search and select -'}
           value={values.layercollections}

@@ -321,7 +321,7 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
         />
         {!belongsToScenario ? (
           <SelectDropdown
-            title={'Layer-collections'}
+            title={'Layer collections'}
             name={'layercollections'}
             placeholder={'- Search and select -'}
             value={values.layercollections}
