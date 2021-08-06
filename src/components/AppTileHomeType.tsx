@@ -5,7 +5,8 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { injectIntl } from "react-intl";
 
 interface Props {
-  title: string, 
+  title: string,
+  subtitle: string, 
   icon: string, 
   handleClick: ()=> void, 
   readonly: boolean,
@@ -15,7 +16,7 @@ interface Props {
 const AppTileHomeType = (props: (Props & RouteComponentProps)) => {
   
     const {
-      title, icon, handleClick, readonly,
+      title, subtitle, icon, handleClick, readonly,
       requiredRoles // eslint-disable-line no-unused-vars
     } = props;
     
@@ -40,7 +41,7 @@ const AppTileHomeType = (props: (Props & RouteComponentProps)) => {
         </div>
         
         <p className={styles.Title}>{title}</p>
-        <p className={styles.Subtitle}>{"Some subtitle or a bit long bla bla"}</p>
+        <p className={styles.Subtitle}>{subtitle}</p>
         { !readonly ? <Ink recenter={true}/> : null }
       </div>
     );

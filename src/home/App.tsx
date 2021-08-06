@@ -48,6 +48,7 @@ const AppComponent = (props: RouteComponentProps) => {
             })}}
             key={appTile.title + appTile.order + ""}
             title={appTile.title}
+            subtitle={appTile.subtitle || ""}
             icon={appTile.icon}
             readonly={
               !doArraysHaveEqualElement(appTile.requiresOneOfRoles, currentOrganisationRoles) &&
