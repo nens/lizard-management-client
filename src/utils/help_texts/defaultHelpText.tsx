@@ -20,8 +20,8 @@ export const codeHelpText = 'Choose a code that represents the object within you
 
 export const layercollectionHelpText = (
   <>
-    <p>Choose a layercollection for this object.</p>
-    <p><i>Layer-collections are used to group objects together and can be seen as tag or label.</i></p>
+    <p>Choose a layer collection for this object.</p>
+    <p><i>Layer collections are used to group objects together and can be seen as tag or label.</i></p>
   </>
 );
 
