@@ -1,6 +1,6 @@
 import React from "react";
 import Ink from "react-ink";
-import styles from "./AppTile.module.css";
+import styles from "./AppTileHomeType.module.css";
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { injectIntl } from "react-intl";
 
@@ -32,6 +32,7 @@ const AppTileHomeType = (props: (Props & RouteComponentProps)) => {
            onClick={!readonly ? handleClick : undefined}
            title={readonly ? requiresRoleMessage + requiredRoles : null}
       >
+        <hr className={styles.DecorativeLine}/>
         <div
 					className={styles.IconCircleContainer}
         >
@@ -39,6 +40,7 @@ const AppTileHomeType = (props: (Props & RouteComponentProps)) => {
         </div>
         
         <p className={styles.Title}>{title}</p>
+        <p className={styles.Subtitle}>{"Some subtitle or a bit long bla bla"}</p>
         { !readonly ? <Ink recenter={true}/> : null }
       </div>
     );

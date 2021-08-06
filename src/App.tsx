@@ -30,7 +30,7 @@ import gridStyles from "./styles/Grid.module.css";
 import buttonStyles from "./styles/Buttons.module.css";
 import lizardIcon from "./images/lizard.svg";
 import packageJson from '../package.json';
-import {getCurrentNavigationLinkPage, userHasCorrectRolesForCurrentNavigationLinkTile} from './home/AppTileConfig';
+import {getCurrentUrlPostfix, getCurrentNavigationLinkPage, userHasCorrectRolesForCurrentNavigationLinkTile} from './home/AppTileConfig';
 import LoginProfileDropdown from "./components/LoginProfileDropdown";
 import UnauthenticatedModal from "./components/UnauthenticatedModal";
 import UnauthorizedModal from "./components/UnauthorizedModal";
@@ -125,7 +125,11 @@ const App = (props: RouteComponentProps & DispatchProps) => {
   }, [userHasCorrectRoles, userAuthenticated, showOrganisationSwitcher, selectedOrganisation]);
 
       return (
-        <div className={styles.App} 
+        <div 
+          className={styles.App} 
+          style={{
+            backgroundColor: getCurrentUrlPostfix() === "" || getCurrentUrlPostfix() === "/" ? "#F8F8F8" : "white",
+          }}
         >
           <div className={`${styles.Primary}`}>
             <div className={gridStyles.Container}>
