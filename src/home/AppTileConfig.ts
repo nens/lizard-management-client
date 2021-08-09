@@ -37,6 +37,7 @@ export interface NavigationLinkPage {
 type LinkOrHome = "LINK" | "HOME"
 export interface NavigationLinkTile{
   title: string,
+  subtitle?: string,
   // title: (
   //   <FormattedMessage
   //     id="home.data_management"
@@ -155,6 +156,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
   
   { 
     title: "catalogue",
+    subtitle: "Search for your data",
     // title: (
     //   <FormattedMessage
     //     id="home.data_management"
@@ -172,6 +174,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
   },
   { 
     title: "viewer",
+    subtitle: "Explore your data",
     // title: (
     //   <FormattedMessage
     //     id="home.data_management"
@@ -189,6 +192,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
   },
   { 
     title: "management",
+    subtitle: "Manage your data, users, alarms and GeoBlocks.",
     // title: (
     //   <FormattedMessage
     //     id="home.data_management"
@@ -206,6 +210,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
   },
   { 
     title: "api",
+    subtitle: "Query your data",
     // title: (
     //   <FormattedMessage
     //     id="home.data_management"
@@ -223,6 +228,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
   },
   { 
     title: "documentation",
+    subtitle: "Read the docs.",
     // title: (
     //   <FormattedMessage
     //     id="home.data_management"
@@ -240,6 +246,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
   },
   { 
     title: "support",
+    subtitle: "Need help?",
     // title: (
     //   <FormattedMessage
     //     id="home.data_management"

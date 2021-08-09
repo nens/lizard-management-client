@@ -1,0 +1,98 @@
+.AppTile {
+  position: relative;
+  float: left;
+
+  width: 300px;
+  box-sizing: content-box;
+  height: 280px;
+  border-radius: 7px;
+
+  /* Margin could probably be re-used from AppTile.module.css */
+  margin-top: 22.5px;
+  margin-bottom: 22.5px;
+  margin-right: 45px;
+  margin-left: 0;
+  
+  padding-top: 39px;
+  padding-left: 30px;
+
+  cursor: pointer;
+  background-color: white;
+  box-shadow: 3px 3px 6px #00000029;
+}
+.AppTile.Disabled {
+  background-color: #b9b9b9;
+  cursor: not-allowed;
+}
+.AppTile.Disabled img {
+  filter: grayscale(0.9);
+}
+.AppTile.Disabled .SubTitle {
+  color: #737373;
+}
+.AppTile:hover {
+  transform: scale(1.03);
+  box-shadow: 2px 2px 10px #b9b9b9;
+}
+
+@media only screen and (max-width: 700px) {
+  .AppTile {
+    transform: scale(.85);
+  }
+}
+
+.IconCircleContainer {
+  background-color: #55BFA2;
+  width: 96px;
+  height: 96px;
+  border-radius: 48px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  position: relative;
+  z-index: 200;
+}
+.Img {
+  position: absolute;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%); /* use self width which can be unknown */
+  -ms-transform: translateX(-50%); /* For IE9 */
+  height: 70px;
+
+  position: relative;
+  z-index: 200;
+}
+.Title {
+  margin-top: 24px;
+  margin-bottom: 13px;
+  color: #2C3E50;
+  font-family: Montserrat;
+  font-size: 17px;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.Subtitle {
+  width: 181px;
+  font: normal normal normal 16px/32px Montserrat;
+  letter-spacing: 0px;
+  color: #2C3E50;
+  opacity: 1;
+}
+
+.DecorativeLine {
+  position: absolute;
+  top: 87px;
+  width: 100%;
+  left: 0;
+  z-index: 100;
+  margin: 0;
+  border-top-width: 0.5px;
+  border-bottom-width: 0;
+  color: #707070;
+  opacity: 53%;
+}
+
+
