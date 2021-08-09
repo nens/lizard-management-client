@@ -72,7 +72,7 @@ const OrganisationSwitcher = (props:Props) => {
     const filteredOrganisations = filterValue
     // todo: fix this any
       ? organisations.filter((org:any) => {
-        if (org.name.toLowerCase().indexOf(filterValue) !== -1) {
+        if (org.name.toLowerCase().indexOf(filterValue.toLowerCase()) !== -1) {
             return org;
           }
           return false;
