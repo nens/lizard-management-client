@@ -154,6 +154,15 @@ const App = (props: RouteComponentProps & DispatchProps) => {
                         Apps
                       </a>
                     </div>
+                    {currentRelativeUrl !== "/"? 
+                      <NavLink 
+                        to="/" 
+                        className={styles.HomeLink}
+                      >
+                        <i className="fa fa-home" style={{ paddingRight: 8 }} />
+                        <span>Home</span>
+                      </NavLink>
+                    : null }
                     { userAuthenticated && selectedOrganisation && !isLandingPage? 
                     <div
                       className={styles.Profile}
