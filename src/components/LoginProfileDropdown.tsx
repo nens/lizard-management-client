@@ -14,7 +14,9 @@ import { FormattedMessage, } from "react-intl";
 import helpIcon from '../images/help.svg'
 import documentIcon from '../images/document.svg';
 import logoutIcon from '../images/logout.svg';
-import editIcon from '../images/edit.svg';
+// import editIcon from '../images/edit.svg';
+import supportIcon from "../images/support_profile_dropdown.svg";
+
 
 const LoginProfileDropdown = () => {
 
@@ -57,7 +59,8 @@ const LoginProfileDropdown = () => {
         onMouseLeave={() => setDropdownOpen(false)}
         style={!dropDownOpen? {display: "none"}:{}}
       >
-        <a
+        {/* profile for now not supported */}
+        {/* <a
           className={styles.DropdownMenuRow}
           href="https://sso.lizard.net/edit_profile/"
           target="_blank"
@@ -65,7 +68,7 @@ const LoginProfileDropdown = () => {
         >
           <img src={editIcon} alt={'Profile'} />
           <span>Profile</span>
-        </a>
+        </a> */}
         {/* language switcher no longer needed, but we might need it in future */}
         {/* <LanguageSwitcher
           locale={preferredLocale}
@@ -74,15 +77,7 @@ const LoginProfileDropdown = () => {
             { code: "en", language: "English" }
           ]}
         /> */}
-        <a
-          className={styles.DropdownMenuRow}
-          href="https://nelen-schuurmans.topdesk.net/tas/public/ssp"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img src={helpIcon} alt={'Help'} />
-          <span>Help</span>
-        </a>
+        
         <a
           className={styles.DropdownMenuRow}
           href="https://docs.lizard.net/a_lizard.html"
@@ -96,6 +91,15 @@ const LoginProfileDropdown = () => {
               defaultMessage="Documentation"
             />
           </span>
+        </a>
+        <a
+          className={styles.DropdownMenuRow}
+          href="https://nelen-schuurmans.topdesk.net/tas/public/ssp"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img src={supportIcon} alt={'Support'} />
+          <span>Support</span>
         </a>
         <a
           className={styles.DropdownMenuRow}
