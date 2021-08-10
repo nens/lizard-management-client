@@ -3,9 +3,10 @@
   float: left;
 
   width: 300px;
-  box-sizing: content-box;
   height: 280px;
   border-radius: 7px;
+  box-sizing: content-box;
+  overflow: hidden;
 
   /* Margin could probably be re-used from AppTile.module.css */
   margin-top: 22.5px;
