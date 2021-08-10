@@ -11,7 +11,7 @@ import {
 } from '../reducers';
 import { FormattedMessage, } from "react-intl";
 
-import helpIcon from '../images/help.svg'
+// import helpIcon from '../images/help.svg'
 import documentIcon from '../images/document.svg';
 import logoutIcon from '../images/logout.svg';
 // import editIcon from '../images/edit.svg';
