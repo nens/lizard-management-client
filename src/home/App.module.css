@@ -14,5 +14,7 @@
 
 .HomeTilesHeader + hr {
   margin-bottom: 22.5px;
+  border-top-width: 1px;
+  border-bottom-width: 0;
 }
 
