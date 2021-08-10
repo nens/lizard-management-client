@@ -60,7 +60,7 @@ const GroupForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pr
         const status = response.status;
         if (status === 201) {
           props.addNotification('Success! New group created', 2000);
-          props.history.push("/alarms/groups");
+          props.history.push("/management/alarms/groups");
         } else if (status === 403) {
           props.addNotification("Not authorized", 2000);
           console.error(response);
@@ -81,7 +81,7 @@ const GroupForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pr
         const status = response.status;
         if (status === 200) {
           props.addNotification('Success! Group updated', 2000);
-          props.history.push("/alarms/groups");
+          props.history.push("/management/alarms/groups");
         } else {
           props.addNotification(status, 2000);
           console.error(response);
@@ -163,7 +163,7 @@ const GroupForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pr
           className={formStyles.ButtonContainer}
         >
           <CancelButton
-            url={'/alarms/groups'}
+            url={'/management/alarms/groups'}
           />
           <div style={{
             display: "flex"
@@ -201,7 +201,7 @@ const GroupForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pr
             displayContent={[{name: "name", width: 30}, {name: "id", width: 70}]}
             fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
             handleClose={() => setShowDeleteModal(false)}
-            tableUrl={'/alarms/groups'}
+            tableUrl={'/management/alarms/groups'}
           />
         ) : null}
       </form>

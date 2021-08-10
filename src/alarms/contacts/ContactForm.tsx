@@ -65,7 +65,7 @@ const ContactForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (
         const status = response.status;
         if (status === 201) {
           props.addNotification('Success! New contact created', 2000);
-          props.history.push("/alarms/contacts");
+          props.history.push("/management/alarms/contacts");
         } else if (status === 403) {
           props.addNotification("Not authorized", 2000);
           console.error(response);
@@ -90,7 +90,7 @@ const ContactForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (
           const status = response.status;
           if (status === 200) {
             props.addNotification('Success! Contact updated', 2000);
-            props.history.push("/alarms/contacts");
+            props.history.push("/management/alarms/contacts");
           } else {
             props.addNotification(status, 2000);
             console.error(response);
@@ -108,7 +108,7 @@ const ContactForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (
           const status = response.status;
           if (status === 200) {
             props.addNotification('Success! Contact updated', 2000);
-            props.history.push("/alarms/contacts");
+            props.history.push("/management/alarms/contacts");
           } else {
             props.addNotification(status, 2000);
             console.error(response);
@@ -202,7 +202,7 @@ const ContactForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (
           className={formStyles.ButtonContainer}
         >
           <CancelButton
-            url={'/alarms/contacts'}
+            url={'/management/alarms/contacts'}
           />
           <div style={{display: "flex"}}>
             {currentRecord ? (
@@ -229,7 +229,7 @@ const ContactForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (
           displayContent={[{name: "first_name", width: 20}, {name: "email", width: 50}, {name: "id", width: 30}]}
           fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
           handleClose={() => setShowDeleteModal(false)}
-          tableUrl={'/alarms/contacts'}
+          tableUrl={'/management/alarms/contacts'}
         />
       ) : null}
     </ExplainSideColumn>

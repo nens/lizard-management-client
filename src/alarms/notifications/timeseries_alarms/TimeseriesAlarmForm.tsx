@@ -40,7 +40,7 @@ interface Props {
 const TimeseriesAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (props) => {
   const { currentRecord, timeseries, groups, templates } = props;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
-  const navigationUrl = "/alarms/notifications/timeseries_alarms";
+  const navigationUrl = "/management/alarms/notifications/timeseries_alarms";
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
 
   const initialValues = currentRecord && timeseries ? {
@@ -107,7 +107,7 @@ const TimeseriesAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps>
         const status = response.status;
         if (status === 201) {
           props.addNotification('Success! New timeseries alarm created', 2000);
-          props.history.push("/alarms/notifications/timeseries_alarms");
+          props.history.push("/management/alarms/notifications/timeseries_alarms");
         } else if (status === 403) {
           props.addNotification("Not authorized", 2000);
           console.error(response);
@@ -128,7 +128,7 @@ const TimeseriesAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps>
         const status = response.status;
         if (status === 200) {
           props.addNotification('Success! Timeseries alarm updated', 2000);
-          props.history.push("/alarms/notifications/timeseries_alarms");
+          props.history.push("/management/alarms/notifications/timeseries_alarms");
         } else {
           props.addNotification(status, 2000);
           console.error(response);

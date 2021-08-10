@@ -180,7 +180,7 @@ const PersonalApiKeyFormModel: React.FC<Props & PropsFromDispatch & RouteCompone
           buttonConfirmName={'Close'}
           onClickButtonConfirm={() => {
             setApiKeyString("");
-            props.history.push('/personal_api_keys');
+            props.history.push('/management/personal_api_keys');
           }}
         >
           <p>

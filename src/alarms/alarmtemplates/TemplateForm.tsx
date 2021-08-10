@@ -137,7 +137,7 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
         const status = response.status;
         if (status === 201) {
           props.addNotification('Success! New template created', 2000);
-          props.history.push("/alarms/templates");
+          props.history.push("/management/alarms/templates");
         } else if (status === 403) {
           props.addNotification("Not authorized", 2000);
           console.error(response);
@@ -158,7 +158,7 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
         const status = response.status;
         if (status === 200) {
           props.addNotification('Success! Template updated', 2000);
-          props.history.push("/alarms/templates");
+          props.history.push("/management/alarms/templates");
         } else {
           props.addNotification(status, 2000);
           console.error(response);
@@ -362,7 +362,7 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           className={formStyles.ButtonContainer}
         >
           <CancelButton
-            url={'/alarms/templates'}
+            url={'/management/alarms/templates'}
           />
           <div style={{display: "flex"}}>
             {currentRecord ? (
@@ -389,7 +389,7 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           displayContent={[{name: "name", width: 30}, {name: "type", width: 20}, {name: "id", width: 50}]}
           fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
           handleClose={() => setShowDeleteModal(false)}
-          tableUrl={'/alarms/templates'}
+          tableUrl={'/management/alarms/templates'}
         />
       ) : null}
     </ExplainSideColumn>

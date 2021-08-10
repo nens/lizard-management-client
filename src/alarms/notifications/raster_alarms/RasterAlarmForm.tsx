@@ -132,7 +132,7 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
         const status = response.status;
         if (status === 201) {
           props.addNotification('Success! New raster alarm created', 2000);
-          props.history.push("/alarms/notifications/raster_alarms");
+          props.history.push("/management/alarms/notifications/raster_alarms");
         } else if (status === 403) {
           props.addNotification("Not authorized", 2000);
           console.error(response);
@@ -153,7 +153,7 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
         const status = response.status;
         if (status === 200) {
           props.addNotification('Success! Raster alarm updated', 2000);
-          props.history.push("/alarms/notifications/raster_alarms");
+          props.history.push("/management/alarms/notifications/raster_alarms");
         } else {
           props.addNotification(status, 2000);
           console.error(response);
