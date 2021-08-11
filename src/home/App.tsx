@@ -19,13 +19,18 @@ const AppComponent = (props: RouteComponentProps) => {
       props.history.push(destination);
     }
   
-    const handleExternalLink = (destination:string) => {
-      window.location.href = destination;
+    const handleExternalLink = (destination:string, openInNewTab: boolean) => {
+      if (openInNewTab) {
+        // @ts-ignore
+        window.open(destination, '_blank').focus();
+      } else {
+        window.location.href = destination;
+      }
     }
   
-    const handleLink = (linksToUrlObject: {path:string; external:boolean}) => {
+    const handleLink = (linksToUrlObject: {path:string; openInNewTab: boolean; external:boolean}) => {
       if (linksToUrlObject.external === true) {
-        handleExternalLink(linksToUrlObject.path);
+        handleExternalLink(linksToUrlObject.path, linksToUrlObject.openInNewTab);
       } else {
         handleInternalLink(linksToUrlObject.path);
       }
@@ -44,6 +49,7 @@ const AppComponent = (props: RouteComponentProps) => {
           <AppTileHomeType
             handleClick={()=>{ handleLink({
               external: appTile.linksToUrlExternal? true : false,
+              openInNewTab: appTile.homePageLinkOrHome !== "HOME",
               path: appTile.linksToUrl
             })}}
             key={appTile.title + appTile.order + ""}
@@ -60,6 +66,7 @@ const AppComponent = (props: RouteComponentProps) => {
           <AppTile
             handleClick={()=>{ handleLink({
               external: appTile.linksToUrlExternal? true : false,
+              openInNewTab: appTile.homePageLinkOrHome !== "HOME",
               path: appTile.linksToUrl
             })}}
             key={appTile.title + appTile.order + ""}
