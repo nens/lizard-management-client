@@ -1,14 +1,16 @@
 import React from "react";
 import Ink from "react-ink";
 import styles from "./AppTileHomeType.module.css";
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { RouteComponentProps, withRouter, NavLink } from 'react-router-dom';
 import { injectIntl } from "react-intl";
 
 interface Props {
   title: string,
   subtitle: string, 
   icon: string, 
-  handleClick: ()=> void, 
+  linkPath: string,
+  openInNewTab: boolean,
+  linksToUrlExternal: boolean,
   readonly: boolean,
   requiredRoles: string[]
 };
@@ -16,7 +18,7 @@ interface Props {
 const AppTileHomeType = (props: (Props & RouteComponentProps)) => {
   
     const {
-      title, subtitle, icon, handleClick, readonly,
+      title, subtitle, icon, readonly, linkPath, openInNewTab, linksToUrlExternal,
       requiredRoles // eslint-disable-line no-unused-vars
     } = props;
     
@@ -28,11 +30,9 @@ const AppTileHomeType = (props: (Props & RouteComponentProps)) => {
       },
       {requiredRolesLength: (requiredRoles && requiredRoles.length) || 0}
     );
-    return (
-      <div className={`${styles.AppTile} ${readonly ? styles.Disabled: null}`}
-           onClick={!readonly ? handleClick : undefined}
-           title={readonly ? requiresRoleMessage + requiredRoles : null}
-      >
+
+    const tileContent = (
+      <>
         <hr className={styles.DecorativeLine}/>
         <div
 					className={styles.IconCircleContainer}
@@ -43,8 +43,41 @@ const AppTileHomeType = (props: (Props & RouteComponentProps)) => {
         <p className={styles.Title}>{title}</p>
         <p className={styles.Subtitle}>{subtitle}</p>
         { !readonly ? <Ink recenter={true}/> : null }
-      </div>
+      </>
     );
+    if (readonly) {
+      return (
+        <div
+          className={`${styles.AppTile} ${readonly ? styles.Disabled: null}`}
+          title={ requiresRoleMessage + requiredRoles}
+        >
+          {tileContent}
+        </div>
+      );
+    }
+    else if (linksToUrlExternal) {
+      return (
+        <a 
+            href={linkPath}
+            target={openInNewTab? "_blank" : "_self"}
+            className={`${styles.AppTile} ${readonly ? styles.Disabled: null}`}
+            title={readonly ? requiresRoleMessage + requiredRoles : null}
+        >
+          {tileContent}
+        </a>
+      );
+    } else {
+      return (
+        <NavLink 
+            to={linkPath}
+            target={openInNewTab? "_blank" : "_self"}
+            className={`${styles.AppTile} ${readonly ? styles.Disabled: null}`}
+            title={readonly ? requiresRoleMessage + requiredRoles : null}
+        >
+          {tileContent}
+        </NavLink>
+      );    
+      }
   }
 
 export default withRouter(injectIntl(AppTileHomeType));

@@ -15,27 +15,6 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 const AppComponent = (props: RouteComponentProps) => {
 
-    const handleInternalLink = (destination:string) => {
-      props.history.push(destination);
-    }
-  
-    const handleExternalLink = (destination:string, openInNewTab: boolean) => {
-      if (openInNewTab) {
-        // @ts-ignore
-        window.open(destination, '_blank').focus();
-      } else {
-        window.location.href = destination;
-      }
-    }
-  
-    const handleLink = (linksToUrlObject: {path:string; openInNewTab: boolean; external:boolean}) => {
-      if (linksToUrlObject.external === true) {
-        handleExternalLink(linksToUrlObject.path, linksToUrlObject.openInNewTab);
-      } else {
-        handleInternalLink(linksToUrlObject.path);
-      }
-    }
-
     // todo resolve any. x:any because x needs to support  x.interpolate
     const AppTileRow = (appTile: NavigationLinkTile) => (obj:{ x:any, opacity:number }) => (
       <animated.div
@@ -47,11 +26,9 @@ const AppComponent = (props: RouteComponentProps) => {
         {
           appTile.homePageIcon?
           <AppTileHomeType
-            handleClick={()=>{ handleLink({
-              external: appTile.linksToUrlExternal? true : false,
-              openInNewTab: appTile.homePageLinkOrHome !== "HOME",
-              path: appTile.linksToUrl
-            })}}
+            linkPath={appTile.linksToUrl}
+            openInNewTab={appTile.homePageLinkOrHome !== "HOME"}
+            linksToUrlExternal={appTile.linksToUrlExternal}
             key={appTile.title + appTile.order + ""}
             title={appTile.title}
             subtitle={appTile.subtitle || ""}
@@ -64,11 +41,8 @@ const AppComponent = (props: RouteComponentProps) => {
           />
           :
           <AppTile
-            handleClick={()=>{ handleLink({
-              external: appTile.linksToUrlExternal? true : false,
-              openInNewTab: appTile.homePageLinkOrHome !== "HOME",
-              path: appTile.linksToUrl
-            })}}
+            linkPath={appTile.linksToUrl}
+            openInNewTab={false}
             key={appTile.title + appTile.order + ""}
             title={appTile.title}
             icon={appTile.icon}
