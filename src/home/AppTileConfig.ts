@@ -339,22 +339,22 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     requiresOneOfRoles: ["user", "admin", "supplier", "manager"],
     icon: rasterIcon,
   },
-  {
-    title: "Go Back",
-    // title: (
-    //   <FormattedMessage
-    //     id="go_back"
-    //     defaultMessage="Go Back"
-    //   />
-    // ),
-    homePageIcon: false,
-    order: 600,
-    onUrl: "/management",
-    linksToUrl: "/",
-    linksToUrlExternal: false,
-    requiresOneOfRoles: [],
-    icon: backArrowIcon
-  },
+  // {
+  //   title: "Go Back",
+  //   // title: (
+  //   //   <FormattedMessage
+  //   //     id="go_back"
+  //   //     defaultMessage="Go Back"
+  //   //   />
+  //   // ),
+  //   homePageIcon: false,
+  //   order: 600,
+  //   onUrl: "/management",
+  //   linksToUrl: "/",
+  //   linksToUrlExternal: false,
+  //   requiresOneOfRoles: [],
+  //   icon: backArrowIcon
+  // },
   { 
     title: "rasters",
     // title: (
