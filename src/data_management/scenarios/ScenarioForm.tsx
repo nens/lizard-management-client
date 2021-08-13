@@ -14,7 +14,7 @@ import { addNotification } from '../../actions';
 import threediIcon from "../../images/3di@3x.svg";
 import formStyles from './../../styles/Forms.module.css';
 import { scenarioFormHelpText, defaultScenarioExplanationText } from '../../utils/help_texts/helpTextForScenarios';
-import { getScenarioTotalSize } from '../../reducers';
+import { getScenarioTotalSize, getScenarioAvailableSizeDefinedByContract } from '../../reducers';
 import { bytesToDisplayValue } from '../../utils/byteUtils';
 
 interface Props {
@@ -30,6 +30,7 @@ interface RouteParams {
 const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProps<RouteParams>> = (props) => {
   const { currentRecord } = props;
   const scenarioTotalSize = useSelector(getScenarioTotalSize);
+  const scenarioAvailableSizeDefinedByContract = useSelector(getScenarioAvailableSizeDefinedByContract);
   const organisations = useSelector(getOrganisations).available;
   const scenarioOrganisation = organisations.find((org: any) => org.uuid === currentRecord.organisation.uuid);
   const username = useSelector(getUsername);
@@ -89,7 +90,7 @@ const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProp
       imgUrl={threediIcon}
       imgAltDescription={"3Di icon"}
       headerText={"3Di Scenarios"}
-      explanationText={scenarioFormHelpText[fieldOnFocus] || defaultScenarioExplanationText(bytesToDisplayValue(scenarioTotalSize), selectedOrganisation.name)}
+      explanationText={scenarioFormHelpText[fieldOnFocus] || defaultScenarioExplanationText(bytesToDisplayValue(scenarioTotalSize), bytesToDisplayValue(scenarioAvailableSizeDefinedByContract), selectedOrganisation.name)}
       backUrl={"/management/data_management/scenarios/"}
       fieldName={fieldOnFocus}
     >

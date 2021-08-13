@@ -10,7 +10,7 @@ import tableStyles from "../../components/Table.module.css";
 import { getSelectedOrganisation, getUsername } from "../../reducers";
 import { bytesToDisplayValue } from '../../utils/byteUtils';
 import { defaultScenarioExplanationText } from '../../utils/help_texts/helpTextForScenarios';
-import { getScenarioTotalSize } from '../../reducers';
+import { getScenarioTotalSize, getScenarioAvailableSizeDefinedByContract } from '../../reducers';
 import DeleteModal from '../../components/DeleteModal';
 import AuthorisationModal from '../../components/AuthorisationModal';
 
@@ -42,6 +42,7 @@ export const ScenarioTable = () =>  {
   const userName = useSelector(getUsername);
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const scenarioTotalSize = useSelector(getScenarioTotalSize);
+  const scenarioAvailableSizeDefinedByContract = useSelector(getScenarioAvailableSizeDefinedByContract);
 
   const deleteActions = (
     rows: any[],
@@ -172,7 +173,7 @@ export const ScenarioTable = () =>  {
       imgUrl={threediIcon}
       imgAltDescription={"3Di icon"}
       headerText={"3Di Scenarios"}
-      explanationText={defaultScenarioExplanationText(bytesToDisplayValue(scenarioTotalSize), selectedOrganisation.name)}
+      explanationText={defaultScenarioExplanationText(bytesToDisplayValue(scenarioTotalSize), bytesToDisplayValue(scenarioAvailableSizeDefinedByContract), selectedOrganisation.name)}
       backUrl={"/management/data_management"}
     >
         <TableStateContainer 

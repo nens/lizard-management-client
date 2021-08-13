@@ -8,7 +8,8 @@ import {
   uuidHelpText
 } from './defaultHelpText';
 
-export const defaultScenarioExplanationText = (usedSpaceString:string, organisation: string) => (
+
+export const defaultScenarioExplanationText = (usedSpaceString:string, availableSpace: string, organisation: string) => (
   <div
     style={{
       display:"grid",
@@ -20,6 +21,8 @@ export const defaultScenarioExplanationText = (usedSpaceString:string, organisat
     <span style={{ fontWeight: "bold" }}>{organisation}</span>
     <span>Used storage:</span>
     <span style={{ fontWeight: "bold" }}>{usedSpaceString}</span>
+    <span>Available storage:</span>
+    <span style={{ fontWeight: "bold" }}>{availableSpace}</span>
   </div>
 );
 

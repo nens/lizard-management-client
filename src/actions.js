@@ -68,6 +68,8 @@ export const REQUEST_ORGANISATIONS = "REQUEST_ORGANISATIONS";
 export const SELECT_ORGANISATION = "SELECT_ORGANISATION";
 export const REQUEST_USAGE = "REQUEST_USAGE";
 export const SET_USAGE = "SET_USAGE";
+export const REQUEST_CONTRACTS = "REQUEST_CONTRACTS";
+export const SET_CONTRACTS = "SET_CONTRACTS";
 
 export function fetchOrganisations() {
   return async (dispatch, getState) => {
@@ -96,6 +98,28 @@ export function fetchOrganisations() {
     } else {
       dispatch(selectOrganisation(selectedOrganisationLocalStorage, false));
     };
+
+    // request contracts
+    const requestContracts = (url) => {
+      dispatch({
+        type: REQUEST_CONTRACTS,
+      });
+      fetch(url, {
+          credentials: "same-origin"
+      })
+      .then(response => response.json())
+      .then(data => {
+          dispatch({
+            type: SET_CONTRACTS,
+            contracts: data,
+          });
+          if (data.next) {
+            const relativeUrl = data.next.split('lizard.net')[1];
+            requestContracts(relativeUrl);
+          }
+      });
+    };
+    requestContracts(`/api/v4/contracts`);
   };
 }
 

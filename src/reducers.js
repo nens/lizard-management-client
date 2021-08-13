@@ -9,6 +9,8 @@ import {
   SELECT_ORGANISATION,
   REQUEST_USAGE,
   SET_USAGE,
+  REQUEST_CONTRACTS,
+  SET_CONTRACTS,
   SHOW_NOTIFICATION,
   DISMISS_NOTIFICATION,
   UPDATE_ALARM_TYPE,
@@ -26,6 +28,11 @@ import {
   REMOVE_LOCATION,
   SET_OPEN_CLOSE_UPLOADQUEUE_MODAL,
 } from "./actions";
+
+// todo type this reducer file
+// import {
+//   Contract
+// } from "./types/contractType";
 
 function bootstrap(
   state = {
@@ -103,6 +110,24 @@ switch (action.type) {
     return {...state, isFetching: true}
   case SET_USAGE:
     return {...action.usage, isFetching: false, timesFetched: state.timesFetched + 1}
+  default:
+      return state;
+  } 
+}
+
+function contracts (
+  state = {
+    contracts: [],
+    isFetching: false,
+    timesFetched: 0,
+  },
+  action
+) {
+switch (action.type) {
+  case REQUEST_CONTRACTS:
+    return {...state, isFetching: true}
+  case SET_CONTRACTS:
+    return {contracts: state.contracts.concat(action.contracts.results), isFetching: false, timesFetched: state.timesFetched + 1}
   default:
       return state;
   } 
@@ -338,6 +363,23 @@ export const getScenarioTotalSize = (state) => {
 export const getRasterTotalSize = (state) => {
   return state.usage.raster_total_size;
 };
+export const getContratForSelectedOrganisation = (state) => {
+  const selectedOrganisation = getSelectedOrganisation(state);
+  const selectedOrganisationUuid = selectedOrganisation && selectedOrganisation.uuid;
+  if (!selectedOrganisationUuid) {
+    return null;
+  }
+  const selectedContract = state.contracts.contracts.find(contract=>{
+    return contract.organisation.uuid === selectedOrganisationUuid;
+  });
+  return selectedContract || null;
+}
+
+export const getScenarioAvailableSizeDefinedByContract = (state) => {
+  const currentContract = getContratForSelectedOrganisation(state);
+  return (currentContract && currentContract.scenario_storage_capacity) || 0;
+}
+
 export const getLayercollections = (state) => {
   return state.layercollections;
 };
@@ -370,6 +412,7 @@ const rootReducer = combineReducers({
   bootstrap,
   organisations,
   usage,
+  contracts,
   layercollections,
   notifications,
   alarmType,
