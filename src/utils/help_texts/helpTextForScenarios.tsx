@@ -9,7 +9,7 @@ import {
 } from './defaultHelpText';
 
 
-export const defaultScenarioExplanationText = (usedSpaceString:string, availableSpace: string, organisation: string) => (
+export const defaultScenarioExplanationText = (usedSpaceString:string, totalAvailableSpace: string, availableSpaceLeft: string, organisation: string) => (
   <div
     style={{
       display:"grid",
@@ -17,12 +17,16 @@ export const defaultScenarioExplanationText = (usedSpaceString:string, available
       columnGap: 5
     }}
   >
-    <span>Organisation:</span>
+    {/* <span>Organisation:</span>
     <span style={{ fontWeight: "bold" }}>{organisation}</span>
     <span>Used storage:</span>
     <span style={{ fontWeight: "bold" }}>{usedSpaceString}</span>
     <span>Available storage:</span>
-    <span style={{ fontWeight: "bold" }}>{availableSpace}</span>
+    <span style={{ fontWeight: "bold" }}>{availableSpace}</span> */}
+    <span>Used storage:</span>
+    <span style={{ fontWeight: "bold" }}>{usedSpaceString}</span>
+    <span>Storage left:</span>
+    <span style={{ fontWeight: "bold" }}>{availableSpaceLeft}</span>
   </div>
 );
 

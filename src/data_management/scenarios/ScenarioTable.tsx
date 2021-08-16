@@ -173,8 +173,14 @@ export const ScenarioTable = () =>  {
       imgUrl={threediIcon}
       imgAltDescription={"3Di icon"}
       headerText={"3Di Scenarios"}
-      explanationText={defaultScenarioExplanationText(bytesToDisplayValue(scenarioTotalSize), bytesToDisplayValue(scenarioAvailableSizeDefinedByContract), selectedOrganisation.name)}
-      backUrl={"/management/data_management"}
+      explanationText={
+        defaultScenarioExplanationText(
+          bytesToDisplayValue(scenarioTotalSize), 
+          bytesToDisplayValue(scenarioAvailableSizeDefinedByContract), 
+          bytesToDisplayValue(scenarioAvailableSizeDefinedByContract-scenarioTotalSize), 
+          selectedOrganisation.name
+        )
+      }backUrl={"/management/data_management"}
     >
         <TableStateContainer 
           gridTemplateColumns={"4fr 28fr 29fr 15fr 10fr 10fr 4fr"}

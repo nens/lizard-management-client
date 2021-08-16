@@ -90,7 +90,15 @@ const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProp
       imgUrl={threediIcon}
       imgAltDescription={"3Di icon"}
       headerText={"3Di Scenarios"}
-      explanationText={scenarioFormHelpText[fieldOnFocus] || defaultScenarioExplanationText(bytesToDisplayValue(scenarioTotalSize), bytesToDisplayValue(scenarioAvailableSizeDefinedByContract), selectedOrganisation.name)}
+      explanationText={
+        scenarioFormHelpText[fieldOnFocus] || 
+        defaultScenarioExplanationText(
+          bytesToDisplayValue(scenarioTotalSize), 
+          bytesToDisplayValue(scenarioAvailableSizeDefinedByContract), 
+          bytesToDisplayValue(scenarioAvailableSizeDefinedByContract-scenarioTotalSize), 
+          selectedOrganisation.name
+        )
+      }
       backUrl={"/management/data_management/scenarios/"}
       fieldName={fieldOnFocus}
     >
