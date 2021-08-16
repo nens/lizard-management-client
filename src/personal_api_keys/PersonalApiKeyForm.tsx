@@ -154,7 +154,7 @@ const PersonalApiKeyFormModel: React.FC<Props & PropsFromDispatch & RouteCompone
           className={formStyles.ButtonContainer}
         >
           <CancelButton
-            url={'/personal_api_keys'}
+            url={'/management/personal_api_keys'}
           />
           <div style={{display: "flex"}}>
             {currentRecord?
