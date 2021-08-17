@@ -15,7 +15,6 @@ import threediIcon from "../../images/3di@3x.svg";
 import formStyles from './../../styles/Forms.module.css';
 import { scenarioFormHelpText, defaultScenarioExplanationText } from '../../utils/help_texts/helpTextForScenarios';
 import { getScenarioTotalSize, getScenarioAvailableSizeDefinedByContract } from '../../reducers';
-import { bytesToDisplayValue } from '../../utils/byteUtils';
 
 interface Props {
   currentRecord: any
@@ -93,9 +92,8 @@ const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProp
       explanationText={
         scenarioFormHelpText[fieldOnFocus] || 
         defaultScenarioExplanationText(
-          bytesToDisplayValue(scenarioTotalSize), 
-          bytesToDisplayValue(scenarioAvailableSizeDefinedByContract), 
-          bytesToDisplayValue(scenarioAvailableSizeDefinedByContract-scenarioTotalSize), 
+          scenarioTotalSize, 
+          scenarioAvailableSizeDefinedByContract, 
           selectedOrganisation.name
         )
       }

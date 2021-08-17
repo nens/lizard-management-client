@@ -175,9 +175,8 @@ export const ScenarioTable = () =>  {
       headerText={"3Di Scenarios"}
       explanationText={
         defaultScenarioExplanationText(
-          bytesToDisplayValue(scenarioTotalSize), 
-          bytesToDisplayValue(scenarioAvailableSizeDefinedByContract), 
-          bytesToDisplayValue(scenarioAvailableSizeDefinedByContract-scenarioTotalSize), 
+          scenarioTotalSize, 
+          scenarioAvailableSizeDefinedByContract, 
           selectedOrganisation.name
         )
       }backUrl={"/management/data_management"}
