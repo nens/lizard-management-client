@@ -64,7 +64,9 @@
   margin-left: 10%;
 
   background-color: #55BFA2;
-  width: 31%;
+  /* size needs to be percentages in order for DecorativeLine to be positioned correctly if tile scales up or because of by screensize */
+  /* element needs to be round thus width equal to height: 29% of 300px roughly equals 31% of 280px (size parent container is 300px by 280px)*/
+  width: 29%;
   height: 31%;
   border-radius: 50%;
   display: flex;
