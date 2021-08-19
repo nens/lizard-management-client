@@ -183,7 +183,7 @@ const UserForm: React.FC<Props & DispatchProps & RouteComponentProps> = (props) 
           className={formStyles.ButtonContainer}
         >
           <CancelButton
-            url={'/users'}
+            url={'/management/users'}
           />
           <div style={{
             display: "flex"

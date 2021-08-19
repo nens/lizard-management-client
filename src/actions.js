@@ -94,9 +94,9 @@ export function fetchOrganisations() {
       availableOrganisations.map(orga=>orga.uuid).indexOf(selectedOrganisationLocalStorage.uuid) === -1
     ) {
       const selectedOrganisation = availableOrganisations[0];
-      dispatch(selectOrganisation(selectedOrganisation, true));
+      dispatch(selectOrganisation(selectedOrganisation));
     } else {
-      dispatch(selectOrganisation(selectedOrganisationLocalStorage, false));
+      dispatch(selectOrganisation(selectedOrganisationLocalStorage));
     };
 
     // request contracts
@@ -123,20 +123,12 @@ export function fetchOrganisations() {
   };
 }
 
-export function selectOrganisation(organisation, mustAddNotification) {
+export function selectOrganisation(organisation) {
   return (dispatch) => {
     localStorage.setItem(
       "lizard-management-current-organisation",
       JSON.stringify(organisation)
     );
-    if (mustAddNotification) {
-      dispatch(
-        addNotification(
-          `Organisation "${(organisation && organisation.name) || "none"}" selected`,
-          2000
-        )
-      );
-    }
     
     if (organisation && organisation.uuid) {
       dispatch({
