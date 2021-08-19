@@ -13,8 +13,8 @@ const DeleteRasterSourceNotAllowed: React.FC<MyProps> = (props) => {
   } = props;
 
   const layerUuids = rowToBeDeleted.layers.map((layerUrl:string)=>{return layerUrl.split("/")[layerUrl.split("/").length-2] });
-  const layerUrls = layerUuids.map((layerUuid:string)=>{return '/management#/data_management/rasters/layers/' + layerUuid})
-  const labelTypeUrls = rowToBeDeleted.labeltypes.map((uuid:string)=>{return '/management#/data_management/labeltypes/' + uuid})
+  const layerUrls = layerUuids.map((layerUuid:string)=>{return '/management/data_management/rasters/layers/' + layerUuid})
+  const labelTypeUrls = rowToBeDeleted.labeltypes.map((uuid:string)=>{return '/management/data_management/labeltypes/' + uuid})
 
   // Do not remove, lateron we are going to display layer name and labeltype name instead of url
   // const fetchLayers = (uuids: string[],) => {
@@ -57,7 +57,7 @@ const DeleteRasterSourceNotAllowed: React.FC<MyProps> = (props) => {
     >
       <p>
         {'You are trying to delete the raster source '}
-        <a target="_blank" rel="noopener noreferrer" href={`/management#/data_management/rasters/sources/${rowToBeDeleted.uuid}`}>{rowToBeDeleted.name}</a>
+        <a target="_blank" rel="noopener noreferrer" href={`/management/data_management/rasters/sources/${rowToBeDeleted.uuid}`}>{rowToBeDeleted.name}</a>
         <br />
         but this raster source still has dependent objects.
       </p>

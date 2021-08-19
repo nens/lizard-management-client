@@ -17,9 +17,251 @@ import templatesIcon from "../images/templates@3x.svg";
 import timeseriesIcon from "../images/timeseries_icon.svg";
 import monitoringsNetworkicon from "../images/monitoring_network_icon.svg";
 import locationsIcon from "../images/locations_icon.svg";
+import catalogIcon from "../images/magnifiying-glass.svg";
+import managementIcon from "../images/settings.svg";
+import viewerIcon from "../images/world.svg";
+import codeIcon from "../images/code.svg";
+import docsIcon from "../images/document2.svg";
+import supportIcon from "../images/support.svg";
+
+import doArraysHaveEqualElement from '../utils/doArraysHaveEqualElement';
 
 
-export const appTiles = [
+export type Role = "admin"| "supplier"| "manager"| "user"
+export interface NavigationLinkPage {
+  onUrl: string,
+  needsAuthentication: boolean,
+  needsOneOfRoles: Role[],
+}
+
+type LinkOrHome = "LINK" | "HOME"
+export interface NavigationLinkTile{
+  title: string,
+  subtitle?: string,
+  // title: (
+  //   <FormattedMessage
+  //     id="home.data_management"
+  //     defaultMessage="Data Management"
+  //   />
+  // ),
+  homePageIcon: boolean,
+  homePageLinkOrHome?:  LinkOrHome,
+  order: number,
+  onUrl: string,
+  linksToUrl: string,
+  requiresOneOfRoles: Role[],
+  linksToUrlExternal: boolean,
+  icon: string,
+}
+
+
+export const getNavigationLinkPageFromUrlAndAllNavigationLinkPages = (urlPostFix:string, allNavigationLinkPages:NavigationLinkPage[]) => {
+  return allNavigationLinkPages.find(navigationLinkPage => navigationLinkPage.onUrl === urlPostFix);
+}
+
+export const getNavigationLinkTileFromUrlAndAllNavigationLinkTiles = (urlPostFix:string, allNavigationLinkTiles:NavigationLinkTile[]) => {
+  const homeAppTileOnCompleteUrl = allNavigationLinkTiles.find(navigationLinkTile => navigationLinkTile.linksToUrl === urlPostFix);
+  if (homeAppTileOnCompleteUrl) {
+    return homeAppTileOnCompleteUrl;
+  } else {
+    const urlMinusLastPart = urlPostFix.split("/").slice(0,-1).join("/");
+    return allNavigationLinkTiles.find(navigationLinkTile => navigationLinkTile.linksToUrl === urlMinusLastPart); 
+  }
+}
+
+export const getCurrentUrlPostfix = () => {
+  let urlPostfix = window.location.pathname;
+  if (urlPostfix !== "/" && urlPostfix[urlPostfix.length-1] === "/")  {
+    urlPostfix = urlPostfix.substring(0, urlPostfix.length-1)
+  }
+  return urlPostfix;
+}
+
+export const getCurrentNavigationLinkPage = () => {
+  const urlPostfix = getCurrentUrlPostfix();
+  return getNavigationLinkPageFromUrlAndAllNavigationLinkPages(urlPostfix, navigationLinkPages)
+}
+export const getCurrentNavigationLinkTile = () => {
+  const urlPostfix = getCurrentUrlPostfix();
+  return getNavigationLinkTileFromUrlAndAllNavigationLinkTiles(urlPostfix, navigationLinkTiles)
+}
+
+
+export const getNavigationLinkTilesFromNavigationLinkPageAndAllNavigationLinkTiles = (navigationLinkPage: NavigationLinkPage, navigationLinkTiles: NavigationLinkTile[]) => {
+  return navigationLinkTiles.filter(navigationLinkTile=>navigationLinkTile.onUrl === navigationLinkPage.onUrl)
+}
+
+export const getCurrentNavigationLinkTiles = () => {
+  const currentPage = getCurrentNavigationLinkPage();
+  if (currentPage) {
+    return getNavigationLinkTilesFromNavigationLinkPageAndAllNavigationLinkTiles(currentPage,navigationLinkTiles);
+  } else{
+    return [];
+  }
+}
+
+export const userHasCorrectRolesForCurrentNavigationLinkTile = (userRoles: string[]) => {
+  const currentHomeAppTile = getCurrentNavigationLinkTile();
+  return !currentHomeAppTile || currentHomeAppTile.requiresOneOfRoles.length === 0 || doArraysHaveEqualElement(userRoles, currentHomeAppTile.requiresOneOfRoles);
+}
+
+
+
+
+export const navigationLinkPages: NavigationLinkPage[] = [
+  {
+    onUrl: "/",
+    needsAuthentication: false,
+    needsOneOfRoles: [],
+  },
+  {
+    onUrl: "/management",
+    needsAuthentication: true,
+    needsOneOfRoles: ["admin", "supplier", "manager", "user"],
+  },
+  {
+    onUrl: "/management/data_management",
+    needsAuthentication: true,
+    needsOneOfRoles: ["admin", "supplier"],
+  },
+  {
+    onUrl: "/management/data_management/rasters",
+    needsAuthentication: true,
+    needsOneOfRoles: ["admin", "supplier"],
+  },
+  {
+    onUrl: "/management/data_management/timeseries",
+    needsAuthentication: true,
+    needsOneOfRoles: ["admin", "supplier"],
+  },
+  {
+    onUrl: "/management/data_management/labels",
+    needsAuthentication: true,
+    needsOneOfRoles: ["admin", "supplier"],
+  },
+  {
+    onUrl: "/management/alarms",
+    needsAuthentication: true,
+    needsOneOfRoles: ["admin"],
+  },
+  {
+    onUrl: "/management/alarms/notifications",
+    needsAuthentication: true,
+    needsOneOfRoles: ["admin"],
+  },
+];
+
+
+export const navigationLinkTiles: NavigationLinkTile[] = [
+  
+  { 
+    title: "catalogue",
+    subtitle: "Search for your data",
+    // title: (
+    //   <FormattedMessage
+    //     id="home.data_management"
+    //     defaultMessage="Data Management"
+    //   />
+    // ),
+    homePageIcon: true,
+    homePageLinkOrHome: "HOME",
+    order: 100,
+    onUrl: "/",
+    linksToUrl: "/catalogue",
+    linksToUrlExternal: true,
+    requiresOneOfRoles: [],
+    icon: catalogIcon,
+  },
+  { 
+    title: "viewer",
+    subtitle: "Explore your data",
+    // title: (
+    //   <FormattedMessage
+    //     id="home.data_management"
+    //     defaultMessage="Data Management"
+    //   />
+    // ),
+    homePageIcon: true,
+    homePageLinkOrHome: "HOME",
+    order: 100,
+    onUrl: "/",
+    linksToUrl: "/viewer",
+    linksToUrlExternal: true,
+    requiresOneOfRoles: [],
+    icon: viewerIcon,
+  },
+  { 
+    title: "management",
+    subtitle: "Manage your data, users, alarms and GeoBlocks.",
+    // title: (
+    //   <FormattedMessage
+    //     id="home.data_management"
+    //     defaultMessage="Data Management"
+    //   />
+    // ),
+    homePageIcon: true,
+    homePageLinkOrHome: "HOME",
+    order: 100,
+    onUrl: "/",
+    linksToUrl: "/management",
+    linksToUrlExternal: false,
+    requiresOneOfRoles: ["admin", "supplier", "manager", "user"],
+    icon: managementIcon,
+  },
+  { 
+    title: "api",
+    subtitle: "Query your data",
+    // title: (
+    //   <FormattedMessage
+    //     id="home.data_management"
+    //     defaultMessage="Data Management"
+    //   />
+    // ),
+    homePageIcon: true,
+    homePageLinkOrHome: "HOME",
+    order: 100,
+    onUrl: "/",
+    linksToUrl: "/api",
+    linksToUrlExternal: true,
+    requiresOneOfRoles: [],
+    icon: codeIcon,
+  },
+  { 
+    title: "documentation",
+    subtitle: "Read the docs.",
+    // title: (
+    //   <FormattedMessage
+    //     id="home.data_management"
+    //     defaultMessage="Data Management"
+    //   />
+    // ),
+    homePageIcon: true,
+    homePageLinkOrHome: "LINK",
+    order: 100,
+    onUrl: "/",
+    linksToUrl: "https://docs.lizard.net/a_lizard.html",
+    linksToUrlExternal: true,
+    requiresOneOfRoles: [],
+    icon: docsIcon,
+  },
+  { 
+    title: "support",
+    subtitle: "Need help?",
+    // title: (
+    //   <FormattedMessage
+    //     id="home.data_management"
+    //     defaultMessage="Data Management"
+    //   />
+    // ),
+    homePageIcon: true,
+    homePageLinkOrHome: "LINK",
+    order: 100,
+    onUrl: "/",
+    linksToUrl: "https://nelen-schuurmans.topdesk.net/tas/public/ssp",
+    linksToUrlExternal: true,
+    requiresOneOfRoles: [],
+    icon: supportIcon,
+  },
   { 
     title: "data",
     // title: (
@@ -28,9 +270,11 @@ export const appTiles = [
     //     defaultMessage="Data Management"
     //   />
     // ),
+    homePageIcon: false,
     order: 100,
-    onPage: "/",
-    linksTo: "/data_management",
+    onUrl: "/management",
+    linksToUrl: "/management/data_management",
+    linksToUrlExternal: false,
     requiresOneOfRoles: ["admin", "supplier",],
     icon: dataManagementIcon,
   },
@@ -42,10 +286,11 @@ export const appTiles = [
     //     defaultMessage="Users"
     //   />
     // ),
+    homePageIcon: false,
     order: 200,
-    onPage: "/",
-    linksTo: "/users",
-    linksToExternal: false,
+    onUrl: "/management",
+    linksToUrl: "/management/users",
+    linksToUrlExternal: false,
     requiresOneOfRoles: ["manager"],
     icon: userManagementIcon,
   },
@@ -54,9 +299,11 @@ export const appTiles = [
     // title: (
     //   <FormattedMessage id="home.alarms" defaultMessage="Alarms" />
     // ),
+    homePageIcon: false,
     order: 300,
-    onPage: "/",
-    linksTo: "/alarms",
+    onUrl: "/management",
+    linksToUrl: "/management/alarms",
+    linksToUrlExternal: false,
     requiresOneOfRoles: ["admin"],
     icon: alarmIcon,
   },
@@ -68,9 +315,11 @@ export const appTiles = [
     //     defaultMessage="Personal API keys"
     //   />
     // ),
+    homePageIcon: false,
     order: 400,
-    onPage: "/",
-    linksTo: "/personal_api_keys",
+    onUrl: "/management",
+    linksToUrl: "/management/personal_api_keys",
+    linksToUrlExternal: false,
     requiresOneOfRoles: ["user", "admin", "supplier", "manager"],
     icon: personalApiKeysIcon,
   },
@@ -82,12 +331,30 @@ export const appTiles = [
     //     defaultMessage="Personal API keys"
     //   />
     // ),
+    homePageIcon: false,
     order: 500,
-    onPage: "/",
-    linksTo: "/map_viewer",
+    onUrl: "/management",
+    linksToUrl: "/management/map_viewer",
+    linksToUrlExternal: false,
     requiresOneOfRoles: ["user", "admin", "supplier", "manager"],
     icon: rasterIcon,
   },
+  // {
+  //   title: "Go Back",
+  //   // title: (
+  //   //   <FormattedMessage
+  //   //     id="go_back"
+  //   //     defaultMessage="Go Back"
+  //   //   />
+  //   // ),
+  //   homePageIcon: false,
+  //   order: 600,
+  //   onUrl: "/management",
+  //   linksToUrl: "/",
+  //   linksToUrlExternal: false,
+  //   requiresOneOfRoles: [],
+  //   icon: backArrowIcon
+  // },
   { 
     title: "rasters",
     // title: (
@@ -96,9 +363,11 @@ export const appTiles = [
     //     defaultMessage="Rasters"
     //   />
     // ),
+    homePageIcon: false,
     order: 100,
-    onPage: "/data_management",
-    linksTo: "/data_management/rasters",
+    onUrl: "/management/data_management",
+    linksToUrl: "/management/data_management/rasters",
+    linksToUrlExternal: false,
     requiresOneOfRoles: ["admin", "supplier",],
     icon: rasterIcon,
   },
@@ -110,9 +379,11 @@ export const appTiles = [
     //     defaultMessage="WMS layers"
     //   />
     // ),
+    homePageIcon: false,
     order: 200,
-    onPage: "/data_management",
-    linksTo: "/data_management/wms_layers",
+    onUrl: "/management/data_management",
+    linksToUrl: "/management/data_management/wms_layers",
+    linksToUrlExternal: false,
     requiresOneOfRoles: ["admin", "supplier",],
     icon: wmsIcon
   },
@@ -124,9 +395,11 @@ export const appTiles = [
     //     defaultMessage="WMS layers"
     //   />
     // ),
+    homePageIcon: false,
     order: 250,
-    onPage: "/data_management",
-    linksTo: "/data_management/timeseries",
+    onUrl: "/management/data_management",
+    linksToUrl: "/management/data_management/timeseries",
+    linksToUrlExternal: false,
     requiresOneOfRoles: ["admin", "supplier",],
     icon: timeseriesIcon,
   },
@@ -139,8 +412,10 @@ export const appTiles = [
     //   />
     // ),
     order: 300,
-    onPage: "/data_management",
-    linksTo: "/data_management/scenarios",
+    homePageIcon: false,
+    onUrl: "/management/data_management",
+    linksToUrl: "/management/data_management/scenarios",
+    linksToUrlExternal: false,
     requiresOneOfRoles: ["admin", "supplier",],
     icon: threediIcon
   },
@@ -152,9 +427,11 @@ export const appTiles = [
     //     defaultMessage="Labels"
     //   />
     // ),
+    homePageIcon: false,
     order: 400,
-    onPage: "/data_management",
-    linksTo: "/data_management/labels",
+    onUrl: "/management/data_management",
+    linksToUrl: "/management/data_management/labels",
+    linksToUrlExternal: false,
     requiresOneOfRoles: ["admin", "supplier",],
     icon: labelIcon
   },
@@ -166,10 +443,12 @@ export const appTiles = [
     //     defaultMessage="Go Back"
     //   />
     // ),
+    homePageIcon: false,
     order: 400,
-    onPage: "/data_management",
-    linksTo: "/",
-    requiresOneOfRoles: ["admin", "supplier","user", "manager"],
+    onUrl: "/management/data_management",
+    linksToUrl: "/management",
+    linksToUrlExternal: false,
+    requiresOneOfRoles: [],
     icon: backArrowIcon
   },
   {
@@ -180,9 +459,11 @@ export const appTiles = [
     //     defaultMessage="Rasters Sources"
     //   />
     // ),
+    homePageIcon: false,
     order: 100,
-    onPage: "/data_management/rasters",
-    linksTo: "/data_management/rasters/sources",
+    onUrl: "/management/data_management/rasters",
+    linksToUrl: "/management/data_management/rasters/sources",
+    linksToUrlExternal: false,
     requiresOneOfRoles: ["admin", "supplier",],
     icon: rasterSourcesIcon
   },
@@ -194,9 +475,11 @@ export const appTiles = [
     //     defaultMessage="Raster Layers"
     //   />
     // ),
+    homePageIcon: false,
     order: 200,
-    onPage: "/data_management/rasters",
-    linksTo: "/data_management/rasters/layers",
+    onUrl: "/management/data_management/rasters",
+    linksToUrl: "/management/data_management/rasters/layers",
+    linksToUrlExternal: false,
     requiresOneOfRoles: ["admin", "supplier",],
     icon: rasterLayersIcon,
   },
@@ -208,10 +491,12 @@ export const appTiles = [
     //     defaultMessage="Go Back"
     //   />
     // ),
+    homePageIcon: false,
     order: 400,
-    onPage: "/data_management/rasters",
-    linksTo: "/data_management",
-    requiresOneOfRoles: ["admin", "supplier","user", "manager"],
+    onUrl: "/management/data_management/rasters",
+    linksToUrl: "/management/data_management",
+    linksToUrlExternal: false,
+    requiresOneOfRoles: [],
     icon: backArrowIcon
   },
   {
@@ -222,9 +507,11 @@ export const appTiles = [
     //     defaultMessage="Label types"
     //   />
     // ),
+    homePageIcon: false,
     order: 100,
-    onPage: "/data_management/labels",
-    linksTo: "/data_management/labels/label_types",
+    onUrl: "/management/data_management/labels",
+    linksToUrl: "/management/data_management/labels/label_types",
+    linksToUrlExternal: false,
     requiresOneOfRoles: ["admin", "supplier",],
     icon: labeltypesIcon
   },
@@ -236,10 +523,12 @@ export const appTiles = [
     //     defaultMessage="Go Back"
     //   />
     // ),
+    homePageIcon: false,
     order: 400,
-    onPage: "/data_management/labels",
-    linksTo: "/data_management",
-    requiresOneOfRoles: ["admin", "supplier","user", "manager"],
+    onUrl: "/management/data_management/labels",
+    linksToUrl: "/management/data_management",
+    linksToUrlExternal: false,
+    requiresOneOfRoles: [],
     icon: backArrowIcon
   },
   {
@@ -250,9 +539,11 @@ export const appTiles = [
     //     defaultMessage="Go Back"
     //   />
     // ),
+    homePageIcon: false,
     order: 400,
-    onPage: "/data_management/timeseries",
-    linksTo: "/data_management/timeseries/locations",
+    onUrl: "/management/data_management/timeseries",
+    linksToUrl: "/management/data_management/timeseries/locations",
+    linksToUrlExternal: false,
     requiresOneOfRoles: ["admin", "supplier",],
     icon: locationsIcon,
   },
@@ -264,9 +555,11 @@ export const appTiles = [
     //     defaultMessage="Go Back"
     //   />
     // ),
+    homePageIcon: false,
     order: 400,
-    onPage: "/data_management/timeseries",
-    linksTo: "/data_management/timeseries/timeseries",
+    onUrl: "/management/data_management/timeseries",
+    linksToUrl: "/management/data_management/timeseries/timeseries",
+    linksToUrlExternal: false,
     requiresOneOfRoles: ["admin", "supplier",],
     icon: timeseriesIcon
   },
@@ -278,9 +571,11 @@ export const appTiles = [
     //     defaultMessage="Go Back"
     //   />
     // ),
+    homePageIcon: false,
     order: 400,
-    onPage: "/data_management/timeseries",
-    linksTo: "/data_management/timeseries/monitoring_networks",
+    onUrl: "/management/data_management/timeseries",
+    linksToUrl: "/management/data_management/timeseries/monitoring_networks",
+    linksToUrlExternal: false,
     requiresOneOfRoles: ["admin", "supplier",],
     icon: monitoringsNetworkicon,
   },
@@ -292,10 +587,12 @@ export const appTiles = [
     //     defaultMessage="Go Back"
     //   />
     // ),
+    homePageIcon: false,
     order: 400,
-    onPage: "/data_management/timeseries",
-    linksTo: "/data_management",
-    requiresOneOfRoles: ["admin", "supplier","user", "manager"],
+    onUrl: "/management/data_management/timeseries",
+    linksToUrl: "/management/data_management",
+    linksToUrlExternal: false,
+    requiresOneOfRoles: [],
     icon: backArrowIcon
   },
   {
@@ -306,9 +603,11 @@ export const appTiles = [
     //     defaultMessage="Notifications"
     //   />
     // ),
+    homePageIcon: false,
     order: 100,
-    onPage: "/alarms",
-    linksTo: "/alarms/notifications",
+    onUrl: "/management/alarms",
+    linksToUrl: "/management/alarms/notifications",
+    linksToUrlExternal: false,
     requiresOneOfRoles: ["admin",],
     icon: alarmsIcon,
   },
@@ -320,9 +619,11 @@ export const appTiles = [
     //     defaultMessage="Recipients"
     //   />
     // ),
+    homePageIcon: false,
     order: 200,
-    onPage: "/alarms",
-    linksTo: "/alarms/groups",
+    onUrl: "/management/alarms",
+    linksToUrl: "/management/alarms/groups",
+    linksToUrlExternal: false,
     requiresOneOfRoles: ["admin",],
     icon: groupsIcon
   },
@@ -334,9 +635,11 @@ export const appTiles = [
     //     defaultMessage="Contacts"
     //   />
     // ),
+    homePageIcon: false,
     order: 300,
-    onPage: "/alarms",
-    linksTo: "/alarms/contacts",
+    onUrl: "/management/alarms",
+    linksToUrl: "/management/alarms/contacts",
+    linksToUrlExternal: false,
     requiresOneOfRoles: ["admin",],
     icon: contactsIcon
   },
@@ -348,9 +651,11 @@ export const appTiles = [
     //     defaultMessage="Templates"
     //   />
     // ),
+    homePageIcon: false,
     order: 400,
-    onPage: "/alarms",
-    linksTo: "/alarms/templates",
+    onUrl: "/management/alarms",
+    linksToUrl: "/management/alarms/templates",
+    linksToUrlExternal: false,
     requiresOneOfRoles: ["admin",],
     icon: templatesIcon,
   },
@@ -362,10 +667,12 @@ export const appTiles = [
     //     defaultMessage="Go Back"
     //   />
     // ),
+    homePageIcon: false,
     order: 500,
-    onPage: "/alarms",
-    linksTo: "/",
-    requiresOneOfRoles: ["admin", "supplier","user", "manager"],
+    onUrl: "/management/alarms",
+    linksToUrl: "/management",
+    linksToUrlExternal: false,
+    requiresOneOfRoles: [],
     icon: backArrowIcon
   },
   {
@@ -376,9 +683,11 @@ export const appTiles = [
     //     defaultMessage="Raster Alarms"
     //   />
     // ),
+    homePageIcon: false,
     order: 100,
-    onPage: "/alarms/notifications",
-    linksTo: "/alarms/notifications/raster_alarms",
+    onUrl: "/management/alarms/notifications",
+    linksToUrl: "/management/alarms/notifications/raster_alarms",
+    linksToUrlExternal: false,
     requiresOneOfRoles: ["admin",],
     icon: alarmsIcon,
   },
@@ -390,9 +699,11 @@ export const appTiles = [
     //     defaultMessage="Timeseries Alarms"
     //   />
     // ),
+    homePageIcon: false,
     order: 200,
-    onPage: "/alarms/notifications",
-    linksTo: "/alarms/notifications/timeseries_alarms",
+    onUrl: "/management/alarms/notifications",
+    linksToUrl: "/management/alarms/notifications/timeseries_alarms",
+    linksToUrlExternal: false,
     requiresOneOfRoles: ["admin",],
     icon: alarmsIcon,
   },
@@ -404,10 +715,12 @@ export const appTiles = [
     //     defaultMessage="Go Back"
     //   />
     // ),
+    homePageIcon: false,
     order: 300,
-    onPage: "/alarms/notifications",
-    linksTo: "/alarms",
-    requiresOneOfRoles: ["admin", "supplier","user", "manager"],
+    onUrl: "/management/alarms/notifications",
+    linksToUrl: "/management/alarms",
+    linksToUrlExternal: false,
+    requiresOneOfRoles: [],
     icon: backArrowIcon
   },
 ];

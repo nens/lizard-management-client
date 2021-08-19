@@ -18,24 +18,24 @@ import formStyles from './../../styles/Forms.module.css';
 import contactIcon from "../../images/contacts@3x.svg";
 
 interface Props {
-  currentContact?: any
+  currentRecord?: any
 };
 interface PropsFromDispatch {
   addNotification: (message: string | number, timeout: number) => void
 };
 
 const ContactForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (props) => {
-  const { currentContact } = props;
+  const { currentRecord } = props;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
 
-  const initialValues = currentContact ? {
-    // if currentContact.user is not null, that means a Django User is linked to this contact
+  const initialValues = currentRecord ? {
+    // if currentRecord.user is not null, that means a Django User is linked to this contact
     // then show the infos of the Django User, otherwise show the current contact
-    firstName: currentContact.user ? currentContact.user.first_name : currentContact.first_name,
-    lastName: currentContact.user ? currentContact.user.last_name : currentContact.last_name,
-    email: currentContact.user ? currentContact.user.email : currentContact.email,
-    phoneNumber: currentContact.user ? currentContact.user.phone_number : currentContact.phone_number,
+    firstName: currentRecord.user ? currentRecord.user.first_name : currentRecord.first_name,
+    lastName: currentRecord.user ? currentRecord.user.last_name : currentRecord.last_name,
+    email: currentRecord.user ? currentRecord.user.email : currentRecord.email,
+    phoneNumber: currentRecord.user ? currentRecord.user.phone_number : currentRecord.phone_number,
   } : {
     firstName: null,
     lastName: null,
@@ -51,7 +51,7 @@ const ContactForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (
       phone_number: values.phoneNumber
     };
 
-    if (!currentContact) {
+    if (!currentRecord) {
       fetch("/api/v4/contacts/", {
         credentials: "same-origin",
         method: "POST",
@@ -65,7 +65,7 @@ const ContactForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (
         const status = response.status;
         if (status === 201) {
           props.addNotification('Success! New contact created', 2000);
-          props.history.push("/alarms/contacts");
+          props.history.push("/management/alarms/contacts");
         } else if (status === 403) {
           props.addNotification("Not authorized", 2000);
           console.error(response);
@@ -76,9 +76,9 @@ const ContactForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (
       })
       .catch(console.error);
     } else {
-      if (currentContact.user) {
-        // if currentContact.user is not null then update the contact of the linked Django User
-        fetch(`/api/v4/contacts/${currentContact.id}/`, {
+      if (currentRecord.user) {
+        // if currentRecord.user is not null then update the contact of the linked Django User
+        fetch(`/api/v4/contacts/${currentRecord.id}/`, {
           credentials: "same-origin",
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
@@ -90,7 +90,7 @@ const ContactForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (
           const status = response.status;
           if (status === 200) {
             props.addNotification('Success! Contact updated', 2000);
-            props.history.push("/alarms/contacts");
+            props.history.push("/management/alarms/contacts");
           } else {
             props.addNotification(status, 2000);
             console.error(response);
@@ -98,7 +98,7 @@ const ContactForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (
         })
         .catch(console.error);
       } else {
-        fetch(`/api/v4/contacts/${currentContact.id}/`, {
+        fetch(`/api/v4/contacts/${currentRecord.id}/`, {
           credentials: "same-origin",
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
@@ -108,7 +108,7 @@ const ContactForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (
           const status = response.status;
           if (status === 200) {
             props.addNotification('Success! Contact updated', 2000);
-            props.history.push("/alarms/contacts");
+            props.history.push("/management/alarms/contacts");
           } else {
             props.addNotification(status, 2000);
             console.error(response);
@@ -139,7 +139,7 @@ const ContactForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (
       imgAltDescription={"Contact icon"}
       headerText={"Contacts"}
       explanationText={contactFormHelpText[fieldOnFocus] || contactFormHelpText['default']}
-      backUrl={"/alarms/contacts"}
+      backUrl={"/management/alarms/contacts"}
       fieldName={fieldOnFocus}
     >
       <form
@@ -202,10 +202,10 @@ const ContactForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (
           className={formStyles.ButtonContainer}
         >
           <CancelButton
-            url={'/alarms/contacts'}
+            url={'/management/alarms/contacts'}
           />
           <div style={{display: "flex"}}>
-            {currentContact ? (
+            {currentRecord ? (
               <div style={{ marginRight: 16 }}>
                 <FormActionButtons
                   actions={[
@@ -223,13 +223,13 @@ const ContactForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (
           </div>
         </div>
       </form>
-      {currentContact && showDeleteModal ? (
+      {currentRecord && showDeleteModal ? (
         <DeleteModal
-          rows={[currentContact]}
+          rows={[currentRecord]}
           displayContent={[{name: "first_name", width: 20}, {name: "email", width: 50}, {name: "id", width: 30}]}
           fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
           handleClose={() => setShowDeleteModal(false)}
-          tableUrl={'/alarms/contacts'}
+          tableUrl={'/management/alarms/contacts'}
         />
       ) : null}
     </ExplainSideColumn>

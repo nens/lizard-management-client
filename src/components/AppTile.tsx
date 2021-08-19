@@ -1,21 +1,22 @@
 import React from "react";
 import Ink from "react-ink";
 import styles from "./AppTile.module.css";
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { RouteComponentProps, withRouter, NavLink } from 'react-router-dom';
 import { injectIntl } from "react-intl";
 
 interface Props {
   title: string, 
   icon: string, 
-  handleClick: ()=> void, 
+  linkPath: string,
+  openInNewTab: boolean,
   readonly: boolean,
-  requiredRoles: string[]
+  requiredRoles: string[],
 };
 
 const AppTile = (props: (Props & RouteComponentProps)) => {
   
     const {
-      title, icon, handleClick, readonly,
+      title, icon, readonly, linkPath, openInNewTab,
       requiredRoles // eslint-disable-line no-unused-vars
     } = props;
     
@@ -27,16 +28,36 @@ const AppTile = (props: (Props & RouteComponentProps)) => {
       },
       {requiredRolesLength: (requiredRoles && requiredRoles.length) || 0}
     );
-    return (
-      <div className={`${styles.AppTile} ${readonly ? styles.Disabled: null}`}
-           onClick={!readonly ? handleClick : undefined}
-           title={readonly ? requiresRoleMessage + requiredRoles : null}
-      >
-        <img src={icon} alt={title} className={styles.Img}/>
-        <p className={styles.Title}>{title}</p>
-        { !readonly ? <Ink/> : null }
-      </div>
+
+    const content = (
+      <>
+      <img src={icon} alt={title} className={styles.Img}/>
+      <p className={styles.Title}>{title}</p>
+      { !readonly ? <Ink recenter={true}/> : null }
+      </>
     );
+    if (readonly) {
+      return (
+        <div 
+          className={`${styles.AppTile} ${readonly ? styles.Disabled: null}`}
+          title={readonly ? requiresRoleMessage + requiredRoles : null}
+        >
+          {content}
+        </div>
+      );
+    } else {
+      return (
+        <NavLink 
+          to={linkPath}
+          target={openInNewTab? "_blank" : "_self"}
+          className={`${styles.AppTile} ${readonly ? styles.Disabled: null}`}
+          title={readonly ? requiresRoleMessage + requiredRoles : null}
+        >
+          {content}
+        </NavLink>
+      );
+    }
+    
   }
 
 export default withRouter(injectIntl(AppTile));

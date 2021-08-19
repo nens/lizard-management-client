@@ -2,7 +2,10 @@
   position: relative;
   width: 229px;
   height: 219px;
-  margin: 22.5px;
+  margin-top: 22.5px;
+  margin-bottom: 22.5px;
+  margin-right: 45px;
+  margin-left: 0;
   cursor: pointer;
   float: left;
   border-radius: 10px;
@@ -19,7 +22,7 @@
 .AppTile.Disabled .SubTitle {
   color: #737373;
 }
-.AppTile:hover {
+.AppTile:hover:not(.Disabled) {
   transform: scale(1.03);
   box-shadow: 2px 2px 10px #b9b9b9;
 }
@@ -30,13 +33,19 @@
   }
 }
 
-.Img {
+.IconCircleContainer {
   position: absolute;
-  top: 60px;
-  margin-left: 50%; /* From parent width */
-  transform: translateX(-50%); /* use self width which can be unknown */
-  -ms-transform: translateX(-50%); /* For IE9 */
-  height: 70px;
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%); 
+  -ms-transform: translateX(-50%);  
+  background-color: #55BFA2;
+  width: 96px;
+  height: 96px;
+  border-radius: 48px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .Title {
   position: absolute;
@@ -50,4 +59,14 @@
   text-transform: uppercase;
   text-align: center;
   text-decoration: none;
+}
+
+
+.Img {
+  position: absolute;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%); /* use self width which can be unknown */
+  -ms-transform: translateX(-50%); /* For IE9 */
+  height: 70px;
 }

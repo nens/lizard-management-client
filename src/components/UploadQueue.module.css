@@ -26,7 +26,7 @@
 }
 
 .GridContainerBody {
-  max-height: 380px;
+  max-height: 300px;
   overflow-y: auto;
   border: 1px solid #003D7A;
 }

@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import TableStateContainer from '../../../components/TableStateContainer';
 import { NavLink, RouteComponentProps } from "react-router-dom";
 import { ExplainSideColumn } from '../../../components/ExplainSideColumn';
 import { getAccessibiltyText } from '../../../form/AccessModifier';
 import { defaultTableHelpText } from '../../../utils/help_texts/defaultHelpText';
 import { fetchWithOptions } from '../../../utils/fetchWithOptions';
-import { usePaginatedFetch } from '../../../utils/usePaginatedFetch';
+import { useRecursiveFetch } from '../../../api/hooks';
 import TableActionButtons from '../../../components/TableActionButtons';
 import AuthorisationModal from '../../../components/AuthorisationModal';
 import DeleteLocationNotAllowed from './DeleteLocationNotAllowed';
@@ -16,22 +16,20 @@ import locationIcon from "../../../images/locations_icon.svg";
 import MDSpinner from 'react-md-spinner';
 
 export const baseUrl = "/api/v4/locations/";
-const navigationUrl = "/data_management/timeseries/locations";
+const navigationUrl = "/management/data_management/timeseries/locations";
 
 export const LocationsTable = (props: RouteComponentProps) =>  {
   const [rowToBeDeleted, setRowToBeDeleted] = useState<any | null>(null);
   const [resetTable, setResetTable] = useState<Function | null>(null);
-  const [dependentTimeseries, setDependentTimeseries] = useState<any[] | null>(null);
 
   // selected rows for set accessibility action
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
 
-  const { results: timeseries } = usePaginatedFetch({
-    url: rowToBeDeleted && rowToBeDeleted.uuid ? `/api/v4/timeseries/?location__uuid=${rowToBeDeleted.uuid}` : null
-  });
-  useEffect(() => {
-    setDependentTimeseries(timeseries);
-  }, [timeseries]);
+  const { data: dependentTimeseries } = useRecursiveFetch(
+    '/api/v4/timeseries/',
+    { location__uuid: rowToBeDeleted ? rowToBeDeleted.uuid : '' },
+    { enabled: !!rowToBeDeleted }
+  );
 
   const deleteActions = (
     row: any,
@@ -123,7 +121,7 @@ export const LocationsTable = (props: RouteComponentProps) =>  {
       imgAltDescription={"Locations icon"}
       headerText={"Locations"}
       explanationText={defaultTableHelpText('Search or sort your locations here.')}
-      backUrl={"/data_management/timeseries"}
+      backUrl={"/management/data_management/timeseries"}
     >
       <TableStateContainer 
         gridTemplateColumns={"4fr 36fr 36fr 16fr 8fr"} 
@@ -150,10 +148,7 @@ export const LocationsTable = (props: RouteComponentProps) =>  {
       {rowToBeDeleted && !dependentTimeseries ? (
         <Modal
           title={'Loading'}
-          cancelAction={() => {
-            setRowToBeDeleted(null);
-            setDependentTimeseries(null);
-          }}
+          cancelAction={() => setRowToBeDeleted(null)}
         >
           <MDSpinner size={24} /><span style={{ marginLeft: 40 }}>Loading dependent time series ...</span>
         </Modal>
@@ -166,7 +161,6 @@ export const LocationsTable = (props: RouteComponentProps) =>  {
           resetTable={resetTable}
           handleClose={() => {
             setRowToBeDeleted(null);
-            setDependentTimeseries(null);
             setResetTable(null);
           }}
         />
@@ -175,10 +169,7 @@ export const LocationsTable = (props: RouteComponentProps) =>  {
         <DeleteLocationNotAllowed
           name={rowToBeDeleted.name}
           uuids={dependentTimeseries.map(ts => ts.uuid)}
-          closeDialogAction={() => {
-            setRowToBeDeleted(null);
-            setDependentTimeseries(null);
-          }}
+          closeDialogAction={() => setRowToBeDeleted(null)}
         />
       ) : null}
       {selectedRows.length ? (

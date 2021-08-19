@@ -24,13 +24,13 @@ import formStyles from './../../../styles/Forms.module.css';
 import monitoringNetworkIcon from "../../../images/monitoring_network_icon.svg";
 
 interface Props {
-  currentNetwork?: any
+  currentRecord?: any
 };
 
-const backUrl = "/data_management/timeseries/monitoring_networks";
+const backUrl = "/management/data_management/timeseries/monitoring_networks";
 
 const MonitoringNetworkForm = (props: Props & DispatchProps & RouteComponentProps) => {
-  const { currentNetwork } = props;
+  const { currentRecord } = props;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const organisations = useSelector(getOrganisations).available;
   const organisationsToSwitchTo = organisations.filter((org: any) => org.roles.includes('admin'));
@@ -39,11 +39,11 @@ const MonitoringNetworkForm = (props: Props & DispatchProps & RouteComponentProp
   // Modal to manage timeseries of a monitoring network
   const [timeseriesModal, setTimeseriesModal] = useState<boolean>(false);
 
-  const initialValues = currentNetwork ? {
-    name: currentNetwork.name,
-    description: currentNetwork.description,
-    accessModifier: currentNetwork.access_modifier,
-    organisation: currentNetwork.organisation ? convertToSelectObject(currentNetwork.organisation.uuid, currentNetwork.organisation.name) : null
+  const initialValues = currentRecord ? {
+    name: currentRecord.name,
+    description: currentRecord.description,
+    accessModifier: currentRecord.access_modifier,
+    organisation: currentRecord.organisation ? convertToSelectObject(currentRecord.organisation.uuid, currentRecord.organisation.name) : null
   } : {
     name: null,
     description: null,
@@ -59,7 +59,7 @@ const MonitoringNetworkForm = (props: Props & DispatchProps & RouteComponentProp
       organisation: values.organisation && values.organisation.value
     };
 
-    if (!currentNetwork) {
+    if (!currentRecord) {
       fetch("/api/v4/monitoringnetworks/", {
         credentials: "same-origin",
         method: "POST",
@@ -81,7 +81,7 @@ const MonitoringNetworkForm = (props: Props & DispatchProps & RouteComponentProp
       })
       .catch(console.error);
     } else {
-      fetch(`/api/v4/monitoringnetworks/${currentNetwork.uuid}/`, {
+      fetch(`/api/v4/monitoringnetworks/${currentRecord.uuid}/`, {
         credentials: "same-origin",
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -146,11 +146,11 @@ const MonitoringNetworkForm = (props: Props & DispatchProps & RouteComponentProp
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
-        {currentNetwork ? (
+        {currentRecord ? (
           <TextInput
             title={'UUID'}
             name={'uuid'}
-            value={currentNetwork.uuid}
+            value={currentRecord.uuid}
             valueChanged={handleInputChange}
             validated
             onFocus={handleFocus}
@@ -179,7 +179,7 @@ const MonitoringNetworkForm = (props: Props & DispatchProps & RouteComponentProp
             e.preventDefault();
             setTimeseriesModal(true);
           }}
-          readOnly={!currentNetwork}
+          readOnly={!currentRecord}
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
@@ -204,7 +204,7 @@ const MonitoringNetworkForm = (props: Props & DispatchProps & RouteComponentProp
           validated={values.organisation !== null && values.organisation !== ''}
           errorMessage={'Please select an organisation'}
           triedToSubmit={triedToSubmit}
-          readOnly={!(!currentNetwork && organisationsToSwitchTo.length > 0 && selectedOrganisation.roles.includes('admin'))}
+          readOnly={!(!currentRecord && organisationsToSwitchTo.length > 0 && selectedOrganisation.roles.includes('admin'))}
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
@@ -215,7 +215,7 @@ const MonitoringNetworkForm = (props: Props & DispatchProps & RouteComponentProp
             url={backUrl}
           />
           <div style={{display: "flex"}}>
-            {currentNetwork ? (
+            {currentRecord ? (
               <div style={{ marginRight: 16 }}>
                 <FormActionButtons
                   actions={[
@@ -235,13 +235,13 @@ const MonitoringNetworkForm = (props: Props & DispatchProps & RouteComponentProp
       </form>
       {timeseriesModal ? (
         <TimeseriesModal
-          currentMonitoringNetworkUuid={currentNetwork ? currentNetwork.uuid : null}
+          currentMonitoringNetworkUuid={currentRecord ? currentRecord.uuid : null}
           handleClose={() => setTimeseriesModal(false)}
         />
       ) : null}
-      {currentNetwork && showDeleteModal ? (
+      {currentRecord && showDeleteModal ? (
         <DeleteModal
-          rows={[currentNetwork]}
+          rows={[currentRecord]}
           displayContent={[{name: "name", width: 40}, {name: "uuid", width: 60}]}
           fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
           handleClose={() => setShowDeleteModal(false)}

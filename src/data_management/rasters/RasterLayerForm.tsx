@@ -43,7 +43,7 @@ import { fetchSuppliers } from './RasterSourceForm';
 import { baseUrl } from './RasterLayerTable';
 
 interface Props {
-  currentRasterLayer?: RasterLayerFromAPI,
+  currentRecord?: RasterLayerFromAPI,
 };
 
 // Helper function to fetch paginated raster sources with search query
@@ -117,30 +117,30 @@ export const fetchOrganisationsToShareWith = async (searchQuery: string) => {
 };
 
 const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (props) => {
-  const { currentRasterLayer, removeRasterSourceUUID } = props;
+  const { currentRecord, removeRasterSourceUUID } = props;
   const organisations = useSelector(getOrganisations).available;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const layercollections = useSelector(getLayercollections).available;
   const rasterSourceUUID = useSelector(getRasterSourceUUID);
-  const belongsToScenario = (currentRasterLayer && rasterLayerFromAPIBelongsToScenario(currentRasterLayer)) || false;
+  const belongsToScenario = (currentRecord && rasterLayerFromAPIBelongsToScenario(currentRecord)) || false;
 
   useEffect(() => {
     return () => removeRasterSourceUUID();
   }, [removeRasterSourceUUID]);
 
-  const initialValues = currentRasterLayer ? {
-    name: currentRasterLayer.name,
-    uuid: currentRasterLayer.uuid,
-    description: currentRasterLayer.description,
-    layercollections: currentRasterLayer.layer_collections.map(layercollection => convertToSelectObject(layercollection.slug)) || [],
-    rasterSource: currentRasterLayer.raster_sources && currentRasterLayer.raster_sources.map(rasterSource => convertToSelectObject(getUuidFromUrl(rasterSource)))[0],
-    aggregationType: currentRasterLayer.aggregation_type ? convertToSelectObject(currentRasterLayer.aggregation_type) : null,
-    observationType: currentRasterLayer.observation_type ? convertToSelectObject(currentRasterLayer.observation_type.id, currentRasterLayer.observation_type.code) : null,
-    colorMap: {options: currentRasterLayer.options, rescalable: currentRasterLayer.rescalable, customColormap: currentRasterLayer.colormap || {}},
-    sharedWith: currentRasterLayer.shared_with.length === 0 ? false : true,
-    organisationsToSharedWith: currentRasterLayer.shared_with.map(organisation => convertToSelectObject(organisation.uuid, organisation.name)) || [],
-    organisation: currentRasterLayer.organisation ? convertToSelectObject(currentRasterLayer.organisation.uuid, currentRasterLayer.organisation.name) : null,
-    supplier: currentRasterLayer.supplier ? convertToSelectObject(currentRasterLayer.supplier) : null,
+  const initialValues = currentRecord ? {
+    name: currentRecord.name,
+    uuid: currentRecord.uuid,
+    description: currentRecord.description,
+    layercollections: currentRecord.layer_collections.map(layercollection => convertToSelectObject(layercollection.slug)) || [],
+    rasterSource: currentRecord.raster_sources && currentRecord.raster_sources.map(rasterSource => convertToSelectObject(getUuidFromUrl(rasterSource)))[0],
+    aggregationType: currentRecord.aggregation_type ? convertToSelectObject(currentRecord.aggregation_type) : null,
+    observationType: currentRecord.observation_type ? convertToSelectObject(currentRecord.observation_type.id, currentRecord.observation_type.code) : null,
+    colorMap: {options: currentRecord.options, rescalable: currentRecord.rescalable, customColormap: currentRecord.colormap || {}},
+    sharedWith: currentRecord.shared_with.length === 0 ? false : true,
+    organisationsToSharedWith: currentRecord.shared_with.map(organisation => convertToSelectObject(organisation.uuid, organisation.name)) || [],
+    organisation: currentRecord.organisation ? convertToSelectObject(currentRecord.organisation.uuid, currentRecord.organisation.name) : null,
+    supplier: currentRecord.supplier ? convertToSelectObject(currentRecord.supplier) : null,
   } : {
     name: null,
     description: null,
@@ -155,7 +155,7 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
     supplier: null,
   };
   const onSubmit = (values: Values) => {
-    if (!currentRasterLayer) {
+    if (!currentRecord) {
       const rasterLayer = {
         name: values.name,
         organisation: values.organisation && values.organisation.value,
@@ -177,7 +177,7 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           if (status === 201) {
             props.addNotification('Success! Raster layer created', 2000);
             // redirect back to the table of raster layers
-            props.history.push('/data_management/rasters/layers');
+            props.history.push('/management/data_management/rasters/layers');
           } else {
             props.addNotification(status, 2000);
             console.error(response);
@@ -204,13 +204,13 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
         body.options = values.colorMap.options;
       };
 
-      patchRasterLayer(currentRasterLayer.uuid as string, body)
+      patchRasterLayer(currentRecord.uuid as string, body)
         .then(data => {
           const status = data.response.status;
           if (status === 200) {
             props.addNotification('Success! Raster layer updated', 2000);
             // redirect back to the table of raster layers
-            props.history.push('/data_management/rasters/layers');
+            props.history.push('/management/data_management/rasters/layers');
           } else {
             props.addNotification(status, 2000);
             console.error(data);
@@ -237,15 +237,15 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
   // Access Modifier of a raster layer is kept in the react hook state instead of the form state
   // to keep it in sync with new selected raster source in useEffect
   const { rasterSource } = values;
-  const [accessModifier, setAccessModifier] = useState<string>(currentRasterLayer ? currentRasterLayer.access_modifier : 'Private');
+  const [accessModifier, setAccessModifier] = useState<string>(currentRecord ? currentRecord.access_modifier : 'Private');
 
   useEffect(() => {
-    if (!currentRasterLayer && rasterSource) {
+    if (!currentRecord && rasterSource) {
       fetchRasterSourceV4(rasterSource.value).then(
         rasterSourceData => setAccessModifier(rasterSourceData.access_modifier || 'Private')
       ).catch(e => console.error(e));
     };
-  }, [currentRasterLayer, rasterSource]);
+  }, [currentRecord, rasterSource]);
 
   // Delete modal
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -259,7 +259,7 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
       imgAltDescription={"Raster-Layer icon"}
       headerText={"Raster Layers"}
       explanationText={rasterLayerFormHelpText[fieldOnFocus] || rasterLayerFormHelpText['default']}
-      backUrl={"/data_management/rasters/layers"}
+      backUrl={"/management/data_management/rasters/layers"}
       fieldName={fieldOnFocus}
     >
       {/* 
@@ -295,7 +295,7 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           triedToSubmit={triedToSubmit}
           form={"raster_layer_form_id"}
         />
-        {currentRasterLayer ? (
+        {currentRecord ? (
           <TextInput
             title={'UUID'}
             name={'uuid'}
@@ -337,7 +337,7 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
         <span className={formStyles.FormFieldTitle}>
           2: Data
         </span>
-        {currentRasterLayer ? (
+        {currentRecord ? (
           <FormButton
             name={'rasterSourceModal'}
             title={'Source'}
@@ -363,8 +363,8 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
             form={"raster_layer_form_id"}
             onFocus={handleFocus}
             onBlur={handleBlur}
-            readOnly={!!currentRasterLayer || !!rasterSourceUUID}
-            isAsync={!rasterSourceUUID && !currentRasterLayer}
+            readOnly={!!currentRecord || !!rasterSourceUUID}
+            isAsync={!rasterSourceUUID && !currentRecord}
             isCached
             loadOptions={searchInput => fetchRasterSources(selectedOrganisation.uuid, searchInput)}
           />
@@ -515,11 +515,11 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           className={formStyles.ButtonContainer}
         >
           <CancelButton
-            url={'/data_management/rasters/layers'}
+            url={'/management/data_management/rasters/layers'}
             form={"raster_layer_form_id"}
           />
           <div style={{ display: "flex" }}>
-            {currentRasterLayer ? (
+            {currentRecord ? (
               <div style={{ marginRight: 16 }}> 
                 <FormActionButtons
                   actions={[
@@ -538,18 +538,18 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           </div>
         </div>
       </div>
-      {currentRasterLayer && showDeleteModal ? (
+      {currentRecord && showDeleteModal ? (
         <DeleteModal
-          rows={[currentRasterLayer]}
+          rows={[currentRecord]}
           displayContent={[{name: "name", width: 40}, {name: "uuid", width: 60}]}
           fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
           handleClose={() => setShowDeleteModal(false)}
-          tableUrl={'/data_management/rasters/layers'}
+          tableUrl={'/management/data_management/rasters/layers'}
         />
       ) : null}
-      {currentRasterLayer && currentRasterLayer.uuid && rasterSourceModal ? (
+      {currentRecord && currentRecord.uuid && rasterSourceModal ? (
         <RasterSourceModal
-          selectedLayer={currentRasterLayer.uuid}
+          selectedLayer={currentRecord.uuid}
           closeModal={() => setRasterSourceModal(false)}
         />
       ) : null}

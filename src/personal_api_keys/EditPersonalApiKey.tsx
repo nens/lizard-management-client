@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { RouteComponentProps } from 'react-router';
-import MDSpinner from "react-md-spinner";
-import {PersonalApiKeyForm} from "./PersonalApiKeyForm";
+import { PersonalApiKeyForm } from "./PersonalApiKeyForm";
+import SpinnerIfNotLoaded from '../components/SpinnerIfNotLoaded';
+import { createFetchRecordFunctionFromUrl } from '../utils/createFetchRecordFunctionFromUrl';
 
 interface RouteParams {
   uuid: string;
@@ -13,34 +14,18 @@ export const EditPersonalApiKey: React.FC<RouteComponentProps<RouteParams>> = (p
   const { uuid } = props.match.params;
   useEffect(() => {
     (async () => {
-      const currentRecord = await fetch(`/api/v4/personalapikeys/${uuid}`, {
-        credentials: "same-origin"
-      }).then(response => response.json());
-      
+      const currentRecord = await createFetchRecordFunctionFromUrl(`/api/v4/personalapikeys/${uuid}`)();
       setCurrentRecord(currentRecord);
     })();
   }, [uuid]);
 
-  if (
-    currentRecord 
-  ) {
-    return <PersonalApiKeyForm
-      currentRecord={currentRecord}
-    />;
-  }
-  else {
-    return (
-      <div
-        style={{
-          position: "relative",
-          top: 50,
-          height: 300,
-          bottom: 50,
-          marginLeft: "50%"
-        }}
-      >
-        <MDSpinner size={24} />
-      </div>
-    );
-  }
+  return (
+    <SpinnerIfNotLoaded
+      loaded={!!currentRecord}
+    >
+      <PersonalApiKeyForm
+        currentRecord={currentRecord}
+      />
+    </SpinnerIfNotLoaded>
+  );
 };

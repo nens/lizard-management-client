@@ -9,7 +9,7 @@ For basic authentication you can choose from following 3 options:
 Instead of `yarn start` run:   
 `PROXY_URL=https://nxt3.staging.lizard.net/ PROXY_API_KEY=123456789STAGINGKEY yarn start`  
   
-but replace `123456789STAGINGKEY` with a key you created with [api-key-management-page](https://nxt3.staging.lizard.net/management/#/personal_api_keys)  
+but replace `123456789STAGINGKEY` with a key you created with [api-key-management-page](https://nxt3.staging.lizard.net/management/personal_api_keys)  
 
 2 Set default environments variables system wide 
 =================================================
@@ -23,14 +23,14 @@ In your `~/.bashrc` file add the following lines:
 `export PROXY_URL='https://nxt3.staging.lizard.net/'`  
 `export PROXY_API_KEY=123456789PRODKEY`  
 
-But change the `123456789STAGINGKEY` with a key you created with [api-key-management-page](https://nxt3.staging.lizard.net/management/#/personal_api_keys).  
-Also change the `123456789PRODKEY` with a key you created with [production_api-key-management-page](https://demo.lizard.net/management/#/personal_api_keys). 
+But change the `123456789STAGINGKEY` with a key you created with [api-key-management-page](https://nxt3.staging.lizard.net/management/personal_api_keys).  
+Also change the `123456789PRODKEY` with a key you created with [production_api-key-management-page](https://demo.lizard.net/management/personal_api_keys). 
 
 3 startauth.sh file in this repo
 ================================= 
 
 - Copy the file `./startauth.sh.example` and call the copy `./startauth.sh`  
-- In your new startauth.sh file replace the key `123456789STAGINGKEY` with a key you created with [api-key-management-page](https://nxt3.staging.lizard.net/management/#/personal_api_keys)
+- In your new startauth.sh file replace the key `123456789STAGINGKEY` with a key you created with [api-key-management-page](https://nxt3.staging.lizard.net/management/personal_api_keys)
 - now instead of `yarn start` run `yarn run startauth`
 
 Alternatively you can uncomment one of the other lines in `startauth.sh` to proxy to production or other domains.  

@@ -1,6 +1,6 @@
 // MARK: Bootstrap
+import { recursiveFetchFunction } from "./api/hooks";
 import { getLocalStorage } from "./utils/localStorageUtils";
-import { paginatedFetchHelper } from "./utils/paginatedFetchHelper";
 
 export const RECEIVE_LIZARD_BOOTSTRAP = "RECEIVE_LIZARD_BOOTSTRAP";
 export const REQUEST_LIZARD_BOOTSTRAP = "REQUEST_LIZARD_BOOTSTRAP";
@@ -27,12 +27,7 @@ export function fetchLizardBootstrap() {
     })
       .then(response => response.json())
       .then(data => {
-        if (data && data.user && data.user.authenticated === true) {
           dispatch(receiveLizardBootstrap(data));
-        } else {
-          const nextUrl = window.location.href;
-          window.location.href = `${data.sso.login}&next=${nextUrl}`;
-        };
       });
   };
 }
@@ -84,7 +79,7 @@ export function fetchOrganisations() {
 
     // Fetch the list of available organisations with user roles by user ID
     const availableOrganisationsUrl = `/api/v4/users/${userId}/organisations/`;
-    const availableOrganisations = await paginatedFetchHelper(availableOrganisationsUrl, []);
+    const availableOrganisations = await recursiveFetchFunction(availableOrganisationsUrl, []);
 
     // Dispatch action to update Redux store
     dispatch({
@@ -141,17 +136,6 @@ export function selectOrganisation(organisation, mustAddNotification) {
       organisation
     });
   }
-}
-
-// MARK: Viewport
-export const UPDATE_VIEWPORT_DIMENSIONS = "UPDATE_VIEWPORT_DIMENSIONS";
-
-export function updateViewportDimensions(width, height) {
-  return {
-    type: UPDATE_VIEWPORT_DIMENSIONS,
-    width,
-    height
-  };
 }
 
 // MARK: Alarm Type update with Raster or Timeseries
@@ -270,5 +254,14 @@ export function removeFileFromQueue(file) {
   return {
     type: REMOVE_FILE_FROM_QUEUE,
     file
+  };
+}
+
+export const SET_OPEN_CLOSE_UPLOADQUEUE_MODAL = "SET_OPEN_CLOSE_UPLOADQUEUE_MODAL";
+
+export function openCloseUploadQueueModal(isOpen) {
+  return {
+    type: SET_OPEN_CLOSE_UPLOADQUEUE_MODAL,
+    isOpen
   };
 }

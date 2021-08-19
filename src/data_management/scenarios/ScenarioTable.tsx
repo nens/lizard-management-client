@@ -15,7 +15,7 @@ import DeleteModal from '../../components/DeleteModal';
 import AuthorisationModal from '../../components/AuthorisationModal';
 
 const baseUrl = "/api/v4/scenarios/";
-const navigationUrl = "/data_management/scenarios";
+const navigationUrl = "/management/data_management/scenarios";
 
 const fetchScenariosWithOptions = (uuids: string[], fetchOptions: RequestInit) => {
   const fetches = uuids.map (uuid => {
@@ -173,7 +173,7 @@ export const ScenarioTable = () =>  {
       imgAltDescription={"3Di icon"}
       headerText={"3Di Scenarios"}
       explanationText={defaultScenarioExplanationText(bytesToDisplayValue(scenarioTotalSize), selectedOrganisation.name)}
-      backUrl={"/data_management"}
+      backUrl={"/management/data_management"}
     >
         <TableStateContainer 
           gridTemplateColumns={"4fr 28fr 29fr 15fr 10fr 10fr 4fr"}

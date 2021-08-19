@@ -1,0 +1,20 @@
+.HomeTilesHeader {
+  font-size: 30px;
+  line-height: 37px;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: 500; /* adobe design seems to specify medium; */
+  margin-top: 22.5px;
+  margin-bottom: 15px;
+}
+.HomeTilesHeaderFirst {
+  margin-top: 45px;
+  /* margin-top: 32px; + 22.5px of margin tiles */
+}
+
+.HomeTilesHeader + hr {
+  margin-bottom: 22.5px;
+  border-top-width: 1px;
+  border-bottom-width: 0;
+}
+

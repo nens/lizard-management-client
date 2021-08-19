@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { NavLink, RouteComponentProps } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import { getSelectedOrganisation } from '../reducers';
@@ -6,7 +6,7 @@ import { ExplainSideColumn } from '../components/ExplainSideColumn';
 import { UserRoles } from '../form/UserRoles';
 import { userTableHelpText } from '../utils/help_texts/helpTextForUsers';
 import { fetchWithOptions } from '../utils/fetchWithOptions';
-import { usePaginatedFetch } from '../utils/usePaginatedFetch';
+import { useRecursiveFetch } from '../api/hooks';
 import TableActionButtons from '../components/TableActionButtons';
 import TableStateContainer from '../components/TableStateContainer';
 import InvitationModal from './InvitationModal';
@@ -17,20 +17,25 @@ import userManagementIcon from "../images/userManagement.svg";
 export const UserTable = (props: RouteComponentProps) =>  {
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const baseUrl = `/api/v4/organisations/${selectedOrganisation.uuid}/users/`;
-  const navigationUrl = "/users";
+  const navigationUrl = "/management/users";
 
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const [resetTable, setResetTable] = useState<Function | null>(null);
 
   const [invitationModal, setInvitationModal] = useState<boolean>(false);
-  const [invitationList, setInvitationList] = useState<any[] | null>(null);
 
-  const { results } = usePaginatedFetch({
-    url: `/api/v4/invitations/?organisation__uuid=${selectedOrganisation.uuid}`
-  });
-  useEffect(() => {
-    setInvitationList(results);
-  }, [results]);
+  const [refetchInvitationList, setRefetchInvitationList] = useState<boolean>(true);
+  const {
+    data: invitationList,
+    isFetching: invitationListIsFetching
+  } = useRecursiveFetch(
+    '/api/v4/invitations/',
+    { organisation__uuid: selectedOrganisation.uuid },
+    {
+      enabled: refetchInvitationList,
+      cacheTime: 0
+    }
+  );
 
   const deactivateActions = (
     rows: any[],
@@ -120,7 +125,7 @@ export const UserTable = (props: RouteComponentProps) =>  {
       imgAltDescription={"User icon"}
       headerText={"Users"}
       explanationText={userTableHelpText}
-      backUrl={"/"}
+      backUrl={"/management"}
     >
       <TableStateContainer
         gridTemplateColumns={"33fr 33fr 30fr 4fr"}
@@ -129,9 +134,16 @@ export const UserTable = (props: RouteComponentProps) =>  {
         checkBoxActions={[]}
         newItemOnClick={handleNewClick}
         customTableButton={{
-          name: invitationList ? `${invitationList.length} Pending ${invitationList.length > 1 ? 'Users' : 'User'}` : '0 Pending User',
-          disabled: !invitationList || invitationList.length === 0,
-          onClick: () => setInvitationModal(true)
+          name: (
+            invitationListIsFetching ? 'Loading' :
+            invitationList ? `${invitationList.length} Pending ${invitationList.length > 1 ? 'Users' : 'User'}` :
+            '0 Pending User'
+          ),
+          disabled: !invitationList || invitationList.length === 0 || invitationListIsFetching,
+          onClick: () => {
+            setInvitationModal(true);
+            setRefetchInvitationList(false);
+          }
         }}
         filterOptions={[
           {
@@ -167,9 +179,10 @@ export const UserTable = (props: RouteComponentProps) =>  {
       ) : null}
       {invitationModal && invitationList ? (
         <InvitationModal
-          invitations={invitationList}
-          setInvitations={setInvitationList}
-          handleClose={() => setInvitationModal(false)}
+          handleClose={() => {
+            setInvitationModal(false);
+            setRefetchInvitationList(true);
+          }}
         />
       ) : null}
     </ExplainSideColumn>

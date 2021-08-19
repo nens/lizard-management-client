@@ -22,19 +22,19 @@ import formStyles from './../../styles/Forms.module.css';
 import groupIcon from "../../images/group.svg";
 
 interface Props {
-  currentGroup?: any
+  currentRecord?: any
 };
 interface PropsFromDispatch {
   addNotification: (message: string | number, timeout: number) => void
 };
 
 const GroupForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (props) => {
-  const { currentGroup } = props;
+  const { currentRecord } = props;
   const selectedOrganisationUuid = useSelector(getSelectedOrganisation).uuid;
 
-  const initialValues = currentGroup ? {
-    name: currentGroup.name,
-    contacts: currentGroup.contacts.map((contact: any) => convertToSelectObject(contact.id, contact.first_name + ' ' + contact.last_name))
+  const initialValues = currentRecord ? {
+    name: currentRecord.name,
+    contacts: currentRecord.contacts.map((contact: any) => convertToSelectObject(contact.id, contact.first_name + ' ' + contact.last_name))
   } : {
     name: null,
     contacts: []
@@ -46,7 +46,7 @@ const GroupForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pr
       contacts: values.contacts.map((contact: any) => contact.value)
     };
 
-    if (!currentGroup) {
+    if (!currentRecord) {
       fetch("/api/v4/contactgroups/", {
         credentials: "same-origin",
         method: "POST",
@@ -60,7 +60,7 @@ const GroupForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pr
         const status = response.status;
         if (status === 201) {
           props.addNotification('Success! New group created', 2000);
-          props.history.push("/alarms/groups");
+          props.history.push("/management/alarms/groups");
         } else if (status === 403) {
           props.addNotification("Not authorized", 2000);
           console.error(response);
@@ -71,7 +71,7 @@ const GroupForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pr
       })
       .catch(console.error);
     } else {
-      fetch(`/api/v4/contactgroups/${currentGroup.id}/`, {
+      fetch(`/api/v4/contactgroups/${currentRecord.id}/`, {
         credentials: "same-origin",
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -81,7 +81,7 @@ const GroupForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pr
         const status = response.status;
         if (status === 200) {
           props.addNotification('Success! Group updated', 2000);
-          props.history.push("/alarms/groups");
+          props.history.push("/management/alarms/groups");
         } else {
           props.addNotification(status, 2000);
           console.error(response);
@@ -94,9 +94,9 @@ const GroupForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pr
   // Fetch list of contacts to add to group
   const {
     data: contacts,
-    status: contactsFetchStatus
+    isFetching: contactsIsFetching
   } = useRecursiveFetch('/api/v4/contacts/', {
-    organisation__uuid: currentGroup ? currentGroup.organisation.uuid : selectedOrganisationUuid
+    organisation__uuid: currentRecord ? currentRecord.organisation.uuid : selectedOrganisationUuid
   });
 
   // Modal to send message to all contacts in group
@@ -125,7 +125,7 @@ const GroupForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pr
       imgAltDescription={"Group icon"}
       headerText={"Groups"}
       explanationText={groupFormHelpText[fieldOnFocus] || groupFormHelpText['default']}
-      backUrl={"/alarms/groups"}
+      backUrl={"/management/alarms/groups"}
       fieldName={fieldOnFocus}
     >
       <form
@@ -155,7 +155,7 @@ const GroupForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pr
           options={contacts ? contacts.map((contact: any) => convertToSelectObject(contact.id, contact.first_name + ' ' + contact.last_name, contact.email, contact.phone_number)) : []}
           validated
           isMulti
-          isLoading={contactsFetchStatus === 'loading'}
+          isLoading={contactsIsFetching}
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
@@ -163,12 +163,12 @@ const GroupForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pr
           className={formStyles.ButtonContainer}
         >
           <CancelButton
-            url={'/alarms/groups'}
+            url={'/management/alarms/groups'}
           />
           <div style={{
             display: "flex"
           }}>
-            {currentGroup ? (
+            {currentRecord ? (
               <div style={{marginRight: "16px"}}>
                 <FormActionButtons
                   actions={[
@@ -191,17 +191,17 @@ const GroupForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pr
         </div>
         {showGroupMessageModal ? (
           <GroupMessage
-            groupId={currentGroup.id}
+            groupId={currentRecord.id}
             handleClose={() => setShowGroupMessageModal(false)}
           />
         ) :null}
-        {currentGroup && showDeleteModal ? (
+        {currentRecord && showDeleteModal ? (
           <DeleteModal
-            rows={[currentGroup]}
+            rows={[currentRecord]}
             displayContent={[{name: "name", width: 30}, {name: "id", width: 70}]}
             fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
             handleClose={() => setShowDeleteModal(false)}
-            tableUrl={'/alarms/groups'}
+            tableUrl={'/management/alarms/groups'}
           />
         ) : null}
       </form>

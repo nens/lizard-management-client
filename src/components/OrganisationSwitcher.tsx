@@ -11,8 +11,8 @@ import { connect } from "react-redux";
 import { selectOrganisation } from "../actions";
 import { FormattedMessage, injectIntl } from "react-intl";
 import { Scrollbars } from "react-custom-scrollbars";
-import doArraysHaveEqualElement from '../utils/doArraysHaveEqualElement';
-import {appTiles} from '../home/AppTileConfig';
+import { userHasCorrectRolesForCurrentNavigationLinkTile} from '../home/AppTileConfig';
+
 
 interface PropsArgs {
   handleClose: () => void,
@@ -72,16 +72,13 @@ const OrganisationSwitcher = (props:Props) => {
     const filteredOrganisations = filterValue
     // todo: fix this any
       ? organisations.filter((org:any) => {
-        if (org.name.toLowerCase().indexOf(filterValue) !== -1) {
+        if (org.name.toLowerCase().indexOf(filterValue.toLowerCase()) !== -1) {
             return org;
           }
           return false;
         })
       : organisations;
 
-    const currentHomeAppTile = appTiles.find(icon => {
-      return window.location.href.includes(icon.linksTo)
-    });
     // todo add type defenitions for props.intl.formatMessage
     // @ts-ignore
     const authorisationText = props.intl.formatMessage({ id: "authorization.organisation_not_allowed_current_page", defaultMessage: "! Organisation not authorized to visit current page !" });
@@ -145,7 +142,7 @@ const OrganisationSwitcher = (props:Props) => {
                 {filteredOrganisations
                 // Todo fix any og organisation
                   ? filteredOrganisations.map((organisation:any, i:number) => {
-                      const hasRequiredRoles = !currentHomeAppTile || doArraysHaveEqualElement(organisation.roles, currentHomeAppTile.requiresOneOfRoles);
+                      const hasRequiredRoles = userHasCorrectRolesForCurrentNavigationLinkTile(organisation.roles);
                       return (
                         <div
                           key={organisation.uuid}

@@ -1,82 +1,78 @@
 import React, { useState, useEffect } from "react";
 import { RouteComponentProps } from 'react-router';
-import MDSpinner from "react-md-spinner";
 import { getUuidFromUrl } from "../../../utils/getUuidFromUrl";
-import { usePaginatedFetch } from "../../../utils/usePaginatedFetch";
+import { useRecursiveFetch } from "../../../api/hooks";
 import { TimeseriesFromTimeseriesEndpoint } from "../../../types/timeseriesType";
+import { createFetchRecordFunctionFromUrl } from '../../../utils/createFetchRecordFunctionFromUrl';
 import TimeseriesAlarmForm from "./TimeseriesAlarmForm";
+import SpinnerIfNotLoaded from '../../../components/SpinnerIfNotLoaded';
 
 interface RouteParams {
   uuid: string;
 };
 
+interface TimeseriesAlarm {
+  timeseries: any;
+  organisation: {uuid: string}
+}
+
 export const EditTimeseriesAlarm: React.FC<RouteComponentProps<RouteParams>> = (props) => {
-  const [currentTimeseriesAlarm, setCurrentTimeseriesAlarm] = useState<any | null>(null);
-  const [timeseries, setTimeseries] = useState<TimeseriesFromTimeseriesEndpoint | null>(null);
+  const [currentRecord, setCurrentRecord] = useState<TimeseriesAlarm | null>(null);
+  const [timeseries, setTimeseries] = useState<TimeseriesFromTimeseriesEndpoint | undefined>(undefined);
 
   const { uuid } = props.match.params;
+
   useEffect(() => {
     (async () => {
-      const timeseriesAlarm = await fetch(`/api/v4/timeseriesalarms/${uuid}/`, {
-        credentials: "same-origin"
-      }).then(
-        response => response.json()
-      );
-
-      const timeseriesUrl = timeseriesAlarm.timeseries;
-      const timeseriesUuid = getUuidFromUrl(timeseriesUrl);
-      const timeseries = await fetch(`/api/v4/timeseries/${timeseriesUuid}/`, {
-        credentials: 'same-origin'
-      }).then(
-        response => response.json()
-      )
-
-      setTimeseries(timeseries);
-      setCurrentTimeseriesAlarm(timeseriesAlarm);
+      const currentRecord = await createFetchRecordFunctionFromUrl(`/api/v4/timeseriesalarms/${uuid}/`)();
+      setCurrentRecord(currentRecord);
     })();
   }, [uuid]);
+  useEffect(() => {
+    (async () => {
+      if (currentRecord) {
+        const timeseriesUrl = currentRecord.timeseries;
+        const timeseriesUuid = getUuidFromUrl(timeseriesUrl);
+        const timeseries = await createFetchRecordFunctionFromUrl(`/api/v4/timeseriesalarms/${timeseriesUuid}/`)();
+        setTimeseries(timeseries);
+      }
+    })();
+  }, [currentRecord]);
 
   const {
-    results: groups,
-    fetchingState: groupsFetchingState
-  } = usePaginatedFetch({
-    url: currentTimeseriesAlarm ? `/api/v4/contactgroups/?organisation__uuid=${currentTimeseriesAlarm.organisation.uuid}` : ''
-  });
+    data: groups,
+    status: groupsFetchStatus
+  } = useRecursiveFetch(
+    '/api/v4/contactgroups/',
+    { organisation__uuid: currentRecord ? currentRecord.organisation.uuid : '' },
+    { enabled: !!currentRecord }
+  );
 
   const {
-    results: templates,
-    fetchingState: templatesFetchingState
-  } = usePaginatedFetch({
-    url: currentTimeseriesAlarm ? `/api/v4/messages/?organisation__uuid=${currentTimeseriesAlarm.organisation.uuid}` : ''
-  });
+    data: templates,
+    status: templatesFetchStatus
+  } = useRecursiveFetch(
+    '/api/v4/messages/',
+    { organisation__uuid: currentRecord ? currentRecord.organisation.uuid : '' },
+    { enabled: !!currentRecord }
+  );
 
-  if (
-    currentTimeseriesAlarm &&
-    timeseries &&
-    groupsFetchingState === 'RETRIEVED' &&
-    templatesFetchingState === 'RETRIEVED'
-  ) {
     return (
-      <TimeseriesAlarmForm
-        groups={groups || []}
-        templates={templates || []}
-        currentTimeseriesAlarm={currentTimeseriesAlarm}
-        timeseries={timeseries}
-      />
-    );
-  } else {
-    return (
-      <div
-        style={{
-          position: "relative",
-          top: 50,
-          height: 300,
-          bottom: 50,
-          marginLeft: "50%"
-        }}
+      <SpinnerIfNotLoaded
+        loaded={!!(
+          currentRecord && timeseries &&
+          groupsFetchStatus === 'success' &&
+          templatesFetchStatus === 'success'
+        )}
       >
-        <MDSpinner size={24} />
-      </div>
+        <TimeseriesAlarmForm
+          currentRecord={currentRecord}
+          timeseries={timeseries}
+          groups={groups || []}
+          templates={templates || []}
+        />
+      </SpinnerIfNotLoaded>
+      
     );
-  }
+  
 };

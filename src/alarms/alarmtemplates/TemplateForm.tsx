@@ -24,7 +24,7 @@ import templateIcon from "../../images/templates@3x.svg";
 import FormActionButtons from '../../components/FormActionButtons';
 
 interface Props {
-  currentTemplate?: any
+  currentRecord?: any
 };
 interface PropsFromDispatch {
   addNotification: (message: string | number, timeout: number) => void
@@ -95,16 +95,16 @@ export const availableParameters = [
 ];
 
 const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (props) => {
-  const { currentTemplate } = props;
+  const { currentRecord } = props;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
 
-  const initialValues = currentTemplate ? {
-    name: currentTemplate.name,
-    type: convertToSelectObject(currentTemplate.type, currentTemplate.type.toUpperCase()),
-    subject: currentTemplate.subject,
-    message: currentTemplate.type === 'sms' ? currentTemplate.text : currentTemplate.html, // if email, read html field
-    noFurtherImpactOption: currentTemplate.no_further_impact,
+  const initialValues = currentRecord ? {
+    name: currentRecord.name,
+    type: convertToSelectObject(currentRecord.type, currentRecord.type.toUpperCase()),
+    subject: currentRecord.subject,
+    message: currentRecord.type === 'sms' ? currentRecord.text : currentRecord.html, // if email, read html field
+    noFurtherImpactOption: currentRecord.no_further_impact,
   } : {
     name: null,
     type: convertToSelectObject('email', 'EMAIL'),
@@ -122,7 +122,7 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
       no_further_impact: values.noFurtherImpactOption,
     };
 
-    if (!currentTemplate) {
+    if (!currentRecord) {
       fetch("/api/v4/messages/", {
         credentials: "same-origin",
         method: "POST",
@@ -137,7 +137,7 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
         const status = response.status;
         if (status === 201) {
           props.addNotification('Success! New template created', 2000);
-          props.history.push("/alarms/templates");
+          props.history.push("/management/alarms/templates");
         } else if (status === 403) {
           props.addNotification("Not authorized", 2000);
           console.error(response);
@@ -148,7 +148,7 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
       })
       .catch(console.error);
     } else {
-      fetch(`/api/v4/messages/${currentTemplate.id}/`, {
+      fetch(`/api/v4/messages/${currentRecord.id}/`, {
         credentials: "same-origin",
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -158,7 +158,7 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
         const status = response.status;
         if (status === 200) {
           props.addNotification('Success! Template updated', 2000);
-          props.history.push("/alarms/templates");
+          props.history.push("/management/alarms/templates");
         } else {
           props.addNotification(status, 2000);
           console.error(response);
@@ -254,7 +254,7 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
       imgAltDescription={"Template icon"}
       headerText={"Templates"}
       explanationText={templateFormHelpText[fieldOnFocus] || templateFormHelpText['default']}
-      backUrl={"/alarms/templates"}
+      backUrl={"/management/alarms/templates"}
       fieldName={fieldOnFocus}
     >
       <form
@@ -291,7 +291,7 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
             }
           ]}
           validated
-          readOnly={currentTemplate}
+          readOnly={currentRecord}
           isClearable={false}
           onFocus={handleFocus}
           onBlur={handleBlur}
@@ -362,10 +362,10 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           className={formStyles.ButtonContainer}
         >
           <CancelButton
-            url={'/alarms/templates'}
+            url={'/management/alarms/templates'}
           />
           <div style={{display: "flex"}}>
-            {currentTemplate ? (
+            {currentRecord ? (
               <div style={{ marginRight: 16 }}>
                 <FormActionButtons
                   actions={[
@@ -383,13 +383,13 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           </div>
         </div>
       </form>
-      {currentTemplate && showDeleteModal ? (
+      {currentRecord && showDeleteModal ? (
         <DeleteModal
-          rows={[currentTemplate]}
+          rows={[currentRecord]}
           displayContent={[{name: "name", width: 30}, {name: "type", width: 20}, {name: "id", width: 50}]}
           fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
           handleClose={() => setShowDeleteModal(false)}
-          tableUrl={'/alarms/templates'}
+          tableUrl={'/management/alarms/templates'}
         />
       ) : null}
     </ExplainSideColumn>

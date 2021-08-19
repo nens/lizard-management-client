@@ -13,7 +13,7 @@ import tableStyles from "../../../components/Table.module.css";
 import timeseriesIcon from "../../../images/timeseries_icon.svg";
 
 export const baseUrl = "/api/v4/timeseries/";
-const navigationUrl = "/data_management/timeseries/timeseries";
+const navigationUrl = "/management/data_management/timeseries/timeseries";
 
 export const TimeseriesTable = (props: RouteComponentProps) =>  {
   const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
@@ -166,7 +166,7 @@ export const TimeseriesTable = (props: RouteComponentProps) =>  {
       imgAltDescription={"Timeseries icon"}
       headerText={"Time Series"}
       explanationText={defaultTableHelpText('Search or sort your time series here.')}
-      backUrl={"/data_management/timeseries"}
+      backUrl={"/management/data_management/timeseries"}
     >
       <TableStateContainer
         gridTemplateColumns={"4fr 20fr 18fr 18fr 22fr 14fr 4fr"}

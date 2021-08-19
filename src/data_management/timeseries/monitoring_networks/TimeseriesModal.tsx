@@ -32,7 +32,7 @@ function TimeseriesModal (props: MyProps & DispatchProps) {
   const { currentMonitoringNetworkUuid } = props;
 
   const baseUrl = `/api/v4/monitoringnetworks/${currentMonitoringNetworkUuid}/timeseries/`;
-  const timeseriesTableUrl = '/management#/data_management/timeseries/timeseries';
+  const timeseriesTableUrl = '/management/data_management/timeseries/timeseries';
 
   // Filter options for timeseries list
   const filterOptions = [

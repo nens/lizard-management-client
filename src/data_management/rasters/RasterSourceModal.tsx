@@ -35,7 +35,7 @@ export const RasterSourceModal: React.FC<SourceModalProps> = (props) => {
             <li>
               <a
                 key={rasterSource}
-                href={`/management#/data_management/rasters/sources/${rasterSource}/`}
+                href={`/management/data_management/rasters/sources/${rasterSource}/`}
                 target="_blank"
                 rel="noopener noreferrer"
               >

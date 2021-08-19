@@ -30,9 +30,9 @@ import formStyles from './../../../styles/Forms.module.css';
 import rasterAlarmIcon from "../../../images/alarm@3x.svg";
 
 interface Props {
+  currentRecord?: any,
   groups: any[],
   templates: any[],
-  currentRasterAlarm?: any,
   raster?: RasterLayerFromAPI
 };
 
@@ -57,23 +57,23 @@ const fetchRasterLayers = async (uuid: string, searchQuery: string) => {
 };
 
 const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (props) => {
-  const { currentRasterAlarm, raster, groups, templates } = props;
+  const { currentRecord, raster, groups, templates } = props;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
-  const navigationUrl = "/alarms/notifications/raster_alarms";
+  const navigationUrl = "/management/alarms/notifications/raster_alarms";
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
 
-  const initialValues = currentRasterAlarm && raster ? {
-    name: currentRasterAlarm.name,
+  const initialValues = currentRecord && raster ? {
+    name: currentRecord.name,
     raster: convertToSelectObject(raster.uuid!, raster.name),
-    point: currentRasterAlarm.geometry ? {lat: currentRasterAlarm.geometry.coordinates[1], lng: currentRasterAlarm.geometry.coordinates[0]} : null, // point in format of {lat: number, lng: number}
-    relative: !!currentRasterAlarm.relative_start || !!currentRasterAlarm.relative_end,
-    relativeStart: currentRasterAlarm.relative_start ? convertDurationObjToSeconds(rasterIntervalStringServerToDurationObject(currentRasterAlarm.relative_start)) : null,
-    relativeEnd: currentRasterAlarm.relative_end ? convertDurationObjToSeconds(rasterIntervalStringServerToDurationObject(currentRasterAlarm.relative_end)) : null,
-    snoozeOn: currentRasterAlarm.snooze_sign_on,
-    snoozeOff: currentRasterAlarm.snooze_sign_off,
-    comparison: convertToSelectObject(currentRasterAlarm.comparison),
-    thresholds: currentRasterAlarm.thresholds,
-    recipients: currentRasterAlarm.messages.map((message: any) => {
+    point: currentRecord.geometry ? {lat: currentRecord.geometry.coordinates[1], lng: currentRecord.geometry.coordinates[0]} : null, // point in format of {lat: number, lng: number}
+    relative: !!currentRecord.relative_start || !!currentRecord.relative_end,
+    relativeStart: currentRecord.relative_start ? convertDurationObjToSeconds(rasterIntervalStringServerToDurationObject(currentRecord.relative_start)) : null,
+    relativeEnd: currentRecord.relative_end ? convertDurationObjToSeconds(rasterIntervalStringServerToDurationObject(currentRecord.relative_end)) : null,
+    snoozeOn: currentRecord.snooze_sign_on,
+    snoozeOff: currentRecord.snooze_sign_off,
+    comparison: convertToSelectObject(currentRecord.comparison),
+    thresholds: currentRecord.thresholds,
+    recipients: currentRecord.messages.map((message: any) => {
       const groupId = parseInt(getUuidFromUrl(message.contact_group));
       const templateId = parseInt(getUuidFromUrl(message.message));
       const selectedGroup = groups.find(group => group.id === groupId);
@@ -118,7 +118,7 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
       }))
     };
 
-    if (!currentRasterAlarm) {
+    if (!currentRecord) {
       fetch("/api/v4/rasteralarms/", {
         credentials: "same-origin",
         method: "POST",
@@ -132,7 +132,7 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
         const status = response.status;
         if (status === 201) {
           props.addNotification('Success! New raster alarm created', 2000);
-          props.history.push("/alarms/notifications/raster_alarms");
+          props.history.push("/management/alarms/notifications/raster_alarms");
         } else if (status === 403) {
           props.addNotification("Not authorized", 2000);
           console.error(response);
@@ -143,7 +143,7 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
       })
       .catch(console.error);
     } else {
-      fetch(`/api/v4/rasteralarms/${currentRasterAlarm.uuid}/`, {
+      fetch(`/api/v4/rasteralarms/${currentRecord.uuid}/`, {
         credentials: "same-origin",
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -153,7 +153,7 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
         const status = response.status;
         if (status === 200) {
           props.addNotification('Success! Raster alarm updated', 2000);
-          props.history.push("/alarms/notifications/raster_alarms");
+          props.history.push("/management/alarms/notifications/raster_alarms");
         } else {
           props.addNotification(status, 2000);
           console.error(response);
@@ -184,7 +184,7 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
       imgAltDescription={"Raster alarm icon"}
       headerText={"Raster alarms"}
       explanationText={alarmFormHelpText[fieldOnFocus] || alarmFormHelpText['default']}
-      backUrl={"/alarms/notifications/raster_alarms"}
+      backUrl={"/management/alarms/notifications/raster_alarms"}
       fieldName={fieldOnFocus}
     >
       <form
@@ -208,11 +208,11 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
-        {currentRasterAlarm ? (
+        {currentRecord ? (
           <TextInput
             title={'UUID'}
             name={'uuid'}
-            value={currentRasterAlarm.uuid}
+            value={currentRecord.uuid}
             valueChanged={handleInputChange}
             validated
             onFocus={handleFocus}
@@ -356,7 +356,7 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
         <Recipients
           title={'Recipients'}
           name={'recipients'}
-          organisation={currentRasterAlarm ? currentRasterAlarm.organisation.uuid : selectedOrganisation.uuid}
+          organisation={currentRecord ? currentRecord.organisation.uuid : selectedOrganisation.uuid}
           recipients={values.recipients}
           availableGroups={groups.map(group => convertToSelectObject(group.id, group.name))}
           availableTemplates={templates.map(template => convertToSelectObject(template.id, template.name))}
@@ -374,7 +374,7 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
             url={navigationUrl}
           />
           <div style={{display: "flex"}}>
-            {currentRasterAlarm ? (
+            {currentRecord ? (
               <div style={{ marginRight: 16 }}>
                 <FormActionButtons
                   actions={[
@@ -392,9 +392,9 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           </div>
         </div>
       </form>
-      {currentRasterAlarm && showDeleteModal ? (
+      {currentRecord && showDeleteModal ? (
         <DeleteModal
-          rows={[currentRasterAlarm]}
+          rows={[currentRecord]}
           displayContent={[{name: "name", width: 40}, {name: "uuid", width: 60}]}
           fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
           handleClose={() => setShowDeleteModal(false)}

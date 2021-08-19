@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import configureStore from "./configureStore";
 import { addLocaleData, IntlProvider } from "react-intl";
-import { HashRouter as Router } from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
 import { QueryClientProvider } from "react-query";
 import { queryClient } from "./api/hooks";
 import ScrollToTop from "./components/ScrollToTop";
