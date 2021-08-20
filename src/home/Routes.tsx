@@ -49,6 +49,7 @@ import { UserTable } from "../users/UserTable";
 import { EditUser } from "../users/EditUser";
 import { NewUser } from "../users/NewUser";
 import SpinnerIfStandardSelectorsNotLoaded from '../components/SpinnerIfStandardSelectorsNotLoaded';
+import { ViewContract } from '../contracts/ViewContract';
 
 const authenticatedRoutes = () => {
   return (
@@ -62,6 +63,9 @@ const authenticatedRoutes = () => {
             <Route exact path="/management/personal_api_keys" component={PersonalApiKeysTable} />
             <Route exact path="/management/personal_api_keys/new" component={NewPersonalApiKey} />
             <Route exact path="/management/personal_api_keys/:uuid" component={EditPersonalApiKey} />
+            
+            <Route exact path="/management/contract" component={ViewContract} />
+            
 
             <Route exact path="/management/data_management/rasters/sources" component={RasterSourceTable} />
             <Route exact path="/management/data_management/rasters/sources/new" component={NewRasterSource} />
