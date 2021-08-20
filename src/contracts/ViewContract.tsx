@@ -4,6 +4,9 @@ import React, { useState, useEffect } from "react";
 import SpinnerIfNotLoaded from '../components/SpinnerIfNotLoaded';
 import { createFetchRecordFunctionFromUrl } from '../utils/createFetchRecordFunctionFromUrl';
 import { ContractForm} from './ContractForm';
+import {  useSelector } from "react-redux";
+import {getContractForSelectedOrganisation, getUsage} from '../reducers';
+
 
 // interface RouteParams {
 //   uuid: string;
@@ -11,7 +14,9 @@ import { ContractForm} from './ContractForm';
 
 // export const ViewContract: React.FC<RouteComponentProps<RouteParams>> = (props) => {
 export const ViewContract = () => {
-  const [currentRecord, setCurrentRecord] = useState<any | null>(null);
+  const contractFetched = useSelector(getContractForSelectedOrganisation);
+  const usageFetched = useSelector(getUsage);
+  console.log('contractFetched', contractFetched)
 
   // const { uuid } = props.match.params;
   // useEffect(() => {
@@ -23,11 +28,9 @@ export const ViewContract = () => {
 
   return (
     <SpinnerIfNotLoaded
-      loaded={!!currentRecord}
+      loaded={!!contractFetched && !!usageFetched}
     >
-      {/* <PersonalApiKeyForm
-        currentRecord={currentRecord}
-      /> */}
+      <ContractForm/>
     </SpinnerIfNotLoaded>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
+import {  useSelector } from "react-redux";
 import { RouteComponentProps, withRouter } from 'react-router';
 import { ExplainSideColumn } from '../components/ExplainSideColumn';
 import { TextInput } from './../form/TextInput';
@@ -9,14 +9,14 @@ import { CancelButton } from '../form/CancelButton';
 import { useForm, Values } from '../form/useForm';
 import { minLength } from '../form/validators';
 import { addNotification } from '../actions';
-import { personalApiKeysFormHelpText } from '../utils/help_texts/helpTextForPersonalAPIKeys';
+import { helpTextContractView } from '../utils/help_texts/helpTextContractView';
 import { fetchWithOptions } from '../utils/fetchWithOptions';
 import Modal from '../components/Modal';
 import DeleteModal from '../components/DeleteModal';
 import FormActionButtons from '../components/FormActionButtons';
 import styles from './PersonalApiKeyForm.module.css';
 import formStyles from './../styles/Forms.module.css';
-import personalApiKeysIcon from "../images/personal_api_key_icon.svg";
+import agreementIcon from "../images/agreement.svg";
 
 
 export const ContractForm = () => {
@@ -43,11 +43,11 @@ export const ContractForm = () => {
 
   return (
     <ExplainSideColumn
-      imgUrl={personalApiKeysIcon}
-      imgAltDescription={"Personal API keys icon"}
-      headerText={"Personal API keys"}
-      explanationText={personalApiKeysFormHelpText[fieldOnFocus] || personalApiKeysFormHelpText['default']}
-      backUrl={"/management/personal_api_keys"}
+      imgUrl={agreementIcon}
+      imgAltDescription={"Contract Icon"}
+      headerText={"Contract"}
+      explanationText={helpTextContractView[fieldOnFocus] || helpTextContractView['default']}
+      backUrl={"/management"}
       fieldName={fieldOnFocus}
     >
       <form
@@ -90,7 +90,7 @@ export const ContractForm = () => {
           className={formStyles.ButtonContainer}
         >
           <CancelButton
-            url={'/management/personal_api_keys'}
+            url={'/management'}
           />
           
         </div>

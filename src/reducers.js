@@ -357,13 +357,20 @@ export const getSelectedOrganisation = (state) => {
   return state.organisations.selected;
 };
 
+export const getUsage = (state) => {
+  if (!state.usage.isFetching && state.usage.timesFetched > 0) {
+    return state.usage;
+  }
+  return null;
+};
+
 export const getScenarioTotalSize = (state) => {
   return state.usage.scenario_total_size;
 };
 export const getRasterTotalSize = (state) => {
   return state.usage.raster_total_size;
 };
-export const getContratForSelectedOrganisation = (state) => {
+export const getContractForSelectedOrganisation = (state) => {
   const selectedOrganisation = getSelectedOrganisation(state);
   const selectedOrganisationUuid = selectedOrganisation && selectedOrganisation.uuid;
   if (!selectedOrganisationUuid) {
@@ -376,7 +383,7 @@ export const getContratForSelectedOrganisation = (state) => {
 }
 
 export const getScenarioAvailableSizeDefinedByContract = (state) => {
-  const currentContract = getContratForSelectedOrganisation(state);
+  const currentContract = getContractForSelectedOrganisation(state);
   return (currentContract && currentContract.scenario_storage_capacity) || 0;
 }
 
