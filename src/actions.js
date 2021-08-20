@@ -1,6 +1,7 @@
 // MARK: Bootstrap
 import { recursiveFetchFunction } from "./api/hooks";
 import { getLocalStorage } from "./utils/localStorageUtils";
+import { getSelectedOrganisation } from "./reducers";
 
 export const RECEIVE_LIZARD_BOOTSTRAP = "RECEIVE_LIZARD_BOOTSTRAP";
 export const REQUEST_LIZARD_BOOTSTRAP = "REQUEST_LIZARD_BOOTSTRAP";
@@ -123,18 +124,16 @@ export function fetchOrganisations() {
   };
 }
 
-export function selectOrganisation(organisation) {
-  return (dispatch) => {
-    localStorage.setItem(
-      "lizard-management-current-organisation",
-      JSON.stringify(organisation)
-    );
-    
-    if (organisation && organisation.uuid) {
+export function requestUsage () {
+  return (dispatch, getState) => {
+    const selectedOrganisation = getSelectedOrganisation(getState());
+    console.log('selectedOrganisation', selectedOrganisation);
+    if (selectedOrganisation) {
+      const selectedorganisationUuid = selectedOrganisation.uuid;
       dispatch({
         type: REQUEST_USAGE,
       });
-      const url = `/api/v4/organisations/${organisation.uuid}/usage/`;
+      const url = `/api/v4/organisations/${selectedorganisationUuid}/usage/`;
       fetch(url, {
           credentials: "same-origin"
       })
@@ -146,11 +145,21 @@ export function selectOrganisation(organisation) {
           });
       });
     }
+    
+  };
+}
 
+export function selectOrganisation(organisation) {
+  return (dispatch) => {
+    localStorage.setItem(
+      "lizard-management-current-organisation",
+      JSON.stringify(organisation)
+    );
     dispatch({
       type: SELECT_ORGANISATION,
       organisation
     });
+    dispatch(requestUsage());
   }
 }
 
