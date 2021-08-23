@@ -56,8 +56,8 @@ export const ContractForm = () => {
           1: General
         </span>
         <TextInput
-          title={'Member since'}
-          name={'member_since'}
+          title={'Start dat contract'}
+          name={'start_date_contract'}
           value={(new Date(contractObjApi.start).toLocaleDateString())}
           valueChanged={handleInputChange}
           clearInput={clearInput}
