@@ -1,24 +1,17 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {  useSelector } from "react-redux";
-import { RouteComponentProps, withRouter } from 'react-router';
 import { ExplainSideColumn } from '../components/ExplainSideColumn';
 import { TextInput } from './../form/TextInput';
 import { CheckBox } from './../form/CheckBox';
-import { SubmitButton } from '../form/SubmitButton';
 import { CancelButton } from '../form/CancelButton';
 import { useForm, Values } from '../form/useForm';
 import { minLength } from '../form/validators';
-import { addNotification } from '../actions';
 import { getContractForSelectedOrganisation, getUsage } from '../reducers';
 import { helpTextContractView } from '../utils/help_texts/helpTextContractView';
-import { fetchWithOptions } from '../utils/fetchWithOptions';
-import Modal from '../components/Modal';
-import DeleteModal from '../components/DeleteModal';
-import FormActionButtons from '../components/FormActionButtons';
-import styles from './PersonalApiKeyForm.module.css';
 import formStyles from './../styles/Forms.module.css';
 import agreementIcon from "../images/agreement.svg";
 import { TextArea } from './../form/TextArea';
+import UsagePieChart from './../components/UsagePieChart';
 
 
 
@@ -35,9 +28,7 @@ export const ContractForm = () => {
   const {
     values,
     triedToSubmit,
-    // formSubmitted,
     handleValueChange,
-    tryToSubmitForm,
     handleInputChange,
     fieldOnFocus,
     handleFocus,
@@ -80,17 +71,41 @@ export const ContractForm = () => {
         <span className={formStyles.FormFieldTitle}>
           2. Data
         </span>
-        <CheckBox
-          title={'Read / Write'}
-          name={'scopeWildcardReadWrite'}
-          value={values.scopeWildcardReadWrite}
-          valueChanged={bool => handleValueChange('scopeWildcardReadWrite', bool)}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-          readOnly={true}
-          validated={values.scopeWildcardReadWrite === true || values.scopeFtpReadWrite === true }
-          errorMessage={(values.scopeWildcardReadWrite === true || values.scopeFtpReadWrite === true)? false : "Chose at least 1 scope: read/ write or FTP"}
-        />
+        <div 
+          style={{
+            display: "flex",
+          }}
+        >
+          <div
+            style={{
+              marginRight: "100px"
+            }}
+          >
+            <div className={formStyles.LabelTitle} >Rasters</div>
+            <UsagePieChart
+              used={usageObj.raster_total_size}
+              available={contractObjApi.raster_storage_capacity}
+            />
+          </div>
+          <div
+            style={{
+              marginRight: "100px"
+            }}
+          >
+            <div className={formStyles.LabelTitle}>Scenarios</div>
+            <UsagePieChart
+              used={usageObj.scenario_total_size}
+              available={contractObjApi.scenario_storage_capacity}
+            />
+          </div>
+          <div>
+            <div className={formStyles.LabelTitle}>Timeseries</div>
+            <UsagePieChart
+              used={usageObj.timeseries_total_size}
+              available={contractObjApi.timeseries_storage_capacity}
+            />
+          </div>
+        </div>
         <span className={formStyles.FormFieldTitle}>
           3. Other
         </span>
