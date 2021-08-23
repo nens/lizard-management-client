@@ -12,8 +12,22 @@ const UsagePieChart = (props:Props) => {
   const percentageUsed = (used/available) * 100;
   const percentageNotUsed = 100 - percentageUsed;
   return (
-      <div>
-        <div style={{position: "relative"}}>
+      <div
+      style={{
+        position: "relative",
+        alignItems: "flex-start",
+        display: "inline-flex",
+        flexDirection: "column",
+      }}
+      >
+        <div 
+          style={{
+            position: "relative",
+            alignItems: "flex-start",
+            display: "inline-flex",
+            flexDirection: "column",
+          }}
+        >
           <svg
             height={138}
             width={138}
@@ -57,6 +71,8 @@ const UsagePieChart = (props:Props) => {
         <div
           style={{
             textAlign: "center",
+            width: "100%",
+            marginTop: "8px",
             fontSize: "12px",
             lineHeight: "15px",
           }}

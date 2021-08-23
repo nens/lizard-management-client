@@ -7,74 +7,44 @@ import {
   supplierHelpText,
   uuidHelpText
 } from './defaultHelpText';
-import { bytesToDisplayValue } from '../../utils/byteUtils';
+import UsagePieChart from './../../components/UsagePieChart';
+
 
 
 
 export const defaultScenarioExplanationText = (usedSpace:number, totalAvailableSpace: number, organisation: string) => {
-  console.log('totalAvailableSpace', totalAvailableSpace)
-  const usedSpaceString = bytesToDisplayValue(usedSpace);
-  const totalAvailableSpaceString = bytesToDisplayValue(totalAvailableSpace); 
-  const availableSpaceLeft = totalAvailableSpace - usedSpace
-  const availableSpaceLeftString = bytesToDisplayValue(availableSpaceLeft); 
-
-  const barchartHeight = 340;
-  const fractionUsed = usedSpace / totalAvailableSpace;
-  const fractionNotUsed = (totalAvailableSpace - usedSpace) / totalAvailableSpace;
   return (
-    <div
-      // style={{
-      //   display:"grid",
-      //   gridTemplateColumns: "1fr 1fr",
-      //   columnGap: 5
-      // }}
-    >
-      {/* <span>Organisation:</span>
-      <span style={{ fontWeight: "bold" }}>{organisation}</span>
-      <span>Used storage:</span>
-      <span style={{ fontWeight: "bold" }}>{usedSpaceString}</span>
-      <span>Available storage:</span>
-      <span style={{ fontWeight: "bold" }}>{availableSpace}</span> */}
-      {/* <span>Used storage:</span>
-      <span style={{ fontWeight: "bold" }}>{usedSpaceString}</span>
-      <span>Storage left:</span>
-      <span style={{ fontWeight: "bold" }}>{availableSpaceLeft}</span> */}
-      <div>
-        <div
-          style={{
-            display:"grid",
-            gridTemplateColumns: "1fr 1fr",
-            columnGap: 5
-          }}
-        >
-          <span>Total available: </span>
-          <span style={{ fontWeight: "bold" }}>{totalAvailableSpaceString}</span>
+    <div>
+      {/* <div
+        style={{
+          display:"grid",
+          gridTemplateColumns: "1fr 1fr",
+          columnGap: 5,
+          marginBottom: "32px",
+        }}
+      >
+        <span>Organisation:</span>
+        <span style={{ fontWeight: "bold" }}>{organisation}</span>
+      </div> */}
+      <div
+        style={{
+          display:"flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <div style={{marginBottom: "16px",}}>
+          {`Scenario storage used for organisation `}
+          <div style={{fontWeight: "bold"}}>{organisation}</div>
         </div>
-      
-        </div>
-        <svg width="264" height="400" viewBox="0 0 264 400">
-          <rect
-            x="10"
-            y="50"
-            width="80"
-            height={barchartHeight}
-            fill="blue"
-          />
-          <rect
-            x="10"
-            y={50+fractionNotUsed}
-            width="80"
-            height={fractionUsed*340}
-            fill="red"
-          />
-          <g transform="translate(0 200)">
-            <text x="0" y="0">
-              <tspan x="0" dy="1.2em">Total space</tspan>
-              <tspan x="0" dy="1.2em">{totalAvailableSpace}</tspan>
-            </text>
-          </g>
-        </svg>
+        <UsagePieChart
+          used={usedSpace}
+          available={totalAvailableSpace}
+        />
       </div>
+      
+    </div>
+    
   );
 };
 
