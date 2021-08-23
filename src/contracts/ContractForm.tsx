@@ -9,6 +9,7 @@ import { CancelButton } from '../form/CancelButton';
 import { useForm, Values } from '../form/useForm';
 import { minLength } from '../form/validators';
 import { addNotification } from '../actions';
+import { getContractForSelectedOrganisation, getUsage } from '../reducers';
 import { helpTextContractView } from '../utils/help_texts/helpTextContractView';
 import { fetchWithOptions } from '../utils/fetchWithOptions';
 import Modal from '../components/Modal';
@@ -17,9 +18,14 @@ import FormActionButtons from '../components/FormActionButtons';
 import styles from './PersonalApiKeyForm.module.css';
 import formStyles from './../styles/Forms.module.css';
 import agreementIcon from "../images/agreement.svg";
+import { TextArea } from './../form/TextArea';
+
 
 
 export const ContractForm = () => {
+
+  const contractObjApi = useSelector(getContractForSelectedOrganisation);
+  const usageObj = useSelector(getUsage);
 
   const initialValues = {
   };
@@ -59,9 +65,9 @@ export const ContractForm = () => {
           1: General
         </span>
         <TextInput
-          title={'Name *'}
-          name={'name'}
-          value={values.name}
+          title={'Member since'}
+          name={'member_since'}
+          value={(new Date(contractObjApi.start).toLocaleDateString())}
           valueChanged={handleInputChange}
           clearInput={clearInput}
           validated={!minLength(2, values.name)}
@@ -72,7 +78,7 @@ export const ContractForm = () => {
           readOnly={true}
         />
         <span className={formStyles.FormFieldTitle}>
-          2. Scope
+          2. Data
         </span>
         <CheckBox
           title={'Read / Write'}
@@ -85,12 +91,103 @@ export const ContractForm = () => {
           validated={values.scopeWildcardReadWrite === true || values.scopeFtpReadWrite === true }
           errorMessage={(values.scopeWildcardReadWrite === true || values.scopeFtpReadWrite === true)? false : "Chose at least 1 scope: read/ write or FTP"}
         />
-        
+        <span className={formStyles.FormFieldTitle}>
+          3. Other
+        </span>
+        <TextInput
+          title={'Assets capacity'}
+          name={'asset_capacity'}
+          value={contractObjApi.asset_capacity}
+          valueChanged={handleInputChange}
+          clearInput={clearInput}
+          validated={!minLength(2, values.name)}
+          errorMessage={minLength(2, values.name)}
+          triedToSubmit={triedToSubmit}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          readOnly={true}
+        />
+        <TextInput
+          title={'Labels capacity'}
+          name={'label_capacity'}
+          value={contractObjApi.label_capacity}
+          valueChanged={handleInputChange}
+          clearInput={clearInput}
+          validated={!minLength(2, values.name)}
+          errorMessage={minLength(2, values.name)}
+          triedToSubmit={triedToSubmit}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          readOnly={true}
+        />
+        <TextInput
+          title={'Events capacity'}
+          name={'event_capacity'}
+          value={contractObjApi.event_capacity}
+          valueChanged={handleInputChange}
+          clearInput={clearInput}
+          validated={!minLength(2, values.name)}
+          errorMessage={minLength(2, values.name)}
+          triedToSubmit={triedToSubmit}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          readOnly={true}
+        />
+        <TextInput
+          title={'Alarm message capacity'}
+          name={'alarm_message_capacity'}
+          value={contractObjApi.alarm_message_capacity}
+          valueChanged={handleInputChange}
+          clearInput={clearInput}
+          validated={!minLength(2, values.name)}
+          errorMessage={minLength(2, values.name)}
+          triedToSubmit={triedToSubmit}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          readOnly={true}
+        />
+        <CheckBox
+          title={'Geoblocks functionality'}
+          name={'geoblocks_functionality'}
+          value={contractObjApi.geoblocks_acces}
+          valueChanged={bool => handleValueChange('scopeWildcardReadWrite', bool)}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          readOnly={true}
+          validated={true}
+          errorMessage={false}
+        />
+        <TextInput
+          title={'Geoblocks calculation units'}
+          name={'geoblocks_calculation_units'}
+          value={contractObjApi.geoblocks_calculation_units_capacity}
+          valueChanged={handleInputChange}
+          clearInput={clearInput}
+          validated={!minLength(2, values.name)}
+          errorMessage={minLength(2, values.name)}
+          triedToSubmit={triedToSubmit}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          readOnly={true}
+        />
+        <TextArea
+          title={'Links'}
+          name={'links'}
+          placeholder={'This is a layer based on raster_source'}
+          value={contractObjApi.links}
+          valueChanged={handleInputChange}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          clearInput={clearInput}
+          validated
+          readOnly={true}
+        />
         <div
           className={formStyles.ButtonContainer}
         >
           <CancelButton
             url={'/management'}
+            buttonText={"CLOSE"}
           />
           
         </div>

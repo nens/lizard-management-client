@@ -5,12 +5,14 @@ import buttonStyles from "../styles/Buttons.module.css";
 interface MyProps {
   url: string,
   form?: string,
+  buttonText?: string,
 };
 
 export const CancelButton: React.FC<MyProps> = (props) => {  
   const {
     url,
-    // form
+    // form,
+    buttonText,
   } = props;
 
   return (
@@ -18,7 +20,7 @@ export const CancelButton: React.FC<MyProps> = (props) => {
       to={url}
       className={buttonStyles.ButtonLink}
     >
-      CANCEL
+      {buttonText? buttonText : "CANCEL" }
     </NavLink>
   );
 };
