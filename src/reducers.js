@@ -370,6 +370,20 @@ export const getScenarioTotalSize = (state) => {
 export const getRasterTotalSize = (state) => {
   return state.usage.raster_total_size;
 };
+
+export const getIsItSureSelectedOrganisationHasNoContract = (state) => {
+  const contract = getContractForSelectedOrganisation(state);
+  if (
+    state.contracts.isFetching === false &&
+    state.contracts.timesFetched > 0 &&
+    !contract
+  ) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 export const getContractForSelectedOrganisation = (state) => {
   const selectedOrganisation = getSelectedOrganisation(state);
   const selectedOrganisationUuid = selectedOrganisation && selectedOrganisation.uuid;

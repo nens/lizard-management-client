@@ -337,7 +337,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     onUrl: "/management",
     linksToUrl: "/management/contract",
     linksToUrlExternal: false,
-    requiresOneOfRoles: ["user", "admin", "supplier", "manager"],
+    requiresOneOfRoles: ["admin", "supplier", "manager"],
     icon: agreementIcon,
   },
   { 
