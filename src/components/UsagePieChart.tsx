@@ -59,7 +59,6 @@ const UsagePieChart = (props:Props) => {
               position: "absolute", 
               width: "100%",
               textAlign: "center",
-              // left: "50%",
               top: "50%",
               transform: "translate(0%,-50%)",
               fontSize: "23px"

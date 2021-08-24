@@ -127,7 +127,6 @@ export function fetchOrganisations() {
 export function requestUsage () {
   return (dispatch, getState) => {
     const selectedOrganisation = getSelectedOrganisation(getState());
-    console.log('selectedOrganisation', selectedOrganisation);
     if (selectedOrganisation) {
       const selectedorganisationUuid = selectedOrganisation.uuid;
       dispatch({
