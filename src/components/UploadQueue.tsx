@@ -95,7 +95,7 @@ const UploadQueue: React.FC<MyProps & PropsFromDispatch> = (props) => {
           <div className={styles.GridItem}>Filesize</div>
           <div className={styles.GridItem}>Status</div>
           <div className={styles.GridItem}/>
-          <div className={styles.GridItem}/>
+          {/* <div className={styles.GridItem}/> */}
         </div>
         {(uploadFiles || []).length === 0?
           <div
@@ -128,7 +128,7 @@ const UploadQueue: React.FC<MyProps & PropsFromDispatch> = (props) => {
                 <div className={`${styles.GridItem} ${styles.Image}`}>
                   <img src={getStatusIcon(file.status)} alt={file.status} />
                 </div>
-                {file.status === 'SUCCESS' || file.status === 'FAILED' ? (
+                {/* {file.status === 'SUCCESS' || file.status === 'FAILED' ? (
                   <div
                     className={`${styles.GridItem} ${styles.RemoveIcon}`}
                     onClick={() => props.removeFileFromQueue(file)}
@@ -137,7 +137,7 @@ const UploadQueue: React.FC<MyProps & PropsFromDispatch> = (props) => {
                   </div>
                 ) : (
                   <div className={styles.GridItem} />
-                )}
+                )} */}
               </React.Fragment>
             ))}
           </div>
@@ -145,11 +145,19 @@ const UploadQueue: React.FC<MyProps & PropsFromDispatch> = (props) => {
       </div>
       <div className={styles.ModalFooter}>
         <button
+          className={buttonStyles.LinkCancel}
+          onClick={() => !mustWaitForFiles && props.handleClose()}
+          disabled={mustWaitForFiles}
+          title={'Close this modal'}
+        >
+          CLOSE
+        </button>
+        <button
           className={buttonStyles.NewButton}
           onClick={() => finishedFiles.map(file => props.removeFileFromQueue(file))}
           disabled={!finishedFiles || finishedFiles.length === 0}
         >
-          Clean queue
+          Clear finished tasks
         </button>
       </div>
     </ModalBackground>
