@@ -12,7 +12,7 @@ const NoOrganisationFoundComponent = () => {
       >
         <img alt={"Contract Icon"} src={agreementIcon}></img>
         <h1>No contract found for the selected organisation</h1>
-        <span>If you need a contract here please contact: <a href="mailto:email@nelen-schuurmans.nl">email@nelen-schuurmans.nl</a></span>
+        <span>If you have questions or want to change your contract please contact: <a href="mailto:email@nelen-schuurmans.nl">email@nelen-schuurmans.nl</a></span>
         
       </div>
   )
