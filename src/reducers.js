@@ -127,7 +127,7 @@ switch (action.type) {
   case REQUEST_CONTRACTS:
     return {...state, isFetching: true}
   case SET_CONTRACTS:
-    return {contracts: state.contracts.concat(action.contracts.results), isFetching: false, timesFetched: state.timesFetched + 1}
+    return {contracts: action.contracts, isFetching: false, timesFetched: state.timesFetched + 1}
   default:
       return state;
   } 

@@ -56,13 +56,11 @@ export const ContractForm = () => {
           1: General
         </span>
         <TextInput
-          title={'Start dat contract'}
+          title={'Start date contract'}
           name={'start_date_contract'}
           value={(new Date(contractObjApi.start).toLocaleDateString())}
           valueChanged={handleInputChange}
-          clearInput={clearInput}
-          validated={!minLength(2, values.name)}
-          errorMessage={minLength(2, values.name)}
+          validated
           triedToSubmit={triedToSubmit}
           onFocus={handleFocus}
           onBlur={handleBlur}
@@ -114,9 +112,7 @@ export const ContractForm = () => {
           name={'asset_capacity'}
           value={contractObjApi.asset_capacity}
           valueChanged={handleInputChange}
-          clearInput={clearInput}
-          validated={!minLength(2, values.name)}
-          errorMessage={minLength(2, values.name)}
+          validated
           triedToSubmit={triedToSubmit}
           onFocus={handleFocus}
           onBlur={handleBlur}

@@ -101,26 +101,14 @@ export function fetchOrganisations() {
     };
 
     // request contracts
-    const requestContracts = (url) => {
-      dispatch({
-        type: REQUEST_CONTRACTS,
-      });
-      fetch(url, {
-          credentials: "same-origin"
-      })
-      .then(response => response.json())
-      .then(data => {
-          dispatch({
-            type: SET_CONTRACTS,
-            contracts: data,
-          });
-          if (data.next) {
-            const relativeUrl = data.next.split('lizard.net')[1];
-            requestContracts(relativeUrl);
-          }
-      });
-    };
-    requestContracts(`/api/v4/contracts`);
+    dispatch({
+      type: REQUEST_CONTRACTS,
+    });
+    const contracts = await recursiveFetchFunction('/api/v4/contracts', []);
+    dispatch({
+      type: SET_CONTRACTS,
+      contracts: contracts,
+    });
   };
 }
 
