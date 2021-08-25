@@ -9,6 +9,7 @@ import backArrowIcon from "../images/backArrow.svg";
 import labelIcon from "../images/labels_icon.svg";
 import rasterSourcesIcon from "../images/raster_source_icon.svg";
 import rasterLayersIcon from "../images/raster_layer_icon.svg";
+import geoblockIcon from "../images/geoblock.svg";
 import labeltypesIcon from "../images/labeltypes_icon.svg";
 import alarmsIcon from "../images/alarm@3x.svg";
 import groupsIcon from "../images/group.svg";
@@ -387,6 +388,16 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     linksToUrlExternal: false,
     requiresOneOfRoles: ["admin", "supplier",],
     icon: rasterIcon,
+  },
+  {
+    title: "geoblocks",
+    homePageIcon: false,
+    order: 100,
+    onUrl: "/management/data_management",
+    linksToUrl: "/management/data_management/geoblocks",
+    linksToUrlExternal: false,
+    requiresOneOfRoles: ["admin", "supplier",],
+    icon: geoblockIcon,
   },
   {
     title: "WMS layers",

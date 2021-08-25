@@ -50,6 +50,7 @@ import { EditUser } from "../users/EditUser";
 import { NewUser } from "../users/NewUser";
 import SpinnerIfStandardSelectorsNotLoaded from '../components/SpinnerIfStandardSelectorsNotLoaded';
 import { ViewContract } from '../contracts/ViewContract';
+import { GeoBlockTable } from "../data_management/geoblocks/GeoBlockTable";
 
 const authenticatedRoutes = () => {
   return (
@@ -74,6 +75,8 @@ const authenticatedRoutes = () => {
             <Route exact path="/management/data_management/rasters/layers" component={RasterLayerTable} />
             <Route exact path="/management/data_management/rasters/layers/new" component={NewRasterLayer} />
             <Route exact path="/management/data_management/rasters/layers/:uuid" component={EditRasterLayer} />
+
+            <Route exact path="/management/data_management/geoblocks" component={GeoBlockTable} />
 
             <Route exact path="/management/data_management/wms_layers" component={WmsLayerTable} />
             <Route exact path="/management/data_management/wms_layers/new" component={NewWmsLayer} />
