@@ -49,6 +49,7 @@ import { UserTable } from "../users/UserTable";
 import { EditUser } from "../users/EditUser";
 import { NewUser } from "../users/NewUser";
 import {LayerCollectionsTable} from "../data_management/layer_collections/LayerCollectionsTable";
+import {EditLayerCollection} from "../data_management/layer_collections/EditLayerCollection";
 import SpinnerIfStandardSelectorsNotLoaded from '../components/SpinnerIfStandardSelectorsNotLoaded';
 
 const authenticatedRoutes = () => {
@@ -77,6 +78,7 @@ const authenticatedRoutes = () => {
             <Route exact path="/management/data_management/wms_layers/:id" component={EditWmsLayer} />
 
             <Route exact path="/management/data_management/layer_collections" component={LayerCollectionsTable} />
+            <Route exact path="/management/data_management/layer_collections/:slug" component={EditLayerCollection} />
 
             <Route exact path="/management/data_management/timeseries/timeseries" component={TimeseriesTable} />
             <Route exact path="/management/data_management/timeseries/timeseries/new" component={NewTimeseries} />

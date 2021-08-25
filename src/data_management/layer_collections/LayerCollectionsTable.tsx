@@ -3,7 +3,6 @@ import { NavLink, RouteComponentProps } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import { getSelectedOrganisation } from '../../reducers';
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
-import { UserRoles } from '../../form/UserRoles';
 import { layerCollectionTableHelpText } from '../../utils/help_texts/helpTextForLayercollections';
 import { fetchWithOptions } from '../../utils/fetchWithOptions';
 import { useRecursiveFetch } from '../../api/hooks';
@@ -15,12 +14,11 @@ import userManagementIcon from "../images/userManagement.svg";
 import { getAccessibiltyText } from '../../form/AccessModifier';
 import layerCollectionIcon from "../../images/layer_collection_icon.svg";
 
-
+export const baseUrl = `/api/v4/layercollections/`;
 
 export const LayerCollectionsTable = (props: RouteComponentProps) =>  {
   const selectedOrganisation = useSelector(getSelectedOrganisation);
-  const baseUrl = `/api/v4/layercollections/`;
-  const navigationUrl = "/management/layer_collections";
+  const navigationUrl = "/management/data_management/layer_collections";
 
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const [resetTable, setResetTable] = useState<Function | null>(null);
@@ -34,7 +32,7 @@ export const LayerCollectionsTable = (props: RouteComponentProps) =>  {
           className={tableStyles.CellEllipsis}
           title={row.slug}
         >
-          {row.slug}
+          <NavLink to={`${navigationUrl}/${row.slug}`}>{row.slug}</NavLink>
         </span>
       ,
       orderingField: 'slug',
@@ -61,7 +59,7 @@ export const LayerCollectionsTable = (props: RouteComponentProps) =>  {
               setTableData={setTableData} 
               triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
               triggerReloadWithBasePage={triggerReloadWithBasePage}
-              editUrl={`${navigationUrl}/${row.id}`}
+              editUrl={`${navigationUrl}/${row.slug}`}
               actions={[
                 // {
                 //   displayValue: "Deactivate",
