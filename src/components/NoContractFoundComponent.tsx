@@ -2,7 +2,7 @@ import React from 'react';
 import agreementIcon from "../images/agreement.svg";
 
 
-const NoOrganisationFoundComponent = () => {
+const NoContractFoundComponent = () => {
   
   return (
       <div 
@@ -18,4 +18,4 @@ const NoOrganisationFoundComponent = () => {
   )
 };
 
-export default NoOrganisationFoundComponent;
+export default NoContractFoundComponent;

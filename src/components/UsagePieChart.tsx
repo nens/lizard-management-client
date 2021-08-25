@@ -41,7 +41,7 @@ const UsagePieChart = (props:Props) => {
               r="15.91549430918952" 
               fill="none"
               stroke="#E6E6E6" 
-              stroke-width="4"
+              strokeWidth="4"
             ></circle>
             <circle
               cx="0" 
@@ -49,9 +49,9 @@ const UsagePieChart = (props:Props) => {
               r="15.91549430918952" 
               fill="none"
               stroke="#139696" 
-              stroke-width="4"
-              stroke-dasharray={`${percentageUsed} ${percentageNotUsed}`} 
-              stroke-dashoffset="25"
+              strokeWidth="4"
+              strokeDasharray={`${percentageUsed} ${percentageNotUsed}`} 
+              strokeDashoffset="25"
             ></circle>
           </svg>
           <div

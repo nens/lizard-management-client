@@ -3,7 +3,7 @@ import SpinnerIfNotLoaded from '../components/SpinnerIfNotLoaded';
 import { ContractForm} from './ContractForm';
 import {  useSelector } from "react-redux";
 import {getContractForSelectedOrganisation, getUsage, getIsItSureSelectedOrganisationHasNoContract} from '../reducers';
-import NoOrganisationFoundComponent from '../components/NoOrganisationFoundComponent';
+import NoContractFoundComponent from '../components/NoContractFoundComponent';
 
 export const ViewContract = () => {
   const contractFetched = useSelector(getContractForSelectedOrganisation);
@@ -15,7 +15,7 @@ export const ViewContract = () => {
       loaded={sureContractDoesnotExist || (!!contractFetched && !!usageFetched)}
     >
       {sureContractDoesnotExist? 
-      <NoOrganisationFoundComponent/>
+      <NoContractFoundComponent/>
       : 
       <ContractForm/>
       }
