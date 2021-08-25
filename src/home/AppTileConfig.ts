@@ -23,6 +23,7 @@ import viewerIcon from "../images/world.svg";
 import codeIcon from "../images/code.svg";
 import docsIcon from "../images/document2.svg";
 import supportIcon from "../images/support.svg";
+import agreementIcon from "../images/agreement.svg";
 
 import doArraysHaveEqualElement from '../utils/doArraysHaveEqualElement';
 
@@ -320,8 +321,24 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     onUrl: "/management",
     linksToUrl: "/management/personal_api_keys",
     linksToUrlExternal: false,
-    requiresOneOfRoles: ["user", "admin", "supplier", "manager"],
+    requiresOneOfRoles: ["admin"],
     icon: personalApiKeysIcon,
+  },
+  { 
+    title: "Contract",
+    // title: (
+    //   <FormattedMessage
+    //     id="home.personal_api_keys"
+    //     defaultMessage="Personal API keys"
+    //   />
+    // ),
+    homePageIcon: false,
+    order: 500,
+    onUrl: "/management",
+    linksToUrl: "/management/contract",
+    linksToUrlExternal: false,
+    requiresOneOfRoles: ["admin", "supplier", "manager", "user"],
+    icon: agreementIcon,
   },
   { 
     title: "Map viewer",
@@ -332,7 +349,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     //   />
     // ),
     homePageIcon: false,
-    order: 500,
+    order: 600,
     onUrl: "/management",
     linksToUrl: "/management/map_viewer",
     linksToUrlExternal: false,

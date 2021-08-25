@@ -7,21 +7,46 @@ import {
   supplierHelpText,
   uuidHelpText
 } from './defaultHelpText';
+import UsagePieChart from './../../components/UsagePieChart';
 
-export const defaultScenarioExplanationText = (usedSpaceString:string, organisation: string) => (
-  <div
-    style={{
-      display:"grid",
-      gridTemplateColumns: "1fr 1fr",
-      columnGap: 5
-    }}
-  >
-    <span>Organisation:</span>
-    <span style={{ fontWeight: "bold" }}>{organisation}</span>
-    <span>Used storage:</span>
-    <span style={{ fontWeight: "bold" }}>{usedSpaceString}</span>
-  </div>
-);
+
+
+
+export const defaultScenarioExplanationText = (usedSpace:number, totalAvailableSpace: number, organisation: string) => {
+  return (
+    <div>
+      {/* <div
+        style={{
+          display:"grid",
+          gridTemplateColumns: "1fr 1fr",
+          columnGap: 5,
+          marginBottom: "32px",
+        }}
+      >
+        <span>Organisation:</span>
+        <span style={{ fontWeight: "bold" }}>{organisation}</span>
+      </div> */}
+      <div
+        style={{
+          display:"flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <div style={{marginBottom: "16px",}}>
+          {`Scenario storage used for organisation `}
+          <div style={{fontWeight: "bold"}}>{organisation}</div>
+        </div>
+        <UsagePieChart
+          used={usedSpace}
+          available={totalAvailableSpace}
+        />
+      </div>
+      
+    </div>
+    
+  );
+};
 
 
 export const scenarioFormHelpText: HelpText = {
