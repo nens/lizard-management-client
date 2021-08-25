@@ -5,7 +5,6 @@ import { TextInput } from './../form/TextInput';
 import { CheckBox } from './../form/CheckBox';
 import { CancelButton } from '../form/CancelButton';
 import { useForm, Values } from '../form/useForm';
-import { minLength } from '../form/validators';
 import { getContractForSelectedOrganisation, getUsage } from '../reducers';
 import { helpTextContractView } from '../utils/help_texts/helpTextContractView';
 import formStyles from './../styles/Forms.module.css';
@@ -26,8 +25,6 @@ export const ContractForm = () => {
   const onSubmit = (values: Values) => {};
 
   const {
-    values,
-    triedToSubmit,
     handleValueChange,
     handleInputChange,
     fieldOnFocus,
@@ -35,7 +32,6 @@ export const ContractForm = () => {
     handleBlur,
     handleSubmit,
     handleReset,
-    clearInput,
   } = useForm({initialValues, onSubmit});
 
   return (
@@ -61,10 +57,9 @@ export const ContractForm = () => {
           value={(new Date(contractObjApi.start).toLocaleDateString())}
           valueChanged={handleInputChange}
           validated
-          triedToSubmit={triedToSubmit}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          readOnly={true}
+          readOnly
         />
         <span className={formStyles.FormFieldTitle}>
           2. Data
@@ -113,49 +108,39 @@ export const ContractForm = () => {
           value={contractObjApi.asset_capacity}
           valueChanged={handleInputChange}
           validated
-          triedToSubmit={triedToSubmit}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          readOnly={true}
+          readOnly
         />
         <TextInput
           title={'Labels capacity'}
           name={'label_capacity'}
           value={contractObjApi.label_capacity}
           valueChanged={handleInputChange}
-          clearInput={clearInput}
-          validated={!minLength(2, values.name)}
-          errorMessage={minLength(2, values.name)}
-          triedToSubmit={triedToSubmit}
+          validated
           onFocus={handleFocus}
           onBlur={handleBlur}
-          readOnly={true}
+          readOnly
         />
         <TextInput
           title={'Events capacity'}
           name={'event_capacity'}
           value={contractObjApi.event_capacity}
           valueChanged={handleInputChange}
-          clearInput={clearInput}
-          validated={!minLength(2, values.name)}
-          errorMessage={minLength(2, values.name)}
-          triedToSubmit={triedToSubmit}
+          validated
           onFocus={handleFocus}
           onBlur={handleBlur}
-          readOnly={true}
+          readOnly
         />
         <TextInput
           title={'Alarm message capacity'}
           name={'alarm_message_capacity'}
           value={contractObjApi.alarm_message_capacity}
           valueChanged={handleInputChange}
-          clearInput={clearInput}
-          validated={!minLength(2, values.name)}
-          errorMessage={minLength(2, values.name)}
-          triedToSubmit={triedToSubmit}
+          validated
           onFocus={handleFocus}
           onBlur={handleBlur}
-          readOnly={true}
+          readOnly
         />
         <CheckBox
           title={'Geoblocks functionality'}
@@ -164,22 +149,18 @@ export const ContractForm = () => {
           valueChanged={bool => handleValueChange('scopeWildcardReadWrite', bool)}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          readOnly={true}
-          validated={true}
-          errorMessage={false}
+          readOnly
+          validated
         />
         <TextInput
           title={'Geoblocks calculation units'}
           name={'geoblocks_calculation_units'}
           value={contractObjApi.geoblocks_calculation_units_capacity}
           valueChanged={handleInputChange}
-          clearInput={clearInput}
-          validated={!minLength(2, values.name)}
-          errorMessage={minLength(2, values.name)}
-          triedToSubmit={triedToSubmit}
+          validated
           onFocus={handleFocus}
           onBlur={handleBlur}
-          readOnly={true}
+          readOnly
         />
         <TextArea
           title={'Links'}
@@ -189,9 +170,8 @@ export const ContractForm = () => {
           valueChanged={handleInputChange}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          clearInput={clearInput}
           validated
-          readOnly={true}
+          readOnly
         />
         <div
           className={formStyles.ButtonContainer}
