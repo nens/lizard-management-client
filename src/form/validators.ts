@@ -22,6 +22,14 @@ export const nonEmptyString = (str: string): validatorResult => {
   return false;
 }
 
+export const isNotLiteralStringNew = (str: string): validatorResult => {
+  const strippedString = str.replace(/\s/g, '');
+  if ( strippedString === 'new' || strippedString === 'New') {
+    return "The value 'new' is not allowed here";
+  }
+  return false;
+}
+
 export const minLength = (length: number, s: string): validatorResult => {
   if (!s || s.length < length) {
     return `Please enter at least ${length} ${length === 1 ? 'character' : 'characters'}`;

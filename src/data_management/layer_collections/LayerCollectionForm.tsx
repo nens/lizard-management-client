@@ -3,17 +3,13 @@ import { connect, useSelector } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import { TextInput } from './../../form/TextInput';
-import { TextArea } from '../../form/TextArea';
-import { AccessModifier } from '../../form/AccessModifier';
-import { SelectDropdown } from '../../form/SelectDropdown';
-import { FormButton } from '../../form/FormButton';
+// import { AccessModifier } from '../../form/AccessModifier';
 import { SubmitButton } from '../../form/SubmitButton';
 import { CancelButton } from '../../form/CancelButton';
 import { useForm, Values } from '../../form/useForm';
-import { minLength } from '../../form/validators';
+import { minLength, isNotLiteralStringNew } from '../../form/validators';
 import { addNotification } from '../../actions';
-import { getOrganisations, getSelectedOrganisation } from '../../reducers';
-import { convertToSelectObject } from '../../utils/convertToSelectObject';
+import { getSelectedOrganisation } from '../../reducers';
 import { monitoringNetworkFormHelpText } from '../../utils/help_texts/helpTextForMonitoringNetworks';
 import { fetchWithOptions } from '../../utils/fetchWithOptions';
 import { baseUrl } from './LayerCollectionsTable';
@@ -30,7 +26,10 @@ const backUrl = "/management/data_management/layer_collections";
 
 const LayerCollectionForm = (props: Props & DispatchProps & RouteComponentProps) => {
   const { currentRecord } = props;
+  
+  const selectedOrganisation = useSelector(getSelectedOrganisation);
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+
 
 
   const initialValues = currentRecord ? {
@@ -40,11 +39,17 @@ const LayerCollectionForm = (props: Props & DispatchProps & RouteComponentProps)
   };
 
   const onSubmit = (values: Values) => {
-    const body = {
+    interface Body {
+      slug: string;
+      organisation?: string; //uuid
+    }
+
+    const body: Body = {
       slug: values.slug,
     };
 
     if (!currentRecord) {
+      body.organisation = selectedOrganisation.uuid;
       fetch("/api/v4/layercollections/", {
         credentials: "same-origin",
         method: "POST",
@@ -89,10 +94,8 @@ const LayerCollectionForm = (props: Props & DispatchProps & RouteComponentProps)
   const {
     values,
     triedToSubmit,
-    // formSubmitted,
     tryToSubmitForm,
     handleInputChange,
-    handleValueChange,
     handleSubmit,
     handleReset,
     clearInput,
@@ -125,51 +128,16 @@ const LayerCollectionForm = (props: Props & DispatchProps & RouteComponentProps)
           value={values.slug}
           valueChanged={handleInputChange}
           clearInput={clearInput}
-          validated={!minLength(3, values.slug)}
-          errorMessage={minLength(3, values.slug)}
+          validated={!minLength(3, values.slug) && !isNotLiteralStringNew(values.slug)}
+          errorMessage={minLength(3, values.slug) || isNotLiteralStringNew(values.slug)}
           triedToSubmit={triedToSubmit}
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
         {/* {currentRecord ? (
-          <TextInput
-            title={'UUID'}
-            name={'uuid'}
-            value={currentRecord.uuid}
-            valueChanged={handleInputChange}
-            validated
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-            readOnly
-          />
-        ) : null}
-        <TextArea
-          title={'Description'}
-          name={'description'}
-          value={values.description}
-          valueChanged={handleInputChange}
-          clearInput={clearInput}
-          validated
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-        />
+          
         <span className={formStyles.FormFieldTitle}>
-          2: Data
-        </span>
-        <FormButton
-          name={'timeseriesModal'}
-          title={'Time Series'}
-          text={'Manage'}
-          onClick={e => {
-            e.preventDefault();
-            setTimeseriesModal(true);
-          }}
-          readOnly={!currentRecord}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-        />
-        <span className={formStyles.FormFieldTitle}>
-          3: Rights
+          2: Rights
         </span>
         <AccessModifier
           title={'Accessibility *'}
@@ -179,19 +147,6 @@ const LayerCollectionForm = (props: Props & DispatchProps & RouteComponentProps)
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
-        <SelectDropdown
-          title={'Organisation *'}
-          name={'organisation'}
-          placeholder={'- Search and select -'}
-          value={values.organisation}
-          valueChanged={value => handleValueChange('organisation', value)}
-          options={organisations.map((organisation: any) => convertToSelectObject(organisation.uuid, organisation.name))}
-          validated={values.organisation !== null && values.organisation !== ''}
-          errorMessage={'Please select an organisation'}
-          triedToSubmit={triedToSubmit}
-          readOnly={!(!currentRecord && organisationsToSwitchTo.length > 0 && selectedOrganisation.roles.includes('admin'))}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
         /> */}
         <div
           className={formStyles.ButtonContainer}
