@@ -1,23 +1,17 @@
 import React, { useState } from 'react';
 import { NavLink, RouteComponentProps } from "react-router-dom";
-import { useSelector } from 'react-redux';
-import { getSelectedOrganisation } from '../../reducers';
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import { layerCollectionTableHelpText } from '../../utils/help_texts/helpTextForLayercollections';
 import { fetchWithOptions } from '../../utils/fetchWithOptions';
-import { useRecursiveFetch } from '../../api/hooks';
 import TableActionButtons from '../../components/TableActionButtons';
 import TableStateContainer from '../../components/TableStateContainer';
 import DeleteModal from '../../components/DeleteModal';
 import tableStyles from "../../components/Table.module.css";
-import userManagementIcon from "../images/userManagement.svg";
-import { getAccessibiltyText } from '../../form/AccessModifier';
 import layerCollectionIcon from "../../images/layer_collection_icon.svg";
 
 export const baseUrl = `/api/v4/layercollections/`;
 
 export const LayerCollectionsTable = (props: RouteComponentProps) =>  {
-  const selectedOrganisation = useSelector(getSelectedOrganisation);
   const navigationUrl = "/management/data_management/layer_collections";
 
   const [selectedRows, setSelectedRows] = useState<any[]>([]);

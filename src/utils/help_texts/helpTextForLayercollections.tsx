@@ -4,6 +4,9 @@ import {
   HelpText,
 } from './defaultHelpText';
 
+export const layerCollectionFormHelpText: HelpText = {
+  default: "You can use Layer collections to group rasters or Wms layers.",
+}
 
 export const layerCollectionTableHelpText = (
   <>

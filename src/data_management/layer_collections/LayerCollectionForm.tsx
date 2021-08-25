@@ -10,13 +10,14 @@ import { useForm, Values } from '../../form/useForm';
 import { minLength, isNotLiteralStringNew } from '../../form/validators';
 import { addNotification } from '../../actions';
 import { getSelectedOrganisation } from '../../reducers';
-import { monitoringNetworkFormHelpText } from '../../utils/help_texts/helpTextForMonitoringNetworks';
 import { fetchWithOptions } from '../../utils/fetchWithOptions';
 import { baseUrl } from './LayerCollectionsTable';
 import FormActionButtons from '../../components/FormActionButtons';
 import DeleteModal from '../../components/DeleteModal';
 import formStyles from './../../styles/Forms.module.css';
 import layerCollectionIcon from "../../images/layer_collection_icon.svg";
+import { layerCollectionFormHelpText } from '../../utils/help_texts/helpTextForLayercollections';
+
 
 interface Props {
   currentRecord?: any
@@ -109,7 +110,7 @@ const LayerCollectionForm = (props: Props & DispatchProps & RouteComponentProps)
       imgUrl={layerCollectionIcon}
       imgAltDescription={"Network icon"}
       headerText={"Monitoring Networks"}
-      explanationText={monitoringNetworkFormHelpText[fieldOnFocus] || monitoringNetworkFormHelpText['default']}
+      explanationText={layerCollectionFormHelpText[fieldOnFocus] || layerCollectionFormHelpText['default']}
       backUrl={backUrl}
       fieldName={fieldOnFocus}
     >
