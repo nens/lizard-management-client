@@ -49,7 +49,7 @@ const LayerCollectionForm = (props: Props & DispatchProps & RouteComponentProps)
   const onSubmit = (values: Values) => {
     interface Body {
       slug: string;
-      accessModifier: string;
+      access_modifier: string;
       supplier: string | null;
       organisation?: string; //uuid
     }
@@ -57,7 +57,7 @@ const LayerCollectionForm = (props: Props & DispatchProps & RouteComponentProps)
     const body: Body = {
       slug: values.slug,
       supplier: values.supplier,
-      accessModifier: values.accessModifier,
+      access_modifier: values.accessModifier,
     };
 
     if (!currentRecord) {
