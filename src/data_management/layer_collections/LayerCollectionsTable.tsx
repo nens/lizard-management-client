@@ -73,11 +73,15 @@ export const LayerCollectionsTable = (props: RouteComponentProps) =>  {
               editUrl={`${navigationUrl}/${row.slug}`}
               actions={[
                 // {
-                //   displayValue: "Deactivate",
-                //   actionFunction: (row: any, _updateTableRow: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any) => {
-                //     deactivateActions([row], triggerReloadWithCurrentPage, null)
-                //   }
+                //   displayValue: "Change right",
+                //   actionFunction: (row: any) => selectedRowsForChangeRights([row])
                 // },
+                {
+                  displayValue: "Delete",
+                  actionFunction: (row: any, _updateTableRow: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any) => {
+                    deleteActions([row], triggerReloadWithCurrentPage, null)
+                  }
+                }
               ]}
             />
         );
