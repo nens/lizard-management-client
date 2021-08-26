@@ -21,7 +21,7 @@ function AuthorisationModal (props: MyProps & DispatchProps) {
 
   // PATCH requests
   const handleSubmit = async () => {
-    const uuids = rows.map(row => row.uuid);
+    const uuids = rows.map(row => (row.uuid || row.id || row.slug));
     const options = {
       credentials: "same-origin",
       method: "PATCH",
