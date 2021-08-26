@@ -5,6 +5,7 @@ import TableStateContainer from '../../components/TableStateContainer';
 import TableActionButtons from '../../components/TableActionButtons';
 import geoblockIcon from "../../images/geoblock.svg";
 import tableStyles from "../../components/Table.module.css";
+import { getAccessibiltyText } from '../../form/AccessModifier';
 
 export const baseUrl = "/api/v4/rasters/";
 const navigationUrl = "/management/data_management/geoblocks";
@@ -32,6 +33,18 @@ export const GeoBlockTable: React.FC<RouteComponentProps> = (props) =>  {
         {row.supplier}
       </span>,
       orderingField: "supplier",
+    },
+    {
+      titleRenderFunction: () =>  "Accessibility",
+      renderFunction: (row: any) =>
+        <span
+          className={tableStyles.CellEllipsis}
+          title={row.access_modifier}
+        >
+          {getAccessibiltyText(row.access_modifier)}
+        </span>
+      ,
+      orderingField: null,
     },
     {
       titleRenderFunction: () =>  "",//"Actions",
@@ -66,7 +79,7 @@ export const GeoBlockTable: React.FC<RouteComponentProps> = (props) =>  {
       backUrl={"/management/data_management"}
     >
         <TableStateContainer 
-          gridTemplateColumns={"5fr 3fr 2fr"} 
+          gridTemplateColumns={"4fr 3fr 2fr 1fr"}
           columnDefinitions={columnDefinitions}
           baseUrl={`${baseUrl}?`} 
           checkBoxActions={[]}
