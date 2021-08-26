@@ -3,7 +3,10 @@ import { connect, useSelector } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import { TextInput } from './../../form/TextInput';
-// import { AccessModifier } from '../../form/AccessModifier';
+import { AccessModifier } from '../../form/AccessModifier';
+import { SelectDropdown } from '../../form/SelectDropdown';
+import { fetchSuppliers } from './../rasters/RasterSourceForm';
+import { convertToSelectObject } from '../../utils/convertToSelectObject';
 import { SubmitButton } from '../../form/SubmitButton';
 import { CancelButton } from '../../form/CancelButton';
 import { useForm, Values } from '../../form/useForm';
@@ -35,18 +38,26 @@ const LayerCollectionForm = (props: Props & DispatchProps & RouteComponentProps)
 
   const initialValues = currentRecord ? {
     slug: currentRecord.slug,
+    accessModifier: currentRecord.access_modifier,
+    supplier: currentRecord.supplier ? convertToSelectObject(currentRecord.supplier) : null,
   } : {
     slug: null,
+    accessModifier: 'Private',
+    supplier: null
   };
 
   const onSubmit = (values: Values) => {
     interface Body {
       slug: string;
+      accessModifier: string;
+      supplier: string | null;
       organisation?: string; //uuid
     }
 
     const body: Body = {
       slug: values.slug,
+      supplier: values.supplier,
+      accessModifier: values.accessModifier,
     };
 
     if (!currentRecord) {
@@ -97,6 +108,7 @@ const LayerCollectionForm = (props: Props & DispatchProps & RouteComponentProps)
     triedToSubmit,
     tryToSubmitForm,
     handleInputChange,
+    handleValueChange,
     handleSubmit,
     handleReset,
     clearInput,
@@ -135,7 +147,6 @@ const LayerCollectionForm = (props: Props & DispatchProps & RouteComponentProps)
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
-        {/* {currentRecord ? (
           
         <span className={formStyles.FormFieldTitle}>
           2: Rights
@@ -148,7 +159,21 @@ const LayerCollectionForm = (props: Props & DispatchProps & RouteComponentProps)
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
-        /> */}
+        <SelectDropdown
+          title={'Supplier'}
+          name={'supplier'}
+          placeholder={'- Search and select -'}
+          value={values.supplier}
+          valueChanged={value => handleValueChange('supplier', value)}
+          options={[]}
+          validated
+          isAsync
+          isCached
+          loadOptions={searchInput => fetchSuppliers(selectedOrganisation.uuid, searchInput)}
+          dropUp
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+        />
         <div
           className={formStyles.ButtonContainer}
         >
