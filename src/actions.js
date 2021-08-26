@@ -1,6 +1,7 @@
 // MARK: Bootstrap
 import { recursiveFetchFunction } from "./api/hooks";
 import { getLocalStorage } from "./utils/localStorageUtils";
+import { getSelectedOrganisation } from "./reducers";
 
 export const RECEIVE_LIZARD_BOOTSTRAP = "RECEIVE_LIZARD_BOOTSTRAP";
 export const REQUEST_LIZARD_BOOTSTRAP = "REQUEST_LIZARD_BOOTSTRAP";
@@ -68,6 +69,8 @@ export const REQUEST_ORGANISATIONS = "REQUEST_ORGANISATIONS";
 export const SELECT_ORGANISATION = "SELECT_ORGANISATION";
 export const REQUEST_USAGE = "REQUEST_USAGE";
 export const SET_USAGE = "SET_USAGE";
+export const REQUEST_CONTRACTS = "REQUEST_CONTRACTS";
+export const SET_CONTRACTS = "SET_CONTRACTS";
 
 export function fetchOrganisations() {
   return async (dispatch, getState) => {
@@ -96,21 +99,28 @@ export function fetchOrganisations() {
     } else {
       dispatch(selectOrganisation(selectedOrganisationLocalStorage));
     };
+
+    // request contracts
+    dispatch({
+      type: REQUEST_CONTRACTS,
+    });
+    const contracts = await recursiveFetchFunction('/api/v4/contracts', []);
+    dispatch({
+      type: SET_CONTRACTS,
+      contracts: contracts,
+    });
   };
 }
 
-export function selectOrganisation(organisation) {
-  return (dispatch) => {
-    localStorage.setItem(
-      "lizard-management-current-organisation",
-      JSON.stringify(organisation)
-    );
-    
-    if (organisation && organisation.uuid) {
+export function requestUsage () {
+  return (dispatch, getState) => {
+    const selectedOrganisation = getSelectedOrganisation(getState());
+    if (selectedOrganisation) {
+      const selectedorganisationUuid = selectedOrganisation.uuid;
       dispatch({
         type: REQUEST_USAGE,
       });
-      const url = `/api/v4/organisations/${organisation.uuid}/usage/`;
+      const url = `/api/v4/organisations/${selectedorganisationUuid}/usage/`;
       fetch(url, {
           credentials: "same-origin"
       })
@@ -122,11 +132,21 @@ export function selectOrganisation(organisation) {
           });
       });
     }
+    
+  };
+}
 
+export function selectOrganisation(organisation) {
+  return (dispatch) => {
+    localStorage.setItem(
+      "lizard-management-current-organisation",
+      JSON.stringify(organisation)
+    );
     dispatch({
       type: SELECT_ORGANISATION,
       organisation
     });
+    dispatch(requestUsage());
   }
 }
 

@@ -52,6 +52,7 @@ import {LayerCollectionsTable} from "../data_management/layer_collections/LayerC
 import {EditLayerCollection} from "../data_management/layer_collections/EditLayerCollection";
 import {NewLayerCollection} from "../data_management/layer_collections/NewLayerCollection";
 import SpinnerIfStandardSelectorsNotLoaded from '../components/SpinnerIfStandardSelectorsNotLoaded';
+import { ViewContract } from '../contracts/ViewContract';
 
 const authenticatedRoutes = () => {
   return (
@@ -65,6 +66,9 @@ const authenticatedRoutes = () => {
             <Route exact path="/management/personal_api_keys" component={PersonalApiKeysTable} />
             <Route exact path="/management/personal_api_keys/new" component={NewPersonalApiKey} />
             <Route exact path="/management/personal_api_keys/:uuid" component={EditPersonalApiKey} />
+            
+            <Route exact path="/management/contract" component={ViewContract} />
+            
 
             <Route exact path="/management/data_management/rasters/sources" component={RasterSourceTable} />
             <Route exact path="/management/data_management/rasters/sources/new" component={NewRasterSource} />

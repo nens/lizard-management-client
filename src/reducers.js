@@ -9,6 +9,8 @@ import {
   SELECT_ORGANISATION,
   REQUEST_USAGE,
   SET_USAGE,
+  REQUEST_CONTRACTS,
+  SET_CONTRACTS,
   SHOW_NOTIFICATION,
   DISMISS_NOTIFICATION,
   UPDATE_ALARM_TYPE,
@@ -26,6 +28,11 @@ import {
   REMOVE_LOCATION,
   SET_OPEN_CLOSE_UPLOADQUEUE_MODAL,
 } from "./actions";
+
+// todo type this reducer file
+// import {
+//   Contract
+// } from "./types/contractType";
 
 function bootstrap(
   state = {
@@ -103,6 +110,24 @@ switch (action.type) {
     return {...state, isFetching: true}
   case SET_USAGE:
     return {...action.usage, isFetching: false, timesFetched: state.timesFetched + 1}
+  default:
+      return state;
+  } 
+}
+
+function contracts (
+  state = {
+    contracts: [],
+    isFetching: false,
+    timesFetched: 0,
+  },
+  action
+) {
+switch (action.type) {
+  case REQUEST_CONTRACTS:
+    return {...state, isFetching: true}
+  case SET_CONTRACTS:
+    return {contracts: action.contracts, isFetching: false, timesFetched: state.timesFetched + 1}
   default:
       return state;
   } 
@@ -332,12 +357,50 @@ export const getSelectedOrganisation = (state) => {
   return state.organisations.selected;
 };
 
+export const getUsage = (state) => {
+  if (!state.usage.isFetching && state.usage.timesFetched > 0) {
+    return state.usage;
+  }
+  return null;
+};
+
 export const getScenarioTotalSize = (state) => {
   return state.usage.scenario_total_size;
 };
 export const getRasterTotalSize = (state) => {
   return state.usage.raster_total_size;
 };
+
+export const getIsItSureSelectedOrganisationHasNoContract = (state) => {
+  const contract = getContractForSelectedOrganisation(state);
+  if (
+    state.contracts.isFetching === false &&
+    state.contracts.timesFetched > 0 &&
+    !contract
+  ) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+export const getContractForSelectedOrganisation = (state) => {
+  const selectedOrganisation = getSelectedOrganisation(state);
+  const selectedOrganisationUuid = selectedOrganisation && selectedOrganisation.uuid;
+  if (!selectedOrganisationUuid) {
+    return null;
+  }
+  const selectedContract = state.contracts.contracts.find(contract=>{
+    return contract.organisation.uuid === selectedOrganisationUuid;
+  });
+  return selectedContract || null;
+}
+
+export const getScenarioAvailableSizeDefinedByContract = (state) => {
+  const currentContract = getContractForSelectedOrganisation(state);
+  return (currentContract && currentContract.scenario_storage_capacity) || 0;
+}
+
 export const getLayercollections = (state) => {
   return state.layercollections;
 };
@@ -370,6 +433,7 @@ const rootReducer = combineReducers({
   bootstrap,
   organisations,
   usage,
+  contracts,
   layercollections,
   notifications,
   alarmType,
