@@ -25,7 +25,8 @@ function DeleteModal (props: MyProps & DispatchProps & RouteComponentProps) {
     const uuids = rows.map(row =>
       row.uuid ||
       row.id ||
-      row.prefix // for personalApiKeysTable
+      row.prefix || // for personalApiKeysTable
+      row.slug // for layercollections
     );
     const options = {
       credentials: "same-origin",
