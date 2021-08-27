@@ -7,7 +7,7 @@ import styles from './GeoBlockBuildModal.module.css';
 import formStyles from './../../styles/Forms.module.css';
 import buttonStyles from './../../styles/Buttons.module.css';
 import { TextArea } from '../../form/TextArea';
-import { jsonValidator } from '../../form/validators';
+// import { jsonValidator } from '../../form/validators';
 
 interface MyProps {
   currentRecord: any,
@@ -16,7 +16,8 @@ interface MyProps {
 
 function GeoBlockBuildModal (props: MyProps & DispatchProps) {
   const { currentRecord } = props;
-  console.log(currentRecord.source);
+  const jsonSource = JSON.stringify(currentRecord.source);
+
   return (
     <ModalBackground
       title={'Geo Block Builder'}
@@ -30,12 +31,10 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
           <TextArea
             title={'Source'}
             name={'source'}
-            value={JSON.stringify(currentRecord.source)}
+            value={jsonSource}
             valueChanged={() => null}
             // clearInput={clearInput}
-            validated={!jsonValidator(JSON.stringify(currentRecord.source))}
-            errorMessage={jsonValidator(JSON.stringify(currentRecord.source))}
-            readOnly
+            validated
           />
         </div>
         <div className={`${formStyles.ButtonContainer} ${formStyles.FixedButtonContainer}`}>
@@ -46,7 +45,7 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
             Close
           </button>
           <SubmitButton
-            onClick={() => null}
+            onClick={() => console.log(currentRecord)}
           />
         </div>
       </div>
