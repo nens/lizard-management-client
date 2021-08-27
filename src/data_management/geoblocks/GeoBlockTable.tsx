@@ -65,10 +65,10 @@ export const GeoBlockTable: React.FC<RouteComponentProps> = (props) =>  {
     },
   ];
 
-  const handleNewClick  = () => {
-    const { history } = props;
-    history.push(`${navigationUrl}/new`);
-  }
+  // const handleNewClick  = () => {
+  //   const { history } = props;
+  //   history.push(`${navigationUrl}/new`);
+  // }
 
   return (
     <ExplainSideColumn
@@ -83,7 +83,7 @@ export const GeoBlockTable: React.FC<RouteComponentProps> = (props) =>  {
           columnDefinitions={columnDefinitions}
           baseUrl={`${baseUrl}?`} 
           checkBoxActions={[]}
-          newItemOnClick={handleNewClick}
+          // newItemOnClick={handleNewClick}
           filterOptions={[
             {value: 'name__icontains=', label: 'Name'},
             {value: 'uuid=', label: 'UUID'},

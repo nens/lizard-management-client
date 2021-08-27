@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { connect, useSelector } from 'react-redux';
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
@@ -9,7 +9,6 @@ import { SubmitButton } from '../../form/SubmitButton';
 import { CancelButton } from '../../form/CancelButton';
 import { AccessModifier } from '../../form/AccessModifier';
 import { useForm, Values } from '../../form/useForm';
-import { minLength } from '../../form/validators';
 import { getSelectedOrganisation } from '../../reducers';
 import { addNotification } from './../../actions';
 import geoblockIcon from "../../images/geoblock.svg";
@@ -17,6 +16,7 @@ import formStyles from './../../styles/Forms.module.css';
 import { convertToSelectObject } from '../../utils/convertToSelectObject';
 import { fetchSuppliers } from '../rasters/RasterSourceForm';
 import { FormButton } from '../../form/FormButton';
+import GeoBlockBuildModal from './GeoBlockBuildModal';
 
 interface Props {
   currentRecord?: any,
@@ -25,6 +25,8 @@ interface Props {
 const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (props) => {
   const { currentRecord } = props;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
+
+  const [buildModal, setBuildModal] = useState<boolean>(false);
 
   const initialValues = currentRecord ? {
     name: currentRecord.name,
@@ -54,7 +56,7 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
 
   const {
     values,
-    triedToSubmit,
+    // triedToSubmit,
     tryToSubmitForm,
     handleInputChange,
     handleValueChange,
@@ -91,10 +93,8 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
           valueChanged={handleInputChange}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          clearInput={clearInput}
-          validated={!minLength(3, values.name)}
-          errorMessage={minLength(3, values.name)}
-          triedToSubmit={triedToSubmit}
+          validated
+          readOnly
         />
         {currentRecord ? (
           <TextInput
@@ -117,6 +117,7 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
           onBlur={handleBlur}
           clearInput={clearInput}
           validated
+          readOnly
         />
         <span className={formStyles.FormFieldTitle}>
           2: Data
@@ -126,8 +127,8 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
           title={'Geo Block'}
           text={'Geo Block Builder'}
           onClick={e => {
-            console.log('Open modal to build geoblock')
             e.preventDefault();
+            setBuildModal(true);
           }}
           onFocus={handleFocus}
           onBlur={handleBlur}
@@ -142,6 +143,7 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
           valueChanged={value => handleValueChange('accessModifier', value)}
           onFocus={handleFocus}
           onBlur={handleBlur}
+          readOnly
         />
         <SelectDropdown
           title={'Supplier'}
@@ -170,6 +172,12 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
           />
         </div>
       </form>
+      {buildModal ? (
+        <GeoBlockBuildModal
+          handleClose={() => setBuildModal(false)}
+          currentRecord={currentRecord}
+        />
+      ) : null}
     </ExplainSideColumn>
   );
 };

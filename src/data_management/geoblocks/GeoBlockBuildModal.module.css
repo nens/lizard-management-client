@@ -1,0 +1,8 @@
+.MainContainer {
+  height: calc(100% - 60px);
+  margin: 20px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+}
