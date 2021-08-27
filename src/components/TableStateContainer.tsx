@@ -42,7 +42,7 @@ interface Props {
 // Helper function to get row identifier (by uuid or id)
 // because sometimes tableData does not contain uuid but only id (e.g. alarm contacts)
 const getRowIdentifier = (row: any): string => {
-  return row.uuid || row.id + '';
+  return row.uuid || row.id || row.slug ;
 };
 
 const TableStateContainer: React.FC<Props> = ({

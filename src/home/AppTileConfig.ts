@@ -23,6 +23,7 @@ import viewerIcon from "../images/world.svg";
 import codeIcon from "../images/code.svg";
 import docsIcon from "../images/document2.svg";
 import supportIcon from "../images/support.svg";
+import layerCollectionIcon from "../images/layer_collection_icon.svg";
 import agreementIcon from "../images/agreement.svg";
 
 import doArraysHaveEqualElement from '../utils/doArraysHaveEqualElement';
@@ -403,6 +404,22 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     linksToUrlExternal: false,
     requiresOneOfRoles: ["admin", "supplier",],
     icon: wmsIcon
+  },
+  {
+    title: "Layer collections",
+    // title: (
+    //   <FormattedMessage
+    //     id="data_management.wms_layers"
+    //     defaultMessage="WMS layers"
+    //   />
+    // ),
+    homePageIcon: false,
+    order: 250,
+    onUrl: "/management/data_management",
+    linksToUrl: "/management/data_management/layer_collections",
+    linksToUrlExternal: false,
+    requiresOneOfRoles: ["admin", "supplier",],
+    icon: layerCollectionIcon
   },
   {
     title: "Time Series",
