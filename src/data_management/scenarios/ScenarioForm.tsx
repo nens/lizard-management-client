@@ -1,7 +1,7 @@
 import React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { connect, useSelector } from 'react-redux';
-import { getOrganisations, getSelectedOrganisation, getUsername } from '../../reducers';
+import { getOrganisations,  getUsername } from '../../reducers';
 import { ScenarioResult } from '../../form/ScenarioResult';
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import { TextInput } from './../../form/TextInput';
@@ -13,8 +13,7 @@ import { minLength } from '../../form/validators';
 import { addNotification } from '../../actions';
 import threediIcon from "../../images/3di@3x.svg";
 import formStyles from './../../styles/Forms.module.css';
-import { scenarioFormHelpText, defaultScenarioExplanationText } from '../../utils/help_texts/helpTextForScenarios';
-import { getScenarioTotalSize, getScenarioAvailableSizeDefinedByContract } from '../../reducers';
+import { scenarioFormHelpText, DefaultScenarioExplanationText } from '../../utils/help_texts/helpTextForScenarios';
 
 interface Props {
   currentRecord: any
@@ -28,12 +27,9 @@ interface RouteParams {
 
 const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProps<RouteParams>> = (props) => {
   const { currentRecord } = props;
-  const scenarioTotalSize = useSelector(getScenarioTotalSize);
-  const scenarioAvailableSizeDefinedByContract = useSelector(getScenarioAvailableSizeDefinedByContract);
   const organisations = useSelector(getOrganisations).available;
   const scenarioOrganisation = organisations.find((org: any) => org.uuid === currentRecord.organisation.uuid);
   const username = useSelector(getUsername);
-  const selectedOrganisation = useSelector(getSelectedOrganisation);
 
   const initialValues = {
     name: currentRecord.name,
@@ -91,11 +87,7 @@ const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProp
       headerText={"3Di Scenarios"}
       explanationText={
         scenarioFormHelpText[fieldOnFocus] || 
-        defaultScenarioExplanationText(
-          scenarioTotalSize, 
-          scenarioAvailableSizeDefinedByContract, 
-          selectedOrganisation.name
-        )
+        DefaultScenarioExplanationText()
       }
       backUrl={"/management/data_management/scenarios/"}
       fieldName={fieldOnFocus}

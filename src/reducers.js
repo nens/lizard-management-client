@@ -400,6 +400,11 @@ export const getScenarioAvailableSizeDefinedByContract = (state) => {
   const currentContract = getContractForSelectedOrganisation(state);
   return (currentContract && currentContract.scenario_storage_capacity) || 0;
 }
+export const getRasterAvailableSizeDefinedByContract = (state) => {
+  const currentContract = getContractForSelectedOrganisation(state);
+  return (currentContract && currentContract.raster_storage_capacity) || 0;
+}
+
 
 export const getLayercollections = (state) => {
   return state.layercollections;
