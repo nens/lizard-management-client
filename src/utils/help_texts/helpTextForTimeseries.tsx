@@ -1,5 +1,9 @@
 import React from 'react';
 
+import { useSelector} from 'react-redux';
+import { getTimeseriesTotalSize, getTimeseriesAvailableSizeDefinedByContract, getSelectedOrganisation } from '../../reducers';
+import UsagePieChart from './../../components/UsagePieChart';
+
 import {
   accessModifierHelpText,
   codeHelpText,
@@ -10,6 +14,34 @@ import {
   supplierHelpText,
   uuidHelpText
 } from './defaultHelpText';
+
+export const TimeseriesTableHelptext = () => {
+  const rastersTotalSize = useSelector(getTimeseriesTotalSize);
+  const rasterAvailableSizeDefinedByContract = useSelector(getTimeseriesAvailableSizeDefinedByContract);
+  const selectedOrganisation = useSelector(getSelectedOrganisation);
+  return (
+    <div>
+
+    
+      <div
+        style={{
+          display:"flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <div style={{marginBottom: "16px"}}>
+          {`Timeseries usage for organisation `}
+          <div style={{fontWeight: "bold"}}>{selectedOrganisation.name}</div>
+        </div>
+        <UsagePieChart
+          used={rastersTotalSize}
+          available={rasterAvailableSizeDefinedByContract}
+        />
+      </div>
+    </div>
+  );
+}
 
 export const timeseriesFormHelpText: HelpText = {
   default: 'Form to edit time series. Please select a field to get more information.',

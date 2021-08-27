@@ -7,7 +7,7 @@ import AuthorisationModal from '../../../components/AuthorisationModal';
 import DeleteModal from '../../../components/DeleteModal';
 import { ExplainSideColumn } from '../../../components/ExplainSideColumn';
 import { getAccessibiltyText } from '../../../form/AccessModifier';
-import { defaultTableHelpText } from '../../../utils/help_texts/defaultHelpText';
+import { TimeseriesTableHelptext } from '../../../utils/help_texts/helpTextForTimeseries';
 import { fetchWithOptions } from '../../../utils/fetchWithOptions';
 import tableStyles from "../../../components/Table.module.css";
 import timeseriesIcon from "../../../images/timeseries_icon.svg";
@@ -165,7 +165,7 @@ export const TimeseriesTable = (props: RouteComponentProps) =>  {
       imgUrl={timeseriesIcon}
       imgAltDescription={"Timeseries icon"}
       headerText={"Time Series"}
-      explanationText={defaultTableHelpText('Search or sort your time series here.')}
+      explanationText={TimeseriesTableHelptext()}
       backUrl={"/management/data_management/timeseries"}
     >
       <TableStateContainer
