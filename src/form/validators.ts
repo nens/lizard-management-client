@@ -24,7 +24,7 @@ export const nonEmptyString = (str: string): validatorResult => {
 
 export const isNotLiteralStringNew = (str: string): validatorResult => {
   const strippedString = str.replace(/\s/g, '');
-  if ( strippedString === 'new' || strippedString === 'New') {
+  if ( strippedString.toLowerCase() === 'new') {
     return "The value 'new' is not allowed here";
   }
   return false;
