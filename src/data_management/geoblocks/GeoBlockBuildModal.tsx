@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { SubmitButton } from './../../form/SubmitButton';
 import { addNotification } from './../../actions';
@@ -16,7 +16,9 @@ interface MyProps {
 
 function GeoBlockBuildModal (props: MyProps & DispatchProps) {
   const { currentRecord } = props;
-  const jsonSource = JSON.stringify(currentRecord.source);
+  const jsonSource = JSON.stringify(currentRecord.source, null, 4);
+  const [json, setJson] = useState<string>(jsonSource);
+  console.log(json);
 
   return (
     <ModalBackground
@@ -31,8 +33,8 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
           <TextArea
             title={'Source'}
             name={'source'}
-            value={jsonSource}
-            valueChanged={() => null}
+            value={json}
+            valueChanged={e => setJson(e.target.value)}
             // clearInput={clearInput}
             validated
           />
