@@ -3,13 +3,13 @@ import {  useSelector } from "react-redux";
 import { ExplainSideColumn } from '../components/ExplainSideColumn';
 import { TextInput } from './../form/TextInput';
 import { CheckBox } from './../form/CheckBox';
+import { LinksArea } from '../form/LinksArea';
 import { CancelButton } from '../form/CancelButton';
 import { useForm, Values } from '../form/useForm';
 import { getContractForSelectedOrganisation, getUsage } from '../reducers';
 import { helpTextContractView } from '../utils/help_texts/helpTextContractView';
 import formStyles from './../styles/Forms.module.css';
 import agreementIcon from "../images/agreement.svg";
-import { TextArea } from './../form/TextArea';
 import UsagePieChart from './../components/UsagePieChart';
 
 
@@ -162,16 +162,10 @@ export const ContractForm = () => {
           onBlur={handleBlur}
           readOnly
         />
-        <TextArea
+        <LinksArea
           title={'Links'}
-          name={'links'}
-          placeholder={'This is a layer based on raster_source'}
-          value={contractObjApi.links}
-          valueChanged={handleInputChange}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-          validated
-          readOnly
+          name={'link'}
+          links={contractObjApi.links || []}
         />
         <div
           className={formStyles.ButtonContainer}
@@ -180,7 +174,6 @@ export const ContractForm = () => {
             url={'/management'}
             buttonText={"CLOSE"}
           />
-          
         </div>
       </form>
     </ExplainSideColumn>
