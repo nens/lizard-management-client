@@ -48,7 +48,7 @@ const UsagePieChart = (props:Props) => {
               cy="0" 
               r="15.91549430918952" 
               fill="none"
-              stroke="#139696" 
+              stroke={percentageUsed < 90 ? "#139696": percentageUsed < 100 ? "#ead153": "#AE0000"} 
               strokeWidth="4"
               strokeDasharray={`${percentageUsed} ${percentageNotUsed}`} 
               strokeDashoffset="25"

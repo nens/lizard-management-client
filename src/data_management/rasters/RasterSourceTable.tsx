@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector} from 'react-redux';
 import TableStateContainer from '../../components/TableStateContainer';
 import { NavLink } from "react-router-dom";
 import TableActionButtons from '../../components/TableActionButtons';
@@ -11,8 +10,7 @@ import Modal from '../../components/Modal';
 import { ModalDeleteContent } from '../../components/ModalDeleteContent';
 import DeleteRasterSourceNotAllowed  from './DeleteRasterSourceNotAllowed';
 import MDSpinner from "react-md-spinner";
-import { defaultRasterSourceExplanationTextTable } from '../../utils/help_texts/helpTextForRasters';
-import { getScenarioTotalSize } from '../../reducers';
+import { DefaultRasterSourceExplanationTextTable } from '../../utils/help_texts/helpTextForRasters';
 import { fetchWithOptions } from '../../utils/fetchWithOptions';
 import DeleteModal from '../../components/DeleteModal';
 import DataFlushingModal from './DataFlushingModal';
@@ -28,7 +26,7 @@ export const RasterSourceTable = (props: any) => {
   const [resetTable, setResetTable] = useState<Function | null>(null);
   const [currentRowDetailView, setCurrentRowDetailView] = useState<null | any>(null);
   const [showDeleteFailedModal, setShowDeleteFailedModal] = useState<boolean>(false);
-  const rastersTotalSize = useSelector(getScenarioTotalSize);
+
 
   useEffect(() => { 
     if (rowToBeDeleted) {
@@ -183,7 +181,7 @@ export const RasterSourceTable = (props: any) => {
       imgUrl={rasterSourcesIcon}
       imgAltDescription={"Raster-Source icon"}
       headerText={"Raster Sources"}
-      explanationText={defaultRasterSourceExplanationTextTable(bytesToDisplayValue(rastersTotalSize))} 
+      explanationText={DefaultRasterSourceExplanationTextTable()} 
       backUrl={"/management/data_management/rasters"}
     >
       <TableStateContainer
