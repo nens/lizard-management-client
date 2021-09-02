@@ -6,17 +6,17 @@ import ModalBackground from './../../components/ModalBackground';
 import styles from './GeoBlockBuildModal.module.css';
 import formStyles from './../../styles/Forms.module.css';
 import buttonStyles from './../../styles/Buttons.module.css';
-import { TextArea } from '../../form/TextArea';
-// import { jsonValidator } from '../../form/validators';
+// @ts-ignore
+import JSONInput from "react-json-editor-ajrm/index";
 
 interface MyProps {
-  source: Object | null,
+  source: Object,
   onChange: (value: any) => void,
   handleClose: () => void
 }
 
 function GeoBlockBuildModal (props: MyProps & DispatchProps) {
-  const [json, setJson] = useState<string>(JSON.stringify(props.source, null, 4));
+  const [json, setJson] = useState<Object>(props.source);
 
   return (
     <ModalBackground
@@ -28,13 +28,11 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
       <div className={styles.MainContainer}>
         <div className={styles.GridContainer}>
           <h3>Build</h3>
-          <TextArea
-            title={'Source'}
-            name={'source'}
-            value={json}
-            valueChanged={e => setJson(e.target.value)}
-            // clearInput={clearInput}
-            validated
+          <JSONInput
+            locale={'nl'}
+            placeholder={json}
+            theme="light_mitsuketa_tribute"
+            onChange={(e: any) => setJson(e.jsObject)}
           />
         </div>
         <div className={`${formStyles.ButtonContainer} ${formStyles.FixedButtonContainer}`}>
@@ -46,7 +44,7 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
           </button>
           <SubmitButton
             onClick={() => {
-              props.onChange(JSON.parse(json));
+              props.onChange(json);
               props.handleClose();
             }}
           />
