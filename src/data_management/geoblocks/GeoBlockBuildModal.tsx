@@ -31,6 +31,8 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
           onEdit={e => setJsonObject(e.updated_src)}
           onAdd={e => setJsonObject(e.updated_src)}
           onDelete={e => setJsonObject(e.updated_src)}
+          displayDataTypes={false}
+          displayObjectSize={false}
           style={{
             position: "absolute",
             height: "80%",
