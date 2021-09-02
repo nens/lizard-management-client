@@ -1,40 +1,50 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { connect, useSelector } from 'react-redux';
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import { TextArea } from './../../form/TextArea';
 import { TextInput } from './../../form/TextInput';
 import { SelectDropdown } from '../../form/SelectDropdown';
+import { FormButton } from '../../form/FormButton';
 import { SubmitButton } from '../../form/SubmitButton';
 import { CancelButton } from '../../form/CancelButton';
 import { AccessModifier } from '../../form/AccessModifier';
 import { useForm, Values } from '../../form/useForm';
-import { minLength } from '../../form/validators';
 import { getSelectedOrganisation } from '../../reducers';
 import { addNotification } from './../../actions';
-import geoblockIcon from "../../images/geoblock.svg";
-import formStyles from './../../styles/Forms.module.css';
 import { convertToSelectObject } from '../../utils/convertToSelectObject';
 import { fetchSuppliers } from '../rasters/RasterSourceForm';
-import { FormButton } from '../../form/FormButton';
+import { fetchObservationTypes } from '../rasters/RasterLayerForm';
+import { minLength, required } from '../../form/validators';
+import GeoBlockBuildModal from './GeoBlockBuildModal';
+import geoblockIcon from "../../images/geoblock.svg";
+import formStyles from './../../styles/Forms.module.css';
 
 interface Props {
   currentRecord?: any,
 };
 
+const backUrl = "/management/data_management/geoblocks";
+
 const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (props) => {
   const { currentRecord } = props;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
+
+  const [buildModal, setBuildModal] = useState<boolean>(false);
 
   const initialValues = currentRecord ? {
     name: currentRecord.name,
     uuid: currentRecord.uuid,
     description: currentRecord.description,
+    source: currentRecord.source,
+    observationType: currentRecord.observation_type ? convertToSelectObject(currentRecord.observation_type.id, currentRecord.observation_type.code) : null,
     accessModifier: currentRecord.access_modifier,
     supplier: currentRecord.supplier ? convertToSelectObject(currentRecord.supplier) : null,
   } : {
     name: null,
     description: null,
+    source: null,
+    observationType: null,
     accessModifier: 'Private',
     supplier: null,
   };
@@ -42,13 +52,52 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
     const body = {
       name: values.name,
       description: values.description,
+      source: values.source,
+      observation_type: values.observationType && values.observationType.value,
       access_modifier: values.accessModifier,
       supplier: values.supplier && values.supplier.label,
+      organisation: selectedOrganisation.uuid,
     };
     if (!currentRecord) {
       console.log('create new geoblock: ', body);
+      fetch('/api/v4/rasters/', {
+        credentials: 'same-origin',
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+      }).then(response => {
+        const status = response.status;
+        if (status === 201) {
+          props.addNotification('Success! New GeoBlock created', 2000);
+          props.history.push(backUrl);
+        } else if (status === 403) {
+          props.addNotification("Not authorized", 2000);
+          console.error(response);
+        } else {
+          props.addNotification(status, 2000);
+          console.error(response);
+        };
+      }).catch(console.error);
     } else {
       console.log('edit a geoblock: ', body);
+      fetch(`/api/v4/rasters/${currentRecord.uuid}/`, {
+        credentials: 'same-origin',
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+      }).then(response => {
+        const status = response.status;
+        if (status === 200) {
+          props.addNotification('Success! Geo Block updated', 2000);
+          props.history.push(backUrl);
+        } else if (status === 403) {
+          props.addNotification("Not authorized", 2000);
+          console.error(response);
+        } else {
+          props.addNotification(status, 2000);
+          console.error(response);
+        };
+      }).catch(console.error);
     };
   };
 
@@ -91,7 +140,6 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
           valueChanged={handleInputChange}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          clearInput={clearInput}
           validated={!minLength(3, values.name)}
           errorMessage={minLength(3, values.name)}
           triedToSubmit={triedToSubmit}
@@ -126,11 +174,27 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
           title={'Geo Block'}
           text={'Geo Block Builder'}
           onClick={e => {
-            console.log('Open modal to build geoblock')
             e.preventDefault();
+            setBuildModal(true);
           }}
           onFocus={handleFocus}
           onBlur={handleBlur}
+        />
+        <SelectDropdown
+          title={'Observation type *'}
+          name={'observationType'}
+          placeholder={'- Search and select -'}
+          value={values.observationType}
+          valueChanged={value => handleValueChange('observationType', value)}
+          options={[]}
+          validated={!required('Please select an observation type', values.observationType)}
+          errorMessage={required('Please select an observation type', values.observationType)}
+          triedToSubmit={triedToSubmit}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          isAsync
+          isCached
+          loadOptions={fetchObservationTypes}
         />
         <span className={formStyles.FormFieldTitle}>
           3: Rights
@@ -170,6 +234,13 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
           />
         </div>
       </form>
+      {buildModal ? (
+        <GeoBlockBuildModal
+          source={values.source}
+          onChange={value => handleValueChange('source', value)}
+          handleClose={() => setBuildModal(false)}
+        />
+      ) : null}
     </ExplainSideColumn>
   );
 };
