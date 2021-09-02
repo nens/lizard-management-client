@@ -16,6 +16,10 @@ import { convertToSelectObject } from '../../utils/convertToSelectObject';
 import { fetchSuppliers } from '../rasters/RasterSourceForm';
 import { fetchObservationTypes } from '../rasters/RasterLayerForm';
 import { minLength, required } from '../../form/validators';
+import { fetchWithOptions } from '../../utils/fetchWithOptions';
+import { baseUrl } from '../rasters/RasterLayerTable';
+import FormActionButtons from '../../components/FormActionButtons';
+import DeleteModal from '../../components/DeleteModal';
 import GeoBlockBuildModal from './GeoBlockBuildModal';
 import geoblockIcon from "../../images/geoblock.svg";
 import formStyles from './../../styles/Forms.module.css';
@@ -59,8 +63,7 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
       organisation: selectedOrganisation.uuid,
     };
     if (!currentRecord) {
-      console.log('create new geoblock: ', body);
-      fetch('/api/v4/rasters/', {
+      fetch(baseUrl, {
         credentials: 'same-origin',
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -79,7 +82,6 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
         };
       }).catch(console.error);
     } else {
-      console.log('edit a geoblock: ', body);
       fetch(`/api/v4/rasters/${currentRecord.uuid}/`, {
         credentials: 'same-origin',
         method: "PATCH",
@@ -114,6 +116,9 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
     handleReset,
     clearInput,
   } = useForm({initialValues, onSubmit});
+
+  // Delete modal
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   return (
     <ExplainSideColumn
@@ -229,11 +234,34 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
           <CancelButton
             url={'/management/data_management/geoblocks'}
           />
-          <SubmitButton
-            onClick={tryToSubmitForm}
-          />
+          <div style={{ display: "flex" }}>
+            {currentRecord ? (
+              <div style={{ marginRight: 16 }}>
+                <FormActionButtons
+                  actions={[
+                    {
+                      displayValue: "Delete",
+                      actionFunction: () => setShowDeleteModal(true)
+                    },
+                  ]}
+                />
+              </div>
+            ) : null}
+            <SubmitButton
+              onClick={tryToSubmitForm}
+            />
+          </div>
         </div>
       </form>
+      {currentRecord && showDeleteModal ? (
+        <DeleteModal
+          rows={[currentRecord]}
+          displayContent={[{name: "name", width: 40}, {name: "uuid", width: 60}]}
+          fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
+          handleClose={() => setShowDeleteModal(false)}
+          tableUrl={'/management/data_management/rasters/layers'}
+        />
+      ) : null}
       {buildModal ? (
         <GeoBlockBuildModal
           source={values.source}
