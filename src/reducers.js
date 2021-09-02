@@ -370,6 +370,9 @@ export const getScenarioTotalSize = (state) => {
 export const getRasterTotalSize = (state) => {
   return state.usage.raster_total_size;
 };
+export const getTimeseriesTotalSize = (state) => {
+  return state.usage.timeseries_total_size;
+};
 
 export const getIsItSureSelectedOrganisationHasNoContract = (state) => {
   const contract = getContractForSelectedOrganisation(state);
@@ -400,6 +403,15 @@ export const getScenarioAvailableSizeDefinedByContract = (state) => {
   const currentContract = getContractForSelectedOrganisation(state);
   return (currentContract && currentContract.scenario_storage_capacity) || 0;
 }
+export const getRasterAvailableSizeDefinedByContract = (state) => {
+  const currentContract = getContractForSelectedOrganisation(state);
+  return (currentContract && currentContract.raster_storage_capacity) || 0;
+}
+export const getTimeseriesAvailableSizeDefinedByContract = (state) => {
+  const currentContract = getContractForSelectedOrganisation(state);
+  return (currentContract && currentContract.timeseries_storage_capacity) || 0;
+}
+
 
 export const getLayercollections = (state) => {
   return state.layercollections;
