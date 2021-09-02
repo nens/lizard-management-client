@@ -3,6 +3,7 @@ import ReactJson from 'react-json-view';
 import { connect } from 'react-redux';
 import { SubmitButton } from './../../form/SubmitButton';
 import { addNotification } from './../../actions';
+import { jsonValidator } from '../../form/validators';
 import ModalBackground from './../../components/ModalBackground';
 import styles from './GeoBlockBuildModal.module.css';
 import formStyles from './../../styles/Forms.module.css';
@@ -25,15 +26,31 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
       height={'80%'}
     >
       <div className={styles.MainContainer}>
+        {Object.keys(props.source).length === 0 ? (
+          <button
+            onClick={async () => {
+              const valueFromClipboard = await navigator.clipboard.readText();
+              if (jsonValidator(valueFromClipboard)) {
+                return alert('Incorrect JSON format');
+              };
+              return setJsonObject(JSON.parse(valueFromClipboard));
+            }}
+          >
+            Paste JSON from clipboard
+          </button>
+        ) : null}
         <ReactJson
           src={jsonObject}
-          theme={"shapeshifter:inverted"}
+          name="source"
+          theme="shapeshifter:inverted"
           onEdit={e => setJsonObject(e.updated_src)}
           onAdd={e => setJsonObject(e.updated_src)}
           onDelete={e => setJsonObject(e.updated_src)}
           displayDataTypes={false}
           displayObjectSize={false}
+          quotesOnKeys={false}
           style={{
+            top: Object.keys(props.source).length === 0 ? 50 : 0,
             position: "absolute",
             height: "80%",
             width: "100%",
