@@ -47,7 +47,7 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
   } : {
     name: null,
     description: null,
-    source: null,
+    source: {},
     observationType: null,
     accessModifier: 'Private',
     supplier: null,
