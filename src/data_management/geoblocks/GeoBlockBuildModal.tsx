@@ -10,15 +10,13 @@ import { TextArea } from '../../form/TextArea';
 // import { jsonValidator } from '../../form/validators';
 
 interface MyProps {
-  currentRecord: any,
+  source: Object | null,
+  onChange: (value: any) => void,
   handleClose: () => void
 }
 
 function GeoBlockBuildModal (props: MyProps & DispatchProps) {
-  const { currentRecord } = props;
-  const jsonSource = JSON.stringify(currentRecord.source, null, 4);
-  const [json, setJson] = useState<string>(jsonSource);
-  console.log(json);
+  const [json, setJson] = useState<string>(JSON.stringify(props.source, null, 4));
 
   return (
     <ModalBackground
@@ -47,7 +45,10 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
             Close
           </button>
           <SubmitButton
-            onClick={() => console.log(currentRecord)}
+            onClick={() => {
+              props.onChange(JSON.parse(json));
+              props.handleClose();
+            }}
           />
         </div>
       </div>
