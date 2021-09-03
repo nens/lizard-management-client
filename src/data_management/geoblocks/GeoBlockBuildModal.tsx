@@ -10,13 +10,13 @@ import formStyles from './../../styles/Forms.module.css';
 import buttonStyles from './../../styles/Buttons.module.css';
 
 interface MyProps {
-  source: Object,
+  source: Object | null,
   onChange: (value: any) => void,
   handleClose: () => void
 }
 
 function GeoBlockBuildModal (props: MyProps & DispatchProps) {
-  const [jsonObject, setJsonObject] = useState<Object>(props.source);
+  const [jsonObject, setJsonObject] = useState<Object>(props.source || {});
 
   return (
     <ModalBackground
@@ -26,12 +26,12 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
       height={'80%'}
     >
       <div className={styles.MainContainer}>
-        {Object.keys(props.source).length === 0 ? (
+        {Object.keys(jsonObject).length === 0 ? (
           <button
             onClick={async () => {
               const valueFromClipboard = await navigator.clipboard.readText();
               if (jsonValidator(valueFromClipboard)) {
-                return alert('Incorrect JSON format');
+                return alert('Invalid JSON to paste, please copy a valid JSON!');
               };
               return setJsonObject(JSON.parse(valueFromClipboard));
             }}
@@ -50,7 +50,7 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
           displayObjectSize={false}
           quotesOnKeys={false}
           style={{
-            top: Object.keys(props.source).length === 0 ? 50 : 0,
+            top: Object.keys(jsonObject).length === 0 ? 50 : 0,
             position: "absolute",
             height: "80%",
             width: "100%",
