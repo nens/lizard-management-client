@@ -15,7 +15,7 @@ import { addNotification } from './../../actions';
 import { convertToSelectObject } from '../../utils/convertToSelectObject';
 import { fetchSuppliers } from '../rasters/RasterSourceForm';
 import { fetchObservationTypes } from '../rasters/RasterLayerForm';
-import { minLength, required } from '../../form/validators';
+import { geoblockSourceValidator, minLength, required } from '../../form/validators';
 import { fetchWithOptions } from '../../utils/fetchWithOptions';
 import { geoBlockHelpText } from '../../utils/help_texts/helpTextForGeoBlock';
 import { baseUrl } from '../rasters/RasterLayerTable';
@@ -48,7 +48,7 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
   } : {
     name: null,
     description: null,
-    source: null,
+    source: {},
     observationType: null,
     accessModifier: 'Private',
     supplier: null,
@@ -183,6 +183,8 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
             e.preventDefault();
             setBuildModal(true);
           }}
+          validated={!geoblockSourceValidator(values.source)}
+          errorMessage={geoblockSourceValidator(values.source)}
           onFocus={handleFocus}
           onBlur={handleBlur}
         />

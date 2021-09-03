@@ -182,6 +182,7 @@ const MonitoringNetworkForm = (props: Props & DispatchProps & RouteComponentProp
           readOnly={!currentRecord}
           onFocus={handleFocus}
           onBlur={handleBlur}
+          validated
         />
         <span className={formStyles.FormFieldTitle}>
           3: Rights
