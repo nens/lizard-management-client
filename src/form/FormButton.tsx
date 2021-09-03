@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import formStyles from "../styles/Forms.module.css";
 import buttonStyles from "../styles/Buttons.module.css";
 
@@ -6,6 +6,8 @@ interface MyProps {
   name: string,
   title: string,
   text: string,
+  validated: boolean,
+  errorMessage?: string | false,
   onFocus?: (e: React.FocusEvent<HTMLButtonElement>) => void,
   onBlur?: () => void,
   readOnly?: boolean,
@@ -18,12 +20,26 @@ export const FormButton: React.FC<MyProps> = (props) => {
     name,
     title,
     text,
+    validated,
+    errorMessage,
     onFocus,
     onBlur,
     readOnly,
     onClick,
     form,
   } = props;
+
+  // Set validity of the input field
+  const myButton = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (myButton && myButton.current) {
+      if (validated) {
+        myButton.current.setCustomValidity('');
+      } else {
+        myButton.current.setCustomValidity(errorMessage || '');
+      };
+    };
+  })
 
   return (
     <label
@@ -35,6 +51,7 @@ export const FormButton: React.FC<MyProps> = (props) => {
       </span>
       <div>
         <button
+          ref={myButton}
           name={name}
           id={name}
           className={buttonStyles.NewButton}

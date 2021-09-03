@@ -348,6 +348,7 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
             }}
             onFocus={handleFocus}
             onBlur={handleBlur}
+            validated
           />
         ) : (
           <SelectDropdown
