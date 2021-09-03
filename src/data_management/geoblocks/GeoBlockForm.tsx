@@ -17,6 +17,7 @@ import { fetchSuppliers } from '../rasters/RasterSourceForm';
 import { fetchObservationTypes } from '../rasters/RasterLayerForm';
 import { minLength, required } from '../../form/validators';
 import { fetchWithOptions } from '../../utils/fetchWithOptions';
+import { geoBlockHelpText } from '../../utils/help_texts/helpTextForGeoBlock';
 import { baseUrl } from '../rasters/RasterLayerTable';
 import FormActionButtons from '../../components/FormActionButtons';
 import DeleteModal from '../../components/DeleteModal';
@@ -125,7 +126,7 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
       imgUrl={geoblockIcon}
       imgAltDescription={"GeoBlock icon"}
       headerText={"Geo Blocks"}
-      explanationText={'Geo Blocks'}
+      explanationText={geoBlockHelpText[fieldOnFocus] || geoBlockHelpText['default']}
       backUrl={"/management/data_management/geoblocks"}
       fieldName={fieldOnFocus}
     >
@@ -176,7 +177,7 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
         </span>
         <FormButton
           name={'geoBlockBuildModal'}
-          title={'Geo Block'}
+          title={'Geo Block *'}
           text={'Geo Block Builder'}
           onClick={e => {
             e.preventDefault();

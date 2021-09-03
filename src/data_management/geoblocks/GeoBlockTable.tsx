@@ -8,6 +8,7 @@ import geoblockIcon from "../../images/geoblock.svg";
 import tableStyles from "../../components/Table.module.css";
 import { getAccessibiltyText } from '../../form/AccessModifier';
 import { fetchWithOptions } from '../../utils/fetchWithOptions';
+import { geoBlockHelpText } from '../../utils/help_texts/helpTextForGeoBlock';
 
 export const baseUrl = "/api/v4/rasters/";
 const navigationUrl = "/management/data_management/geoblocks";
@@ -99,7 +100,7 @@ export const GeoBlockTable: React.FC<RouteComponentProps> = (props) =>  {
       imgUrl={geoblockIcon}
       imgAltDescription={"GeoBlock icon"}
       headerText={"Geo Blocks"}
-      explanationText={'Geo Blocks'}
+      explanationText={geoBlockHelpText['default']}
       backUrl={"/management/data_management"}
     >
         <TableStateContainer 
