@@ -102,16 +102,17 @@ export const ContractForm = () => {
           5. Links
         </span>
         {contractObjApi.links.map((link: string) => (
-            <a
-              className={formStyles.Label}
-              key={link}
-              href={link}
-              // tabIndex={-1}
-              target="_blank"
-              rel="noreferrer"
-            >
-              {link}
-            </a>
+          // show list of links
+          <a
+            className={formStyles.Label}
+            key={link}
+            href={link}
+            // tabIndex={-1}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {link}
+          </a>
         ))}
         <div
           className={formStyles.ButtonContainer}
