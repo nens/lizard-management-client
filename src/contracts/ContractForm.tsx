@@ -4,12 +4,12 @@ import { ExplainSideColumn } from '../components/ExplainSideColumn';
 import { TextInput } from './../form/TextInput';
 import { LinksArea } from '../form/LinksArea';
 import { InfoLabel } from '../form/InfoLabel';
+import { UsageField } from './UsageField';
 import { CancelButton } from '../form/CancelButton';
 import { getContractForSelectedOrganisation, getUsage } from '../reducers';
 import { helpTextContractView } from '../utils/help_texts/helpTextContractView';
 import formStyles from './../styles/Forms.module.css';
 import agreementIcon from "../images/agreement.svg";
-import UsagePieChart from './../components/UsagePieChart';
 
 export const ContractForm = () => {
   const contractObjApi = useSelector(getContractForSelectedOrganisation);
@@ -40,45 +40,29 @@ export const ContractForm = () => {
         <span className={formStyles.FormFieldTitle}>
           2. Usage
         </span>
-        <div 
-          style={{
-            display: "flex",
-          }}
+        <div
+          style={{ display: 'flex' }}
         >
-          <div
-            style={{
-              marginRight: 100
-            }}
-          >
-            <div className={formStyles.LabelTitle} >Rasters</div>
-            <UsagePieChart
-              used={usageObj.raster_total_size}
-              available={contractObjApi.raster_storage_capacity}
-            />
-          </div>
-          <div
-            style={{
-              marginRight: 100
-            }}
-          >
-            <div className={formStyles.LabelTitle}>Scenarios</div>
-            <UsagePieChart
-              used={usageObj.scenario_total_size}
-              available={contractObjApi.scenario_storage_capacity}
-            />
-          </div>
-          <div>
-            <div className={formStyles.LabelTitle}>Timeseries</div>
-            <UsagePieChart
-              used={usageObj.timeseries_total_size}
-              available={contractObjApi.timeseries_storage_capacity}
-            />
-          </div>
+          <UsageField
+            title={'Rasters'}
+            used={usageObj.raster_total_size}
+            available={contractObjApi.raster_storage_capacity}
+          />
+          <UsageField
+            title={'Scenarios'}
+            used={usageObj.scenario_total_size}
+            available={contractObjApi.scenario_storage_capacity}
+          />
+          <UsageField
+            title={'Timeseries'}
+            used={usageObj.timeseries_total_size}
+            available={contractObjApi.timeseries_storage_capacity}
+          />
         </div>
         <span className={formStyles.FormFieldTitle}>
           3. Capacity
         </span>
-        <div className={formStyles.InfoGridContainer}>
+        <div className={formStyles.TwoColumnGridContainer}>
           <InfoLabel
             title={'Assets capacity'}
             name={'asset_capacity'}
@@ -103,7 +87,7 @@ export const ContractForm = () => {
         <span className={formStyles.FormFieldTitle}>
           4. Geo Block
         </span>
-        <div className={formStyles.InfoGridContainer}>
+        <div className={formStyles.TwoColumnGridContainer}>
           <InfoLabel
             title={'Geoblocks functionality'}
             name={'geoblocks_functionality'}

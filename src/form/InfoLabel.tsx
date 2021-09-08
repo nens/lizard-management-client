@@ -14,7 +14,6 @@ export const InfoLabel = (props: MyProps) => {
     title,
     value,
   } = props;
-  if (name === 'geoblocks_functionality') console.log(value)
 
   return (
     <label
