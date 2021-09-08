@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
+import ReactJson from 'react-json-view';
 import { connect } from 'react-redux';
 import { SubmitButton } from './../../form/SubmitButton';
 import { addNotification } from './../../actions';
+import { jsonValidator } from '../../form/validators';
 import ModalBackground from './../../components/ModalBackground';
 import styles from './GeoBlockBuildModal.module.css';
 import formStyles from './../../styles/Forms.module.css';
 import buttonStyles from './../../styles/Buttons.module.css';
-import { TextArea } from '../../form/TextArea';
-// import { jsonValidator } from '../../form/validators';
 
 interface MyProps {
   source: Object | null,
@@ -16,7 +16,7 @@ interface MyProps {
 }
 
 function GeoBlockBuildModal (props: MyProps & DispatchProps) {
-  const [json, setJson] = useState<string>(JSON.stringify(props.source, null, 4));
+  const [jsonObject, setJsonObject] = useState<Object>(props.source || {});
 
   return (
     <ModalBackground
@@ -26,17 +26,39 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
       height={'80%'}
     >
       <div className={styles.MainContainer}>
-        <div className={styles.GridContainer}>
-          <h3>Build</h3>
-          <TextArea
-            title={'Source'}
-            name={'source'}
-            value={json}
-            valueChanged={e => setJson(e.target.value)}
-            // clearInput={clearInput}
-            validated
-          />
-        </div>
+        {Object.keys(jsonObject).length === 0 ? (
+          <button
+            onClick={async () => {
+              const valueFromClipboard = await navigator.clipboard.readText();
+              if (jsonValidator(valueFromClipboard)) {
+                return alert('Invalid JSON to paste, please copy a valid JSON!');
+              };
+              return setJsonObject(JSON.parse(valueFromClipboard));
+            }}
+          >
+            Paste JSON from clipboard
+          </button>
+        ) : null}
+        <ReactJson
+          src={jsonObject}
+          name="source"
+          theme="shapeshifter:inverted"
+          onEdit={e => setJsonObject(e.updated_src)}
+          onAdd={e => setJsonObject(e.updated_src)}
+          onDelete={e => setJsonObject(e.updated_src)}
+          displayDataTypes={false}
+          displayObjectSize={false}
+          quotesOnKeys={false}
+          style={{
+            top: Object.keys(jsonObject).length === 0 ? 50 : 0,
+            position: "absolute",
+            height: "80%",
+            width: "100%",
+            overflow: "auto",
+            border: "1px solid lightgrey",
+            borderRadius: 5
+          }}
+        />
         <div className={`${formStyles.ButtonContainer} ${formStyles.FixedButtonContainer}`}>
           <button
             className={`${buttonStyles.Button} ${buttonStyles.LinkCancel}`}
@@ -46,7 +68,7 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
           </button>
           <SubmitButton
             onClick={() => {
-              props.onChange(JSON.parse(json));
+              props.onChange(jsonObject);
               props.handleClose();
             }}
           />
