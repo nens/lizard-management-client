@@ -2,7 +2,6 @@ import React from 'react';
 import { useSelector } from "react-redux";
 import { ExplainSideColumn } from '../components/ExplainSideColumn';
 import { TextInput } from './../form/TextInput';
-import { LinksArea } from '../form/LinksArea';
 import { InfoLabel } from '../form/InfoLabel';
 import { UsageField } from './UsageField';
 import { CancelButton } from '../form/CancelButton';
@@ -100,13 +99,20 @@ export const ContractForm = () => {
           />
         </div>
         <span className={formStyles.FormFieldTitle}>
-          5. Others
+          5. Links
         </span>
-        <LinksArea
-          title={'Links'}
-          name={'link'}
-          links={contractObjApi.links || []}
-        />
+        {contractObjApi.links.map((link: string) => (
+            <a
+              className={formStyles.Label}
+              key={link}
+              href={link}
+              // tabIndex={-1}
+              target="_blank"
+              rel="noreferrer"
+            >
+              {link}
+            </a>
+        ))}
         <div
           className={formStyles.ButtonContainer}
         >
