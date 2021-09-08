@@ -1,11 +1,10 @@
 import React from 'react';
-import {  useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { ExplainSideColumn } from '../components/ExplainSideColumn';
 import { TextInput } from './../form/TextInput';
-import { CheckBox } from './../form/CheckBox';
 import { LinksArea } from '../form/LinksArea';
+import { InfoLabel } from '../form/InfoLabel';
 import { CancelButton } from '../form/CancelButton';
-import { useForm } from '../form/useForm';
 import { getContractForSelectedOrganisation, getUsage } from '../reducers';
 import { helpTextContractView } from '../utils/help_texts/helpTextContractView';
 import formStyles from './../styles/Forms.module.css';
@@ -16,25 +15,13 @@ export const ContractForm = () => {
   const contractObjApi = useSelector(getContractForSelectedOrganisation);
   const usageObj = useSelector(getUsage);
 
-  const initialValues = {};
-  const onSubmit = () => null;
-
-  const {
-    handleValueChange,
-    handleInputChange,
-    fieldOnFocus,
-    handleFocus,
-    handleBlur,
-  } = useForm({initialValues, onSubmit});
-
   return (
     <ExplainSideColumn
       imgUrl={agreementIcon}
       imgAltDescription={"Contract Icon"}
       headerText={"Contract"}
-      explanationText={helpTextContractView[fieldOnFocus] || helpTextContractView['default']}
+      explanationText={helpTextContractView['default']}
       backUrl={"/management"}
-      fieldName={fieldOnFocus}
     >
       <form
         className={formStyles.Form}
@@ -46,14 +33,12 @@ export const ContractForm = () => {
           title={'Start date contract'}
           name={'start_date_contract'}
           value={(new Date(contractObjApi.start).toLocaleDateString())}
-          valueChanged={handleInputChange}
+          valueChanged={() => null}
           validated
-          onFocus={handleFocus}
-          onBlur={handleBlur}
           readOnly
         />
         <span className={formStyles.FormFieldTitle}>
-          2. Data
+          2. Usage
         </span>
         <div 
           style={{
@@ -62,7 +47,7 @@ export const ContractForm = () => {
         >
           <div
             style={{
-              marginRight: "100px"
+              marginRight: 100
             }}
           >
             <div className={formStyles.LabelTitle} >Rasters</div>
@@ -73,7 +58,7 @@ export const ContractForm = () => {
           </div>
           <div
             style={{
-              marginRight: "100px"
+              marginRight: 100
             }}
           >
             <div className={formStyles.LabelTitle}>Scenarios</div>
@@ -91,68 +76,48 @@ export const ContractForm = () => {
           </div>
         </div>
         <span className={formStyles.FormFieldTitle}>
-          3. Other
+          3. Capacity
         </span>
-        <TextInput
-          title={'Assets capacity'}
-          name={'asset_capacity'}
-          value={contractObjApi.asset_capacity}
-          valueChanged={handleInputChange}
-          validated
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-          readOnly
-        />
-        <TextInput
-          title={'Labels capacity'}
-          name={'label_capacity'}
-          value={contractObjApi.label_capacity}
-          valueChanged={handleInputChange}
-          validated
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-          readOnly
-        />
-        <TextInput
-          title={'Events capacity'}
-          name={'event_capacity'}
-          value={contractObjApi.event_capacity}
-          valueChanged={handleInputChange}
-          validated
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-          readOnly
-        />
-        <TextInput
-          title={'Alarm message capacity'}
-          name={'alarm_message_capacity'}
-          value={contractObjApi.alarm_message_capacity}
-          valueChanged={handleInputChange}
-          validated
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-          readOnly
-        />
-        <CheckBox
-          title={'Geoblocks functionality'}
-          name={'geoblocks_functionality'}
-          value={contractObjApi.geoblocks_acces}
-          valueChanged={bool => handleValueChange('scopeWildcardReadWrite', bool)}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-          readOnly
-          validated
-        />
-        <TextInput
-          title={'Geoblocks calculation units'}
-          name={'geoblocks_calculation_units'}
-          value={contractObjApi.geoblocks_calculation_units_capacity}
-          valueChanged={handleInputChange}
-          validated
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-          readOnly
-        />
+        <div className={formStyles.InfoGridContainer}>
+          <InfoLabel
+            title={'Assets capacity'}
+            name={'asset_capacity'}
+            value={contractObjApi.asset_capacity}
+          />
+          <InfoLabel
+            title={'Labels capacity'}
+            name={'label_capacity'}
+            value={contractObjApi.label_capacity}
+          />
+          <InfoLabel
+            title={'Events capacity'}
+            name={'event_capacity'}
+            value={contractObjApi.event_capacity}
+          />
+          <InfoLabel
+            title={'Alarm message capacity'}
+            name={'alarm_message_capacity'}
+            value={contractObjApi.alarm_message_capacity}
+          />
+        </div>
+        <span className={formStyles.FormFieldTitle}>
+          4. Geo Block
+        </span>
+        <div className={formStyles.InfoGridContainer}>
+          <InfoLabel
+            title={'Geoblocks functionality'}
+            name={'geoblocks_functionality'}
+            value={contractObjApi.geoblocks_acces}
+          />
+          <InfoLabel
+            title={'Geoblocks calculation units'}
+            name={'geoblocks_calculation_units'}
+            value={contractObjApi.geoblocks_calculation_units_capacity}
+          />
+        </div>
+        <span className={formStyles.FormFieldTitle}>
+          5. Others
+        </span>
         <LinksArea
           title={'Links'}
           name={'link'}
