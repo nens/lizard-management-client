@@ -213,6 +213,7 @@ const UserForm: React.FC<Props & DispatchProps & RouteComponentProps> = (props) 
           fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
           handleClose={() => setShowDeleteModal(false)}
           tableUrl={'/users'}
+          deleteButtonName={'Deactivate'}
           text={'You are deactivating the following user. Please make sure that s/he is not a member of any other organisation before continue.'}
         />
       ) : null}

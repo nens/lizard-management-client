@@ -174,6 +174,7 @@ export const UserTable = (props: RouteComponentProps) =>  {
             setSelectedRows([]);
             setResetTable(null);
           }}
+          deleteButtonName={'Deactivate'}
           text={'You are deactivating the following user. Please make sure that s/he is not a member of any other organisation before continue.'}
         />
       ) : null}
