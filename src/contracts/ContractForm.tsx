@@ -5,24 +5,19 @@ import { TextInput } from './../form/TextInput';
 import { CheckBox } from './../form/CheckBox';
 import { LinksArea } from '../form/LinksArea';
 import { CancelButton } from '../form/CancelButton';
-import { useForm, Values } from '../form/useForm';
+import { useForm } from '../form/useForm';
 import { getContractForSelectedOrganisation, getUsage } from '../reducers';
 import { helpTextContractView } from '../utils/help_texts/helpTextContractView';
 import formStyles from './../styles/Forms.module.css';
 import agreementIcon from "../images/agreement.svg";
 import UsagePieChart from './../components/UsagePieChart';
 
-
-
 export const ContractForm = () => {
-
   const contractObjApi = useSelector(getContractForSelectedOrganisation);
   const usageObj = useSelector(getUsage);
 
-  const initialValues = {
-  };
-
-  const onSubmit = (values: Values) => {};
+  const initialValues = {};
+  const onSubmit = () => null;
 
   const {
     handleValueChange,
@@ -30,8 +25,6 @@ export const ContractForm = () => {
     fieldOnFocus,
     handleFocus,
     handleBlur,
-    handleSubmit,
-    handleReset,
   } = useForm({initialValues, onSubmit});
 
   return (
@@ -45,8 +38,6 @@ export const ContractForm = () => {
     >
       <form
         className={formStyles.Form}
-        onSubmit={handleSubmit}
-        onReset={handleReset}
       >
         <span className={`${formStyles.FormFieldTitle} ${formStyles.FirstFormFieldTitle}`}>
           1: General
