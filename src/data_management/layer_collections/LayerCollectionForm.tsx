@@ -4,9 +4,9 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import { TextInput } from './../../form/TextInput';
 import { AccessModifier } from '../../form/AccessModifier';
-// import { SelectDropdown } from '../../form/SelectDropdown';
-// import { fetchSuppliers } from './../rasters/RasterSourceForm';
-// import { convertToSelectObject } from '../../utils/convertToSelectObject';
+import { SelectDropdown } from '../../form/SelectDropdown';
+import { fetchSuppliers } from './../rasters/RasterSourceForm';
+import { convertToSelectObject } from '../../utils/convertToSelectObject';
 import { SubmitButton } from '../../form/SubmitButton';
 import { CancelButton } from '../../form/CancelButton';
 import { useForm, Values } from '../../form/useForm';
@@ -30,43 +30,35 @@ const backUrl = "/management/data_management/layer_collections";
 
 const LayerCollectionForm = (props: Props & DispatchProps & RouteComponentProps) => {
   const { currentRecord } = props;
-  
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
-
-
 
   const initialValues = currentRecord ? {
     slug: currentRecord.slug,
     accessModifier: currentRecord.access_modifier,
-    // supplier: currentRecord.supplier ? convertToSelectObject(currentRecord.supplier) : null,
+    supplier: currentRecord.supplier ? convertToSelectObject(currentRecord.supplier) : null,
   } : {
     slug: null,
     accessModifier: 'Private',
-    // supplier: null
+    supplier: null
   };
 
   const onSubmit = (values: Values) => {
-    interface Body {
-      slug: string;
-      access_modifier: string;
-      // supplier: string | null;
-      organisation?: string; //uuid
-    }
-
-    const body: Body = {
+    const body = {
       slug: values.slug,
-      // supplier: values.supplier,
+      supplier: values.supplier && values.supplier.label,
       access_modifier: values.accessModifier,
     };
 
     if (!currentRecord) {
-      body.organisation = selectedOrganisation.uuid;
       fetch("/api/v4/layercollections/", {
         credentials: "same-origin",
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body)
+        body: JSON.stringify({
+          ...body,
+          organisation: selectedOrganisation.uuid
+        })
       })
       .then(response => {
         const status = response.status;
@@ -159,7 +151,7 @@ const LayerCollectionForm = (props: Props & DispatchProps & RouteComponentProps)
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
-        {/* <SelectDropdown
+        <SelectDropdown
           title={'Supplier'}
           name={'supplier'}
           placeholder={'- Search and select -'}
@@ -173,7 +165,7 @@ const LayerCollectionForm = (props: Props & DispatchProps & RouteComponentProps)
           dropUp
           onFocus={handleFocus}
           onBlur={handleBlur}
-        /> */}
+        />
         <div
           className={formStyles.ButtonContainer}
         >
