@@ -5,7 +5,7 @@ import formStyles from "../styles/Forms.module.css";
 interface MyProps {
   name: string,
   title: string,
-  value: number | boolean,
+  value: string | number | boolean,
 }
 
 export const InfoLabel = (props: MyProps) => {
@@ -27,8 +27,9 @@ export const InfoLabel = (props: MyProps) => {
         <h3>{title}</h3>
         <span className={styles.InfoValue}>
           {
-            typeof(value) === 'number' ? value.toLocaleString() : // value is a number
-            value ? <i className="fa fa-check-circle" /> : <i className="fa fa-times-circle" /> // value is boolean
+            typeof(value) === 'string' ? value : // display a string e.g. date
+            typeof(value) === 'number' ? value.toLocaleString() : // display a number
+            value ? <i className="fa fa-check-circle" /> : <i className="fa fa-times-circle" /> // display a boolean
           }
         </span>
       </div>

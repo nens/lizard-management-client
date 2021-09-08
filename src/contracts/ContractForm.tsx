@@ -1,7 +1,6 @@
 import React from 'react';
 import { useSelector } from "react-redux";
 import { ExplainSideColumn } from '../components/ExplainSideColumn';
-import { TextInput } from './../form/TextInput';
 import { InfoLabel } from '../form/InfoLabel';
 import { UsageField } from './UsageField';
 import { CancelButton } from '../form/CancelButton';
@@ -28,13 +27,10 @@ export const ContractForm = () => {
         <span className={`${formStyles.FormFieldTitle} ${formStyles.FirstFormFieldTitle}`}>
           1: General
         </span>
-        <TextInput
-          title={'Start date contract'}
+        <InfoLabel
+          title={'Start date'}
           name={'start_date_contract'}
-          value={(new Date(contractObjApi.start).toLocaleDateString())}
-          valueChanged={() => null}
-          validated
-          readOnly
+          value={new Date(contractObjApi.start).toLocaleDateString()}
         />
         <span className={formStyles.FormFieldTitle}>
           2. Usage
