@@ -61,7 +61,7 @@ export const ContractForm = () => {
         <span className={formStyles.FormFieldTitle}>
           3. Capacity
         </span>
-        <div className={formStyles.TwoColumnGridContainer}>
+        <div className={formStyles.GridContainer}>
           <InfoLabel
             title={'Assets capacity'}
             name={'asset_capacity'}
@@ -72,6 +72,7 @@ export const ContractForm = () => {
             name={'label_capacity'}
             value={contractObjApi.label_capacity}
           />
+          <div />
           <InfoLabel
             title={'Events capacity'}
             name={'event_capacity'}
@@ -86,7 +87,7 @@ export const ContractForm = () => {
         <span className={formStyles.FormFieldTitle}>
           4. Geo Block
         </span>
-        <div className={formStyles.TwoColumnGridContainer}>
+        <div className={formStyles.GridContainer}>
           <InfoLabel
             title={'Geoblocks functionality'}
             name={'geoblocks_functionality'}

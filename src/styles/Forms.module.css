@@ -70,12 +70,6 @@
   align-items: center;
 }
 
-.TwoColumnGridContainer {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  column-gap: 20px;
-}
-
 /* CSS for form input fields */
 .FormControl {
   display: block;
