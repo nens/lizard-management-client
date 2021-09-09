@@ -89,11 +89,13 @@ export const ContractForm = () => {
             name={'geoblocks_functionality'}
             value={contractObjApi.geoblocks_acces}
           />
-          <InfoLabel
-            title={'Geoblocks calculation units'}
-            name={'geoblocks_calculation_units'}
-            value={contractObjApi.geoblocks_calculation_units_capacity}
-          />
+          {contractObjApi.geoblocks_acces ? (
+            <InfoLabel
+              title={'Geoblocks calculation units'}
+              name={'geoblocks_calculation_units'}
+              value={contractObjApi.geoblocks_calculation_units_capacity}
+            />
+          ) : null}
         </div>
         <span className={formStyles.FormFieldTitle}>
           5. Links
