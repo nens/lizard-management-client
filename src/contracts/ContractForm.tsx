@@ -36,7 +36,10 @@ export const ContractForm = () => {
           2. Usage
         </span>
         <div
-          style={{ display: 'flex' }}
+          style={{
+            marginBottom: 24,
+            display: 'flex'
+          }}
         >
           <UsageField
             title={'Rasters'}
@@ -54,10 +57,7 @@ export const ContractForm = () => {
             available={contractObjApi.timeseries_storage_capacity}
           />
         </div>
-        <span className={formStyles.FormFieldTitle}>
-          3. Capacity
-        </span>
-        <div className={formStyles.GridContainer}>
+        {/* <div className={formStyles.GridContainer}>
           <InfoLabel
             title={'Assets capacity'}
             name={'asset_capacity'}
@@ -79,11 +79,8 @@ export const ContractForm = () => {
             name={'alarm_message_capacity'}
             value={contractObjApi.alarm_message_capacity}
           />
-        </div>
-        <span className={formStyles.FormFieldTitle}>
-          4. Geo Block
-        </span>
-        <div className={formStyles.GridContainer}>
+        </div> */}
+        {/* <div className={formStyles.GridContainer}>
           <InfoLabel
             title={'Geoblocks functionality'}
             name={'geoblocks_functionality'}
@@ -96,9 +93,9 @@ export const ContractForm = () => {
               value={contractObjApi.geoblocks_calculation_units_capacity}
             />
           ) : null}
-        </div>
+        </div> */}
         <span className={formStyles.FormFieldTitle}>
-          5. Links
+          3. Links
         </span>
         {contractObjApi.links.map((link: string) => (
           // show list of links
@@ -106,7 +103,7 @@ export const ContractForm = () => {
             className={formStyles.Label}
             key={link}
             href={link}
-            // tabIndex={-1}
+            tabIndex={-1}
             target="_blank"
             rel="noreferrer"
           >
