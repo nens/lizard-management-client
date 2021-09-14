@@ -1,0 +1,25 @@
+.InfoLabel {
+  height: 160px;
+  width: 280px;
+  cursor: default;
+  border: 1px solid #C9C9C9;
+  border-radius: 10px;
+  box-shadow: 2px 2px 10px #b9b9b9;
+  padding: 20px;
+  background-color: var(--color-border-input);
+  color: #FFFFFF;
+}
+
+.InfoValue {
+  font-size: 26px;
+  font-weight: bold;
+  line-height: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.InfoValue i {
+  margin-top: 10px;
+  font-size: 70px;
+}

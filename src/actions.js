@@ -104,7 +104,7 @@ export function fetchOrganisations() {
     dispatch({
       type: REQUEST_CONTRACTS,
     });
-    const contracts = await recursiveFetchFunction('/api/v4/contracts', []);
+    const contracts = await recursiveFetchFunction('/api/v4/contracts/', []);
     dispatch({
       type: SET_CONTRACTS,
       contracts: contracts,
