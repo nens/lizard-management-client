@@ -8,7 +8,6 @@ import ModalBackground from './../../components/ModalBackground';
 import styles from './GeoBlockBuildModal.module.css';
 import formStyles from './../../styles/Forms.module.css';
 import buttonStyles from './../../styles/Buttons.module.css';
-import Dashboard from './GeoBlockGraphComponent';
 
 interface MyProps {
   source: Object | null,
@@ -27,8 +26,7 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
       height={'80%'}
     >
       <div className={styles.MainContainer}>
-        <Dashboard />
-        {/* {Object.keys(jsonObject).length === 0 ? (
+        {Object.keys(jsonObject).length === 0 ? (
           <button
             onClick={async () => {
               const valueFromClipboard = await navigator.clipboard.readText();
@@ -60,7 +58,7 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
             border: "1px solid lightgrey",
             borderRadius: 5
           }}
-        /> */}
+        />
         <div className={`${formStyles.ButtonContainer} ${formStyles.FixedButtonContainer}`}>
           <button
             className={`${buttonStyles.Button} ${buttonStyles.LinkCancel}`}
