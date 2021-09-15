@@ -56,6 +56,7 @@ import { ViewContract } from '../contracts/ViewContract';
 import { GeoBlockTable } from "../data_management/geoblocks/GeoBlockTable";
 import { NewGeoBlock } from "../data_management/geoblocks/NewGeoBlock";
 import { EditGeoBlock } from "../data_management/geoblocks/EditGeoBlock";
+import { ReteApp } from "../data_management/geoblocks/test";
 
 const authenticatedRoutes = () => {
   return (
@@ -65,6 +66,7 @@ const authenticatedRoutes = () => {
             <Route exact path="/management/users" component={UserTable} />
             <Route exact path="/management/users/new" component={NewUser} />
             <Route exact path="/management/users/:id" component={EditUser} />
+            <Route exact path="/management/test" component={ReteApp} />
 
             <Route exact path="/management/personal_api_keys" component={PersonalApiKeysTable} />
             <Route exact path="/management/personal_api_keys/new" component={NewPersonalApiKey} />
