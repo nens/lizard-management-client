@@ -1,9 +1,13 @@
 import React from "react";
-import SpinnerIfNotLoaded from '../components/SpinnerIfNotLoaded';
+import { useSelector } from "react-redux";
 import { ContractForm} from './ContractForm';
-import {  useSelector } from "react-redux";
-import {getContractForSelectedOrganisation, getUsage, getIsItSureSelectedOrganisationHasNoContract} from '../reducers';
-import NoContractFoundComponent from '../components/NoContractFoundComponent';
+import {
+  getContractForSelectedOrganisation,
+  getUsage,
+  getIsItSureSelectedOrganisationHasNoContract
+} from '../reducers';
+import NoContractFoundComponent from './NoContractFoundComponent';
+import SpinnerIfNotLoaded from '../components/SpinnerIfNotLoaded';
 
 export const ViewContract = () => {
   const contractFetched = useSelector(getContractForSelectedOrganisation);
