@@ -6,100 +6,194 @@ import ReactFlow, {
   Connection,
   updateEdge,
   addEdge,
-  Controls,
+  // Controls,
   removeElements,
+  Position
 } from 'react-flow-renderer';
 
-const initialElements: Elements = [
+// test flow elements
+// const initialElements: Elements = [
+//   {
+//     id: '1',
+//     type: 'input',
+//     data: { label: 'Raster 1' },
+//     position: { x: 10, y: 50 }
+//   },
+//   {
+//     id: '2',
+//     type: 'input',
+//     data: { label: 'Raster 2' },
+//     position: { x: 200, y: 50 }
+//   },
+//   {
+//     id: '3',
+//     type: 'input',
+//     data: { label: 'Raster 3' },
+//     position: { x: 400, y: 50 }
+//   },
+//   {
+//     id: '4',
+//     type: 'input',
+//     data: { label: 'Raster 4' },
+//     position: { x: 600, y: 50 }
+//   },
+//   {
+//     id: '5',
+//     type: 'default',
+//     data: { label: 'Group' },
+//     position: { x: 300, y: 200 }
+//   },
+//   {
+//     id: 'custom',
+//     type: 'default',
+//     data: { label: 'Custom' },
+//     position: { x: 600, y: 200 }
+//   },
+//   {
+//     id: '6',
+//     type: 'output',
+//     data: { label: 'Group 1234' },
+//     position: { x: 300, y: 300 }
+//   },
+//   {
+//     id: '1-5',
+//     source: '1',
+//     target: '5',
+//     animated: true,
+//     type: 'default'
+//   },
+//   {
+//     id: '2-5',
+//     source: '2',
+//     target: '5',
+//     animated: true,
+//     type: 'default'
+//   },
+//   {
+//     id: '3-5',
+//     source: '3',
+//     target: '5',
+//     animated: true,
+//     type: 'default'
+//   },
+//   {
+//     id: '4-5',
+//     source: '4',
+//     target: '5',
+//     animated: true,
+//     type: 'default'
+//   },
+//   {
+//     id: '5-6',
+//     source: '5',
+//     target: '6',
+//     animated: true,
+//     type: 'default'
+//   },
+// ];
+
+// test source of a geoblock
+const source = {
+  name: 'Clip',
+  graph: {
+    Clip: [
+        "dask_geomodeling.raster.misc.Clip",
+        "LizardRasterSource_2",
+        "Snap"
+    ],
+    Snap: [
+        "dask_geomodeling.raster.temporal.Snap",
+        "LizardRasterSource_1",
+        "LizardRasterSource_2"
+    ],
+    LizardRasterSource_1: [
+        "lizard_nxt.blocks.LizardRasterSource",
+        "8b803e44-5419-4c84-a54a-9e4270d14436"
+    ],
+    LizardRasterSource_2: [
+        "lizard_nxt.blocks.LizardRasterSource",
+        "377ba082-2e2b-484a-bed6-3480f67f5ea3"
+    ]
+}};
+
+// test graph elements
+const graphElements: Elements = [
   {
-    id: '1',
+    id: "LizardRasterSource_1",
     type: 'input',
-    data: { label: 'Raster 1' },
-    position: { x: 10, y: 50 }
+    data: {
+      label: "8b803e44-5419-4c84-a54a-9e4270d14436"
+    },
+    sourcePosition: Position.Right,
+    position: {x: 0, y: 0}
   },
   {
-    id: '2',
+    id: "LizardRasterSource_2",
     type: 'input',
-    data: { label: 'Raster 2' },
-    position: { x: 200, y: 50 }
+    data: {
+      label: "377ba082-2e2b-484a-bed6-3480f67f5ea3"
+    },
+    sourcePosition: Position.Right,
+    position: {x: 0, y: 200}
   },
   {
-    id: '3',
-    type: 'input',
-    data: { label: 'Raster 3' },
-    position: { x: 400, y: 50 }
-  },
-  {
-    id: '4',
-    type: 'input',
-    data: { label: 'Raster 4' },
-    position: { x: 600, y: 50 }
-  },
-  {
-    id: '5',
+    id: 'Snap',
     type: 'default',
-    data: { label: 'Group' },
-    position: { x: 300, y: 200 }
+    data: {
+      label: 'Snap'
+    },
+    sourcePosition: Position.Right,
+    targetPosition: Position.Left,
+    position: {x: 200, y: 100}
   },
   {
-    id: 'custom',
-    type: 'default',
-    data: { label: 'Custom' },
-    position: { x: 600, y: 200 }
-  },
-  {
-    id: '6',
+    id: 'Clip',
     type: 'output',
-    data: { label: 'Group 1234' },
-    position: { x: 300, y: 300 }
+    data: {
+      label: 'Clip'
+    },
+    targetPosition: Position.Left,
+    position: {x: 400, y: 100}
   },
   {
-    id: '1-5',
-    source: '1',
-    target: '5',
-    animated: true,
-    type: 'default'
+    id: 'LizardRasterSource_1-Snap',
+    type: 'default',
+    source: 'LizardRasterSource_1',
+    target: 'Snap',
+    animated: true
   },
   {
-    id: '2-5',
-    source: '2',
-    target: '5',
-    animated: true,
-    type: 'default'
+    id: 'LizardRasterSource_2-Snap',
+    type: 'default',
+    source: 'LizardRasterSource_2',
+    target: 'Snap',
+    animated: true
   },
   {
-    id: '3-5',
-    source: '3',
-    target: '5',
-    animated: true,
-    type: 'default'
+    id: 'LizardRasterSource_2-Clip',
+    type: 'default',
+    source: 'LizardRasterSource_2',
+    target: 'Clip',
+    animated: true
   },
   {
-    id: '4-5',
-    source: '4',
-    target: '5',
-    animated: true,
-    type: 'default'
-  },
-  {
-    id: '5-6',
-    source: '5',
-    target: '6',
-    animated: true,
-    type: 'default'
-  },
+    id: 'Snap-Clip',
+    type: 'default',
+    source: 'Snap',
+    target: 'Clip',
+    animated: true
+  }
 ];
 
 const flowStyles = {
   height: 600,
-  border: '1px solid black'
+  margin: 20
 };
 
 export const BasicFlow = () => {
   const reactFlowWrapper = useRef<any>(null);
   const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
-  const [elements, setElements] = useState<Elements>(initialElements);
-  console.log('elements', elements);
+  const [elements, setElements] = useState<Elements>(graphElements);
 
   const onLoad = (_reactFlowInstance: any) => {
     setReactFlowInstance(_reactFlowInstance);
@@ -112,22 +206,23 @@ export const BasicFlow = () => {
 
   const onDrop = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
-    if (
-      reactFlowWrapper && reactFlowWrapper.current) {
+    if (reactFlowWrapper && reactFlowWrapper.current) {
       const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
       const type = event.dataTransfer.getData('application/reactflow');
       const position = reactFlowInstance.project({
         x: event.clientX - reactFlowBounds.left,
         y: event.clientY - reactFlowBounds.top,
       });
+      const sourcePosition = Position.Right;
+      const targetPosition = Position.Left;
       const newNode = {
         id: 'node_' + Math.floor(Math.random() * 1000),
         type,
         position,
+        sourcePosition,
+        targetPosition,
         data: { label: type },
       };
-      console.log('newNode', newNode)
-  
       setElements((es) => es.concat(newNode));
     }
   };
@@ -147,7 +242,10 @@ export const BasicFlow = () => {
 
   return (
     <ReactFlowProvider>
-      <div className="reactflow-wrapper" ref={reactFlowWrapper}>
+      <div
+        className="reactflow-wrapper"
+        ref={reactFlowWrapper}
+      >
         <ReactFlow
           elements={elements}
           onElementsRemove={onElementsRemove}
@@ -158,11 +256,16 @@ export const BasicFlow = () => {
           onLoad={onLoad}
           onDragOver={onDragOver}
           onDrop={onDrop}
-        >
-          <Controls />
-        </ReactFlow>
+        />
       </div>
       <SideBar />
+      <button
+        onClick={() => {
+          console.log(elements)
+        }}
+      >
+        Save
+      </button>
     </ReactFlowProvider>
   )
 };
