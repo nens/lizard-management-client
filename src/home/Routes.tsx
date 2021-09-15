@@ -53,6 +53,7 @@ import {EditLayerCollection} from "../data_management/layer_collections/EditLaye
 import {NewLayerCollection} from "../data_management/layer_collections/NewLayerCollection";
 import SpinnerIfStandardSelectorsNotLoaded from '../components/SpinnerIfStandardSelectorsNotLoaded';
 import { ViewContract } from '../contracts/ViewContract';
+import { BasicFlow } from "./Test";
 
 const authenticatedRoutes = () => {
   return (
@@ -62,6 +63,7 @@ const authenticatedRoutes = () => {
             <Route exact path="/management/users" component={UserTable} />
             <Route exact path="/management/users/new" component={NewUser} />
             <Route exact path="/management/users/:id" component={EditUser} />
+            <Route exact path="/management/test" component={BasicFlow} />
 
             <Route exact path="/management/personal_api_keys" component={PersonalApiKeysTable} />
             <Route exact path="/management/personal_api_keys/new" component={NewPersonalApiKey} />
