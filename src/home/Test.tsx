@@ -1,99 +1,20 @@
 import React, { useState, useRef } from 'react';
 import ReactFlow, {
-  ReactFlowProvider,
   Elements,
   Edge,
   Connection,
-  updateEdge,
-  addEdge,
   // Controls,
+  Handle,
+  Node,
+  Position,
+  ReactFlowProvider,
+  addEdge,
   removeElements,
-  Position
+  updateEdge,
 } from 'react-flow-renderer';
 
-// test flow elements
-// const initialElements: Elements = [
-//   {
-//     id: '1',
-//     type: 'input',
-//     data: { label: 'Raster 1' },
-//     position: { x: 10, y: 50 }
-//   },
-//   {
-//     id: '2',
-//     type: 'input',
-//     data: { label: 'Raster 2' },
-//     position: { x: 200, y: 50 }
-//   },
-//   {
-//     id: '3',
-//     type: 'input',
-//     data: { label: 'Raster 3' },
-//     position: { x: 400, y: 50 }
-//   },
-//   {
-//     id: '4',
-//     type: 'input',
-//     data: { label: 'Raster 4' },
-//     position: { x: 600, y: 50 }
-//   },
-//   {
-//     id: '5',
-//     type: 'default',
-//     data: { label: 'Group' },
-//     position: { x: 300, y: 200 }
-//   },
-//   {
-//     id: 'custom',
-//     type: 'default',
-//     data: { label: 'Custom' },
-//     position: { x: 600, y: 200 }
-//   },
-//   {
-//     id: '6',
-//     type: 'output',
-//     data: { label: 'Group 1234' },
-//     position: { x: 300, y: 300 }
-//   },
-//   {
-//     id: '1-5',
-//     source: '1',
-//     target: '5',
-//     animated: true,
-//     type: 'default'
-//   },
-//   {
-//     id: '2-5',
-//     source: '2',
-//     target: '5',
-//     animated: true,
-//     type: 'default'
-//   },
-//   {
-//     id: '3-5',
-//     source: '3',
-//     target: '5',
-//     animated: true,
-//     type: 'default'
-//   },
-//   {
-//     id: '4-5',
-//     source: '4',
-//     target: '5',
-//     animated: true,
-//     type: 'default'
-//   },
-//   {
-//     id: '5-6',
-//     source: '5',
-//     target: '6',
-//     animated: true,
-//     type: 'default'
-//   },
-// ];
-
 // test source of a geoblock
-const source = {
+const testSource = {
   name: 'Clip',
   graph: {
     Clip: [
@@ -122,7 +43,8 @@ const graphElements: Elements = [
     id: "LizardRasterSource_1",
     type: 'input',
     data: {
-      label: "8b803e44-5419-4c84-a54a-9e4270d14436"
+      label: 'LizardRasterSource_1',
+      value: "8b803e44-5419-4c84-a54a-9e4270d14436"
     },
     sourcePosition: Position.Right,
     position: {x: 0, y: 0}
@@ -131,7 +53,8 @@ const graphElements: Elements = [
     id: "LizardRasterSource_2",
     type: 'input',
     data: {
-      label: "377ba082-2e2b-484a-bed6-3480f67f5ea3"
+      label: 'LizardRasterSource_2',
+      value: "377ba082-2e2b-484a-bed6-3480f67f5ea3"
     },
     sourcePosition: Position.Right,
     position: {x: 0, y: 200}
@@ -140,7 +63,8 @@ const graphElements: Elements = [
     id: 'Snap',
     type: 'default',
     data: {
-      label: 'Snap'
+      label: 'Snap',
+      value: "dask_geomodeling.raster.temporal.Snap"
     },
     sourcePosition: Position.Right,
     targetPosition: Position.Left,
@@ -150,7 +74,8 @@ const graphElements: Elements = [
     id: 'Clip',
     type: 'output',
     data: {
-      label: 'Clip'
+      label: 'Clip',
+      value: 'dask_geomodeling.raster.misc.Clip'
     },
     targetPosition: Position.Left,
     position: {x: 400, y: 100}
@@ -182,7 +107,7 @@ const graphElements: Elements = [
     source: 'Snap',
     target: 'Clip',
     animated: true
-  }
+  },
 ];
 
 const flowStyles = {
@@ -215,16 +140,54 @@ export const BasicFlow = () => {
       });
       const sourcePosition = Position.Right;
       const targetPosition = Position.Left;
-      const newNode = {
-        id: 'node_' + Math.floor(Math.random() * 1000),
+      const id = `${type === 'customNode' ? 'custom-node_' : 'node_'}` + Math.floor(Math.random() * 1000);
+
+      const customNodeStyle = {
+        padding: 10,
+        border: '1px solid grey',
+        borderRadius: 5
+      };
+
+      const customeNodeData = {
+        label: 'LizardRasterSource_' + id,
+        value: '',
+        onChange: (value: string) => {
+          console.log(value);
+          setElements(elms => {
+            return elms.map(elm => {
+              if (elm.id !== id) {
+                return elm;
+              };
+
+              return {
+                ...elm,
+                data: {
+                  ...elm.data,
+                  value
+                }
+              }
+            })
+          })
+        }
+      };
+
+      const newNode = type !== 'customNode' ? {
+        id,
         type,
         position,
         sourcePosition,
         targetPosition,
         data: { label: type },
+      } : {
+        id,
+        type,
+        position,
+        style: customNodeStyle,
+        data: customeNodeData,
       };
+
       setElements((es) => es.concat(newNode));
-    }
+    };
   };
 
   // gets called after end of edge gets dragged to another source or target
@@ -242,26 +205,25 @@ export const BasicFlow = () => {
 
   return (
     <ReactFlowProvider>
-      <div
-        className="reactflow-wrapper"
+      <ReactFlow
         ref={reactFlowWrapper}
-      >
-        <ReactFlow
-          elements={elements}
-          onElementsRemove={onElementsRemove}
-          style={flowStyles}
-          snapToGrid
-          onEdgeUpdate={onEdgeUpdate}
-          onConnect={onConnect}
-          onLoad={onLoad}
-          onDragOver={onDragOver}
-          onDrop={onDrop}
-        />
-      </div>
+        elements={elements}
+        onElementsRemove={onElementsRemove}
+        style={flowStyles}
+        snapToGrid
+        onEdgeUpdate={onEdgeUpdate}
+        onConnect={onConnect}
+        onLoad={onLoad}
+        onDragOver={onDragOver}
+        onDrop={onDrop}
+        nodeTypes={{
+          customNode: CustomNode
+        }}
+      />
       <SideBar />
       <button
         onClick={() => {
-          console.log(elements)
+          console.log('elements', elements);
         }}
       >
         Save
@@ -299,6 +261,43 @@ const SideBar = () => {
       >
         Output
       </div>
+      <div
+        className="dndnode custom"
+        onDragStart={(event) => onDragStart(event, 'customNode')}
+        draggable
+      >
+        Custom
+      </div>
     </aside>
   );
 };
+
+// Custom node with input field
+const CustomNode = (props: Node) => {
+  const { data } = props;
+  return (
+    <>
+      <div
+        style={{
+          fontSize: 12
+        }}
+      >
+        {data.label}
+      </div>
+      <input
+        className="nodrag"
+        type="text"
+        onChange={(e) => data.onChange(e.target.value)}
+        defaultValue={data.value}
+        style={{
+          width: '100%',
+          fontSize: 10,
+        }}
+      />
+      <Handle
+        type="source"
+        position={Position.Right}
+      />
+    </>
+  )
+}
