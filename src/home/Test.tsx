@@ -11,6 +11,7 @@ import ReactFlow, {
   addEdge,
   removeElements,
   updateEdge,
+  isNode,
 } from 'react-flow-renderer';
 
 const customNodeStyle = {
@@ -127,6 +128,10 @@ export const BasicFlow = () => {
   const reactFlowWrapper = useRef<any>(null);
   const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
   const [elements, setElements] = useState<Elements>(graphElements);
+  const [id, setId] = useState<number>(1);
+
+  // Keep track of number of source elements in the graph
+  const numberOfSources = elements.filter(elm => isNode(elm) && elm.type === 'rasterSource').length;
 
   const onLoad = (_reactFlowInstance: any) => {
     setReactFlowInstance(_reactFlowInstance);
@@ -148,16 +153,15 @@ export const BasicFlow = () => {
       });
       const sourcePosition = Position.Right;
       const targetPosition = Position.Left;
-      const id = Math.floor(Math.random() * 1000).toString();
 
       const customeNodeData = {
-        label: 'LizardRasterSource_' + id,
+        label: 'LizardRasterSource_' + (numberOfSources + 1),
         value: '',
         onChange: (value: string) => {
           console.log(value);
           setElements(elms => {
             return elms.map(elm => {
-              if (elm.id !== id) {
+              if (elm.id !== id.toString()) {
                 return elm;
               };
 
@@ -174,20 +178,21 @@ export const BasicFlow = () => {
       };
 
       const newNode = operation ? {
-        id,
+        id: id.toString(),
         type: 'default',
         position,
         sourcePosition,
         targetPosition,
         data: { label: operation },
       } : {
-        id,
+        id: id.toString(),
         type: 'rasterSource',
         position,
         style: customNodeStyle,
         data: customeNodeData,
       };
 
+      setId(id + 1);
       setElements((es) => es.concat(newNode));
     };
   };
