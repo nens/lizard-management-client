@@ -13,6 +13,12 @@ import ReactFlow, {
   updateEdge,
 } from 'react-flow-renderer';
 
+const customNodeStyle = {
+  padding: 10,
+  border: '1px solid grey',
+  borderRadius: 5
+};
+
 // test source of a geoblock
 const testSource = {
   name: 'Clip',
@@ -41,21 +47,23 @@ const testSource = {
 const graphElements: Elements = [
   {
     id: "LizardRasterSource_1",
-    type: 'input',
+    type: 'rasterSource',
     data: {
       label: 'LizardRasterSource_1',
       value: "8b803e44-5419-4c84-a54a-9e4270d14436"
     },
+    style: customNodeStyle,
     sourcePosition: Position.Right,
     position: {x: 0, y: 0}
   },
   {
     id: "LizardRasterSource_2",
-    type: 'input',
+    type: 'rasterSource',
     data: {
       label: 'LizardRasterSource_2',
       value: "377ba082-2e2b-484a-bed6-3480f67f5ea3"
     },
+    style: customNodeStyle,
     sourcePosition: Position.Right,
     position: {x: 0, y: 200}
   },
@@ -133,20 +141,14 @@ export const BasicFlow = () => {
     event.preventDefault();
     if (reactFlowWrapper && reactFlowWrapper.current) {
       const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
-      const type = event.dataTransfer.getData('application/reactflow');
+      const operation = event.dataTransfer.getData('application/reactflow');
       const position = reactFlowInstance.project({
         x: event.clientX - reactFlowBounds.left,
         y: event.clientY - reactFlowBounds.top,
       });
       const sourcePosition = Position.Right;
       const targetPosition = Position.Left;
-      const id = `${type === 'customNode' ? 'custom-node_' : 'node_'}` + Math.floor(Math.random() * 1000);
-
-      const customNodeStyle = {
-        padding: 10,
-        border: '1px solid grey',
-        borderRadius: 5
-      };
+      const id = Math.floor(Math.random() * 1000).toString();
 
       const customeNodeData = {
         label: 'LizardRasterSource_' + id,
@@ -171,16 +173,16 @@ export const BasicFlow = () => {
         }
       };
 
-      const newNode = type !== 'customNode' ? {
+      const newNode = operation ? {
         id,
-        type,
+        type: 'default',
         position,
         sourcePosition,
         targetPosition,
-        data: { label: type },
+        data: { label: operation },
       } : {
         id,
-        type,
+        type: 'rasterSource',
         position,
         style: customNodeStyle,
         data: customeNodeData,
@@ -217,7 +219,7 @@ export const BasicFlow = () => {
         onDragOver={onDragOver}
         onDrop={onDrop}
         nodeTypes={{
-          customNode: CustomNode
+          rasterSource: RasterSource
         }}
       >
         <Controls />
@@ -235,47 +237,49 @@ export const BasicFlow = () => {
 };
 
 const SideBar = () => {
-  const onDragStart = (event: React.DragEvent<HTMLDivElement>, nodeType: string) => {
-    event.dataTransfer.setData('application/reactflow', nodeType);
+  const onDragStart = (event: React.DragEvent<HTMLDivElement>, operation: string) => {
+    event.dataTransfer.setData('application/reactflow', operation);
     event.dataTransfer.effectAllowed = 'move';
   };
 
   return (
     <aside>
       <div
-        className="dndnode input"
-        onDragStart={(event) => onDragStart(event, 'input')}
+        onDragStart={(event) => onDragStart(event, 'Clip')}
         draggable
       >
-        Input
+        Clip
       </div>
       <div
-        className="dndnode"
-        onDragStart={(event) => onDragStart(event, 'default')}
+        onDragStart={(event) => onDragStart(event, 'Subtract')}
         draggable
       >
-        Default
+        Subtract
       </div>
       <div
-        className="dndnode output"
-        onDragStart={(event) => onDragStart(event, 'output')}
+        onDragStart={(event) => onDragStart(event, 'Snap')}
         draggable
       >
-        Output
+        Snap
       </div>
       <div
-        className="dndnode custom"
-        onDragStart={(event) => onDragStart(event, 'customNode')}
+        onDragStart={(event) => onDragStart(event, 'Mask Below')}
         draggable
       >
-        Custom
+        Mask Below
+      </div>
+      <div
+        onDragStart={(event) => onDragStart(event, '')}
+        draggable
+      >
+        Raster Source
       </div>
     </aside>
   );
 };
 
-// Custom node with input field
-const CustomNode = (props: Node) => {
+// Custom raster source node with input field
+const RasterSource = (props: Node) => {
   const { data } = props;
   return (
     <>
