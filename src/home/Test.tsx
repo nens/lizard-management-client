@@ -3,7 +3,7 @@ import ReactFlow, {
   Elements,
   Edge,
   Connection,
-  // Controls,
+  Controls,
   Handle,
   Node,
   Position,
@@ -219,7 +219,9 @@ export const BasicFlow = () => {
         nodeTypes={{
           customNode: CustomNode
         }}
-      />
+      >
+        <Controls />
+      </ReactFlow>
       <SideBar />
       <button
         onClick={() => {
