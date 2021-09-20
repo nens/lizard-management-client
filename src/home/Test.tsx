@@ -22,9 +22,19 @@ interface GeoBlockSource {
   }
 }
 
-const customNodeStyle = {
+const rasterNodeStyle = {
+  padding: 10,
+  border: '1px solid blue',
+  borderRadius: 5
+};
+const operationNodeStyle = {
   padding: 10,
   border: '1px solid grey',
+  borderRadius: 5
+};
+const outputNodeStyle = {
+  padding: 10,
+  border: '1px solid red',
   borderRadius: 5
 };
 
@@ -54,7 +64,7 @@ const convertGeoblockSourceToData = (source: GeoBlockSource) => {
         label: node,
         value: graph[node][1]
       },
-      style: customNodeStyle,
+      style: rasterNodeStyle,
       sourcePosition: Position.Right,
       position: { x: 0, y: i * 200}
     };
@@ -63,11 +73,13 @@ const convertGeoblockSourceToData = (source: GeoBlockSource) => {
   const operationElements: Elements = operationNodes.map((node, i) => {
     return {
       id: node,
-      type: node === outputNode ? 'output' : 'default',
+      type: node === outputNode ? 'outputBlock' : 'block',
       data: {
         label: node,
-        value: graph[node][0]
+        value: graph[node][0],
+        inputs: graph[node]
       },
+      style: node === outputNode ?  outputNodeStyle : operationNodeStyle,
       sourcePosition: Position.Right,
       targetPosition: Position.Left,
       position: { x: (i + 1) * 200, y: 100 }
@@ -82,12 +94,13 @@ const convertGeoblockSourceToData = (source: GeoBlockSource) => {
     };
   }).map(elm => {
     const { operationName, sources } = elm;
-    return sources.map(source => {
+    return sources.map((source, i) => {
       return {
         id: source + '-' + operationName,
         type: 'default',
         source: source.toString(),
         target: operationName,
+        targetHandle: 'input-' + i,
         animated: true
       };
     });
@@ -104,7 +117,7 @@ const convertFlowToSource = (elements: Elements) => {
   console.log('elements', elements);
   const edges = elements.filter(e => isEdge(e)) as Edge[];
   const nodes = elements.filter(e => isNode(e));
-  const outputNode = nodes.find(e => e.type === 'output');
+  const outputNode = nodes.find(e => e.type === 'outputBlock');
 
   if (!outputNode) {
     console.error('No output node');
@@ -387,8 +400,9 @@ export const BasicFlow = () => {
 
       const newNode = operation ? {
         id: id.toString(),
-        type: 'default',
+        type: 'customOperationBlock',
         position,
+        style: operationNodeStyle,
         sourcePosition,
         targetPosition,
         data: { label: operation },
@@ -396,7 +410,7 @@ export const BasicFlow = () => {
         id: id.toString(),
         type: 'rasterSource',
         position,
-        style: customNodeStyle,
+        style: rasterNodeStyle,
         data: customeNodeData,
       };
 
@@ -432,7 +446,10 @@ export const BasicFlow = () => {
         onDragOver={onDragOver}
         onDrop={onDrop}
         nodeTypes={{
-          rasterSource: RasterSource
+          rasterSource: RasterSource,
+          block: Block,
+          outputBlock: OutputBlock,
+          customOperationBlock: CustomOperationBlock
         }}
       >
         <Controls />
@@ -518,3 +535,98 @@ const RasterSource = (props: Node) => {
     </>
   )
 }
+
+// custom blocks with multiple inputs
+const Block = (props: Node) => {
+  const { data } = props;
+  const inputs = data.inputs.slice(1);
+
+  return (
+    <>
+      {inputs.map((_input: string, i: number) => (
+        <Handle
+          key={i}
+          type="target"
+          position={Position.Left}
+          id={'input-' + i}
+          style={{ top: 10 * (i + 1) }}
+        />
+      ))}
+      <div
+        style={{
+          fontSize: 12
+        }}
+      >
+        {data.label}
+      </div>
+      <Handle
+        type="source"
+        position={Position.Right}
+      />
+    </>
+  )
+}
+
+// custom output node
+const OutputBlock = (props: Node) => {
+  const { data } = props;
+  const inputs = data.inputs.slice(1);
+  return (
+    <>
+      {inputs.map((_input: string, i: number) => (
+        <Handle
+          key={i}
+          type="target"
+          position={Position.Left}
+          id={'input-' + i}
+          style={{ top: 10 * (i + 1) }}
+        />
+      ))}
+      <div
+        style={{
+          fontSize: 12
+        }}
+      >
+        {data.label}
+      </div>
+    </>
+  )
+}
+
+const CustomOperationBlock = (props: Node) => {
+  const { data } = props;
+  const [inputs, setInputs] = useState([data.label]);
+  return (
+    <>
+      {inputs.map((_input: string, i: number) => {
+        return (
+        <Handle
+          key={i}
+          type="target"
+          position={Position.Left}
+          id={'custom-' + i}
+          style={{ top: 10 * (i + 1) }}
+        />
+      )})}
+      <div
+        style={{
+          fontSize: 12
+        }}
+      >
+        {data.label}
+        <i
+          className={'fa fa-plus'}
+          style={{
+            marginLeft: 10,
+            cursor: 'pointer'
+          }}
+          onClick={() => setInputs(inputs => inputs.concat('new-input'))}
+        />
+      </div>
+      <Handle
+        type="source"
+        position={Position.Right}
+      />
+    </>
+  )
+};
