@@ -111,18 +111,31 @@ const convertFlowToSource = (elements: Elements) => {
     return;
   };
 
-  const graph = nodes.reduce((graph, node) => (
-    {
+  // use reduce method to create the graph object
+  const graph = nodes.reduce((graph, node) => {
+    // find connected nodes and their labels
+    const connectedNodes = edges.filter(
+      e => e.target === node.data.label
+    ).map(
+      e => e.source
+    ).map(nodeId => {
+      const sourceNode = nodes.find(node => node.id === nodeId);
+
+      if (!sourceNode) return nodeId;
+      return sourceNode.data.label;
+    });
+
+    return {
       ...graph,
       [node.data.label]: node.type === 'rasterSource' ? [
         'lizard_nxt.blocks.LizardRasterSource',
         node.data.value
       ] : [
         node.data.value,
-        ...edges.filter(e => e.target === node.data.label).map(e => e.source)
+        ...connectedNodes
       ]
-    }
-  ), {});
+    };
+  }, {});
 
   console.log('geoblock source', {
     name: outputNode.data.label,
