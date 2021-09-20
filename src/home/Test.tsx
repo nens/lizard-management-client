@@ -12,6 +12,7 @@ import ReactFlow, {
   removeElements,
   updateEdge,
   isNode,
+  isEdge,
 } from 'react-flow-renderer';
 
 interface GeoBlockSource {
@@ -92,12 +93,47 @@ const convertGeoblockSourceToData = (source: GeoBlockSource) => {
     });
   }).flat(1);
 
-  console.log('connectionLines', connectionLines);
-  console.log('outputNode', outputNode);
-  console.log('rasterElements', rasterElements);
-  console.log('operationElements', operationElements);
+  // console.log('connectionLines', connectionLines);
+  // console.log('outputNode', outputNode);
+  // console.log('rasterElements', rasterElements);
+  // console.log('operationElements', operationElements);
   return operationElements.concat(rasterElements).concat(connectionLines);
-}
+};
+
+const convertFlowToSource = (elements: Elements) => {
+  console.log('elements', elements);
+  const edges = elements.filter(e => isEdge(e)) as Edge[];
+  const nodes = elements.filter(e => isNode(e));
+  const outputNode = nodes.find(e => e.type === 'output');
+
+  if (!outputNode) {
+    console.error('No output node');
+    return;
+  };
+
+  const graph = nodes.reduce((graph, node) => (
+    {
+      ...graph,
+      [node.data.label]: node.type === 'rasterSource' ? [
+        'lizard_nxt.blocks.LizardRasterSource',
+        node.data.value
+      ] : [
+        node.data.value,
+        ...edges.filter(e => e.target === node.data.label).map(e => e.source)
+      ]
+    }
+  ), {});
+
+  console.log('geoblock source', {
+    name: outputNode.data.label,
+    graph
+  });
+
+  return {
+    name: outputNode.data.label,
+    graph
+  };
+};
 
 // test source of a geoblock
 const testSource = {
@@ -123,80 +159,80 @@ const testSource = {
     ]
 }};
 
-const hoanGeo1 = {
-  name: "Add_2",
-  graph: {
-    Add_1: [
-      "dask_geomodeling.raster.elemwise.Add",
-      "LizardRasterSource_2",
-      0.5
-    ],
-    Add_2: [
-      "dask_geomodeling.raster.elemwise.Add",
-      "Multiply",
-      "Step"
-    ],
-    Snap: [
-      "dask_geomodeling.raster.temporal.Snap",
-      "LizardRasterSource_3",
-      "LizardRasterSource_1"
-    ],
-    Step: [
-      "dask_geomodeling.raster.misc.Step",
-      "MaskBelow",
-      0.5,
-      1,
-      0.25,
-      0.5
-    ],
-    Multiply: [
-      "dask_geomodeling.raster.elemwise.Multiply",
-      "MaskBelow",
-      "Add_1"
-    ],
-    Subtract: [
-      "dask_geomodeling.raster.elemwise.Subtract",
-      "LizardRasterSource_1",
-      "Snap"
-    ],
-    MaskBelow: [
-      "dask_geomodeling.raster.misc.MaskBelow",
-      "Subtract",
-      0
-    ],
-    LizardRasterSource_1: [
-      "lizard_nxt.blocks.LizardRasterSource",
-      "29a411c7-9ac7-4e29-a6ff-2aef632689c5"
-    ],
-    LizardRasterSource_2: [
-      "lizard_nxt.blocks.LizardRasterSource",
-      "a823440e-9718-43c8-8edb-52e57fa78098"
-    ],
-    LizardRasterSource_3: [
-      "lizard_nxt.blocks.LizardRasterSource",
-      "79bd5c32-325f-48e6-8719-480527adf118"
-    ]
-  }
-}
+// const hoanGeo1 = {
+//   name: "Add_2",
+//   graph: {
+//     Add_1: [
+//       "dask_geomodeling.raster.elemwise.Add",
+//       "LizardRasterSource_2",
+//       0.5
+//     ],
+//     Add_2: [
+//       "dask_geomodeling.raster.elemwise.Add",
+//       "Multiply",
+//       "Step"
+//     ],
+//     Snap: [
+//       "dask_geomodeling.raster.temporal.Snap",
+//       "LizardRasterSource_3",
+//       "LizardRasterSource_1"
+//     ],
+//     Step: [
+//       "dask_geomodeling.raster.misc.Step",
+//       "MaskBelow",
+//       0.5,
+//       1,
+//       0.25,
+//       0.5
+//     ],
+//     Multiply: [
+//       "dask_geomodeling.raster.elemwise.Multiply",
+//       "MaskBelow",
+//       "Add_1"
+//     ],
+//     Subtract: [
+//       "dask_geomodeling.raster.elemwise.Subtract",
+//       "LizardRasterSource_1",
+//       "Snap"
+//     ],
+//     MaskBelow: [
+//       "dask_geomodeling.raster.misc.MaskBelow",
+//       "Subtract",
+//       0
+//     ],
+//     LizardRasterSource_1: [
+//       "lizard_nxt.blocks.LizardRasterSource",
+//       "29a411c7-9ac7-4e29-a6ff-2aef632689c5"
+//     ],
+//     LizardRasterSource_2: [
+//       "lizard_nxt.blocks.LizardRasterSource",
+//       "a823440e-9718-43c8-8edb-52e57fa78098"
+//     ],
+//     LizardRasterSource_3: [
+//       "lizard_nxt.blocks.LizardRasterSource",
+//       "79bd5c32-325f-48e6-8719-480527adf118"
+//     ]
+//   }
+// }
 
-const hoanGeo2 = {
-  name: "Clip",
-  graph: {
-    Clip: [
-      "dask_geomodeling.raster.misc.Clip",
-      "RasterStoreSource_1",
-      "RasterStoreSource_2"
-    ],
-    RasterStoreSource_1: [
-      "lizard_nxt.blocks.LizardRasterSource",
-      "7ba9243b-d3fc-4eb9-8999-47a473e28f91"
-    ],
-    RasterStoreSource_2: [
-      "lizard_nxt.blocks.LizardRasterSource",
-      "f0b456d8-b17c-401b-93d2-d591caa19cf8"
-    ]
-  }
-};
+// const hoanGeo2 = {
+//   name: "Clip",
+//   graph: {
+//     Clip: [
+//       "dask_geomodeling.raster.misc.Clip",
+//       "RasterStoreSource_1",
+//       "RasterStoreSource_2"
+//     ],
+//     RasterStoreSource_1: [
+//       "lizard_nxt.blocks.LizardRasterSource",
+//       "7ba9243b-d3fc-4eb9-8999-47a473e28f91"
+//     ],
+//     RasterStoreSource_2: [
+//       "lizard_nxt.blocks.LizardRasterSource",
+//       "f0b456d8-b17c-401b-93d2-d591caa19cf8"
+//     ]
+//   }
+// };
 
 // test graph elements
 // const graphElements: Elements = [
@@ -318,7 +354,6 @@ export const BasicFlow = () => {
         label: 'LizardRasterSource_' + (numberOfSources + 1),
         value: '',
         onChange: (value: string) => {
-          console.log(value);
           setElements(elms => {
             return elms.map(elm => {
               if (elm.id !== id.toString()) {
@@ -391,9 +426,7 @@ export const BasicFlow = () => {
       </ReactFlow>
       <SideBar />
       <button
-        onClick={() => {
-          console.log('elements', elements);
-        }}
+        onClick={() => convertFlowToSource(elements)}
       >
         Save
       </button>
