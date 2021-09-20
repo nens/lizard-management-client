@@ -28,12 +28,19 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
       <div className={styles.MainContainer}>
         {Object.keys(jsonObject).length === 0 ? (
           <button
+            className={buttonStyles.BlockButton}
             onClick={async () => {
               const valueFromClipboard = await navigator.clipboard.readText();
               if (jsonValidator(valueFromClipboard)) {
                 return alert('Invalid JSON to paste, please copy a valid JSON!');
               };
               return setJsonObject(JSON.parse(valueFromClipboard));
+            }}
+            style={{
+              position: 'absolute',
+              top: 10,
+              right: 10,
+              zIndex: 1000, // to stay on top of the ReactJson component
             }}
           >
             Paste JSON from clipboard
@@ -50,7 +57,6 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
           displayObjectSize={false}
           quotesOnKeys={false}
           style={{
-            top: Object.keys(jsonObject).length === 0 ? 50 : 0,
             position: "absolute",
             height: "80%",
             width: "100%",
