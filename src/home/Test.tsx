@@ -551,11 +551,11 @@ const RasterSource = (props: Node) => {
 // custom blocks with multiple inputs
 const Block = (props: Node) => {
   const { data } = props;
-  const initialInputs = data.inputs.slice(1); // first item is not input
-  const [inputs, setInputs] = useState<string[]>(initialInputs);
+  const initialHandles = data.inputs.slice(1); // first item is not input
+  const [handles, setHandles] = useState<string[]>(initialHandles);
   return (
     <>
-      {inputs.map((_input: string, i: number) => (
+      {handles.map((_handles: string, i: number) => (
         <Handle
           key={i}
           type="target"
@@ -564,21 +564,10 @@ const Block = (props: Node) => {
           style={{ top: 10 * (i + 1) }}
         />
       ))}
-      <div
-        style={{
-          fontSize: 12
-        }}
-      >
-        <i
-          className={'fa fa-plus'}
-          style={{
-            marginRight: 5,
-            cursor: 'pointer'
-          }}
-          onClick={() => setInputs(inputs.concat('new-input'))}
-        />
-        {data.label}
-      </div>
+      <BlockArea
+        label={data.label}
+        setHandles={setHandles}
+      />
       <Handle
         type="source"
         position={Position.Right}
@@ -590,11 +579,11 @@ const Block = (props: Node) => {
 // custom output node
 const OutputBlock = (props: Node) => {
   const { data } = props;
-  const initialInputs = data.inputs.slice(1); // first item is not input
-  const [inputs, setInputs] = useState<string[]>(initialInputs);
+  const initialHandles = data.inputs.slice(1); // first item is not input
+  const [handles, setHandles] = useState<string[]>(initialHandles);
   return (
     <>
-      {inputs.map((_input: string, i: number) => (
+      {handles.map((_handles: string, i: number) => (
         <Handle
           key={i}
           type="target"
@@ -603,31 +592,20 @@ const OutputBlock = (props: Node) => {
           style={{ top: 10 * (i + 1) }}
         />
       ))}
-      <div
-        style={{
-          fontSize: 12
-        }}
-      >
-        <i
-          className={'fa fa-plus'}
-          style={{
-            marginRight: 5,
-            cursor: 'pointer'
-          }}
-          onClick={() => setInputs(inputs.concat('new-input'))}
-        />
-        {data.label}
-      </div>
+      <BlockArea
+        label={data.label}
+        setHandles={setHandles}
+      />
     </>
   )
 }
 
 const CustomOperationBlock = (props: Node) => {
   const { data } = props;
-  const [inputs, setInputs] = useState([data.label]);
+  const [handles, setHandles] = useState([data.label]);
   return (
     <>
-      {inputs.map((_input: string, i: number) => {
+      {handles.map((_handle: string, i: number) => {
         return (
         <Handle
           key={i}
@@ -637,21 +615,10 @@ const CustomOperationBlock = (props: Node) => {
           style={{ top: 10 * (i + 1) }}
         />
       )})}
-      <div
-        style={{
-          fontSize: 12
-        }}
-      >
-        <i
-          className={'fa fa-plus'}
-          style={{
-            marginRight: 5,
-            cursor: 'pointer'
-          }}
-          onClick={() => setInputs(inputs.concat('new-input'))}
-        />
-        {data.label}
-      </div>
+      <BlockArea
+        label={data.label}
+        setHandles={setHandles}
+      />
       <Handle
         type="source"
         position={Position.Right}
@@ -659,3 +626,24 @@ const CustomOperationBlock = (props: Node) => {
     </>
   )
 };
+
+const BlockArea = (props: { label: string, setHandles: Function }) => {
+  const { label, setHandles } = props;
+  return (
+    <div
+      style={{
+        fontSize: 12
+      }}
+    >
+      <i
+        className={'fa fa-plus'}
+        style={{
+          marginRight: 5,
+          cursor: 'pointer'
+        }}
+        onClick={() => setHandles((handles: string[]) => handles.concat('new-handle'))}
+      />
+      {label}
+    </div>
+  )
+}
