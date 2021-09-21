@@ -644,6 +644,14 @@ const BlockArea = (props: { label: string, setHandles: Function }) => {
         onClick={() => setHandles((handles: string[]) => handles.concat('new-handle'))}
       />
       {label}
+      <i
+        className={'fa fa-minus'}
+        style={{
+          marginLeft: 5,
+          cursor: 'pointer'
+        }}
+        onClick={() => setHandles((handles: string[]) => handles.slice(0, -1))}
+      />
     </div>
   )
 }
