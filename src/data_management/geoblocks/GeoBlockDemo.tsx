@@ -341,7 +341,7 @@ const flowStyles = {
   margin: 20
 };
 
-export const BasicFlow = () => {
+export const GeoBlockDemo = () => {
   return (
     <ReactFlowProvider>
       <Flow />
