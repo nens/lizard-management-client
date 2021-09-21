@@ -39,6 +39,27 @@ const outputNodeStyle = {
   borderRadius: 5
 };
 
+// function to get value of a building block
+const getValueOfBlock = (block: string) => {
+  if (block === 'Snap') {
+    return 'dask_geomodeling.raster.temporal.Snap';
+  } else if (block === 'Clip') {
+    return 'dask_geomodeling.raster.misc.Clip';
+  } else if (block === 'Add') {
+    return 'dask_geomodeling.raster.elemwise.Add';
+  } else if (block === 'Subtract') {
+    return 'dask_geomodeling.raster.elemwise.Subtract';
+  } else if (block === 'MaskBelow') {
+    return 'dask_geomodeling.raster.misc.MaskBelow';
+  } else if (block === 'Step') {
+    return 'dask_geomodeling.raster.misc.Step';
+  } else if (block === 'Multiply') {
+    return 'dask_geomodeling.raster.elemwise.Multiply';
+  } else {
+    return block;
+  };
+};
+
 // function to convert geoblock source to react-flow data
 const convertGeoblockSourceToData = (source: GeoBlockSource) => {
   const { name, graph } = source;
@@ -129,7 +150,7 @@ const convertFlowToSource = (elements: Elements) => {
   const graph = nodes.reduce((graph, node) => {
     // find connected nodes and their labels
     const connectedNodes = edges.filter(
-      e => e.target === node.data.label
+      e => e.target === node.id
     ).map(
       e => e.source
     ).map(nodeId => {
@@ -261,81 +282,6 @@ const testSource = {
 //   }
 // };
 
-// test graph elements
-// const graphElements: Elements = [
-//   {
-//     id: "LizardRasterSource_1",
-//     type: 'rasterSource',
-//     data: {
-//       label: 'LizardRasterSource_1',
-//       value: "8b803e44-5419-4c84-a54a-9e4270d14436"
-//     },
-//     style: customNodeStyle,
-//     sourcePosition: Position.Right,
-//     position: {x: 0, y: 0}
-//   },
-//   {
-//     id: "LizardRasterSource_2",
-//     type: 'rasterSource',
-//     data: {
-//       label: 'LizardRasterSource_2',
-//       value: "377ba082-2e2b-484a-bed6-3480f67f5ea3"
-//     },
-//     style: customNodeStyle,
-//     sourcePosition: Position.Right,
-//     position: {x: 0, y: 200}
-//   },
-//   {
-//     id: 'Snap',
-//     type: 'default',
-//     data: {
-//       label: 'Snap',
-//       value: "dask_geomodeling.raster.temporal.Snap"
-//     },
-//     sourcePosition: Position.Right,
-//     targetPosition: Position.Left,
-//     position: {x: 200, y: 100}
-//   },
-//   {
-//     id: 'Clip',
-//     type: 'output',
-//     data: {
-//       label: 'Clip',
-//       value: 'dask_geomodeling.raster.misc.Clip'
-//     },
-//     targetPosition: Position.Left,
-//     position: {x: 400, y: 100}
-//   },
-//   {
-//     id: 'LizardRasterSource_1-Snap',
-//     type: 'default',
-//     source: 'LizardRasterSource_1',
-//     target: 'Snap',
-//     animated: true
-//   },
-//   {
-//     id: 'LizardRasterSource_2-Snap',
-//     type: 'default',
-//     source: 'LizardRasterSource_2',
-//     target: 'Snap',
-//     animated: true
-//   },
-//   {
-//     id: 'LizardRasterSource_2-Clip',
-//     type: 'default',
-//     source: 'LizardRasterSource_2',
-//     target: 'Clip',
-//     animated: true
-//   },
-//   {
-//     id: 'Snap-Clip',
-//     type: 'default',
-//     source: 'Snap',
-//     target: 'Clip',
-//     animated: true
-//   },
-// ];
-
 const flowStyles = {
   height: 600,
   margin: 20
@@ -415,7 +361,10 @@ const Flow = () => {
         style: operationNodeStyle,
         sourcePosition,
         targetPosition,
-        data: { label: operation },
+        data: {
+          label: operation,
+          value: getValueOfBlock(operation)
+        },
       } : {
         id: id.toString(),
         type: 'rasterSource',
@@ -503,10 +452,10 @@ const SideBar = () => {
         Snap
       </div>
       <div
-        onDragStart={(event) => onDragStart(event, 'Mask Below')}
+        onDragStart={(event) => onDragStart(event, 'MaskBelow')}
         draggable
       >
-        Mask Below
+        MaskBelow
       </div>
       <div
         onDragStart={(event) => onDragStart(event, '')}
