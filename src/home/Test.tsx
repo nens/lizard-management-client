@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import ReactFlow, {
   Elements,
   Edge,
@@ -356,7 +356,6 @@ const Flow = () => {
   const [elements, setElements] = useState<Elements>([]);
   const [id, setId] = useState<number>(1);
   const updateNodeInternals = useUpdateNodeInternals();
-  const updateNode = useCallback((params) => updateNodeInternals(params.target), [updateNodeInternals]);
 
   useEffect(() => {
     const geoblockElements = convertGeoblockSourceToData(geoblockSource);
@@ -433,11 +432,12 @@ const Flow = () => {
   // gets called after end of edge gets dragged to another source or target
   const onEdgeUpdate = (oldEdge: Edge, newConnection: Connection) => {
     setElements((els) => updateEdge(oldEdge, newConnection, els));
+    newConnection.target && updateNodeInternals(newConnection.target); // update node internals
   };
 
   const onConnect = (params: Edge | Connection) => {
     setElements((els) => addEdge({ ...params, animated: true }, els));
-    updateNode(params);
+    params.target && updateNodeInternals(params.target); // update node internals
   };
 
   const onElementsRemove = (elementsToRemove: Elements) => {
