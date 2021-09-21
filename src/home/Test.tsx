@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useCallback, useEffect, useState, useRef } from 'react';
 import ReactFlow, {
   Elements,
   Edge,
@@ -13,6 +13,7 @@ import ReactFlow, {
   updateEdge,
   isNode,
   isEdge,
+  useUpdateNodeInternals
 } from 'react-flow-renderer';
 
 interface GeoBlockSource {
@@ -100,7 +101,7 @@ const convertGeoblockSourceToData = (source: GeoBlockSource) => {
         type: 'default',
         source: source.toString(),
         target: operationName,
-        targetHandle: 'input-' + i,
+        targetHandle: 'handle-' + i,
         animated: true
       };
     });
@@ -341,11 +342,21 @@ const flowStyles = {
 };
 
 export const BasicFlow = () => {
+  return (
+    <ReactFlowProvider>
+      <Flow />
+    </ReactFlowProvider>
+  )
+}
+
+const Flow = () => {
   const geoblockSource = testSource;
   const reactFlowWrapper = useRef<any>(null);
   const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
   const [elements, setElements] = useState<Elements>([]);
   const [id, setId] = useState<number>(1);
+  const updateNodeInternals = useUpdateNodeInternals();
+  const updateNode = useCallback((params) => updateNodeInternals(params.target), [updateNodeInternals]);
 
   useEffect(() => {
     const geoblockElements = convertGeoblockSourceToData(geoblockSource);
@@ -426,6 +437,7 @@ export const BasicFlow = () => {
 
   const onConnect = (params: Edge | Connection) => {
     setElements((els) => addEdge({ ...params, animated: true }, els));
+    updateNode(params);
   };
 
   const onElementsRemove = (elementsToRemove: Elements) => {
@@ -433,7 +445,7 @@ export const BasicFlow = () => {
   };
 
   return (
-    <ReactFlowProvider>
+    <>
       <ReactFlow
         ref={reactFlowWrapper}
         elements={elements}
@@ -460,7 +472,7 @@ export const BasicFlow = () => {
       >
         Save
       </button>
-    </ReactFlowProvider>
+    </>
   )
 };
 
@@ -539,8 +551,8 @@ const RasterSource = (props: Node) => {
 // custom blocks with multiple inputs
 const Block = (props: Node) => {
   const { data } = props;
-  const inputs = data.inputs.slice(1);
-
+  const initialInputs = data.inputs.slice(1); // first item is not input
+  const [inputs, setInputs] = useState<string[]>(initialInputs);
   return (
     <>
       {inputs.map((_input: string, i: number) => (
@@ -548,7 +560,7 @@ const Block = (props: Node) => {
           key={i}
           type="target"
           position={Position.Left}
-          id={'input-' + i}
+          id={'handle-' + i}
           style={{ top: 10 * (i + 1) }}
         />
       ))}
@@ -557,6 +569,14 @@ const Block = (props: Node) => {
           fontSize: 12
         }}
       >
+        <i
+          className={'fa fa-plus'}
+          style={{
+            marginRight: 5,
+            cursor: 'pointer'
+          }}
+          onClick={() => setInputs(inputs.concat('new-input'))}
+        />
         {data.label}
       </div>
       <Handle
@@ -570,7 +590,8 @@ const Block = (props: Node) => {
 // custom output node
 const OutputBlock = (props: Node) => {
   const { data } = props;
-  const inputs = data.inputs.slice(1);
+  const initialInputs = data.inputs.slice(1); // first item is not input
+  const [inputs, setInputs] = useState<string[]>(initialInputs);
   return (
     <>
       {inputs.map((_input: string, i: number) => (
@@ -578,7 +599,7 @@ const OutputBlock = (props: Node) => {
           key={i}
           type="target"
           position={Position.Left}
-          id={'input-' + i}
+          id={'handle-' + i}
           style={{ top: 10 * (i + 1) }}
         />
       ))}
@@ -587,6 +608,14 @@ const OutputBlock = (props: Node) => {
           fontSize: 12
         }}
       >
+        <i
+          className={'fa fa-plus'}
+          style={{
+            marginRight: 5,
+            cursor: 'pointer'
+          }}
+          onClick={() => setInputs(inputs.concat('new-input'))}
+        />
         {data.label}
       </div>
     </>
@@ -604,7 +633,7 @@ const CustomOperationBlock = (props: Node) => {
           key={i}
           type="target"
           position={Position.Left}
-          id={'custom-' + i}
+          id={'handle-' + i}
           style={{ top: 10 * (i + 1) }}
         />
       )})}
@@ -613,15 +642,15 @@ const CustomOperationBlock = (props: Node) => {
           fontSize: 12
         }}
       >
-        {data.label}
         <i
           className={'fa fa-plus'}
           style={{
-            marginLeft: 10,
+            marginRight: 5,
             cursor: 'pointer'
           }}
-          onClick={() => setInputs(inputs => inputs.concat('new-input'))}
+          onClick={() => setInputs(inputs.concat('new-input'))}
         />
+        {data.label}
       </div>
       <Handle
         type="source"
