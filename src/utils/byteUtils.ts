@@ -1,6 +1,6 @@
 export const bytesToDisplayValue = (bytes:number) => {
-  const mb = bytes / 1048576;
-  const gb = bytes / 1073741824;
+  const mb = bytes / 1000000;
+  const gb = bytes / 1000000000;
   if (bytes >= 0) {
     if (gb > 0.01) {
       return gb.toFixed(2) + ' Gb';

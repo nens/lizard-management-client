@@ -1,7 +1,10 @@
 import React from 'react';
 import { useSelector} from 'react-redux';
-import { getScenarioTotalSize, getScenarioAvailableSizeDefinedByContract, getSelectedOrganisation } from '../../reducers';
-
+import {
+  getScenarioTotalSize,
+  getScenarioAvailableSizeDefinedByContract,
+  getSelectedOrganisation
+} from '../../reducers';
 import {
   accessModifierHelpText,
   HelpText,
@@ -11,26 +14,12 @@ import {
 } from './defaultHelpText';
 import UsagePieChart from './../../components/UsagePieChart';
 
-
-
-
 export const DefaultScenarioExplanationText = () => {
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const scenarioTotalSize = useSelector(getScenarioTotalSize);
   const scenarioAvailableSizeDefinedByContract = useSelector(getScenarioAvailableSizeDefinedByContract);
   return (
     <div>
-      {/* <div
-        style={{
-          display:"grid",
-          gridTemplateColumns: "1fr 1fr",
-          columnGap: 5,
-          marginBottom: "32px",
-        }}
-      >
-        <span>Organisation:</span>
-        <span style={{ fontWeight: "bold" }}>{organisation}</span>
-      </div> */}
       <div
         style={{
           display:"flex",
@@ -39,7 +28,7 @@ export const DefaultScenarioExplanationText = () => {
         }}
       >
         <div style={{marginBottom: "16px",}}>
-          {`Scenario storage used for organisation `}
+          {`Scenario storage used for`}
           <div style={{fontWeight: "bold"}}>{selectedOrganisation.name}</div>
         </div>
         <UsagePieChart
