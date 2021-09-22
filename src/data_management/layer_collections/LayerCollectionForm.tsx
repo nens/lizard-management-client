@@ -32,6 +32,7 @@ const LayerCollectionForm = (props: Props & DispatchProps & RouteComponentProps)
   const { currentRecord } = props;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+  const [duplicateSlugError, setDuplicateSlugError] = useState<string | false>(false);
 
   const initialValues = currentRecord ? {
     slug: currentRecord.slug,
@@ -98,7 +99,8 @@ const LayerCollectionForm = (props: Props & DispatchProps & RouteComponentProps)
       .then(parsedRes => {
         if (!parsedRes) return;
         if (parsedRes.code && parsedRes.code === 20) { // code 20 from backend if the slug already existed
-          props.addNotification(`${values.slug} is already in use. Please try another slug name.`, 5000);
+          setDuplicateSlugError('This slug is already in use. Please try another one.')
+          props.addNotification(`${values.slug} is already in use. Please try another slug name.`, 3000);
         } else {
           props.addNotification(400, 2000); // add notification for status code 400
         };
@@ -143,10 +145,13 @@ const LayerCollectionForm = (props: Props & DispatchProps & RouteComponentProps)
           name={'slug'}
           placeholder={'Please enter at least 3 character'}
           value={values.slug}
-          valueChanged={handleInputChange}
+          valueChanged={e => {
+            if (duplicateSlugError) setDuplicateSlugError(false);
+            handleInputChange(e);
+          }}
           clearInput={clearInput}
-          validated={!minLength(3, values.slug) && !isNotLiteralStringNew(values.slug)}
-          errorMessage={minLength(3, values.slug) || isNotLiteralStringNew(values.slug)}
+          validated={!minLength(3, values.slug) && !isNotLiteralStringNew(values.slug) && !duplicateSlugError}
+          errorMessage={minLength(3, values.slug) || isNotLiteralStringNew(values.slug) || duplicateSlugError}
           triedToSubmit={triedToSubmit}
           onFocus={handleFocus}
           onBlur={handleBlur}
