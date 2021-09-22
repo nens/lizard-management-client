@@ -86,10 +86,21 @@ const LayerCollectionForm = (props: Props & DispatchProps & RouteComponentProps)
         if (status === 200) {
           props.addNotification('Success! Layer collection updated', 2000);
           props.history.push(backUrl);
+        } else if (status === 400) {
+          // we need to parse the response to json to read the message details in case of duplicate in slug name
+          return response.json();
         } else {
           props.addNotification(status, 2000);
           console.error(response);
         }
+      })
+      .then(parsedRes => {
+        if (!parsedRes) return;
+        if (parsedRes.code && parsedRes.code === 20) { // code 20 from backend if the slug already existed
+          props.addNotification('This slug is already in use. Please try another one.', 2000);
+        } else {
+          props.addNotification(400, 2000); // add notification for status code 400
+        };
       })
       .catch(console.error);
     };
