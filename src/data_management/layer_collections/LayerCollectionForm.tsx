@@ -32,7 +32,7 @@ const LayerCollectionForm = (props: Props & DispatchProps & RouteComponentProps)
   const { currentRecord } = props;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
-  const [duplicateSlugError, setDuplicateSlugError] = useState<string | false>(false);
+  const [duplicateSlugError, setDuplicateSlugError] = useState<string | false>(false); // set error message when slug is already existed
 
   const initialValues = currentRecord ? {
     slug: currentRecord.slug,
