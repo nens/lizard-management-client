@@ -56,6 +56,7 @@ import { ViewContract } from '../contracts/ViewContract';
 import { GeoBlockTable } from "../data_management/geoblocks/GeoBlockTable";
 import { NewGeoBlock } from "../data_management/geoblocks/NewGeoBlock";
 import { EditGeoBlock } from "../data_management/geoblocks/EditGeoBlock";
+import { GeoBlockDemo } from "../data_management/geoblocks/GeoBlockDemo";
 
 const authenticatedRoutes = () => {
   return (
@@ -83,6 +84,7 @@ const authenticatedRoutes = () => {
 
             <Route exact path="/management/data_management/geoblocks" component={GeoBlockTable} />
             <Route exact path="/management/data_management/geoblocks/new" component={NewGeoBlock} />
+            <Route exact path="/management/data_management/geoblocks/geoblock_demo" component={GeoBlockDemo} />
             <Route exact path="/management/data_management/geoblocks/:uuid" component={EditGeoBlock} />
 
             <Route exact path="/management/data_management/wms_layers" component={WmsLayerTable} />
