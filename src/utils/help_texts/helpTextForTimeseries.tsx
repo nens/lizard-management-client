@@ -1,9 +1,11 @@
 import React from 'react';
-
 import { useSelector} from 'react-redux';
-import { getTimeseriesTotalSize, getTimeseriesAvailableSizeDefinedByContract, getSelectedOrganisation } from '../../reducers';
+import {
+  getTimeseriesTotalSize,
+  getTimeseriesAvailableSizeDefinedByContract,
+  getSelectedOrganisation
+} from '../../reducers';
 import UsagePieChart from './../../components/UsagePieChart';
-
 import {
   accessModifierHelpText,
   codeHelpText,
@@ -21,8 +23,6 @@ export const TimeseriesTableHelptext = () => {
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   return (
     <div>
-
-    
       <div
         style={{
           display:"flex",
@@ -31,7 +31,7 @@ export const TimeseriesTableHelptext = () => {
         }}
       >
         <div style={{marginBottom: "16px"}}>
-          {`Timeseries usage for organisation `}
+          {`Timeseries usage for`}
           <div style={{fontWeight: "bold"}}>{selectedOrganisation.name}</div>
         </div>
         <UsagePieChart
