@@ -125,7 +125,7 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
     <ExplainSideColumn
       imgUrl={geoblockIcon}
       imgAltDescription={"GeoBlock icon"}
-      headerText={"Geo Blocks"}
+      headerText={"GeoBlocks"}
       explanationText={geoBlockHelpText[fieldOnFocus] || geoBlockHelpText['default']}
       backUrl={"/management/data_management/geoblocks"}
       fieldName={fieldOnFocus}

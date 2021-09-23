@@ -9,7 +9,7 @@ import {
 } from './defaultHelpText';
 
 export const geoBlockHelpText: HelpText = {
-  default: 'Geo Block management.',
+  default: 'GeoBlocks management.',
   name: nameHelpText,
   uuid: uuidHelpText,
   description: descriptionHelpText,

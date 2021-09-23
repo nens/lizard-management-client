@@ -99,7 +99,7 @@ export const GeoBlockTable: React.FC<RouteComponentProps> = (props) =>  {
     <ExplainSideColumn
       imgUrl={geoblockIcon}
       imgAltDescription={"GeoBlock icon"}
-      headerText={"Geo Blocks"}
+      headerText={"GeoBlocks"}
       explanationText={geoBlockHelpText['default']}
       backUrl={"/management/data_management"}
     >
