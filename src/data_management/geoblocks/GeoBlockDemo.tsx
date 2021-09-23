@@ -65,18 +65,24 @@ const convertGeoblockSourceToData = (source: GeoBlockSource) => {
   const { name, graph } = source;
 
   const nodes = Object.keys(graph);
-  const outputNode = name;
+  const outputNodeName = name;
+  const outputNode = nodes.filter(node => node === outputNodeName);
+  const rasterNodes = nodes.filter(node => node.includes('LizardRasterSource') || node.includes('RasterStoreSource'));
+  const operationNodes = nodes.filter(node => !rasterNodes.includes(node) && !outputNode.includes(node));
 
-  const rasterNodes = nodes.filter(node => {
-    if (node.includes('LizardRasterSource')) {
-      return true;
-    } else if (node.includes('RasterStoreSource')) {
-      return true;
-    } else {
-      return false;
-    };
-  });
-  const operationNodes = nodes.filter(node => !rasterNodes.includes(node)).reverse();
+  const outputElement: Elements = outputNode.map(node => ({
+    id: node,
+    type: 'outputBlock',
+    data: {
+      label: node,
+      value: graph[node][0],
+      inputs: graph[node]
+    },
+    style: outputNodeStyle,
+    sourcePosition: Position.Right,
+    targetPosition: Position.Left,
+    position: { x: (operationNodes.length + 1) * 200, y: 100 }
+  }));
 
   const rasterElements: Elements = rasterNodes.map((node, i) => {
     return {
@@ -95,33 +101,56 @@ const convertGeoblockSourceToData = (source: GeoBlockSource) => {
   const operationElements: Elements = operationNodes.map((node, i) => {
     return {
       id: node,
-      type: node === outputNode ? 'outputBlock' : 'block',
+      type: 'block',
       data: {
         label: node,
         value: graph[node][0],
         inputs: graph[node]
       },
-      style: node === outputNode ?  outputNodeStyle : operationNodeStyle,
+      style: operationNodeStyle,
       sourcePosition: Position.Right,
       targetPosition: Position.Left,
       position: { x: (i + 1) * 200, y: 100 }
     };
   });
 
-  const connectionLines: Elements = operationNodes.map(node => {
+  const numberElements: Elements = operationElements.filter(
+    elm => elm.data && elm.data.inputs && elm.data.inputs.filter((input: any) => !isNaN(input)).length // find blocks with connected number inputs
+  ).map(elm => {
+    const numbers: number[] = elm.data.inputs.filter((input: any) => !isNaN(input));
+    return numbers.map((n, i) => {
+      return {
+        id: elm.id + '-' + n,
+        type: 'numberBlock',
+        data: {
+          label: n,
+          value: n
+        },
+        style: operationNodeStyle,
+        sourcePosition: Position.Right,
+        targetPosition: Position.Left,
+        position: {
+          x: (elm as Node).position.x - 70,
+          y: (elm as Node).position.y - i * 50
+        }
+      };
+    });
+  }).flat(1);
+
+  const connectionLines: Elements = operationNodes.concat(outputNode).map(node => {
     const sources = graph[node].slice(1);
     return {
-      operationName: node,
+      blockName: node,
       sources
     };
   }).map(elm => {
-    const { operationName, sources } = elm;
+    const { blockName, sources } = elm;
     return sources.map((source, i) => {
       return {
-        id: source + '-' + operationName,
+        id: source + '-' + blockName,
         type: 'default',
-        source: source.toString(),
-        target: operationName,
+        source: typeof(source) === 'string' ? source.toString() : blockName + '-' + source,
+        target: blockName,
         targetHandle: 'handle-' + i,
         animated: true
       };
@@ -129,10 +158,11 @@ const convertGeoblockSourceToData = (source: GeoBlockSource) => {
   }).flat(1);
 
   // console.log('connectionLines', connectionLines);
-  // console.log('outputNode', outputNode);
+  // console.log('outputElement', outputElement);
   // console.log('rasterElements', rasterElements);
   // console.log('operationElements', operationElements);
-  return operationElements.concat(rasterElements).concat(connectionLines);
+  // console.log('numberElements', numberElements);
+  return operationElements.concat(outputElement).concat(rasterElements).concat(connectionLines).concat(numberElements);
 };
 
 const convertFlowToSource = (elements: Elements) => {
@@ -147,11 +177,20 @@ const convertFlowToSource = (elements: Elements) => {
   };
 
   // use reduce method to create the graph object
-  const graph = nodes.reduce((graph, node) => {
+  const graph = nodes.filter(
+    node => isNaN(node.data && node.data.value) // remove number nodes from graph
+  ).reduce((graph, node) => {
     // find connected nodes and their labels
     const connectedNodes = edges.filter(
       e => e.target === node.id
-    ).map(
+    ).sort((a, b) => {
+      // sort the connected nodes by their target handle (e.g. handle-0, handle-1, handle-2, etc)
+      if (a.targetHandle && b.targetHandle) {
+        return a.targetHandle.localeCompare(b.targetHandle);
+      } else {
+        return 0;
+      };
+    }).map(
       e => e.source
     ).map(nodeId => {
       const sourceNode = nodes.find(node => node.id === nodeId);
@@ -184,84 +223,84 @@ const convertFlowToSource = (elements: Elements) => {
 };
 
 // test source of a geoblock
-const testSource = {
-  name: 'Clip',
-  graph: {
-    Clip: [
-        "dask_geomodeling.raster.misc.Clip",
-        "LizardRasterSource_2",
-        "Snap"
-    ],
-    Snap: [
-        "dask_geomodeling.raster.temporal.Snap",
-        "LizardRasterSource_1",
-        "LizardRasterSource_2"
-    ],
-    LizardRasterSource_1: [
-        "lizard_nxt.blocks.LizardRasterSource",
-        "8b803e44-5419-4c84-a54a-9e4270d14436"
-    ],
-    LizardRasterSource_2: [
-        "lizard_nxt.blocks.LizardRasterSource",
-        "377ba082-2e2b-484a-bed6-3480f67f5ea3"
-    ]
-}};
-
-// const hoanGeo1 = {
-//   name: "Add_2",
+// const testSource = {
+//   name: 'Clip',
 //   graph: {
-//     Add_1: [
-//       "dask_geomodeling.raster.elemwise.Add",
-//       "LizardRasterSource_2",
-//       0.5
-//     ],
-//     Add_2: [
-//       "dask_geomodeling.raster.elemwise.Add",
-//       "Multiply",
-//       "Step"
+//     Clip: [
+//         "dask_geomodeling.raster.misc.Clip",
+//         "LizardRasterSource_2",
+//         "Snap"
 //     ],
 //     Snap: [
-//       "dask_geomodeling.raster.temporal.Snap",
-//       "LizardRasterSource_3",
-//       "LizardRasterSource_1"
-//     ],
-//     Step: [
-//       "dask_geomodeling.raster.misc.Step",
-//       "MaskBelow",
-//       0.5,
-//       1,
-//       0.25,
-//       0.5
-//     ],
-//     Multiply: [
-//       "dask_geomodeling.raster.elemwise.Multiply",
-//       "MaskBelow",
-//       "Add_1"
-//     ],
-//     Subtract: [
-//       "dask_geomodeling.raster.elemwise.Subtract",
-//       "LizardRasterSource_1",
-//       "Snap"
-//     ],
-//     MaskBelow: [
-//       "dask_geomodeling.raster.misc.MaskBelow",
-//       "Subtract",
-//       0
+//         "dask_geomodeling.raster.temporal.Snap",
+//         "LizardRasterSource_1",
+//         "LizardRasterSource_2"
 //     ],
 //     LizardRasterSource_1: [
-//       "lizard_nxt.blocks.LizardRasterSource",
-//       "29a411c7-9ac7-4e29-a6ff-2aef632689c5"
+//         "lizard_nxt.blocks.LizardRasterSource",
+//         "8b803e44-5419-4c84-a54a-9e4270d14436"
 //     ],
 //     LizardRasterSource_2: [
-//       "lizard_nxt.blocks.LizardRasterSource",
-//       "a823440e-9718-43c8-8edb-52e57fa78098"
-//     ],
-//     LizardRasterSource_3: [
-//       "lizard_nxt.blocks.LizardRasterSource",
-//       "79bd5c32-325f-48e6-8719-480527adf118"
+//         "lizard_nxt.blocks.LizardRasterSource",
+//         "377ba082-2e2b-484a-bed6-3480f67f5ea3"
 //     ]
-//   }
-// }
+// }};
+
+const hoanGeo1 = {
+  name: "Add_2",
+  graph: {
+    Add_1: [
+      "dask_geomodeling.raster.elemwise.Add",
+      "LizardRasterSource_2",
+      0.5
+    ],
+    Add_2: [
+      "dask_geomodeling.raster.elemwise.Add",
+      "Multiply",
+      "Step"
+    ],
+    Snap: [
+      "dask_geomodeling.raster.temporal.Snap",
+      "LizardRasterSource_3",
+      "LizardRasterSource_1"
+    ],
+    Step: [
+      "dask_geomodeling.raster.misc.Step",
+      "MaskBelow",
+      0.5,
+      1,
+      0.25,
+      // 0.5
+    ],
+    Multiply: [
+      "dask_geomodeling.raster.elemwise.Multiply",
+      "MaskBelow",
+      "Add_1"
+    ],
+    Subtract: [
+      "dask_geomodeling.raster.elemwise.Subtract",
+      "LizardRasterSource_1",
+      "Snap"
+    ],
+    MaskBelow: [
+      "dask_geomodeling.raster.misc.MaskBelow",
+      "Subtract",
+      0
+    ],
+    LizardRasterSource_1: [
+      "lizard_nxt.blocks.LizardRasterSource",
+      "29a411c7-9ac7-4e29-a6ff-2aef632689c5"
+    ],
+    LizardRasterSource_2: [
+      "lizard_nxt.blocks.LizardRasterSource",
+      "a823440e-9718-43c8-8edb-52e57fa78098"
+    ],
+    LizardRasterSource_3: [
+      "lizard_nxt.blocks.LizardRasterSource",
+      "79bd5c32-325f-48e6-8719-480527adf118"
+    ]
+  }
+}
 
 // const hoanGeo2 = {
 //   name: "Clip",
@@ -284,7 +323,9 @@ const testSource = {
 
 const flowStyles = {
   height: 600,
-  margin: 20
+  margin: 20,
+  border: '1px solid lightgrey',
+  borderRadius: 10,
 };
 
 export const GeoBlockDemo = () => {
@@ -296,7 +337,7 @@ export const GeoBlockDemo = () => {
 }
 
 const Flow = () => {
-  const geoblockSource = testSource;
+  const geoblockSource = hoanGeo1;
   const reactFlowWrapper = useRef<any>(null);
   const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
   const [elements, setElements] = useState<Elements>([]);
@@ -354,7 +395,24 @@ const Flow = () => {
         }
       };
 
-      const newNode = operation ? {
+      const newNode = (operation === 'RasterSource') ? {
+        id: id.toString(),
+        type: 'rasterSource',
+        position,
+        style: rasterNodeStyle,
+        data: customeNodeData,
+      } : (operation === 'Number') ? {
+        id: id.toString(),
+        type: 'numberBlock',
+        position,
+        style: operationNodeStyle,
+        sourcePosition,
+        targetPosition,
+        data: {
+          label: 0,
+          value: 0
+        },
+      } : {
         id: id.toString(),
         type: 'customOperationBlock',
         position,
@@ -365,12 +423,6 @@ const Flow = () => {
           label: operation,
           value: getValueOfBlock(operation)
         },
-      } : {
-        id: id.toString(),
-        type: 'rasterSource',
-        position,
-        style: rasterNodeStyle,
-        data: customeNodeData,
       };
 
       setId(id + 1);
@@ -410,7 +462,8 @@ const Flow = () => {
           rasterSource: RasterSource,
           block: Block,
           outputBlock: OutputBlock,
-          customOperationBlock: CustomOperationBlock
+          customOperationBlock: CustomOperationBlock,
+          numberBlock: NumberBlock
         }}
       >
         <Controls />
@@ -432,7 +485,12 @@ const SideBar = () => {
   };
 
   return (
-    <aside>
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'space-between'
+      }}
+    >
       <div
         onDragStart={(event) => onDragStart(event, 'Clip')}
         draggable
@@ -458,12 +516,18 @@ const SideBar = () => {
         MaskBelow
       </div>
       <div
-        onDragStart={(event) => onDragStart(event, '')}
+        onDragStart={(event) => onDragStart(event, 'Number')}
+        draggable
+      >
+        Number
+      </div>
+      <div
+        onDragStart={(event) => onDragStart(event, 'RasterSource')}
         draggable
       >
         Raster Source
       </div>
-    </aside>
+    </div>
   );
 };
 
@@ -517,6 +581,26 @@ const Block = (props: Node) => {
         label={data.label}
         setHandles={setHandles}
       />
+      <Handle
+        type="source"
+        position={Position.Right}
+      />
+    </>
+  )
+}
+
+// Number block
+const NumberBlock = (props: Node) => {
+  const { data } = props;
+  return (
+    <>
+      <div
+        style={{
+          fontSize: 12
+        }}
+      >
+        {data.label}
+      </div>
       <Handle
         type="source"
         position={Position.Right}
