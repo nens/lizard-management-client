@@ -15,6 +15,8 @@ import ReactFlow, {
   isEdge,
   useUpdateNodeInternals
 } from 'react-flow-renderer';
+import styles from './GeoBlockDemo.module.css';
+import buttonStyles from '../../styles/Buttons.module.css';
 
 interface GeoBlockSource {
   name: string,
@@ -223,28 +225,28 @@ const convertFlowToSource = (elements: Elements) => {
 };
 
 // test source of a geoblock
-// const testSource = {
-//   name: 'Clip',
-//   graph: {
-//     Clip: [
-//         "dask_geomodeling.raster.misc.Clip",
-//         "LizardRasterSource_2",
-//         "Snap"
-//     ],
-//     Snap: [
-//         "dask_geomodeling.raster.temporal.Snap",
-//         "LizardRasterSource_1",
-//         "LizardRasterSource_2"
-//     ],
-//     LizardRasterSource_1: [
-//         "lizard_nxt.blocks.LizardRasterSource",
-//         "8b803e44-5419-4c84-a54a-9e4270d14436"
-//     ],
-//     LizardRasterSource_2: [
-//         "lizard_nxt.blocks.LizardRasterSource",
-//         "377ba082-2e2b-484a-bed6-3480f67f5ea3"
-//     ]
-// }};
+const testSource = {
+  name: 'Clip',
+  graph: {
+    Clip: [
+        "dask_geomodeling.raster.misc.Clip",
+        "LizardRasterSource_2",
+        "Snap"
+    ],
+    Snap: [
+        "dask_geomodeling.raster.temporal.Snap",
+        "LizardRasterSource_1",
+        "LizardRasterSource_2"
+    ],
+    LizardRasterSource_1: [
+        "lizard_nxt.blocks.LizardRasterSource",
+        "8b803e44-5419-4c84-a54a-9e4270d14436"
+    ],
+    LizardRasterSource_2: [
+        "lizard_nxt.blocks.LizardRasterSource",
+        "377ba082-2e2b-484a-bed6-3480f67f5ea3"
+    ]
+}};
 
 const hoanGeo1 = {
   name: "Add_2",
@@ -323,7 +325,7 @@ const hoanGeo1 = {
 
 const flowStyles = {
   height: 600,
-  margin: 20,
+  // margin: 20,
   border: '1px solid lightgrey',
   borderRadius: 10,
 };
@@ -337,7 +339,7 @@ export const GeoBlockDemo = () => {
 }
 
 const Flow = () => {
-  const geoblockSource = hoanGeo1;
+  const geoblockSource = testSource;
   const reactFlowWrapper = useRef<any>(null);
   const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
   const [elements, setElements] = useState<Elements>([]);
@@ -447,30 +449,40 @@ const Flow = () => {
 
   return (
     <>
-      <ReactFlow
-        ref={reactFlowWrapper}
-        elements={elements}
-        onElementsRemove={onElementsRemove}
-        style={flowStyles}
-        snapToGrid
-        onEdgeUpdate={onEdgeUpdate}
-        onConnect={onConnect}
-        onLoad={onLoad}
-        onDragOver={onDragOver}
-        onDrop={onDrop}
-        nodeTypes={{
-          rasterSource: RasterSource,
-          block: Block,
-          outputBlock: OutputBlock,
-          customOperationBlock: CustomOperationBlock,
-          numberBlock: NumberBlock
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: '9fr 1fr',
+          columnGap: 10,
+          margin: '20px 0',
         }}
       >
-        <Controls />
-      </ReactFlow>
-      <SideBar />
+        <ReactFlow
+          ref={reactFlowWrapper}
+          elements={elements}
+          onElementsRemove={onElementsRemove}
+          style={flowStyles}
+          snapToGrid
+          onEdgeUpdate={onEdgeUpdate}
+          onConnect={onConnect}
+          onLoad={onLoad}
+          onDragOver={onDragOver}
+          onDrop={onDrop}
+          nodeTypes={{
+            rasterSource: RasterSource,
+            block: Block,
+            outputBlock: OutputBlock,
+            customOperationBlock: CustomOperationBlock,
+            numberBlock: NumberBlock
+          }}
+        >
+          <Controls />
+        </ReactFlow>
+        <SideBar />
+      </div>
       <button
         onClick={() => convertFlowToSource(elements)}
+        className={buttonStyles.NewButton}
       >
         Save
       </button>
@@ -486,42 +498,45 @@ const SideBar = () => {
 
   return (
     <div
-      style={{
-        display: 'flex',
-        justifyContent: 'space-between'
-      }}
+      className={styles.SideBar}
     >
       <div
+        className={styles.Block}
         onDragStart={(event) => onDragStart(event, 'Clip')}
         draggable
       >
         Clip
       </div>
       <div
+        className={styles.Block}
         onDragStart={(event) => onDragStart(event, 'Subtract')}
         draggable
       >
         Subtract
       </div>
       <div
+        className={styles.Block}
         onDragStart={(event) => onDragStart(event, 'Snap')}
         draggable
       >
         Snap
       </div>
       <div
+        className={styles.Block}
         onDragStart={(event) => onDragStart(event, 'MaskBelow')}
         draggable
       >
         MaskBelow
       </div>
       <div
+        className={styles.Block}
         onDragStart={(event) => onDragStart(event, 'Number')}
         draggable
       >
         Number
       </div>
       <div
+        className={styles.Block}
         onDragStart={(event) => onDragStart(event, 'RasterSource')}
         draggable
       >
