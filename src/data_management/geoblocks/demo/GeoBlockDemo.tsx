@@ -3,6 +3,7 @@ import ReactFlow, {
   Elements,
   Edge,
   Connection,
+  ConnectionLineType,
   Controls,
   Handle,
   Node,
@@ -15,8 +16,10 @@ import ReactFlow, {
   isEdge,
   useUpdateNodeInternals
 } from 'react-flow-renderer';
+import { createGraphLayout } from './createGraphLayout';
+import { testGeoBlock } from './blockData';
 import styles from './GeoBlockDemo.module.css';
-import buttonStyles from '../../styles/Buttons.module.css';
+import buttonStyles from '../../../styles/Buttons.module.css';
 
 interface GeoBlockSource {
   name: string,
@@ -24,6 +27,12 @@ interface GeoBlockSource {
     [key: string]: (string | number)[]
   }
 }
+
+const flowStyles = {
+  height: 600,
+  border: '1px solid lightgrey',
+  borderRadius: 10,
+};
 
 const rasterNodeStyle = {
   padding: 10,
@@ -71,6 +80,7 @@ const convertGeoblockSourceToData = (source: GeoBlockSource) => {
   const outputNode = nodes.filter(node => node === outputNodeName);
   const rasterNodes = nodes.filter(node => node.includes('LizardRasterSource') || node.includes('RasterStoreSource'));
   const operationNodes = nodes.filter(node => !rasterNodes.includes(node) && !outputNode.includes(node));
+  const position = { x: 0, y: 0 };
 
   const outputElement: Elements = outputNode.map(node => ({
     id: node,
@@ -81,9 +91,7 @@ const convertGeoblockSourceToData = (source: GeoBlockSource) => {
       inputs: graph[node]
     },
     style: outputNodeStyle,
-    sourcePosition: Position.Right,
-    targetPosition: Position.Left,
-    position: { x: (operationNodes.length + 1) * 200, y: 100 }
+    position
   }));
 
   const rasterElements: Elements = rasterNodes.map((node, i) => {
@@ -95,8 +103,7 @@ const convertGeoblockSourceToData = (source: GeoBlockSource) => {
         value: graph[node][1]
       },
       style: rasterNodeStyle,
-      sourcePosition: Position.Right,
-      position: { x: 0, y: i * 200}
+      position
     };
   });
 
@@ -110,9 +117,7 @@ const convertGeoblockSourceToData = (source: GeoBlockSource) => {
         inputs: graph[node]
       },
       style: operationNodeStyle,
-      sourcePosition: Position.Right,
-      targetPosition: Position.Left,
-      position: { x: (i + 1) * 200, y: 100 }
+      position
     };
   });
 
@@ -129,12 +134,7 @@ const convertGeoblockSourceToData = (source: GeoBlockSource) => {
           value: n
         },
         style: operationNodeStyle,
-        sourcePosition: Position.Right,
-        targetPosition: Position.Left,
-        position: {
-          x: (elm as Node).position.x - 70,
-          y: (elm as Node).position.y - i * 50
-        }
+        position
       };
     });
   }).flat(1);
@@ -150,7 +150,7 @@ const convertGeoblockSourceToData = (source: GeoBlockSource) => {
     return sources.map((source, i) => {
       return {
         id: source + '-' + blockName,
-        type: 'default',
+        type: ConnectionLineType.SmoothStep,
         source: typeof(source) === 'string' ? source.toString() : blockName + '-' + source,
         target: blockName,
         targetHandle: 'handle-' + i,
@@ -224,112 +224,6 @@ const convertFlowToSource = (elements: Elements) => {
   };
 };
 
-// test source of a geoblock
-const testSource = {
-  name: 'Clip',
-  graph: {
-    Clip: [
-        "dask_geomodeling.raster.misc.Clip",
-        "LizardRasterSource_2",
-        "Snap"
-    ],
-    Snap: [
-        "dask_geomodeling.raster.temporal.Snap",
-        "LizardRasterSource_1",
-        "LizardRasterSource_2"
-    ],
-    LizardRasterSource_1: [
-        "lizard_nxt.blocks.LizardRasterSource",
-        "8b803e44-5419-4c84-a54a-9e4270d14436"
-    ],
-    LizardRasterSource_2: [
-        "lizard_nxt.blocks.LizardRasterSource",
-        "377ba082-2e2b-484a-bed6-3480f67f5ea3"
-    ]
-}};
-
-const hoanGeo1 = {
-  name: "Add_2",
-  graph: {
-    Add_1: [
-      "dask_geomodeling.raster.elemwise.Add",
-      "LizardRasterSource_2",
-      0.5
-    ],
-    Add_2: [
-      "dask_geomodeling.raster.elemwise.Add",
-      "Multiply",
-      "Step"
-    ],
-    Snap: [
-      "dask_geomodeling.raster.temporal.Snap",
-      "LizardRasterSource_3",
-      "LizardRasterSource_1"
-    ],
-    Step: [
-      "dask_geomodeling.raster.misc.Step",
-      "MaskBelow",
-      0.5,
-      1,
-      0.25,
-      // 0.5
-    ],
-    Multiply: [
-      "dask_geomodeling.raster.elemwise.Multiply",
-      "MaskBelow",
-      "Add_1"
-    ],
-    Subtract: [
-      "dask_geomodeling.raster.elemwise.Subtract",
-      "LizardRasterSource_1",
-      "Snap"
-    ],
-    MaskBelow: [
-      "dask_geomodeling.raster.misc.MaskBelow",
-      "Subtract",
-      0
-    ],
-    LizardRasterSource_1: [
-      "lizard_nxt.blocks.LizardRasterSource",
-      "29a411c7-9ac7-4e29-a6ff-2aef632689c5"
-    ],
-    LizardRasterSource_2: [
-      "lizard_nxt.blocks.LizardRasterSource",
-      "a823440e-9718-43c8-8edb-52e57fa78098"
-    ],
-    LizardRasterSource_3: [
-      "lizard_nxt.blocks.LizardRasterSource",
-      "79bd5c32-325f-48e6-8719-480527adf118"
-    ]
-  }
-}
-
-// const hoanGeo2 = {
-//   name: "Clip",
-//   graph: {
-//     Clip: [
-//       "dask_geomodeling.raster.misc.Clip",
-//       "RasterStoreSource_1",
-//       "RasterStoreSource_2"
-//     ],
-//     RasterStoreSource_1: [
-//       "lizard_nxt.blocks.LizardRasterSource",
-//       "7ba9243b-d3fc-4eb9-8999-47a473e28f91"
-//     ],
-//     RasterStoreSource_2: [
-//       "lizard_nxt.blocks.LizardRasterSource",
-//       "f0b456d8-b17c-401b-93d2-d591caa19cf8"
-//     ]
-//   }
-// };
-
-const flowStyles = {
-  height: 600,
-  // margin: 20,
-  border: '1px solid lightgrey',
-  borderRadius: 10,
-};
-
 export const GeoBlockDemo = () => {
   return (
     <ReactFlowProvider>
@@ -339,7 +233,7 @@ export const GeoBlockDemo = () => {
 }
 
 const Flow = () => {
-  const geoblockSource = testSource;
+  const geoblockSource = testGeoBlock;
   const reactFlowWrapper = useRef<any>(null);
   const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
   const [elements, setElements] = useState<Elements>([]);
@@ -348,7 +242,8 @@ const Flow = () => {
 
   useEffect(() => {
     const geoblockElements = convertGeoblockSourceToData(geoblockSource);
-    setElements(geoblockElements);
+    const layoutedElements = createGraphLayout(geoblockElements);
+    setElements(layoutedElements);
   }, [geoblockSource]);
 
   // Keep track of number of source elements in the graph
@@ -439,7 +334,7 @@ const Flow = () => {
   };
 
   const onConnect = (params: Edge | Connection) => {
-    setElements((els) => addEdge({ ...params, animated: true }, els));
+    setElements((els) => addEdge({ ...params, type: ConnectionLineType.SmoothStep, animated: true }, els));
     params.target && updateNodeInternals(params.target); // update node internals
   };
 
