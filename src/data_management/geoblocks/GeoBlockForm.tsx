@@ -5,6 +5,7 @@ import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import { TextArea } from './../../form/TextArea';
 import { TextInput } from './../../form/TextInput';
 import { SelectDropdown } from '../../form/SelectDropdown';
+import ColorMapInput from '../../form/ColorMapInput';
 import { FormButton } from '../../form/FormButton';
 import { SubmitButton } from '../../form/SubmitButton';
 import { CancelButton } from '../../form/CancelButton';
@@ -51,6 +52,7 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
     source: currentRecord.source,
     aggregationType: currentRecord.aggregation_type ? convertToSelectObject(currentRecord.aggregation_type) : null,
     observationType: currentRecord.observation_type ? convertToSelectObject(currentRecord.observation_type.id, currentRecord.observation_type.code) : null,
+    colorMap: {options: currentRecord.options, rescalable: currentRecord.rescalable, customColormap: currentRecord.colormap || {}},
     accessModifier: currentRecord.access_modifier,
     supplier: currentRecord.supplier ? convertToSelectObject(currentRecord.supplier) : null,
   } : {
@@ -60,6 +62,7 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
     source: {},
     aggregationType: null,
     observationType: null,
+    colorMap: {options: {}, rescalable: true, customColormap: {}},
     accessModifier: 'Private',
     supplier: null,
   };
@@ -71,6 +74,8 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
       source: values.source,
       aggregation_type: values.aggregationType && values.aggregationType.value,
       observation_type: values.observationType && values.observationType.value,
+      options: values.colorMap && values.colorMap.options,
+      colormap: JSON.stringify(values.colorMap.customColormap) ==="{}"? undefined : values.colorMap.customColormap,
       access_modifier: values.accessModifier,
       supplier: values.supplier && values.supplier.label,
       organisation: selectedOrganisation.uuid,
@@ -270,6 +275,15 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
           isAsync
           isCached
           loadOptions={fetchObservationTypes}
+        />
+        <ColorMapInput
+          title={'Choose a color map *'}
+          name={'colorMap'}
+          colorMapValue={values.colorMap}
+          valueChanged={value => handleValueChange('colorMap', value)}
+          validated
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         <span className={formStyles.FormFieldTitle}>
           3: Rights
