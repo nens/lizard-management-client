@@ -56,7 +56,7 @@ import { ViewContract } from '../contracts/ViewContract';
 import { GeoBlockTable } from "../data_management/geoblocks/GeoBlockTable";
 import { NewGeoBlock } from "../data_management/geoblocks/NewGeoBlock";
 import { EditGeoBlock } from "../data_management/geoblocks/EditGeoBlock";
-import { GeoBlockDemo } from "../data_management/geoblocks/GeoBlockDemo";
+import { GeoBlockDemo } from "../data_management/geoblocks/demo/GeoBlockDemo";
 
 const authenticatedRoutes = () => {
   return (
