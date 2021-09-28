@@ -25,6 +25,8 @@ import GeoBlockBuildModal from './GeoBlockBuildModal';
 import geoblockIcon from "../../images/geoblock.svg";
 import formStyles from './../../styles/Forms.module.css';
 import { rasterLayerFromAPIBelongsToScenario } from '../../api/rasters';
+import { FormattedMessage } from 'react-intl';
+
 
 interface Props {
   currentRecord?: any,
@@ -47,6 +49,7 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
     description: currentRecord.description,
     layercollections: currentRecord.layer_collections.map((layercollection: {slug: string}) => convertToSelectObject(layercollection.slug)) || [],
     source: currentRecord.source,
+    aggregationType: currentRecord.aggregation_type ? convertToSelectObject(currentRecord.aggregation_type) : null,
     observationType: currentRecord.observation_type ? convertToSelectObject(currentRecord.observation_type.id, currentRecord.observation_type.code) : null,
     accessModifier: currentRecord.access_modifier,
     supplier: currentRecord.supplier ? convertToSelectObject(currentRecord.supplier) : null,
@@ -55,6 +58,7 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
     description: null,
     layercollections: [],
     source: {},
+    aggregationType: null,
     observationType: null,
     accessModifier: 'Private',
     supplier: null,
@@ -65,6 +69,7 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
       description: values.description,
       layer_collections: values.layercollections.map((data: any) => data.value),
       source: values.source,
+      aggregation_type: values.aggregationType && values.aggregationType.value,
       observation_type: values.observationType && values.observationType.value,
       access_modifier: values.accessModifier,
       supplier: values.supplier && values.supplier.label,
@@ -209,6 +214,46 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
           errorMessage={geoblockSourceValidator(values.source)}
           onFocus={handleFocus}
           onBlur={handleBlur}
+        />
+        <SelectDropdown
+          title={'Aggregation type *'}
+          name={'aggregationType'}
+          placeholder={'- Select -'}
+          value={values.aggregationType}
+          valueChanged={value => handleValueChange('aggregationType', value)}
+          options={[
+            {
+              value: 'none',
+              label: 'none',
+              subLabel: <FormattedMessage id="raster_form.aggregation_type_none" />
+            },
+            {
+              value: 'counts',
+              label: 'counts',
+              subLabel: <FormattedMessage id="raster_form.aggregation_type_counts" />
+            },
+            {
+              value: 'curve',
+              label: 'curve',
+              subLabel: <FormattedMessage id="raster_form.aggregation_type_curve" />
+            },
+            {
+              value: 'sum',
+              label: 'sum',
+              subLabel: <FormattedMessage id="raster_form.aggregation_type_sum" />
+            },
+            {
+              value: 'average',
+              label: 'average',
+              subLabel: <FormattedMessage id="raster_form.aggregation_type_average" />
+            }
+          ]}
+          validated={!!values.aggregationType}
+          errorMessage={'Please select an option'}
+          triedToSubmit={triedToSubmit}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          isSearchable={false}
         />
         <SelectDropdown
           title={'Observation type *'}
