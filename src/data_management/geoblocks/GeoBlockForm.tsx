@@ -4,6 +4,7 @@ import { connect, useSelector } from 'react-redux';
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import { TextArea } from './../../form/TextArea';
 import { TextInput } from './../../form/TextInput';
+import { CheckBox } from './../../form/CheckBox';
 import { SelectDropdown } from '../../form/SelectDropdown';
 import ColorMapInput from '../../form/ColorMapInput';
 import { FormButton } from '../../form/FormButton';
@@ -27,6 +28,7 @@ import geoblockIcon from "../../images/geoblock.svg";
 import formStyles from './../../styles/Forms.module.css';
 import { rasterLayerFromAPIBelongsToScenario } from '../../api/rasters';
 import { FormattedMessage } from 'react-intl';
+import { fetchOrganisationsToShareWith } from '../rasters/RasterLayerForm';
 
 
 interface Props {
@@ -54,6 +56,8 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
     observationType: currentRecord.observation_type ? convertToSelectObject(currentRecord.observation_type.id, currentRecord.observation_type.code) : null,
     colorMap: {options: currentRecord.options, rescalable: currentRecord.rescalable, customColormap: currentRecord.colormap || {}},
     accessModifier: currentRecord.access_modifier,
+    sharedWith: currentRecord.shared_with.length === 0 ? false : true,
+    organisationsToSharedWith: currentRecord.shared_with.map((organisation:any) => convertToSelectObject(organisation.uuid, organisation.name)) || [],
     supplier: currentRecord.supplier ? convertToSelectObject(currentRecord.supplier) : null,
   } : {
     name: null,
@@ -64,6 +68,8 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
     observationType: null,
     colorMap: {options: {}, rescalable: true, customColormap: {}},
     accessModifier: 'Private',
+    sharedWith: false,
+    organisationsToSharedWith: [],
     supplier: null,
   };
   const onSubmit = (values: Values) => {
@@ -77,6 +83,7 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
       options: values.colorMap && values.colorMap.options,
       colormap: JSON.stringify(values.colorMap.customColormap) ==="{}"? undefined : values.colorMap.customColormap,
       access_modifier: values.accessModifier,
+      shared_with: values.sharedWith ? values.organisationsToSharedWith.map((organisation: any) => organisation.value) : [],
       supplier: values.supplier && values.supplier.label,
       organisation: selectedOrganisation.uuid,
     };
@@ -296,6 +303,35 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
+        <CheckBox
+          title={'Shared with other organisations'}
+          name={'sharedWith'}
+          value={values.sharedWith}
+          valueChanged={bool => handleValueChange('sharedWith', bool)}
+          form={"raster_layer_form_id"}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          readOnly={belongsToScenario}
+        />
+        {values.sharedWith ? (
+          <SelectDropdown
+            title={'Organisations to share with'}
+            name={'organisationsToSharedWith'}
+            placeholder={'- Search and select -'}
+            value={values.organisationsToSharedWith}
+            options={[]}
+            valueChanged={value => handleValueChange('organisationsToSharedWith', value)}
+            validated
+            form={"raster_layer_form_id"}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            isMulti
+            isAsync
+            isCached
+            loadOptions={fetchOrganisationsToShareWith}
+            readOnly={belongsToScenario}
+          />
+        ) : null}
         <SelectDropdown
           title={'Supplier'}
           name={'supplier'}
