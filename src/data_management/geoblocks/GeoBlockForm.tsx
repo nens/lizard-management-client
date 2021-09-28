@@ -206,7 +206,6 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
             options={layercollections.map((layercollection: any) => convertToSelectObject(layercollection.slug))}
             validated
             isMulti
-            form={"raster_layer_form_id"}
             onFocus={handleFocus}
             onBlur={handleBlur}
           />
@@ -308,7 +307,6 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
           name={'sharedWith'}
           value={values.sharedWith}
           valueChanged={bool => handleValueChange('sharedWith', bool)}
-          form={"raster_layer_form_id"}
           onFocus={handleFocus}
           onBlur={handleBlur}
           readOnly={belongsToScenario}
@@ -322,7 +320,6 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
             options={[]}
             valueChanged={value => handleValueChange('organisationsToSharedWith', value)}
             validated
-            form={"raster_layer_form_id"}
             onFocus={handleFocus}
             onBlur={handleBlur}
             isMulti
