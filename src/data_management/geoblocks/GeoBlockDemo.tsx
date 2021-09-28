@@ -432,7 +432,7 @@ const Flow = () => {
   };
 
   const onConnect = (params: Edge | Connection) => {
-    setElements((els) => addEdge({ ...params, animated: true }, els));
+    setElements((els) => addEdge({ ...params, type: ConnectionLineType.SmoothStep, animated: true }, els));
     params.target && updateNodeInternals(params.target); // update node internals
   };
 
