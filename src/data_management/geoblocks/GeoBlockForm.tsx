@@ -10,7 +10,7 @@ import { SubmitButton } from '../../form/SubmitButton';
 import { CancelButton } from '../../form/CancelButton';
 import { AccessModifier } from '../../form/AccessModifier';
 import { useForm, Values } from '../../form/useForm';
-import { getSelectedOrganisation } from '../../reducers';
+import { getSelectedOrganisation,   getLayercollections } from '../../reducers';
 import { addNotification } from './../../actions';
 import { convertToSelectObject } from '../../utils/convertToSelectObject';
 import { fetchSuppliers } from '../rasters/RasterSourceForm';
@@ -24,6 +24,7 @@ import DeleteModal from '../../components/DeleteModal';
 import GeoBlockBuildModal from './GeoBlockBuildModal';
 import geoblockIcon from "../../images/geoblock.svg";
 import formStyles from './../../styles/Forms.module.css';
+import { rasterLayerFromAPIBelongsToScenario } from '../../api/rasters';
 
 interface Props {
   currentRecord?: any,
@@ -33,7 +34,10 @@ const backUrl = "/management/data_management/geoblocks";
 
 const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (props) => {
   const { currentRecord } = props;
+  const layercollections = useSelector(getLayercollections).available;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
+  const belongsToScenario = (currentRecord && rasterLayerFromAPIBelongsToScenario(currentRecord)) || false;
+
 
   const [buildModal, setBuildModal] = useState<boolean>(false);
 
@@ -41,6 +45,7 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
     name: currentRecord.name,
     uuid: currentRecord.uuid,
     description: currentRecord.description,
+    layercollections: currentRecord.layer_collections.map((layercollection: {slug: string}) => convertToSelectObject(layercollection.slug)) || [],
     source: currentRecord.source,
     observationType: currentRecord.observation_type ? convertToSelectObject(currentRecord.observation_type.id, currentRecord.observation_type.code) : null,
     accessModifier: currentRecord.access_modifier,
@@ -48,6 +53,7 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
   } : {
     name: null,
     description: null,
+    layercollections: [],
     source: {},
     observationType: null,
     accessModifier: 'Private',
@@ -57,6 +63,7 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
     const body = {
       name: values.name,
       description: values.description,
+      layer_collections: values.layercollections.map((data: any) => data.value),
       source: values.source,
       observation_type: values.observationType && values.observationType.value,
       access_modifier: values.accessModifier,
@@ -172,6 +179,21 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
           clearInput={clearInput}
           validated
         />
+        {!belongsToScenario ? (
+          <SelectDropdown
+            title={'Layer collections'}
+            name={'layercollections'}
+            placeholder={'- Search and select -'}
+            value={values.layercollections}
+            valueChanged={value => handleValueChange('layercollections', value)}
+            options={layercollections.map((layercollection: any) => convertToSelectObject(layercollection.slug))}
+            validated
+            isMulti
+            form={"raster_layer_form_id"}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+          />
+        ) : null}
         <span className={formStyles.FormFieldTitle}>
           2: Data
         </span>
