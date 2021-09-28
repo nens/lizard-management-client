@@ -98,7 +98,13 @@ const LayerCollectionForm = (props: Props & DispatchProps & RouteComponentProps)
       })
       .then(parsedRes => {
         if (!parsedRes) return;
-        if (parsedRes.code && parsedRes.code === 20) { // code 20 from backend if the slug already existed
+        if (
+          parsedRes.code &&
+          parsedRes.code === 20 &&
+          parsedRes.detail &&
+          parsedRes.detail.slug &&
+          parsedRes.detail.slug[0] === 'layer collection with this slug already exists.'
+        ) {
           setDuplicateSlugError('This slug is already in use. Please try another one.')
           props.addNotification(`${values.slug} is already in use. Please try another slug name.`, 3000);
         } else {
