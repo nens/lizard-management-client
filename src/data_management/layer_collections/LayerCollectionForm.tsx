@@ -32,6 +32,7 @@ const LayerCollectionForm = (props: Props & DispatchProps & RouteComponentProps)
   const { currentRecord } = props;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+  const [duplicateSlugError, setDuplicateSlugError] = useState<string | false>(false); // set error message when slug is already existed
 
   const initialValues = currentRecord ? {
     slug: currentRecord.slug,
@@ -41,6 +42,23 @@ const LayerCollectionForm = (props: Props & DispatchProps & RouteComponentProps)
     slug: null,
     accessModifier: 'Private',
     supplier: null
+  };
+
+  // Helper function to handle parsed response when slug name already existed
+  const handleSlugError = (parsedRes: any) => {
+    if (!parsedRes) return;
+    if (
+      parsedRes.code &&
+      parsedRes.code === 20 &&
+      parsedRes.detail &&
+      parsedRes.detail.slug &&
+      parsedRes.detail.slug[0] === 'layer collection with this slug already exists.'
+    ) {
+      setDuplicateSlugError('This slug is already in use. Please try another one.')
+      props.addNotification(`${values.slug} is already in use. Please try another slug name.`, 3000);
+    } else {
+      props.addNotification(400, 2000); // add notification for HTTP status code 400
+    };
   };
 
   const onSubmit = (values: Values) => {
@@ -68,11 +86,16 @@ const LayerCollectionForm = (props: Props & DispatchProps & RouteComponentProps)
         } else if (status === 403) {
           props.addNotification("Not authorized", 2000);
           console.error(response);
+        } else if (status === 400) {
+          console.error(response);
+          // parse the response to json to read the error message in case of slug name duplication
+          return response.json();
         } else {
           props.addNotification(status, 2000);
           console.error(response);
         };
       })
+      .then(parsedRes => handleSlugError(parsedRes))
       .catch(console.error);
     } else {
       fetch(`/api/v4/layercollections/${currentRecord.slug}/`, {
@@ -86,11 +109,16 @@ const LayerCollectionForm = (props: Props & DispatchProps & RouteComponentProps)
         if (status === 200) {
           props.addNotification('Success! Layer collection updated', 2000);
           props.history.push(backUrl);
+        } else if (status === 400) {
+          console.error(response);
+          // parse the response to json to read the error message in case of slug name duplication
+          return response.json();
         } else {
           props.addNotification(status, 2000);
           console.error(response);
         }
       })
+      .then(parsedRes => handleSlugError(parsedRes))
       .catch(console.error);
     };
   };
@@ -131,10 +159,13 @@ const LayerCollectionForm = (props: Props & DispatchProps & RouteComponentProps)
           name={'slug'}
           placeholder={'Please enter at least 3 character'}
           value={values.slug}
-          valueChanged={handleInputChange}
+          valueChanged={e => {
+            if (duplicateSlugError) setDuplicateSlugError(false);
+            handleInputChange(e);
+          }}
           clearInput={clearInput}
-          validated={!minLength(3, values.slug) && !isNotLiteralStringNew(values.slug)}
-          errorMessage={minLength(3, values.slug) || isNotLiteralStringNew(values.slug)}
+          validated={!minLength(3, values.slug) && !isNotLiteralStringNew(values.slug) && !duplicateSlugError}
+          errorMessage={minLength(3, values.slug) || isNotLiteralStringNew(values.slug) || duplicateSlugError}
           triedToSubmit={triedToSubmit}
           onFocus={handleFocus}
           onBlur={handleBlur}
