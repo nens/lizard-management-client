@@ -39,7 +39,7 @@ export const createGraphLayout = (elements: Elements) => {
         targetPosition: Position.Left,
         sourcePosition: Position.Right,
         position: {
-          x: node.x - node.width / 2,
+          x: node.x - node.width / 2 + Math.random() / 1000,
           y: node.y - node.height / 2
         }
       };

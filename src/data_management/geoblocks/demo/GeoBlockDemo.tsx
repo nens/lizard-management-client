@@ -376,6 +376,31 @@ const Flow = () => {
         <SideBar />
       </div>
       <button
+        onClick={() => {
+          const elementsWithoutPosition = elements.map(el => {
+            if (isNode(el)) {
+              return {
+                ...el,
+                position: { x: 0, y: 0 }
+              };
+            };
+            return el;
+          });
+          const layoutedElements = createGraphLayout(elementsWithoutPosition);
+          setElements(layoutedElements);
+        }}
+        className={buttonStyles.NewButton}
+      >
+        Reset
+      </button>
+      <button
+        onClick={() => console.log('validate the graph')}
+        className={buttonStyles.NewButton}
+        style={{ margin: '0 20px'}}
+      >
+        Validate
+      </button>
+      <button
         onClick={() => convertFlowToSource(elements)}
         className={buttonStyles.NewButton}
       >
