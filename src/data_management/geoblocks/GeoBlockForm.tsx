@@ -4,13 +4,15 @@ import { connect, useSelector } from 'react-redux';
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import { TextArea } from './../../form/TextArea';
 import { TextInput } from './../../form/TextInput';
+import { CheckBox } from './../../form/CheckBox';
 import { SelectDropdown } from '../../form/SelectDropdown';
+import ColorMapInput from '../../form/ColorMapInput';
 import { FormButton } from '../../form/FormButton';
 import { SubmitButton } from '../../form/SubmitButton';
 import { CancelButton } from '../../form/CancelButton';
 import { AccessModifier } from '../../form/AccessModifier';
 import { useForm, Values } from '../../form/useForm';
-import { getSelectedOrganisation } from '../../reducers';
+import { getSelectedOrganisation,   getLayercollections } from '../../reducers';
 import { addNotification } from './../../actions';
 import { convertToSelectObject } from '../../utils/convertToSelectObject';
 import { fetchSuppliers } from '../rasters/RasterSourceForm';
@@ -24,6 +26,10 @@ import DeleteModal from '../../components/DeleteModal';
 import GeoBlockBuildModal from './GeoBlockBuildModal';
 import geoblockIcon from "../../images/geoblock.svg";
 import formStyles from './../../styles/Forms.module.css';
+import { rasterLayerFromAPIBelongsToScenario } from '../../api/rasters';
+import { FormattedMessage } from 'react-intl';
+import { fetchOrganisationsToShareWith } from '../rasters/RasterLayerForm';
+
 
 interface Props {
   currentRecord?: any,
@@ -33,7 +39,10 @@ const backUrl = "/management/data_management/geoblocks";
 
 const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (props) => {
   const { currentRecord } = props;
+  const layercollections = useSelector(getLayercollections).available;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
+  const belongsToScenario = (currentRecord && rasterLayerFromAPIBelongsToScenario(currentRecord)) || false;
+
 
   const [buildModal, setBuildModal] = useState<boolean>(false);
 
@@ -41,25 +50,40 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
     name: currentRecord.name,
     uuid: currentRecord.uuid,
     description: currentRecord.description,
+    layercollections: currentRecord.layer_collections.map((layercollection: {slug: string}) => convertToSelectObject(layercollection.slug)) || [],
     source: currentRecord.source,
+    aggregationType: currentRecord.aggregation_type ? convertToSelectObject(currentRecord.aggregation_type) : null,
     observationType: currentRecord.observation_type ? convertToSelectObject(currentRecord.observation_type.id, currentRecord.observation_type.code) : null,
+    colorMap: {options: currentRecord.options, rescalable: currentRecord.rescalable, customColormap: currentRecord.colormap || {}},
     accessModifier: currentRecord.access_modifier,
+    sharedWith: currentRecord.shared_with.length === 0 ? false : true,
+    organisationsToSharedWith: currentRecord.shared_with.map((organisation:any) => convertToSelectObject(organisation.uuid, organisation.name)) || [],
     supplier: currentRecord.supplier ? convertToSelectObject(currentRecord.supplier) : null,
   } : {
     name: null,
     description: null,
+    layercollections: [],
     source: {},
+    aggregationType: null,
     observationType: null,
+    colorMap: {options: {}, rescalable: true, customColormap: {}},
     accessModifier: 'Private',
+    sharedWith: false,
+    organisationsToSharedWith: [],
     supplier: null,
   };
   const onSubmit = (values: Values) => {
     const body = {
       name: values.name,
       description: values.description,
+      layer_collections: values.layercollections.map((data: any) => data.value),
       source: values.source,
+      aggregation_type: values.aggregationType && values.aggregationType.value,
       observation_type: values.observationType && values.observationType.value,
+      options: values.colorMap && values.colorMap.options,
+      colormap: JSON.stringify(values.colorMap.customColormap) ==="{}"? undefined : values.colorMap.customColormap,
       access_modifier: values.accessModifier,
+      shared_with: values.sharedWith ? values.organisationsToSharedWith.map((organisation: any) => organisation.value) : [],
       supplier: values.supplier && values.supplier.label,
       organisation: selectedOrganisation.uuid,
     };
@@ -172,6 +196,20 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
           clearInput={clearInput}
           validated
         />
+        {!belongsToScenario ? (
+          <SelectDropdown
+            title={'Layer collections'}
+            name={'layercollections'}
+            placeholder={'- Search and select -'}
+            value={values.layercollections}
+            valueChanged={value => handleValueChange('layercollections', value)}
+            options={layercollections.map((layercollection: any) => convertToSelectObject(layercollection.slug))}
+            validated
+            isMulti
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+          />
+        ) : null}
         <span className={formStyles.FormFieldTitle}>
           2: Data
         </span>
@@ -189,6 +227,46 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
           onBlur={handleBlur}
         />
         <SelectDropdown
+          title={'Aggregation type *'}
+          name={'aggregationType'}
+          placeholder={'- Select -'}
+          value={values.aggregationType}
+          valueChanged={value => handleValueChange('aggregationType', value)}
+          options={[
+            {
+              value: 'none',
+              label: 'none',
+              subLabel: <FormattedMessage id="raster_form.aggregation_type_none" />
+            },
+            {
+              value: 'counts',
+              label: 'counts',
+              subLabel: <FormattedMessage id="raster_form.aggregation_type_counts" />
+            },
+            {
+              value: 'curve',
+              label: 'curve',
+              subLabel: <FormattedMessage id="raster_form.aggregation_type_curve" />
+            },
+            {
+              value: 'sum',
+              label: 'sum',
+              subLabel: <FormattedMessage id="raster_form.aggregation_type_sum" />
+            },
+            {
+              value: 'average',
+              label: 'average',
+              subLabel: <FormattedMessage id="raster_form.aggregation_type_average" />
+            }
+          ]}
+          validated={!!values.aggregationType}
+          errorMessage={'Please select an option'}
+          triedToSubmit={triedToSubmit}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          isSearchable={false}
+        />
+        <SelectDropdown
           title={'Observation type *'}
           name={'observationType'}
           placeholder={'- Search and select -'}
@@ -204,6 +282,15 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
           isCached
           loadOptions={fetchObservationTypes}
         />
+        <ColorMapInput
+          title={'Choose a color map *'}
+          name={'colorMap'}
+          colorMapValue={values.colorMap}
+          valueChanged={value => handleValueChange('colorMap', value)}
+          validated
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+        />
         <span className={formStyles.FormFieldTitle}>
           3: Rights
         </span>
@@ -215,6 +302,33 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
+        <CheckBox
+          title={'Shared with other organisations'}
+          name={'sharedWith'}
+          value={values.sharedWith}
+          valueChanged={bool => handleValueChange('sharedWith', bool)}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          readOnly={belongsToScenario}
+        />
+        {values.sharedWith ? (
+          <SelectDropdown
+            title={'Organisations to share with'}
+            name={'organisationsToSharedWith'}
+            placeholder={'- Search and select -'}
+            value={values.organisationsToSharedWith}
+            options={[]}
+            valueChanged={value => handleValueChange('organisationsToSharedWith', value)}
+            validated
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            isMulti
+            isAsync
+            isCached
+            loadOptions={fetchOrganisationsToShareWith}
+            readOnly={belongsToScenario}
+          />
+        ) : null}
         <SelectDropdown
           title={'Supplier'}
           name={'supplier'}
