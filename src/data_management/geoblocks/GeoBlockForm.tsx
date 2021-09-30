@@ -141,6 +141,7 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
     handleReset,
     clearInput,
   } = useForm({initialValues, onSubmit});
+  console.log(values.source)
 
   // Delete modal
   const [showDeleteModal, setShowDeleteModal] = useState(false);

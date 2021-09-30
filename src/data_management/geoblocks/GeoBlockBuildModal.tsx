@@ -18,6 +18,8 @@ interface MyProps {
 function GeoBlockBuildModal (props: MyProps & DispatchProps) {
   const [jsonObject, setJsonObject] = useState<Object>(props.source || {});
 
+  const [json, setJson] = useState<string>(JSON.stringify(props.source, undefined, 4));
+
   return (
     <ModalBackground
       title={'Geo Block Builder'}
@@ -46,7 +48,35 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
             Paste JSON from clipboard
           </button>
         ) : null}
-        <ReactJson
+        <button
+          className={buttonStyles.BlockButton}
+          onClick={() => {
+            if (jsonValidator(json)) {
+              return alert('error');
+            };
+            const object = JSON.parse(json);
+            setJson(JSON.stringify(object, undefined, 4))
+          }}
+          style={{
+            position: 'absolute',
+            top: 10,
+            right: 10
+          }}
+        >
+          Pretty
+        </button>
+        <button
+          className={buttonStyles.BlockButton}
+          onClick={() => {}}
+          style={{
+            position: 'absolute',
+            top: 50,
+            right: 10
+          }}
+        >
+          Switch
+        </button>
+        {/* <ReactJson
           src={jsonObject}
           name="source"
           theme="shapeshifter:inverted"
@@ -64,6 +94,14 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
             border: "1px solid lightgrey",
             borderRadius: 5
           }}
+        /> */}
+        <textarea
+          className={formStyles.FormControl}
+          value={json}
+          onChange={e => setJson(e.target.value)}
+          spellCheck={false}
+          cols={50}
+          rows={20}
         />
         <div className={`${formStyles.ButtonContainer} ${formStyles.FixedButtonContainer}`}>
           <button
