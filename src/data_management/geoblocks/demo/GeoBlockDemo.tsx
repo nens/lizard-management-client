@@ -20,6 +20,7 @@ import { createGraphLayout } from './createGraphLayout';
 import { testGeoBlock } from './blockData';
 import styles from './GeoBlockDemo.module.css';
 import buttonStyles from '../../../styles/Buttons.module.css';
+import { GeoBlock } from './geoblock';
 
 interface GeoBlockSource {
   name: string,
@@ -322,8 +323,31 @@ const Flow = () => {
         },
       };
 
+      const snapNode: Node<{
+        label: string,
+        data: GeoBlock['Snap']
+      }> = {
+        id: id.toString(),
+        type: 'snapBlock',
+        position,
+        style: operationNodeStyle,
+        sourcePosition,
+        targetPosition,
+        data: {
+          label: operation,
+          data: {
+            class: 'dask_geomodeling.raster.temporal.Snap',
+            description: 'This operations allows to take the cell values from one raster (‘store’) and the temporal properties of another raster (‘index’).',
+            parameters: {
+              store: '',
+              index: '',
+            }
+          }
+        },
+      }
+
       setId(id + 1);
-      setElements((es) => es.concat(newNode));
+      setElements((es) => operation === 'Snap' ? es.concat(snapNode): es.concat(newNode));
     };
   };
 
@@ -368,7 +392,8 @@ const Flow = () => {
             block: Block,
             outputBlock: OutputBlock,
             customOperationBlock: CustomOperationBlock,
-            numberBlock: NumberBlock
+            numberBlock: NumberBlock,
+            snapBlock: SnapBlock,
           }}
         >
           <Controls />
@@ -621,5 +646,38 @@ const BlockArea = (props: { label: string, setHandles: Function }) => {
         onClick={() => setHandles((handles: string[]) => handles.slice(0, -1))}
       />
     </div>
+  )
+}
+
+const SnapBlock = (props: Node<{label: string, data: GeoBlock['Snap']}>) => {
+  console.log('props', props)
+  const { data } = props;
+  if (!data) return;
+  const handles = data.data.parameters;
+  return (
+    <>
+      <Handle
+        key={handles.store}
+        type="target"
+        position={Position.Left}
+        id={'handle-1'}
+        style={{ top: 10 }}
+      />
+      <Handle
+        key={handles.index}
+        type="target"
+        position={Position.Left}
+        id={'handle-2'}
+        style={{ top: 20 }}
+      />
+      <BlockArea
+        label={data.label}
+        setHandles={() => null}
+      />
+      <Handle
+        type="source"
+        position={Position.Right}
+      />
+    </>
   )
 }
