@@ -121,31 +121,6 @@ const convertGeoblockSourceToData = (source: GeoBlockSource): Node[] => {
     });
   }).flat(1);
 
-  // const connectionLines: Elements = operationNodes.concat(outputNode).map(node => {
-  //   const sources = graph[node].slice(1);
-  //   return {
-  //     blockName: node,
-  //     sources
-  //   };
-  // }).map(elm => {
-  //   const { blockName, sources } = elm;
-  //   return sources.map((source, i) => {
-  //     return {
-  //       id: source + '-' + blockName,
-  //       type: ConnectionLineType.SmoothStep,
-  //       source: typeof(source) === 'string' ? source.toString() : blockName + '-' + source,
-  //       target: blockName,
-  //       targetHandle: 'handle-' + i,
-  //       animated: true
-  //     };
-  //   });
-  // }).flat(1);
-
-  // console.log('connectionLines', connectionLines);
-  // console.log('outputElement', outputElement);
-  // console.log('rasterElements', rasterElements);
-  // console.log('operationElements', operationElements);
-  // console.log('numberElements', numberElements);
   return operationElements.concat(outputElement).concat(rasterElements).concat(numberElements);
 };
 
@@ -536,12 +511,7 @@ const CustomOperationBlock = (props: Node) => {
             position={Position.Left}
             id={'handle-' + parameter.name}
             style={{
-              top: 10 * (i + 1),
-              // background: (
-              //   parameter.type === "number" ? "blue" :
-              //   parameter.type === "raster_block" ? "red" :
-              //   undefined
-              // )
+              top: 10 * (i + 1)
             }}
           />
       )})}
