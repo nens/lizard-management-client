@@ -11,16 +11,16 @@ import buttonStyles from './../../styles/Buttons.module.css';
 
 interface MyProps {
   source: Object | null,
-  onChange: (value: any) => void,
+  onChange: (value: Object) => void,
   handleClose: () => void
 }
 
 function GeoBlockBuildModal (props: MyProps & DispatchProps) {
-  const source = JSON.stringify(props.source, undefined, 4);
-  const [jsonString, setJsonString] = useState<string>(source);
+  const sourceString = JSON.stringify(props.source, undefined, 4);
+  const [jsonString, setJsonString] = useState<string>(sourceString);
   const [jsonView, setJsonView] = useState<'textEditor' | 'jsonEditor'>('textEditor');
 
-  const setJsonStringInPrettyFormat = (e: object) => {
+  const setJsonStringInPrettyFormat = (e: Object) => {
     setJsonString(JSON.stringify(e, undefined, 4));
   };
 
@@ -48,7 +48,7 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
             position: 'absolute',
             top: 10,
             right: 30,
-            zIndex: 1000
+            zIndex: 1000 //to stay on top of the React-JSON component
           }}
         >
           Switch Editor
