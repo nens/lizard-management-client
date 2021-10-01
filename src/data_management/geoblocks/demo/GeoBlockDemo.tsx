@@ -20,7 +20,7 @@ import { createGraphLayout } from './createGraphLayout';
 import { testGeoBlock } from './blockData';
 import styles from './GeoBlockDemo.module.css';
 import buttonStyles from '../../../styles/Buttons.module.css';
-import { GeoBlock } from './geoblock';
+import geoblockType from './jsonType.json';
 
 interface GeoBlockSource {
   name: string,
@@ -49,27 +49,6 @@ const outputNodeStyle = {
   padding: 10,
   border: '1px solid red',
   borderRadius: 5
-};
-
-// function to get value of a building block
-const getValueOfBlock = (block: string) => {
-  if (block === 'Snap') {
-    return 'dask_geomodeling.raster.temporal.Snap';
-  } else if (block === 'Clip') {
-    return 'dask_geomodeling.raster.misc.Clip';
-  } else if (block === 'Add') {
-    return 'dask_geomodeling.raster.elemwise.Add';
-  } else if (block === 'Subtract') {
-    return 'dask_geomodeling.raster.elemwise.Subtract';
-  } else if (block === 'MaskBelow') {
-    return 'dask_geomodeling.raster.misc.MaskBelow';
-  } else if (block === 'Step') {
-    return 'dask_geomodeling.raster.misc.Step';
-  } else if (block === 'Multiply') {
-    return 'dask_geomodeling.raster.elemwise.Multiply';
-  } else {
-    return block;
-  };
 };
 
 // function to convert geoblock source to react-flow data
@@ -271,7 +250,7 @@ const Flow = () => {
       const sourcePosition = Position.Right;
       const targetPosition = Position.Left;
 
-      const customeNodeData = {
+      const customNodeData = {
         label: 'LizardRasterSource_' + (numberOfSources + 1),
         value: '',
         onChange: (value: string) => {
@@ -293,13 +272,13 @@ const Flow = () => {
         }
       };
 
-      const newNode = (operation === 'RasterSource') ? {
+      const newNode = (operation === 'rasterSource') ? {
         id: id.toString(),
-        type: 'rasterSource',
+        type: operation,
         position,
         style: rasterNodeStyle,
-        data: customeNodeData,
-      } : (operation === 'Number') ? {
+        data: customNodeData,
+      } : (operation === 'number') ? {
         id: id.toString(),
         type: 'numberBlock',
         position,
@@ -319,35 +298,15 @@ const Flow = () => {
         targetPosition,
         data: {
           label: operation,
-          value: getValueOfBlock(operation)
+          // @ts-ignore
+          value: geoblockType[operation].class,
+          // @ts-ignore
+          parameters: geoblockType[operation].parameters
         },
       };
 
-      const snapNode: Node<{
-        label: string,
-        data: GeoBlock['Snap']
-      }> = {
-        id: id.toString(),
-        type: 'snapBlock',
-        position,
-        style: operationNodeStyle,
-        sourcePosition,
-        targetPosition,
-        data: {
-          label: operation,
-          data: {
-            class: 'dask_geomodeling.raster.temporal.Snap',
-            description: 'This operations allows to take the cell values from one raster (‘store’) and the temporal properties of another raster (‘index’).',
-            parameters: {
-              store: '',
-              index: '',
-            }
-          }
-        },
-      }
-
       setId(id + 1);
-      setElements((es) => operation === 'Snap' ? es.concat(snapNode): es.concat(newNode));
+      setElements((es) => es.concat(newNode));
     };
   };
 
@@ -393,7 +352,6 @@ const Flow = () => {
             outputBlock: OutputBlock,
             customOperationBlock: CustomOperationBlock,
             numberBlock: NumberBlock,
-            snapBlock: SnapBlock,
           }}
         >
           <Controls />
@@ -445,48 +403,16 @@ const SideBar = () => {
     <div
       className={styles.SideBar}
     >
-      <div
-        className={styles.Block}
-        onDragStart={(event) => onDragStart(event, 'Clip')}
-        draggable
-      >
-        Clip
-      </div>
-      <div
-        className={styles.Block}
-        onDragStart={(event) => onDragStart(event, 'Subtract')}
-        draggable
-      >
-        Subtract
-      </div>
-      <div
-        className={styles.Block}
-        onDragStart={(event) => onDragStart(event, 'Snap')}
-        draggable
-      >
-        Snap
-      </div>
-      <div
-        className={styles.Block}
-        onDragStart={(event) => onDragStart(event, 'MaskBelow')}
-        draggable
-      >
-        MaskBelow
-      </div>
-      <div
-        className={styles.Block}
-        onDragStart={(event) => onDragStart(event, 'Number')}
-        draggable
-      >
-        Number
-      </div>
-      <div
-        className={styles.Block}
-        onDragStart={(event) => onDragStart(event, 'RasterSource')}
-        draggable
-      >
-        Raster Source
-      </div>
+      {Object.keys(geoblockType).map(block => (
+        <div
+          key={block}
+          className={styles.Block}
+          onDragStart={(event) => onDragStart(event, block)}
+          draggable
+        >
+          {block}
+        </div>
+      ))}
     </div>
   );
 };
@@ -595,18 +521,25 @@ const OutputBlock = (props: Node) => {
 
 const CustomOperationBlock = (props: Node) => {
   const { data } = props;
-  const [handles, setHandles] = useState([data.label]);
+  const [handles, setHandles] = useState(data.parameters);
   return (
     <>
-      {handles.map((_handle: string, i: number) => {
+      {handles.map((parameter: any, i: number) => {
         return (
-        <Handle
-          key={i}
-          type="target"
-          position={Position.Left}
-          id={'handle-' + i}
-          style={{ top: 10 * (i + 1) }}
-        />
+          <Handle
+            key={parameter.name}
+            type="target"
+            position={Position.Left}
+            id={'handle-' + parameter.name}
+            style={{
+              top: 10 * (i + 1),
+              background: (
+                parameter.type === "number" ? "blue" :
+                parameter.type === "string" ? "red" :
+                undefined
+              )
+            }}
+          />
       )})}
       <BlockArea
         label={data.label}
@@ -646,38 +579,5 @@ const BlockArea = (props: { label: string, setHandles: Function }) => {
         onClick={() => setHandles((handles: string[]) => handles.slice(0, -1))}
       />
     </div>
-  )
-}
-
-const SnapBlock = (props: Node<{label: string, data: GeoBlock['Snap']}>) => {
-  console.log('props', props)
-  const { data } = props;
-  if (!data) return;
-  const handles = data.data.parameters;
-  return (
-    <>
-      <Handle
-        key={handles.store}
-        type="target"
-        position={Position.Left}
-        id={'handle-1'}
-        style={{ top: 10 }}
-      />
-      <Handle
-        key={handles.index}
-        type="target"
-        position={Position.Left}
-        id={'handle-2'}
-        style={{ top: 20 }}
-      />
-      <BlockArea
-        label={data.label}
-        setHandles={() => null}
-      />
-      <Handle
-        type="source"
-        position={Position.Right}
-      />
-    </>
   )
 }

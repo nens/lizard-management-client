@@ -1,0 +1,53 @@
+{
+  "rasterSource": {
+    "class": "raster_source",
+    "description": "raster block"
+  },
+  "number": {
+    "class": "number",
+    "description": "number block"
+  },
+  "snap": {
+    "class": "dask_geomodeling.raster.temporal.Snap",
+    "description": "snap block",
+    "parameters": [
+      {
+        "name": "store",
+        "type": "string"
+      },
+      {
+        "name": "index",
+        "type": "string"
+      }
+    ]
+  },
+  "step": {
+    "class": "dask_geomodeling.raster.misc.Step",
+    "description": "step block",
+    "parameters": [
+      {
+        "name": "store",
+        "type": "string"
+      },
+      {
+        "name": "left",
+        "type": "number",
+        "default": 0
+      },
+      {
+        "name": "right",
+        "type": "number",
+        "default": 1
+      },
+      {
+        "name": "value",
+        "type": "number",
+        "default": 0
+      },
+      {
+        "name": "at",
+        "type": "number"
+      }
+    ]
+  }
+}
