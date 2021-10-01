@@ -1,6 +1,6 @@
 {
-  "rasterSource": {
-    "class": "raster_source",
+  "rasterBlock": {
+    "class": "raster_block",
     "description": "raster block"
   },
   "number": {
@@ -13,11 +13,11 @@
     "parameters": [
       {
         "name": "store",
-        "type": "string"
+        "type": "raster_block"
       },
       {
         "name": "index",
-        "type": "string"
+        "type": "raster_block"
       }
     ]
   },
@@ -27,7 +27,7 @@
     "parameters": [
       {
         "name": "store",
-        "type": "string"
+        "type": "raster_block"
       },
       {
         "name": "left",
@@ -49,5 +49,84 @@
         "type": "number"
       }
     ]
+  },
+  "add": {
+    "class": "dask_geomodeling.raster.elemwise.Add",
+    "description": "add block",
+    "parameters": [
+      {
+        "name": "a",
+        "type": [
+          "number",
+          "raster_block"
+        ]
+      },
+      {
+        "name": "b",
+        "type": [
+          "number",
+          "raster_block"
+        ]
+      }
+    ]
+  },
+  "subtract": {
+    "class": "dask_geomodeling.raster.elemwise.Subtract",
+    "description": "subtract block",
+    "parameters": [
+      {
+        "name": "a",
+        "type": [
+          "number",
+          "raster_block"
+        ]
+      },
+      {
+        "name": "b",
+        "type": [
+          "number",
+          "raster_block"
+        ]
+      }
+    ]
+  },
+  "maskBelow": {
+    "class": "dask_geomodeling.raster.misc.MaskBelow",
+    "description": "mask below block",
+    "parameters": [
+      {
+        "name": "store",
+        "type": "raster_block"
+      },
+      {
+        "name": "value",
+        "type": "number"
+      }
+    ]
+  },
+  "multiply": {
+    "class": "dask_geomodeling.raster.elemwise.Multiply",
+    "description": "multiply block",
+    "parameters": [
+      {
+        "name": "a",
+        "type": [
+          "number",
+          "raster_block"
+        ]
+      },
+      {
+        "name": "b",
+        "type": [
+          "number",
+          "raster_block"
+        ]
+      }
+    ]
+  },
+  "group": {
+    "class": "dask_geomodeling.raster.combine.Group",
+    "description": "group block",
+    "parameters": []
   }
 }

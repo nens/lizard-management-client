@@ -77,7 +77,7 @@ const convertGeoblockSourceToData = (source: GeoBlockSource) => {
   const rasterElements: Elements = rasterNodes.map((node, i) => {
     return {
       id: node,
-      type: 'rasterSource',
+      type: 'rasterBlock',
       data: {
         label: node,
         value: graph[node][1]
@@ -183,7 +183,7 @@ const convertFlowToSource = (elements: Elements) => {
 
     return {
       ...graph,
-      [node.data.label]: node.type === 'rasterSource' ? [
+      [node.data.label]: node.type === 'rasterBlock' ? [
         'lizard_nxt.blocks.LizardRasterSource',
         node.data.value
       ] : [
@@ -227,7 +227,7 @@ const Flow = () => {
   }, [geoblockSource]);
 
   // Keep track of number of source elements in the graph
-  const numberOfSources = elements.filter(elm => isNode(elm) && elm.type === 'rasterSource').length;
+  const numberOfSources = elements.filter(elm => isNode(elm) && elm.type === 'rasterBlock').length;
 
   const onLoad = (_reactFlowInstance: any) => {
     setReactFlowInstance(_reactFlowInstance);
@@ -272,7 +272,7 @@ const Flow = () => {
         }
       };
 
-      const newNode = (operation === 'rasterSource') ? {
+      const newNode = (operation === 'rasterBlock') ? {
         id: id.toString(),
         type: operation,
         position,
@@ -347,7 +347,7 @@ const Flow = () => {
           onDragOver={onDragOver}
           onDrop={onDrop}
           nodeTypes={{
-            rasterSource: RasterSource,
+            rasterBlock: RasterBlock,
             block: Block,
             outputBlock: OutputBlock,
             customOperationBlock: CustomOperationBlock,
@@ -418,7 +418,7 @@ const SideBar = () => {
 };
 
 // Custom raster source node with input field
-const RasterSource = (props: Node) => {
+const RasterBlock = (props: Node) => {
   const { data } = props;
   return (
     <>
@@ -533,11 +533,11 @@ const CustomOperationBlock = (props: Node) => {
             id={'handle-' + parameter.name}
             style={{
               top: 10 * (i + 1),
-              background: (
-                parameter.type === "number" ? "blue" :
-                parameter.type === "string" ? "red" :
-                undefined
-              )
+              // background: (
+              //   parameter.type === "number" ? "blue" :
+              //   parameter.type === "raster_block" ? "red" :
+              //   undefined
+              // )
             }}
           />
       )})}
