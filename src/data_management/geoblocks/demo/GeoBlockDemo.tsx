@@ -52,7 +52,7 @@ const outputNodeStyle = {
 };
 
 // function to convert geoblock source to react-flow data
-const convertGeoblockSourceToData = (source: GeoBlockSource) => {
+const convertGeoblockSourceToData = (source: GeoBlockSource): Node[] => {
   const { name, graph } = source;
 
   const nodes = Object.keys(graph);
@@ -62,19 +62,20 @@ const convertGeoblockSourceToData = (source: GeoBlockSource) => {
   const operationNodes = nodes.filter(node => !rasterNodes.includes(node) && !outputNode.includes(node));
   const position = { x: 0, y: 0 };
 
-  const outputElement: Elements = outputNode.map(node => ({
+  const outputElement: Node[] = outputNode.map(node => ({
     id: node,
     type: 'outputBlock',
     data: {
       label: node,
       value: graph[node][0],
-      inputs: graph[node]
+      inputs: graph[node],
+      inboundEdges: graph[node].slice(1)
     },
     style: outputNodeStyle,
     position
   }));
 
-  const rasterElements: Elements = rasterNodes.map((node, i) => {
+  const rasterElements: Node[] = rasterNodes.map((node, i) => {
     return {
       id: node,
       type: 'rasterBlock',
@@ -87,21 +88,22 @@ const convertGeoblockSourceToData = (source: GeoBlockSource) => {
     };
   });
 
-  const operationElements: Elements = operationNodes.map((node, i) => {
+  const operationElements: Node[] = operationNodes.map((node, i) => {
     return {
       id: node,
       type: 'block',
       data: {
         label: node,
         value: graph[node][0],
-        inputs: graph[node]
+        inputs: graph[node],
+        inboundEdges: graph[node].slice(1)
       },
       style: operationNodeStyle,
       position
     };
   });
 
-  const numberElements: Elements = operationElements.filter(
+  const numberElements: Node[] = operationElements.filter(
     elm => elm.data && elm.data.inputs && elm.data.inputs.filter((input: any) => !isNaN(input)).length // find blocks with connected number inputs
   ).map(elm => {
     const numbers: number[] = elm.data.inputs.filter((input: any) => !isNaN(input));
@@ -119,32 +121,32 @@ const convertGeoblockSourceToData = (source: GeoBlockSource) => {
     });
   }).flat(1);
 
-  const connectionLines: Elements = operationNodes.concat(outputNode).map(node => {
-    const sources = graph[node].slice(1);
-    return {
-      blockName: node,
-      sources
-    };
-  }).map(elm => {
-    const { blockName, sources } = elm;
-    return sources.map((source, i) => {
-      return {
-        id: source + '-' + blockName,
-        type: ConnectionLineType.SmoothStep,
-        source: typeof(source) === 'string' ? source.toString() : blockName + '-' + source,
-        target: blockName,
-        targetHandle: 'handle-' + i,
-        animated: true
-      };
-    });
-  }).flat(1);
+  // const connectionLines: Elements = operationNodes.concat(outputNode).map(node => {
+  //   const sources = graph[node].slice(1);
+  //   return {
+  //     blockName: node,
+  //     sources
+  //   };
+  // }).map(elm => {
+  //   const { blockName, sources } = elm;
+  //   return sources.map((source, i) => {
+  //     return {
+  //       id: source + '-' + blockName,
+  //       type: ConnectionLineType.SmoothStep,
+  //       source: typeof(source) === 'string' ? source.toString() : blockName + '-' + source,
+  //       target: blockName,
+  //       targetHandle: 'handle-' + i,
+  //       animated: true
+  //     };
+  //   });
+  // }).flat(1);
 
   // console.log('connectionLines', connectionLines);
   // console.log('outputElement', outputElement);
   // console.log('rasterElements', rasterElements);
   // console.log('operationElements', operationElements);
   // console.log('numberElements', numberElements);
-  return operationElements.concat(outputElement).concat(rasterElements).concat(connectionLines).concat(numberElements);
+  return operationElements.concat(outputElement).concat(rasterElements).concat(numberElements);
 };
 
 const convertFlowToSource = (elements: Elements) => {
@@ -227,7 +229,7 @@ const Flow = () => {
   }, [geoblockSource]);
 
   // Keep track of number of source elements in the graph
-  const numberOfSources = elements.filter(elm => isNode(elm) && elm.type === 'rasterBlock').length;
+  const numberOfSources = 3;
 
   const onLoad = (_reactFlowInstance: any) => {
     setReactFlowInstance(_reactFlowInstance);
@@ -360,7 +362,9 @@ const Flow = () => {
       </div>
       <button
         onClick={() => {
-          const elementsWithoutPosition = elements.map(el => {
+          const elementsWithoutPosition = elements.filter(
+            el => isNode(el)
+          ).map(el => {
             if (isNode(el)) {
               return {
                 ...el,
@@ -368,7 +372,7 @@ const Flow = () => {
               };
             };
             return el;
-          });
+          }) as Node[];
           const layoutedElements = createGraphLayout(elementsWithoutPosition);
           setElements(layoutedElements);
         }}
