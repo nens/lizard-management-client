@@ -50,6 +50,14 @@ function MapViewer (props: MyProps & DispatchProps) {
     return arr;
 }
 
+const onClick = (event: any) => {
+  const {
+    features,
+    srcEvent: { offsetX, offsetY }
+  } = event;
+  console.log(features)
+};
+
 const reversedRasters = selectedRasters.map(id=>id).reverse();
 
   return (
@@ -175,6 +183,7 @@ const reversedRasters = selectedRasters.map(id=>id).reverse();
         onViewportChange={(viewport:any) => setViewport(viewport)}
         mapboxApiAccessToken={mapBoxAccesToken}
         mapStyle={"mapbox://styles/nelenschuurmans/ck8sgpk8h25ql1io2ccnueuj6"}
+        onClick={onClick}
       >
 
           {/* these 100 layers are needed for ordering layers with "beforeId"
