@@ -521,7 +521,8 @@ const OutputBlock = (props: Node) => {
 
 const CustomOperationBlock = (props: Node) => {
   const { data } = props;
-  const [handles, setHandles] = useState(data.parameters);
+  const initialHandles = Array.isArray(data.parameters) ? data.parameters : [];
+  const [handles, setHandles] = useState<string[]>(initialHandles);
   return (
     <>
       {handles.map((parameter: any, i: number) => {
@@ -543,7 +544,7 @@ const CustomOperationBlock = (props: Node) => {
       )})}
       <BlockArea
         label={data.label}
-        setHandles={setHandles}
+        setHandles={data.parameters.type === "array" ? (e: any) => setHandles(e) : undefined}
       />
       <Handle
         type="source"
@@ -553,31 +554,47 @@ const CustomOperationBlock = (props: Node) => {
   )
 };
 
-const BlockArea = (props: { label: string, setHandles: Function }) => {
+const BlockArea = (props: {
+  label: string,
+  setHandles?: Function
+}) => {
   const { label, setHandles } = props;
   return (
     <div
       style={{
-        fontSize: 12
+        fontSize: 12,
+        display: 'flex'
       }}
     >
-      <i
-        className={'fa fa-plus'}
-        style={{
-          marginRight: 5,
-          cursor: 'pointer'
-        }}
-        onClick={() => setHandles((handles: string[]) => handles.concat('new-handle'))}
-      />
+      {setHandles ? (
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginRight: 5
+          }}
+        >
+          <i
+            className={'fa fa-plus'}
+            style={{
+              // marginRight: 5,
+              cursor: 'pointer'
+            }}
+            onClick={() => setHandles((handles: string[]) => handles.concat('new-handle'))}
+          />
+          <i
+            className={'fa fa-minus'}
+            style={{
+              // marginLeft: 5,
+              cursor: 'pointer'
+            }}
+            onClick={() => setHandles((handles: string[]) => handles.slice(0, -1))}
+          />
+        </div>
+      ) : null}
       {label}
-      <i
-        className={'fa fa-minus'}
-        style={{
-          marginLeft: 5,
-          cursor: 'pointer'
-        }}
-        onClick={() => setHandles((handles: string[]) => handles.slice(0, -1))}
-      />
     </div>
   )
 }

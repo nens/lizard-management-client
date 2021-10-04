@@ -127,6 +127,230 @@
   "group": {
     "class": "dask_geomodeling.raster.combine.Group",
     "description": "group block",
-    "parameters": []
+    "parameters": {
+      "type": "array",
+      "items": {
+        "type": "raster_block"
+      }
+    }
+  },
+  "place": {
+    "class": "dask_geomodeling.raster.spatial.Place",
+    "description": "place block",
+    "parameters": [
+      {
+        "name": "store",
+        "type": "raster_block"
+      },
+      {
+        "name": "place_projection",
+        "type": "string"
+      },
+      {
+        "name": "anchor",
+        "type": "array",
+        "prefixItems": [
+          { "type": "number" },
+          { "type": "number" }
+        ]
+      },
+      {
+        "name": "coordinates",
+        "type": "array",
+        "items": {
+          "type": "array",
+          "prefixItems": [
+            { "type": "number" },
+            { "type": "number" }
+          ]
+        }
+      },
+      {
+        "name": "statistic",
+        "type": "string",
+        "enum": [
+          "last",
+          "fist",
+          "count",
+          "sum",
+          "mean",
+          "min",
+          "max",
+          "argmin",
+          "argmax",
+          "product",
+          "std",
+          "var",
+          "p<number>"
+        ]
+      }
+    ]
+  },
+  "classify": {
+    "class": "dask_geomodeling.misc.Classify",
+    "description": "classify block",
+    "parameters": [
+      {
+        "name": "store",
+        "type": "raster_block"
+      },
+      {
+        "name": "bin",
+        "type": "array",
+        "items": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": ["boolean", "integer"]
+            },
+            {
+              "type": "number"
+            }
+          ]
+        }
+      },
+      {
+        "name": "right",
+        "type": "boolean",
+        "default": false
+      }
+    ]
+  },
+  "rasterize": {
+    "class": "dask_geomodeling.misc.Rasterize",
+    "description": "rasterize block",
+    "parameters": [
+      {
+        "name": "source",
+        "type": "geometry_block"
+      },
+      {
+        "name": "column_name",
+        "type": "string"
+      },
+      {
+        "name": "dtype",
+        "type": "string",
+        "default": "int32"
+      }
+    ]
+  },
+  "memorySource": {
+    "class": "dask_geomodeling.sources.MemorySource",
+    "description": "memory source",
+    "parameters": [
+      {
+        "name": "data",
+        "type": "number"
+      },
+      {
+        "name": "no_data_value",
+        "type": "number"
+      },
+      {
+        "name": "projection",
+        "type": "string"
+      },
+      {
+        "name": "pixel_size",
+        "type": "float"
+      },
+      {
+        "name": "pixel_origin",
+        "type": "float"
+      },
+      {
+        "name": "time_first",
+        "type": "integer"
+      },
+      {
+        "name": "time_delta",
+        "type": "integer"
+      },
+      {
+        "name": "metadata",
+        "type": "array",
+        "items": {
+          "type": "any"
+        }
+      }
+    ]
+  },
+  "temporalAggregate": {
+    "class": "dask_geomodeling.raster.temporal.TemporalAggregate",
+    "description": "temporal aggregate",
+    "parameters": [
+      {
+        "name": "source",
+        "type": "raster_block"
+      },
+      {
+        "name": "frequency",
+        "type": "string",
+        "default": "None"
+      },
+      {
+        "name": "statistic",
+        "type": "string",
+        "enum":[
+          "sum",
+          "count",
+          "mean",
+          "min",
+          "max"
+        ]
+      },
+      {
+        "name": "closed",
+        "type": "string",
+        "enum":[
+          "left",
+          "right",
+          "None"
+        ]
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "enum":[
+          "left",
+          "right",
+          "None"
+        ]
+      },
+      {
+        "name": "timezone",
+        "type": "string",
+        "default": "UTC"
+      }
+    ]
+  },
+  "cumulative": {
+    "class": "dask_geomodeling.raster.temporal.Cumulative",
+    "description": "cumulative block",
+    "parameters": [
+      {
+        "name": "source",
+        "type": "raster_block"
+      },
+      {
+        "name": "statistic",
+        "type": "string",
+        "enum": [
+          "sum",
+          "count"
+        ]
+      },
+      {
+        "name": "frequency",
+        "type": "string",
+        "default": "None"
+      },
+      {
+        "name": "timezone",
+        "type": "string",
+        "default": "UTC"
+      }
+    ]
   }
 }
