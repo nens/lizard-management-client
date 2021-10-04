@@ -330,7 +330,7 @@ const Flow = () => {
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: '9fr 1fr',
+          gridTemplateColumns: '1fr 150px',
           columnGap: 10,
           margin: '20px 0',
         }}
@@ -533,12 +533,7 @@ const CustomOperationBlock = (props: Node) => {
             position={Position.Left}
             id={'handle-' + parameter.name}
             style={{
-              top: 10 * (i + 1),
-              // background: (
-              //   parameter.type === "number" ? "blue" :
-              //   parameter.type === "raster_block" ? "red" :
-              //   undefined
-              // )
+              top: 10 * (i + 1)
             }}
           />
       )})}
@@ -563,7 +558,8 @@ const BlockArea = (props: {
     <div
       style={{
         fontSize: 12,
-        display: 'flex'
+        display: 'flex',
+        alignItems: 'center'
       }}
     >
       {setHandles ? (
@@ -573,13 +569,12 @@ const BlockArea = (props: {
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
-            marginRight: 5
+            marginRight: 10
           }}
         >
           <i
             className={'fa fa-plus'}
             style={{
-              // marginRight: 5,
               cursor: 'pointer'
             }}
             onClick={() => setHandles((handles: string[]) => handles.concat('new-handle'))}
@@ -587,7 +582,6 @@ const BlockArea = (props: {
           <i
             className={'fa fa-minus'}
             style={{
-              // marginLeft: 5,
               cursor: 'pointer'
             }}
             onClick={() => setHandles((handles: string[]) => handles.slice(0, -1))}

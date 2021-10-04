@@ -1,9 +1,12 @@
 .SideBar {
+  height: 600px;
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
 }
 
 .Block {
+  width: 120px;
   border: 1px solid grey;
   padding: 10px;
   border-radius: 5px;
