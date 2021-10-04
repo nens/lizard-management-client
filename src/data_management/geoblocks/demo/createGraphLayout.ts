@@ -4,11 +4,11 @@ import dagre from 'dagre';
 import {
   ConnectionLineType,
   Elements,
-  Node,
+  // Node,
   Position
 } from 'react-flow-renderer';
 
-export const createGraphLayout = (elements: Node[]): Elements => {
+export const createGraphLayout = (elements: Elements): Elements => {
   const dagreGraph = new dagre.graphlib.Graph();
   dagreGraph.setDefaultEdgeLabel(() => ({}));
   dagreGraph.setGraph({ rankdir: 'LR' });

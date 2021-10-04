@@ -52,7 +52,7 @@ const outputNodeStyle = {
 };
 
 // function to convert geoblock source to react-flow data
-const convertGeoblockSourceToData = (source: GeoBlockSource): Node[] => {
+const convertGeoblockSourceToData = (source: GeoBlockSource): Elements => {
   const { name, graph } = source;
 
   const nodes = Object.keys(graph);
@@ -202,7 +202,7 @@ const Flow = () => {
   }, [geoblockSource]);
 
   // Keep track of number of source elements in the graph
-  const numberOfSources = 3;
+  const numberOfSources = elements.filter(elm => isNode(elm) && elm.type === 'rasterBlock').length;
 
   const onLoad = (_reactFlowInstance: any) => {
     setReactFlowInstance(_reactFlowInstance);
@@ -345,7 +345,7 @@ const Flow = () => {
               };
             };
             return el;
-          }) as Node[];
+          });
           const layoutedElements = createGraphLayout(elementsWithoutPosition);
           setElements(layoutedElements);
         }}
