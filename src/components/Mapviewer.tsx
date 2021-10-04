@@ -218,7 +218,34 @@ const reversedRasters = selectedRasters.map(id=>id).reverse();
               </Source>
             );
           })}
-        
+        <Source 
+          key={"vector_tile_mapbox1"}
+          type={"vector"}
+          //tiles={[`http://a.tiles.mapbox.com/v4/mapbox.mapbox-streets-v6?access_token=${mapBoxAccesToken}`]}
+          tiles={[`https://api.mapbox.com/v4/mapbox.mapbox-streets-v8/{z}/{x}/{y}.vector.pbf?sku=101cmdIjjXnSr&access_token=${mapBoxAccesToken}`]}
+          // mapbox.mapbox-streets-v8
+          // tiles={[`http://a.tiles.mapbox.com/v4/mapbox.mapbox-streets-v8}`]}
+          // tiles={["mapbox://styles/nelenschuurmans/ckucf5p4y4rvo18s0k9k9upbm"]}
+          // tileSize={256}
+          id={"vector_tile_mapbox1"}
+        >
+          {/* 
+          // @ts-ignore */}
+          <Layer
+            key={"vector_tile_mapbox1"}
+            id={"vector_tile_mapbox1"}
+            beforeId={'GROUP_' + 80}
+            type={"fill"}
+            source={"vector_tile_mapbox1"}
+            source-layer={"building"}
+            paint={{
+              "fill-color": "rgba(255,0,0, 1)",
+              "fill-outline-color": "rgba(255,244,244, 1)"
+              }}
+            minzoom={0}
+            maxzoom={22}
+          />
+        </Source>
         
       </ReactMapGL>
     </div>
