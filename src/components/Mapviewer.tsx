@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import ReactMapGL, {Source, Layer} from 'react-map-gl';
+import ReactMapGL, {Source, Layer, Popup} from 'react-map-gl';
 import mapboxgl from "mapbox-gl";
 import {mapBoxAccesToken} from '../mapboxConfig';
 import { MapViewerRasterLayerTable} from "./MapViewerRasterLayerTable";
@@ -269,6 +269,16 @@ const reversedRasters = selectedRasters.map(id=>id).reverse();
             maxzoom={22}
           />
         </Source>
+
+        <Popup
+          latitude={52.3676}
+          longitude={4.9041}
+          closeButton={true}
+          closeOnClick={false}
+          // onClose={() => togglePopup(false)}
+          anchor="top" >
+          <div>You are here</div>
+        </Popup>
         
       </ReactMapGL>
     </div>
