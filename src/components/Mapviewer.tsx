@@ -245,6 +245,20 @@ const reversedRasters = selectedRasters.map(id=>id).reverse();
             minzoom={0}
             maxzoom={22}
           />
+          <Layer
+            key={"vector_tile_mapbox2"}
+            id={"vector_tile_mapbox2"}
+            beforeId={'GROUP_' + 79}
+            type={"fill"}
+            source={"vector_tile_mapbox1"}
+            source-layer={"waterway"}
+            paint={{
+              "fill-color": "rgba(255,0,255, 1)",
+              "fill-outline-color": "rgba(255,244,255, 1)"
+              }}
+            minzoom={0}
+            maxzoom={22}
+          />
         </Source>
         
       </ReactMapGL>
