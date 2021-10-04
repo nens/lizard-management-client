@@ -68,8 +68,7 @@ const convertGeoblockSourceToData = (source: GeoBlockSource): Node[] => {
     data: {
       label: node,
       value: graph[node][0],
-      inputs: graph[node],
-      inboundEdges: graph[node].slice(1)
+      inputs: graph[node].slice(1)
     },
     style: outputNodeStyle,
     position
@@ -95,8 +94,7 @@ const convertGeoblockSourceToData = (source: GeoBlockSource): Node[] => {
       data: {
         label: node,
         value: graph[node][0],
-        inputs: graph[node],
-        inboundEdges: graph[node].slice(1)
+        inputs: graph[node].slice(1)
       },
       style: operationNodeStyle,
       position
@@ -429,7 +427,7 @@ const RasterBlock = (props: Node) => {
 // custom blocks with multiple inputs
 const Block = (props: Node) => {
   const { data } = props;
-  const initialHandles = data.inputs.slice(1); // first item is not input
+  const initialHandles = data.inputs;
   const [handles, setHandles] = useState<string[]>(initialHandles);
   return (
     <>
@@ -477,7 +475,7 @@ const NumberBlock = (props: Node) => {
 // custom output node
 const OutputBlock = (props: Node) => {
   const { data } = props;
-  const initialHandles = data.inputs.slice(1); // first item is not input
+  const initialHandles = data.inputs;
   const [handles, setHandles] = useState<string[]>(initialHandles);
   return (
     <>

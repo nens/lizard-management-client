@@ -24,8 +24,8 @@ export const createGraphLayout = (elements: Node[]): Elements => {
       height: nodeHeight
     });
 
-    if (el.data && el.data.inboundEdges) {
-      el.data.inboundEdges.forEach((edge: any) => {
+    if (el.data && el.data.inputs) {
+      el.data.inputs.forEach((edge: any) => {
         dagreGraph.setEdge(
           typeof(edge) === 'string' ? edge : el.id + '-' + edge,
           el.id
@@ -51,9 +51,9 @@ export const createGraphLayout = (elements: Node[]): Elements => {
   });
 
   const edges = elements.filter(
-    el => el.data && el.data.inboundEdges
+    el => el.data && el.data.inputs
   ).map(el => {
-    return el.data.inboundEdges.map((edge: any, i: number) => {
+    return el.data.inputs.map((edge: any, i: number) => {
       return {
         id: edge + '-' + el.id,
         type: ConnectionLineType.SmoothStep,
