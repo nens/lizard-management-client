@@ -20,6 +20,7 @@ import { createGraphLayout } from './createGraphLayout';
 import { testGeoBlock } from './blockData';
 import styles from './GeoBlockDemo.module.css';
 import buttonStyles from '../../../styles/Buttons.module.css';
+import { geoblockType } from './geoblockType';
 
 interface GeoBlockSource {
   name: string,
@@ -50,27 +51,6 @@ const outputNodeStyle = {
   borderRadius: 5
 };
 
-// function to get value of a building block
-const getValueOfBlock = (block: string) => {
-  if (block === 'Snap') {
-    return 'dask_geomodeling.raster.temporal.Snap';
-  } else if (block === 'Clip') {
-    return 'dask_geomodeling.raster.misc.Clip';
-  } else if (block === 'Add') {
-    return 'dask_geomodeling.raster.elemwise.Add';
-  } else if (block === 'Subtract') {
-    return 'dask_geomodeling.raster.elemwise.Subtract';
-  } else if (block === 'MaskBelow') {
-    return 'dask_geomodeling.raster.misc.MaskBelow';
-  } else if (block === 'Step') {
-    return 'dask_geomodeling.raster.misc.Step';
-  } else if (block === 'Multiply') {
-    return 'dask_geomodeling.raster.elemwise.Multiply';
-  } else {
-    return block;
-  };
-};
-
 // function to convert geoblock source to react-flow data
 const convertGeoblockSourceToData = (source: GeoBlockSource) => {
   const { name, graph } = source;
@@ -84,7 +64,7 @@ const convertGeoblockSourceToData = (source: GeoBlockSource) => {
 
   const outputElement: Elements = outputNode.map(node => ({
     id: node,
-    type: 'outputBlock',
+    type: 'OutputBlock',
     data: {
       label: node,
       value: graph[node][0],
@@ -97,7 +77,7 @@ const convertGeoblockSourceToData = (source: GeoBlockSource) => {
   const rasterElements: Elements = rasterNodes.map((node, i) => {
     return {
       id: node,
-      type: 'rasterSource',
+      type: 'RasterBlock',
       data: {
         label: node,
         value: graph[node][1]
@@ -110,7 +90,7 @@ const convertGeoblockSourceToData = (source: GeoBlockSource) => {
   const operationElements: Elements = operationNodes.map((node, i) => {
     return {
       id: node,
-      type: 'block',
+      type: 'Block',
       data: {
         label: node,
         value: graph[node][0],
@@ -128,7 +108,7 @@ const convertGeoblockSourceToData = (source: GeoBlockSource) => {
     return numbers.map((n, i) => {
       return {
         id: elm.id + '-' + n,
-        type: 'numberBlock',
+        type: 'NumberBlock',
         data: {
           label: n,
           value: n
@@ -171,7 +151,7 @@ const convertFlowToSource = (elements: Elements) => {
   console.log('elements', elements);
   const edges = elements.filter(e => isEdge(e)) as Edge[];
   const nodes = elements.filter(e => isNode(e));
-  const outputNode = nodes.find(e => e.type === 'outputBlock');
+  const outputNode = nodes.find(e => e.type === 'OutputBlock');
 
   if (!outputNode) {
     console.error('No output node');
@@ -203,7 +183,7 @@ const convertFlowToSource = (elements: Elements) => {
 
     return {
       ...graph,
-      [node.data.label]: node.type === 'rasterSource' ? [
+      [node.data.label]: node.type === 'RasterBlock' ? [
         'lizard_nxt.blocks.LizardRasterSource',
         node.data.value
       ] : [
@@ -247,7 +227,7 @@ const Flow = () => {
   }, [geoblockSource]);
 
   // Keep track of number of source elements in the graph
-  const numberOfSources = elements.filter(elm => isNode(elm) && elm.type === 'rasterSource').length;
+  const numberOfSources = elements.filter(elm => isNode(elm) && elm.type === 'RasterBlock').length;
 
   const onLoad = (_reactFlowInstance: any) => {
     setReactFlowInstance(_reactFlowInstance);
@@ -270,7 +250,7 @@ const Flow = () => {
       const sourcePosition = Position.Right;
       const targetPosition = Position.Left;
 
-      const customeNodeData = {
+      const customNodeData = {
         label: 'LizardRasterSource_' + (numberOfSources + 1),
         value: '',
         onChange: (value: string) => {
@@ -292,15 +272,15 @@ const Flow = () => {
         }
       };
 
-      const newNode = (operation === 'RasterSource') ? {
+      const newNode = (operation === 'RasterBlock') ? {
         id: id.toString(),
-        type: 'rasterSource',
+        type: operation,
         position,
         style: rasterNodeStyle,
-        data: customeNodeData,
+        data: customNodeData,
       } : (operation === 'Number') ? {
         id: id.toString(),
-        type: 'numberBlock',
+        type: 'NumberBlock',
         position,
         style: operationNodeStyle,
         sourcePosition,
@@ -311,14 +291,17 @@ const Flow = () => {
         },
       } : {
         id: id.toString(),
-        type: 'customOperationBlock',
+        type: 'CustomOperationBlock',
         position,
         style: operationNodeStyle,
         sourcePosition,
         targetPosition,
         data: {
           label: operation,
-          value: getValueOfBlock(operation)
+          // @ts-ignore
+          value: geoblockType[operation].class,
+          // @ts-ignore
+          parameters: geoblockType[operation].parameters
         },
       };
 
@@ -347,7 +330,7 @@ const Flow = () => {
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: '9fr 1fr',
+          gridTemplateColumns: '1fr 150px',
           columnGap: 10,
           margin: '20px 0',
         }}
@@ -364,11 +347,11 @@ const Flow = () => {
           onDragOver={onDragOver}
           onDrop={onDrop}
           nodeTypes={{
-            rasterSource: RasterSource,
-            block: Block,
-            outputBlock: OutputBlock,
-            customOperationBlock: CustomOperationBlock,
-            numberBlock: NumberBlock
+            RasterBlock: RasterBlock,
+            Block: Block,
+            OutputBlock: OutputBlock,
+            CustomOperationBlock: CustomOperationBlock,
+            NumberBlock: NumberBlock,
           }}
         >
           <Controls />
@@ -420,54 +403,22 @@ const SideBar = () => {
     <div
       className={styles.SideBar}
     >
-      <div
-        className={styles.Block}
-        onDragStart={(event) => onDragStart(event, 'Clip')}
-        draggable
-      >
-        Clip
-      </div>
-      <div
-        className={styles.Block}
-        onDragStart={(event) => onDragStart(event, 'Subtract')}
-        draggable
-      >
-        Subtract
-      </div>
-      <div
-        className={styles.Block}
-        onDragStart={(event) => onDragStart(event, 'Snap')}
-        draggable
-      >
-        Snap
-      </div>
-      <div
-        className={styles.Block}
-        onDragStart={(event) => onDragStart(event, 'MaskBelow')}
-        draggable
-      >
-        MaskBelow
-      </div>
-      <div
-        className={styles.Block}
-        onDragStart={(event) => onDragStart(event, 'Number')}
-        draggable
-      >
-        Number
-      </div>
-      <div
-        className={styles.Block}
-        onDragStart={(event) => onDragStart(event, 'RasterSource')}
-        draggable
-      >
-        Raster Source
-      </div>
+      {Object.keys(geoblockType).map(blockName => (
+        <div
+          key={blockName}
+          className={styles.Block}
+          onDragStart={(event) => onDragStart(event, blockName)}
+          draggable
+        >
+          {blockName}
+        </div>
+      ))}
     </div>
   );
 };
 
 // Custom raster source node with input field
-const RasterSource = (props: Node) => {
+const RasterBlock = (props: Node) => {
   const { data } = props;
   return (
     <>
@@ -570,22 +521,32 @@ const OutputBlock = (props: Node) => {
 
 const CustomOperationBlock = (props: Node) => {
   const { data } = props;
-  const [handles, setHandles] = useState([data.label]);
+  const initialHandles = Array.isArray(data.parameters) ? data.parameters : [];
+  const [handles, setHandles] = useState<string[]>(initialHandles);
   return (
     <>
-      {handles.map((_handle: string, i: number) => {
+      {handles.map((parameter: any, i: number) => {
         return (
-        <Handle
-          key={i}
-          type="target"
-          position={Position.Left}
-          id={'handle-' + i}
-          style={{ top: 10 * (i + 1) }}
-        />
+          <Handle
+            key={parameter.name}
+            title={parameter.name}
+            type="target"
+            position={Position.Left}
+            id={'handle-' + parameter.name}
+            style={{
+              top: 10 * (i + 1),
+              background: (
+                parameter.type === "number" ? "red" :
+                parameter.type === "string" ? "green" :
+                parameter.type === "raster_block" ? "blue" :
+                undefined
+              )
+            }}
+          />
       )})}
       <BlockArea
         label={data.label}
-        setHandles={setHandles}
+        setHandles={data.parameters.type === "array" ? (e: any) => setHandles(e) : undefined}
       />
       <Handle
         type="source"
@@ -595,31 +556,46 @@ const CustomOperationBlock = (props: Node) => {
   )
 };
 
-const BlockArea = (props: { label: string, setHandles: Function }) => {
+const BlockArea = (props: {
+  label: string,
+  setHandles?: Function
+}) => {
   const { label, setHandles } = props;
   return (
     <div
       style={{
-        fontSize: 12
+        fontSize: 12,
+        display: 'flex',
+        alignItems: 'center'
       }}
     >
-      <i
-        className={'fa fa-plus'}
-        style={{
-          marginRight: 5,
-          cursor: 'pointer'
-        }}
-        onClick={() => setHandles((handles: string[]) => handles.concat('new-handle'))}
-      />
+      {setHandles ? (
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginRight: 10
+          }}
+        >
+          <i
+            className={'fa fa-plus'}
+            style={{
+              cursor: 'pointer'
+            }}
+            onClick={() => setHandles((handles: string[]) => handles.concat('new-handle'))}
+          />
+          <i
+            className={'fa fa-minus'}
+            style={{
+              cursor: 'pointer'
+            }}
+            onClick={() => setHandles((handles: string[]) => handles.slice(0, -1))}
+          />
+        </div>
+      ) : null}
       {label}
-      <i
-        className={'fa fa-minus'}
-        style={{
-          marginLeft: 5,
-          cursor: 'pointer'
-        }}
-        onClick={() => setHandles((handles: string[]) => handles.slice(0, -1))}
-      />
     </div>
   )
 }
