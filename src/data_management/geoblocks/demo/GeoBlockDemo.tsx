@@ -20,7 +20,7 @@ import { createGraphLayout } from './createGraphLayout';
 import { testGeoBlock } from './blockData';
 import styles from './GeoBlockDemo.module.css';
 import buttonStyles from '../../../styles/Buttons.module.css';
-import geoblockType from './jsonType.json';
+import { geoblockType } from './geoblockType';
 
 interface GeoBlockSource {
   name: string,
@@ -64,7 +64,7 @@ const convertGeoblockSourceToData = (source: GeoBlockSource) => {
 
   const outputElement: Elements = outputNode.map(node => ({
     id: node,
-    type: 'outputBlock',
+    type: 'OutputBlock',
     data: {
       label: node,
       value: graph[node][0],
@@ -77,7 +77,7 @@ const convertGeoblockSourceToData = (source: GeoBlockSource) => {
   const rasterElements: Elements = rasterNodes.map((node, i) => {
     return {
       id: node,
-      type: 'rasterBlock',
+      type: 'RasterBlock',
       data: {
         label: node,
         value: graph[node][1]
@@ -90,7 +90,7 @@ const convertGeoblockSourceToData = (source: GeoBlockSource) => {
   const operationElements: Elements = operationNodes.map((node, i) => {
     return {
       id: node,
-      type: 'block',
+      type: 'Block',
       data: {
         label: node,
         value: graph[node][0],
@@ -108,7 +108,7 @@ const convertGeoblockSourceToData = (source: GeoBlockSource) => {
     return numbers.map((n, i) => {
       return {
         id: elm.id + '-' + n,
-        type: 'numberBlock',
+        type: 'NumberBlock',
         data: {
           label: n,
           value: n
@@ -151,7 +151,7 @@ const convertFlowToSource = (elements: Elements) => {
   console.log('elements', elements);
   const edges = elements.filter(e => isEdge(e)) as Edge[];
   const nodes = elements.filter(e => isNode(e));
-  const outputNode = nodes.find(e => e.type === 'outputBlock');
+  const outputNode = nodes.find(e => e.type === 'OutputBlock');
 
   if (!outputNode) {
     console.error('No output node');
@@ -183,7 +183,7 @@ const convertFlowToSource = (elements: Elements) => {
 
     return {
       ...graph,
-      [node.data.label]: node.type === 'rasterBlock' ? [
+      [node.data.label]: node.type === 'RasterBlock' ? [
         'lizard_nxt.blocks.LizardRasterSource',
         node.data.value
       ] : [
@@ -227,7 +227,7 @@ const Flow = () => {
   }, [geoblockSource]);
 
   // Keep track of number of source elements in the graph
-  const numberOfSources = elements.filter(elm => isNode(elm) && elm.type === 'rasterBlock').length;
+  const numberOfSources = elements.filter(elm => isNode(elm) && elm.type === 'RasterBlock').length;
 
   const onLoad = (_reactFlowInstance: any) => {
     setReactFlowInstance(_reactFlowInstance);
@@ -272,15 +272,15 @@ const Flow = () => {
         }
       };
 
-      const newNode = (operation === 'rasterBlock') ? {
+      const newNode = (operation === 'RasterBlock') ? {
         id: id.toString(),
         type: operation,
         position,
         style: rasterNodeStyle,
         data: customNodeData,
-      } : (operation === 'number') ? {
+      } : (operation === 'Number') ? {
         id: id.toString(),
-        type: 'numberBlock',
+        type: 'NumberBlock',
         position,
         style: operationNodeStyle,
         sourcePosition,
@@ -291,7 +291,7 @@ const Flow = () => {
         },
       } : {
         id: id.toString(),
-        type: 'customOperationBlock',
+        type: 'CustomOperationBlock',
         position,
         style: operationNodeStyle,
         sourcePosition,
@@ -347,11 +347,11 @@ const Flow = () => {
           onDragOver={onDragOver}
           onDrop={onDrop}
           nodeTypes={{
-            rasterBlock: RasterBlock,
-            block: Block,
-            outputBlock: OutputBlock,
-            customOperationBlock: CustomOperationBlock,
-            numberBlock: NumberBlock,
+            RasterBlock: RasterBlock,
+            Block: Block,
+            OutputBlock: OutputBlock,
+            CustomOperationBlock: CustomOperationBlock,
+            NumberBlock: NumberBlock,
           }}
         >
           <Controls />
@@ -403,14 +403,14 @@ const SideBar = () => {
     <div
       className={styles.SideBar}
     >
-      {Object.keys(geoblockType).map(block => (
+      {Object.keys(geoblockType).map(blockName => (
         <div
-          key={block}
+          key={blockName}
           className={styles.Block}
-          onDragStart={(event) => onDragStart(event, block)}
+          onDragStart={(event) => onDragStart(event, blockName)}
           draggable
         >
-          {block}
+          {blockName}
         </div>
       ))}
     </div>
@@ -529,11 +529,18 @@ const CustomOperationBlock = (props: Node) => {
         return (
           <Handle
             key={parameter.name}
+            title={parameter.name}
             type="target"
             position={Position.Left}
             id={'handle-' + parameter.name}
             style={{
-              top: 10 * (i + 1)
+              top: 10 * (i + 1),
+              background: (
+                parameter.type === "number" ? "red" :
+                parameter.type === "string" ? "green" :
+                parameter.type === "raster_block" ? "blue" :
+                undefined
+              )
             }}
           />
       )})}
