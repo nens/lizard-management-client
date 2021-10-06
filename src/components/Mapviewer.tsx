@@ -55,7 +55,7 @@ const onClick = (event: any) => {
     features,
     srcEvent: { offsetX, offsetY }
   } = event;
-  console.log(features)
+  console.log(features, offsetX, offsetY)
 };
 
 const reversedRasters = selectedRasters.map(id=>id).reverse();
@@ -254,7 +254,7 @@ const reversedRasters = selectedRasters.map(id=>id).reverse();
             minzoom={0}
             maxzoom={22}
           />
-          <Layer
+          {/* <Layer
             key={"vector_tile_mapbox2"}
             id={"vector_tile_mapbox2"}
             beforeId={'GROUP_' + 79}
@@ -267,7 +267,7 @@ const reversedRasters = selectedRasters.map(id=>id).reverse();
               }}
             minzoom={0}
             maxzoom={22}
-          />
+          /> */}
         </Source>
 
         <Popup
