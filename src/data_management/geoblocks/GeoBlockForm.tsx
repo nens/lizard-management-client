@@ -23,7 +23,7 @@ import { geoBlockHelpText } from '../../utils/help_texts/helpTextForGeoBlock';
 import { baseUrl } from '../rasters/RasterLayerTable';
 import FormActionButtons from '../../components/FormActionButtons';
 import DeleteModal from '../../components/DeleteModal';
-import GeoBlockBuildModal from './GeoBlockBuildModal';
+import GeoBlockBuildModal from './buildComponents/GeoBlockBuildModal';
 import geoblockIcon from "../../images/geoblock.svg";
 import formStyles from './../../styles/Forms.module.css';
 import { rasterLayerFromAPIBelongsToScenario } from '../../api/rasters';
