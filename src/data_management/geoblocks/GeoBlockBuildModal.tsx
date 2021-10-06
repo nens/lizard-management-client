@@ -11,12 +11,18 @@ import buttonStyles from './../../styles/Buttons.module.css';
 
 interface MyProps {
   source: Object | null,
-  onChange: (value: any) => void,
+  onChange: (value: Object) => void,
   handleClose: () => void
 }
 
 function GeoBlockBuildModal (props: MyProps & DispatchProps) {
-  const [jsonObject, setJsonObject] = useState<Object>(props.source || {});
+  const sourceString = JSON.stringify(props.source, undefined, 4);
+  const [jsonString, setJsonString] = useState<string>(sourceString);
+  const [jsonView, setJsonView] = useState<'textEditor' | 'jsonEditor'>('textEditor');
+
+  const setJsonStringInPrettyFormat = (e: Object) => {
+    setJsonString(JSON.stringify(e, undefined, 4));
+  };
 
   return (
     <ModalBackground
@@ -26,45 +32,79 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
       height={'80%'}
     >
       <div className={styles.MainContainer}>
-        {Object.keys(jsonObject).length === 0 ? (
+        <button
+          className={buttonStyles.BlockButton}
+          onClick={() => {
+            if (jsonValidator(jsonString)) {
+              return alert(jsonValidator(jsonString));
+            };
+            if (jsonView === 'textEditor') {
+              setJsonView('jsonEditor');
+            } else {
+              setJsonView('textEditor');
+            };
+          }}
+          style={{
+            position: 'absolute',
+            top: 10,
+            right: 30,
+            zIndex: 1000 //to stay on top of the React-JSON component
+          }}
+        >
+          Switch Editor
+        </button>
+        {jsonView === 'textEditor' ? (
           <button
             className={buttonStyles.BlockButton}
-            onClick={async () => {
-              const valueFromClipboard = await navigator.clipboard.readText();
-              if (jsonValidator(valueFromClipboard)) {
-                return alert('Invalid JSON to paste, please copy a valid JSON!');
+            onClick={() => {
+              if (jsonValidator(jsonString)) {
+                return alert(jsonValidator(jsonString));
               };
-              return setJsonObject(JSON.parse(valueFromClipboard));
+              const object = JSON.parse(jsonString);
+              setJsonStringInPrettyFormat(object);
             }}
             style={{
               position: 'absolute',
-              top: 10,
-              right: 10,
-              zIndex: 1000, // to stay on top of the ReactJson component
+              top: 50,
+              right: 30
             }}
           >
-            Paste JSON from clipboard
+            Pretty JSON
           </button>
         ) : null}
-        <ReactJson
-          src={jsonObject}
-          name="source"
-          theme="shapeshifter:inverted"
-          onEdit={e => setJsonObject(e.updated_src)}
-          onAdd={e => setJsonObject(e.updated_src)}
-          onDelete={e => setJsonObject(e.updated_src)}
-          displayDataTypes={false}
-          displayObjectSize={false}
-          quotesOnKeys={false}
-          style={{
-            position: "absolute",
-            height: "80%",
-            width: "100%",
-            overflow: "auto",
-            border: "1px solid lightgrey",
-            borderRadius: 5
-          }}
-        />
+        {jsonView === 'jsonEditor' ? (
+          <ReactJson
+            src={JSON.parse(jsonString)}
+            name="source"
+            theme="shapeshifter:inverted"
+            onEdit={e => setJsonStringInPrettyFormat(e.updated_src)}
+            onAdd={e => setJsonStringInPrettyFormat(e.updated_src)}
+            onDelete={e => setJsonStringInPrettyFormat(e.updated_src)}
+            displayDataTypes={false}
+            displayObjectSize={false}
+            quotesOnKeys={false}
+            style={{
+              position: "absolute",
+              height: "80%",
+              width: "100%",
+              overflow: "auto",
+              border: "1px solid lightgrey",
+              borderRadius: 5
+            }}
+          />
+        ) : (
+          <textarea
+            className={formStyles.FormControl}
+            value={jsonString}
+            onChange={e => setJsonString(e.target.value)}
+            spellCheck={false}
+            cols={50}
+            rows={20}
+            style={{
+              overflowY: 'auto'
+            }}
+          />
+        )}
         <div className={`${formStyles.ButtonContainer} ${formStyles.FixedButtonContainer}`}>
           <button
             className={`${buttonStyles.Button} ${buttonStyles.LinkCancel}`}
@@ -74,7 +114,7 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
           </button>
           <SubmitButton
             onClick={() => {
-              props.onChange(jsonObject);
+              props.onChange(JSON.parse(jsonString));
               props.handleClose();
             }}
           />
