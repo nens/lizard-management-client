@@ -4,62 +4,84 @@ import { GeoBlockSource } from "../types/geoBlockType";
 export const convertGeoblockSourceToFlowElements = (source: GeoBlockSource) => {
   const { name, graph } = source;
 
-  const nodes = Object.keys(graph);
-  const outputNodeName = name;
-  const outputNode = nodes.filter(node => node === outputNodeName);
-  const rasterNodes = nodes.filter(node => node.includes('LizardRasterSource') || node.includes('RasterStoreSource'));
-  const operationNodes = nodes.filter(node => !rasterNodes.includes(node) && !outputNode.includes(node));
+  const allBlockNames = Object.keys(graph);
+  const outputBlockName = name;
+  const rasterBlockNames = allBlockNames.filter(blockName => blockName.includes('LizardRasterSource') || blockName.includes('RasterStoreSource'));
+  const blockNames = allBlockNames.filter(blockName => !rasterBlockNames.includes(blockName) && blockName !== outputBlockName);
   const position = { x: 0, y: 0 };
 
-  const outputElement: Elements = outputNode.map(node => ({
-    id: node,
+  const outputElement = {
+    id: outputBlockName,
+    type: 'Block',
     data: {
-      label: node
+      label: outputBlockName,
+      classOfBlock: graph[outputBlockName][0],
+      parameters: graph[outputBlockName].slice(1)
+    },
+    style: {
+      padding: 10,
+      border: '1px solid red',
+      borderRadius: 5
+    },
+    position
+  };
+
+  const rasterElements: Elements = rasterBlockNames.map((name, i) => ({
+    id: name,
+    type: 'InputBlock',
+    data: {
+      label: name
+    },
+    style: {
+      padding: 10,
+      border: '1px solid blue',
+      borderRadius: 5
     },
     position
   }));
 
-  const rasterElements: Elements = rasterNodes.map((node, i) => {
-    return {
-      id: node,
-      data: {
-        label: node
-      },
-      position
-    };
-  });
+  const blockElements: Elements = blockNames.map((blockName, i) => ({
+    id: blockName,
+    type: 'Block',
+    data: {
+      label: blockName,
+      classOfBlock: graph[blockName][0],
+      parameters: graph[blockName].slice(1)
+    },
+    style: {
+      padding: 10,
+      border: '1px solid grey',
+      borderRadius: 5
+    },
+    position
+  }));
 
-  const operationElements: Elements = operationNodes.map((node, i) => {
-    return {
-      id: node,
-      data: {
-        label: node
-      },
-      position
-    };
-  });
-
-  const numberElements: Elements = operationElements.filter(
-    elm => elm.data && elm.data.inputs && elm.data.inputs.filter((input: any) => !isNaN(input)).length // find blocks with connected number inputs
+  const numberElements: Elements = blockElements.filter(
+    elm => elm.data && elm.data.parameters && elm.data.parameters.filter((parameter: any) => !isNaN(parameter)).length // find blocks with connected number inputs
   ).map(elm => {
-    const numbers: number[] = elm.data.inputs.filter((input: any) => !isNaN(input));
+    const numbers: number[] = elm.data.parameters.filter((parameter: any) => !isNaN(parameter));
     return numbers.map((n, i) => {
       return {
         id: elm.id + '-' + n,
-        type: 'NumberBlock',
+        type: 'InputBlock',
         data: {
           label: n,
           value: n
+        },
+        style: {
+          padding: 10,
+          border: '1px solid blue',
+          borderRadius: 5
         },
         position
       };
     });
   }).flat(1);
 
-  const connectionLines: Elements = operationNodes.concat(outputNode).map(node => {
-    const sources = graph[node].slice(1);
+  const connectionLines: Elements = blockNames.concat(outputBlockName).map(name => {
+    const sources = graph[name].slice(1);
     return {
-      blockName: node,
+      blockName: name,
       sources
     };
   }).map(elm => {
@@ -81,5 +103,5 @@ export const convertGeoblockSourceToFlowElements = (source: GeoBlockSource) => {
   // console.log('rasterElements', rasterElements);
   // console.log('operationElements', operationElements);
   // console.log('numberElements', numberElements);
-  return operationElements.concat(outputElement).concat(rasterElements).concat(connectionLines).concat(numberElements);
+  return blockElements.concat(outputElement).concat(rasterElements).concat(connectionLines).concat(numberElements);
 };

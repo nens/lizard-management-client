@@ -14,6 +14,7 @@ import ReactFlow, {
 import { GeoBlockSource } from '../../../types/geoBlockType';
 import { convertGeoblockSourceToFlowElements } from '../../../utils/geoblockUtils';
 import { createGraphLayout } from '../../../utils/createGraphLayout';
+import { Block, InputBlock } from './BlockComponents';
 
 interface MyProps {
   source: GeoBlockSource
@@ -59,6 +60,14 @@ const GeoBlockVisualFlow = (props: MyProps) => {
       snapToGrid
       onEdgeUpdate={onEdgeUpdate}
       onConnect={onConnect}
+      nodeTypes={{
+        InputBlock: InputBlock,
+        // RasterBlock: RasterBlock,
+        Block: Block,
+        // OutputBlock: OutputBlock,
+        // CustomOperationBlock: CustomOperationBlock,
+        // NumberBlock: NumberBlock,
+      }}
     >
       <Controls />
     </ReactFlow>
