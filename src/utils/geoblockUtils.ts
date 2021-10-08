@@ -10,6 +10,12 @@ export const convertGeoblockSourceToFlowElements = (source: GeoBlockSource) => {
   const blockNames = allBlockNames.filter(blockName => !rasterBlockNames.includes(blockName) && blockName !== outputBlockName);
   const position = { x: 0, y: 0 };
 
+  const blockStyle = {
+    padding: 10,
+    borderRadius: 5,
+    border: '1px solid grey'
+  };
+
   const outputElement = {
     id: outputBlockName,
     type: 'Block',
@@ -19,9 +25,8 @@ export const convertGeoblockSourceToFlowElements = (source: GeoBlockSource) => {
       parameters: graph[outputBlockName].slice(1)
     },
     style: {
-      padding: 10,
-      border: '1px solid red',
-      borderRadius: 5
+      ...blockStyle,
+      border: '1px solid red'
     },
     position
   };
@@ -33,9 +38,8 @@ export const convertGeoblockSourceToFlowElements = (source: GeoBlockSource) => {
       label: name
     },
     style: {
-      padding: 10,
-      border: '1px solid blue',
-      borderRadius: 5
+      ...blockStyle,
+      border: '1px solid blue'
     },
     position
   }));
@@ -48,11 +52,7 @@ export const convertGeoblockSourceToFlowElements = (source: GeoBlockSource) => {
       classOfBlock: graph[blockName][0],
       parameters: graph[blockName].slice(1)
     },
-    style: {
-      padding: 10,
-      border: '1px solid grey',
-      borderRadius: 5
-    },
+    style: blockStyle,
     position
   }));
 
@@ -62,26 +62,20 @@ export const convertGeoblockSourceToFlowElements = (source: GeoBlockSource) => {
     const numbers: number[] = elm.data.parameters.filter((parameter: any) => !isNaN(parameter));
     return numbers.map((n, i) => {
       return {
-        id: elm.id + '-' + n,
+        id: elm.id + '-' + n + '-' + i,
         type: 'InputBlock',
         data: {
           label: n,
           value: n
         },
         style: {
-          padding: 10,
-          border: '1px solid blue',
-          borderRadius: 5
+          ...blockStyle,
+          border: '1px solid blue'
         },
         position
       };
     });
   }).flat(1);
 
-  // console.log('connectionLines', connectionLines);
-  // console.log('outputElement', outputElement);
-  // console.log('rasterElements', rasterElements);
-  // console.log('operationElements', operationElements);
-  console.log('numberElements', numberElements);
   return blockElements.concat(outputElement).concat(rasterElements).concat(numberElements);
 };

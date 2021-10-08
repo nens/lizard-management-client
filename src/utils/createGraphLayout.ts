@@ -25,9 +25,18 @@ export const createGraphLayout = (elements: Elements<BlockFlowData>): Elements =
     });
 
     if (el.data && el.data.parameters) {
-      el.data.parameters.forEach(parameter => {
+      const stringParameters = el.data.parameters.filter(parameter => typeof(parameter) === 'string') as string[];
+      stringParameters.forEach(parameter => {
         dagreGraph.setEdge(
-          typeof(parameter) === 'string' ? parameter : el.id + '-' + parameter,
+          parameter,
+          el.id
+        );
+      });
+
+      const numberParameters = el.data.parameters.filter(parameter => typeof(parameter) === 'number') as number[];
+      numberParameters.forEach((parameter, i) => {
+        dagreGraph.setEdge(
+          el.id + '-' + parameter + '-' + i,
           el.id
         );
       });
@@ -36,7 +45,7 @@ export const createGraphLayout = (elements: Elements<BlockFlowData>): Elements =
 
   dagre.layout(dagreGraph);
 
-  const nodes = elements.map(el => {
+  const nodes: Elements = elements.map(el => {
     const node = dagreGraph.node(el.id);
     return {
       ...el,
@@ -52,16 +61,42 @@ export const createGraphLayout = (elements: Elements<BlockFlowData>): Elements =
   const edges = elements.filter(
     el => el.data && el.data.parameters
   ).map(el => {
-    return el.data!.parameters.map((parameter, i) => ({
-      id: parameter + '-' + el.id,
-      type: ConnectionLineType.SmoothStep,
-      source: typeof(parameter) === 'string' ? parameter : el.id + '-' + parameter,
-      target: el.id,
-      targetHandle: 'handle-' + i,
-      animated: true
-    }));
+    const { parameters } = el.data!;
+    const numberParameters = parameters.filter(parameter => typeof(parameter) === 'number') as number[];
+
+    return parameters.map((parameter, index) => {
+      if (typeof(parameter) === 'string') {
+        return {
+          id: parameter + '-' + el.id,
+          type: ConnectionLineType.SmoothStep,
+          source: parameter,
+          target: el.id,
+          targetHandle: 'handle-' + index,
+          animated: true
+        };
+      } else if (typeof(parameter) === 'number') {
+        const indexOfParameter = numberParameters.indexOf(parameter);
+        numberParameters[indexOfParameter] = NaN; // replace number with NaN to avoid duplicate numbers
+        return {
+          id: parameter + '-' + el.id + '-' + indexOfParameter,
+          type: ConnectionLineType.SmoothStep,
+          source: el.id + '-' + parameter + '-' + indexOfParameter,
+          target: el.id,
+          targetHandle: 'handle-' + index,
+          animated: true
+        };
+      } else {
+        return {
+          id: parameter + '-' + el.id,
+          type: ConnectionLineType.SmoothStep,
+          source: parameter.toString(),
+          target: el.id,
+          targetHandle: 'handle-' + index,
+          animated: true
+        };
+      };
+    });
   }).flat(1);
 
-  // @ts-ignore
   return nodes.concat(edges);
 };
