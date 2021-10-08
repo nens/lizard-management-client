@@ -11,7 +11,7 @@ import ReactFlow, {
   updateEdge,
   useUpdateNodeInternals
 } from 'react-flow-renderer';
-import { Block, GroupBlock, InputBlock } from './BlockComponents';
+import { Block, GroupBlock, InputBlock, NumberBlock } from './BlockComponents';
 import { GeoBlockSource } from '../../../types/geoBlockType';
 import { convertGeoblockSourceToFlowElements } from '../../../utils/geoblockUtils';
 import { createGraphLayout } from '../../../utils/createGraphLayout';
@@ -27,7 +27,24 @@ const GeoBlockVisualFlow = (props: MyProps) => {
   const [elements, setElements] = useState<Elements>([]);
 
   useEffect(() => {
-    const geoblockElements = convertGeoblockSourceToFlowElements(source);
+    // Helper function to change value of a block (e.g. UUID of a raster block or number input)
+    const onChange = (value: string | number, blockId: string) => {
+      setElements(elms => {
+        return elms.map(elm => {
+          if (elm.id === blockId) {
+            return {
+              ...elm,
+              data: {
+                ...elm.data,
+                value
+              }
+            }
+          };
+          return elm;
+        });
+      });
+    };
+    const geoblockElements = convertGeoblockSourceToFlowElements(source, onChange);
     const layoutedElements = createGraphLayout(geoblockElements);
     setElements(layoutedElements);
   }, [source]);
@@ -61,9 +78,10 @@ const GeoBlockVisualFlow = (props: MyProps) => {
       onEdgeUpdate={onEdgeUpdate}
       onConnect={onConnect}
       nodeTypes={{
-        InputBlock: InputBlock,
+        Block: Block,
         GroupBlock: GroupBlock,
-        Block: Block
+        InputBlock: InputBlock,
+        NumberBlock: NumberBlock,
       }}
     >
       <Controls />

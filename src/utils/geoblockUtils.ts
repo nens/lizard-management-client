@@ -1,7 +1,10 @@
 import { Elements } from "react-flow-renderer";
 import { GeoBlockSource } from "../types/geoBlockType";
 
-export const convertGeoblockSourceToFlowElements = (source: GeoBlockSource) => {
+export const convertGeoblockSourceToFlowElements = (
+  source: GeoBlockSource,
+  onChange: (value: string | number, blockId: string) => void
+) => {
   const { name, graph } = source;
 
   const allBlockNames = Object.keys(graph);
@@ -18,7 +21,9 @@ export const convertGeoblockSourceToFlowElements = (source: GeoBlockSource) => {
     id: blockName,
     type: 'InputBlock',
     data: {
-      label: blockName
+      label: blockName,
+      value: graph[blockName][1],
+      onChange: (value: string) => onChange(value, blockName)
     },
     style: {
       ...blockStyle,
@@ -52,16 +57,17 @@ export const convertGeoblockSourceToFlowElements = (source: GeoBlockSource) => {
   ).map(elm => {
     const numbers: number[] = elm.data.parameters.filter((parameter: any) => !isNaN(parameter));
     return numbers.map((n, i) => {
+      const blockId = elm.id + '-' + n + '-' + i;
       return {
-        id: elm.id + '-' + n + '-' + i,
-        type: 'InputBlock',
+        id: blockId,
+        type: 'NumberBlock',
         data: {
-          label: n,
-          value: n
+          value: n,
+          onChange: (value: number) => onChange(value, blockId)
         },
         style: {
           ...blockStyle,
-          border: '1px solid blue'
+          border: '1px solid green'
         },
         position
       };

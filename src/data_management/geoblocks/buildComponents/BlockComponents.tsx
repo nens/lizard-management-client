@@ -9,19 +9,59 @@ export interface BlockFlowData {
   outputBlock?: boolean
 }
 
-export const InputBlock = (props: Node<BlockFlowData>) => {
-  const { label } = props.data!;
+interface InputBlockFlowData {
+  label: string,
+  value: string,
+  onChange: (e: string) => void,
+}
+
+interface NumberBlockFlowData {
+  value: number,
+  onChange: (e: number) => void,
+}
+
+export const InputBlock = (props: Node<InputBlockFlowData>) => {
+  const { label, value, onChange } = props.data!;
   return (
     <>
       <div
         style={{
-          fontSize: 12,
-          display: 'flex',
-          alignItems: 'center'
+          fontSize: 12
         }}
       >
         {label}
       </div>
+      <input
+        className="nodrag"
+        type="text"
+        onChange={e => onChange(e.target.value)}
+        defaultValue={value}
+        style={{
+          // width: '100%',
+          fontSize: 10,
+        }}
+      />
+      <Handle
+        type="source"
+        position={Position.Right}
+      />
+    </>
+  )
+}
+
+export const NumberBlock = (props: Node<NumberBlockFlowData>) => {
+  const { value, onChange } = props.data!;
+  return (
+    <>
+      <input
+        type="number"
+        onChange={e => onChange(parseFloat(e.target.value))}
+        defaultValue={value}
+        style={{
+          width: 60,
+          fontSize: 10,
+        }}
+      />
       <Handle
         type="source"
         position={Position.Right}
