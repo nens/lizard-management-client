@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Handle, Node, Position } from 'react-flow-renderer';
 import { geoblockType } from '../../../types/geoBlockType';
 
@@ -9,13 +9,18 @@ export interface BlockFlowData {
 }
 
 export const InputBlock = (props: Node<BlockFlowData>) => {
-  if (!props.data) return;
-  const { label } = props.data;
+  const { label } = props.data!;
   return (
     <>
-      <BlockArea
-        label={label}
-      />
+      <div
+        style={{
+          fontSize: 12,
+          display: 'flex',
+          alignItems: 'center'
+        }}
+      >
+        {label}
+      </div>
       <Handle
         type="source"
         position={Position.Right}
@@ -25,13 +30,11 @@ export const InputBlock = (props: Node<BlockFlowData>) => {
 }
 
 export const Block = (props: Node<BlockFlowData>) => {
-  if (!props.data) return;
-
-  const { label, classOfBlock } = props.data;
+  const { label, classOfBlock } = props.data!;
   const block = Object.values(geoblockType).find(
     geoblock => geoblock && geoblock.class && geoblock.class === classOfBlock
   );
-  
+
   if (!block) {
     console.error('No type definition for this block: ' + classOfBlock);
     return;
@@ -58,9 +61,15 @@ export const Block = (props: Node<BlockFlowData>) => {
           }}
         />
       ))}
-      <BlockArea
-        label={label}
-      />
+      <div
+        style={{
+          fontSize: 12,
+          display: 'flex',
+          alignItems: 'center'
+        }}
+      >
+        {label}
+      </div>
       <Handle
         type="source"
         position={Position.Right}
@@ -69,20 +78,32 @@ export const Block = (props: Node<BlockFlowData>) => {
   )
 }
 
-const BlockArea = (props: {
-  label: string,
-  setHandles?: Function
-}) => {
-  const { label, setHandles } = props;
+export const GroupBlock = (props: Node<BlockFlowData>) => {
+  const { label, parameters } = props.data!;
+  const [handles, setHandles] = useState<string[]>(parameters as string[]);
+
   return (
-    <div
-      style={{
-        fontSize: 12,
-        display: 'flex',
-        alignItems: 'center'
-      }}
-    >
-      {setHandles ? (
+    <>
+      {handles.map((_parameter, i) => (
+        <Handle
+          key={i}
+          type="target"
+          id={'handle-' + i}
+          title={'source'}
+          position={Position.Left}
+          style={{
+            top: 10 * (i + 1),
+            background: 'orange'
+          }}
+        />
+      ))}
+      <div
+        style={{
+          fontSize: 12,
+          display: 'flex',
+          alignItems: 'center'
+        }}
+      >
         <div
           style={{
             display: 'flex',
@@ -107,8 +128,12 @@ const BlockArea = (props: {
             onClick={() => setHandles((handles: string[]) => handles.slice(0, -1))}
           />
         </div>
-      ) : null}
-      <span>{label}</span>
-    </div>
+        <span>{label}</span>
+      </div>
+      <Handle
+        type="source"
+        position={Position.Right}
+      />
+    </>
   )
 }

@@ -44,17 +44,21 @@ export const convertGeoblockSourceToFlowElements = (source: GeoBlockSource) => {
     position
   }));
 
-  const blockElements: Elements = blockNames.map((blockName, i) => ({
-    id: blockName,
-    type: 'Block',
-    data: {
-      label: blockName,
-      classOfBlock: graph[blockName][0],
-      parameters: graph[blockName].slice(1)
-    },
-    style: blockStyle,
-    position
-  }));
+  const blockElements: Elements = blockNames.map((blockName, i) => {
+    const blockValue = graph[blockName];
+    const classOfBlock = blockValue[0];
+    return {
+      id: blockName,
+      type: classOfBlock === "dask_geomodeling.raster.combine.Group" ? 'GroupBlock' : 'Block',
+      data: {
+        label: blockName,
+        classOfBlock,
+        parameters: blockValue.slice(1)
+      },
+      style: blockStyle,
+      position
+    }
+  });
 
   const numberElements: Elements = blockElements.filter(
     elm => elm.data && elm.data.parameters && elm.data.parameters.filter((parameter: any) => !isNaN(parameter)).length // find blocks with connected number inputs
