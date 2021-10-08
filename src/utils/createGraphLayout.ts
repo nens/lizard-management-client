@@ -6,9 +6,12 @@ import {
   Elements,
   Position
 } from 'react-flow-renderer';
-import { BlockFlowData } from '../data_management/geoblocks/buildComponents/BlockComponents';
 
-export const createGraphLayout = (elements: Elements<BlockFlowData>): Elements => {
+interface BlockInput {
+  parameters: (string | number | [])[]
+}
+
+export const createGraphLayout = (elements: Elements<BlockInput>): Elements => {
   const dagreGraph = new dagre.graphlib.Graph();
   dagreGraph.setDefaultEdgeLabel(() => ({}));
   dagreGraph.setGraph({ rankdir: 'LR' });

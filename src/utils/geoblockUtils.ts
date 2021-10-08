@@ -19,7 +19,7 @@ export const convertGeoblockSourceToFlowElements = (
 
   const rasterElements: Elements = rasterBlockNames.map((blockName, i) => ({
     id: blockName,
-    type: 'InputBlock',
+    type: 'RasterBlock',
     data: {
       label: blockName,
       value: graph[blockName][1],

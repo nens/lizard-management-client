@@ -11,7 +11,10 @@ import ReactFlow, {
   updateEdge,
   useUpdateNodeInternals
 } from 'react-flow-renderer';
-import { Block, GroupBlock, InputBlock, NumberBlock } from './BlockComponents';
+import { Block } from './blockComponents/Block';
+import { GroupBlock } from './blockComponents/GroupBlock';
+import { NumberBlock } from './blockComponents/NumberBlock';
+import { RasterBlock } from './blockComponents/RasterBlock';
 import { GeoBlockSource } from '../../../types/geoBlockType';
 import { convertGeoblockSourceToFlowElements } from '../../../utils/geoblockUtils';
 import { createGraphLayout } from '../../../utils/createGraphLayout';
@@ -80,7 +83,7 @@ const GeoBlockVisualFlow = (props: MyProps) => {
       nodeTypes={{
         Block: Block,
         GroupBlock: GroupBlock,
-        InputBlock: InputBlock,
+        RasterBlock: RasterBlock,
         NumberBlock: NumberBlock,
       }}
     >
