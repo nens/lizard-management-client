@@ -82,7 +82,7 @@ export const Block = (props: Node<BlockFlowData>) => {
 }
 
 export const GroupBlock = (props: Node<BlockFlowData>) => {
-  const { label, parameters } = props.data!;
+  const { label, parameters, outputBlock } = props.data!;
   const [handles, setHandles] = useState<string[]>(parameters as string[]);
 
   return (
@@ -133,10 +133,12 @@ export const GroupBlock = (props: Node<BlockFlowData>) => {
         </div>
         <span>{label}</span>
       </div>
-      <Handle
-        type="source"
-        position={Position.Right}
-      />
+      {!outputBlock ? (
+        <Handle
+          type="source"
+          position={Position.Right}
+        />
+      ) : null}
     </>
   )
 }

@@ -5,38 +5,20 @@ export const convertGeoblockSourceToFlowElements = (source: GeoBlockSource) => {
   const { name, graph } = source;
 
   const allBlockNames = Object.keys(graph);
-  const outputBlockName = name;
   const rasterBlockNames = allBlockNames.filter(blockName => blockName.includes('LizardRasterSource') || blockName.includes('RasterStoreSource'));
-  const blockNames = allBlockNames.filter(blockName => !rasterBlockNames.includes(blockName) && blockName !== outputBlockName);
+  const blockNames = allBlockNames.filter(blockName => !rasterBlockNames.includes(blockName));
   const position = { x: 0, y: 0 };
 
   const blockStyle = {
     padding: 10,
-    borderRadius: 5,
-    border: '1px solid grey'
+    borderRadius: 5
   };
 
-  const outputElement = {
-    id: outputBlockName,
-    type: 'Block',
-    data: {
-      label: outputBlockName,
-      classOfBlock: graph[outputBlockName][0],
-      parameters: graph[outputBlockName].slice(1),
-      outputBlock: true
-    },
-    style: {
-      ...blockStyle,
-      border: '1px solid red'
-    },
-    position
-  };
-
-  const rasterElements: Elements = rasterBlockNames.map((name, i) => ({
-    id: name,
+  const rasterElements: Elements = rasterBlockNames.map((blockName, i) => ({
+    id: blockName,
     type: 'InputBlock',
     data: {
-      label: name
+      label: blockName
     },
     style: {
       ...blockStyle,
@@ -54,9 +36,13 @@ export const convertGeoblockSourceToFlowElements = (source: GeoBlockSource) => {
       data: {
         label: blockName,
         classOfBlock,
-        parameters: blockValue.slice(1)
+        parameters: blockValue.slice(1),
+        outputBlock: blockName === name
       },
-      style: blockStyle,
+      style: {
+        ...blockStyle,
+        border: blockName === name ? '1px solid red' : '1px solid grey'
+      },
       position
     }
   });
@@ -82,5 +68,5 @@ export const convertGeoblockSourceToFlowElements = (source: GeoBlockSource) => {
     });
   }).flat(1);
 
-  return blockElements.concat(outputElement).concat(rasterElements).concat(numberElements);
+  return blockElements.concat(rasterElements).concat(numberElements);
 };
