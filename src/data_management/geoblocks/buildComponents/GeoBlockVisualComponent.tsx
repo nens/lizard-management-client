@@ -18,6 +18,7 @@ import { RasterBlock } from './blockComponents/RasterBlock';
 import { GeoBlockSource } from '../../../types/geoBlockType';
 import { convertGeoblockSourceToFlowElements } from '../../../utils/geoblockUtils';
 import { createGraphLayout } from '../../../utils/createGraphLayout';
+import { SideBar } from './blockComponents/SideBar';
 
 interface MyProps {
   source: GeoBlockSource
@@ -68,27 +69,38 @@ const GeoBlockVisualFlow = (props: MyProps) => {
   };
 
   return (
-    <ReactFlow
-      ref={reactFlowWrapper}
-      elements={elements}
-      onElementsRemove={onElementsRemove}
+    <div
       style={{
-        height: '90%',
-        border: '1px solid lightgrey',
-        borderRadius: 10
-      }}
-      snapToGrid
-      onEdgeUpdate={onEdgeUpdate}
-      onConnect={onConnect}
-      nodeTypes={{
-        Block: Block,
-        GroupBlock: GroupBlock,
-        RasterBlock: RasterBlock,
-        NumberBlock: NumberBlock,
+        display: 'grid',
+        gridTemplateColumns: '1fr 150px',
+        columnGap: 10,
+        margin: '20px 0',
+        height: 550
       }}
     >
-      <Controls />
-    </ReactFlow>
+      <ReactFlow
+        ref={reactFlowWrapper}
+        elements={elements}
+        onElementsRemove={onElementsRemove}
+        style={{
+          // height: '90%',
+          border: '1px solid lightgrey',
+          borderRadius: 10
+        }}
+        snapToGrid
+        onEdgeUpdate={onEdgeUpdate}
+        onConnect={onConnect}
+        nodeTypes={{
+          Block: Block,
+          GroupBlock: GroupBlock,
+          RasterBlock: RasterBlock,
+          NumberBlock: NumberBlock,
+        }}
+      >
+        <Controls />
+      </ReactFlow>
+      <SideBar />
+    </div>
   )
 }
 
