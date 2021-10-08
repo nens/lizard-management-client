@@ -2,13 +2,13 @@ import React from 'react';
 import { Handle, Node, Position } from 'react-flow-renderer';
 import { geoblockType } from '../../../types/geoBlockType';
 
-interface BlockData {
+export interface BlockFlowData {
   label: string,
   classOfBlock: string,
   parameters: (string | number | [])[],
 }
 
-export const InputBlock = (props: Node<BlockData>) => {
+export const InputBlock = (props: Node<BlockFlowData>) => {
   if (!props.data) return;
   const { label } = props.data;
   return (
@@ -24,7 +24,7 @@ export const InputBlock = (props: Node<BlockData>) => {
   )
 }
 
-export const Block = (props: Node<BlockData>) => {
+export const Block = (props: Node<BlockFlowData>) => {
   if (!props.data) return;
 
   const { label, classOfBlock } = props.data;

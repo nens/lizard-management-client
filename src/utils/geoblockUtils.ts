@@ -1,4 +1,4 @@
-import { ConnectionLineType, Elements } from "react-flow-renderer";
+import { Elements } from "react-flow-renderer";
 import { GeoBlockSource } from "../types/geoBlockType";
 
 export const convertGeoblockSourceToFlowElements = (source: GeoBlockSource) => {
@@ -78,30 +78,10 @@ export const convertGeoblockSourceToFlowElements = (source: GeoBlockSource) => {
     });
   }).flat(1);
 
-  const connectionLines: Elements = blockNames.concat(outputBlockName).map(name => {
-    const sources = graph[name].slice(1);
-    return {
-      blockName: name,
-      sources
-    };
-  }).map(elm => {
-    const { blockName, sources } = elm;
-    return sources.map((source, i) => {
-      return {
-        id: source + '-' + blockName,
-        type: ConnectionLineType.SmoothStep,
-        source: typeof(source) === 'string' ? source.toString() : blockName + '-' + source,
-        target: blockName,
-        targetHandle: 'handle-' + i,
-        animated: true
-      };
-    });
-  }).flat(1);
-
   // console.log('connectionLines', connectionLines);
   // console.log('outputElement', outputElement);
   // console.log('rasterElements', rasterElements);
   // console.log('operationElements', operationElements);
-  // console.log('numberElements', numberElements);
-  return blockElements.concat(outputElement).concat(rasterElements).concat(connectionLines).concat(numberElements);
+  console.log('numberElements', numberElements);
+  return blockElements.concat(outputElement).concat(rasterElements).concat(numberElements);
 };
