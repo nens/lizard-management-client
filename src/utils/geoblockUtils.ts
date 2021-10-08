@@ -22,7 +22,8 @@ export const convertGeoblockSourceToFlowElements = (source: GeoBlockSource) => {
     data: {
       label: outputBlockName,
       classOfBlock: graph[outputBlockName][0],
-      parameters: graph[outputBlockName].slice(1)
+      parameters: graph[outputBlockName].slice(1),
+      outputBlock: true
     },
     style: {
       ...blockStyle,

@@ -6,6 +6,7 @@ export interface BlockFlowData {
   label: string,
   classOfBlock: string,
   parameters: (string | number | [])[],
+  outputBlock?: boolean
 }
 
 export const InputBlock = (props: Node<BlockFlowData>) => {
@@ -30,7 +31,7 @@ export const InputBlock = (props: Node<BlockFlowData>) => {
 }
 
 export const Block = (props: Node<BlockFlowData>) => {
-  const { label, classOfBlock } = props.data!;
+  const { label, classOfBlock, outputBlock } = props.data!;
   const block = Object.values(geoblockType).find(
     geoblock => geoblock && geoblock.class && geoblock.class === classOfBlock
   );
@@ -70,10 +71,12 @@ export const Block = (props: Node<BlockFlowData>) => {
       >
         {label}
       </div>
-      <Handle
-        type="source"
-        position={Position.Right}
-      />
+      {!outputBlock ? (
+        <Handle
+          type="source"
+          position={Position.Right}
+        />
+      ) : null}
     </>
   )
 }
