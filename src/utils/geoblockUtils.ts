@@ -1,4 +1,4 @@
-import { Elements } from "react-flow-renderer";
+import { Edge, Elements, isEdge, isNode } from "react-flow-renderer";
 import { GeoBlockSource, geoblockType } from "../types/geoBlockType";
 
 const position = { x: 0, y: 0 };
@@ -141,4 +141,60 @@ export const convertGeoblockSourceToFlowElements = (
   const numberElements = getNumberElements(blockElements, onChange);
 
   return blockElements.concat(rasterElements).concat(numberElements);
+};
+
+export const convertElementsToGeoBlockSource = (elements: Elements, setJsonString: (e: string) => void) => {
+  console.log('elements', elements);
+  const edges = elements.filter(e => isEdge(e)) as Edge[];
+  const nodes = elements.filter(e => isNode(e));
+  const outputNode = nodes.find(e => e.data && e.data.outputBlock);
+
+  if (!outputNode) {
+    console.error('No output node');
+    return;
+  };
+
+  // use reduce method to create the graph object
+  const graph = nodes.filter(
+    node => isNaN(node.data && node.data.value) // remove number nodes from graph
+  ).reduce((graph, node) => {
+    // find connected nodes and their labels
+    const connectedNodes = edges.filter(
+      e => e.target === node.id
+    ).sort((a, b) => {
+      // sort the connected nodes by their target handle (e.g. handle-0, handle-1, handle-2, etc)
+      if (a.targetHandle && b.targetHandle) {
+        return a.targetHandle.localeCompare(b.targetHandle);
+      } else {
+        return 0;
+      };
+    }).map(
+      e => e.source
+    ).map(nodeId => {
+      const sourceNode = nodes.find(node => node.id === nodeId);
+
+      if (!sourceNode) return nodeId;
+      return sourceNode.data.label;
+    });
+
+    return {
+      ...graph,
+      [node.data.label]: node.type === 'RasterBlock' ? [
+        'lizard_nxt.blocks.LizardRasterSource',
+        node.data.value
+      ] : [
+        node.data.classOfBlock,
+        ...connectedNodes
+      ]
+    };
+  }, {});
+
+  const geoblockSource = {
+    name: outputNode.data.label,
+    graph
+  };
+
+  console.log('geoblock source', geoblockSource);
+
+  return setJsonString(JSON.stringify(geoblockSource, null, 4));
 };

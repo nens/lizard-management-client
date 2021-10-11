@@ -37,6 +37,7 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
         ) : (
           <GeoBlockVisualComponent
             source={JSON.parse(jsonString)}
+            setJsonString={setJsonString}
           />
         )}
         <div className={`${formStyles.ButtonContainer} ${formStyles.FixedButtonContainer}`}>

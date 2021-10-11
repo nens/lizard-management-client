@@ -13,17 +13,23 @@ import ReactFlow, {
   updateEdge,
   useUpdateNodeInternals
 } from 'react-flow-renderer';
+import { SideBar } from './blockComponents/SideBar';
 import { Block } from './blockComponents/Block';
 import { GroupBlock } from './blockComponents/GroupBlock';
 import { NumberBlock } from './blockComponents/NumberBlock';
 import { RasterBlock } from './blockComponents/RasterBlock';
 import { GeoBlockSource, geoblockType } from '../../../types/geoBlockType';
-import { convertGeoblockSourceToFlowElements, getBlockData, getBlockStyle } from '../../../utils/geoblockUtils';
 import { createGraphLayout } from '../../../utils/createGraphLayout';
-import { SideBar } from './blockComponents/SideBar';
+import {
+  convertElementsToGeoBlockSource,
+  convertGeoblockSourceToFlowElements,
+  getBlockData,
+  getBlockStyle
+} from '../../../utils/geoblockUtils';
 
 interface MyProps {
-  source: GeoBlockSource
+  source: GeoBlockSource,
+  setJsonString: (e: string) => void
 }
 
 const GeoBlockVisualFlow = (props: MyProps) => {
@@ -153,6 +159,11 @@ const GeoBlockVisualFlow = (props: MyProps) => {
         <Controls />
       </ReactFlow>
       <SideBar />
+      <button
+        onClick={() => convertElementsToGeoBlockSource(elements, props.setJsonString)}
+      >
+        Validate
+      </button>
     </div>
   )
 }
@@ -165,6 +176,7 @@ export const GeoBlockVisualComponent = (props: MyProps) => (
   <ReactFlowProvider>
     <GeoBlockVisualFlow
       source={props.source}
+      setJsonString={props.setJsonString}
     />
   </ReactFlowProvider>
 )
