@@ -140,6 +140,7 @@ const GeoBlockVisualFlow = (props: MyProps) => {
         elements={elements}
         onElementsRemove={onElementsRemove}
         style={{
+          position: 'relative',
           border: '1px solid lightgrey',
           borderRadius: 10
         }}
@@ -157,13 +158,39 @@ const GeoBlockVisualFlow = (props: MyProps) => {
         }}
       >
         <Controls />
+        <button
+          onClick={() => {
+            const elementsWithoutPosition = elements.filter(
+              el => isNode(el)
+            ).map(el => ({
+              ...el,
+              position: { x: 0, y: 0 }
+            }));
+            const layoutedElements = createGraphLayout(elementsWithoutPosition);
+            setElements(layoutedElements);
+          }}
+          style={{
+            position: 'absolute',
+            right: 100,
+            bottom: 10,
+            zIndex: 1000
+          }}
+        >
+          Reset view
+        </button>
+        <button
+          onClick={() => convertElementsToGeoBlockSource(elements, props.setJsonString)}
+          style={{
+            position: 'absolute',
+            right: 10,
+            bottom: 10,
+            zIndex: 1000
+          }}
+        >
+          Validate
+        </button>
       </ReactFlow>
       <SideBar />
-      <button
-        onClick={() => convertElementsToGeoBlockSource(elements, props.setJsonString)}
-      >
-        Validate
-      </button>
     </div>
   )
 }
