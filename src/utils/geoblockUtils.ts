@@ -40,7 +40,7 @@ export const getBlockData = (
   };
 
   const dataOfBuildBlock = {
-    label: numberOfBlocks ? blockName + '_' + numberOfBlocks : blockName,
+    label: blockName + '_' + (numberOfBlocks + 1),
     // @ts-ignore
     classOfBlock: geoblockType[blockName].class,
     // @ts-ignore
@@ -61,6 +61,9 @@ const getRasterElements = (
   graph: GeoBlockSource['graph'],
   onChange: Function
 ): Elements => {
+  // Note that block name of a raster block can be different from its type
+  // because the type is RasterBlock but the block name can be either
+  // LizardRasterSource and RasterStoreSource
   return blockNames.map(blockName => ({
     id: blockName,
     type: 'RasterBlock',
@@ -70,7 +73,7 @@ const getRasterElements = (
       classOfBlock: 'RasterBlock',
       onChange: (value: string) => onChange(value, blockName)
     },
-    style: getBlockStyle(blockName),
+    style: getBlockStyle('RasterBlock'),
     position
   }));
 };
