@@ -4,6 +4,7 @@ import { GeoBlockJsonComponent } from './GeoBlockJsonComponent';
 import { GeoBlockVisualComponent } from './GeoBlockVisualComponent';
 import { SubmitButton } from '../../../form/SubmitButton';
 import { addNotification } from '../../../actions';
+import { jsonValidator } from '../../../form/validators';
 import ModalBackground from '../../../components/ModalBackground';
 import styles from './GeoBlockBuildModal.module.css';
 import formStyles from './../../../styles/Forms.module.css';
@@ -47,10 +48,13 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
           </button>
           <button
             onClick={() => {
+              if (jsonValidator(jsonString)) {
+                return alert(jsonValidator(jsonString));
+              };
               if (geoBlockView === 'json') {
                 setGeoBlockView('visual');
               } else {
-                setGeoBlockView('json')
+                setGeoBlockView('json');
               };
             }}
           >
@@ -58,6 +62,9 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
           </button>
           <SubmitButton
             onClick={() => {
+              if (jsonValidator(jsonString)) {
+                return alert(jsonValidator(jsonString));
+              };
               props.onChange(JSON.parse(jsonString));
               props.handleClose();
             }}
