@@ -6,6 +6,8 @@ import ReactFlow, {
   Controls,
   Edge,
   Elements,
+  isNode,
+  Position,
   ReactFlowProvider,
   removeElements,
   updateEdge,
@@ -15,8 +17,8 @@ import { Block } from './blockComponents/Block';
 import { GroupBlock } from './blockComponents/GroupBlock';
 import { NumberBlock } from './blockComponents/NumberBlock';
 import { RasterBlock } from './blockComponents/RasterBlock';
-import { GeoBlockSource } from '../../../types/geoBlockType';
-import { convertGeoblockSourceToFlowElements } from '../../../utils/geoblockUtils';
+import { GeoBlockSource, geoblockType } from '../../../types/geoBlockType';
+import { convertGeoblockSourceToFlowElements, getBlockData, getBlockStyle } from '../../../utils/geoblockUtils';
 import { createGraphLayout } from '../../../utils/createGraphLayout';
 import { SideBar } from './blockComponents/SideBar';
 
@@ -28,27 +30,30 @@ const GeoBlockVisualFlow = (props: MyProps) => {
   const { source } = props;
   const reactFlowWrapper = useRef<any>(null);
   const updateNodeInternals = useUpdateNodeInternals();
+  const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
   const [elements, setElements] = useState<Elements>([]);
 
-  useEffect(() => {
-    // Helper function to change value of a block (e.g. UUID of a raster block or number input)
-    const onChange = (value: string | number, blockId: string) => {
-      setElements(elms => {
-        return elms.map(elm => {
-          if (elm.id === blockId) {
-            return {
-              ...elm,
-              data: {
-                ...elm.data,
-                value
-              }
+  // Helper function to change value of a block (e.g. UUID of a raster block or number input)
+  const onBlockValueChange = (value: string | number, blockId: string) => {
+    setElements(elms => {
+      return elms.map(elm => {
+        if (elm.id === blockId) {
+          return {
+            ...elm,
+            data: {
+              ...elm.data,
+              value
             }
-          };
-          return elm;
-        });
+          }
+        };
+        return elm;
       });
-    };
-    const geoblockElements = convertGeoblockSourceToFlowElements(source, onChange);
+    });
+  };
+
+  // useEffect to create geoblock elements and build the graph layout using dagre library
+  useEffect(() => {
+    const geoblockElements = convertGeoblockSourceToFlowElements(source, onBlockValueChange);
     const layoutedElements = createGraphLayout(geoblockElements);
     setElements(layoutedElements);
   }, [source]);
@@ -68,6 +73,52 @@ const GeoBlockVisualFlow = (props: MyProps) => {
     setElements((els) => removeElements(elementsToRemove, els))
   };
 
+  const onLoad = (_reactFlowInstance: any) => {
+    setReactFlowInstance(_reactFlowInstance);
+  };
+
+  // Drag and drop actions
+  const onDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = 'move';
+  };
+
+  const onDrop = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    if (reactFlowWrapper && reactFlowWrapper.current) {
+      const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
+      const blockName = event.dataTransfer.getData('application/reactflow');
+      const position = reactFlowInstance.project({
+        x: event.clientX - reactFlowBounds.left,
+        y: event.clientY - reactFlowBounds.top,
+      });
+      const sourcePosition = Position.Right;
+      const targetPosition = Position.Left;
+
+      // Keep track of number of block elements in the graph to create block id
+      const numberOfBlocks = elements.filter(elm => {
+        // @ts-ignore
+        return isNode(elm) && elm.data && elm.data.classOfBlock === geoblockType[blockName].class;
+      }).length;
+      const idOfNewBlock = blockName + numberOfBlocks;
+
+      const newBlock = {
+        id: idOfNewBlock,
+        type: (
+          blockName === 'RasterBlock' || blockName === 'NumberBlock' ? blockName :
+          blockName === 'Group' ? 'GroupBlock' : 'Block'
+        ),
+        position,
+        sourcePosition,
+        targetPosition,
+        style: getBlockStyle(blockName),
+        data: getBlockData(blockName, numberOfBlocks, idOfNewBlock, onBlockValueChange)
+      };
+      console.log('newBlock', newBlock);
+      setElements((es) => es.concat(newBlock));
+    };
+  };
+
   return (
     <div
       style={{
@@ -83,13 +134,15 @@ const GeoBlockVisualFlow = (props: MyProps) => {
         elements={elements}
         onElementsRemove={onElementsRemove}
         style={{
-          // height: '90%',
           border: '1px solid lightgrey',
           borderRadius: 10
         }}
         snapToGrid
         onEdgeUpdate={onEdgeUpdate}
         onConnect={onConnect}
+        onLoad={onLoad}
+        onDragOver={onDragOver}
+        onDrop={onDrop}
         nodeTypes={{
           Block: Block,
           GroupBlock: GroupBlock,

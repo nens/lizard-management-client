@@ -4,8 +4,8 @@
     "description": "raster block",
     "parameters": []
   },
-  "Number": {
-    "class": "number",
+  "NumberBlock": {
+    "class": "NumberBlock",
     "description": "number block",
     "parameters": []
   },

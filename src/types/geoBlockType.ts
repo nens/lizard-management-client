@@ -14,7 +14,7 @@ type parameter = {
 }
 
 enum InputBlockEnum {
-  Number = "Number",
+  NumberBlock = "NumberBlock",
   RasterBlock = "RasterBlock"
 }
 
