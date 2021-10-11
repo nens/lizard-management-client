@@ -4,13 +4,14 @@ import { Handle, Node, Position } from 'react-flow-renderer';
 interface GroupBlockInput {
   label: string,
   classOfBlock: string,
-  parameters: (string | number | [])[],
+  parameters: string[] | Object,
   outputBlock?: boolean
 }
 
 export const GroupBlock = (props: Node<GroupBlockInput>) => {
   const { label, parameters, outputBlock } = props.data!;
-  const [handles, setHandles] = useState<string[]>(parameters as string[]);
+  const initialHandles = Array.isArray(parameters) ? parameters : ['handle-1', 'handle-2'];
+  const [handles, setHandles] = useState<string[]>(initialHandles);
 
   return (
     <>
