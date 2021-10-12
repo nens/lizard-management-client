@@ -6,11 +6,12 @@ interface BlockInput {
   label: string,
   classOfBlock: string,
   parameters: (string | number | [])[],
-  outputBlock?: boolean
+  outputBlock?: boolean,
+  onOutputChange: (bool: boolean) => void
 }
 
 export const Block = (props: Node<BlockInput>) => {
-  const { label, classOfBlock, outputBlock } = props.data!;
+  const { label, classOfBlock, outputBlock, onOutputChange } = props.data!;
   const block = Object.values(geoblockType).find(
     geoblock => geoblock && geoblock.class && geoblock.class === classOfBlock
   );
@@ -52,14 +53,25 @@ export const Block = (props: Node<BlockInput>) => {
           height: numberOfParameters && numberOfParameters > 3 ? numberOfParameters * 10 : undefined
         }}
       >
-        {label}
-      </div>
-      {!outputBlock ? (
-        <Handle
-          type="source"
-          position={Position.Right}
+        <span>{label}</span>
+        <i
+          className={outputBlock ? 'fa fa-plus' : 'fa fa-minus'}
+          style={{
+            cursor: 'pointer',
+            marginLeft: 10
+          }}
+          onClick={() => {
+            onOutputChange(!outputBlock)
+          }}
         />
-      ) : null}
+      </div>
+      <Handle
+        type="source"
+        position={Position.Right}
+        style={{
+          visibility: outputBlock ? 'hidden' : 'visible'
+        }}
+      />
     </>
   )
 }

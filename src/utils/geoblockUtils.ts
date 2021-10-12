@@ -44,7 +44,8 @@ export const getBlockData = (
     // @ts-ignore
     classOfBlock: geoblockType[blockName].class,
     // @ts-ignore
-    parameters: geoblockType[blockName].parameters
+    parameters: geoblockType[blockName].parameters,
+    onOutputChange: (bool: boolean) => onBlockOutputChange(bool, idOfNewBlock, setElements)
   };
 
   if (blockName === 'RasterBlock') {
@@ -80,7 +81,8 @@ const getRasterElements = (
 
 const getBlockElements = (
   blockNames: string[],
-  source: GeoBlockSource
+  source: GeoBlockSource,
+  setElements: React.Dispatch<React.SetStateAction<Elements<any>>>
 ): Elements => {
   const { name, graph } = source;
   return blockNames.map(blockName => {
@@ -97,7 +99,8 @@ const getBlockElements = (
         label: blockName,
         classOfBlock,
         parameters: blockValue.slice(1),
-        outputBlock: blockName === name
+        outputBlock: blockName === name,
+        onOutputChange: (bool: boolean) => onBlockOutputChange(bool, blockName, setElements)
       },
       style: getBlockStyle(blockName, name),
       position
@@ -152,6 +155,35 @@ const onBlockValueChange = (
   });
 };
 
+// Helper function to change an output block
+const onBlockOutputChange = (
+  bool: boolean,
+  blockId: string,
+  setElements: React.Dispatch<React.SetStateAction<Elements<any>>>
+) => {
+  setElements(elms => {
+    return elms.filter(
+      // remove the output edge connected to the block
+      elm => !(isEdge(elm) && elm.source === blockId)
+    ).map(elm => {
+      if (elm.id === blockId) {
+        return {
+          ...elm,
+          style: {
+            ...elm.style,
+            borderColor: bool ? 'red' : 'grey'
+          },
+          data: {
+            ...elm.data,
+            outputBlock: bool
+          }
+        }
+      };
+      return elm;
+    });
+  });
+};
+
 export const convertGeoblockSourceToFlowElements = (
   source: GeoBlockSource,
   setElements: React.Dispatch<React.SetStateAction<Elements<any>>>
@@ -163,7 +195,7 @@ export const convertGeoblockSourceToFlowElements = (
 
   // get block elements
   const rasterElements = getRasterElements(rasterBlockNames, source.graph, setElements);
-  const blockElements = getBlockElements(blockNames, source);
+  const blockElements = getBlockElements(blockNames, source, setElements);
   const numberElements = getNumberElements(blockElements, setElements);
 
   return blockElements.concat(rasterElements).concat(numberElements);
