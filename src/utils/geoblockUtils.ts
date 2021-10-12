@@ -207,10 +207,13 @@ export const convertElementsToGeoBlockSource = (
 ) => {
   const edges = elements.filter(e => isEdge(e)) as Edge[];
   const blocks = elements.filter(e => isNode(e));
-  const outputBlock = blocks.find(block => block.data && block.data.outputBlock);
+  const outputBlocks = blocks.filter(block => block.data && block.data.outputBlock);
 
-  if (!outputBlock) {
+  if (outputBlocks.length === 0) {
     console.error('No output node');
+    return;
+  } else if (outputBlocks.length > 1) {
+    console.error('Only one output block is allowed');
     return;
   };
 
@@ -250,7 +253,7 @@ export const convertElementsToGeoBlockSource = (
   }, {});
 
   const geoblockSource = {
-    name: outputBlock.data.label,
+    name: outputBlocks[0].data.label,
     graph
   };
 
