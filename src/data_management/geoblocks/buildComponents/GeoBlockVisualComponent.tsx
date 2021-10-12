@@ -24,7 +24,6 @@ import {
   convertElementsToGeoBlockSource,
   convertGeoblockSourceToFlowElements,
   getBlockData,
-  getBlockStyle
 } from '../../../utils/geoblockUtils';
 
 interface MyProps {
@@ -99,7 +98,6 @@ const GeoBlockVisualFlow = (props: MyProps) => {
         position,
         sourcePosition,
         targetPosition,
-        style: getBlockStyle(blockName),
         data: getBlockData(blockName, numberOfBlocks, idOfNewBlock, setElements)
       };
       console.log('newBlock', newBlock);

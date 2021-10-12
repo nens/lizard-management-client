@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Handle, Node, Position } from 'react-flow-renderer';
+import styles from './Block.module.css';
 
 interface GroupBlockInput {
   label: string,
@@ -16,7 +17,10 @@ export const GroupBlock = (props: Node<GroupBlockInput>) => {
   const numberOfHandles = handles.length;
 
   return (
-    <>
+    <div
+      className={`${styles.Block} ${outputBlock ? styles.OutputBlock : ''}`}
+      tabIndex={1}
+    >
       {handles.map((_parameter, i) => (
         <Handle
           key={i}
@@ -80,6 +84,6 @@ export const GroupBlock = (props: Node<GroupBlockInput>) => {
           visibility: outputBlock ? 'hidden' : 'visible'
         }}
       />
-    </>
+    </div>
   )
 }

@@ -3,23 +3,6 @@ import { GeoBlockSource, geoblockType } from "../types/geoBlockType";
 
 const position = { x: 0, y: 0 };
 
-const blockStyle = {
-  padding: 10,
-  borderRadius: 5,
-  border: '1px solid'
-};
-
-export const getBlockStyle = (blockName: string, outputBlockName?: string) => {
-  return {
-    ...blockStyle,
-    borderColor: (
-      blockName === 'RasterBlock' ? 'blue' :
-      blockName === 'NumberBlock' ? 'green' :
-      blockName === outputBlockName ? 'red' : 'grey' // build blocks
-    )
-  };
-};
-
 export const getBlockData = (
   blockName: string,
   numberOfBlocks: number,
@@ -75,7 +58,6 @@ const getRasterElements = (
       classOfBlock: 'RasterBlock',
       onChange: (value: string) => onBlockValueChange(value, blockName, setElements)
     },
-    style: getBlockStyle('RasterBlock'),
     position
   }));
 };
@@ -103,7 +85,6 @@ const getBlockElements = (
         outputBlock: blockName === name,
         onOutputChange: (bool: boolean) => onBlockOutputChange(bool, blockName, setElements)
       },
-      style: getBlockStyle(blockName, name),
       position
     };
   });
@@ -127,7 +108,6 @@ const getNumberElements = (
           classOfBlock: 'NumberBlock',
           onChange: (value: number) => onBlockValueChange(value, blockId, setElements)
         },
-        style: getBlockStyle('NumberBlock'),
         position
       };
     });

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Handle, Node, Position } from 'react-flow-renderer';
 import { geoblockType } from '../../../../types/geoBlockType';
+import styles from './Block.module.css';
 
 interface BlockInput {
   label: string,
@@ -25,7 +26,10 @@ export const Block = (props: Node<BlockInput>) => {
   const numberOfParameters = Array.isArray(parameters) && parameters.length;
 
   return (
-    <>
+    <div
+      className={`${styles.Block} ${outputBlock ? styles.OutputBlock : ''}`}
+      tabIndex={1}
+    >
       {Array.isArray(parameters) && parameters.map((parameter, i) => (
         <Handle
           key={i}
@@ -70,6 +74,6 @@ export const Block = (props: Node<BlockInput>) => {
           visibility: outputBlock ? 'hidden' : 'visible'
         }}
       />
-    </>
+    </div>
   )
 }
