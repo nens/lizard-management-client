@@ -9,7 +9,7 @@ import {
 import edgeStyles from './../data_management/geoblocks/buildComponents/blockComponents/Edge.module.css';
 
 interface BlockInput {
-  parameters: (string | number | [])[]
+  parameters: (string | number | boolean | [])[]
 }
 
 export const createGraphLayout = (elements: Elements<BlockInput>): Elements => {
@@ -39,6 +39,14 @@ export const createGraphLayout = (elements: Elements<BlockInput>): Elements => {
 
       const numberParameters = el.data.parameters.filter(parameter => typeof(parameter) === 'number') as number[];
       numberParameters.forEach((parameter, i) => {
+        dagreGraph.setEdge(
+          el.id + '-' + parameter + '-' + i,
+          el.id
+        );
+      });
+
+      const booleanParameters = el.data.parameters.filter(parameter => typeof(parameter) === 'boolean') as boolean[];
+      booleanParameters.forEach((parameter, i) => {
         dagreGraph.setEdge(
           el.id + '-' + parameter + '-' + i,
           el.id
@@ -87,6 +95,16 @@ export const createGraphLayout = (elements: Elements<BlockInput>): Elements => {
           className: edgeStyles.NumberEdge,
           type: ConnectionLineType.SmoothStep,
           source: el.id + '-' + parameter + '-' + indexOfParameter,
+          target: el.id,
+          targetHandle: 'handle-' + index,
+          animated: true
+        };
+      } else if (typeof(parameter) === 'boolean') {
+        return {
+          id: parameter + '-' + el.id,
+          className: edgeStyles.BooleanEdge,
+          type: ConnectionLineType.SmoothStep,
+          source: el.id + '-' + parameter,
           target: el.id,
           targetHandle: 'handle-' + index,
           animated: true

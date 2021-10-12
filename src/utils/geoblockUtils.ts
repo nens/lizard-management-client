@@ -16,8 +16,13 @@ export const getBlockData = (
     onChange: (value: string) => onBlockValueChange(value, idOfNewBlock, setElements)
   };
 
+  const dataOfBooleanBlock = {
+    value: false,
+    classOfBlock: 'BooleanBlock',
+    onChange: (value: boolean) => onBlockValueChange(value, idOfNewBlock, setElements)
+  };
+
   const dataOfNumberBlock = {
-    label: '',
     value: 0,
     classOfBlock: 'NumberBlock',
     onChange: (value: number) => onBlockValueChange(value, idOfNewBlock, setElements)
@@ -36,6 +41,8 @@ export const getBlockData = (
     return dataOfRasterBlock;
   } else if (blockName === 'NumberBlock') {
     return dataOfNumberBlock;
+  } else if (blockName === 'BooleanBlock') {
+    return dataOfBooleanBlock;
   } else {
     return dataOfBuildBlock;
   };
@@ -95,7 +102,7 @@ const getNumberElements = (
   setElements: React.Dispatch<React.SetStateAction<Elements<any>>>
 ): Elements => {
   return blockElements.filter(
-    elm => elm.data && elm.data.parameters && elm.data.parameters.filter((parameter: any) => !isNaN(parameter)).length // find blocks with connected number inputs
+    elm => elm.data && elm.data.parameters && elm.data.parameters.filter((parameter: any) => typeof(parameter) === 'number').length // find blocks with connected number inputs
   ).map(elm => {
     const numbers: number[] = elm.data.parameters.filter((parameter: any) => !isNaN(parameter));
     return numbers.map((n, i) => {
@@ -114,9 +121,33 @@ const getNumberElements = (
   }).flat(1);
 };
 
+const getBooleanElements = (
+  blockElements: Elements,
+  setElements: React.Dispatch<React.SetStateAction<Elements<any>>>
+): Elements => {
+  return blockElements.filter(
+    elm => elm.data && elm.data.parameters && elm.data.parameters.filter((parameter: any) => typeof(parameter) === 'boolean').length // find blocks with connected boolean inputs
+  ).map(elm => {
+    const booleanParameters: boolean[] = elm.data.parameters.filter((parameter: any) => typeof(parameter) === 'boolean');
+    return booleanParameters.map((bool, i) => {
+      const blockId = elm.id + '-' + bool;
+      return {
+        id: blockId,
+        type: 'BooleanBlock',
+        data: {
+          value: bool,
+          classOfBlock: 'BooleanBlock',
+          onChange: (value: boolean) => onBlockValueChange(value, blockId, setElements)
+        },
+        position
+      };
+    });
+  }).flat(1);
+};
+
 // Helper function to change value of a block (e.g. UUID of a raster block or number input)
 const onBlockValueChange = (
-  value: string | number,
+  value: string | number | boolean,
   blockId: string,
   setElements: React.Dispatch<React.SetStateAction<Elements<any>>>
 ) => {
@@ -178,8 +209,9 @@ export const convertGeoblockSourceToFlowElements = (
   const rasterElements = getRasterElements(rasterBlockNames, source.graph, setElements);
   const blockElements = getBlockElements(blockNames, source, setElements);
   const numberElements = getNumberElements(blockElements, setElements);
+  const booleanElements = getBooleanElements(blockElements, setElements);
 
-  return blockElements.concat(rasterElements).concat(numberElements);
+  return blockElements.concat(rasterElements).concat(numberElements).concat(booleanElements);
 };
 
 export const convertElementsToGeoBlockSource = (

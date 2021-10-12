@@ -15,6 +15,7 @@ import ReactFlow, {
 } from 'react-flow-renderer';
 import { SideBar } from './blockComponents/SideBar';
 import { Block } from './blockComponents/Block';
+import { BooleanBlock } from './blockComponents/BooleanBlock';
 import { GroupBlock } from './blockComponents/GroupBlock';
 import { NumberBlock } from './blockComponents/NumberBlock';
 import { RasterBlock } from './blockComponents/RasterBlock';
@@ -103,7 +104,7 @@ const GeoBlockVisualFlow = (props: MyProps) => {
       const newBlock = {
         id: idOfNewBlock,
         type: (
-          blockName === 'RasterBlock' || blockName === 'NumberBlock' ? blockName :
+          blockName === 'RasterBlock' || blockName === 'NumberBlock' || blockName === 'BooleanBlock' ? blockName :
           blockName === 'Group' || blockName === 'FillNoData' ? 'GroupBlock' : 'Block'
         ),
         position,
@@ -143,6 +144,7 @@ const GeoBlockVisualFlow = (props: MyProps) => {
         onDrop={onDrop}
         nodeTypes={{
           Block: Block,
+          BooleanBlock: BooleanBlock,
           GroupBlock: GroupBlock,
           RasterBlock: RasterBlock,
           NumberBlock: NumberBlock,

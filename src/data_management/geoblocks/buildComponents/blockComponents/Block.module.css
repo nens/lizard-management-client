@@ -35,6 +35,14 @@
   box-shadow: 0 0 0 0.3px orange;
 }
 
+/* Boolean block */
+.BooleanBlock {
+  border-color: blue;
+}
+.BooleanBlock:focus {
+  box-shadow: 0 0 0 0.3px blue;
+}
+
 /* Number block */
 .NumberBlock {
   border-color: green;
