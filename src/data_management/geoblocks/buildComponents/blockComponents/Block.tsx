@@ -60,9 +60,7 @@ export const Block = (props: Node<BlockInput>) => {
             cursor: 'pointer',
             marginLeft: 10
           }}
-          onClick={() => {
-            onOutputChange(!outputBlock)
-          }}
+          onClick={() => onOutputChange(!outputBlock)}
         />
       </div>
       <Handle

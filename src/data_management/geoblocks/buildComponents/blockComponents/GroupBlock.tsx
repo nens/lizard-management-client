@@ -5,11 +5,12 @@ interface GroupBlockInput {
   label: string,
   classOfBlock: string,
   parameters: string[] | Object,
-  outputBlock?: boolean
+  outputBlock?: boolean,
+  onOutputChange: (bool: boolean) => void
 }
 
 export const GroupBlock = (props: Node<GroupBlockInput>) => {
-  const { label, parameters, outputBlock } = props.data!;
+  const { label, parameters, outputBlock, onOutputChange } = props.data!;
   const initialHandles = Array.isArray(parameters) ? parameters : ['handle-1', 'handle-2'];
   const [handles, setHandles] = useState<string[]>(initialHandles);
   const numberOfHandles = handles.length;
@@ -63,13 +64,22 @@ export const GroupBlock = (props: Node<GroupBlockInput>) => {
           />
         </div>
         <span>{label}</span>
-      </div>
-      {!outputBlock ? (
-        <Handle
-          type="source"
-          position={Position.Right}
+        <i
+          className={outputBlock ? 'fa fa-plus' : 'fa fa-minus'}
+          style={{
+            cursor: 'pointer',
+            marginLeft: 10
+          }}
+          onClick={() => onOutputChange(!outputBlock)}
         />
-      ) : null}
+      </div>
+      <Handle
+        type="source"
+        position={Position.Right}
+        style={{
+          visibility: outputBlock ? 'hidden' : 'visible'
+        }}
+      />
     </>
   )
 }
