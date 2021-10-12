@@ -5,16 +5,17 @@ const position = { x: 0, y: 0 };
 
 const blockStyle = {
   padding: 10,
-  borderRadius: 5
+  borderRadius: 5,
+  border: '1px solid'
 };
 
 export const getBlockStyle = (blockName: string, outputBlockName?: string) => {
   return {
     ...blockStyle,
-    border: (
-      blockName === 'RasterBlock' ? '1px solid blue' :
-      blockName === 'NumberBlock' ? '1px solid green' :
-      blockName === outputBlockName ? '1px solid red' : '1px solid grey' // build blocks
+    borderColor: (
+      blockName === 'RasterBlock' ? 'blue' :
+      blockName === 'NumberBlock' ? 'green' :
+      blockName === outputBlockName ? 'red' : 'grey' // build blocks
     )
   };
 };
