@@ -4,9 +4,9 @@
 }
 
 .BooleanEdge path {
-  stroke: #009f86;
+  stroke: green;
 }
 
 .NumberEdge path {
-  stroke: blue;
+  stroke: #009f86;
 }

@@ -13,10 +13,15 @@
 }
 .BlockInput {
   font-size: 10px;
+  padding: 4px;
 }
-.BlockNumberInput {
-  width: 50px;
-  font-size: 10px;
+
+/* Number block */
+.NumberBlock {
+  width: 60px;
+  font-size: 12px;
+  padding: 5px;
+  border-color: #009f86;
 }
 
 /* Output block */
@@ -24,7 +29,7 @@
   border-color: red;
 }
 .OutputBlock:focus {
-  box-shadow: 0 0 0 0.3px red;
+  box-shadow: 0 0 0 0.5px red;
 }
 
 /* Raster block */
@@ -32,21 +37,13 @@
   border-color: orange;
 }
 .RasterBlock:focus {
-  box-shadow: 0 0 0 0.3px orange;
+  box-shadow: 0 0 0 0.5px orange;
 }
 
 /* Boolean block */
 .BooleanBlock {
-  border-color: #009f86;
+  border-color: green;
 }
 .BooleanBlock:focus {
-  box-shadow: 0 0 0 0.3px #009f86;
-}
-
-/* Number block */
-.NumberBlock {
-  border-color: blue;
-}
-.NumberBlock:focus {
-  box-shadow: 0 0 0 0.3px blue;
+  box-shadow: 0 0 0 0.5px green;
 }

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Handle, Node, Position } from 'react-flow-renderer';
+import formStyles from './../../../../styles/Forms.module.css';
 import styles from './Block.module.css';
 
 interface RasterBlockInput {
@@ -19,10 +20,11 @@ export const RasterBlock = (props: Node<RasterBlockInput>) => {
         {label}
       </div>
       <input
-        className={styles.BlockInput}
         type="text"
+        className={`${formStyles.FormControl} ${styles.BlockInput}`}
+        placeholder={'Please enter an UUID'}
+        value={value}
         onChange={e => onChange(e.target.value)}
-        defaultValue={value}
       />
       <Handle
         type="source"

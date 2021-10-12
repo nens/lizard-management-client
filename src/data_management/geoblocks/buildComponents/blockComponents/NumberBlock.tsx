@@ -1,5 +1,6 @@
 import React from 'react';
 import { Handle, Node, Position } from 'react-flow-renderer';
+import formStyles from './../../../../styles/Forms.module.css';
 import styles from './Block.module.css';
 
 interface NumberBlockInput {
@@ -10,13 +11,10 @@ interface NumberBlockInput {
 export const NumberBlock = (props: Node<NumberBlockInput>) => {
   const { value, onChange } = props.data!;
   return (
-    <div
-      className={`${styles.Block} ${styles.NumberBlock}`}
-      tabIndex={1}
-    >
+    <div>
       <input
-        className={styles.BlockNumberInput}
         type="number"
+        className={`${formStyles.FormControl} ${styles.NumberBlock}`}
         onChange={e => onChange(parseFloat(e.target.value))}
         defaultValue={value}
       />
