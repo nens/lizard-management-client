@@ -234,7 +234,7 @@ export const convertElementsToGeoBlockSource = (
       const sourceNode = blocks.find(block => block.id === blockId);
 
       if (!sourceNode) return blockId;
-      return sourceNode.data.label;
+      return sourceNode.data.label || sourceNode.data.value;
     });
 
     return {
