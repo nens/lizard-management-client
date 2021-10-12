@@ -39,27 +39,9 @@ const GeoBlockVisualFlow = (props: MyProps) => {
   const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
   const [elements, setElements] = useState<Elements>([]);
 
-  // Helper function to change value of a block (e.g. UUID of a raster block or number input)
-  const onBlockValueChange = (value: string | number, blockId: string) => {
-    setElements(elms => {
-      return elms.map(elm => {
-        if (elm.id === blockId) {
-          return {
-            ...elm,
-            data: {
-              ...elm.data,
-              value
-            }
-          }
-        };
-        return elm;
-      });
-    });
-  };
-
   // useEffect to create geoblock elements and build the graph layout using dagre library
   useEffect(() => {
-    const geoblockElements = convertGeoblockSourceToFlowElements(source, onBlockValueChange);
+    const geoblockElements = convertGeoblockSourceToFlowElements(source, setElements);
     const layoutedElements = createGraphLayout(geoblockElements);
     setElements(layoutedElements);
   }, [source]);
@@ -118,7 +100,7 @@ const GeoBlockVisualFlow = (props: MyProps) => {
         sourcePosition,
         targetPosition,
         style: getBlockStyle(blockName),
-        data: getBlockData(blockName, numberOfBlocks, idOfNewBlock, onBlockValueChange)
+        data: getBlockData(blockName, numberOfBlocks, idOfNewBlock, setElements)
       };
       console.log('newBlock', newBlock);
       setElements((es) => es.concat(newBlock));

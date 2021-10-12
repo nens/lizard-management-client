@@ -23,20 +23,20 @@ export const getBlockData = (
   blockName: string,
   numberOfBlocks: number,
   idOfNewBlock: string,
-  onChange: (value: string | number, id: string) => void
+  setElements: React.Dispatch<React.SetStateAction<Elements<any>>>
 ) => {
   const dataOfRasterBlock = {
     label: 'LizardRasterSource_' + (numberOfBlocks + 1),
     value: '',
     classOfBlock: 'RasterBlock',
-    onChange: (value: string) => onChange(value, idOfNewBlock)
+    onChange: (value: string) => onBlockValueChange(value, idOfNewBlock, setElements)
   };
 
   const dataOfNumberBlock = {
     label: '',
     value: 0,
     classOfBlock: 'NumberBlock',
-    onChange: (value: number) => onChange(value, idOfNewBlock)
+    onChange: (value: number) => onBlockValueChange(value, idOfNewBlock, setElements)
   };
 
   const dataOfBuildBlock = {
@@ -59,7 +59,7 @@ export const getBlockData = (
 const getRasterElements = (
   blockNames: string[],
   graph: GeoBlockSource['graph'],
-  onChange: Function
+  setElements: React.Dispatch<React.SetStateAction<Elements<any>>>
 ): Elements => {
   // Note that block name of a raster block can be different from its type
   // because the type is RasterBlock but the block name can be either
@@ -71,7 +71,7 @@ const getRasterElements = (
       label: blockName,
       value: graph[blockName][1],
       classOfBlock: 'RasterBlock',
-      onChange: (value: string) => onChange(value, blockName)
+      onChange: (value: string) => onBlockValueChange(value, blockName, setElements)
     },
     style: getBlockStyle('RasterBlock'),
     position
@@ -107,7 +107,7 @@ const getBlockElements = (
 
 const getNumberElements = (
   blockElements: Elements,
-  onChange: Function
+  setElements: React.Dispatch<React.SetStateAction<Elements<any>>>
 ): Elements => {
   return blockElements.filter(
     elm => elm.data && elm.data.parameters && elm.data.parameters.filter((parameter: any) => !isNaN(parameter)).length // find blocks with connected number inputs
@@ -121,7 +121,7 @@ const getNumberElements = (
         data: {
           value: n,
           classOfBlock: 'NumberBlock',
-          onChange: (value: number) => onChange(value, blockId)
+          onChange: (value: number) => onBlockValueChange(value, blockId, setElements)
         },
         style: getBlockStyle('NumberBlock'),
         position
@@ -130,9 +130,31 @@ const getNumberElements = (
   }).flat(1);
 };
 
+// Helper function to change value of a block (e.g. UUID of a raster block or number input)
+const onBlockValueChange = (
+  value: string | number,
+  blockId: string,
+  setElements: React.Dispatch<React.SetStateAction<Elements<any>>>
+) => {
+  setElements(elms => {
+    return elms.map(elm => {
+      if (elm.id === blockId) {
+        return {
+          ...elm,
+          data: {
+            ...elm.data,
+            value
+          }
+        }
+      };
+      return elm;
+    });
+  });
+};
+
 export const convertGeoblockSourceToFlowElements = (
   source: GeoBlockSource,
-  onChange: (value: string | number, blockId: string) => void
+  setElements: React.Dispatch<React.SetStateAction<Elements<any>>>
 ) => {
   // Get names of different types of blocks
   const allBlockNames = Object.keys(source.graph);
@@ -140,9 +162,9 @@ export const convertGeoblockSourceToFlowElements = (
   const blockNames = allBlockNames.filter(blockName => !rasterBlockNames.includes(blockName));
 
   // get block elements
-  const rasterElements = getRasterElements(rasterBlockNames, source.graph, onChange);
+  const rasterElements = getRasterElements(rasterBlockNames, source.graph, setElements);
   const blockElements = getBlockElements(blockNames, source);
-  const numberElements = getNumberElements(blockElements, onChange);
+  const numberElements = getNumberElements(blockElements, setElements);
 
   return blockElements.concat(rasterElements).concat(numberElements);
 };
