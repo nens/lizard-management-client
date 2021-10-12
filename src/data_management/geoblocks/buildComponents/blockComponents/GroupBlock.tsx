@@ -12,6 +12,7 @@ export const GroupBlock = (props: Node<GroupBlockInput>) => {
   const { label, parameters, outputBlock } = props.data!;
   const initialHandles = Array.isArray(parameters) ? parameters : ['handle-1', 'handle-2'];
   const [handles, setHandles] = useState<string[]>(initialHandles);
+  const numberOfHandles = handles.length;
 
   return (
     <>
@@ -41,7 +42,9 @@ export const GroupBlock = (props: Node<GroupBlockInput>) => {
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
-            marginRight: 10
+            marginRight: 10,
+            // calculate height of the Block if there are more than 3 handlers
+            height: numberOfHandles > 3 ? numberOfHandles * 10 : undefined
           }}
         >
           <i

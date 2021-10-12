@@ -20,9 +20,12 @@ export const Block = (props: Node<BlockInput>) => {
     return;
   };
 
+  const { parameters } = block;
+  const numberOfParameters = Array.isArray(parameters) && parameters.length;
+
   return (
     <>
-      {Array.isArray(block.parameters) && block.parameters.map((parameter, i) => (
+      {Array.isArray(parameters) && parameters.map((parameter, i) => (
         <Handle
           key={i}
           type="target"
@@ -44,7 +47,9 @@ export const Block = (props: Node<BlockInput>) => {
         style={{
           fontSize: 12,
           display: 'flex',
-          alignItems: 'center'
+          alignItems: 'center',
+          // calculate the height of the block if there are more than 3 parameters
+          height: numberOfParameters && numberOfParameters > 3 ? numberOfParameters * 10 : undefined
         }}
       >
         {label}
