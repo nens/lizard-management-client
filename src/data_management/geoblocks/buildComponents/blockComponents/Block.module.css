@@ -37,16 +37,16 @@
 
 /* Boolean block */
 .BooleanBlock {
-  border-color: blue;
+  border-color: #009f86;
 }
 .BooleanBlock:focus {
-  box-shadow: 0 0 0 0.3px blue;
+  box-shadow: 0 0 0 0.3px #009f86;
 }
 
 /* Number block */
 .NumberBlock {
-  border-color: green;
+  border-color: blue;
 }
 .NumberBlock:focus {
-  box-shadow: 0 0 0 0.3px green;
+  box-shadow: 0 0 0 0.3px blue;
 }

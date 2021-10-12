@@ -1,5 +1,6 @@
 import React from 'react';
 import { Handle, Node, Position } from 'react-flow-renderer';
+import Checkbox from '../../../../components/Checkbox';
 import styles from './Block.module.css';
 
 interface BooleanBlockInput {
@@ -14,11 +15,13 @@ export const BooleanBlock = (props: Node<BooleanBlockInput>) => {
       className={`${styles.Block} ${styles.BooleanBlock}`}
       tabIndex={1}
     >
-      <input
-        className={styles.BlockNumberInput}
-        type="checkbox"
+      <Checkbox
+        name={''}
         checked={value}
         onChange={() => onChange(!value)}
+        size={24}
+        borderRadius={3}
+        checkmarkColor={'#009f86'}
       />
       <Handle
         type="source"
