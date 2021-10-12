@@ -33,7 +33,9 @@ export const GroupBlock = (props: Node<GroupBlockInput>) => {
         style={{
           fontSize: 12,
           display: 'flex',
-          alignItems: 'center'
+          alignItems: 'center',
+          // calculate height of the Block if there are more than 3 handlers
+          height: numberOfHandles > 3 ? numberOfHandles * 10 : undefined
         }}
       >
         <div
@@ -43,8 +45,6 @@ export const GroupBlock = (props: Node<GroupBlockInput>) => {
             justifyContent: 'center',
             alignItems: 'center',
             marginRight: 10,
-            // calculate height of the Block if there are more than 3 handlers
-            height: numberOfHandles > 3 ? numberOfHandles * 10 : undefined
           }}
         >
           <i
