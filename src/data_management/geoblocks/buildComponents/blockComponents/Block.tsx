@@ -31,7 +31,7 @@ export const Block = (props: Node<BlockInput>) => {
           key={i}
           type="target"
           id={'handle-' + i}
-          title={parameter.name}
+          title={`${parameter.name}: ${parameter.type}`}
           position={Position.Left}
           style={{
             top: 10 * (i + 1),

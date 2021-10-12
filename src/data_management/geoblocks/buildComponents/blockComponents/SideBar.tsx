@@ -13,16 +13,21 @@ export const SideBar = () => {
     <div
       className={styles.SideBar}
     >
-      {blockNames.map((blockName: string) => (
-        <div
-          key={blockName}
-          className={styles.Block}
-          onDragStart={(event) => onDragStart(event, blockName)}
-          draggable
-        >
-          {blockName}
-        </div>
-      ))}
+      {blockNames.map((blockName: string) => {
+        // @ts-ignore
+        const block = geoblockType[blockName];
+        return (
+          <div
+            key={blockName}
+            className={styles.Block}
+            title={block.description}
+            onDragStart={(event) => onDragStart(event, blockName)}
+            draggable
+          >
+            {blockName}
+          </div>
+        );
+      })}
     </div>
   );
 };
