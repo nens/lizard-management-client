@@ -29,6 +29,26 @@
       }
     ]
   },
+  "And": {
+    "class": "dask_geomodeling.raster.elemwise.And",
+    "description": "Returns True where both inputs are True.",
+    "parameters": [
+      {
+        "name": "a",
+        "type": [
+          "boolean",
+          "raster_block"
+        ]
+      },
+      {
+        "name": "b",
+        "type": [
+          "boolean",
+          "raster_block"
+        ]
+      }
+    ]
+  },
   "Classify": {
     "class": "dask_geomodeling.raster.misc.Classify",
     "description": "classify block",
@@ -61,7 +81,7 @@
   },
   "Clip": {
     "class": "dask_geomodeling.raster.misc.Clip",
-    "description": "classify block",
+    "description": "clip block",
     "parameters": [
       {
         "name": "store",
@@ -141,6 +161,16 @@
       }
     ]
   },
+  "Exp": {
+    "class": "dask_geomodeling.raster.elemwise.Exp",
+    "description": "Return e raised to the power of the raster values.",
+    "parameters": [
+      {
+        "name": "x",
+        "type": "raster_block"
+      }
+    ]
+  },
   "FillNoData": {
     "class": "dask_geomodeling.raster.elemwise.FillNoData",
     "description": "fill no data block",
@@ -201,6 +231,36 @@
       }
     }
   },
+  "Invert": {
+    "class": "dask_geomodeling.raster.elemwise.Invert",
+    "description": "Logically invert a raster (swap True and False).",
+    "parameters": [
+      {
+        "name": "x",
+        "type": "raster_block"
+      }
+    ]
+  },
+  "IsData": {
+    "class": "dask_geomodeling.raster.elemwise.IsData",
+    "description": "Return True where raster has data.",
+    "parameters": [
+      {
+        "name": "store",
+        "type": "raster_block"
+      }
+    ]
+  },
+  "IsNoData": {
+    "class": "dask_geomodeling.raster.elemwise.IsNoData",
+    "description": "Return True where raster has no data.",
+    "parameters": [
+      {
+        "name": "store",
+        "type": "raster_block"
+      }
+    ]
+  },
   "Less": {
     "class": "dask_geomodeling.raster.elemwise.Less",
     "description": "Compares the values of two rasters and returns True if an element in the first term is less.",
@@ -238,6 +298,26 @@
           "number",
           "raster_block"
         ]
+      }
+    ]
+  },
+  "Log": {
+    "class": "dask_geomodeling.raster.elemwise.Log",
+    "description": "Return natural logarithm of the raster values.",
+    "parameters": [
+      {
+        "name": "x",
+        "type": "raster_block"
+      }
+    ]
+  },
+  "Log10": {
+    "class": "dask_geomodeling.raster.elemwise.Log10",
+    "description": "Return the base 10 logarithm of the raster values.",
+    "parameters": [
+      {
+        "name": "x",
+        "type": "raster_block"
       }
     ]
   },
@@ -336,6 +416,26 @@
       }
     ]
   },
+  "Or": {
+    "class": "dask_geomodeling.raster.elemwise.Or",
+    "description": "Returns True where any of inputs is True.",
+    "parameters": [
+      {
+        "name": "a",
+        "type": [
+          "boolean",
+          "raster_block"
+        ]
+      },
+      {
+        "name": "b",
+        "type": [
+          "boolean",
+          "raster_block"
+        ]
+      }
+    ]
+  },
   "Place": {
     "class": "dask_geomodeling.raster.spatial.Place",
     "description": "place block",
@@ -424,6 +524,36 @@
         "name": "dtype",
         "type": "string",
         "default": "int32"
+      }
+    ]
+  },
+  "Reclassify": {
+    "class": "dask_geomodeling.raster.misc.Reclassify",
+    "description": "reclassify block",
+    "parameters": [
+      {
+        "name": "store",
+        "type": "raster_block"
+      },
+      {
+        "name": "bin",
+        "type": "array",
+        "items": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": ["boolean", "integer"]
+            },
+            {
+              "type": "number"
+            }
+          ]
+        }
+      },
+      {
+        "name": "select",
+        "type": "boolean",
+        "default": false
       }
     ]
   },
@@ -536,6 +666,26 @@
         "name": "timezone",
         "type": "string",
         "default": "UTC"
+      }
+    ]
+  },
+  "Xor": {
+    "class": "dask_geomodeling.raster.elemwise.Xor",
+    "description": "Exclusive or: returns True where exactly one of the inputs is True.",
+    "parameters": [
+      {
+        "name": "a",
+        "type": [
+          "boolean",
+          "raster_block"
+        ]
+      },
+      {
+        "name": "b",
+        "type": [
+          "boolean",
+          "raster_block"
+        ]
       }
     ]
   }

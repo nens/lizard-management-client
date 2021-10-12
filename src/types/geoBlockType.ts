@@ -20,26 +20,36 @@ enum InputBlockEnum {
 
 enum GeoBlockEnum {
   Add = "Add",
+  And = "And",
   Classify = "Classify",
   Clip = "Clip",
   Cumulative = "Cumulative",
   Divide = "Divide",
   Equal = "Equal",
+  Exp = "Exp",
   Greater = "Greater",
   GreaterEqual = "GreaterEqual",
+  Invert = "Invert",
+  IsData = "IsData",
+  IsNoData = "IsNoData",
   Less = "Less",
   LessEqual = "LessEqual",
+  Log = "Log",
+  Log10 = "Log10",
   MaskBelow = "MaskBelow",
   MemorySource = "MemorySource",
   Multiply = "Multiply",
   NotEqual = "NotEqual",
+  Or = "Or",
   Place = "Place",
   Power = "Power",
   Rasterize = "Rasterize",
+  Reclassify = "Reclassify",
   Snap = "Snap",
   Step = "Step",
   Subtract = "Subtract",
-  TemporalAggregate = "TemporalAggregate"
+  TemporalAggregate = "TemporalAggregate",
+  Xor = "Xor"
 }
 
 enum GroupBlockEnum {
