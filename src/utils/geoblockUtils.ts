@@ -12,7 +12,7 @@ export const getBlockData = (
   const dataOfRasterBlock = {
     label: 'LizardRasterSource_' + (numberOfBlocks + 1),
     value: '',
-    classOfBlock: 'RasterBlock',
+    classOfBlock: 'lizard_nxt.blocks.LizardRasterSource',
     onChange: (value: string) => onBlockValueChange(value, idOfNewBlock, setElements)
   };
 
@@ -49,20 +49,22 @@ export const getBlockData = (
 };
 
 const getRasterElements = (
-  blockNames: string[],
   graph: GeoBlockSource['graph'],
   setElements: React.Dispatch<React.SetStateAction<Elements<any>>>
 ): Elements => {
-  // Note that block name of a raster block can be different from its type
-  // because the type is RasterBlock but the block name can be either
-  // LizardRasterSource and RasterStoreSource
-  return blockNames.map(blockName => ({
+  const allBlockNames = Object.keys(graph);
+  const rasterBlockNames = allBlockNames.filter(blockName => {
+    const classOfBlock = graph[blockName][0];
+    return classOfBlock === 'lizard_nxt.blocks.LizardRasterSource';
+  });
+
+  return rasterBlockNames.map(blockName => ({
     id: blockName,
     type: 'RasterBlock',
     data: {
       label: blockName,
       value: graph[blockName][1],
-      classOfBlock: 'RasterBlock',
+      classOfBlock: 'lizard_nxt.blocks.LizardRasterSource',
       onChange: (value: string) => onBlockValueChange(value, blockName, setElements)
     },
     position
@@ -70,11 +72,16 @@ const getRasterElements = (
 };
 
 const getBlockElements = (
-  blockNames: string[],
   source: GeoBlockSource,
   setElements: React.Dispatch<React.SetStateAction<Elements<any>>>
 ): Elements => {
   const { name, graph } = source;
+  const allBlockNames = Object.keys(graph);
+  const blockNames = allBlockNames.filter(blockName => {
+    const classOfBlock = graph[blockName][0];
+    return classOfBlock !== 'lizard_nxt.blocks.LizardRasterSource';
+  });
+
   return blockNames.map(blockName => {
     const blockValue = graph[blockName];
     const classOfBlock = blockValue[0];
@@ -200,14 +207,8 @@ export const convertGeoblockSourceToFlowElements = (
   source: GeoBlockSource,
   setElements: React.Dispatch<React.SetStateAction<Elements<any>>>
 ) => {
-  // Get names of different types of blocks
-  const allBlockNames = Object.keys(source.graph);
-  const rasterBlockNames = allBlockNames.filter(blockName => blockName.includes('LizardRasterSource') || blockName.includes('RasterStoreSource'));
-  const blockNames = allBlockNames.filter(blockName => !rasterBlockNames.includes(blockName));
-
-  // get block elements
-  const rasterElements = getRasterElements(rasterBlockNames, source.graph, setElements);
-  const blockElements = getBlockElements(blockNames, source, setElements);
+  const rasterElements = getRasterElements(source.graph, setElements);
+  const blockElements = getBlockElements(source, setElements);
   const numberElements = getNumberElements(blockElements, setElements);
   const booleanElements = getBooleanElements(blockElements, setElements);
 

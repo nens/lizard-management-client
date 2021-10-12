@@ -1,6 +1,6 @@
 {
   "RasterBlock": {
-    "class": "RasterBlock",
+    "class": "lizard_nxt.blocks.LizardRasterSource",
     "description": "raster block",
     "parameters": []
   },
