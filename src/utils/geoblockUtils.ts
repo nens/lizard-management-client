@@ -88,7 +88,11 @@ const getBlockElements = (
     const classOfBlock = blockValue[0];
     return {
       id: blockName,
-      type: classOfBlock === "dask_geomodeling.raster.combine.Group" ? 'GroupBlock' : 'Block',
+      type: (
+        classOfBlock === "dask_geomodeling.raster.combine.Group" ||
+        classOfBlock === "dask_geomodeling.raster.elemwise.FillNoData" ?
+        'GroupBlock' : 'Block'
+      ),
       data: {
         label: blockName,
         classOfBlock,

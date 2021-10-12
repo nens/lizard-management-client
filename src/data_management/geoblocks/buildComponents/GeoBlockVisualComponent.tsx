@@ -112,7 +112,7 @@ const GeoBlockVisualFlow = (props: MyProps) => {
         id: idOfNewBlock,
         type: (
           blockName === 'RasterBlock' || blockName === 'NumberBlock' ? blockName :
-          blockName === 'Group' ? 'GroupBlock' : 'Block'
+          blockName === 'Group' || blockName === 'FillNoData' ? 'GroupBlock' : 'Block'
         ),
         position,
         sourcePosition,
