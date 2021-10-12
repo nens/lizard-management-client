@@ -6,6 +6,7 @@ import {
   Elements,
   Position
 } from 'react-flow-renderer';
+import edgeStyles from './../data_management/geoblocks/buildComponents/blockComponents/Edge.module.css';
 
 interface BlockInput {
   parameters: (string | number | [])[]
@@ -71,6 +72,7 @@ export const createGraphLayout = (elements: Elements<BlockInput>): Elements => {
       if (typeof(parameter) === 'string') {
         return {
           id: parameter + '-' + el.id,
+          className: edgeStyles.BlockEdge,
           type: ConnectionLineType.SmoothStep,
           source: parameter,
           target: el.id,
@@ -82,6 +84,7 @@ export const createGraphLayout = (elements: Elements<BlockInput>): Elements => {
         numberParameters[indexOfParameter] = NaN; // replace number with NaN to avoid duplicate numbers
         return {
           id: parameter + '-' + el.id + '-' + indexOfParameter,
+          className: edgeStyles.NumberEdge,
           type: ConnectionLineType.SmoothStep,
           source: el.id + '-' + parameter + '-' + indexOfParameter,
           target: el.id,

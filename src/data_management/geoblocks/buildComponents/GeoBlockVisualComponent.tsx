@@ -25,6 +25,7 @@ import {
   convertGeoblockSourceToFlowElements,
   getBlockData,
 } from '../../../utils/geoblockUtils';
+import edgeStyle from './blockComponents/Edge.module.css';
 
 interface MyProps {
   source: GeoBlockSource,
@@ -52,7 +53,17 @@ const GeoBlockVisualFlow = (props: MyProps) => {
   };
 
   const onConnect = (params: Edge | Connection) => {
-    setElements((els) => addEdge({ ...params, type: ConnectionLineType.SmoothStep, animated: true }, els));
+    setElements((els) => {
+      const source = els.find(el => el.id === params.source)!;
+      return addEdge({
+        ...params,
+        type: ConnectionLineType.SmoothStep,
+        animated: true,
+        className: (
+          source.type === 'NumberBlock' ? edgeStyle.NumberEdge : edgeStyle.BlockEdge
+        )
+      }, els);
+    });
     params.target && updateNodeInternals(params.target); // update node internals
   };
 

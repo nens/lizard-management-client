@@ -1,0 +1,8 @@
+/* Edges */
+.NumberEdge path {
+  stroke: green;
+}
+
+.BlockEdge path {
+  stroke: orange;
+}
