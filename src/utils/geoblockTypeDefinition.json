@@ -101,6 +101,96 @@
       }
     ]
   },
+  "Divide": {
+    "class": "dask_geomodeling.raster.elemwise.Divide",
+    "description": "divide block",
+    "parameters": [
+      {
+        "name": "a",
+        "type": [
+          "number",
+          "raster_block"
+        ]
+      },
+      {
+        "name": "b",
+        "type": [
+          "number",
+          "raster_block"
+        ]
+      }
+    ]
+  },
+  "Equal": {
+    "class": "dask_geomodeling.raster.elemwise.Equal",
+    "description": "equal block",
+    "parameters": [
+      {
+        "name": "a",
+        "type": [
+          "number",
+          "raster_block"
+        ]
+      },
+      {
+        "name": "b",
+        "type": [
+          "number",
+          "raster_block"
+        ]
+      }
+    ]
+  },
+  "FillNoData": {
+    "class": "dask_geomodeling.raster.elemwise.FillNoData",
+    "description": "fill no data block",
+    "parameters": {
+      "type": "array",
+      "items": {
+        "type": "raster_block"
+      }
+    }
+  },
+  "Greater": {
+    "class": "dask_geomodeling.raster.elemwise.Greater",
+    "description": "Compares the values of two rasters and returns True if an element in the first term is greater.",
+    "parameters": [
+      {
+        "name": "a",
+        "type": [
+          "number",
+          "raster_block"
+        ]
+      },
+      {
+        "name": "b",
+        "type": [
+          "number",
+          "raster_block"
+        ]
+      }
+    ]
+  },
+  "GreaterEqual": {
+    "class": "dask_geomodeling.raster.elemwise.GreaterEqual",
+    "description": "Compares the values of two rasters and returns True if an element in the first term is greater or equal.",
+    "parameters": [
+      {
+        "name": "a",
+        "type": [
+          "number",
+          "raster_block"
+        ]
+      },
+      {
+        "name": "b",
+        "type": [
+          "number",
+          "raster_block"
+        ]
+      }
+    ]
+  },
   "Group": {
     "class": "dask_geomodeling.raster.combine.Group",
     "description": "group block",
@@ -110,6 +200,46 @@
         "type": "raster_block"
       }
     }
+  },
+  "Less": {
+    "class": "dask_geomodeling.raster.elemwise.Less",
+    "description": "Compares the values of two rasters and returns True if an element in the first term is less.",
+    "parameters": [
+      {
+        "name": "a",
+        "type": [
+          "number",
+          "raster_block"
+        ]
+      },
+      {
+        "name": "b",
+        "type": [
+          "number",
+          "raster_block"
+        ]
+      }
+    ]
+  },
+  "LessEqual": {
+    "class": "dask_geomodeling.raster.elemwise.LessEqual",
+    "description": "Compares the values of two rasters and returns True if an element in the first term is less or equal.",
+    "parameters": [
+      {
+        "name": "a",
+        "type": [
+          "number",
+          "raster_block"
+        ]
+      },
+      {
+        "name": "b",
+        "type": [
+          "number",
+          "raster_block"
+        ]
+      }
+    ]
   },
   "MaskBelow": {
     "class": "dask_geomodeling.raster.misc.MaskBelow",
@@ -186,6 +316,26 @@
       }
     ]
   },
+  "NotEqual": {
+    "class": "dask_geomodeling.raster.elemwise.NotEqual",
+    "description": "not equal block",
+    "parameters": [
+      {
+        "name": "a",
+        "type": [
+          "number",
+          "raster_block"
+        ]
+      },
+      {
+        "name": "b",
+        "type": [
+          "number",
+          "raster_block"
+        ]
+      }
+    ]
+  },
   "Place": {
     "class": "dask_geomodeling.raster.spatial.Place",
     "description": "place block",
@@ -234,6 +384,26 @@
           "std",
           "var",
           "p<number>"
+        ]
+      }
+    ]
+  },
+  "Power": {
+    "class": "dask_geomodeling.raster.elemwise.Power",
+    "description": "power block",
+    "parameters": [
+      {
+        "name": "a",
+        "type": [
+          "number",
+          "raster_block"
+        ]
+      },
+      {
+        "name": "b",
+        "type": [
+          "number",
+          "raster_block"
         ]
       }
     ]

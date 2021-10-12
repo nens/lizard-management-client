@@ -23,10 +23,18 @@ enum GeoBlockEnum {
   Classify = "Classify",
   Clip = "Clip",
   Cumulative = "Cumulative",
+  Divide = "Divide",
+  Equal = "Equal",
+  Greater = "Greater",
+  GreaterEqual = "GreaterEqual",
+  Less = "Less",
+  LessEqual = "LessEqual",
   MaskBelow = "MaskBelow",
   MemorySource = "MemorySource",
   Multiply = "Multiply",
+  NotEqual = "NotEqual",
   Place = "Place",
+  Power = "Power",
   Rasterize = "Rasterize",
   Snap = "Snap",
   Step = "Step",
@@ -35,7 +43,8 @@ enum GeoBlockEnum {
 }
 
 enum GroupBlockEnum {
-  Group = "Group"
+  Group = "Group",
+  FillNoData = "FillNoData",
 }
 
 type InputBlockType = {
