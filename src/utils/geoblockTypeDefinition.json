@@ -100,7 +100,7 @@
   },
   "Cumulative": {
     "class": "dask_geomodeling.raster.temporal.Cumulative",
-    "description": "cumulative block",
+    "description": "Compute the cumulative of a raster over time.",
     "parameters": [
       {
         "name": "source",
@@ -123,6 +123,23 @@
         "name": "timezone",
         "type": "string",
         "default": "UTC"
+      }
+    ]
+  },
+  "Dilate": {
+    "class": "dask_geomodeling.raster.spatial.Dilate",
+    "description": "Perform spatial dilation on specific cell values.",
+    "parameters": [
+      {
+        "name": "store",
+        "type": "raster_block"
+      },
+      {
+        "name": "values",
+        "type": "array",
+        "items": {
+          "type": "any"
+        }
       }
     ]
   },
@@ -236,6 +253,28 @@
       }
     }
   },
+  "HillShade": {
+    "class": "dask_geomodeling.raster.spatial.HillShade",
+    "description": "Calculate a hillshade from the raster values.",
+    "parameters": [
+      {
+        "name": "store",
+        "type": "raster_block"
+      },
+      {
+        "name": "altitude",
+        "type": "number"
+      },
+      {
+        "name": "azimuth",
+        "type": "number"
+      },
+      {
+        "name": "fill",
+        "type": "number"
+      }
+    ]
+  },
   "Invert": {
     "class": "dask_geomodeling.raster.elemwise.Invert",
     "description": "Logically invert a raster (swap True and False).",
@@ -326,9 +365,23 @@
       }
     ]
   },
+  "Mask": {
+    "class": "dask_geomodeling.raster.misc.Mask",
+    "description": "Replace values in a raster with a single constant value. ‘no data’ values are preserved.",
+    "parameters": [
+      {
+        "name": "store",
+        "type": "raster_block"
+      },
+      {
+        "name": "value",
+        "type": "number"
+      }
+    ]
+  },
   "MaskBelow": {
     "class": "dask_geomodeling.raster.misc.MaskBelow",
-    "description": "mask below block",
+    "description": "Converts raster cells below the supplied value to ‘no data’.",
     "parameters": [
       {
         "name": "store",
@@ -378,6 +431,20 @@
         "items": {
           "type": "any"
         }
+      }
+    ]
+  },
+  "MovingMax": {
+    "class": "dask_geomodeling.raster.spatial.MovingMax",
+    "description": "Apply a spatial maximum filter to the data using a circular footprint.",
+    "parameters": [
+      {
+        "name": "store",
+        "type": "raster_block"
+      },
+      {
+        "name": "size",
+        "type": "integer"
       }
     ]
   },
@@ -513,22 +580,36 @@
       }
     ]
   },
-  "Rasterize": {
-    "class": "dask_geomodeling.misc.Rasterize",
-    "description": "rasterize block",
+  "RasterFileSource": {
+    "class": "dask_geomodeling.raster.sources.RasterFileSource",
+    "description": "A raster source that interfaces data from a file path.",
     "parameters": [
       {
-        "name": "source",
-        "type": "geometry_block"
-      },
-      {
-        "name": "column_name",
+        "name": "url",
         "type": "string"
       },
       {
-        "name": "dtype",
-        "type": "string",
-        "default": "int32"
+        "name": "time_first",
+        "type": "integer"
+      },
+      {
+        "name": "time_delta",
+        "type": "integer",
+        "default": 300000
+      }
+    ]
+  },
+  "RasterizeWKT": {
+    "class": "dask_geomodeling.raster.misc.RasterizeWKT",
+    "description": "Converts a single geometry to a raster mask.",
+    "parameters": [
+      {
+        "name": "wkt",
+        "type": "string"
+      },
+      {
+        "name": "projection",
+        "type": "string"
       }
     ]
   },
@@ -559,6 +640,38 @@
         "name": "select",
         "type": "boolean",
         "default": false
+      }
+    ]
+  },
+  "Shift": {
+    "class": "dask_geomodeling.raster.temporal.Shift",
+    "description": "Shift a temporal raster by some timedelta.",
+    "parameters": [
+      {
+        "name": "store",
+        "type": "raster_block"
+      },
+      {
+        "name": "time",
+        "type": "integer"
+      }
+    ]
+  },
+  "Smooth": {
+    "class": "dask_geomodeling.raster.spatial.Smooth",
+    "description": "Smooth the values from a raster spatially using Gaussian smoothing.",
+    "parameters": [
+      {
+        "name": "store",
+        "type": "raster_block"
+      },
+      {
+        "name": "size",
+        "type": "number"
+      },
+      {
+        "name": "fill",
+        "type": "number"
       }
     ]
   },
@@ -627,7 +740,7 @@
   },
   "TemporalAggregate": {
     "class": "dask_geomodeling.raster.temporal.TemporalAggregate",
-    "description": "temporal aggregate",
+    "description": "Resample a raster in time.",
     "parameters": [
       {
         "name": "source",
