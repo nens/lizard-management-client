@@ -50,6 +50,7 @@ export const Block = (props: Node<BlockInput>) => {
         />
       ))}
       <div
+        title={classOfBlock}
         style={{
           fontSize: 12,
           display: 'flex',

@@ -11,7 +11,7 @@ interface GroupBlockInput {
 }
 
 export const GroupBlock = (props: Node<GroupBlockInput>) => {
-  const { label, parameters, outputBlock, onOutputChange } = props.data!;
+  const { classOfBlock, label, parameters, outputBlock, onOutputChange } = props.data!;
   const initialHandles = Array.isArray(parameters) ? parameters : ['handle-1', 'handle-2'];
   const [handles, setHandles] = useState<string[]>(initialHandles);
   const numberOfHandles = handles.length;
@@ -35,6 +35,7 @@ export const GroupBlock = (props: Node<GroupBlockInput>) => {
         />
       ))}
       <div
+        title={classOfBlock}
         style={{
           fontSize: 12,
           display: 'flex',
