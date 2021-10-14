@@ -1,5 +1,6 @@
 import { Edge, Elements, isEdge, isNode } from "react-flow-renderer";
 import { GeoBlockSource, geoblockType } from "../types/geoBlockType";
+import { geoBlockValidator } from "./geoblockValidators";
 
 const position = { x: 0, y: 0 };
 
@@ -228,6 +229,12 @@ export const convertElementsToGeoBlockSource = (
     return;
   } else if (outputBlocks.length > 1) {
     console.error('Only one output block is allowed');
+    return;
+  };
+
+  const errors = geoBlockValidator(elements);
+  if (errors.length >= 1) {
+    errors.map(e => console.error(e.errorMessage));
     return;
   };
 

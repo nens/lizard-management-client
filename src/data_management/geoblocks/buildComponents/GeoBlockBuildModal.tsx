@@ -74,8 +74,8 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
                 return alert(jsonValidator(jsonString));
               };
               if (geoBlockView === 'visual') {
-                convertElementsToGeoBlockSource(elements, setJsonString);
-                setGeoBlockView('json');
+                const geoBlockSource = convertElementsToGeoBlockSource(elements, setJsonString);
+                if (geoBlockSource) setGeoBlockView('json');
               } else {
                 setGeoBlockView('visual');
               };
@@ -92,13 +92,12 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
                 const geoBlockSource = convertElementsToGeoBlockSource(elements, setJsonString);
                 if (geoBlockSource) {
                   props.onChange(geoBlockSource);
-                } else {
-                  return;
+                  props.handleClose();
                 };
               } else {
                 props.onChange(JSON.parse(jsonString));
+                props.handleClose();
               };
-              props.handleClose();
             }}
           />
         </div>
