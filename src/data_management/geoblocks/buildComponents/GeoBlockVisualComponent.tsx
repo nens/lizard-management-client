@@ -22,7 +22,11 @@ import { NumberBlock } from './blockComponents/NumberBlock';
 import { RasterBlock } from './blockComponents/RasterBlock';
 import { geoblockType } from '../../../types/geoBlockType';
 import { createGraphLayout } from '../../../utils/createGraphLayout';
-import { getBlockData } from '../../../utils/geoblockUtils';
+import {
+  convertElementsToGeoBlockSource,
+  convertGeoblockSourceToFlowElements,
+  getBlockData
+} from '../../../utils/geoblockUtils';
 import edgeStyle from './blockComponents/Edge.module.css';
 
 interface MyProps {
@@ -181,7 +185,10 @@ const GeoBlockVisualFlow = (props: MyProps) => {
         <Controls />
         <button
           onClick={() => {
-            const elementsWithoutPosition = elements.filter(
+            const geoBlockSource = convertElementsToGeoBlockSource(elements);
+            if (!geoBlockSource) return;
+            const newElements = convertGeoblockSourceToFlowElements(geoBlockSource, setElements);
+            const elementsWithoutPosition = newElements.filter(
               el => isNode(el)
             ).map(el => ({
               ...el,
