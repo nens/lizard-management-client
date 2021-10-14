@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import ReactFlow, {
   addEdge,
   Connection,
@@ -19,33 +19,21 @@ import { BooleanBlock } from './blockComponents/BooleanBlock';
 import { GroupBlock } from './blockComponents/GroupBlock';
 import { NumberBlock } from './blockComponents/NumberBlock';
 import { RasterBlock } from './blockComponents/RasterBlock';
-import { GeoBlockSource, geoblockType } from '../../../types/geoBlockType';
+import { geoblockType } from '../../../types/geoBlockType';
 import { createGraphLayout } from '../../../utils/createGraphLayout';
-import {
-  convertElementsToGeoBlockSource,
-  convertGeoblockSourceToFlowElements,
-  getBlockData,
-} from '../../../utils/geoblockUtils';
+import { getBlockData } from '../../../utils/geoblockUtils';
 import edgeStyle from './blockComponents/Edge.module.css';
 
 interface MyProps {
-  source: GeoBlockSource,
-  setJsonString: (e: string) => void
+  elements: Elements,
+  setElements: React.Dispatch<React.SetStateAction<Elements<any>>>
 }
 
 const GeoBlockVisualFlow = (props: MyProps) => {
-  const { source } = props;
+  const { elements, setElements } = props;
   const reactFlowWrapper = useRef<any>(null);
   const updateNodeInternals = useUpdateNodeInternals();
   const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
-  const [elements, setElements] = useState<Elements>([]);
-
-  // useEffect to create geoblock elements and build the graph layout using dagre library
-  useEffect(() => {
-    const geoblockElements = convertGeoblockSourceToFlowElements(source, setElements);
-    const layoutedElements = createGraphLayout(geoblockElements);
-    setElements(layoutedElements);
-  }, [source]);
 
   // gets called after end of edge gets dragged to another source or target
   const onEdgeUpdate = (oldEdge: Edge, newConnection: Connection) => {
@@ -164,23 +152,12 @@ const GeoBlockVisualFlow = (props: MyProps) => {
           }}
           style={{
             position: 'absolute',
-            right: 100,
-            bottom: 10,
-            zIndex: 1000
-          }}
-        >
-          Reset view
-        </button>
-        <button
-          onClick={() => convertElementsToGeoBlockSource(elements, props.setJsonString)}
-          style={{
-            position: 'absolute',
             right: 10,
             bottom: 10,
             zIndex: 1000
           }}
         >
-          Validate
+          Reset view
         </button>
       </ReactFlow>
       <SideBar />
@@ -195,8 +172,8 @@ export const GeoBlockVisualComponent = (props: MyProps) => (
   // when there are changes that cannot be automatically updated to the node.
   <ReactFlowProvider>
     <GeoBlockVisualFlow
-      source={props.source}
-      setJsonString={props.setJsonString}
+      elements={props.elements}
+      setElements={props.setElements}
     />
   </ReactFlowProvider>
 )

@@ -218,7 +218,7 @@ export const convertGeoblockSourceToFlowElements = (
 export const convertElementsToGeoBlockSource = (
   elements: Elements,
   setJsonString: (e: string) => void
-) => {
+): GeoBlockSource | undefined => {
   const edges = elements.filter(e => isEdge(e)) as Edge[];
   const blocks = elements.filter(e => isNode(e));
   const outputBlocks = blocks.filter(block => block.data && block.data.outputBlock);
@@ -266,10 +266,11 @@ export const convertElementsToGeoBlockSource = (
     };
   }, {});
 
-  const geoblockSource = {
+  const geoBlockSource = {
     name: outputBlocks[0].data.label,
     graph
   };
 
-  return setJsonString(JSON.stringify(geoblockSource, null, 4));
+  setJsonString(JSON.stringify(geoBlockSource, null, 4));
+  return geoBlockSource;
 };

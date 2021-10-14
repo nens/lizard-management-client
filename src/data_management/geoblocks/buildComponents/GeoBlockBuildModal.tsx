@@ -1,10 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
+import { Elements } from 'react-flow-renderer';
 import { GeoBlockJsonComponent } from './GeoBlockJsonComponent';
 import { GeoBlockVisualComponent } from './GeoBlockVisualComponent';
 import { SubmitButton } from '../../../form/SubmitButton';
 import { addNotification } from '../../../actions';
 import { jsonValidator } from '../../../form/validators';
+import { createGraphLayout } from '../../../utils/createGraphLayout';
+import {
+  convertElementsToGeoBlockSource,
+  convertGeoblockSourceToFlowElements
+} from '../../../utils/geoblockUtils';
 import ModalBackground from '../../../components/ModalBackground';
 import styles from './GeoBlockBuildModal.module.css';
 import formStyles from './../../../styles/Forms.module.css';
@@ -21,6 +27,21 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
   const [jsonString, setJsonString] = useState<string>(sourceString);
   const [geoBlockView, setGeoBlockView] = useState<'json' | 'visual'>('json');
 
+  // Block elements of a geoblock for React-Flow are kept in here
+  // to make use of the SAVE, SWITCH and VALIDATE buttons
+  const [elements, setElements] = useState<Elements>([]);
+
+  // useEffect to create geoblock elements and build the graph layout using dagre library
+  // useEffect only gets called when the visual component is open
+  // use the useEffect here instead of the GeoBlockVisualComponent to avoid Maximum Depth Exceeded error
+  useEffect(() => {
+    if (geoBlockView === 'visual') {
+      const geoblockElements = convertGeoblockSourceToFlowElements(JSON.parse(jsonString), setElements);
+      const layoutedElements = createGraphLayout(geoblockElements);
+      setElements(layoutedElements);
+    };
+  }, [jsonString, setElements, geoBlockView]);
+
   return (
     <ModalBackground
       title={'Geo Block Builder'}
@@ -36,8 +57,8 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
           />
         ) : (
           <GeoBlockVisualComponent
-            source={JSON.parse(jsonString)}
-            setJsonString={setJsonString}
+            elements={elements}
+            setElements={setElements}
           />
         )}
         <div className={`${formStyles.ButtonContainer} ${formStyles.FixedButtonContainer}`}>
@@ -52,10 +73,11 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
               if (jsonValidator(jsonString)) {
                 return alert(jsonValidator(jsonString));
               };
-              if (geoBlockView === 'json') {
-                setGeoBlockView('visual');
-              } else {
+              if (geoBlockView === 'visual') {
+                convertElementsToGeoBlockSource(elements, setJsonString);
                 setGeoBlockView('json');
+              } else {
+                setGeoBlockView('visual');
               };
             }}
           >
@@ -66,7 +88,16 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
               if (jsonValidator(jsonString)) {
                 return alert(jsonValidator(jsonString));
               };
-              props.onChange(JSON.parse(jsonString));
+              if (geoBlockView === 'visual') {
+                const geoBlockSource = convertElementsToGeoBlockSource(elements, setJsonString);
+                if (geoBlockSource) {
+                  props.onChange(geoBlockSource);
+                } else {
+                  return;
+                };
+              } else {
+                props.onChange(JSON.parse(jsonString));
+              };
               props.handleClose();
             }}
           />
