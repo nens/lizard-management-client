@@ -224,14 +224,6 @@ export const convertElementsToGeoBlockSource = (
   const blocks = elements.filter(e => isNode(e));
   const outputBlocks = blocks.filter(block => block.data && block.data.outputBlock);
 
-  if (outputBlocks.length === 0) {
-    console.error('No output node');
-    return;
-  } else if (outputBlocks.length > 1) {
-    console.error('Only one output block is allowed');
-    return;
-  };
-
   const errors = geoBlockValidator(elements);
   if (errors.length >= 1) {
     errors.map(e => console.error(e.errorMessage));
