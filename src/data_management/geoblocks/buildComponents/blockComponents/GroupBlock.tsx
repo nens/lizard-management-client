@@ -26,7 +26,7 @@ export const GroupBlock = (props: Node<GroupBlockInput>) => {
           key={i}
           type="target"
           id={'handle-' + i}
-          title={'source'}
+          title={'source: raster_block'}
           position={Position.Left}
           style={{
             top: 10 * (i + 1),
