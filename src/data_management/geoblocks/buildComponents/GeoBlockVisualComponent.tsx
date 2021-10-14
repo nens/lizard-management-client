@@ -6,6 +6,7 @@ import ReactFlow, {
   Controls,
   Edge,
   Elements,
+  isEdge,
   isNode,
   Position,
   ReactFlowProvider,
@@ -47,6 +48,15 @@ const GeoBlockVisualFlow = (props: MyProps) => {
       const target = els.find(el => el.id === params.target)!;
       const targetHandle = params.targetHandle!;
 
+      const edges = els.filter(el => isEdge(el)) as Edge[];
+      const edgeConnectedToTargetHandle = edges.find(edge => edge.target === target.id && edge.targetHandle === targetHandle);
+
+      // Not allowed to connect to a target handle that is already used by another block
+      if (edgeConnectedToTargetHandle) {
+        console.error('Target handle has been used by another block.');
+        return els;
+      };
+
       const valueTypeOfSource = (
         source.type === 'NumberBlock' ? 'number' :
         source.type === 'BooleanBlock' ? 'boolean' :
@@ -68,8 +78,9 @@ const GeoBlockVisualFlow = (props: MyProps) => {
         valueTypeOfTargetHandle = 'raster_block';
       };
 
+      // Not allowed to connect to a target handle with a wrong data type
       if (!valueTypeOfTargetHandle.includes(valueTypeOfSource)) {
-        console.error('Invalid type');
+        console.error('Invalid connection due to wrong data type.');
         return els;
       };
 
