@@ -44,6 +44,35 @@ const GeoBlockVisualFlow = (props: MyProps) => {
   const onConnect = (params: Edge | Connection) => {
     setElements((els) => {
       const source = els.find(el => el.id === params.source)!;
+      const target = els.find(el => el.id === params.target)!;
+      const targetHandle = params.targetHandle!;
+
+      const valueTypeOfSource = (
+        source.type === 'NumberBlock' ? 'number' :
+        source.type === 'BooleanBlock' ? 'boolean' :
+        'raster_block'
+      );
+
+      const targetBlockParameters = Object.values(geoblockType).find(blockType => blockType!.class === target.data!.classOfBlock)!.parameters;
+
+      const targetHandlers: {[key: string]: string | string[]} = {};
+
+      let valueTypeOfTargetHandle: string | string[];
+
+      if (Array.isArray(targetBlockParameters)) {
+        targetBlockParameters.forEach((parameter, i) => {
+          return targetHandlers['handle-' + i] = parameter.type;
+        });
+        valueTypeOfTargetHandle = targetHandlers[targetHandle];
+      } else {
+        valueTypeOfTargetHandle = 'raster_block';
+      };
+
+      if (!valueTypeOfTargetHandle.includes(valueTypeOfSource)) {
+        console.error('Invalid type');
+        return els;
+      };
+
       return addEdge({
         ...params,
         type: ConnectionLineType.SmoothStep,
