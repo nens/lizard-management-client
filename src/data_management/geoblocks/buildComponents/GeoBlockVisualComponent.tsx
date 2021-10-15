@@ -6,7 +6,6 @@ import ReactFlow, {
   Controls,
   Edge,
   Elements,
-  isEdge,
   isNode,
   Position,
   ReactFlowProvider,
@@ -22,6 +21,7 @@ import { NumberBlock } from './blockComponents/NumberBlock';
 import { RasterBlock } from './blockComponents/RasterBlock';
 import { geoblockType } from '../../../types/geoBlockType';
 import { getBlockData } from '../../../utils/geoblockUtils';
+import { targetHandleValidator } from '../../../utils/geoblockValidators';
 import edgeStyle from './blockComponents/Edge.module.css';
 
 interface MyProps {
@@ -42,47 +42,11 @@ const GeoBlockVisualFlow = (props: MyProps) => {
   };
 
   const onConnect = (params: Edge | Connection) => {
+    const connectError = targetHandleValidator(elements, params);
+    if (connectError) return console.error(connectError.errorMessage);
+
     setElements((els) => {
       const source = els.find(el => el.id === params.source)!;
-      const target = els.find(el => el.id === params.target)!;
-      const targetHandle = params.targetHandle!;
-
-      const edges = els.filter(el => isEdge(el)) as Edge[];
-      const edgeConnectedToTargetHandle = edges.find(edge => edge.target === target.id && edge.targetHandle === targetHandle);
-
-      // Not allowed to connect to a target handle that is already used by another block
-      if (edgeConnectedToTargetHandle) {
-        console.error('Target handle has been used by another block.');
-        return els;
-      };
-
-      const valueTypeOfSource = (
-        source.type === 'NumberBlock' ? 'number' :
-        source.type === 'BooleanBlock' ? 'boolean' :
-        'raster_block'
-      );
-
-      const targetBlockParameters = Object.values(geoblockType).find(blockType => blockType!.class === target.data!.classOfBlock)!.parameters;
-
-      const targetHandlers: {[key: string]: string | string[]} = {};
-
-      let valueTypeOfTargetHandle: string | string[];
-
-      if (Array.isArray(targetBlockParameters)) {
-        targetBlockParameters.forEach((parameter, i) => {
-          return targetHandlers['handle-' + i] = parameter.type;
-        });
-        valueTypeOfTargetHandle = targetHandlers[targetHandle];
-      } else {
-        valueTypeOfTargetHandle = 'raster_block';
-      };
-
-      // Not allowed to connect to a target handle with a wrong data type
-      if (!valueTypeOfTargetHandle.includes(valueTypeOfSource)) {
-        console.error('Invalid connection due to wrong data type.');
-        return els;
-      };
-
       return addEdge({
         ...params,
         type: ConnectionLineType.SmoothStep,
