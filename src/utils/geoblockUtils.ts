@@ -220,15 +220,16 @@ export const convertElementsToGeoBlockSource = (
   elements: Elements,
   setJsonString?: (e: string) => void
 ): GeoBlockSource | undefined => {
-  const edges = elements.filter(e => isEdge(e)) as Edge[];
-  const blocks = elements.filter(e => isNode(e));
-  const outputBlocks = blocks.filter(block => block.data && block.data.outputBlock);
-
+  // check if the geoblock is validated
   const errors = geoBlockValidator(elements);
   if (errors.length >= 1) {
     errors.map(e => console.error(e.errorMessage));
     return;
   };
+
+  const edges = elements.filter(e => isEdge(e)) as Edge[];
+  const blocks = elements.filter(e => isNode(e));
+  const outputBlocks = blocks.filter(block => block.data && block.data.outputBlock);
 
   // use reduce method to create the graph object
   const graph = blocks.filter(
