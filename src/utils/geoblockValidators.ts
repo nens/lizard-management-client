@@ -1,4 +1,4 @@
-import { Connection, Edge, Elements, isEdge, isNode, Node } from "react-flow-renderer";
+import { Connection, Edge, Elements, getOutgoers, isEdge, isNode, Node } from "react-flow-renderer";
 import { geoblockType } from "../types/geoBlockType";
 
 interface ErrorObject {
@@ -24,6 +24,9 @@ export const geoBlockValidator = (elements: Elements): ErrorObject[] => {
   const outputError = outputValidator(outputBlocks);
   if (outputError) errors.push(outputError);
 
+  const orphanPartError = orphanPartValidator(elements);
+  if (orphanPartError) errors.push(orphanPartError);
+
   return errors;
 };
 
@@ -48,6 +51,30 @@ const outputValidator = (outputBlocks: Node[]): Error => {
       errorMessage: 'No output block.'
     };
   };
+  return false;
+};
+
+const orphanPartValidator = (els: Elements): Error => {
+  const blocks = els.filter(
+    el => isNode(el)
+  ).filter(
+    el => !(el.type === 'NumberBlock')
+  ).filter(
+    el => !el.data.outputBlock
+  ) as Node[];
+
+  const orphanBlock = blocks.find(block => {
+    const outgoers = getOutgoers(block, els);
+    return outgoers.length === 0;
+  });
+
+  if (orphanBlock) {
+    return {
+      blockId: orphanBlock.id,
+      errorMessage: 'Orphan part existed in the graph.'
+    };
+  };
+
   return false;
 };
 
