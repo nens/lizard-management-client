@@ -83,6 +83,25 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
           >
             Switch
           </button>
+          <button
+            onClick={async () => {
+              const geoBlockSource = convertElementsToGeoBlockSource(elements, setJsonString);
+              if (geoBlockSource) {
+                const apiResponse = await fetch('/api/v4/rasters/db90664c-57fd-4ece-b0a6-ffa34b0e9b2f/', {
+                  credentials: 'same-origin',
+                  method: "PATCH",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    source: geoBlockSource
+                  })
+                }).then(res => res.json());
+                console.log(apiResponse);
+              };
+              return;
+            }}
+          >
+            Validate
+          </button>
           <SubmitButton
             onClick={() => {
               if (jsonValidator(jsonString)) {
