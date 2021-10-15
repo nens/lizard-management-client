@@ -21,12 +21,7 @@ import { GroupBlock } from './blockComponents/GroupBlock';
 import { NumberBlock } from './blockComponents/NumberBlock';
 import { RasterBlock } from './blockComponents/RasterBlock';
 import { geoblockType } from '../../../types/geoBlockType';
-import { createGraphLayout } from '../../../utils/createGraphLayout';
-import {
-  convertElementsToGeoBlockSource,
-  convertGeoblockSourceToFlowElements,
-  getBlockData
-} from '../../../utils/geoblockUtils';
+import { getBlockData } from '../../../utils/geoblockUtils';
 import edgeStyle from './blockComponents/Edge.module.css';
 
 interface MyProps {
@@ -183,29 +178,6 @@ const GeoBlockVisualFlow = (props: MyProps) => {
         }}
       >
         <Controls />
-        <button
-          onClick={() => {
-            const geoBlockSource = convertElementsToGeoBlockSource(elements);
-            if (!geoBlockSource) return;
-            const newElements = convertGeoblockSourceToFlowElements(geoBlockSource, setElements);
-            const elementsWithoutPosition = newElements.filter(
-              el => isNode(el)
-            ).map(el => ({
-              ...el,
-              position: { x: 0, y: 0 }
-            }));
-            const layoutedElements = createGraphLayout(elementsWithoutPosition);
-            setElements(layoutedElements);
-          }}
-          style={{
-            position: 'absolute',
-            right: 10,
-            bottom: 10,
-            zIndex: 1000
-          }}
-        >
-          Reset view
-        </button>
       </ReactFlow>
       <SideBar />
     </div>
