@@ -109,10 +109,8 @@ const getNumberElements = (
   blockElements: Elements,
   setElements: React.Dispatch<React.SetStateAction<Elements<any>>>
 ): Elements => {
-  return blockElements.filter(
-    elm => elm.data && elm.data.parameters && elm.data.parameters.filter((parameter: any) => typeof(parameter) === 'number').length // find blocks with connected number inputs
-  ).map(elm => {
-    const numbers: number[] = elm.data.parameters.filter((parameter: any) => !isNaN(parameter));
+  return blockElements.map(elm => {
+    const numbers: number[] = elm.data.parameters.filter((parameter: any) => typeof(parameter) === 'number');
     return numbers.map((n, i) => {
       const blockId = elm.id + '-' + n + '-' + i;
       return {
@@ -129,13 +127,39 @@ const getNumberElements = (
   }).flat(1);
 };
 
+const getStringElements = (
+  graph: GeoBlockSource['graph'],
+  blockElements: Elements,
+  setElements: React.Dispatch<React.SetStateAction<Elements<any>>>
+): Elements => {
+  const allBlockNames = Object.keys(graph);
+  return blockElements.map(elm => {
+    const stringValues: string[] = elm.data.parameters.filter(
+      (parameter: any) => !allBlockNames.includes(parameter)
+    ).filter(
+      (parameter: any) => typeof(parameter) === 'string'
+    );
+    return stringValues.map((value, i) => {
+      const blockId = elm.id + '-' + value;
+      return {
+        id: blockId,
+        type: 'StringBlock',
+        data: {
+          value: value,
+          classOfBlock: 'StringBlock',
+          onChange: (value: string) => onBlockValueChange(value, blockId, setElements)
+        },
+        position
+      };
+    });
+  }).flat(1);
+};
+
 const getBooleanElements = (
   blockElements: Elements,
   setElements: React.Dispatch<React.SetStateAction<Elements<any>>>
 ): Elements => {
-  return blockElements.filter(
-    elm => elm.data && elm.data.parameters && elm.data.parameters.filter((parameter: any) => typeof(parameter) === 'boolean').length // find blocks with connected boolean inputs
-  ).map(elm => {
+  return blockElements.map(elm => {
     const booleanParameters: boolean[] = elm.data.parameters.filter((parameter: any) => typeof(parameter) === 'boolean');
     return booleanParameters.map((bool, i) => {
       const blockId = elm.id + '-' + bool;
@@ -212,8 +236,9 @@ export const convertGeoblockSourceToFlowElements = (
   const blockElements = getBlockElements(source, setElements);
   const numberElements = getNumberElements(blockElements, setElements);
   const booleanElements = getBooleanElements(blockElements, setElements);
+  const stringElements = getStringElements(source.graph, blockElements, setElements);
 
-  return blockElements.concat(rasterElements).concat(numberElements).concat(booleanElements);
+  return blockElements.concat(rasterElements).concat(numberElements).concat(booleanElements).concat(stringElements);
 };
 
 export const convertElementsToGeoBlockSource = (

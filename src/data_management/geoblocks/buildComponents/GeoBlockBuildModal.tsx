@@ -37,7 +37,7 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
   useEffect(() => {
     if (geoBlockView === 'visual') {
       const geoblockElements = convertGeoblockSourceToFlowElements(JSON.parse(jsonString), setElements);
-      const layoutedElements = createGraphLayout(geoblockElements);
+      const layoutedElements = createGraphLayout(JSON.parse(jsonString), geoblockElements);
       setElements(layoutedElements);
     };
   }, [jsonString, setElements, geoBlockView]);

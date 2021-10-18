@@ -6,13 +6,17 @@ import {
   Elements,
   Position
 } from 'react-flow-renderer';
+import { GeoBlockSource } from '../types/geoBlockType';
 import edgeStyles from './../data_management/geoblocks/buildComponents/blockComponents/Edge.module.css';
 
 interface BlockInput {
   parameters: (string | number | boolean | [])[]
 }
 
-export const createGraphLayout = (elements: Elements<BlockInput>): Elements => {
+export const createGraphLayout = (
+  source: GeoBlockSource,
+  elements: Elements<BlockInput>
+): Elements => {
   const dagreGraph = new dagre.graphlib.Graph();
   dagreGraph.setDefaultEdgeLabel(() => ({}));
   dagreGraph.setGraph({ rankdir: 'LR' });
@@ -74,10 +78,12 @@ export const createGraphLayout = (elements: Elements<BlockInput>): Elements => {
     el => el.data && el.data.parameters
   ).map(el => {
     const { parameters } = el.data!;
-    const numberParameters = parameters.filter(parameter => typeof(parameter) === 'number') as number[];
+    const allBlockNames = Object.keys(source.graph);
+    const numberParameters = parameters.filter(parameter => typeof(parameter) === 'number');
 
     return parameters.map((parameter, index) => {
-      if (typeof(parameter) === 'string') {
+      if (typeof(parameter) === 'string' && allBlockNames.includes(parameter)) {
+        // edge from a block to another block
         return {
           id: parameter + '-' + el.id,
           className: edgeStyles.BlockEdge,
@@ -87,7 +93,19 @@ export const createGraphLayout = (elements: Elements<BlockInput>): Elements => {
           targetHandle: 'handle-' + index,
           animated: true
         };
+      } else if (typeof(parameter) === 'string' && !allBlockNames.includes(parameter)) {
+        // edge from a string value to another block
+        return {
+          id: parameter + '-' + el.id,
+          className: edgeStyles.BlockEdge,
+          type: ConnectionLineType.SmoothStep,
+          source: el.id + '-' + parameter,
+          target: el.id,
+          targetHandle: 'handle-' + index,
+          animated: true
+        };
       } else if (typeof(parameter) === 'number') {
+        // edge from a number value to another block
         const indexOfParameter = numberParameters.indexOf(parameter);
         numberParameters[indexOfParameter] = NaN; // replace number with NaN to avoid duplicate numbers
         return {
@@ -100,6 +118,7 @@ export const createGraphLayout = (elements: Elements<BlockInput>): Elements => {
           animated: true
         };
       } else if (typeof(parameter) === 'boolean') {
+        // edge from a boolean value to another block
         return {
           id: parameter + '-' + el.id,
           className: edgeStyles.BooleanEdge,
@@ -110,6 +129,7 @@ export const createGraphLayout = (elements: Elements<BlockInput>): Elements => {
           animated: true
         };
       } else {
+        // edge from an array value to another block
         return {
           id: parameter + '-' + el.id,
           type: ConnectionLineType.SmoothStep,

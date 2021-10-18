@@ -19,6 +19,7 @@ import { BooleanBlock } from './blockComponents/BooleanBlock';
 import { GroupBlock } from './blockComponents/GroupBlock';
 import { NumberBlock } from './blockComponents/NumberBlock';
 import { RasterBlock } from './blockComponents/RasterBlock';
+import { StringBlock } from './blockComponents/StringBlock';
 import { geoblockType } from '../../../types/geoBlockType';
 import { getBlockData } from '../../../utils/geoblockUtils';
 import { targetHandleValidator } from '../../../utils/geoblockValidators';
@@ -139,6 +140,7 @@ const GeoBlockVisualFlow = (props: MyProps) => {
           GroupBlock: GroupBlock,
           RasterBlock: RasterBlock,
           NumberBlock: NumberBlock,
+          StringBlock: StringBlock
         }}
       >
         <Controls />
