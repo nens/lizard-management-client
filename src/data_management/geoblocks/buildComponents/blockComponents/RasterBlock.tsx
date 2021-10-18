@@ -14,6 +14,7 @@ export const RasterBlock = (props: Node<RasterBlockInput>) => {
   return (
     <div
       className={`${styles.Block} ${styles.RasterBlock}`}
+      title={label}
       tabIndex={1}
     >
       <div className={styles.BlockLabel}>
@@ -21,6 +22,7 @@ export const RasterBlock = (props: Node<RasterBlockInput>) => {
       </div>
       <input
         type="text"
+        title={value}
         className={`${formStyles.FormControl} ${styles.BlockInput}`}
         placeholder={'Please enter an UUID'}
         value={value}

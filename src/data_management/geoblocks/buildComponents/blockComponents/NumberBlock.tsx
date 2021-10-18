@@ -14,6 +14,7 @@ export const NumberBlock = (props: Node<NumberBlockInput>) => {
     <div>
       <input
         type="number"
+        title={value.toString()}
         className={`${formStyles.FormControl} ${styles.NumberBlock}`}
         onChange={e => onChange(parseFloat(e.target.value))}
         defaultValue={value}

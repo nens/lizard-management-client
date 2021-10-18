@@ -17,6 +17,7 @@ export const BooleanBlock = (props: Node<BooleanBlockInput>) => {
     >
       <Checkbox
         name={''}
+        title={value.toString()}
         checked={value}
         onChange={() => onChange(!value)}
         size={24}

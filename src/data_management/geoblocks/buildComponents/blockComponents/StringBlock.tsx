@@ -17,7 +17,8 @@ export const StringBlock = (props: Node<StringBlockInput>) => {
     >
       <input
         type="text"
-        className={`${formStyles.FormControl}`}
+        title={value}
+        className={formStyles.FormControl}
         onChange={e => onChange(e.target.value)}
         defaultValue={value}
       />
