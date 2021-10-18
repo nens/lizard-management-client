@@ -97,6 +97,7 @@ export const targetHandleValidator = (els: Elements, params: Edge | Connection):
   const valueTypeOfSource = (
     source.type === 'NumberBlock' ? 'number' :
     source.type === 'BooleanBlock' ? 'boolean' :
+    source.type === 'StringBlock' ? 'string' :
     'raster_block'
   );
 

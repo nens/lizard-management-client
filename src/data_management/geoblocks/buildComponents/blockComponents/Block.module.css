@@ -26,10 +26,12 @@
 
 /* String block */
 .StringBlock {
-  /* width: 60px; */
+  width: 160px;
   font-size: 12px;
-  padding: 5px;
-  /* border-color: #009f86; */
+  border-color: blue;
+}
+.StringBlock:focus {
+  box-shadow: 0 0 0 0.5px blue;
 }
 
 /* Output block */

@@ -53,7 +53,10 @@ const GeoBlockVisualFlow = (props: MyProps) => {
         type: ConnectionLineType.SmoothStep,
         animated: true,
         className: (
-          source.type === 'NumberBlock' ? edgeStyle.NumberEdge : edgeStyle.BlockEdge
+          source.type === 'NumberBlock' ? edgeStyle.NumberEdge :
+          source.type === 'StringBlock' ? edgeStyle.StringEdge :
+          source.type === 'BooleanBlock' ? edgeStyle.BooleanEdge :
+          edgeStyle.BlockEdge
         )
       }, els);
     });
@@ -96,7 +99,7 @@ const GeoBlockVisualFlow = (props: MyProps) => {
       const newBlock = {
         id: idOfNewBlock,
         type: (
-          blockName === 'RasterBlock' || blockName === 'NumberBlock' || blockName === 'BooleanBlock' ? blockName :
+          blockName === 'RasterBlock' || blockName === 'NumberBlock' || blockName === 'BooleanBlock' || blockName === 'StringBlock' ? blockName :
           blockName === 'Group' || blockName === 'FillNoData' ? 'GroupBlock' : 'Block'
         ),
         position,

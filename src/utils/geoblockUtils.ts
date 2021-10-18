@@ -29,6 +29,12 @@ export const getBlockData = (
     onChange: (value: number) => onBlockValueChange(value, idOfNewBlock, setElements)
   };
 
+  const dataOfStringBlock = {
+    value: 'test',
+    classOfBlock: 'StringBlock',
+    onChange: (value: string) => onBlockValueChange(value, idOfNewBlock, setElements)
+  };
+
   const dataOfBuildBlock = {
     label: blockName + '_' + (numberOfBlocks + 1),
     // @ts-ignore
@@ -44,6 +50,8 @@ export const getBlockData = (
     return dataOfNumberBlock;
   } else if (blockName === 'BooleanBlock') {
     return dataOfBooleanBlock;
+  } else if (blockName === 'StringBlock') {
+    return dataOfStringBlock;
   } else {
     return dataOfBuildBlock;
   };

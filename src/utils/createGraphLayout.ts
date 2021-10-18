@@ -97,7 +97,7 @@ export const createGraphLayout = (
         // edge from a string value to another block
         return {
           id: parameter + '-' + el.id,
-          className: edgeStyles.BlockEdge,
+          className: edgeStyles.StringEdge,
           type: ConnectionLineType.SmoothStep,
           source: el.id + '-' + parameter,
           target: el.id,

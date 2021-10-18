@@ -41,7 +41,7 @@ export const Block = (props: Node<BlockInput>) => {
             top: 10 * (i + 1),
             background: (
               parameter.type === 'raster_block' ? 'orange' :
-              parameter.type === 'string' ? 'orange' :
+              parameter.type === 'string' ? 'blue' :
               parameter.type === 'number' ? '#009f86' :
               parameter.type === 'boolean' ? 'green' :
               undefined
