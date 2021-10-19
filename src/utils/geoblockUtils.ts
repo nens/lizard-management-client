@@ -261,9 +261,10 @@ const onBlockOutputChange = (
 };
 
 export const convertGeoblockSourceToFlowElements = (
-  source: GeoBlockSource,
+  jsonString: string,
   setElements: React.Dispatch<React.SetStateAction<Elements<any>>>
 ) => {
+  const source: GeoBlockSource = JSON.parse(jsonString);
   const rasterElements = getRasterElements(source.graph, setElements);
   const blockElements = getBlockElements(source, setElements);
   const numberElements = getNumberElements(blockElements, setElements);
@@ -276,6 +277,7 @@ export const convertGeoblockSourceToFlowElements = (
 
 export const convertElementsToGeoBlockSource = (
   elements: Elements,
+  jsonString: string,
   setJsonString?: (e: string) => void
 ): GeoBlockSource | undefined => {
   // check if the geoblock is validated
@@ -326,7 +328,9 @@ export const convertElementsToGeoBlockSource = (
     };
   }, {});
 
+  const source: GeoBlockSource = JSON.parse(jsonString);
   const geoBlockSource = {
+    ...source,
     name: outputBlocks[0].data.label,
     graph
   };

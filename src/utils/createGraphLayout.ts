@@ -14,7 +14,7 @@ interface BlockInput {
 }
 
 export const createGraphLayout = (
-  source: GeoBlockSource,
+  jsonString: string,
   elements: Elements<BlockInput>
 ): Elements => {
   const dagreGraph = new dagre.graphlib.Graph();
@@ -24,6 +24,7 @@ export const createGraphLayout = (
   const nodeWidth = 172;
   const nodeHeight = 36;
 
+  const source: GeoBlockSource = JSON.parse(jsonString);
   const allBlockNames = Object.keys(source.graph);
 
   elements.forEach(el => {

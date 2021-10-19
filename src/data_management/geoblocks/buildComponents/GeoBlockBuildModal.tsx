@@ -36,8 +36,8 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
   // use the useEffect here instead of the GeoBlockVisualComponent to avoid Maximum Depth Exceeded error
   useEffect(() => {
     if (geoBlockView === 'visual') {
-      const geoblockElements = convertGeoblockSourceToFlowElements(JSON.parse(jsonString), setElements);
-      const layoutedElements = createGraphLayout(JSON.parse(jsonString), geoblockElements);
+      const geoblockElements = convertGeoblockSourceToFlowElements(jsonString, setElements);
+      const layoutedElements = createGraphLayout(jsonString, geoblockElements);
       setElements(layoutedElements);
     };
   }, [jsonString, setElements, geoBlockView]);
@@ -74,7 +74,7 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
                 return alert(jsonValidator(jsonString));
               };
               if (geoBlockView === 'visual') {
-                const geoBlockSource = convertElementsToGeoBlockSource(elements, setJsonString);
+                const geoBlockSource = convertElementsToGeoBlockSource(elements, jsonString, setJsonString);
                 if (geoBlockSource) {
                   setElements([]);
                   setGeoBlockView('json');
@@ -88,7 +88,7 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
           </button>
           <button
             onClick={async () => {
-              const geoBlockSource = convertElementsToGeoBlockSource(elements, setJsonString);
+              const geoBlockSource = convertElementsToGeoBlockSource(elements, jsonString, setJsonString);
               if (geoBlockSource) {
                 const apiResponse = await fetch('/api/v4/rasters/db90664c-57fd-4ece-b0a6-ffa34b0e9b2f/', {
                   credentials: 'same-origin',
@@ -111,7 +111,7 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
                 return alert(jsonValidator(jsonString));
               };
               if (geoBlockView === 'visual') {
-                const geoBlockSource = convertElementsToGeoBlockSource(elements, setJsonString);
+                const geoBlockSource = convertElementsToGeoBlockSource(elements, jsonString, setJsonString);
                 if (geoBlockSource) {
                   props.onChange(geoBlockSource);
                   props.handleClose();
