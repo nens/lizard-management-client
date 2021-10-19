@@ -25,7 +25,7 @@ export const createGraphLayout = (
   const nodeHeight = 36;
 
   const source: GeoBlockSource = JSON.parse(jsonString);
-  const allBlockNames = Object.keys(source.graph);
+  const allBlockNames = source && source.graph ? Object.keys(source.graph) : [];
 
   elements.forEach(el => {
     dagreGraph.setNode(el.id, {

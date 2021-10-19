@@ -265,6 +265,10 @@ export const convertGeoblockSourceToFlowElements = (
   setElements: React.Dispatch<React.SetStateAction<Elements<any>>>
 ) => {
   const source: GeoBlockSource = JSON.parse(jsonString);
+
+  // Return empty array if it is a new geoblock or the geoblock has no value yet
+  if (!source || !source.graph) return [];
+
   const rasterElements = getRasterElements(source.graph, setElements);
   const blockElements = getBlockElements(source, setElements);
   const numberElements = getNumberElements(blockElements, setElements);
