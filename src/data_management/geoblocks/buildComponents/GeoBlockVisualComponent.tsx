@@ -7,6 +7,7 @@ import ReactFlow, {
   Edge,
   Elements,
   isNode,
+  MiniMap,
   Position,
   ReactFlowProvider,
   removeElements,
@@ -148,6 +149,17 @@ const GeoBlockVisualFlow = (props: MyProps) => {
           ArrayBlock: ArrayBlock
         }}
       >
+        {elements.length > 100 ? (
+          <MiniMap
+            nodeColor={(node) => {
+              if (node.type === 'RasterBlock') return 'orange';
+              if (node.type === 'Block' && node.data.outputBlock) return 'red';
+              if (node.type === 'Block' || node.type === 'GroupBlock') return 'green';
+              return 'lightgrey';
+            }}
+            nodeStrokeWidth={3}
+          />
+        ) : null}
         <Controls />
       </ReactFlow>
       <SideBar />

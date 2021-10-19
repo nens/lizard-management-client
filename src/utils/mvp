@@ -1,0 +1,29 @@
+*** Design ***
+
+- Horizontal vs vertical layout of view tabs (JSON text >> JSON editor >> Visual editor) (Tom vs Lirry)
+- JSON editor tab: icons for switch and pretty options
+- Layout of a LizardRasterSource block
+- Layout of a building block
+- New Block view: as in a column or in its own modal with search bar and more documentation?
+- Validation errors: how and where to show error messages?
+- Option to edit/change an output block: with or without the +/- icons?
+- Placement of default or constant values of a block (e.g. numbers): inside a building block or have its own input block?
+
+*** MVP ***
+
+- JSON text editor
+- JSON structure viewer/editor
+- Geoblock visual editor
+- Client-side validation for the graph: UUID of raster, orphan parts
+- Back-end validation
+- Validation UI
+- Fullscreen option?
+- search bar for new blocks and more documentation on each block?
+
+*** User stories ***
+
+- User should be able to create a new graph using the geoblock build modal
+- User should be able to edit an existing graph of a geoblock using the geoblock build modal
+- User should be able to view a geoblock in JSON format or in a visual editor
+- User should be able to edit/create a graph using either the JSON editor or the visual editor
+- User should be able to see if the graph is valid or not and why it is not valid
