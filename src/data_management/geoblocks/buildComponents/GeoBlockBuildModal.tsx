@@ -41,6 +41,7 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
       const layoutedElements = createGraphLayout(jsonString, geoblockElements);
       setElements(layoutedElements);
     };
+    return () => setElements([]);
   }, [jsonString, setElements, geoBlockView]);
 
   return (
@@ -76,10 +77,7 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
               };
               if (geoBlockView === 'visual') {
                 const geoBlockSource = convertElementsToGeoBlockSource(elements, jsonString, setJsonString);
-                if (geoBlockSource) {
-                  setElements([]);
-                  setGeoBlockView('json');
-                };
+                if (geoBlockSource) setGeoBlockView('json');
               } else {
                 setGeoBlockView('visual');
               };
