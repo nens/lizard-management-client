@@ -41,6 +41,7 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
       const layoutedElements = createGraphLayout(jsonString, geoblockElements);
       setElements(layoutedElements);
     };
+    // setElements back to [] when component unmounted
     return () => setElements([]);
   }, [jsonString, setElements, geoBlockView]);
 
