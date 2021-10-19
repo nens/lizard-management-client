@@ -60,7 +60,7 @@ export const createGraphLayout = (
       const arrayParameters = el.data.parameters.filter(parameter => Array.isArray(parameter));
       arrayParameters.forEach(parameter => {
         dagreGraph.setEdge(
-          el.id + '-' + parameter.toString(),
+          el.id + '-' + JSON.stringify(parameter),
           el.id
         );
       });
@@ -148,7 +148,7 @@ export const createGraphLayout = (
         return {
           id: parameter + '-' + el.id,
           type: ConnectionLineType.SmoothStep,
-          source: el.id + parameter.toString(),
+          source: el.id + '-' + parameter,
           target: el.id,
           targetHandle: 'handle-' + index,
           animated: true

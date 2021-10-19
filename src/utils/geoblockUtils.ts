@@ -194,13 +194,13 @@ const getArrayElements = (
       (parameter: any) => Array.isArray(parameter)
     );
     return arrayValues.map((value, i) => {
-      const blockId = elm.id + '-' + value.toString();
+      const blockId = elm.id + '-' + value;
       return {
         id: blockId,
-        type: 'StringBlock',
+        type: 'ArrayBlock',
         data: {
-          value: value.toString(),
-          classOfBlock: 'StringBlock',
+          value: value,
+          classOfBlock: 'ArrayBlock',
           onChange: (value: string) => onBlockValueChange(value, blockId, setElements)
         },
         position
@@ -290,8 +290,9 @@ export const convertElementsToGeoBlockSource = (
   const outputBlocks = blocks.filter(block => block.data && block.data.outputBlock);
 
   // use reduce method to create the graph object
-  const graph = blocks.filter(
-    block => isNaN(block.data && block.data.value) // remove number nodes from graph
+  const graph = blocks.filter(block =>
+    typeof(block.data && block.data.value) !== "number" && // remove number blocks from graph
+    !Array.isArray(block.data && block.data.value) // remove array blocks from graph
   ).reduce((graph, block) => {
     // find connected nodes and their labels
     const connectedNodes = edges.filter(

@@ -17,7 +17,8 @@ enum InputBlockEnum {
   BooleanBlock = "BooleanBlock",
   NumberBlock = "NumberBlock",
   RasterBlock = "RasterBlock",
-  StringBlock = "StringBlock"
+  StringBlock = "StringBlock",
+  ArrayBlock = "ArrayBlock"
 }
 
 enum GeoBlockEnum {

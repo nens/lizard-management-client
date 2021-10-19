@@ -4,6 +4,11 @@
     "description": "raster block",
     "parameters": []
   },
+  "ArrayBlock": {
+    "class": "ArrayBlock",
+    "description": "array block",
+    "parameters": []
+  },
   "BooleanBlock": {
     "class": "BooleanBlock",
     "description": "boolean block",
