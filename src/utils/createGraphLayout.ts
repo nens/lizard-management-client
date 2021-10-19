@@ -33,15 +33,15 @@ export const createGraphLayout = (
     });
 
     if (el.data && el.data.parameters) {
-      const stringParameters = el.data.parameters.filter(parameter => typeof(parameter) === 'string') as string[];
+      const stringParameters = el.data.parameters.filter(parameter => typeof(parameter) === 'string');
       stringParameters.forEach(parameter => {
         dagreGraph.setEdge(
-          parameter,
+          parameter + '',
           el.id
         );
       });
 
-      const numberParameters = el.data.parameters.filter(parameter => typeof(parameter) === 'number') as number[];
+      const numberParameters = el.data.parameters.filter(parameter => typeof(parameter) === 'number');
       numberParameters.forEach((parameter, i) => {
         dagreGraph.setEdge(
           el.id + '-' + parameter + '-' + i,
@@ -49,10 +49,18 @@ export const createGraphLayout = (
         );
       });
 
-      const booleanParameters = el.data.parameters.filter(parameter => typeof(parameter) === 'boolean') as boolean[];
-      booleanParameters.forEach((parameter, i) => {
+      const booleanParameters = el.data.parameters.filter(parameter => typeof(parameter) === 'boolean');
+      booleanParameters.forEach(parameter => {
         dagreGraph.setEdge(
-          el.id + '-' + parameter + '-' + i,
+          el.id + '-' + parameter,
+          el.id
+        );
+      });
+
+      const arrayParameters = el.data.parameters.filter(parameter => Array.isArray(parameter));
+      arrayParameters.forEach(parameter => {
+        dagreGraph.setEdge(
+          el.id + '-' + parameter.toString(),
           el.id
         );
       });
@@ -133,7 +141,7 @@ export const createGraphLayout = (
         return {
           id: parameter + '-' + el.id,
           type: ConnectionLineType.SmoothStep,
-          source: parameter.toString(),
+          source: el.id + parameter.toString(),
           target: el.id,
           targetHandle: 'handle-' + index,
           animated: true

@@ -185,6 +185,30 @@ const getBooleanElements = (
   }).flat(1);
 };
 
+const getArrayElements = (
+  blockElements: Elements,
+  setElements: React.Dispatch<React.SetStateAction<Elements<any>>>
+): Elements => {
+  return blockElements.map(elm => {
+    const arrayValues: [][] = elm.data.parameters.filter(
+      (parameter: any) => Array.isArray(parameter)
+    );
+    return arrayValues.map((value, i) => {
+      const blockId = elm.id + '-' + value.toString();
+      return {
+        id: blockId,
+        type: 'StringBlock',
+        data: {
+          value: value.toString(),
+          classOfBlock: 'StringBlock',
+          onChange: (value: string) => onBlockValueChange(value, blockId, setElements)
+        },
+        position
+      };
+    });
+  }).flat(1);
+};
+
 // Helper function to change value of a block (e.g. UUID of a raster block or number input)
 const onBlockValueChange = (
   value: string | number | boolean,
@@ -245,8 +269,9 @@ export const convertGeoblockSourceToFlowElements = (
   const numberElements = getNumberElements(blockElements, setElements);
   const booleanElements = getBooleanElements(blockElements, setElements);
   const stringElements = getStringElements(source.graph, blockElements, setElements);
+  const arrayElements = getArrayElements(blockElements, setElements);
 
-  return blockElements.concat(rasterElements).concat(numberElements).concat(booleanElements).concat(stringElements);
+  return blockElements.concat(rasterElements).concat(numberElements).concat(booleanElements).concat(stringElements).concat(arrayElements);
 };
 
 export const convertElementsToGeoBlockSource = (
