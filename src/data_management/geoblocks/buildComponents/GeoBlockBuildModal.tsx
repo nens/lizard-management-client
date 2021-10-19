@@ -17,6 +17,7 @@ import formStyles from './../../../styles/Forms.module.css';
 import buttonStyles from './../../../styles/Buttons.module.css';
 
 interface MyProps {
+  uuid: string | null,
   source: Object | null,
   onChange: (value: Object) => void,
   handleClose: () => void
@@ -90,14 +91,17 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
             onClick={async () => {
               const geoBlockSource = convertElementsToGeoBlockSource(elements, jsonString, setJsonString);
               if (geoBlockSource) {
-                const apiResponse = await fetch('/api/v4/rasters/db90664c-57fd-4ece-b0a6-ffa34b0e9b2f/', {
-                  credentials: 'same-origin',
-                  method: "PATCH",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({
-                    source: geoBlockSource
-                  })
-                }).then(res => res.json());
+                const apiResponse = await fetch(
+                  `/api/v4/rasters/${props.uuid ? props.uuid : "db90664c-57fd-4ece-b0a6-ffa34b0e9b2f"}/?dry-run`,
+                  {
+                    credentials: 'same-origin',
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                      source: geoBlockSource
+                    })
+                  }
+                ).then(res => res.json());
                 console.log(apiResponse);
               };
               return;

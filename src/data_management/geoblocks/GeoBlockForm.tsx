@@ -381,6 +381,7 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
       ) : null}
       {buildModal ? (
         <GeoBlockBuildModal
+          uuid={currentRecord ? currentRecord.uuid : null}
           source={values.source}
           onChange={value => handleValueChange('source', value)}
           handleClose={() => setBuildModal(false)}
