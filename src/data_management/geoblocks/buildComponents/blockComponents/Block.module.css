@@ -26,12 +26,9 @@
 
 /* String block */
 .StringBlock {
-  width: 160px;
+  width: 140px;
   font-size: 12px;
   border-color: blue;
-}
-.StringBlock:focus {
-  box-shadow: 0 0 0 0.5px blue;
 }
 
 /* Output block */

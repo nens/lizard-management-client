@@ -11,14 +11,11 @@ interface StringBlockInput {
 export const StringBlock = (props: Node<StringBlockInput>) => {
   const { value, onChange } = props.data!;
   return (
-    <div
-      className={`${styles.Block} ${styles.StringBlock}`}
-      tabIndex={1}
-    >
+    <div>
       <input
         type="text"
         title={value}
-        className={formStyles.FormControl}
+        className={`${formStyles.FormControl} ${styles.StringBlock}`}
         onChange={e => onChange(e.target.value)}
         defaultValue={value}
       />

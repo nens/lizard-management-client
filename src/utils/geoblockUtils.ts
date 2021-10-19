@@ -292,6 +292,7 @@ export const convertElementsToGeoBlockSource = (
   // use reduce method to create the graph object
   const graph = blocks.filter(block =>
     typeof(block.data && block.data.value) !== "number" && // remove number blocks from graph
+    typeof(block.data && block.data.value) !== "boolean" && // remove boolean blocks from graph
     !Array.isArray(block.data && block.data.value) // remove array blocks from graph
   ).reduce((graph, block) => {
     // find connected nodes and their labels

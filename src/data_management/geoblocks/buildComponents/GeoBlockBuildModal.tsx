@@ -75,7 +75,10 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
               };
               if (geoBlockView === 'visual') {
                 const geoBlockSource = convertElementsToGeoBlockSource(elements, setJsonString);
-                if (geoBlockSource) setGeoBlockView('json');
+                if (geoBlockSource) {
+                  setElements([]);
+                  setGeoBlockView('json');
+                };
               } else {
                 setGeoBlockView('visual');
               };

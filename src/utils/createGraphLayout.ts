@@ -24,6 +24,8 @@ export const createGraphLayout = (
   const nodeWidth = 172;
   const nodeHeight = 36;
 
+  const allBlockNames = Object.keys(source.graph);
+
   elements.forEach(el => {
     dagreGraph.setNode(el.id, {
       // width: el.__rf.width,
@@ -33,10 +35,25 @@ export const createGraphLayout = (
     });
 
     if (el.data && el.data.parameters) {
-      const stringParameters = el.data.parameters.filter(parameter => typeof(parameter) === 'string');
-      stringParameters.forEach(parameter => {
+      const blockParameters = el.data.parameters.filter(parameter =>
+        typeof(parameter) === 'string' &&
+        allBlockNames.includes(parameter)
+      );
+      blockParameters.forEach(parameter => {
         dagreGraph.setEdge(
           parameter + '',
+          el.id
+        );
+      });
+
+      const stringParameters = el.data.parameters.filter(parameter =>
+        typeof(parameter) === 'string' &&
+        !allBlockNames.includes(parameter) &&
+        !parameter.includes('RasterStoreSource' || 'LizardRasterSource')
+      );
+      stringParameters.forEach(parameter => {
+        dagreGraph.setEdge(
+          el.id + '-' + parameter,
           el.id
         );
       });
@@ -60,7 +77,7 @@ export const createGraphLayout = (
       const arrayParameters = el.data.parameters.filter(parameter => Array.isArray(parameter));
       arrayParameters.forEach(parameter => {
         dagreGraph.setEdge(
-          el.id + '-' + JSON.stringify(parameter),
+          el.id + '-' + parameter,
           el.id
         );
       });
@@ -86,7 +103,6 @@ export const createGraphLayout = (
     el => el.data && el.data.parameters
   ).map(el => {
     const { parameters } = el.data!;
-    const allBlockNames = Object.keys(source.graph);
     const numberParameters = parameters.filter(parameter => typeof(parameter) === 'number');
 
     return parameters.map((parameter, index) => {

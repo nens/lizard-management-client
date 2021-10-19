@@ -20,7 +20,8 @@ export const ArrayBlock = (props: Node<ArrayBlockInput>) => {
         value={JSON.stringify(value)}
         readOnly
         style={{
-          width: 160
+          width: 140,
+          fontSize: 12
         }}
       />
       <Handle
