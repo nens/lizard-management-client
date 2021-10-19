@@ -90,7 +90,10 @@ export const createGraphLayout = (
     const numberParameters = parameters.filter(parameter => typeof(parameter) === 'number');
 
     return parameters.map((parameter, index) => {
-      if (typeof(parameter) === 'string' && allBlockNames.includes(parameter)) {
+      if (
+        typeof(parameter) === 'string' &&
+        allBlockNames.includes(parameter)
+      ) {
         // edge from a block to another block
         return {
           id: parameter + '-' + el.id,
@@ -101,7 +104,11 @@ export const createGraphLayout = (
           targetHandle: 'handle-' + index,
           animated: true
         };
-      } else if (typeof(parameter) === 'string' && !allBlockNames.includes(parameter)) {
+      } else if (
+        typeof(parameter) === 'string' &&
+        !allBlockNames.includes(parameter) &&
+        !parameter.includes('RasterStoreSource' || 'LizardRasterSource')
+      ) {
         // edge from a string value to another block
         return {
           id: parameter + '-' + el.id,

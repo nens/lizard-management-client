@@ -142,10 +142,10 @@ const getStringElements = (
 ): Elements => {
   const allBlockNames = Object.keys(graph);
   return blockElements.map(elm => {
-    const stringValues: string[] = elm.data.parameters.filter(
-      (parameter: any) => !allBlockNames.includes(parameter)
-    ).filter(
-      (parameter: any) => typeof(parameter) === 'string'
+    const stringValues: string[] = elm.data.parameters.filter((parameter: any) =>
+      typeof(parameter) === 'string' &&
+      !allBlockNames.includes(parameter) &&
+      !parameter.includes('RasterStoreSource' || 'LizardRasterSource')
     );
     return stringValues.map((value, i) => {
       const blockId = elm.id + '-' + value;
