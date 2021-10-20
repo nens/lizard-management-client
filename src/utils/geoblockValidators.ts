@@ -1,5 +1,5 @@
 import { Connection, Edge, Elements, getOutgoers, isEdge, isNode, Node } from "react-flow-renderer";
-import { geoblockType } from "../types/geoBlockType";
+import { GeoBlockSource, geoblockType } from "../types/geoBlockType";
 
 interface ErrorObject {
   blockId?: string,
@@ -9,6 +9,17 @@ interface ErrorObject {
 type Error = ErrorObject | false;
 
 const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+export const fetchGeoBlock = (uuid: string | null, source: GeoBlockSource) => {
+  fetch(`/api/v4/rasters/${uuid || "db90664c-57fd-4ece-b0a6-ffa34b0e9b2f"}/?dry-run`, {
+    credentials: 'same-origin',
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ source })
+  })
+  .then(res => res.json())
+  .then(res => console.log(res))
+};
 
 export const geoBlockValidator = (elements: Elements): ErrorObject[] => {
   const rasterElements = elements.filter(el => isNode(el) && el.type === 'RasterBlock') as Node[];

@@ -7,6 +7,7 @@ import { SubmitButton } from '../../../form/SubmitButton';
 import { addNotification } from '../../../actions';
 import { jsonValidator } from '../../../form/validators';
 import { createGraphLayout } from '../../../utils/createGraphLayout';
+import { fetchGeoBlock } from '../../../utils/geoblockValidators';
 import {
   convertElementsToGeoBlockSource,
   convertGeoblockSourceToFlowElements
@@ -87,23 +88,16 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
             Switch
           </button>
           <button
-            onClick={async () => {
-              const geoBlockSource = convertElementsToGeoBlockSource(elements, jsonString, setJsonString);
-              if (geoBlockSource) {
-                const apiResponse = await fetch(
-                  `/api/v4/rasters/${props.uuid ? props.uuid : "db90664c-57fd-4ece-b0a6-ffa34b0e9b2f"}/?dry-run`,
-                  {
-                    credentials: 'same-origin',
-                    method: "PATCH",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                      source: geoBlockSource
-                    })
-                  }
-                ).then(res => res.json());
-                console.log(apiResponse);
+            onClick={() => {
+              if (geoBlockView === 'visual') {
+                const geoBlockSource = convertElementsToGeoBlockSource(elements, jsonString, setJsonString);
+                if (geoBlockSource) fetchGeoBlock(props.uuid, geoBlockSource);
+              } else {
+                if (jsonValidator(jsonString)) {
+                  return alert(jsonValidator(jsonString));
+                };
+                fetchGeoBlock(props.uuid, JSON.parse(jsonString))
               };
-              return;
             }}
           >
             Validate
