@@ -24,7 +24,7 @@ import codeIcon from "../images/code.svg";
 import docsIcon from "../images/document2.svg";
 import supportIcon from "../images/support.svg";
 import layerCollectionIcon from "../images/layer_collection_icon.svg";
-import agreementIcon from "../images/agreement.svg";
+// import agreementIcon from "../images/agreement.svg";
 
 import doArraysHaveEqualElement from '../utils/doArraysHaveEqualElement';
 
@@ -325,22 +325,22 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     requiresOneOfRoles: ["admin"],
     icon: personalApiKeysIcon,
   },
-  { 
-    title: "Contract",
-    // title: (
-    //   <FormattedMessage
-    //     id="home.personal_api_keys"
-    //     defaultMessage="Personal API keys"
-    //   />
-    // ),
-    homePageIcon: false,
-    order: 500,
-    onUrl: "/management",
-    linksToUrl: "/management/contract",
-    linksToUrlExternal: false,
-    requiresOneOfRoles: ["admin", "supplier", "manager", "user"],
-    icon: agreementIcon,
-  },
+  // { 
+  //   title: "Contract",
+  //   // title: (
+  //   //   <FormattedMessage
+  //   //     id="home.personal_api_keys"
+  //   //     defaultMessage="Personal API keys"
+  //   //   />
+  //   // ),
+  //   homePageIcon: false,
+  //   order: 500,
+  //   onUrl: "/management",
+  //   linksToUrl: "/management/contract",
+  //   linksToUrlExternal: false,
+  //   requiresOneOfRoles: ["admin", "supplier", "manager", "user"],
+  //   icon: agreementIcon,
+  // },
   { 
     title: "Map viewer",
     // title: (
