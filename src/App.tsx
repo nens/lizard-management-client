@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { connect, useSelector } from "react-redux";
-import { FormattedMessage, injectIntl } from "react-intl";
+import { FormattedMessage } from "react-intl.macro";
+import {  injectIntl } from "react-intl";
 import { fetchTaskInstance } from "./api/tasks";
 import {
   addNotification,

@@ -1,7 +1,9 @@
 // {"styles": "Blues:0.0:2.0"}
 // {"styles": "transparent", "HEIGHT": 512, "ZINDEX": 20, "WIDTH": 1024, "effects": "radar:0:0.008", "TRANSPARENT": false}
 import React, { useEffect, useRef, useState } from "react";
-import { FormattedMessage, injectIntl, InjectedIntlProps } from "react-intl";
+import { FormattedMessage, } from "react-intl.macro";
+import {  injectIntl, InjectedIntlProps } from "react-intl";
+
 import { SelectDropdown } from "./SelectDropdown";
 import { CheckBox } from "./CheckBox";
 import { TextInput } from "./TextInput";
@@ -247,7 +249,7 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
   } else {
     colors = (
       <span style={{opacity: 0.5}}>
-        <FormattedMessage id="color_map.initial_message" />
+        <FormattedMessage id="color_map.initial_message" defaultMessage="No Preview available" />
       </span>
     );
   }

@@ -9,7 +9,9 @@ import MDSpinner from "react-md-spinner";
 import styles from "./OrganisationSwitcher.module.css";
 import { connect } from "react-redux";
 import { selectOrganisation } from "../actions";
-import { FormattedMessage, injectIntl } from "react-intl";
+import { FormattedMessage } from "react-intl.macro";
+import {  injectIntl } from "react-intl";
+
 import { Scrollbars } from "react-custom-scrollbars";
 import { userHasCorrectRolesForCurrentNavigationLinkTile} from '../home/AppTileConfig';
 

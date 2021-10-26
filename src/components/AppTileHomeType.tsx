@@ -2,7 +2,7 @@ import React from "react";
 import Ink from "react-ink";
 import styles from "./AppTileHomeType.module.css";
 import { RouteComponentProps, withRouter, NavLink } from 'react-router-dom';
-import { injectIntl } from "react-intl";
+import {  injectIntl } from "react-intl";
 
 interface Props {
   title: string,

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage } from "react-intl.macro";
 import { getBoundsFromWmsLayer } from "../utils/getBoundsFromGeoServer";
 import { ClearInputButton } from "../form/ClearInputButton";
 import styles from "./SpatialBoundsField.module.css";
@@ -190,7 +190,7 @@ const SpatialBoundsField  =  (props: SpatialBoundsProps) => {
                         // we do not use label class below because this wraps text to a newline. Should fix that later.
                         // className={formStyles.Label}
                     >
-                        <FormattedMessage id="wms_layer_form.north" />
+                        <FormattedMessage id="wms_layer_form.north" defaultMessage="North" />
                         &nbsp;(&deg;)
                     </label>
                     <input
@@ -213,7 +213,7 @@ const SpatialBoundsField  =  (props: SpatialBoundsProps) => {
                     }
                 >
                     <label>
-                        <FormattedMessage id="wms_layer_form.east" />
+                        <FormattedMessage id="wms_layer_form.east" defaultMessage="East" />
                         &nbsp;(&deg;)
                     </label>
                     <input
@@ -236,7 +236,7 @@ const SpatialBoundsField  =  (props: SpatialBoundsProps) => {
                     }
                 >
                     <label>
-                        <FormattedMessage id="wms_layer_form.south" />
+                        <FormattedMessage id="wms_layer_form.south" defaultMessage="South" />
                         &nbsp;(&deg;)
                     </label>
                     <input
@@ -259,7 +259,7 @@ const SpatialBoundsField  =  (props: SpatialBoundsProps) => {
                     }
                 >
                     <label>
-                        <FormattedMessage id="wms_layer_form.west" />
+                        <FormattedMessage id="wms_layer_form.west" defaultMessage="West" />
                         &nbsp;(&deg;)
                     </label>
                     <input

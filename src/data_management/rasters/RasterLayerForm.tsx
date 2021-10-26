@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage } from "react-intl.macro";
 import { connect, useSelector } from 'react-redux';
 import {
   createRasterLayer,
@@ -379,27 +379,27 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
             {
               value: 'none',
               label: 'none',
-              subLabel: <FormattedMessage id="raster_form.aggregation_type_none" />
+              subLabel: <FormattedMessage id="raster_form.aggregation_type_none" defaultMessage="no aggregation" />
             },
             {
               value: 'counts',
               label: 'counts',
-              subLabel: <FormattedMessage id="raster_form.aggregation_type_counts" />
+              subLabel: <FormattedMessage id="raster_form.aggregation_type_counts" defaultMessage="area per category" />
             },
             {
               value: 'curve',
               label: 'curve',
-              subLabel: <FormattedMessage id="raster_form.aggregation_type_curve" />
+              subLabel: <FormattedMessage id="raster_form.aggregation_type_curve" defaultMessage="cumulative distribution" />
             },
             {
               value: 'sum',
               label: 'sum',
-              subLabel: <FormattedMessage id="raster_form.aggregation_type_sum" />
+              subLabel: <FormattedMessage id="raster_form.aggregation_type_sum" defaultMessage="values in the region are summed" />
             },
             {
               value: 'average',
               label: 'average',
-              subLabel: <FormattedMessage id="raster_form.aggregation_type_average" />
+              subLabel: <FormattedMessage id="raster_form.aggregation_type_average" defaultMessage="values in the region are averaged" />
             }
           ]}
           validated={!!values.aggregationType}

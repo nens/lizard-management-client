@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage } from "react-intl.macro";
 
 import Scrollbars from "react-custom-scrollbars";
 import ClearButton from "../components/ClearButton.js";
@@ -114,7 +114,7 @@ export const SlushBucket: React.FC<MyProps> = (props) => {
             }}
           >
             <div className={`${styles.SelectedRow}`}>
-              <b><FormattedMessage id="available" /></b>
+              <b><FormattedMessage id="available" defaultMessage="Available" /></b>
             </div>
             <Scrollbars autoHeight autoHeightMin={400} autoHeightMax={400}>
               {choices
@@ -171,7 +171,7 @@ export const SlushBucket: React.FC<MyProps> = (props) => {
             }}
           >
             <div className={`${styles.SelectedRow}`}>
-              <b><FormattedMessage id="selected" /></b>
+              <b><FormattedMessage id="selected" defaultMessage="Selected" /></b>
             </div>
             <Scrollbars autoHeight autoHeightMin={400} autoHeightMax={400} key={selected.join()}>
               {selected

@@ -9,7 +9,7 @@ import {
   getSsoLogout,
   getUserFirstName,
 } from '../reducers';
-import { FormattedMessage, } from "react-intl";
+import { FormattedMessage, } from "react-intl.macro";
 
 // import helpIcon from '../images/help.svg'
 import documentIcon from '../images/document.svg';

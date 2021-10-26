@@ -1,3 +1,4 @@
+import React from "react";
 import alarmIcon from "../images/alarm@3x.svg";
 import userManagementIcon from "../images/userManagement.svg";
 import dataManagementIcon from "../images/database.svg";
@@ -25,6 +26,8 @@ import docsIcon from "../images/document2.svg";
 import supportIcon from "../images/support.svg";
 import layerCollectionIcon from "../images/layer_collection_icon.svg";
 // import agreementIcon from "../images/agreement.svg";
+import { FormattedMessage } from "react-intl.macro";
+
 
 import doArraysHaveEqualElement from '../utils/doArraysHaveEqualElement';
 
@@ -38,7 +41,7 @@ export interface NavigationLinkPage {
 
 type LinkOrHome = "LINK" | "HOME"
 export interface NavigationLinkTile{
-  title: string,
+  title: string | JSX.Element,
   subtitle?: string,
   // title: (
   //   <FormattedMessage
@@ -157,14 +160,14 @@ export const navigationLinkPages: NavigationLinkPage[] = [
 export const navigationLinkTiles: NavigationLinkTile[] = [
   
   { 
-    title: "catalogue",
+    // title: "catalogue",
     subtitle: "Search for your data",
-    // title: (
-    //   <FormattedMessage
-    //     id="home.data_management"
-    //     defaultMessage="Data Management"
-    //   />
-    // ),
+    title: 
+      <FormattedMessage
+        id="apptile.catalogue_tile"
+        defaultMessage="catalogue"
+      />
+    ,
     homePageIcon: true,
     homePageLinkOrHome: "HOME",
     order: 100,
