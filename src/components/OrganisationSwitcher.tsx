@@ -103,10 +103,11 @@ const OrganisationSwitcher = (props:Props) => {
             <i className="material-icons">close</i>
           </div>
           <h3>
-            <FormattedMessage
+            {0?<FormattedMessage
               id="components.switch_org"
               defaultMessage="Switch organisation"
-            />
+            />:null}
+            Switch organisation
           </h3>
           <br />
           <div className={formStyles.FormGroup}>

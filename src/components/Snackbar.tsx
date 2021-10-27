@@ -43,10 +43,11 @@ const Snackbar: React.FC<PropsFromDispatch> = (props) => {
           className={styles.DismissButton}
           onClick={() => dismiss(notifications.length - 1)}
         >
-          <FormattedMessage
+          {0?<FormattedMessage
             id="components_snackbar.dismiss"
             defaultMessage="Dismiss"
-          />
+          />:null}
+          Dismiss
         </div>
       </div>
     </div>

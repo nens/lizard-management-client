@@ -251,7 +251,8 @@ const ColorMapInput: React.FC<ColorMapProps> = (props) => {
   } else {
     colors = (
       <span style={{opacity: 0.5}}>
-        <FormattedMessage id="color_map.initial_message" defaultMessage="No Preview available" />
+        {0?<FormattedMessage id="color_map.initial_message" defaultMessage="No Preview available" />:null}
+        No Preview available
       </span>
     );
   }

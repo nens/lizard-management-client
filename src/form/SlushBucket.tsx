@@ -114,7 +114,7 @@ export const SlushBucket: React.FC<MyProps> = (props) => {
             }}
           >
             <div className={`${styles.SelectedRow}`}>
-              <b><FormattedMessage id="available" defaultMessage="Available" /></b>
+              <b>{0?<FormattedMessage id="available" defaultMessage="Available" />:null}Available</b>
             </div>
             <Scrollbars autoHeight autoHeightMin={400} autoHeightMax={400}>
               {choices
@@ -171,7 +171,7 @@ export const SlushBucket: React.FC<MyProps> = (props) => {
             }}
           >
             <div className={`${styles.SelectedRow}`}>
-              <b><FormattedMessage id="selected" defaultMessage="Selected" /></b>
+              <b>{0?<FormattedMessage id="selected" defaultMessage="Selected" />:null}Selected</b>
             </div>
             <Scrollbars autoHeight autoHeightMin={400} autoHeightMax={400} key={selected.join()}>
               {selected

@@ -369,6 +369,11 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
             loadOptions={searchInput => fetchRasterSources(selectedOrganisation.uuid, searchInput)}
           />
         )}
+        {0?<FormattedMessage id="raster_form.aggregation_type_none" defaultMessage="no aggregation" />:null}
+        {0?<FormattedMessage id="raster_form.aggregation_type_counts" defaultMessage="area per category" />:null}
+        {0?<FormattedMessage id="raster_form.aggregation_type_curve" defaultMessage="cumulative distribution" />:null}
+        {0?<FormattedMessage id="raster_form.aggregation_type_sum" defaultMessage="values in the region are summed" />:null}
+        {0?<FormattedMessage id="raster_form.aggregation_type_average" defaultMessage="values in the region are averaged" />:null}
         <SelectDropdown
           title={'Aggregation type *'}
           name={'aggregationType'}
@@ -379,27 +384,27 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
             {
               value: 'none',
               label: 'none',
-              subLabel: <FormattedMessage id="raster_form.aggregation_type_none" defaultMessage="no aggregation" />
+              subLabel: "no aggregation",
             },
             {
               value: 'counts',
               label: 'counts',
-              subLabel: <FormattedMessage id="raster_form.aggregation_type_counts" defaultMessage="area per category" />
+              subLabel: 'area per category',
             },
             {
               value: 'curve',
               label: 'curve',
-              subLabel: <FormattedMessage id="raster_form.aggregation_type_curve" defaultMessage="cumulative distribution" />
+              subLabel: 'cumulative distribution',
             },
             {
               value: 'sum',
               label: 'sum',
-              subLabel: <FormattedMessage id="raster_form.aggregation_type_sum" defaultMessage="values in the region are summed" />
+              subLabel: 'values in the region are summed',
             },
             {
               value: 'average',
               label: 'average',
-              subLabel: <FormattedMessage id="raster_form.aggregation_type_average" defaultMessage="values in the region are averaged" />
+              subLabel: 'values in the region are averaged',
             }
           ]}
           validated={!!values.aggregationType}
