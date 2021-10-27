@@ -216,6 +216,11 @@ But we plan on translating the whole management app to Dutch.
 Later we might also translate the whole management app to Traditional-Chinese and Vietnamese. 
 Previously bigger parts of the app were translated to Dutch, but not everything.
 To not get intoo the situation that parts are translated and other parts not we for now comment everything out what is translated outside of the homepage. The only part that is used in both places is the profile dropdown so we must accept that this one can be Dutch, but the rest of the app English.  
+Commented out translation components look like this:  
+```JSX
+{0?<FormattedMessage id="raster_form.aggregation_type_none" defaultMessage="no aggregation" />:null}  
+```
+
 
 ### old translations 
 Before we used a slightly different translation extraction. 
