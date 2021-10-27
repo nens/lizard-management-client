@@ -35,7 +35,7 @@ const AppComponent = (props: RouteComponentProps) => {
             linkPath={appTile.linksToUrl}
             openInNewTab={appTile.homePageLinkOrHome !== "HOME"}
             linksToUrlExternal={appTile.linksToUrlExternal}
-            key={(appTile.title + '') + appTile.order + ""}
+            key={(typeof appTile.title === 'string' ? appTile.title : formattedMessageToString(appTile.title, intl)) + appTile.order + ""}
             title={typeof appTile.title === 'string' ? appTile.title : formattedMessageToString(appTile.title, intl)}
             subtitle={appTile.subtitle || ""}
             icon={appTile.icon}
@@ -49,7 +49,7 @@ const AppComponent = (props: RouteComponentProps) => {
           <AppTile
             linkPath={appTile.linksToUrl}
             openInNewTab={false}
-            key={(appTile.title + '') + appTile.order + ""}
+            key={(typeof appTile.title === 'string' ? appTile.title : formattedMessageToString(appTile.title, intl)) + appTile.order + ""}
             title={typeof appTile.title === 'string' ? appTile.title : formattedMessageToString(appTile.title, intl)}
             icon={appTile.icon}
             readonly={

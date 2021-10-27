@@ -160,7 +160,6 @@ export const navigationLinkPages: NavigationLinkPage[] = [
 export const navigationLinkTiles: NavigationLinkTile[] = [
   
   { 
-    // title: "catalogue",
     title: 
       <FormattedMessage
         id="apptile.catalogue_tile"
@@ -232,7 +231,6 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     icon: codeIcon,
   },
   { 
-    // title: "documentation",
     title: 
       <FormattedMessage
         id="apptile.documentation_tile"
@@ -240,12 +238,6 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
       />
     ,
     subtitle: "Read the docs.",
-    // title: (
-    //   <FormattedMessage
-    //     id="home.data_management"
-    //     defaultMessage="Data Management"
-    //   />
-    // ),
     homePageIcon: true,
     homePageLinkOrHome: "LINK",
     order: 100,

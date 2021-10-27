@@ -18,7 +18,7 @@ const AppTile = (props: (Props & RouteComponentProps)) => {
   
     const {
       title, icon, readonly, linkPath, openInNewTab,
-      requiredRoles // eslint-disable-line no-unused-vars
+      requiredRoles,
     } = props;
 
     const intl = useIntl();

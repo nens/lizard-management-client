@@ -4,7 +4,6 @@ import { IntlShape} from 'react-intl';
 // We did a lot of double coding the translations for this, 
 // but this is hopefully a good way to change a formatted message to a string without hardcoding everything double
 export const formattedMessageToString = (formattedMessage: JSX.Element, intl: IntlShape):  string => {
-  // @ts-ignore
   return intl.formatMessage({
     id: formattedMessage.props.id,
     defaultMessage: formattedMessage.props.defaultMessage,
