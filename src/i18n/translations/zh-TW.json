@@ -19,6 +19,7 @@
   "apptile.support_tile_subtitle": "Need help?",
   "apptile.viewer_tile": "viewer",
   "apptile.viewer_tile_subtitle": "Explore your data",
+  "authorization.organisation_not_allowed_current_page": "! Organisation not authorized to visit current page !",
   "color_map.initial_message": "No Preview available",
   "components.switch_org": "Switch organisation",
   "components_snackbar.dismiss": "Dismiss",

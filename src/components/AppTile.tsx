@@ -2,7 +2,9 @@ import React from "react";
 import Ink from "react-ink";
 import styles from "./AppTile.module.css";
 import { RouteComponentProps, withRouter, NavLink } from 'react-router-dom';
-import { useIntl  } from "react-intl";
+import { FormattedMessage} from 'react-intl.macro';
+import { useIntl} from 'react-intl';
+import {formattedMessageToString} from './../utils/translationUtils';
 
 
 interface Props {
@@ -23,12 +25,19 @@ const AppTile = (props: (Props & RouteComponentProps)) => {
 
     const intl = useIntl();
     
-    const requiresRoleMessage = intl.formatMessage({
-        id: "authorization.requires_role",
-        defaultMessage: "Requires {requiredRolesLength, plural,  one {role} other {one of the following roles} }: ",
-      },
-      {requiredRolesLength: (requiredRoles && requiredRoles.length) || 0}
+    const requiredRolesLength = (requiredRoles && requiredRoles.length) || 0;
+    
+    // requiresRoleMessageForTranlation needs later to be renamed to requiresRoleMessage (when we make translations for the whole app)
+    // eslint-disable-next-line
+    const requiresRoleMessageForTranlation = formattedMessageToString(<FormattedMessage
+        id="authorization.requires_role"
+        defaultMessage="Requires {requiredRolesLength, plural,  one {role} other {one of the following roles} }"
+        />,
+        intl,
+      {requiredRolesLength: requiredRolesLength}
     );
+
+    const requiresRoleMessage = (requiredRolesLength === 1? "Requires role" : "Requires one of the following roles");
 
     const content = (
       <>

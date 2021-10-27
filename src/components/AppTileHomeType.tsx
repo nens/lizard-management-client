@@ -2,7 +2,9 @@ import React from "react";
 import Ink from "react-ink";
 import styles from "./AppTileHomeType.module.css";
 import { RouteComponentProps, withRouter, NavLink } from 'react-router-dom';
-import {  useIntl } from "react-intl";
+import { FormattedMessage} from 'react-intl.macro';
+import { useIntl} from 'react-intl';
+import {formattedMessageToString} from './../utils/translationUtils';
 
 interface Props {
   title: string,
@@ -23,13 +25,15 @@ const AppTileHomeType = (props: (Props & RouteComponentProps)) => {
     } = props;
 
     const intl = useIntl();
-    
-    const requiresRoleMessage = intl.formatMessage({
-        id: "authorization.requires_role",
-        defaultMessage: "Requires {requiredRolesLength, plural,  one {role} other {one of the following roles} }: ",
-      },
-      {requiredRolesLength: (requiredRoles && requiredRoles.length) || 0}
-    );
+
+    const requiredRolesLength = (requiredRoles && requiredRoles.length) || 0;
+    const requiresRoleMessage = formattedMessageToString(<FormattedMessage
+        id="authorization.requires_role"
+        defaultMessage="Requires {requiredRolesLength, plural,  one {role} other {one of the following roles} }: "
+      />,
+      intl,
+    {requiredRolesLength: requiredRolesLength}
+  );
 
     const tileContent = (
       <>

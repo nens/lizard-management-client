@@ -13,7 +13,8 @@ import { FormattedMessage } from "react-intl.macro";
 
 import { Scrollbars } from "react-custom-scrollbars";
 import { userHasCorrectRolesForCurrentNavigationLinkTile} from '../home/AppTileConfig';
-import { useIntl} from 'react-intl';
+// import { useIntl} from 'react-intl';
+// import {formattedMessageToString} from './../utils/translationUtils';
 
 
 interface PropsArgs {
@@ -26,7 +27,7 @@ const OrganisationSwitcher = (props:Props) => {
   
   const [height, setHeight] = useState(window.innerHeight);
   const [filterValue, setFilterValue] = useState<null | string>(null);
-  const intl = useIntl();
+  // const intl = useIntl();
 
   useEffect(() => {
     window.addEventListener("resize", handleResize, false);
@@ -77,8 +78,8 @@ const OrganisationSwitcher = (props:Props) => {
       })
     : organisations;
 
-  const authorisationText = intl.formatMessage({ id: "authorization.organisation_not_allowed_current_page", defaultMessage: "! Organisation not authorized to visit current page !" });
-
+  // const authorisationText = formattedMessageToString(<FormattedMessage id="authorization.organisation_not_allowed_current_page" defaultMessage="! Organisation not authorized to visit current page !"/>, intl);
+  const authorisationText = "! Organisation not authorized to visit current page !";
       
 
   return (

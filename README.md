@@ -159,7 +159,7 @@ The majority of your translations will be html components:
 ```
 
 The method above does not allow to translate to strings (for example needed for html attributes).   
-Below methos allows this: the tooltip attribute of the html attribute was translated to a string with the function intl.formatMessage() :    
+Below methos allows this: the tooltip attribute of the html attribute was translated to a string with the function formattedMessageToString :    
 
 ```JSX
   import { FormattedMessage } from 'react-intl.macro';

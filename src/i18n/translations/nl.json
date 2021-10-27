@@ -19,6 +19,7 @@
   "apptile.support_tile_subtitle": "Hulp nodig?",
   "apptile.viewer_tile": "viewer",
   "apptile.viewer_tile_subtitle": "Verken jouw data",
+  "authorization.organisation_not_allowed_current_page": "! Organisatie niet geautoriseerd om huidige pagina te zien !",
   "color_map.initial_message": "Geen voorbeeld beschikbaar",
   "components.switch_org": "Wissel van organisatie",
   "components_snackbar.dismiss": "OK",
