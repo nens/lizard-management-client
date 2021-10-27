@@ -2,7 +2,8 @@
 // {"styles": "transparent", "HEIGHT": 512, "ZINDEX": 20, "WIDTH": 1024, "effects": "radar:0:0.008", "TRANSPARENT": false}
 import React, { useEffect, useRef, useState } from "react";
 import { FormattedMessage, } from "react-intl.macro";
-import {  injectIntl, InjectedIntlProps } from "react-intl";
+import {  useIntl } from 'react-intl';
+
 
 import { SelectDropdown } from "./SelectDropdown";
 import { CheckBox } from "./CheckBox";
@@ -83,7 +84,7 @@ const usePrevious = (value: any) => {
   return ref.current;
 };
 
-const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
+const ColorMapInput: React.FC<ColorMapProps> = (props) => {
   const {
     title,
     name,
@@ -93,8 +94,9 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
     form,
     onFocus,
     onBlur,
-    intl
   } = props;
+
+  const intl = useIntl();
 
   // Fetch list of color maps
   const {
@@ -389,4 +391,4 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
   );
 }
 
-export default injectIntl(ColorMapInput);
+export default (ColorMapInput);

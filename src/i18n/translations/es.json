@@ -8,6 +8,7 @@
   "alarmtemplates_new.characters": "characters",
   "alarmtemplates_new.sms_max_char_warning": "SMS messages have a limit of 160 characters after substituting the parameter tags",
   "apptile.catalogue_tile": "catalogue",
+  "apptile.documentation_tile": "documentation",
   "color_map.initial_message": "No Preview available",
   "components.switch_org": "Switch organisation",
   "components_snackbar.dismiss": "Dismiss",

@@ -431,7 +431,7 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           title={'Choose a color map *'}
           name={'colorMap'}
           colorMapValue={values.colorMap}
-          valueChanged={value => handleValueChange('colorMap', value)}
+          valueChanged={(value) => handleValueChange('colorMap', value)}
           validated
           form={"raster_layer_form_id"}
           onFocus={handleFocus}

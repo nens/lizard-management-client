@@ -8,6 +8,7 @@
   "alarmtemplates_new.characters": "tekens",
   "alarmtemplates_new.sms_max_char_warning": "SMS berichten kunnen maximaal 160 tekens bevatten",
   "apptile.catalogue_tile": "catalogus",
+  "apptile.documentation_tile": "documentatie",
   "color_map.initial_message": "Geen voorbeeld beschikbaar",
   "components.switch_org": "Wissel van organisatie",
   "components_snackbar.dismiss": "OK",

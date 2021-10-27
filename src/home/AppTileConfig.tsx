@@ -161,13 +161,13 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
   
   { 
     // title: "catalogue",
-    subtitle: "Search for your data",
     title: 
       <FormattedMessage
         id="apptile.catalogue_tile"
         defaultMessage="catalogue"
       />
     ,
+    subtitle: "Search for your data",
     homePageIcon: true,
     homePageLinkOrHome: "HOME",
     order: 100,
@@ -232,7 +232,13 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     icon: codeIcon,
   },
   { 
-    title: "documentation",
+    // title: "documentation",
+    title: 
+      <FormattedMessage
+        id="apptile.documentation_tile"
+        defaultMessage="documentation"
+      />
+    ,
     subtitle: "Read the docs.",
     // title: (
     //   <FormattedMessage

@@ -2,7 +2,7 @@ import React from "react";
 import Ink from "react-ink";
 import styles from "./AppTileHomeType.module.css";
 import { RouteComponentProps, withRouter, NavLink } from 'react-router-dom';
-import {  injectIntl } from "react-intl";
+import {  useIntl } from "react-intl";
 
 interface Props {
   title: string,
@@ -19,12 +19,12 @@ const AppTileHomeType = (props: (Props & RouteComponentProps)) => {
   
     const {
       title, subtitle, icon, readonly, linkPath, openInNewTab, linksToUrlExternal,
-      requiredRoles // eslint-disable-line no-unused-vars
+      requiredRoles,
     } = props;
+
+    const intl = useIntl();
     
-    // ts ignore because how to use intl with typescript in props? Maybe look at how it is done in 3di-livesite  or here https://stackoverflow.com/questions/40784817/react-intl-use-api-with-typescript
-    // @ts-ignore
-    const requiresRoleMessage = props.intl.formatMessage({
+    const requiresRoleMessage = intl.formatMessage({
         id: "authorization.requires_role",
         defaultMessage: "Requires {requiredRolesLength, plural,  one {role} other {one of the following roles} }: ",
       },
@@ -56,23 +56,39 @@ const AppTileHomeType = (props: (Props & RouteComponentProps)) => {
       );
     }
     else if (linksToUrlExternal) {
-      return (
-        <a 
-            href={linkPath}
-            target={openInNewTab? "_blank" : "_self"}
-            className={`${styles.AppTile} ${readonly ? styles.Disabled: null}`}
-            title={readonly ? requiresRoleMessage + requiredRoles : null}
-        >
-          {tileContent}
-        </a>
-      );
+      if (openInNewTab) {
+        return (
+          <a 
+              href={linkPath}
+              target={"_blank"}
+              rel={"noreferrer"}
+              className={`${styles.AppTile} ${readonly ? styles.Disabled: null}`}
+              title={readonly ? requiresRoleMessage + requiredRoles : undefined}
+          >
+            {tileContent}
+          </a>
+        );
+      } else {
+        return (
+          <a 
+              href={linkPath}
+              target={"_self"}
+              rel={undefined}
+              className={`${styles.AppTile} ${readonly ? styles.Disabled: null}`}
+              title={readonly ? requiresRoleMessage + requiredRoles : undefined}
+          >
+            {tileContent}
+          </a>
+        );
+      }
+      
     } else {
       return (
         <NavLink 
             to={linkPath}
             target={openInNewTab? "_blank" : "_self"}
             className={`${styles.AppTile} ${readonly ? styles.Disabled: null}`}
-            title={readonly ? requiresRoleMessage + requiredRoles : null}
+            title={readonly ? requiresRoleMessage + requiredRoles : undefined}
         >
           {tileContent}
         </NavLink>
@@ -80,4 +96,4 @@ const AppTileHomeType = (props: (Props & RouteComponentProps)) => {
       }
   }
 
-export default withRouter(injectIntl(AppTileHomeType));
+export default withRouter((AppTileHomeType));

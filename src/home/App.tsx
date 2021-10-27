@@ -9,7 +9,6 @@ import doArraysHaveEqualElement from '../utils/doArraysHaveEqualElement';
 import {getCurrentNavigationLinkTiles, NavigationLinkTile} from './AppTileConfig';
 import {getSelectedOrganisation, getUsername} from '../reducers';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-// @ts-ignore
 import {  useIntl } from 'react-intl';
 import { formattedMessageToString} from '../utils/translationUtils';
 
