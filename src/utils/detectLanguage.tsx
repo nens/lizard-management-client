@@ -3,7 +3,9 @@
 // we also support only traditional chinese for the taiwanese market
 // but in the future, we might want to also support simplified chinese
 // this is why we use zh-TW for traditional chinese instead of only zh
-const supportedLocales = ["en", "nl", "zh-TW"];
+// const supportedLocales = ["en", "nl", "zh-TW"];
+// For now no support for traditional Chinese
+const supportedLocales = ["en", "nl",];
 const defaultLocale = "en";
 
 
