@@ -42,13 +42,7 @@ export interface NavigationLinkPage {
 type LinkOrHome = "LINK" | "HOME"
 export interface NavigationLinkTile{
   title: string | JSX.Element,
-  subtitle?: string,
-  // title: (
-  //   <FormattedMessage
-  //     id="home.data_management"
-  //     defaultMessage="Data Management"
-  //   />
-  // ),
+  subtitle?: string | JSX.Element,
   homePageIcon: boolean,
   homePageLinkOrHome?:  LinkOrHome,
   order: number,
@@ -166,7 +160,11 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
         defaultMessage="catalogue"
       />
     ,
-    subtitle: "Search for your data",
+    subtitle: 
+      <FormattedMessage
+        id="apptile.catalogue_tile_subtitle"
+        defaultMessage="Search for your data"
+      />,
     homePageIcon: true,
     homePageLinkOrHome: "HOME",
     order: 100,

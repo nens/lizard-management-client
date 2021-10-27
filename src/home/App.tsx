@@ -37,7 +37,7 @@ const AppComponent = (props: RouteComponentProps) => {
             linksToUrlExternal={appTile.linksToUrlExternal}
             key={(typeof appTile.title === 'string' ? appTile.title : formattedMessageToString(appTile.title, intl)) + appTile.order + ""}
             title={typeof appTile.title === 'string' ? appTile.title : formattedMessageToString(appTile.title, intl)}
-            subtitle={appTile.subtitle || ""}
+            subtitle={!appTile.subtitle? "" : typeof appTile.subtitle === 'string' ? appTile.subtitle : formattedMessageToString(appTile.subtitle, intl)}
             icon={appTile.icon}
             readonly={
               !doArraysHaveEqualElement(appTile.requiresOneOfRoles, currentOrganisationRoles) &&
