@@ -1,5 +1,5 @@
 .SideBar {
-  height: 600px;
+  /* height: 600px; */
   display: flex;
   flex-direction: column;
   overflow-y: auto;

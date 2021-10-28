@@ -1,0 +1,16 @@
+/* Edges */
+.BlockEdge path {
+  stroke: orange;
+}
+
+.BooleanEdge path {
+  stroke: green;
+}
+
+.NumberEdge path {
+  stroke: #009f86;
+}
+
+.StringEdge path {
+  stroke: blue;
+}

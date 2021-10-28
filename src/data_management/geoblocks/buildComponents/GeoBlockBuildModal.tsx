@@ -1,15 +1,24 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
+import { Elements } from 'react-flow-renderer';
 import { GeoBlockJsonComponent } from './GeoBlockJsonComponent';
 import { GeoBlockVisualComponent } from './GeoBlockVisualComponent';
 import { SubmitButton } from '../../../form/SubmitButton';
 import { addNotification } from '../../../actions';
+import { jsonValidator } from '../../../form/validators';
+import { createGraphLayout } from '../../../utils/createGraphLayout';
+import { fetchGeoBlock } from '../../../utils/geoblockValidators';
+import {
+  convertElementsToGeoBlockSource,
+  convertGeoblockSourceToFlowElements
+} from '../../../utils/geoblockUtils';
 import ModalBackground from '../../../components/ModalBackground';
 import styles from './GeoBlockBuildModal.module.css';
 import formStyles from './../../../styles/Forms.module.css';
 import buttonStyles from './../../../styles/Buttons.module.css';
 
 interface MyProps {
+  uuid: string | null,
   source: Object | null,
   onChange: (value: Object) => void,
   handleClose: () => void
@@ -19,6 +28,23 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
   const sourceString = JSON.stringify(props.source, undefined, 4);
   const [jsonString, setJsonString] = useState<string>(sourceString);
   const [geoBlockView, setGeoBlockView] = useState<'json' | 'visual'>('json');
+
+  // Block elements of a geoblock for React-Flow are kept in here
+  // to make use of the SAVE, SWITCH and VALIDATE buttons
+  const [elements, setElements] = useState<Elements>([]);
+
+  // useEffect to create geoblock elements and build the graph layout using dagre library
+  // useEffect only gets called when the visual component is open
+  // use the useEffect here instead of the GeoBlockVisualComponent to avoid Maximum Depth Exceeded error
+  useEffect(() => {
+    if (geoBlockView === 'visual') {
+      const geoblockElements = convertGeoblockSourceToFlowElements(jsonString, setElements);
+      const layoutedElements = createGraphLayout(jsonString, geoblockElements);
+      setElements(layoutedElements);
+    };
+    // setElements back to [] when component unmounted
+    return () => setElements([]);
+  }, [jsonString, setElements, geoBlockView]);
 
   return (
     <ModalBackground
@@ -35,6 +61,8 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
           />
         ) : (
           <GeoBlockVisualComponent
+            elements={elements}
+            setElements={setElements}
           />
         )}
         <div className={`${formStyles.ButtonContainer} ${formStyles.FixedButtonContainer}`}>
@@ -46,19 +74,49 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
           </button>
           <button
             onClick={() => {
-              if (geoBlockView === 'json') {
-                setGeoBlockView('visual');
+              if (jsonValidator(jsonString)) {
+                return alert(jsonValidator(jsonString));
+              };
+              if (geoBlockView === 'visual') {
+                const geoBlockSource = convertElementsToGeoBlockSource(elements, jsonString, setJsonString);
+                if (geoBlockSource) setGeoBlockView('json');
               } else {
-                setGeoBlockView('json')
+                setGeoBlockView('visual');
               };
             }}
           >
             Switch
           </button>
+          <button
+            onClick={() => {
+              if (geoBlockView === 'visual') {
+                const geoBlockSource = convertElementsToGeoBlockSource(elements, jsonString, setJsonString);
+                if (geoBlockSource) fetchGeoBlock(props.uuid, geoBlockSource);
+              } else {
+                if (jsonValidator(jsonString)) {
+                  return alert(jsonValidator(jsonString));
+                };
+                fetchGeoBlock(props.uuid, JSON.parse(jsonString))
+              };
+            }}
+          >
+            Validate
+          </button>
           <SubmitButton
             onClick={() => {
-              props.onChange(JSON.parse(jsonString));
-              props.handleClose();
+              if (jsonValidator(jsonString)) {
+                return alert(jsonValidator(jsonString));
+              };
+              if (geoBlockView === 'visual') {
+                const geoBlockSource = convertElementsToGeoBlockSource(elements, jsonString, setJsonString);
+                if (geoBlockSource) {
+                  props.onChange(geoBlockSource);
+                  props.handleClose();
+                };
+              } else {
+                props.onChange(JSON.parse(jsonString));
+                props.handleClose();
+              };
             }}
           />
         </div>

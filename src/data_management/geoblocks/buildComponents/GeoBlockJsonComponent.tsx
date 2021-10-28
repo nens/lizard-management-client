@@ -9,14 +9,13 @@ interface MyProps {
   setJsonString: (e: string) => void
 }
 
+const prettyJsonFormat = (e: Object) => {
+  return JSON.stringify(e, null, 4);
+};
+
 export const GeoBlockJsonComponent = (props: MyProps) => {
   const { jsonString, setJsonString } = props;
   const [jsonTextView, setJsonTextView] = useState<boolean>(true);
-
-  // Helper function to convert json to pretty format
-  const setJsonStringInPrettyFormat = (e: Object) => {
-    setJsonString(JSON.stringify(e, undefined, 4));
-  };
 
   return (
     <>
@@ -45,7 +44,7 @@ export const GeoBlockJsonComponent = (props: MyProps) => {
               return alert(jsonValidator(jsonString));
             };
             const object = JSON.parse(jsonString);
-            setJsonStringInPrettyFormat(object);
+            setJsonString(prettyJsonFormat(object));
           }}
           style={{
             position: 'absolute',
@@ -73,9 +72,9 @@ export const GeoBlockJsonComponent = (props: MyProps) => {
           src={JSON.parse(jsonString)}
           name="source"
           theme="shapeshifter:inverted"
-          onEdit={e => setJsonStringInPrettyFormat(e.updated_src)}
-          onAdd={e => setJsonStringInPrettyFormat(e.updated_src)}
-          onDelete={e => setJsonStringInPrettyFormat(e.updated_src)}
+          onEdit={e => setJsonString(prettyJsonFormat(e.updated_src))}
+          onAdd={e => setJsonString(prettyJsonFormat(e.updated_src))}
+          onDelete={e => setJsonString(prettyJsonFormat(e.updated_src))}
           displayDataTypes={false}
           displayObjectSize={false}
           quotesOnKeys={false}

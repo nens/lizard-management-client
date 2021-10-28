@@ -1,0 +1,56 @@
+.Block {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid;
+  border-color: grey;
+}
+.Block:focus {
+  box-shadow: 0 0 0 0.5px grey;
+}
+
+.BlockLabel {
+  font-size: 12px;
+}
+.BlockInput {
+  font-size: 10px;
+  padding: 4px;
+}
+
+/* Number block */
+.NumberBlock {
+  width: 60px;
+  font-size: 12px;
+  padding: 5px;
+  border-color: #009f86;
+}
+
+/* String block */
+.StringBlock {
+  width: 140px;
+  font-size: 12px;
+  border-color: blue;
+}
+
+/* Output block */
+.OutputBlock {
+  border-color: red;
+}
+.OutputBlock:focus {
+  box-shadow: 0 0 0 0.5px red;
+}
+
+/* Raster block */
+.RasterBlock {
+  border-color: orange;
+}
+.RasterBlock:focus {
+  box-shadow: 0 0 0 0.5px orange;
+}
+
+/* Boolean block */
+.BooleanBlock {
+  border-color: green;
+}
+.BooleanBlock:focus {
+  box-shadow: 0 0 0 0.5px green;
+}
