@@ -77,7 +77,6 @@ const AppTileHomeType = (props: (Props & RouteComponentProps)) => {
           <a 
               href={linkPath}
               target={"_self"}
-              rel={undefined}
               className={`${styles.AppTile} ${readonly ? styles.Disabled: null}`}
               title={readonly ? requiresRoleMessage + requiredRoles : undefined}
           >
