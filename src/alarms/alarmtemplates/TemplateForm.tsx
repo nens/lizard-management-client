@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage } from "react-intl.macro";
 import { connect, useSelector } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
@@ -329,21 +329,22 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
               // onBlur={handleBlur}
             />
             <small>
-              <FormattedMessage
+              {0?<FormattedMessage
                 id="alarmtemplates_app.template"
                 defaultMessage="Template"
-              />{" "}
+              />:null}Template{" "}
               ({(values.message || '').length}{" "}
-              <FormattedMessage
+              {0?<FormattedMessage
                 id="alarmtemplates_new.characters"
                 defaultMessage="characters"
-              />)<br />
+              />:null}characters)<br />
               {values.type.value === "sms" ? (
                 <i>
-                  <FormattedMessage
+                  {0?<FormattedMessage
                     id="alarmtemplates_new.sms_max_char_warning"
                     defaultMessage="SMS messages have a limit of 160 characters after substituting the parameter tags"
-                  />
+                  />:null}
+                  SMS messages have a limit of 160 characters after substituting the parameter tags
                 </i>
               ) : null}
             </small>

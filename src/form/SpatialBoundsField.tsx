@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage } from "react-intl.macro";
 import { getBoundsFromWmsLayer } from "../utils/getBoundsFromGeoServer";
 import { ClearInputButton } from "../form/ClearInputButton";
 import styles from "./SpatialBoundsField.module.css";
@@ -190,7 +190,8 @@ const SpatialBoundsField  =  (props: SpatialBoundsProps) => {
                         // we do not use label class below because this wraps text to a newline. Should fix that later.
                         // className={formStyles.Label}
                     >
-                        <FormattedMessage id="wms_layer_form.north" />
+                        {0?<FormattedMessage id="wms_layer_form.north" defaultMessage="North" />:null}
+                        North
                         &nbsp;(&deg;)
                     </label>
                     <input
@@ -213,7 +214,8 @@ const SpatialBoundsField  =  (props: SpatialBoundsProps) => {
                     }
                 >
                     <label>
-                        <FormattedMessage id="wms_layer_form.east" />
+                        {0?<FormattedMessage id="wms_layer_form.east" defaultMessage="East" />:null}
+                        East
                         &nbsp;(&deg;)
                     </label>
                     <input
@@ -236,7 +238,8 @@ const SpatialBoundsField  =  (props: SpatialBoundsProps) => {
                     }
                 >
                     <label>
-                        <FormattedMessage id="wms_layer_form.south" />
+                        {0?<FormattedMessage id="wms_layer_form.south" defaultMessage="South" />:null}
+                        South
                         &nbsp;(&deg;)
                     </label>
                     <input
@@ -259,7 +262,8 @@ const SpatialBoundsField  =  (props: SpatialBoundsProps) => {
                     }
                 >
                     <label>
-                        <FormattedMessage id="wms_layer_form.west" />
+                        {0?<FormattedMessage id="wms_layer_form.west" defaultMessage="West" />:null}
+                        West
                         &nbsp;(&deg;)
                     </label>
                     <input
@@ -291,10 +295,11 @@ const SpatialBoundsField  =  (props: SpatialBoundsProps) => {
                     )}
                     type={"button"}
                 >
-                    <FormattedMessage
+                    {0?<FormattedMessage
                         id="wms_layer_form.get_from_geoserver"
                         defaultMessage="Get from source"
-                    />
+                    />:null}
+                    Get from source
                 </button>
                 &nbsp;
                 <span

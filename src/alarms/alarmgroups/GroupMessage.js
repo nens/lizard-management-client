@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage } from "react-intl.macro";
 import { connect } from "react-redux";
 import styles from "./GroupMessage.module.css";
 import gridStyles from "../../styles/Grid.module.css";
@@ -118,10 +118,11 @@ class GroupMessage extends Component {
               <i className="material-icons">close</i>
             </div>
             <h3>
-              <FormattedMessage
+              {0?<FormattedMessage
                 id="alarmgroups_app.send_a_message_to_this_group"
                 defaultMessage="Send a message to this group"
-              />
+              />:null}
+              Send a message to this group
             </h3>
             <br />
             <div className="form-group">
@@ -136,10 +137,11 @@ class GroupMessage extends Component {
                 disabled={isSending ? true : false}
               />
               <small className="text-muted">
-                <FormattedMessage
+                {0?<FormattedMessage
                   id="alarmgroups_app.subject_only_applies"
                   defaultMessage="Subject (only applies to e-mail messages)"
-                />
+                />:null}
+                Subject (only applies to e-mail messages)
               </small>
             </div>
             <Scrollbars
@@ -168,15 +170,15 @@ class GroupMessage extends Component {
                     }}
                   />
                   <small className="text-muted">
-                    <FormattedMessage
+                    {0?<FormattedMessage
                       id="alarmgroups_app.message"
                       defaultMessage="Message"
-                    />{" "}
+                    />:null}Message{" "}
                     ({160 - messageText.length}{" "}
-                    <FormattedMessage
+                    {0?<FormattedMessage
                       id="alarmgroups_app.characters_left"
                       defaultMessage="characters left"
-                    />)
+                    />:null}characters left)
                   </small>
                 </div>
               </div>
@@ -192,10 +194,11 @@ class GroupMessage extends Component {
                 }
               }}
             >
-              <FormattedMessage
+              {0?<FormattedMessage
                 id="alarmgroup.send_message"
                 defaultMessage="Send message"
-              />
+              />:null}
+              Send message
             </button>
           </div>
         </CSSTransition>

@@ -1,5 +1,5 @@
 import React from "react";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage } from "react-intl.macro";
 import { connect, useSelector } from "react-redux";
 import { dismissNotification } from "../actions";
 import { getNotifications } from "../reducers";
@@ -43,10 +43,11 @@ const Snackbar: React.FC<PropsFromDispatch> = (props) => {
           className={styles.DismissButton}
           onClick={() => dismiss(notifications.length - 1)}
         >
-          <FormattedMessage
+          {0?<FormattedMessage
             id="components_snackbar.dismiss"
             defaultMessage="Dismiss"
-          />
+          />:null}
+          Dismiss
         </div>
       </div>
     </div>

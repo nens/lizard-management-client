@@ -144,17 +144,88 @@ This client has l10n/i18n support via react-intl.
 English is the default/fallback language.
 Dutch is the only planned supported other language for now.
 
-Below is described how to automaticly extract translations.
-Currently this does not find the translations that are passed as formatted messages in attributes of react components,
-nor does it find messages translated with intl.formatMessage({ id: "<key>" });
-Even worse, it deletes existing translations that were made that way.
-Therefore we do not currently use below command, but keep translations in sync manually.
+Here is how to create a translated html component.  
+The majority of your translations will be html components:  
 
-To extract translation tags to the i18n catalog (this thus wrongly removes some translations and should not be used untill this problem is resolved): `$ yarn run i18n:extract`.
+```JSX
+  import { FormattedMessage } from 'react-intl.macro';
+
+  ....
+
+  <FormattedMessage 
+    id="select_model.header" 
+    defaultMessage="Choose model to run" 
+  />
+```
+
+The method above does not allow to translate to strings (for example needed for html attributes).   
+Below methos allows this: the tooltip attribute of the html attribute was translated to a string with the function formattedMessageToString :    
+
+```JSX
+  import { FormattedMessage } from 'react-intl.macro';
+  import {  useIntl } from 'react-intl';
+  import {formattedMessageToString} from '../utils/translationUtils';
+
+  // inside react component !
+  const intl = useIntl();
+
+  ...
+
+  <button
+    title={formattedMessageToString(<FormattedMessage id="toolbox.wind_tooltip" defaultMessage="Wind tool"/>, intl)}
+  />
+```
+
+### Extract translations automatically
+
+To extract the translations run:
+
+### `yarn run i18n:extract`
+
+After this you will need to add the translations to a human readable form by running:   
+
+### `yarn i18n:manageTranslations`
+
+The translations will now be stored in:  
+./src/i18n/translations/nl.json  
+./src/i18n/translations/en.json  
+./src/i18n/translations/es.json  
+    
+They need to be translated here manually in the .json files.  
+We do not need the Spanish translation yet, it just serves as example. 
+The English translations should not be edited, but the "defaultMessage" inside the "FormattedMessage" component should be edited instead.    
+We do not have a good editor for these translations and are considering how to use the online service transifex.  
+
+### Language displayed in app
+
+To change your preferred language you need to change your browser settings.  
+For Firefox it is explained here:   
+https://support.mozilla.org/en-US/kb/choose-display-languages-multilingual-web-pages  
+For Chrome it is explained here:    
+https://support.google.com/chrome/answer/173424?co=GENIE.Platform%3DDesktop&hl=en below "Turn translation on or off for a specific language"  
+
+### more translation details
+
+For translation we used the following tutorial:  
+https://objectpartners.com/2019/04/03/translate-create-react-app-with-react-intl/  
+The tutorial is already outdated so we improvised a bit. 
+
+### What is currently translated? 
+We currently only translated the homepage to Dutch.  
+But we plan on translating the whole management app to Dutch. 
+Later we might also translate the whole management app to Traditional-Chinese and Vietnamese. 
+Previously bigger parts of the app were translated to Dutch, but not everything.
+To not get intoo the situation that parts are translated and other parts not we for now comment everything out what is translated outside of the homepage. The only part that is used in both places is the profile dropdown so we must accept that this one can be Dutch, but the rest of the app English.  
+Commented out translation components look like this:  
+```JSX
+{0?<FormattedMessage id="raster_form.aggregation_type_none" defaultMessage="no aggregation" />:null}  
+```
 
 
-
-See `src/translations/locales/[language].json`. (where language is 'nl', for now)
+### old translations 
+Before we used a slightly different translation extraction. 
+The resulting translations are now not used, but can still be of value.
+They can be found in the folder /src/translations__legacy
 
 
 Redux

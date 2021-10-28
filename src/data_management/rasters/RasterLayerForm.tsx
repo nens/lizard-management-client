@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage } from "react-intl.macro";
 import { connect, useSelector } from 'react-redux';
 import {
   createRasterLayer,
@@ -369,6 +369,11 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
             loadOptions={searchInput => fetchRasterSources(selectedOrganisation.uuid, searchInput)}
           />
         )}
+        {0?<FormattedMessage id="raster_form.aggregation_type_none" defaultMessage="no aggregation" />:null}
+        {0?<FormattedMessage id="raster_form.aggregation_type_counts" defaultMessage="area per category" />:null}
+        {0?<FormattedMessage id="raster_form.aggregation_type_curve" defaultMessage="cumulative distribution" />:null}
+        {0?<FormattedMessage id="raster_form.aggregation_type_sum" defaultMessage="values in the region are summed" />:null}
+        {0?<FormattedMessage id="raster_form.aggregation_type_average" defaultMessage="values in the region are averaged" />:null}
         <SelectDropdown
           title={'Aggregation type *'}
           name={'aggregationType'}
@@ -379,27 +384,27 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
             {
               value: 'none',
               label: 'none',
-              subLabel: <FormattedMessage id="raster_form.aggregation_type_none" />
+              subLabel: "no aggregation",
             },
             {
               value: 'counts',
               label: 'counts',
-              subLabel: <FormattedMessage id="raster_form.aggregation_type_counts" />
+              subLabel: 'area per category',
             },
             {
               value: 'curve',
               label: 'curve',
-              subLabel: <FormattedMessage id="raster_form.aggregation_type_curve" />
+              subLabel: 'cumulative distribution',
             },
             {
               value: 'sum',
               label: 'sum',
-              subLabel: <FormattedMessage id="raster_form.aggregation_type_sum" />
+              subLabel: 'values in the region are summed',
             },
             {
               value: 'average',
               label: 'average',
-              subLabel: <FormattedMessage id="raster_form.aggregation_type_average" />
+              subLabel: 'values in the region are averaged',
             }
           ]}
           validated={!!values.aggregationType}
@@ -431,7 +436,7 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           title={'Choose a color map *'}
           name={'colorMap'}
           colorMapValue={values.colorMap}
-          valueChanged={value => handleValueChange('colorMap', value)}
+          valueChanged={(value) => handleValueChange('colorMap', value)}
           validated
           form={"raster_layer_form_id"}
           onFocus={handleFocus}

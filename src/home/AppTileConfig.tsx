@@ -1,3 +1,4 @@
+import React from "react";
 import alarmIcon from "../images/alarm@3x.svg";
 import userManagementIcon from "../images/userManagement.svg";
 import dataManagementIcon from "../images/database.svg";
@@ -25,6 +26,8 @@ import docsIcon from "../images/document2.svg";
 import supportIcon from "../images/support.svg";
 import layerCollectionIcon from "../images/layer_collection_icon.svg";
 // import agreementIcon from "../images/agreement.svg";
+import { FormattedMessage } from "react-intl.macro";
+
 
 import doArraysHaveEqualElement from '../utils/doArraysHaveEqualElement';
 
@@ -38,14 +41,8 @@ export interface NavigationLinkPage {
 
 type LinkOrHome = "LINK" | "HOME"
 export interface NavigationLinkTile{
-  title: string,
-  subtitle?: string,
-  // title: (
-  //   <FormattedMessage
-  //     id="home.data_management"
-  //     defaultMessage="Data Management"
-  //   />
-  // ),
+  title: string | JSX.Element,
+  subtitle?: string | JSX.Element,
   homePageIcon: boolean,
   homePageLinkOrHome?:  LinkOrHome,
   order: number,
@@ -157,14 +154,17 @@ export const navigationLinkPages: NavigationLinkPage[] = [
 export const navigationLinkTiles: NavigationLinkTile[] = [
   
   { 
-    title: "catalogue",
-    subtitle: "Search for your data",
-    // title: (
-    //   <FormattedMessage
-    //     id="home.data_management"
-    //     defaultMessage="Data Management"
-    //   />
-    // ),
+    title: 
+      <FormattedMessage
+        id="apptile.catalogue_tile"
+        defaultMessage="catalogue"
+      />
+    ,
+    subtitle: 
+      <FormattedMessage
+        id="apptile.catalogue_tile_subtitle"
+        defaultMessage="Search for your data"
+      />,
     homePageIcon: true,
     homePageLinkOrHome: "HOME",
     order: 100,
@@ -175,14 +175,17 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     icon: catalogIcon,
   },
   { 
-    title: "viewer",
-    subtitle: "Explore your data",
-    // title: (
-    //   <FormattedMessage
-    //     id="home.data_management"
-    //     defaultMessage="Data Management"
-    //   />
-    // ),
+    title: 
+      <FormattedMessage
+        id="apptile.viewer_tile"
+        defaultMessage="viewer"
+      />
+    ,
+    subtitle: 
+      <FormattedMessage
+        id="apptile.viewer_tile_subtitle"
+        defaultMessage="Explore your data"
+      />,
     homePageIcon: true,
     homePageLinkOrHome: "HOME",
     order: 100,
@@ -193,14 +196,17 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     icon: viewerIcon,
   },
   { 
-    title: "management",
-    subtitle: "Manage your data, users, alarms and GeoBlocks.",
-    // title: (
-    //   <FormattedMessage
-    //     id="home.data_management"
-    //     defaultMessage="Data Management"
-    //   />
-    // ),
+    title: 
+      <FormattedMessage
+        id="apptile.management_tile"
+        defaultMessage="management"
+      />
+    ,
+    subtitle: 
+      <FormattedMessage
+        id="apptile.management_tile_subtitle"
+        defaultMessage="Manage your data, users, alarms and GeoBlocks."
+      />,
     homePageIcon: true,
     homePageLinkOrHome: "HOME",
     order: 100,
@@ -211,14 +217,17 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     icon: managementIcon,
   },
   { 
-    title: "api",
-    subtitle: "Query your data",
-    // title: (
-    //   <FormattedMessage
-    //     id="home.data_management"
-    //     defaultMessage="Data Management"
-    //   />
-    // ),
+    title: 
+      <FormattedMessage
+        id="apptile.api_tile"
+        defaultMessage="api"
+      />
+    ,
+    subtitle: 
+      <FormattedMessage
+        id="apptile.api_tile_subtitle"
+        defaultMessage="Query your data."
+      />,
     homePageIcon: true,
     homePageLinkOrHome: "HOME",
     order: 100,
@@ -229,14 +238,17 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     icon: codeIcon,
   },
   { 
-    title: "documentation",
-    subtitle: "Read the docs.",
-    // title: (
-    //   <FormattedMessage
-    //     id="home.data_management"
-    //     defaultMessage="Data Management"
-    //   />
-    // ),
+    title: 
+      <FormattedMessage
+        id="apptile.documentation_tile"
+        defaultMessage="documentation"
+      />
+    ,
+    subtitle: 
+      <FormattedMessage
+        id="apptile.documentation_tile_subtitle"
+        defaultMessage="Read the docs."
+      />,
     homePageIcon: true,
     homePageLinkOrHome: "LINK",
     order: 100,
@@ -247,14 +259,17 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     icon: docsIcon,
   },
   { 
-    title: "support",
-    subtitle: "Need help?",
-    // title: (
-    //   <FormattedMessage
-    //     id="home.data_management"
-    //     defaultMessage="Data Management"
-    //   />
-    // ),
+    title: 
+      <FormattedMessage
+        id="apptile.support_tile"
+        defaultMessage="support"
+      />
+    ,
+    subtitle: 
+      <FormattedMessage
+        id="apptile.support_tile_subtitle"
+        defaultMessage="Need help?"
+      />,
     homePageIcon: true,
     homePageLinkOrHome: "LINK",
     order: 100,
