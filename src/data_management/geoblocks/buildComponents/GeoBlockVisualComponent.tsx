@@ -105,7 +105,7 @@ const GeoBlockVisualFlow = (props: MyProps) => {
         gridTemplateColumns: '1fr 150px',
         columnGap: 10,
         margin: '20px 0',
-        height: 550
+        height: 720
       }}
     >
       <ReactFlow
