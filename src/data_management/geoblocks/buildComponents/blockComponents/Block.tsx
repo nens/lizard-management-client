@@ -8,11 +8,11 @@ interface BlockInput {
   classOfBlock: string,
   parameters: (string | number | [])[],
   outputBlock?: boolean,
-  onOutputChange: (bool: boolean) => void
+  onChange: (value: number, i: number) => void
 }
 
 export const Block = (props: Node<BlockInput>) => {
-  const { label, classOfBlock, parameters } = props.data!;
+  const { label, classOfBlock, parameters, onChange } = props.data!;
   const block = Object.values(geoblockType).find(
     geoblock => geoblock && geoblock.class && geoblock.class === classOfBlock
   );
@@ -37,7 +37,7 @@ export const Block = (props: Node<BlockInput>) => {
           <Handle
             key={i}
             type="target"
-            id={'handle-' + i}
+            id={i + ''}
             title={`${parameter.name}: ${parameter.type}`}
             position={Position.Left}
             style={{
@@ -57,12 +57,13 @@ export const Block = (props: Node<BlockInput>) => {
         {blockArrayParameters.map((parameter, i) => {
           return (
             <input
-              type={'text'}
+              type={parameter.type === 'number' ? 'number' : 'text'}
               className={styles.BlockInput}
               title={parameter.name}
               placeholder={parameter.name}
-              defaultValue={parameters ? parameters[i] : undefined}
+              value={parameters ? parameters[i] : undefined}
               readOnly={parameter.type === 'raster_block'}
+              onChange={e => onChange(parseFloat(e.target.value), i)}
             />
           )
         })}

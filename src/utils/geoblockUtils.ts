@@ -1,4 +1,4 @@
-import { Elements, isEdge, isNode } from "react-flow-renderer";
+import { Elements, isNode } from "react-flow-renderer";
 import { GeoBlockSource, geoblockType } from "../types/geoBlockType";
 import { geoBlockValidator } from "./geoblockValidators";
 
@@ -14,14 +14,14 @@ export const getBlockData = (
     label: 'LizardRasterSource_' + (numberOfBlocks + 1),
     value: '',
     classOfBlock: 'lizard_nxt.blocks.LizardRasterSource',
-    onChange: (value: string) => onBlockValueChange(value, idOfNewBlock, setElements)
+    onChange: (value: string) => onRasterBlockChange(value, idOfNewBlock, setElements)
   };
 
   const dataOfBuildBlock = {
     label: blockName + '_' + (numberOfBlocks + 1),
     // @ts-ignore
     classOfBlock: geoblockType[blockName].class,
-    onOutputChange: (bool: boolean) => onBlockOutputChange(bool, idOfNewBlock, setElements)
+    onChange: (value: number, i: number) => onBlockChange(value, i, blockName, setElements)
   };
 
   if (blockName === 'RasterBlock') {
@@ -48,7 +48,7 @@ const getRasterElements = (
       label: blockName,
       value: graph[blockName][1],
       classOfBlock: 'lizard_nxt.blocks.LizardRasterSource',
-      onChange: (value: string) => onBlockValueChange(value, blockName, setElements)
+      onChange: (value: string) => onRasterBlockChange(value, blockName, setElements)
     },
     position
   }));
@@ -80,59 +80,37 @@ const getBlockElements = (
         classOfBlock,
         parameters: blockValue.slice(1),
         outputBlock: blockName === name,
-        onOutputChange: (bool: boolean) => onBlockOutputChange(bool, blockName, setElements)
+        onChange: (value: number, i: number) => onBlockChange(value, i, blockName, setElements)
       },
       position
     };
   });
 };
 
-// Helper function to change value of a block (e.g. UUID of a raster block or number input)
-const onBlockValueChange = (
+// Helper function to change parameter value of a block
+const onBlockChange = (
   value: string | number | boolean,
+  index: number,
   blockId: string,
   setElements: React.Dispatch<React.SetStateAction<Elements<any>>>
 ) => {
   setElements(elms => {
     return elms.map(elm => {
-      if (elm.id === blockId) {
-        return {
-          ...elm,
-          data: {
-            ...elm.data,
-            value
-          }
-        }
-      };
+      if (elm.id === blockId) elm.data.parameters[index] = value;
       return elm;
     });
   });
 };
 
-// Helper function to change an output block
-const onBlockOutputChange = (
-  bool: boolean,
+// Helper function to change UUID of a raster
+const onRasterBlockChange = (
+  value: string,
   blockId: string,
   setElements: React.Dispatch<React.SetStateAction<Elements<any>>>
 ) => {
   setElements(elms => {
-    return elms.filter(
-      // remove the output edge connected to the block
-      elm => !(isEdge(elm) && elm.source === blockId)
-    ).map(elm => {
-      if (elm.id === blockId) {
-        return {
-          ...elm,
-          style: {
-            ...elm.style,
-            borderColor: bool ? 'red' : 'grey'
-          },
-          data: {
-            ...elm.data,
-            outputBlock: bool
-          }
-        }
-      };
+    return elms.map(elm => {
+      if (elm.id === blockId) elm.data.value = value;
       return elm;
     });
   });

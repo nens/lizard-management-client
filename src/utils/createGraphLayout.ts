@@ -76,7 +76,7 @@ export const createGraphLayout = (
       type: ConnectionLineType.SmoothStep,
       source: parameter,
       target: el.id,
-      targetHandle: 'handle-' + index,
+      targetHandle: index + '',
       animated: true
     }));
   }).flat(1);

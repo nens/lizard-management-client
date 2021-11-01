@@ -47,11 +47,15 @@ const GeoBlockVisualFlow = (props: MyProps) => {
     if (connectError) return console.error(connectError.errorMessage);
 
     setElements((els) => {
+      const newElements = els.map(el => {
+        if (el.id === params.target) el.data.parameters[params.targetHandle!] = params.source;
+        return el;
+      });
       return addEdge({
         ...params,
         type: ConnectionLineType.SmoothStep,
         animated: true
-      }, els);
+      }, newElements);
     });
     params.target && updateNodeInternals(params.target); // update node internals
   };
