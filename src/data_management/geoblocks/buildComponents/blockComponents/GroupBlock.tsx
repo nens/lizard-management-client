@@ -11,14 +11,14 @@ interface GroupBlockInput {
 }
 
 export const GroupBlock = (props: Node<GroupBlockInput>) => {
-  const { classOfBlock, label, parameters, outputBlock, onOutputChange } = props.data!;
+  const { classOfBlock, label, parameters } = props.data!;
   const initialHandles = Array.isArray(parameters) ? parameters : ['handle-1', 'handle-2'];
   const [handles, setHandles] = useState<string[]>(initialHandles);
   const numberOfHandles = handles.length;
 
   return (
     <div
-      className={`${styles.Block} ${outputBlock ? styles.OutputBlock : ''}`}
+      className={styles.Block}
       tabIndex={1}
     >
       {handles.map((_parameter, i) => (
@@ -37,20 +37,20 @@ export const GroupBlock = (props: Node<GroupBlockInput>) => {
       <div
         title={classOfBlock}
         style={{
-          fontSize: 12,
           display: 'flex',
           alignItems: 'center',
-          // calculate height of the Block if there are more than 3 handlers
-          height: numberOfHandles > 3 ? numberOfHandles * 10 : undefined
+          // calculate height of the Block if there are more than 7 handlers
+          height: numberOfHandles > 7 ? numberOfHandles * 10 : 70
         }}
       >
         <div
           style={{
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: 'center',
+            justifyContent: 'space-between',
             alignItems: 'center',
             marginRight: 10,
+            height: '100%'
           }}
         >
           <i
@@ -68,22 +68,16 @@ export const GroupBlock = (props: Node<GroupBlockInput>) => {
             onClick={() => setHandles((handles: string[]) => handles.slice(0, -1))}
           />
         </div>
-        <span>{label}</span>
-        <i
-          className={outputBlock ? 'fa fa-plus' : 'fa fa-minus'}
-          style={{
-            cursor: 'pointer',
-            marginLeft: 10
-          }}
-          onClick={() => onOutputChange(!outputBlock)}
-        />
+        <div
+          className={styles.BlockHeader}
+        >
+          <h4>{label}</h4>
+          <small><i>({classOfBlock})</i></small>
+        </div>
       </div>
       <Handle
         type="source"
         position={Position.Right}
-        style={{
-          visibility: outputBlock ? 'hidden' : 'visible'
-        }}
       />
     </div>
   )

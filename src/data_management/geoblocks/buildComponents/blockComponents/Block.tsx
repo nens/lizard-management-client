@@ -12,7 +12,7 @@ interface BlockInput {
 }
 
 export const Block = (props: Node<BlockInput>) => {
-  const { label, classOfBlock } = props.data!;
+  const { label, classOfBlock, parameters } = props.data!;
   const block = Object.values(geoblockType).find(
     geoblock => geoblock && geoblock.class && geoblock.class === classOfBlock
   );
@@ -22,28 +22,30 @@ export const Block = (props: Node<BlockInput>) => {
     return;
   };
 
-  const { parameters } = block;
-
-  const rasterParameters = Array.isArray(parameters) ? parameters.filter(parameter => parameter.type.includes('raster_block')) : [];
-  const otherParameters = Array.isArray(parameters) ? parameters.filter(parameter => parameter.type !== 'raster_block') : [];
+  const blockParameters = block.parameters;
+  const blockArrayParameters = Array.isArray(blockParameters) ? blockParameters : [];
+  // const rasterParameters = blockArrayParameters.filter(parameter => parameter.type.includes('raster_block'));
+  // const otherParameters = blockArrayParameters.filter(parameter => parameter.type !== 'raster_block');
 
   return (
     <div
       className={styles.Block}
       tabIndex={1}
     >
-      {rasterParameters.map((parameter, i) => (
-        <Handle
-          key={i}
-          type="target"
-          id={'handle-' + i}
-          title={`${parameter.name}: ${parameter.type}`}
-          position={Position.Left}
-          style={{
-            top: 10 * (i + 1),
-            background: 'orange',
-          }}
-        />
+      {blockArrayParameters.map((parameter, i) => (
+        parameter.type.includes('raster_block') ? (
+          <Handle
+            key={i}
+            type="target"
+            id={'handle-' + i}
+            title={`${parameter.name}: ${parameter.type}`}
+            position={Position.Left}
+            style={{
+              top: i === 0 ? 100 : (100 + i * 35),
+              background: 'orange',
+            }}
+          />
+        ) : null
       ))}
       <div>
         <div
@@ -52,17 +54,18 @@ export const Block = (props: Node<BlockInput>) => {
           <h4>{label}</h4>
           <small><i>({classOfBlock})</i></small>
         </div>
-        {otherParameters.map((parameter, i) => (
-          <input
-            type={'text'}
-            title={parameter.name}
-            placeholder={parameter.name}
-            style={{
-              width: '100%',
-              marginTop: 10,
-            }}
-          />
-        ))}
+        {blockArrayParameters.map((parameter, i) => {
+          return (
+            <input
+              type={'text'}
+              className={styles.BlockInput}
+              title={parameter.name}
+              placeholder={parameter.name}
+              defaultValue={parameters[i]}
+              readOnly={parameter.type === 'raster_block'}
+            />
+          )
+        })}
       </div>
       <Handle
         type="source"
