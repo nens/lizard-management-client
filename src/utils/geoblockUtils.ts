@@ -1,4 +1,4 @@
-import { Edge, Elements, isEdge, isNode } from "react-flow-renderer";
+import { Elements, isEdge, isNode } from "react-flow-renderer";
 import { GeoBlockSource, geoblockType } from "../types/geoBlockType";
 import { geoBlockValidator } from "./geoblockValidators";
 
@@ -21,8 +21,6 @@ export const getBlockData = (
     label: blockName + '_' + (numberOfBlocks + 1),
     // @ts-ignore
     classOfBlock: geoblockType[blockName].class,
-    // @ts-ignore
-    parameters: geoblockType[blockName].parameters,
     onOutputChange: (bool: boolean) => onBlockOutputChange(bool, idOfNewBlock, setElements)
   };
 
@@ -167,35 +165,11 @@ export const convertElementsToGeoBlockSource = (
     return;
   };
 
-  const edges = elements.filter(e => isEdge(e)) as Edge[];
   const blocks = elements.filter(e => isNode(e));
   const outputBlocks = blocks.filter(block => block.data && block.data.outputBlock);
 
   // use reduce method to create the graph object
-  const graph = blocks.filter(block =>
-    block.type === 'RasterBlock' ||
-    block.type === 'Block' ||
-    block.type === 'GroupBlock'
-  ).reduce((graph, block) => {
-    // find connected nodes and their labels
-    const connectedNodes = edges.filter(
-      e => e.target === block.id
-    ).sort((a, b) => {
-      // sort the connected nodes by their target handle (e.g. handle-0, handle-1, handle-2, etc)
-      if (a.targetHandle && b.targetHandle) {
-        return a.targetHandle.localeCompare(b.targetHandle);
-      } else {
-        return 0;
-      };
-    }).map(
-      e => e.source
-    ).map(blockId => {
-      const sourceNode = blocks.find(block => block.id === blockId);
-
-      if (!sourceNode) return blockId;
-      return sourceNode.data.label || sourceNode.data.value;
-    });
-
+  const graph = blocks.reduce((graph, block) => {
     return {
       ...graph,
       [block.data.label]: block.type === 'RasterBlock' ? [
@@ -203,7 +177,7 @@ export const convertElementsToGeoBlockSource = (
         block.data.value
       ] : [
         block.data.classOfBlock,
-        ...connectedNodes
+        ...block.data.parameters
       ]
     };
   }, {});

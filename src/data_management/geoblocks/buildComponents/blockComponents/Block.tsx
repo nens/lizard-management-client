@@ -61,7 +61,7 @@ export const Block = (props: Node<BlockInput>) => {
               className={styles.BlockInput}
               title={parameter.name}
               placeholder={parameter.name}
-              defaultValue={parameters[i]}
+              defaultValue={parameters ? parameters[i] : undefined}
               readOnly={parameter.type === 'raster_block'}
             />
           )

@@ -5,14 +5,14 @@ import styles from './Block.module.css';
 interface GroupBlockInput {
   label: string,
   classOfBlock: string,
-  parameters: string[] | Object,
+  parameters: string[],
   outputBlock?: boolean,
   onOutputChange: (bool: boolean) => void
 }
 
 export const GroupBlock = (props: Node<GroupBlockInput>) => {
   const { classOfBlock, label, parameters } = props.data!;
-  const initialHandles = Array.isArray(parameters) ? parameters : ['handle-1', 'handle-2'];
+  const initialHandles = parameters ? parameters : ['handle-1', 'handle-2'];
   const [handles, setHandles] = useState<string[]>(initialHandles);
   const numberOfHandles = handles.length;
 
