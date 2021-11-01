@@ -6,6 +6,7 @@ import ReactFlow, {
   Controls,
   Edge,
   Elements,
+  isEdge,
   isNode,
   MiniMap,
   Position,
@@ -61,7 +62,16 @@ const GeoBlockVisualFlow = (props: MyProps) => {
   };
 
   const onElementsRemove = (elementsToRemove: Elements) => {
-    setElements((els) => removeElements(elementsToRemove, els))
+    setElements((els) => {
+      const newElements = els.map(el => {
+        const edgesToRemove = elementsToRemove.filter(elm => isEdge(elm)) as Edge[];
+        edgesToRemove.forEach(edge => {
+          if (edge.target === el.id) el.data.parameters[edge.targetHandle!] = '';
+        });
+        return el;
+      });
+      return removeElements(elementsToRemove, newElements);
+    });
   };
 
   const onLoad = (_reactFlowInstance: any) => {
