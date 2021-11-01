@@ -4,8 +4,9 @@ import styles from './ModalBackground.module.css';
 interface MyProps {
   title: string,
   handleClose?: () => void,
-  height?: string,
-  width?: string,
+  style?: {
+    [key: string]: string | number
+  },
 }
 
 const ModalBackground: React.FC<MyProps> = (props) => {
@@ -22,10 +23,7 @@ const ModalBackground: React.FC<MyProps> = (props) => {
     <div className={styles.ModalBackground}>
       <div
         className={styles.ModalBox}
-        style={{
-          height: props.height,
-          width: props.width
-        }}
+        style={props.style}
       >
         <div className={styles.ModalTitle}>
           <span>{props.title}</span>

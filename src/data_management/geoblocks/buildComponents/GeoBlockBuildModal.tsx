@@ -50,8 +50,11 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
     <ModalBackground
       title={'Geo Block Builder'}
       handleClose={props.handleClose}
-      width={'80%'}
-      height={'80%'}
+      style={{
+        width: '100%',
+        height: '100%',
+        borderRadius: 0
+      }}
     >
       <div className={styles.MainContainer}>
         {geoBlockView === 'json' ? (
