@@ -20,6 +20,7 @@ import { GroupBlock } from './blockComponents/GroupBlock';
 import { RasterBlock } from './blockComponents/RasterBlock';
 import { geoblockType } from '../../../types/geoBlockType';
 import { getBlockData } from '../../../utils/geoblockUtils';
+import { targetHandleValidator } from '../../../utils/geoblockValidators';
 
 interface MyProps {
   elements: Elements,
@@ -34,11 +35,17 @@ const GeoBlockVisualFlow = (props: MyProps) => {
 
   // gets called after end of edge gets dragged to another source or target
   const onEdgeUpdate = (oldEdge: Edge, newConnection: Connection) => {
+    const connectError = targetHandleValidator(elements, newConnection);
+    if (connectError) return console.error(connectError.errorMessage);
+
     setElements((els) => updateEdge(oldEdge, newConnection, els));
     newConnection.target && updateNodeInternals(newConnection.target); // update node internals
   };
 
   const onConnect = (params: Edge | Connection) => {
+    const connectError = targetHandleValidator(elements, params);
+    if (connectError) return console.error(connectError.errorMessage);
+
     setElements((els) => {
       return addEdge({
         ...params,
