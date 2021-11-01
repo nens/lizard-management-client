@@ -4,26 +4,6 @@
     "description": "raster block",
     "parameters": []
   },
-  "ArrayBlock": {
-    "class": "ArrayBlock",
-    "description": "array block",
-    "parameters": []
-  },
-  "BooleanBlock": {
-    "class": "BooleanBlock",
-    "description": "boolean block",
-    "parameters": []
-  },
-  "NumberBlock": {
-    "class": "NumberBlock",
-    "description": "number block",
-    "parameters": []
-  },
-  "StringBlock": {
-    "class": "StringBlock",
-    "description": "string block",
-    "parameters": []
-  },
   "Add": {
     "class": "dask_geomodeling.raster.elemwise.Add",
     "description": "add block",

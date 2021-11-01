@@ -16,16 +16,10 @@ import ReactFlow, {
 } from 'react-flow-renderer';
 import { SideBar } from './blockComponents/SideBar';
 import { Block } from './blockComponents/Block';
-import { BooleanBlock } from './blockComponents/BooleanBlock';
 import { GroupBlock } from './blockComponents/GroupBlock';
-import { NumberBlock } from './blockComponents/NumberBlock';
 import { RasterBlock } from './blockComponents/RasterBlock';
-import { StringBlock } from './blockComponents/StringBlock';
-import { ArrayBlock } from './blockComponents/ArrayBlock';
 import { geoblockType } from '../../../types/geoBlockType';
 import { getBlockData } from '../../../utils/geoblockUtils';
-import { targetHandleValidator } from '../../../utils/geoblockValidators';
-import edgeStyle from './blockComponents/Edge.module.css';
 
 interface MyProps {
   elements: Elements,
@@ -45,21 +39,11 @@ const GeoBlockVisualFlow = (props: MyProps) => {
   };
 
   const onConnect = (params: Edge | Connection) => {
-    const connectError = targetHandleValidator(elements, params);
-    if (connectError) return console.error(connectError.errorMessage);
-
     setElements((els) => {
-      const source = els.find(el => el.id === params.source)!;
       return addEdge({
         ...params,
         type: ConnectionLineType.SmoothStep,
-        animated: true,
-        className: (
-          source.type === 'NumberBlock' ? edgeStyle.NumberEdge :
-          source.type === 'StringBlock' ? edgeStyle.StringEdge :
-          source.type === 'BooleanBlock' ? edgeStyle.BooleanEdge :
-          edgeStyle.BlockEdge
-        )
+        animated: true
       }, els);
     });
     params.target && updateNodeInternals(params.target); // update node internals
@@ -101,7 +85,7 @@ const GeoBlockVisualFlow = (props: MyProps) => {
       const newBlock = {
         id: idOfNewBlock,
         type: (
-          blockName === 'RasterBlock' || blockName === 'NumberBlock' || blockName === 'BooleanBlock' || blockName === 'StringBlock' ? blockName :
+          blockName === 'RasterBlock' ? blockName :
           blockName === 'Group' || blockName === 'FillNoData' ? 'GroupBlock' : 'Block'
         ),
         position,
@@ -141,12 +125,8 @@ const GeoBlockVisualFlow = (props: MyProps) => {
         onDrop={onDrop}
         nodeTypes={{
           Block: Block,
-          BooleanBlock: BooleanBlock,
           GroupBlock: GroupBlock,
-          RasterBlock: RasterBlock,
-          NumberBlock: NumberBlock,
-          StringBlock: StringBlock,
-          ArrayBlock: ArrayBlock
+          RasterBlock: RasterBlock
         }}
       >
         {elements.length > 100 ? (

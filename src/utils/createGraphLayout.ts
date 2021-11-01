@@ -7,7 +7,6 @@ import {
   Position
 } from 'react-flow-renderer';
 import { GeoBlockSource } from '../types/geoBlockType';
-import edgeStyles from './../data_management/geoblocks/buildComponents/blockComponents/Edge.module.css';
 
 interface BlockInput {
   parameters: (string | number | boolean | [])[]
@@ -21,8 +20,8 @@ export const createGraphLayout = (
   dagreGraph.setDefaultEdgeLabel(() => ({}));
   dagreGraph.setGraph({ rankdir: 'LR' });
 
-  const nodeWidth = 172;
-  const nodeHeight = 36;
+  const nodeWidth = 240;
+  const nodeHeight = 260;
 
   const source: GeoBlockSource = JSON.parse(jsonString);
   const allBlockNames = source && source.graph ? Object.keys(source.graph) : [];
@@ -43,42 +42,6 @@ export const createGraphLayout = (
       blockParameters.forEach(parameter => {
         dagreGraph.setEdge(
           parameter + '',
-          el.id
-        );
-      });
-
-      const stringParameters = el.data.parameters.filter(parameter =>
-        typeof(parameter) === 'string' &&
-        !allBlockNames.includes(parameter) &&
-        !parameter.includes('RasterStoreSource' || 'LizardRasterSource')
-      );
-      stringParameters.forEach(parameter => {
-        dagreGraph.setEdge(
-          el.id + '-' + parameter,
-          el.id
-        );
-      });
-
-      const numberParameters = el.data.parameters.filter(parameter => typeof(parameter) === 'number');
-      numberParameters.forEach((parameter, i) => {
-        dagreGraph.setEdge(
-          el.id + '-' + parameter + '-' + i,
-          el.id
-        );
-      });
-
-      const booleanParameters = el.data.parameters.filter(parameter => typeof(parameter) === 'boolean');
-      booleanParameters.forEach(parameter => {
-        dagreGraph.setEdge(
-          el.id + '-' + parameter,
-          el.id
-        );
-      });
-
-      const arrayParameters = el.data.parameters.filter(parameter => Array.isArray(parameter));
-      arrayParameters.forEach(parameter => {
-        dagreGraph.setEdge(
-          el.id + '-' + parameter,
           el.id
         );
       });
@@ -104,75 +67,20 @@ export const createGraphLayout = (
     el => el.data && el.data.parameters
   ).map(el => {
     const { parameters } = el.data!;
-    const numberParameters = parameters.filter(parameter => typeof(parameter) === 'number');
 
-    return parameters.map((parameter, index) => {
-      if (
-        typeof(parameter) === 'string' &&
-        allBlockNames.includes(parameter)
-      ) {
-        // edge from a block to another block
-        return {
-          id: parameter + '-' + el.id,
-          className: edgeStyles.BlockEdge,
-          type: ConnectionLineType.SmoothStep,
-          source: parameter,
-          target: el.id,
-          targetHandle: 'handle-' + index,
-          animated: true
-        };
-      } else if (
-        typeof(parameter) === 'string' &&
-        !allBlockNames.includes(parameter) &&
-        !parameter.includes('RasterStoreSource' || 'LizardRasterSource')
-      ) {
-        // edge from a string value to another block
-        return {
-          id: parameter + '-' + el.id,
-          className: edgeStyles.StringEdge,
-          type: ConnectionLineType.SmoothStep,
-          source: el.id + '-' + parameter,
-          target: el.id,
-          targetHandle: 'handle-' + index,
-          animated: true
-        };
-      } else if (typeof(parameter) === 'number') {
-        // edge from a number value to another block
-        const indexOfParameter = numberParameters.indexOf(parameter);
-        numberParameters[indexOfParameter] = NaN; // replace number with NaN to avoid duplicate numbers
-        return {
-          id: parameter + '-' + el.id + '-' + indexOfParameter,
-          className: edgeStyles.NumberEdge,
-          type: ConnectionLineType.SmoothStep,
-          source: el.id + '-' + parameter + '-' + indexOfParameter,
-          target: el.id,
-          targetHandle: 'handle-' + index,
-          animated: true
-        };
-      } else if (typeof(parameter) === 'boolean') {
-        // edge from a boolean value to another block
-        return {
-          id: parameter + '-' + el.id,
-          className: edgeStyles.BooleanEdge,
-          type: ConnectionLineType.SmoothStep,
-          source: el.id + '-' + parameter,
-          target: el.id,
-          targetHandle: 'handle-' + index,
-          animated: true
-        };
-      } else {
-        // edge from an array value to another block
-        return {
-          id: parameter + '-' + el.id,
-          type: ConnectionLineType.SmoothStep,
-          source: el.id + '-' + parameter,
-          target: el.id,
-          targetHandle: 'handle-' + index,
-          animated: true
-        };
-      };
-    });
+    return parameters.filter(parameter =>
+      typeof(parameter) === 'string' &&
+      allBlockNames.includes(parameter)
+    ).map((parameter, index) => ({
+      id: parameter + '-' + el.id,
+      type: ConnectionLineType.SmoothStep,
+      source: parameter,
+      target: el.id,
+      targetHandle: 'handle-' + index,
+      animated: true
+    }));
   }).flat(1);
 
+  // @ts-ignore
   return nodes.concat(edges);
 };

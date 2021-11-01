@@ -1,5 +1,5 @@
 import { Connection, Edge, Elements, getOutgoers, isEdge, isNode, Node } from "react-flow-renderer";
-import { GeoBlockSource, geoblockType } from "../types/geoBlockType";
+import { GeoBlockSource } from "../types/geoBlockType";
 
 interface ErrorObject {
   blockId?: string,
@@ -90,7 +90,6 @@ const orphanPartValidator = (els: Elements): Error => {
 };
 
 export const targetHandleValidator = (els: Elements, params: Edge | Connection): Error => {
-  const source = els.find(el => el.id === params.source)!;
   const target = els.find(el => el.id === params.target)!;
   const targetHandle = params.targetHandle!;
 
@@ -101,36 +100,6 @@ export const targetHandleValidator = (els: Elements, params: Edge | Connection):
   if (existingEdge) {
     return {
       errorMessage: 'Target handle has been used by another block.'
-    };
-  };
-
-  // check if input block and the target handle have the same data type
-  const valueTypeOfSource = (
-    source.type === 'NumberBlock' ? 'number' :
-    source.type === 'BooleanBlock' ? 'boolean' :
-    source.type === 'StringBlock' ? 'string' :
-    'raster_block'
-  );
-
-  const targetBlockParameters = Object.values(geoblockType).find(blockType => blockType!.class === target.data!.classOfBlock)!.parameters;
-
-  const targetHandlers: {[key: string]: string | string[]} = {};
-
-  let valueTypeOfTargetHandle: string | string[];
-
-  if (Array.isArray(targetBlockParameters)) {
-    targetBlockParameters.forEach((parameter, i) => {
-      return targetHandlers['handle-' + i] = parameter.type;
-    });
-    valueTypeOfTargetHandle = targetHandlers[targetHandle];
-  } else {
-    valueTypeOfTargetHandle = 'raster_block';
-  };
-
-  // Not allowed to connect to a target handle with a wrong data type
-  if (!valueTypeOfTargetHandle.includes(valueTypeOfSource)) {
-    return {
-      errorMessage: 'Invalid connection due to wrong data type.'
     };
   };
 

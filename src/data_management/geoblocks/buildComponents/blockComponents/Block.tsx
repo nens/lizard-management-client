@@ -12,7 +12,7 @@ interface BlockInput {
 }
 
 export const Block = (props: Node<BlockInput>) => {
-  const { label, classOfBlock, outputBlock, onOutputChange } = props.data!;
+  const { label, classOfBlock } = props.data!;
   const block = Object.values(geoblockType).find(
     geoblock => geoblock && geoblock.class && geoblock.class === classOfBlock
   );
@@ -23,14 +23,16 @@ export const Block = (props: Node<BlockInput>) => {
   };
 
   const { parameters } = block;
-  const numberOfParameters = Array.isArray(parameters) && parameters.length;
+
+  const rasterParameters = Array.isArray(parameters) ? parameters.filter(parameter => parameter.type.includes('raster_block')) : [];
+  const otherParameters = Array.isArray(parameters) ? parameters.filter(parameter => parameter.type !== 'raster_block') : [];
 
   return (
     <div
-      className={`${styles.Block} ${outputBlock ? styles.OutputBlock : ''}`}
+      className={styles.Block}
       tabIndex={1}
     >
-      {Array.isArray(parameters) && parameters.map((parameter, i) => (
+      {rasterParameters.map((parameter, i) => (
         <Handle
           key={i}
           type="target"
@@ -39,42 +41,32 @@ export const Block = (props: Node<BlockInput>) => {
           position={Position.Left}
           style={{
             top: 10 * (i + 1),
-            background: (
-              parameter.type === 'raster_block' ? 'orange' :
-              parameter.type === 'string' ? 'blue' :
-              parameter.type === 'number' ? '#009f86' :
-              parameter.type === 'boolean' ? 'green' :
-              undefined
-            )
+            background: 'orange',
           }}
         />
       ))}
-      <div
-        title={classOfBlock}
-        style={{
-          fontSize: 12,
-          display: 'flex',
-          alignItems: 'center',
-          // calculate the height of the block if there are more than 3 parameters
-          height: numberOfParameters && numberOfParameters > 3 ? numberOfParameters * 10 : undefined
-        }}
-      >
-        <span>{label}</span>
-        <i
-          className={outputBlock ? 'fa fa-plus' : 'fa fa-minus'}
-          style={{
-            cursor: 'pointer',
-            marginLeft: 10
-          }}
-          onClick={() => onOutputChange(!outputBlock)}
-        />
+      <div>
+        <div
+          className={styles.BlockHeader}
+        >
+          <h4>{label}</h4>
+          <small><i>({classOfBlock})</i></small>
+        </div>
+        {otherParameters.map((parameter, i) => (
+          <input
+            type={'text'}
+            title={parameter.name}
+            placeholder={parameter.name}
+            style={{
+              width: '100%',
+              marginTop: 10,
+            }}
+          />
+        ))}
       </div>
       <Handle
         type="source"
         position={Position.Right}
-        style={{
-          visibility: outputBlock ? 'hidden' : 'visible'
-        }}
       />
     </div>
   )

@@ -17,24 +17,6 @@ export const getBlockData = (
     onChange: (value: string) => onBlockValueChange(value, idOfNewBlock, setElements)
   };
 
-  const dataOfBooleanBlock = {
-    value: false,
-    classOfBlock: 'BooleanBlock',
-    onChange: (value: boolean) => onBlockValueChange(value, idOfNewBlock, setElements)
-  };
-
-  const dataOfNumberBlock = {
-    value: 0,
-    classOfBlock: 'NumberBlock',
-    onChange: (value: number) => onBlockValueChange(value, idOfNewBlock, setElements)
-  };
-
-  const dataOfStringBlock = {
-    value: 'test',
-    classOfBlock: 'StringBlock',
-    onChange: (value: string) => onBlockValueChange(value, idOfNewBlock, setElements)
-  };
-
   const dataOfBuildBlock = {
     label: blockName + '_' + (numberOfBlocks + 1),
     // @ts-ignore
@@ -46,12 +28,6 @@ export const getBlockData = (
 
   if (blockName === 'RasterBlock') {
     return dataOfRasterBlock;
-  } else if (blockName === 'NumberBlock') {
-    return dataOfNumberBlock;
-  } else if (blockName === 'BooleanBlock') {
-    return dataOfBooleanBlock;
-  } else if (blockName === 'StringBlock') {
-    return dataOfStringBlock;
   } else {
     return dataOfBuildBlock;
   };
@@ -111,102 +87,6 @@ const getBlockElements = (
       position
     };
   });
-};
-
-const getNumberElements = (
-  blockElements: Elements,
-  setElements: React.Dispatch<React.SetStateAction<Elements<any>>>
-): Elements => {
-  return blockElements.map(elm => {
-    const numbers: number[] = elm.data.parameters.filter((parameter: any) => typeof(parameter) === 'number');
-    return numbers.map((n, i) => {
-      const blockId = elm.id + '-' + n + '-' + i;
-      return {
-        id: blockId,
-        type: 'NumberBlock',
-        data: {
-          value: n,
-          classOfBlock: 'NumberBlock',
-          onChange: (value: number) => onBlockValueChange(value, blockId, setElements)
-        },
-        position
-      };
-    });
-  }).flat(1);
-};
-
-const getStringElements = (
-  graph: GeoBlockSource['graph'],
-  blockElements: Elements,
-  setElements: React.Dispatch<React.SetStateAction<Elements<any>>>
-): Elements => {
-  const allBlockNames = Object.keys(graph);
-  return blockElements.map(elm => {
-    const stringValues: string[] = elm.data.parameters.filter((parameter: any) =>
-      typeof(parameter) === 'string' &&
-      !allBlockNames.includes(parameter) &&
-      !parameter.includes('RasterStoreSource' || 'LizardRasterSource')
-    );
-    return stringValues.map((value, i) => {
-      const blockId = elm.id + '-' + value;
-      return {
-        id: blockId,
-        type: 'StringBlock',
-        data: {
-          value: value,
-          classOfBlock: 'StringBlock',
-          onChange: (value: string) => onBlockValueChange(value, blockId, setElements)
-        },
-        position
-      };
-    });
-  }).flat(1);
-};
-
-const getBooleanElements = (
-  blockElements: Elements,
-  setElements: React.Dispatch<React.SetStateAction<Elements<any>>>
-): Elements => {
-  return blockElements.map(elm => {
-    const booleanParameters: boolean[] = elm.data.parameters.filter((parameter: any) => typeof(parameter) === 'boolean');
-    return booleanParameters.map((bool, i) => {
-      const blockId = elm.id + '-' + bool;
-      return {
-        id: blockId,
-        type: 'BooleanBlock',
-        data: {
-          value: bool,
-          classOfBlock: 'BooleanBlock',
-          onChange: (value: boolean) => onBlockValueChange(value, blockId, setElements)
-        },
-        position
-      };
-    });
-  }).flat(1);
-};
-
-const getArrayElements = (
-  blockElements: Elements,
-  setElements: React.Dispatch<React.SetStateAction<Elements<any>>>
-): Elements => {
-  return blockElements.map(elm => {
-    const arrayValues: [][] = elm.data.parameters.filter(
-      (parameter: any) => Array.isArray(parameter)
-    );
-    return arrayValues.map((value, i) => {
-      const blockId = elm.id + '-' + value;
-      return {
-        id: blockId,
-        type: 'ArrayBlock',
-        data: {
-          value: value,
-          classOfBlock: 'ArrayBlock',
-          onChange: (value: string) => onBlockValueChange(value, blockId, setElements)
-        },
-        position
-      };
-    });
-  }).flat(1);
 };
 
 // Helper function to change value of a block (e.g. UUID of a raster block or number input)
@@ -271,12 +151,8 @@ export const convertGeoblockSourceToFlowElements = (
 
   const rasterElements = getRasterElements(source.graph, setElements);
   const blockElements = getBlockElements(source, setElements);
-  const numberElements = getNumberElements(blockElements, setElements);
-  const booleanElements = getBooleanElements(blockElements, setElements);
-  const stringElements = getStringElements(source.graph, blockElements, setElements);
-  const arrayElements = getArrayElements(blockElements, setElements);
 
-  return blockElements.concat(rasterElements).concat(numberElements).concat(booleanElements).concat(stringElements).concat(arrayElements);
+  return blockElements.concat(rasterElements);
 };
 
 export const convertElementsToGeoBlockSource = (
