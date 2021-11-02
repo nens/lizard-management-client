@@ -27,8 +27,8 @@
 
 /* Raster block */
 .RasterBlock {
-  border-color: orange;
+  border-color: green;
 }
 .RasterBlock:focus {
-  box-shadow: 0 0 0 0.5px orange;
+  box-shadow: 0 0 0 0.5px green;
 }

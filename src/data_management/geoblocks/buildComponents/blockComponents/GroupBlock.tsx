@@ -28,7 +28,7 @@ export const GroupBlock = (props: Node<GroupBlockInput>) => {
           position={Position.Left}
           style={{
             top: 10 * (i + 1),
-            background: 'orange'
+            background: 'green'
           }}
         />
       ))}

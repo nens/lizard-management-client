@@ -161,7 +161,7 @@ const GeoBlockVisualFlow = (props: MyProps) => {
         {elements.length > 100 ? (
           <MiniMap
             nodeColor={(node) => {
-              if (node.type === 'RasterBlock') return 'orange';
+              if (node.type === 'RasterBlock') return 'green';
               return 'lightgrey';
             }}
             nodeStrokeWidth={3}
