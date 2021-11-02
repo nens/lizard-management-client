@@ -38,29 +38,37 @@ const GeoBlockVisualFlow = (props: MyProps) => {
 
   // gets called after end of edge gets dragged to another source or target
   const onEdgeUpdate = (oldEdge: Edge, newConnection: Connection) => {
-    const connectError = targetHandleValidator(elements, newConnection);
-    if (connectError) return console.error(connectError.errorMessage);
-
     setElements((els) => {
+      const connectError = targetHandleValidator(els, newConnection);
+      if (connectError) {
+        console.error(connectError.errorMessage);
+        return els;
+      };
+
       const newElements = els.map(el => {
         if (el.id === oldEdge.target) el.data.parameters[oldEdge.targetHandle!] = ''; // remove old value
         if (el.id === newConnection.target) el.data.parameters[newConnection.targetHandle!] = newConnection.source; // update new value
         return el;
       });
+
       return updateEdge(oldEdge, newConnection, newElements);
     });
     newConnection.target && updateNodeInternals(newConnection.target); // update node internals
   };
 
   const onConnect = (params: Edge | Connection) => {
-    const connectError = targetHandleValidator(elements, params);
-    if (connectError) return console.error(connectError.errorMessage);
-
     setElements((els) => {
+      const connectError = targetHandleValidator(els, params);
+      if (connectError) {
+        console.error(connectError.errorMessage);
+        return els;
+      };
+
       const newElements = els.map(el => {
         if (el.id === params.target) el.data.parameters[params.targetHandle!] = params.source; // update new value
         return el;
       });
+
       return addEdge({
         ...params,
         type: ConnectionLineType.SmoothStep,
