@@ -6,9 +6,9 @@ import styles from './Block.module.css';
 interface BlockInput {
   label: string,
   classOfBlock: string,
-  parameters: (string | number | [])[],
+  parameters: (string | number | boolean | [])[],
   outputBlock?: boolean,
-  onChange: (value: number, i: number) => void
+  onChange: (value: number | boolean, i: number) => void
 }
 
 export const Block = (props: Node<BlockInput>) => {
@@ -55,17 +55,73 @@ export const Block = (props: Node<BlockInput>) => {
           <small><i>({classOfBlock})</i></small>
         </div>
         {blockArrayParameters.map((parameter, i) => {
-          return (
-            <input
-              type={parameter.type === 'number' ? 'number' : 'text'}
-              className={styles.BlockInput}
-              title={parameter.name}
-              placeholder={parameter.name}
-              value={parameters ? parameters[i] : undefined}
-              readOnly={parameter.type === 'raster_block'}
-              onChange={e => onChange(parseFloat(e.target.value), i)}
-            />
-          )
+          if (parameter.type === 'raster_block') {
+            const parameterValue = parameters ? parameters[i] as string : undefined;
+            return (
+              <input
+                type={'text'}
+                key={parameter.name}
+                className={styles.BlockInput}
+                title={parameter.name}
+                placeholder={parameter.name}
+                value={parameterValue}
+                onChange={e => onChange(parseFloat(e.target.value), i)}
+                readOnly
+              />
+            );
+          } else if (parameter.type === 'number') {
+            const parameterValue = parameters ? parameters[i] as number : undefined;
+            return (
+              <input
+                type={'number'}
+                key={parameter.name}
+                className={styles.BlockInput}
+                title={parameter.name}
+                placeholder={parameter.name}
+                value={parameterValue}
+                onChange={e => onChange(parseFloat(e.target.value), i)}
+              />
+            );
+          } else if (parameter.type === 'boolean') {
+            const checked = parameters ? parameters[i] as boolean : undefined;
+            return (
+              <input
+                type={'checkbox'}
+                key={parameter.name}
+                className={styles.BlockInput}
+                title={parameter.name}
+                placeholder={parameter.name}
+                checked={checked}
+                onChange={e => onChange(e.target.checked, i)}
+              />
+            );
+          } else if (Array.isArray(parameter.type) && parameter.type.includes('number') && parameter.type.includes('raster_block')) {
+            const parameterValue = parameters ? parameters[i] as number | string : undefined;
+            return (
+              <input
+                type={typeof(parameterValue) === 'number' ? 'number' : 'text'}
+                key={parameter.name}
+                className={styles.BlockInput}
+                title={parameter.name}
+                placeholder={parameter.name}
+                value={parameterValue}
+                onChange={e => onChange(parseFloat(e.target.value), i)}
+              />
+            );
+          } else {
+            const parameterValue = parameters ? parameters[i] as any : undefined;
+            return (
+              <input
+                type={'text'}
+                key={parameter.name}
+                className={styles.BlockInput}
+                title={parameter.name}
+                placeholder={parameter.name}
+                value={parameterValue}
+                readOnly
+              />
+            );
+          };
         })}
       </div>
       <Handle
