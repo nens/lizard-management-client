@@ -163,7 +163,7 @@ const GeoBlockVisualFlow = (props: MyProps) => {
         onDrop={onDrop}
         nodeTypes={{
           Block: (block: Node) => <Block block={block} onElementsRemove={onElementsRemove} />,
-          GroupBlock: GroupBlock,
+          GroupBlock: (block: Node) => <GroupBlock block={block} onElementsRemove={onElementsRemove} />,
           RasterBlock: RasterBlock
         }}
       >

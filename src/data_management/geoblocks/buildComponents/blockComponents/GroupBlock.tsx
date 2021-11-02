@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Handle, Node, Position } from 'react-flow-renderer';
+import { Elements, Handle, Node, Position, useStoreState } from 'react-flow-renderer';
 import styles from './Block.module.css';
 
 interface GroupBlockInput {
@@ -8,11 +8,19 @@ interface GroupBlockInput {
   parameters: string[],
 }
 
-export const GroupBlock = (props: Node<GroupBlockInput>) => {
-  const { classOfBlock, label, parameters } = props.data!;
+interface GroupBlockProps {
+  block: Node<GroupBlockInput>,
+  onElementsRemove: (elementsToRemove: Elements) => void,
+}
+
+export const GroupBlock = (props: GroupBlockProps) => {
+  const { block, onElementsRemove } = props;
+  const { classOfBlock, label, parameters } = block.data!;
   const initialHandles = parameters ? parameters : ['handle-1', 'handle-2'];
   const [handles, setHandles] = useState<string[]>(initialHandles);
   const numberOfHandles = handles.length;
+
+  const edges = useStoreState(state => state.edges);
 
   return (
     <div
@@ -62,7 +70,16 @@ export const GroupBlock = (props: Node<GroupBlockInput>) => {
             style={{
               cursor: 'pointer'
             }}
-            onClick={() => setHandles((handles: string[]) => handles.slice(0, -1))}
+            onClick={() => setHandles((handles: string[]) => {
+              // First remove the edge that is connected to the last handle
+              const connectedEdge = edges.find(
+                edge => edge.target === block.id && edge.targetHandle === (handles.length - 1).toString()
+              );
+              if (connectedEdge) onElementsRemove([connectedEdge]);
+
+              // remove the last handle
+              return handles.slice(0, -1);
+            })}
           />
         </div>
         <div
