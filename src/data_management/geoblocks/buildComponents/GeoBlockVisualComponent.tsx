@@ -6,6 +6,7 @@ import ReactFlow, {
   Controls,
   Edge,
   Elements,
+  getOutgoers,
   isEdge,
   isNode,
   MiniMap,
@@ -161,8 +162,9 @@ const GeoBlockVisualFlow = (props: MyProps) => {
         {elements.length > 100 ? (
           <MiniMap
             nodeColor={(node) => {
-              if (node.type === 'RasterBlock') return 'green';
-              return 'lightgrey';
+              if (node.type === 'RasterBlock') return 'orange'; // raster block
+              if (getOutgoers(node, elements).length === 0) return 'red'; // output block
+              return 'lightgrey'; // normal block
             }}
             nodeStrokeWidth={3}
           />

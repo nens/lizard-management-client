@@ -47,8 +47,7 @@ export const Block = (props: BlockProps) => {
             title={`${parameter.name}: ${parameter.type}`}
             position={Position.Left}
             style={{
-              top: i === 0 ? 100 : (100 + i * 35),
-              background: 'green',
+              top: i === 0 ? 100 : (100 + i * 35)
             }}
           />
         ) : null

@@ -27,8 +27,7 @@ export const GroupBlock = (props: Node<GroupBlockInput>) => {
           title={'source: raster_block'}
           position={Position.Left}
           style={{
-            top: 10 * (i + 1),
-            background: 'green'
+            top: 10 * (i + 1)
           }}
         />
       ))}
