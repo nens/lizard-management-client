@@ -9,6 +9,7 @@ import ReactFlow, {
   isEdge,
   isNode,
   MiniMap,
+  Node,
   Position,
   ReactFlowProvider,
   removeElements,
@@ -145,7 +146,7 @@ const GeoBlockVisualFlow = (props: MyProps) => {
         onDragOver={onDragOver}
         onDrop={onDrop}
         nodeTypes={{
-          Block: Block,
+          Block: (block: Node) => <Block block={block} onElementsRemove={onElementsRemove} />,
           GroupBlock: GroupBlock,
           RasterBlock: RasterBlock
         }}

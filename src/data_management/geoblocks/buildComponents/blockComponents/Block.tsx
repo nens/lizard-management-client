@@ -1,5 +1,5 @@
 import React from 'react';
-import { Handle, Node, Position } from 'react-flow-renderer';
+import { Elements, Handle, Node, Position, useStoreState } from 'react-flow-renderer';
 import { geoblockType } from '../../../../types/geoBlockType';
 import styles from './Block.module.css';
 
@@ -11,28 +11,35 @@ interface BlockInput {
   onChange: (value: number | boolean, i: number) => void
 }
 
-export const Block = (props: Node<BlockInput>) => {
-  const { label, classOfBlock, parameters, onChange } = props.data!;
-  const block = Object.values(geoblockType).find(
+interface BlockProps {
+  block: Node<BlockInput>,
+  onElementsRemove: (elementsToRemove: Elements) => void,
+}
+
+export const Block = (props: BlockProps) => {
+  const { block, onElementsRemove } = props;
+  const { label, classOfBlock, parameters, onChange } = block.data!;
+
+  const edges = useStoreState(state => state.edges);
+
+  const blockDefinition = Object.values(geoblockType).find(
     geoblock => geoblock && geoblock.class && geoblock.class === classOfBlock
   );
 
-  if (!block) {
+  if (!blockDefinition) {
     console.error('No type definition for this block: ' + classOfBlock);
-    return;
+    return null;
   };
 
-  const blockParameters = block.parameters;
-  const blockArrayParameters = Array.isArray(blockParameters) ? blockParameters : [];
-  // const rasterParameters = blockArrayParameters.filter(parameter => parameter.type.includes('raster_block'));
-  // const otherParameters = blockArrayParameters.filter(parameter => parameter.type !== 'raster_block');
+  const blockDefinitionParameters = blockDefinition.parameters;
+  const blockDefinitionParametersAsArray = Array.isArray(blockDefinitionParameters) ? blockDefinitionParameters : [];
 
   return (
     <div
       className={styles.Block}
       tabIndex={1}
     >
-      {blockArrayParameters.map((parameter, i) => (
+      {blockDefinitionParametersAsArray.map((parameter, i) => (
         parameter.type.includes('raster_block') ? (
           <Handle
             key={i}
@@ -54,7 +61,7 @@ export const Block = (props: Node<BlockInput>) => {
           <h4>{label}</h4>
           <small><i>({classOfBlock})</i></small>
         </div>
-        {blockArrayParameters.map((parameter, i) => {
+        {blockDefinitionParametersAsArray.map((parameter, i) => {
           if (parameter.type === 'raster_block') {
             const parameterValue = parameters ? parameters[i] as string : undefined;
             return (
@@ -65,7 +72,6 @@ export const Block = (props: Node<BlockInput>) => {
                 title={parameter.name}
                 placeholder={parameter.name}
                 value={parameterValue}
-                onChange={e => onChange(parseFloat(e.target.value), i)}
                 readOnly
               />
             );
@@ -95,7 +101,11 @@ export const Block = (props: Node<BlockInput>) => {
                 onChange={e => onChange(e.target.checked, i)}
               />
             );
-          } else if (Array.isArray(parameter.type) && parameter.type.includes('number') && parameter.type.includes('raster_block')) {
+          } else if (
+            Array.isArray(parameter.type) &&
+            parameter.type.includes('number') &&
+            parameter.type.includes('raster_block')
+          ) {
             const parameterValue = parameters ? parameters[i] as number | string : undefined;
             return (
               <input
@@ -105,7 +115,13 @@ export const Block = (props: Node<BlockInput>) => {
                 title={parameter.name}
                 placeholder={parameter.name}
                 value={parameterValue}
-                onChange={e => onChange(parseFloat(e.target.value), i)}
+                onChange={e => {
+                  if (typeof(parameterValue) === 'string') { // raster block input
+                    const connectedEdge = edges.find(edge => edge.target === block.id && edge.targetHandle === i.toString());
+                    if (connectedEdge) onElementsRemove([connectedEdge]);
+                  };
+                  onChange(parseFloat(e.target.value), i);
+                }}
               />
             );
           } else {
