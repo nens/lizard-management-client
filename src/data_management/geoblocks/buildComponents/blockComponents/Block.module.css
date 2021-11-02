@@ -24,9 +24,6 @@
   width: 100%;
   margin-top: 10px;
 }
-.BlockInput:read-only {
-  cursor: not-allowed;
-}
 
 /* Raster block */
 .RasterBlock {

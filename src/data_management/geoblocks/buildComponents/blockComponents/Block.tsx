@@ -71,7 +71,7 @@ export const Block = (props: BlockProps) => {
                 title={parameter.name}
                 placeholder={parameter.name}
                 value={parameterValue}
-                readOnly
+                disabled
               />
             );
           } else if (parameter.type === 'number') {
@@ -95,9 +95,9 @@ export const Block = (props: BlockProps) => {
                 key={parameter.name}
                 className={styles.BlockInput}
                 title={parameter.name}
-                placeholder={parameter.name}
                 checked={checked}
                 onChange={e => onChange(e.target.checked, i)}
+                style={{ cursor: 'pointer' }}
               />
             );
           } else if (
@@ -133,7 +133,7 @@ export const Block = (props: BlockProps) => {
                 title={parameter.name}
                 placeholder={parameter.name}
                 value={parameterValue}
-                readOnly
+                disabled
               />
             );
           };
