@@ -7,7 +7,6 @@ interface BlockInput {
   label: string,
   classOfBlock: string,
   parameters: (string | number | boolean | [])[],
-  outputBlock?: boolean,
   onChange: (value: number | boolean, i: number) => void
 }
 

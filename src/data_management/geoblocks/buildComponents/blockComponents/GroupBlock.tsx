@@ -6,8 +6,6 @@ interface GroupBlockInput {
   label: string,
   classOfBlock: string,
   parameters: string[],
-  outputBlock?: boolean,
-  onOutputChange: (bool: boolean) => void
 }
 
 export const GroupBlock = (props: Node<GroupBlockInput>) => {

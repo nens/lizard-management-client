@@ -23,7 +23,7 @@ export const fetchGeoBlock = (uuid: string | null, source: GeoBlockSource) => {
 
 export const geoBlockValidator = (elements: Elements): ErrorObject[] => {
   const rasterElements = elements.filter(el => isNode(el) && el.type === 'RasterBlock') as Node[];
-  const outputBlocks = elements.filter(el => isNode(el) && el.data && el.data.outputBlock) as Node[];
+  const outputBlocks = elements.filter(el => isNode(el) && getOutgoers(el, elements).length === 0);
 
   let errors: ErrorObject[] = [];
 
@@ -34,9 +34,6 @@ export const geoBlockValidator = (elements: Elements): ErrorObject[] => {
 
   const outputError = outputValidator(outputBlocks);
   if (outputError) errors.push(outputError);
-
-  const orphanPartError = orphanPartValidator(elements);
-  if (orphanPartError) errors.push(orphanPartError);
 
   return errors;
 };
@@ -52,40 +49,16 @@ const uuidValidator = (el: Node): Error => {
   return false;
 };
 
-const outputValidator = (outputBlocks: Node[]): Error => {
+const outputValidator = (outputBlocks: Elements): Error => {
   if (outputBlocks.length > 1) {
     return {
-      errorMessage: 'Only one output block is allowed.'
+      errorMessage: 'Orphan part existed in the graph.'
     };
   } else if (outputBlocks.length === 0) {
     return {
       errorMessage: 'No output block.'
     };
   };
-  return false;
-};
-
-const orphanPartValidator = (els: Elements): Error => {
-  const blocks = els.filter(
-    el => isNode(el)
-  ).filter(
-    el => !(el.type === 'NumberBlock')
-  ).filter(
-    el => !el.data.outputBlock
-  ) as Node[];
-
-  const orphanBlock = blocks.find(block => {
-    const outgoers = getOutgoers(block, els);
-    return outgoers.length === 0;
-  });
-
-  if (orphanBlock) {
-    return {
-      blockId: orphanBlock.id,
-      errorMessage: 'Orphan part existed in the graph.'
-    };
-  };
-
   return false;
 };
 

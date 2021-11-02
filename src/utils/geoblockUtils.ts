@@ -1,4 +1,4 @@
-import { Elements, isNode } from "react-flow-renderer";
+import { Elements, getOutgoers, isNode, Node } from "react-flow-renderer";
 import { GeoBlockSource, geoblockType } from "../types/geoBlockType";
 import { geoBlockValidator } from "./geoblockValidators";
 
@@ -55,10 +55,9 @@ const getRasterElements = (
 };
 
 const getBlockElements = (
-  source: GeoBlockSource,
+  graph: GeoBlockSource['graph'],
   setElements: React.Dispatch<React.SetStateAction<Elements<any>>>
 ): Elements => {
-  const { name, graph } = source;
   const allBlockNames = Object.keys(graph);
   const blockNames = allBlockNames.filter(blockName => {
     const classOfBlock = graph[blockName][0];
@@ -79,7 +78,6 @@ const getBlockElements = (
         label: blockName,
         classOfBlock,
         parameters: blockValue.slice(1),
-        outputBlock: blockName === name,
         onChange: (value: number, i: number) => onBlockChange(value, i, blockName, setElements)
       },
       position
@@ -126,7 +124,7 @@ export const convertGeoblockSourceToFlowElements = (
   if (!source || !source.graph) return [];
 
   const rasterElements = getRasterElements(source.graph, setElements);
-  const blockElements = getBlockElements(source, setElements);
+  const blockElements = getBlockElements(source.graph, setElements);
 
   return blockElements.concat(rasterElements);
 };
@@ -143,8 +141,8 @@ export const convertElementsToGeoBlockSource = (
     return;
   };
 
-  const blocks = elements.filter(e => isNode(e));
-  const outputBlocks = blocks.filter(block => block.data && block.data.outputBlock);
+  const blocks = elements.filter(e => isNode(e)) as Node[];
+  const outputBlocks = blocks.filter(block => getOutgoers(block, elements).length === 0);
 
   // use reduce method to create the graph object
   const graph = blocks.reduce((graph, block) => {
