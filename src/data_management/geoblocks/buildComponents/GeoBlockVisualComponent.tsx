@@ -40,7 +40,14 @@ const GeoBlockVisualFlow = (props: MyProps) => {
     const connectError = targetHandleValidator(elements, newConnection);
     if (connectError) return console.error(connectError.errorMessage);
 
-    setElements((els) => updateEdge(oldEdge, newConnection, els));
+    setElements((els) => {
+      const newElements = els.map(el => {
+        if (el.id === oldEdge.target) el.data.parameters[oldEdge.targetHandle!] = ''; // remove old value
+        if (el.id === newConnection.target) el.data.parameters[newConnection.targetHandle!] = newConnection.source; // update new value
+        return el;
+      });
+      return updateEdge(oldEdge, newConnection, newElements);
+    });
     newConnection.target && updateNodeInternals(newConnection.target); // update node internals
   };
 
@@ -50,7 +57,7 @@ const GeoBlockVisualFlow = (props: MyProps) => {
 
     setElements((els) => {
       const newElements = els.map(el => {
-        if (el.id === params.target) el.data.parameters[params.targetHandle!] = params.source;
+        if (el.id === params.target) el.data.parameters[params.targetHandle!] = params.source; // update new value
         return el;
       });
       return addEdge({
@@ -67,7 +74,7 @@ const GeoBlockVisualFlow = (props: MyProps) => {
       const newElements = els.map(el => {
         const edgesToRemove = elementsToRemove.filter(elm => isEdge(elm)) as Edge[];
         edgesToRemove.forEach(edge => {
-          if (edge.target === el.id) el.data.parameters[edge.targetHandle!] = '';
+          if (edge.target === el.id) el.data.parameters[edge.targetHandle!] = ''; // remove old value
         });
         return el;
       });
