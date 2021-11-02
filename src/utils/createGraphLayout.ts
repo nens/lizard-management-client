@@ -63,24 +63,28 @@ export const createGraphLayout = (
     };
   });
 
-  const edges = elements.filter(
+  const edges: Elements = elements.filter(
     el => el.data && el.data.parameters
   ).map(el => {
     const { parameters } = el.data!;
-
-    return parameters.filter(parameter =>
-      typeof(parameter) === 'string' &&
-      allBlockNames.includes(parameter)
-    ).map((parameter, index) => ({
-      id: parameter + '-' + el.id,
-      type: ConnectionLineType.SmoothStep,
-      source: parameter,
-      target: el.id,
-      targetHandle: index + '',
-      animated: true
-    }));
+    return parameters.map((parameter, i) => {
+      if (
+        typeof(parameter) === 'string' &&
+        allBlockNames.includes(parameter)
+      ) {
+        return {
+          id: parameter + '-' + el.id,
+          type: ConnectionLineType.SmoothStep,
+          source: parameter,
+          target: el.id,
+          targetHandle: i.toString(),
+          animated: true
+        };
+      } else {
+        return [];
+      };
+    }).flat(1);
   }).flat(1);
 
-  // @ts-ignore
   return nodes.concat(edges);
 };
