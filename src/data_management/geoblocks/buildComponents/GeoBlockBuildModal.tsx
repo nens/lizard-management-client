@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Elements } from 'react-flow-renderer';
 import { GeoBlockJsonComponent } from './GeoBlockJsonComponent';
-import { GeoBlockVisualComponent } from './GeoBlockVisualComponent';
+import GeoBlockVisualComponent from './GeoBlockVisualComponent';
 import { SubmitButton } from '../../../form/SubmitButton';
 import { addNotification } from '../../../actions';
 import { jsonValidator } from '../../../form/validators';
 import { createGraphLayout } from '../../../utils/createGraphLayout';
-import { fetchGeoBlock } from '../../../utils/geoblockValidators';
+import { dryFetchGeoBlockForValidation } from '../../../utils/geoblockValidators';
 import {
   convertElementsToGeoBlockSource,
   convertGeoblockSourceToFlowElements
@@ -94,12 +94,12 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
             onClick={() => {
               if (geoBlockView === 'visual') {
                 const geoBlockSource = convertElementsToGeoBlockSource(elements, jsonString, setJsonString);
-                if (geoBlockSource) fetchGeoBlock(props.uuid, geoBlockSource);
+                if (geoBlockSource) dryFetchGeoBlockForValidation(props.uuid, geoBlockSource);
               } else {
                 if (jsonValidator(jsonString)) {
                   return alert(jsonValidator(jsonString));
                 };
-                fetchGeoBlock(props.uuid, JSON.parse(jsonString))
+                dryFetchGeoBlockForValidation(props.uuid, JSON.parse(jsonString))
               };
             }}
           >

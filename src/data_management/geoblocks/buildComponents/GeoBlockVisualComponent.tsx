@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import { connect } from 'react-redux';
 import ReactFlow, {
   addEdge,
   Connection,
@@ -24,14 +25,15 @@ import { RasterBlock } from './blockComponents/RasterBlock';
 import { geoblockType } from '../../../types/geoBlockType';
 import { getBlockData } from '../../../utils/geoblockUtils';
 import { targetHandleValidator } from '../../../utils/geoblockValidators';
+import { addNotification } from '../../../actions';
 
 interface MyProps {
   elements: Elements,
   setElements: React.Dispatch<React.SetStateAction<Elements<any>>>
 }
 
-const GeoBlockVisualFlow = (props: MyProps) => {
-  const { elements, setElements } = props;
+const GeoBlockVisualFlow = (props: MyProps & DispatchProps) => {
+  const { elements, setElements, addNotification } = props;
   const reactFlowWrapper = useRef<any>(null);
   const updateNodeInternals = useUpdateNodeInternals();
   const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
@@ -42,6 +44,7 @@ const GeoBlockVisualFlow = (props: MyProps) => {
       const connectError = targetHandleValidator(els, newConnection);
       if (connectError) {
         console.error(connectError.errorMessage);
+        addNotification(connectError.errorMessage, 2000);
         return els;
       };
 
@@ -61,6 +64,7 @@ const GeoBlockVisualFlow = (props: MyProps) => {
       const connectError = targetHandleValidator(els, params);
       if (connectError) {
         console.error(connectError.errorMessage);
+        addNotification(connectError.errorMessage, 2000);
         return els;
       };
 
@@ -184,7 +188,7 @@ const GeoBlockVisualFlow = (props: MyProps) => {
   )
 }
 
-export const GeoBlockVisualComponent = (props: MyProps) => (
+const GeoBlockVisualComponent = (props: MyProps & DispatchProps) => (
   // Wrap the GeoBlockVisualFlow component inside the ReactFlowProvider
   // to have access to the useUpdateNodeInternals hook of react-flow.
   // the useUpdateNodeInternals hook is used to update the node manually
@@ -193,6 +197,14 @@ export const GeoBlockVisualComponent = (props: MyProps) => (
     <GeoBlockVisualFlow
       elements={props.elements}
       setElements={props.setElements}
+      addNotification={props.addNotification}
     />
   </ReactFlowProvider>
 )
+
+const mapDispatchToProps = (dispatch: any) => ({
+  addNotification: (message: string | number, timeout?: number) => dispatch(addNotification(message, timeout))
+});
+type DispatchProps = ReturnType<typeof mapDispatchToProps>;
+
+export default connect(null, mapDispatchToProps)(GeoBlockVisualComponent);

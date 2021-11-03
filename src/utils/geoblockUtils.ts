@@ -1,3 +1,5 @@
+import { storeDispatch } from "..";
+import { addNotification } from "../actions";
 import { Elements, getOutgoers, isNode, Node } from "react-flow-renderer";
 import { GeoBlockSource, geoblockType } from "../types/geoBlockType";
 import { geoBlockValidator } from "./geoblockValidators";
@@ -137,7 +139,10 @@ export const convertElementsToGeoBlockSource = (
   // check if the geoblock is validated
   const errors = geoBlockValidator(elements);
   if (errors.length >= 1) {
-    errors.map(e => console.error(e.errorMessage));
+    errors.forEach(e => {
+      console.error(e.errorMessage);
+      storeDispatch(addNotification(e.errorMessage));
+    });
     return;
   };
 

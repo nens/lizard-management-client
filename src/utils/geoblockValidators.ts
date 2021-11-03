@@ -1,5 +1,15 @@
-import { Connection, Edge, Elements, getOutgoers, isEdge, isNode, Node } from "react-flow-renderer";
+import { storeDispatch } from "..";
+import { addNotification } from "../actions";
 import { GeoBlockSource } from "../types/geoBlockType";
+import {
+  Connection,
+  Edge,
+  Elements,
+  getOutgoers,
+  isEdge,
+  isNode,
+  Node
+} from "react-flow-renderer";
 
 interface ErrorObject {
   blockId?: string,
@@ -10,7 +20,7 @@ type Error = ErrorObject | false;
 
 const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
-export const fetchGeoBlock = (uuid: string | null, source: GeoBlockSource) => {
+export const dryFetchGeoBlockForValidation = (uuid: string | null, source: GeoBlockSource) => {
   fetch(`/api/v4/rasters/${uuid || "db90664c-57fd-4ece-b0a6-ffa34b0e9b2f"}/?dry-run`, {
     credentials: 'same-origin',
     method: "PATCH",
@@ -18,7 +28,20 @@ export const fetchGeoBlock = (uuid: string | null, source: GeoBlockSource) => {
     body: JSON.stringify({ source })
   })
   .then(res => res.json())
-  .then(res => console.log(res))
+  .then(res => {
+    console.log(res);
+    if (res.status === 400) {
+      console.error(res.detail && res.detail.source && res.detail.source[0]);
+      const errorMessage = res.detail && res.detail.source && res.detail.source[0];
+      if (errorMessage) {
+        storeDispatch(addNotification(errorMessage))
+      } else {
+        storeDispatch(addNotification('Unknown error! Something is wrong with the GeoBlock.'))
+      };
+    } else if (res.id) { // valid response
+      storeDispatch(addNotification('The GeoBlock is valid.', 2000));
+    };
+  });
 };
 
 export const geoBlockValidator = (elements: Elements): ErrorObject[] => {
@@ -52,7 +75,7 @@ const uuidValidator = (el: Node): Error => {
 const outputValidator = (outputBlocks: Elements): Error => {
   if (outputBlocks.length > 1) {
     return {
-      errorMessage: 'Orphan part existed in the graph.'
+      errorMessage: 'More than one output block existed in the graph.'
     };
   } else if (outputBlocks.length === 0) {
     return {
