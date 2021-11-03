@@ -15,12 +15,13 @@ export const GeoBlockJsonComponent = (props: MyProps) => {
       name={'source'}
       value={source ? source : {}}
       onChange={e => setSource(e)}
-      allowedModes={['tree', 'text']}
+      allowedModes={['tree', 'code', 'text']}
       htmlElementProps={{style: {
         position: 'absolute',
         width: '100%',
         height: '90%'
       }}}
+      history
       enableSort={false}
       enableTransform={false}
     />
