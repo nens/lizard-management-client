@@ -59,7 +59,6 @@
     "react-flow-renderer": "^9.6.7",
     "react-ink": "^6.5.1",
     "react-intl": "^2.8.0",
-    "react-json-view": "^1.21.3",
     "react-leaflet": "^2.2.1",
     "react-lottie": "^1.2.3",
     "react-map-gl": "^6.1.13",
