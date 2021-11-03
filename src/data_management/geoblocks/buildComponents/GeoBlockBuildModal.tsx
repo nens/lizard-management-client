@@ -20,7 +20,7 @@ import buttonStyles from './../../../styles/Buttons.module.css';
 interface MyProps {
   uuid: string | null,
   source: GeoBlockSource | null,
-  onChange: (value: Object | null) => void,
+  onChange: (value: GeoBlockSource | null) => void,
   handleClose: () => void
 }
 
