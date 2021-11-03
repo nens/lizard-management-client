@@ -3,6 +3,7 @@ import styles from './ModalBackground.module.css';
 
 interface MyProps {
   title: string,
+  escKeyNotAllowed?: boolean,
   handleClose?: () => void,
   style?: {
     [key: string]: string | number
@@ -10,10 +11,10 @@ interface MyProps {
 }
 
 const ModalBackground: React.FC<MyProps> = (props) => {
-  // Add event listener to close modal on 'ESCAPE'
+  // Add event listener to close modal on 'ESCAPE' key
   useEffect(() => {
     const closeModalOnEsc = (e: any) => {
-      if (e.key === 'Escape' && props.handleClose) props.handleClose();
+      if (!props.escKeyNotAllowed && e.key === 'Escape' && props.handleClose) props.handleClose();
     };
     window.addEventListener('keydown', closeModalOnEsc);
     return () => window.removeEventListener('keydown', closeModalOnEsc);

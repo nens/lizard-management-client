@@ -50,6 +50,7 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
     <ModalBackground
       title={'Geo Block Builder'}
       handleClose={props.handleClose}
+      escKeyNotAllowed
       style={{
         width: '100%',
         height: '100%',

@@ -27,6 +27,7 @@ export const BlockDefinitionModal = (props: MyProps) => {
     <ModalBackground
       title={blockDefinition.title}
       handleClose={props.handleClose}
+      escKeyNotAllowed
       style={{
         width: '40%',
         height: '40%',
