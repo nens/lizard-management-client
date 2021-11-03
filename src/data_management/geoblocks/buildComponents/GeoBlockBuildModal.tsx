@@ -76,6 +76,7 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
             Close
           </button>
           <button
+            className={buttonStyles.NewButton}
             onClick={() => {
               if (geoBlockView === 'visual') {
                 const geoBlockSource = convertElementsToGeoBlockSource(elements, source, setSource);
@@ -85,9 +86,10 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
               };
             }}
           >
-            Switch
+            {geoBlockView === 'visual' ? 'JSON Editor' : 'Visual Editor'}
           </button>
           <button
+            className={buttonStyles.NewButton}
             onClick={() => {
               if (geoBlockView === 'visual') {
                 const geoBlockSource = convertElementsToGeoBlockSource(elements, source, setSource);
