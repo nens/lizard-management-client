@@ -48,9 +48,11 @@ const GeoBlockVisualFlow = (props: MyProps & DispatchProps) => {
         return els;
       };
 
+      const sourceNode = els.find(el => el.id === newConnection.source)!;
+
       const newElements = els.map(el => {
         if (el.id === oldEdge.target) el.data.parameters[oldEdge.targetHandle!] = ''; // remove old value
-        if (el.id === newConnection.target) el.data.parameters[newConnection.targetHandle!] = newConnection.source; // update new value
+        if (el.id === newConnection.target) el.data.parameters[newConnection.targetHandle!] = sourceNode.data.label; // update new value
         return el;
       });
 
@@ -68,8 +70,10 @@ const GeoBlockVisualFlow = (props: MyProps & DispatchProps) => {
         return els;
       };
 
+      const sourceNode = els.find(el => el.id === params.source)!;
+
       const newElements = els.map(el => {
-        if (el.id === params.target) el.data.parameters[params.targetHandle!] = params.source; // update new value
+        if (el.id === params.target) el.data.parameters[params.targetHandle!] = sourceNode.data.label; // update new value
         return el;
       });
 

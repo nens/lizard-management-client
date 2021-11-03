@@ -19,11 +19,22 @@ export const getBlockData = (
     onChange: (value: string) => onRasterBlockChange(value, idOfNewBlock, setElements)
   };
 
+  // @ts-ignore
+  const blockDefinition = geoblockType[blockName];
+  const blockParameters = (
+    blockDefinition.class === "dask_geomodeling.raster.combine.Group" ||
+    blockDefinition.class === "dask_geomodeling.raster.elemwise.FillNoData" ? (
+      ['handle-1', 'handle-2'] // 2 default parameters for Group and FillNoData blocks
+    ) : (
+      new Array(blockDefinition.parameters.length)
+    )
+  );
+
   const dataOfBuildBlock = {
     label: blockName + '_' + (numberOfBlocks + 1),
-    // @ts-ignore
-    classOfBlock: geoblockType[blockName].class,
-    onChange: (value: number, i: number) => onBlockChange(value, i, blockName, setElements)
+    classOfBlock: blockDefinition.class,
+    parameters: blockParameters,
+    onChange: (value: number, i: number) => onBlockChange(value, i, idOfNewBlock, setElements)
   };
 
   if (blockName === 'RasterBlock') {

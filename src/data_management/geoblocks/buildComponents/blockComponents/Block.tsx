@@ -107,7 +107,7 @@ export const Block = (props: BlockProps) => {
             const parameterValue = parameters ? parameters[i] as number | string : undefined;
             return (
               <input
-                type={typeof(parameterValue) === 'number' ? 'number' : 'text'}
+                type={typeof(parameterValue) === 'number' || parameterValue === undefined ? 'number' : 'text'}
                 key={parameter.name}
                 className={styles.BlockInput}
                 title={parameter.name}
