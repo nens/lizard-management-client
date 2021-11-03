@@ -35,7 +35,8 @@ export const BlockDefinitionModal = (props: MyProps) => {
       <div className={styles.MainContainer}>
         <div className={styles.BlockHeader}>
           <h4>{blockDefinition.class}</h4>
-          <i>{blockDefinition.description}</i>
+          <i>{blockDefinition.description} </i>
+          <i>(<a href="https://dask-geomodeling.readthedocs.io/en/latest/raster.html">link to documentation</a>)</i>
         </div>
         <div className={styles.GridContainer}>
           <div>Input:</div>
