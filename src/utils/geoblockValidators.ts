@@ -20,12 +20,12 @@ type Error = ErrorObject | false;
 
 const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
-export const dryFetchGeoBlockForValidation = (uuid: string | null, source: GeoBlockSource) => {
+export const dryFetchGeoBlockForValidation = (uuid: string | null, source: GeoBlockSource | null) => {
   fetch(`/api/v4/rasters/${uuid || "db90664c-57fd-4ece-b0a6-ffa34b0e9b2f"}/?dry-run`, {
     credentials: 'same-origin',
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ source })
+    body: source ? JSON.stringify({ source }) : null
   })
   .then(res => res.json())
   .then(res => {

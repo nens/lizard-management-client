@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Elements } from 'react-flow-renderer';
+import { GeoBlockSource } from '../../../types/geoBlockType';
 import { GeoBlockJsonComponent } from './GeoBlockJsonComponent';
 import GeoBlockVisualComponent from './GeoBlockVisualComponent';
 import { SubmitButton } from '../../../form/SubmitButton';
 import { addNotification } from '../../../actions';
-import { jsonValidator } from '../../../form/validators';
 import { createGraphLayout } from '../../../utils/createGraphLayout';
 import { dryFetchGeoBlockForValidation } from '../../../utils/geoblockValidators';
 import {
@@ -19,14 +19,13 @@ import buttonStyles from './../../../styles/Buttons.module.css';
 
 interface MyProps {
   uuid: string | null,
-  source: Object | null,
-  onChange: (value: Object) => void,
+  source: GeoBlockSource | null,
+  onChange: (value: Object | null) => void,
   handleClose: () => void
 }
 
 function GeoBlockBuildModal (props: MyProps & DispatchProps) {
-  const sourceString = JSON.stringify(props.source, undefined, 4);
-  const [jsonString, setJsonString] = useState<string>(sourceString);
+  const [source, setSource] = useState<GeoBlockSource | null>(props.source);
   const [geoBlockView, setGeoBlockView] = useState<'json' | 'visual'>('json');
 
   // Block elements of a geoblock for React-Flow are kept in here
@@ -38,13 +37,13 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
   // use the useEffect here instead of the GeoBlockVisualComponent to avoid Maximum Depth Exceeded error
   useEffect(() => {
     if (geoBlockView === 'visual') {
-      const geoblockElements = convertGeoblockSourceToFlowElements(jsonString, setElements);
-      const layoutedElements = createGraphLayout(jsonString, geoblockElements);
+      const geoblockElements = convertGeoblockSourceToFlowElements(source, setElements);
+      const layoutedElements = createGraphLayout(source, geoblockElements);
       setElements(layoutedElements);
     };
     // setElements back to [] when component unmounted
     return () => setElements([]);
-  }, [jsonString, setElements, geoBlockView]);
+  }, [source, setElements, geoBlockView]);
 
   return (
     <ModalBackground
@@ -60,8 +59,8 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
       <div className={styles.MainContainer}>
         {geoBlockView === 'json' ? (
           <GeoBlockJsonComponent
-            jsonString={jsonString}
-            setJsonString={setJsonString}
+            source={source}
+            setSource={setSource}
           />
         ) : (
           <GeoBlockVisualComponent
@@ -78,11 +77,8 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
           </button>
           <button
             onClick={() => {
-              if (jsonValidator(jsonString)) {
-                return alert(jsonValidator(jsonString));
-              };
               if (geoBlockView === 'visual') {
-                const geoBlockSource = convertElementsToGeoBlockSource(elements, jsonString, setJsonString);
+                const geoBlockSource = convertElementsToGeoBlockSource(elements, source, setSource);
                 if (geoBlockSource) setGeoBlockView('json');
               } else {
                 setGeoBlockView('visual');
@@ -94,13 +90,10 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
           <button
             onClick={() => {
               if (geoBlockView === 'visual') {
-                const geoBlockSource = convertElementsToGeoBlockSource(elements, jsonString, setJsonString);
+                const geoBlockSource = convertElementsToGeoBlockSource(elements, source, setSource);
                 if (geoBlockSource) dryFetchGeoBlockForValidation(props.uuid, geoBlockSource);
               } else {
-                if (jsonValidator(jsonString)) {
-                  return alert(jsonValidator(jsonString));
-                };
-                dryFetchGeoBlockForValidation(props.uuid, JSON.parse(jsonString))
+                dryFetchGeoBlockForValidation(props.uuid, source)
               };
             }}
           >
@@ -108,17 +101,14 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
           </button>
           <SubmitButton
             onClick={() => {
-              if (jsonValidator(jsonString)) {
-                return alert(jsonValidator(jsonString));
-              };
               if (geoBlockView === 'visual') {
-                const geoBlockSource = convertElementsToGeoBlockSource(elements, jsonString, setJsonString);
+                const geoBlockSource = convertElementsToGeoBlockSource(elements, source, setSource);
                 if (geoBlockSource) {
                   props.onChange(geoBlockSource);
                   props.handleClose();
                 };
               } else {
-                props.onChange(JSON.parse(jsonString));
+                props.onChange(source);
                 props.handleClose();
               };
             }}

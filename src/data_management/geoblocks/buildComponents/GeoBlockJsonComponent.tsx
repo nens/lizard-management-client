@@ -3,16 +3,16 @@ import { JsonEditor } from 'jsoneditor-react';
 import 'jsoneditor-react/es/editor.min.css';
 
 interface MyProps {
-  jsonString: string,
-  setJsonString: (e: string) => void
+  source: any,
+  setSource: (e: any) => void
 }
 
 export const GeoBlockJsonComponent = (props: MyProps) => {
-  const { jsonString, setJsonString } = props;
+  const { source, setSource } = props;
   return (
     <JsonEditor
-      value={JSON.parse(jsonString)}
-      onChange={e => setJsonString(e)}
+      value={source}
+      onChange={e => setSource(e)}
       allowedModes={['tree', 'text']}
       htmlElementProps={{style: {
         position: 'absolute',
