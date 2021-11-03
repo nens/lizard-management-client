@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { geoblockType } from '../../../../types/geoBlockType';
 import styles from './SideBar.module.css';
 
@@ -9,25 +9,38 @@ export const SideBar = () => {
     event.dataTransfer.effectAllowed = 'move';
   };
 
+  const [searchInput, setSearchInput] = useState<string>('');
+
   return (
     <div
       className={styles.SideBar}
     >
-      {blockNames.map((blockName: string) => {
-        // @ts-ignore
-        const block = geoblockType[blockName];
-        return (
-          <div
-            key={blockName}
-            className={styles.Block}
-            title={block.description}
-            onDragStart={(event) => onDragStart(event, blockName)}
-            draggable
-          >
-            {blockName}
-          </div>
-        );
-      })}
+      <input
+        className={styles.SearchBar}
+        type="text"
+        placeholder={'Search ...'}
+        value={searchInput}
+        onChange={e => setSearchInput(e.target.value)}
+      />
+      <div>
+        {blockNames.filter(
+          blockName => blockName.toLowerCase().includes(searchInput.toLowerCase())
+        ).map(blockName => {
+          // @ts-ignore
+          const block = geoblockType[blockName];
+          return (
+            <div
+              key={blockName}
+              className={styles.Block}
+              title={block.description}
+              onDragStart={(event) => onDragStart(event, blockName)}
+              draggable
+            >
+              {blockName}
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 };
