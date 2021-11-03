@@ -22,8 +22,8 @@ export const RasterBlock = (props: Node<RasterBlockInput>) => {
 
   const [rasterSource, setRasterSource] = useState<Value>(convertToSelectObject(value));
   useEffect(() => {
-    fetchRasterSourceV4(value).then(
-      rasterSource => setRasterSource(convertToSelectObject(rasterSource.uuid, rasterSource.name))
+    fetchRasterSourceV4(value).then(rasterSource =>
+      rasterSource && rasterSource.uuid && setRasterSource(convertToSelectObject(rasterSource.uuid, rasterSource.name))
     );
   }, [value]);
 
