@@ -1,19 +1,19 @@
 // Util function to automatically create a graph layout
 
 import dagre from 'dagre';
+import { GeoBlockSource } from '../types/geoBlockType';
 import {
   ConnectionLineType,
   Elements,
   Position
 } from 'react-flow-renderer';
-import { GeoBlockSource } from '../types/geoBlockType';
 
 interface BlockInput {
   parameters: (string | number | boolean | [])[]
 }
 
 export const createGraphLayout = (
-  jsonString: string,
+  source: GeoBlockSource | null,
   elements: Elements<BlockInput>
 ): Elements => {
   const dagreGraph = new dagre.graphlib.Graph();
@@ -23,7 +23,6 @@ export const createGraphLayout = (
   const nodeWidth = 240;
   const nodeHeight = 260;
 
-  const source: GeoBlockSource = JSON.parse(jsonString);
   const allBlockNames = source && source.graph ? Object.keys(source.graph) : [];
 
   elements.forEach(el => {

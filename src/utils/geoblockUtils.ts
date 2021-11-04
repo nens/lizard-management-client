@@ -128,11 +128,9 @@ const onRasterBlockChange = (
 };
 
 export const convertGeoblockSourceToFlowElements = (
-  jsonString: string,
+  source: GeoBlockSource | null,
   setElements: React.Dispatch<React.SetStateAction<Elements<any>>>
 ) => {
-  const source: GeoBlockSource = JSON.parse(jsonString);
-
   // Return empty array if it is a new geoblock or the geoblock has no value yet
   if (!source || !source.graph) return [];
 
@@ -144,8 +142,8 @@ export const convertGeoblockSourceToFlowElements = (
 
 export const convertElementsToGeoBlockSource = (
   elements: Elements,
-  jsonString: string,
-  setJsonString?: (e: string) => void
+  source: GeoBlockSource | null,
+  setSource?: (e: GeoBlockSource) => void
 ): GeoBlockSource | undefined => {
   // check if the geoblock is validated
   const errors = geoBlockValidator(elements);
@@ -174,13 +172,12 @@ export const convertElementsToGeoBlockSource = (
     };
   }, {});
 
-  const source: GeoBlockSource = JSON.parse(jsonString);
   const geoBlockSource = {
     ...source,
     name: outputBlocks[0].data.label,
     graph
   };
 
-  if (setJsonString) setJsonString(JSON.stringify(geoBlockSource, null, 4));
+  if (setSource) setSource(geoBlockSource);
   return geoBlockSource;
 };
