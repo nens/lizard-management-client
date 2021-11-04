@@ -16,8 +16,7 @@ interface GroupBlockProps {
 export const GroupBlock = (props: GroupBlockProps) => {
   const { block, onElementsRemove } = props;
   const { classOfBlock, label, parameters } = block.data!;
-  const initialHandles = parameters ? parameters : ['handle-1', 'handle-2'];
-  const [handles, setHandles] = useState<string[]>(initialHandles);
+  const [handles, setHandles] = useState<string[]>(parameters);
   const numberOfHandles = handles.length;
 
   const edges = useStoreState(state => state.edges);
@@ -78,7 +77,12 @@ export const GroupBlock = (props: GroupBlockProps) => {
               if (connectedEdge) onElementsRemove([connectedEdge]);
 
               // remove the last handle
-              return handles.slice(0, -1);
+              const newHandles = handles.slice(0, -1);
+
+              // Remove the last input value of the parameters
+              parameters.pop();
+
+              return newHandles;
             })}
           />
         </div>

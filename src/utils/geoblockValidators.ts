@@ -12,7 +12,6 @@ import {
 } from "react-flow-renderer";
 
 interface ErrorObject {
-  blockId?: string,
   errorMessage: string
 }
 
@@ -46,6 +45,7 @@ export const dryFetchGeoBlockForValidation = (uuid: string | null, source: GeoBl
 
 export const geoBlockValidator = (elements: Elements): ErrorObject[] => {
   const rasterElements = elements.filter(el => isNode(el) && el.type === 'RasterBlock') as Node[];
+  const buildingBlocks = elements.filter(el => isNode(el) && el.type !== 'RasterBlock');
   const outputBlocks = elements.filter(el => isNode(el) && getOutgoers(el, elements).length === 0);
 
   let errors: ErrorObject[] = [];
@@ -58,6 +58,9 @@ export const geoBlockValidator = (elements: Elements): ErrorObject[] => {
   const outputError = outputValidator(outputBlocks);
   if (outputError) errors.push(outputError);
 
+  const blockError = blockInutValidator(buildingBlocks);
+  if (blockError) errors.push(blockError);
+
   return errors;
 };
 
@@ -65,7 +68,6 @@ const uuidValidator = (el: Node): Error => {
   const uuid = el.data!.value;
   if (!uuidRegex.test(uuid)) {
     return {
-      blockId: el.id,
       errorMessage: `UUID of ${el.data!.label} is not valid.`
     };
   };
@@ -80,6 +82,29 @@ const outputValidator = (outputBlocks: Elements): Error => {
   } else if (outputBlocks.length === 0) {
     return {
       errorMessage: 'No output block.'
+    };
+  };
+  return false;
+};
+
+const blockInutValidator = (blocks: Elements): Error => {
+  const blocksWithInvalidInput = blocks.filter(block => {
+    const parameters = block.data.parameters as any[];
+
+    // invalid inputs include following values: null, undefined, NaN, empty string
+    // or a string starts with 'handle-'
+    return (
+      parameters.includes(null) ||
+      parameters.includes(undefined) ||
+      parameters.includes(NaN) ||
+      parameters.includes('') ||
+      !!parameters.find(parameter => typeof(parameter) === 'string' && parameter.includes('handle-'))
+    );
+  });
+
+  if (blocksWithInvalidInput.length > 0) {
+    return {
+      errorMessage: `${blocksWithInvalidInput.map(block => block.data.label).join(', ')} contain invalid inputs.`
     };
   };
   return false;

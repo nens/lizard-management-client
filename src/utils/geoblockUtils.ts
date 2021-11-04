@@ -24,7 +24,7 @@ export const getBlockData = (
   const blockParameters = (
     blockDefinition.class === "dask_geomodeling.raster.combine.Group" ||
     blockDefinition.class === "dask_geomodeling.raster.elemwise.FillNoData" ? (
-      ['handle-1', 'handle-2'] // 2 default parameters for Group and FillNoData blocks
+      ['handle-1', 'handle-2'] // 2 default parameters for GroupBlocks
     ) : (
       new Array(blockDefinition.parameters.length)
     )
