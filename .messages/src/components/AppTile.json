@@ -1,1 +1,1 @@
-[]
+[{"id":"authorization.requires_role","defaultMessage":"Requires {requiredRolesLength, plural,  one {role} other {one of the following roles} }"}]
