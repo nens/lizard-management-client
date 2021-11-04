@@ -163,7 +163,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     subtitle: 
       <FormattedMessage
         id="apptile.catalogue_tile_subtitle"
-        defaultMessage="Search for your data"
+        defaultMessage="Search through your data"
       />,
     homePageIcon: true,
     homePageLinkOrHome: "HOME",
@@ -184,7 +184,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     subtitle: 
       <FormattedMessage
         id="apptile.viewer_tile_subtitle"
-        defaultMessage="Explore your data"
+        defaultMessage="Explore your data on the map"
       />,
     homePageIcon: true,
     homePageLinkOrHome: "HOME",
@@ -205,7 +205,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     subtitle: 
       <FormattedMessage
         id="apptile.management_tile_subtitle"
-        defaultMessage="Manage your data, users, alarms and GeoBlocks."
+        defaultMessage="Manage your data, users and alarms"
       />,
     homePageIcon: true,
     homePageLinkOrHome: "HOME",
@@ -226,7 +226,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     subtitle: 
       <FormattedMessage
         id="apptile.api_tile_subtitle"
-        defaultMessage="Query your data."
+        defaultMessage="Query your data"
       />,
     homePageIcon: true,
     homePageLinkOrHome: "HOME",
@@ -247,7 +247,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     subtitle: 
       <FormattedMessage
         id="apptile.documentation_tile_subtitle"
-        defaultMessage="Read the docs."
+        defaultMessage="Read the docs"
       />,
     homePageIcon: true,
     homePageLinkOrHome: "LINK",
