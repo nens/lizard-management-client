@@ -94,6 +94,7 @@ const blockInutValidator = (blocks: Elements): Error => {
     // invalid inputs include following values: null, undefined, NaN, empty string
     // or a string starts with 'handle-'
     return (
+      parameters.length === 0 ||
       parameters.includes(null) ||
       parameters.includes(undefined) ||
       parameters.includes(NaN) ||
