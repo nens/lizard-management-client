@@ -43,7 +43,7 @@ export const RasterBlock = (props: Node<RasterBlockInput>) => {
         placeholder={'Please enter an UUID'}
         cacheOptions
         defaultOptions
-        loadOptions={searchInput => fetchRasterSources(selectedOrganisation.uuid, searchInput)}
+        loadOptions={searchInput => searchInput ? fetchRasterSources(selectedOrganisation.uuid, searchInput) : Promise.resolve()}
         value={rasterSource}
         onChange={option => option && onChange(option.value.toString())}
         isClearable={false}
