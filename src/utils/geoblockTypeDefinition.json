@@ -534,7 +534,7 @@
         "type": "enum",
         "enum": [
           "last",
-          "fist",
+          "first",
           "count",
           "sum",
           "mean",

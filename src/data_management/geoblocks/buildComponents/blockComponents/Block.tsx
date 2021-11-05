@@ -152,6 +152,18 @@ export const Block = (props: BlockProps) => {
                 ))}
               </select>
             );
+          } else if (parameter.type === 'array') {
+            const parameterValue = parameters ? parameters[i] as any : undefined;
+            const parameterValueInJsonString = JSON.stringify(parameterValue);
+            return (
+              <textarea
+                key={parameter.name}
+                className={styles.BlockInput}
+                value={parameterValueInJsonString}
+                onChange={e => onChange(e.target.value, i)}
+                disabled
+              />
+            )
           } else {
             const parameterValue = parameters ? parameters[i] as any : undefined;
             return (
