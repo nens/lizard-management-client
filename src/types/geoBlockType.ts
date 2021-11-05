@@ -14,11 +14,7 @@ type parameter = {
 }
 
 enum InputBlockEnum {
-  BooleanBlock = "BooleanBlock",
-  NumberBlock = "NumberBlock",
-  RasterBlock = "RasterBlock",
-  StringBlock = "StringBlock",
-  ArrayBlock = "ArrayBlock"
+  RasterBlock = "RasterBlock"
 }
 
 enum GeoBlockEnum {

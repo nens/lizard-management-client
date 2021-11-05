@@ -1,8 +1,17 @@
-import { Connection, Edge, Elements, getOutgoers, isEdge, isNode, Node } from "react-flow-renderer";
-import { GeoBlockSource, geoblockType } from "../types/geoBlockType";
+import { storeDispatch } from "..";
+import { addNotification } from "../actions";
+import { GeoBlockSource } from "../types/geoBlockType";
+import {
+  Connection,
+  Edge,
+  Elements,
+  getOutgoers,
+  isEdge,
+  isNode,
+  Node
+} from "react-flow-renderer";
 
 interface ErrorObject {
-  blockId?: string,
   errorMessage: string
 }
 
@@ -10,20 +19,34 @@ type Error = ErrorObject | false;
 
 const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
-export const fetchGeoBlock = (uuid: string | null, source: GeoBlockSource) => {
+export const dryFetchGeoBlockForValidation = (uuid: string | null, source: GeoBlockSource | null) => {
   fetch(`/api/v4/rasters/${uuid || "db90664c-57fd-4ece-b0a6-ffa34b0e9b2f"}/?dry-run`, {
     credentials: 'same-origin',
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ source })
+    body: source ? JSON.stringify({ source }) : null
   })
   .then(res => res.json())
-  .then(res => console.log(res))
+  .then(res => {
+    console.log(res);
+    if (res.status === 400) {
+      console.error(res.detail && res.detail.source && res.detail.source[0]);
+      const errorMessage = res.detail && res.detail.source && res.detail.source[0];
+      if (errorMessage) {
+        storeDispatch(addNotification(errorMessage))
+      } else {
+        storeDispatch(addNotification('Unknown error! Something is wrong with the GeoBlock.'))
+      };
+    } else if (res.id) { // valid response
+      storeDispatch(addNotification('The GeoBlock is valid.', 2000));
+    };
+  });
 };
 
 export const geoBlockValidator = (elements: Elements): ErrorObject[] => {
   const rasterElements = elements.filter(el => isNode(el) && el.type === 'RasterBlock') as Node[];
-  const outputBlocks = elements.filter(el => isNode(el) && el.data && el.data.outputBlock) as Node[];
+  const buildingBlocks = elements.filter(el => isNode(el) && el.type !== 'RasterBlock');
+  const outputBlocks = elements.filter(el => isNode(el) && getOutgoers(el, elements).length === 0);
 
   let errors: ErrorObject[] = [];
 
@@ -35,8 +58,8 @@ export const geoBlockValidator = (elements: Elements): ErrorObject[] => {
   const outputError = outputValidator(outputBlocks);
   if (outputError) errors.push(outputError);
 
-  const orphanPartError = orphanPartValidator(elements);
-  if (orphanPartError) errors.push(orphanPartError);
+  const blockError = blockInutValidator(buildingBlocks);
+  if (blockError) errors.push(blockError);
 
   return errors;
 };
@@ -45,17 +68,16 @@ const uuidValidator = (el: Node): Error => {
   const uuid = el.data!.value;
   if (!uuidRegex.test(uuid)) {
     return {
-      blockId: el.id,
       errorMessage: `UUID of ${el.data!.label} is not valid.`
     };
   };
   return false;
 };
 
-const outputValidator = (outputBlocks: Node[]): Error => {
+const outputValidator = (outputBlocks: Elements): Error => {
   if (outputBlocks.length > 1) {
     return {
-      errorMessage: 'Only one output block is allowed.'
+      errorMessage: 'More than one output block existed in the graph.'
     };
   } else if (outputBlocks.length === 0) {
     return {
@@ -65,32 +87,31 @@ const outputValidator = (outputBlocks: Node[]): Error => {
   return false;
 };
 
-const orphanPartValidator = (els: Elements): Error => {
-  const blocks = els.filter(
-    el => isNode(el)
-  ).filter(
-    el => !(el.type === 'NumberBlock')
-  ).filter(
-    el => !el.data.outputBlock
-  ) as Node[];
+const blockInutValidator = (blocks: Elements): Error => {
+  const blocksWithInvalidInput = blocks.filter(block => {
+    const parameters = block.data.parameters as any[];
 
-  const orphanBlock = blocks.find(block => {
-    const outgoers = getOutgoers(block, els);
-    return outgoers.length === 0;
+    // invalid inputs include following values: null, undefined, NaN, empty string
+    // or a string starts with 'handle-'
+    return (
+      parameters.length === 0 ||
+      parameters.includes(null) ||
+      parameters.includes(undefined) ||
+      parameters.includes(NaN) ||
+      parameters.includes('') ||
+      !!parameters.find(parameter => typeof(parameter) === 'string' && parameter.includes('handle-'))
+    );
   });
 
-  if (orphanBlock) {
+  if (blocksWithInvalidInput.length > 0) {
     return {
-      blockId: orphanBlock.id,
-      errorMessage: 'Orphan part existed in the graph.'
+      errorMessage: `${blocksWithInvalidInput.map(block => block.data.label).join(', ')} contain invalid inputs.`
     };
   };
-
   return false;
 };
 
 export const targetHandleValidator = (els: Elements, params: Edge | Connection): Error => {
-  const source = els.find(el => el.id === params.source)!;
   const target = els.find(el => el.id === params.target)!;
   const targetHandle = params.targetHandle!;
 
@@ -101,36 +122,6 @@ export const targetHandleValidator = (els: Elements, params: Edge | Connection):
   if (existingEdge) {
     return {
       errorMessage: 'Target handle has been used by another block.'
-    };
-  };
-
-  // check if input block and the target handle have the same data type
-  const valueTypeOfSource = (
-    source.type === 'NumberBlock' ? 'number' :
-    source.type === 'BooleanBlock' ? 'boolean' :
-    source.type === 'StringBlock' ? 'string' :
-    'raster_block'
-  );
-
-  const targetBlockParameters = Object.values(geoblockType).find(blockType => blockType!.class === target.data!.classOfBlock)!.parameters;
-
-  const targetHandlers: {[key: string]: string | string[]} = {};
-
-  let valueTypeOfTargetHandle: string | string[];
-
-  if (Array.isArray(targetBlockParameters)) {
-    targetBlockParameters.forEach((parameter, i) => {
-      return targetHandlers['handle-' + i] = parameter.type;
-    });
-    valueTypeOfTargetHandle = targetHandlers[targetHandle];
-  } else {
-    valueTypeOfTargetHandle = 'raster_block';
-  };
-
-  // Not allowed to connect to a target handle with a wrong data type
-  if (!valueTypeOfTargetHandle.includes(valueTypeOfSource)) {
-    return {
-      errorMessage: 'Invalid connection due to wrong data type.'
     };
   };
 

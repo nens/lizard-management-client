@@ -1,56 +1,60 @@
 import React, { useState } from 'react';
-import { Handle, Node, Position } from 'react-flow-renderer';
+import { Elements, Handle, Node, Position, useStoreState } from 'react-flow-renderer';
 import styles from './Block.module.css';
 
 interface GroupBlockInput {
   label: string,
   classOfBlock: string,
-  parameters: string[] | Object,
-  outputBlock?: boolean,
-  onOutputChange: (bool: boolean) => void
+  parameters: string[],
 }
 
-export const GroupBlock = (props: Node<GroupBlockInput>) => {
-  const { classOfBlock, label, parameters, outputBlock, onOutputChange } = props.data!;
-  const initialHandles = Array.isArray(parameters) ? parameters : ['handle-1', 'handle-2'];
-  const [handles, setHandles] = useState<string[]>(initialHandles);
+interface GroupBlockProps {
+  block: Node<GroupBlockInput>,
+  onElementsRemove: (elementsToRemove: Elements) => void,
+}
+
+export const GroupBlock = (props: GroupBlockProps) => {
+  const { block, onElementsRemove } = props;
+  const { classOfBlock, label, parameters } = block.data!;
+  const [handles, setHandles] = useState<string[]>(parameters);
   const numberOfHandles = handles.length;
+
+  const edges = useStoreState(state => state.edges);
 
   return (
     <div
-      className={`${styles.Block} ${outputBlock ? styles.OutputBlock : ''}`}
+      className={styles.Block}
       tabIndex={1}
     >
       {handles.map((_parameter, i) => (
         <Handle
           key={i}
           type="target"
-          id={'handle-' + i}
+          id={i + ''}
           title={'source: raster_block'}
           position={Position.Left}
           style={{
-            top: 10 * (i + 1),
-            background: 'orange'
+            top: 10 * (i + 1)
           }}
         />
       ))}
       <div
         title={classOfBlock}
         style={{
-          fontSize: 12,
           display: 'flex',
           alignItems: 'center',
-          // calculate height of the Block if there are more than 3 handlers
-          height: numberOfHandles > 3 ? numberOfHandles * 10 : undefined
+          // calculate height of the Block if there are more than 7 handlers
+          height: numberOfHandles > 7 ? numberOfHandles * 10 : 70
         }}
       >
         <div
           style={{
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: 'center',
+            justifyContent: 'space-between',
             alignItems: 'center',
             marginRight: 10,
+            height: '100%'
           }}
         >
           <i
@@ -65,25 +69,33 @@ export const GroupBlock = (props: Node<GroupBlockInput>) => {
             style={{
               cursor: 'pointer'
             }}
-            onClick={() => setHandles((handles: string[]) => handles.slice(0, -1))}
+            onClick={() => setHandles((handles: string[]) => {
+              // First remove the edge that is connected to the last handle
+              const connectedEdge = edges.find(
+                edge => edge.target === block.id && edge.targetHandle === (handles.length - 1).toString()
+              );
+              if (connectedEdge) onElementsRemove([connectedEdge]);
+
+              // remove the last handle
+              const newHandles = handles.slice(0, -1);
+
+              // Remove the last input value of the parameters
+              parameters.pop();
+
+              return newHandles;
+            })}
           />
         </div>
-        <span>{label}</span>
-        <i
-          className={outputBlock ? 'fa fa-plus' : 'fa fa-minus'}
-          style={{
-            cursor: 'pointer',
-            marginLeft: 10
-          }}
-          onClick={() => onOutputChange(!outputBlock)}
-        />
+        <div
+          className={styles.BlockHeader}
+        >
+          <h4>{label}</h4>
+          <small><i>({classOfBlock})</i></small>
+        </div>
       </div>
       <Handle
         type="source"
         position={Position.Right}
-        style={{
-          visibility: outputBlock ? 'hidden' : 'visible'
-        }}
       />
     </div>
   )

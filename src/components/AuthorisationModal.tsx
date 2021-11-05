@@ -49,8 +49,10 @@ function AuthorisationModal (props: MyProps & DispatchProps) {
     <ModalBackground
       title={'Change accessibility'}
       handleClose={props.handleClose}
-      width={'50%'}
-      height={'50%'}
+      style={{
+        width: '50%',
+        height: '50%',
+      }}
     >
       <div
         style={{

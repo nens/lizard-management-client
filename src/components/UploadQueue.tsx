@@ -71,7 +71,9 @@ const UploadQueue: React.FC<MyProps & PropsFromDispatch> = (props) => {
     <ModalBackground
       title={mustWaitForFiles? "Do not close! Upload Queue Busy" :'Upload Queue'}
       handleClose={mustWaitForFiles ? undefined : () => props.handleClose()}
-      height={'600px'}
+      style={{
+        height: 600
+      }}
     >
       <div className={styles.ModalBody}>
         {mustWaitForFiles?

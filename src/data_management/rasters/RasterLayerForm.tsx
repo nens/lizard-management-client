@@ -47,7 +47,7 @@ interface Props {
 };
 
 // Helper function to fetch paginated raster sources with search query
-const fetchRasterSources = async (uuid: string, searchQuery: string) => {
+export const fetchRasterSources = async (uuid: string, searchQuery: string) => {
   const params=[`organisation__uuid=${uuid}`, "scenario__isnull=true", "page_size=20"];
 
   // Regex expression to check if search input is UUID of raster source

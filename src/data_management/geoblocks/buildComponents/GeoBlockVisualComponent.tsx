@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import { connect } from 'react-redux';
 import ReactFlow, {
   addEdge,
   Connection,
@@ -6,8 +7,11 @@ import ReactFlow, {
   Controls,
   Edge,
   Elements,
+  getOutgoers,
+  isEdge,
   isNode,
   MiniMap,
+  Node,
   Position,
   ReactFlowProvider,
   removeElements,
@@ -16,57 +20,83 @@ import ReactFlow, {
 } from 'react-flow-renderer';
 import { SideBar } from './blockComponents/SideBar';
 import { Block } from './blockComponents/Block';
-import { BooleanBlock } from './blockComponents/BooleanBlock';
 import { GroupBlock } from './blockComponents/GroupBlock';
-import { NumberBlock } from './blockComponents/NumberBlock';
 import { RasterBlock } from './blockComponents/RasterBlock';
-import { StringBlock } from './blockComponents/StringBlock';
-import { ArrayBlock } from './blockComponents/ArrayBlock';
 import { geoblockType } from '../../../types/geoBlockType';
 import { getBlockData } from '../../../utils/geoblockUtils';
 import { targetHandleValidator } from '../../../utils/geoblockValidators';
-import edgeStyle from './blockComponents/Edge.module.css';
+import { addNotification } from '../../../actions';
 
 interface MyProps {
   elements: Elements,
   setElements: React.Dispatch<React.SetStateAction<Elements<any>>>
 }
 
-const GeoBlockVisualFlow = (props: MyProps) => {
-  const { elements, setElements } = props;
+const GeoBlockVisualFlow = (props: MyProps & DispatchProps) => {
+  const { elements, setElements, addNotification } = props;
   const reactFlowWrapper = useRef<any>(null);
   const updateNodeInternals = useUpdateNodeInternals();
   const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
 
   // gets called after end of edge gets dragged to another source or target
   const onEdgeUpdate = (oldEdge: Edge, newConnection: Connection) => {
-    setElements((els) => updateEdge(oldEdge, newConnection, els));
+    setElements((els) => {
+      const connectError = targetHandleValidator(els, newConnection);
+      if (connectError) {
+        console.error(connectError.errorMessage);
+        addNotification(connectError.errorMessage, 2000);
+        return els;
+      };
+
+      const sourceNode = els.find(el => el.id === newConnection.source)!;
+
+      const newElements = els.map(el => {
+        if (el.id === oldEdge.target) el.data.parameters[oldEdge.targetHandle!] = ''; // remove old value
+        if (el.id === newConnection.target) el.data.parameters[newConnection.targetHandle!] = sourceNode.data.label; // update new value
+        return el;
+      });
+
+      return updateEdge(oldEdge, newConnection, newElements);
+    });
     newConnection.target && updateNodeInternals(newConnection.target); // update node internals
   };
 
   const onConnect = (params: Edge | Connection) => {
-    const connectError = targetHandleValidator(elements, params);
-    if (connectError) return console.error(connectError.errorMessage);
-
     setElements((els) => {
-      const source = els.find(el => el.id === params.source)!;
+      const connectError = targetHandleValidator(els, params);
+      if (connectError) {
+        console.error(connectError.errorMessage);
+        addNotification(connectError.errorMessage, 2000);
+        return els;
+      };
+
+      const sourceNode = els.find(el => el.id === params.source)!;
+
+      const newElements = els.map(el => {
+        if (el.id === params.target) el.data.parameters[params.targetHandle!] = sourceNode.data.label; // update new value
+        return el;
+      });
+
       return addEdge({
         ...params,
         type: ConnectionLineType.SmoothStep,
-        animated: true,
-        className: (
-          source.type === 'NumberBlock' ? edgeStyle.NumberEdge :
-          source.type === 'StringBlock' ? edgeStyle.StringEdge :
-          source.type === 'BooleanBlock' ? edgeStyle.BooleanEdge :
-          edgeStyle.BlockEdge
-        )
-      }, els);
+        animated: true
+      }, newElements);
     });
     params.target && updateNodeInternals(params.target); // update node internals
   };
 
   const onElementsRemove = (elementsToRemove: Elements) => {
-    setElements((els) => removeElements(elementsToRemove, els))
+    setElements((els) => {
+      const newElements = els.map(el => {
+        const edgesToRemove = elementsToRemove.filter(elm => isEdge(elm)) as Edge[];
+        edgesToRemove.forEach(edge => {
+          if (edge.target === el.id) el.data.parameters[edge.targetHandle!] = ''; // remove old value
+        });
+        return el;
+      });
+      return removeElements(elementsToRemove, newElements);
+    });
   };
 
   const onLoad = (_reactFlowInstance: any) => {
@@ -101,7 +131,7 @@ const GeoBlockVisualFlow = (props: MyProps) => {
       const newBlock = {
         id: idOfNewBlock,
         type: (
-          blockName === 'RasterBlock' || blockName === 'NumberBlock' || blockName === 'BooleanBlock' || blockName === 'StringBlock' ? blockName :
+          blockName === 'RasterBlock' ? blockName :
           blockName === 'Group' || blockName === 'FillNoData' ? 'GroupBlock' : 'Block'
         ),
         position,
@@ -121,7 +151,7 @@ const GeoBlockVisualFlow = (props: MyProps) => {
         gridTemplateColumns: '1fr 150px',
         columnGap: 10,
         margin: '20px 0',
-        height: 550
+        height: 720
       }}
     >
       <ReactFlow
@@ -140,22 +170,17 @@ const GeoBlockVisualFlow = (props: MyProps) => {
         onDragOver={onDragOver}
         onDrop={onDrop}
         nodeTypes={{
-          Block: Block,
-          BooleanBlock: BooleanBlock,
-          GroupBlock: GroupBlock,
-          RasterBlock: RasterBlock,
-          NumberBlock: NumberBlock,
-          StringBlock: StringBlock,
-          ArrayBlock: ArrayBlock
+          Block: (block: Node) => <Block block={block} onElementsRemove={onElementsRemove} />,
+          GroupBlock: (block: Node) => <GroupBlock block={block} onElementsRemove={onElementsRemove} />,
+          RasterBlock: RasterBlock
         }}
       >
         {elements.length > 100 ? (
           <MiniMap
             nodeColor={(node) => {
-              if (node.type === 'RasterBlock') return 'orange';
-              if (node.type === 'Block' && node.data.outputBlock) return 'red';
-              if (node.type === 'Block' || node.type === 'GroupBlock') return 'green';
-              return 'lightgrey';
+              if (node.type === 'RasterBlock') return 'orange'; // raster block
+              if (getOutgoers(node, elements).length === 0) return 'red'; // output block
+              return 'lightgrey'; // normal block
             }}
             nodeStrokeWidth={3}
           />
@@ -167,7 +192,7 @@ const GeoBlockVisualFlow = (props: MyProps) => {
   )
 }
 
-export const GeoBlockVisualComponent = (props: MyProps) => (
+const GeoBlockVisualComponent = (props: MyProps & DispatchProps) => (
   // Wrap the GeoBlockVisualFlow component inside the ReactFlowProvider
   // to have access to the useUpdateNodeInternals hook of react-flow.
   // the useUpdateNodeInternals hook is used to update the node manually
@@ -176,6 +201,14 @@ export const GeoBlockVisualComponent = (props: MyProps) => (
     <GeoBlockVisualFlow
       elements={props.elements}
       setElements={props.setElements}
+      addNotification={props.addNotification}
     />
   </ReactFlowProvider>
 )
+
+const mapDispatchToProps = (dispatch: any) => ({
+  addNotification: (message: string | number, timeout?: number) => dispatch(addNotification(message, timeout))
+});
+type DispatchProps = ReturnType<typeof mapDispatchToProps>;
+
+export default connect(null, mapDispatchToProps)(GeoBlockVisualComponent);

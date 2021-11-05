@@ -1,4 +1,6 @@
-import { Edge, Elements, isEdge, isNode } from "react-flow-renderer";
+import { storeDispatch } from "..";
+import { addNotification } from "../actions";
+import { Elements, getOutgoers, isNode, Node } from "react-flow-renderer";
 import { GeoBlockSource, geoblockType } from "../types/geoBlockType";
 import { geoBlockValidator } from "./geoblockValidators";
 
@@ -14,44 +16,29 @@ export const getBlockData = (
     label: 'LizardRasterSource_' + (numberOfBlocks + 1),
     value: '',
     classOfBlock: 'lizard_nxt.blocks.LizardRasterSource',
-    onChange: (value: string) => onBlockValueChange(value, idOfNewBlock, setElements)
+    onChange: (value: string) => onRasterBlockChange(value, idOfNewBlock, setElements)
   };
 
-  const dataOfBooleanBlock = {
-    value: false,
-    classOfBlock: 'BooleanBlock',
-    onChange: (value: boolean) => onBlockValueChange(value, idOfNewBlock, setElements)
-  };
-
-  const dataOfNumberBlock = {
-    value: 0,
-    classOfBlock: 'NumberBlock',
-    onChange: (value: number) => onBlockValueChange(value, idOfNewBlock, setElements)
-  };
-
-  const dataOfStringBlock = {
-    value: 'test',
-    classOfBlock: 'StringBlock',
-    onChange: (value: string) => onBlockValueChange(value, idOfNewBlock, setElements)
-  };
+  // @ts-ignore
+  const blockDefinition = geoblockType[blockName];
+  const blockParameters = (
+    blockDefinition.class === "dask_geomodeling.raster.combine.Group" ||
+    blockDefinition.class === "dask_geomodeling.raster.elemwise.FillNoData" ? (
+      ['handle-1', 'handle-2'] // 2 default parameters for GroupBlocks
+    ) : (
+      new Array(blockDefinition.parameters.length)
+    )
+  );
 
   const dataOfBuildBlock = {
     label: blockName + '_' + (numberOfBlocks + 1),
-    // @ts-ignore
-    classOfBlock: geoblockType[blockName].class,
-    // @ts-ignore
-    parameters: geoblockType[blockName].parameters,
-    onOutputChange: (bool: boolean) => onBlockOutputChange(bool, idOfNewBlock, setElements)
+    classOfBlock: blockDefinition.class,
+    parameters: blockParameters,
+    onChange: (value: number, i: number) => onBlockChange(value, i, idOfNewBlock, setElements)
   };
 
   if (blockName === 'RasterBlock') {
     return dataOfRasterBlock;
-  } else if (blockName === 'NumberBlock') {
-    return dataOfNumberBlock;
-  } else if (blockName === 'BooleanBlock') {
-    return dataOfBooleanBlock;
-  } else if (blockName === 'StringBlock') {
-    return dataOfStringBlock;
   } else {
     return dataOfBuildBlock;
   };
@@ -74,17 +61,16 @@ const getRasterElements = (
       label: blockName,
       value: graph[blockName][1],
       classOfBlock: 'lizard_nxt.blocks.LizardRasterSource',
-      onChange: (value: string) => onBlockValueChange(value, blockName, setElements)
+      onChange: (value: string) => onRasterBlockChange(value, blockName, setElements)
     },
     position
   }));
 };
 
 const getBlockElements = (
-  source: GeoBlockSource,
+  graph: GeoBlockSource['graph'],
   setElements: React.Dispatch<React.SetStateAction<Elements<any>>>
 ): Elements => {
-  const { name, graph } = source;
   const allBlockNames = Object.keys(graph);
   const blockNames = allBlockNames.filter(blockName => {
     const classOfBlock = graph[blockName][0];
@@ -105,221 +91,75 @@ const getBlockElements = (
         label: blockName,
         classOfBlock,
         parameters: blockValue.slice(1),
-        outputBlock: blockName === name,
-        onOutputChange: (bool: boolean) => onBlockOutputChange(bool, blockName, setElements)
+        onChange: (value: number, i: number) => onBlockChange(value, i, blockName, setElements)
       },
       position
     };
   });
 };
 
-const getNumberElements = (
-  blockElements: Elements,
-  setElements: React.Dispatch<React.SetStateAction<Elements<any>>>
-): Elements => {
-  return blockElements.map(elm => {
-    const numbers: number[] = elm.data.parameters.filter((parameter: any) => typeof(parameter) === 'number');
-    return numbers.map((n, i) => {
-      const blockId = elm.id + '-' + n + '-' + i;
-      return {
-        id: blockId,
-        type: 'NumberBlock',
-        data: {
-          value: n,
-          classOfBlock: 'NumberBlock',
-          onChange: (value: number) => onBlockValueChange(value, blockId, setElements)
-        },
-        position
-      };
-    });
-  }).flat(1);
-};
-
-const getStringElements = (
-  graph: GeoBlockSource['graph'],
-  blockElements: Elements,
-  setElements: React.Dispatch<React.SetStateAction<Elements<any>>>
-): Elements => {
-  const allBlockNames = Object.keys(graph);
-  return blockElements.map(elm => {
-    const stringValues: string[] = elm.data.parameters.filter((parameter: any) =>
-      typeof(parameter) === 'string' &&
-      !allBlockNames.includes(parameter) &&
-      !parameter.includes('RasterStoreSource' || 'LizardRasterSource')
-    );
-    return stringValues.map((value, i) => {
-      const blockId = elm.id + '-' + value;
-      return {
-        id: blockId,
-        type: 'StringBlock',
-        data: {
-          value: value,
-          classOfBlock: 'StringBlock',
-          onChange: (value: string) => onBlockValueChange(value, blockId, setElements)
-        },
-        position
-      };
-    });
-  }).flat(1);
-};
-
-const getBooleanElements = (
-  blockElements: Elements,
-  setElements: React.Dispatch<React.SetStateAction<Elements<any>>>
-): Elements => {
-  return blockElements.map(elm => {
-    const booleanParameters: boolean[] = elm.data.parameters.filter((parameter: any) => typeof(parameter) === 'boolean');
-    return booleanParameters.map((bool, i) => {
-      const blockId = elm.id + '-' + bool;
-      return {
-        id: blockId,
-        type: 'BooleanBlock',
-        data: {
-          value: bool,
-          classOfBlock: 'BooleanBlock',
-          onChange: (value: boolean) => onBlockValueChange(value, blockId, setElements)
-        },
-        position
-      };
-    });
-  }).flat(1);
-};
-
-const getArrayElements = (
-  blockElements: Elements,
-  setElements: React.Dispatch<React.SetStateAction<Elements<any>>>
-): Elements => {
-  return blockElements.map(elm => {
-    const arrayValues: [][] = elm.data.parameters.filter(
-      (parameter: any) => Array.isArray(parameter)
-    );
-    return arrayValues.map((value, i) => {
-      const blockId = elm.id + '-' + value;
-      return {
-        id: blockId,
-        type: 'ArrayBlock',
-        data: {
-          value: value,
-          classOfBlock: 'ArrayBlock',
-          onChange: (value: string) => onBlockValueChange(value, blockId, setElements)
-        },
-        position
-      };
-    });
-  }).flat(1);
-};
-
-// Helper function to change value of a block (e.g. UUID of a raster block or number input)
-const onBlockValueChange = (
+// Helper function to change parameter value of a block
+const onBlockChange = (
   value: string | number | boolean,
+  index: number,
   blockId: string,
   setElements: React.Dispatch<React.SetStateAction<Elements<any>>>
 ) => {
   setElements(elms => {
     return elms.map(elm => {
-      if (elm.id === blockId) {
-        return {
-          ...elm,
-          data: {
-            ...elm.data,
-            value
-          }
-        }
-      };
+      if (elm.id === blockId) elm.data.parameters[index] = value;
       return elm;
     });
   });
 };
 
-// Helper function to change an output block
-const onBlockOutputChange = (
-  bool: boolean,
+// Helper function to change UUID of a raster
+const onRasterBlockChange = (
+  value: string,
   blockId: string,
   setElements: React.Dispatch<React.SetStateAction<Elements<any>>>
 ) => {
   setElements(elms => {
-    return elms.filter(
-      // remove the output edge connected to the block
-      elm => !(isEdge(elm) && elm.source === blockId)
-    ).map(elm => {
-      if (elm.id === blockId) {
-        return {
-          ...elm,
-          style: {
-            ...elm.style,
-            borderColor: bool ? 'red' : 'grey'
-          },
-          data: {
-            ...elm.data,
-            outputBlock: bool
-          }
-        }
-      };
+    return elms.map(elm => {
+      if (elm.id === blockId) elm.data.value = value;
       return elm;
     });
   });
 };
 
 export const convertGeoblockSourceToFlowElements = (
-  jsonString: string,
+  source: GeoBlockSource | null,
   setElements: React.Dispatch<React.SetStateAction<Elements<any>>>
 ) => {
-  const source: GeoBlockSource = JSON.parse(jsonString);
-
   // Return empty array if it is a new geoblock or the geoblock has no value yet
   if (!source || !source.graph) return [];
 
   const rasterElements = getRasterElements(source.graph, setElements);
-  const blockElements = getBlockElements(source, setElements);
-  const numberElements = getNumberElements(blockElements, setElements);
-  const booleanElements = getBooleanElements(blockElements, setElements);
-  const stringElements = getStringElements(source.graph, blockElements, setElements);
-  const arrayElements = getArrayElements(blockElements, setElements);
+  const blockElements = getBlockElements(source.graph, setElements);
 
-  return blockElements.concat(rasterElements).concat(numberElements).concat(booleanElements).concat(stringElements).concat(arrayElements);
+  return blockElements.concat(rasterElements);
 };
 
 export const convertElementsToGeoBlockSource = (
   elements: Elements,
-  jsonString: string,
-  setJsonString?: (e: string) => void
+  source: GeoBlockSource | null,
+  setSource?: (e: GeoBlockSource) => void
 ): GeoBlockSource | undefined => {
   // check if the geoblock is validated
   const errors = geoBlockValidator(elements);
   if (errors.length >= 1) {
-    errors.map(e => console.error(e.errorMessage));
+    errors.forEach(e => {
+      console.error(e.errorMessage);
+      storeDispatch(addNotification(e.errorMessage));
+    });
     return;
   };
 
-  const edges = elements.filter(e => isEdge(e)) as Edge[];
-  const blocks = elements.filter(e => isNode(e));
-  const outputBlocks = blocks.filter(block => block.data && block.data.outputBlock);
+  const blocks = elements.filter(e => isNode(e)) as Node[];
+  const outputBlocks = blocks.filter(block => getOutgoers(block, elements).length === 0);
 
   // use reduce method to create the graph object
-  const graph = blocks.filter(block =>
-    block.type === 'RasterBlock' ||
-    block.type === 'Block' ||
-    block.type === 'GroupBlock'
-  ).reduce((graph, block) => {
-    // find connected nodes and their labels
-    const connectedNodes = edges.filter(
-      e => e.target === block.id
-    ).sort((a, b) => {
-      // sort the connected nodes by their target handle (e.g. handle-0, handle-1, handle-2, etc)
-      if (a.targetHandle && b.targetHandle) {
-        return a.targetHandle.localeCompare(b.targetHandle);
-      } else {
-        return 0;
-      };
-    }).map(
-      e => e.source
-    ).map(blockId => {
-      const sourceNode = blocks.find(block => block.id === blockId);
-
-      if (!sourceNode) return blockId;
-      return sourceNode.data.label || sourceNode.data.value;
-    });
-
+  const graph = blocks.reduce((graph, block) => {
     return {
       ...graph,
       [block.data.label]: block.type === 'RasterBlock' ? [
@@ -327,18 +167,17 @@ export const convertElementsToGeoBlockSource = (
         block.data.value
       ] : [
         block.data.classOfBlock,
-        ...connectedNodes
+        ...block.data.parameters
       ]
     };
   }, {});
 
-  const source: GeoBlockSource = JSON.parse(jsonString);
   const geoBlockSource = {
     ...source,
     name: outputBlocks[0].data.label,
     graph
   };
 
-  if (setJsonString) setJsonString(JSON.stringify(geoBlockSource, null, 4));
+  if (setSource) setSource(geoBlockSource);
   return geoBlockSource;
 };

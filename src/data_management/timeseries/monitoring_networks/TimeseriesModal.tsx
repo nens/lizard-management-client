@@ -114,8 +114,10 @@ function TimeseriesModal (props: MyProps & DispatchProps) {
     <ModalBackground
       title={'Manage Time Series'}
       handleClose={props.handleClose}
-      width={'80%'}
-      height={'80%'}
+      style={{
+        width: '80%',
+        height: '80%',
+      }}
     >
       <div className={styles.MainContainer}>
         <div className={styles.GridContainer}>

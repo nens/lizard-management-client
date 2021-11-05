@@ -93,7 +93,9 @@ function InvitationModal (props: MyProps & DispatchProps) {
     <ModalBackground
       title={'Pending Invitations'}
       handleClose={props.handleClose}
-      width={'50%'}
+      style={{
+        width: '50%'
+      }}
     >
       <div
         style={{

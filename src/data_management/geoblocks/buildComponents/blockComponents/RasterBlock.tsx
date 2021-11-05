@@ -1,33 +1,64 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import AsyncSelect from 'react-select/async';
+import { useSelector } from 'react-redux';
 import { Handle, Node, Position } from 'react-flow-renderer';
-import formStyles from './../../../../styles/Forms.module.css';
+import { getSelectedOrganisation } from '../../../../reducers';
+import { convertToSelectObject } from '../../../../utils/convertToSelectObject';
+import { fetchRasterSources } from '../../../rasters/RasterLayerForm';
+import { fetchRasterSourceV4 } from '../../../../api/rasters';
+import { Value } from '../../../../form/SelectDropdown';
 import styles from './Block.module.css';
 
 interface RasterBlockInput {
   label: string,
+  classOfBlock: string
   value: string,
   onChange: (value: string) => void,
 }
 
 export const RasterBlock = (props: Node<RasterBlockInput>) => {
-  const { label, value, onChange } = props.data!;
+  const { label, classOfBlock, value, onChange } = props.data!;
+  const selectedOrganisation = useSelector(getSelectedOrganisation);
+
+  const [rasterSource, setRasterSource] = useState<Value>(convertToSelectObject(value));
+  useEffect(() => {
+    fetchRasterSourceV4(value).then(rasterSource =>
+      rasterSource && rasterSource.uuid && setRasterSource(convertToSelectObject(rasterSource.uuid, rasterSource.name))
+    );
+  }, [value]);
+
   return (
     <div
       className={`${styles.Block} ${styles.RasterBlock}`}
-      title={label}
       tabIndex={1}
     >
-      <div className={styles.BlockLabel}>
-        {label}
+      <div
+        className={styles.BlockHeader}
+      >
+        <h4>{label}</h4>
+        <small><i>({classOfBlock})</i></small>
       </div>
-      <input
-        type="text"
-        title={value}
-        className={`${formStyles.FormControl} ${styles.BlockInput}`}
+      <AsyncSelect
+        className={styles.BlockInput}
         placeholder={'Please enter an UUID'}
-        value={value}
-        onChange={e => onChange(e.target.value)}
+        cacheOptions
+        defaultOptions
+        loadOptions={searchInput => searchInput ? fetchRasterSources(selectedOrganisation.uuid, searchInput) : Promise.resolve()}
+        value={rasterSource}
+        onChange={option => option && onChange(option.value.toString())}
+        isClearable={false}
+        isSearchable
+        components={{
+          DropdownIndicator:() => null,
+          IndicatorSeparator:() => null
+        }}
       />
+      <div
+        style={{ marginTop: 10 }}
+      >
+        <small>{rasterSource.label}</small><br />
+        <small>{rasterSource.value}</small>
+      </div>
       <Handle
         type="source"
         position={Position.Right}
