@@ -9,11 +9,17 @@ import doArraysHaveEqualElement from '../utils/doArraysHaveEqualElement';
 import {getCurrentNavigationLinkTiles, NavigationLinkTile} from './AppTileConfig';
 import {getSelectedOrganisation, getUsername} from '../reducers';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
+import {  useIntl } from 'react-intl';
+import { formattedMessageToString} from '../utils/translationUtils';
+
 
 
 
 
 const AppComponent = (props: RouteComponentProps) => {
+
+  const intl = useIntl();
+
 
     // todo resolve any. x:any because x needs to support  x.interpolate
     const AppTileRow = (appTile: NavigationLinkTile) => (obj:{ x:any, opacity:number }) => (
@@ -29,9 +35,9 @@ const AppComponent = (props: RouteComponentProps) => {
             linkPath={appTile.linksToUrl}
             openInNewTab={appTile.homePageLinkOrHome !== "HOME"}
             linksToUrlExternal={appTile.linksToUrlExternal}
-            key={appTile.title + appTile.order + ""}
-            title={appTile.title}
-            subtitle={appTile.subtitle || ""}
+            key={(typeof appTile.title === 'string' ? appTile.title : formattedMessageToString(appTile.title, intl)) + appTile.order + ""}
+            title={typeof appTile.title === 'string' ? appTile.title : formattedMessageToString(appTile.title, intl)}
+            subtitle={!appTile.subtitle? "" : typeof appTile.subtitle === 'string' ? appTile.subtitle : formattedMessageToString(appTile.subtitle, intl)}
             icon={appTile.icon}
             readonly={
               !doArraysHaveEqualElement(appTile.requiresOneOfRoles, currentOrganisationRoles) &&
@@ -43,8 +49,8 @@ const AppComponent = (props: RouteComponentProps) => {
           <AppTile
             linkPath={appTile.linksToUrl}
             openInNewTab={false}
-            key={appTile.title + appTile.order + ""}
-            title={appTile.title}
+            key={(typeof appTile.title === 'string' ? appTile.title : formattedMessageToString(appTile.title, intl)) + appTile.order + ""}
+            title={typeof appTile.title === 'string' ? appTile.title : formattedMessageToString(appTile.title, intl)}
             icon={appTile.icon}
             readonly={
               !doArraysHaveEqualElement(appTile.requiresOneOfRoles, currentOrganisationRoles) &&

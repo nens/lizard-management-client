@@ -75,7 +75,10 @@ export const jsonValidator = (jsonStr: string) => {
 };
 
 export const emailValidator = (address: string) => {
-  if (/^\w+([+.-]\w+)*@\w+([.-]\w+)*(\.\w{2,3})+$/.test(address)) {
+  // http://emailregex.com/
+  // https://github.com/nens/lizard-management-client/issues/985
+  //eslint-disable-next-line
+  if (/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(address)) {
     return false;
   };
   return 'Please enter a valid email address';

@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './Pagination.module.css';
 import paginationArrowIcon from '../images/pagination_arrow.svg';
-// import { FormattedMessage, } from "react-intl";
+// import { FormattedMessage, } from "react-intl.macro";
 
 interface Props {
   page1Url: string;

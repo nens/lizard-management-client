@@ -52,10 +52,10 @@ import {LayerCollectionsTable} from "../data_management/layer_collections/LayerC
 import {EditLayerCollection} from "../data_management/layer_collections/EditLayerCollection";
 import {NewLayerCollection} from "../data_management/layer_collections/NewLayerCollection";
 import SpinnerIfStandardSelectorsNotLoaded from '../components/SpinnerIfStandardSelectorsNotLoaded';
-import { ViewContract } from '../contracts/ViewContract';
 import { GeoBlockTable } from "../data_management/geoblocks/GeoBlockTable";
 import { NewGeoBlock } from "../data_management/geoblocks/NewGeoBlock";
 import { EditGeoBlock } from "../data_management/geoblocks/EditGeoBlock";
+// import { ViewContract } from '../contracts/ViewContract';
 
 const authenticatedRoutes = () => {
   return (
@@ -70,8 +70,7 @@ const authenticatedRoutes = () => {
             <Route exact path="/management/personal_api_keys/new" component={NewPersonalApiKey} />
             <Route exact path="/management/personal_api_keys/:uuid" component={EditPersonalApiKey} />
             
-            <Route exact path="/management/contract" component={ViewContract} />
-            
+            {/* <Route exact path="/management/contract" component={ViewContract} /> */}
 
             <Route exact path="/management/data_management/rasters/sources" component={RasterSourceTable} />
             <Route exact path="/management/data_management/rasters/sources/new" component={NewRasterSource} />

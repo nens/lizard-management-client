@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { connect, useSelector } from "react-redux";
-import { FormattedMessage, injectIntl } from "react-intl";
+import { FormattedMessage } from "react-intl.macro";
 import { fetchTaskInstance } from "./api/tasks";
 import {
   addNotification,
@@ -340,4 +340,4 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => {
 type DispatchProps = ReturnType<typeof mapDispatchToProps>;
 
 
-export default withRouter(connect(null, mapDispatchToProps)(injectIntl(App)));
+export default withRouter(connect(null, mapDispatchToProps)((App)));

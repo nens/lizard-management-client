@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-// import { FormattedMessage } from "react-intl";
+// import { FormattedMessage } from "react-intl.macro";
 
 import styles from "../form/DurationField.module.css";
 import formStyles from "../styles/Forms.module.css";

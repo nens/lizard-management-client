@@ -2,7 +2,10 @@ import React from "react";
 import Ink from "react-ink";
 import styles from "./AppTile.module.css";
 import { RouteComponentProps, withRouter, NavLink } from 'react-router-dom';
-import { injectIntl } from "react-intl";
+import { FormattedMessage} from 'react-intl.macro';
+import { useIntl} from 'react-intl';
+import {formattedMessageToString} from './../utils/translationUtils';
+
 
 interface Props {
   title: string, 
@@ -17,17 +20,24 @@ const AppTile = (props: (Props & RouteComponentProps)) => {
   
     const {
       title, icon, readonly, linkPath, openInNewTab,
-      requiredRoles // eslint-disable-line no-unused-vars
+      requiredRoles,
     } = props;
+
+    const intl = useIntl();
     
-    // ts ignore because how to use intl with typescript in props? Maybe look at how it is done in 3di-livesite  or here https://stackoverflow.com/questions/40784817/react-intl-use-api-with-typescript
-    // @ts-ignore
-    const requiresRoleMessage = props.intl.formatMessage({
-        id: "authorization.requires_role",
-        defaultMessage: "Requires {requiredRolesLength, plural,  one {role} other {one of the following roles} }: ",
-      },
-      {requiredRolesLength: (requiredRoles && requiredRoles.length) || 0}
+    const requiredRolesLength = (requiredRoles && requiredRoles.length) || 0;
+    
+    // requiresRoleMessageForTranlation needs later to be renamed to requiresRoleMessage (when we make translations for the whole app)
+    // eslint-disable-next-line
+    const requiresRoleMessageForTranlation = formattedMessageToString(<FormattedMessage
+        id="authorization.requires_role"
+        defaultMessage="Requires {requiredRolesLength, plural,  one {role} other {one of the following roles} }"
+        />,
+        intl,
+      {requiredRolesLength: requiredRolesLength}
     );
+
+    const requiresRoleMessage = (requiredRolesLength === 1? "Requires role" : "Requires one of the following roles");
 
     const content = (
       <>
@@ -40,7 +50,7 @@ const AppTile = (props: (Props & RouteComponentProps)) => {
       return (
         <div 
           className={`${styles.AppTile} ${readonly ? styles.Disabled: null}`}
-          title={readonly ? requiresRoleMessage + requiredRoles : null}
+          title={readonly ? requiresRoleMessage + requiredRoles : undefined}
         >
           {content}
         </div>
@@ -51,7 +61,7 @@ const AppTile = (props: (Props & RouteComponentProps)) => {
           to={linkPath}
           target={openInNewTab? "_blank" : "_self"}
           className={`${styles.AppTile} ${readonly ? styles.Disabled: null}`}
-          title={readonly ? requiresRoleMessage + requiredRoles : null}
+          title={readonly ? requiresRoleMessage + requiredRoles : undefined}
         >
           {content}
         </NavLink>
@@ -60,4 +70,4 @@ const AppTile = (props: (Props & RouteComponentProps)) => {
     
   }
 
-export default withRouter(injectIntl(AppTile));
+export default withRouter(AppTile);

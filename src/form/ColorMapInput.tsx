@@ -1,7 +1,9 @@
 // {"styles": "Blues:0.0:2.0"}
 // {"styles": "transparent", "HEIGHT": 512, "ZINDEX": 20, "WIDTH": 1024, "effects": "radar:0:0.008", "TRANSPARENT": false}
 import React, { useEffect, useRef, useState } from "react";
-import { FormattedMessage, injectIntl, InjectedIntlProps } from "react-intl";
+import { FormattedMessage} from 'react-intl.macro';
+// import { useIntl} from 'react-intl';
+// import {formattedMessageToString} from './../utils/translationUtils';
 import { SelectDropdown } from "./SelectDropdown";
 import { CheckBox } from "./CheckBox";
 import { TextInput } from "./TextInput";
@@ -17,6 +19,7 @@ import ModalBackground from '../components/ModalBackground';
 import { ColormapForm } from '../data_management/colormap/ColormapForm';
 import { useRecursiveFetch } from "../api/hooks";
 import { convertToSelectObject } from "../utils/convertToSelectObject";
+
 
 export interface ColorMapOptions {
   options: {
@@ -81,7 +84,7 @@ const usePrevious = (value: any) => {
   return ref.current;
 };
 
-const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
+const ColorMapInput: React.FC<ColorMapProps> = (props) => {
   const {
     title,
     name,
@@ -91,8 +94,9 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
     form,
     onFocus,
     onBlur,
-    intl
   } = props;
+
+  // const intl = useIntl();
 
   // Fetch list of color maps
   const {
@@ -247,15 +251,21 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
   } else {
     colors = (
       <span style={{opacity: 0.5}}>
-        <FormattedMessage id="color_map.initial_message" />
+        {0?<FormattedMessage id="color_map.initial_message" defaultMessage="No Preview available" />:null}
+        No Preview available
       </span>
     );
   }
 
-  //Format message for placeholder in the input form for translation
-  const placeholderColorMapSelection = intl.formatMessage({ id: "placeholder_color_map_selection" })
-  const placeholderMinimumColorRange = intl.formatMessage({ id: "placeholder_minimum_color_range" })
-  const placeholderMaximumColorRange = intl.formatMessage({ id: "placeholder_maximum_color_range" })
+  // These translations will later be used
+  // const placeholderColorMapSelection = formattedMessageToString(<FormattedMessage id="placeholder_color_map_selection" defaultMessage="Choose a color map" />, intl)
+  // const placeholderMinimumColorRange = formattedMessageToString(<FormattedMessage id="placeholder_minimum_color_range" defaultMessage="Optional minimum of range" />, intl)
+  // const placeholderMaximumColorRange = formattedMessageToString(<FormattedMessage id="placeholder_maximum_color_range" defaultMessage="Optional maximum of range" />, intl)
+
+  const placeholderColorMapSelection = "Choose a color map";
+  const placeholderMinimumColorRange = "Optional minimum of range";
+  const placeholderMaximumColorRange = "Optional maximum of range";
+
 
   return (
     <label
@@ -389,4 +399,4 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
   );
 }
 
-export default injectIntl(ColorMapInput);
+export default (ColorMapInput);
