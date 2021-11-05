@@ -28,17 +28,23 @@ export const dryFetchGeoBlockForValidation = (uuid: string | null, source: GeoBl
   })
   .then(res => res.json())
   .then(res => {
-    console.log(res);
     if (res.status === 400) {
       console.error(res.detail && res.detail.source && res.detail.source[0]);
       const errorMessage = res.detail && res.detail.source && res.detail.source[0];
       if (errorMessage) {
         storeDispatch(addNotification(errorMessage))
       } else {
-        storeDispatch(addNotification('Unknown error! Something is wrong with the GeoBlock.'))
+        storeDispatch(addNotification('Unknown error!'))
       };
+    } else if (res.status === 500) {
+      console.error(res.message);
+      storeDispatch(addNotification(500));
     } else if (res.id) { // valid response
+      console.log(res);
       storeDispatch(addNotification('The GeoBlock is valid.', 2000));
+    } else {
+      console.error(res);
+      storeDispatch(addNotification('Unknown error!'));
     };
   });
 };
