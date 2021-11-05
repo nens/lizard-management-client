@@ -74,7 +74,11 @@ export const Block = (props: BlockProps) => {
                 disabled={parameter.type === 'raster_block'}
               />
             );
-          } else if (parameter.type === 'number') {
+          } else if (
+            parameter.type === 'number' ||
+            parameter.type === 'float' ||
+            parameter.type === 'integer'
+          ) {
             const parameterValue = parameters ? parameters[i] as number : undefined;
             return (
               <input
@@ -84,7 +88,10 @@ export const Block = (props: BlockProps) => {
                 title={parameter.name}
                 placeholder={parameter.name}
                 value={parameterValue}
-                onChange={e => onChange(parseFloat(e.target.value), i)}
+                onChange={e => onChange(
+                  parameter.type === 'integer' ? parseInt(e.target.value) : parseFloat(e.target.value),
+                  i
+                )}
               />
             );
           } else if (parameter.type === 'boolean') {
