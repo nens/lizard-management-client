@@ -7,7 +7,7 @@ interface BlockInput {
   label: string,
   classOfBlock: string,
   parameters: (string | number | boolean | [])[],
-  onChange: (value: number | boolean, i: number) => void
+  onChange: (value: string | number | boolean, i: number) => void
 }
 
 interface BlockProps {
@@ -60,7 +60,7 @@ export const Block = (props: BlockProps) => {
           <small><i>({classOfBlock})</i></small>
         </div>
         {blockDefinitionParametersAsArray.map((parameter, i) => {
-          if (parameter.type === 'raster_block') {
+          if (parameter.type === 'raster_block' || parameter.type === 'string') {
             const parameterValue = parameters ? parameters[i] as string : undefined;
             return (
               <input
@@ -70,7 +70,8 @@ export const Block = (props: BlockProps) => {
                 title={parameter.name}
                 placeholder={parameter.name}
                 value={parameterValue}
-                disabled
+                onChange={e => onChange(e.target.value, i)}
+                disabled={parameter.type === 'raster_block'}
               />
             );
           } else if (parameter.type === 'number') {
