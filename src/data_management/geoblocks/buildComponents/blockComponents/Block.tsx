@@ -67,7 +67,7 @@ export const Block = (props: BlockProps) => {
                 type={'text'}
                 key={parameter.name}
                 className={styles.BlockInput}
-                title={parameter.name}
+                title={`${parameter.name}: ${parameter.type}`}
                 placeholder={parameter.name}
                 value={parameterValue}
                 onChange={e => onChange(e.target.value, i)}
@@ -85,7 +85,7 @@ export const Block = (props: BlockProps) => {
                 type={'number'}
                 key={parameter.name}
                 className={styles.BlockInput}
-                title={parameter.name}
+                title={`${parameter.name}: ${parameter.type}`}
                 placeholder={parameter.name}
                 value={parameterValue}
                 onChange={e => onChange(
@@ -101,7 +101,7 @@ export const Block = (props: BlockProps) => {
                 type={'checkbox'}
                 key={parameter.name}
                 className={styles.BlockCheckbox}
-                title={parameter.name}
+                title={`${parameter.name}: ${parameter.type}`}
                 checked={checked}
                 onChange={e => onChange(e.target.checked, i)}
               />
@@ -117,7 +117,7 @@ export const Block = (props: BlockProps) => {
                 type={typeof(parameterValue) === 'number' || parameterValue === undefined ? 'number' : 'text'}
                 key={parameter.name}
                 className={styles.BlockInput}
-                title={parameter.name}
+                title={`${parameter.name}: ${parameter.type}`}
                 placeholder={parameter.name}
                 value={parameterValue}
                 onChange={e => {
@@ -145,7 +145,7 @@ export const Block = (props: BlockProps) => {
                   type={'text'}
                   key={parameter.name + 'text'}
                   className={styles.BlockInput}
-                  title={parameter.name}
+                  title={`${parameter.name}: ${parameter.type}`}
                   placeholder={parameter.name}
                   value={parameterValue + ''}
                   disabled
@@ -157,7 +157,7 @@ export const Block = (props: BlockProps) => {
                   type={'checkbox'}
                   key={parameter.name + 'checkbox'}
                   className={styles.BlockCheckbox}
-                  title={parameter.name}
+                  title={`${parameter.name}: ${parameter.type}`}
                   checked={typeof(parameterValue) === 'boolean' ? parameterValue : false}
                   onChange={e => {
                     if (typeof(parameterValue) === 'string') { // raster block input
@@ -176,7 +176,7 @@ export const Block = (props: BlockProps) => {
               <select
                 key={parameter.name}
                 className={styles.BlockInput}
-                title={parameter.name}
+                title={`${parameter.name}: ${parameter.type}`}
                 value={parameterValue}
                 onChange={e => onChange(e.target.value, i)}
               >
@@ -198,6 +198,7 @@ export const Block = (props: BlockProps) => {
               <textarea
                 key={parameter.name}
                 className={styles.BlockInput}
+                title={`${parameter.name}: ${parameter.type}`}
                 value={parameterValueInJsonString}
                 onChange={e => onChange(e.target.value, i)}
                 disabled
@@ -210,7 +211,7 @@ export const Block = (props: BlockProps) => {
                 type={'text'}
                 key={parameter.name}
                 className={styles.BlockInput}
-                title={parameter.name}
+                title={`${parameter.name}: ${parameter.type}`}
                 placeholder={parameter.name}
                 value={parameterValue}
                 disabled
