@@ -100,11 +100,10 @@ export const Block = (props: BlockProps) => {
               <input
                 type={'checkbox'}
                 key={parameter.name}
-                className={styles.BlockInput}
+                className={styles.BlockCheckbox}
                 title={parameter.name}
                 checked={checked}
                 onChange={e => onChange(e.target.checked, i)}
-                style={{ cursor: 'pointer' }}
               />
             );
           } else if (
@@ -130,6 +129,46 @@ export const Block = (props: BlockProps) => {
                 }}
               />
             );
+          } else if (
+            Array.isArray(parameter.type) &&
+            parameter.type.includes('boolean') &&
+            parameter.type.includes('raster_block')
+          ) {
+            const parameterValue = parameters ? parameters[i] as boolean | string : undefined;
+            return (
+              <div
+                style={{
+                  display: 'flex'
+                }}
+              >
+                <input
+                  type={'text'}
+                  key={parameter.name + 'text'}
+                  className={styles.BlockInput}
+                  title={parameter.name}
+                  placeholder={parameter.name}
+                  value={parameterValue + ''}
+                  disabled
+                  style={{
+                    marginRight: 10
+                  }}
+                />
+                <input
+                  type={'checkbox'}
+                  key={parameter.name + 'checkbox'}
+                  className={styles.BlockCheckbox}
+                  title={parameter.name}
+                  checked={typeof(parameterValue) === 'boolean' ? parameterValue : false}
+                  onChange={e => {
+                    if (typeof(parameterValue) === 'string') { // raster block input
+                      const connectedEdge = edges.find(edge => edge.target === block.id && edge.targetHandle === i.toString());
+                      if (connectedEdge) onElementsRemove([connectedEdge]);
+                    };
+                    onChange(e.target.checked, i);
+                  }}
+                />
+              </div>
+            )
           } else if (parameter.type === 'enum') {
             const parameterValue = parameters ? parameters[i] as any : undefined;
             const options = parameter.enum as string[];

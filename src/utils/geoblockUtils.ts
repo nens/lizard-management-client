@@ -28,7 +28,7 @@ export const getBlockData = (
     ) : (
       blockDefinition.parameters.map((parameter: any) => (
         parameter.type === 'array' ? [] :
-        parameter.type === 'boolean' && parameter.default === undefined ? false :
+        parameter.type.includes('boolean') && parameter.default === undefined ? false :
         parameter.default
       ))
     )
