@@ -128,6 +128,7 @@ export const Block = (props: BlockProps) => {
             const options = parameter.enum as string[];
             return (
               <select
+                key={parameter.name}
                 className={styles.BlockInput}
                 title={parameter.name}
                 value={parameterValue}
