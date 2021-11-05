@@ -123,6 +123,27 @@ export const Block = (props: BlockProps) => {
                 }}
               />
             );
+          } else if (parameter.type === 'enum') {
+            const parameterValue = parameters ? parameters[i] as any : undefined;
+            const options = parameter.enum as string[];
+            return (
+              <select
+                className={styles.BlockInput}
+                title={parameter.name}
+                value={parameterValue}
+                onChange={e => onChange(e.target.value, i)}
+              >
+                <option />
+                {options.map(option => (
+                  <option
+                    key={option}
+                    value={option}
+                  >
+                    {option}
+                  </option>
+                ))}
+              </select>
+            );
           } else {
             const parameterValue = parameters ? parameters[i] as any : undefined;
             return (
