@@ -1,12 +1,16 @@
 import React from 'react';
 import { Elements, Handle, Node, Position, useStoreState } from 'react-flow-renderer';
-import { geoblockType } from '../../../../types/geoBlockType';
 import styles from './Block.module.css';
 
 interface BlockInput {
   label: string,
   classOfBlock: string,
   parameters: (string | number | boolean | [])[],
+  parameterTypes: {
+    name: string,
+    type: string | string[],
+    [key: string]: any
+  }[],
   onChange: (value: string | number | boolean, i: number) => void
 }
 
@@ -17,28 +21,16 @@ interface BlockProps {
 
 export const Block = (props: BlockProps) => {
   const { block, onElementsRemove } = props;
-  const { label, classOfBlock, parameters, onChange } = block.data!;
+  const { label, classOfBlock, parameters, parameterTypes, onChange } = block.data!;
 
   const edges = useStoreState(state => state.edges);
-
-  const blockDefinition = Object.values(geoblockType).find(
-    geoblock => geoblock && geoblock.class && geoblock.class === classOfBlock
-  );
-
-  if (!blockDefinition) {
-    console.error('No type definition for this block: ' + classOfBlock);
-    return null;
-  };
-
-  const blockDefinitionParameters = blockDefinition.parameters;
-  const blockDefinitionParametersAsArray = Array.isArray(blockDefinitionParameters) ? blockDefinitionParameters : [];
 
   return (
     <div
       className={styles.Block}
       tabIndex={1}
     >
-      {blockDefinitionParametersAsArray.map((parameter, i) => (
+      {parameterTypes.map((parameter, i) => (
         parameter.type.includes('raster_block') ? (
           <Handle
             key={i}
@@ -59,7 +51,7 @@ export const Block = (props: BlockProps) => {
           <h4>{label}</h4>
           <small><i>({classOfBlock})</i></small>
         </div>
-        {blockDefinitionParametersAsArray.map((parameter, i) => {
+        {parameterTypes.map((parameter, i) => {
           if (parameter.type === 'raster_block' || parameter.type === 'string') {
             const parameterValue = parameters ? parameters[i] as string : undefined;
             return (
@@ -137,6 +129,7 @@ export const Block = (props: BlockProps) => {
             const parameterValue = parameters ? parameters[i] as boolean | string : undefined;
             return (
               <div
+                key={parameter.name}
                 style={{
                   display: 'flex'
                 }}

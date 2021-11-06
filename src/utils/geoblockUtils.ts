@@ -21,23 +21,21 @@ export const getBlockData = (
 
   // @ts-ignore
   const blockDefinition = geoblockType[blockName];
-  const blockParameters = (
-    blockDefinition.class === "dask_geomodeling.raster.combine.Group" ||
-    blockDefinition.class === "dask_geomodeling.raster.elemwise.FillNoData" ? (
-      ['handle-1', 'handle-2'] // 2 default parameters for GroupBlocks
-    ) : (
-      blockDefinition.parameters.map((parameter: any) => (
-        parameter.type === 'array' ? [] :
-        parameter.type.includes('boolean') && parameter.default === undefined ? false :
-        parameter.default
-      ))
-    )
+  const blockParameters = Array.isArray(blockDefinition.parameters) ? (
+    blockDefinition.parameters.map((parameter: any) => (
+      parameter.type === 'array' ? [] :
+      parameter.type.includes('boolean') && parameter.default === undefined ? false :
+      parameter.default
+    ))
+  ) : (
+    ['handle-1', 'handle-2']
   );
 
   const dataOfBuildBlock = {
     label: blockName + '_' + (numberOfBlocks + 1),
     classOfBlock: blockDefinition.class,
     parameters: blockParameters,
+    parameterTypes: blockDefinition.parameters,
     onChange: (value: number, i: number) => onBlockChange(value, i, idOfNewBlock, setElements)
   };
 
@@ -84,6 +82,7 @@ const getBlockElements = (
   return blockNames.map(blockName => {
     const blockValue = graph[blockName];
     const classOfBlock = blockValue[0];
+    const blockDefinition = Object.values(geoblockType).find(geoBlockType => geoBlockType!.class === classOfBlock)!;
     return {
       id: blockName,
       type: (
@@ -95,6 +94,7 @@ const getBlockElements = (
         label: blockName,
         classOfBlock,
         parameters: blockValue.slice(1),
+        parameterTypes: blockDefinition.parameters,
         onChange: (value: number, i: number) => onBlockChange(value, i, blockName, setElements)
       },
       position
