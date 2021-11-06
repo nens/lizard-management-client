@@ -82,7 +82,7 @@ const getBlockElements = (
   return blockNames.map(blockName => {
     const blockValue = graph[blockName];
     const classOfBlock = blockValue[0];
-    const blockDefinition = Object.values(geoblockType).find(geoBlockType => geoBlockType!.class === classOfBlock)!;
+    const blockDefinition = Object.values(geoblockType).find(geoBlockType => geoBlockType!.class === classOfBlock);
     return {
       id: blockName,
       type: (
@@ -94,7 +94,7 @@ const getBlockElements = (
         label: blockName,
         classOfBlock,
         parameters: blockValue.slice(1),
-        parameterTypes: blockDefinition.parameters,
+        parameterTypes: blockDefinition ? blockDefinition.parameters : [],
         onChange: (value: number, i: number) => onBlockChange(value, i, blockName, setElements)
       },
       position
