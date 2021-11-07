@@ -213,19 +213,6 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
         <span className={formStyles.FormFieldTitle}>
           2: Data
         </span>
-        <FormButton
-          name={'geoBlockBuildModal'}
-          title={'Geo Block *'}
-          text={'Geo Block Builder'}
-          onClick={e => {
-            e.preventDefault();
-            setBuildModal(true);
-          }}
-          validated={!geoblockSourceValidator(values.source)}
-          errorMessage={geoblockSourceValidator(values.source)}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-        />
         <SelectDropdown
           title={'Aggregation type *'}
           name={'aggregationType'}
@@ -288,6 +275,27 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
           colorMapValue={values.colorMap}
           valueChanged={value => handleValueChange('colorMap', value)}
           validated
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+        />
+        <FormButton
+          name={'geoBlockBuildModal'}
+          title={'Geo Block *'}
+          text={'Geo Block Builder'}
+          onClick={e => {
+            e.preventDefault();
+            setBuildModal(true);
+          }}
+          validated={!geoblockSourceValidator(values.source)}
+          errorMessage={geoblockSourceValidator(values.source)}
+          readOnly={
+            // required fields must be filled in first
+            !(values.name && values.name.length >= 3) ||
+            !values.aggregationType ||
+            !values.observationType ||
+            !values.colorMap
+          }
+          readOnlyTooltip={'Please first fill in the required fields.'}
           onFocus={handleFocus}
           onBlur={handleBlur}
         />

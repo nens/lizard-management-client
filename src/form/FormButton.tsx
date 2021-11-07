@@ -11,6 +11,7 @@ interface MyProps {
   onFocus?: (e: React.FocusEvent<HTMLButtonElement>) => void,
   onBlur?: () => void,
   readOnly?: boolean,
+  readOnlyTooltip?: string,
   onClick?: React.MouseEventHandler<HTMLButtonElement>,
   form?: string,
 };
@@ -25,6 +26,7 @@ export const FormButton: React.FC<MyProps> = (props) => {
     onFocus,
     onBlur,
     readOnly,
+    readOnlyTooltip,
     onClick,
     form,
   } = props;
@@ -56,7 +58,8 @@ export const FormButton: React.FC<MyProps> = (props) => {
           id={name}
           className={buttonStyles.NewButton}
           onClick={onClick}
-          disabled={!!readOnly}
+          disabled={readOnly}
+          title={(readOnly && readOnlyTooltip) || undefined}
           form={form}
           onFocus={onFocus}
           onBlur={onBlur}
