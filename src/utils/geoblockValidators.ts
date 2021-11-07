@@ -108,9 +108,24 @@ const blockInutValidator = (blocks: Elements): Error => {
     );
   });
 
+  const blocksWithOnlyNumberOrBooleanInputs = blocks.filter(block => {
+    const parameters = block.data.parameters as any[];
+
+    // for blocks with 2 inputs of type [raster_block, number] or type [raster_block, boolean]
+    // at least, one of the inputs must be a RasterBlock
+    return (
+      (parameters.length === 2 && typeof(parameters[0]) === 'boolean' && typeof(parameters[1]) === 'boolean') ||
+      (parameters.length === 2 && typeof(parameters[0]) === 'number' && typeof(parameters[1]) === 'number')
+    );
+  });
+
   if (blocksWithInvalidInput.length > 0) {
     return {
       errorMessage: `${blocksWithInvalidInput.map(block => block.data.label).join(', ')} contain invalid inputs.`
+    };
+  } else if (blocksWithOnlyNumberOrBooleanInputs.length > 0) {
+    return {
+      errorMessage: `${blocksWithOnlyNumberOrBooleanInputs.map(block => block.data.label).join(', ')} must contain at least one RasterBlock.`
     };
   };
   return false;
