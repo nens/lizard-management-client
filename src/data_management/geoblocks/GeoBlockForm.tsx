@@ -12,7 +12,7 @@ import { SubmitButton } from '../../form/SubmitButton';
 import { CancelButton } from '../../form/CancelButton';
 import { AccessModifier } from '../../form/AccessModifier';
 import { useForm, Values } from '../../form/useForm';
-import { getSelectedOrganisation,   getLayercollections } from '../../reducers';
+import { getSelectedOrganisation,   getLayercollections, getOrganisations } from '../../reducers';
 import { addNotification } from './../../actions';
 import { convertToSelectObject } from '../../utils/convertToSelectObject';
 import { fetchSuppliers } from '../rasters/RasterSourceForm';
@@ -40,6 +40,7 @@ const backUrl = "/management/data_management/geoblocks";
 const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (props) => {
   const { currentRecord } = props;
   const layercollections = useSelector(getLayercollections).available;
+  const organisations = useSelector(getOrganisations).available;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const belongsToScenario = (currentRecord && rasterLayerFromAPIBelongsToScenario(currentRecord)) || false;
 
@@ -58,6 +59,7 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
     accessModifier: currentRecord.access_modifier,
     sharedWith: currentRecord.shared_with.length === 0 ? false : true,
     organisationsToSharedWith: currentRecord.shared_with.map((organisation:any) => convertToSelectObject(organisation.uuid, organisation.name)) || [],
+    organisation: currentRecord.organisation ? convertToSelectObject(currentRecord.organisation.uuid, currentRecord.organisation.name) : null,
     supplier: currentRecord.supplier ? convertToSelectObject(currentRecord.supplier) : null,
   } : {
     name: null,
@@ -70,6 +72,7 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
     accessModifier: 'Private',
     sharedWith: false,
     organisationsToSharedWith: [],
+    organisation: selectedOrganisation ? convertToSelectObject(selectedOrganisation.uuid, selectedOrganisation.name) : null,
     supplier: null,
   };
   const onSubmit = (values: Values) => {
@@ -85,7 +88,7 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
       access_modifier: values.accessModifier,
       shared_with: values.sharedWith ? values.organisationsToSharedWith.map((organisation: any) => organisation.value) : [],
       supplier: values.supplier && values.supplier.label,
-      organisation: selectedOrganisation.uuid,
+      organisation: values.organisation && values.organisation.value,
     };
     if (!currentRecord) {
       fetch(baseUrl, {
@@ -337,6 +340,20 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
             readOnly={belongsToScenario}
           />
         ) : null}
+        <SelectDropdown
+          title={'Organisation *'}
+          name={'organisation'}
+          placeholder={'- Search and select -'}
+          value={values.organisation}
+          valueChanged={value => handleValueChange('organisation', value)}
+          options={organisations.map((organisation: any) => convertToSelectObject(organisation.uuid, organisation.name))}
+          validated={values.organisation !== null && values.organisation !== ''}
+          errorMessage={'Please select an organisation'}
+          triedToSubmit={triedToSubmit}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          readOnly
+        />
         <SelectDropdown
           title={'Supplier'}
           name={'supplier'}
