@@ -91,7 +91,19 @@ const GeoBlockVisualFlow = (props: MyProps & DispatchProps) => {
       const newElements = els.map(el => {
         const edgesToRemove = elementsToRemove.filter(elm => isEdge(elm)) as Edge[];
         edgesToRemove.forEach(edge => {
-          if (edge.target === el.id) el.data.parameters[edge.targetHandle!] = ''; // remove old value
+          if (edge.target === el.id) {
+            const parameterIndex = parseInt(edge.targetHandle!);
+            const { parameters, parameterTypes } = el.data!;
+            const parameterType = Array.isArray(parameterTypes) ? parameterTypes[parameterIndex].type :[];
+
+            if (parameterType.includes('boolean')) {
+              // replace old value by false value in case of a boolean parameter field
+              parameters[parameterIndex] = false;
+            } else {
+              // replace old value by an empty string
+              parameters[parameterIndex] = '';
+            }
+          };
         });
         return el;
       });
