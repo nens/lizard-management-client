@@ -158,10 +158,12 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
       fieldName={fieldOnFocus}
     >
       <form
-        className={formStyles.Form}
         onSubmit={handleSubmit}
         onReset={handleReset}
+        id={"geoblock_form_id"}
       >
+      </form>
+      <div className={formStyles.Form}>
         <span className={`${formStyles.FormFieldTitle} ${formStyles.FirstFormFieldTitle}`}>
           1: General
         </span>
@@ -176,6 +178,7 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
           validated={!minLength(3, values.name)}
           errorMessage={minLength(3, values.name)}
           triedToSubmit={triedToSubmit}
+          form={"geoblock_form_id"}
         />
         {currentRecord ? (
           <TextInput
@@ -198,6 +201,7 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
           onBlur={handleBlur}
           clearInput={clearInput}
           validated
+          form={"geoblock_form_id"}
         />
         {!belongsToScenario ? (
           <SelectDropdown
@@ -209,6 +213,7 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
             options={layercollections.map((layercollection: any) => convertToSelectObject(layercollection.slug))}
             validated
             isMulti
+            form={"geoblock_form_id"}
             onFocus={handleFocus}
             onBlur={handleBlur}
           />
@@ -216,6 +221,11 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
         <span className={formStyles.FormFieldTitle}>
           2: Data
         </span>
+        {0?<FormattedMessage id="raster_form.aggregation_type_none" defaultMessage="no aggregation" />:null}
+        {0?<FormattedMessage id="raster_form.aggregation_type_counts" defaultMessage="area per category" />:null}
+        {0?<FormattedMessage id="raster_form.aggregation_type_curve" defaultMessage="cumulative distribution" />:null}
+        {0?<FormattedMessage id="raster_form.aggregation_type_sum" defaultMessage="values in the region are summed" />:null}
+        {0?<FormattedMessage id="raster_form.aggregation_type_average" defaultMessage="values in the region are averaged" />:null}
         <SelectDropdown
           title={'Aggregation type *'}
           name={'aggregationType'}
@@ -226,32 +236,33 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
             {
               value: 'none',
               label: 'none',
-              subLabel: <FormattedMessage id="raster_form.aggregation_type_none" />
+              subLabel: "no aggregation",
             },
             {
               value: 'counts',
               label: 'counts',
-              subLabel: <FormattedMessage id="raster_form.aggregation_type_counts" />
+              subLabel: 'area per category',
             },
             {
               value: 'curve',
               label: 'curve',
-              subLabel: <FormattedMessage id="raster_form.aggregation_type_curve" />
+              subLabel: 'cumulative distribution',
             },
             {
               value: 'sum',
               label: 'sum',
-              subLabel: <FormattedMessage id="raster_form.aggregation_type_sum" />
+              subLabel: 'values in the region are summed',
             },
             {
               value: 'average',
               label: 'average',
-              subLabel: <FormattedMessage id="raster_form.aggregation_type_average" />
+              subLabel: 'values in the region are averaged',
             }
           ]}
           validated={!!values.aggregationType}
           errorMessage={'Please select an option'}
           triedToSubmit={triedToSubmit}
+          form={"geoblock_form_id"}
           onFocus={handleFocus}
           onBlur={handleBlur}
           isSearchable={false}
@@ -266,6 +277,7 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
           validated={!required('Please select an observation type', values.observationType)}
           errorMessage={required('Please select an observation type', values.observationType)}
           triedToSubmit={triedToSubmit}
+          form={"geoblock_form_id"}
           onFocus={handleFocus}
           onBlur={handleBlur}
           isAsync
@@ -278,6 +290,7 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
           colorMapValue={values.colorMap}
           valueChanged={value => handleValueChange('colorMap', value)}
           validated
+          form={"geoblock_form_id"}
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
@@ -301,6 +314,7 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
           readOnlyTooltip={'Please first fill in the required fields.'}
           onFocus={handleFocus}
           onBlur={handleBlur}
+          form={"geoblock_form_id"}
         />
         <span className={formStyles.FormFieldTitle}>
           3: Rights
@@ -312,6 +326,8 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
           valueChanged={value => handleValueChange('accessModifier', value)}
           onFocus={handleFocus}
           onBlur={handleBlur}
+          readOnly={belongsToScenario}
+          form={"geoblock_form_id"}
         />
         <CheckBox
           title={'Shared with other organisations'}
@@ -321,6 +337,7 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
           onFocus={handleFocus}
           onBlur={handleBlur}
           readOnly={belongsToScenario}
+          form={"geoblock_form_id"}
         />
         {values.sharedWith ? (
           <SelectDropdown
@@ -338,6 +355,7 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
             isCached
             loadOptions={fetchOrganisationsToShareWith}
             readOnly={belongsToScenario}
+            form={"geoblock_form_id"}
           />
         ) : null}
         <SelectDropdown
@@ -353,6 +371,7 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
           onFocus={handleFocus}
           onBlur={handleBlur}
           readOnly
+          form={"geoblock_form_id"}
         />
         <SelectDropdown
           title={'Supplier'}
@@ -369,12 +388,14 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
           dropUp
           onFocus={handleFocus}
           onBlur={handleBlur}
+          form={"geoblock_form_id"}
         />
         <div
           className={formStyles.ButtonContainer}
         >
           <CancelButton
             url={'/management/data_management/geoblocks'}
+            form={"geoblock_form_id"}
           />
           <div style={{ display: "flex" }}>
             {currentRecord ? (
@@ -391,10 +412,11 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
             ) : null}
             <SubmitButton
               onClick={tryToSubmitForm}
+              form={"geoblock_form_id"}
             />
           </div>
         </div>
-      </form>
+      </div>
       {currentRecord && showDeleteModal ? (
         <DeleteModal
           rows={[currentRecord]}
