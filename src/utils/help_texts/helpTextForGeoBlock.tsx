@@ -29,7 +29,12 @@ export const geoBlockHelpText: HelpText = {
   colormap_minimum: 'Lowest value in the colorscale',
   colormap_maximum: 'Highest value in the colorscale',
   colorMap_rescalable: 'Make color map rescalable.',
-  geoBlockBuildModal: 'Open modal to build this GeoBlock.',
+  geoBlockBuildModal: (
+    <>
+      <p>Open modal to build this GeoBlock.</p>
+      <p><i>Please first fill in the required fields to open this modal.</i></p>
+    </>
+  ),
   accessModifier: accessModifierHelpText,
   sharedWith: sharedWithCheckboxHelpText,
   organisationsToSharedWith: organisationsToSharedWithHelpText,

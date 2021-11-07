@@ -49,7 +49,7 @@ interface ColorMapProps {
   onBlur?: () => void,
 };
 
-const colorMapValidator = (options: ColorMapOptions | null): {
+export const colorMapValidator = (options: ColorMapOptions | null): {
   validated: boolean,
   minValidated: boolean,
   maxValidated: boolean,

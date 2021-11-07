@@ -6,7 +6,7 @@ import { TextArea } from './../../form/TextArea';
 import { TextInput } from './../../form/TextInput';
 import { CheckBox } from './../../form/CheckBox';
 import { SelectDropdown } from '../../form/SelectDropdown';
-import ColorMapInput from '../../form/ColorMapInput';
+import ColorMapInput, { colorMapValidator } from '../../form/ColorMapInput';
 import { FormButton } from '../../form/FormButton';
 import { SubmitButton } from '../../form/SubmitButton';
 import { CancelButton } from '../../form/CancelButton';
@@ -296,7 +296,7 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
             !(values.name && values.name.length >= 3) ||
             !values.aggregationType ||
             !values.observationType ||
-            !values.colorMap
+            !colorMapValidator(values.colorMap).validated
           }
           readOnlyTooltip={'Please first fill in the required fields.'}
           onFocus={handleFocus}

@@ -56,9 +56,8 @@ export const FormButton: React.FC<MyProps> = (props) => {
           ref={myButton}
           name={name}
           id={name}
-          className={buttonStyles.NewButton}
-          onClick={onClick}
-          disabled={readOnly}
+          className={`${buttonStyles.NewButton} ${readOnly ? buttonStyles.Inactive : ''}`}
+          onClick={!readOnly ? onClick : undefined}
           title={(readOnly && readOnlyTooltip) || undefined}
           form={form}
           onFocus={onFocus}
