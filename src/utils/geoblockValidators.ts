@@ -1,6 +1,7 @@
 import { storeDispatch } from "..";
 import { addNotification } from "../actions";
 import { GeoBlockSource } from "../types/geoBlockType";
+import { geoblockSourceValidator } from "../form/validators";
 import { Values } from "../form/useForm";
 import {
   Connection,
@@ -46,14 +47,15 @@ export const dryFetchGeoBlockForValidation = (
   source: GeoBlockSource | null,
   formValues: Values
 ) => {
+  const e = geoblockSourceValidator(source);
+  if (e) return storeDispatch(addNotification(e), 2000);
+
   if (uuid) {
     fetch(`/api/v4/rasters/${uuid}/?dry-run`, {
       credentials: 'same-origin',
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        source: source && Object.keys(source).length ? source : null
-      })
+      body: JSON.stringify({ source })
     })
     .then(res => res.json())
     .then(res => handleGeoBlockValidationResponse(res))
@@ -67,7 +69,7 @@ export const dryFetchGeoBlockForValidation = (
         name: formValues.name,
         aggregation_type: formValues.aggregationType && formValues.aggregationType.value,
         observation_type: formValues.observationType && formValues.observationType.value,
-        source: source && Object.keys(source).length ? source : null,
+        source: source,
         access_modifier: formValues.access_modifier || 'Private',
         organisation: formValues.organisation && formValues.organisation.value,
       })
