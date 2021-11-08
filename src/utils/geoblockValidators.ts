@@ -47,8 +47,9 @@ export const dryFetchGeoBlockForValidation = (
   source: GeoBlockSource | null,
   formValues: Values
 ) => {
-  const e = geoblockSourceValidator(source);
-  if (e) return storeDispatch(addNotification(e), 2000);
+  // validate if the provided source is valid
+  const sourceError = geoblockSourceValidator(source);
+  if (sourceError) return storeDispatch(addNotification(sourceError), 2000);
 
   if (uuid) {
     fetch(`/api/v4/rasters/${uuid}/?dry-run`, {
