@@ -5,6 +5,7 @@ import { GeoBlockSource } from '../../../types/geoBlockType';
 import { GeoBlockJsonComponent } from './GeoBlockJsonComponent';
 import GeoBlockVisualComponent from './GeoBlockVisualComponent';
 import { SubmitButton } from '../../../form/SubmitButton';
+import { Values } from '../../../form/useForm';
 import { addNotification } from '../../../actions';
 import { createGraphLayout } from '../../../utils/createGraphLayout';
 import { dryFetchGeoBlockForValidation } from '../../../utils/geoblockValidators';
@@ -19,6 +20,7 @@ import buttonStyles from './../../../styles/Buttons.module.css';
 
 interface MyProps {
   uuid: string | null,
+  formValues: Values
   source: GeoBlockSource | null,
   onChange: (value: GeoBlockSource | null) => void,
   handleClose: () => void
@@ -93,9 +95,9 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
             onClick={() => {
               if (geoBlockView === 'visual') {
                 const geoBlockSource = convertElementsToGeoBlockSource(elements, source, setSource);
-                if (geoBlockSource) dryFetchGeoBlockForValidation(props.uuid, geoBlockSource);
+                if (geoBlockSource) dryFetchGeoBlockForValidation(props.uuid, geoBlockSource, props.formValues);
               } else {
-                dryFetchGeoBlockForValidation(props.uuid, source)
+                dryFetchGeoBlockForValidation(props.uuid, source, props.formValues);
               };
             }}
           >

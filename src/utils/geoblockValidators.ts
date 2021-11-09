@@ -1,6 +1,8 @@
 import { storeDispatch } from "..";
 import { addNotification } from "../actions";
 import { GeoBlockSource } from "../types/geoBlockType";
+import { geoblockSourceValidator } from "../form/validators";
+import { Values } from "../form/useForm";
 import {
   Connection,
   Edge,
@@ -19,28 +21,64 @@ type Error = ErrorObject | false;
 
 const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
-export const dryFetchGeoBlockForValidation = (uuid: string | null, source: GeoBlockSource | null) => {
-  fetch(`/api/v4/rasters/${uuid || "db90664c-57fd-4ece-b0a6-ffa34b0e9b2f"}/?dry-run`, {
-    credentials: 'same-origin',
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: source ? JSON.stringify({ source }) : null
-  })
-  .then(res => res.json())
-  .then(res => {
-    console.log(res);
-    if (res.status === 400) {
-      console.error(res.detail && res.detail.source && res.detail.source[0]);
-      const errorMessage = res.detail && res.detail.source && res.detail.source[0];
-      if (errorMessage) {
-        storeDispatch(addNotification(errorMessage))
-      } else {
-        storeDispatch(addNotification('Unknown error! Something is wrong with the GeoBlock.'))
-      };
-    } else if (res.id) { // valid response
-      storeDispatch(addNotification('The GeoBlock is valid.', 2000));
+const handleGeoBlockValidationResponse = (res: any) => {
+  if (res.status === 400) {
+    console.error(res.detail && res.detail.source && res.detail.source[0]);
+    const errorMessage = res.detail && res.detail.source && res.detail.source[0];
+    if (errorMessage) {
+      storeDispatch(addNotification(errorMessage))
+    } else {
+      storeDispatch(addNotification('Unknown error!'))
     };
-  });
+  } else if (res.status === 500) {
+    console.error(res.message);
+    storeDispatch(addNotification(500));
+  } else if (res.id) { // valid response
+    console.log(res);
+    storeDispatch(addNotification('The GeoBlock is valid.', 2000));
+  } else {
+    console.error(res);
+    storeDispatch(addNotification('Unknown error!'));
+  };
+};
+
+export const dryFetchGeoBlockForValidation = (
+  uuid: string | null,
+  source: GeoBlockSource | null,
+  formValues: Values
+) => {
+  // validate if the provided source is valid
+  const sourceError = geoblockSourceValidator(source);
+  if (sourceError) return storeDispatch(addNotification(sourceError), 2000);
+
+  if (uuid) {
+    fetch(`/api/v4/rasters/${uuid}/?dry-run`, {
+      credentials: 'same-origin',
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ source })
+    })
+    .then(res => res.json())
+    .then(res => handleGeoBlockValidationResponse(res))
+    .catch(console.error)
+  } else {
+    fetch('/api/v4/rasters/?dry-run', {
+      credentials: "same-origin",
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: formValues.name,
+        aggregation_type: formValues.aggregationType && formValues.aggregationType.value,
+        observation_type: formValues.observationType && formValues.observationType.value,
+        source: source,
+        access_modifier: formValues.access_modifier || 'Private',
+        organisation: formValues.organisation && formValues.organisation.value,
+      })
+    })
+    .then(res => res.json())
+    .then(res => handleGeoBlockValidationResponse(res))
+    .catch(console.error)
+  };
 };
 
 export const geoBlockValidator = (elements: Elements): ErrorObject[] => {
@@ -91,11 +129,10 @@ const blockInutValidator = (blocks: Elements): Error => {
   const blocksWithInvalidInput = blocks.filter(block => {
     const parameters = block.data.parameters as any[];
 
-    // invalid inputs include following values: null, undefined, NaN, empty string
+    // invalid inputs include following values: undefined, NaN, empty string
     // or a string starts with 'handle-'
     return (
       parameters.length === 0 ||
-      parameters.includes(null) ||
       parameters.includes(undefined) ||
       parameters.includes(NaN) ||
       parameters.includes('') ||
@@ -103,9 +140,24 @@ const blockInutValidator = (blocks: Elements): Error => {
     );
   });
 
+  const blocksWithOnlyNumberOrBooleanInputs = blocks.filter(block => {
+    const parameters = block.data.parameters as any[];
+
+    // for blocks with 2 inputs of type [raster_block, number] or type [raster_block, boolean]
+    // at least, one of the inputs must be a RasterBlock
+    return (
+      (parameters.length === 2 && typeof(parameters[0]) === 'boolean' && typeof(parameters[1]) === 'boolean') ||
+      (parameters.length === 2 && typeof(parameters[0]) === 'number' && typeof(parameters[1]) === 'number')
+    );
+  });
+
   if (blocksWithInvalidInput.length > 0) {
     return {
       errorMessage: `${blocksWithInvalidInput.map(block => block.data.label).join(', ')} contain invalid inputs.`
+    };
+  } else if (blocksWithOnlyNumberOrBooleanInputs.length > 0) {
+    return {
+      errorMessage: `${blocksWithOnlyNumberOrBooleanInputs.map(block => block.data.label).join(', ')} must contain at least one RasterBlock.`
     };
   };
   return false;

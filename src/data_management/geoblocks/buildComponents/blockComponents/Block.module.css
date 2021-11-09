@@ -25,6 +25,13 @@
   margin-top: 10px;
 }
 
+.BlockCheckbox {
+  width: 22px;
+  height: 22px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
 /* Raster block */
 .RasterBlock {
   border-color: orange;

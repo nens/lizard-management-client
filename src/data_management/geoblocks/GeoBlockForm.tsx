@@ -6,13 +6,13 @@ import { TextArea } from './../../form/TextArea';
 import { TextInput } from './../../form/TextInput';
 import { CheckBox } from './../../form/CheckBox';
 import { SelectDropdown } from '../../form/SelectDropdown';
-import ColorMapInput from '../../form/ColorMapInput';
+import ColorMapInput, { colorMapValidator } from '../../form/ColorMapInput';
 import { FormButton } from '../../form/FormButton';
 import { SubmitButton } from '../../form/SubmitButton';
 import { CancelButton } from '../../form/CancelButton';
 import { AccessModifier } from '../../form/AccessModifier';
 import { useForm, Values } from '../../form/useForm';
-import { getSelectedOrganisation,   getLayercollections } from '../../reducers';
+import { getSelectedOrganisation,   getLayercollections, getOrganisations } from '../../reducers';
 import { addNotification } from './../../actions';
 import { convertToSelectObject } from '../../utils/convertToSelectObject';
 import { fetchSuppliers } from '../rasters/RasterSourceForm';
@@ -40,6 +40,7 @@ const backUrl = "/management/data_management/geoblocks";
 const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (props) => {
   const { currentRecord } = props;
   const layercollections = useSelector(getLayercollections).available;
+  const organisations = useSelector(getOrganisations).available;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const belongsToScenario = (currentRecord && rasterLayerFromAPIBelongsToScenario(currentRecord)) || false;
 
@@ -58,6 +59,7 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
     accessModifier: currentRecord.access_modifier,
     sharedWith: currentRecord.shared_with.length === 0 ? false : true,
     organisationsToSharedWith: currentRecord.shared_with.map((organisation:any) => convertToSelectObject(organisation.uuid, organisation.name)) || [],
+    organisation: currentRecord.organisation ? convertToSelectObject(currentRecord.organisation.uuid, currentRecord.organisation.name) : null,
     supplier: currentRecord.supplier ? convertToSelectObject(currentRecord.supplier) : null,
   } : {
     name: null,
@@ -70,6 +72,7 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
     accessModifier: 'Private',
     sharedWith: false,
     organisationsToSharedWith: [],
+    organisation: selectedOrganisation ? convertToSelectObject(selectedOrganisation.uuid, selectedOrganisation.name) : null,
     supplier: null,
   };
   const onSubmit = (values: Values) => {
@@ -85,7 +88,7 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
       access_modifier: values.accessModifier,
       shared_with: values.sharedWith ? values.organisationsToSharedWith.map((organisation: any) => organisation.value) : [],
       supplier: values.supplier && values.supplier.label,
-      organisation: selectedOrganisation.uuid,
+      organisation: values.organisation && values.organisation.value,
     };
     if (!currentRecord) {
       fetch(baseUrl, {
@@ -155,10 +158,12 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
       fieldName={fieldOnFocus}
     >
       <form
-        className={formStyles.Form}
         onSubmit={handleSubmit}
         onReset={handleReset}
+        id={"geoblock_form_id"}
       >
+      </form>
+      <div className={formStyles.Form}>
         <span className={`${formStyles.FormFieldTitle} ${formStyles.FirstFormFieldTitle}`}>
           1: General
         </span>
@@ -173,6 +178,7 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
           validated={!minLength(3, values.name)}
           errorMessage={minLength(3, values.name)}
           triedToSubmit={triedToSubmit}
+          form={"geoblock_form_id"}
         />
         {currentRecord ? (
           <TextInput
@@ -195,6 +201,7 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
           onBlur={handleBlur}
           clearInput={clearInput}
           validated
+          form={"geoblock_form_id"}
         />
         {!belongsToScenario ? (
           <SelectDropdown
@@ -206,6 +213,7 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
             options={layercollections.map((layercollection: any) => convertToSelectObject(layercollection.slug))}
             validated
             isMulti
+            form={"geoblock_form_id"}
             onFocus={handleFocus}
             onBlur={handleBlur}
           />
@@ -213,19 +221,11 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
         <span className={formStyles.FormFieldTitle}>
           2: Data
         </span>
-        <FormButton
-          name={'geoBlockBuildModal'}
-          title={'Geo Block *'}
-          text={'Geo Block Builder'}
-          onClick={e => {
-            e.preventDefault();
-            setBuildModal(true);
-          }}
-          validated={!geoblockSourceValidator(values.source)}
-          errorMessage={geoblockSourceValidator(values.source)}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-        />
+        {0?<FormattedMessage id="raster_form.aggregation_type_none" defaultMessage="no aggregation" />:null}
+        {0?<FormattedMessage id="raster_form.aggregation_type_counts" defaultMessage="area per category" />:null}
+        {0?<FormattedMessage id="raster_form.aggregation_type_curve" defaultMessage="cumulative distribution" />:null}
+        {0?<FormattedMessage id="raster_form.aggregation_type_sum" defaultMessage="values in the region are summed" />:null}
+        {0?<FormattedMessage id="raster_form.aggregation_type_average" defaultMessage="values in the region are averaged" />:null}
         <SelectDropdown
           title={'Aggregation type *'}
           name={'aggregationType'}
@@ -236,32 +236,33 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
             {
               value: 'none',
               label: 'none',
-              subLabel: <FormattedMessage id="raster_form.aggregation_type_none" />
+              subLabel: "no aggregation",
             },
             {
               value: 'counts',
               label: 'counts',
-              subLabel: <FormattedMessage id="raster_form.aggregation_type_counts" />
+              subLabel: 'area per category',
             },
             {
               value: 'curve',
               label: 'curve',
-              subLabel: <FormattedMessage id="raster_form.aggregation_type_curve" />
+              subLabel: 'cumulative distribution',
             },
             {
               value: 'sum',
               label: 'sum',
-              subLabel: <FormattedMessage id="raster_form.aggregation_type_sum" />
+              subLabel: 'values in the region are summed',
             },
             {
               value: 'average',
               label: 'average',
-              subLabel: <FormattedMessage id="raster_form.aggregation_type_average" />
+              subLabel: 'values in the region are averaged',
             }
           ]}
           validated={!!values.aggregationType}
           errorMessage={'Please select an option'}
           triedToSubmit={triedToSubmit}
+          form={"geoblock_form_id"}
           onFocus={handleFocus}
           onBlur={handleBlur}
           isSearchable={false}
@@ -276,6 +277,7 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
           validated={!required('Please select an observation type', values.observationType)}
           errorMessage={required('Please select an observation type', values.observationType)}
           triedToSubmit={triedToSubmit}
+          form={"geoblock_form_id"}
           onFocus={handleFocus}
           onBlur={handleBlur}
           isAsync
@@ -288,8 +290,31 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
           colorMapValue={values.colorMap}
           valueChanged={value => handleValueChange('colorMap', value)}
           validated
+          form={"geoblock_form_id"}
           onFocus={handleFocus}
           onBlur={handleBlur}
+        />
+        <FormButton
+          name={'geoBlockBuildModal'}
+          title={'Geo Block *'}
+          text={'Geo Block Builder'}
+          onClick={e => {
+            e.preventDefault();
+            setBuildModal(true);
+          }}
+          validated={!geoblockSourceValidator(values.source)}
+          errorMessage={geoblockSourceValidator(values.source)}
+          readOnly={
+            // required fields must be filled in first
+            !(values.name && values.name.length >= 3) ||
+            !values.aggregationType ||
+            !values.observationType ||
+            !colorMapValidator(values.colorMap).validated
+          }
+          readOnlyTooltip={'Please first fill in the required fields.'}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          form={"geoblock_form_id"}
         />
         <span className={formStyles.FormFieldTitle}>
           3: Rights
@@ -301,6 +326,8 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
           valueChanged={value => handleValueChange('accessModifier', value)}
           onFocus={handleFocus}
           onBlur={handleBlur}
+          readOnly={belongsToScenario}
+          form={"geoblock_form_id"}
         />
         <CheckBox
           title={'Shared with other organisations'}
@@ -310,6 +337,7 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
           onFocus={handleFocus}
           onBlur={handleBlur}
           readOnly={belongsToScenario}
+          form={"geoblock_form_id"}
         />
         {values.sharedWith ? (
           <SelectDropdown
@@ -327,8 +355,24 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
             isCached
             loadOptions={fetchOrganisationsToShareWith}
             readOnly={belongsToScenario}
+            form={"geoblock_form_id"}
           />
         ) : null}
+        <SelectDropdown
+          title={'Organisation *'}
+          name={'organisation'}
+          placeholder={'- Search and select -'}
+          value={values.organisation}
+          valueChanged={value => handleValueChange('organisation', value)}
+          options={organisations.map((organisation: any) => convertToSelectObject(organisation.uuid, organisation.name))}
+          validated={values.organisation !== null && values.organisation !== ''}
+          errorMessage={'Please select an organisation'}
+          triedToSubmit={triedToSubmit}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          readOnly
+          form={"geoblock_form_id"}
+        />
         <SelectDropdown
           title={'Supplier'}
           name={'supplier'}
@@ -344,12 +388,14 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
           dropUp
           onFocus={handleFocus}
           onBlur={handleBlur}
+          form={"geoblock_form_id"}
         />
         <div
           className={formStyles.ButtonContainer}
         >
           <CancelButton
             url={'/management/data_management/geoblocks'}
+            form={"geoblock_form_id"}
           />
           <div style={{ display: "flex" }}>
             {currentRecord ? (
@@ -366,10 +412,11 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
             ) : null}
             <SubmitButton
               onClick={tryToSubmitForm}
+              form={"geoblock_form_id"}
             />
           </div>
         </div>
-      </form>
+      </div>
       {currentRecord && showDeleteModal ? (
         <DeleteModal
           rows={[currentRecord]}
@@ -382,6 +429,7 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
       {buildModal ? (
         <GeoBlockBuildModal
           uuid={currentRecord ? currentRecord.uuid : null}
+          formValues={values}
           source={values.source}
           onChange={value => handleValueChange('source', value)}
           handleClose={() => setBuildModal(false)}

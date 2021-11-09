@@ -534,7 +534,7 @@
         "type": "enum",
         "enum": [
           "last",
-          "fist",
+          "first",
           "count",
           "sum",
           "mean",
@@ -545,7 +545,7 @@
           "product",
           "std",
           "var",
-          "p<number>"
+          "p1"
         ]
       }
     ]
