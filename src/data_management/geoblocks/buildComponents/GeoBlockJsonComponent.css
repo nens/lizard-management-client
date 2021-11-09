@@ -1,0 +1,8 @@
+#json-editor-container div.jsoneditor {
+  border: thin solid var(--color-header);
+}
+
+#json-editor-container div.jsoneditor-menu {
+  background-color: var(--color-header);
+  border: thin solid var(--color-header);
+}
