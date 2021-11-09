@@ -59,6 +59,23 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
       }}
     >
       <div className={styles.MainContainer}>
+        <div className={styles.TabContainer}>
+            <div
+                className={geoBlockView === 'json' ? styles.SelectedTab : undefined}
+                onClick={() => {
+                  const geoBlockSource = convertElementsToGeoBlockSource(elements, source, setSource);
+                  if (geoBlockSource) setGeoBlockView('json');
+                }}
+            >
+                JSON Editor
+            </div>
+            <div
+                className={geoBlockView === 'visual' ? styles.SelectedTab : undefined}
+                onClick={() => setGeoBlockView('visual')}
+            >
+                Visual Editor
+            </div>
+        </div>
         {geoBlockView === 'json' ? (
           <GeoBlockJsonComponent
             source={source}
@@ -76,19 +93,6 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
             onClick={props.handleClose}
           >
             Close
-          </button>
-          <button
-            className={buttonStyles.NewButton}
-            onClick={() => {
-              if (geoBlockView === 'visual') {
-                const geoBlockSource = convertElementsToGeoBlockSource(elements, source, setSource);
-                if (geoBlockSource) setGeoBlockView('json');
-              } else {
-                setGeoBlockView('visual');
-              };
-            }}
-          >
-            {geoBlockView === 'visual' ? 'JSON Editor' : 'Visual Editor'}
           </button>
           <button
             className={buttonStyles.NewButton}
