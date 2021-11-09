@@ -25,7 +25,8 @@ export const GeoBlockJsonComponent = (props: MyProps) => {
         style: {
           position: 'absolute',
           width: '100%',
-          height: '90%'
+          height: '85%',
+          marginTop: 40
         }
       }}
       history
