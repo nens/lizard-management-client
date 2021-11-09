@@ -87,9 +87,8 @@ const getBlockElements = (
     const parameters = blockValue.slice(1).map(parameter => {
       if (Array.isArray(parameter)) {
         return JSON.stringify(parameter);
-      } else {
-        return parameter;
       };
+      return parameter;
     });
 
     return {

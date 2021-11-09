@@ -192,6 +192,7 @@ export const Block = (props: BlockProps) => {
                 key={parameter.name}
                 className={styles.BlockInput}
                 title={`${parameter.name}: ${parameter.type}`}
+                placeholder={'Enter valid JSON'}
                 value={parameterValue}
                 onChange={e => onChange(e.target.value, i)}
               />

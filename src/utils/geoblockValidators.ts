@@ -99,9 +99,6 @@ export const geoBlockValidator = (elements: Elements): ErrorObject[] => {
   const blockError = blockInutValidator(buildingBlocks);
   if (blockError) errors.push(blockError);
 
-  const blockJsonInputError = blockInputJsonValidator(buildingBlocks);
-  if (blockJsonInputError) errors.push(blockJsonInputError);
-
   return errors;
 };
 
@@ -154,19 +151,25 @@ const blockInutValidator = (blocks: Elements): Error => {
     );
   });
 
+  const blocksWithInvalidJsonInput = getBlocksWithInvalidJsonInput(blocks);
+
   if (blocksWithInvalidInput.length > 0) {
     return {
-      errorMessage: `${blocksWithInvalidInput.map(block => block.data.label).join(', ')} contain invalid inputs.`
+      errorMessage: `${blocksWithInvalidInput.map(block => block.data.label).join(', ')} contain invalid input(s).`
     };
   } else if (blocksWithOnlyNumberOrBooleanInputs.length > 0) {
     return {
       errorMessage: `${blocksWithOnlyNumberOrBooleanInputs.map(block => block.data.label).join(', ')} must contain at least one RasterBlock.`
     };
+  } else if (blocksWithInvalidJsonInput.length > 0) {
+    return {
+      errorMessage: `${blocksWithInvalidJsonInput.map(block => block.data.label).join(', ')} contain input(s) in invalid JSON format.`
+    }
   };
   return false;
 };
 
-const blockInputJsonValidator = (blocks: Elements): Error => {
+const getBlocksWithInvalidJsonInput = (blocks: Elements) => {
   const blocksWithArrayInput = blocks.filter(block => {
     const parameterTypes = block.data.parameterTypes;
     return Array.isArray(parameterTypes) && parameterTypes.filter(parameter => parameter.type === 'array').length > 0;
@@ -182,12 +185,7 @@ const blockInputJsonValidator = (blocks: Elements): Error => {
     return invalidJsonParameters.length > 0;
   });
 
-  if (blocksWithInvalidJsonInput.length > 0) {
-    return {
-      errorMessage: `${blocksWithInvalidJsonInput.map(block => block.data.label).join(', ')} contain input in invalid JSON format.`
-    };
-  };
-  return false;
+  return blocksWithInvalidJsonInput;
 };
 
 export const targetHandleValidator = (els: Elements, params: Edge | Connection): Error => {
