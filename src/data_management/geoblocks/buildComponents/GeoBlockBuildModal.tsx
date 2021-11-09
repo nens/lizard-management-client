@@ -87,7 +87,7 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
             setElements={setElements}
           />
         )}
-        <div className={`${formStyles.ButtonContainer} ${formStyles.FixedButtonContainer}`}>
+        <div className={formStyles.ButtonContainer}>
           <button
             className={`${buttonStyles.Button} ${buttonStyles.LinkCancel}`}
             onClick={props.handleClose}

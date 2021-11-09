@@ -18,16 +18,11 @@ export const GeoBlockJsonComponent = (props: MyProps) => {
       name={'source'}
       value={source ? source : {}}
       onChange={e => setSource(e)}
-      allowedModes={['tree', 'code', 'text']}
+      mode={'code'}
+      allowedModes={['code', 'tree', 'text']}
       ace={ace}
       htmlElementProps={{
-        id: 'json-editor-container',
-        style: {
-          position: 'absolute',
-          width: '100%',
-          height: '85%',
-          marginTop: 40
-        }
+        id: 'json-editor-container'
       }}
       history
       enableSort={false}

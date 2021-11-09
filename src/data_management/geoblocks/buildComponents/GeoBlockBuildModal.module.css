@@ -1,10 +1,8 @@
 .MainContainer {
   height: calc(100% - 60px);
   margin: 20px 40px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  position: relative;
+  display: grid;
+  grid-template-rows: 40px 1fr 60px;
 }
 
 .TabContainer {
@@ -15,7 +13,6 @@
 
 .TabContainer > div {
   opacity: 0.34;
-  font-size: 20px;
   font-weight: 500;
   text-transform: uppercase;
   color: #FFFFFF;

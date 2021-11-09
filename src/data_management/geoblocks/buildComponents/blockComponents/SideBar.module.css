@@ -1,9 +1,8 @@
 .SideBar {
-  /* height: 600px; */
+  height: calc(100vh - 200px); /* without this, the overflow auto will not work */
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  position: relative;
 }
 
 .Block {

@@ -161,11 +161,7 @@ const GeoBlockVisualFlow = (props: MyProps & DispatchProps) => {
       style={{
         display: 'grid',
         gridTemplateColumns: '1fr 150px',
-        columnGap: 10,
-        marginTop: 40,
-        position: 'absolute',
-        height: '85%',
-        width: '100%'
+        columnGap: 10
       }}
     >
       <ReactFlow
