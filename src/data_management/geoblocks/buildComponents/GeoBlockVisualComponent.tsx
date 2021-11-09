@@ -26,6 +26,7 @@ import { geoblockType } from '../../../types/geoBlockType';
 import { getBlockData } from '../../../utils/geoblockUtils';
 import { targetHandleValidator } from '../../../utils/geoblockValidators';
 import { addNotification } from '../../../actions';
+import { v4 as uuid } from 'uuid';
 
 interface MyProps {
   elements: Elements,
@@ -138,7 +139,8 @@ const GeoBlockVisualFlow = (props: MyProps & DispatchProps) => {
         // @ts-ignore
         return isNode(elm) && elm.data && elm.data.classOfBlock === geoblockType[blockName].class;
       }).length;
-      const idOfNewBlock = blockName + numberOfBlocks;
+
+      const idOfNewBlock = uuid();
 
       const newBlock = {
         id: idOfNewBlock,
