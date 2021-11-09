@@ -94,33 +94,38 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
           >
             Close
           </button>
-          <button
-            className={buttonStyles.NewButton}
-            onClick={() => {
-              if (geoBlockView === 'visual') {
-                const geoBlockSource = convertElementsToGeoBlockSource(elements, source, setSource);
-                if (geoBlockSource) dryFetchGeoBlockForValidation(props.uuid, geoBlockSource, props.formValues);
-              } else {
-                dryFetchGeoBlockForValidation(props.uuid, source, props.formValues);
-              };
-            }}
-          >
-            Validate
-          </button>
-          <SubmitButton
-            onClick={() => {
-              if (geoBlockView === 'visual') {
-                const geoBlockSource = convertElementsToGeoBlockSource(elements, source, setSource);
-                if (geoBlockSource) {
-                  props.onChange(geoBlockSource);
+          <div>
+            <button
+              className={buttonStyles.NewButton}
+              onClick={() => {
+                if (geoBlockView === 'visual') {
+                  const geoBlockSource = convertElementsToGeoBlockSource(elements, source, setSource);
+                  if (geoBlockSource) dryFetchGeoBlockForValidation(props.uuid, geoBlockSource, props.formValues);
+                } else {
+                  dryFetchGeoBlockForValidation(props.uuid, source, props.formValues);
+                };
+              }}
+              style={{
+                marginRight: 20
+              }}
+            >
+              Check Validation
+            </button>
+            <SubmitButton
+              onClick={() => {
+                if (geoBlockView === 'visual') {
+                  const geoBlockSource = convertElementsToGeoBlockSource(elements, source, setSource);
+                  if (geoBlockSource) {
+                    props.onChange(geoBlockSource);
+                    props.handleClose();
+                  };
+                } else {
+                  props.onChange(source);
                   props.handleClose();
                 };
-              } else {
-                props.onChange(source);
-                props.handleClose();
-              };
-            }}
-          />
+              }}
+            />
+          </div>
         </div>
       </div>
     </ModalBackground>
