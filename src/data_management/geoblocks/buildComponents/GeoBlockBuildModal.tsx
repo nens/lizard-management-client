@@ -59,6 +59,23 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
       }}
     >
       <div className={styles.MainContainer}>
+        <div className={styles.TabContainer}>
+            <div
+                className={geoBlockView === 'json' ? styles.SelectedTab : undefined}
+                onClick={() => {
+                  const geoBlockSource = convertElementsToGeoBlockSource(elements, source, setSource);
+                  if (geoBlockSource) setGeoBlockView('json');
+                }}
+            >
+                JSON Editor
+            </div>
+            <div
+                className={geoBlockView === 'visual' ? styles.SelectedTab : undefined}
+                onClick={() => setGeoBlockView('visual')}
+            >
+                Visual Editor
+            </div>
+        </div>
         {geoBlockView === 'json' ? (
           <GeoBlockJsonComponent
             source={source}
@@ -70,53 +87,45 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
             setElements={setElements}
           />
         )}
-        <div className={`${formStyles.ButtonContainer} ${formStyles.FixedButtonContainer}`}>
+        <div className={formStyles.ButtonContainer}>
           <button
             className={`${buttonStyles.Button} ${buttonStyles.LinkCancel}`}
             onClick={props.handleClose}
           >
             Close
           </button>
-          <button
-            className={buttonStyles.NewButton}
-            onClick={() => {
-              if (geoBlockView === 'visual') {
-                const geoBlockSource = convertElementsToGeoBlockSource(elements, source, setSource);
-                if (geoBlockSource) setGeoBlockView('json');
-              } else {
-                setGeoBlockView('visual');
-              };
-            }}
-          >
-            {geoBlockView === 'visual' ? 'JSON Editor' : 'Visual Editor'}
-          </button>
-          <button
-            className={buttonStyles.NewButton}
-            onClick={() => {
-              if (geoBlockView === 'visual') {
-                const geoBlockSource = convertElementsToGeoBlockSource(elements, source, setSource);
-                if (geoBlockSource) dryFetchGeoBlockForValidation(props.uuid, geoBlockSource, props.formValues);
-              } else {
-                dryFetchGeoBlockForValidation(props.uuid, source, props.formValues);
-              };
-            }}
-          >
-            Validate
-          </button>
-          <SubmitButton
-            onClick={() => {
-              if (geoBlockView === 'visual') {
-                const geoBlockSource = convertElementsToGeoBlockSource(elements, source, setSource);
-                if (geoBlockSource) {
-                  props.onChange(geoBlockSource);
+          <div>
+            <button
+              className={buttonStyles.NewButton}
+              onClick={() => {
+                if (geoBlockView === 'visual') {
+                  const geoBlockSource = convertElementsToGeoBlockSource(elements, source, setSource);
+                  if (geoBlockSource) dryFetchGeoBlockForValidation(props.uuid, geoBlockSource, props.formValues);
+                } else {
+                  dryFetchGeoBlockForValidation(props.uuid, source, props.formValues);
+                };
+              }}
+              style={{
+                marginRight: 20
+              }}
+            >
+              Check Validation
+            </button>
+            <SubmitButton
+              onClick={() => {
+                if (geoBlockView === 'visual') {
+                  const geoBlockSource = convertElementsToGeoBlockSource(elements, source, setSource);
+                  if (geoBlockSource) {
+                    props.onChange(geoBlockSource);
+                    props.handleClose();
+                  };
+                } else {
+                  props.onChange(source);
                   props.handleClose();
                 };
-              } else {
-                props.onChange(source);
-                props.handleClose();
-              };
-            }}
-          />
+              }}
+            />
+          </div>
         </div>
       </div>
     </ModalBackground>

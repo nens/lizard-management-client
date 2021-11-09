@@ -4,6 +4,7 @@ import { GeoBlockSource } from '../../../types/geoBlockType';
 import { JsonEditor } from 'jsoneditor-react';
 import 'jsoneditor-react/es/editor.min.css';
 import 'brace/mode/json';
+import './GeoBlockJsonComponent.css';
 
 interface MyProps {
   source: GeoBlockSource | null,
@@ -17,13 +18,12 @@ export const GeoBlockJsonComponent = (props: MyProps) => {
       name={'source'}
       value={source ? source : {}}
       onChange={e => setSource(e)}
-      allowedModes={['tree', 'code', 'text']}
+      mode={'code'}
+      allowedModes={['code', 'tree', 'text']}
       ace={ace}
-      htmlElementProps={{style: {
-        position: 'absolute',
-        width: '100%',
-        height: '90%'
-      }}}
+      htmlElementProps={{
+        id: 'json-editor-container'
+      }}
       history
       enableSort={false}
       enableTransform={false}

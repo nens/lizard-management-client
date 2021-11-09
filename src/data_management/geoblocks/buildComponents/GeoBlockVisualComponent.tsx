@@ -161,9 +161,7 @@ const GeoBlockVisualFlow = (props: MyProps & DispatchProps) => {
       style={{
         display: 'grid',
         gridTemplateColumns: '1fr 150px',
-        columnGap: 10,
-        margin: '20px 0',
-        height: 720
+        columnGap: 10
       }}
     >
       <ReactFlow
@@ -172,8 +170,7 @@ const GeoBlockVisualFlow = (props: MyProps & DispatchProps) => {
         onElementsRemove={onElementsRemove}
         style={{
           position: 'relative',
-          border: '1px solid lightgrey',
-          borderRadius: 10
+          border: 'thin solid var(--color-header)'
         }}
         snapToGrid
         onEdgeUpdate={onEdgeUpdate}
