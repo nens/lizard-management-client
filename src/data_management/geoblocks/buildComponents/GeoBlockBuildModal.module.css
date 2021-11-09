@@ -1,5 +1,5 @@
 .MainContainer {
-  height: calc(100% - 60px);
+  height: 100%;
   margin: 20px 40px;
   display: grid;
   grid-template-rows: 40px 1fr 60px;
