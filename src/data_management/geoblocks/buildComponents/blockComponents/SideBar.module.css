@@ -12,6 +12,8 @@
   border-radius: 5px;
   font-size: 12px;
   margin-bottom: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
   cursor: pointer;
 }
 .Block:active {
