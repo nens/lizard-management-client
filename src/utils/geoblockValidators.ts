@@ -1,7 +1,7 @@
 import { storeDispatch } from "..";
 import { addNotification } from "../actions";
 import { GeoBlockSource } from "../types/geoBlockType";
-import { geoblockSourceValidator } from "../form/validators";
+import { geoblockSourceValidator, jsonValidator } from "../form/validators";
 import { Values } from "../form/useForm";
 import {
   Connection,
@@ -99,6 +99,9 @@ export const geoBlockValidator = (elements: Elements): ErrorObject[] => {
   const blockError = blockInutValidator(buildingBlocks);
   if (blockError) errors.push(blockError);
 
+  const blockJsonInputError = blockInputJsonValidator(buildingBlocks);
+  if (blockJsonInputError) errors.push(blockJsonInputError);
+
   return errors;
 };
 
@@ -158,6 +161,30 @@ const blockInutValidator = (blocks: Elements): Error => {
   } else if (blocksWithOnlyNumberOrBooleanInputs.length > 0) {
     return {
       errorMessage: `${blocksWithOnlyNumberOrBooleanInputs.map(block => block.data.label).join(', ')} must contain at least one RasterBlock.`
+    };
+  };
+  return false;
+};
+
+const blockInputJsonValidator = (blocks: Elements): Error => {
+  const blocksWithArrayInput = blocks.filter(block => {
+    const parameterTypes = block.data.parameterTypes;
+    return Array.isArray(parameterTypes) && parameterTypes.filter(parameter => parameter.type === 'array').length > 0;
+  });
+
+  const blocksWithInvalidJsonInput = blocksWithArrayInput.filter(block => {
+    const invalidJsonParameters = block.data.parameters.filter((parameter: any, i: number) => {
+      const parameterType = block.data.parameterTypes[i];
+
+      return parameterType && parameterType.type === 'array' && jsonValidator(parameter);
+    });
+
+    return invalidJsonParameters.length > 0;
+  });
+
+  if (blocksWithInvalidJsonInput.length > 0) {
+    return {
+      errorMessage: `${blocksWithInvalidJsonInput.map(block => block.data.label).join(', ')} contain input in invalid JSON format.`
     };
   };
   return false;
