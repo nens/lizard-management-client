@@ -23,7 +23,6 @@ export const getBlockData = (
   const blockDefinition = geoblockType[blockName];
   const blockParameters = Array.isArray(blockDefinition.parameters) ? (
     blockDefinition.parameters.map((parameter: any) => (
-      parameter.type === 'array' ? [] :
       parameter.type.includes('boolean') && parameter.default === undefined ? false :
       parameter.default
     ))
@@ -83,6 +82,15 @@ const getBlockElements = (
     const blockValue = graph[blockName];
     const classOfBlock = blockValue[0];
     const blockDefinition = Object.values(geoblockType).find(geoBlockType => geoBlockType!.class === classOfBlock);
+
+    // convert Array parameter into string to show and edit in TextArea
+    const parameters = blockValue.slice(1).map(parameter => {
+      if (typeof(parameter) === 'object') {
+        return JSON.stringify(parameter);
+      };
+      return parameter;
+    });
+
     return {
       id: blockName,
       type: (
@@ -93,7 +101,7 @@ const getBlockElements = (
       data: {
         label: blockName,
         classOfBlock,
-        parameters: blockValue.slice(1),
+        parameters: parameters,
         parameterTypes: blockDefinition ? blockDefinition.parameters : [],
         onChange: (value: number, i: number) => onBlockChange(value, i, blockName, setElements)
       },
@@ -164,15 +172,31 @@ export const convertElementsToGeoBlockSource = (
 
   // use reduce method to create the graph object
   const graph = blocks.reduce((graph, block) => {
-    return {
-      ...graph,
-      [block.data.label]: block.type === 'RasterBlock' ? [
+    let blockValue;
+    if (block.type === 'RasterBlock') {
+      blockValue = [
         'lizard_nxt.blocks.LizardRasterSource',
         block.data.value
-      ] : [
+      ];
+    } else {
+      const parameters = block.data.parameters.map((parameter: any, i: number) => {
+        const parameterType = block.data.parameterTypes[i];
+        if (parameterType && parameterType.type === 'array') {
+          // parse string to array if parameter type is 'array'
+          return JSON.parse(parameter);
+        };
+        return parameter;
+      });
+
+      blockValue = [
         block.data.classOfBlock,
-        ...block.data.parameters
-      ]
+        ...parameters
+      ];
+    };
+
+    return {
+      ...graph,
+      [block.data.label]: blockValue
     };
   }, {});
 

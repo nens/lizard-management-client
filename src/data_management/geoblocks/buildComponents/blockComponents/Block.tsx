@@ -185,16 +185,16 @@ export const Block = (props: BlockProps) => {
               </select>
             );
           } else if (parameter.type === 'array') {
-            const parameterValue = parameters ? parameters[i] as any : undefined;
-            const parameterValueInJsonString = JSON.stringify(parameterValue);
+            // array has been converted into string in getBlockElements in geoblockUtils.ts
+            const parameterValue = parameters ? parameters[i] as string : undefined;
             return (
               <textarea
                 key={parameter.name}
                 className={styles.BlockInput}
                 title={`${parameter.name}: ${parameter.type}`}
-                value={parameterValueInJsonString}
+                placeholder={'Enter valid JSON'}
+                value={parameterValue}
                 onChange={e => onChange(e.target.value, i)}
-                disabled
               />
             )
           } else {
