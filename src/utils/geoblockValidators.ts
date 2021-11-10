@@ -21,6 +21,13 @@ type Error = ErrorObject | false;
 
 const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
+const getContainOrContainsText = (blocks: Elements) => {
+  if (blocks.length === 1) {
+    return 'contains';
+  };
+  return 'contain';
+};
+
 const handleGeoBlockValidationResponse = (res: any) => {
   if (res.status === 400) {
     console.error(res.detail && res.detail.source && res.detail.source[0]);
@@ -151,31 +158,31 @@ const blockInutValidator = (blocks: Elements): Error => {
     );
   });
 
-  const blocksWithInvalidJsonInput = getBlocksWithInvalidJsonInput(blocks);
+  const blocksWithInvalidArrayInput = getBlocksWithInvalidArrayInput(blocks);
 
   if (blocksWithInvalidInput.length > 0) {
     return {
-      errorMessage: `${blocksWithInvalidInput.map(block => block.data.label).join(', ')} contain invalid input(s).`
+      errorMessage: `${blocksWithInvalidInput.map(block => block.data.label).join(', ')} ${getContainOrContainsText(blocksWithInvalidInput)} invalid input.`
     };
   } else if (blocksWithOnlyNumberOrBooleanInputs.length > 0) {
     return {
       errorMessage: `${blocksWithOnlyNumberOrBooleanInputs.map(block => block.data.label).join(', ')} must contain at least one RasterBlock.`
     };
-  } else if (blocksWithInvalidJsonInput.length > 0) {
+  } else if (blocksWithInvalidArrayInput.length > 0) {
     return {
-      errorMessage: `${blocksWithInvalidJsonInput.map(block => block.data.label).join(', ')} contain input(s) in invalid JSON format.`
+      errorMessage: `${blocksWithInvalidArrayInput.map(block => block.data.label).join(', ')} ${getContainOrContainsText(blocksWithInvalidArrayInput)} input in invalid array format.`
     }
   };
   return false;
 };
 
-const getBlocksWithInvalidJsonInput = (blocks: Elements) => {
+const getBlocksWithInvalidArrayInput = (blocks: Elements) => {
   const blocksWithArrayInput = blocks.filter(block => {
     const parameterTypes = block.data.parameterTypes;
     return Array.isArray(parameterTypes) && parameterTypes.filter(parameter => parameter.type === 'array').length > 0;
   });
 
-  const blocksWithInvalidJsonInput = blocksWithArrayInput.filter(block => {
+  const blocksWithInvalidArrayInput = blocksWithArrayInput.filter(block => {
     const invalidJsonParameters = block.data.parameters.filter((parameter: any, i: number) => {
       const parameterType = block.data.parameterTypes[i];
 
@@ -185,7 +192,7 @@ const getBlocksWithInvalidJsonInput = (blocks: Elements) => {
     return invalidJsonParameters.length > 0;
   });
 
-  return blocksWithInvalidJsonInput;
+  return blocksWithInvalidArrayInput;
 };
 
 export const targetHandleValidator = (els: Elements, params: Edge | Connection): Error => {

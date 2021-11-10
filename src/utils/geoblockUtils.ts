@@ -85,7 +85,7 @@ const getBlockElements = (
 
     // convert Array parameter into string to show and edit in TextArea
     const parameters = blockValue.slice(1).map(parameter => {
-      if (Array.isArray(parameter)) {
+      if (typeof(parameter) === 'object') {
         return JSON.stringify(parameter);
       };
       return parameter;
