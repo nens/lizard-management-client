@@ -39,7 +39,7 @@ export const RasterBlock = (props: Node<RasterBlockInput>) => {
         <small><i>({classOfBlock})</i></small>
       </div>
       <AsyncSelect
-        className={styles.BlockInput}
+        className={styles.BlockInput + ' nodrag'}
         placeholder={'Please enter an UUID'}
         cacheOptions
         defaultOptions
