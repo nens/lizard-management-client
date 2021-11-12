@@ -22,7 +22,14 @@ export const GeoBlockJsonComponent = (props: MyProps) => {
       allowedModes={['code', 'tree', 'text']}
       ace={ace}
       htmlElementProps={{
-        id: 'json-editor-container'
+        id: 'json-editor-container',
+        style: {
+          // calculate max height of the json editor
+          // to avoid scrollbar on the whole page when
+          // using tree mode and expanding the whole tree
+          // (similar to the SibarBar height)
+          maxHeight: 'calc(100vh - 200px)'
+        }
       }}
       history
       enableSort={false}
