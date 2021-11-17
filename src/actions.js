@@ -97,7 +97,8 @@ export function fetchOrganisations() {
       const selectedOrganisation = availableOrganisations[0];
       dispatch(selectOrganisation(selectedOrganisation));
     } else {
-      dispatch(selectOrganisation(selectedOrganisationLocalStorage));
+      const selectedOrganisation = availableOrganisations.find(org => org.uuid === selectedOrganisationLocalStorage.uuid);
+      dispatch(selectOrganisation(selectedOrganisation || selectedOrganisationLocalStorage));
     };
 
     // request contracts
