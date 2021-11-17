@@ -49,7 +49,7 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
 
   return (
     <ModalBackground
-      title={'Geo Block Builder'}
+      title={'GeoBlock Builder'}
       handleClose={props.handleClose}
       escKeyNotAllowed
       style={{
