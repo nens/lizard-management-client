@@ -338,7 +338,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     onUrl: "/management",
     linksToUrl: "/management/personal_api_keys",
     linksToUrlExternal: false,
-    requiresOneOfRoles: ["admin"],
+    requiresOneOfRoles: ["admin", "supplier", "manager", "user"],
     icon: personalApiKeysIcon,
   },
   // { 

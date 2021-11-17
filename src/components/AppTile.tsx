@@ -37,7 +37,7 @@ const AppTile = (props: (Props & RouteComponentProps)) => {
       {requiredRolesLength: requiredRolesLength}
     );
 
-    const requiresRoleMessage = (requiredRolesLength === 1? "Requires role" : "Requires one of the following roles");
+    const requiresRoleMessage = (requiredRolesLength === 1? "Required role: " : "Requires one of the following roles: ");
 
     const content = (
       <>
@@ -50,7 +50,7 @@ const AppTile = (props: (Props & RouteComponentProps)) => {
       return (
         <div 
           className={`${styles.AppTile} ${readonly ? styles.Disabled: null}`}
-          title={readonly ? requiresRoleMessage + requiredRoles : undefined}
+          title={readonly ? requiresRoleMessage + requiredRoles.join(', ') : undefined}
         >
           {content}
         </div>
