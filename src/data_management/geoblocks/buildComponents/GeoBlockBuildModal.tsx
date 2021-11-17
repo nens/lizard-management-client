@@ -67,7 +67,7 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
                   if (geoBlockSource) setGeoBlockView('json');
                 }}
             >
-                JSON Editor
+                Text Editor
             </div>
             <div
                 className={geoBlockView === 'visual' ? styles.SelectedTab : undefined}
