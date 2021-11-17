@@ -109,7 +109,7 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
                 marginRight: 20
               }}
             >
-              Check Validation
+              Validate
             </button>
             <SubmitButton
               onClick={() => {
