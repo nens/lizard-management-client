@@ -49,7 +49,7 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
 
   return (
     <ModalBackground
-      title={'Geo Block Builder'}
+      title={'GeoBlock Builder'}
       handleClose={props.handleClose}
       escKeyNotAllowed
       style={{
@@ -67,7 +67,7 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
                   if (geoBlockSource) setGeoBlockView('json');
                 }}
             >
-                JSON Editor
+                Text Editor
             </div>
             <div
                 className={geoBlockView === 'visual' ? styles.SelectedTab : undefined}
@@ -109,7 +109,7 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
                 marginRight: 20
               }}
             >
-              Check Validation
+              Validate
             </button>
             <SubmitButton
               onClick={() => {

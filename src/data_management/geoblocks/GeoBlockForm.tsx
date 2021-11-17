@@ -118,7 +118,7 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
       }).then(response => {
         const status = response.status;
         if (status === 200) {
-          props.addNotification('Success! Geo Block updated', 2000);
+          props.addNotification('Success! GeoBlock updated', 2000);
           props.history.push(backUrl);
         } else if (status === 403) {
           props.addNotification("Not authorized", 2000);
@@ -296,8 +296,8 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
         />
         <FormButton
           name={'geoBlockBuildModal'}
-          title={'Geo Block *'}
-          text={'Geo Block Builder'}
+          title={'GeoBlock *'}
+          text={'GeoBlock Builder'}
           onClick={e => {
             e.preventDefault();
             setBuildModal(true);
