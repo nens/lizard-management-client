@@ -34,7 +34,9 @@ export const SideBar = () => {
         value={searchInput}
         onChange={e => setSearchInput(e.target.value)}
       />
-      <div>
+      <div
+        className={styles.BlocksContainer}
+      >
         {blockNames.filter(
           blockName => blockName.toLowerCase().includes(searchInput.toLowerCase())
         ).map(blockName => {

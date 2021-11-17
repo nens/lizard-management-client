@@ -5,13 +5,18 @@
   overflow-y: auto;
 }
 
+.BlocksContainer {
+  width: 120px;
+  border-top: 1px dashed var(--color-header);
+}
+
 .Block {
   width: 120px;
   border: 1px solid grey;
   padding: 10px;
   border-radius: 5px;
   font-size: 12px;
-  margin-bottom: 10px;
+  margin-top: 10px;
   overflow: hidden;
   text-overflow: ellipsis;
   cursor: pointer;
@@ -21,10 +26,15 @@
 }
 
 .SearchBar {
-  font-size: 12px;
+  font-size: 14px;
   width: 120px;
-  margin-bottom: 10px;
-  padding: 10px 5px;
+  margin-bottom: 20px;
+  padding: 15px 10px;
+  border: 1px solid var(--color-header);
+  border-radius: 5px;
   position: sticky;
   top: 0;
+}
+.SearchBar:focus {
+  outline-color: var(--color-header);
 }
