@@ -122,7 +122,7 @@ const uuidValidator = (el: Node): Error => {
 const outputValidator = (outputBlocks: Elements): Error => {
   if (outputBlocks.length > 1) {
     return {
-      errorMessage: 'More than one output block existed in the graph.'
+      errorMessage: 'More than one output block existed in the graph: ' + outputBlocks.map(block => block.data.label).join(', ')
     };
   } else if (outputBlocks.length === 0) {
     return {
