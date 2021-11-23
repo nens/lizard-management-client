@@ -23,6 +23,7 @@ import { rasterIntervalStringServerToDurationObject } from '../../../utils/isoUt
 import { getUuidFromUrl } from '../../../utils/getUuidFromUrl';
 import { alarmFormHelpText } from '../../../utils/help_texts/helpTextForAlarms';
 import { fetchWithOptions } from '../../../utils/fetchWithOptions';
+import { getTimeseriesLabel } from '../../../types/timeseriesType';
 import { baseUrl } from './RasterAlarmTable';
 import FormActionButtons from '../../../components/FormActionButtons';
 import DeleteModal from '../../../components/DeleteModal';
@@ -36,7 +37,7 @@ interface Props {
   raster?: RasterLayerFromAPI
 };
 
-// Helper function to fetch paginated observation types with search query
+// Helper function to fetch paginated raster layers with search query
 const fetchRasterLayers = async (uuid: string, searchQuery: string) => {
   const params=[`organisation__uuid=${uuid}`, "temporal=true", "page_size=20"];
 
@@ -53,7 +54,7 @@ const fetchRasterLayers = async (uuid: string, searchQuery: string) => {
   const urlQuery = params.join('&');
   const response = await fetchRasterLayersV4(urlQuery);
 
-  return response.results.map((raster: any) => convertToSelectObject(raster.uuid, raster.name));
+  return response.results.map((raster: any) => convertToSelectObject(raster.uuid, getTimeseriesLabel(raster), raster.uuid));
 };
 
 const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (props) => {
@@ -64,7 +65,7 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
 
   const initialValues = currentRecord && raster ? {
     name: currentRecord.name,
-    raster: convertToSelectObject(raster.uuid!, raster.name),
+    raster: convertToSelectObject(raster.uuid!, getTimeseriesLabel(raster as any)),
     point: currentRecord.geometry ? {lat: currentRecord.geometry.coordinates[1], lng: currentRecord.geometry.coordinates[0]} : null, // point in format of {lat: number, lng: number}
     relative: !!currentRecord.relative_start || !!currentRecord.relative_end,
     relativeStart: currentRecord.relative_start ? convertDurationObjToSeconds(rasterIntervalStringServerToDurationObject(currentRecord.relative_start)) : null,
