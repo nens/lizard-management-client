@@ -33,7 +33,7 @@ export const EditTimeseriesAlarm: React.FC<RouteComponentProps<RouteParams>> = (
       if (currentRecord) {
         const timeseriesUrl = currentRecord.timeseries;
         const timeseriesUuid = getUuidFromUrl(timeseriesUrl);
-        const timeseries = await createFetchRecordFunctionFromUrl(`/api/v4/timeseriesalarms/${timeseriesUuid}/`)();
+        const timeseries = await createFetchRecordFunctionFromUrl(`/api/v4/timeseries/${timeseriesUuid}/`)();
         setTimeseries(timeseries);
       }
     })();
