@@ -185,6 +185,7 @@ const GeoBlockVisualFlow = (props: MyProps & DispatchProps) => {
           GroupBlock: (block: Node) => <GroupBlock block={block} onElementsRemove={onElementsRemove} />,
           RasterBlock: RasterBlock
         }}
+        deleteKeyCode={'Delete'}
       >
         {elements.length > 100 ? (
           <MiniMap
