@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import Select, { components, createFilter, StylesConfig, ValueType, OptionProps } from 'react-select';
 import AsyncSelect from 'react-select/async';
+import { UUID_REGEX } from '../components/Breadcrumbs';
 import formStyles from "../styles/Forms.module.css";
 
 export type Value = {
@@ -153,8 +154,10 @@ export const SelectDropdown = (props: MyProps) => {
       ...styles,
       display: 'grid',
       gridTemplateColumns: (
-        data.subLabel2 ? '35% 45% 20%' :
-        data.subLabel ? '35% 65%' : '100%'
+        data.subLabel2 ? '35fr 45fr 20fr' :
+        // use a different layout for the option list when the sub-label is an UUID
+        UUID_REGEX.test(data.subLabel) ? '65fr 35fr' :
+        data.subLabel ? '35fr 65fr' : '1fr'
       )
     }),
     // Custom styling for the Indicator component

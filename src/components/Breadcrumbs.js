@@ -3,11 +3,12 @@ import { NavLink } from "react-router-dom";
 import styles from "./Breadcrumbs.module.css";
 import gridStyles from "./../styles/Grid.module.css";
 
+export const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 class Breadcrumbs extends Component {
   constructor(props) {
     super(props);
-    this.uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    this.uuidRegex = UUID_REGEX;
   }
   computeBreadcrumb() {
     const currentRelativeUrl = this.props.location.pathname;
