@@ -53,7 +53,7 @@ export const dryFetchGeoBlockForValidation = (
   uuid: string | null,
   source: GeoBlockSource | null,
   formValues: Values,
-  setNoOfOperations?: any
+  setNoOfOperations?: React.Dispatch<React.SetStateAction<number | null>>
 ) => {
   // validate if the provided source is valid
   const sourceError = geoblockSourceValidator(source);
@@ -69,7 +69,7 @@ export const dryFetchGeoBlockForValidation = (
     .then(res => res.json())
     .then(res => {
       handleGeoBlockValidationResponse(res);
-      res && setNoOfOperations && setNoOfOperations(res.weight);
+      res && res.uuid && setNoOfOperations && setNoOfOperations(res.weight);
     })
     .catch(console.error)
   } else {
@@ -89,7 +89,7 @@ export const dryFetchGeoBlockForValidation = (
     .then(res => res.json())
     .then(res => {
       handleGeoBlockValidationResponse(res);
-      res && setNoOfOperations && setNoOfOperations(res.weight);
+      res && res.uuid && setNoOfOperations && setNoOfOperations(res.weight);
     })
     .catch(console.error)
   };
