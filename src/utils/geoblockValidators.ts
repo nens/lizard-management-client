@@ -69,6 +69,7 @@ export const dryFetchGeoBlockForValidation = (
     .then(res => res.json())
     .then(res => {
       handleGeoBlockValidationResponse(res);
+      // Update the number of operations if the response is valid
       res && res.uuid && setNoOfOperations && setNoOfOperations(res.weight);
     })
     .catch(console.error)
@@ -89,6 +90,7 @@ export const dryFetchGeoBlockForValidation = (
     .then(res => res.json())
     .then(res => {
       handleGeoBlockValidationResponse(res);
+      // Update the number of operations if the response is valid
       res && res.uuid && setNoOfOperations && setNoOfOperations(res.weight);
     })
     .catch(console.error)
