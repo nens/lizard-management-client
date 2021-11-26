@@ -96,19 +96,19 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
           >
             Close
           </button>
-          <div>
+          <b>
             <span>Operations: </span>
             <span>{noOfOperations || 0}</span>
-          </div>
+          </b>
           <div>
             <button
               className={buttonStyles.NewButton}
               onClick={() => {
                 if (geoBlockView === 'visual') {
                   const geoBlockSource = convertElementsToGeoBlockSource(elements, source, setSource);
-                  if (geoBlockSource) dryFetchGeoBlockForValidation(props.uuid, geoBlockSource, props.formValues);
+                  if (geoBlockSource) dryFetchGeoBlockForValidation(props.uuid, geoBlockSource, props.formValues, setNoOfOperations);
                 } else {
-                  dryFetchGeoBlockForValidation(props.uuid, source, props.formValues);
+                  dryFetchGeoBlockForValidation(props.uuid, source, props.formValues, setNoOfOperations);
                 };
               }}
               style={{
