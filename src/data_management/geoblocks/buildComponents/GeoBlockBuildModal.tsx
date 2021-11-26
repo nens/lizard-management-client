@@ -22,11 +22,13 @@ interface MyProps {
   uuid: string | null,
   formValues: Values
   source: GeoBlockSource | null,
+  operations: number | null,
   onChange: (value: GeoBlockSource | null) => void,
   handleClose: () => void
 }
 
 function GeoBlockBuildModal (props: MyProps & DispatchProps) {
+  const [noOfOperations, setNoOfOperations] = useState<number | null>(props.operations);
   const [source, setSource] = useState<GeoBlockSource | null>(props.source);
   const [geoBlockView, setGeoBlockView] = useState<'json' | 'visual'>('json');
 
@@ -94,6 +96,10 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
           >
             Close
           </button>
+          <div>
+            <span>Operations: </span>
+            <span>{noOfOperations || 0}</span>
+          </div>
           <div>
             <button
               className={buttonStyles.NewButton}
