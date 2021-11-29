@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { Elements } from 'react-flow-renderer';
+import { Elements, isNode } from 'react-flow-renderer';
 import { GeoBlockSource } from '../../../types/geoBlockType';
 import { GeoBlockJsonComponent } from './GeoBlockJsonComponent';
 import GeoBlockVisualComponent from './GeoBlockVisualComponent';
@@ -48,6 +48,14 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
     // setElements back to [] when component unmounted
     return () => setElements([]);
   }, [source, setElements, geoBlockView]);
+
+  // useEffect to keep noOfOperations in sync with geoblock elements
+  useEffect(() => {
+    if (geoBlockView === 'visual') {
+      // calculate the number of operations as the number of nodes in the elements array
+      setNoOfOperations(elements.filter(el => isNode(el)).length);
+    };
+  }, [elements, geoBlockView]);
 
   return (
     <ModalBackground
