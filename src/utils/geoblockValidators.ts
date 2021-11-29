@@ -53,7 +53,6 @@ export const dryFetchGeoBlockForValidation = (
   uuid: string | null,
   source: GeoBlockSource | null,
   formValues: Values,
-  setNoOfOperations?: React.Dispatch<React.SetStateAction<number | null>>
 ) => {
   // validate if the provided source is valid
   const sourceError = geoblockSourceValidator(source);
@@ -67,11 +66,7 @@ export const dryFetchGeoBlockForValidation = (
       body: JSON.stringify({ source })
     })
     .then(res => res.json())
-    .then(res => {
-      handleGeoBlockValidationResponse(res);
-      // Update the number of operations if the response is valid
-      res && res.uuid && setNoOfOperations && setNoOfOperations(res.weight);
-    })
+    .then(res => handleGeoBlockValidationResponse(res))
     .catch(console.error)
   } else {
     fetch('/api/v4/rasters/?dry-run', {
@@ -88,11 +83,7 @@ export const dryFetchGeoBlockForValidation = (
       })
     })
     .then(res => res.json())
-    .then(res => {
-      handleGeoBlockValidationResponse(res);
-      // Update the number of operations if the response is valid
-      res && res.uuid && setNoOfOperations && setNoOfOperations(res.weight);
-    })
+    .then(res => handleGeoBlockValidationResponse(res))
     .catch(console.error)
   };
 };

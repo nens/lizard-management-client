@@ -49,16 +49,6 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
     return () => setElements([]);
   }, [source, setElements, geoBlockView]);
 
-  // Helper function to validate and update number of operations if the geoblock is valid
-  const validateAndUpdateGeoBlock = () => {
-    if (geoBlockView === 'visual') {
-      const geoBlockSource = convertElementsToGeoBlockSource(elements, source, setSource);
-      if (geoBlockSource || geoBlockSource === null) dryFetchGeoBlockForValidation(props.uuid, geoBlockSource, props.formValues, setNoOfOperations);
-    } else {
-      dryFetchGeoBlockForValidation(props.uuid, source, props.formValues, setNoOfOperations);
-    };
-  };
-
   return (
     <ModalBackground
       title={'GeoBlock Builder'}
@@ -106,25 +96,18 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
           >
             Close
           </button>
-          <div>
-            <b>Operations: {noOfOperations || 0}</b>
-            <button
-              className={buttonStyles.IconButton}
-              title={'Validate and update number of operations'}
-              style={{
-                fontSize: 20,
-                marginLeft: 10,
-                color: 'var(--color-header)'
-              }}
-              onClick={validateAndUpdateGeoBlock}
-            >
-              <i className={'fa fa-sync'} />
-            </button>
-          </div>
+          <b>Operations: {noOfOperations || 0}</b>
           <div>
             <button
               className={buttonStyles.NewButton}
-              onClick={validateAndUpdateGeoBlock}
+              onClick={() => {
+                if (geoBlockView === 'visual') {
+                  const geoBlockSource = convertElementsToGeoBlockSource(elements, source, setSource);
+                  if (geoBlockSource || geoBlockSource === null) dryFetchGeoBlockForValidation(props.uuid, geoBlockSource, props.formValues);
+                } else {
+                  dryFetchGeoBlockForValidation(props.uuid, source, props.formValues);
+                };
+              }}
               style={{
                 marginRight: 20
               }}
