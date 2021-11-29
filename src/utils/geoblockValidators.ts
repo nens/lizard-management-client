@@ -52,7 +52,7 @@ const handleGeoBlockValidationResponse = (res: any) => {
 export const dryFetchGeoBlockForValidation = (
   uuid: string | null,
   source: GeoBlockSource | null,
-  formValues: Values,
+  formValues: Values
 ) => {
   // validate if the provided source is valid
   const sourceError = geoblockSourceValidator(source);
