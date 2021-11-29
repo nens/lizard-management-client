@@ -41,6 +41,7 @@ import { convertToSelectObject } from '../../utils/convertToSelectObject';
 import { fetchWithOptions } from '../../utils/fetchWithOptions';
 import { fetchSuppliers } from './RasterSourceForm';
 import { baseUrl } from './RasterLayerTable';
+import { UUID_REGEX } from '../../components/Breadcrumbs';
 
 interface Props {
   currentRecord?: RasterLayerFromAPI,
@@ -50,10 +51,8 @@ interface Props {
 export const fetchRasterSources = async (uuid: string, searchQuery: string) => {
   const params=[`organisation__uuid=${uuid}`, "scenario__isnull=true", "page_size=20"];
 
-  // Regex expression to check if search input is UUID of raster source
-  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
   if (searchQuery) {
-    if (uuidRegex.test(searchQuery)) {
+    if (UUID_REGEX.test(searchQuery)) {
       params.push(`uuid=${searchQuery}`);
     } else {
       params.push(`name__icontains=${searchQuery}`);
@@ -99,10 +98,8 @@ export const fetchObservationTypes = async (searchQuery: string) => {
 export const fetchOrganisationsToShareWith = async (searchQuery: string) => {
   const params=["page_size=20"];
 
-  // Regex expression to check if search input is UUID of raster source
-  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
   if (searchQuery) {
-    if (uuidRegex.test(searchQuery)) {
+    if (UUID_REGEX.test(searchQuery)) {
       params.push(`uuid=${searchQuery}`);
     } else {
       params.push(`name__icontains=${searchQuery}`);
