@@ -104,7 +104,7 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
           >
             Close
           </button>
-          <b>Operations: {noOfOperations || 0}</b>
+          {geoBlockView === 'visual' ? <b>Operations: {noOfOperations || 0}</b> : null}
           <div>
             <button
               className={buttonStyles.NewButton}
