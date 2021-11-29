@@ -64,7 +64,7 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
                 className={geoBlockView === 'json' ? styles.SelectedTab : undefined}
                 onClick={() => {
                   const geoBlockSource = convertElementsToGeoBlockSource(elements, source, setSource);
-                  if (geoBlockSource) setGeoBlockView('json');
+                  if (geoBlockSource || geoBlockSource === null) setGeoBlockView('json');
                 }}
             >
                 Text Editor
@@ -100,7 +100,7 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
               onClick={() => {
                 if (geoBlockView === 'visual') {
                   const geoBlockSource = convertElementsToGeoBlockSource(elements, source, setSource);
-                  if (geoBlockSource) dryFetchGeoBlockForValidation(props.uuid, geoBlockSource, props.formValues);
+                  if (geoBlockSource || geoBlockSource === null) dryFetchGeoBlockForValidation(props.uuid, geoBlockSource, props.formValues);
                 } else {
                   dryFetchGeoBlockForValidation(props.uuid, source, props.formValues);
                 };
@@ -115,7 +115,7 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
               onClick={() => {
                 if (geoBlockView === 'visual') {
                   const geoBlockSource = convertElementsToGeoBlockSource(elements, source, setSource);
-                  if (geoBlockSource) {
+                  if (geoBlockSource || geoBlockSource === null) {
                     props.onChange(geoBlockSource);
                     props.handleClose();
                   };
