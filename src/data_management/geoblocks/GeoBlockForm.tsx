@@ -65,7 +65,7 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
     name: null,
     description: null,
     layercollections: [],
-    source: {},
+    source: null,
     aggregationType: null,
     observationType: null,
     colorMap: {options: {}, rescalable: true, customColormap: {}},
