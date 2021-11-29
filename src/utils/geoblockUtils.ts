@@ -155,8 +155,14 @@ export const convertGeoblockSourceToFlowElements = (
 export const convertElementsToGeoBlockSource = (
   elements: Elements,
   source: GeoBlockSource | null,
-  setSource?: (e: GeoBlockSource) => void
-): GeoBlockSource | undefined => {
+  setSource: (e: GeoBlockSource | null) => void
+): GeoBlockSource | null | undefined => {
+  // Do not validate an empty geoblock and set the source back to null
+  if (elements.length === 0) {
+    setSource(null);
+    return null;
+  };
+
   // check if the geoblock is validated
   const errors = geoBlockValidator(elements);
   if (errors.length >= 1) {
@@ -206,6 +212,6 @@ export const convertElementsToGeoBlockSource = (
     graph
   };
 
-  if (setSource) setSource(geoBlockSource);
+  setSource(geoBlockSource);
   return geoBlockSource;
 };
