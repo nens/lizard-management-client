@@ -185,7 +185,8 @@ const GeoBlockVisualFlow = (props: MyProps & DispatchProps) => {
           GroupBlock: (block: Node) => <GroupBlock block={block} onElementsRemove={onElementsRemove} />,
           RasterBlock: RasterBlock
         }}
-        deleteKeyCode={'Delete'}
+        // use Backspace key for deletion on Mac instead of Delete key (for other platforms)
+        deleteKeyCode={window.navigator.platform.startsWith("Mac") ? 'Backspace' : 'Delete'}
       >
         {elements.length > 100 ? (
           <MiniMap
