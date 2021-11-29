@@ -42,6 +42,17 @@ export const GeoBlockTable: React.FC<RouteComponentProps> = (props) =>  {
       orderingField: "name",
     },
     {
+      titleRenderFunction: () => "Operations",
+      renderFunction: (row: any) =>
+        <span
+          className={tableStyles.CellEllipsis}
+          title={row.weight}
+        >
+          {row.weight}
+        </span>,
+      orderingField: null,
+    },
+    {
       titleRenderFunction: () =>  "User",
       renderFunction: (row: any) =>  
       <span
@@ -104,7 +115,7 @@ export const GeoBlockTable: React.FC<RouteComponentProps> = (props) =>  {
       backUrl={"/management/data_management"}
     >
         <TableStateContainer 
-          gridTemplateColumns={"1fr 8fr 4fr 2fr 1fr"}
+          gridTemplateColumns={"1fr 6fr 2fr 3fr 2fr 1fr"}
           columnDefinitions={columnDefinitions}
           baseUrl={`${baseUrl}?`} 
           checkBoxActions={[
