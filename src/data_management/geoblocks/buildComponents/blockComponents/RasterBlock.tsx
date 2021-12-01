@@ -22,7 +22,7 @@ export const RasterBlock = (props: Node<RasterBlockInput>) => {
   const { label, classOfBlock, value, onChange, onBlockNameChange } = props.data!;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
 
-  const [rasterSource, setRasterSource] = useState<Value>(convertToSelectObject(value));
+  const [rasterSource, setRasterSource] = useState<Value | null>(value ? convertToSelectObject(value) : null);
   useEffect(() => {
     if (value) {
       fetchRasterSourceV4(value).then(rasterSource =>
@@ -63,8 +63,8 @@ export const RasterBlock = (props: Node<RasterBlockInput>) => {
       <div
         style={{ marginTop: 10 }}
       >
-        <small>{rasterSource.label}</small><br />
-        <small>{rasterSource.value}</small>
+        <small>{rasterSource?.label}</small><br />
+        <small>{rasterSource?.value}</small>
       </div>
       <Handle
         type="source"
