@@ -20,6 +20,7 @@ export const BlockName = (props: MyProps) => {
         <input
           type="text"
           className={styles.NameInput + ' nodrag'}
+          placeholder={'Enter a name'}
           title={name}
           value={name}
           onChange={e => setName(e.target.value)}
@@ -34,7 +35,7 @@ export const BlockName = (props: MyProps) => {
       )}
       <button
         className={`${buttonStyles.IconButton} ${buttonStyles.IconButtonWithoutOutline}`}
-        title={showInput ? 'Confirm' : 'Edit name'}
+        title={showInput ? 'Confirm block name' : 'Edit block name'}
         onClick={() => {
           if (showInput && name !== label) onConfirm(name);
           setShowInput(!showInput);
