@@ -34,6 +34,7 @@ export const BlockName = (props: MyProps) => {
       )}
       <button
         className={`${buttonStyles.IconButton} ${buttonStyles.IconButtonWithoutOutline}`}
+        title={showInput ? 'Confirm' : 'Edit name'}
         onClick={() => {
           if (showInput && name !== label) onConfirm(name);
           setShowInput(!showInput);
