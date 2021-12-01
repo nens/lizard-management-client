@@ -122,7 +122,18 @@ const onBlockNameChange = (
 ) => {
   setElements(elms => {
     return elms.map(elm => {
-      if (elm.id === blockId) elm.data.label = name;
+      if (elm.id === blockId) {
+        // Change the parameter value of the connected output block if there is one
+        const connectedOutputBlock = getOutgoers(elm as Node, elms)[0];
+        if (connectedOutputBlock) {
+          const parametersOfOutputBlock = connectedOutputBlock.data!.parameters;
+          const indexOfTheBlock = parametersOfOutputBlock.indexOf(elm.data.label);
+          parametersOfOutputBlock[indexOfTheBlock] = name;
+        };
+
+        // Change the label name of the block
+        elm.data.label = name;
+      };
       return elm;
     });
   });
