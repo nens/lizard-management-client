@@ -24,9 +24,11 @@ export const RasterBlock = (props: Node<RasterBlockInput>) => {
 
   const [rasterSource, setRasterSource] = useState<Value>(convertToSelectObject(value));
   useEffect(() => {
-    fetchRasterSourceV4(value).then(rasterSource =>
-      rasterSource && rasterSource.uuid && setRasterSource(convertToSelectObject(rasterSource.uuid, rasterSource.name))
-    );
+    if (value) {
+      fetchRasterSourceV4(value).then(rasterSource =>
+        rasterSource && rasterSource.uuid && setRasterSource(convertToSelectObject(rasterSource.uuid, rasterSource.name))
+      );
+    };
   }, [value]);
 
   return (
@@ -45,7 +47,7 @@ export const RasterBlock = (props: Node<RasterBlockInput>) => {
       </div>
       <AsyncSelect
         className={styles.BlockInput + ' nodrag'}
-        placeholder={'Please enter an UUID'}
+        placeholder={'Search and select'}
         cacheOptions
         defaultOptions
         loadOptions={searchInput => searchInput ? fetchRasterSources(selectedOrganisation.uuid, searchInput) : Promise.resolve()}
