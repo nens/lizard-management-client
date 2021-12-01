@@ -7,6 +7,7 @@ import { convertToSelectObject } from '../../../../utils/convertToSelectObject';
 import { fetchRasterSources } from '../../../rasters/RasterLayerForm';
 import { fetchRasterSourceV4 } from '../../../../api/rasters';
 import { Value } from '../../../../form/SelectDropdown';
+import { BlockName } from './BlockName';
 import styles from './Block.module.css';
 
 interface RasterBlockInput {
@@ -14,10 +15,11 @@ interface RasterBlockInput {
   classOfBlock: string
   value: string,
   onChange: (value: string) => void,
+  onBlockNameChange: (name: string) => void
 }
 
 export const RasterBlock = (props: Node<RasterBlockInput>) => {
-  const { label, classOfBlock, value, onChange } = props.data!;
+  const { label, classOfBlock, value, onChange, onBlockNameChange } = props.data!;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
 
   const [rasterSource, setRasterSource] = useState<Value>(convertToSelectObject(value));
@@ -35,7 +37,10 @@ export const RasterBlock = (props: Node<RasterBlockInput>) => {
       <div
         className={styles.BlockHeader}
       >
-        <h4>{label}</h4>
+        <BlockName
+          label={label}
+          onConfirm={onBlockNameChange}
+        />
         <small><i>({classOfBlock})</i></small>
       </div>
       <AsyncSelect

@@ -16,7 +16,8 @@ export const getBlockData = (
     label: 'LizardRasterSource_' + (numberOfBlocks + 1),
     value: '',
     classOfBlock: 'lizard_nxt.blocks.LizardRasterSource',
-    onChange: (value: string) => onRasterBlockChange(value, idOfNewBlock, setElements)
+    onChange: (value: string) => onRasterBlockChange(value, idOfNewBlock, setElements),
+    onBlockNameChange: (name: string) => onBlockNameChange(name, idOfNewBlock, setElements)
   };
 
   // @ts-ignore
@@ -35,7 +36,8 @@ export const getBlockData = (
     classOfBlock: blockDefinition.class,
     parameters: blockParameters,
     parameterTypes: blockDefinition.parameters,
-    onChange: (value: number, i: number) => onBlockChange(value, i, idOfNewBlock, setElements)
+    onChange: (value: number, i: number) => onBlockChange(value, i, idOfNewBlock, setElements),
+    onBlockNameChange: (name: string) => onBlockNameChange(name, idOfNewBlock, setElements)
   };
 
   if (blockName === 'RasterBlock') {
@@ -62,7 +64,8 @@ const getRasterElements = (
       label: blockName,
       value: graph[blockName][1],
       classOfBlock: 'lizard_nxt.blocks.LizardRasterSource',
-      onChange: (value: string) => onRasterBlockChange(value, blockName, setElements)
+      onChange: (value: string) => onRasterBlockChange(value, blockName, setElements),
+      onBlockNameChange: (name: string) => onBlockNameChange(name, blockName, setElements)
     },
     position
   }));
@@ -103,10 +106,25 @@ const getBlockElements = (
         classOfBlock,
         parameters: parameters,
         parameterTypes: blockDefinition ? blockDefinition.parameters : [],
-        onChange: (value: number, i: number) => onBlockChange(value, i, blockName, setElements)
+        onChange: (value: number, i: number) => onBlockChange(value, i, blockName, setElements),
+        onBlockNameChange: (name: string) => onBlockNameChange(name, blockName, setElements)
       },
       position
     };
+  });
+};
+
+// Helper function to change the name of the block
+const onBlockNameChange = (
+  name: string,
+  blockId: string,
+  setElements: React.Dispatch<React.SetStateAction<Elements<any>>>
+) => {
+  setElements(elms => {
+    return elms.map(elm => {
+      if (elm.id === blockId) elm.data.label = name;
+      return elm;
+    });
   });
 };
 
