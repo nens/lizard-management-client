@@ -48,7 +48,7 @@ interface Props {
 };
 
 // Helper function to fetch paginated raster sources with search query
-const fetchRasterSources = async (uuid: string, searchQuery: string) => {
+export const fetchRasterSources = async (uuid: string, searchQuery: string) => {
   const params=[`organisation__uuid=${uuid}`, "scenario__isnull=true", "page_size=20"];
 
   if (searchQuery) {
@@ -345,6 +345,7 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
             }}
             onFocus={handleFocus}
             onBlur={handleBlur}
+            validated
           />
         ) : (
           <SelectDropdown

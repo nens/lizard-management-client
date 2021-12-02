@@ -21,7 +21,9 @@ const UnauthenticatedModal = (props: Props) => {
   return (
     <ModalBackground
       title={'Not logged-in'}
-      height={'400px'}
+      style={{
+        height: 400
+      }}
     >
       <div className={styles.ModalBody}>
         <span>You need to be logged in to use this page</span>

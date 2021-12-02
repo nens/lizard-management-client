@@ -54,7 +54,9 @@ function AddToMonitoringNetworkModal (props: MyProps & DispatchProps) {
     <ModalBackground
       title={'Add to Monitoring Network'}
       handleClose={props.handleClose}
-      width={'50%'}
+      style={{
+        width: '50%'
+      }}
     >
       <div
         style={{

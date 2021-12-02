@@ -49,7 +49,7 @@ interface ColorMapProps {
   onBlur?: () => void,
 };
 
-const colorMapValidator = (options: ColorMapOptions | null): {
+export const colorMapValidator = (options: ColorMapOptions | null): {
   validated: boolean,
   minValidated: boolean,
   maxValidated: boolean,
@@ -278,8 +278,10 @@ const ColorMapInput: React.FC<ColorMapProps> = (props) => {
           handleClose={() => setShowCustomColormapModal(false)}
           // previously this value was precisely hardcoded to pixels, because some of the content has a fixed minheight
           // height={'816px'}
-          height={'90%'}
-          width={'50%'} 
+          style={{
+            width: '50%',
+            height: '90%',
+          }}
         >
           <div
             style={{padding: "30px", flexGrow: 1, minHeight: 0,}}

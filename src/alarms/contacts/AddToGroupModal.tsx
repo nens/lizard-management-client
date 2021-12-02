@@ -83,7 +83,9 @@ function AddToGroupModal (props: MyProps & DispatchProps) {
     <ModalBackground
       title={'Add Contact to Group'}
       handleClose={props.handleClose}
-      width={'50%'}
+      style={{
+        width: '50%'
+      }}
     >
       <div
         style={{

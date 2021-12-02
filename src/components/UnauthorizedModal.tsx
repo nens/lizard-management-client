@@ -16,7 +16,9 @@ const UnauthorizedModal = (props: Props) => {
   return (
     <ModalBackground
       title={'Not Authorized to view this page'}
-      height={'400px'}
+      style={{
+        height: 400
+      }}
     >
       <div className={styles.ModalBody}>
         <span>You are not authorized to view this page. <br/> Maybe you are authorized with a different organisation?</span>

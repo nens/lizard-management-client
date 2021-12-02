@@ -114,3 +114,19 @@ export const geometryValidator = (location: Location | null) => {
     return false;
   };
 };
+
+export const geoblockSourceValidator = (source: any) => {
+  if (!source) {
+    return 'Please provide a source';
+  }
+  if (Object.keys(source).length === 0) {
+    return 'Please provide a name and graph for the source';
+  };
+  if (!source.name) {
+    return 'Please provide a name for the source';
+  };
+  if (!source.graph) {
+    return 'Please provide a graph for the source';
+  };
+  return false;
+};

@@ -52,6 +52,9 @@ import {LayerCollectionsTable} from "../data_management/layer_collections/LayerC
 import {EditLayerCollection} from "../data_management/layer_collections/EditLayerCollection";
 import {NewLayerCollection} from "../data_management/layer_collections/NewLayerCollection";
 import SpinnerIfStandardSelectorsNotLoaded from '../components/SpinnerIfStandardSelectorsNotLoaded';
+import { GeoBlockTable } from "../data_management/geoblocks/GeoBlockTable";
+import { NewGeoBlock } from "../data_management/geoblocks/NewGeoBlock";
+import { EditGeoBlock } from "../data_management/geoblocks/EditGeoBlock";
 // import { ViewContract } from '../contracts/ViewContract';
 
 const authenticatedRoutes = () => {
@@ -68,7 +71,6 @@ const authenticatedRoutes = () => {
             <Route exact path="/management/personal_api_keys/:uuid" component={EditPersonalApiKey} />
             
             {/* <Route exact path="/management/contract" component={ViewContract} /> */}
-            
 
             <Route exact path="/management/data_management/rasters/sources" component={RasterSourceTable} />
             <Route exact path="/management/data_management/rasters/sources/new" component={NewRasterSource} />
@@ -77,6 +79,10 @@ const authenticatedRoutes = () => {
             <Route exact path="/management/data_management/rasters/layers" component={RasterLayerTable} />
             <Route exact path="/management/data_management/rasters/layers/new" component={NewRasterLayer} />
             <Route exact path="/management/data_management/rasters/layers/:uuid" component={EditRasterLayer} />
+
+            <Route exact path="/management/data_management/geoblocks" component={GeoBlockTable} />
+            <Route exact path="/management/data_management/geoblocks/new" component={NewGeoBlock} />
+            <Route exact path="/management/data_management/geoblocks/:uuid" component={EditGeoBlock} />
 
             <Route exact path="/management/data_management/wms_layers" component={WmsLayerTable} />
             <Route exact path="/management/data_management/wms_layers/new" component={NewWmsLayer} />

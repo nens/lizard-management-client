@@ -1,0 +1,796 @@
+{
+  "RasterBlock": {
+    "class": "lizard_nxt.blocks.LizardRasterSource",
+    "description": "A raster block",
+    "parameters": []
+  },
+  "Add": {
+    "class": "dask_geomodeling.raster.elemwise.Add",
+    "description": "Add two rasters together or add a constant value to a raster",
+    "parameters": [
+      {
+        "name": "a",
+        "type": [
+          "number",
+          "raster_block"
+        ]
+      },
+      {
+        "name": "b",
+        "type": [
+          "number",
+          "raster_block"
+        ]
+      }
+    ]
+  },
+  "And": {
+    "class": "dask_geomodeling.raster.elemwise.And",
+    "description": "Returns True where both inputs are True",
+    "parameters": [
+      {
+        "name": "a",
+        "type": [
+          "boolean",
+          "raster_block"
+        ]
+      },
+      {
+        "name": "b",
+        "type": [
+          "boolean",
+          "raster_block"
+        ]
+      }
+    ]
+  },
+  "Classify": {
+    "class": "dask_geomodeling.raster.misc.Classify",
+    "description": "Classify raster data into binned categories",
+    "parameters": [
+      {
+        "name": "store",
+        "type": "raster_block"
+      },
+      {
+        "name": "bin",
+        "type": "array",
+        "items": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": ["boolean", "integer"]
+            },
+            {
+              "type": "number"
+            }
+          ]
+        }
+      },
+      {
+        "name": "right",
+        "type": "boolean",
+        "default": false
+      }
+    ]
+  },
+  "Clip": {
+    "class": "dask_geomodeling.raster.misc.Clip",
+    "description": "Clip one raster to the extent of another raster",
+    "parameters": [
+      {
+        "name": "store",
+        "type": "raster_block"
+      },
+      {
+        "name": "source",
+        "type": "raster_block"
+      }
+    ]
+  },
+  "Cumulative": {
+    "class": "dask_geomodeling.raster.temporal.Cumulative",
+    "description": "Compute the cumulative of a raster over time",
+    "parameters": [
+      {
+        "name": "source",
+        "type": "raster_block"
+      },
+      {
+        "name": "statistic",
+        "type": "enum",
+        "enum": [
+          "sum",
+          "count"
+        ]
+      },
+      {
+        "name": "frequency",
+        "type": "string"
+      },
+      {
+        "name": "timezone",
+        "type": "string",
+        "default": "UTC"
+      }
+    ]
+  },
+  "Dilate": {
+    "class": "dask_geomodeling.raster.spatial.Dilate",
+    "description": "Perform spatial dilation on specific cell values",
+    "parameters": [
+      {
+        "name": "store",
+        "type": "raster_block"
+      },
+      {
+        "name": "values",
+        "type": "array",
+        "items": {
+          "type": "any"
+        }
+      }
+    ]
+  },
+  "Divide": {
+    "class": "dask_geomodeling.raster.elemwise.Divide",
+    "description": "Divide two rasters or divide a raster by a constant value",
+    "parameters": [
+      {
+        "name": "a",
+        "type": [
+          "number",
+          "raster_block"
+        ]
+      },
+      {
+        "name": "b",
+        "type": [
+          "number",
+          "raster_block"
+        ]
+      }
+    ]
+  },
+  "Equal": {
+    "class": "dask_geomodeling.raster.elemwise.Equal",
+    "description": "Compares the values of two rasters and returns True for equal elements",
+    "parameters": [
+      {
+        "name": "a",
+        "type": [
+          "number",
+          "raster_block"
+        ]
+      },
+      {
+        "name": "b",
+        "type": [
+          "number",
+          "raster_block"
+        ]
+      }
+    ]
+  },
+  "Exp": {
+    "class": "dask_geomodeling.raster.elemwise.Exp",
+    "description": "Return e raised to the power of the raster values",
+    "parameters": [
+      {
+        "name": "x",
+        "type": "raster_block"
+      }
+    ]
+  },
+  "FillNoData": {
+    "class": "dask_geomodeling.raster.elemwise.FillNoData",
+    "description": "Combines multiple rasters filling ‘no data’ values",
+    "parameters": {
+      "type": "array",
+      "items": {
+        "type": "raster_block"
+      }
+    }
+  },
+  "Greater": {
+    "class": "dask_geomodeling.raster.elemwise.Greater",
+    "description": "Compares the values of two rasters and returns True if an element in the first term is greater",
+    "parameters": [
+      {
+        "name": "a",
+        "type": [
+          "number",
+          "raster_block"
+        ]
+      },
+      {
+        "name": "b",
+        "type": [
+          "number",
+          "raster_block"
+        ]
+      }
+    ]
+  },
+  "GreaterEqual": {
+    "class": "dask_geomodeling.raster.elemwise.GreaterEqual",
+    "description": "Compares the values of two rasters and returns True if an element in the first term is greater or equal",
+    "parameters": [
+      {
+        "name": "a",
+        "type": [
+          "number",
+          "raster_block"
+        ]
+      },
+      {
+        "name": "b",
+        "type": [
+          "number",
+          "raster_block"
+        ]
+      }
+    ]
+  },
+  "Group": {
+    "class": "dask_geomodeling.raster.combine.Group",
+    "description": "Combine multiple rasters into a single one",
+    "parameters": {
+      "type": "array",
+      "items": {
+        "type": "raster_block"
+      }
+    }
+  },
+  "HillShade": {
+    "class": "dask_geomodeling.raster.spatial.HillShade",
+    "description": "Calculate a hillshade from the raster values",
+    "parameters": [
+      {
+        "name": "store",
+        "type": "raster_block"
+      },
+      {
+        "name": "altitude",
+        "type": "number"
+      },
+      {
+        "name": "azimuth",
+        "type": "number"
+      },
+      {
+        "name": "fill",
+        "type": "number"
+      }
+    ]
+  },
+  "Invert": {
+    "class": "dask_geomodeling.raster.elemwise.Invert",
+    "description": "Logically invert a raster (swap True and False)",
+    "parameters": [
+      {
+        "name": "x",
+        "type": "raster_block"
+      }
+    ]
+  },
+  "IsData": {
+    "class": "dask_geomodeling.raster.elemwise.IsData",
+    "description": "Return True where raster has data",
+    "parameters": [
+      {
+        "name": "store",
+        "type": "raster_block"
+      }
+    ]
+  },
+  "IsNoData": {
+    "class": "dask_geomodeling.raster.elemwise.IsNoData",
+    "description": "Return True where raster has no data",
+    "parameters": [
+      {
+        "name": "store",
+        "type": "raster_block"
+      }
+    ]
+  },
+  "Less": {
+    "class": "dask_geomodeling.raster.elemwise.Less",
+    "description": "Compares the values of two rasters and returns True if an element in the first term is less",
+    "parameters": [
+      {
+        "name": "a",
+        "type": [
+          "number",
+          "raster_block"
+        ]
+      },
+      {
+        "name": "b",
+        "type": [
+          "number",
+          "raster_block"
+        ]
+      }
+    ]
+  },
+  "LessEqual": {
+    "class": "dask_geomodeling.raster.elemwise.LessEqual",
+    "description": "Compares the values of two rasters and returns True if an element in the first term is less or equal",
+    "parameters": [
+      {
+        "name": "a",
+        "type": [
+          "number",
+          "raster_block"
+        ]
+      },
+      {
+        "name": "b",
+        "type": [
+          "number",
+          "raster_block"
+        ]
+      }
+    ]
+  },
+  "Log": {
+    "class": "dask_geomodeling.raster.elemwise.Log",
+    "description": "Return natural logarithm of the raster values",
+    "parameters": [
+      {
+        "name": "x",
+        "type": "raster_block"
+      }
+    ]
+  },
+  "Log10": {
+    "class": "dask_geomodeling.raster.elemwise.Log10",
+    "description": "Return the base 10 logarithm of the raster values",
+    "parameters": [
+      {
+        "name": "x",
+        "type": "raster_block"
+      }
+    ]
+  },
+  "Mask": {
+    "class": "dask_geomodeling.raster.misc.Mask",
+    "description": "Replace values in a raster with a single constant value. ‘no data’ values are preserved",
+    "parameters": [
+      {
+        "name": "store",
+        "type": "raster_block"
+      },
+      {
+        "name": "value",
+        "type": "number"
+      }
+    ]
+  },
+  "MaskBelow": {
+    "class": "dask_geomodeling.raster.misc.MaskBelow",
+    "description": "Converts raster cells below the supplied value to ‘no data’",
+    "parameters": [
+      {
+        "name": "store",
+        "type": "raster_block"
+      },
+      {
+        "name": "value",
+        "type": "number"
+      }
+    ]
+  },
+  "MemorySource": {
+    "class": "dask_geomodeling.sources.MemorySource",
+    "description": "A raster source that interfaces data from memory",
+    "parameters": [
+      {
+        "name": "data",
+        "type": "number"
+      },
+      {
+        "name": "no_data_value",
+        "type": "number"
+      },
+      {
+        "name": "projection",
+        "type": "string"
+      },
+      {
+        "name": "pixel_size",
+        "type": "float"
+      },
+      {
+        "name": "pixel_origin",
+        "type": "float"
+      },
+      {
+        "name": "time_first",
+        "type": "integer"
+      },
+      {
+        "name": "time_delta",
+        "type": "integer"
+      },
+      {
+        "name": "metadata",
+        "type": "array",
+        "items": {
+          "type": "any"
+        }
+      }
+    ]
+  },
+  "MovingMax": {
+    "class": "dask_geomodeling.raster.spatial.MovingMax",
+    "description": "Apply a spatial maximum filter to the data using a circular footprint",
+    "parameters": [
+      {
+        "name": "store",
+        "type": "raster_block"
+      },
+      {
+        "name": "size",
+        "type": "integer"
+      }
+    ]
+  },
+  "Multiply": {
+    "class": "dask_geomodeling.raster.elemwise.Multiply",
+    "description": "Multiply two rasters or multiply a raster by a constant value",
+    "parameters": [
+      {
+        "name": "a",
+        "type": [
+          "number",
+          "raster_block"
+        ]
+      },
+      {
+        "name": "b",
+        "type": [
+          "number",
+          "raster_block"
+        ]
+      }
+    ]
+  },
+  "NotEqual": {
+    "class": "dask_geomodeling.raster.elemwise.NotEqual",
+    "description": "Compares the values of two rasters and returns False for equal elements",
+    "parameters": [
+      {
+        "name": "a",
+        "type": [
+          "number",
+          "raster_block"
+        ]
+      },
+      {
+        "name": "b",
+        "type": [
+          "number",
+          "raster_block"
+        ]
+      }
+    ]
+  },
+  "Or": {
+    "class": "dask_geomodeling.raster.elemwise.Or",
+    "description": "Returns True where any of inputs is True",
+    "parameters": [
+      {
+        "name": "a",
+        "type": [
+          "boolean",
+          "raster_block"
+        ]
+      },
+      {
+        "name": "b",
+        "type": [
+          "boolean",
+          "raster_block"
+        ]
+      }
+    ]
+  },
+  "Place": {
+    "class": "dask_geomodeling.raster.spatial.Place",
+    "description": "Place an input raster at given coordinates",
+    "parameters": [
+      {
+        "name": "store",
+        "type": "raster_block"
+      },
+      {
+        "name": "place_projection",
+        "type": "string"
+      },
+      {
+        "name": "anchor",
+        "type": "array",
+        "prefixItems": [
+          { "type": "number" },
+          { "type": "number" }
+        ]
+      },
+      {
+        "name": "coordinates",
+        "type": "array",
+        "items": {
+          "type": "array",
+          "prefixItems": [
+            { "type": "number" },
+            { "type": "number" }
+          ]
+        }
+      },
+      {
+        "name": "statistic",
+        "type": "enum",
+        "enum": [
+          "last",
+          "first",
+          "count",
+          "sum",
+          "mean",
+          "min",
+          "max",
+          "argmin",
+          "argmax",
+          "product",
+          "std",
+          "var",
+          "p1"
+        ]
+      }
+    ]
+  },
+  "Power": {
+    "class": "dask_geomodeling.raster.elemwise.Power",
+    "description": "Exponential function with either a raster and a number or two rasters",
+    "parameters": [
+      {
+        "name": "a",
+        "type": [
+          "number",
+          "raster_block"
+        ]
+      },
+      {
+        "name": "b",
+        "type": [
+          "number",
+          "raster_block"
+        ]
+      }
+    ]
+  },
+  "RasterFileSource": {
+    "class": "dask_geomodeling.raster.sources.RasterFileSource",
+    "description": "A raster source that interfaces data from a file path",
+    "parameters": [
+      {
+        "name": "url",
+        "type": "string"
+      },
+      {
+        "name": "time_first",
+        "type": "integer"
+      },
+      {
+        "name": "time_delta",
+        "type": "integer",
+        "default": 300000
+      }
+    ]
+  },
+  "RasterizeWKT": {
+    "class": "dask_geomodeling.raster.misc.RasterizeWKT",
+    "description": "Converts a single geometry to a raster mask",
+    "parameters": [
+      {
+        "name": "wkt",
+        "type": "string"
+      },
+      {
+        "name": "projection",
+        "type": "string"
+      }
+    ]
+  },
+  "Reclassify": {
+    "class": "dask_geomodeling.raster.misc.Reclassify",
+    "description": "Reclassify a raster of integer values",
+    "parameters": [
+      {
+        "name": "store",
+        "type": "raster_block"
+      },
+      {
+        "name": "bin",
+        "type": "array",
+        "items": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": ["boolean", "integer"]
+            },
+            {
+              "type": "number"
+            }
+          ]
+        }
+      },
+      {
+        "name": "select",
+        "type": "boolean",
+        "default": false
+      }
+    ]
+  },
+  "Shift": {
+    "class": "dask_geomodeling.raster.temporal.Shift",
+    "description": "Shift a temporal raster by some timedelta",
+    "parameters": [
+      {
+        "name": "store",
+        "type": "raster_block"
+      },
+      {
+        "name": "time",
+        "type": "integer"
+      }
+    ]
+  },
+  "Smooth": {
+    "class": "dask_geomodeling.raster.spatial.Smooth",
+    "description": "Smooth the values from a raster spatially using Gaussian smoothing",
+    "parameters": [
+      {
+        "name": "store",
+        "type": "raster_block"
+      },
+      {
+        "name": "size",
+        "type": "number"
+      },
+      {
+        "name": "fill",
+        "type": "number"
+      }
+    ]
+  },
+  "Snap": {
+    "class": "dask_geomodeling.raster.temporal.Snap",
+    "description": "Snap the time structure of a raster to that of another raster",
+    "parameters": [
+      {
+        "name": "store",
+        "type": "raster_block"
+      },
+      {
+        "name": "index",
+        "type": "raster_block"
+      }
+    ]
+  },
+  "Step": {
+    "class": "dask_geomodeling.raster.misc.Step",
+    "description": "Apply a step function to a raster",
+    "parameters": [
+      {
+        "name": "store",
+        "type": "raster_block"
+      },
+      {
+        "name": "left",
+        "type": "number",
+        "default": 0
+      },
+      {
+        "name": "right",
+        "type": "number",
+        "default": 1
+      },
+      {
+        "name": "value",
+        "type": "number",
+        "default": 0
+      },
+      {
+        "name": "at",
+        "type": "number"
+      }
+    ]
+  },
+  "Subtract": {
+    "class": "dask_geomodeling.raster.elemwise.Subtract",
+    "description": "Subtract two rasters or subtract a constant value from a raster",
+    "parameters": [
+      {
+        "name": "a",
+        "type": [
+          "number",
+          "raster_block"
+        ]
+      },
+      {
+        "name": "b",
+        "type": [
+          "number",
+          "raster_block"
+        ]
+      }
+    ]
+  },
+  "TemporalAggregate": {
+    "class": "dask_geomodeling.raster.temporal.TemporalAggregate",
+    "description": "Resample a raster in time",
+    "parameters": [
+      {
+        "name": "source",
+        "type": "raster_block"
+      },
+      {
+        "name": "frequency",
+        "type": "string"
+      },
+      {
+        "name": "statistic",
+        "type": "enum",
+        "enum":[
+          "sum",
+          "count",
+          "mean",
+          "min",
+          "max"
+        ]
+      },
+      {
+        "name": "closed",
+        "type": "enum",
+        "enum":[
+          "left",
+          "right"
+        ]
+      },
+      {
+        "name": "label",
+        "type": "enum",
+        "enum":[
+          "left",
+          "right"
+        ]
+      },
+      {
+        "name": "timezone",
+        "type": "string",
+        "default": "UTC"
+      }
+    ]
+  },
+  "Xor": {
+    "class": "dask_geomodeling.raster.elemwise.Xor",
+    "description": "Exclusive or: returns True where exactly one of the inputs is True",
+    "parameters": [
+      {
+        "name": "a",
+        "type": [
+          "boolean",
+          "raster_block"
+        ]
+      },
+      {
+        "name": "b",
+        "type": [
+          "boolean",
+          "raster_block"
+        ]
+      }
+    ]
+  }
+}
