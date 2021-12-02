@@ -1,4 +1,4 @@
-import geoblock from '../utils/geoblockTypeDefinition.json';
+import geoblock from '../data_management/geoblocks/geoblockUtils/geoblockTypeDefinition.json';
 
 export interface GeoBlockSource {
   name: string,

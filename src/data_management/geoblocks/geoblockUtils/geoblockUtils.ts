@@ -1,7 +1,7 @@
-import { storeDispatch } from "..";
-import { addNotification } from "../actions";
+import { storeDispatch } from "../../../index";
+import { addNotification } from "../../../actions";
 import { Elements, getOutgoers, isNode, Node } from "react-flow-renderer";
-import { GeoBlockSource, geoblockType } from "../types/geoBlockType";
+import { GeoBlockSource, geoblockType } from "../../../types/geoBlockType";
 import { geoBlockValidator } from "./geoblockValidators";
 
 const position = { x: 0, y: 0 };

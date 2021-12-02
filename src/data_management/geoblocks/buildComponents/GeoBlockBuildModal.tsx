@@ -8,11 +8,11 @@ import { SubmitButton } from '../../../form/SubmitButton';
 import { Values } from '../../../form/useForm';
 import { addNotification } from '../../../actions';
 import { createGraphLayout } from '../../../utils/createGraphLayout';
-import { dryFetchGeoBlockForValidation } from '../../../utils/geoblockValidators';
+import { dryFetchGeoBlockForValidation } from '../geoblockUtils/geoblockValidators';
 import {
   convertElementsToGeoBlockSource,
   convertGeoblockSourceToFlowElements
-} from '../../../utils/geoblockUtils';
+} from '../geoblockUtils/geoblockUtils';
 import ModalBackground from '../../../components/ModalBackground';
 import styles from './GeoBlockBuildModal.module.css';
 import formStyles from './../../../styles/Forms.module.css';

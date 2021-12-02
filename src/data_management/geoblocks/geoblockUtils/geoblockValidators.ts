@@ -1,8 +1,8 @@
-import { storeDispatch } from "..";
-import { addNotification } from "../actions";
-import { GeoBlockSource } from "../types/geoBlockType";
-import { geoblockSourceValidator, jsonValidator } from "../form/validators";
-import { Values } from "../form/useForm";
+import { storeDispatch } from "../../../index";
+import { addNotification } from "../../../actions";
+import { GeoBlockSource } from "../../../types/geoBlockType";
+import { geoblockSourceValidator, jsonValidator } from "../../../form/validators";
+import { Values } from "../../../form/useForm";
 import {
   Connection,
   Edge,
