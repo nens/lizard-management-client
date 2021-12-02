@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { Elements, Handle, Node, Position, useStoreState } from 'react-flow-renderer';
+import { BlockName } from './BlockName';
 import styles from './Block.module.css';
 
 interface GroupBlockInput {
   label: string,
   classOfBlock: string,
   parameters: string[],
+  onBlockNameChange: (name: string) => void
 }
 
 interface GroupBlockProps {
@@ -15,7 +17,7 @@ interface GroupBlockProps {
 
 export const GroupBlock = (props: GroupBlockProps) => {
   const { block, onElementsRemove } = props;
-  const { classOfBlock, label, parameters } = block.data!;
+  const { classOfBlock, label, parameters, onBlockNameChange } = block.data!;
   const [handles, setHandles] = useState<string[]>(parameters);
   const numberOfHandles = handles.length;
 
@@ -89,7 +91,10 @@ export const GroupBlock = (props: GroupBlockProps) => {
         <div
           className={styles.BlockHeader}
         >
-          <h4>{label}</h4>
+          <BlockName
+            label={label}
+            onConfirm={onBlockNameChange}
+          />
           <small><i>({classOfBlock})</i></small>
         </div>
       </div>

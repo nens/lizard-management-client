@@ -23,8 +23,8 @@ import { Block } from './blockComponents/Block';
 import { GroupBlock } from './blockComponents/GroupBlock';
 import { RasterBlock } from './blockComponents/RasterBlock';
 import { geoblockType } from '../../../types/geoBlockType';
-import { getBlockData } from '../../../utils/geoblockUtils';
-import { targetHandleValidator } from '../../../utils/geoblockValidators';
+import { getBlockData } from '../geoblockUtils/geoblockUtils';
+import { targetHandleValidator } from '../geoblockUtils/geoblockValidators';
 import { addNotification } from '../../../actions';
 import { v4 as uuid } from 'uuid';
 

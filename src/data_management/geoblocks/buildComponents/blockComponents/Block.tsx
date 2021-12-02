@@ -1,5 +1,6 @@
 import React from 'react';
 import { Elements, Handle, Node, Position, useStoreState } from 'react-flow-renderer';
+import { BlockName } from './BlockName';
 import styles from './Block.module.css';
 
 interface BlockInput {
@@ -11,7 +12,8 @@ interface BlockInput {
     type: string | string[],
     [key: string]: any
   }[],
-  onChange: (value: string | number | boolean, i: number) => void
+  onChange: (value: string | number | boolean, i: number) => void,
+  onBlockNameChange: (value: string) => void,
 }
 
 interface BlockProps {
@@ -21,7 +23,7 @@ interface BlockProps {
 
 export const Block = (props: BlockProps) => {
   const { block, onElementsRemove } = props;
-  const { label, classOfBlock, parameters, parameterTypes, onChange } = block.data!;
+  const { label, classOfBlock, parameters, parameterTypes, onChange, onBlockNameChange } = block.data!;
 
   const edges = useStoreState(state => state.edges);
 
@@ -48,7 +50,10 @@ export const Block = (props: BlockProps) => {
         <div
           className={styles.BlockHeader}
         >
-          <h4>{label}</h4>
+          <BlockName
+            label={label}
+            onConfirm={onBlockNameChange}
+          />
           <small><i>({classOfBlock})</i></small>
         </div>
         {parameterTypes.map((parameter, i) => {
