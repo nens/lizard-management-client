@@ -30,7 +30,7 @@ interface MyProps {
 function GeoBlockBuildModal (props: MyProps & DispatchProps) {
   const [noOfOperations, setNoOfOperations] = useState<number | null>(props.operations);
   const [source, setSource] = useState<GeoBlockSource | null>(props.source);
-  const [geoBlockView, setGeoBlockView] = useState<'json' | 'visual'>('json');
+  const [geoBlockView, setGeoBlockView] = useState<'json' | 'visual'>('visual');
 
   // Block elements of a geoblock for React-Flow are kept in here
   // to make use of the SAVE, SWITCH and VALIDATE buttons
@@ -71,6 +71,12 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
       <div className={styles.MainContainer}>
         <div className={styles.TabContainer}>
             <div
+                className={geoBlockView === 'visual' ? styles.SelectedTab : undefined}
+                onClick={() => setGeoBlockView('visual')}
+            >
+                Visual Editor
+            </div>
+            <div
                 className={geoBlockView === 'json' ? styles.SelectedTab : undefined}
                 onClick={() => {
                   const geoBlockSource = convertElementsToGeoBlockSource(elements, source, setSource);
@@ -78,12 +84,6 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
                 }}
             >
                 Text Editor
-            </div>
-            <div
-                className={geoBlockView === 'visual' ? styles.SelectedTab : undefined}
-                onClick={() => setGeoBlockView('visual')}
-            >
-                Visual Editor
             </div>
         </div>
         {geoBlockView === 'json' ? (
