@@ -289,9 +289,26 @@
       {
         "name": "geo_transform",
         "type": "array",
-        "items": {
-          "type": "number"
-        }
+        "prefixItems": [
+          {
+            "type": "number"
+          },
+          {
+            "type": "number"
+          },
+          {
+            "type": "number"
+          },
+          {
+            "type": "number"
+          },
+          {
+            "type": "number"
+          },
+          {
+            "type": "number"
+          }
+        ]
       }
     ]
   },
