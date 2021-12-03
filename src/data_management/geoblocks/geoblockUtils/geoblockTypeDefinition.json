@@ -242,6 +242,16 @@
       }
     }
   },
+  "GroupTemporal": {
+    "class": "raster_store.blocks.GroupTemporal",
+    "description": "Select a data source based on time resolution",
+    "parameters": {
+      "type": "array",
+      "items": {
+        "type": "raster_block"
+      }
+    }
+  },
   "HillShade": {
     "class": "dask_geomodeling.raster.spatial.HillShade",
     "description": "Calculate a hillshade from the raster values",
@@ -261,6 +271,27 @@
       {
         "name": "fill",
         "type": "number"
+      }
+    ]
+  },
+  "Interpolate": {
+    "class": "raster_store.blocks.Interpolate",
+    "description": "This block does intrapixel interpolation of the source data above a certain requested resolution",
+    "parameters": [
+      {
+        "name": "store",
+        "type": "raster_block"
+      },
+      {
+        "name": "projection",
+        "type": "string"
+      },
+      {
+        "name": "geo_transform",
+        "type": "array",
+        "items": {
+          "type": "number"
+        }
       }
     ]
   },
