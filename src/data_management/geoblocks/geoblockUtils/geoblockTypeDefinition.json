@@ -244,7 +244,7 @@
   },
   "GroupTemporal": {
     "class": "raster_store.blocks.GroupTemporal",
-    "description": "Select a data source based on time resolution",
+    "description": "Select a data source based on time resolution. On initialization, looks up all source blocks and orders them by timedelta. Works only for equidistant sources (with timedelta set)",
     "parameters": {
       "type": "array",
       "items": {
