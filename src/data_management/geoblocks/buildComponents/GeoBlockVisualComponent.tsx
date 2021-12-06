@@ -146,7 +146,7 @@ const GeoBlockVisualFlow = (props: MyProps & DispatchProps) => {
         id: idOfNewBlock,
         type: (
           blockName === 'RasterBlock' ? blockName :
-          blockName === 'Group' || blockName === 'FillNoData' ? 'GroupBlock' : 'Block'
+          blockName === 'Group' || blockName === 'GroupTemporal' || blockName === 'FillNoData' ? 'GroupBlock' : 'Block'
         ),
         position,
         sourcePosition,

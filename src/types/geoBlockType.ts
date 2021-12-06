@@ -60,6 +60,7 @@ enum GeoBlockEnum {
 
 enum GroupBlockEnum {
   Group = "Group",
+  GroupTemporal = "GroupTemporal",
   FillNoData = "FillNoData",
 }
 
