@@ -11,9 +11,9 @@ import { CancelButton } from '../../form/CancelButton';
 import { useForm, Values } from '../../form/useForm';
 import { minLength } from '../../form/validators';
 import { addNotification } from '../../actions';
+import { scenarioFormHelpText } from '../../utils/help_texts/helpTextForScenarios';
 import threediIcon from "../../images/3di@3x.svg";
 import formStyles from './../../styles/Forms.module.css';
-import { scenarioFormHelpText, DefaultScenarioExplanationText } from '../../utils/help_texts/helpTextForScenarios';
 
 interface Props {
   currentRecord: any
@@ -87,7 +87,7 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
       headerText={"3Di Scenarios"}
       explanationText={
         scenarioFormHelpText[fieldOnFocus] || 
-        DefaultScenarioExplanationText()
+        scenarioFormHelpText['default']
       }
       backUrl={"/management/data_management/scenarios/"}
       fieldName={fieldOnFocus}
