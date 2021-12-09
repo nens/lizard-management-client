@@ -36,12 +36,9 @@ export const DefaultScenarioExplanationText = () => {
           available={scenarioAvailableSizeDefinedByContract}
         />
       </div>
-      
     </div>
-    
   );
 };
-
 
 export const scenarioFormHelpText: HelpText = {
   name: 'The scenario name comes from 3Di. This name can be changed for your convenience.',
