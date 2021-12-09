@@ -25,7 +25,7 @@ interface RouteParams {
   uuid: string;
 };
 
-const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProps<RouteParams>> = (props) => {
+const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<RouteParams>> = (props) => {
   const { currentRecord } = props;
   const organisations = useSelector(getOrganisations).available;
   const scenarioOrganisation = organisations.find((org: any) => org.uuid === currentRecord.organisation.uuid);
@@ -199,6 +199,4 @@ const mapPropsToDispatch = (dispatch: any) => ({
   addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout))
 });
 
-const ScenarioForm = connect(null, mapPropsToDispatch)(withRouter(ScenarioFormModel));
-
-export { ScenarioForm };
+export default connect(null, mapPropsToDispatch)(withRouter(ScenarioForm));
