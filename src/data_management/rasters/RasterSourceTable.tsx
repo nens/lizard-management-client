@@ -181,7 +181,7 @@ export const RasterSourceTable = (props: any) => {
       imgUrl={rasterSourcesIcon}
       imgAltDescription={"Raster-Source icon"}
       headerText={"Raster Sources"}
-      explanationText={DefaultRasterSourceExplanationTextTable()} 
+      explanationText={<DefaultRasterSourceExplanationTextTable />}
       backUrl={"/management/data_management/rasters"}
     >
       <TableStateContainer
