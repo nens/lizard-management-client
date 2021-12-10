@@ -169,7 +169,7 @@ export const ScenarioTable = () =>  {
       imgUrl={threediIcon}
       imgAltDescription={"3Di icon"}
       headerText={"3Di Scenarios"}
-      explanationText={DefaultScenarioExplanationText()}
+      explanationText={<DefaultScenarioExplanationText />}
       backUrl={"/management/data_management"}
     >
         <TableStateContainer 

@@ -11,9 +11,9 @@ import { CancelButton } from '../../form/CancelButton';
 import { useForm, Values } from '../../form/useForm';
 import { minLength } from '../../form/validators';
 import { addNotification } from '../../actions';
+import { scenarioFormHelpText } from '../../utils/help_texts/helpTextForScenarios';
 import threediIcon from "../../images/3di@3x.svg";
 import formStyles from './../../styles/Forms.module.css';
-import { scenarioFormHelpText, DefaultScenarioExplanationText } from '../../utils/help_texts/helpTextForScenarios';
 
 interface Props {
   currentRecord: any
@@ -25,7 +25,7 @@ interface RouteParams {
   uuid: string;
 };
 
-const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProps<RouteParams>> = (props) => {
+const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<RouteParams>> = (props) => {
   const { currentRecord } = props;
   const organisations = useSelector(getOrganisations).available;
   const scenarioOrganisation = organisations.find((org: any) => org.uuid === currentRecord.organisation.uuid);
@@ -87,7 +87,7 @@ const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProp
       headerText={"3Di Scenarios"}
       explanationText={
         scenarioFormHelpText[fieldOnFocus] || 
-        DefaultScenarioExplanationText()
+        scenarioFormHelpText['default']
       }
       backUrl={"/management/data_management/scenarios/"}
       fieldName={fieldOnFocus}
@@ -199,6 +199,4 @@ const mapPropsToDispatch = (dispatch: any) => ({
   addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout))
 });
 
-const ScenarioForm = connect(null, mapPropsToDispatch)(withRouter(ScenarioFormModel));
-
-export { ScenarioForm };
+export default connect(null, mapPropsToDispatch)(withRouter(ScenarioForm));
