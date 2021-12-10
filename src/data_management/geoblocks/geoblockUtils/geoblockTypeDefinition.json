@@ -1,7 +1,7 @@
 {
-  "RasterBlock": {
+  "RasterSource": {
     "class": "lizard_nxt.blocks.LizardRasterSource",
-    "description": "A raster block",
+    "description": "A raster source block",
     "parameters": []
   },
   "Add": {

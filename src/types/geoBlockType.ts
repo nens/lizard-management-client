@@ -14,7 +14,7 @@ type parameter = {
 }
 
 enum InputBlockEnum {
-  RasterBlock = "RasterBlock"
+  RasterSource = "RasterSource"
 }
 
 enum GeoBlockEnum {

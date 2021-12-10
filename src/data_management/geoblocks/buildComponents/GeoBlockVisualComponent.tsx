@@ -21,7 +21,7 @@ import ReactFlow, {
 import { SideBar } from './blockComponents/SideBar';
 import { Block } from './blockComponents/Block';
 import { GroupBlock } from './blockComponents/GroupBlock';
-import { RasterBlock } from './blockComponents/RasterBlock';
+import { RasterSource } from './blockComponents/RasterSource';
 import { geoblockType } from '../../../types/geoBlockType';
 import { getBlockData } from '../geoblockUtils/geoblockUtils';
 import { targetHandleValidator } from '../geoblockUtils/geoblockValidators';
@@ -145,7 +145,7 @@ const GeoBlockVisualFlow = (props: MyProps & DispatchProps) => {
       const newBlock = {
         id: idOfNewBlock,
         type: (
-          blockName === 'RasterBlock' ? blockName :
+          blockName === 'RasterSource' ? blockName :
           blockName === 'Group' || blockName === 'GroupTemporal' || blockName === 'FillNoData' ? 'GroupBlock' : 'Block'
         ),
         position,
@@ -183,7 +183,7 @@ const GeoBlockVisualFlow = (props: MyProps & DispatchProps) => {
         nodeTypes={{
           Block: (block: Node) => <Block block={block} onElementsRemove={onElementsRemove} />,
           GroupBlock: (block: Node) => <GroupBlock block={block} onElementsRemove={onElementsRemove} />,
-          RasterBlock: RasterBlock
+          RasterSource
         }}
         // use Backspace key for deletion on Mac instead of Delete key (for other platforms)
         deleteKeyCode={window.navigator.platform.startsWith("Mac") ? 'Backspace' : 'Delete'}
@@ -191,9 +191,9 @@ const GeoBlockVisualFlow = (props: MyProps & DispatchProps) => {
         {elements.length > 100 ? (
           <MiniMap
             nodeColor={(node) => {
-              if (node.type === 'RasterBlock') return 'orange'; // raster block
+              if (node.type === 'RasterSource') return 'orange'; // raster source block
               if (getOutgoers(node, elements).length === 0) return 'red'; // output block
-              return 'lightgrey'; // normal block
+              return 'lightgrey'; // other blocks
             }}
             nodeStrokeWidth={3}
           />
