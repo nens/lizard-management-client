@@ -14,7 +14,7 @@ type parameter = {
 }
 
 enum InputBlockEnum {
-  RasterBlock = "RasterBlock"
+  RasterSource = "RasterSource"
 }
 
 enum GeoBlockEnum {
@@ -39,14 +39,12 @@ enum GeoBlockEnum {
   Log10 = "Log10",
   Mask = "Mask",
   MaskBelow = "MaskBelow",
-  MemorySource = "MemorySource",
   MovingMax = "MovingMax",
   Multiply = "Multiply",
   NotEqual = "NotEqual",
   Or = "Or",
   Place = "Place",
   Power = "Power",
-  RasterFileSource = "RasterFileSource",
   RasterizeWKT = "RasterizeWKT",
   Reclassify = "Reclassify",
   Shift = "Shift",

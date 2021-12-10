@@ -10,7 +10,7 @@ import { Value } from '../../../../form/SelectDropdown';
 import { BlockName } from './BlockName';
 import styles from './Block.module.css';
 
-interface RasterBlockInput {
+interface RasterSourceInput {
   label: string,
   classOfBlock: string
   value: string,
@@ -18,7 +18,7 @@ interface RasterBlockInput {
   onBlockNameChange: (name: string) => void
 }
 
-export const RasterBlock = (props: Node<RasterBlockInput>) => {
+export const RasterSource = (props: Node<RasterSourceInput>) => {
   const { label, classOfBlock, value, onChange, onBlockNameChange } = props.data!;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
 
@@ -33,7 +33,7 @@ export const RasterBlock = (props: Node<RasterBlockInput>) => {
 
   return (
     <div
-      className={`${styles.Block} ${styles.RasterBlock}`}
+      className={`${styles.Block} ${styles.RasterSource}`}
       tabIndex={1}
     >
       <div

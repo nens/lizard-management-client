@@ -89,8 +89,8 @@ export const dryFetchGeoBlockForValidation = (
 };
 
 export const geoBlockValidator = (elements: Elements): ErrorObject[] => {
-  const rasterElements = elements.filter(el => isNode(el) && el.type === 'RasterBlock') as Node[];
-  const buildingBlocks = elements.filter(el => isNode(el) && el.type !== 'RasterBlock');
+  const rasterElements = elements.filter(el => isNode(el) && el.type === 'RasterSource') as Node[];
+  const buildingBlocks = elements.filter(el => isNode(el) && el.type !== 'RasterSource');
   const outputBlocks = elements.filter(el => isNode(el) && getOutgoers(el, elements).length === 0);
 
   let errors: ErrorObject[] = [];

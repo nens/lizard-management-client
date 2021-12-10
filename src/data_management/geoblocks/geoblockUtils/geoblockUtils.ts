@@ -12,11 +12,11 @@ export const getBlockData = (
   idOfNewBlock: string,
   setElements: React.Dispatch<React.SetStateAction<Elements<any>>>
 ) => {
-  const dataOfRasterBlock = {
+  const dataOfRasterSourceBlock = {
     label: 'LizardRasterSource_' + (numberOfBlocks + 1),
     value: '',
     classOfBlock: 'lizard_nxt.blocks.LizardRasterSource',
-    onChange: (value: string) => onRasterBlockChange(value, idOfNewBlock, setElements),
+    onChange: (value: string) => onRasterSourceBlockChange(value, idOfNewBlock, setElements),
     onBlockNameChange: (name: string) => onBlockNameChange(name, idOfNewBlock, setElements)
   };
 
@@ -40,8 +40,8 @@ export const getBlockData = (
     onBlockNameChange: (name: string) => onBlockNameChange(name, idOfNewBlock, setElements)
   };
 
-  if (blockName === 'RasterBlock') {
-    return dataOfRasterBlock;
+  if (blockName === 'RasterSource') {
+    return dataOfRasterSourceBlock;
   } else {
     return dataOfBuildBlock;
   };
@@ -52,19 +52,19 @@ const getRasterElements = (
   setElements: React.Dispatch<React.SetStateAction<Elements<any>>>
 ): Elements => {
   const allBlockNames = Object.keys(graph);
-  const rasterBlockNames = allBlockNames.filter(blockName => {
+  const rasterSourceBlockNames = allBlockNames.filter(blockName => {
     const classOfBlock = graph[blockName][0];
     return classOfBlock === 'lizard_nxt.blocks.LizardRasterSource';
   });
 
-  return rasterBlockNames.map(blockName => ({
+  return rasterSourceBlockNames.map(blockName => ({
     id: blockName,
-    type: 'RasterBlock',
+    type: 'RasterSource',
     data: {
       label: blockName,
       value: graph[blockName][1],
       classOfBlock: 'lizard_nxt.blocks.LizardRasterSource',
-      onChange: (value: string) => onRasterBlockChange(value, blockName, setElements),
+      onChange: (value: string) => onRasterSourceBlockChange(value, blockName, setElements),
       onBlockNameChange: (name: string) => onBlockNameChange(name, blockName, setElements)
     },
     position
@@ -156,7 +156,7 @@ const onBlockChange = (
 };
 
 // Helper function to change UUID of a raster
-const onRasterBlockChange = (
+const onRasterSourceBlockChange = (
   value: string,
   blockId: string,
   setElements: React.Dispatch<React.SetStateAction<Elements<any>>>
@@ -209,7 +209,7 @@ export const convertElementsToGeoBlockSource = (
   // use reduce method to create the graph object
   const graph = blocks.reduce((graph, block) => {
     let blockValue;
-    if (block.type === 'RasterBlock') {
+    if (block.type === 'RasterSource') {
       blockValue = [
         'lizard_nxt.blocks.LizardRasterSource',
         block.data.value

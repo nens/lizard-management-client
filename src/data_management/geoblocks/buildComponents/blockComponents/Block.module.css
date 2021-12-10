@@ -29,10 +29,10 @@
   cursor: pointer;
 }
 
-/* Raster block */
-.RasterBlock {
+/* Raster source block */
+.RasterSource {
   border-color: orange;
 }
-.RasterBlock:focus {
+.RasterSource:focus {
   box-shadow: 0 0 0 0.5px orange;
 }
