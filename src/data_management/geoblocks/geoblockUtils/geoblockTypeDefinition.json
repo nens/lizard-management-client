@@ -430,47 +430,6 @@
       }
     ]
   },
-  "MemorySource": {
-    "class": "dask_geomodeling.sources.MemorySource",
-    "description": "A raster source that interfaces data from memory",
-    "parameters": [
-      {
-        "name": "data",
-        "type": "number"
-      },
-      {
-        "name": "no_data_value",
-        "type": "number"
-      },
-      {
-        "name": "projection",
-        "type": "string"
-      },
-      {
-        "name": "pixel_size",
-        "type": "float"
-      },
-      {
-        "name": "pixel_origin",
-        "type": "float"
-      },
-      {
-        "name": "time_first",
-        "type": "integer"
-      },
-      {
-        "name": "time_delta",
-        "type": "integer"
-      },
-      {
-        "name": "metadata",
-        "type": "array",
-        "items": {
-          "type": "any"
-        }
-      }
-    ]
-  },
   "MovingMax": {
     "class": "dask_geomodeling.raster.spatial.MovingMax",
     "description": "Apply a spatial maximum filter to the data using a circular footprint",
@@ -614,25 +573,6 @@
           "number",
           "raster_block"
         ]
-      }
-    ]
-  },
-  "RasterFileSource": {
-    "class": "dask_geomodeling.raster.sources.RasterFileSource",
-    "description": "A raster source that interfaces data from a file path",
-    "parameters": [
-      {
-        "name": "url",
-        "type": "string"
-      },
-      {
-        "name": "time_first",
-        "type": "integer"
-      },
-      {
-        "name": "time_delta",
-        "type": "integer",
-        "default": 300000
       }
     ]
   },
