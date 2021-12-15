@@ -85,6 +85,7 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
       observation_type: values.observationType && values.observationType.value,
       options: values.colorMap && values.colorMap.options,
       colormap: JSON.stringify(values.colorMap.customColormap) ==="{}"? undefined : values.colorMap.customColormap,
+      rescalable: values.colorMap && values.colorMap.rescalable,
       access_modifier: values.accessModifier,
       shared_with: values.sharedWith ? values.organisationsToSharedWith.map((organisation: any) => organisation.value) : [],
       supplier: values.supplier && values.supplier.label,
