@@ -3,6 +3,7 @@ import { addNotification } from "../../../actions";
 import { GeoBlockSource } from "../../../types/geoBlockType";
 import { geoblockSourceValidator, jsonValidator } from "../../../form/validators";
 import { Values } from "../../../form/useForm";
+import { RasterLayerFromAPI } from "../../../api/rasters";
 import {
   Connection,
   Edge,
@@ -50,7 +51,7 @@ const handleGeoBlockValidationResponse = (res: any) => {
 };
 
 export const dryFetchGeoBlockForValidation = (
-  uuid: string | null,
+  currentRecord: RasterLayerFromAPI | null,
   source: GeoBlockSource | null,
   formValues: Values
 ) => {
@@ -58,8 +59,8 @@ export const dryFetchGeoBlockForValidation = (
   const sourceError = geoblockSourceValidator(source);
   if (sourceError) return storeDispatch(addNotification(sourceError), 2000);
 
-  if (uuid) {
-    fetch(`/api/v4/rasters/${uuid}/?dry-run`, {
+  if (currentRecord) {
+    fetch(`/api/v4/rasters/${currentRecord.uuid}/?dry-run`, {
       credentials: 'same-origin',
       method: "PATCH",
       headers: { "Content-Type": "application/json" },

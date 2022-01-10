@@ -26,13 +26,12 @@ import DeleteModal from '../../components/DeleteModal';
 import GeoBlockBuildModal from './buildComponents/GeoBlockBuildModal';
 import geoblockIcon from "../../images/geoblock.svg";
 import formStyles from './../../styles/Forms.module.css';
-import { rasterLayerFromAPIBelongsToScenario } from '../../api/rasters';
+import { RasterLayerFromAPI, rasterLayerFromAPIBelongsToScenario } from '../../api/rasters';
 import { FormattedMessage } from 'react-intl';
 import { fetchOrganisationsToShareWith } from '../rasters/RasterLayerForm';
 
-
 interface Props {
-  currentRecord?: any,
+  currentRecord?: RasterLayerFromAPI,
 };
 
 const backUrl = "/management/data_management/geoblocks";
@@ -42,7 +41,6 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
   const organisations = useSelector(getOrganisations).available;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const belongsToScenario = (currentRecord && rasterLayerFromAPIBelongsToScenario(currentRecord)) || false;
-
 
   const [buildModal, setBuildModal] = useState<boolean>(false);
 
@@ -431,10 +429,9 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
       ) : null}
       {buildModal ? (
         <GeoBlockBuildModal
-          uuid={currentRecord ? currentRecord.uuid : null}
+          currentRecord={currentRecord || null}
           formValues={values}
           source={values.source}
-          operations={currentRecord ? currentRecord.weight : null}
           onChange={value => handleValueChange('source', value)}
           handleClose={() => setBuildModal(false)}
         />
