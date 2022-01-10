@@ -10,7 +10,7 @@ interface RouteProps {
 }
 
 export const EditGeoBlock = (props: RouteComponentProps<RouteProps>) => {
-  const [currentRecord, setCurrentRecord] = useState<RasterLayerFromAPI | null>(null);
+  const [currentRecord, setCurrentRecord] = useState<RasterLayerFromAPI | undefined>(undefined);
   const { uuid } = props.match.params;
 
   useEffect (() => {

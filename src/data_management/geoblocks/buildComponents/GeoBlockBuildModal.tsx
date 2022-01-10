@@ -24,14 +24,13 @@ interface MyProps {
   currentRecord: RasterLayerFromAPI | null,
   formValues: Values,
   source: GeoBlockSource | null,
-  operations: number | null,
   onChange: (value: GeoBlockSource | null) => void,
   handleClose: () => void
 }
 
 function GeoBlockBuildModal (props: MyProps & DispatchProps) {
-  const { currentRecord, operations } = props;
-  const [noOfOperations, setNoOfOperations] = useState<number | null>(operations);
+  const { currentRecord, formValues } = props;
+  const [noOfOperations, setNoOfOperations] = useState<number | null>(currentRecord ? currentRecord.weight : null);
   const [source, setSource] = useState<GeoBlockSource | null>(props.source);
   const [geoBlockView, setGeoBlockView] = useState<'json' | 'visual'>('visual');
 
@@ -125,9 +124,9 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
               onClick={() => {
                 if (geoBlockView === 'visual') {
                   const geoBlockSource = convertElementsToGeoBlockSource(elements, source, setSource);
-                  if (geoBlockSource || geoBlockSource === null) dryFetchGeoBlockForValidation(currentRecord, geoBlockSource, props.formValues);
+                  if (geoBlockSource || geoBlockSource === null) dryFetchGeoBlockForValidation(currentRecord, geoBlockSource, formValues);
                 } else {
-                  dryFetchGeoBlockForValidation(currentRecord, source, props.formValues);
+                  dryFetchGeoBlockForValidation(currentRecord, source, formValues);
                 };
               }}
               style={{

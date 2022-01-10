@@ -31,7 +31,7 @@ import { FormattedMessage } from 'react-intl';
 import { fetchOrganisationsToShareWith } from '../rasters/RasterLayerForm';
 
 interface Props {
-  currentRecord?: RasterLayerFromAPI | null,
+  currentRecord?: RasterLayerFromAPI,
 };
 
 const backUrl = "/management/data_management/geoblocks";
@@ -432,7 +432,6 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
           currentRecord={currentRecord || null}
           formValues={values}
           source={values.source}
-          operations={currentRecord ? currentRecord.weight : null}
           onChange={value => handleValueChange('source', value)}
           handleClose={() => setBuildModal(false)}
         />
