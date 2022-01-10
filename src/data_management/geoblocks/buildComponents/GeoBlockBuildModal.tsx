@@ -13,13 +13,15 @@ import {
   convertElementsToGeoBlockSource,
   convertGeoblockSourceToFlowElements
 } from '../geoblockUtils/geoblockUtils';
+import { RasterLayerFromAPI } from '../../../api/rasters';
+import { openRasterInLizardViewer } from '../../../utils/openRasterInViewer';
 import ModalBackground from '../../../components/ModalBackground';
 import styles from './GeoBlockBuildModal.module.css';
 import formStyles from './../../../styles/Forms.module.css';
 import buttonStyles from './../../../styles/Buttons.module.css';
 
 interface MyProps {
-  uuid: string | null,
+  currentRecord: RasterLayerFromAPI | null,
   formValues: Values,
   source: GeoBlockSource | null,
   operations: number | null,
@@ -28,7 +30,8 @@ interface MyProps {
 }
 
 function GeoBlockBuildModal (props: MyProps & DispatchProps) {
-  const [noOfOperations, setNoOfOperations] = useState<number | null>(props.operations);
+  const { currentRecord, operations } = props;
+  const [noOfOperations, setNoOfOperations] = useState<number | null>(operations);
   const [source, setSource] = useState<GeoBlockSource | null>(props.source);
   const [geoBlockView, setGeoBlockView] = useState<'json' | 'visual'>('visual');
 
@@ -106,23 +109,25 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
           </button>
           {geoBlockView === 'visual' ? <b>Operations: {noOfOperations || 0}</b> : null}
           <div>
-            <button
-              className={buttonStyles.NewButton}
-              onClick={() => window.open(`/catalogue/?data=Raster&search=${props.uuid}`)}
-              style={{
-                marginRight: 20
-              }}
-            >
-              Open in Catalogue
-            </button>
+            {currentRecord ? (
+              <button
+                className={buttonStyles.NewButton}
+                onClick={() => openRasterInLizardViewer(currentRecord)}
+                style={{
+                  marginRight: 20
+                }}
+              >
+                Open in Viewer
+              </button>
+            ) : null}
             <button
               className={buttonStyles.NewButton}
               onClick={() => {
                 if (geoBlockView === 'visual') {
                   const geoBlockSource = convertElementsToGeoBlockSource(elements, source, setSource);
-                  if (geoBlockSource || geoBlockSource === null) dryFetchGeoBlockForValidation(props.uuid, geoBlockSource, props.formValues);
+                  if (geoBlockSource || geoBlockSource === null) dryFetchGeoBlockForValidation(currentRecord, geoBlockSource, props.formValues);
                 } else {
-                  dryFetchGeoBlockForValidation(props.uuid, source, props.formValues);
+                  dryFetchGeoBlockForValidation(currentRecord, source, props.formValues);
                 };
               }}
               style={{

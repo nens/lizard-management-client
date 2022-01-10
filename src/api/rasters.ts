@@ -2,6 +2,7 @@
 // Centralized here so we know what is used and what isn't,
 // to start the Typescriptification process and to do error
 // handling in a more uniform way, if we do it.
+import { GeoBlockSource } from "../types/geoBlockType"
 
 export interface OldRaster {
   name: string;
@@ -98,6 +99,7 @@ export type RasterLayerFromForm = RasterLayerInstance & {
 }
 
 export type RasterLayerFromAPI = RasterLayerInstance & {
+  uuid: string;
   organisation: Organisation;
   shared_with: Organisation[];
   observation_type: ObservationType;
@@ -111,7 +113,9 @@ export type RasterLayerFromAPI = RasterLayerInstance & {
     east: number,
     south: number,
     west: number
-  } | null
+  } | null;
+  source: GeoBlockSource | null;
+  weight: number;
 }
 
 export const fetchRasterSourcesV4 = async (query?: string) => {
