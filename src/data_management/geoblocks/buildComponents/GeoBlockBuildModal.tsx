@@ -20,7 +20,7 @@ import buttonStyles from './../../../styles/Buttons.module.css';
 
 interface MyProps {
   uuid: string | null,
-  formValues: Values
+  formValues: Values,
   source: GeoBlockSource | null,
   operations: number | null,
   onChange: (value: GeoBlockSource | null) => void,
@@ -106,6 +106,15 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
           </button>
           {geoBlockView === 'visual' ? <b>Operations: {noOfOperations || 0}</b> : null}
           <div>
+            <button
+              className={buttonStyles.NewButton}
+              onClick={() => window.open(`/catalogue/?data=Raster&search=${props.uuid}`)}
+              style={{
+                marginRight: 20
+              }}
+            >
+              Open in Catalogue
+            </button>
             <button
               className={buttonStyles.NewButton}
               onClick={() => {
