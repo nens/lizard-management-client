@@ -15,7 +15,7 @@ export const EditLayerCollection: React.FC<RouteComponentProps<RouteParams>> = (
   const { slug } = props.match.params;
   useEffect(() => {
     (async () => {
-      const currentRecord = await createFetchRecordFunctionFromUrl(`/api/v4/layercollections/${slug}`)();
+      const currentRecord = await createFetchRecordFunctionFromUrl(`/api/v4/layercollections/${slug}/`)();
       setCurrentRecord(currentRecord);
     })();
   }, [slug]);
