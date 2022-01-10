@@ -19,6 +19,9 @@ const getCenterPoint = (bounds: SpatialBounds) => {
   return spatialBounds.getCenter();
 };
 
+// Get zoom level based on spatial bounds
+// Reference from stackoverflow on how to calculate the zoom level:
+// https://stackoverflow.com/questions/6048975/google-maps-v3-how-to-calculate-the-zoom-level-for-a-given-bounds
 const zoomLevelCalculation = (bounds: SpatialBounds) => {
   const { north, east, south, west } = bounds;
   const GLOBE_WIDTH = 256; // a constant in Google's map projection
