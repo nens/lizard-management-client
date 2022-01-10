@@ -14,7 +14,6 @@ import { useForm, Values } from '../../form/useForm';
 import { greaterThanMin, minLength, rangeCheck, jsonValidator, required} from '../../form/validators';
 import wmsIcon from "../../images/wms@3x.svg";
 import {
-  getLayercollections,
   getOrganisations,
   getSelectedOrganisation,
 } from '../../reducers';
@@ -28,7 +27,7 @@ import { wmsFormHelpText } from '../../utils/help_texts/helpTextForWMS';
 import { convertToSelectObject } from '../../utils/convertToSelectObject';
 import { fetchWithOptions } from '../../utils/fetchWithOptions';
 import { fetchSuppliers } from '../rasters/RasterSourceForm';
-import { fetchOrganisationsToShareWith } from '../rasters/RasterLayerForm';
+import { fetchLayerCollections, fetchOrganisationsToShareWith } from '../rasters/RasterLayerForm';
 import { baseUrl } from './WmsLayerTable';
 import FormActionButtons from '../../components/FormActionButtons';
 import DeleteModal from '../../components/DeleteModal';
@@ -47,7 +46,6 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
   const [geoserverError, setGeoserverError] = useState<boolean>(false);
   const organisations = useSelector(getOrganisations).available;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
-  const layercollections = useSelector(getLayercollections).available;
   const organisationsToSwitchTo = organisations.filter((org:any) => org.roles.includes('admin'));
 
   const initialValues: WmsLayerFormType = currentRecord ? wmsLayerReceivedFromApiToForm(currentRecord) : wmsLayerGetDefaultFormValues(selectedOrganisation);
@@ -172,9 +170,12 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           placeholder={'- Search and select -'}
           value={values.layercollections}
           valueChanged={value => handleValueChange('layercollections', value)}
-          options={layercollections.map((layercollection: any) => convertToSelectObject(layercollection.slug))}
+          options={[]}
           validated
           isMulti
+          isAsync
+          isCached
+          loadOptions={fetchLayerCollections}
           onFocus={handleFocus}
           onBlur={handleBlur}
         />

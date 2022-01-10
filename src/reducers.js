@@ -13,10 +13,6 @@ import {
   SET_CONTRACTS,
   SHOW_NOTIFICATION,
   DISMISS_NOTIFICATION,
-  UPDATE_ALARM_TYPE,
-  REQUEST_LAYERCOLLECTIONS,
-  RECEIVE_LAYERCOLLECTIONS_SUCCESS,
-  RECEIVE_LAYERCOLLECTIONS_ERROR,
   UPDATE_RASTER_SOURCE_UUID,
   REMOVE_RASTER_SOURCE_UUID,
   ADD_FILES_TO_QUEUE,
@@ -133,41 +129,6 @@ switch (action.type) {
   } 
 }
 
-function layercollections(
-  state = {
-    isFetching: false,
-    timesFetched: 0,
-    hasError: false,
-    errorMessage: "",
-    available: []
-  },
-  action
-) {
-  switch (action.type) {
-    case REQUEST_LAYERCOLLECTIONS:
-      return { ...state, isFetching: true };
-    case RECEIVE_LAYERCOLLECTIONS_SUCCESS:
-      return {
-        ...state,
-        available: action.data,
-        isFetching: false,
-        hasError: false,
-        timesFetched: state.timesFetched + 1
-      };
-    case RECEIVE_LAYERCOLLECTIONS_ERROR:
-      return {
-        ...state,
-        available: [],
-        isFetching: false,
-        hasError: true,
-        errorMessage: action.errorMessage,
-        timesFetched: state.timesFetched + 1
-      };
-    default:
-      return state;
-  }
-}
-
 function notifications(
   state = {
     notifications: []
@@ -188,15 +149,6 @@ function notifications(
           ...state.notifications.slice(action.idx + 1)
         ]
       };
-    default:
-      return state;
-  }
-}
-
-function alarmType(state = "RASTERS", action) {
-  switch (action.type) {
-    case UPDATE_ALARM_TYPE:
-      return action.alarmType;
     default:
       return state;
   }
@@ -412,10 +364,6 @@ export const getTimeseriesAvailableSizeDefinedByContract = (state) => {
   return (currentContract && currentContract.timeseries_storage_capacity) || 0;
 }
 
-
-export const getLayercollections = (state) => {
-  return state.layercollections;
-};
 export const getRasterSourceUUID = (state) => {
   return state.rasterSourceUUID;
 };
@@ -446,9 +394,7 @@ const rootReducer = combineReducers({
   organisations,
   usage,
   contracts,
-  layercollections,
   notifications,
-  alarmType,
   rasterSourceUUID,
   location,
   uploadFiles,

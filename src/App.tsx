@@ -6,7 +6,6 @@ import {
   addNotification,
   fetchLizardBootstrap,
   fetchOrganisations,
-  fetchLayercollections,
   updateTaskStatus,
   openCloseUploadQueueModal,
 } from "./actions";
@@ -36,11 +35,9 @@ import UnauthenticatedModal from "./components/UnauthenticatedModal";
 import UnauthorizedModal from "./components/UnauthorizedModal";
 
 const App = (props: RouteComponentProps & DispatchProps) => {
-
   const {
     fetchLizardBootstrap,
     fetchOrganisations,
-    fetchLayercollections,
     updateTaskStatus,
     addNotification,
   } = props;
@@ -61,9 +58,6 @@ const App = (props: RouteComponentProps & DispatchProps) => {
   const [showUnauthenticatedRedirectModal, setShowUnauthenticatedRedirectModal] = useState(false);
   const [showUnauthorizedRedirectModal, setshowUnauthorizedRedirectModal] = useState(false);
 
-
-  
-
   // fetch if user is authenticated
   useEffect(() => {
     if (shouldFetchBootstrap) {
@@ -73,9 +67,8 @@ const App = (props: RouteComponentProps & DispatchProps) => {
   useEffect(() => {
     if (userAuthenticated && shouldFetchOrganisations) {
       fetchOrganisations();
-      fetchLayercollections();
     }
-  }, [userAuthenticated, shouldFetchOrganisations, fetchOrganisations, fetchLayercollections]);
+  }, [userAuthenticated, shouldFetchOrganisations, fetchOrganisations]);
 
   useEffect(() => {
     if (firstFileInTheQueueUuid) {
@@ -325,11 +318,10 @@ const App = (props: RouteComponentProps & DispatchProps) => {
       );
 }
 
-const mapDispatchToProps = (dispatch: any, ownProps: any) => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
     fetchLizardBootstrap: () => dispatch(fetchLizardBootstrap()),
     fetchOrganisations: () => dispatch(fetchOrganisations()),
-    fetchLayercollections: () => dispatch(fetchLayercollections()),
     addNotification: (message: string, timeout: number) => {
       dispatch(addNotification(message, timeout));
     },

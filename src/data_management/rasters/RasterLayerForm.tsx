@@ -23,7 +23,6 @@ import ColorMapInput from '../../form/ColorMapInput';
 import { useForm, Values } from '../../form/useForm';
 import { minLength, required } from '../../form/validators';
 import {
-  getLayercollections,
   getOrganisations,
   getRasterSourceUUID,
   getSelectedOrganisation,
@@ -63,6 +62,17 @@ export const fetchRasterSources = async (uuid: string, searchQuery: string) => {
   const response = await fetchRasterSourcesV4(urlQuery);
 
   return response.results.map((rasterSource: any) => convertToSelectObject(rasterSource.uuid, rasterSource.name));
+};
+
+// Helper function to fetch paginated layer collections with search query
+export const fetchLayerCollections = async (searchQuery: string) => {
+  const urlQuery = searchQuery ? `?page_size=20&slug__icontains=${searchQuery}` : '?page_size=20';
+  const response = await fetch(
+    `/api/v4/layercollections/${urlQuery}`
+  );
+  const responseJSON = await response.json();
+
+  return responseJSON.results.map((layerCollection: any) => convertToSelectObject(layerCollection.slug));
 };
 
 // Helper function to fetch paginated observation types with search query
@@ -117,7 +127,6 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
   const { currentRecord, removeRasterSourceUUID } = props;
   const organisations = useSelector(getOrganisations).available;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
-  const layercollections = useSelector(getLayercollections).available;
   const rasterSourceUUID = useSelector(getRasterSourceUUID);
   const belongsToScenario = (currentRecord && rasterLayerFromAPIBelongsToScenario(currentRecord)) || false;
 
@@ -323,9 +332,12 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
             placeholder={'- Search and select -'}
             value={values.layercollections}
             valueChanged={value => handleValueChange('layercollections', value)}
-            options={layercollections.map((layercollection: any) => convertToSelectObject(layercollection.slug))}
+            options={[]}
             validated
             isMulti
+            isAsync
+            isCached
+            loadOptions={fetchLayerCollections}
             form={"raster_layer_form_id"}
             onFocus={handleFocus}
             onBlur={handleBlur}
