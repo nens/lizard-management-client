@@ -161,36 +161,6 @@ export function updateAlarmType(alarmType) {
   };
 }
 
-// MARK: Layercollections
-export const REQUEST_LAYERCOLLECTIONS = "REQUEST_LAYERCOLLECTIONS";
-export const RECEIVE_LAYERCOLLECTIONS_SUCCESS = "RECEIVE_LAYERCOLLECTIONS_SUCCESS";
-export const RECEIVE_LAYERCOLLECTIONS_ERROR = "RECEIVE_LAYERCOLLECTIONS_ERROR";
-
-export function fetchLayercollections() {
-  return dispatch => {
-    const url = `/api/v4/layercollections/`;
-    const opts = { credentials: "same-origin" };
-
-    dispatch({ type: REQUEST_LAYERCOLLECTIONS });
-
-    fetch(url, opts)
-      .then(responseObj => {
-        if (!responseObj.ok) {
-          const errorMessage = `HTTP error ${responseObj.status} while fetching Layer collections: ${responseObj.statusText}`;
-          dispatch({ type: RECEIVE_LAYERCOLLECTIONS_ERROR, errorMessage });
-          console.error("[E]", errorMessage, responseObj);
-          return Promise.reject(errorMessage);
-        } else {
-          return responseObj.json();
-        }
-      })
-      .then(responseData => {
-        const data = responseData.results;
-        dispatch({ type: RECEIVE_LAYERCOLLECTIONS_SUCCESS, data });
-      });
-  };
-}
-
 // MARK: Raster source uuid
 export const UPDATE_RASTER_SOURCE_UUID = "UPDATE_RASTER_SOURCE_UUID";
 export const REMOVE_RASTER_SOURCE_UUID = "REMOVE_RASTER_SOURCE_UUID";
