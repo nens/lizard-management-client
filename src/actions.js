@@ -151,16 +151,6 @@ export function selectOrganisation(organisation) {
   }
 }
 
-// MARK: Alarm Type update with Raster or Timeseries
-export const UPDATE_ALARM_TYPE = "UPDATE_ALARM_TYPE";
-
-export function updateAlarmType(alarmType) {
-  return {
-    type: UPDATE_ALARM_TYPE,
-    alarmType
-  };
-}
-
 // MARK: Raster source uuid
 export const UPDATE_RASTER_SOURCE_UUID = "UPDATE_RASTER_SOURCE_UUID";
 export const REMOVE_RASTER_SOURCE_UUID = "REMOVE_RASTER_SOURCE_UUID";

@@ -13,7 +13,6 @@ import {
   SET_CONTRACTS,
   SHOW_NOTIFICATION,
   DISMISS_NOTIFICATION,
-  UPDATE_ALARM_TYPE,
   UPDATE_RASTER_SOURCE_UUID,
   REMOVE_RASTER_SOURCE_UUID,
   ADD_FILES_TO_QUEUE,
@@ -150,15 +149,6 @@ function notifications(
           ...state.notifications.slice(action.idx + 1)
         ]
       };
-    default:
-      return state;
-  }
-}
-
-function alarmType(state = "RASTERS", action) {
-  switch (action.type) {
-    case UPDATE_ALARM_TYPE:
-      return action.alarmType;
     default:
       return state;
   }
@@ -405,7 +395,6 @@ const rootReducer = combineReducers({
   usage,
   contracts,
   notifications,
-  alarmType,
   rasterSourceUUID,
   location,
   uploadFiles,
