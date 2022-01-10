@@ -12,11 +12,11 @@ import { SubmitButton } from '../../form/SubmitButton';
 import { CancelButton } from '../../form/CancelButton';
 import { AccessModifier } from '../../form/AccessModifier';
 import { useForm, Values } from '../../form/useForm';
-import { getSelectedOrganisation,   getLayercollections, getOrganisations } from '../../reducers';
+import { getSelectedOrganisation, getOrganisations } from '../../reducers';
 import { addNotification } from './../../actions';
 import { convertToSelectObject } from '../../utils/convertToSelectObject';
 import { fetchSuppliers } from '../rasters/RasterSourceForm';
-import { fetchObservationTypes } from '../rasters/RasterLayerForm';
+import { fetchLayerCollections, fetchObservationTypes } from '../rasters/RasterLayerForm';
 import { geoblockSourceValidator, minLength, required } from '../../form/validators';
 import { fetchWithOptions } from '../../utils/fetchWithOptions';
 import { geoBlockHelpText } from '../../utils/help_texts/helpTextForGeoBlock';
@@ -39,7 +39,6 @@ const backUrl = "/management/data_management/geoblocks";
 
 const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (props) => {
   const { currentRecord } = props;
-  const layercollections = useSelector(getLayercollections).available;
   const organisations = useSelector(getOrganisations).available;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const belongsToScenario = (currentRecord && rasterLayerFromAPIBelongsToScenario(currentRecord)) || false;
@@ -211,9 +210,12 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
             placeholder={'- Search and select -'}
             value={values.layercollections}
             valueChanged={value => handleValueChange('layercollections', value)}
-            options={layercollections.map((layercollection: any) => convertToSelectObject(layercollection.slug))}
+            options={[]}
             validated
             isMulti
+            isAsync
+            isCached
+            loadOptions={fetchLayerCollections}
             form={"geoblock_form_id"}
             onFocus={handleFocus}
             onBlur={handleBlur}
