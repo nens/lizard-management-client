@@ -6,7 +6,7 @@ import { FormattedMessage} from 'react-intl.macro';
 // import {formattedMessageToString} from './../utils/translationUtils';
 import { SelectDropdown } from "./SelectDropdown";
 import { CheckBox } from "./CheckBox";
-import { TextInput } from "./TextInput";
+import { FloatInput } from "./FloatInput";
 import styles from "./ColorMapInput.module.css";
 import formStyles from "../styles/Forms.module.css";
 import {
@@ -191,20 +191,19 @@ const ColorMapInput: React.FC<ColorMapProps> = (props) => {
       options: JSON.stringify(customColormap) ==="{}"? colorMapValue.options : {},
       rescalable: colorMapValue.rescalable,
       customColormap: customColormap
-
     });
   }
 
-  const handleValueChanged = (field: string, value: number | null) => {
+  const handleValueChanged = (field: string, value: number) => {
     let newValue;
 
     if (field !== 'min' && field !== 'max') return;
 
-    if (value === null) {
+    if (isNaN(value)) {
       newValue = '';
     } else {
-      newValue = value
-    }
+      newValue = value;
+    };
 
     let newStyleOptions;
     if (field === 'min') {
@@ -219,7 +218,7 @@ const ColorMapInput: React.FC<ColorMapProps> = (props) => {
         colorMapValue.options,
         {max: newValue}
       );
-    }
+    };
 
     valueChanged({
       options: newStyleOptions.options,
@@ -227,16 +226,6 @@ const ColorMapInput: React.FC<ColorMapProps> = (props) => {
       customColormap: colorMapValue.customColormap,
     });
   }
-
-  const toFloat = (value: string): number | null => {
-    if (!value) return null;
-
-    const f = parseFloat(value);
-
-    if (Number.isNaN(f)) return null;
-
-    return f;
-  };
 
   const readOnly = optionsHasLayers(colorMapValue.options || {} );
   const colorMapType = colorMapTypeFromOptions(colorMapValue.options || {});
@@ -355,13 +344,12 @@ const ColorMapInput: React.FC<ColorMapProps> = (props) => {
             null
           }
         </div>
-        <TextInput
+        <FloatInput
           title={'Minimum of color map range'}
           name={'colormap_minimum'}
-          type={'number'}
           placeholder={placeholderMinimumColorRange}
-          value={(colorMapType && colorMapType.min) || ""}
-          valueChanged={e => handleValueChanged('min', toFloat(e.target.value))}
+          value={colorMapType ? parseFloat(colorMapType.min) : NaN}
+          valueChanged={value => handleValueChanged('min', value)}
           validated={colorMapValidator(colorMapValue).minValidated}
           errorMessage={colorMapValidator(colorMapValue).errorMessage}
           triedToSubmit={triedToSubmit}
@@ -370,13 +358,12 @@ const ColorMapInput: React.FC<ColorMapProps> = (props) => {
           readOnly={readOnly}
           form={form}
         />
-        <TextInput
+        <FloatInput
           title={'Maximum of color map range'}
           name={'colormap_maximum'}
-          type={'number'}
           placeholder={placeholderMaximumColorRange}
-          value={(colorMapType && colorMapType.max) || ""}
-          valueChanged={e => handleValueChanged('max', toFloat(e.target.value))}
+          value={colorMapType ? parseFloat(colorMapType.max) : NaN}
+          valueChanged={value => handleValueChanged('max', value)}
           validated={colorMapValidator(colorMapValue).maxValidated}
           errorMessage={colorMapValidator(colorMapValue).errorMessage}
           triedToSubmit={triedToSubmit}

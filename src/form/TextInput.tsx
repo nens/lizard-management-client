@@ -19,7 +19,6 @@ interface MyProps {
   form?: string,
   type?: string,
   required?: boolean,
-  showUpDownArrows?: boolean, // only works if type = "number"
 };
 
 export const TextInput: React.FC<MyProps> = (props) => {  
@@ -40,7 +39,6 @@ export const TextInput: React.FC<MyProps> = (props) => {
     form,
     type,
     required,
-    showUpDownArrows,
   } = props;
 
   // Set validity of the input field
@@ -69,7 +67,7 @@ export const TextInput: React.FC<MyProps> = (props) => {
           name={name}
           id={name}
           autoComplete="off"
-          className={`${formStyles.FormControl} ${triedToSubmit ? formStyles.FormSubmitted : ''} ${showUpDownArrows? "": formStyles.HideNumberUpDownArrows}`}
+          className={`${formStyles.FormControl} ${triedToSubmit ? formStyles.FormSubmitted : ''}`}
           placeholder={placeholder}
           onChange={valueChanged}
           value={value || (value===0? value: "")}

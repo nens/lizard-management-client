@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { TextInput } from '../form/TextInput';
+import { FloatInput } from './FloatInput';
 import formStyles from "../styles/Forms.module.css";
 import buttonStyles from "../styles/Buttons.module.css";
 
@@ -75,16 +76,14 @@ export function AlarmThresholds (props: MyProps) {
             </button>
           </React.Fragment>
         ))}
-        <TextInput
+        <FloatInput
           title={''}
           name={'thresholdValue'}
-          type={'number'}
           value={threshold.value}
-          valueChanged={e => {
-            const thresholdValue = parseFloat(e.target.value);
+          valueChanged={value => {
             setThreshold({
               ...threshold,
-              value: thresholdValue
+              value
             });
           }}
           validated
