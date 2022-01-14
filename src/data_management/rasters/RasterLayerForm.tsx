@@ -66,7 +66,7 @@ export const fetchRasterSources = async (uuid: string, searchQuery: string) => {
 
 // Helper function to fetch paginated layer collections with search query
 export const fetchLayerCollections = async (searchQuery: string) => {
-  const urlQuery = searchQuery ? `?page_size=20&slug__icontains=${searchQuery}` : '?page_size=20';
+  const urlQuery = searchQuery ? `?page_size=20&writable=true&slug__icontains=${searchQuery}` : '?page_size=20&writable=true';
   const response = await fetch(
     `/api/v4/layercollections/${urlQuery}`
   );
