@@ -10,6 +10,7 @@ import tableStyles from "../../components/Table.module.css";
 import {  getUsername } from "../../reducers";
 import { bytesToDisplayValue } from '../../utils/byteUtils';
 import { DefaultScenarioExplanationText } from '../../utils/help_texts/helpTextForScenarios';
+import { getLocalDateString } from '../../utils/dateUtils';
 import DeleteModal from '../../components/DeleteModal';
 import AuthorisationModal from '../../components/AuthorisationModal';
 
@@ -114,6 +115,11 @@ export const ScenarioTable = () =>  {
       orderingField: null,
     },
     {
+      titleRenderFunction: () =>  "Last update",
+      renderFunction: (row: any) => getLocalDateString(row.last_modified),
+      orderingField: "last_modified",
+    },
+    {
       titleRenderFunction: () =>  "Size",
       renderFunction: (row: any) => 
         <span
@@ -173,7 +179,7 @@ export const ScenarioTable = () =>  {
       backUrl={"/management/data_management"}
     >
         <TableStateContainer 
-          gridTemplateColumns={"4fr 28fr 29fr 15fr 10fr 10fr 4fr"}
+          gridTemplateColumns={"4fr 20fr 25fr 13fr 10fr 14fr 10fr 4fr"}
           columnDefinitions={columnDefinitions}
           baseUrl={`${baseUrl}?`} 
           checkBoxActions={[
