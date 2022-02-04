@@ -430,6 +430,16 @@
       }
     ]
   },
+  "Max": {
+    "class": "dask_geomodeling.raster.reduction.Max",
+    "description": "Take the maximum value of two or more rasters, ignoring no data.",
+    "parameters": {
+      "type": "array",
+      "items": {
+        "type": "raster_block"
+      }
+    }
+  },
   "MovingMax": {
     "class": "dask_geomodeling.raster.spatial.MovingMax",
     "description": "Apply a spatial maximum filter to the data using a circular footprint",
