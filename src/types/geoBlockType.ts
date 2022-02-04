@@ -60,6 +60,7 @@ enum GroupBlockEnum {
   Group = "Group",
   GroupTemporal = "GroupTemporal",
   FillNoData = "FillNoData",
+  Max = "Max",
 }
 
 type InputBlockType = {
