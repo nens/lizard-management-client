@@ -9,8 +9,6 @@ import buttonStyles from '../styles/Buttons.module.css';
 import tableStyles from "../components/Table.module.css";
 
 interface MyProps {
-  invitations: any[],
-  setInvitations: (value: any[] | null) => void,
   handleClose: () => void
 }
 
@@ -29,9 +27,6 @@ function InvitationModal (props: MyProps & DispatchProps) {
       if (res.status === 204) {
         props.addNotification('Success! Invitation cancelled', 2000);
         triggerReloadWithCurrentPage();
-        const newInvitationList = props.invitations.filter(invitation => invitation.id !== row.id);
-        props.setInvitations(newInvitationList);
-        if (newInvitationList.length === 0) props.handleClose(); // close the modal if there is no pending invitation left
       } else {
         props.addNotification('An error occurred! Please try again!', 2000);
         console.error('Error cancelling the following pending invitation: ', row, res);
@@ -98,7 +93,9 @@ function InvitationModal (props: MyProps & DispatchProps) {
     <ModalBackground
       title={'Pending Invitations'}
       handleClose={props.handleClose}
-      width={'50%'}
+      style={{
+        width: '50%'
+      }}
     >
       <div
         style={{

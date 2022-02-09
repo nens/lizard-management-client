@@ -10,7 +10,7 @@ import contactIcon from "../../images/contacts@3x.svg";
 import tableStyles from "../../components/Table.module.css";
 
 export const baseUrl = "/api/v4/contacts/";
-const navigationUrl = "/alarms/contacts";
+const navigationUrl = "/management/alarms/contacts";
 
 export const ContactTable: React.FC<RouteComponentProps> = (props) =>  {
   const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
@@ -123,7 +123,7 @@ export const ContactTable: React.FC<RouteComponentProps> = (props) =>  {
       imgAltDescription={"Contact icon"}
       headerText={"Contacts"}
       explanationText={"Your contacts contain an email address, phone number and a name. Add these contacts to group to send them alarm messages when your thresholds are triggered."} 
-      backUrl={"/alarms"}
+      backUrl={"/management/alarms"}
     >
         <TableStateContainer 
           gridTemplateColumns={"6% 18% 18% 32% 18% 8%"} 

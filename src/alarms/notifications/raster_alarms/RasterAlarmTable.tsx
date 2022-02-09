@@ -11,7 +11,7 @@ import DeleteModal from '../../../components/DeleteModal';
 import alarmIcon from "../../../images/alarm@3x.svg";
 
 export const baseUrl = "/api/v4/rasteralarms/";
-const navigationUrl = "/alarms/notifications/raster_alarms";
+const navigationUrl = "/management/alarms/notifications/raster_alarms";
 
 export const RasterAlarmTableComponent: React.FC<DispatchProps & RouteComponentProps> = (props) =>  {
   const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
@@ -123,7 +123,7 @@ export const RasterAlarmTableComponent: React.FC<DispatchProps & RouteComponentP
       imgAltDescription={"Alarm icon"}
       headerText={"Raster Alarms"}
       explanationText={"Alarms consist of a name, template, thresholds and recipients. You can create, (de)activate or delete your alarms here."} 
-      backUrl={"/alarms/notifications"}
+      backUrl={"/management/alarms/notifications"}
     >
         <TableStateContainer 
           gridTemplateColumns={"10% 40% 20% 20% 10%"} 

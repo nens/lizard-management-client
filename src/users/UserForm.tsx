@@ -18,30 +18,30 @@ import formStyles from './../styles/Forms.module.css';
 import userManagementIcon from "../images/userManagement.svg";
 
 interface Props {
-  currentUser?: any
+  currentRecord?: any
 };
 
 const UserForm: React.FC<Props & DispatchProps & RouteComponentProps> = (props) => {
-  const { currentUser } = props;
+  const { currentRecord } = props;
   const selectedOrganisationUuid = useSelector(getSelectedOrganisation).uuid;
   const baseUrl = `/api/v4/organisations/${selectedOrganisationUuid}/users/`;
 
   // Delete modal
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-  const initialValues = currentUser ? {
-    firstName: currentUser.first_name,
-    lastName: currentUser.last_name,
-    username: currentUser.username,
-    email: currentUser.email,
-    roles: currentUser.roles,
+  const initialValues = currentRecord ? {
+    firstName: currentRecord.first_name,
+    lastName: currentRecord.last_name,
+    username: currentRecord.username,
+    email: currentRecord.email,
+    roles: currentRecord.roles,
   } : {
     email: null,
     roles: ['user'] // give user role to new user by default
   };
 
   const onSubmit = (values: Values) => {
-    if (!currentUser) {
+    if (!currentRecord) {
       fetch(`/api/v4/invitations/`, {
         credentials: "same-origin",
         method: "POST",
@@ -58,7 +58,7 @@ const UserForm: React.FC<Props & DispatchProps & RouteComponentProps> = (props) 
         const status = response.status;
         if (status === 201) {
           props.addNotification(`Success! An invitation email was sent to ${values.email}`, 2000);
-          props.history.push("/users");
+          props.history.push("/management/users");
         } else if (status === 403) {
           props.addNotification("Not authorized", 2000);
           console.error(response);
@@ -69,7 +69,7 @@ const UserForm: React.FC<Props & DispatchProps & RouteComponentProps> = (props) 
       })
       .catch(console.error);
     } else {
-      fetch(`/api/v4/organisations/${selectedOrganisationUuid}/users/${currentUser.id}/`, {
+      fetch(`/api/v4/organisations/${selectedOrganisationUuid}/users/${currentRecord.id}/`, {
         credentials: "same-origin",
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -81,7 +81,7 @@ const UserForm: React.FC<Props & DispatchProps & RouteComponentProps> = (props) 
         const status = response.status;
         if (status === 200) {
           props.addNotification('Success! User role updated', 2000);
-          props.history.push("/users");
+          props.history.push("/management/users");
         } else {
           props.addNotification(status, 2000);
           console.error(response);
@@ -112,7 +112,7 @@ const UserForm: React.FC<Props & DispatchProps & RouteComponentProps> = (props) 
       imgAltDescription={"User icon"}
       headerText={"Users"}
       explanationText={userFormHelpText[fieldOnFocus] || userFormHelpText['default']}
-      backUrl={"/users"}
+      backUrl={"/management/users"}
       fieldName={fieldOnFocus}
     >
       <form
@@ -120,7 +120,7 @@ const UserForm: React.FC<Props & DispatchProps & RouteComponentProps> = (props) 
         onSubmit={handleSubmit}
         onReset={handleReset}
       >
-        {currentUser ? (
+        {currentRecord ? (
           <>
             <TextInput
               title={'First name'}
@@ -158,24 +158,24 @@ const UserForm: React.FC<Props & DispatchProps & RouteComponentProps> = (props) 
           </>
         ) : null}
         <TextInput
-          title={currentUser ? 'Email' : 'Email *'}
+          title={currentRecord ? 'Email' : 'Email *'}
           name={'email'}
           value={values.email}
           valueChanged={handleInputChange}
           clearInput={clearInput}
-          validated={currentUser || !emailValidator(values.email)}
+          validated={currentRecord || !emailValidator(values.email)}
           errorMessage={emailValidator(values.email)}
           triedToSubmit={triedToSubmit}
-          readOnly={currentUser}
+          readOnly={currentRecord}
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
         <UserRoles
-          title={currentUser ? 'Roles' : 'Roles *'}
+          title={currentRecord ? 'Roles' : 'Roles *'}
           name={'roles'}
           value={values.roles}
           valueChanged={value => handleValueChange('roles', value)}
-          currentUser={currentUser}
+          currentUser={currentRecord}
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
@@ -183,12 +183,12 @@ const UserForm: React.FC<Props & DispatchProps & RouteComponentProps> = (props) 
           className={formStyles.ButtonContainer}
         >
           <CancelButton
-            url={'/users'}
+            url={'/management/users'}
           />
           <div style={{
             display: "flex"
           }}>
-            {currentUser ? (
+            {currentRecord ? (
               <div style={{marginRight: "16px"}}>
                 <FormActionButtons
                   actions={[
@@ -206,13 +206,14 @@ const UserForm: React.FC<Props & DispatchProps & RouteComponentProps> = (props) 
           </div>
         </div>
       </form>
-      {currentUser && showDeleteModal ? (
+      {currentRecord && showDeleteModal ? (
         <DeleteModal
-          rows={[currentUser]}
+          rows={[currentRecord]}
           displayContent={[{name: "username", width: 40}, {name: "email", width: 60}]}
           fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
           handleClose={() => setShowDeleteModal(false)}
           tableUrl={'/users'}
+          deleteButtonName={'Deactivate'}
           text={'You are deactivating the following user. Please make sure that s/he is not a member of any other organisation before continue.'}
         />
       ) : null}

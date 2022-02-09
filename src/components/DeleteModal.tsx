@@ -13,10 +13,11 @@ interface MyProps {
   resetTable?: Function | null, // for Table to reload after deletion
   tableUrl?: string, // for Form to redirect backs to the Table after deletion of object
   text?: string,
+  deleteButtonName?: string,
 }
 
 function DeleteModal (props: MyProps & DispatchProps & RouteComponentProps) {
-  const { rows, displayContent, tableUrl, text } = props;
+  const { rows, displayContent, tableUrl, text, deleteButtonName } = props;
 
   const [busyDeleting, setBusyDeleting] = useState<boolean>(false);
 
@@ -25,7 +26,8 @@ function DeleteModal (props: MyProps & DispatchProps & RouteComponentProps) {
     const uuids = rows.map(row =>
       row.uuid ||
       row.id ||
-      row.prefix // for personalApiKeysTable
+      row.prefix || // for personalApiKeysTable
+      row.slug // for layercollections
     );
     const options = {
       credentials: "same-origin",
@@ -62,7 +64,7 @@ function DeleteModal (props: MyProps & DispatchProps & RouteComponentProps) {
   return (
     <Modal
       title={'Are you sure?'}
-      buttonConfirmName={'Delete'}
+      buttonConfirmName={deleteButtonName || 'Delete'}
       onClickButtonConfirm={handleDelete}
       cancelAction={props.handleClose}
       disabledCancelAction={busyDeleting}

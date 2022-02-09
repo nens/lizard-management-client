@@ -18,10 +18,10 @@ export const accessModifierHelpText = 'Choose an accessibility to decide who has
 
 export const codeHelpText = 'Choose a code that represents the object within your organisation.';
 
-export const datasetHelpText = (
+export const layercollectionHelpText = (
   <>
-    <p>Choose a dataset for this object.</p>
-    <p><i>Datasets are used to group objects together and can be seen as tag or label.</i></p>
+    <p>Choose a layer collection for this object.</p>
+    <p><i>Layer collections are used to group objects together and can be seen as tag or label.</i></p>
   </>
 );
 

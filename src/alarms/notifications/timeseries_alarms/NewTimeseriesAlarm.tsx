@@ -1,50 +1,39 @@
 import React from "react";
-import MDSpinner from "react-md-spinner";
 import { useSelector } from "react-redux";
 import { getSelectedOrganisation } from "../../../reducers";
-import { usePaginatedFetch } from "../../../utils/usePaginatedFetch";
+import { useRecursiveFetch } from "../../../api/hooks";
 import TimeseriesAlarmForm from "./TimeseriesAlarmForm";
+import SpinnerIfNotLoaded from '../../../components/SpinnerIfNotLoaded';
 
 export const NewTimeseriesAlarm: React.FC = () => {
+  
   const selectedOrganisation = useSelector(getSelectedOrganisation);
 
   const {
-    results: groups,
-    fetchingState: groupsFetchingState
-  } = usePaginatedFetch({
-    url: `/api/v4/contactgroups/?organisation__uuid=${selectedOrganisation.uuid}`
+    data: groups,
+    status: groupsFetchStatus
+  } = useRecursiveFetch('/api/v4/contactgroups/', {
+    organisation__uuid: selectedOrganisation.uuid
   });
 
   const {
-    results: templates,
-    fetchingState: templatesFetchingState
-  } = usePaginatedFetch({
-    url: `/api/v4/messages/?organisation__uuid=${selectedOrganisation.uuid}`
+    data: templates,
+    status: templatesFetchStatus
+  } = useRecursiveFetch('/api/v4/messages/', {
+    organisation__uuid: selectedOrganisation.uuid
   });
 
-  if (
-    groupsFetchingState === 'RETRIEVED' &&
-    templatesFetchingState === 'RETRIEVED'
-  ) {
-    return (
-      <TimeseriesAlarmForm
+  return (
+    <SpinnerIfNotLoaded
+      loaded={
+        groupsFetchStatus === 'success' &&
+        templatesFetchStatus === 'success'
+      }
+    >
+      <TimeseriesAlarmForm 
         groups={groups || []}
         templates={templates || []}
       />
-    )
-  } else {
-    return (
-      <div
-        style={{
-          position: "relative",
-          top: 50,
-          height: 300,
-          bottom: 50,
-          marginLeft: "50%"
-        }}
-      >
-        <MDSpinner size={24} />
-      </div>
+    </SpinnerIfNotLoaded>
     );
-  }
 };

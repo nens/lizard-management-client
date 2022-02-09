@@ -1,5 +1,10 @@
 import React from 'react';
-
+import { useSelector} from 'react-redux';
+import {
+  getScenarioTotalSize,
+  getScenarioAvailableSizeDefinedByContract,
+  getSelectedOrganisation
+} from '../../reducers';
 import {
   accessModifierHelpText,
   HelpText,
@@ -7,24 +12,36 @@ import {
   supplierHelpText,
   uuidHelpText
 } from './defaultHelpText';
+import UsagePieChart from './../../components/UsagePieChart';
 
-export const defaultScenarioExplanationText = (usedSpaceString:string, organisation: string) => (
-  <div
-    style={{
-      display:"grid",
-      gridTemplateColumns: "1fr 1fr",
-      columnGap: 5
-    }}
-  >
-    <span>Organisation:</span>
-    <span style={{ fontWeight: "bold" }}>{organisation}</span>
-    <span>Used storage:</span>
-    <span style={{ fontWeight: "bold" }}>{usedSpaceString}</span>
-  </div>
-);
-
+export const DefaultScenarioExplanationText = () => {
+  const selectedOrganisation = useSelector(getSelectedOrganisation);
+  const scenarioTotalSize = useSelector(getScenarioTotalSize);
+  const scenarioAvailableSizeDefinedByContract = useSelector(getScenarioAvailableSizeDefinedByContract);
+  return (
+    <div>
+      <div
+        style={{
+          display:"flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <div style={{marginBottom: "16px",}}>
+          {`Scenario storage used for`}
+          <div style={{fontWeight: "bold"}}>{selectedOrganisation.name}</div>
+        </div>
+        <UsagePieChart
+          used={scenarioTotalSize}
+          available={scenarioAvailableSizeDefinedByContract}
+        />
+      </div>
+    </div>
+  );
+};
 
 export const scenarioFormHelpText: HelpText = {
+  default: 'View and manage a 3Di scenario.',
   name: 'The scenario name comes from 3Di. This name can be changed for your convenience.',
   uuid: uuidHelpText,
   modelName: 'The model that was used to create this scenario.',

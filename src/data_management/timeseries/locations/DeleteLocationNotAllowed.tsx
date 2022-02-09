@@ -34,7 +34,7 @@ const DeleteLocationNotAllowed = (props: MyProps) => {
           }}
         >
           {uuids.map(uuid => {
-            const url = `/management#/data_management/timeseries/timeseries/${uuid}`;
+            const url = `/management/data_management/timeseries/timeseries/${uuid}`;
             return (
               <li key={uuid}><a target="_blank" rel="noopener noreferrer" href={url}>{url}</a></li>
             );

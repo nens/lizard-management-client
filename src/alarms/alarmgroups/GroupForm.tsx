@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { connect, useSelector } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
@@ -9,11 +9,11 @@ import { useForm, Values } from '../../form/useForm';
 import { minLength } from '../../form/validators';
 import { addNotification } from '../../actions';
 import { getSelectedOrganisation } from '../../reducers';
-import { SelectDropdown, Value } from '../../form/SelectDropdown';
+import { SelectDropdown } from '../../form/SelectDropdown';
 import { convertToSelectObject } from '../../utils/convertToSelectObject';
 import { groupFormHelpText } from '../../utils/help_texts/helpTextForAlarmGroups';
 import { fetchWithOptions } from '../../utils/fetchWithOptions';
-import { usePaginatedFetch } from '../../utils/usePaginatedFetch';
+import { useRecursiveFetch } from '../../api/hooks';
 import { baseUrl } from './GroupTable';
 import DeleteModal from '../../components/DeleteModal';
 import FormActionButtons from '../../components/FormActionButtons';
@@ -22,19 +22,19 @@ import formStyles from './../../styles/Forms.module.css';
 import groupIcon from "../../images/group.svg";
 
 interface Props {
-  currentGroup?: any
+  currentRecord?: any
 };
 interface PropsFromDispatch {
   addNotification: (message: string | number, timeout: number) => void
 };
 
 const GroupForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (props) => {
-  const { currentGroup } = props;
+  const { currentRecord } = props;
   const selectedOrganisationUuid = useSelector(getSelectedOrganisation).uuid;
 
-  const initialValues = currentGroup ? {
-    name: currentGroup.name,
-    contacts: currentGroup.contacts.map((contact: any) => convertToSelectObject(contact.id, contact.first_name + ' ' + contact.last_name))
+  const initialValues = currentRecord ? {
+    name: currentRecord.name,
+    contacts: currentRecord.contacts.map((contact: any) => convertToSelectObject(contact.id, contact.first_name + ' ' + contact.last_name))
   } : {
     name: null,
     contacts: []
@@ -46,7 +46,7 @@ const GroupForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pr
       contacts: values.contacts.map((contact: any) => contact.value)
     };
 
-    if (!currentGroup) {
+    if (!currentRecord) {
       fetch("/api/v4/contactgroups/", {
         credentials: "same-origin",
         method: "POST",
@@ -60,7 +60,7 @@ const GroupForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pr
         const status = response.status;
         if (status === 201) {
           props.addNotification('Success! New group created', 2000);
-          props.history.push("/alarms/groups");
+          props.history.push("/management/alarms/groups");
         } else if (status === 403) {
           props.addNotification("Not authorized", 2000);
           console.error(response);
@@ -71,7 +71,7 @@ const GroupForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pr
       })
       .catch(console.error);
     } else {
-      fetch(`/api/v4/contactgroups/${currentGroup.id}/`, {
+      fetch(`/api/v4/contactgroups/${currentRecord.id}/`, {
         credentials: "same-origin",
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -81,7 +81,7 @@ const GroupForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pr
         const status = response.status;
         if (status === 200) {
           props.addNotification('Success! Group updated', 2000);
-          props.history.push("/alarms/groups");
+          props.history.push("/management/alarms/groups");
         } else {
           props.addNotification(status, 2000);
           console.error(response);
@@ -92,13 +92,12 @@ const GroupForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pr
   };
 
   // Fetch list of contacts to add to group
-  const [contacts, setContacts] = useState<Value[] | null>(null);
-  const { results, fetchingState } = usePaginatedFetch({
-    url: `/api/v4/contacts/?organisation__uuid=${currentGroup ? currentGroup.organisation.uuid : selectedOrganisationUuid}`
+  const {
+    data: contacts,
+    isFetching: contactsIsFetching
+  } = useRecursiveFetch('/api/v4/contacts/', {
+    organisation__uuid: currentRecord ? currentRecord.organisation.uuid : selectedOrganisationUuid
   });
-  useEffect(() => {
-    setContacts(results && results.map((contact: any) => convertToSelectObject(contact.id, contact.first_name + ' ' + contact.last_name, contact.email, contact.phone_number)));
-  }, [results]);
 
   // Modal to send message to all contacts in group
   const [showGroupMessageModal, setShowGroupMessageModal] = useState<boolean>(false);
@@ -126,7 +125,7 @@ const GroupForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pr
       imgAltDescription={"Group icon"}
       headerText={"Groups"}
       explanationText={groupFormHelpText[fieldOnFocus] || groupFormHelpText['default']}
-      backUrl={"/alarms/groups"}
+      backUrl={"/management/alarms/groups"}
       fieldName={fieldOnFocus}
     >
       <form
@@ -153,10 +152,10 @@ const GroupForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pr
           placeholder={'- Search and select -'}
           value={values.contacts}
           valueChanged={value => handleValueChange('contacts', value)}
-          options={contacts || []}
+          options={contacts ? contacts.map((contact: any) => convertToSelectObject(contact.id, contact.first_name + ' ' + contact.last_name, contact.email, contact.phone_number)) : []}
           validated
           isMulti
-          isLoading={fetchingState === 'RETRIEVING'}
+          isLoading={contactsIsFetching}
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
@@ -164,12 +163,12 @@ const GroupForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pr
           className={formStyles.ButtonContainer}
         >
           <CancelButton
-            url={'/alarms/groups'}
+            url={'/management/alarms/groups'}
           />
           <div style={{
             display: "flex"
           }}>
-            {currentGroup ? (
+            {currentRecord ? (
               <div style={{marginRight: "16px"}}>
                 <FormActionButtons
                   actions={[
@@ -192,17 +191,17 @@ const GroupForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pr
         </div>
         {showGroupMessageModal ? (
           <GroupMessage
-            groupId={currentGroup.id}
+            groupId={currentRecord.id}
             handleClose={() => setShowGroupMessageModal(false)}
           />
         ) :null}
-        {currentGroup && showDeleteModal ? (
+        {currentRecord && showDeleteModal ? (
           <DeleteModal
-            rows={[currentGroup]}
+            rows={[currentRecord]}
             displayContent={[{name: "name", width: 30}, {name: "id", width: 70}]}
             fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
             handleClose={() => setShowDeleteModal(false)}
-            tableUrl={'/alarms/groups'}
+            tableUrl={'/management/alarms/groups'}
           />
         ) : null}
       </form>

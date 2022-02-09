@@ -11,12 +11,12 @@ import { SubmitButton } from '../../form/SubmitButton';
 import { CancelButton } from '../../form/CancelButton';
 import { SelectDropdown } from '../../form/SelectDropdown';
 import { AcceptedFile, UploadData } from '../../form/UploadData';
-import { getOrganisations, getSelectedOrganisation } from '../../reducers';
+import { getOrganisations, getSelectedOrganisation} from '../../reducers';
 import { useForm, Values } from '../../form/useForm';
 import { minLength } from '../../form/validators';
 import { AccessModifier } from '../../form/AccessModifier';
 import { rasterIntervalStringServerToDurationObject, toISOValue } from '../../utils/isoUtils';
-import { addFilesToQueue, addNotification, updateRasterSourceUUID } from '../../actions';
+import { addFilesToQueue, addNotification, updateRasterSourceUUID, openCloseUploadQueueModal } from '../../actions';
 import { sendDataToLizardRecursive } from '../../utils/sendDataToLizard';
 import { rasterSourceFormHelpText } from '../../utils/help_texts/helpTextForRasters';
 import { convertToSelectObject } from '../../utils/convertToSelectObject';
@@ -32,12 +32,13 @@ import DataFlushingModal from './DataFlushingModal';
 import TemporalDataFlushingModal from './TemporalDataFlushingModal';
 
 interface Props {
-  currentRasterSource?: RasterSourceFromAPI
+  currentRecord?: RasterSourceFromAPI
 };
 interface PropsFromDispatch {
   updateRasterSourceUUID: (uuid: string) => void,
   addNotification: (message: string | number, timeout: number) => void,
   addFilesToQueue: (files: File[]) => void,
+  openCloseUploadQueueModal: (isOpen:boolean) => void;
 };
 interface RouteParams {
   uuid: string;
@@ -59,7 +60,7 @@ export const fetchSuppliers = async (uuid: string, searchInput: string) => {
 };
 
 const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<RouteParams>> = (props) => {
-  const { currentRasterSource } = props;
+  const { currentRecord } = props;
   const organisations = useSelector(getOrganisations).available;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const organisationsToSwitchTo = organisations.filter((org: any) => org.roles.includes('admin'));
@@ -68,16 +69,16 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
   const [showDataFlushingModal, setShowDataFlushingModal] = useState<boolean>(false);
   const [temporalDataFlushingModal, setTemporalDataFlushingModal] = useState<boolean>(false);
 
-  const initialValues = currentRasterSource ? {
-    name: currentRasterSource.name,
-    uuid: currentRasterSource.uuid,
-    description: currentRasterSource.description,
-    supplierCode: currentRasterSource.supplier_code,
-    supplier: currentRasterSource.supplier ? convertToSelectObject(currentRasterSource.supplier) : null,
-    temporal: currentRasterSource.temporal,
-    interval: currentRasterSource.interval ? toISOValue(rasterIntervalStringServerToDurationObject(currentRasterSource.interval)) : '',
-    accessModifier: currentRasterSource.access_modifier,
-    organisation: currentRasterSource.organisation ? convertToSelectObject(currentRasterSource.organisation.uuid, currentRasterSource.organisation.name) : null,
+  const initialValues = currentRecord ? {
+    name: currentRecord.name,
+    uuid: currentRecord.uuid,
+    description: currentRecord.description,
+    supplierCode: currentRecord.supplier_code,
+    supplier: currentRecord.supplier ? convertToSelectObject(currentRecord.supplier) : null,
+    temporal: currentRecord.temporal,
+    interval: currentRecord.interval ? toISOValue(rasterIntervalStringServerToDurationObject(currentRecord.interval)) : '',
+    accessModifier: currentRecord.access_modifier,
+    organisation: currentRecord.organisation ? convertToSelectObject(currentRecord.organisation.uuid, currentRecord.organisation.name) : null,
     data: [],
   } : {
     name: null,
@@ -92,13 +93,13 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
   };
 
   const onSubmit = (values: Values) => {
-    if (!currentRasterSource) {
+    if (!currentRecord) {
       const rasterSource = {
         name: values.name,
         organisation: values.organisation && values.organisation.value,
         access_modifier: values.accessModifier,
         description: values.description,
-        supplier: values.supplier && values.supplier.value,
+        supplier: values.supplier && values.supplier.label,
         supplier_code: values.supplierCode,
         temporal: values.temporal,
         interval: values.interval,
@@ -120,6 +121,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           const uploadFiles = acceptedFiles.map(f => f.file);
           if (uploadFiles.length > 0) props.addNotification('Upload started', 1000);
           props.addFilesToQueue(uploadFiles);
+          props.openCloseUploadQueueModal(true);
           sendDataToLizardRecursive(
             parsedBody.uuid,
             values.data,
@@ -132,12 +134,12 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
         organisation: values.organisation && values.organisation.value,
         access_modifier: values.accessModifier,
         description: values.description,
-        supplier: values.supplier && values.supplier.value,
+        supplier: values.supplier && values.supplier.label,
         supplier_code: values.supplierCode,
         temporal: values.temporal,
         interval: values.interval,
       };
-      patchRasterSource(currentRasterSource.uuid as string, body)
+      patchRasterSource(currentRecord.uuid as string, body)
         .then(data => {
           const status = data.response.status;
           if (status === 200) {
@@ -148,13 +150,14 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
             const uploadFiles = acceptedFiles.map(f => f.file);
             if (uploadFiles.length > 0) props.addNotification('Upload started', 1000);
             props.addFilesToQueue(uploadFiles);
+            props.openCloseUploadQueueModal(true);
             sendDataToLizardRecursive(
               props.match.params.uuid,
               values.data,
               values.temporal
             );
             // redirect back to the table of raster sources
-            props.history.push('/data_management/rasters/sources')
+            props.history.push('/management/data_management/rasters/sources')
           } else {
             props.addNotification(status, 2000);
             console.error(data);
@@ -184,7 +187,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
       imgAltDescription={"Raster-Source icon"}
       headerText={"Raster Sources"}
       explanationText={rasterSourceFormHelpText[fieldOnFocus] || rasterSourceFormHelpText['default']}
-      backUrl={"/data_management/rasters/sources"}
+      backUrl={"/management/data_management/rasters/sources"}
       fieldName={fieldOnFocus}
     >
       <form
@@ -208,7 +211,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           errorMessage={minLength(3, values.name)}
           triedToSubmit={triedToSubmit}
         />
-        {currentRasterSource ? (
+        {currentRecord ? (
           <TextInput
             title={'UUID'}
             name={'uuid'}
@@ -250,7 +253,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           valueChanged={bool => handleValueChange('temporal', bool)}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          readOnly={!!currentRasterSource}
+          readOnly={!!currentRecord}
         />
         <DurationField
           title={'Interval'}
@@ -262,7 +265,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           triedToSubmit={triedToSubmit}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          readOnly={!!currentRasterSource || values.temporal === false}
+          readOnly={!!currentRecord || values.temporal === false}
         />
         <UploadData
           title={'Data'}
@@ -284,7 +287,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           valueChanged={value => handleValueChange('accessModifier', value)}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          readOnly={!!currentRasterSource}
+          readOnly={!!currentRecord}
         />
         <SelectDropdown
           title={'Organisation *'}
@@ -298,7 +301,10 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           triedToSubmit={triedToSubmit}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          readOnly={!(!currentRasterSource && organisationsToSwitchTo.length > 0 && selectedOrganisation.roles.includes('admin'))}
+          readOnly={
+            !selectedOrganisation? true:
+            !(!currentRecord && organisationsToSwitchTo.length > 0 && selectedOrganisation.roles.includes('admin'))
+          }
         />
         <SelectDropdown
           title={'Supplier'}
@@ -310,8 +316,14 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           validated
           isAsync
           isCached
-          loadOptions={searchInput => fetchSuppliers(selectedOrganisation.uuid, searchInput)}
-          readOnly={!selectedOrganisation.roles.includes('admin')}
+          loadOptions={
+            selectedOrganisation? searchInput => fetchSuppliers(selectedOrganisation.uuid, searchInput) :
+            undefined
+          }
+          readOnly={
+            !selectedOrganisation? true:
+            !selectedOrganisation.roles.includes('admin')
+          }
           dropUp
           onFocus={handleFocus}
           onBlur={handleBlur}
@@ -320,13 +332,13 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           className={formStyles.ButtonContainer}
         >
           <CancelButton
-            url={'/data_management/rasters/sources'}
+            url={'/management/data_management/rasters/sources'}
           />
           <div style={{display: "flex"}}>
-            {currentRasterSource ? (
+            {currentRecord ? (
               <div style={{ marginRight: 16 }}>
                 <FormActionButtons
-                  actions={currentRasterSource.temporal ? [
+                  actions={currentRecord.temporal ? [
                     {
                       displayValue: "Delete",
                       actionFunction: () => setShowDeleteModal(true)
@@ -362,37 +374,37 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
         <Modal
           title={'Raster created'}
           buttonConfirmName={'Continue'}
-          onClickButtonConfirm={() => props.history.push('/data_management/rasters/layers/new')}
+          onClickButtonConfirm={() => props.history.push('/management/data_management/rasters/layers/new')}
         >
           <p>A layer is needed to view the raster in the portal.</p>
           <p>We automatically created a layer for you to compose. You will now be redirected to the layer management.</p>
         </Modal>
       ) : null}
-      {showDeleteModal && currentRasterSource && currentRasterSource.layers.length === 0 && currentRasterSource.labeltypes.length === 0 ? (
+      {showDeleteModal && currentRecord && currentRecord.layers.length === 0 && currentRecord.labeltypes.length === 0 ? (
         <DeleteModal
-          rows={[currentRasterSource]}
+          rows={[currentRecord]}
           displayContent={[{name: "name", width: 65}, {name: "uuid", width: 35}]}
           fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
           handleClose={() => setShowDeleteModal(false)}
-          tableUrl={'/data_management/rasters/sources'}
+          tableUrl={'/management/data_management/rasters/sources'}
         />
       ) : null}
-      {showDeleteModal && currentRasterSource && (currentRasterSource.layers.length !== 0 || currentRasterSource.labeltypes.length !== 0) ? (
+      {showDeleteModal && currentRecord && (currentRecord.layers.length !== 0 || currentRecord.labeltypes.length !== 0) ? (
         <DeleteRasterSourceNotAllowed
           handleClose={() => setShowDeleteModal(false)}
-          rowToBeDeleted={currentRasterSource}
+          rowToBeDeleted={currentRecord}
         />
       ) : null}
-      {currentRasterSource && showDataFlushingModal ? (
+      {currentRecord && showDataFlushingModal ? (
         <DataFlushingModal
-          row={currentRasterSource}
+          row={currentRecord}
           displayContent={[{name: "name", width: 50}, {name: "uuid", width: 50}]}
           handleClose={() => setShowDataFlushingModal(false)}
         />
       ) : null}
-      {currentRasterSource && currentRasterSource.temporal && temporalDataFlushingModal ? (
+      {currentRecord && currentRecord.temporal && temporalDataFlushingModal ? (
         <TemporalDataFlushingModal
-          row={currentRasterSource}
+          row={currentRecord}
           handleClose={() => setTemporalDataFlushingModal(false)}
         />
       ) : null}
@@ -404,6 +416,7 @@ const mapPropsToDispatch = (dispatch: any) => ({
   updateRasterSourceUUID: (uuid: string) => dispatch(updateRasterSourceUUID(uuid)),
   addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout)),
   addFilesToQueue: (files: File[]) => dispatch(addFilesToQueue(files)),
+  openCloseUploadQueueModal: (isOpen: boolean) => dispatch(openCloseUploadQueueModal(isOpen)),
 });
 
 export default connect(null, mapPropsToDispatch)(withRouter(RasterSourceForm));

@@ -3,76 +3,77 @@ import { RouteComponentProps } from 'react-router';
 import RasterAlarmForm from "./RasterAlarmForm";
 import { fetchRasterV4, RasterLayerFromAPI } from "../../../api/rasters";
 import { getUuidFromUrl } from "../../../utils/getUuidFromUrl";
-import { usePaginatedFetch } from "../../../utils/usePaginatedFetch";
-import MDSpinner from "react-md-spinner";
+import SpinnerIfNotLoaded from '../../../components/SpinnerIfNotLoaded';
+import { createFetchRecordFunctionFromUrl } from '../../../utils/createFetchRecordFunctionFromUrl';
+import { useRecursiveFetch } from "../../../api/hooks";
 
 interface RouteParams {
   uuid: string;
 };
 
-export const EditRasterAlarm: React.FC<RouteComponentProps<RouteParams>> = (props) => {
-  const [currentRasterAlarm, setCurrentRasterAlarm] = useState<any | null>(null);
-  const [raster, setRaster] = useState<RasterLayerFromAPI | null>(null);
+interface RasterAlarm {
+  raster: string, // raster url
+  organisation: {uuid: string}
+}
+
+export const EditRasterAlarm = (props: RouteComponentProps<RouteParams>) => {
+  const [currentRecord, setCurrentRecord] = useState<RasterAlarm | null>(null);
+  const [raster, setRaster] = useState<RasterLayerFromAPI | undefined>(undefined);
 
   const { uuid } = props.match.params;
+
   useEffect(() => {
     (async () => {
-      const rasterAlarm = await fetch(`/api/v4/rasteralarms/${uuid}/`, {
-        credentials: "same-origin"
-      }).then(
-        response => response.json()
-      );
-
-      const rasterUrl = rasterAlarm.raster;
-      const rasterUuid = getUuidFromUrl(rasterUrl);
-      const raster = await fetchRasterV4(rasterUuid);
-
-      setCurrentRasterAlarm(rasterAlarm);
-      setRaster(raster);
+      const currentRecord = await createFetchRecordFunctionFromUrl(`/api/v4/rasteralarms/${uuid}/`)();
+      setCurrentRecord(currentRecord);
     })();
   }, [uuid]);
 
   const {
-    results: groups,
-    fetchingState: groupsFetchingState
-  } = usePaginatedFetch({
-    url: currentRasterAlarm ? `/api/v4/contactgroups/?organisation__uuid=${currentRasterAlarm.organisation.uuid}` : ''
-  });
+    data: groups,
+    status: groupsFetchStatus
+  } = useRecursiveFetch(
+    '/api/v4/contactgroups/',
+    { organisation__uuid: currentRecord ? currentRecord.organisation.uuid : '' },
+    { enabled: !!currentRecord }
+  );
 
   const {
-    results: templates,
-    fetchingState: templatesFetchingState
-  } = usePaginatedFetch({
-    url: currentRasterAlarm ? `/api/v4/messages/?organisation__uuid=${currentRasterAlarm.organisation.uuid}` : ''
-  });
+    data: templates,
+    status: templatesFetchStatus
+  } = useRecursiveFetch(
+    '/api/v4/messages/',
+    { organisation__uuid: currentRecord ? currentRecord.organisation.uuid : '' },
+    { enabled: !!currentRecord }
+  );
 
-  if (
-    currentRasterAlarm &&
-    raster &&
-    groupsFetchingState === 'RETRIEVED' &&
-    templatesFetchingState === 'RETRIEVED'
-  ) {
-    return (
+  useEffect(() => {
+    (async () => {
+      if (currentRecord) {
+        const rasterUrl = currentRecord.raster;
+        const rasterUuid = getUuidFromUrl(rasterUrl);
+        const raster = await fetchRasterV4(rasterUuid);
+        setRaster(raster);
+      }
+    })();
+  }, [currentRecord]);
+
+  return (
+    <SpinnerIfNotLoaded
+      loaded={!!(
+        currentRecord &&
+        raster &&
+        groupsFetchStatus === 'success' &&
+        templatesFetchStatus === 'success'
+      )}
+    >
       <RasterAlarmForm
+        currentRecord={currentRecord}
         groups={groups || []}
         templates={templates || []}
-        currentRasterAlarm={currentRasterAlarm}
         raster={raster}
       />
-    )
-  } else {
-    return (
-      <div
-        style={{
-          position: "relative",
-          top: 50,
-          height: 300,
-          bottom: 50,
-          marginLeft: "50%"
-        }}
-      >
-        <MDSpinner size={24} />
-      </div>
-    );
-  }
+    </SpinnerIfNotLoaded>
+    
+  );
 };

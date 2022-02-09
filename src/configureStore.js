@@ -8,7 +8,7 @@ export default function configureStore(initialState) {
     initialState,
     compose(
       applyMiddleware(thunkMiddleware),
-      window.devToolsExtension ? window.devToolsExtension() : f => f
+      window.__REDUX_DEVTOOLS_EXTENSION__ ? window.__REDUX_DEVTOOLS_EXTENSION__() : f => f
     )
   );
 }

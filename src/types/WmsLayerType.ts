@@ -14,7 +14,7 @@ export interface WmsLayerReceivedFromApi {
   uuid?: string,
   slug: string;
   description: string;
-  datasets: {slug:string}[];
+  layer_collections: {slug:string}[];
   
   wms_url: string;
   download_url: string;
@@ -40,7 +40,7 @@ export const wmsLayerReceivedFromApiToForm = (wmsLayer: WmsLayerReceivedFromApi)
     sharedWithCheckbox: wmsLayer.shared_with.length > 0? true : false,
     organisation: convertToSelectObject(wmsLayer.organisation.uuid, wmsLayer.organisation.name),
     shared_with: wmsLayer.shared_with.map(org => convertToSelectObject(org.uuid, org.name)),
-    datasets: wmsLayer.datasets.map(dataset => convertToSelectObject(dataset.slug)),
+    layercollections: wmsLayer.layer_collections.map(layercollection => convertToSelectObject(layercollection.slug)),
     supplier: wmsLayer.supplier ? convertToSelectObject(wmsLayer.supplier) : null,
     options: JSON.stringify(wmsLayer.options)
   }
@@ -51,7 +51,7 @@ export type WmsLayerFormType = {
   uuid?: string,
   slug: string;
   description: string;
-  datasets: Value[];
+  layercollections: Value[];
   
   wms_url: string;
   download_url: string;
@@ -78,7 +78,7 @@ export const wmsLayerGetDefaultFormValues = (organisation: Organisation): WmsLay
   uuid: "",
   slug: "",
   description: "",
-  datasets: [],
+  layercollections: [],
   
   wms_url: "",
   // use next url to test spatial bounds button
@@ -112,8 +112,8 @@ export const wmsLayerFormToFormSendToApi = (wmsLayer: WmsLayerFormType) => {
       sharedWithCheckbox: undefined,
       get_feature_info: wmsLayer.get_feature_info_url === ""? false: true,
       organisation: wmsLayer.organisation && wmsLayer.organisation.value,
-      supplier: wmsLayer.supplier && wmsLayer.supplier.value,
+      supplier: wmsLayer.supplier && wmsLayer.supplier.label,
       shared_with: wmsLayer.sharedWithCheckbox ? wmsLayer.shared_with.map(org => org.value) : [],
-      datasets: wmsLayer.datasets.map(dataset => dataset.value),
+      layer_collections: wmsLayer.layercollections.map(layercollection => layercollection.value),
     }
 }

@@ -3,11 +3,12 @@ import { NavLink } from "react-router-dom";
 import styles from "./Breadcrumbs.module.css";
 import gridStyles from "./../styles/Grid.module.css";
 
+export const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 class Breadcrumbs extends Component {
   constructor(props) {
     super(props);
-    this.uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    this.uuidRegex = UUID_REGEX;
   }
   computeBreadcrumb() {
     const currentRelativeUrl = this.props.location.pathname;
@@ -43,7 +44,7 @@ class Breadcrumbs extends Component {
         className={`${styles.BreadcrumbsContainer} ${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12}`}
       >
         <NavLink to="/" style={{ overflowX: "hidden" }}>
-          Management
+          home
         </NavLink>
         {breadcrumbs}
       </div>

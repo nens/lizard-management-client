@@ -1,45 +1,34 @@
-import React, { useState, useEffect } from "react";
+import React,  {useState, useEffect} from "react";
 import { RouteComponentProps } from 'react-router';
-import MDSpinner from "react-md-spinner";
 import TemplateForm from "./TemplateForm";
+import {createFetchRecordFunctionFromUrl} from '../../utils/createFetchRecordFunctionFromUrl';
+import SpinnerIfNotLoaded from '../../components/SpinnerIfNotLoaded';
+
 
 interface RouteParams {
   id: string;
 };
 
-export const EditTemplate: React.FC<RouteComponentProps<RouteParams>> = (props) => {
-  const [currentTemplate, setCurrentTemplate] = useState<Object | null>(null);
-
+export const EditTemplate = (props: RouteComponentProps<RouteParams>) => {
   const { id } = props.match.params;
+
+  const [ currentRecord , setCurrentRecord] = useState(null)
+
   useEffect(() => {
     (async () => {
-      const template = await fetch(`/api/v4/messages/${id}/`, {
-        credentials: "same-origin"
-      }).then(
-        response => response.json()
-      );
-      setCurrentTemplate(template);
+      const currentRecord = await createFetchRecordFunctionFromUrl(`/api/v4/messages/${id}/`)();
+      setCurrentRecord(currentRecord);
     })();
   }, [id]);
 
-  if (currentTemplate) {
-    return <TemplateForm
-      currentTemplate={currentTemplate}
-    />;
-  }
-  else {
-    return (
-      <div
-        style={{
-          position: "relative",
-          top: 50,
-          height: 300,
-          bottom: 50,
-          marginLeft: "50%"
-        }}
-      >
-        <MDSpinner size={24} />
-      </div>
-    );
-  }
+  return (
+    <SpinnerIfNotLoaded
+      loaded={!!currentRecord}
+    >
+      <TemplateForm
+        currentRecord={currentRecord}
+      />
+    </SpinnerIfNotLoaded>
+    
+  );
 };

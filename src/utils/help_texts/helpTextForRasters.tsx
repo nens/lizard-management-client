@@ -1,8 +1,14 @@
 import React from 'react';
-
+import { useSelector} from 'react-redux';
+import {
+  getRasterTotalSize,
+  getRasterAvailableSizeDefinedByContract,
+  getSelectedOrganisation
+} from '../../reducers';
+import UsagePieChart from './../../components/UsagePieChart';
 import {
   accessModifierHelpText,
-  datasetHelpText,
+  layercollectionHelpText,
   HelpText,
   nameHelpText,
   organisationHelpText,
@@ -13,15 +19,31 @@ import {
   uuidHelpText
 } from './defaultHelpText';
 
-export const defaultRasterSourceExplanationTextTable = (usedSpaceString:string) => {
+export const DefaultRasterSourceExplanationTextTable = () => {
+  const rastersTotalSize = useSelector(getRasterTotalSize);
+  const rasterAvailableSizeDefinedByContract = useSelector(getRasterAvailableSizeDefinedByContract);
+  const selectedOrganisation = useSelector(getSelectedOrganisation);
+
   return (
     <div>
-      <div style={{marginBottom: "16px"}}>Raster Sources are the containers for your raster data. When your raster data is uploaded to a Raster Source, it can be published as a Raster Layer to be visualized in the Catalogue and the Portal or it can be used in a GeoBlocks model.</div>
-      <div 
-        style={{display:"flex", justifyContent: "space-between",}}
+      <div style={{marginBottom: "16px"}}>
+        Raster Sources are the containers for your raster data. When your raster data is uploaded to a Raster Source, it can be published as a Raster Layer to be visualized in the Catalogue and the Portal or can be used in a GeoBlocks model.
+      </div>
+      <div
+        style={{
+          display:"flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
       >
-        <span>Used storage: </span>
-        <span style={{fontWeight: "bold",}}>{usedSpaceString}</span>
+        <div style={{ marginBottom: "16px" }}>
+          {`Raster storage used for`}
+          <div style={{ fontWeight: "bold" }}>{selectedOrganisation.name}</div>
+        </div>
+        <UsagePieChart
+          used={rastersTotalSize}
+          available={rasterAvailableSizeDefinedByContract}
+        />
       </div>
     </div>
   );
@@ -63,7 +85,7 @@ export const rasterLayerFormHelpText: HelpText = {
       <p><i>If this raster was created automatically from a source, there will be a reference to it.</i></p>
     </>
   ),
-  datasets: datasetHelpText,
+  layercollections: layercollectionHelpText,
   rasterSourceModal: 'Open modal to view connected raster source(s) of this layer.',
   rasterSource: (
     <>

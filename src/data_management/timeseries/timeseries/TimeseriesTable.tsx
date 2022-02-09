@@ -7,13 +7,13 @@ import AuthorisationModal from '../../../components/AuthorisationModal';
 import DeleteModal from '../../../components/DeleteModal';
 import { ExplainSideColumn } from '../../../components/ExplainSideColumn';
 import { getAccessibiltyText } from '../../../form/AccessModifier';
-import { defaultTableHelpText } from '../../../utils/help_texts/defaultHelpText';
+import { TimeseriesTableHelptext } from '../../../utils/help_texts/helpTextForTimeseries';
 import { fetchWithOptions } from '../../../utils/fetchWithOptions';
 import tableStyles from "../../../components/Table.module.css";
 import timeseriesIcon from "../../../images/timeseries_icon.svg";
 
 export const baseUrl = "/api/v4/timeseries/";
-const navigationUrl = "/data_management/timeseries/timeseries";
+const navigationUrl = "/management/data_management/timeseries/timeseries";
 
 export const TimeseriesTable = (props: RouteComponentProps) =>  {
   const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
@@ -165,8 +165,8 @@ export const TimeseriesTable = (props: RouteComponentProps) =>  {
       imgUrl={timeseriesIcon}
       imgAltDescription={"Timeseries icon"}
       headerText={"Time Series"}
-      explanationText={defaultTableHelpText('Search or sort your time series here.')}
-      backUrl={"/data_management/timeseries"}
+      explanationText={<TimeseriesTableHelptext />}
+      backUrl={"/management/data_management/timeseries"}
     >
       <TableStateContainer
         gridTemplateColumns={"4fr 20fr 18fr 18fr 22fr 14fr 4fr"}

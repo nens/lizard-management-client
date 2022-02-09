@@ -7,15 +7,15 @@ import TableActionButtons from '../../components/TableActionButtons';
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import threediIcon from "../../images/3di@3x.svg";
 import tableStyles from "../../components/Table.module.css";
-import { getSelectedOrganisation, getUsername } from "../../reducers";
+import {  getUsername } from "../../reducers";
 import { bytesToDisplayValue } from '../../utils/byteUtils';
-import { defaultScenarioExplanationText } from '../../utils/help_texts/helpTextForScenarios';
-import { getScenarioTotalSize } from '../../reducers';
+import { DefaultScenarioExplanationText } from '../../utils/help_texts/helpTextForScenarios';
+import { getLocalDateString } from '../../utils/dateUtils';
 import DeleteModal from '../../components/DeleteModal';
 import AuthorisationModal from '../../components/AuthorisationModal';
 
 const baseUrl = "/api/v4/scenarios/";
-const navigationUrl = "/data_management/scenarios";
+const navigationUrl = "/management/data_management/scenarios";
 
 const fetchScenariosWithOptions = (uuids: string[], fetchOptions: RequestInit) => {
   const fetches = uuids.map (uuid => {
@@ -40,8 +40,6 @@ export const ScenarioTable = () =>  {
   const [rowsToChangeAccess, setRowsToChangeAccess] = useState<any[]>([]);
 
   const userName = useSelector(getUsername);
-  const selectedOrganisation = useSelector(getSelectedOrganisation);
-  const scenarioTotalSize = useSelector(getScenarioTotalSize);
 
   const deleteActions = (
     rows: any[],
@@ -117,6 +115,11 @@ export const ScenarioTable = () =>  {
       orderingField: null,
     },
     {
+      titleRenderFunction: () =>  "Last update",
+      renderFunction: (row: any) => getLocalDateString(row.last_modified),
+      orderingField: "last_modified",
+    },
+    {
       titleRenderFunction: () =>  "Size",
       renderFunction: (row: any) => 
         <span
@@ -172,11 +175,11 @@ export const ScenarioTable = () =>  {
       imgUrl={threediIcon}
       imgAltDescription={"3Di icon"}
       headerText={"3Di Scenarios"}
-      explanationText={defaultScenarioExplanationText(bytesToDisplayValue(scenarioTotalSize), selectedOrganisation.name)}
-      backUrl={"/data_management"}
+      explanationText={<DefaultScenarioExplanationText />}
+      backUrl={"/management/data_management"}
     >
         <TableStateContainer 
-          gridTemplateColumns={"4fr 28fr 29fr 15fr 10fr 10fr 4fr"}
+          gridTemplateColumns={"4fr 20fr 25fr 13fr 10fr 14fr 10fr 4fr"}
           columnDefinitions={columnDefinitions}
           baseUrl={`${baseUrl}?`} 
           checkBoxActions={[

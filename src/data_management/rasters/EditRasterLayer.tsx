@@ -1,48 +1,31 @@
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
 import { RouteComponentProps } from 'react-router';
-import MDSpinner from "react-md-spinner";
 import { fetchRasterV4, RasterLayerFromAPI } from "../../api/rasters";
-import { getOrganisations } from "../../reducers";
 import RasterLayerForm from "./RasterLayerForm";
+import SpinnerIfNotLoaded from '../../components/SpinnerIfNotLoaded';
 
 interface RouteParams {
   uuid: string;
 };
 
 export const EditRasterLayer: React.FC<RouteComponentProps<RouteParams>> = (props) => {
-  const [currentRasterLayer, setCurrentRasterLayer] = useState<RasterLayerFromAPI | null>(null);
-  const organisations = useSelector(getOrganisations);
+  const [currentRecord, setCurrentRecord] = useState<RasterLayerFromAPI | undefined>(undefined);
 
   const { uuid } = props.match.params;
   useEffect(() => {
     (async () => {
-      const rasterLayer = await fetchRasterV4(uuid);
-      setCurrentRasterLayer(rasterLayer);
+      const currentRecord = await fetchRasterV4(uuid);
+      setCurrentRecord(currentRecord);
     })();
   }, [uuid]);
 
-  if (
-    currentRasterLayer &&
-    organisations.isFetching === false
-  ) {
-    return <RasterLayerForm
-      currentRasterLayer={currentRasterLayer}
-    />;
-  }
-  else {
-    return (
-      <div
-        style={{
-          position: "relative",
-          top: 50,
-          height: 300,
-          bottom: 50,
-          marginLeft: "50%"
-        }}
-      >
-        <MDSpinner size={24} />
-      </div>
-    );
-  }
+  return (
+    <SpinnerIfNotLoaded
+      loaded={!!currentRecord}
+    >
+      <RasterLayerForm
+        currentRecord={currentRecord}
+      />;
+    </SpinnerIfNotLoaded>
+  );
 };

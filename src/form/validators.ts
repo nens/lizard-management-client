@@ -22,6 +22,14 @@ export const nonEmptyString = (str: string): validatorResult => {
   return false;
 }
 
+export const isNotLiteralStringNew = (str: string): validatorResult => {
+  const strippedString = str.replace(/\s/g, '');
+  if ( strippedString.toLowerCase() === 'new') {
+    return "The value 'new' is not allowed here";
+  }
+  return false;
+}
+
 export const minLength = (length: number, s: string): validatorResult => {
   if (!s || s.length < length) {
     return `Please enter at least ${length} ${length === 1 ? 'character' : 'characters'}`;
@@ -67,7 +75,10 @@ export const jsonValidator = (jsonStr: string) => {
 };
 
 export const emailValidator = (address: string) => {
-  if (/^\w+([+.-]\w+)*@\w+([.-]\w+)*(\.\w{2,3})+$/.test(address)) {
+  // http://emailregex.com/
+  // https://github.com/nens/lizard-management-client/issues/985
+  //eslint-disable-next-line
+  if (/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(address)) {
     return false;
   };
   return 'Please enter a valid email address';
@@ -102,4 +113,20 @@ export const geometryValidator = (location: Location | null) => {
   } else {
     return false;
   };
+};
+
+export const geoblockSourceValidator = (source: any) => {
+  if (!source) {
+    return 'Please provide a source';
+  }
+  if (Object.keys(source).length === 0) {
+    return 'Please provide a name and graph for the source';
+  };
+  if (!source.name) {
+    return 'Please provide a name for the source';
+  };
+  if (!source.graph) {
+    return 'Please provide a graph for the source';
+  };
+  return false;
 };

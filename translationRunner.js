@@ -1,8 +1,10 @@
-const manageTranslations = require("react-intl-translations-manager").default;
+
+// See https://github.com/GertjanReynaert/react-intl-translations-manager
+const manageTranslations = require('react-intl-translations-manager').default;
 
 manageTranslations({
-  messagesDirectory: "src/translations/extracted/",
-  translationsDirectory: "src/translations/locales/",
-  languages: ["nl"], // any language you need
-  singleMessagesFile: false
+  messagesDirectory: '.messages',
+  translationsDirectory: 'src/i18n/translations/',
+  // "en" is defaultLocale
+  languages: ['en', 'nl', 'es', 'zh-TW']
 });

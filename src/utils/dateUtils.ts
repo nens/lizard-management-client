@@ -21,3 +21,8 @@ export const convertSecondsToDurationObject = (totalSeconds: number) => {
 
   return durationObject;
 };
+
+export const getLocalDateString = (value: string) => {
+  const dateObject = new Date(value);
+  return dateObject.toLocaleDateString();
+};

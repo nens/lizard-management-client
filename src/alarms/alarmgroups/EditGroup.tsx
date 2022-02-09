@@ -1,45 +1,34 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import { RouteComponentProps } from 'react-router';
-import MDSpinner from "react-md-spinner";
 import GroupForm from "./GroupForm";
+import SpinnerIfNotLoaded from '../../components/SpinnerIfNotLoaded';
+import {createFetchRecordFunctionFromUrl} from '../../utils/createFetchRecordFunctionFromUrl';
 
 interface RouteParams {
   id: string;
 };
 
-export const EditGroup: React.FC<RouteComponentProps<RouteParams>> = (props) => {
-  const [currentGroup, setCurrentGroup] = useState<Object | null>(null);
-
+export const EditGroup = (props: RouteComponentProps<RouteParams>) => {
   const { id } = props.match.params;
+
+  const [ currentRecord , setCurrentRecord] = useState(null)
+
   useEffect(() => {
     (async () => {
-      const group = await fetch(`/api/v4/contactgroups/${id}/`, {
-        credentials: "same-origin"
-      }).then(
-        response => response.json()
-      );
-      setCurrentGroup(group);
+      const currentRecord = await createFetchRecordFunctionFromUrl(`/api/v4/contactgroups/${id}/`)();
+      setCurrentRecord(currentRecord);
     })();
   }, [id]);
 
-  if (currentGroup) {
-    return <GroupForm
-      currentGroup={currentGroup}
-    />;
-  }
-  else {
-    return (
-      <div
-        style={{
-          position: "relative",
-          top: 50,
-          height: 300,
-          bottom: 50,
-          marginLeft: "50%"
-        }}
-      >
-        <MDSpinner size={24} />
-      </div>
-    );
-  }
+  return (
+    <SpinnerIfNotLoaded
+      loaded={!!currentRecord}
+    >
+      <GroupForm
+        currentRecord={currentRecord}
+      />
+    </SpinnerIfNotLoaded>
+    
+  );
 };
+

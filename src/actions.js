@@ -1,6 +1,7 @@
 // MARK: Bootstrap
+import { recursiveFetchFunction } from "./api/hooks";
 import { getLocalStorage } from "./utils/localStorageUtils";
-import { paginatedFetchHelper } from "./utils/paginatedFetchHelper";
+import { getSelectedOrganisation } from "./reducers";
 
 export const RECEIVE_LIZARD_BOOTSTRAP = "RECEIVE_LIZARD_BOOTSTRAP";
 export const REQUEST_LIZARD_BOOTSTRAP = "REQUEST_LIZARD_BOOTSTRAP";
@@ -27,12 +28,7 @@ export function fetchLizardBootstrap() {
     })
       .then(response => response.json())
       .then(data => {
-        if (data && data.user && data.user.authenticated === true) {
           dispatch(receiveLizardBootstrap(data));
-        } else {
-          const nextUrl = window.location.href;
-          window.location.href = `${data.sso.login}&next=${nextUrl}`;
-        };
       });
   };
 }
@@ -73,6 +69,8 @@ export const REQUEST_ORGANISATIONS = "REQUEST_ORGANISATIONS";
 export const SELECT_ORGANISATION = "SELECT_ORGANISATION";
 export const REQUEST_USAGE = "REQUEST_USAGE";
 export const SET_USAGE = "SET_USAGE";
+export const REQUEST_CONTRACTS = "REQUEST_CONTRACTS";
+export const SET_CONTRACTS = "SET_CONTRACTS";
 
 export function fetchOrganisations() {
   return async (dispatch, getState) => {
@@ -84,7 +82,7 @@ export function fetchOrganisations() {
 
     // Fetch the list of available organisations with user roles by user ID
     const availableOrganisationsUrl = `/api/v4/users/${userId}/organisations/`;
-    const availableOrganisations = await paginatedFetchHelper(availableOrganisationsUrl, []);
+    const availableOrganisations = await recursiveFetchFunction(availableOrganisationsUrl, []);
 
     // Dispatch action to update Redux store
     dispatch({
@@ -97,33 +95,33 @@ export function fetchOrganisations() {
       availableOrganisations.map(orga=>orga.uuid).indexOf(selectedOrganisationLocalStorage.uuid) === -1
     ) {
       const selectedOrganisation = availableOrganisations[0];
-      dispatch(selectOrganisation(selectedOrganisation, true));
+      dispatch(selectOrganisation(selectedOrganisation));
     } else {
-      dispatch(selectOrganisation(selectedOrganisationLocalStorage, false));
+      const selectedOrganisation = availableOrganisations.find(org => org.uuid === selectedOrganisationLocalStorage.uuid);
+      dispatch(selectOrganisation(selectedOrganisation || selectedOrganisationLocalStorage));
     };
+
+    // request contracts
+    dispatch({
+      type: REQUEST_CONTRACTS,
+    });
+    const contracts = await recursiveFetchFunction('/api/v4/contracts/', []);
+    dispatch({
+      type: SET_CONTRACTS,
+      contracts: contracts,
+    });
   };
 }
 
-export function selectOrganisation(organisation, mustAddNotification) {
-  return (dispatch) => {
-    localStorage.setItem(
-      "lizard-management-current-organisation",
-      JSON.stringify(organisation)
-    );
-    if (mustAddNotification) {
-      dispatch(
-        addNotification(
-          `Organisation "${(organisation && organisation.name) || "none"}" selected`,
-          2000
-        )
-      );
-    }
-    
-    if (organisation && organisation.uuid) {
+export function requestUsage () {
+  return (dispatch, getState) => {
+    const selectedOrganisation = getSelectedOrganisation(getState());
+    if (selectedOrganisation) {
+      const selectedorganisationUuid = selectedOrganisation.uuid;
       dispatch({
         type: REQUEST_USAGE,
       });
-      const url = `/api/v4/organisations/${organisation.uuid}/usage/`;
+      const url = `/api/v4/organisations/${selectedorganisationUuid}/usage/`;
       fetch(url, {
           credentials: "same-origin"
       })
@@ -135,63 +133,22 @@ export function selectOrganisation(organisation, mustAddNotification) {
           });
       });
     }
+    
+  };
+}
 
+export function selectOrganisation(organisation) {
+  return (dispatch) => {
+    localStorage.setItem(
+      "lizard-management-current-organisation",
+      JSON.stringify(organisation)
+    );
     dispatch({
       type: SELECT_ORGANISATION,
       organisation
     });
+    dispatch(requestUsage());
   }
-}
-
-// MARK: Viewport
-export const UPDATE_VIEWPORT_DIMENSIONS = "UPDATE_VIEWPORT_DIMENSIONS";
-
-export function updateViewportDimensions(width, height) {
-  return {
-    type: UPDATE_VIEWPORT_DIMENSIONS,
-    width,
-    height
-  };
-}
-
-// MARK: Alarm Type update with Raster or Timeseries
-export const UPDATE_ALARM_TYPE = "UPDATE_ALARM_TYPE";
-
-export function updateAlarmType(alarmType) {
-  return {
-    type: UPDATE_ALARM_TYPE,
-    alarmType
-  };
-}
-
-// MARK: Datasets
-export const REQUEST_DATASETS = "REQUEST_DATASETS";
-export const RECEIVE_DATASETS_SUCCESS = "RECEIVE_DATASETS_SUCCESS";
-export const RECEIVE_DATASETS_ERROR = "RECEIVE_DATASETS_ERROR";
-
-export function fetchDatasets() {
-  return dispatch => {
-    const url = `/api/v4/datasets/`;
-    const opts = { credentials: "same-origin" };
-
-    dispatch({ type: REQUEST_DATASETS });
-
-    fetch(url, opts)
-      .then(responseObj => {
-        if (!responseObj.ok) {
-          const errorMessage = `HTTP error ${responseObj.status} while fetching Datasets: ${responseObj.statusText}`;
-          dispatch({ type: RECEIVE_DATASETS_ERROR, errorMessage });
-          console.error("[E]", errorMessage, responseObj);
-          return Promise.reject(errorMessage);
-        } else {
-          return responseObj.json();
-        }
-      })
-      .then(responseData => {
-        const data = responseData.results;
-        dispatch({ type: RECEIVE_DATASETS_SUCCESS, data });
-      });
-  };
 }
 
 // MARK: Raster source uuid
@@ -270,5 +227,14 @@ export function removeFileFromQueue(file) {
   return {
     type: REMOVE_FILE_FROM_QUEUE,
     file
+  };
+}
+
+export const SET_OPEN_CLOSE_UPLOADQUEUE_MODAL = "SET_OPEN_CLOSE_UPLOADQUEUE_MODAL";
+
+export function openCloseUploadQueueModal(isOpen) {
+  return {
+    type: SET_OPEN_CLOSE_UPLOADQUEUE_MODAL,
+    isOpen
   };
 }

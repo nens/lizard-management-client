@@ -1,0 +1,38 @@
+.Block {
+  font-size: 12px;
+  width: 180px;
+  word-break: break-all;
+  height: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid;
+  border-color: grey;
+  position: relative;
+}
+.Block:focus {
+  box-shadow: 0 0 0 0.5px grey;
+}
+
+.BlockHeader {
+  height: 70px;
+}
+
+.BlockInput {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.BlockCheckbox {
+  width: 22px;
+  height: 22px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+/* Raster source block */
+.RasterSource {
+  border-color: orange;
+}
+.RasterSource:focus {
+  box-shadow: 0 0 0 0.5px orange;
+}

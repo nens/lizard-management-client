@@ -1,0 +1,34 @@
+.MainContainer {
+  height: 100%;
+  margin: 20px 40px;
+  display: grid;
+  grid-template-rows: 40px 1fr 60px;
+}
+
+.TabContainer {
+  display: grid;
+  grid-template-columns: 200px 200px;
+  grid-auto-rows: minmax(40px, 40px);
+}
+
+.TabContainer > div {
+  opacity: 0.34;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: #FFFFFF;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--color-header);
+  border-radius: 10px 10px 0 0;
+  box-shadow: 6px 0px 5px #00000029;
+  cursor: pointer;
+}
+.TabContainer > div:nth-child(2) {
+  box-shadow: none;
+  border-radius: 10px 10px 0 0;
+}
+.SelectedTab {
+  opacity: 1 !important;
+}

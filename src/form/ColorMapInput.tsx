@@ -1,10 +1,12 @@
 // {"styles": "Blues:0.0:2.0"}
 // {"styles": "transparent", "HEIGHT": 512, "ZINDEX": 20, "WIDTH": 1024, "effects": "radar:0:0.008", "TRANSPARENT": false}
 import React, { useEffect, useRef, useState } from "react";
-import { FormattedMessage, injectIntl, InjectedIntlProps } from "react-intl";
-import { SelectDropdown, Value } from "./SelectDropdown";
+import { FormattedMessage} from 'react-intl.macro';
+// import { useIntl} from 'react-intl';
+// import {formattedMessageToString} from './../utils/translationUtils';
+import { SelectDropdown } from "./SelectDropdown";
 import { CheckBox } from "./CheckBox";
-import { TextInput } from "./TextInput";
+import { FloatInput } from "./FloatInput";
 import styles from "./ColorMapInput.module.css";
 import formStyles from "../styles/Forms.module.css";
 import {
@@ -15,8 +17,9 @@ import {
 } from "../utils/rasterOptionFunctions";
 import ModalBackground from '../components/ModalBackground';
 import { ColormapForm } from '../data_management/colormap/ColormapForm';
-import { usePaginatedFetch } from "../utils/usePaginatedFetch";
+import { useRecursiveFetch } from "../api/hooks";
 import { convertToSelectObject } from "../utils/convertToSelectObject";
+
 
 export interface ColorMapOptions {
   options: {
@@ -46,7 +49,7 @@ interface ColorMapProps {
   onBlur?: () => void,
 };
 
-const colorMapValidator = (options: ColorMapOptions | null): {
+export const colorMapValidator = (options: ColorMapOptions | null): {
   validated: boolean,
   minValidated: boolean,
   maxValidated: boolean,
@@ -81,7 +84,7 @@ const usePrevious = (value: any) => {
   return ref.current;
 };
 
-const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
+const ColorMapInput: React.FC<ColorMapProps> = (props) => {
   const {
     title,
     name,
@@ -91,20 +94,25 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
     form,
     onFocus,
     onBlur,
-    intl
   } = props;
 
+  // const intl = useIntl();
+
   // Fetch list of color maps
-  const [colorMaps, setColorMaps] = useState<Value[]>([]);
   const {
-    results: allColorMaps,
-    fetchingState: colorMapsFetchingState
-  } = usePaginatedFetch({
-    url: `/api/v4/colormaps/?format=json&page_size=100`
+    data: colorMaps,
+    isFetching: colorMapsIsFetching
+  } = useRecursiveFetch('/api/v4/colormaps/', {
+    format: 'json',
+    page_size: 100
   });
-  useEffect(() => {
-    setColorMaps(allColorMaps ? allColorMaps.map((colorMap: any) => convertToSelectObject(colorMap.name, colorMap.name, colorMap.description)) : []);
-  }, [allColorMaps]);
+
+  // Option to select a custom color map from the color map dropdown
+  const customColorMapOption = {
+    value: "Custom colormap",
+    label: "Custom colormap",
+    subLabel: "+ Create new colormap for this raster"
+  };
 
   const [previewColor, setPreviewColor] = useState<LegendResponse | null>(null);
   const [showCustomColormapModal, setShowCustomColormapModal] = useState(false);
@@ -183,20 +191,19 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
       options: JSON.stringify(customColormap) ==="{}"? colorMapValue.options : {},
       rescalable: colorMapValue.rescalable,
       customColormap: customColormap
-
     });
   }
 
-  const handleValueChanged = (field: string, value: number | null) => {
+  const handleValueChanged = (field: string, value: number) => {
     let newValue;
 
     if (field !== 'min' && field !== 'max') return;
 
-    if (value === null) {
+    if (isNaN(value)) {
       newValue = '';
     } else {
-      newValue = value
-    }
+      newValue = value;
+    };
 
     let newStyleOptions;
     if (field === 'min') {
@@ -211,7 +218,7 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
         colorMapValue.options,
         {max: newValue}
       );
-    }
+    };
 
     valueChanged({
       options: newStyleOptions.options,
@@ -219,16 +226,6 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
       customColormap: colorMapValue.customColormap,
     });
   }
-
-  const toFloat = (value: string): number | null => {
-    if (!value) return null;
-
-    const f = parseFloat(value);
-
-    if (Number.isNaN(f)) return null;
-
-    return f;
-  };
 
   const readOnly = optionsHasLayers(colorMapValue.options || {} );
   const colorMapType = colorMapTypeFromOptions(colorMapValue.options || {});
@@ -243,15 +240,21 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
   } else {
     colors = (
       <span style={{opacity: 0.5}}>
-        <FormattedMessage id="color_map.initial_message" />
+        {0?<FormattedMessage id="color_map.initial_message" defaultMessage="No Preview available" />:null}
+        No Preview available
       </span>
     );
   }
 
-  //Format message for placeholder in the input form for translation
-  const placeholderColorMapSelection = intl.formatMessage({ id: "placeholder_color_map_selection" })
-  const placeholderMinimumColorRange = intl.formatMessage({ id: "placeholder_minimum_color_range" })
-  const placeholderMaximumColorRange = intl.formatMessage({ id: "placeholder_maximum_color_range" })
+  // These translations will later be used
+  // const placeholderColorMapSelection = formattedMessageToString(<FormattedMessage id="placeholder_color_map_selection" defaultMessage="Choose a color map" />, intl)
+  // const placeholderMinimumColorRange = formattedMessageToString(<FormattedMessage id="placeholder_minimum_color_range" defaultMessage="Optional minimum of range" />, intl)
+  // const placeholderMaximumColorRange = formattedMessageToString(<FormattedMessage id="placeholder_maximum_color_range" defaultMessage="Optional maximum of range" />, intl)
+
+  const placeholderColorMapSelection = "Choose a color map";
+  const placeholderMinimumColorRange = "Optional minimum of range";
+  const placeholderMaximumColorRange = "Optional maximum of range";
+
 
   return (
     <label
@@ -264,8 +267,10 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
           handleClose={() => setShowCustomColormapModal(false)}
           // previously this value was precisely hardcoded to pixels, because some of the content has a fixed minheight
           // height={'816px'}
-          height={'90%'}
-          width={'50%'} 
+          style={{
+            width: '50%',
+            height: '90%',
+          }}
         >
           <div
             style={{padding: "30px", flexGrow: 1, minHeight: 0,}}
@@ -294,15 +299,13 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
           <SelectDropdown
             title={''}
             name={name}
-            options={[
-              {
-                value: "Custom colormap",
-                label: "Custom colormap",
-                subLabel: "+ Create new colormap for this raster"
-              },
-              ...colorMaps
+            options={colorMaps ? [
+              customColorMapOption,
+              ...colorMaps.map((colorMap: any) => convertToSelectObject(colorMap.name, colorMap.name, colorMap.description))
+            ] : [
+              customColorMapOption
             ]}
-            isLoading={colorMapsFetchingState === 'RETRIEVING'}
+            isLoading={colorMapsIsFetching}
             value={JSON.stringify(colorMapValue.customColormap) !== "{}" && JSON.stringify(colorMapValue.options) === "{}" ? (
               {
                 value: "Custom colormap",
@@ -341,13 +344,12 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
             null
           }
         </div>
-        <TextInput
+        <FloatInput
           title={'Minimum of color map range'}
           name={'colormap_minimum'}
-          type={'number'}
           placeholder={placeholderMinimumColorRange}
-          value={(colorMapType && colorMapType.min) || ""}
-          valueChanged={e => handleValueChanged('min', toFloat(e.target.value))}
+          value={colorMapType ? parseFloat(colorMapType.min) : NaN}
+          valueChanged={value => handleValueChanged('min', value)}
           validated={colorMapValidator(colorMapValue).minValidated}
           errorMessage={colorMapValidator(colorMapValue).errorMessage}
           triedToSubmit={triedToSubmit}
@@ -356,13 +358,12 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
           readOnly={readOnly}
           form={form}
         />
-        <TextInput
+        <FloatInput
           title={'Maximum of color map range'}
           name={'colormap_maximum'}
-          type={'number'}
           placeholder={placeholderMaximumColorRange}
-          value={(colorMapType && colorMapType.max) || ""}
-          valueChanged={e => handleValueChanged('max', toFloat(e.target.value))}
+          value={colorMapType ? parseFloat(colorMapType.max) : NaN}
+          valueChanged={value => handleValueChanged('max', value)}
           validated={colorMapValidator(colorMapValue).maxValidated}
           errorMessage={colorMapValidator(colorMapValue).errorMessage}
           triedToSubmit={triedToSubmit}
@@ -385,4 +386,4 @@ const ColorMapInput: React.FC<ColorMapProps & InjectedIntlProps> = (props) => {
   );
 }
 
-export default injectIntl(ColorMapInput);
+export default (ColorMapInput);

@@ -14,7 +14,6 @@ import { useForm, Values } from '../../form/useForm';
 import { greaterThanMin, minLength, rangeCheck, jsonValidator, required} from '../../form/validators';
 import wmsIcon from "../../images/wms@3x.svg";
 import {
-  getDatasets,
   getOrganisations,
   getSelectedOrganisation,
 } from '../../reducers';
@@ -28,13 +27,13 @@ import { wmsFormHelpText } from '../../utils/help_texts/helpTextForWMS';
 import { convertToSelectObject } from '../../utils/convertToSelectObject';
 import { fetchWithOptions } from '../../utils/fetchWithOptions';
 import { fetchSuppliers } from '../rasters/RasterSourceForm';
-import { fetchOrganisationsToShareWith } from '../rasters/RasterLayerForm';
+import { fetchLayerCollections, fetchOrganisationsToShareWith } from '../rasters/RasterLayerForm';
 import { baseUrl } from './WmsLayerTable';
 import FormActionButtons from '../../components/FormActionButtons';
 import DeleteModal from '../../components/DeleteModal';
 
 interface Props {
-  currentWmsLayer?: WmsLayerReceivedFromApi, 
+  currentRecord?: WmsLayerReceivedFromApi, 
 };
 
 interface PropsFromDispatch {
@@ -42,15 +41,14 @@ interface PropsFromDispatch {
 };
 
 const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (props) => {
-  const { currentWmsLayer} = props;
+  const { currentRecord} = props;
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const [geoserverError, setGeoserverError] = useState<boolean>(false);
   const organisations = useSelector(getOrganisations).available;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
-  const datasets = useSelector(getDatasets).available;
   const organisationsToSwitchTo = organisations.filter((org:any) => org.roles.includes('admin'));
 
-  const initialValues: WmsLayerFormType = currentWmsLayer ? wmsLayerReceivedFromApiToForm(currentWmsLayer) : wmsLayerGetDefaultFormValues(selectedOrganisation);
+  const initialValues: WmsLayerFormType = currentRecord ? wmsLayerReceivedFromApiToForm(currentRecord) : wmsLayerGetDefaultFormValues(selectedOrganisation);
   
   const onSubmit = (values: Values) => {
 
@@ -58,7 +56,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
     const wmsLayer = wmsLayerFormToFormSendToApi(values);
     const url = "/api/v4/wmslayers/";
 
-     if (!currentWmsLayer) {
+     if (!currentRecord) {
         const opts = {
           credentials: "same-origin",
           method: "POST",
@@ -71,7 +69,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
             const status = data.status;
             props.addNotification(status, 2000);
             if (status === 201) {
-              props.history.push('/data_management/wms_layers');
+              props.history.push('/management/data_management/wms_layers');
             } else {
               console.error(data);
             };
@@ -85,12 +83,12 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
         body: JSON.stringify(wmsLayer)
       };
       // @ts-ignore
-      fetch(url + "uuid:" + currentWmsLayer.uuid + "/", opts)
+      fetch(url + "uuid:" + currentRecord.uuid + "/", opts)
         .then((data:any) => {
           const status = data.status;
           props.addNotification(status, 2000);
           if (status === 200) {
-            props.history.push('/data_management/wms_layers');
+            props.history.push('/management/data_management/wms_layers');
           } else {
             console.error(data);
           };
@@ -119,7 +117,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
       imgAltDescription={"WMS-Layer icon"}
       headerText={"WMS Layers"}
       explanationText={wmsFormHelpText[fieldOnFocus] || wmsFormHelpText['default']}
-      backUrl={"/data_management/wms_layers"}
+      backUrl={"/management/data_management/wms_layers"}
       fieldName={fieldOnFocus}
     >
       <form
@@ -143,7 +141,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           onBlur={handleBlur}
           triedToSubmit={triedToSubmit}
         />
-        {currentWmsLayer ? (
+        {currentRecord ? (
           <TextInput
             title={'UUID'}
             name={'uuid'}
@@ -167,14 +165,17 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           onBlur={handleBlur}
         />
         <SelectDropdown
-          title={'Tags / Datasets'}
-          name={'datasets'}
+          title={'Layer collections'}
+          name={'layercollections'}
           placeholder={'- Search and select -'}
-          value={values.datasets}
-          valueChanged={value => handleValueChange('datasets', value)}
-          options={datasets.map((dataset: any) => convertToSelectObject(dataset.slug))}
+          value={values.layercollections}
+          valueChanged={value => handleValueChange('layercollections', value)}
+          options={[]}
           validated
           isMulti
+          isAsync
+          isCached
+          loadOptions={fetchLayerCollections}
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
@@ -403,10 +404,10 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           className={formStyles.ButtonContainer}
         >
           <CancelButton
-            url={'/data_management/wms_layers'}
+            url={'/management/data_management/wms_layers'}
           />
           <div style={{display: "flex"}}>
-            {currentWmsLayer ? (
+            {currentRecord ? (
               <div style={{ marginRight: 16 }}>
                 <FormActionButtons
                   actions={[
@@ -424,13 +425,13 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           </div>
         </div>
       </form>
-      {currentWmsLayer && showDeleteModal ? (
+      {currentRecord && showDeleteModal ? (
         <DeleteModal
-          rows={[currentWmsLayer]}
+          rows={[currentRecord]}
           displayContent={[{name: "name", width: 65}, {name: "uuid", width: 35}]}
           fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
           handleClose={() => setShowDeleteModal(false)}
-          tableUrl={'/data_management/wms_layers'}
+          tableUrl={'/management/data_management/wms_layers'}
         />
       ) : null}
     </ExplainSideColumn>

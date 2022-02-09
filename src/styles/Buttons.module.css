@@ -203,6 +203,9 @@
 .IconButton:active {
   transform: translateY(2px);
 }
+.IconButtonWithoutOutline:focus {
+  outline: none;
+}
 
 .BlockButton {
   border: 2px solid var(--color-button);

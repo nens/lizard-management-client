@@ -9,13 +9,10 @@ import {
   SELECT_ORGANISATION,
   REQUEST_USAGE,
   SET_USAGE,
+  REQUEST_CONTRACTS,
+  SET_CONTRACTS,
   SHOW_NOTIFICATION,
   DISMISS_NOTIFICATION,
-  UPDATE_VIEWPORT_DIMENSIONS,
-  UPDATE_ALARM_TYPE,
-  REQUEST_DATASETS,
-  RECEIVE_DATASETS_SUCCESS,
-  RECEIVE_DATASETS_ERROR,
   UPDATE_RASTER_SOURCE_UUID,
   REMOVE_RASTER_SOURCE_UUID,
   ADD_FILES_TO_QUEUE,
@@ -24,26 +21,32 @@ import {
   ADD_TASK_UUID_TO_FILE,
   UPDATE_TASK_STATUS,
   UPDATE_LOCATION,
-  REMOVE_LOCATION
+  REMOVE_LOCATION,
+  SET_OPEN_CLOSE_UPLOADQUEUE_MODAL,
 } from "./actions";
+
+// todo type this reducer file
+// import {
+//   Contract
+// } from "./types/contractType";
 
 function bootstrap(
   state = {
     bootstrap: {},
-    isAuthenticated: null,
-    isFetching: false
+    isFetching: false,
+    startedFetch: false,
   },
   action
 ) {
   switch (action.type) {
     case REQUEST_LIZARD_BOOTSTRAP:
-      return { ...state, isFetching: true };
+      return { ...state, isFetching: true, startedFetch: true, };
     case RECEIVE_LIZARD_BOOTSTRAP:
       return {
         ...state,
         bootstrap: action.data,
-        isAuthenticated: action.data.user.authenticated,
-        isFetching: false
+        isFetching: false,
+        
       };
     default:
       return state;
@@ -108,39 +111,22 @@ switch (action.type) {
   } 
 }
 
-function datasets(
+function contracts (
   state = {
+    contracts: [],
     isFetching: false,
     timesFetched: 0,
-    hasError: false,
-    errorMessage: "",
-    available: []
   },
   action
 ) {
-  switch (action.type) {
-    case REQUEST_DATASETS:
-      return { ...state, isFetching: true };
-    case RECEIVE_DATASETS_SUCCESS:
-      return {
-        ...state,
-        available: action.data,
-        isFetching: false,
-        hasError: false,
-        timesFetched: state.timesFetched + 1
-      };
-    case RECEIVE_DATASETS_ERROR:
-      return {
-        ...state,
-        available: [],
-        isFetching: false,
-        hasError: true,
-        errorMessage: action.errorMessage,
-        timesFetched: state.timesFetched + 1
-      };
-    default:
+switch (action.type) {
+  case REQUEST_CONTRACTS:
+    return {...state, isFetching: true}
+  case SET_CONTRACTS:
+    return {contracts: action.contracts, isFetching: false, timesFetched: state.timesFetched + 1}
+  default:
       return state;
-  }
+  } 
 }
 
 function notifications(
@@ -163,34 +149,6 @@ function notifications(
           ...state.notifications.slice(action.idx + 1)
         ]
       };
-    default:
-      return state;
-  }
-}
-
-function viewport(
-  state = {
-    width: window.innerWidth,
-    height: window.innerHeight
-  },
-  action
-) {
-  switch (action.type) {
-    case UPDATE_VIEWPORT_DIMENSIONS:
-      return {
-        ...state,
-        width: action.width,
-        height: action.height
-      };
-    default:
-      return state;
-  }
-}
-
-function alarmType(state = "RASTERS", action) {
-  switch (action.type) {
-    case UPDATE_ALARM_TYPE:
-      return action.alarmType;
     default:
       return state;
   }
@@ -258,7 +216,11 @@ function uploadFiles(state = null, action) {
         if (f.uuid === action.uuid) {
           // An async task to Lizard can have different statuses. However for the client side,
           // we divide them into 3 main statuses: "PROCESSING", "SUCCESS" and "FAILED"
-          const status = (action.status === 'SUCCESS' || action.status === 'FAILED') ? action.status : 'PROCESSING';
+          const status = (
+            action.status === 'SUCCESS' ? 'SUCCESS' :
+            (action.status === 'FAILURE' || action.status === 'REVOKED' || action.status === 'REJECTED' || action.status === 'IGNORED') ? 'FAILED' :
+            'PROCESSING'
+          );
           return {
             ...f,
             "status": status
@@ -273,11 +235,57 @@ function uploadFiles(state = null, action) {
       return state;
   };
 };
+function uploadQueueModalOpen(state = false, action) {
+  switch (action.type) {
+    case SET_OPEN_CLOSE_UPLOADQUEUE_MODAL:
+      return action.isOpen;
+    default:
+      return state;
+  }
+}
+  
 
 // Selectors
 export const getBootstrap = (state) => {
   return state.bootstrap;
 };
+export const getShouldFetchBootstrap = (state) => {
+  return state.bootstrap.startedFetch === false;
+};
+export const getIsNotFinishedFetchingBootstrap = (state) => {
+  return state.bootstrap.isFetching === true || state.bootstrap.startedFetch === false;
+};
+export const getUserAuthenticated = (state) => {
+  return state.bootstrap.startedFetch === true && !state.bootstrap.isFetching &&  state.bootstrap.bootstrap.user && state.bootstrap.bootstrap.user.authenticated;
+};
+export const getSsoLogin = (state) => {
+  if (state.bootstrap.isFetching || state.bootstrap.startedFetch === false) {
+    return "";
+  } else if (!state.bootstrap.bootstrap.sso) {
+    return ""
+  } else {
+    return state.bootstrap.bootstrap.sso.login;
+  }
+}
+export const getSsoLogout = (state) => {
+  if (state.bootstrap.isFetching || state.bootstrap.startedFetch === false) {
+    return "";
+  } else if (!state.bootstrap.bootstrap.sso) {
+    return ""
+  } else {
+    return state.bootstrap.bootstrap.sso.logout;
+  }
+}
+
+export const getUserFirstName = (state) => {
+  if (state.bootstrap.isFetching || state.bootstrap.startedFetch === false) {
+    return "";
+  } else if (!state.bootstrap.bootstrap.user) {
+    return ""
+  } else {
+    return state.bootstrap.bootstrap.user.first_name;
+  }
+}
 
 export const getUsername = (state) => {
   return (state.bootstrap && state.bootstrap.bootstrap && state.bootstrap.bootstrap.user &&  state.bootstrap.bootstrap.user.username) || null;
@@ -294,18 +302,68 @@ export const getNotifications = (state) => {
 export const getOrganisations = (state) => {
   return state.organisations;
 };
+export const getShouldFetchOrganisations = (state) => {
+  return !state.organisations.isFetching && state.organisations.timesFetched < 1;
+};
+export const getSelectedOrganisation = (state) => {
+  return state.organisations.selected;
+};
+
+export const getUsage = (state) => {
+  if (!state.usage.isFetching && state.usage.timesFetched > 0) {
+    return state.usage;
+  }
+  return null;
+};
+
 export const getScenarioTotalSize = (state) => {
   return state.usage.scenario_total_size;
 };
 export const getRasterTotalSize = (state) => {
   return state.usage.raster_total_size;
 };
-export const getSelectedOrganisation = (state) => {
-  return state.organisations.selected;
+export const getTimeseriesTotalSize = (state) => {
+  return state.usage.timeseries_total_size;
 };
-export const getDatasets = (state) => {
-  return state.datasets;
-};
+
+export const getIsItSureSelectedOrganisationHasNoContract = (state) => {
+  const contract = getContractForSelectedOrganisation(state);
+  if (
+    state.contracts.isFetching === false &&
+    state.contracts.timesFetched > 0 &&
+    !contract
+  ) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+export const getContractForSelectedOrganisation = (state) => {
+  const selectedOrganisation = getSelectedOrganisation(state);
+  const selectedOrganisationUuid = selectedOrganisation && selectedOrganisation.uuid;
+  if (!selectedOrganisationUuid) {
+    return null;
+  }
+  const selectedContract = state.contracts.contracts.find(contract=>{
+    return contract.organisation.uuid === selectedOrganisationUuid;
+  });
+  return selectedContract || null;
+}
+
+export const getScenarioAvailableSizeDefinedByContract = (state) => {
+  const currentContract = getContractForSelectedOrganisation(state);
+  return (currentContract && currentContract.scenario_storage_capacity) || 0;
+}
+export const getRasterAvailableSizeDefinedByContract = (state) => {
+  const currentContract = getContractForSelectedOrganisation(state);
+  return (currentContract && currentContract.raster_storage_capacity) || 0;
+}
+export const getTimeseriesAvailableSizeDefinedByContract = (state) => {
+  const currentContract = getContractForSelectedOrganisation(state);
+  return (currentContract && currentContract.timeseries_storage_capacity) || 0;
+}
+
 export const getRasterSourceUUID = (state) => {
   return state.rasterSourceUUID;
 };
@@ -316,21 +374,31 @@ export const getLocation = (state) => {
 export const getUploadFiles = (state) => {
   return state.uploadFiles;
 };
+
+export const  getFilesInProcess  = (state) => {
+    return state.uploadFiles &&
+      state.uploadFiles.length > 0 &&
+      state.uploadFiles.filter(file => file.status !== 'SUCCESS' && file.status !== 'FAILED');
+};
+
 export const getFinsihedFiles = (state) => {
   return state.uploadFiles && state.uploadFiles.length > 0 && state.uploadFiles.filter(file => file.status === 'SUCCESS' || file.status === 'FAILED');
 };
+
+export const getShowUploadQueueModal = (state) => {
+  return state.uploadQueueModalOpen;
+}
 
 const rootReducer = combineReducers({
   bootstrap,
   organisations,
   usage,
-  datasets,
+  contracts,
   notifications,
-  viewport,
-  alarmType,
   rasterSourceUUID,
   location,
-  uploadFiles
+  uploadFiles,
+  uploadQueueModalOpen,
 });
 
 // Todo: add type defenitions to redux. Check threedi-livesite for examples. Next line defines AppDispatch for mapDispatchToProps

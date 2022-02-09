@@ -1,7 +1,7 @@
 import React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { connect, useSelector } from 'react-redux';
-import { getOrganisations, getSelectedOrganisation, getUsername } from '../../reducers';
+import { getOrganisations,  getUsername } from '../../reducers';
 import { ScenarioResult } from '../../form/ScenarioResult';
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import { TextInput } from './../../form/TextInput';
@@ -11,14 +11,12 @@ import { CancelButton } from '../../form/CancelButton';
 import { useForm, Values } from '../../form/useForm';
 import { minLength } from '../../form/validators';
 import { addNotification } from '../../actions';
+import { scenarioFormHelpText } from '../../utils/help_texts/helpTextForScenarios';
 import threediIcon from "../../images/3di@3x.svg";
 import formStyles from './../../styles/Forms.module.css';
-import { scenarioFormHelpText, defaultScenarioExplanationText } from '../../utils/help_texts/helpTextForScenarios';
-import { getScenarioTotalSize } from '../../reducers';
-import { bytesToDisplayValue } from '../../utils/byteUtils';
 
 interface Props {
-  currentScenario: any
+  currentRecord: any
 };
 interface PropsFromDispatch {
   addNotification: (message: string | number, timeout: number) => void
@@ -27,21 +25,19 @@ interface RouteParams {
   uuid: string;
 };
 
-const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProps<RouteParams>> = (props) => {
-  const { currentScenario } = props;
-  const scenarioTotalSize = useSelector(getScenarioTotalSize);
+const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<RouteParams>> = (props) => {
+  const { currentRecord } = props;
   const organisations = useSelector(getOrganisations).available;
-  const scenarioOrganisation = organisations.find((org: any) => org.uuid === currentScenario.organisation.uuid);
+  const scenarioOrganisation = organisations.find((org: any) => org.uuid === currentRecord.organisation.uuid);
   const username = useSelector(getUsername);
-  const selectedOrganisation = useSelector(getSelectedOrganisation);
 
   const initialValues = {
-    name: currentScenario.name,
-    uuid: currentScenario.uuid,
-    modelName: currentScenario.model_name || '',
-    supplier: currentScenario.username || '',
-    organisation: currentScenario.organisation.name || '',
-    accessModifier: currentScenario.access_modifier
+    name: currentRecord.name,
+    uuid: currentRecord.uuid,
+    modelName: currentRecord.model_name || '',
+    supplier: currentRecord.username || '',
+    organisation: currentRecord.organisation.name || '',
+    accessModifier: currentRecord.access_modifier
   };
 
   const onSubmit = (values: Values) => {
@@ -50,7 +46,7 @@ const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProp
       access_modifier: values.accessModifier
     };
 
-    fetch(`/api/v4/scenarios/${currentScenario.uuid}/`, {
+    fetch(`/api/v4/scenarios/${currentRecord.uuid}/`, {
       credentials: 'same-origin',
       method: 'PATCH',
       headers: {'Content-Type': 'application/json'},
@@ -60,7 +56,7 @@ const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProp
         const status = data.status;
         if (status === 200) {
           props.addNotification('Success! Scenario updated', 2000);
-          props.history.push('/data_management/scenarios/');
+          props.history.push('/management/data_management/scenarios/');
         } else {
           props.addNotification(status, 2000);
           console.error(data);
@@ -89,8 +85,11 @@ const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProp
       imgUrl={threediIcon}
       imgAltDescription={"3Di icon"}
       headerText={"3Di Scenarios"}
-      explanationText={scenarioFormHelpText[fieldOnFocus] || defaultScenarioExplanationText(bytesToDisplayValue(scenarioTotalSize), selectedOrganisation.name)}
-      backUrl={"/data_management/scenarios/"}
+      explanationText={
+        scenarioFormHelpText[fieldOnFocus] || 
+        scenarioFormHelpText['default']
+      }
+      backUrl={"/management/data_management/scenarios/"}
       fieldName={fieldOnFocus}
     >
       <form
@@ -113,9 +112,9 @@ const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProp
           triedToSubmit={triedToSubmit}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          readOnly={!scenarioOrganisation.roles.includes("admin") && !(username === currentScenario.username)}
+          readOnly={!scenarioOrganisation.roles.includes("admin") && !(username === currentRecord.username)}
         />
-        {currentScenario ? (
+        {currentRecord ? (
           <TextInput
             title={'UUID'}
             name={'uuid'}
@@ -143,7 +142,7 @@ const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProp
         </span>
         <ScenarioResult
           name={'results'}
-          uuid={currentScenario.uuid}
+          uuid={currentRecord.uuid}
           formSubmitted={formSubmitted}
           onFocus={handleFocus}
           onBlur={handleBlur}
@@ -185,7 +184,7 @@ const ScenarioFormModel: React.FC<Props & PropsFromDispatch & RouteComponentProp
           className={formStyles.ButtonContainer}
         >
           <CancelButton
-            url={'/data_management/scenarios/'}
+            url={'/management/data_management/scenarios/'}
           />
           <SubmitButton
             onClick={tryToSubmitForm}
@@ -200,6 +199,4 @@ const mapPropsToDispatch = (dispatch: any) => ({
   addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout))
 });
 
-const ScenarioForm = connect(null, mapPropsToDispatch)(withRouter(ScenarioFormModel));
-
-export { ScenarioForm };
+export default connect(null, mapPropsToDispatch)(withRouter(ScenarioForm));
