@@ -116,21 +116,18 @@ const reversedRasters = selectedRasters.map(id=>id).reverse();
           position: "absolute",
           left: 0,
           top: 0,
-          width: "700px",
+          width: "200px",
           height: "100vh",
           overflowY: "auto",
           backgroundColor: "white",
           zIndex: 10,
         }}
       >
-       
-       <h1>Mapbox mapbox.mapbox-streets-v7 layers</h1>
-      <br/>
-       <label>ShowRoads <input type="checkbox" checked={showRoads===true} onClick={()=>setShowRoads(!showRoads)}></input></label>
+       <label>Roads <input type="checkbox" checked={showRoads===true} onClick={()=>setShowRoads(!showRoads)}></input></label>
        <br/>
-       <label>ShowWaterbodies <input type="checkbox" checked={showWaterbodies===true} onClick={()=>setShowWaterbodies(!showWaterbodies)}></input></label>
+       <label>Water <input type="checkbox" checked={showWaterbodies===true} onClick={()=>setShowWaterbodies(!showWaterbodies)}></input></label>
        <br/>
-       <label>ShowBuildings <input type="checkbox" checked={showBuildings===true} onClick={()=>setShowBuildings(!showBuildings)}></input></label>
+       <label>Buildings <input type="checkbox" checked={showBuildings===true} onClick={()=>setShowBuildings(!showBuildings)}></input></label>
        <br/> 
 
        <h1>Lizard Rasters</h1>
@@ -345,20 +342,20 @@ const reversedRasters = selectedRasters.map(id=>id).reverse();
             /> */}
           </Source>
           <Source
-            key={"mapillary"}
-            id={"mapillary"}
+            key={"structures"}
+            id={"structures"}
             type={'vector'}
-            
-            tiles={[
-            'https://tiles.mapillary.com/maps/vtp/mly1_public/2/{z}/{x}/{y}'
-            ]} // mapbox://styles/nelenschuurmans/ckrbsw9f806k017o9ctzbyr0w
+            // tiles={[
+            //   `https://tiles.mapillary.com/maps/vtp/mly1_public/2/{z}/{x}/{y}?access_token=${mapBoxAccesToken}`
+            // ]}
+            url={'mapbox://styles/nelenschuurmans/ckrbsw9f806k017o9ctzbyr0w'}
             minzoom={6}
             maxzoom={14}
           >
-            {/* <Layer
+            <Layer
               key={'mapillary'}
               id={'mapillary'}
-              beforeId={'GROUP_' + 79}
+              beforeId={'road-label'}
               type={'line'}
               source={"mapillary"}
               source-layer={'sequence'}
@@ -366,14 +363,12 @@ const reversedRasters = selectedRasters.map(id=>id).reverse();
                 'line-opacity': 0.6,
                 'line-color': 'rgb(53, 175, 109)',
                 'line-width': 2
-                }}
-                layout={{
-                  'line-join': 'round',
-                  'line-cap': 'round'
-                  }}
-              
-            /> */}
-
+              }}
+              layout={{
+                'line-join': 'round',
+                'line-cap': 'round'
+              }}
+            />
           </Source>
 
           {/* Below layer is a style and we cannot ad it as a vector tile? */}
@@ -455,15 +450,8 @@ const reversedRasters = selectedRasters.map(id=>id).reverse();
               source={"mapbox://mapbox.mapbox-streets-v7"}
               source-layer={'building'}
               paint={{
-              // 'line-opacity': 0.6,
-              'fill-color': 'rgb(255, 0, 0)',
-              // 'line-width': 2
+                'fill-color': 'rgb(255, 0, 0)'
               }}
-              layout={{
-                // 'line-join': 'round',
-                // 'line-cap': 'round'
-                }}
-              
             />:null}
 
           </Source>
