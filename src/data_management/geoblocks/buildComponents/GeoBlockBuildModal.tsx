@@ -14,7 +14,6 @@ import {
   convertGeoblockSourceToFlowElements
 } from '../geoblockUtils/geoblockUtils';
 import { RasterLayerFromAPI } from '../../../api/rasters';
-import { openRasterInLizardViewer } from '../../../utils/openRasterInViewer';
 import ModalBackground from '../../../components/ModalBackground';
 import styles from './GeoBlockBuildModal.module.css';
 import formStyles from './../../../styles/Forms.module.css';
@@ -24,7 +23,7 @@ interface MyProps {
   currentRecord: RasterLayerFromAPI | null,
   formValues: Values,
   source: GeoBlockSource | null,
-  onChange: (value: GeoBlockSource | null) => void,
+  onSubmit: (values: Values) => void,
   handleClose: () => void
 }
 
@@ -108,17 +107,6 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
           </button>
           {geoBlockView === 'visual' ? <b>Operations: {noOfOperations || 0}</b> : null}
           <div>
-            {currentRecord ? (
-              <button
-                className={buttonStyles.NewButton}
-                onClick={() => openRasterInLizardViewer(currentRecord)}
-                style={{
-                  marginRight: 20
-                }}
-              >
-                Open in Viewer
-              </button>
-            ) : null}
             <button
               className={buttonStyles.NewButton}
               onClick={() => {
@@ -140,12 +128,16 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
                 if (geoBlockView === 'visual') {
                   const geoBlockSource = convertElementsToGeoBlockSource(elements, source, setSource);
                   if (geoBlockSource || geoBlockSource === null) {
-                    props.onChange(geoBlockSource);
-                    props.handleClose();
+                    props.onSubmit({
+                      ...formValues,
+                      source: geoBlockSource
+                    });
                   };
                 } else {
-                  props.onChange(source);
-                  props.handleClose();
+                  props.onSubmit({
+                    ...formValues,
+                    source: source
+                  });
                 };
               }}
             />
