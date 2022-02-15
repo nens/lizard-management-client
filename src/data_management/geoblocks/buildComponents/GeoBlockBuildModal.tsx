@@ -14,7 +14,6 @@ import {
   convertGeoblockSourceToFlowElements
 } from '../geoblockUtils/geoblockUtils';
 import { RasterLayerFromAPI } from '../../../api/rasters';
-import { openRasterInLizardViewer } from '../../../utils/openRasterInViewer';
 import ModalBackground from '../../../components/ModalBackground';
 import styles from './GeoBlockBuildModal.module.css';
 import formStyles from './../../../styles/Forms.module.css';
@@ -108,17 +107,6 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
           </button>
           {geoBlockView === 'visual' ? <b>Operations: {noOfOperations || 0}</b> : null}
           <div>
-            {currentRecord ? (
-              <button
-                className={buttonStyles.NewButton}
-                onClick={() => openRasterInLizardViewer(currentRecord)}
-                style={{
-                  marginRight: 20
-                }}
-              >
-                Open in Viewer
-              </button>
-            ) : null}
             <button
               className={buttonStyles.NewButton}
               onClick={() => {
