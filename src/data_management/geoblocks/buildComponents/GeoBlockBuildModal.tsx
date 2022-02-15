@@ -23,7 +23,7 @@ interface MyProps {
   currentRecord: RasterLayerFromAPI | null,
   formValues: Values,
   source: GeoBlockSource | null,
-  onChange: (value: GeoBlockSource | null) => void,
+  onSubmit: (values: Values) => void,
   handleClose: () => void
 }
 
@@ -128,12 +128,16 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
                 if (geoBlockView === 'visual') {
                   const geoBlockSource = convertElementsToGeoBlockSource(elements, source, setSource);
                   if (geoBlockSource || geoBlockSource === null) {
-                    props.onChange(geoBlockSource);
-                    props.handleClose();
+                    props.onSubmit({
+                      ...formValues,
+                      source: geoBlockSource
+                    });
                   };
                 } else {
-                  props.onChange(source);
-                  props.handleClose();
+                  props.onSubmit({
+                    ...formValues,
+                    source: source
+                  });
                 };
               }}
             />

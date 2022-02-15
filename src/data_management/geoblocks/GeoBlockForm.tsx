@@ -432,7 +432,7 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
           currentRecord={currentRecord || null}
           formValues={values}
           source={values.source}
-          onChange={value => handleValueChange('source', value)}
+          onSubmit={onSubmit}
           handleClose={() => setBuildModal(false)}
         />
       ) : null}
