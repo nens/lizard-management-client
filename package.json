@@ -51,7 +51,7 @@
     "react-query": "^3.19.0",
     "react-redux": "^7.0.2",
     "react-router-dom": "^5.0.0",
-    "react-scripts": "^4.0.3",
+    "react-scripts": "4.0.3",
     "react-select": "^4.0.2",
     "react-spring": "5.5.1",
     "react-timeseries-charts": "^0.15.5",
