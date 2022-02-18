@@ -1,4 +1,3 @@
-import React from 'react';
 import { useSelector } from "react-redux";
 import { ExplainSideColumn } from '../components/ExplainSideColumn';
 import { InfoLabel } from '../form/InfoLabel';
@@ -10,8 +9,8 @@ import formStyles from './../styles/Forms.module.css';
 import agreementIcon from "../images/agreement.svg";
 
 export const ContractForm = () => {
-  const contractObjApi = useSelector(getContractForSelectedOrganisation);
-  const usageObj = useSelector(getUsage);
+  const contractObjApi = useSelector(getContractForSelectedOrganisation)!;
+  const usageObj = useSelector(getUsage)!;
 
   return (
     <ExplainSideColumn

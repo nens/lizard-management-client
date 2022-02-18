@@ -3,6 +3,7 @@
 // to start the Typescriptification process and to do error
 // handling in a more uniform way, if we do it.
 import { GeoBlockSource } from "../types/geoBlockType"
+import { Organisation } from "../types/organisationType"
 
 export interface OldRaster {
   name: string;
@@ -32,12 +33,6 @@ export interface OldRasterEdit {
   aggregation_type: string;
   options?: string;
   shared_with: string;
-}
-
-export interface Organisation {
-  name: string,
-  uuid: string,
-  url: string,
 }
 
 export interface Layercollection {

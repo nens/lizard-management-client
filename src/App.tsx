@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { connect, useSelector } from "react-redux";
 import { FormattedMessage } from "react-intl.macro";
 import { fetchTaskInstance } from "./api/tasks";

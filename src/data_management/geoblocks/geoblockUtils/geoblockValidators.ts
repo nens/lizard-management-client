@@ -1,4 +1,4 @@
-import { storeDispatch } from "../../../index";
+import { appDispatch } from "../../../index";
 import { addNotification } from "../../../actions";
 import { GeoBlockSource } from "../../../types/geoBlockType";
 import { geoblockSourceValidator, jsonValidator } from "../../../form/validators";
@@ -34,19 +34,19 @@ const handleGeoBlockValidationResponse = (res: any) => {
     console.error(res.detail && res.detail.source && res.detail.source[0]);
     const errorMessage = res.detail && res.detail.source && res.detail.source[0];
     if (errorMessage) {
-      storeDispatch(addNotification(errorMessage))
+      appDispatch(addNotification(errorMessage))
     } else {
-      storeDispatch(addNotification('Unknown error!'))
+      appDispatch(addNotification('Unknown error!'))
     };
   } else if (res.status === 500) {
     console.error(res.message);
-    storeDispatch(addNotification(500));
+    appDispatch(addNotification(500));
   } else if (res.id) { // valid response
     console.log(res);
-    storeDispatch(addNotification('The GeoBlock is valid.', 2000));
+    appDispatch(addNotification('The GeoBlock is valid.', 2000));
   } else {
     console.error(res);
-    storeDispatch(addNotification('Unknown error!'));
+    appDispatch(addNotification('Unknown error!'));
   };
 };
 
@@ -57,7 +57,7 @@ export const dryFetchGeoBlockForValidation = (
 ) => {
   // validate if the provided source is valid
   const sourceError = geoblockSourceValidator(source);
-  if (sourceError) return storeDispatch(addNotification(sourceError), 2000);
+  if (sourceError) return appDispatch(addNotification(sourceError, 2000));
 
   if (currentRecord) {
     fetch(`/api/v4/rasters/${currentRecord.uuid}/?dry-run`, {

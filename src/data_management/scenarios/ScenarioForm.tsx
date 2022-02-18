@@ -28,7 +28,7 @@ interface RouteParams {
 const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<RouteParams>> = (props) => {
   const { currentRecord } = props;
   const organisations = useSelector(getOrganisations).available;
-  const scenarioOrganisation = organisations.find((org: any) => org.uuid === currentRecord.organisation.uuid);
+  const scenarioOrganisation = organisations.find((org: any) => org.uuid === currentRecord.organisation.uuid)!;
   const username = useSelector(getUsername);
 
   const initialValues = {

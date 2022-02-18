@@ -1,4 +1,3 @@
-import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import configureStore from "./configureStore";
@@ -9,24 +8,29 @@ import translations from './i18n/locales';
 import { BrowserRouter as Router } from "react-router-dom";
 import { QueryClientProvider } from "react-query";
 import { queryClient } from "./api/hooks";
+import { getLocaleStringFromBrowserSetting } from './utils/detectLanguage';
 import ScrollToTop from "./components/ScrollToTop";
 import App from "./App";
-import { getLocaleStringFromBrowserSetting } from './utils/detectLanguage';
+import { ThunkAction, ThunkDispatch } from "redux-thunk";
+import { AnyAction } from "redux";
 
 
 // Initialize Redux store
-let store = configureStore();
-export const storeDispatch = store.dispatch;
+const store = configureStore();
+export const appDispatch: AppDispatch = store.dispatch;
+export type AppDispatch = ThunkDispatch<AppState, undefined, AnyAction>;
+export type AppState = ReturnType<typeof store.getState>;
+export type AppGetState = () => AppState;
+export type Thunk = ThunkAction<void, AppState, undefined, AnyAction>;
 
 // React-router basename (https://reacttraining.com/react-router/web/api/BrowserRouter/basename-string)
 const basename = "/";
 
 const localeProp = getLocaleStringFromBrowserSetting();
 
-const preferredLocale =
-  "en";
+// const preferredLocale = "en";
 
-const Root = ({ store }) => (
+const Root = () => (
   <IntlProvider
     locale={localeProp}
     defaultLocale="en"
@@ -53,7 +57,7 @@ const Root = ({ store }) => (
               localeProp === 'zh-TW' ? 'zh_TW' : localeProp
             ]}
           >
-            <App preferredLocale={preferredLocale} />
+            <App />
           </IntlProvider>
         </Router>
       </QueryClientProvider>
@@ -61,7 +65,7 @@ const Root = ({ store }) => (
   </IntlProvider>
 );
 
-ReactDOM.render(<Root store={store} />, document.getElementById("root"));
+ReactDOM.render(<Root />, document.getElementById("root"));
 
 if (module.hot) {
   module.hot.accept("./App", () => {
@@ -81,7 +85,7 @@ if (module.hot) {
         <Provider store={store}>
           <QueryClientProvider client={queryClient}>
             <Router basename={basename}>
-              <HotApp preferredLocale={preferredLocale} />
+              <HotApp />
             </Router>
           </QueryClientProvider>
         </Provider>

@@ -1,4 +1,4 @@
-import { storeDispatch } from "../../../index";
+import { appDispatch } from "../../../index";
 import { addNotification } from "../../../actions";
 import { Elements, getOutgoers, isNode, Node } from "react-flow-renderer";
 import { GeoBlockSource, geoblockType } from "../../../types/geoBlockType";
@@ -199,7 +199,7 @@ export const convertElementsToGeoBlockSource = (
   if (errors.length >= 1) {
     errors.forEach(e => {
       console.error(e.errorMessage);
-      storeDispatch(addNotification(e.errorMessage));
+      appDispatch(addNotification(e.errorMessage));
     });
     return;
   };

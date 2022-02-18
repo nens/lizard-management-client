@@ -14,7 +14,7 @@ const ActionButtons: React.FC<Props> = ({actions, onChange, display, forForm }) 
   const [showActionList, setShowActionList] = useState<boolean>(false);
 
   useEffect(() => {
-    const closeActionListOnEsc = (e: any) => {
+    const closeActionListOnEsc = (e: KeyboardEvent) => {
       if (e.key === 'Escape') setShowActionList(false);
     };
     window.addEventListener('keydown', closeActionListOnEsc);

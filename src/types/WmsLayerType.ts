@@ -1,13 +1,7 @@
 import { Value } from '../form/SelectDropdown';
 import { convertToSelectObject } from '../utils/convertToSelectObject';
 import { SpatialBounds } from './mapTypes';
-
-// TODO: reuse organisation type for rasterlayer in api/rasters.ts and this file from ./types/organisationType
-export interface Organisation {
-  name: string,
-  uuid: string,
-  url: string,
-}
+import { Organisation } from './organisationType';
 
 export interface WmsLayerReceivedFromApi {
   name: string;

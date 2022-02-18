@@ -4,7 +4,7 @@ import ActionButton from './ActionButton';
 
 export interface Action {
   displayValue: string;
-  actionFunction: any; // function that takes uuid and performs action
+  actionFunction: () => void; // function that takes uuid and performs action
 }
 
 interface Props {
