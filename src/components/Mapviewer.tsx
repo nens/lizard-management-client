@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import ReactMapGL, {Source, Layer, Popup} from 'react-map-gl';
 import mapboxgl from "mapbox-gl";
@@ -32,6 +32,8 @@ function MapViewer (props: MyProps & DispatchProps) {
   const [popupData, setPopupData] = useState<any | null>(null)
 
   const [ lizardBuildings, setLizardBuildings ] = useState<null | any[]>(null);
+
+  const mapRef = useRef<any>(null);
   
   useEffect(() => {
     (async () => {
@@ -224,6 +226,7 @@ const reversedRasters = selectedRasters.map(id=>id).reverse();
       </div>
       <ReactMapGL
         {...viewport}
+        ref={mapRef}
         width="100%"
         height="100%"
         onViewportChange={(viewport:any) => setViewport(viewport)}
@@ -232,6 +235,11 @@ const reversedRasters = selectedRasters.map(id=>id).reverse();
         onClick={(event)=>{
           console.log('event', event.features, event);
           setPopupData(event);
+        }}
+        onLoad={() => {
+          const map: mapboxgl.Map = mapRef.current.getMap();
+          console.log('hoan source', map.getSource('measuringstation').type)
+          console.log('hoan layer', map.getLayer('hoan'))
         }}
       >
         {popupData? <Popup
@@ -342,17 +350,25 @@ const reversedRasters = selectedRasters.map(id=>id).reverse();
             /> */}
           </Source>
           <Source
-            key={"structures"}
-            id={"structures"}
+            key={"measuringstation"}
+            id={"measuringstation"}
             type={'vector'}
-            // tiles={[
-            //   `https://tiles.mapillary.com/maps/vtp/mly1_public/2/{z}/{x}/{y}?access_token=${mapBoxAccesToken}`
-            // ]}
-            url={'mapbox://styles/nelenschuurmans/ckrbsw9f806k017o9ctzbyr0w'}
+            tiles={[
+              // `https://tiles.mapillary.com/maps/vtp/mly1_public/2/{z}/{x}/{y}?access_token=${mapBoxAccesToken}`
+              `/api/v4/measuringstations/vectortiles/{z}/{x}/{y}/`
+            ]}
             minzoom={6}
             maxzoom={14}
           >
             <Layer
+              key={'hoan'}
+              id={'hoan'}
+              type={'fill'}
+              source={'measuringstation'}
+              source-layer={'abc'}
+              paint={{}}
+            />
+            {/* <Layer
               key={'mapillary'}
               id={'mapillary'}
               beforeId={'road-label'}
@@ -368,7 +384,7 @@ const reversedRasters = selectedRasters.map(id=>id).reverse();
                 'line-join': 'round',
                 'line-cap': 'round'
               }}
-            />
+            /> */}
           </Source>
 
           {/* Below layer is a style and we cannot ad it as a vector tile? */}
