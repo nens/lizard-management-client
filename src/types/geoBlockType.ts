@@ -92,5 +92,4 @@ type GroupBlockType = {
   }
 }
 
-// @ts-ignore
 export const geoblockType: GeoBlockType & InputBlockType & GroupBlockType = geoblock;

@@ -1,40 +1,46 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { PropsWithChildren, useCallback, useEffect, useRef, useState } from 'react';
 import styles from './Table.module.css';
 import actionListStyles from './ActionList.module.css';
 import {DataRetrievalState} from '../types/retrievingDataTypes';
 import MDSpinner from "react-md-spinner";
 
 
-export interface ColumnDefinition {
-  titleRenderFunction: any;
-  renderFunction: any; //(row: any): any; //returns field JSX.Element;
-  orderingField: null | string;
+export interface ColumnDefinition<TableRowType> {
+  titleRenderFunction: () => string | JSX.Element;
+  renderFunction: (
+    row: TableRowType,
+    updateTableRow: (row: TableRowType) => void,
+    triggerReloadWithCurrentPage: () => void,
+    triggerReloadWithBasePage: () => void
+  ) => string | JSX.Element;
+  orderingField: string | null;
 }
 
-interface Props {
-  // name: string;
-  tableData: any [];
-  setTableData: any;
+interface Props<TableRowType> {
+  tableData: TableRowType[];
+  setTableData: (data: TableRowType[]) => void;
   gridTemplateColumns: string;
-  columnDefinitions: ColumnDefinition[];
+  columnDefinitions: ColumnDefinition<TableRowType>[];
   dataRetrievalState: DataRetrievalState;
-  triggerReloadWithCurrentPage: any;
-  triggerReloadWithBasePage: any;
-  getIfCheckBoxOfUuidIsSelected?: any;
+  triggerReloadWithCurrentPage: () => void;
+  triggerReloadWithBasePage: () => void;
+  getIfCheckBoxOfUuidIsSelected?: (uuid: string) => boolean;
   responsive?: boolean;
 }
 
-const Table: React.FC<Props> = ({
-  tableData,
-  setTableData,
-  gridTemplateColumns,
-  columnDefinitions,
-  dataRetrievalState,
-  triggerReloadWithCurrentPage,
-  triggerReloadWithBasePage,
-  getIfCheckBoxOfUuidIsSelected,
-  responsive,
-}) => {
+function Table<TableRowType extends { uuid: string, checkboxChecked?: boolean }> (props: PropsWithChildren<Props<TableRowType>>) {
+  const {
+    tableData,
+    setTableData,
+    gridTemplateColumns,
+    columnDefinitions,
+    dataRetrievalState,
+    triggerReloadWithCurrentPage,
+    triggerReloadWithBasePage,
+    getIfCheckBoxOfUuidIsSelected,
+    responsive,
+  } = props;
+
   ///////////////////////////
   // Below code is to check if table is overflow and scrollbar is visible
   // Vertical scrollbar takes palce and causes table header and table body no longer alinged with each other
@@ -81,8 +87,8 @@ const Table: React.FC<Props> = ({
           {
             tableData.map((tableRow, idx) => {
               const rowIsSelected = getIfCheckBoxOfUuidIsSelected && getIfCheckBoxOfUuidIsSelected(tableRow.uuid);
-              const updateTableRow = (newTableRow: any) => {
-                const newTableData = tableData.map((rowAllTables:any)=>{
+              const updateTableRow = (newTableRow: typeof tableRow) => {
+                const newTableData = tableData.map(rowAllTables => {
                   if (rowAllTables.uuid ===  tableRow.uuid) {
                     return {...newTableRow}
                   } else{

@@ -1,16 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { connect, useSelector } from 'react-redux';
 import { SelectDropdown } from '../../form/SelectDropdown';
 import { SubmitButton } from '../../form/SubmitButton';
 import { getSelectedOrganisation } from '../../reducers';
 import { addNotification } from '../../actions';
 import { useRecursiveFetch } from '../../api/hooks';
+import { AppDispatch } from '../..';
+import { Contact, ContactGroup } from '../../types/contactGroupType';
 import ModalBackground from '../../components/ModalBackground';
 import formStyles from '../../styles/Forms.module.css';
 import buttonStyles from '../../styles/Buttons.module.css';
 
 interface MyProps {
-  contact: any,
+  contact: Contact,
   handleClose: () => void
 }
 
@@ -37,15 +39,15 @@ function AddToGroupModal (props: MyProps & DispatchProps) {
   useEffect(() => {
     if (!groups) return;
 
-    const listOfGroups = groups.map((group: any) => ({
+    const listOfGroups = groups.map((group: ContactGroup) => ({
       value: group.id,
       label: group.name,
-      contacts: group.contacts.map((contact: any) => contact.id)
+      contacts: group.contacts.map(contact => contact.id)
     }));
 
     // filter list of available groups with only groups that the contact has not yet been added to
     const listOfGroupsWithoutCurrentContact = listOfGroups.filter(
-      (group: any) => !group.contacts.includes(contact.id)
+      group => !group.contacts.includes(contact.id)
     );
     setAvailableGroups(listOfGroupsWithoutCurrentContact);
   }, [groups, contact.id]);
@@ -127,7 +129,7 @@ function AddToGroupModal (props: MyProps & DispatchProps) {
   )
 }
 
-const mapDispatchToProps = (dispatch: any) => ({
+const mapDispatchToProps = (dispatch: AppDispatch) => ({
   addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout))
 });
 type DispatchProps = ReturnType<typeof mapDispatchToProps>;

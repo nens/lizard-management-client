@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl.macro";
 
 import Scrollbars from "react-custom-scrollbars";
-import ClearButton from "../components/ClearButton.js";
+import ClearButton from "../components/ClearButton";
 
 import styles from "./SlushBucket.module.css";
 import formStyles from "../styles/Forms.module.css";
@@ -201,7 +201,7 @@ export const SlushBucket: React.FC<MyProps> = (props) => {
                             selected.filter(e => e !== choiceItem.value)
                           );
                         }}
-                        style={{
+                        styles={{
                           visibility: readOnly ? "hidden" : "visible"
                         }}
                       />

@@ -1,7 +1,8 @@
 import React, {useEffect} from 'react';
 import { connect } from 'react-redux';
 import { useSelector } from 'react-redux';
-import { getFinsihedFiles, getUploadFiles, getFilesInProcess } from '../reducers';
+import { AppDispatch } from '..';
+import { getFinsihedFiles, getUploadFiles, getFilesInProcess, FileState } from '../reducers';
 import { removeFileFromQueue } from '../actions';
 import { bytesToMb } from '../utils/byteUtils';
 import ModalBackground from './ModalBackground';
@@ -48,8 +49,8 @@ interface PropsFromDispatch {
 };
 
 const UploadQueue: React.FC<MyProps & PropsFromDispatch> = (props) => {
-  const uploadFiles: any[] = useSelector(getUploadFiles);
-  const finishedFiles: any[] = useSelector(getFinsihedFiles);
+  const uploadFiles: FileState[] = useSelector(getUploadFiles);
+  const finishedFiles: FileState[] = useSelector(getFinsihedFiles);
 
   const waitingOrUploadingFiles = (uploadFiles || []).filter(file=> file.status === "WAITING" || file.status === "UPLOADING");
   const mustWaitForFiles = waitingOrUploadingFiles.length !== 0;
@@ -166,7 +167,7 @@ const UploadQueue: React.FC<MyProps & PropsFromDispatch> = (props) => {
   )
 }
 
-const mapDispatchToProps = (dispatch: any) => ({
+const mapDispatchToProps = (dispatch: AppDispatch) => ({
   removeFileFromQueue: (file: File) => dispatch(removeFileFromQueue(file)),
 });
 

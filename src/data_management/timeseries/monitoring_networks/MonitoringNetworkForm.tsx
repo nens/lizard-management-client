@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { connect, useSelector } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { AppDispatch } from '../../..';
 import { ExplainSideColumn } from '../../../components/ExplainSideColumn';
 import { TextInput } from './../../../form/TextInput';
 import { TextArea } from '../../../form/TextArea';
@@ -253,7 +254,7 @@ const MonitoringNetworkForm = (props: Props & DispatchProps & RouteComponentProp
   );
 };
 
-const mapPropsToDispatch = (dispatch: any) => ({
+const mapPropsToDispatch = (dispatch: AppDispatch) => ({
   addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout))
 });
 type DispatchProps = ReturnType<typeof mapPropsToDispatch>;

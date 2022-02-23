@@ -10,19 +10,21 @@ import { RasterSourceModal } from './RasterSourceModal';
 import { defaultRasterLayerHelpTextTable } from '../../utils/help_texts/helpTextForRasters';
 import DeleteModal from '../../components/DeleteModal';
 import { fetchWithOptions } from '../../utils/fetchWithOptions';
+import { RasterLayerFromAPI } from '../../api/rasters';
+import { ColumnDefinition } from '../../components/Table';
 
 export const baseUrl = "/api/v4/rasters/";
 const navigationUrlRasters = "/management/data_management/rasters/layers";
 
 export const RasterLayerTable: React.FC<RouteComponentProps> = (props) =>  {
-  const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
+  const [rowsToBeDeleted, setRowsToBeDeleted] = useState<RasterLayerFromAPI[]>([]);
   const [resetTable, setResetTable] = useState<Function | null>(null);
 
   const [selectedLayer, setSelectedLayer] = useState<string>('');
 
   const deleteActions = (
-    rows: any[],
-    triggerReloadWithCurrentPage: Function,
+    rows: RasterLayerFromAPI[],
+    triggerReloadWithCurrentPage: () => void,
     setCheckboxes: Function | null
   ) => {
     setRowsToBeDeleted(rows);
@@ -32,10 +34,10 @@ export const RasterLayerTable: React.FC<RouteComponentProps> = (props) =>  {
     });
   };
 
-  const columnDefinitions = [
+  const columnDefinitions: ColumnDefinition<RasterLayerFromAPI>[] = [
     {
       titleRenderFunction: () => "Name",
-      renderFunction: (row: any) => 
+      renderFunction: row => 
         <span
           className={tableStyles.CellEllipsis}
           title={row.name}
@@ -46,7 +48,7 @@ export const RasterLayerTable: React.FC<RouteComponentProps> = (props) =>  {
     },
     {
       titleRenderFunction: () =>  "Based on",
-      renderFunction: (row: any) => 
+      renderFunction: row => 
         <span
           className={tableStyles.CellEllipsis}
           title={row.is_geoblock ? 'Geoblock' : 'Raster source'}
@@ -65,7 +67,7 @@ export const RasterLayerTable: React.FC<RouteComponentProps> = (props) =>  {
     },
     {
       titleRenderFunction: () =>  "User",
-      renderFunction: (row: any) =>  
+      renderFunction: row =>  
       <span
         className={tableStyles.CellEllipsis}
         title={row.supplier}
@@ -76,11 +78,12 @@ export const RasterLayerTable: React.FC<RouteComponentProps> = (props) =>  {
     },
     {
       titleRenderFunction: () =>  "Temporal",
-      renderFunction: (row: any) => row.temporal === true? "Yes" : "No",
+      renderFunction: row => row.temporal === true? "Yes" : "No",
       orderingField: "temporal",
     },
     {
       titleRenderFunction: () =>  "",//"Actions",
+      // @ts-ignore
       renderFunction: (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any) => {
         return (
             <TableActionButtons

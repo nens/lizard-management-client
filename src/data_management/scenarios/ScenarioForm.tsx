@@ -1,6 +1,6 @@
-import React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { connect, useSelector } from 'react-redux';
+import { AppDispatch } from '../..';
 import { getOrganisations,  getUsername } from '../../reducers';
 import { ScenarioResult } from '../../form/ScenarioResult';
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
@@ -195,7 +195,7 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
   );
 };
 
-const mapPropsToDispatch = (dispatch: any) => ({
+const mapPropsToDispatch = (dispatch: AppDispatch) => ({
   addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout))
 });
 

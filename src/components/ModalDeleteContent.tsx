@@ -1,9 +1,11 @@
-import React from 'react';
 import MDSpinner from "react-md-spinner";
 
+export interface Field {
+  name: string,
+  width: number
+}
 
-
-export const ModalDeleteContent = (rows: any[], spinner: boolean, fields: {name:string, width: number}[]) => {
+export const ModalDeleteContent = (rows: any[], spinner: boolean, fields: Field[]) => {
   return (
     <div>
     <ul

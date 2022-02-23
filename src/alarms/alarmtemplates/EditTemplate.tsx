@@ -1,6 +1,7 @@
-import React,  {useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 import { RouteComponentProps } from 'react-router';
 import TemplateForm from "./TemplateForm";
+import { Message } from "../../types/messageType";
 import {createFetchRecordFunctionFromUrl} from '../../utils/createFetchRecordFunctionFromUrl';
 import SpinnerIfNotLoaded from '../../components/SpinnerIfNotLoaded';
 
@@ -12,7 +13,7 @@ interface RouteParams {
 export const EditTemplate = (props: RouteComponentProps<RouteParams>) => {
   const { id } = props.match.params;
 
-  const [ currentRecord , setCurrentRecord] = useState(null)
+  const [ currentRecord , setCurrentRecord] = useState<Message | null>(null)
 
   useEffect(() => {
     (async () => {
@@ -26,7 +27,7 @@ export const EditTemplate = (props: RouteComponentProps<RouteParams>) => {
       loaded={!!currentRecord}
     >
       <TemplateForm
-        currentRecord={currentRecord}
+        currentRecord={currentRecord!}
       />
     </SpinnerIfNotLoaded>
     

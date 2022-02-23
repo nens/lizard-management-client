@@ -1,7 +1,8 @@
-import React from "react";
-import {useState, useEffect} from 'react';
-import {useSelector,} from 'react-redux';
-import {getSelectedOrganisation, getOrganisations} from '../reducers'
+import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { AppDispatch } from "..";
+import { getSelectedOrganisation, getOrganisations } from '../reducers';
+import { OrganisationWithRoles } from '../types/organisationType';
 import CSSTransition from "react-transition-group/CSSTransition";
 import formStyles from "../styles/Forms.module.css";
 import MDSpinner from "react-md-spinner";
@@ -12,9 +13,9 @@ import { selectOrganisation } from "../actions";
 import { FormattedMessage } from "react-intl.macro";
 
 import { Scrollbars } from "react-custom-scrollbars";
-import { userHasCorrectRolesForCurrentNavigationLinkTile} from '../home/AppTileConfig';
-import { useIntl} from 'react-intl';
-import {formattedMessageToString} from './../utils/translationUtils';
+import { userHasCorrectRolesForCurrentNavigationLinkTile } from '../home/AppTileConfig';
+// import { useIntl } from 'react-intl';
+// import { formattedMessageToString } from './../utils/translationUtils';
 
 
 interface PropsArgs {
@@ -27,7 +28,7 @@ const OrganisationSwitcher = (props:Props) => {
   
   const [height, setHeight] = useState(window.innerHeight);
   const [filterValue, setFilterValue] = useState<null | string>(null);
-  const intl = useIntl();
+  // const intl = useIntl();
 
   useEffect(() => {
     window.addEventListener("resize", handleResize, false);
@@ -55,7 +56,7 @@ const OrganisationSwitcher = (props:Props) => {
   }
   
   // todo fix this any
-  const handleInput = (e: any) => {
+  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFilterValue( e.target.value);
   }
   
@@ -69,8 +70,7 @@ const OrganisationSwitcher = (props:Props) => {
   const organisations = reduxOrganisations.available;
 
   const filteredOrganisations = filterValue
-  // todo: fix this any
-    ? organisations.filter((org:any) => {
+    ? organisations.filter(org => {
       if (org.name.toLowerCase().indexOf(filterValue.toLowerCase()) !== -1) {
           return org;
         }
@@ -78,8 +78,7 @@ const OrganisationSwitcher = (props:Props) => {
       })
     : organisations;
 
-  // eslint-disable-next-line
-  const authorisationTextForTranslation = formattedMessageToString(<FormattedMessage id="authorization.organisation_not_allowed_current_page" defaultMessage="! Organisation not authorized to visit current page !"/>, intl);
+  // const authorisationTextForTranslation = formattedMessageToString(<FormattedMessage id="authorization.organisation_not_allowed_current_page" defaultMessage="! Organisation not authorized to visit current page !"/>, intl);
   const authorisationText = "! Organisation not authorized to visit current page !";
       
 
@@ -92,10 +91,8 @@ const OrganisationSwitcher = (props:Props) => {
         classNames={{
           enter: styles.Enter,
           enterActive: styles.EnterActive,
-          // Todo find out how to solve this
-          // @ts-ignore
-          leave: styles.Leave,
-          leaveActive: styles.LeaveActive,
+          exit: styles.Leave,
+          exitActive: styles.LeaveActive,
           appear: styles.Appear,
           appearActive: styles.AppearActive
         }}
@@ -173,9 +170,9 @@ const OrganisationSwitcher = (props:Props) => {
   );
 }
 
-const mapDispatchToProps = (dispatch:any) => {
+const mapDispatchToProps = (dispatch: AppDispatch) => {
   return {
-    selectOrganisation: (organisation:any) => dispatch(selectOrganisation(organisation))
+    selectOrganisation: (organisation: OrganisationWithRoles) => dispatch(selectOrganisation(organisation))
   };
 };
 

@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { RouteComponentProps, withRouter} from 'react-router';
 import {  useSelector, connect } from 'react-redux';
+import { AppDispatch } from '../..';
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import { CheckBox } from './../../form/CheckBox';
 import { TextArea } from './../../form/TextArea';
@@ -57,13 +58,12 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
     const url = "/api/v4/wmslayers/";
 
      if (!currentRecord) {
-        const opts = {
+        const opts: RequestInit = {
           credentials: "same-origin",
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(wmsLayer),
         }
-        // @ts-ignore
         fetch(url, opts)
         .then((data:any) => {
             const status = data.status;
@@ -76,13 +76,12 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           })
           .catch((e:any) => console.error(e));
     } else {
-      const opts = {
+      const opts: RequestInit = {
         credentials: "same-origin",
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(wmsLayer)
       };
-      // @ts-ignore
       fetch(url + "uuid:" + currentRecord.uuid + "/", opts)
         .then((data:any) => {
           const status = data.status;
@@ -438,7 +437,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
   );
 };
 
-const mapDispatchToProps = (dispatch: any) => ({
+const mapDispatchToProps = (dispatch: AppDispatch) => ({
   addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout)),
 });
 

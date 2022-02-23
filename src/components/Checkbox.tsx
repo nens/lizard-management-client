@@ -4,7 +4,7 @@ import styles from './Checkbox.module.css';
 
 interface Props {
   name?: string;
-  checked: boolean;
+  checked: boolean | undefined;
   onChange: () => void;
   size?: number;
   borderRadius?: number;

@@ -1,20 +1,25 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { FormattedMessage } from "react-intl.macro";
 import { connect, useSelector } from 'react-redux';
+import { AppDispatch } from '../..';
 import {
   createRasterLayer,
   fetchRasterSourcesV4,
   fetchRasterSourceV4,
+  Layercollection,
+  ObservationType,
   patchRasterLayer,
   RasterLayerFromAPI,
   rasterLayerFromAPIBelongsToScenario,
+  RasterSourceFromAPI,
 } from '../../api/rasters';
+import { Organisation } from '../../types/organisationType';
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import { CheckBox } from './../../form/CheckBox';
 import { TextArea } from './../../form/TextArea';
 import { TextInput } from './../../form/TextInput';
-import { SelectDropdown } from '../../form/SelectDropdown';
+import { SelectDropdown, Value } from '../../form/SelectDropdown';
 import { FormButton } from './../../form/FormButton';
 import { SubmitButton } from '../../form/SubmitButton';
 import { CancelButton } from '../../form/CancelButton';
@@ -61,7 +66,7 @@ export const fetchRasterSources = async (uuid: string, searchQuery: string) => {
   const urlQuery = params.join('&');
   const response = await fetchRasterSourcesV4(urlQuery);
 
-  return response.results.map((rasterSource: any) => convertToSelectObject(rasterSource.uuid, rasterSource.name));
+  return response.results.map((rasterSource: RasterSourceFromAPI) => convertToSelectObject(rasterSource.uuid, rasterSource.name));
 };
 
 // Helper function to fetch paginated layer collections with search query
@@ -72,7 +77,7 @@ export const fetchLayerCollections = async (searchQuery: string) => {
   );
   const responseJSON = await response.json();
 
-  return responseJSON.results.map((layerCollection: any) => convertToSelectObject(layerCollection.slug));
+  return responseJSON.results.map((layerCollection: Layercollection) => convertToSelectObject(layerCollection.slug));
 };
 
 // Helper function to fetch paginated observation types with search query
@@ -83,7 +88,7 @@ export const fetchObservationTypes = async (searchQuery: string) => {
   );
   const responseJSON = await response.json();
 
-  return responseJSON.results.map((obsT: any) => {
+  return responseJSON.results.map((obsT: ObservationType) => {
     let parameterString = obsT.parameter + '';
 
     if (obsT.unit || obsT.reference_frame) {
@@ -120,7 +125,7 @@ export const fetchOrganisationsToShareWith = async (searchQuery: string) => {
   const response = await fetch(`/api/v4/organisations/?${urlQuery}`);
   const responseJSON = await response.json();
 
-  return responseJSON.results.map((org: any) => convertToSelectObject(org.uuid, org.name));
+  return responseJSON.results.map((org: Organisation) => convertToSelectObject(org.uuid, org.name));
 };
 
 const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (props) => {
@@ -173,8 +178,8 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
         options: values.colorMap && values.colorMap.options,
         colormap: JSON.stringify(values.colorMap.customColormap) ==="{}"? undefined : values.colorMap.customColormap,
         rescalable: values.colorMap && values.colorMap.rescalable,
-        shared_with: values.sharedWith ? values.organisationsToSharedWith.map((organisation: any) => organisation.value) : [],
-        layer_collections: values.layercollections.map((data: any) => data.value)
+        shared_with: values.sharedWith ? values.organisationsToSharedWith.map((organisation: Value) => organisation.value) : [],
+        layer_collections: values.layercollections.map((data: Value) => data.value)
       };
 
       createRasterLayer(rasterLayer, values.rasterSource.value)
@@ -202,8 +207,8 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
         options: values.colorMap && values.colorMap.options,
         colormap: JSON.stringify(values.colorMap.customColormap) ==="{}"? undefined : values.colorMap.customColormap,
         rescalable: values.colorMap && values.colorMap.rescalable,
-        shared_with: values.sharedWith ? values.organisationsToSharedWith.map((organisation: any) => organisation.value) : [],
-        layer_collections: values.layercollections.map((layercollection: any) => layercollection.value)
+        shared_with: values.sharedWith ? values.organisationsToSharedWith.map((organisation: Value) => organisation.value) : [],
+        layer_collections: values.layercollections.map((layercollection: Value) => layercollection.value)
       };
       // only add colormap in options if not multiple layers
       if (!optionsHasLayers(values.colorMap.options)) {
@@ -500,7 +505,7 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           placeholder={'- Search and select -'}
           value={values.organisation}
           valueChanged={value => handleValueChange('organisation', value)}
-          options={organisations.map((organisation: any) => convertToSelectObject(organisation.uuid, organisation.name))}
+          options={organisations.map(organisation => convertToSelectObject(organisation.uuid, organisation.name))}
           validated={values.organisation !== null && values.organisation !== ''}
           errorMessage={'Please select an organisation'}
           triedToSubmit={triedToSubmit}
@@ -572,7 +577,7 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
   );
 };
 
-const mapDispatchToProps = (dispatch: any) => ({
+const mapDispatchToProps = (dispatch: AppDispatch) => ({
   removeRasterSourceUUID: () => dispatch(removeRasterSourceUUID()),
   addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout)),
 });

@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { connect } from 'react-redux';
+import { useState } from 'react';
 import ReactMapGL, {Source, Layer} from 'react-map-gl';
 import mapboxgl from "mapbox-gl";
 import {mapBoxAccesToken} from '../mapboxConfig';
@@ -9,14 +8,8 @@ import { MapViewerRasterLayerTable} from "./MapViewerRasterLayerTable";
 // eslint-disable-next-line import/no-webpack-loader-syntax
 (mapboxgl as any).workerClass = require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker').default;
 
-interface MyProps {
-}
-
-function MapViewer (props: MyProps & DispatchProps) {
-  // const { } = props;
-
+function MapViewer () {
   const [viewport, setViewport] = useState({
-    
     latitude: 52.6892,
     longitude: 5.9,
     zoom: 8,
@@ -202,8 +195,6 @@ const reversedRasters = selectedRasters.map(id=>id).reverse();
                 tileSize={256}
                 id={raster.uuid}
               >
-                {/* 
-                // @ts-ignore */}
                 <Layer
                   key={raster.uuid}
                   id={raster.uuid}
@@ -225,9 +216,4 @@ const reversedRasters = selectedRasters.map(id=>id).reverse();
   )
 }
 
-const mapDispatchToProps = (dispatch: any) => ({
- 
-});
-type DispatchProps = ReturnType<typeof mapDispatchToProps>;
-
-export default connect(null, mapDispatchToProps)(MapViewer); 
+export default MapViewer; 

@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { connect, useSelector } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { AppDispatch } from '..';
+import { User } from '../types/userType';
 import { ExplainSideColumn } from '../components/ExplainSideColumn';
 import { UserRoles } from '../form/UserRoles';
 import { TextInput } from './../form/TextInput';
@@ -18,7 +20,7 @@ import formStyles from './../styles/Forms.module.css';
 import userManagementIcon from "../images/userManagement.svg";
 
 interface Props {
-  currentRecord?: any
+  currentRecord?: User
 };
 
 const UserForm: React.FC<Props & DispatchProps & RouteComponentProps> = (props) => {
@@ -163,10 +165,10 @@ const UserForm: React.FC<Props & DispatchProps & RouteComponentProps> = (props) 
           value={values.email}
           valueChanged={handleInputChange}
           clearInput={clearInput}
-          validated={currentRecord || !emailValidator(values.email)}
+          validated={!!currentRecord || !emailValidator(values.email)}
           errorMessage={emailValidator(values.email)}
           triedToSubmit={triedToSubmit}
-          readOnly={currentRecord}
+          readOnly={!!currentRecord}
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
@@ -221,7 +223,7 @@ const UserForm: React.FC<Props & DispatchProps & RouteComponentProps> = (props) 
   );
 };
 
-const mapDispatchToProps = (dispatch: any) => ({
+const mapDispatchToProps = (dispatch: AppDispatch) => ({
   addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout))
 });
 type DispatchProps = ReturnType<typeof mapDispatchToProps>;

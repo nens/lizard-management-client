@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import LocationForm from "./LocationForm";
 import SpinnerIfNotLoaded from '../../../components/SpinnerIfNotLoaded';
 import {createFetchRecordFunctionFromUrl} from '../../../utils/createFetchRecordFunctionFromUrl';
+import { AssetObject, LocationFromAPI } from "../../../types/locationFormTypes";
 
 
 interface RouteProps {
@@ -10,9 +11,9 @@ interface RouteProps {
 }
 
 const EditLocation = (props: RouteProps & RouteComponentProps<RouteProps>) => {
-  const [currentRecord, setCurrentRecord] = useState<any>(null);
+  const [currentRecord, setCurrentRecord] = useState<LocationFromAPI | null>(null);
   const [relatedAssetRequired, setRelatedAssetRequired] = useState<boolean>(false);
-  const [relatedAsset, setRelatedAsset] = useState<any | null>(null);
+  const [relatedAsset, setRelatedAsset] = useState<AssetObject | null>(null);
 
   const { uuid } = props.match.params;
   useEffect (() => {
@@ -34,7 +35,7 @@ const EditLocation = (props: RouteProps & RouteComponentProps<RouteProps>) => {
       loaded={!!( currentRecord && (!relatedAssetRequired || relatedAsset))}
     >
       <LocationForm
-        currentRecord={currentRecord}
+        currentRecord={currentRecord!}
         relatedAsset={relatedAsset}
       />;
     </SpinnerIfNotLoaded>

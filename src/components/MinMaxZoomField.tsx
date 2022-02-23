@@ -1,9 +1,9 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import durationStyles from "../form/DurationField.module.css";
 import formStyles from "../styles/Forms.module.css";
 import inputStyles from "../styles/Input.module.css";
 
-export const isValidIntegerZeroOrLarger = (value: any) => {
+export const isValidIntegerZeroOrLarger = (value: number) => {
   if (isNaN(value) || typeof value !== 'number') {
       return {
           valid: false,
@@ -42,7 +42,7 @@ interface Props {
   triedToSubmit: boolean,
 }
 
-const isValidMaxZoom = (min:any, max: any) => {
+const isValidMaxZoom = (min: number, max: number) => {
     const minZoomValidated = isValidIntegerZeroOrLarger(min);
     const maxZoomValidated = isValidIntegerZeroOrLarger(max);
     if (!maxZoomValidated.valid) {

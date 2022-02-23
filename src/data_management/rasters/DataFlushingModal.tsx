@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { connect } from 'react-redux';
+import { AppDispatch } from '../..';
 import { RasterSourceFromAPI } from '../../api/rasters';
 import { addNotification } from './../../actions';
 import { ModalDeleteContent } from './../../components/ModalDeleteContent';
@@ -53,7 +54,7 @@ function DataFlushingModal (props: MyProps & DispatchProps) {
   )
 }
 
-const mapDispatchToProps = (dispatch: any) => ({
+const mapDispatchToProps = (dispatch: AppDispatch) => ({
   addNotification: (message: string | number, timeout?: number) => dispatch(addNotification(message, timeout))
 });
 type DispatchProps = ReturnType<typeof mapDispatchToProps>;

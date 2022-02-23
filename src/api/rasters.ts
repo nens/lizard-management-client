@@ -42,7 +42,9 @@ export interface Layercollection {
 export interface ObservationType {
   id: number,
   code: string,
-  parameter: string
+  parameter: string,
+  unit: string,
+  reference_frame: string | null,
 }
 
 interface RasterSourceInstance {
@@ -61,6 +63,7 @@ export type RasterSourceFromForm = RasterSourceInstance & {
 }
 
 export type RasterSourceFromAPI = RasterSourceInstance & {
+  uuid: string;
   layers: string[];
   labeltypes: string[];
   organisation: Organisation;
@@ -111,6 +114,8 @@ export type RasterLayerFromAPI = RasterLayerInstance & {
   } | null;
   source: GeoBlockSource | null;
   weight: number;
+  is_geoblock: boolean;
+  temporal: boolean;
 }
 
 export const fetchRasterSourcesV4 = async (query?: string) => {

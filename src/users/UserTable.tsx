@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { NavLink, RouteComponentProps } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import { getSelectedOrganisation } from '../reducers';
@@ -7,6 +7,8 @@ import { UserRoles } from '../form/UserRoles';
 import { userTableHelpText } from '../utils/help_texts/helpTextForUsers';
 import { fetchWithOptions } from '../utils/fetchWithOptions';
 import { useRecursiveFetch } from '../api/hooks';
+import { ColumnDefinition } from '../components/Table';
+import { User } from '../types/userType';
 import TableActionButtons from '../components/TableActionButtons';
 import TableStateContainer from '../components/TableStateContainer';
 import InvitationModal from './InvitationModal';
@@ -14,12 +16,12 @@ import DeleteModal from '../components/DeleteModal';
 import tableStyles from "../components/Table.module.css";
 import userManagementIcon from "../images/userManagement.svg";
 
-export const UserTable = (props: RouteComponentProps) =>  {
+export const UserTable: React.FC<RouteComponentProps> = (props) =>  {
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const baseUrl = `/api/v4/organisations/${selectedOrganisation.uuid}/users/`;
   const navigationUrl = "/management/users";
 
-  const [selectedRows, setSelectedRows] = useState<any[]>([]);
+  const [selectedRows, setSelectedRows] = useState<User[]>([]);
   const [resetTable, setResetTable] = useState<Function | null>(null);
 
   const [invitationModal, setInvitationModal] = useState<boolean>(false);
@@ -38,8 +40,8 @@ export const UserTable = (props: RouteComponentProps) =>  {
   );
 
   const deactivateActions = (
-    rows: any[],
-    triggerReloadWithCurrentPage: Function,
+    rows: User[],
+    triggerReloadWithCurrentPage: () => void,
     setCheckboxes: Function | null
   ) => {
     setSelectedRows(rows);
@@ -49,22 +51,22 @@ export const UserTable = (props: RouteComponentProps) =>  {
     });
   };
 
-  const columnDefinitions = [
+  const columnDefinitions: ColumnDefinition<User>[] = [
     {
       titleRenderFunction: () => "Username",
-      renderFunction: (row: any) => 
+      renderFunction: row => 
         <span
           className={tableStyles.CellEllipsis}
           title={row.username}
         >
-          <NavLink to={`${navigationUrl}/${row.id}`}>{row.username }</NavLink>
+          <NavLink to={`${navigationUrl}/${row.id}`}>{row.username}</NavLink>
         </span>
       ,
       orderingField: 'username',
     },
     {
       titleRenderFunction: () => "Email",
-      renderFunction: (row: any) => 
+      renderFunction: row => 
         <span
           className={tableStyles.CellEllipsis}
           title={row.email}
@@ -76,7 +78,7 @@ export const UserTable = (props: RouteComponentProps) =>  {
     },
     {
       titleRenderFunction: () => "Roles",
-      renderFunction: (row: any) =>
+      renderFunction: row =>
         <UserRoles
           title={''}
           name={'roles'}
@@ -90,24 +92,26 @@ export const UserTable = (props: RouteComponentProps) =>  {
     },
     {
       titleRenderFunction: () =>  "",//"Actions",
-      renderFunction: (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any) => {
+      // @ts-ignore
+      renderFunction: (row, tableData: any, setTableData: any, triggerReloadWithCurrentPage, triggerReloadWithBasePage) => {
         return (
-            <TableActionButtons
-              tableRow={row} 
-              tableData={tableData}
-              setTableData={setTableData} 
-              triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
-              triggerReloadWithBasePage={triggerReloadWithBasePage}
-              editUrl={`${navigationUrl}/${row.id}`}
-              actions={[
-                {
-                  displayValue: "Deactivate",
-                  actionFunction: (row: any, _updateTableRow: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any) => {
-                    deactivateActions([row], triggerReloadWithCurrentPage, null)
-                  }
-                },
-              ]}
-            />
+          <TableActionButtons
+            tableRow={row} 
+            tableData={tableData}
+            setTableData={setTableData} 
+            triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
+            triggerReloadWithBasePage={triggerReloadWithBasePage}
+            editUrl={`${navigationUrl}/${row.id}`}
+            actions={[
+              {
+                displayValue: "Deactivate",
+                actionFunction: (row, tableData, setTableData, triggerReloadWithCurrentPage) => {
+                  // @ts-ignore
+                  deactivateActions([row], triggerReloadWithCurrentPage, null)
+                }
+              },
+            ]}
+          />
         );
       },
       orderingField: null,

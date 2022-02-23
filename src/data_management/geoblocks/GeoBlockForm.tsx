@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { connect, useSelector } from 'react-redux';
+import { AppDispatch } from '../..';
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import { TextArea } from './../../form/TextArea';
 import { TextInput } from './../../form/TextInput';
 import { CheckBox } from './../../form/CheckBox';
-import { SelectDropdown } from '../../form/SelectDropdown';
+import { SelectDropdown, Value } from '../../form/SelectDropdown';
 import ColorMapInput, { colorMapValidator } from '../../form/ColorMapInput';
 import { FormButton } from '../../form/FormButton';
 import { SubmitButton } from '../../form/SubmitButton';
@@ -55,7 +56,7 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
     colorMap: {options: currentRecord.options, rescalable: currentRecord.rescalable, customColormap: currentRecord.colormap || {}},
     accessModifier: currentRecord.access_modifier,
     sharedWith: currentRecord.shared_with.length === 0 ? false : true,
-    organisationsToSharedWith: currentRecord.shared_with.map((organisation:any) => convertToSelectObject(organisation.uuid, organisation.name)) || [],
+    organisationsToSharedWith: currentRecord.shared_with.map(organisation => convertToSelectObject(organisation.uuid, organisation.name)) || [],
     organisation: currentRecord.organisation ? convertToSelectObject(currentRecord.organisation.uuid, currentRecord.organisation.name) : null,
     supplier: currentRecord.supplier ? convertToSelectObject(currentRecord.supplier) : null,
   } : {
@@ -76,7 +77,7 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
     const body = {
       name: values.name,
       description: values.description,
-      layer_collections: values.layercollections.map((data: any) => data.value),
+      layer_collections: values.layercollections.map((data: Value) => data.value),
       source: values.source,
       aggregation_type: values.aggregationType && values.aggregationType.value,
       observation_type: values.observationType && values.observationType.value,
@@ -84,7 +85,7 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
       colormap: JSON.stringify(values.colorMap.customColormap) ==="{}"? undefined : values.colorMap.customColormap,
       rescalable: values.colorMap && values.colorMap.rescalable,
       access_modifier: values.accessModifier,
-      shared_with: values.sharedWith ? values.organisationsToSharedWith.map((organisation: any) => organisation.value) : [],
+      shared_with: values.sharedWith ? values.organisationsToSharedWith.map((organisation: Value) => organisation.value) : [],
       supplier: values.supplier && values.supplier.label,
       organisation: values.organisation && values.organisation.value,
     };
@@ -365,7 +366,7 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
           placeholder={'- Search and select -'}
           value={values.organisation}
           valueChanged={value => handleValueChange('organisation', value)}
-          options={organisations.map((organisation: any) => convertToSelectObject(organisation.uuid, organisation.name))}
+          options={organisations.map(organisation => convertToSelectObject(organisation.uuid, organisation.name))}
           validated={values.organisation !== null && values.organisation !== ''}
           errorMessage={'Please select an organisation'}
           triedToSubmit={triedToSubmit}
@@ -440,7 +441,7 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
   );
 };
 
-const mapDispatchToProps = (dispatch: any) => ({
+const mapDispatchToProps = (dispatch: AppDispatch) => ({
   addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout)),
 });
 type DispatchProps = ReturnType<typeof mapDispatchToProps>;

@@ -17,6 +17,8 @@ import { minLength } from '../../form/validators';
 import { templateFormHelpText } from '../../utils/help_texts/helpTextForAlarmTemplate';
 import { fetchWithOptions } from '../../utils/fetchWithOptions';
 import { baseUrl } from './TemplateTable';
+import { AppDispatch } from '../..';
+import { Message } from '../../types/messageType';
 import DeleteModal from '../../components/DeleteModal';
 import formStyles from './../../styles/Forms.module.css';
 import buttonStyles from './../../styles/Buttons.module.css';
@@ -24,7 +26,7 @@ import templateIcon from "../../images/templates@3x.svg";
 import FormActionButtons from '../../components/FormActionButtons';
 
 interface Props {
-  currentRecord?: any
+  currentRecord?: Message
 };
 interface PropsFromDispatch {
   addNotification: (message: string | number, timeout: number) => void
@@ -291,7 +293,7 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
             }
           ]}
           validated
-          readOnly={currentRecord}
+          readOnly={!!currentRecord}
           isClearable={false}
           onFocus={handleFocus}
           onBlur={handleBlur}
@@ -397,7 +399,7 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
   );
 };
 
-const mapPropsToDispatch = (dispatch: any) => ({
+const mapPropsToDispatch = (dispatch: AppDispatch) => ({
   addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout))
 });
 

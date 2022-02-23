@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { AppDispatch } from '../../..';
 import MDSpinner from 'react-md-spinner';
 import { connect } from 'react-redux';
 import { Scrollbars } from "react-custom-scrollbars";
@@ -239,7 +240,7 @@ function TimeseriesModal (props: MyProps & DispatchProps) {
   )
 }
 
-const mapDispatchToProps = (dispatch: any) => ({
+const mapDispatchToProps = (dispatch: AppDispatch) => ({
   addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout))
 });
 type DispatchProps = ReturnType<typeof mapDispatchToProps>;

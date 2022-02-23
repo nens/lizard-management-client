@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { connect, useSelector } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { ExplainSideColumn } from '../../../components/ExplainSideColumn';
@@ -24,16 +24,19 @@ import { getTimeseriesLabel, TimeseriesFromTimeseriesEndpoint } from '../../../t
 import { alarmFormHelpText } from '../../../utils/help_texts/helpTextForAlarms';
 import { fetchWithOptions } from '../../../utils/fetchWithOptions';
 import { baseUrl } from './TimeseriesAlarmTable';
+import { AppDispatch } from '../../..';
+import { TimeseriesAlarm } from '../../../types/alarmType';
+import { ContactGroup } from '../../../types/contactGroupType';
+import { Message } from '../../../types/messageType';
 import FormActionButtons from '../../../components/FormActionButtons';
 import DeleteModal from '../../../components/DeleteModal';
 import formStyles from './../../../styles/Forms.module.css';
 import rasterAlarmIcon from "../../../images/alarm@3x.svg";
 
 interface Props {
-  currentRecord?: any,
-  groups: any[],
-  templates: any[],
-  currentTimeseriesAlarm?: any,
+  currentRecord?: TimeseriesAlarm,
+  groups: ContactGroup[],
+  templates: Message[],
   timeseries?: TimeseriesFromTimeseriesEndpoint
 };
 
@@ -53,14 +56,14 @@ const TimeseriesAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps>
     snoozeOff: currentRecord.snooze_sign_off,
     comparison: convertToSelectObject(currentRecord.comparison),
     thresholds: currentRecord.thresholds,
-    recipients: currentRecord.messages.map((message: any) => {
+    recipients: currentRecord.messages.map(message => {
       const groupId = parseInt(getUuidFromUrl(message.contact_group));
       const templateId = parseInt(getUuidFromUrl(message.message));
       const selectedGroup = groups.find(group => group.id === groupId);
       const selectedTemplate = templates.find(template => template.id === templateId);
       return {
         contact_group: selectedGroup ? convertToSelectObject(groupId, selectedGroup.name) : convertToSelectObject(groupId),
-        message: selectedGroup ? convertToSelectObject(templateId, selectedTemplate.name) : convertToSelectObject(templateId)
+        message: selectedTemplate ? convertToSelectObject(templateId, selectedTemplate.name) : convertToSelectObject(templateId)
       };
     })
   } : {
@@ -362,7 +365,7 @@ const TimeseriesAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps>
   );
 };
 
-const mapPropsToDispatch = (dispatch: any) => ({
+const mapPropsToDispatch = (dispatch: AppDispatch) => ({
   addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout))
 });
 type DispatchProps = ReturnType<typeof mapPropsToDispatch>;

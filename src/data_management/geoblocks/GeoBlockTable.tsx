@@ -10,16 +10,17 @@ import { getAccessibiltyText } from '../../form/AccessModifier';
 import { fetchWithOptions } from '../../utils/fetchWithOptions';
 import { geoBlockHelpText } from '../../utils/help_texts/helpTextForGeoBlock';
 import { openRasterInLizardViewer } from '../../utils/openRasterInViewer';
+import { RasterLayerFromAPI } from '../../api/rasters';
 
 export const baseUrl = "/api/v4/rasters/";
 const navigationUrl = "/management/data_management/geoblocks";
 
 export const GeoBlockTable: React.FC<RouteComponentProps> = (props) =>  {
-  const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
+  const [rowsToBeDeleted, setRowsToBeDeleted] = useState<RasterLayerFromAPI[]>([]);
   const [resetTable, setResetTable] = useState<Function | null>(null);
 
   const deleteActions = (
-    rows: any[],
+    rows: RasterLayerFromAPI[],
     triggerReloadWithCurrentPage: Function,
     setCheckboxes: Function | null
   ) => {
@@ -33,7 +34,7 @@ export const GeoBlockTable: React.FC<RouteComponentProps> = (props) =>  {
   const columnDefinitions = [
     {
       titleRenderFunction: () => "Name",
-      renderFunction: (row: any) => 
+      renderFunction: (row: RasterLayerFromAPI) => 
         <span
           className={tableStyles.CellEllipsis}
           title={row.name}
@@ -44,10 +45,10 @@ export const GeoBlockTable: React.FC<RouteComponentProps> = (props) =>  {
     },
     {
       titleRenderFunction: () => "Operations",
-      renderFunction: (row: any) =>
+      renderFunction: (row: RasterLayerFromAPI) =>
         <span
           className={tableStyles.CellEllipsis}
-          title={row.weight}
+          title={row.weight.toString()}
         >
           {row.weight}
         </span>,
@@ -55,7 +56,7 @@ export const GeoBlockTable: React.FC<RouteComponentProps> = (props) =>  {
     },
     {
       titleRenderFunction: () =>  "User",
-      renderFunction: (row: any) =>  
+      renderFunction: (row: RasterLayerFromAPI) =>  
       <span
         className={tableStyles.CellEllipsis}
         title={row.supplier}
@@ -66,7 +67,7 @@ export const GeoBlockTable: React.FC<RouteComponentProps> = (props) =>  {
     },
     {
       titleRenderFunction: () =>  "Accessibility",
-      renderFunction: (row: any) =>
+      renderFunction: (row: RasterLayerFromAPI) =>
         <span
           className={tableStyles.CellEllipsis}
           title={row.access_modifier}
@@ -78,7 +79,7 @@ export const GeoBlockTable: React.FC<RouteComponentProps> = (props) =>  {
     },
     {
       titleRenderFunction: () =>  "",//"Actions",
-      renderFunction: (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any) => {
+      renderFunction: (row: RasterLayerFromAPI, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any) => {
         return (
             <TableActionButtons
               tableRow={row} 
@@ -90,13 +91,13 @@ export const GeoBlockTable: React.FC<RouteComponentProps> = (props) =>  {
               actions={[
                 {
                   displayValue: "Delete",
-                  actionFunction: (row: any, _updateTableRow: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any) => {
+                  actionFunction: (row: RasterLayerFromAPI, _updateTableRow: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any) => {
                     deleteActions([row], triggerReloadWithCurrentPage, null)
                   }
                 },
                 {
                   displayValue: "Open in Viewer",
-                  actionFunction: (row: any) => openRasterInLizardViewer(row)
+                  actionFunction: (row: RasterLayerFromAPI) => openRasterInLizardViewer(row)
                 }
               ]}
             />
@@ -126,7 +127,7 @@ export const GeoBlockTable: React.FC<RouteComponentProps> = (props) =>  {
           checkBoxActions={[
             {
               displayValue: "Delete",
-              actionFunction: (rows: any[], _tableData: any, _setTableData: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any, setCheckboxes: any) => {
+              actionFunction: (rows: RasterLayerFromAPI[], _tableData: any, _setTableData: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any, setCheckboxes: any) => {
                 deleteActions(rows, triggerReloadWithCurrentPage, setCheckboxes)
               }
             }

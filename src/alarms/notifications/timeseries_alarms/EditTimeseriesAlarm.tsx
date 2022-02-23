@@ -4,17 +4,13 @@ import { getUuidFromUrl } from "../../../utils/getUuidFromUrl";
 import { useRecursiveFetch } from "../../../api/hooks";
 import { TimeseriesFromTimeseriesEndpoint } from "../../../types/timeseriesType";
 import { createFetchRecordFunctionFromUrl } from '../../../utils/createFetchRecordFunctionFromUrl';
+import { TimeseriesAlarm } from "../../../types/alarmType";
 import TimeseriesAlarmForm from "./TimeseriesAlarmForm";
 import SpinnerIfNotLoaded from '../../../components/SpinnerIfNotLoaded';
 
 interface RouteParams {
   uuid: string;
 };
-
-interface TimeseriesAlarm {
-  timeseries: any;
-  organisation: {uuid: string}
-}
 
 export const EditTimeseriesAlarm: React.FC<RouteComponentProps<RouteParams>> = (props) => {
   const [currentRecord, setCurrentRecord] = useState<TimeseriesAlarm | null>(null);
@@ -66,7 +62,7 @@ export const EditTimeseriesAlarm: React.FC<RouteComponentProps<RouteParams>> = (
         )}
       >
         <TimeseriesAlarmForm
-          currentRecord={currentRecord}
+          currentRecord={currentRecord!}
           timeseries={timeseries}
           groups={groups || []}
           templates={templates || []}

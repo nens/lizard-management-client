@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, PropsWithChildren } from 'react';
 import Table from './Table';
 import { ColumnDefinition } from './Table';
 import Pagination from './Pagination';
@@ -16,17 +16,17 @@ import orderedIcon from "../images/list_order_icon_ordered.svg";
 import styles from './Table.module.css';
 import buttonStyles from '../styles/Buttons.module.css';
 
-interface checkboxAction {
+interface checkboxAction<TableRowType> {
   displayValue: string,
   actionFunction: Function,
-  checkIfActionIsApplicable?: (row: any) => boolean
+  checkIfActionIsApplicable?: (row: TableRowType) => boolean
 }
 
-interface Props {
+interface Props<TableRowType> {
   gridTemplateColumns: string;
-  columnDefinitions: ColumnDefinition[];
+  columnDefinitions: ColumnDefinition<TableRowType>[];
   baseUrl: string; 
-  checkBoxActions: checkboxAction[];
+  checkBoxActions: checkboxAction<TableRowType>[];
   filterOptions?: Value[];
   newItemOnClick?: () => void | null;
   customTableButton?: {
@@ -41,34 +41,35 @@ interface Props {
 
 // Helper function to get row identifier (by uuid or id)
 // because sometimes tableData does not contain uuid but only id (e.g. alarm contacts)
-const getRowIdentifier = (row: any): string => {
-  return row.uuid || row.id || row.slug ;
+const getRowIdentifier = (row: { uuid?: string, id?: number, slug?: string }): string => {
+  return (row.uuid || row.id?.toString() || row.slug)!;
 };
 
-const TableStateContainer: React.FC<Props> = ({
-  gridTemplateColumns,
-  columnDefinitions,
-  baseUrl,
-  checkBoxActions,
-  filterOptions,
-  newItemOnClick,
-  customTableButton,
-  queryCheckBox,
-  defaultUrlParams,
-  responsive,
-}) => {
-  const [tableData, setTableData] = useState<any[]>([]);
+function TableStateContainer<TableRowType extends { uuid: string, checkboxChecked?: boolean }> (props: PropsWithChildren<Props<TableRowType>>) {
+  const {
+    gridTemplateColumns,
+    columnDefinitions,
+    baseUrl,
+    checkBoxActions,
+    filterOptions,
+    newItemOnClick,
+    customTableButton,
+    queryCheckBox,
+    defaultUrlParams,
+    responsive,
+  } = props;
+  const [tableData, setTableData] = useState<TableRowType[]>([]);
   const [checkBoxes, setCheckBoxes] = useState<string[]>([]);
-  const [currentUrl, setCurrentUrl] = useState("");
-  const [nextUrl, setNextUrl] = useState("");
-  const [previousUrl, setPreviousUrl] = useState("");
-  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [currentUrl, setCurrentUrl] = useState<string>("");
+  const [nextUrl, setNextUrl] = useState<string>("");
+  const [previousUrl, setPreviousUrl] = useState<string>("");
+  const [itemsPerPage, setItemsPerPage] = useState<number>(10);
   const [ordering, setOrdering] = useState<string | null>("last_modified");
   const [searchInput, setSearchInput] = useState<string>("");
   const [selectedFilterOption, setSelectedFilterOption] = useState<Value | null>(filterOptions && filterOptions.length > 0 ? filterOptions[0] : null)
   const [dataRetrievalState, setDataRetrievalState] = useState<DataRetrievalState>("NEVER_DID_RETRIEVE");
   const [apiResponse, setApiResponse] = useState<{response:any, currentUrl: string, dataRetrievalState: DataRetrievalState}>({response: {}, currentUrl: "", dataRetrievalState: "NEVER_DID_RETRIEVE"});
-  const [queryCheckBoxState, setQueryCheckBoxState] = useState(false);
+  const [queryCheckBoxState, setQueryCheckBoxState] = useState<boolean>(false);
 
   // todo later: find out how the state of the table can be represented in the url?
 
@@ -151,7 +152,7 @@ const TableStateContainer: React.FC<Props> = ({
     })
   }
 
-  const dataWithCheckBoxes = tableData.map((tableRow:any) => {
+  const dataWithCheckBoxes = tableData.map(tableRow => {
     if (isChecked(getRowIdentifier(tableRow))) {
       return {...tableRow, checkboxChecked: true};
     } else {
@@ -159,7 +160,7 @@ const TableStateContainer: React.FC<Props> = ({
     }
   })
 
-  const checkBoxColumnDefinition: ColumnDefinition = {
+  const checkBoxColumnDefinition: ColumnDefinition<TableRowType> = {
     titleRenderFunction: () => 
       <Checkbox  
         checked={areAllOnCurrentPageChecked()}
@@ -171,7 +172,7 @@ const TableStateContainer: React.FC<Props> = ({
           }
         }}
       />,
-    renderFunction: (row: any) => 
+    renderFunction: (row: TableRowType) => 
       <Checkbox 
         checked={row.checkboxChecked} 
         onChange={()=>{
@@ -189,7 +190,7 @@ const TableStateContainer: React.FC<Props> = ({
       columnDefinitions
       ;
 
-  const getIfCheckBoxOfUuidIsSelected = ((uuid: string) => {return checkBoxes.find(checkBoxUuid=> checkBoxUuid===uuid)});
+  const getIfCheckBoxOfUuidIsSelected = ((uuid: string) => !!checkBoxes.find(checkBoxUuid => checkBoxUuid===uuid));
 
   const columnDefinitionsPlusCheckboxSortable =
   columnDefinitionsPlusCheckbox.map((columnDefinition, ind)=>{
@@ -325,7 +326,6 @@ const TableStateContainer: React.FC<Props> = ({
         </div>
       </div>
       <div
-        // @ts-ignore
         style={{
           visibility: checkBoxes.length > 0? "visible" : "hidden",
           display: checkBoxActions.length === 0? "none" :"flex",

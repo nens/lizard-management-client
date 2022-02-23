@@ -1,14 +1,21 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { connect } from 'react-redux';
 import { SubmitButton } from '../form/SubmitButton';
 import { addNotification } from '../actions';
+import { AppDispatch } from '..';
 import ModalBackground from './ModalBackground';
 import formStyles from '../styles/Forms.module.css';
 import buttonStyles from '../styles/Buttons.module.css';
 import { AccessModifier } from '../form/AccessModifier';
 
+interface Row {
+  uuid?: string,
+  id?: string,
+  slug?: string
+}
+
 interface MyProps {
-  rows: any[],
+  rows: Row[],
   fetchFunction: (uuids: string[], fetchOptions: RequestInit) => Promise<Response[]>,
   resetTable: Function | null,
   handleClose: () => void,
@@ -21,7 +28,7 @@ function AuthorisationModal (props: MyProps & DispatchProps) {
 
   // PATCH requests
   const handleSubmit = async () => {
-    const uuids = rows.map(row => (row.uuid || row.id || row.slug));
+    const uuids = rows.map(row => (row.uuid || row.id || row.slug)!);
     const options = {
       credentials: "same-origin",
       method: "PATCH",
@@ -96,7 +103,7 @@ function AuthorisationModal (props: MyProps & DispatchProps) {
   )
 }
 
-const mapDispatchToProps = (dispatch: any) => ({
+const mapDispatchToProps = (dispatch: AppDispatch) => ({
   addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout))
 });
 type DispatchProps = ReturnType<typeof mapDispatchToProps>;

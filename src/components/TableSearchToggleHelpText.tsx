@@ -1,4 +1,3 @@
-import React from 'react';
 import { Value } from '../form/SelectDropdown';
 
 interface Props {

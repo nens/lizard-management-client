@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { connect, useSelector } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
@@ -12,13 +12,15 @@ import { getSelectedOrganisation } from '../../reducers';
 import { contactFormHelpText } from '../../utils/help_texts/helpTextForAlarmContacts';
 import { fetchWithOptions } from '../../utils/fetchWithOptions';
 import { baseUrl } from './ContactTable';
+import { AppDispatch } from '../..';
+import { Contact } from '../../types/contactGroupType';
 import FormActionButtons from '../../components/FormActionButtons';
 import DeleteModal from '../../components/DeleteModal';
 import formStyles from './../../styles/Forms.module.css';
 import contactIcon from "../../images/contacts@3x.svg";
 
 interface Props {
-  currentRecord?: any
+  currentRecord?: Contact
 };
 interface PropsFromDispatch {
   addNotification: (message: string | number, timeout: number) => void
@@ -236,7 +238,7 @@ const ContactForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (
   );
 };
 
-const mapPropsToDispatch = (dispatch: any) => ({
+const mapPropsToDispatch = (dispatch: AppDispatch) => ({
   addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout))
 });
 

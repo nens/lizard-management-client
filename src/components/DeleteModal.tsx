@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
+import { AppDispatch } from '..';
 import Modal from './Modal';
-import { ModalDeleteContent } from './ModalDeleteContent';
+import { Field, ModalDeleteContent } from './ModalDeleteContent';
 import { addNotification } from '../actions';
 
 interface MyProps {
   rows: any[],
-  displayContent: any[],
+  displayContent: Field[],
   fetchFunction: (uuids: string[], fetchOptions: RequestInit) => Promise<Response[]>,
   handleClose: () => void,
   resetTable?: Function | null, // for Table to reload after deletion
@@ -76,7 +77,7 @@ function DeleteModal (props: MyProps & DispatchProps & RouteComponentProps) {
   )
 }
 
-const mapDispatchToProps = (dispatch: any) => ({
+const mapDispatchToProps = (dispatch: AppDispatch) => ({
   addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout))
 });
 type DispatchProps = ReturnType<typeof mapDispatchToProps>;

@@ -5,6 +5,7 @@ import TableActionButtons from '../../components/TableActionButtons';
 import tableStyles from "../../components/Table.module.css";
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import { fetchWithOptions } from '../../utils/fetchWithOptions';
+import { Message } from '../../types/messageType';
 import DeleteModal from '../../components/DeleteModal';
 import templateIcon from "../../images/templates@3x.svg";
 
@@ -16,7 +17,7 @@ export const TemplateTable: React.FC<RouteComponentProps> = (props) =>  {
   const [resetTable, setResetTable] = useState<Function | null>(null);
 
   const deleteActions = (
-    rows: any[],
+    rows: Message[],
     triggerReloadWithCurrentPage: Function,
     setCheckboxes: Function | null
   ) => {
@@ -30,7 +31,7 @@ export const TemplateTable: React.FC<RouteComponentProps> = (props) =>  {
   const columnDefinitions = [
     {
       titleRenderFunction: () => "Name",
-      renderFunction: (row: any) => 
+      renderFunction: (row: Message) => 
         <span
           className={tableStyles.CellEllipsis}
           title={row.name}
@@ -41,7 +42,7 @@ export const TemplateTable: React.FC<RouteComponentProps> = (props) =>  {
     },
     {
       titleRenderFunction: () =>  "Type",
-      renderFunction: (row: any) => 
+      renderFunction: (row: Message) => 
         <span
           className={tableStyles.CellEllipsis}
           title={row.type}
@@ -52,7 +53,7 @@ export const TemplateTable: React.FC<RouteComponentProps> = (props) =>  {
     },
     {
       titleRenderFunction: () =>  "",//"Actions",
-      renderFunction: (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any) => {
+      renderFunction: (row: Message, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any) => {
         return (
             <TableActionButtons
               tableRow={row} 
@@ -64,7 +65,7 @@ export const TemplateTable: React.FC<RouteComponentProps> = (props) =>  {
               actions={[
                 {
                   displayValue: "Delete",
-                  actionFunction: (row: any, _updateTableRow: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any) => {
+                  actionFunction: (row: Message, _updateTableRow: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any) => {
                     deleteActions([row], triggerReloadWithCurrentPage, null)
                   }
                 },
@@ -96,7 +97,7 @@ export const TemplateTable: React.FC<RouteComponentProps> = (props) =>  {
           checkBoxActions={[
             {
               displayValue: "Delete",
-              actionFunction: (rows: any[], _tableData: any, _setTableData: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any, setCheckboxes: any) => {
+              actionFunction: (rows: Message[], _tableData: any, _setTableData: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any, setCheckboxes: any) => {
                 deleteActions(rows, triggerReloadWithCurrentPage, setCheckboxes)
               }
             }

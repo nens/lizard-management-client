@@ -71,7 +71,6 @@ export const ColormapAllSteps: React.FC<Props> = (props) => {
   //   oldSteps[ind].label = event.target.value;
   //   // const (event: as React.ChangeEvent<HTMLInputElement>) = {target:{name: name, value: oldSteps}}
   //   const fakeEvent = {target:{name: name, value: oldSteps}}
-  //   // @ts-ignore
   //   onChange(fakeEvent);
   // }
   const handleStepChange = (event:React.ChangeEvent<HTMLInputElement>, ind:number)=>{
@@ -124,9 +123,7 @@ export const ColormapAllSteps: React.FC<Props> = (props) => {
                 <div 
                   // this tabIndex is needed to make sure the div (that should actually be a button, but was made div for above reasons) does receive onfocus and onblur event
                   tabIndex={0}
-                  onBlur={(event)=> {
-                    setVisiblepickerIndex(null);
-                  }}
+                  onBlur={() => setVisiblepickerIndex(null)}
                   // Todo:
                   // I added the keypress so user can also tab enter open this colorpicker.
                   // anyway now the user might expect that excape closes it.

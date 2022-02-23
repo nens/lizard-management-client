@@ -10,20 +10,22 @@ import styles from './ColormapForm.module.css';
 import formStyles from './../../styles/Forms.module.css';
 import buttonStyles from "../../styles/Buttons.module.css";
 
-interface ColomapObj {
+export interface ColomapObj {
   type: string,
   data: ColormapStepApi[],
   // name: string,
   // description: string,
   labels: any[],
+  log?: boolean,
+  rescalable?: boolean,
   free?: boolean,
   invalid?: ColormapStepApi,
 }
 
 interface Props {
-  currentRecord: any,
+  currentRecord: ColomapObj,
   cancelAction: () => void,
-  confirmAction: (record:any) => void,
+  confirmAction: (record: ColomapObj) => void,
 };
 
 const ColormapForm: React.FC<Props> = (props) => {
@@ -36,17 +38,15 @@ const ColormapForm: React.FC<Props> = (props) => {
   const [stepLengthFieldIsEmpty, setStepLengthFieldIsEmpty] = useState<boolean>(false);
 
   const initialValues = currentRecord? {
-    name: currentRecord.name || '',
-    description: currentRecord.description || '',
+    // name: currentRecord.name || '',
+    // description: currentRecord.description || '',
     data: (currentRecord.data || []).map(colorMapStepApiToColormapStep),
     type: currentRecord.log? "Logarithmic": currentRecord.type || "GradientColormap",
-    rescalable: currentRecord.rescalable === true,
+    rescalable: currentRecord.rescalable,
     labels: currentRecord.labels,
     invalid: currentRecord.invalid,
     free: currentRecord.free,
-  }
-  :
-  {
+  } : {
     name: null,
     description: null,
     data: [
@@ -242,7 +242,7 @@ const ColormapForm: React.FC<Props> = (props) => {
                   const newEvent = {...e, target: {...e.target, value: newArray, name: e.target.name}}
                   handleInputChange(newEvent);
                 } else /*if (difference < 0)*/ {
-                  const newArray = values.data.filter((item:any,i:number)=>{ 
+                  const newArray = values.data.filter((_item: ColormapStepApi, i: number)=>{ 
                     if ((i+1) > (values.data.length + difference)) { // difference is negative so we add it
                       return false
                     } 
@@ -260,7 +260,7 @@ const ColormapForm: React.FC<Props> = (props) => {
               <ColormapAllSteps
                 title={"Colormap Values"}
                 steps={values.data}
-                onChange={((event:any)=>{
+                onChange={((event: React.ChangeEvent<HTMLInputElement>) => {
                   handleInputChange(event);
                 })}
                 name={"data"}

@@ -4,6 +4,7 @@ import { getLocalStorage } from "./utils/localStorageUtils";
 import { getSelectedOrganisation } from "./reducers";
 import { Thunk } from ".";
 import { OrganisationWithRoles } from "./types/organisationType";
+import { LocationFromAPI } from "./types/locationFormTypes";
 
 export const RECEIVE_LIZARD_BOOTSTRAP = "RECEIVE_LIZARD_BOOTSTRAP";
 export const REQUEST_LIZARD_BOOTSTRAP = "REQUEST_LIZARD_BOOTSTRAP";
@@ -62,7 +63,8 @@ export const fetchOrganisations = (): Thunk => async (dispatch, getState) => {
   dispatch({ type: REQUEST_ORGANISATIONS });
 
   // Get User ID from the Redux store and selected organisation from local storage
-  const userId = getState().bootstrap.bootstrap.user.id;
+  const bootstrap = getState().bootstrap;
+  const userId = bootstrap && bootstrap.bootstrap && bootstrap.bootstrap.user.id;
   const selectedOrganisationLocalStorage = getLocalStorage("lizard-management-current-organisation", null);
 
   // Fetch the list of available organisations with user roles by user ID
@@ -134,34 +136,34 @@ export const selectOrganisation = (organisation: OrganisationWithRoles): Thunk =
 export const UPDATE_RASTER_SOURCE_UUID = "UPDATE_RASTER_SOURCE_UUID";
 export const REMOVE_RASTER_SOURCE_UUID = "REMOVE_RASTER_SOURCE_UUID";
 
-export function updateRasterSourceUUID(uuid: string) {
-  return {
+export const updateRasterSourceUUID = (uuid: string): Thunk => dispatch => {
+  dispatch({
     type: UPDATE_RASTER_SOURCE_UUID,
     uuid
-  };
+  });
 }
 
-export function removeRasterSourceUUID() {
-  return {
+export const removeRasterSourceUUID = (): Thunk => dispatch => {
+  dispatch({
     type: REMOVE_RASTER_SOURCE_UUID
-  };
+  });
 }
 
 // MARK: Location uuid
 export const UPDATE_LOCATION = "UPDATE_LOCATION";
 export const REMOVE_LOCATION = "REMOVE_LOCATION";
 
-export function updateLocation(location: any) {
-  return {
+export const updateLocation = (location: LocationFromAPI): Thunk => dispatch => {
+  dispatch({
     type: UPDATE_LOCATION,
     location
-  };
+  });
 }
 
-export function removeLocation() {
-  return {
+export const removeLocation = (): Thunk => dispatch => {
+  dispatch({
     type: REMOVE_LOCATION
-  };
+  });
 }
 
 // MARK: Uploads
@@ -171,49 +173,49 @@ export const UPDATE_TASK_STATUS = "UPDATE_TASK_STATUS";
 export const UPDATE_FILE_STATUS = "UPDATE_FILE_STATUS";
 export const REMOVE_FILE_FROM_QUEUE = "REMOVE_FILE";
 
-export function addFilesToQueue(files: File[]) {
-  return {
+export const addFilesToQueue = (files: File[]): Thunk => dispatch => {
+  dispatch({
     type: ADD_FILES_TO_QUEUE,
     files
-  };
+  });
 }
 
-export function updateFileStatus(file: File, status: string) {
-  return {
+export const updateFileStatus = (file: File, status: string): Thunk => dispatch => {
+  dispatch({
     type: UPDATE_FILE_STATUS,
     file,
     status
-  };
+  });
 }
 
-export function addTaskUuidToFile(file: File, uuid: string) {
-  return {
+export const addTaskUuidToFile = (file: File, uuid: string): Thunk => dispatch => {
+  dispatch({
     type: ADD_TASK_UUID_TO_FILE,
     file,
     uuid
-  };
+  });
 }
 
-export function updateTaskStatus(uuid: string, status: number) {
-  return {
+export const updateTaskStatus = (uuid: string, status: number): Thunk => dispatch => {
+  dispatch({
     type: UPDATE_TASK_STATUS,
     uuid,
     status
-  };
+  });
 }
 
-export function removeFileFromQueue(file: File) {
-  return {
+export const removeFileFromQueue = (file: File): Thunk => dispatch => {
+  dispatch({
     type: REMOVE_FILE_FROM_QUEUE,
     file
-  };
+  });
 }
 
 export const SET_OPEN_CLOSE_UPLOADQUEUE_MODAL = "SET_OPEN_CLOSE_UPLOADQUEUE_MODAL";
 
-export function openCloseUploadQueueModal(isOpen: boolean) {
-  return {
+export const openCloseUploadQueueModal = (isOpen: boolean): Thunk => dispatch => {
+  dispatch({
     type: SET_OPEN_CLOSE_UPLOADQUEUE_MODAL,
     isOpen
-  };
+  });
 }

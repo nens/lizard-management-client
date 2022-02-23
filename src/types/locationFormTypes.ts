@@ -1,4 +1,20 @@
+import { Point } from "geojson";
 import { Value } from "../form/SelectDropdown";
+import { Organisation } from "./organisationType";
+
+export interface LocationFromAPI {
+  uuid: string,
+  name: string,
+  code: string,
+  geometry: Point,
+  organisation: Organisation,
+  access_modifier: string,
+  extra_metadata: Object,
+  object?: {
+    id: number,
+    type: string
+  }
+}
 
 export interface Location {
   lat: number,
@@ -9,6 +25,7 @@ export type AssetObject = {
   value: number, // id
   label: string, // code
   location: Location | null,
+  name?: string,
   id?: number,
   code?: string,
   type?: string,

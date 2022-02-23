@@ -1,4 +1,3 @@
-import React from 'react';
 import ModalBackground from './ModalBackground';
 import styles from './UnauthorizedModal.module.css';
 import buttonStyles from './../styles/Buttons.module.css';

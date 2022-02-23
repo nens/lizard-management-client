@@ -9,12 +9,14 @@ import { useForm, Values } from '../../form/useForm';
 import { minLength } from '../../form/validators';
 import { addNotification } from '../../actions';
 import { getSelectedOrganisation } from '../../reducers';
-import { SelectDropdown } from '../../form/SelectDropdown';
+import { SelectDropdown, Value } from '../../form/SelectDropdown';
 import { convertToSelectObject } from '../../utils/convertToSelectObject';
 import { groupFormHelpText } from '../../utils/help_texts/helpTextForAlarmGroups';
 import { fetchWithOptions } from '../../utils/fetchWithOptions';
 import { useRecursiveFetch } from '../../api/hooks';
 import { baseUrl } from './GroupTable';
+import { AppDispatch } from '../..';
+import { ContactGroup } from '../../types/contactGroupType';
 import DeleteModal from '../../components/DeleteModal';
 import FormActionButtons from '../../components/FormActionButtons';
 import GroupMessage from './GroupMessage';
@@ -22,7 +24,7 @@ import formStyles from './../../styles/Forms.module.css';
 import groupIcon from "../../images/group.svg";
 
 interface Props {
-  currentRecord?: any
+  currentRecord?: ContactGroup
 };
 interface PropsFromDispatch {
   addNotification: (message: string | number, timeout: number) => void
@@ -34,7 +36,7 @@ const GroupForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pr
 
   const initialValues = currentRecord ? {
     name: currentRecord.name,
-    contacts: currentRecord.contacts.map((contact: any) => convertToSelectObject(contact.id, contact.first_name + ' ' + contact.last_name))
+    contacts: currentRecord.contacts.map(contact => convertToSelectObject(contact.id, contact.first_name + ' ' + contact.last_name))
   } : {
     name: null,
     contacts: []
@@ -43,7 +45,7 @@ const GroupForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pr
   const onSubmit = (values: Values) => {
     const body = {
       name: values.name,
-      contacts: values.contacts.map((contact: any) => contact.value)
+      contacts: values.contacts.map((contact: Value) => contact.value)
     };
 
     if (!currentRecord) {
@@ -152,7 +154,7 @@ const GroupForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pr
           placeholder={'- Search and select -'}
           value={values.contacts}
           valueChanged={value => handleValueChange('contacts', value)}
-          options={contacts ? contacts.map((contact: any) => convertToSelectObject(contact.id, contact.first_name + ' ' + contact.last_name, contact.email, contact.phone_number)) : []}
+          options={contacts ? contacts.map(contact => convertToSelectObject(contact.id, contact.first_name + ' ' + contact.last_name, contact.email, contact.phone_number)) : []}
           validated
           isMulti
           isLoading={contactsIsFetching}
@@ -191,7 +193,7 @@ const GroupForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pr
         </div>
         {showGroupMessageModal ? (
           <GroupMessage
-            groupId={currentRecord.id}
+            groupId={currentRecord?.id}
             handleClose={() => setShowGroupMessageModal(false)}
           />
         ) :null}
@@ -209,7 +211,7 @@ const GroupForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (pr
   );
 };
 
-const mapPropsToDispatch = (dispatch: any) => ({
+const mapPropsToDispatch = (dispatch: AppDispatch) => ({
   addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout))
 });
 

@@ -1,5 +1,5 @@
-import React from 'react';
 import { connect } from 'react-redux';
+import { AppDispatch } from '..';
 import { addNotification } from '../actions';
 import TableStateContainer from '../components/TableStateContainer';
 import TableActionButtons from '../components/TableActionButtons';
@@ -127,7 +127,7 @@ function InvitationModal (props: MyProps & DispatchProps) {
   )
 }
 
-const mapDispatchToProps = (dispatch: any) => ({
+const mapDispatchToProps = (dispatch: AppDispatch) => ({
   addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout))
 });
 type DispatchProps = ReturnType<typeof mapDispatchToProps>;

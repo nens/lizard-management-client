@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { RouteComponentProps } from 'react-router';
 import RasterAlarmForm from "./RasterAlarmForm";
 import { fetchRasterV4, RasterLayerFromAPI } from "../../../api/rasters";
@@ -6,15 +6,11 @@ import { getUuidFromUrl } from "../../../utils/getUuidFromUrl";
 import SpinnerIfNotLoaded from '../../../components/SpinnerIfNotLoaded';
 import { createFetchRecordFunctionFromUrl } from '../../../utils/createFetchRecordFunctionFromUrl';
 import { useRecursiveFetch } from "../../../api/hooks";
+import { RasterAlarm } from "../../../types/alarmType";
 
 interface RouteParams {
   uuid: string;
 };
-
-interface RasterAlarm {
-  raster: string, // raster url
-  organisation: {uuid: string}
-}
 
 export const EditRasterAlarm = (props: RouteComponentProps<RouteParams>) => {
   const [currentRecord, setCurrentRecord] = useState<RasterAlarm | null>(null);
@@ -68,7 +64,7 @@ export const EditRasterAlarm = (props: RouteComponentProps<RouteParams>) => {
       )}
     >
       <RasterAlarmForm
-        currentRecord={currentRecord}
+        currentRecord={currentRecord!}
         groups={groups || []}
         templates={templates || []}
         raster={raster}

@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { connect } from 'react-redux';
 import { NavLink, RouteComponentProps } from "react-router-dom";
+import { AppDispatch } from '../../..';
+import { TimeseriesAlarm } from '../../../types/alarmType';
 import TableStateContainer from '../../../components/TableStateContainer';
 import TableActionButtons from '../../../components/TableActionButtons';
 import tableStyles from "../../../components/Table.module.css";
@@ -14,11 +16,11 @@ export const baseUrl = "/api/v4/timeseriesalarms/";
 const navigationUrl = "/management/alarms/notifications/timeseries_alarms";
 
 export const TimeseriesAlarmTableComponent: React.FC<DispatchProps & RouteComponentProps> = (props) =>  {
-  const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
+  const [rowsToBeDeleted, setRowsToBeDeleted] = useState<TimeseriesAlarm[]>([]);
   const [resetTable, setResetTable] = useState<Function | null>(null);
 
   const deleteActions = (
-    rows: any[],
+    rows: TimeseriesAlarm[],
     triggerReloadWithCurrentPage: Function,
     setCheckboxes: Function | null
   ) => {
@@ -29,7 +31,7 @@ export const TimeseriesAlarmTableComponent: React.FC<DispatchProps & RouteCompon
     });
   };
 
-  const setAlarmActive = (row: any, updateTableRow: any, triggerReloadWithCurrentPage: any) => {
+  const setAlarmActive = (row: TimeseriesAlarm, updateTableRow: any, triggerReloadWithCurrentPage: any) => {
     fetchWithOptions(baseUrl, [row.uuid], {
       credentials: "same-origin",
       method: "PATCH",
@@ -53,7 +55,7 @@ export const TimeseriesAlarmTableComponent: React.FC<DispatchProps & RouteCompon
   const columnDefinitions = [
     {
       titleRenderFunction: () => "Name",
-      renderFunction: (row: any) => 
+      renderFunction: (row: TimeseriesAlarm) => 
         <span
           className={tableStyles.CellEllipsis}
           title={row.name}
@@ -64,7 +66,7 @@ export const TimeseriesAlarmTableComponent: React.FC<DispatchProps & RouteCompon
     },
     {
       titleRenderFunction: () =>  "Recipients",
-      renderFunction: (row: any) => 
+      renderFunction: (row: TimeseriesAlarm) => 
         <span
           className={tableStyles.CellEllipsis}
         >
@@ -74,7 +76,7 @@ export const TimeseriesAlarmTableComponent: React.FC<DispatchProps & RouteCompon
     },
     {
       titleRenderFunction: () => "Status",
-      renderFunction: (row: any) => 
+      renderFunction: (row: TimeseriesAlarm) => 
         <span
           className={tableStyles.CellEllipsis}
         >
@@ -84,7 +86,7 @@ export const TimeseriesAlarmTableComponent: React.FC<DispatchProps & RouteCompon
     },
     {
       titleRenderFunction: () =>  "",//"Actions",
-      renderFunction: (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any) => {
+      renderFunction: (row: TimeseriesAlarm, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any) => {
         return (
             <TableActionButtons
               tableRow={row} 
@@ -100,7 +102,7 @@ export const TimeseriesAlarmTableComponent: React.FC<DispatchProps & RouteCompon
                 },
                 {
                   displayValue: "Delete",
-                  actionFunction: (row: any, _updateTableRow: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any) => {
+                  actionFunction: (row: TimeseriesAlarm, _updateTableRow: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any) => {
                     deleteActions([row], triggerReloadWithCurrentPage, null)
                   }
                 }
@@ -132,7 +134,7 @@ export const TimeseriesAlarmTableComponent: React.FC<DispatchProps & RouteCompon
           checkBoxActions={[
             {
               displayValue: "Delete",
-              actionFunction: (rows: any[], _tableData: any, _setTableData: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any, setCheckboxes: any) => {
+              actionFunction: (rows: TimeseriesAlarm[], _tableData: any, _setTableData: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any, setCheckboxes: any) => {
                 deleteActions(rows, triggerReloadWithCurrentPage, setCheckboxes)
               }
             }
@@ -161,7 +163,7 @@ export const TimeseriesAlarmTableComponent: React.FC<DispatchProps & RouteCompon
   );
 }
 
-const mapDispatchToProps = (dispatch: any) => ({
+const mapDispatchToProps = (dispatch: AppDispatch) => ({
   addNotification: (message: string, timeout: number) => dispatch(addNotification(message, timeout))
 });
 type DispatchProps = ReturnType<typeof mapDispatchToProps>;

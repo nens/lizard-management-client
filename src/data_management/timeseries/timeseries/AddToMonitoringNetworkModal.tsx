@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { connect, useSelector } from 'react-redux';
+import { AppDispatch } from '../../..';
 import { SelectDropdown, Value } from '../../../form/SelectDropdown';
 import { SubmitButton } from '../../../form/SubmitButton';
 import { getSelectedOrganisation } from '../../../reducers';
@@ -97,7 +98,7 @@ function AddToMonitoringNetworkModal (props: MyProps & DispatchProps) {
   )
 }
 
-const mapDispatchToProps = (dispatch: any) => ({
+const mapDispatchToProps = (dispatch: AppDispatch) => ({
   addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout))
 });
 type DispatchProps = ReturnType<typeof mapDispatchToProps>;

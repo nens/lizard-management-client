@@ -2,13 +2,14 @@ import React from 'react';
 import TableStateContainer from './TableStateContainer';
 // import { NavLink, RouteComponentProps } from "react-router-dom";
 import tableStyles from "./Table.module.css";
+import { RasterLayerFromAPI } from '../api/rasters';
 // import buttonStyles from "../styles/Buttons.module.css";
 
 export const baseUrl = "/api/v4/rasters/";
 // const navigationUrlRasters = "/management/data_management/rasters/layers";
 
 interface Props {
-  setSelectedRasters: (rasterLayers: any[]) => void
+  setSelectedRasters: (rasterLayers: RasterLayerFromAPI[]) => void
 }
 
 export const MapViewerRasterLayerTable: React.FC<Props> = ({setSelectedRasters}) =>  {
@@ -18,7 +19,7 @@ export const MapViewerRasterLayerTable: React.FC<Props> = ({setSelectedRasters})
   const columnDefinitions = [
     {
       titleRenderFunction: () => "Name",
-      renderFunction: (row: any) => 
+      renderFunction: (row: RasterLayerFromAPI) => 
         <span
           className={tableStyles.CellEllipsis}
           title={row.name}
@@ -30,7 +31,7 @@ export const MapViewerRasterLayerTable: React.FC<Props> = ({setSelectedRasters})
     },
     {
       titleRenderFunction: () =>  "Based on",
-      renderFunction: (row: any) => 
+      renderFunction: (row: RasterLayerFromAPI) => 
         <span
           className={tableStyles.CellEllipsis}
           title={row.is_geoblock ? 'Geoblock' : 'Raster source'}
@@ -49,7 +50,7 @@ export const MapViewerRasterLayerTable: React.FC<Props> = ({setSelectedRasters})
     },
     {
       titleRenderFunction: () =>  "User",
-      renderFunction: (row: any) =>  
+      renderFunction: (row: RasterLayerFromAPI) =>  
       <span
         className={tableStyles.CellEllipsis}
         title={row.supplier}
@@ -60,7 +61,7 @@ export const MapViewerRasterLayerTable: React.FC<Props> = ({setSelectedRasters})
     },
     {
       titleRenderFunction: () =>  "Temporal",
-      renderFunction: (row: any) => row.temporal === true? "Yes" : "No",
+      renderFunction: (row: RasterLayerFromAPI) => row.temporal === true? "Yes" : "No",
       orderingField: "temporal",
     },
   ];
@@ -73,7 +74,7 @@ export const MapViewerRasterLayerTable: React.FC<Props> = ({setSelectedRasters})
           checkBoxActions={[
             {
               displayValue: "Add to map",
-              actionFunction: (rows: any[], _tableData: any, _setTableData: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any, setCheckboxes: any) => {
+              actionFunction: (rows: RasterLayerFromAPI[], _tableData: any, _setTableData: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any, setCheckboxes: any) => {
                 setSelectedRasters(rows);
               }
             },

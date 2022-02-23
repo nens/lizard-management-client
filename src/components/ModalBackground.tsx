@@ -13,7 +13,7 @@ interface MyProps {
 const ModalBackground: React.FC<MyProps> = (props) => {
   // Add event listener to close modal on 'ESCAPE' key
   useEffect(() => {
-    const closeModalOnEsc = (e: any) => {
+    const closeModalOnEsc = (e: KeyboardEvent) => {
       if (!props.escKeyNotAllowed && e.key === 'Escape' && props.handleClose) props.handleClose();
     };
     window.addEventListener('keydown', closeModalOnEsc);

@@ -1,26 +1,43 @@
-import React from 'react';
+import { PropsWithChildren } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 // We will need styles later to factor out the over stule of the svg passed to clickableComponent
 // import styles from './TableActionButtons.module.css';
 import ActionButton from './ActionButton';
 
 
-export interface Action {
+export interface Action<TableRowType> {
   displayValue: string;
-  actionFunction: any; // function that takes uuid and performs action
+  actionFunction: (
+    row: TableRowType,
+    tableData: TableRowType[],
+    setTableData: (data: TableRowType[]) => void,
+    triggerReloadWithCurrentPage: () => void,
+    triggerReloadWithBasePage: () => void
+  ) => void;
 }
 
-interface Props {
-  actions: Action[];
-  tableRow:any;
-  tableData:any;
-  setTableData:any;
-  triggerReloadWithCurrentPage:any; 
-  triggerReloadWithBasePage:any;
+interface Props<TableRowType> {
+  actions: Action<TableRowType>[];
+  tableRow: TableRowType;
+  tableData: TableRowType[];
+  setTableData: (data: TableRowType[]) => void;
+  triggerReloadWithCurrentPage: () => void; 
+  triggerReloadWithBasePage: () => void;
   editUrl?: string; // optional parameter for EDIT action
 }
 
-const TableActionButtons: React.FC<Props & RouteComponentProps> = ({actions, tableRow,tableData,setTableData,triggerReloadWithCurrentPage, triggerReloadWithBasePage, editUrl, history }) => {
+function TableActionButtons<TableRowType> (props: PropsWithChildren<Props<TableRowType>> & RouteComponentProps) {
+  const {
+    actions,
+    tableRow,
+    tableData,
+    setTableData,
+    triggerReloadWithCurrentPage,
+    triggerReloadWithBasePage,
+    editUrl,
+    history
+  } = props;
+
   const actionList = editUrl ? [
     // Edit action to open the object in the form
     // and is optional based on parameter "editUrl"

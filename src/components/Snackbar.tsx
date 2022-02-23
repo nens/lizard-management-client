@@ -1,6 +1,6 @@
-import React from "react";
 import { FormattedMessage } from "react-intl.macro";
 import { connect, useSelector } from "react-redux";
+import { AppDispatch } from "..";
 import { dismissNotification } from "../actions";
 import { getNotifications } from "../reducers";
 import styles from "./Snackbar.module.css";
@@ -54,7 +54,7 @@ const Snackbar: React.FC<PropsFromDispatch> = (props) => {
   );
 }
 
-const mapDispatchToProps = (dispatch: any) => ({
+const mapDispatchToProps = (dispatch: AppDispatch) => ({
   dismiss: (idx: number) => dispatch(dismissNotification(idx))
 });
 

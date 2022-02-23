@@ -5,6 +5,7 @@ import TableActionButtons from '../../components/TableActionButtons';
 import tableStyles from "../../components/Table.module.css";
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import { fetchWithOptions } from '../../utils/fetchWithOptions';
+import { ContactGroup } from '../../types/contactGroupType';
 import DeleteModal from '../../components/DeleteModal';
 import groupIcon from "../../images/group.svg";
 
@@ -16,7 +17,7 @@ export const GroupTable: React.FC<RouteComponentProps> = (props) =>  {
   const [resetTable, setResetTable] = useState<Function | null>(null);
 
   const deleteActions = (
-    rows: any[],
+    rows: ContactGroup[],
     triggerReloadWithCurrentPage: Function,
     setCheckboxes: Function | null
   ) => {
@@ -30,7 +31,7 @@ export const GroupTable: React.FC<RouteComponentProps> = (props) =>  {
   const columnDefinitions = [
     {
       titleRenderFunction: () => "Name",
-      renderFunction: (row: any) => 
+      renderFunction: (row: ContactGroup) => 
         <span
           className={tableStyles.CellEllipsis}
           title={row.name}
@@ -41,7 +42,7 @@ export const GroupTable: React.FC<RouteComponentProps> = (props) =>  {
     },
     {
       titleRenderFunction: () =>  "Size",
-      renderFunction: (row: any) => 
+      renderFunction: (row: ContactGroup) => 
         <span
           className={tableStyles.CellEllipsis}
         >
@@ -51,7 +52,7 @@ export const GroupTable: React.FC<RouteComponentProps> = (props) =>  {
     },
     {
       titleRenderFunction: () =>  "",//"Actions",
-      renderFunction: (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any) => {
+      renderFunction: (row: ContactGroup, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any) => {
         return (
             <TableActionButtons
               tableRow={row} 
@@ -63,7 +64,7 @@ export const GroupTable: React.FC<RouteComponentProps> = (props) =>  {
               actions={[
                 {
                   displayValue: "Delete",
-                  actionFunction: (row: any, _updateTableRow: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any) => {
+                  actionFunction: (row: ContactGroup, _updateTableRow: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any) => {
                     deleteActions([row], triggerReloadWithCurrentPage, null)
                   }
                 },
@@ -95,7 +96,7 @@ export const GroupTable: React.FC<RouteComponentProps> = (props) =>  {
         checkBoxActions={[
           {
             displayValue: "Delete",
-            actionFunction: (rows: any[], _tableData: any, _setTableData: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any, setCheckboxes: any) => {
+            actionFunction: (rows: ContactGroup[], _tableData: any, _setTableData: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any, setCheckboxes: any) => {
               deleteActions(rows, triggerReloadWithCurrentPage, setCheckboxes)
             }
           }

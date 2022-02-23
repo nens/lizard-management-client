@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { connect, useSelector } from "react-redux";
 import { FormattedMessage } from "react-intl.macro";
 import { fetchTaskInstance } from "./api/tasks";
+import { AppDispatch } from ".";
 import {
   addNotification,
   fetchLizardBootstrap,
@@ -211,8 +212,7 @@ const App = (props: RouteComponentProps & DispatchProps) => {
               <div className={gridStyles.Container}>
                 <div className={gridStyles.Row}>
                   <Breadcrumbs
-                    // The same location is needed to calculate the breadcrumbs.
-                    location= {props.location}
+                    currentRelativeUrl={currentRelativeUrl}
                   />
                 </div>
               </div>
@@ -318,7 +318,7 @@ const App = (props: RouteComponentProps & DispatchProps) => {
       );
 }
 
-const mapDispatchToProps = (dispatch: any) => {
+const mapDispatchToProps = (dispatch: AppDispatch) => {
   return {
     fetchLizardBootstrap: () => dispatch(fetchLizardBootstrap()),
     fetchOrganisations: () => dispatch(fetchOrganisations()),

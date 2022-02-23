@@ -1,4 +1,3 @@
-import React from 'react';
 import ace from 'brace';
 import { GeoBlockSource } from '../../../types/geoBlockType';
 import { JsonEditor } from 'jsoneditor-react';

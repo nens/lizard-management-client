@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
+import { AppDispatch } from '../../..';
 import { Elements, isNode } from 'react-flow-renderer';
 import { GeoBlockSource } from '../../../types/geoBlockType';
 import { GeoBlockJsonComponent } from './GeoBlockJsonComponent';
@@ -148,7 +149,7 @@ function GeoBlockBuildModal (props: MyProps & DispatchProps) {
   )
 }
 
-const mapDispatchToProps = (dispatch: any) => ({
+const mapDispatchToProps = (dispatch: AppDispatch) => ({
   addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout))
 });
 type DispatchProps = ReturnType<typeof mapDispatchToProps>;

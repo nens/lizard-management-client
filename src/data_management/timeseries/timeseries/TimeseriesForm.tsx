@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { connect, useSelector } from 'react-redux';
+import { AppDispatch } from '../../..';
 import { getLocation, getSelectedOrganisation, getUsername } from '../../../reducers';
 import { ExplainSideColumn } from '../../../components/ExplainSideColumn';
 import { TextInput } from './../../../form/TextInput';
@@ -498,7 +499,7 @@ const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
   );
 };
 
-const mapPropsToDispatch = (dispatch: any) => ({
+const mapPropsToDispatch = (dispatch: AppDispatch) => ({
   removeLocation: () => dispatch(removeLocation()),
   addNotification: (message: string | number | JSX.Element, timeout?: number) => dispatch(addNotification(message, timeout))
 });

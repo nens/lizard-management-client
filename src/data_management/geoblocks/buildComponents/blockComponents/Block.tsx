@@ -1,4 +1,3 @@
-import React from 'react';
 import { Elements, Handle, Node, Position, useStoreState } from 'react-flow-renderer';
 import { BlockName } from './BlockName';
 import styles from './Block.module.css';

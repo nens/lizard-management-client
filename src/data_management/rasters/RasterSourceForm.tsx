@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { connect, useSelector } from 'react-redux';
+import { AppDispatch } from '../..';
 import { createRasterSource, patchRasterSource, RasterSourceFromAPI } from '../../api/rasters';
 import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import { CheckBox } from './../../form/CheckBox';
@@ -34,12 +35,6 @@ import TemporalDataFlushingModal from './TemporalDataFlushingModal';
 interface Props {
   currentRecord?: RasterSourceFromAPI
 };
-interface PropsFromDispatch {
-  updateRasterSourceUUID: (uuid: string) => void,
-  addNotification: (message: string | number, timeout: number) => void,
-  addFilesToQueue: (files: File[]) => void,
-  openCloseUploadQueueModal: (isOpen:boolean) => void;
-};
 interface RouteParams {
   uuid: string;
 };
@@ -59,11 +54,11 @@ export const fetchSuppliers = async (uuid: string, searchInput: string) => {
   return responseJSON.results.map((supplier: any) => convertToSelectObject(supplier.id, supplier.username));
 };
 
-const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<RouteParams>> = (props) => {
+const RasterSourceForm: React.FC<Props & DispatchProps & RouteComponentProps<RouteParams>> = (props) => {
   const { currentRecord } = props;
   const organisations = useSelector(getOrganisations).available;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
-  const organisationsToSwitchTo = organisations.filter((org: any) => org.roles.includes('admin'));
+  const organisationsToSwitchTo = organisations.filter(org => org.roles.includes('admin'));
   const [rasterCreatedModal, setRasterCreatedModal] = useState<boolean>(false);
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const [showDataFlushingModal, setShowDataFlushingModal] = useState<boolean>(false);
@@ -113,11 +108,11 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           } else {
             console.error(response);
           }
-        }).then((parsedBody: any) => {
+        }).then(parsedBody => {
           props.updateRasterSourceUUID(parsedBody.uuid);
           // Add files to Upload Queue in Redux store
           // add notification and send data to Lizard server
-          const acceptedFiles = values.data as AcceptedFile[] || [];
+          const acceptedFiles = values.data as AcceptedFile[];
           const uploadFiles = acceptedFiles.map(f => f.file);
           if (uploadFiles.length > 0) props.addNotification('Upload started', 1000);
           props.addFilesToQueue(uploadFiles);
@@ -295,7 +290,7 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
           placeholder={'- Search and select -'}
           value={values.organisation}
           valueChanged={value => handleValueChange('organisation', value)}
-          options={organisations.map((organisation: any) => convertToSelectObject(organisation.uuid, organisation.name))}
+          options={organisations.map(organisation => convertToSelectObject(organisation.uuid, organisation.name))}
           validated={values.organisation !== null && values.organisation !== ''}
           errorMessage={'Please select an organisation'}
           triedToSubmit={triedToSubmit}
@@ -412,11 +407,12 @@ const RasterSourceForm: React.FC<Props & PropsFromDispatch & RouteComponentProps
   );
 };
 
-const mapPropsToDispatch = (dispatch: any) => ({
+const mapPropsToDispatch = (dispatch: AppDispatch) => ({
   updateRasterSourceUUID: (uuid: string) => dispatch(updateRasterSourceUUID(uuid)),
   addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout)),
   addFilesToQueue: (files: File[]) => dispatch(addFilesToQueue(files)),
   openCloseUploadQueueModal: (isOpen: boolean) => dispatch(openCloseUploadQueueModal(isOpen)),
 });
+type DispatchProps = ReturnType<typeof mapPropsToDispatch>;
 
 export default connect(null, mapPropsToDispatch)(withRouter(RasterSourceForm));

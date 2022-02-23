@@ -1,22 +1,13 @@
-import React from "react";
 import MDSpinner from "react-md-spinner";
 import spinnerStyles from '../styles/Spinner.module.css';
 
 interface Props {
-    loaded: boolean;
-    children: any;
+  loaded: boolean;
 }
 
-export const SpinnerIfNotLoaded = (props:  Props) => {
-
-	const {
-    loaded,
-    children,
-	} = props;
-
-  
+const SpinnerIfNotLoaded: React.FC<Props> = ({ loaded, children }) => {
   if (loaded) {
-    return children
+    return <>{children}</>
   } else {
     return (
       <div
@@ -27,4 +18,5 @@ export const SpinnerIfNotLoaded = (props:  Props) => {
     );
   }
 };
+
 export default SpinnerIfNotLoaded;

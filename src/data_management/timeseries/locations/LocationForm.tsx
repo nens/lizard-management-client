@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { connect, useSelector } from 'react-redux';
+import { AppDispatch } from '../../..';
 import { getSelectedOrganisation } from '../../../reducers';
 import { ExplainSideColumn } from '../../../components/ExplainSideColumn';
 import { TextInput } from './../../../form/TextInput';
@@ -18,6 +19,7 @@ import { locationFormHelpText } from '../../../utils/help_texts/helpTextsForLoca
 import { fetchWithOptions } from '../../../utils/fetchWithOptions';
 import { useRecursiveFetch } from '../../../api/hooks';
 import { baseUrl } from './LocationsTable';
+import { AssetObject, LocationFromAPI } from '../../../types/locationFormTypes';
 import FormActionButtons from '../../../components/FormActionButtons';
 import Modal from '../../../components/Modal';
 import DeleteModal from '../../../components/DeleteModal';
@@ -25,8 +27,8 @@ import DeleteLocationNotAllowed from './DeleteLocationNotAllowed';
 import MDSpinner from 'react-md-spinner';
 
 interface Props {
-  currentRecord?: any;
-  relatedAsset?: any;
+  currentRecord?: LocationFromAPI;
+  relatedAsset?: AssetObject | null;
 };
 interface RouteParams {
   uuid: string;
@@ -318,7 +320,7 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
   );
 };
 
-const mapPropsToDispatch = (dispatch: any) => ({
+const mapPropsToDispatch = (dispatch: AppDispatch) => ({
   addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout)),
   updateLocation: (location: any) => dispatch(updateLocation(location)),
   removeLocation: () => dispatch(removeLocation()),

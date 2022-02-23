@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { RouteComponentProps } from 'react-router';
 import { useSelector } from "react-redux";
 import { getSelectedOrganisation } from "../reducers";
+import { User } from "../types/userType";
 import UserForm from "./UserForm";
 import SpinnerIfNotLoaded from '../components/SpinnerIfNotLoaded';
 import {createFetchRecordFunctionFromUrl} from '../utils/createFetchRecordFunctionFromUrl';
@@ -12,7 +13,7 @@ interface RouteParams {
 
 export const EditUser: React.FC<RouteComponentProps<RouteParams>> = (props) => {
   const selectedOrganisation = useSelector(getSelectedOrganisation);
-  const [currentRecord, setCurrentRecord] = useState<Object | undefined>(undefined);
+  const [currentRecord, setCurrentRecord] = useState<User | null>(null);
 
   const { id } = props.match.params;
   useEffect(() => {
@@ -29,7 +30,7 @@ export const EditUser: React.FC<RouteComponentProps<RouteParams>> = (props) => {
       loaded={!!currentRecord}
     >
       <UserForm
-        currentRecord={currentRecord}
+        currentRecord={currentRecord!}
       />
     </SpinnerIfNotLoaded>
   );

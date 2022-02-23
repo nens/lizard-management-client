@@ -27,14 +27,25 @@ import { Contract } from "./types/contractType";
 import { OrganisationWithRoles } from "./types/organisationType";
 
 interface BootstrapState {
-  bootstrap: any,
+  bootstrap: {
+    user: {
+      id: number,
+      first_name: string,
+      username: string,
+      authenticated: boolean
+    },
+    sso: {
+      login: string,
+      logout: string
+    }
+  } | null,
   isFetching: boolean,
   startedFetch: boolean
 }
 
 function bootstrap(
   state: BootstrapState = {
-    bootstrap: {},
+    bootstrap: null,
     isFetching: false,
     startedFetch: false,
   },
@@ -214,9 +225,12 @@ function location(state: LocationState = null, action: AnyAction): LocationState
   };
 };
 
-type UploadFileState = any[];
+export interface FileState extends File {
+  uuid: string | null,
+  status: string
+}
 
-function uploadFiles(state: UploadFileState = [], action: AnyAction): UploadFileState {
+function uploadFiles(state: FileState[] = [], action: AnyAction): FileState[] {
   switch (action.type) {
     case ADD_FILES_TO_QUEUE:
       const files = action.files.map((file: File) => {
@@ -297,32 +311,41 @@ export const getIsNotFinishedFetchingBootstrap = (state: AppState) => {
   return state.bootstrap.isFetching === true || state.bootstrap.startedFetch === false;
 };
 export const getUserAuthenticated = (state: AppState) => {
-  return state.bootstrap.startedFetch === true && !state.bootstrap.isFetching &&  state.bootstrap.bootstrap.user && state.bootstrap.bootstrap.user.authenticated;
+  return state.bootstrap.startedFetch === true && !state.bootstrap.isFetching && state.bootstrap.bootstrap && state.bootstrap.bootstrap.user && state.bootstrap.bootstrap.user.authenticated;
 };
 export const getSsoLogin = (state: AppState) => {
-  if (state.bootstrap.isFetching || state.bootstrap.startedFetch === false) {
+  if (
+    state.bootstrap.isFetching ||
+    state.bootstrap.startedFetch === false ||
+    !state.bootstrap.bootstrap ||
+    !state.bootstrap.bootstrap.sso
+  ) {
     return "";
-  } else if (!state.bootstrap.bootstrap.sso) {
-    return ""
   } else {
     return state.bootstrap.bootstrap.sso.login;
   }
 }
 export const getSsoLogout = (state: AppState) => {
-  if (state.bootstrap.isFetching || state.bootstrap.startedFetch === false) {
+  if (
+    state.bootstrap.isFetching ||
+    state.bootstrap.startedFetch === false ||
+    !state.bootstrap.bootstrap ||
+    !state.bootstrap.bootstrap.sso
+  ) {
     return "";
-  } else if (!state.bootstrap.bootstrap.sso) {
-    return ""
   } else {
     return state.bootstrap.bootstrap.sso.logout;
   }
 }
 
 export const getUserFirstName = (state: AppState) => {
-  if (state.bootstrap.isFetching || state.bootstrap.startedFetch === false) {
+  if (
+    state.bootstrap.isFetching ||
+    state.bootstrap.startedFetch === false ||
+    !state.bootstrap.bootstrap ||
+    !state.bootstrap.bootstrap.user
+  ) {
     return "";
-  } else if (!state.bootstrap.bootstrap.user) {
-    return ""
   } else {
     return state.bootstrap.bootstrap.user.first_name;
   }

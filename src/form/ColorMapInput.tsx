@@ -278,7 +278,7 @@ const ColorMapInput: React.FC<ColorMapProps> = (props) => {
             <ColormapForm
               currentRecord={colorMapValue.customColormap.data? colorMapValue.customColormap: undefined}
               cancelAction={()=>{setShowCustomColormapModal(false)}}
-              confirmAction={(customColormap:any)=>{
+              confirmAction={customColormap => {
                 customColormapChanged(customColormap);
                 setShowCustomColormapModal(false);
               }}
