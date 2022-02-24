@@ -45,8 +45,7 @@ const OrganisationSwitcher = (props:Props) => {
     };
   });
 
-  // Todo howto remove this any
-  const hideOrganisationSwitcher:any = (e: React.KeyboardEvent) => {
+  const hideOrganisationSwitcher = (e: KeyboardEvent) => {
     if (e.key === "Escape") {
       props.handleClose();
     }
@@ -55,7 +54,6 @@ const OrganisationSwitcher = (props:Props) => {
     setHeight(window.innerHeight);
   }
   
-  // todo fix this any
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFilterValue( e.target.value);
   }
@@ -136,8 +134,7 @@ const OrganisationSwitcher = (props:Props) => {
               style={{ width: "100%", height: height - 400 }}
             >
               {filteredOrganisations
-              // Todo fix any og organisation
-                ? filteredOrganisations.map((organisation:any, i:number) => {
+                ? filteredOrganisations.map(organisation => {
                     const hasRequiredRoles = userHasCorrectRolesForCurrentNavigationLinkTile(organisation.roles);
                     return (
                       <div

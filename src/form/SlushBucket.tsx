@@ -28,11 +28,11 @@ interface MyProps {
 export const SlushBucket: React.FC<MyProps> = (props) => {
   const [searchString, setSearchString] = useState<string>('');
 
-  const handleKeyUp = (e: any) => {
+  const handleKeyUp = (e: React.KeyboardEvent) => {
     if (e.key === "Escape") setSearchString('');
   };
 
-  const handleInput = (e: any) => {
+  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchString(e.target.value);
   };
 

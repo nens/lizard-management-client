@@ -11,22 +11,24 @@ import { TimeseriesTableHelptext } from '../../../utils/help_texts/helpTextForTi
 import { fetchWithOptions } from '../../../utils/fetchWithOptions';
 import tableStyles from "../../../components/Table.module.css";
 import timeseriesIcon from "../../../images/timeseries_icon.svg";
+import { ColumnDefinition } from '../../../components/Table';
+import { TimeseriesFromTimeseriesEndpoint } from '../../../types/timeseriesType';
 
 export const baseUrl = "/api/v4/timeseries/";
 const navigationUrl = "/management/data_management/timeseries/timeseries";
 
 export const TimeseriesTable = (props: RouteComponentProps) =>  {
-  const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
+  const [rowsToBeDeleted, setRowsToBeDeleted] = useState<TimeseriesFromTimeseriesEndpoint[]>([]);
   const [resetTable, setResetTable] = useState<Function | null>(null);
 
   // selected rows for set accessibility action
-  const [selectedRows, setSelectedRows] = useState<any[]>([]);
+  const [selectedRows, setSelectedRows] = useState<TimeseriesFromTimeseriesEndpoint[]>([]);
 
   // selected rows for adding timeseries to Monitoring network action
-  const [selectedRowsToAddMN, setSelectedRowsToAddMN] = useState<any[]>([]);
+  const [selectedRowsToAddMN, setSelectedRowsToAddMN] = useState<TimeseriesFromTimeseriesEndpoint[]>([]);
 
   const deleteActions = (
-    rows: any[],
+    rows: TimeseriesFromTimeseriesEndpoint[],
     triggerReloadWithCurrentPage: Function,
     setCheckboxes: Function | null
   ) => {
@@ -37,10 +39,10 @@ export const TimeseriesTable = (props: RouteComponentProps) =>  {
     });
   };
 
-  const columnDefinitions = [
+  const columnDefinitions: ColumnDefinition<TimeseriesFromTimeseriesEndpoint>[] = [
     {
       titleRenderFunction: () => "Name",
-      renderFunction: (row: any) => 
+      renderFunction: (row) => 
         <span
           className={tableStyles.CellEllipsis}
           title={`${row.name} - UUID: ${row.uuid}`}
@@ -52,7 +54,7 @@ export const TimeseriesTable = (props: RouteComponentProps) =>  {
     },
     {
       titleRenderFunction: () => "Code",
-      renderFunction: (row: any) =>
+      renderFunction: (row) =>
         <span
           className={tableStyles.CellEllipsis}
           title={row.code}
@@ -68,7 +70,7 @@ export const TimeseriesTable = (props: RouteComponentProps) =>  {
     },
     {
       titleRenderFunction: () => "Observation type",
-      renderFunction: (row: any) => 
+      renderFunction: (row) => 
         <span
           className={tableStyles.CellEllipsis}
           title={
@@ -87,7 +89,7 @@ export const TimeseriesTable = (props: RouteComponentProps) =>  {
     },
     {
       titleRenderFunction: () => "Location",
-      renderFunction: (row: any) => 
+      renderFunction: (row) => 
         <span
           className={tableStyles.CellEllipsis}
           style={{
@@ -111,7 +113,7 @@ export const TimeseriesTable = (props: RouteComponentProps) =>  {
     },
     {
       titleRenderFunction: () => "Accessibility",
-      renderFunction: (row: any) => 
+      renderFunction: (row) => 
         <span
           className={tableStyles.CellEllipsis}
           title={row.access_modifier}
@@ -123,27 +125,25 @@ export const TimeseriesTable = (props: RouteComponentProps) =>  {
     },
     {
       titleRenderFunction: () =>  "",//"Actions",
-      renderFunction: (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any) => {
+      renderFunction: (row, _updateTableRow, triggerReloadWithCurrentPage, triggerReloadWithBasePage) => {
         return (
             <TableActionButtons
-              tableRow={row} 
-              tableData={tableData}
-              setTableData={setTableData} 
-              triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
+              tableRow={row}
+              triggerReloadWithCurrentPage={triggerReloadWithCurrentPage}
               triggerReloadWithBasePage={triggerReloadWithBasePage}
               editUrl={`${navigationUrl}/${row.uuid}`}
               actions={[
                 // {
                 //   displayValue: "Change right",
-                //   actionFunction: (row: any) => setSelectedRows([row])
+                //   actionFunction: (row) => setSelectedRows([row])
                 // },
                 {
                   displayValue: "Add to MN",
-                  actionFunction: (row: any) => setSelectedRowsToAddMN([row])
+                  actionFunction: (row) => setSelectedRowsToAddMN([row])
                 },
                 {
                   displayValue: "Delete",
-                  actionFunction: (row: any, _updateTableRow: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any) => {
+                  actionFunction: (row, triggerReloadWithCurrentPage, _triggerReloadWithBasePage) => {
                     deleteActions([row], triggerReloadWithCurrentPage, null)
                   }
                 },
@@ -176,7 +176,7 @@ export const TimeseriesTable = (props: RouteComponentProps) =>  {
         checkBoxActions={[
           {
             displayValue: "Change rights",
-            actionFunction: (rows: any[], _tableData: any, _setTableData: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any, setCheckboxes: any) => {
+            actionFunction: (rows, _tableData, _setTableData, triggerReloadWithCurrentPage, _triggerReloadWithBasePage, setCheckboxes) => {
               setSelectedRows(rows);
               setResetTable(() => () => {
                 triggerReloadWithCurrentPage();
@@ -186,7 +186,7 @@ export const TimeseriesTable = (props: RouteComponentProps) =>  {
           },
           {
             displayValue: "Add to MN",
-            actionFunction: (rows: any[], _tableData: any, _setTableData: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any, setCheckboxes: any) => {
+            actionFunction: (rows, _tableData, _setTableData, _triggerReloadWithCurrentPage, _triggerReloadWithBasePage, setCheckboxes) => {
               setSelectedRowsToAddMN(rows);
               setResetTable(() => () => {
                 // triggerReloadWithCurrentPage();
@@ -196,7 +196,7 @@ export const TimeseriesTable = (props: RouteComponentProps) =>  {
           },
           {
             displayValue: "Delete",
-            actionFunction: (rows: any[], _tableData: any, _setTableData: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any, setCheckboxes: any) => {
+            actionFunction: (rows, _tableData, _setTableData, triggerReloadWithCurrentPage, _triggerReloadWithBasePage, setCheckboxes) => {
               deleteActions(rows, triggerReloadWithCurrentPage, setCheckboxes)
             }
           }

@@ -1,16 +1,17 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { getUuidFromUrl } from "../../../utils/getUuidFromUrl";
 import TimeseriesForm, { Datasource } from "./TimeseriesForm";
 import SpinnerIfNotLoaded from '../../../components/SpinnerIfNotLoaded';
 import {createFetchRecordFunctionFromUrl} from '../../../utils/createFetchRecordFunctionFromUrl';
+import { TimeseriesFromTimeseriesEndpoint } from "../../../types/timeseriesType";
 
 interface RouteProps {
   uuid: string
 }
 
 export const EditTimeseries = (props: RouteComponentProps<RouteProps>) => {
-  const [currentRecord, setCurrentRecord] = useState<Object | null>(null);
+  const [currentRecord, setCurrentRecord] = useState<TimeseriesFromTimeseriesEndpoint | null>(null);
   const [datasourceIsRequired, setDatasourceIsRequired] = useState<boolean | null>(null);
   const [datasource, setDatasource] = useState<Datasource | undefined>(undefined);
   const { uuid } = props.match.params;
@@ -41,7 +42,7 @@ export const EditTimeseries = (props: RouteComponentProps<RouteProps>) => {
       )}
     >
       <TimeseriesForm
-        currentRecord={currentRecord}
+        currentRecord={currentRecord!}
         datasource={datasourceIsRequired? datasource: undefined}
       />
     </SpinnerIfNotLoaded>

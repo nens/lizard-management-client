@@ -10,6 +10,8 @@ import DeleteModal from '../../components/DeleteModal';
 import tableStyles from "../../components/Table.module.css";
 import layerCollectionIcon from "../../images/layer_collection_icon.svg";
 import { getAccessibiltyText } from '../../form/AccessModifier';
+import { ColumnDefinition } from '../../components/Table';
+import { Layercollection } from '../../api/rasters';
 
 
 export const baseUrl = `/api/v4/layercollections/`;
@@ -17,12 +19,12 @@ export const baseUrl = `/api/v4/layercollections/`;
 export const LayerCollectionsTable = (props: RouteComponentProps) =>  {
   const navigationUrl = "/management/data_management/layer_collections";
 
-  const [selectedRowsForChangeRights, setSelectedRowsForChangeRights] = useState<any[]>([]);
+  const [selectedRowsForChangeRights, setSelectedRowsForChangeRights] = useState<Layercollection[]>([]);
   const [resetTable, setResetTable] = useState<Function | null>(null);
-  const [selectedRowsForDeletion, setSelectedRowsForDeletion] = useState<any[]>([]);
+  const [selectedRowsForDeletion, setSelectedRowsForDeletion] = useState<Layercollection[]>([]);
 
   const deleteActions = (
-    rows: any[],
+    rows: Layercollection[],
     triggerReloadWithCurrentPage: Function,
     setCheckboxes: Function | null
   ) => {
@@ -35,10 +37,10 @@ export const LayerCollectionsTable = (props: RouteComponentProps) =>  {
 
 
 
-  const columnDefinitions = [
+  const columnDefinitions: ColumnDefinition<Layercollection>[] = [
     {
       titleRenderFunction: () => "Slug",
-      renderFunction: (row: any) => 
+      renderFunction: (row) => 
         <span
           className={tableStyles.CellEllipsis}
           title={row.slug}
@@ -50,7 +52,7 @@ export const LayerCollectionsTable = (props: RouteComponentProps) =>  {
     },
     {
       titleRenderFunction: () => "Accessibility",
-      renderFunction: (row: any) => 
+      renderFunction: (row) => 
         <span
           className={tableStyles.CellEllipsis}
           title={row.access_modifier}
@@ -62,19 +64,17 @@ export const LayerCollectionsTable = (props: RouteComponentProps) =>  {
     },
     {
       titleRenderFunction: () =>  "",//"Actions",
-      renderFunction: (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any) => {
+      renderFunction: (row, _updateTableRow, triggerReloadWithCurrentPage, triggerReloadWithBasePage) => {
         return (
             <TableActionButtons
-              tableRow={row} 
-              tableData={tableData}
-              setTableData={setTableData} 
-              triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
+              tableRow={row}
+              triggerReloadWithCurrentPage={triggerReloadWithCurrentPage}
               triggerReloadWithBasePage={triggerReloadWithBasePage}
               editUrl={`${navigationUrl}/${row.slug}`}
               actions={[
                 {
                   displayValue: "Delete",
-                  actionFunction: (row: any, _updateTableRow: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any) => {
+                  actionFunction: (row, triggerReloadWithCurrentPage, _triggerReloadWithBasePage) => {
                     deleteActions([row], triggerReloadWithCurrentPage, null)
                   }
                 }
@@ -106,7 +106,7 @@ export const LayerCollectionsTable = (props: RouteComponentProps) =>  {
         checkBoxActions={[
           {
             displayValue: "Change rights",
-            actionFunction: (rows: any[], _tableData: any, _setTableData: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any, setCheckboxes: any) => {
+            actionFunction: (rows, _tableData, _setTableData, triggerReloadWithCurrentPage, _triggerReloadWithBasePage, setCheckboxes) => {
               setSelectedRowsForChangeRights(rows);
               setResetTable(() => () => {
                 triggerReloadWithCurrentPage();
@@ -116,7 +116,7 @@ export const LayerCollectionsTable = (props: RouteComponentProps) =>  {
           },
           {
             displayValue: "Delete",
-            actionFunction: (rows: any[], _tableData: any, _setTableData: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any, setCheckboxes: any) => {
+            actionFunction: (rows, _tableData, _setTableData, triggerReloadWithCurrentPage, _triggerReloadWithBasePage, setCheckboxes) => {
               deleteActions(rows, triggerReloadWithCurrentPage, setCheckboxes)
             }
           }

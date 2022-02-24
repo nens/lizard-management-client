@@ -5,7 +5,7 @@ import { Organisation } from './organisationType';
 
 export interface WmsLayerReceivedFromApi {
   name: string;
-  uuid?: string,
+  uuid: string,
   slug: string;
   description: string;
   layer_collections: {slug:string}[];

@@ -18,6 +18,7 @@ import { convertToSelectObject } from '../../../utils/convertToSelectObject';
 import { monitoringNetworkFormHelpText } from '../../../utils/help_texts/helpTextForMonitoringNetworks';
 import { fetchWithOptions } from '../../../utils/fetchWithOptions';
 import { baseUrl } from './MonitoringNetworksTable';
+import { MonitoringNetwork } from '../../../types/monitoringNetworkType';
 import TimeseriesModal from './TimeseriesModal';
 import FormActionButtons from '../../../components/FormActionButtons';
 import DeleteModal from '../../../components/DeleteModal';
@@ -25,7 +26,7 @@ import formStyles from './../../../styles/Forms.module.css';
 import monitoringNetworkIcon from "../../../images/monitoring_network_icon.svg";
 
 interface Props {
-  currentRecord?: any
+  currentRecord?: MonitoringNetwork
 };
 
 const backUrl = "/management/data_management/timeseries/monitoring_networks";
@@ -34,7 +35,7 @@ const MonitoringNetworkForm = (props: Props & DispatchProps & RouteComponentProp
   const { currentRecord } = props;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const organisations = useSelector(getOrganisations).available;
-  const organisationsToSwitchTo = organisations.filter((org: any) => org.roles.includes('admin'));
+  const organisationsToSwitchTo = organisations.filter(org => org.roles.includes('admin'));
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
 
   // Modal to manage timeseries of a monitoring network
@@ -202,7 +203,7 @@ const MonitoringNetworkForm = (props: Props & DispatchProps & RouteComponentProp
           placeholder={'- Search and select -'}
           value={values.organisation}
           valueChanged={value => handleValueChange('organisation', value)}
-          options={organisations.map((organisation: any) => convertToSelectObject(organisation.uuid, organisation.name))}
+          options={organisations.map(organisation => convertToSelectObject(organisation.uuid, organisation.name))}
           validated={values.organisation !== null && values.organisation !== ''}
           errorMessage={'Please select an organisation'}
           triedToSubmit={triedToSubmit}

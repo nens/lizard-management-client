@@ -9,6 +9,7 @@ import DeleteModal from '../../components/DeleteModal';
 import AddToGroupModal from './AddToGroupModal';
 import contactIcon from "../../images/contacts@3x.svg";
 import tableStyles from "../../components/Table.module.css";
+import { ColumnDefinition } from '../../components/Table';
 
 export const baseUrl = "/api/v4/contacts/";
 const navigationUrl = "/management/alarms/contacts";
@@ -38,10 +39,10 @@ export const ContactTable: React.FC<RouteComponentProps> = (props) =>  {
     return contact.user ? contact.user : contact;
   };
 
-  const columnDefinitions = [
+  const columnDefinitions: ColumnDefinition<Contact>[] = [
     {
       titleRenderFunction: () => "First name",
-      renderFunction: (row: Contact) => 
+      renderFunction: (row) => 
         <span
           className={tableStyles.CellEllipsis}
           title={getDjangoUserOrContactUser(row).first_name}
@@ -52,7 +53,7 @@ export const ContactTable: React.FC<RouteComponentProps> = (props) =>  {
     },
     {
       titleRenderFunction: () =>  "Last name",
-      renderFunction: (row: Contact) => 
+      renderFunction: (row) => 
         <span
           className={tableStyles.CellEllipsis}
           title={getDjangoUserOrContactUser(row).last_name}
@@ -63,7 +64,7 @@ export const ContactTable: React.FC<RouteComponentProps> = (props) =>  {
     },
     {
       titleRenderFunction: () => "Email",
-      renderFunction: (row: Contact) => 
+      renderFunction: (row) => 
         <span
           className={tableStyles.CellEllipsis}
           title={getDjangoUserOrContactUser(row).email}
@@ -74,7 +75,7 @@ export const ContactTable: React.FC<RouteComponentProps> = (props) =>  {
     },
     {
       titleRenderFunction: () =>  "Telephone",
-      renderFunction: (row: Contact) => 
+      renderFunction: (row) => 
         <span
           className={tableStyles.CellEllipsis}
           title={getDjangoUserOrContactUser(row).phone_number}
@@ -85,23 +86,21 @@ export const ContactTable: React.FC<RouteComponentProps> = (props) =>  {
     },
     {
       titleRenderFunction: () =>  "",//"Actions",
-      renderFunction: (row: Contact, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any) => {
+      renderFunction: (row, _updateTableRow, triggerReloadWithCurrentPage, triggerReloadWithBasePage) => {
         return (
             <TableActionButtons
-              tableRow={row} 
-              tableData={tableData}
-              setTableData={setTableData} 
-              triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
+              tableRow={row}
+              triggerReloadWithCurrentPage={triggerReloadWithCurrentPage}
               triggerReloadWithBasePage={triggerReloadWithBasePage}
               editUrl={`${navigationUrl}/${row.id}`}
               actions={[
                 {
                   displayValue: "Add to group",
-                  actionFunction: (row: Contact) => setSelectedRow(row)
+                  actionFunction: (row) => setSelectedRow(row)
                 },
                 {
                   displayValue: "Delete",
-                  actionFunction: (row: Contact, _updateTableRow: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any) => {
+                  actionFunction: (row, triggerReloadWithCurrentPage, _triggerReloadWithBasePage) => {
                     deleteActions([row], triggerReloadWithCurrentPage, null)
                   }
                 }
@@ -127,13 +126,13 @@ export const ContactTable: React.FC<RouteComponentProps> = (props) =>  {
       backUrl={"/management/alarms"}
     >
         <TableStateContainer 
-          gridTemplateColumns={"6% 18% 18% 32% 18% 8%"} 
+          gridTemplateColumns={"6% 18% 18% 32% 18% 8%"}
           columnDefinitions={columnDefinitions}
           baseUrl={`${baseUrl}?`} 
           checkBoxActions={[
             {
               displayValue: "Delete",
-              actionFunction: (rows: Contact[], _tableData: any, _setTableData: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any, setCheckboxes: any) => {
+              actionFunction: (rows, _tableData, _setTableData, triggerReloadWithCurrentPage, _triggerReloadWithBasePage, setCheckboxes) => {
                 deleteActions(rows, triggerReloadWithCurrentPage, setCheckboxes)
               }
             }

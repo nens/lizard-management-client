@@ -1,16 +1,13 @@
 import { Organisation } from "./organisationType";
 
-export interface Message {
+export interface MonitoringNetwork {
   uuid: string,
   url: string,
-  id: number,
   name: string,
+  description: string,
   organisation: Organisation,
-  type: string,
-  subject: string,
-  text: string,
-  html: string,
-  no_further_impact: boolean,
+  access_modifier: string,
+  num_timeseries: number,
   created: string,
   last_modified: string
 }

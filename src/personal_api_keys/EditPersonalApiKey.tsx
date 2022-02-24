@@ -3,13 +3,14 @@ import { RouteComponentProps } from 'react-router';
 import { PersonalApiKeyForm } from "./PersonalApiKeyForm";
 import SpinnerIfNotLoaded from '../components/SpinnerIfNotLoaded';
 import { createFetchRecordFunctionFromUrl } from '../utils/createFetchRecordFunctionFromUrl';
+import { PersonalApiKey } from "../types/personalApiKeyType";
 
 interface RouteParams {
   uuid: string;
 };
 
 export const EditPersonalApiKey: React.FC<RouteComponentProps<RouteParams>> = (props) => {
-  const [currentRecord, setCurrentRecord] = useState<any | null>(null);
+  const [currentRecord, setCurrentRecord] = useState<PersonalApiKey | null>(null);
 
   const { uuid } = props.match.params;
   useEffect(() => {
@@ -24,7 +25,7 @@ export const EditPersonalApiKey: React.FC<RouteComponentProps<RouteParams>> = (p
       loaded={!!currentRecord}
     >
       <PersonalApiKeyForm
-        currentRecord={currentRecord}
+        currentRecord={currentRecord!}
       />
     </SpinnerIfNotLoaded>
   );

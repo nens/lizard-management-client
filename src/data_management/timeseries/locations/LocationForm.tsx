@@ -322,7 +322,7 @@ const LocationForm = (props:Props & DispatchProps & RouteComponentProps<RoutePar
 
 const mapPropsToDispatch = (dispatch: AppDispatch) => ({
   addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout)),
-  updateLocation: (location: any) => dispatch(updateLocation(location)),
+  updateLocation: (location: LocationFromAPI) => dispatch(updateLocation(location)),
   removeLocation: () => dispatch(removeLocation()),
 });
 type DispatchProps = ReturnType<typeof mapPropsToDispatch>;

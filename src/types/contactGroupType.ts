@@ -1,6 +1,7 @@
 import { Organisation } from "./organisationType";
 
 export interface Contact {
+  uuid: string,
   id: number,
   url: string,
   first_name: string,
@@ -16,6 +17,7 @@ export interface Contact {
 }
 
 export interface ContactGroup {
+  uuid: string,
   id: number,
   url: string,
   name: string,

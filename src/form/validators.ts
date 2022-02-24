@@ -1,4 +1,5 @@
 // Functions to use as validators
+import { GeoBlockSource } from "../types/geoBlockType";
 import { Location } from "../types/locationFormTypes";
 
 // A Validator returns either an error message or false (if no errors)
@@ -115,7 +116,7 @@ export const geometryValidator = (location: Location | null) => {
   };
 };
 
-export const geoblockSourceValidator = (source: any) => {
+export const geoblockSourceValidator = (source: GeoBlockSource | null) => {
   if (!source) {
     return 'Please provide a source';
   }

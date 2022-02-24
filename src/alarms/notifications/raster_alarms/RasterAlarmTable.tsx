@@ -9,6 +9,7 @@ import tableStyles from "../../../components/Table.module.css";
 import { ExplainSideColumn } from '../../../components/ExplainSideColumn';
 import { addNotification } from '../../../actions';
 import { fetchWithOptions } from '../../../utils/fetchWithOptions';
+import { ColumnDefinition } from '../../../components/Table';
 import DeleteModal from '../../../components/DeleteModal';
 import alarmIcon from "../../../images/alarm@3x.svg";
 
@@ -31,7 +32,7 @@ export const RasterAlarmTableComponent: React.FC<DispatchProps & RouteComponentP
     });
   };
 
-  const setAlarmActive = (row: RasterAlarm, _updateTableRow: any, triggerReloadWithCurrentPage: any) => {
+  const setAlarmActive = (row: RasterAlarm, triggerReloadWithCurrentPage: () => void) => {
     fetchWithOptions(baseUrl, [row.uuid], {
       credentials: "same-origin",
       method: "PATCH",
@@ -52,10 +53,10 @@ export const RasterAlarmTableComponent: React.FC<DispatchProps & RouteComponentP
     });
   };
 
-  const columnDefinitions = [
+  const columnDefinitions: ColumnDefinition<RasterAlarm>[] = [
     {
       titleRenderFunction: () => "Name",
-      renderFunction: (row: RasterAlarm) => 
+      renderFunction: (row) => 
         <span
           className={tableStyles.CellEllipsis}
           title={row.name}
@@ -66,7 +67,7 @@ export const RasterAlarmTableComponent: React.FC<DispatchProps & RouteComponentP
     },
     {
       titleRenderFunction: () =>  "Recipients",
-      renderFunction: (row: RasterAlarm) => 
+      renderFunction: (row) => 
         <span
           className={tableStyles.CellEllipsis}
         >
@@ -76,7 +77,7 @@ export const RasterAlarmTableComponent: React.FC<DispatchProps & RouteComponentP
     },
     {
       titleRenderFunction: () => "Status",
-      renderFunction: (row: RasterAlarm) => 
+      renderFunction: (row) => 
         <span
           className={tableStyles.CellEllipsis}
         >
@@ -86,13 +87,11 @@ export const RasterAlarmTableComponent: React.FC<DispatchProps & RouteComponentP
     },
     {
       titleRenderFunction: () =>  "",//"Actions",
-      renderFunction: (row: RasterAlarm, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any) => {
+      renderFunction: (row, _updateTableRow, triggerReloadWithCurrentPage, triggerReloadWithBasePage) => {
         return (
             <TableActionButtons
-              tableRow={row} 
-              tableData={tableData}
-              setTableData={setTableData} 
-              triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
+              tableRow={row}
+              triggerReloadWithCurrentPage={triggerReloadWithCurrentPage}
               triggerReloadWithBasePage={triggerReloadWithBasePage}
               editUrl={`${navigationUrl}/${row.uuid}`}
               actions={[
@@ -102,7 +101,7 @@ export const RasterAlarmTableComponent: React.FC<DispatchProps & RouteComponentP
                 },
                 {
                   displayValue: "Delete",
-                  actionFunction: (row: RasterAlarm, _updateTableRow: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any) => {
+                  actionFunction: (row, triggerReloadWithCurrentPage, _triggerReloadWithBasePage) => {
                     deleteActions([row], triggerReloadWithCurrentPage, null)
                   }
                 }
@@ -134,7 +133,7 @@ export const RasterAlarmTableComponent: React.FC<DispatchProps & RouteComponentP
           checkBoxActions={[
             {
               displayValue: "Delete",
-              actionFunction: (rows: RasterAlarm[], _tableData: any, _setTableData: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any, setCheckboxes: any) => {
+              actionFunction: (rows, _tableData, _setTableData, triggerReloadWithCurrentPage, _triggerReloadWithBasePage, setCheckboxes) => {
                 deleteActions(rows, triggerReloadWithCurrentPage, setCheckboxes)
               }
             }

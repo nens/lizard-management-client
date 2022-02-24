@@ -9,7 +9,6 @@ interface MyProps {
   valueChanged: (value: string) => void,
   onFocus?: (e: any) => void,
   onBlur?: () => void,
-  handleEnter?: (e: any) => void,
   readOnly?: boolean,
   form?: string,
 };

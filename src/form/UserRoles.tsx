@@ -3,13 +3,14 @@ import styles from "./UserRoles.module.css";
 import formStyles from "../styles/Forms.module.css";
 import { useSelector } from "react-redux";
 import { getUserId } from "../reducers";
+import { User } from "../types/userType";
 
 interface MyProps {
   title: string,
   name: string,
   value: string[],
   valueChanged: (value: string[]) => void,
-  currentUser: any,
+  currentUser: User | undefined,
   onFocus?: (e: any) => void,
   onBlur?: () => void,
   readOnly?: boolean,

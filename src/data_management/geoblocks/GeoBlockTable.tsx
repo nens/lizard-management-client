@@ -11,6 +11,7 @@ import { fetchWithOptions } from '../../utils/fetchWithOptions';
 import { geoBlockHelpText } from '../../utils/help_texts/helpTextForGeoBlock';
 import { openRasterInLizardViewer } from '../../utils/openRasterInViewer';
 import { RasterLayerFromAPI } from '../../api/rasters';
+import { ColumnDefinition } from '../../components/Table';
 
 export const baseUrl = "/api/v4/rasters/";
 const navigationUrl = "/management/data_management/geoblocks";
@@ -31,10 +32,10 @@ export const GeoBlockTable: React.FC<RouteComponentProps> = (props) =>  {
     });
   };
 
-  const columnDefinitions = [
+  const columnDefinitions: ColumnDefinition<RasterLayerFromAPI>[] = [
     {
       titleRenderFunction: () => "Name",
-      renderFunction: (row: RasterLayerFromAPI) => 
+      renderFunction: (row) => 
         <span
           className={tableStyles.CellEllipsis}
           title={row.name}
@@ -45,7 +46,7 @@ export const GeoBlockTable: React.FC<RouteComponentProps> = (props) =>  {
     },
     {
       titleRenderFunction: () => "Operations",
-      renderFunction: (row: RasterLayerFromAPI) =>
+      renderFunction: (row) =>
         <span
           className={tableStyles.CellEllipsis}
           title={row.weight.toString()}
@@ -56,7 +57,7 @@ export const GeoBlockTable: React.FC<RouteComponentProps> = (props) =>  {
     },
     {
       titleRenderFunction: () =>  "User",
-      renderFunction: (row: RasterLayerFromAPI) =>  
+      renderFunction: (row) =>  
       <span
         className={tableStyles.CellEllipsis}
         title={row.supplier}
@@ -67,7 +68,7 @@ export const GeoBlockTable: React.FC<RouteComponentProps> = (props) =>  {
     },
     {
       titleRenderFunction: () =>  "Accessibility",
-      renderFunction: (row: RasterLayerFromAPI) =>
+      renderFunction: (row) =>
         <span
           className={tableStyles.CellEllipsis}
           title={row.access_modifier}
@@ -79,25 +80,23 @@ export const GeoBlockTable: React.FC<RouteComponentProps> = (props) =>  {
     },
     {
       titleRenderFunction: () =>  "",//"Actions",
-      renderFunction: (row: RasterLayerFromAPI, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any) => {
+      renderFunction: (row, _updateTableRow, triggerReloadWithCurrentPage, triggerReloadWithBasePage) => {
         return (
             <TableActionButtons
-              tableRow={row} 
-              tableData={tableData}
-              setTableData={setTableData} 
-              triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
+              tableRow={row}
+              triggerReloadWithCurrentPage={triggerReloadWithCurrentPage}
               triggerReloadWithBasePage={triggerReloadWithBasePage}
               editUrl={`${navigationUrl}/${row.uuid}`}
               actions={[
                 {
                   displayValue: "Delete",
-                  actionFunction: (row: RasterLayerFromAPI, _updateTableRow: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any) => {
+                  actionFunction: (row, triggerReloadWithCurrentPage, _triggerReloadWithBasePage) => {
                     deleteActions([row], triggerReloadWithCurrentPage, null)
                   }
                 },
                 {
                   displayValue: "Open in Viewer",
-                  actionFunction: (row: RasterLayerFromAPI) => openRasterInLizardViewer(row)
+                  actionFunction: (row) => openRasterInLizardViewer(row)
                 }
               ]}
             />
@@ -127,7 +126,7 @@ export const GeoBlockTable: React.FC<RouteComponentProps> = (props) =>  {
           checkBoxActions={[
             {
               displayValue: "Delete",
-              actionFunction: (rows: RasterLayerFromAPI[], _tableData: any, _setTableData: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any, setCheckboxes: any) => {
+              actionFunction: (rows, _tableData, _setTableData, triggerReloadWithCurrentPage, _triggerReloadWithBasePage, setCheckboxes) => {
                 deleteActions(rows, triggerReloadWithCurrentPage, setCheckboxes)
               }
             }

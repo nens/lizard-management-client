@@ -17,7 +17,6 @@ interface DurationFieldProps {
   triedToSubmit?: boolean,
   onFocus?: (e: React.ChangeEvent<HTMLInputElement>) => void,
   onBlur?: () => void,
-  handleEnter?: (e: any) => void,
   readOnly?: boolean,
 };
 

@@ -21,10 +21,11 @@ import DeleteModal from '../../components/DeleteModal';
 import formStyles from './../../styles/Forms.module.css';
 import layerCollectionIcon from "../../images/layer_collection_icon.svg";
 import { layerCollectionFormHelpText } from '../../utils/help_texts/helpTextForLayercollections';
+import { Layercollection } from '../../api/rasters';
 
 
 interface Props {
-  currentRecord?: any
+  currentRecord?: Layercollection
 };
 
 const backUrl = "/management/data_management/layer_collections";

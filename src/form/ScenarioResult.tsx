@@ -60,6 +60,14 @@ interface ResultRowProps {
   onBlur?: () => void,
 };
 
+interface ScenarioResultApiResponse {
+  id: number,
+  result_type: {
+    name: string
+  },
+  raster: string, // url
+}
+
 // Render button for result deletion
 const DeleteButton: React.FC<DeleteButtonProps> = ({
   scheduledForDeletion,
@@ -200,7 +208,7 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
       setRawResults({
         isFetching: false,
         scheduledForBulkDeletion: false,
-        results: res.results.map((result: any) => {
+        results: res.results.map((result: ScenarioResultApiResponse) => {
           return {
             id: result.id,
             name: result.result_type.name,
@@ -215,7 +223,7 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
       setBasicResults({
         isFetching: false,
         scheduledForBulkDeletion: false,
-        results: res.results.map((result: any) => {
+        results: res.results.map((result: ScenarioResultApiResponse) => {
           return {
             id: result.id,
             name: result.result_type.name,
@@ -230,7 +238,7 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
       setArrivalResults({
         isFetching: false,
         scheduledForBulkDeletion: false,
-        results: res.results.map((result: any) => {
+        results: res.results.map((result: ScenarioResultApiResponse) => {
           return {
             id: result.id,
             name: result.result_type.name,
@@ -245,7 +253,7 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
       setDamageResults({
         isFetching: false,
         scheduledForBulkDeletion: false,
-        results: res.results.map((result: any) => {
+        results: res.results.map((result: ScenarioResultApiResponse) => {
           return {
             id: result.id,
             name: result.result_type.name,

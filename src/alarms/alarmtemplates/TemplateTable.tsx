@@ -8,12 +8,13 @@ import { fetchWithOptions } from '../../utils/fetchWithOptions';
 import { Message } from '../../types/messageType';
 import DeleteModal from '../../components/DeleteModal';
 import templateIcon from "../../images/templates@3x.svg";
+import { ColumnDefinition } from '../../components/Table';
 
 export const baseUrl = "/api/v4/messages/";
 const navigationUrl = "/management/alarms/templates";
 
 export const TemplateTable: React.FC<RouteComponentProps> = (props) =>  {
-  const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
+  const [rowsToBeDeleted, setRowsToBeDeleted] = useState<Message[]>([]);
   const [resetTable, setResetTable] = useState<Function | null>(null);
 
   const deleteActions = (
@@ -28,10 +29,10 @@ export const TemplateTable: React.FC<RouteComponentProps> = (props) =>  {
     });
   };
 
-  const columnDefinitions = [
+  const columnDefinitions: ColumnDefinition<Message>[] = [
     {
       titleRenderFunction: () => "Name",
-      renderFunction: (row: Message) => 
+      renderFunction: (row) => 
         <span
           className={tableStyles.CellEllipsis}
           title={row.name}
@@ -42,7 +43,7 @@ export const TemplateTable: React.FC<RouteComponentProps> = (props) =>  {
     },
     {
       titleRenderFunction: () =>  "Type",
-      renderFunction: (row: Message) => 
+      renderFunction: (row) => 
         <span
           className={tableStyles.CellEllipsis}
           title={row.type}
@@ -53,19 +54,17 @@ export const TemplateTable: React.FC<RouteComponentProps> = (props) =>  {
     },
     {
       titleRenderFunction: () =>  "",//"Actions",
-      renderFunction: (row: Message, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any) => {
+      renderFunction: (row, _updateTableRow, triggerReloadWithCurrentPage, triggerReloadWithBasePage) => {
         return (
             <TableActionButtons
-              tableRow={row} 
-              tableData={tableData}
-              setTableData={setTableData} 
-              triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
+              tableRow={row}
+              triggerReloadWithCurrentPage={triggerReloadWithCurrentPage}
               triggerReloadWithBasePage={triggerReloadWithBasePage}
               editUrl={`${navigationUrl}/${row.id}`}
               actions={[
                 {
                   displayValue: "Delete",
-                  actionFunction: (row: Message, _updateTableRow: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any) => {
+                  actionFunction: (row, triggerReloadWithCurrentPage, _triggerReloadWithBasePage) => {
                     deleteActions([row], triggerReloadWithCurrentPage, null)
                   }
                 },
@@ -91,13 +90,13 @@ export const TemplateTable: React.FC<RouteComponentProps> = (props) =>  {
       backUrl={"/management/alarms"}
     >
         <TableStateContainer 
-          gridTemplateColumns={"10% 70% 10% 10%"} 
+          gridTemplateColumns={"10% 70% 10% 10%"}
           columnDefinitions={columnDefinitions}
           baseUrl={`${baseUrl}?`} 
           checkBoxActions={[
             {
               displayValue: "Delete",
-              actionFunction: (rows: Message[], _tableData: any, _setTableData: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any, setCheckboxes: any) => {
+              actionFunction: (rows, _tableData, _setTableData, triggerReloadWithCurrentPage, _triggerReloadWithBasePage, setCheckboxes) => {
                 deleteActions(rows, triggerReloadWithCurrentPage, setCheckboxes)
               }
             }

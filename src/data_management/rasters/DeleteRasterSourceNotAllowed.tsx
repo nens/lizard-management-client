@@ -1,9 +1,10 @@
 import React from 'react';
+import { RasterSourceFromAPI } from '../../api/rasters';
 import Modal from '../../components/Modal';
 
 interface MyProps {
   handleClose: () => void,
-  rowToBeDeleted: any,
+  rowToBeDeleted: RasterSourceFromAPI,
 }
 
 const DeleteRasterSourceNotAllowed: React.FC<MyProps> = (props) => {

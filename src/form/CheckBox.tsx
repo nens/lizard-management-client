@@ -8,7 +8,7 @@ interface CheckBoxProps {
   value: boolean,
   valueChanged: (bool: boolean) => void,
   form?: string,
-  onFocus?: (e: any) => void,
+  onFocus?: (e: React.ChangeEvent<HTMLInputElement>) => void,
   onBlur?: () => void,
   readOnly?: boolean
   validated?: boolean;

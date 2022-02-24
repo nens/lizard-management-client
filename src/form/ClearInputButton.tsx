@@ -4,7 +4,7 @@ import styles from "./ClearInputButton.module.css";
 interface ClearInputButtonProps {
   className?: string,
   icon?: string
-  onClick?: (e: any) => void
+  onClick?: (e: React.MouseEvent<HTMLDivElement>) => void
 };
 
 export const ClearInputButton: React.FC<ClearInputButtonProps> = (props) => {

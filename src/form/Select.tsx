@@ -10,7 +10,6 @@ interface MyProps {
   validated: boolean,
   errorMessage?: string | false,
   placeholder?: string,
-  handleEnter?: (e: any) => void,
   triedToSubmit: boolean,
   readOnly?: boolean
 };

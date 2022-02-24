@@ -1,6 +1,5 @@
-import React from 'react';
-import {useState, }  from 'react';
-import {useSelector} from 'react-redux';
+import { useState }  from 'react';
+import { useSelector } from 'react-redux';
 import TableStateContainer from '../../components/TableStateContainer';
 import { NavLink } from "react-router-dom";
 import TableActionButtons from '../../components/TableActionButtons';
@@ -13,6 +12,8 @@ import { DefaultScenarioExplanationText } from '../../utils/help_texts/helpTextF
 import { getLocalDateString } from '../../utils/dateUtils';
 import DeleteModal from '../../components/DeleteModal';
 import AuthorisationModal from '../../components/AuthorisationModal';
+import { ColumnDefinition } from '../../components/Table';
+import { Scenario } from '../../types/scenarioType';
 
 const baseUrl = "/api/v4/scenarios/";
 const navigationUrl = "/management/data_management/scenarios";
@@ -32,17 +33,17 @@ const fetchRawDataWithOptions = (uuids: string[], fetchOptions: RequestInit) => 
 };
 
 export const ScenarioTable = () =>  {
-  const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
-  const [rowsWithRawDataToBeDeleted, setRowsWithRawDataToBeDeleted] = useState<any[]>([]);
+  const [rowsToBeDeleted, setRowsToBeDeleted] = useState<Scenario[]>([]);
+  const [rowsWithRawDataToBeDeleted, setRowsWithRawDataToBeDeleted] = useState<Scenario[]>([]);
   const [resetTable, setResetTable] = useState<Function | null>(null);
 
   // selected rows for action to change accessibility
-  const [rowsToChangeAccess, setRowsToChangeAccess] = useState<any[]>([]);
+  const [rowsToChangeAccess, setRowsToChangeAccess] = useState<Scenario[]>([]);
 
   const userName = useSelector(getUsername);
 
   const deleteActions = (
-    rows: any[],
+    rows: Scenario[],
     triggerReloadWithCurrentPage: Function,
     setCheckboxes: Function | null
   ) => {
@@ -54,7 +55,7 @@ export const ScenarioTable = () =>  {
   };
 
   const deleteRawActions = (
-    rows: any[],
+    rows: Scenario[],
     triggerReloadWithCurrentPage: Function,
     setCheckboxes: Function | null
   ) => {
@@ -65,10 +66,10 @@ export const ScenarioTable = () =>  {
     });
   };
 
-  const columnDefinitions = [
+  const columnDefinitions: ColumnDefinition<Scenario>[] = [
     {
       titleRenderFunction: () => "Name",
-      renderFunction: (row: any) => 
+      renderFunction: (row) => 
         <span
           className={tableStyles.CellEllipsis}
           title={row.name}
@@ -84,7 +85,7 @@ export const ScenarioTable = () =>  {
     },
     {
       titleRenderFunction: () =>  "Based on",
-      renderFunction: (row: any) => 
+      renderFunction: (row) => 
         <span
           className={tableStyles.CellEllipsis}
           title={row.model_name}
@@ -100,7 +101,7 @@ export const ScenarioTable = () =>  {
     },
     {
       titleRenderFunction: () =>  "User",
-      renderFunction: (row: any) =>  
+      renderFunction: (row) =>  
       <span
         className={tableStyles.CellEllipsis}
         title={row.username}
@@ -111,17 +112,17 @@ export const ScenarioTable = () =>  {
     },
     {
       titleRenderFunction: () =>  "Raw data",
-      renderFunction: (row: any) => row.has_raw_results === true? "Yes" : "No",
+      renderFunction: (row) => row.has_raw_results === true? "Yes" : "No",
       orderingField: null,
     },
     {
       titleRenderFunction: () =>  "Last update",
-      renderFunction: (row: any) => getLocalDateString(row.last_modified),
+      renderFunction: (row) => getLocalDateString(row.last_modified),
       orderingField: "last_modified",
     },
     {
       titleRenderFunction: () =>  "Size",
-      renderFunction: (row: any) => 
+      renderFunction: (row) => 
         <span
           className={tableStyles.CellEllipsis}
           title={`${row.total_size? row.total_size: 0} Bytes`}
@@ -133,32 +134,30 @@ export const ScenarioTable = () =>  {
     },
     {
       titleRenderFunction: () =>  "",//"Actions",
-      renderFunction: (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any) => {
+      renderFunction: (row, _updateTableRow, triggerReloadWithCurrentPage, triggerReloadWithBasePage) => {
         return (
             <TableActionButtons
-              tableRow={row} 
-              tableData={tableData}
-              setTableData={setTableData} 
+              tableRow={row}
               triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
               triggerReloadWithBasePage={triggerReloadWithBasePage}
               editUrl={`${navigationUrl}/${row.uuid}`}
               actions={row.has_raw_results ? [
                 {
                   displayValue: "Delete raw data",
-                  actionFunction: (row: any, _updateTableRow: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any) => {
+                  actionFunction: (row, triggerReloadWithCurrentPage, _triggerReloadWithBasePage) => {
                     deleteRawActions([row], triggerReloadWithCurrentPage, null)
                   }
                 },
                 {
                   displayValue: "Delete",
-                  actionFunction: (row: any, _updateTableRow: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any) => {
+                  actionFunction: (row, triggerReloadWithCurrentPage, _triggerReloadWithBasePage) => {
                     deleteActions([row], triggerReloadWithCurrentPage, null)
                   }
                 }
               ] : [
                 {
                   displayValue: "Delete",
-                  actionFunction: (row: any, _updateTableRow: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any) => {
+                  actionFunction: (row, triggerReloadWithCurrentPage, _triggerReloadWithBasePage) => {
                     deleteActions([row], triggerReloadWithCurrentPage, null)
                   }
                 }
@@ -185,7 +184,7 @@ export const ScenarioTable = () =>  {
           checkBoxActions={[
             {
               displayValue: "Change rights",
-              actionFunction: (rows: any[], _tableData: any, _setTableData: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any, setCheckboxes: any) => {
+              actionFunction: (rows, _tableData, _setTableData, triggerReloadWithCurrentPage, _triggerReloadWithBasePage, setCheckboxes) => {
                 setRowsToChangeAccess(rows);
                 setResetTable(() => () => {
                   triggerReloadWithCurrentPage();
@@ -195,15 +194,15 @@ export const ScenarioTable = () =>  {
             },
             {
               displayValue: "Delete",
-              actionFunction: (rows: any[], _tableData: any, _setTableData: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any, setCheckboxes: any) => {
+              actionFunction: (rows, _tableData, _setTableData, triggerReloadWithCurrentPage, _triggerReloadWithBasePage, setCheckboxes) => {
                 deleteActions(rows, triggerReloadWithCurrentPage, setCheckboxes)
               }
             },{
               displayValue: "Delete raw",
-              actionFunction: (rows: any[], _tableData: any, _setTableData: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any, setCheckboxes: any) => {
+              actionFunction: (rows, _tableData, _setTableData, triggerReloadWithCurrentPage, _triggerReloadWithBasePage, setCheckboxes) => {
                 deleteRawActions(rows, triggerReloadWithCurrentPage, setCheckboxes)
               },
-              checkIfActionIsApplicable: (row: any) => row.has_raw_results === true
+              checkIfActionIsApplicable: (row) => row.has_raw_results === true
             },
           ]}
           queryCheckBox={{

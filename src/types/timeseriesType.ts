@@ -1,10 +1,25 @@
+export interface Datasource {
+  id: number,
+  name: string,
+};
+
 interface Timeseries {
   uuid: string,
   name: string,
   parameter: string,
   unit: string,
   reference_frame: string,
+  code: string,
+  value_type: string,
+  last_value: string,
+  interval: number,
+  datasource: Datasource,
+  extra_metadata: Object,
+  supplier: string,
+  supplier_code: string,
+  access_modifier: string,
   observation_type: {
+    id: number,
     code: string,
     parameter: string,
     unit: string,

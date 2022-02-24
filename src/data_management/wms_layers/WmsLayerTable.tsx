@@ -7,16 +7,18 @@ import { ExplainSideColumn } from '../../components/ExplainSideColumn';
 import { fetchWithOptions } from '../../utils/fetchWithOptions';
 import wmsIcon from "../../images/wms@3x.svg";
 import tableStyles from "../../components/Table.module.css";
+import { ColumnDefinition } from '../../components/Table';
+import { WmsLayerReceivedFromApi } from '../../types/WmsLayerType';
 
 export const baseUrl = "/api/v4/wmslayers/";
 const navigationUrl = "/management/data_management/wms_layers";
 
 export const WmsLayerTable = (props: RouteComponentProps) =>  {
-  const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
+  const [rowsToBeDeleted, setRowsToBeDeleted] = useState<WmsLayerReceivedFromApi[]>([]);
   const [resetTable, setResetTable] = useState<Function | null>(null);
 
   const deleteActions = (
-    rows: any[],
+    rows: WmsLayerReceivedFromApi[],
     triggerReloadWithCurrentPage: Function,
     setCheckboxes: Function | null
   ) => {
@@ -27,10 +29,10 @@ export const WmsLayerTable = (props: RouteComponentProps) =>  {
     });
   };
 
-  const columnDefinitions = [
+  const columnDefinitions: ColumnDefinition<WmsLayerReceivedFromApi>[] = [
     {
       titleRenderFunction: () => "Name",
-      renderFunction: (row: any) => 
+      renderFunction: (row) => 
         <span
           className={tableStyles.CellEllipsis}
           title={row.name}
@@ -41,7 +43,7 @@ export const WmsLayerTable = (props: RouteComponentProps) =>  {
     },
     {
       titleRenderFunction: () =>  "Description",
-      renderFunction: (row: any) => 
+      renderFunction: (row) => 
         <span
           className={tableStyles.CellEllipsis}
           title={row.description}
@@ -52,19 +54,17 @@ export const WmsLayerTable = (props: RouteComponentProps) =>  {
     },
     {
       titleRenderFunction: () =>  "",//"Actions",
-      renderFunction: (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any) => {
+      renderFunction: (row, _updateTableRow, triggerReloadWithCurrentPage, triggerReloadWithBasePage) => {
         return (
             <TableActionButtons
-              tableRow={row} 
-              tableData={tableData}
-              setTableData={setTableData} 
-              triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
+              tableRow={row}
+              triggerReloadWithCurrentPage={triggerReloadWithCurrentPage}
               triggerReloadWithBasePage={triggerReloadWithBasePage}
               editUrl={`${navigationUrl}/${row.uuid}`}
               actions={[
                 {
                   displayValue: "Delete",
-                  actionFunction: (row: any, _updateTableRow: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any) => {
+                  actionFunction: (row, triggerReloadWithCurrentPage, _triggerReloadWithBasePage) => {
                     deleteActions([row], triggerReloadWithCurrentPage, null)
                   }
                 },
@@ -92,13 +92,13 @@ export const WmsLayerTable = (props: RouteComponentProps) =>  {
       backUrl={"/management/data_management"}
     >
         <TableStateContainer 
-          gridTemplateColumns={"8% 29% 55% 8%"} 
+          gridTemplateColumns={"8% 29% 55% 8%"}
           columnDefinitions={columnDefinitions}
           baseUrl={`${baseUrl}?`} 
           checkBoxActions={[
             {
               displayValue: "Delete",
-              actionFunction: (rows: any[], _tableData: any, _setTableData: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any, setCheckboxes: any) => {
+              actionFunction: (rows, _tableData, _setTableData, triggerReloadWithCurrentPage, _triggerReloadWithBasePage, setCheckboxes) => {
                 deleteActions(rows, triggerReloadWithCurrentPage, setCheckboxes)
               }
             }

@@ -5,7 +5,7 @@ export interface Field {
   width: number
 }
 
-export const ModalDeleteContent = (rows: any[], spinner: boolean, fields: Field[]) => {
+export function ModalDeleteContent<TableRowType> (rows: TableRowType[], spinner: boolean, fields: Field[]) {
   return (
     <div>
     <ul
@@ -14,14 +14,23 @@ export const ModalDeleteContent = (rows: any[], spinner: boolean, fields: Field[
         maxHeight: "200px"
       }}
     >
-        {
-        rows.map((row, i) => {
-            return (
+        {rows.map((row, i) => {
+          return (
             <li key={i} style={{fontStyle: "italic", listStyleType: "square", height: "80px"}}>
               <span style={{display:"flex", flexDirection: "row",justifyContent: "space-between", alignItems: "center"}}>
-                { fields.map(field=>{
+                {fields.map(field => {
                   return (
-                    <span key={field.name} title={row[field.name]} style={{width:`${field.width}%`, textOverflow: "ellipsis", overflow: "hidden"}}>{row[field.name]}</span>
+                    <span
+                      key={field.name}
+                      title={row[field.name as keyof TableRowType] + ''}
+                      style={{
+                        width:`${field.width}%`,
+                        textOverflow: "ellipsis",
+                        overflow: "hidden"
+                      }}
+                    >
+                      {row[field.name as keyof TableRowType]}
+                    </span>
                   );
                 })}
               </span>

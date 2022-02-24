@@ -7,6 +7,8 @@ import ModalBackground from '../components/ModalBackground';
 import formStyles from '../styles/Forms.module.css';
 import buttonStyles from '../styles/Buttons.module.css';
 import tableStyles from "../components/Table.module.css";
+import { ColumnDefinition } from '../components/Table';
+import { UserInvitation } from '../types/userType';
 
 interface MyProps {
   handleClose: () => void
@@ -15,7 +17,7 @@ interface MyProps {
 function InvitationModal (props: MyProps & DispatchProps) {
   // DELETE requests to cancel a pending invitation
   const deleteAction = (
-    row: any,
+    row: UserInvitation,
     triggerReloadWithCurrentPage: Function,
   ) => {
     if (!row) return;
@@ -34,10 +36,10 @@ function InvitationModal (props: MyProps & DispatchProps) {
     }).catch(console.error);
   };
 
-  const columnDefinitions = [
+  const columnDefinitions: ColumnDefinition<UserInvitation>[] = [
     {
       titleRenderFunction: () => 'Email',
-      renderFunction: (row: any) => (
+      renderFunction: (row) => (
         <span
           className={tableStyles.CellEllipsis}
           title={row.email}
@@ -49,7 +51,7 @@ function InvitationModal (props: MyProps & DispatchProps) {
     },
     {
       titleRenderFunction: () => 'Expires in',
-      renderFunction: (row: any) => {
+      renderFunction: (row) => {
         const createdDate = new Date(row.created_at).getTime();
         const currentDate = new Date().getTime();
         const numberOfDaysCreated = Math.floor((currentDate - createdDate) / (1000 * 60 * 60 * 24));
@@ -66,18 +68,16 @@ function InvitationModal (props: MyProps & DispatchProps) {
     },
     {
       titleRenderFunction: () => '', /* Actions */
-      renderFunction: (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any) => {
+      renderFunction: (row, _updateTableRow, triggerReloadWithCurrentPage, triggerReloadWithBasePage) => {
         return (
             <TableActionButtons
               tableRow={row}
-              tableData={tableData}
-              setTableData={setTableData}
               triggerReloadWithCurrentPage={triggerReloadWithCurrentPage}
               triggerReloadWithBasePage={triggerReloadWithBasePage}
               actions={[
                 {
                   displayValue: "Revoke",
-                  actionFunction: (row: any, _updateTableRow: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any) => {
+                  actionFunction: (row, triggerReloadWithCurrentPage, _triggerReloadWithBasePage) => {
                     deleteAction(row, triggerReloadWithCurrentPage);
                   }
                 },

@@ -12,7 +12,6 @@ interface MyProps {
   clearInput?: (name: string) => void,
   errorMessage?: string | false,
   placeholder?: string,
-  handleEnter?: (e: any) => void,
   triedToSubmit?: boolean,
   readOnly?: boolean
 };
@@ -55,7 +54,7 @@ export const Dropdown: React.FC<MyProps> = (props) => {
     ));
   }, [name, options, searchString]);
 
-  const handleKeyUp = (e: any) => {
+  const handleKeyUp = (e: React.KeyboardEvent) => {
     if (e.key === "Escape") {
       setMenuIsOpen(false);
     };

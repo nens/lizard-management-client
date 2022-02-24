@@ -23,6 +23,7 @@ import { rasterSourceFormHelpText } from '../../utils/help_texts/helpTextForRast
 import { convertToSelectObject } from '../../utils/convertToSelectObject';
 import { fetchWithOptions } from '../../utils/fetchWithOptions';
 import { baseUrl } from './RasterSourceTable';
+import { User } from '../../types/userType';
 import Modal from '../../components/Modal';
 import FormActionButtons from '../../components/FormActionButtons';
 import DeleteModal from '../../components/DeleteModal';
@@ -51,7 +52,7 @@ export const fetchSuppliers = async (uuid: string, searchInput: string) => {
   });
   const responseJSON = await response.json();
 
-  return responseJSON.results.map((supplier: any) => convertToSelectObject(supplier.id, supplier.username));
+  return responseJSON.results.map((supplier: User) => convertToSelectObject(supplier.id, supplier.username));
 };
 
 const RasterSourceForm: React.FC<Props & DispatchProps & RouteComponentProps<RouteParams>> = (props) => {

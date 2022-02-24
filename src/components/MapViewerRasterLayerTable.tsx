@@ -74,9 +74,7 @@ export const MapViewerRasterLayerTable: React.FC<Props> = ({setSelectedRasters})
           checkBoxActions={[
             {
               displayValue: "Add to map",
-              actionFunction: (rows: RasterLayerFromAPI[], _tableData: any, _setTableData: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any, setCheckboxes: any) => {
-                setSelectedRasters(rows);
-              }
+              actionFunction: rows => setSelectedRasters(rows)
             },
           ]}
           filterOptions={[

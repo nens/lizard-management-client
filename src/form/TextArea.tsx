@@ -13,7 +13,6 @@ interface MyProps {
   placeholder?: string,
   onFocus?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void,
   onBlur?: () => void,
-  handleEnter?: (e: any) => void,
   triedToSubmit?: boolean,
   readOnly?: boolean,
   form?: string,
@@ -30,7 +29,6 @@ export const TextArea: React.FC<MyProps> = (props) => {
     clearInput,
     onFocus,
     onBlur,
-    handleEnter,
     validated,
     errorMessage,
     triedToSubmit,
@@ -71,7 +69,6 @@ export const TextArea: React.FC<MyProps> = (props) => {
           value={value || ""}
           onFocus={onFocus}
           onBlur={onBlur}
-          onKeyUp={handleEnter}
           readOnly={!!readOnly}
           form={form}
           rows={rows}

@@ -8,16 +8,18 @@ import TableActionButtons from '../components/TableActionButtons';
 import { personalApiKeysFormHelpText } from '../utils/help_texts/helpTextForPersonalAPIKeys';
 import DeleteModal from '../components/DeleteModal';
 import { fetchWithOptions } from '../utils/fetchWithOptions';
+import { ColumnDefinition } from '../components/Table';
+import { PersonalApiKey } from '../types/personalApiKeyType';
 
 export const baseUrl = "/api/v4/personalapikeys/";
 const navigationUrl = "/management/personal_api_keys";
 
 export const PersonalApiKeysTable = (props: RouteComponentProps) =>  {
-  const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
+  const [rowsToBeDeleted, setRowsToBeDeleted] = useState<PersonalApiKey[]>([]);
   const [resetTable, setResetTable] = useState<Function | null>(null);
 
   const deleteActions = (
-    rows: any[],
+    rows: PersonalApiKey[],
     triggerReloadWithCurrentPage: Function,
     setCheckboxes: Function | null
   ) => {
@@ -28,10 +30,10 @@ export const PersonalApiKeysTable = (props: RouteComponentProps) =>  {
     });
   };
 
-  const columnDefinitions = [
+  const columnDefinitions: ColumnDefinition<PersonalApiKey>[] = [
     {
       titleRenderFunction: () => "Name",
-      renderFunction: (row: any) => 
+      renderFunction: (row) => 
         <span
           className={tableStyles.CellEllipsis}
           title={row.name}
@@ -43,7 +45,7 @@ export const PersonalApiKeysTable = (props: RouteComponentProps) =>  {
     },
     {
       titleRenderFunction: () => "Scope",
-      renderFunction: (row: any) => 
+      renderFunction: (row) => 
         <span
           className={tableStyles.CellEllipsis}
           title={row.scope}
@@ -55,10 +57,10 @@ export const PersonalApiKeysTable = (props: RouteComponentProps) =>  {
     },
     {
       titleRenderFunction: () => "Created on",
-      renderFunction: (row: any) => 
+      renderFunction: (row) => 
         <span
           className={tableStyles.CellEllipsis}
-          title={row.creatd}
+          title={row.created}
         >
           {row.created}
         </span>
@@ -67,19 +69,17 @@ export const PersonalApiKeysTable = (props: RouteComponentProps) =>  {
     },
     {
       titleRenderFunction: () =>  "",//"Actions",
-      renderFunction: (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any) => {
+      renderFunction: (row, _updateTableRow, triggerReloadWithCurrentPage, triggerReloadWithBasePage) => {
         return (
             <TableActionButtons
-              tableRow={row} 
-              tableData={tableData}
-              setTableData={setTableData} 
-              triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
+              tableRow={row}
+              triggerReloadWithCurrentPage={triggerReloadWithCurrentPage}
               triggerReloadWithBasePage={triggerReloadWithBasePage}
               editUrl={`${navigationUrl}/${row.prefix}`}
               actions={[
                 {
                   displayValue: "Delete",
-                  actionFunction: (row: any, _updateTableRow: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any) => {
+                  actionFunction: (row, triggerReloadWithCurrentPage, _triggerReloadWithBasePage) => {
                     deleteActions([row], triggerReloadWithCurrentPage, null)
                   }
                 },

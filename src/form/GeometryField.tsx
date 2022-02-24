@@ -9,10 +9,9 @@ interface MyProps {
   value: Location | null,
   validated: boolean,
   valueChanged: (value: Location | null) => void,
-  clearInput?: (e: any) => void,
+  clearInput?: (value: string) => void,
   errorMessage?: string | false,
   placeholder?: string,
-  handleEnter?: (e: any) => void,
   onFocus?: (e: React.ChangeEvent<HTMLInputElement>) => void,
   onBlur?: () => void,
   triedToSubmit?: boolean,
@@ -30,7 +29,6 @@ export const GeometryField: React.FC<MyProps> = (props) => {
     errorMessage,
     onFocus,
     onBlur,
-    handleEnter,
     clearInput,
     triedToSubmit,
     readOnly
@@ -73,7 +71,6 @@ export const GeometryField: React.FC<MyProps> = (props) => {
             errorMessage={errorMessage}
             onFocus={onFocus}
             onBlur={onBlur}
-            handleEnter={handleEnter}
             clearInput={clearInput}
             triedToSubmit={triedToSubmit}
             readOnly={readOnly}
@@ -102,7 +99,6 @@ export const GeometryField: React.FC<MyProps> = (props) => {
             errorMessage={errorMessage}
             onFocus={onFocus}
             onBlur={onBlur}
-            handleEnter={handleEnter}
             clearInput={clearInput}
             triedToSubmit={triedToSubmit}
             readOnly={readOnly}

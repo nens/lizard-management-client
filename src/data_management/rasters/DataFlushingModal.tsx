@@ -3,12 +3,12 @@ import { connect } from 'react-redux';
 import { AppDispatch } from '../..';
 import { RasterSourceFromAPI } from '../../api/rasters';
 import { addNotification } from './../../actions';
-import { ModalDeleteContent } from './../../components/ModalDeleteContent';
+import { Field, ModalDeleteContent } from './../../components/ModalDeleteContent';
 import Modal from './../../components/Modal';
 
 interface MyProps {
   row: RasterSourceFromAPI,
-  displayContent: any[],
+  displayContent: Field[],
   handleClose: () => void,
 }
 

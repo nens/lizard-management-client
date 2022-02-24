@@ -7,12 +7,13 @@ import { getSelectedOrganisation } from '../../../reducers';
 import { addNotification } from '../../../actions';
 import { convertToSelectObject } from '../../../utils/convertToSelectObject';
 import { useRecursiveFetch } from '../../../api/hooks';
+import { TimeseriesFromTimeseriesEndpoint } from '../../../types/timeseriesType';
 import ModalBackground from '../../../components/ModalBackground';
 import formStyles from '../../../styles/Forms.module.css';
 import buttonStyles from '../../../styles/Buttons.module.css';
 
 interface MyProps {
-  timeseries: any[],
+  timeseries: TimeseriesFromTimeseriesEndpoint[],
   resetTable: Function | null,
   handleClose: () => void
 }

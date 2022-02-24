@@ -92,21 +92,17 @@ export const UserTable: React.FC<RouteComponentProps> = (props) =>  {
     },
     {
       titleRenderFunction: () =>  "",//"Actions",
-      // @ts-ignore
-      renderFunction: (row, tableData: any, setTableData: any, triggerReloadWithCurrentPage, triggerReloadWithBasePage) => {
+      renderFunction: (row, _updateTableRow, triggerReloadWithCurrentPage, triggerReloadWithBasePage) => {
         return (
           <TableActionButtons
-            tableRow={row} 
-            tableData={tableData}
-            setTableData={setTableData} 
-            triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
+            tableRow={row}
+            triggerReloadWithCurrentPage={triggerReloadWithCurrentPage}
             triggerReloadWithBasePage={triggerReloadWithBasePage}
             editUrl={`${navigationUrl}/${row.id}`}
             actions={[
               {
                 displayValue: "Deactivate",
-                actionFunction: (row, tableData, setTableData, triggerReloadWithCurrentPage) => {
-                  // @ts-ignore
+                actionFunction: (row, triggerReloadWithCurrentPage, _triggerReloadWithBasePage) => {
                   deactivateActions([row], triggerReloadWithCurrentPage, null)
                 }
               },

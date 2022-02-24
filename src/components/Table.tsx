@@ -28,7 +28,7 @@ interface Props<TableRowType> {
   responsive?: boolean;
 }
 
-function Table<TableRowType extends { uuid: string, checkboxChecked?: boolean }> (props: PropsWithChildren<Props<TableRowType>>) {
+function Table<TableRowType extends { uuid: string }> (props: PropsWithChildren<Props<TableRowType>>) {
   const {
     tableData,
     setTableData,

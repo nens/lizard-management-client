@@ -36,7 +36,10 @@ export interface OldRasterEdit {
 }
 
 export interface Layercollection {
-  slug: string
+  uuid: string,
+  slug: string,
+  access_modifier: string,
+  supplier: string,
 }
 
 export interface ObservationType {
@@ -69,6 +72,7 @@ export type RasterSourceFromAPI = RasterSourceInstance & {
   organisation: Organisation;
   first_value_timestamp: string | null;
   last_value_timestamp: string | null;
+  size: number;
 }
 
 interface RasterLayerInstance {

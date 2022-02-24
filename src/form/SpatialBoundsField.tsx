@@ -11,7 +11,7 @@ import { SpatialBounds } from '../types/mapTypes';
 interface SpatialBoundsProps {
     title: string,
     name: string,
-    clearInput: (e: any) => void,
+    clearInput: (e: string) => void,
     triedToSubmit?: boolean,
     value: SpatialBounds | null,
     otherValues: {

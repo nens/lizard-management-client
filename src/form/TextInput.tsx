@@ -13,7 +13,6 @@ interface MyProps {
   placeholder?: string,
   onFocus?: (e: React.ChangeEvent<HTMLInputElement>) => void,
   onBlur?: () => void,
-  handleEnter?: (e: any) => void,
   triedToSubmit?: boolean,
   readOnly?: boolean,
   form?: string,
@@ -31,7 +30,6 @@ export const TextInput: React.FC<MyProps> = (props) => {
     clearInput,
     onFocus,
     onBlur,
-    handleEnter,
     validated,
     errorMessage,
     triedToSubmit,
@@ -71,7 +69,6 @@ export const TextInput: React.FC<MyProps> = (props) => {
           placeholder={placeholder}
           onChange={valueChanged}
           value={value || (value===0? value: "")}
-          onKeyUp={handleEnter}
           readOnly={!!readOnly}
           form={form}
           type={type || "text"}

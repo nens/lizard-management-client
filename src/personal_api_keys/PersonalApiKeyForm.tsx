@@ -13,6 +13,7 @@ import { addNotification } from '../actions';
 import { personalApiKeysFormHelpText } from '../utils/help_texts/helpTextForPersonalAPIKeys';
 import { fetchWithOptions } from '../utils/fetchWithOptions';
 import { baseUrl } from './PersonalApiKeysTable';
+import { PersonalApiKey } from '../types/personalApiKeyType';
 import Modal from '../components/Modal';
 import DeleteModal from '../components/DeleteModal';
 import FormActionButtons from '../components/FormActionButtons';
@@ -21,8 +22,8 @@ import formStyles from './../styles/Forms.module.css';
 import personalApiKeysIcon from "../images/personal_api_key_icon.svg";
 
 interface Props {
-  currentRecord?: any;
-  allPersonalApiKeys?: any[];
+  currentRecord?: PersonalApiKey;
+  allPersonalApiKeys?: PersonalApiKey[];
 };
 interface PropsFromDispatch {
   addNotification: (message: string | number, timeout: number) => void
@@ -70,7 +71,7 @@ const PersonalApiKeyFormModel: React.FC<Props & PropsFromDispatch & RouteCompone
       .then(data => {
         const status = data.status;
         if (status === 201) {
-          data.json().then((record: any)=>{
+          data.json().then(record => {
             setApiKeyString(record.key+'');
           })
         } else {
@@ -124,7 +125,7 @@ const PersonalApiKeyFormModel: React.FC<Props & PropsFromDispatch & RouteCompone
           triedToSubmit={triedToSubmit}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          readOnly={currentRecord}
+          readOnly={!!currentRecord}
         />
         <span className={formStyles.FormFieldTitle}>
           2. Scope

@@ -47,7 +47,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
   const [geoserverError, setGeoserverError] = useState<boolean>(false);
   const organisations = useSelector(getOrganisations).available;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
-  const organisationsToSwitchTo = organisations.filter((org:any) => org.roles.includes('admin'));
+  const organisationsToSwitchTo = organisations.filter(org => org.roles.includes('admin'));
 
   const initialValues: WmsLayerFormType = currentRecord ? wmsLayerReceivedFromApiToForm(currentRecord) : wmsLayerGetDefaultFormValues(selectedOrganisation);
   
@@ -65,7 +65,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           body: JSON.stringify(wmsLayer),
         }
         fetch(url, opts)
-        .then((data:any) => {
+        .then((data) => {
             const status = data.status;
             props.addNotification(status, 2000);
             if (status === 201) {
@@ -74,7 +74,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
               console.error(data);
             };
           })
-          .catch((e:any) => console.error(e));
+          .catch(console.error);
     } else {
       const opts: RequestInit = {
         credentials: "same-origin",
@@ -83,7 +83,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
         body: JSON.stringify(wmsLayer)
       };
       fetch(url + "uuid:" + currentRecord.uuid + "/", opts)
-        .then((data:any) => {
+        .then((data) => {
           const status = data.status;
           props.addNotification(status, 2000);
           if (status === 200) {
@@ -92,7 +92,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
             console.error(data);
           };
         })
-        .catch((e:any) => console.error(e));
+        .catch(console.error);
       }
   };
 
@@ -375,7 +375,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           placeholder={'- Search and select -'}
           value={typeof values.organisation === "string" ? values.organisation : (values.organisation) }
           valueChanged={value => handleValueChange('organisation', value)}
-          options={organisations.map((organisation: any) => convertToSelectObject(organisation.uuid, organisation.name))}
+          options={organisations.map(organisation => convertToSelectObject(organisation.uuid, organisation.name))}
           validated={values.organisation !== null && values.organisation !== ""}
           errorMessage={'Please select an organisation'}
           readOnly={!(organisationsToSwitchTo.length > 0 && selectedOrganisation.roles.includes("admin"))}

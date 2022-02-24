@@ -6,8 +6,17 @@ import Modal from './Modal';
 import { Field, ModalDeleteContent } from './ModalDeleteContent';
 import { addNotification } from '../actions';
 
-interface MyProps {
-  rows: any[],
+interface TableRow {
+  uuid?: string,
+  id?: number,
+  prefix?: string,
+  slug?: string,
+  username?: string,
+  roles?: string[],
+}
+
+interface MyProps<TableRowType> {
+  rows: TableRowType[],
   displayContent: Field[],
   fetchFunction: (uuids: string[], fetchOptions: RequestInit) => Promise<Response[]>,
   handleClose: () => void,
@@ -17,19 +26,21 @@ interface MyProps {
   deleteButtonName?: string,
 }
 
-function DeleteModal (props: MyProps & DispatchProps & RouteComponentProps) {
+function DeleteModal<TableRowType extends TableRow> (props: MyProps<TableRowType> & DispatchProps & RouteComponentProps) {
   const { rows, displayContent, tableUrl, text, deleteButtonName } = props;
 
   const [busyDeleting, setBusyDeleting] = useState<boolean>(false);
 
   const handleDelete = async () => {
     setBusyDeleting(true);
-    const uuids = rows.map(row =>
-      row.uuid ||
-      row.id ||
-      row.prefix || // for personalApiKeysTable
-      row.slug // for layercollections
-    );
+    const uuids = rows.map(row => {
+      return (
+        row.uuid ||
+        row.id?.toString() ||
+        row.prefix || // for personalApiKeysTable
+        row.slug // for layercollections
+      )!
+    });
     const options = {
       credentials: "same-origin",
       method: "DELETE",

@@ -1,23 +1,18 @@
-import React from 'react';
-
-
-
 import TableStateContainer from '../../components/TableStateContainer';
 import { NavLink } from "react-router-dom";
 import {ExplainSideColumn} from '../../components/ExplainSideColumn';
 import tableStyles from "../../components/Table.module.css";
 import labeltypesIcon from "../../images/labeltypes_icon.svg";
-
+import { ColumnDefinition } from '../../components/Table';
+import { LabelType } from '../../types/labelType';
 
 const baseUrl = "/api/v3/labeltypes/";
 const navigationUrl = "/management/data_management/labels/label_types";
 
-
-
-const columnDefinitions = [
+const columnDefinitions: ColumnDefinition<LabelType>[] = [
   {
     titleRenderFunction: () => "Name",
-    renderFunction: (row: any) => 
+    renderFunction: (row) => 
       <span
         className={tableStyles.CellEllipsis}
         title={row.name}
@@ -29,7 +24,7 @@ const columnDefinitions = [
   },
   {
     titleRenderFunction: () =>  "Uuid",
-    renderFunction: (row: any) =>
+    renderFunction: (row) =>
       <span
         className={tableStyles.CellEllipsis}
         title={row.uuid}
@@ -41,7 +36,7 @@ const columnDefinitions = [
   },
 ];
 
-export const LabeltypesTable = (props:any) =>  {
+export const LabeltypesTable = () =>  {
 
   return (
     <ExplainSideColumn

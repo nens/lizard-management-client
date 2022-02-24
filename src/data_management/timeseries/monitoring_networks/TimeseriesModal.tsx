@@ -17,6 +17,7 @@ import styles from './TimeseriesModal.module.css';
 import formStyles from '../../../styles/Forms.module.css';
 import buttonStyles from '../../../styles/Buttons.module.css';
 import tableStyles from '../../../components/Table.module.css';
+import { TimeseriesFromTimeseriesEndpoint } from '../../../types/timeseriesType';
 
 interface MyProps {
   currentMonitoringNetworkUuid: string | null,
@@ -26,7 +27,7 @@ interface MyProps {
 interface APIResponse {
   previous: string | null,
   next: string | null,
-  results: any[]
+  results: TimeseriesFromTimeseriesEndpoint[]
 }
 
 function TimeseriesModal (props: MyProps & DispatchProps) {

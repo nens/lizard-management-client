@@ -12,11 +12,12 @@ import { useForm, Values } from '../../form/useForm';
 import { minLength } from '../../form/validators';
 import { addNotification } from '../../actions';
 import { scenarioFormHelpText } from '../../utils/help_texts/helpTextForScenarios';
+import { Scenario } from '../../types/scenarioType';
 import threediIcon from "../../images/3di@3x.svg";
 import formStyles from './../../styles/Forms.module.css';
 
 interface Props {
-  currentRecord: any
+  currentRecord: Scenario
 };
 interface PropsFromDispatch {
   addNotification: (message: string | number, timeout: number) => void
@@ -28,7 +29,7 @@ interface RouteParams {
 const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<RouteParams>> = (props) => {
   const { currentRecord } = props;
   const organisations = useSelector(getOrganisations).available;
-  const scenarioOrganisation = organisations.find((org: any) => org.uuid === currentRecord.organisation.uuid)!;
+  const scenarioOrganisation = organisations.find(org => org.uuid === currentRecord.organisation.uuid)!;
   const username = useSelector(getUsername);
 
   const initialValues = {

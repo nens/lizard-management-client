@@ -10,19 +10,21 @@ import { defaultTableHelpText } from '../../../utils/help_texts/defaultHelpText'
 import { fetchWithOptions } from '../../../utils/fetchWithOptions';
 import monitoringNetworkIcon from "../../../images/monitoring_network_icon.svg";
 import tableStyles from "../../../components/Table.module.css";
+import { ColumnDefinition } from '../../../components/Table';
+import { MonitoringNetwork } from '../../../types/monitoringNetworkType';
 
 export const baseUrl = "/api/v4/monitoringnetworks/";
 const navigationUrl = "/management/data_management/timeseries/monitoring_networks";
 
 export const MonitoringNetworksTable = (props: RouteComponentProps) =>  {
-  const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
+  const [rowsToBeDeleted, setRowsToBeDeleted] = useState<MonitoringNetwork[]>([]);
   const [resetTable, setResetTable] = useState<Function | null>(null);
 
   // selected rows for set accessibility action
-  const [selectedRows, setSelectedRows] = useState<any[]>([]);
+  const [selectedRows, setSelectedRows] = useState<MonitoringNetwork[]>([]);
 
   const deleteActions = (
-    rows: any[],
+    rows: MonitoringNetwork[],
     triggerReloadWithCurrentPage: Function,
     setCheckboxes: Function | null
   ) => {
@@ -33,10 +35,10 @@ export const MonitoringNetworksTable = (props: RouteComponentProps) =>  {
     });
   };
 
-  const columnDefinitions = [
+  const columnDefinitions: ColumnDefinition<MonitoringNetwork>[] = [
     {
       titleRenderFunction: () => "Name",
-      renderFunction: (row: any) => 
+      renderFunction: (row) => 
         <span
           className={tableStyles.CellEllipsis}
           title={row.name}
@@ -48,7 +50,7 @@ export const MonitoringNetworksTable = (props: RouteComponentProps) =>  {
     },
     {
       titleRenderFunction: () =>  "Accessibility",
-      renderFunction: (row: any) =>
+      renderFunction: (row) =>
         <span
           className={tableStyles.CellEllipsis}
           title={row.access_modifier}
@@ -60,23 +62,21 @@ export const MonitoringNetworksTable = (props: RouteComponentProps) =>  {
     },
     {
       titleRenderFunction: () =>  "",//"Actions",
-      renderFunction: (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any) => {
+      renderFunction: (row, _updateTableRow, triggerReloadWithCurrentPage, triggerReloadWithBasePage) => {
         return (
             <TableActionButtons
-              tableRow={row} 
-              tableData={tableData}
-              setTableData={setTableData} 
-              triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
+              tableRow={row}
+              triggerReloadWithCurrentPage={triggerReloadWithCurrentPage}
               triggerReloadWithBasePage={triggerReloadWithBasePage}
               editUrl={`${navigationUrl}/${row.uuid}`}
               actions={[
                 // {
                 //   displayValue: "Change right",
-                //   actionFunction: (row: any) => setSelectedRows([row])
+                //   actionFunction: (row) => setSelectedRows([row])
                 // },
                 {
                   displayValue: "Delete",
-                  actionFunction: (row: any, _updateTableRow: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any) => {
+                  actionFunction: (row, triggerReloadWithCurrentPage, _triggerReloadWithBasePage) => {
                     deleteActions([row], triggerReloadWithCurrentPage, null)
                   }
                 }
@@ -109,7 +109,7 @@ export const MonitoringNetworksTable = (props: RouteComponentProps) =>  {
         checkBoxActions={[
           {
             displayValue: "Change rights",
-            actionFunction: (rows: any[], _tableData: any, _setTableData: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any, setCheckboxes: any) => {
+            actionFunction: (rows, _tableData, _setTableData, triggerReloadWithCurrentPage, _triggerReloadWithBasePage, setCheckboxes) => {
               setSelectedRows(rows);
               setResetTable(() => () => {
                 triggerReloadWithCurrentPage();
@@ -119,7 +119,7 @@ export const MonitoringNetworksTable = (props: RouteComponentProps) =>  {
           },
           {
             displayValue: "Delete",
-            actionFunction: (rows: any[], _tableData: any, _setTableData: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any, setCheckboxes: any) => {
+            actionFunction: (rows, _tableData, _setTableData, triggerReloadWithCurrentPage, _triggerReloadWithBasePage, setCheckboxes) => {
               deleteActions(rows, triggerReloadWithCurrentPage, setCheckboxes)
             }
           }

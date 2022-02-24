@@ -18,7 +18,14 @@ import buttonStyles from '../styles/Buttons.module.css';
 
 interface checkboxAction<TableRowType> {
   displayValue: string,
-  actionFunction: Function,
+  actionFunction: (
+    rows: TableRowType[],
+    tableData: TableRowType[],
+    setTableData: (data: TableRowType[]) => void,
+    triggerReloadWithCurrentPage: () => void,
+    triggerReloadWithBasePage: () => void,
+    setCheckBoxes: (checkboxes: string[]) => void,
+  ) => void,
   checkIfActionIsApplicable?: (row: TableRowType) => boolean
 }
 

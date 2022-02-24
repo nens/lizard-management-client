@@ -24,6 +24,8 @@ import { convertDurationObjToSeconds, convertSecondsToDurationObject } from '../
 import { timeseriesFormHelpText } from '../../../utils/help_texts/helpTextForTimeseries';
 import { fetchWithOptions } from '../../../utils/fetchWithOptions';
 import { baseUrl } from './TimeseriesTable';
+import { TimeseriesFromTimeseriesEndpoint } from '../../../types/timeseriesType';
+import { LocationFromAPI } from '../../../types/locationFormTypes';
 import FormActionButtons from '../../../components/FormActionButtons';
 import DeleteModal from '../../../components/DeleteModal';
 import formStyles from './../../../styles/Forms.module.css';
@@ -35,7 +37,7 @@ export interface Datasource {
 };
 
 interface Props {
-  currentRecord?: any,
+  currentRecord?: TimeseriesFromTimeseriesEndpoint,
   datasource?: Datasource,
 };
 
@@ -53,7 +55,7 @@ const fetchLocations = async (searchInput: string, organisationUuid: string) => 
   });
   const responseJSON = await response.json();
 
-  return responseJSON.results.map((location: any) => convertToSelectObject(location.uuid, location.name));
+  return responseJSON.results.map((location: LocationFromAPI) => convertToSelectObject(location.uuid, location.name));
 };
 
 // Helper function to fetch datasources in async select dropdown
@@ -63,7 +65,7 @@ const fetchDatasources = async (searchInput: string) => {
   });
   const responseJSON = await response.json();
 
-  return responseJSON.results.map((datasource: any) => convertToSelectObject(datasource.id, datasource.name));
+  return responseJSON.results.map((datasource: Datasource) => convertToSelectObject(datasource.id, datasource.name));
 };
 
 const TimeseriesForm = (props: Props & DispatchProps & RouteComponentProps) => {
