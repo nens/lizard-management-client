@@ -3,18 +3,25 @@ import ReactMapGL, {Source, Layer} from 'react-map-gl';
 import mapboxgl from "mapbox-gl";
 import {mapBoxAccesToken} from '../mapboxConfig';
 import { MapViewerRasterLayerTable} from "./MapViewerRasterLayerTable";
+import { RasterLayerFromAPI } from '../api/rasters';
 
 /* eslint-disable @typescript-eslint/no-var-requires */
 // eslint-disable-next-line import/no-webpack-loader-syntax
 (mapboxgl as any).workerClass = require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker').default;
 
+interface MapViewport {
+  latitude: number,
+  longitude: number,
+  zoom: number
+}
+
 function MapViewer () {
-  const [viewport, setViewport] = useState({
+  const [viewport, setViewport] = useState<MapViewport>({
     latitude: 52.6892,
     longitude: 5.9,
     zoom: 8,
   });
-  const [selectedRasters, setSelectedRasters ] = useState<any[]>([]);
+  const [selectedRasters, setSelectedRasters ] = useState<RasterLayerFromAPI[]>([]);
   const [showAddRasters, setShowAddRasters ] = useState(false);
   const [selectedRasterForReOrdering, setSelectedRasterForReOrdering ] = useState<null | string>(null);
 
@@ -35,7 +42,7 @@ function MapViewer () {
   }
 
 
-  const arraymove = (arrInput: any[], fromIndex: number, toIndex: number) => {
+  const arraymove = (arrInput: RasterLayerFromAPI[], fromIndex: number, toIndex: number) => {
     const arr = arrInput.map(id=>id)
     const element = arr[fromIndex];
     arr.splice(fromIndex, 1);
@@ -165,7 +172,7 @@ const reversedRasters = selectedRasters.map(id=>id).reverse();
         {...viewport}
         width="100%"
         height="100%"
-        onViewportChange={(viewport:any) => setViewport(viewport)}
+        onViewportChange={(viewport: MapViewport) => setViewport(viewport)}
         mapboxApiAccessToken={mapBoxAccesToken}
         mapStyle={"mapbox://styles/nelenschuurmans/ck8sgpk8h25ql1io2ccnueuj6"}
       >

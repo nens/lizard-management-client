@@ -21,7 +21,7 @@ const DeleteRasterSourceNotAllowed: React.FC<MyProps> = (props) => {
   // const fetchLayers = (uuids: string[],) => {
   //   const baseUrl = "/api/v4/rasters/";
   //   const fetches = uuids.map (uuid => {
-  //     return (fetch(baseUrl + uuid + "/").then((res:any)=>res.json()));
+  //     return (fetch(baseUrl + uuid + "/").then((res)=>res.json()));
   //   });
   //   return Promise.all(fetches)
   // }
@@ -29,24 +29,24 @@ const DeleteRasterSourceNotAllowed: React.FC<MyProps> = (props) => {
   // const fetchLabelTypes = (uuids: string[],) => {
   //   const baseUrl = "/api/v4/labeltypes/";
   //   const fetches = uuids.map (uuid => {
-  //     return (fetch(baseUrl + uuid + "/").then((res:any)=>res.json()));
+  //     return (fetch(baseUrl + uuid + "/").then((res)=>res.json()));
   //   });
   //   return Promise.all(fetches)
   // }
 
-  // const [layers, setLayers] = useState<any[]>([]);
-  // const [labelTypes, setLabelTypes] = useState<any[]>([]);
-  // const [spinner, ] = useState<any[]>([]);
+  // const [layers, setLayers] = useState<[]>([]);
+  // const [labelTypes, setLabelTypes] = useState<[]>([]);
+  // const [spinner, ] = useState<[]>([]);
 
   // useEffect(() => { 
   //   const layerUuids = rowToBeDeleted.layers.map((layerUrl:string)=>{return layerUrl.split("/")[layerUrl.split("/").length-2] })
   //   const labeltypeUuids = rowToBeDeleted.labeltypes.map((layerUrl:string)=>{return layerUrl.split("/")[layerUrl.split("/").length-2] })
   //   fetchLayers(layerUuids)
-  //   .then((layers:any)=>{
+  //   .then((layers)=>{
   //     setLayers(layers)
   //   })
   //   // fetchLabelTypes(labeltypeUuids)
-  //   // .then((labelTypes:any)=>{
+  //   // .then((labelTypes)=>{
   //   //   setLabelTypes(labelTypes)
   //   // })
   // }, [rowToBeDeleted]);

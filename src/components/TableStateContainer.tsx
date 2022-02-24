@@ -46,6 +46,16 @@ interface Props<TableRowType> {
   responsive?: boolean;
 }
 
+interface ListApiResponse<TableRowType> {
+  response: {
+    previous: string,
+    next: string,
+    results: TableRowType[]
+  } | null,
+  currentUrl: string,
+  dataRetrievalState: DataRetrievalState
+}
+
 // Helper function to get row identifier (by uuid or id)
 // because sometimes tableData does not contain uuid but only id (e.g. alarm contacts)
 const getRowIdentifier = (row: { uuid?: string, id?: number, slug?: string }): string => {
@@ -75,7 +85,7 @@ function TableStateContainer<TableRowType extends { uuid: string, checkboxChecke
   const [searchInput, setSearchInput] = useState<string>("");
   const [selectedFilterOption, setSelectedFilterOption] = useState<Value | null>(filterOptions && filterOptions.length > 0 ? filterOptions[0] : null)
   const [dataRetrievalState, setDataRetrievalState] = useState<DataRetrievalState>("NEVER_DID_RETRIEVE");
-  const [apiResponse, setApiResponse] = useState<{response:any, currentUrl: string, dataRetrievalState: DataRetrievalState}>({response: {}, currentUrl: "", dataRetrievalState: "NEVER_DID_RETRIEVE"});
+  const [apiResponse, setApiResponse] = useState<ListApiResponse<TableRowType>>({response: null, currentUrl: "", dataRetrievalState: "NEVER_DID_RETRIEVE"});
   const [queryCheckBoxState, setQueryCheckBoxState] = useState<boolean>(false);
 
   // todo later: find out how the state of the table can be represented in the url?
@@ -98,15 +108,22 @@ function TableStateContainer<TableRowType extends { uuid: string, checkboxChecke
   const url = queryCheckBox && queryCheckBoxState? queryCheckBox.adaptUrlFunction(preUrl) : preUrl
     
   useEffect(() => { 
-    if (currentUrl !== "" && currentUrl === apiResponse.currentUrl) {
-      apiResponse.response.results && setTableData(apiResponse.response.results);
+    if (currentUrl !== "" && currentUrl === apiResponse.currentUrl && apiResponse.response) {
+      const { results, previous, next } = apiResponse.response;
+      setTableData(results);
       // make sure no checkboxes are checked outside of current page !
-      apiResponse.response.results && setCheckBoxes(checkBoxesPar=>checkBoxesPar.filter(value => (apiResponse.response.results.map((item:any)=>getRowIdentifier(item))).includes(value)));
-      setDataRetrievalState(apiResponse.dataRetrievalState)
-      if (apiResponse.response.next) setNextUrl(getRelativePathFromUrl(apiResponse.response.next));
-      else if (apiResponse.response.next === null)  setNextUrl("")
-      if (apiResponse.response.previous) setPreviousUrl(getRelativePathFromUrl(apiResponse.response.previous));
-      else if (apiResponse.response.previous === null) setPreviousUrl("")
+      setCheckBoxes(checkBoxesPar => checkBoxesPar.filter(value => (results.map(item => getRowIdentifier(item))).includes(value)));
+      setDataRetrievalState(apiResponse.dataRetrievalState);
+      if (next) {
+        setNextUrl(getRelativePathFromUrl(next));
+      } else if (next === null) {
+        setNextUrl("");
+      };
+      if (previous) {
+        setPreviousUrl(getRelativePathFromUrl(apiResponse.response.previous));
+      } else if (previous === null) {
+        setPreviousUrl("");
+      };
     }
   }, [apiResponse, currentUrl]);
 
@@ -125,7 +142,7 @@ function TableStateContainer<TableRowType extends { uuid: string, checkboxChecke
       setApiResponse({response: parsedResponse, currentUrl: url, dataRetrievalState: "RETRIEVED"})
     }).catch(error=>{
       console.log('fetching table data for url failed with error', url, error);
-      setApiResponse({response: {}, currentUrl: url, dataRetrievalState: {status:"ERROR", errorMesssage: error, url: url}})
+      setApiResponse({response: null, currentUrl: url, dataRetrievalState: {status:"ERROR", errorMesssage: error, url: url}})
     });
   }
 
