@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import ReactMapGL, { Source, Layer, Popup, MapEvent } from 'react-map-gl';
+import ReactMapGL, { Source, Layer, Popup, MapEvent, MapRef } from 'react-map-gl';
 import mapboxgl from "mapbox-gl";
 import { mapBoxAccesToken } from '../mapboxConfig';
 
@@ -14,7 +14,7 @@ export default function MapViewer () {
     zoom: 8
   });
   const [popupData, setPopupData] = useState<MapEvent | null>(null);
-  const mapRef = useRef<any>(null);
+  const mapRef = useRef<MapRef>(null);
 
   return (
     <div 
@@ -39,7 +39,7 @@ export default function MapViewer () {
           setPopupData(event);
         }}
         onLoad={() => {
-          const map: mapboxgl.Map = mapRef.current.getMap();
+          const map: mapboxgl.Map = mapRef && mapRef.current && mapRef.current.getMap();
           console.log('hoan source', map.getSource('measuringstation'))
           // console.log('hoan layer', map.getLayer('layer-1'))
         }}
