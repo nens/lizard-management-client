@@ -9,6 +9,7 @@ import tableStyles from "../../components/Table.module.css";
 import { getAccessibiltyText } from '../../form/AccessModifier';
 import { fetchWithOptions } from '../../utils/fetchWithOptions';
 import { geoBlockHelpText } from '../../utils/help_texts/helpTextForGeoBlock';
+import { openRasterInLizardViewer } from '../../utils/openRasterInViewer';
 
 export const baseUrl = "/api/v4/rasters/";
 const navigationUrl = "/management/data_management/geoblocks";
@@ -93,6 +94,10 @@ export const GeoBlockTable: React.FC<RouteComponentProps> = (props) =>  {
                     deleteActions([row], triggerReloadWithCurrentPage, null)
                   }
                 },
+                {
+                  displayValue: "Open in Viewer",
+                  actionFunction: (row: any) => openRasterInLizardViewer(row)
+                }
               ]}
             />
         );
