@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
-import ReactMapGL, {Source, Layer, Popup} from 'react-map-gl';
+import ReactMapGL, { Source, Layer, Popup, MapEvent } from 'react-map-gl';
 import mapboxgl from "mapbox-gl";
-import {mapBoxAccesToken} from '../mapboxConfig';
+import { mapBoxAccesToken } from '../mapboxConfig';
 
 /* eslint-disable @typescript-eslint/no-var-requires */
 // eslint-disable-next-line import/no-webpack-loader-syntax
@@ -13,7 +13,7 @@ export default function MapViewer () {
     longitude: 5.9,
     zoom: 8
   });
-  const [popupData, setPopupData] = useState<any>(null)
+  const [popupData, setPopupData] = useState<MapEvent | null>(null);
   const mapRef = useRef<any>(null);
 
   return (
@@ -35,16 +35,16 @@ export default function MapViewer () {
         mapboxApiAccessToken={mapBoxAccesToken}
         mapStyle={"mapbox://styles/nelenschuurmans/ck8sgpk8h25ql1io2ccnueuj6"}
         onClick={(event)=>{
-          console.log('event', event.features, event);
+          console.log('hoan event', event.features);
           setPopupData(event);
         }}
         onLoad={() => {
           const map: mapboxgl.Map = mapRef.current.getMap();
-          console.log('hoan source', map.getSource('measuringstation').type)
-          console.log('hoan layer', map.getLayer('hoan'))
+          console.log('hoan source', map.getSource('measuringstation'))
+          // console.log('hoan layer', map.getLayer('layer-1'))
         }}
       >
-        {popupData? (
+        {popupData && popupData.features?.length ? (
           <Popup
             latitude={popupData.lngLat[1]}
             longitude={popupData.lngLat[0]}
@@ -53,16 +53,16 @@ export default function MapViewer () {
             onClose={() => setPopupData(null)}
             anchor="top"
           >
-            {popupData.features.map((feature: any) => {
+            <h3>Properties</h3>
+            {popupData.features.map((feature: any, i: number) => {
               return (
-                <div>
-                  <h3>Properties:</h3>
-                  <hr/>
-                  {Object.keys(feature.properties).map((key:string)=>{
+                <div key={i}>
+                  <hr />
+                  <h4>{feature.source}</h4>
+                  {Object.keys(feature.properties).map(key => {
                     return (
-                      <div>
-                        <span>{key}: </span>
-                        <span>{feature.properties[key]}: </span>
+                      <div key={key}>
+                        {key}: {feature.properties[key]}
                       </div>
                     );
                   })}
@@ -70,25 +70,39 @@ export default function MapViewer () {
               )})}
           </Popup>
         ) : null}
-          <Source
-            key={"measuringstation"}
-            id={"measuringstation"}
-            type={'vector'}
-            tiles={[
-              `/api/v4/measuringstations/vectortiles/{z}/{x}/{y}/`
-            ]}
-            minzoom={6}
-            maxzoom={14}
-          >
-            <Layer
-              key={'hoan'}
-              id={'hoan'}
-              type={'fill'}
-              source={'measuringstation'}
-              source-layer={'abc'}
-              paint={{}}
-            />
-          </Source>
+
+        {/* Vector tile layer for measuring stations from Lizard */}
+        <Source
+          key={"measuringstation"}
+          id={"measuringstation"}
+          type={'vector'}
+          tiles={[
+            `/api/v4/measuringstations/vectortiles/{z}/{x}/{y}/`
+          ]}
+          minzoom={6}
+          maxzoom={14}
+        >
+          <Layer
+            key={'layer-1'}
+            id={'layer-1'}
+            type={'symbol'}
+            source={'measuringstation'}
+            source-layer={'default'}
+            layout={{
+              "text-field": "{object_name}",
+              "text-size": 14
+            }}
+            paint={{
+              // dynamic styling for text color based on object_id
+              "text-color": [
+                'case',
+                ['>', ["get", "object_id"], 1000],
+                'blue',
+                'red'
+              ]
+            }}
+          />
+        </Source>
       </ReactMapGL>
     </div>
   )
