@@ -1,7 +1,12 @@
 import React, { useRef, useState } from 'react';
-import ReactMapGL, { Source, Layer, Popup, MapEvent, MapRef } from 'react-map-gl';
+import ReactMapGL, { Source, Layer, MapEvent, MapRef } from 'react-map-gl';
 import mapboxgl from "mapbox-gl";
 import { mapBoxAccesToken } from '../mapboxConfig';
+import { MapPopup } from './MapPopup';
+// import iconImage from '../images/lizard.png';
+
+// const image = new Image(20, 20);
+// image.src = iconImage;
 
 /* eslint-disable @typescript-eslint/no-var-requires */
 // eslint-disable-next-line import/no-webpack-loader-syntax
@@ -42,33 +47,21 @@ export default function MapViewer () {
           const map: mapboxgl.Map = mapRef && mapRef.current && mapRef.current.getMap();
           console.log('hoan source', map.getSource('measuringstation'))
           // console.log('hoan layer', map.getLayer('layer-1'))
+          // map.loadImage(
+          //   iconImage,
+          //   (e, img) => {
+          //     if (e || !img) return console.log('Failed to load image: ', e);
+          //     map.addImage('iconImage', img, { sdf: true })
+          //   }
+          // );
+          // map.addImage('hoanImage', image, { sdf: true })
         }}
       >
         {popupData && popupData.features?.length ? (
-          <Popup
-            latitude={popupData.lngLat[1]}
-            longitude={popupData.lngLat[0]}
-            closeButton={true}
-            closeOnClick={false}
-            onClose={() => setPopupData(null)}
-            anchor="top"
-          >
-            <h3>Properties</h3>
-            {popupData.features.map((feature: any, i: number) => {
-              return (
-                <div key={i}>
-                  <hr />
-                  <h4>{feature.source}</h4>
-                  {Object.keys(feature.properties).map(key => {
-                    return (
-                      <div key={key}>
-                        {key}: {feature.properties[key]}
-                      </div>
-                    );
-                  })}
-                </div>
-              )})}
-          </Popup>
+          <MapPopup
+            data={popupData}
+            setData={setPopupData}
+          />
         ) : null}
 
         {/* Vector tile layer for measuring stations from Lizard */}
@@ -85,20 +78,50 @@ export default function MapViewer () {
           <Layer
             key={'layer-1'}
             id={'layer-1'}
-            type={'symbol'}
+            type={'circle'}
+            // type={'symbol'}
             source={'measuringstation'}
             source-layer={'default'}
             layout={{
-              "text-field": "{object_name}",
-              "text-size": 14
+              // "text-field": "{object_name}",
+              // "text-size": 14,
+              // "text-anchor": "bottom-left",
+              // "icon-image": "iconImage",
+              // "icon-anchor": "bottom",
+              // "icon-size": 0.2
             }}
             paint={{
               // dynamic styling for text color based on object_id
-              "text-color": [
+              // "text-color": [
+              //   'case',
+              //   ['>', ["get", "object_id"], 1000],
+              //   'blue',
+              //   'red'
+              // ],
+              // "icon-color": [
+              //   'case',
+              //   ['>', ["get", "object_id"], 1000],
+              //   'blue',
+              //   'red'
+              // ],
+              // "icon-color": [
+              //   'match',
+              //   ["get", "object_name"],
+              //   "ZWOLLE",
+              //   'red',
+              //   "Dante",
+              //   'brown',
+              //   'blue'
+              // ]
+              "circle-radius": 4,
+              "circle-stroke-width": 1,
+              "circle-stroke-color": 'grey',
+              // "circle-color": 'red',
+              "circle-color": [
                 'case',
                 ['>', ["get", "object_id"], 1000],
-                'blue',
-                'red'
+                'red',
+                'blue'
               ]
             }}
           />
