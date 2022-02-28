@@ -76,9 +76,9 @@ const AppComponent = (props: RouteComponentProps) => {
           username === "lex.vandolderen" ||
           username === "remco.gerlich" ||
           username === "hoan.phung" ||
-          username === "joeri.verheijden" ||
-          username === "lirry.pinter" ||
-          username === "tom.deboer"
+          username === "remie.janssen@nelen-schuurmans.nl" ||
+          username === "gijs.nijholt@nelen-schuurmans.nl" ||
+          username === "carsten.byrman"
         )
       ) {
         return true;
