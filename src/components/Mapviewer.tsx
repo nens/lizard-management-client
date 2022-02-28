@@ -3,10 +3,11 @@ import ReactMapGL, { Source, Layer, MapEvent, MapRef } from 'react-map-gl';
 import mapboxgl from "mapbox-gl";
 import { mapBoxAccesToken } from '../mapboxConfig';
 import { MapPopup } from './MapPopup';
-// import iconImage from '../images/lizard.png';
 
-// const image = new Image(20, 20);
-// image.src = iconImage;
+// Use pump icon as iconImage for measuring station vector tile
+// import pumpIcon from '../images/pump.png';
+// const pumpIconImage = new Image(20, 20);
+// pumpIconImage.src = pumpIcon;
 
 /* eslint-disable @typescript-eslint/no-var-requires */
 // eslint-disable-next-line import/no-webpack-loader-syntax
@@ -43,19 +44,19 @@ export default function MapViewer () {
           console.log('hoan event', event.features);
           setPopupData(event);
         }}
-        onLoad={() => {
-          const map: mapboxgl.Map = mapRef && mapRef.current && mapRef.current.getMap();
-          console.log('hoan source', map.getSource('measuringstation'))
+        // onLoad={() => {
+          // const map: mapboxgl.Map = mapRef && mapRef.current && mapRef.current.getMap();
+          // console.log('hoan source', map.getSource('measuringstation'))
           // console.log('hoan layer', map.getLayer('layer-1'))
+          // map.addImage('hoanImage', image, { sdf: true })
           // map.loadImage(
-          //   iconImage,
+          //   pumpIcon,
           //   (e, img) => {
           //     if (e || !img) return console.log('Failed to load image: ', e);
-          //     map.addImage('iconImage', img, { sdf: true })
+          //     map.addImage('pumpIconImage', img, { sdf: true })
           //   }
           // );
-          // map.addImage('hoanImage', image, { sdf: true })
-        }}
+        // }}
       >
         {popupData && popupData.features?.length ? (
           <MapPopup
@@ -86,12 +87,20 @@ export default function MapViewer () {
               // "text-field": "{object_name}",
               // "text-size": 14,
               // "text-anchor": "bottom-left",
-              // "icon-image": "iconImage",
+              // "icon-image": "pumpIconImage",
               // "icon-anchor": "bottom",
-              // "icon-size": 0.2
+              // "icon-size": 0.1
             }}
             paint={{
-              // dynamic styling for text color based on object_id
+              "circle-radius": 4,
+              "circle-stroke-width": 1,
+              "circle-stroke-color": 'grey',
+              "circle-color": [
+                'case',
+                ['>', ["get", "object_id"], 1000],
+                'red',
+                'blue'
+              ],
               // "text-color": [
               //   'case',
               //   ['>', ["get", "object_id"], 1000],
@@ -113,16 +122,6 @@ export default function MapViewer () {
               //   'brown',
               //   'blue'
               // ]
-              "circle-radius": 4,
-              "circle-stroke-width": 1,
-              "circle-stroke-color": 'grey',
-              // "circle-color": 'red',
-              "circle-color": [
-                'case',
-                ['>', ["get", "object_id"], 1000],
-                'red',
-                'blue'
-              ]
             }}
           />
         </Source>
