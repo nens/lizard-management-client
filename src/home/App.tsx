@@ -71,7 +71,6 @@ const AppComponent = (props: RouteComponentProps) => {
     const filterednavigationLinkTiles = getCurrentNavigationLinkTiles().filter((navigationLinkTile)=>{
       if (
         selectedOrganisation &&
-        selectedOrganisation.name === "Nelen & Schuurmans" &&
         ( username === "tom.deboer" ||
           username === "lex.vandolderen" ||
           username === "remco.gerlich" ||
