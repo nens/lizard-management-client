@@ -1,8 +1,9 @@
 import React, { useRef, useState } from 'react';
 import ReactMapGL, { Source, Layer, MapEvent, MapRef } from 'react-map-gl';
-import mapboxgl from "mapbox-gl";
 import { mapBoxAccesToken } from '../mapboxConfig';
 import { MapPopup } from './MapPopup';
+import mapboxgl from "mapbox-gl";
+import 'mapbox-gl/dist/mapbox-gl.css';
 
 // Use pump icon as iconImage for measuring station vector tile
 // import pumpIcon from '../images/pump.png';
