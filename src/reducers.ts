@@ -24,6 +24,7 @@ import {
   SET_OPEN_CLOSE_UPLOADQUEUE_MODAL,
 } from "./actions";
 import { Contract } from "./types/contractType";
+import { LocationFromAPI } from "./types/locationFormTypes";
 import { OrganisationWithRoles } from "./types/organisationType";
 
 interface BootstrapState {
@@ -85,13 +86,6 @@ function organisations(
   },
   action: AnyAction
 ): OrganisationState {
-  // I think this part is outdated --> Need to confirm
-  // if there is already a selected organisation then this organisation must not have the unique_id field.
-  // if it has the unique_id field then empty the selected organisation
-  // if (state.selected && state.selected.unique_id !== undefined) {
-  //   state.selected = null;
-  // }
-
   switch (action.type) {
     case REQUEST_ORGANISATIONS:
       return { ...state, isFetching: true };
@@ -212,7 +206,7 @@ function rasterSourceUUID(state: RasterSourceUuidState = null, action: AnyAction
   };
 };
 
-type LocationState = any | null;
+type LocationState = LocationFromAPI | null;
 
 function location(state: LocationState = null, action: AnyAction): LocationState {
   switch (action.type) {
