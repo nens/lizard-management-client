@@ -8,6 +8,7 @@ import { addNotification } from "../../../actions";
 import { convertToSelectObject } from "../../../utils/convertToSelectObject";
 import { useRecursiveFetch } from "../../../api/hooks";
 import { TimeseriesFromTimeseriesEndpoint } from "../../../types/timeseriesType";
+import { MonitoringNetwork } from "../../../types/monitoringNetworkType";
 import ModalBackground from "../../../components/ModalBackground";
 import formStyles from "../../../styles/Forms.module.css";
 import buttonStyles from "../../../styles/Buttons.module.css";
@@ -84,7 +85,7 @@ function AddToMonitoringNetworkModal(props: MyProps & DispatchProps) {
             valueChanged={(value) => setSelectedMonitoringNetwork(value as Value)}
             options={
               availableMonitoringNetworks
-                ? availableMonitoringNetworks.map((network: any) =>
+                ? availableMonitoringNetworks.map((network: MonitoringNetwork) =>
                     convertToSelectObject(network.uuid, network.name)
                   )
                 : []

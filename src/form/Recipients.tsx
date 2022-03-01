@@ -18,8 +18,8 @@ interface MyProps {
   name: string;
   organisation: string;
   recipients: Recipient[];
-  availableGroups: any[];
-  availableTemplates: any[];
+  availableGroups: Value[];
+  availableTemplates: Value[];
   valueChanged: (recipients: Recipient[]) => void;
   valueRemoved: (recipients: Recipient[]) => void;
   clearInput?: (name: string) => void;

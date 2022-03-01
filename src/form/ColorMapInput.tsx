@@ -222,7 +222,7 @@ const ColorMapInput: React.FC<ColorMapProps> = (props) => {
     minValue = null,
     maxValue = null;
   if (previewColor !== null) {
-    colors = previewColor.legend.map((obj: any, i: number) => {
+    colors = previewColor.legend.map((obj, i) => {
       return <div style={{ flex: 1, backgroundColor: obj.color }} key={i} />;
     });
     minValue = previewColor.limits[0];
@@ -291,9 +291,7 @@ const ColorMapInput: React.FC<ColorMapProps> = (props) => {
               colorMaps
                 ? [
                     customColorMapOption,
-                    ...colorMaps.map((colorMap: any) =>
-                      convertToSelectObject(colorMap.name, colorMap.name, colorMap.description)
-                    ),
+                    ...colorMaps.map(colorMap => convertToSelectObject(colorMap.name, colorMap.name, colorMap.description))
                   ]
                 : [customColorMapOption]
             }

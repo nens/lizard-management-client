@@ -3,10 +3,11 @@
 // or by directly clicking on the map
 
 import React, { useState } from "react";
+import { LeafletMouseEvent } from "leaflet";
 import { Map, Marker, TileLayer, WMSTileLayer, ZoomControl } from "react-leaflet";
 import { SelectDropdown } from "./SelectDropdown";
 import { mapBoxAccesToken } from "../mapboxConfig";
-import { AssetObject, AssetLocationValue } from "../types/locationFormTypes";
+import { AssetObject, AssetLocationValue, AssetResponseFromSearchEndpoint } from "../types/locationFormTypes";
 import { geometryValidator } from "./validators";
 import { RasterLayerFromAPI } from "../api/rasters";
 import styles from "./MapAssetAndPointSelection.module.css";
@@ -48,7 +49,7 @@ const fetchAssets = async (
   });
   const responseJSON = await response.json();
 
-  return responseJSON.results.map((asset: any) => ({
+  return responseJSON.results.map((asset: AssetResponseFromSearchEndpoint) => ({
     value: asset.entity_id,
     label: asset.title,
     location: asset.view
@@ -77,7 +78,7 @@ export const MapAssetAndPointSelection = (props: Props) => {
   // This is required for the RasterPointSelection as it does not contain information about its related asset.
   const [selectedAsset, setSelectedAsset] = useState<AssetObject | null>(null);
 
-  const handleMapClick = (e: any) => {
+  const handleMapClick = (e: LeafletMouseEvent) => {
     valueChanged({
       ...value,
       location: {
@@ -164,9 +165,9 @@ export const MapAssetAndPointSelection = (props: Props) => {
             // onBlur={onBlur}
           />
         </div>
+        {/* @ts-ignore */}
         <Map
-          // @ts-ignore
-          onClick={handleMapClick}
+          onclick={handleMapClick}
           className={styles.MapStyle}
           zoomControl={false}
           {...mapLocation}

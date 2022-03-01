@@ -3,7 +3,7 @@ import styles from "./ClearButton.module.css";
 interface Props {
   onClick: () => void;
   className?: string;
-  styles?: any;
+  styles?: React.CSSProperties;
 }
 
 export default function ClearButton(props: Props) {

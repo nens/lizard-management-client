@@ -130,7 +130,7 @@ export const ColormapAllSteps: React.FC<Props> = (props) => {
                   onBlur={() => setVisiblepickerIndex(null)}
                   // Todo:
                   // I added the keypress so user can also tab enter open this colorpicker.
-                  // anyway now the user might expect that excape closes it.
+                  // but now the user might expect that escape closes it.
                   // Not only does this not work (see next line, does not distinct between keypresses),
                   // also the event listener on <ModalBackground/> closes the entire modal on escape
                   // To avoid confusion I comment out for now

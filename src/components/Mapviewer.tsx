@@ -1,7 +1,6 @@
 import { useRef, useState } from 'react';
-import ReactMapGL, { Source, Layer, MapEvent, MapRef } from 'react-map-gl';
+import ReactMapGL, { Source, Layer, MapEvent, MapRef, Popup } from 'react-map-gl';
 import { mapBoxAccesToken } from '../mapboxConfig';
-import { MapPopup } from './MapPopup';
 import { useSelector } from 'react-redux';
 import { getSelectedOrganisation } from '../reducers';
 import mapboxgl from "mapbox-gl";
@@ -69,10 +68,31 @@ export default function MapViewer () {
         }}
       >
         {popupData && popupData.features?.length ? (
-          <MapPopup
-            data={popupData}
-            setData={setPopupData}
-          />
+          <Popup
+            latitude={popupData.lngLat[1]}
+            longitude={popupData.lngLat[0]}
+            closeButton={true}
+            closeOnClick={false}
+            onClose={() => setPopupData(null)}
+            anchor="top"
+          >
+            <h3>Properties</h3>
+            {popupData.features.map((feature: any, i: number) => {
+              return (
+                <div key={i}>
+                  <hr />
+                  <h4>{feature.source}</h4>
+                  {Object.keys(feature.properties).map(key => {
+                    return (
+                      <div key={key}>
+                        {key}: {feature.properties[key]}
+                      </div>
+                    );
+                  })}
+                </div>
+              )
+            })}
+          </Popup>
         ) : null}
 
         {/* Vector tile layer for measuring stations from Lizard */}

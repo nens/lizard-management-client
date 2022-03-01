@@ -14,7 +14,6 @@ import { formattedMessageToString } from "../utils/translationUtils";
 const AppComponent = (props: RouteComponentProps) => {
   const intl = useIntl();
 
-  // todo resolve any. x:any because x needs to support  x.interpolate
   const AppTileRow = (appTile: NavigationLinkTile) => (obj: { x: any; opacity: number }) => (
     <animated.div
       style={{
@@ -127,9 +126,7 @@ const AppComponent = (props: RouteComponentProps) => {
             ) : null}
 
             <div>
-              {/* Not sure why this ts-ignore is needed. Compiler complaints <Trail needs multiple children?  */}
-              {/*  
-                // @ts-ignore */}
+              {/* @ts-ignore */}
               <Trail
                 native
                 from={{ opacity: 0, x: -5 }}
@@ -139,7 +136,6 @@ const AppComponent = (props: RouteComponentProps) => {
                 {filterednavigationLinkTiles
                   .filter((appTile) => appTile.homePageLinkOrHome === "HOME")
                   .sort((appTileA, appTileB) => appTileA.order - appTileB.order)
-                  // todo resolve any. x:any because x needs to support  x.interpolate
                   .map(AppTileRow)}
               </Trail>
             </div>
@@ -151,10 +147,7 @@ const AppComponent = (props: RouteComponentProps) => {
             ) : null}
 
             <div>
-              {/*  */}
-              {/* Not sure why this ts-ignore is needed. Compiler complaints <Trail needs multiple children?  */}
-              {/*  
-                // @ts-ignore */}
+              {/* @ts-ignore */}
               <Trail
                 native
                 from={{ opacity: 0, x: -5 }}

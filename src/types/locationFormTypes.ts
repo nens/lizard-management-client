@@ -34,6 +34,18 @@ export type AssetObject = {
 export interface AssetLocationValue {
   asset: AssetObject | null;
   location: Location | null;
+};
+
+export interface AssetResponseFromSearchEndpoint {
+  id: number,
+  title: string,
+  description: string,
+  rank: number,
+  entity_name: string,
+  entity_id: number,
+  entity_uuid: string,
+  entity_url: string,
+  view: number[]
 }
 
 // List of asset types available in the search endpoint

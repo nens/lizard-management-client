@@ -92,4 +92,6 @@ type GroupBlockType = {
   };
 };
 
-export const geoblockType: GeoBlockType & InputBlockType & GroupBlockType = geoblock;
+export type AllGeoBlockType = GeoBlockType & InputBlockType & GroupBlockType
+
+export const geoblockType: AllGeoBlockType = geoblock;

@@ -55,7 +55,7 @@ function TemporalDataFlushingModal(props: MyProps & DispatchProps) {
     if (!start || !stop) return; // start & stop are both required
 
     const confirmToFlushRange = window.confirm("Are you sure?");
-    if (!confirmToFlushRange) return; // don't do anything
+    if (!confirmToFlushRange) return; // do nothing
 
     // If user confirms to flush the data
     setBusyDeleting(true);

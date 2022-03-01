@@ -7,7 +7,7 @@ import "./GeoBlockJsonComponent.css";
 
 interface MyProps {
   source: GeoBlockSource | null;
-  setSource: (e: any) => void;
+  setSource: (e: GeoBlockSource | null) => void;
 }
 
 export const GeoBlockJsonComponent = (props: MyProps) => {

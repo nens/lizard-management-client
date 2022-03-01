@@ -3,11 +3,20 @@ import { geoblockType } from "../../../../types/geoBlockType";
 import { BlockDefinitionModal } from "./BlockDefinitionModal";
 import styles from "./SideBar.module.css";
 
-interface BlockDefinition {
+export interface BlockDefinition {
   title: string;
   class: string;
   description: string;
-  parameters: any;
+  parameters: {
+    name: string;
+    type: string | string[];
+    [key: string]: string | string[];
+  }[] | {
+    type: string;
+    items: {
+      type: string;
+    };
+  };
 }
 
 export const SideBar = () => {

@@ -311,7 +311,7 @@ const WmsLayerForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           title={"Spatial Bounds"}
           name={"spatial_bounds"}
           value={values.spatial_bounds}
-          valueChanged={(value: any) => handleValueChange("spatial_bounds", value)}
+          valueChanged={value => handleValueChange("spatial_bounds", value)}
           clearInput={clearInput}
           triedToSubmit={triedToSubmit}
           otherValues={{
