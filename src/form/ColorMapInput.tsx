@@ -144,8 +144,9 @@ const ColorMapInput: React.FC<ColorMapProps> = (props) => {
     if (colorMap === "Custom colormap") {
       setShowCustomColormapModal(true);
       window.setTimeout(() => {
-        // @ts-ignore
-        document.activeElement && document.activeElement.blur && document.activeElement.blur();
+        if (document.activeElement && document.activeElement instanceof HTMLElement) {
+          document.activeElement.blur();
+        };
       }, 0);
       return;
     }

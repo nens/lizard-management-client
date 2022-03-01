@@ -57,25 +57,13 @@ export const ColormapAllSteps: React.FC<Props> = (props) => {
   const handleColorChange = (color: RGBColor, ind: number) => {
     const oldSteps = JSON.parse(JSON.stringify(steps));
     oldSteps[ind].rgba = color;
-    // const (event: as React.ChangeEvent<HTMLInputElement>) = {target:{name: name, value: oldSteps}}
-    const event = { target: { name: name, value: oldSteps } };
-    // @ts-ignore
+    const event = {target: { name: name, value: oldSteps }} as React.ChangeEvent<HTMLInputElement>;
     onChange(event);
   };
-
-  // lateron we will need to support labels
-  // const handleLabelChange = (event:React.ChangeEvent<HTMLInputElement>, ind:number)=>{
-  //   const oldSteps = JSON.parse(JSON.stringify(steps));
-  //   oldSteps[ind].label = event.target.value;
-  //   // const (event: as React.ChangeEvent<HTMLInputElement>) = {target:{name: name, value: oldSteps}}
-  //   const fakeEvent = {target:{name: name, value: oldSteps}}
-  //   onChange(fakeEvent);
-  // }
   const handleStepChange = (event: React.ChangeEvent<HTMLInputElement>, ind: number) => {
     const oldSteps = JSON.parse(JSON.stringify(steps));
     oldSteps[ind].step = parseFloat(event.target.value);
-    const fakeEvent = { target: { name: name, value: oldSteps } };
-    // @ts-ignore
+    const fakeEvent = {target: { name: name, value: oldSteps }} as React.ChangeEvent<HTMLInputElement>;
     onChange(fakeEvent);
   };
 
@@ -169,11 +157,6 @@ export const ColormapAllSteps: React.FC<Props> = (props) => {
                   )}
                 </div>
               </div>
-
-              {/* Lateron add labels */}
-              {/* <input value={step.label} onChange={(event:React.ChangeEvent<HTMLInputElement>)=>{
-                handleLabelChange(event, ind);
-              }}/> */}
             </div>
           );
         })}

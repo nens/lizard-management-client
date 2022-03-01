@@ -23,7 +23,7 @@ import { SideBar } from "./blockComponents/SideBar";
 import { Block } from "./blockComponents/Block";
 import { GroupBlock } from "./blockComponents/GroupBlock";
 import { RasterSource } from "./blockComponents/RasterSource";
-import { geoblockType } from "../../../types/geoBlockType";
+import { AllGeoBlockType, geoblockType } from "../../../types/geoBlockType";
 import { getBlockData } from "../geoblockUtils/geoblockUtils";
 import { targetHandleValidator } from "../geoblockUtils/geoblockValidators";
 import { addNotification } from "../../../actions";
@@ -144,8 +144,7 @@ const GeoBlockVisualFlow = (props: MyProps & DispatchProps) => {
 
       // Keep track of number of block elements in the graph to create block id
       const numberOfBlocks = elements.filter((elm) => {
-        // @ts-ignore
-        return isNode(elm) && elm.data && elm.data.classOfBlock === geoblockType[blockName].class;
+        return isNode(elm) && elm.data && elm.data.classOfBlock === geoblockType[blockName as keyof AllGeoBlockType]!.class;
       }).length;
 
       const idOfNewBlock = uuid();

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { geoblockType } from "../../../../types/geoBlockType";
+import { AllGeoBlockType, geoblockType } from "../../../../types/geoBlockType";
 import { BlockDefinitionModal } from "./BlockDefinitionModal";
 import styles from "./SideBar.module.css";
 
@@ -45,8 +45,7 @@ export const SideBar = () => {
         {blockNames
           .filter((blockName) => blockName.toLowerCase().includes(searchInput.toLowerCase()))
           .map((blockName) => {
-            // @ts-ignore
-            const block = geoblockType[blockName];
+            const block = geoblockType[blockName as keyof AllGeoBlockType]!;
             return (
               <div
                 key={blockName}
