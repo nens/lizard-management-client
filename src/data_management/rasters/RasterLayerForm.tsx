@@ -1,104 +1,107 @@
-import React, { useEffect, useState } from 'react';
-import { RouteComponentProps, withRouter } from 'react-router';
+import { useEffect, useState } from "react";
+import { RouteComponentProps, withRouter } from "react-router";
 import { FormattedMessage } from "react-intl.macro";
-import { connect, useSelector } from 'react-redux';
+import { connect, useSelector } from "react-redux";
+import { AppDispatch } from "../..";
 import {
   createRasterLayer,
   fetchRasterSourcesV4,
   fetchRasterSourceV4,
+  Layercollection,
+  ObservationType,
   patchRasterLayer,
   RasterLayerFromAPI,
   rasterLayerFromAPIBelongsToScenario,
-} from '../../api/rasters';
-import { ExplainSideColumn } from '../../components/ExplainSideColumn';
-import { CheckBox } from './../../form/CheckBox';
-import { TextArea } from './../../form/TextArea';
-import { TextInput } from './../../form/TextInput';
-import { SelectDropdown } from '../../form/SelectDropdown';
-import { FormButton } from './../../form/FormButton';
-import { SubmitButton } from '../../form/SubmitButton';
-import { CancelButton } from '../../form/CancelButton';
-import { AccessModifier } from '../../form/AccessModifier';
-import ColorMapInput from '../../form/ColorMapInput';
-import { useForm, Values } from '../../form/useForm';
-import { minLength, required } from '../../form/validators';
-import {
-  getOrganisations,
-  getRasterSourceUUID,
-  getSelectedOrganisation,
-} from '../../reducers';
-import { optionsHasLayers } from '../../utils/rasterOptionFunctions';
-import { getUuidFromUrl } from '../../utils/getUuidFromUrl';
-import { rasterLayerFormHelpText } from '../../utils/help_texts/helpTextForRasters';
-import { addNotification, removeRasterSourceUUID } from './../../actions';
+  RasterSourceFromAPI,
+} from "../../api/rasters";
+import { Organisation } from "../../types/organisationType";
+import { ExplainSideColumn } from "../../components/ExplainSideColumn";
+import { CheckBox } from "./../../form/CheckBox";
+import { TextArea } from "./../../form/TextArea";
+import { TextInput } from "./../../form/TextInput";
+import { SelectDropdown, Value } from "../../form/SelectDropdown";
+import { FormButton } from "./../../form/FormButton";
+import { SubmitButton } from "../../form/SubmitButton";
+import { CancelButton } from "../../form/CancelButton";
+import { AccessModifier } from "../../form/AccessModifier";
+import ColorMapInput from "../../form/ColorMapInput";
+import { useForm, Values } from "../../form/useForm";
+import { minLength, required } from "../../form/validators";
+import { getOrganisations, getRasterSourceUUID, getSelectedOrganisation } from "../../reducers";
+import { optionsHasLayers } from "../../utils/rasterOptionFunctions";
+import { getUuidFromUrl } from "../../utils/getUuidFromUrl";
+import { rasterLayerFormHelpText } from "../../utils/help_texts/helpTextForRasters";
+import { addNotification, removeRasterSourceUUID } from "./../../actions";
 import rasterLayerIcon from "../../images/raster_layer_icon.svg";
-import formStyles from './../../styles/Forms.module.css';
-import FormActionButtons from '../../components/FormActionButtons';
-import DeleteModal from '../../components/DeleteModal';
-import { RasterSourceModal } from './RasterSourceModal';
-import { convertToSelectObject } from '../../utils/convertToSelectObject';
-import { fetchWithOptions } from '../../utils/fetchWithOptions';
-import { fetchSuppliers } from './RasterSourceForm';
-import { baseUrl } from './RasterLayerTable';
-import { UUID_REGEX } from '../../components/Breadcrumbs';
+import formStyles from "./../../styles/Forms.module.css";
+import FormActionButtons from "../../components/FormActionButtons";
+import DeleteModal from "../../components/DeleteModal";
+import { RasterSourceModal } from "./RasterSourceModal";
+import { convertToSelectObject } from "../../utils/convertToSelectObject";
+import { fetchWithOptions } from "../../utils/fetchWithOptions";
+import { fetchSuppliers } from "./RasterSourceForm";
+import { baseUrl } from "./RasterLayerTable";
+import { UUID_REGEX } from "../../components/Breadcrumbs";
 
 interface Props {
-  currentRecord?: RasterLayerFromAPI,
-};
+  currentRecord?: RasterLayerFromAPI;
+}
 
 // Helper function to fetch paginated raster sources with search query
 export const fetchRasterSources = async (uuid: string, searchQuery: string) => {
-  const params=[`organisation__uuid=${uuid}`, "scenario__isnull=true", "page_size=20"];
+  const params = [`organisation__uuid=${uuid}`, "scenario__isnull=true", "page_size=20"];
 
   if (searchQuery) {
     if (UUID_REGEX.test(searchQuery)) {
       params.push(`uuid=${searchQuery}`);
     } else {
       params.push(`name__icontains=${searchQuery}`);
-    };
-  };
+    }
+  }
 
-  const urlQuery = params.join('&');
+  const urlQuery = params.join("&");
   const response = await fetchRasterSourcesV4(urlQuery);
 
-  return response.results.map((rasterSource: any) => convertToSelectObject(rasterSource.uuid, rasterSource.name));
+  return response.results.map((rasterSource: RasterSourceFromAPI) =>
+    convertToSelectObject(rasterSource.uuid, rasterSource.name)
+  );
 };
 
 // Helper function to fetch paginated layer collections with search query
 export const fetchLayerCollections = async (searchQuery: string) => {
-  const urlQuery = searchQuery ? `?page_size=20&writable=true&slug__icontains=${searchQuery}` : '?page_size=20&writable=true';
-  const response = await fetch(
-    `/api/v4/layercollections/${urlQuery}`
-  );
+  const urlQuery = searchQuery
+    ? `?page_size=20&writable=true&slug__icontains=${searchQuery}`
+    : "?page_size=20&writable=true";
+  const response = await fetch(`/api/v4/layercollections/${urlQuery}`);
   const responseJSON = await response.json();
 
-  return responseJSON.results.map((layerCollection: any) => convertToSelectObject(layerCollection.slug));
+  return responseJSON.results.map((layerCollection: Layercollection) =>
+    convertToSelectObject(layerCollection.slug)
+  );
 };
 
 // Helper function to fetch paginated observation types with search query
 export const fetchObservationTypes = async (searchQuery: string) => {
-  const urlQuery = searchQuery ? `?page_size=20&code__icontains=${searchQuery}` : '?page_size=20';
-  const response = await fetch(
-    `/api/v4/observationtypes/${urlQuery}`
-  );
+  const urlQuery = searchQuery ? `?page_size=20&code__icontains=${searchQuery}` : "?page_size=20";
+  const response = await fetch(`/api/v4/observationtypes/${urlQuery}`);
   const responseJSON = await response.json();
 
-  return responseJSON.results.map((obsT: any) => {
-    let parameterString = obsT.parameter + '';
+  return responseJSON.results.map((obsT: ObservationType) => {
+    let parameterString = obsT.parameter + "";
 
     if (obsT.unit || obsT.reference_frame) {
-      parameterString += ' (';
+      parameterString += " (";
       if (obsT.unit) {
         parameterString += obsT.unit;
-      };
+      }
       if (obsT.unit && obsT.reference_frame) {
-        parameterString += ' ';
-      };
+        parameterString += " ";
+      }
       if (obsT.reference_frame) {
         parameterString += obsT.reference_frame;
-      };
-      parameterString += ')';
-    };
+      }
+      parameterString += ")";
+    }
 
     return convertToSelectObject(obsT.id, obsT.code, parameterString);
   });
@@ -106,21 +109,21 @@ export const fetchObservationTypes = async (searchQuery: string) => {
 
 // Helper function to fetch paginated organisations with search query
 export const fetchOrganisationsToShareWith = async (searchQuery: string) => {
-  const params=["page_size=20"];
+  const params = ["page_size=20"];
 
   if (searchQuery) {
     if (UUID_REGEX.test(searchQuery)) {
       params.push(`uuid=${searchQuery}`);
     } else {
       params.push(`name__icontains=${searchQuery}`);
-    };
-  };
+    }
+  }
 
-  const urlQuery = params.join('&');
+  const urlQuery = params.join("&");
   const response = await fetch(`/api/v4/organisations/?${urlQuery}`);
   const responseJSON = await response.json();
 
-  return responseJSON.results.map((org: any) => convertToSelectObject(org.uuid, org.name));
+  return responseJSON.results.map((org: Organisation) => convertToSelectObject(org.uuid, org.name));
 };
 
 const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (props) => {
@@ -128,102 +131,142 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
   const organisations = useSelector(getOrganisations).available;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const rasterSourceUUID = useSelector(getRasterSourceUUID);
-  const belongsToScenario = (currentRecord && rasterLayerFromAPIBelongsToScenario(currentRecord)) || false;
+  const belongsToScenario =
+    (currentRecord && rasterLayerFromAPIBelongsToScenario(currentRecord)) || false;
 
   useEffect(() => {
     return () => removeRasterSourceUUID();
   }, [removeRasterSourceUUID]);
 
-  const initialValues = currentRecord ? {
-    name: currentRecord.name,
-    uuid: currentRecord.uuid,
-    description: currentRecord.description,
-    layercollections: currentRecord.layer_collections.map(layercollection => convertToSelectObject(layercollection.slug)) || [],
-    rasterSource: currentRecord.raster_sources && currentRecord.raster_sources.map(rasterSource => convertToSelectObject(getUuidFromUrl(rasterSource)))[0],
-    aggregationType: currentRecord.aggregation_type ? convertToSelectObject(currentRecord.aggregation_type) : null,
-    observationType: currentRecord.observation_type ? convertToSelectObject(currentRecord.observation_type.id, currentRecord.observation_type.code) : null,
-    colorMap: {options: currentRecord.options, rescalable: currentRecord.rescalable, customColormap: currentRecord.colormap || {}},
-    sharedWith: currentRecord.shared_with.length === 0 ? false : true,
-    organisationsToSharedWith: currentRecord.shared_with.map(organisation => convertToSelectObject(organisation.uuid, organisation.name)) || [],
-    organisation: currentRecord.organisation ? convertToSelectObject(currentRecord.organisation.uuid, currentRecord.organisation.name) : null,
-    supplier: currentRecord.supplier ? convertToSelectObject(currentRecord.supplier) : null,
-  } : {
-    name: null,
-    description: null,
-    layercollections: [],
-    rasterSource: rasterSourceUUID ? convertToSelectObject(rasterSourceUUID) : null,
-    aggregationType: null,
-    observationType: null,
-    colorMap: {options: {}, rescalable: true, customColormap: {}},
-    sharedWith: false,
-    organisationsToSharedWith: [],
-    organisation: selectedOrganisation ? convertToSelectObject(selectedOrganisation.uuid, selectedOrganisation.name) : null,
-    supplier: null,
-  };
+  const initialValues = currentRecord
+    ? {
+        name: currentRecord.name,
+        uuid: currentRecord.uuid,
+        description: currentRecord.description,
+        layercollections:
+          currentRecord.layer_collections.map((layercollection) =>
+            convertToSelectObject(layercollection.slug)
+          ) || [],
+        rasterSource:
+          currentRecord.raster_sources &&
+          currentRecord.raster_sources.map((rasterSource) =>
+            convertToSelectObject(getUuidFromUrl(rasterSource))
+          )[0],
+        aggregationType: currentRecord.aggregation_type
+          ? convertToSelectObject(currentRecord.aggregation_type)
+          : null,
+        observationType: currentRecord.observation_type
+          ? convertToSelectObject(
+              currentRecord.observation_type.id,
+              currentRecord.observation_type.code
+            )
+          : null,
+        colorMap: {
+          options: currentRecord.options,
+          rescalable: currentRecord.rescalable,
+          customColormap: currentRecord.colormap || {},
+        },
+        sharedWith: currentRecord.shared_with.length === 0 ? false : true,
+        organisationsToSharedWith:
+          currentRecord.shared_with.map((organisation) =>
+            convertToSelectObject(organisation.uuid, organisation.name)
+          ) || [],
+        organisation: currentRecord.organisation
+          ? convertToSelectObject(currentRecord.organisation.uuid, currentRecord.organisation.name)
+          : null,
+        supplier: currentRecord.supplier ? convertToSelectObject(currentRecord.supplier) : null,
+      }
+    : {
+        name: null,
+        description: null,
+        layercollections: [],
+        rasterSource: rasterSourceUUID ? convertToSelectObject(rasterSourceUUID) : null,
+        aggregationType: null,
+        observationType: null,
+        colorMap: { options: {}, rescalable: true, customColormap: {} },
+        sharedWith: false,
+        organisationsToSharedWith: [],
+        organisation: selectedOrganisation
+          ? convertToSelectObject(selectedOrganisation.uuid, selectedOrganisation.name)
+          : null,
+        supplier: null,
+      };
   const onSubmit = (values: Values) => {
     if (!currentRecord) {
       const rasterLayer = {
         name: values.name,
         organisation: values.organisation && values.organisation.value,
-        access_modifier: accessModifier || 'Private',
+        access_modifier: accessModifier || "Private",
         description: values.description,
         observation_type: values.observationType && values.observationType.value,
         supplier: values.supplier && values.supplier.label,
         aggregation_type: values.aggregationType && values.aggregationType.value,
         options: values.colorMap && values.colorMap.options,
-        colormap: JSON.stringify(values.colorMap.customColormap) ==="{}"? undefined : values.colorMap.customColormap,
+        colormap:
+          JSON.stringify(values.colorMap.customColormap) === "{}"
+            ? undefined
+            : values.colorMap.customColormap,
         rescalable: values.colorMap && values.colorMap.rescalable,
-        shared_with: values.sharedWith ? values.organisationsToSharedWith.map((organisation: any) => organisation.value) : [],
-        layer_collections: values.layercollections.map((data: any) => data.value)
+        shared_with: values.sharedWith
+          ? values.organisationsToSharedWith.map((organisation: Value) => organisation.value)
+          : [],
+        layer_collections: values.layercollections.map((data: Value) => data.value),
       };
 
       createRasterLayer(rasterLayer, values.rasterSource.value)
-        .then(response => {
+        .then((response) => {
           const status = response.status;
           if (status === 201) {
-            props.addNotification('Success! Raster layer created', 2000);
+            props.addNotification("Success! Raster layer created", 2000);
             // redirect back to the table of raster layers
-            props.history.push('/management/data_management/rasters/layers');
+            props.history.push("/management/data_management/rasters/layers");
           } else {
             props.addNotification(status, 2000);
             console.error(response);
-          };
+          }
         })
-        .catch(e => console.error(e));
+        .catch((e) => console.error(e));
     } else {
       const body = {
         name: values.name,
         organisation: values.organisation && values.organisation.value,
-        access_modifier: accessModifier || 'Private',
+        access_modifier: accessModifier || "Private",
         description: values.description,
         observation_type: values.observationType && values.observationType.value,
         supplier: values.supplier && values.supplier.label,
         aggregation_type: values.aggregationType && values.aggregationType.value,
         options: values.colorMap && values.colorMap.options,
-        colormap: JSON.stringify(values.colorMap.customColormap) ==="{}"? undefined : values.colorMap.customColormap,
+        colormap:
+          JSON.stringify(values.colorMap.customColormap) === "{}"
+            ? undefined
+            : values.colorMap.customColormap,
         rescalable: values.colorMap && values.colorMap.rescalable,
-        shared_with: values.sharedWith ? values.organisationsToSharedWith.map((organisation: any) => organisation.value) : [],
-        layer_collections: values.layercollections.map((layercollection: any) => layercollection.value)
+        shared_with: values.sharedWith
+          ? values.organisationsToSharedWith.map((organisation: Value) => organisation.value)
+          : [],
+        layer_collections: values.layercollections.map(
+          (layercollection: Value) => layercollection.value
+        ),
       };
       // only add colormap in options if not multiple layers
       if (!optionsHasLayers(values.colorMap.options)) {
         body.options = values.colorMap.options;
-      };
+      }
 
       patchRasterLayer(currentRecord.uuid as string, body)
-        .then(data => {
+        .then((data) => {
           const status = data.response.status;
           if (status === 200) {
-            props.addNotification('Success! Raster layer updated', 2000);
+            props.addNotification("Success! Raster layer updated", 2000);
             // redirect back to the table of raster layers
-            props.history.push('/management/data_management/rasters/layers');
+            props.history.push("/management/data_management/rasters/layers");
           } else {
             props.addNotification(status, 2000);
             console.error(data);
-          };
+          }
         })
-        .catch(e => console.error(e));
-    };
+        .catch((e) => console.error(e));
+    }
   };
 
   const {
@@ -238,19 +281,23 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
     handleSubmit,
     handleReset,
     clearInput,
-  } = useForm({initialValues, onSubmit});
+  } = useForm({ initialValues, onSubmit });
 
   // Access Modifier of a raster layer is kept in the react hook state instead of the form state
   // to keep it in sync with new selected raster source in useEffect
   const { rasterSource } = values;
-  const [accessModifier, setAccessModifier] = useState<string>(currentRecord ? currentRecord.access_modifier : 'Private');
+  const [accessModifier, setAccessModifier] = useState<string>(
+    currentRecord ? currentRecord.access_modifier : "Private"
+  );
 
   useEffect(() => {
     if (!currentRecord && rasterSource) {
-      fetchRasterSourceV4(rasterSource.value).then(
-        rasterSourceData => setAccessModifier(rasterSourceData.access_modifier || 'Private')
-      ).catch(e => console.error(e));
-    };
+      fetchRasterSourceV4(rasterSource.value)
+        .then((rasterSourceData) =>
+          setAccessModifier(rasterSourceData.access_modifier || "Private")
+        )
+        .catch((e) => console.error(e));
+    }
   }, [currentRecord, rasterSource]);
 
   // Delete modal
@@ -264,7 +311,7 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
       imgUrl={rasterLayerIcon}
       imgAltDescription={"Raster-Layer icon"}
       headerText={"Raster Layers"}
-      explanationText={rasterLayerFormHelpText[fieldOnFocus] || rasterLayerFormHelpText['default']}
+      explanationText={rasterLayerFormHelpText[fieldOnFocus] || rasterLayerFormHelpText["default"]}
       backUrl={"/management/data_management/rasters/layers"}
       fieldName={fieldOnFocus}
     >
@@ -281,16 +328,15 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
         onSubmit={handleSubmit}
         onReset={handleReset}
         id={"raster_layer_form_id"}
-      >
-      </form>
+      ></form>
       <div className={formStyles.Form}>
         <span className={`${formStyles.FormFieldTitle} ${formStyles.FirstFormFieldTitle}`}>
           1: General
         </span>
         <TextInput
-          title={'Name *'}
-          name={'name'}
-          placeholder={'Please enter at least 3 characters'}
+          title={"Name *"}
+          name={"name"}
+          placeholder={"Please enter at least 3 characters"}
           value={values.name}
           valueChanged={handleInputChange}
           onFocus={handleFocus}
@@ -303,8 +349,8 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
         />
         {currentRecord ? (
           <TextInput
-            title={'UUID'}
-            name={'uuid'}
+            title={"UUID"}
+            name={"uuid"}
             value={values.uuid}
             valueChanged={handleInputChange}
             validated
@@ -314,9 +360,9 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           />
         ) : null}
         <TextArea
-          title={'Description'}
-          name={'description'}
-          placeholder={'This is a layer based on raster_source'}
+          title={"Description"}
+          name={"description"}
+          placeholder={"This is a layer based on raster_source"}
           value={values.description}
           valueChanged={handleInputChange}
           onFocus={handleFocus}
@@ -327,11 +373,11 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
         />
         {!belongsToScenario ? (
           <SelectDropdown
-            title={'Layer collections'}
-            name={'layercollections'}
-            placeholder={'- Search and select -'}
+            title={"Layer collections"}
+            name={"layercollections"}
+            placeholder={"- Search and select -"}
             value={values.layercollections}
-            valueChanged={value => handleValueChange('layercollections', value)}
+            valueChanged={(value) => handleValueChange("layercollections", value)}
             options={[]}
             validated
             isMulti
@@ -343,15 +389,13 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
             onBlur={handleBlur}
           />
         ) : null}
-        <span className={formStyles.FormFieldTitle}>
-          2: Data
-        </span>
+        <span className={formStyles.FormFieldTitle}>2: Data</span>
         {currentRecord ? (
           <FormButton
-            name={'rasterSourceModal'}
-            title={'Source'}
-            text={'View'}
-            onClick={e => {
+            name={"rasterSourceModal"}
+            title={"Source"}
+            text={"View"}
+            onClick={(e) => {
               e.preventDefault();
               setRasterSourceModal(true);
             }}
@@ -361,14 +405,14 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           />
         ) : (
           <SelectDropdown
-            title={'Source *'}
-            name={'rasterSource'}
-            placeholder={'- Search and select -'}
+            title={"Source *"}
+            name={"rasterSource"}
+            placeholder={"- Search and select -"}
             value={values.rasterSource}
-            valueChanged={value => handleValueChange('rasterSource', value)}
+            valueChanged={(value) => handleValueChange("rasterSource", value)}
             options={[]}
-            validated={!required('Please select a raster source', values.rasterSource)}
-            errorMessage={required('Please select a raster source', values.rasterSource)}
+            validated={!required("Please select a raster source", values.rasterSource)}
+            errorMessage={required("Please select a raster source", values.rasterSource)}
             triedToSubmit={triedToSubmit}
             form={"raster_layer_form_id"}
             onFocus={handleFocus}
@@ -376,49 +420,76 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
             readOnly={!!currentRecord || !!rasterSourceUUID}
             isAsync={!rasterSourceUUID && !currentRecord}
             isCached
-            loadOptions={searchInput => fetchRasterSources(selectedOrganisation.uuid, searchInput)}
+            loadOptions={(searchInput) =>
+              fetchRasterSources(selectedOrganisation.uuid, searchInput)
+            }
           />
         )}
-        {0?<FormattedMessage id="raster_form.aggregation_type_none" defaultMessage="no aggregation" />:null}
-        {0?<FormattedMessage id="raster_form.aggregation_type_counts" defaultMessage="area per category" />:null}
-        {0?<FormattedMessage id="raster_form.aggregation_type_curve" defaultMessage="cumulative distribution" />:null}
-        {0?<FormattedMessage id="raster_form.aggregation_type_sum" defaultMessage="values in the region are summed" />:null}
-        {0?<FormattedMessage id="raster_form.aggregation_type_average" defaultMessage="values in the region are averaged" />:null}
+        {0 ? (
+          <FormattedMessage
+            id="raster_form.aggregation_type_none"
+            defaultMessage="no aggregation"
+          />
+        ) : null}
+        {0 ? (
+          <FormattedMessage
+            id="raster_form.aggregation_type_counts"
+            defaultMessage="area per category"
+          />
+        ) : null}
+        {0 ? (
+          <FormattedMessage
+            id="raster_form.aggregation_type_curve"
+            defaultMessage="cumulative distribution"
+          />
+        ) : null}
+        {0 ? (
+          <FormattedMessage
+            id="raster_form.aggregation_type_sum"
+            defaultMessage="values in the region are summed"
+          />
+        ) : null}
+        {0 ? (
+          <FormattedMessage
+            id="raster_form.aggregation_type_average"
+            defaultMessage="values in the region are averaged"
+          />
+        ) : null}
         <SelectDropdown
-          title={'Aggregation type *'}
-          name={'aggregationType'}
-          placeholder={'- Select -'}
+          title={"Aggregation type *"}
+          name={"aggregationType"}
+          placeholder={"- Select -"}
           value={values.aggregationType}
-          valueChanged={value => handleValueChange('aggregationType', value)}
+          valueChanged={(value) => handleValueChange("aggregationType", value)}
           options={[
             {
-              value: 'none',
-              label: 'none',
+              value: "none",
+              label: "none",
               subLabel: "no aggregation",
             },
             {
-              value: 'counts',
-              label: 'counts',
-              subLabel: 'area per category',
+              value: "counts",
+              label: "counts",
+              subLabel: "area per category",
             },
             {
-              value: 'curve',
-              label: 'curve',
-              subLabel: 'cumulative distribution',
+              value: "curve",
+              label: "curve",
+              subLabel: "cumulative distribution",
             },
             {
-              value: 'sum',
-              label: 'sum',
-              subLabel: 'values in the region are summed',
+              value: "sum",
+              label: "sum",
+              subLabel: "values in the region are summed",
             },
             {
-              value: 'average',
-              label: 'average',
-              subLabel: 'values in the region are averaged',
-            }
+              value: "average",
+              label: "average",
+              subLabel: "values in the region are averaged",
+            },
           ]}
           validated={!!values.aggregationType}
-          errorMessage={'Please select an option'}
+          errorMessage={"Please select an option"}
           triedToSubmit={triedToSubmit}
           form={"raster_layer_form_id"}
           onFocus={handleFocus}
@@ -426,14 +497,14 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           isSearchable={false}
         />
         <SelectDropdown
-          title={'Observation type *'}
-          name={'observationType'}
-          placeholder={'- Search and select -'}
+          title={"Observation type *"}
+          name={"observationType"}
+          placeholder={"- Search and select -"}
           value={values.observationType}
-          valueChanged={value => handleValueChange('observationType', value)}
+          valueChanged={(value) => handleValueChange("observationType", value)}
           options={[]}
-          validated={!required('Please select an observation type', values.observationType)}
-          errorMessage={required('Please select an observation type', values.observationType)}
+          validated={!required("Please select an observation type", values.observationType)}
+          errorMessage={required("Please select an observation type", values.observationType)}
           triedToSubmit={triedToSubmit}
           form={"raster_layer_form_id"}
           onFocus={handleFocus}
@@ -443,33 +514,31 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           loadOptions={fetchObservationTypes}
         />
         <ColorMapInput
-          title={'Choose a color map *'}
-          name={'colorMap'}
+          title={"Choose a color map *"}
+          name={"colorMap"}
           colorMapValue={values.colorMap}
-          valueChanged={(value) => handleValueChange('colorMap', value)}
+          valueChanged={(value) => handleValueChange("colorMap", value)}
           validated
           form={"raster_layer_form_id"}
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
-        <span className={formStyles.FormFieldTitle}>
-          3: Rights
-        </span>
+        <span className={formStyles.FormFieldTitle}>3: Rights</span>
         <AccessModifier
-          title={'Accessibility *'}
-          name={'accessModifier'}
+          title={"Accessibility *"}
+          name={"accessModifier"}
           value={accessModifier}
-          valueChanged={value => setAccessModifier(value || 'Private')}
+          valueChanged={(value) => setAccessModifier(value || "Private")}
           onFocus={handleFocus}
           onBlur={handleBlur}
           readOnly={belongsToScenario}
           form={"raster_layer_form_id"}
         />
         <CheckBox
-          title={'Shared with other organisations'}
-          name={'sharedWith'}
+          title={"Shared with other organisations"}
+          name={"sharedWith"}
           value={values.sharedWith}
-          valueChanged={bool => handleValueChange('sharedWith', bool)}
+          valueChanged={(bool) => handleValueChange("sharedWith", bool)}
           form={"raster_layer_form_id"}
           onFocus={handleFocus}
           onBlur={handleBlur}
@@ -477,12 +546,12 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
         />
         {values.sharedWith ? (
           <SelectDropdown
-            title={'Organisations to share with'}
-            name={'organisationsToSharedWith'}
-            placeholder={'- Search and select -'}
+            title={"Organisations to share with"}
+            name={"organisationsToSharedWith"}
+            placeholder={"- Search and select -"}
             value={values.organisationsToSharedWith}
             options={[]}
-            valueChanged={value => handleValueChange('organisationsToSharedWith', value)}
+            valueChanged={(value) => handleValueChange("organisationsToSharedWith", value)}
             validated
             form={"raster_layer_form_id"}
             onFocus={handleFocus}
@@ -495,14 +564,16 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           />
         ) : null}
         <SelectDropdown
-          title={'Organisation *'}
-          name={'organisation'}
-          placeholder={'- Search and select -'}
+          title={"Organisation *"}
+          name={"organisation"}
+          placeholder={"- Search and select -"}
           value={values.organisation}
-          valueChanged={value => handleValueChange('organisation', value)}
-          options={organisations.map((organisation: any) => convertToSelectObject(organisation.uuid, organisation.name))}
-          validated={values.organisation !== null && values.organisation !== ''}
-          errorMessage={'Please select an organisation'}
+          valueChanged={(value) => handleValueChange("organisation", value)}
+          options={organisations.map((organisation) =>
+            convertToSelectObject(organisation.uuid, organisation.name)
+          )}
+          validated={values.organisation !== null && values.organisation !== ""}
+          errorMessage={"Please select an organisation"}
           triedToSubmit={triedToSubmit}
           onFocus={handleFocus}
           onBlur={handleBlur}
@@ -510,56 +581,54 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           form={"raster_layer_form_id"}
         />
         <SelectDropdown
-          title={'Supplier'}
-          name={'supplier'}
-          placeholder={'- Search and select -'}
+          title={"Supplier"}
+          name={"supplier"}
+          placeholder={"- Search and select -"}
           value={values.supplier}
-          valueChanged={value => handleValueChange('supplier', value)}
+          valueChanged={(value) => handleValueChange("supplier", value)}
           options={[]}
           validated
           isAsync
           isCached
-          loadOptions={searchInput => fetchSuppliers(selectedOrganisation.uuid, searchInput)}
-          readOnly={!selectedOrganisation.roles.includes('admin') || belongsToScenario}
+          loadOptions={(searchInput) => fetchSuppliers(selectedOrganisation.uuid, searchInput)}
+          readOnly={!selectedOrganisation.roles.includes("admin") || belongsToScenario}
           dropUp
           onFocus={handleFocus}
           onBlur={handleBlur}
           form={"raster_layer_form_id"}
         />
-        <div
-          className={formStyles.ButtonContainer}
-        >
+        <div className={formStyles.ButtonContainer}>
           <CancelButton
-            url={'/management/data_management/rasters/layers'}
+            url={"/management/data_management/rasters/layers"}
             form={"raster_layer_form_id"}
           />
           <div style={{ display: "flex" }}>
             {currentRecord ? (
-              <div style={{ marginRight: 16 }}> 
+              <div style={{ marginRight: 16 }}>
                 <FormActionButtons
                   actions={[
                     {
                       displayValue: "Delete",
-                      actionFunction: () => setShowDeleteModal(true)
+                      actionFunction: () => setShowDeleteModal(true),
                     },
                   ]}
                 />
               </div>
             ) : null}
-            <SubmitButton
-              onClick={tryToSubmitForm}
-              form={"raster_layer_form_id"}
-            />
+            <SubmitButton onClick={tryToSubmitForm} form={"raster_layer_form_id"} />
           </div>
         </div>
       </div>
       {currentRecord && showDeleteModal ? (
         <DeleteModal
           rows={[currentRecord]}
-          displayContent={[{name: "name", width: 40}, {name: "uuid", width: 60}]}
+          displayContent={[
+            { name: "name", width: 40 },
+            { name: "uuid", width: 60 },
+          ]}
           fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
           handleClose={() => setShowDeleteModal(false)}
-          tableUrl={'/management/data_management/rasters/layers'}
+          tableUrl={"/management/data_management/rasters/layers"}
         />
       ) : null}
       {currentRecord && currentRecord.uuid && rasterSourceModal ? (
@@ -572,9 +641,10 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
   );
 };
 
-const mapDispatchToProps = (dispatch: any) => ({
+const mapDispatchToProps = (dispatch: AppDispatch) => ({
   removeRasterSourceUUID: () => dispatch(removeRasterSourceUUID()),
-  addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout)),
+  addNotification: (message: string | number, timeout: number) =>
+    dispatch(addNotification(message, timeout)),
 });
 type DispatchProps = ReturnType<typeof mapDispatchToProps>;
 

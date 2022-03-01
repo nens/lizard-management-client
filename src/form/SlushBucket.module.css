@@ -1,4 +1,3 @@
-
 .SelectChoice {
   position: relative;
 }
@@ -25,7 +24,7 @@
 }
 
 .ResultRow:hover {
-  background-color: #a6ece0;;
+  background-color: #a6ece0;
 }
 .Active {
   background-color: #00cdab;
@@ -42,7 +41,7 @@
   padding: 13px;
   border-bottom: 1px solid #ccc;
 }
-  
+
 .SelectedRowReadonly {
-  background-color: #c9c9c9;;
+  background-color: #c9c9c9;
 }

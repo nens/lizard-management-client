@@ -1,40 +1,46 @@
-import React, { useEffect, useRef } from 'react';
-import Select, { components, createFilter, StylesConfig, ValueType, OptionProps } from 'react-select';
-import AsyncSelect from 'react-select/async';
-import { UUID_REGEX } from '../components/Breadcrumbs';
+import React, { useEffect, useRef } from "react";
+import Select, {
+  components,
+  createFilter,
+  StylesConfig,
+  ValueType,
+  OptionProps,
+} from "react-select";
+import AsyncSelect from "react-select/async";
+import { UUID_REGEX } from "../components/Breadcrumbs";
 import formStyles from "../styles/Forms.module.css";
 
 export type Value = {
-  value: string | number,
-  label: string,
-  subLabel?: string | JSX.Element,
-  subLabel2?: string | JSX.Element,
+  value: string | number;
+  label: string;
+  subLabel?: string | JSX.Element;
+  subLabel2?: string | JSX.Element;
 };
 
 interface MyProps {
-  title: string,
-  name: string,
-  id?: string,
-  value?: Value | null,
-  valueChanged: (value: ValueType<Value, boolean> | {}) => void,
-  options: Value[],
-  validated: boolean,
-  errorMessage?: string | false,
-  placeholder?: string,
-  triedToSubmit?: boolean,
-  readOnly?: boolean,
-  isSearchable?: boolean,
-  isClearable?: boolean,
-  isLoading?: boolean,
-  isMulti?: boolean,
-  dropUp?: boolean,
-  form?: string,
-  isAsync?: boolean,
-  isCached?: boolean,
-  loadOptions?: (inputValue: string) => Promise<any>, // loadOptions is required if isAsync === true
-  onFocus?: (e: any) => void,
-  onBlur?: () => void,
-};
+  title: string;
+  name: string;
+  id?: string;
+  value?: Value | null;
+  valueChanged: (value: ValueType<Value, boolean> | {}) => void;
+  options: Value[];
+  validated: boolean;
+  errorMessage?: string | false;
+  placeholder?: string;
+  triedToSubmit?: boolean;
+  readOnly?: boolean;
+  isSearchable?: boolean;
+  isClearable?: boolean;
+  isLoading?: boolean;
+  isMulti?: boolean;
+  dropUp?: boolean;
+  form?: string;
+  isAsync?: boolean;
+  isCached?: boolean;
+  loadOptions?: (inputValue: string) => Promise<any>; // loadOptions is required if isAsync === true
+  onFocus?: (e: any) => void;
+  onBlur?: () => void;
+}
 
 export const SelectDropdown = (props: MyProps) => {
   const {
@@ -70,11 +76,11 @@ export const SelectDropdown = (props: MyProps) => {
   useEffect(() => {
     if (myInput && myInput.current) {
       if (validated) {
-        myInput.current.setCustomValidity('');
+        myInput.current.setCustomValidity("");
       } else {
-        myInput.current.setCustomValidity(errorMessage || '');
-      };
-    };
+        myInput.current.setCustomValidity(errorMessage || "");
+      }
+    }
   });
 
   const SingleValue = (props: any) => (
@@ -89,29 +95,29 @@ export const SelectDropdown = (props: MyProps) => {
     <components.Option {...props}>
       <div
         style={{
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          whiteSpace: 'nowrap'
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          whiteSpace: "nowrap",
         }}
       >
         {props.data.label}
       </div>
       <div
         style={{
-          fontStyle: 'italic',
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          whiteSpace: 'nowrap'
+          fontStyle: "italic",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          whiteSpace: "nowrap",
         }}
       >
         {props.data.subLabel}
       </div>
       <div
         style={{
-          fontStyle: 'italic',
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          whiteSpace: 'nowrap'
+          fontStyle: "italic",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          whiteSpace: "nowrap",
         }}
       >
         {props.data.subLabel2}
@@ -126,57 +132,54 @@ export const SelectDropdown = (props: MyProps) => {
       let borderColor: string = styles.borderColor as string;
       let boxShadow: string = styles.boxShadow as string;
       if (triedToSubmit && !validated) {
-        borderColor =  'var(--color-border-input-invalid)';
-        boxShadow = 'none';
+        borderColor = "var(--color-border-input-invalid)";
+        boxShadow = "none";
       } else if (isFocused) {
-        borderColor = 'var(--color-border-input)';
-        boxShadow = '0 0 1px 1px var(--color-border-input)';
-      };
+        borderColor = "var(--color-border-input)";
+        boxShadow = "0 0 1px 1px var(--color-border-input)";
+      }
       return {
         ...styles,
         paddingTop: 4,
         paddingBottom: 4,
-        backgroundColor: readOnly ?  'var(--color-input-disabled)' : styles.backgroundColor,
-        cursor: readOnly ? 'not-allowed' : styles.cursor,
+        backgroundColor: readOnly ? "var(--color-input-disabled)" : styles.backgroundColor,
+        cursor: readOnly ? "not-allowed" : styles.cursor,
         borderColor: borderColor,
         boxShadow: boxShadow,
-        ':hover': {
-          borderColor: borderColor
-        }
-      }
+        ":hover": {
+          borderColor: borderColor,
+        },
+      };
     },
     menu: (styles) => ({
       ...styles,
-      zIndex: 100 // to always show the menu dropdown
+      zIndex: 100, // to always show the menu dropdown
     }),
     // Custom styling for Option list component
     option: (styles, { data }) => ({
       ...styles,
-      display: 'grid',
-      gridTemplateColumns: (
-        data.subLabel2 ? '35fr 45fr 20fr' :
-        // use a different layout for the option list when the sub-label is an UUID
-        UUID_REGEX.test(data.subLabel) ? '65fr 35fr' :
-        data.subLabel ? '35fr 65fr' : '1fr'
-      )
+      display: "grid",
+      gridTemplateColumns: data.subLabel2
+        ? "35fr 45fr 20fr"
+        : // use a different layout for the option list when the sub-label is an UUID
+        UUID_REGEX.test(data.subLabel)
+        ? "65fr 35fr"
+        : data.subLabel
+        ? "35fr 65fr"
+        : "1fr",
     }),
     // Custom styling for the Indicator component
     indicatorsContainer: (styles) => ({
       ...styles,
-      cursor: 'pointer',
-      visibility: readOnly ? 'hidden' : styles.visibility
-    })
+      cursor: "pointer",
+      visibility: readOnly ? "hidden" : styles.visibility,
+    }),
   };
 
   return (
-    <label
-      htmlFor={name}
-      className={formStyles.Label}
-    >
-      <span className={formStyles.LabelTitle}>
-        {title}
-      </span>
-      <div style={{position: 'relative'}}>
+    <label htmlFor={name} className={formStyles.Label}>
+      <span className={formStyles.LabelTitle}>{title}</span>
+      <div style={{ position: "relative" }}>
         {isAsync ? (
           <AsyncSelect
             ref={mySelect}
@@ -189,12 +192,12 @@ export const SelectDropdown = (props: MyProps) => {
             defaultOptions
             loadOptions={loadOptions}
             value={value}
-            onChange={option => valueChanged(option)}
+            onChange={(option) => valueChanged(option)}
             isClearable={!readOnly && isClearable === undefined ? true : false}
             isSearchable={!readOnly && isSearchable}
             menuIsOpen={readOnly ? false : undefined}
             isMulti={isMulti}
-            menuPlacement={dropUp ? 'top' : undefined}
+            menuPlacement={dropUp ? "top" : undefined}
             onFocus={onFocus}
             onBlur={onBlur}
             filterOption={createFilter({ ignoreAccents: false })}
@@ -209,13 +212,13 @@ export const SelectDropdown = (props: MyProps) => {
             placeholder={placeholder}
             options={options}
             value={value}
-            onChange={option => valueChanged(option)}
+            onChange={(option) => valueChanged(option)}
             isLoading={isLoading}
             isClearable={!readOnly && isClearable === undefined ? true : false}
             isSearchable={!readOnly && isSearchable}
             menuIsOpen={readOnly ? false : undefined}
             isMulti={isMulti}
-            menuPlacement={dropUp ? 'top' : undefined}
+            menuPlacement={dropUp ? "top" : undefined}
             onFocus={onFocus}
             onBlur={onBlur}
             filterOption={createFilter({ ignoreAccents: false })}
@@ -225,17 +228,17 @@ export const SelectDropdown = (props: MyProps) => {
         <input
           ref={myInput}
           tabIndex={-1}
-          autoComplete='off'
+          autoComplete="off"
           onFocus={() => mySelect.current && mySelect.current.focus()}
           form={form}
           style={{
-            position: 'absolute',
+            position: "absolute",
             opacity: 0,
             top: 0,
             left: 0,
-            width: '100%',
-            height: '100%',
-            border: 'none',
+            width: "100%",
+            height: "100%",
+            border: "none",
             padding: 0,
             zIndex: -1,
           }}
@@ -243,4 +246,4 @@ export const SelectDropdown = (props: MyProps) => {
       </div>
     </label>
   );
-}
+};

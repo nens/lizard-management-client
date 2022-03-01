@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import styles from './ActionButton.module.css';
-import ActionList from './ActionList';
-
+import React, { useEffect, useState } from "react";
+import styles from "./ActionButton.module.css";
+import ActionList from "./ActionList";
 
 interface Props {
   actions: string[];
@@ -10,15 +9,15 @@ interface Props {
   forForm?: boolean;
 }
 
-const ActionButtons: React.FC<Props> = ({actions, onChange, display, forForm }) => {
+const ActionButtons: React.FC<Props> = ({ actions, onChange, display, forForm }) => {
   const [showActionList, setShowActionList] = useState<boolean>(false);
 
   useEffect(() => {
-    const closeActionListOnEsc = (e: any) => {
-      if (e.key === 'Escape') setShowActionList(false);
+    const closeActionListOnEsc = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setShowActionList(false);
     };
-    window.addEventListener('keydown', closeActionListOnEsc);
-    return () => window.removeEventListener('keydown', closeActionListOnEsc);
+    window.addEventListener("keydown", closeActionListOnEsc);
+    return () => window.removeEventListener("keydown", closeActionListOnEsc);
   });
 
   return (
@@ -44,12 +43,12 @@ const ActionButtons: React.FC<Props> = ({actions, onChange, display, forForm }) 
       </button>
       <ActionList
         actions={actions}
-        onChange={value => onChange(value)}
+        onChange={(value) => onChange(value)}
         showActionList={showActionList}
         dropUp={forForm} // render drop-up for Form
       />
     </div>
-  )
+  );
 };
 
 export default ActionButtons;

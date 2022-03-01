@@ -29,84 +29,101 @@ import layerCollectionIcon from "../images/layer_collection_icon.svg";
 // import agreementIcon from "../images/agreement.svg";
 import { FormattedMessage } from "react-intl.macro";
 
+import doArraysHaveEqualElement from "../utils/doArraysHaveEqualElement";
 
-import doArraysHaveEqualElement from '../utils/doArraysHaveEqualElement';
-
-
-export type Role = "admin"| "supplier"| "manager"| "user"
+export type Role = "admin" | "supplier" | "manager" | "user";
 export interface NavigationLinkPage {
-  onUrl: string,
-  needsAuthentication: boolean,
-  needsOneOfRoles: Role[],
+  onUrl: string;
+  needsAuthentication: boolean;
+  needsOneOfRoles: Role[];
 }
 
-type LinkOrHome = "LINK" | "HOME"
-export interface NavigationLinkTile{
-  title: string | JSX.Element,
-  subtitle?: string | JSX.Element,
-  homePageIcon: boolean,
-  homePageLinkOrHome?:  LinkOrHome,
-  order: number,
-  onUrl: string,
-  linksToUrl: string,
-  requiresOneOfRoles: Role[],
-  linksToUrlExternal: boolean,
-  icon: string,
+type LinkOrHome = "LINK" | "HOME";
+export interface NavigationLinkTile {
+  title: string | JSX.Element;
+  subtitle?: string | JSX.Element;
+  homePageIcon: boolean;
+  homePageLinkOrHome?: LinkOrHome;
+  order: number;
+  onUrl: string;
+  linksToUrl: string;
+  requiresOneOfRoles: Role[];
+  linksToUrlExternal: boolean;
+  icon: string;
 }
 
+export const getNavigationLinkPageFromUrlAndAllNavigationLinkPages = (
+  urlPostFix: string,
+  allNavigationLinkPages: NavigationLinkPage[]
+) => {
+  return allNavigationLinkPages.find(
+    (navigationLinkPage) => navigationLinkPage.onUrl === urlPostFix
+  );
+};
 
-export const getNavigationLinkPageFromUrlAndAllNavigationLinkPages = (urlPostFix:string, allNavigationLinkPages:NavigationLinkPage[]) => {
-  return allNavigationLinkPages.find(navigationLinkPage => navigationLinkPage.onUrl === urlPostFix);
-}
-
-export const getNavigationLinkTileFromUrlAndAllNavigationLinkTiles = (urlPostFix:string, allNavigationLinkTiles:NavigationLinkTile[]) => {
-  const homeAppTileOnCompleteUrl = allNavigationLinkTiles.find(navigationLinkTile => navigationLinkTile.linksToUrl === urlPostFix);
+export const getNavigationLinkTileFromUrlAndAllNavigationLinkTiles = (
+  urlPostFix: string,
+  allNavigationLinkTiles: NavigationLinkTile[]
+) => {
+  const homeAppTileOnCompleteUrl = allNavigationLinkTiles.find(
+    (navigationLinkTile) => navigationLinkTile.linksToUrl === urlPostFix
+  );
   if (homeAppTileOnCompleteUrl) {
     return homeAppTileOnCompleteUrl;
   } else {
-    const urlMinusLastPart = urlPostFix.split("/").slice(0,-1).join("/");
-    return allNavigationLinkTiles.find(navigationLinkTile => navigationLinkTile.linksToUrl === urlMinusLastPart); 
+    const urlMinusLastPart = urlPostFix.split("/").slice(0, -1).join("/");
+    return allNavigationLinkTiles.find(
+      (navigationLinkTile) => navigationLinkTile.linksToUrl === urlMinusLastPart
+    );
   }
-}
+};
 
 export const getCurrentUrlPostfix = () => {
   let urlPostfix = window.location.pathname;
-  if (urlPostfix !== "/" && urlPostfix[urlPostfix.length-1] === "/")  {
-    urlPostfix = urlPostfix.substring(0, urlPostfix.length-1)
+  if (urlPostfix !== "/" && urlPostfix[urlPostfix.length - 1] === "/") {
+    urlPostfix = urlPostfix.substring(0, urlPostfix.length - 1);
   }
   return urlPostfix;
-}
+};
 
 export const getCurrentNavigationLinkPage = () => {
   const urlPostfix = getCurrentUrlPostfix();
-  return getNavigationLinkPageFromUrlAndAllNavigationLinkPages(urlPostfix, navigationLinkPages)
-}
+  return getNavigationLinkPageFromUrlAndAllNavigationLinkPages(urlPostfix, navigationLinkPages);
+};
 export const getCurrentNavigationLinkTile = () => {
   const urlPostfix = getCurrentUrlPostfix();
-  return getNavigationLinkTileFromUrlAndAllNavigationLinkTiles(urlPostfix, navigationLinkTiles)
-}
+  return getNavigationLinkTileFromUrlAndAllNavigationLinkTiles(urlPostfix, navigationLinkTiles);
+};
 
-
-export const getNavigationLinkTilesFromNavigationLinkPageAndAllNavigationLinkTiles = (navigationLinkPage: NavigationLinkPage, navigationLinkTiles: NavigationLinkTile[]) => {
-  return navigationLinkTiles.filter(navigationLinkTile=>navigationLinkTile.onUrl === navigationLinkPage.onUrl)
-}
+export const getNavigationLinkTilesFromNavigationLinkPageAndAllNavigationLinkTiles = (
+  navigationLinkPage: NavigationLinkPage,
+  navigationLinkTiles: NavigationLinkTile[]
+) => {
+  return navigationLinkTiles.filter(
+    (navigationLinkTile) => navigationLinkTile.onUrl === navigationLinkPage.onUrl
+  );
+};
 
 export const getCurrentNavigationLinkTiles = () => {
   const currentPage = getCurrentNavigationLinkPage();
   if (currentPage) {
-    return getNavigationLinkTilesFromNavigationLinkPageAndAllNavigationLinkTiles(currentPage,navigationLinkTiles);
-  } else{
+    return getNavigationLinkTilesFromNavigationLinkPageAndAllNavigationLinkTiles(
+      currentPage,
+      navigationLinkTiles
+    );
+  } else {
     return [];
   }
-}
+};
 
 export const userHasCorrectRolesForCurrentNavigationLinkTile = (userRoles: string[]) => {
   const currentHomeAppTile = getCurrentNavigationLinkTile();
-  return !currentHomeAppTile || currentHomeAppTile.requiresOneOfRoles.length === 0 || doArraysHaveEqualElement(userRoles, currentHomeAppTile.requiresOneOfRoles);
-}
-
-
-
+  return (
+    !currentHomeAppTile ||
+    currentHomeAppTile.requiresOneOfRoles.length === 0 ||
+    doArraysHaveEqualElement(userRoles, currentHomeAppTile.requiresOneOfRoles)
+  );
+};
 
 export const navigationLinkPages: NavigationLinkPage[] = [
   {
@@ -151,21 +168,15 @@ export const navigationLinkPages: NavigationLinkPage[] = [
   },
 ];
 
-
 export const navigationLinkTiles: NavigationLinkTile[] = [
-  
-  { 
-    title: 
-      <FormattedMessage
-        id="apptile.catalogue_tile"
-        defaultMessage="catalogue"
-      />
-    ,
-    subtitle: 
+  {
+    title: <FormattedMessage id="apptile.catalogue_tile" defaultMessage="catalogue" />,
+    subtitle: (
       <FormattedMessage
         id="apptile.catalogue_tile_subtitle"
         defaultMessage="Search through your data"
-      />,
+      />
+    ),
     homePageIcon: true,
     homePageLinkOrHome: "HOME",
     order: 100,
@@ -175,18 +186,14 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     requiresOneOfRoles: [],
     icon: catalogIcon,
   },
-  { 
-    title: 
-      <FormattedMessage
-        id="apptile.viewer_tile"
-        defaultMessage="viewer"
-      />
-    ,
-    subtitle: 
+  {
+    title: <FormattedMessage id="apptile.viewer_tile" defaultMessage="viewer" />,
+    subtitle: (
       <FormattedMessage
         id="apptile.viewer_tile_subtitle"
         defaultMessage="Explore your data on the map"
-      />,
+      />
+    ),
     homePageIcon: true,
     homePageLinkOrHome: "HOME",
     order: 100,
@@ -196,18 +203,14 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     requiresOneOfRoles: [],
     icon: viewerIcon,
   },
-  { 
-    title: 
-      <FormattedMessage
-        id="apptile.management_tile"
-        defaultMessage="management"
-      />
-    ,
-    subtitle: 
+  {
+    title: <FormattedMessage id="apptile.management_tile" defaultMessage="management" />,
+    subtitle: (
       <FormattedMessage
         id="apptile.management_tile_subtitle"
         defaultMessage="Manage your data, users and alarms"
-      />,
+      />
+    ),
     homePageIcon: true,
     homePageLinkOrHome: "HOME",
     order: 100,
@@ -217,18 +220,9 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     requiresOneOfRoles: ["admin", "supplier", "manager", "user"],
     icon: managementIcon,
   },
-  { 
-    title: 
-      <FormattedMessage
-        id="apptile.api_tile"
-        defaultMessage="api"
-      />
-    ,
-    subtitle: 
-      <FormattedMessage
-        id="apptile.api_tile_subtitle"
-        defaultMessage="Query your data"
-      />,
+  {
+    title: <FormattedMessage id="apptile.api_tile" defaultMessage="api" />,
+    subtitle: <FormattedMessage id="apptile.api_tile_subtitle" defaultMessage="Query your data" />,
     homePageIcon: true,
     homePageLinkOrHome: "HOME",
     order: 100,
@@ -238,18 +232,11 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     requiresOneOfRoles: [],
     icon: codeIcon,
   },
-  { 
-    title: 
-      <FormattedMessage
-        id="apptile.documentation_tile"
-        defaultMessage="documentation"
-      />
-    ,
-    subtitle: 
-      <FormattedMessage
-        id="apptile.documentation_tile_subtitle"
-        defaultMessage="Read the docs"
-      />,
+  {
+    title: <FormattedMessage id="apptile.documentation_tile" defaultMessage="documentation" />,
+    subtitle: (
+      <FormattedMessage id="apptile.documentation_tile_subtitle" defaultMessage="Read the docs" />
+    ),
     homePageIcon: true,
     homePageLinkOrHome: "LINK",
     order: 100,
@@ -259,18 +246,9 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     requiresOneOfRoles: [],
     icon: docsIcon,
   },
-  { 
-    title: 
-      <FormattedMessage
-        id="apptile.support_tile"
-        defaultMessage="support"
-      />
-    ,
-    subtitle: 
-      <FormattedMessage
-        id="apptile.support_tile_subtitle"
-        defaultMessage="Need help?"
-      />,
+  {
+    title: <FormattedMessage id="apptile.support_tile" defaultMessage="support" />,
+    subtitle: <FormattedMessage id="apptile.support_tile_subtitle" defaultMessage="Need help?" />,
     homePageIcon: true,
     homePageLinkOrHome: "LINK",
     order: 100,
@@ -280,7 +258,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     requiresOneOfRoles: [],
     icon: supportIcon,
   },
-  { 
+  {
     title: "data",
     // title: (
     //   <FormattedMessage
@@ -293,10 +271,10 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     onUrl: "/management",
     linksToUrl: "/management/data_management",
     linksToUrlExternal: false,
-    requiresOneOfRoles: ["admin", "supplier",],
+    requiresOneOfRoles: ["admin", "supplier"],
     icon: dataManagementIcon,
   },
-  { 
+  {
     title: "users",
     // title: (
     //   <FormattedMessage
@@ -312,7 +290,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     requiresOneOfRoles: ["manager"],
     icon: userManagementIcon,
   },
-  { 
+  {
     title: "alarms",
     // title: (
     //   <FormattedMessage id="home.alarms" defaultMessage="Alarms" />
@@ -325,7 +303,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     requiresOneOfRoles: ["admin"],
     icon: alarmIcon,
   },
-  { 
+  {
     title: "Personal API keys",
     // title: (
     //   <FormattedMessage
@@ -341,7 +319,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     requiresOneOfRoles: ["admin", "supplier", "manager", "user"],
     icon: personalApiKeysIcon,
   },
-  // { 
+  // {
   //   title: "Contract",
   //   // title: (
   //   //   <FormattedMessage
@@ -357,7 +335,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
   //   requiresOneOfRoles: ["admin", "supplier", "manager", "user"],
   //   icon: agreementIcon,
   // },
-  { 
+  {
     title: "Map viewer",
     // title: (
     //   <FormattedMessage
@@ -389,7 +367,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
   //   requiresOneOfRoles: [],
   //   icon: backArrowIcon
   // },
-  { 
+  {
     title: "rasters",
     // title: (
     //   <FormattedMessage
@@ -402,7 +380,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     onUrl: "/management/data_management",
     linksToUrl: "/management/data_management/rasters",
     linksToUrlExternal: false,
-    requiresOneOfRoles: ["admin", "supplier",],
+    requiresOneOfRoles: ["admin", "supplier"],
     icon: rasterIcon,
   },
   {
@@ -412,7 +390,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     onUrl: "/management/data_management",
     linksToUrl: "/management/data_management/geoblocks",
     linksToUrlExternal: false,
-    requiresOneOfRoles: ["admin", "supplier",],
+    requiresOneOfRoles: ["admin", "supplier"],
     icon: geoblockIcon,
   },
   {
@@ -428,8 +406,8 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     onUrl: "/management/data_management",
     linksToUrl: "/management/data_management/wms_layers",
     linksToUrlExternal: false,
-    requiresOneOfRoles: ["admin", "supplier",],
-    icon: wmsIcon
+    requiresOneOfRoles: ["admin", "supplier"],
+    icon: wmsIcon,
   },
   {
     title: "Layer collections",
@@ -444,8 +422,8 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     onUrl: "/management/data_management",
     linksToUrl: "/management/data_management/layer_collections",
     linksToUrlExternal: false,
-    requiresOneOfRoles: ["admin", "supplier",],
-    icon: layerCollectionIcon
+    requiresOneOfRoles: ["admin", "supplier"],
+    icon: layerCollectionIcon,
   },
   {
     title: "Time Series",
@@ -460,7 +438,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     onUrl: "/management/data_management",
     linksToUrl: "/management/data_management/timeseries",
     linksToUrlExternal: false,
-    requiresOneOfRoles: ["admin", "supplier",],
+    requiresOneOfRoles: ["admin", "supplier"],
     icon: timeseriesIcon,
   },
   {
@@ -476,8 +454,8 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     onUrl: "/management/data_management",
     linksToUrl: "/management/data_management/scenarios",
     linksToUrlExternal: false,
-    requiresOneOfRoles: ["admin", "supplier",],
-    icon: threediIcon
+    requiresOneOfRoles: ["admin", "supplier"],
+    icon: threediIcon,
   },
   {
     title: "Labels",
@@ -492,8 +470,8 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     onUrl: "/management/data_management",
     linksToUrl: "/management/data_management/labels",
     linksToUrlExternal: false,
-    requiresOneOfRoles: ["admin", "supplier",],
-    icon: labelIcon
+    requiresOneOfRoles: ["admin", "supplier"],
+    icon: labelIcon,
   },
   {
     title: "Go Back",
@@ -509,7 +487,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     linksToUrl: "/management",
     linksToUrlExternal: false,
     requiresOneOfRoles: [],
-    icon: backArrowIcon
+    icon: backArrowIcon,
   },
   {
     title: "Rasters Sources",
@@ -524,8 +502,8 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     onUrl: "/management/data_management/rasters",
     linksToUrl: "/management/data_management/rasters/sources",
     linksToUrlExternal: false,
-    requiresOneOfRoles: ["admin", "supplier",],
-    icon: rasterSourcesIcon
+    requiresOneOfRoles: ["admin", "supplier"],
+    icon: rasterSourcesIcon,
   },
   {
     title: "Rasters Layers",
@@ -540,7 +518,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     onUrl: "/management/data_management/rasters",
     linksToUrl: "/management/data_management/rasters/layers",
     linksToUrlExternal: false,
-    requiresOneOfRoles: ["admin", "supplier",],
+    requiresOneOfRoles: ["admin", "supplier"],
     icon: rasterLayersIcon,
   },
   {
@@ -557,7 +535,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     linksToUrl: "/management/data_management",
     linksToUrlExternal: false,
     requiresOneOfRoles: [],
-    icon: backArrowIcon
+    icon: backArrowIcon,
   },
   {
     title: "Label types",
@@ -572,8 +550,8 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     onUrl: "/management/data_management/labels",
     linksToUrl: "/management/data_management/labels/label_types",
     linksToUrlExternal: false,
-    requiresOneOfRoles: ["admin", "supplier",],
-    icon: labeltypesIcon
+    requiresOneOfRoles: ["admin", "supplier"],
+    icon: labeltypesIcon,
   },
   {
     title: "Go Back",
@@ -589,7 +567,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     linksToUrl: "/management/data_management",
     linksToUrlExternal: false,
     requiresOneOfRoles: [],
-    icon: backArrowIcon
+    icon: backArrowIcon,
   },
   {
     title: "Locations",
@@ -604,7 +582,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     onUrl: "/management/data_management/timeseries",
     linksToUrl: "/management/data_management/timeseries/locations",
     linksToUrlExternal: false,
-    requiresOneOfRoles: ["admin", "supplier",],
+    requiresOneOfRoles: ["admin", "supplier"],
     icon: locationsIcon,
   },
   {
@@ -620,8 +598,8 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     onUrl: "/management/data_management/timeseries",
     linksToUrl: "/management/data_management/timeseries/timeseries",
     linksToUrlExternal: false,
-    requiresOneOfRoles: ["admin", "supplier",],
-    icon: timeseriesIcon
+    requiresOneOfRoles: ["admin", "supplier"],
+    icon: timeseriesIcon,
   },
   {
     title: "Monitoring Networks",
@@ -636,7 +614,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     onUrl: "/management/data_management/timeseries",
     linksToUrl: "/management/data_management/timeseries/monitoring_networks",
     linksToUrlExternal: false,
-    requiresOneOfRoles: ["admin", "supplier",],
+    requiresOneOfRoles: ["admin", "supplier"],
     icon: monitoringsNetworkicon,
   },
   {
@@ -653,7 +631,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     linksToUrl: "/management/data_management",
     linksToUrlExternal: false,
     requiresOneOfRoles: [],
-    icon: backArrowIcon
+    icon: backArrowIcon,
   },
   {
     title: "Notifications",
@@ -668,7 +646,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     onUrl: "/management/alarms",
     linksToUrl: "/management/alarms/notifications",
     linksToUrlExternal: false,
-    requiresOneOfRoles: ["admin",],
+    requiresOneOfRoles: ["admin"],
     icon: alarmsIcon,
   },
   {
@@ -684,8 +662,8 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     onUrl: "/management/alarms",
     linksToUrl: "/management/alarms/groups",
     linksToUrlExternal: false,
-    requiresOneOfRoles: ["admin",],
-    icon: groupsIcon
+    requiresOneOfRoles: ["admin"],
+    icon: groupsIcon,
   },
   {
     title: "Contacts",
@@ -700,8 +678,8 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     onUrl: "/management/alarms",
     linksToUrl: "/management/alarms/contacts",
     linksToUrlExternal: false,
-    requiresOneOfRoles: ["admin",],
-    icon: contactsIcon
+    requiresOneOfRoles: ["admin"],
+    icon: contactsIcon,
   },
   {
     title: "Templates",
@@ -716,7 +694,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     onUrl: "/management/alarms",
     linksToUrl: "/management/alarms/templates",
     linksToUrlExternal: false,
-    requiresOneOfRoles: ["admin",],
+    requiresOneOfRoles: ["admin"],
     icon: templatesIcon,
   },
   {
@@ -733,7 +711,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     linksToUrl: "/management",
     linksToUrlExternal: false,
     requiresOneOfRoles: [],
-    icon: backArrowIcon
+    icon: backArrowIcon,
   },
   {
     title: "Raster Alarms",
@@ -748,7 +726,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     onUrl: "/management/alarms/notifications",
     linksToUrl: "/management/alarms/notifications/raster_alarms",
     linksToUrlExternal: false,
-    requiresOneOfRoles: ["admin",],
+    requiresOneOfRoles: ["admin"],
     icon: alarmsIcon,
   },
   {
@@ -764,7 +742,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     onUrl: "/management/alarms/notifications",
     linksToUrl: "/management/alarms/notifications/timeseries_alarms",
     linksToUrlExternal: false,
-    requiresOneOfRoles: ["admin",],
+    requiresOneOfRoles: ["admin"],
     icon: alarmsIcon,
   },
   {
@@ -781,6 +759,6 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     linksToUrl: "/management/alarms",
     linksToUrlExternal: false,
     requiresOneOfRoles: [],
-    icon: backArrowIcon
+    icon: backArrowIcon,
   },
 ];

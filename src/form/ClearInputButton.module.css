@@ -1,4 +1,4 @@
-::-ms-clear{
+::-ms-clear {
   display: none;
 }
 
@@ -11,6 +11,6 @@
 }
 
 .ClearInputTopRight {
-top: 16px;
-right: 16px;
+  top: 16px;
+  right: 16px;
 }

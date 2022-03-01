@@ -1,6 +1,6 @@
 export interface SpatialBounds {
-  north: number,
-  east: number,
-  south: number,
-  west: number,
+  north: number;
+  east: number;
+  south: number;
+  west: number;
 }

@@ -7,9 +7,9 @@ export const convertToSelectObject = (
 ) => {
   return {
     value,
-    label: label || value+'',
+    label: label || value + "",
     subLabel,
     subLabel2,
-    subInputInfo
+    subInputInfo,
   };
 };

@@ -4,12 +4,12 @@
 // https://github.com/vankop/jsoneditor-react/issues/65
 // https://github.com/vankop/jsoneditor-react/issues/65#issuecomment-937084708
 
-declare module 'jsoneditor-react' {
+declare module "jsoneditor-react" {
   export class JsonEditor extends React.Component<JsonEditorProps> {
     jsonEditor: any;
   }
 
-  type Mode = 'tree' | 'view' | 'form' | 'code' | 'text';
+  type Mode = "tree" | "view" | "form" | "code" | "text";
 
   interface JsonEditorProps {
     value: any;
@@ -39,7 +39,7 @@ declare module 'jsoneditor-react' {
     onError?: (error: any) => void;
     /** Set a callback function triggered right after the mode is changed by the user. */
     onModeChange?: (mode: Mode) => void;
-    onClassName?: (args: {path: any; field: str; value: any}) => void;
+    onClassName?: (args: { path: any; field: str; value: any }) => void;
 
     /** Provide a version of the Ace editor. Only applicable when mode is code */
     ace?: object;

@@ -1,20 +1,20 @@
-import geoblock from '../data_management/geoblocks/geoblockUtils/geoblockTypeDefinition.json';
+import geoblock from "../data_management/geoblocks/geoblockUtils/geoblockTypeDefinition.json";
 
 export interface GeoBlockSource {
-  name: string,
+  name: string;
   graph: {
-    [key: string]: (string | number)[]
-  }
+    [key: string]: (string | number)[];
+  };
 }
 
 type parameter = {
-  name: string,
-  type: string | string[],
-  [key: string]: any
-}
+  name: string;
+  type: string | string[];
+  [key: string]: any;
+};
 
 enum InputBlockEnum {
-  RasterSource = "RasterSource"
+  RasterSource = "RasterSource",
 }
 
 enum GeoBlockEnum {
@@ -53,7 +53,7 @@ enum GeoBlockEnum {
   Step = "Step",
   Subtract = "Subtract",
   TemporalAggregate = "TemporalAggregate",
-  Xor = "Xor"
+  Xor = "Xor",
 }
 
 enum GroupBlockEnum {
@@ -65,32 +65,31 @@ enum GroupBlockEnum {
 
 type InputBlockType = {
   [key in InputBlockEnum]?: {
-    class: string,
-    description: string,
-    parameters: parameter[]
-  }
-}
+    class: string;
+    description: string;
+    parameters: parameter[];
+  };
+};
 
 type GeoBlockType = {
   [key in GeoBlockEnum]?: {
-    class: string,
-    description: string,
-    parameters: parameter[]
-  }
-}
+    class: string;
+    description: string;
+    parameters: parameter[];
+  };
+};
 
 type GroupBlockType = {
   [key in GroupBlockEnum]?: {
-    class: string,
-    description: string,
+    class: string;
+    description: string;
     parameters: {
-      type: string,
+      type: string;
       items: {
-        type: string
-      }
-    }
-  }
-}
+        type: string;
+      };
+    };
+  };
+};
 
-// @ts-ignore
 export const geoblockType: GeoBlockType & InputBlockType & GroupBlockType = geoblock;

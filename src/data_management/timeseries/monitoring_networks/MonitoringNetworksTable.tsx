@@ -1,28 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { NavLink, RouteComponentProps } from "react-router-dom";
-import TableStateContainer from '../../../components/TableStateContainer';
-import TableActionButtons from '../../../components/TableActionButtons';
-import AuthorisationModal from '../../../components/AuthorisationModal';
-import DeleteModal from '../../../components/DeleteModal';
-import { ExplainSideColumn } from '../../../components/ExplainSideColumn';
-import { getAccessibiltyText } from '../../../form/AccessModifier';
-import { defaultTableHelpText } from '../../../utils/help_texts/defaultHelpText';
-import { fetchWithOptions } from '../../../utils/fetchWithOptions';
+import TableStateContainer from "../../../components/TableStateContainer";
+import TableActionButtons from "../../../components/TableActionButtons";
+import AuthorisationModal from "../../../components/AuthorisationModal";
+import DeleteModal from "../../../components/DeleteModal";
+import { ExplainSideColumn } from "../../../components/ExplainSideColumn";
+import { getAccessibiltyText } from "../../../form/AccessModifier";
+import { defaultTableHelpText } from "../../../utils/help_texts/defaultHelpText";
+import { fetchWithOptions } from "../../../utils/fetchWithOptions";
 import monitoringNetworkIcon from "../../../images/monitoring_network_icon.svg";
 import tableStyles from "../../../components/Table.module.css";
+import { ColumnDefinition } from "../../../components/Table";
+import { MonitoringNetwork } from "../../../types/monitoringNetworkType";
 
 export const baseUrl = "/api/v4/monitoringnetworks/";
 const navigationUrl = "/management/data_management/timeseries/monitoring_networks";
 
-export const MonitoringNetworksTable = (props: RouteComponentProps) =>  {
-  const [rowsToBeDeleted, setRowsToBeDeleted] = useState<any[]>([]);
+export const MonitoringNetworksTable = (props: RouteComponentProps) => {
+  const [rowsToBeDeleted, setRowsToBeDeleted] = useState<MonitoringNetwork[]>([]);
   const [resetTable, setResetTable] = useState<Function | null>(null);
 
   // selected rows for set accessibility action
-  const [selectedRows, setSelectedRows] = useState<any[]>([]);
+  const [selectedRows, setSelectedRows] = useState<MonitoringNetwork[]>([]);
 
   const deleteActions = (
-    rows: any[],
+    rows: MonitoringNetwork[],
     triggerReloadWithCurrentPage: Function,
     setCheckboxes: Function | null
   ) => {
@@ -33,62 +35,61 @@ export const MonitoringNetworksTable = (props: RouteComponentProps) =>  {
     });
   };
 
-  const columnDefinitions = [
+  const columnDefinitions: ColumnDefinition<MonitoringNetwork>[] = [
     {
       titleRenderFunction: () => "Name",
-      renderFunction: (row: any) => 
-        <span
-          className={tableStyles.CellEllipsis}
-          title={row.name}
-        >
-          <NavLink to={`${navigationUrl}/${row.uuid}`}>{!row.name? "(empty name)" : row.name }</NavLink>
+      renderFunction: (row) => (
+        <span className={tableStyles.CellEllipsis} title={row.name}>
+          <NavLink to={`${navigationUrl}/${row.uuid}`}>
+            {!row.name ? "(empty name)" : row.name}
+          </NavLink>
         </span>
-      ,
+      ),
       orderingField: "name",
     },
     {
-      titleRenderFunction: () =>  "Accessibility",
-      renderFunction: (row: any) =>
-        <span
-          className={tableStyles.CellEllipsis}
-          title={row.access_modifier}
-        >
+      titleRenderFunction: () => "Accessibility",
+      renderFunction: (row) => (
+        <span className={tableStyles.CellEllipsis} title={row.access_modifier}>
           {getAccessibiltyText(row.access_modifier)}
         </span>
-      ,
+      ),
       orderingField: null,
     },
     {
-      titleRenderFunction: () =>  "",//"Actions",
-      renderFunction: (row: any, tableData:any, setTableData:any, triggerReloadWithCurrentPage:any, triggerReloadWithBasePage:any) => {
+      titleRenderFunction: () => "", //"Actions",
+      renderFunction: (
+        row,
+        _updateTableRow,
+        triggerReloadWithCurrentPage,
+        triggerReloadWithBasePage
+      ) => {
         return (
-            <TableActionButtons
-              tableRow={row} 
-              tableData={tableData}
-              setTableData={setTableData} 
-              triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
-              triggerReloadWithBasePage={triggerReloadWithBasePage}
-              editUrl={`${navigationUrl}/${row.uuid}`}
-              actions={[
-                // {
-                //   displayValue: "Change right",
-                //   actionFunction: (row: any) => setSelectedRows([row])
-                // },
-                {
-                  displayValue: "Delete",
-                  actionFunction: (row: any, _updateTableRow: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any) => {
-                    deleteActions([row], triggerReloadWithCurrentPage, null)
-                  }
-                }
-              ]}
-            />
+          <TableActionButtons
+            tableRow={row}
+            triggerReloadWithCurrentPage={triggerReloadWithCurrentPage}
+            triggerReloadWithBasePage={triggerReloadWithBasePage}
+            editUrl={`${navigationUrl}/${row.uuid}`}
+            actions={[
+              // {
+              //   displayValue: "Change right",
+              //   actionFunction: (row) => setSelectedRows([row])
+              // },
+              {
+                displayValue: "Delete",
+                actionFunction: (row, triggerReloadWithCurrentPage, _triggerReloadWithBasePage) => {
+                  deleteActions([row], triggerReloadWithCurrentPage, null);
+                },
+              },
+            ]}
+          />
         );
       },
       orderingField: null,
-    }
+    },
   ];
 
-  const handleNewClick  = () => {
+  const handleNewClick = () => {
     const { history } = props;
     history.push(`${navigationUrl}/new`);
   };
@@ -98,7 +99,9 @@ export const MonitoringNetworksTable = (props: RouteComponentProps) =>  {
       imgUrl={monitoringNetworkIcon}
       imgAltDescription={"Monitoring-Network icon"}
       headerText={"Monitoring Networks"}
-      explanationText={defaultTableHelpText('Monitoring networks are used to group and give insights on time series.')}
+      explanationText={defaultTableHelpText(
+        "Monitoring networks are used to group and give insights on time series."
+      )}
       backUrl={"/management/data_management/timeseries"}
     >
       <TableStateContainer
@@ -109,29 +112,44 @@ export const MonitoringNetworksTable = (props: RouteComponentProps) =>  {
         checkBoxActions={[
           {
             displayValue: "Change rights",
-            actionFunction: (rows: any[], _tableData: any, _setTableData: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any, setCheckboxes: any) => {
+            actionFunction: (
+              rows,
+              _tableData,
+              _setTableData,
+              triggerReloadWithCurrentPage,
+              _triggerReloadWithBasePage,
+              setCheckboxes
+            ) => {
               setSelectedRows(rows);
               setResetTable(() => () => {
                 triggerReloadWithCurrentPage();
                 setCheckboxes([]);
               });
-            }
+            },
           },
           {
             displayValue: "Delete",
-            actionFunction: (rows: any[], _tableData: any, _setTableData: any, triggerReloadWithCurrentPage: any, _triggerReloadWithBasePage: any, setCheckboxes: any) => {
-              deleteActions(rows, triggerReloadWithCurrentPage, setCheckboxes)
-            }
-          }
+            actionFunction: (
+              rows,
+              _tableData,
+              _setTableData,
+              triggerReloadWithCurrentPage,
+              _triggerReloadWithBasePage,
+              setCheckboxes
+            ) => {
+              deleteActions(rows, triggerReloadWithCurrentPage, setCheckboxes);
+            },
+          },
         ]}
-        filterOptions={[
-          {value: 'name__icontains=', label: 'Name'},
-        ]}
+        filterOptions={[{ value: "name__icontains=", label: "Name" }]}
       />
       {rowsToBeDeleted.length > 0 ? (
         <DeleteModal
           rows={rowsToBeDeleted}
-          displayContent={[{name: "name", width: 40}, {name: "uuid", width: 60}]}
+          displayContent={[
+            { name: "name", width: 40 },
+            { name: "uuid", width: 60 },
+          ]}
           fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
           resetTable={resetTable}
           handleClose={() => {
@@ -153,4 +171,4 @@ export const MonitoringNetworksTable = (props: RouteComponentProps) =>  {
       ) : null}
     </ExplainSideColumn>
   );
-}
+};

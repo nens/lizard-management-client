@@ -45,17 +45,16 @@
 }
 
 .ButtonLink {
-  background:none;
+  background: none;
   color: inherit;
-  border:none; 
-  padding:0;
+  border: none;
+  padding: 0;
   font: inherit;
   cursor: pointer;
 }
 .ButtonLink:focus {
   outline-color: var(--color-border-input);
 }
-
 
 .Danger {
   color: #fff;
@@ -65,19 +64,19 @@
 .Danger:disabled,
 .Danger:disabled:hover {
   background-color: var(--color-button-disabled);
-  border-color:var(--color-button-disabled);
+  border-color: var(--color-button-disabled);
 }
 .Danger:active {
-  background-color: #BE404A;
+  background-color: #be404a;
   background-image: none;
-  border-color: #BE404A;
+  border-color: #be404a;
   outline: 0;
   box-shadow: 0 0 0 3px rgba(205, 0, 31, 0.5);
 }
 .Danger:hover {
   color: #fff;
-  background-color: #BE404A;
-  border-color: #BE404A;
+  background-color: #be404a;
+  border-color: #be404a;
 }
 .Danger:focus {
   outline: 0;
@@ -107,7 +106,6 @@
   box-shadow: 0 0 0 3px rgba(0, 205, 171, 0.5);
 }
 
-
 .Success {
   color: #fff;
   background-color: #00cdab;
@@ -135,7 +133,7 @@
   border-color: transparent;
   box-shadow: none;
   font-weight: normal;
-  color: #ABABAB;
+  color: #ababab;
   font-size: 19px;
 }
 
@@ -167,22 +165,22 @@
   border-color: transparent;
   box-shadow: none;
   font-weight: normal;
-  color: #FC0E1D;
+  color: #fc0e1d;
 }
 .Danger2:active {
   background-image: none;
   outline: 0;
-  color: #FC0E1D;
+  color: #fc0e1d;
 }
 .Danger2:hover {
   background-image: none;
   outline: 0;
-  color: #FC0E1D;
+  color: #fc0e1d;
 }
 .Danger2:focus {
   background-image: none;
   outline: 0;
-  color: #FC0E1D;
+  color: #fc0e1d;
 }
 
 .Small {

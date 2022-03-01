@@ -16,7 +16,7 @@ class GroupMessage extends Component {
       width: window.innerWidth,
       height: window.innerHeight,
       isSending: false,
-      messageText: ""
+      messageText: "",
     };
     this.handleResize = this.handleResize.bind(this);
     this.hideGroupMessage = this.hideGroupMessage.bind(this);
@@ -46,7 +46,7 @@ class GroupMessage extends Component {
     const message = document.getElementById("message").value;
     if (subject && message) {
       this.setState({
-        isSending: true
+        isSending: true,
       });
       this.sendMessageToGroup(groupId, subject, message);
     } else {
@@ -56,7 +56,7 @@ class GroupMessage extends Component {
   handleResize() {
     this.setState({
       width: window.innerWidth,
-      height: window.innerHeight
+      height: window.innerHeight,
     });
   }
   sendMessageToGroup(groupId, subject, message) {
@@ -65,32 +65,32 @@ class GroupMessage extends Component {
       email_html: message,
       email_text: message,
       email_subject: subject,
-      sms_content: message
+      sms_content: message,
     };
     fetch(`/api/v4/contactgroups/${groupId}/send/`, {
       credentials: "same-origin",
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(messageData)
+      body: JSON.stringify(messageData),
     })
-      .then(response => {
+      .then((response) => {
         if (response.status === 400) {
           addNotification(`ERROR: Message too long`, 2000);
           this.setState({
-            isSending: false
+            isSending: false,
           });
           return Promise.reject(response);
         }
         return response.json();
       })
-      .then(data => {
+      .then((data) => {
         addNotification(`Message sent to group`, 2000);
         this.setState({
-          isSending: false
+          isSending: false,
         });
         this.props.handleClose();
       })
-      .catch(err => {
+      .catch((err) => {
         console.error(err);
       });
   }
@@ -110,7 +110,7 @@ class GroupMessage extends Component {
             leave: styles.Leave,
             leaveActive: styles.LeaveActive,
             appear: styles.Appear,
-            appearActive: styles.AppearActive
+            appearActive: styles.AppearActive,
           }}
         >
           <div className={styles.GroupMessage}>
@@ -118,10 +118,12 @@ class GroupMessage extends Component {
               <i className="material-icons">close</i>
             </div>
             <h3>
-              {0?<FormattedMessage
-                id="alarmgroups_app.send_a_message_to_this_group"
-                defaultMessage="Send a message to this group"
-              />:null}
+              {0 ? (
+                <FormattedMessage
+                  id="alarmgroups_app.send_a_message_to_this_group"
+                  defaultMessage="Send a message to this group"
+                />
+              ) : null}
               Send a message to this group
             </h3>
             <br />
@@ -137,16 +139,16 @@ class GroupMessage extends Component {
                 disabled={isSending ? true : false}
               />
               <small className="text-muted">
-                {0?<FormattedMessage
-                  id="alarmgroups_app.subject_only_applies"
-                  defaultMessage="Subject (only applies to e-mail messages)"
-                />:null}
+                {0 ? (
+                  <FormattedMessage
+                    id="alarmgroups_app.subject_only_applies"
+                    defaultMessage="Subject (only applies to e-mail messages)"
+                  />
+                ) : null}
                 Subject (only applies to e-mail messages)
               </small>
             </div>
-            <Scrollbars
-              style={{ width: "100%", height: this.state.height - 400 }}
-            >
+            <Scrollbars style={{ width: "100%", height: this.state.height - 400 }}>
               <div className={`${gridStyles.Row}`}>
                 <div
                   className={`${gridStyles.colLg12} ${gridStyles.colMd12} ${gridStyles.colSm12} ${gridStyles.colXs12} ${formStyles.FormGroup}`}
@@ -158,27 +160,30 @@ class GroupMessage extends Component {
                     rows="7"
                     maxLength={160}
                     value={messageText}
-                    onChange={e =>
+                    onChange={(e) =>
                       this.setState({
-                        messageText: e.target.value
-                      })}
+                        messageText: e.target.value,
+                      })
+                    }
                     disabled={isSending ? true : false}
                     style={{
                       // https://bugzilla.mozilla.org/show_bug.cgi?id=1137650
                       // whiteline in firefox
-                      whiteSpace: 'pre-wrap'
+                      whiteSpace: "pre-wrap",
                     }}
                   />
                   <small className="text-muted">
-                    {0?<FormattedMessage
-                      id="alarmgroups_app.message"
-                      defaultMessage="Message"
-                    />:null}Message{" "}
-                    ({160 - messageText.length}{" "}
-                    {0?<FormattedMessage
-                      id="alarmgroups_app.characters_left"
-                      defaultMessage="characters left"
-                    />:null}characters left)
+                    {0 ? (
+                      <FormattedMessage id="alarmgroups_app.message" defaultMessage="Message" />
+                    ) : null}
+                    Message ({160 - messageText.length}{" "}
+                    {0 ? (
+                      <FormattedMessage
+                        id="alarmgroups_app.characters_left"
+                        defaultMessage="characters left"
+                      />
+                    ) : null}
+                    characters left)
                   </small>
                 </div>
               </div>
@@ -194,10 +199,9 @@ class GroupMessage extends Component {
                 }
               }}
             >
-              {0?<FormattedMessage
-                id="alarmgroup.send_message"
-                defaultMessage="Send message"
-              />:null}
+              {0 ? (
+                <FormattedMessage id="alarmgroup.send_message" defaultMessage="Send message" />
+              ) : null}
               Send message
             </button>
           </div>
@@ -208,7 +212,7 @@ class GroupMessage extends Component {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-    addNotification: (message, timeout) => dispatch(addNotification(message, timeout))
+  addNotification: (message, timeout) => dispatch(addNotification(message, timeout)),
 });
 
 export default connect(null, mapDispatchToProps)(GroupMessage);

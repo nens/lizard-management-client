@@ -1,24 +1,23 @@
-import React from 'react';
-import { TextInput } from './TextInput';
+import React from "react";
+import { TextInput } from "./TextInput";
 
 interface MyProps {
-  title: string,
-  name: string,
-  value: number,
-  validated: boolean,
-  valueChanged: (value: number) => void,
-  clearInput?: (e: any) => void,
-  errorMessage?: string | false,
-  placeholder?: string,
-  handleEnter?: (e: any) => void,
-  onFocus?: (e: React.ChangeEvent<HTMLInputElement>) => void,
-  onBlur?: () => void,
-  form?: string,
-  triedToSubmit?: boolean,
-  readOnly?: boolean
-};
+  title: string;
+  name: string;
+  value: number;
+  validated: boolean;
+  valueChanged: (value: number) => void;
+  clearInput?: (name: string) => void;
+  errorMessage?: string | false;
+  placeholder?: string;
+  onFocus?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onBlur?: () => void;
+  form?: string;
+  triedToSubmit?: boolean;
+  readOnly?: boolean;
+}
 
-export const FloatInput: React.FC<MyProps> = (props) => {  
+export const FloatInput: React.FC<MyProps> = (props) => {
   const {
     title,
     name,
@@ -28,31 +27,29 @@ export const FloatInput: React.FC<MyProps> = (props) => {
     valueChanged,
     onFocus,
     onBlur,
-    handleEnter,
     clearInput,
     errorMessage,
     triedToSubmit,
     form,
-    readOnly
+    readOnly,
   } = props;
 
   return (
-    <TextInput 
+    <TextInput
       title={title}
       name={name}
       placeholder={placeholder}
       validated={validated}
       errorMessage={errorMessage}
-      type="number" 
-      value={value} 
-      valueChanged={e => valueChanged(parseFloat(e.target.value))}
+      type="number"
+      value={value}
+      valueChanged={(e) => valueChanged(parseFloat(e.target.value))}
       onFocus={onFocus}
       onBlur={onBlur}
       triedToSubmit={triedToSubmit}
       readOnly={readOnly}
       clearInput={clearInput}
-      handleEnter={handleEnter}
       form={form}
     />
   );
-}
+};

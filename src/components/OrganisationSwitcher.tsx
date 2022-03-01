@@ -1,7 +1,8 @@
-import React from "react";
-import {useState, useEffect} from 'react';
-import {useSelector,} from 'react-redux';
-import {getSelectedOrganisation, getOrganisations} from '../reducers'
+import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { AppDispatch } from "..";
+import { getSelectedOrganisation, getOrganisations } from "../reducers";
+import { OrganisationWithRoles } from "../types/organisationType";
 import CSSTransition from "react-transition-group/CSSTransition";
 import formStyles from "../styles/Forms.module.css";
 import MDSpinner from "react-md-spinner";
@@ -12,22 +13,20 @@ import { selectOrganisation } from "../actions";
 import { FormattedMessage } from "react-intl.macro";
 
 import { Scrollbars } from "react-custom-scrollbars";
-import { userHasCorrectRolesForCurrentNavigationLinkTile} from '../home/AppTileConfig';
-import { useIntl} from 'react-intl';
-import {formattedMessageToString} from './../utils/translationUtils';
-
+import { userHasCorrectRolesForCurrentNavigationLinkTile } from "../home/AppTileConfig";
+// import { useIntl } from 'react-intl';
+// import { formattedMessageToString } from './../utils/translationUtils';
 
 interface PropsArgs {
-  handleClose: () => void,
+  handleClose: () => void;
 }
 
-type Props = PropsArgs & DispatchProps
+type Props = PropsArgs & DispatchProps;
 
-const OrganisationSwitcher = (props:Props) => {
-  
+const OrganisationSwitcher = (props: Props) => {
   const [height, setHeight] = useState(window.innerHeight);
   const [filterValue, setFilterValue] = useState<null | string>(null);
-  const intl = useIntl();
+  // const intl = useIntl();
 
   useEffect(() => {
     window.addEventListener("resize", handleResize, false);
@@ -36,32 +35,24 @@ const OrganisationSwitcher = (props:Props) => {
     organisationNameElement && organisationNameElement.focus();
     return () => {
       window.removeEventListener("resize", handleResize, false);
-      document.removeEventListener(
-        "keydown",
-        hideOrganisationSwitcher,
-        false
-      );
+      document.removeEventListener("keydown", hideOrganisationSwitcher, false);
     };
   });
 
-  // Todo howto remove this any
-  const hideOrganisationSwitcher:any = (e: React.KeyboardEvent) => {
+  const hideOrganisationSwitcher = (e: KeyboardEvent) => {
     if (e.key === "Escape") {
       props.handleClose();
     }
-  }
+  };
   const handleResize = () => {
     setHeight(window.innerHeight);
-  }
-  
-  // todo fix this any
-  const handleInput = (e: any) => {
-    setFilterValue( e.target.value);
-  }
-  
-  const {
-    handleClose,      
-  } = props;
+  };
+
+  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFilterValue(e.target.value);
+  };
+
+  const { handleClose } = props;
 
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const reduxOrganisations = useSelector(getOrganisations);
@@ -69,19 +60,16 @@ const OrganisationSwitcher = (props:Props) => {
   const organisations = reduxOrganisations.available;
 
   const filteredOrganisations = filterValue
-  // todo: fix this any
-    ? organisations.filter((org:any) => {
-      if (org.name.toLowerCase().indexOf(filterValue.toLowerCase()) !== -1) {
+    ? organisations.filter((org) => {
+        if (org.name.toLowerCase().indexOf(filterValue.toLowerCase()) !== -1) {
           return org;
         }
         return false;
       })
     : organisations;
 
-  // eslint-disable-next-line
-  const authorisationTextForTranslation = formattedMessageToString(<FormattedMessage id="authorization.organisation_not_allowed_current_page" defaultMessage="! Organisation not authorized to visit current page !"/>, intl);
+  // const authorisationTextForTranslation = formattedMessageToString(<FormattedMessage id="authorization.organisation_not_allowed_current_page" defaultMessage="! Organisation not authorized to visit current page !"/>, intl);
   const authorisationText = "! Organisation not authorized to visit current page !";
-      
 
   return (
     <div className={styles.OrganisationSwitcherContainer}>
@@ -92,12 +80,10 @@ const OrganisationSwitcher = (props:Props) => {
         classNames={{
           enter: styles.Enter,
           enterActive: styles.EnterActive,
-          // Todo find out how to solve this
-          // @ts-ignore
-          leave: styles.Leave,
-          leaveActive: styles.LeaveActive,
+          exit: styles.Leave,
+          exitActive: styles.LeaveActive,
           appear: styles.Appear,
-          appearActive: styles.AppearActive
+          appearActive: styles.AppearActive,
         }}
       >
         <div className={styles.OrganisationSwitcher}>
@@ -105,10 +91,9 @@ const OrganisationSwitcher = (props:Props) => {
             <i className="material-icons">close</i>
           </div>
           <h3>
-            {0?<FormattedMessage
-              id="components.switch_org"
-              defaultMessage="Switch organisation"
-            />:null}
+            {0 ? (
+              <FormattedMessage id="components.switch_org" defaultMessage="Switch organisation" />
+            ) : null}
             Switch organisation
           </h3>
           <br />
@@ -129,37 +114,35 @@ const OrganisationSwitcher = (props:Props) => {
                 top: 50,
                 height: 300,
                 bottom: 50,
-                marginLeft: "50%"
+                marginLeft: "50%",
               }}
             >
               <MDSpinner size={24} />
             </div>
           ) : (
-            <Scrollbars
-              style={{ width: "100%", height: height - 400 }}
-            >
+            <Scrollbars style={{ width: "100%", height: height - 400 }}>
               {filteredOrganisations
-              // Todo fix any og organisation
-                ? filteredOrganisations.map((organisation:any, i:number) => {
-                    const hasRequiredRoles = userHasCorrectRolesForCurrentNavigationLinkTile(organisation.roles);
+                ? filteredOrganisations.map((organisation) => {
+                    const hasRequiredRoles = userHasCorrectRolesForCurrentNavigationLinkTile(
+                      organisation.roles
+                    );
                     return (
                       <div
                         key={organisation.uuid}
-                        className={`${styles.OrganisationRow} ${selectedOrganisation &&
-                        organisation.uuid === selectedOrganisation.uuid
-                          ? styles.Active
-                          : styles.InActive}`}
+                        className={`${styles.OrganisationRow} ${
+                          selectedOrganisation && organisation.uuid === selectedOrganisation.uuid
+                            ? styles.Active
+                            : styles.InActive
+                        }`}
                         onClick={() => {
                           props.selectOrganisation(organisation);
                           handleClose();
                         }}
                       >
                         <i className="material-icons">group</i>
-                        <div className={styles.OrganisationName}>
-                          {organisation.name}
-                        </div>
+                        <div className={styles.OrganisationName}>{organisation.name}</div>
                         <div className={styles.OrganisationAuthorised}>
-                        {!hasRequiredRoles? authorisationText  : null}
+                          {!hasRequiredRoles ? authorisationText : null}
                         </div>
                       </div>
                     );
@@ -171,16 +154,15 @@ const OrganisationSwitcher = (props:Props) => {
       </CSSTransition>
     </div>
   );
-}
+};
 
-const mapDispatchToProps = (dispatch:any) => {
+const mapDispatchToProps = (dispatch: AppDispatch) => {
   return {
-    selectOrganisation: (organisation:any) => dispatch(selectOrganisation(organisation))
+    selectOrganisation: (organisation: OrganisationWithRoles) =>
+      dispatch(selectOrganisation(organisation)),
   };
 };
 
 type DispatchProps = ReturnType<typeof mapDispatchToProps>;
 
-export default connect(null, mapDispatchToProps)(
-  (OrganisationSwitcher)
-);
+export default connect(null, mapDispatchToProps)(OrganisationSwitcher);

@@ -1,19 +1,19 @@
-import React from 'react';
-import Overlay from './../components/Overlay';
-import modalStyles from '../styles/Modal.module.css';
-import buttonStyles from './../styles/Buttons.module.css';
-import {useState,}  from 'react';
+import React from "react";
+import Overlay from "./../components/Overlay";
+import modalStyles from "../styles/Modal.module.css";
+import buttonStyles from "./../styles/Buttons.module.css";
+import { useState } from "react";
 
 interface MyProps {
-  title: string,
-  buttonConfirmName?: string,
-  onClickButtonConfirm?: () => void,
-  cancelAction?: () => void,
-  disabledCancelAction?: boolean,
-  disabledConfirmAction?: boolean,
+  title: string;
+  buttonConfirmName?: string;
+  onClickButtonConfirm?: () => void;
+  cancelAction?: () => void;
+  disabledCancelAction?: boolean;
+  disabledConfirmAction?: boolean;
   // requiredCheckboxText works, but is currently not used
-  requiredCheckboxText?: string,
-  height?: number | string, // height for modal body, default is auto
+  requiredCheckboxText?: string;
+  height?: number | string; // height for modal body, default is auto
 }
 
 const Modal: React.FC<MyProps> = (props) => {
@@ -25,29 +25,30 @@ const Modal: React.FC<MyProps> = (props) => {
     disabledCancelAction,
     disabledConfirmAction,
     requiredCheckboxText,
-    height
+    height,
   } = props;
 
-  const [checkboxState, /*setCheckboxState*/] = useState<boolean>(false);
+  const [checkboxState /*setCheckboxState*/] = useState<boolean>(false);
 
   return (
     <Overlay
       confirmModal={true}
-      handleClose={()=>{
+      handleClose={() => {
         !disabledCancelAction && // to prevent ESC key to close the modal when buttons are disabled
-        cancelAction &&
-        cancelAction()
+          cancelAction &&
+          cancelAction();
       }}
     >
       <div className={modalStyles.Modal}>
         <div className={modalStyles.ModalHeader}>
           {title}
-          {cancelAction ? <button onClick={cancelAction} disabled={disabledCancelAction}>x</button> : null}
+          {cancelAction ? (
+            <button onClick={cancelAction} disabled={disabledCancelAction}>
+              x
+            </button>
+          ) : null}
         </div>
-        <div
-          className={modalStyles.ModalBody}
-          style={{ height: height }}
-        >
+        <div className={modalStyles.ModalBody} style={{ height: height }}>
           {props.children}
         </div>
         {/* {requiredCheckboxText?
@@ -77,8 +78,13 @@ const Modal: React.FC<MyProps> = (props) => {
         :
         null
         } */}
-        { cancelAction || buttonConfirmName?
-          <div className={modalStyles.ModalFooter} style={cancelAction?{justifyContent: "space-between"}:{justifyContent: "flex-end"}}>
+        {cancelAction || buttonConfirmName ? (
+          <div
+            className={modalStyles.ModalFooter}
+            style={
+              cancelAction ? { justifyContent: "space-between" } : { justifyContent: "flex-end" }
+            }
+          >
             {cancelAction ? (
               <button
                 className={`${buttonStyles.Button} ${buttonStyles.LinkCancel}`}
@@ -92,17 +98,24 @@ const Modal: React.FC<MyProps> = (props) => {
               <button
                 className={`${buttonStyles.Button} ${buttonStyles.Danger}`}
                 onClick={onClickButtonConfirm}
-                disabled={disabledConfirmAction || (checkboxState===false && requiredCheckboxText !== undefined)}
-                title={checkboxState===false && requiredCheckboxText !== undefined? "First confirm the checkbox that you understood this warning" : "" }
+                disabled={
+                  disabledConfirmAction ||
+                  (checkboxState === false && requiredCheckboxText !== undefined)
+                }
+                title={
+                  checkboxState === false && requiredCheckboxText !== undefined
+                    ? "First confirm the checkbox that you understood this warning"
+                    : ""
+                }
               >
                 {buttonConfirmName}
               </button>
             ) : null}
           </div>
-        :null}
+        ) : null}
       </div>
     </Overlay>
-  )
-}
+  );
+};
 
 export default Modal;

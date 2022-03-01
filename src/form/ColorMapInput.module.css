@@ -1,4 +1,4 @@
-.previewColorContainer{
+.previewColorContainer {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -6,16 +6,15 @@
   padding: 10px 0 0 0;
 }
 
-.MinMaxValues{
+.MinMaxValues {
   display: flex;
   justify-content: space-between;
   font-weight: bold;
   height: auto;
 }
 
-
 .MinMaxValues span:empty::before {
-  content: '';
+  content: "";
   display: inline-block;
 }
 

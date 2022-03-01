@@ -5,30 +5,24 @@ import styles from "../form/DurationField.module.css";
 import formStyles from "../styles/Forms.module.css";
 import inputStyles from "../styles/Input.module.css";
 
-import {toISOValue, fromISOValue} from "../utils/isoUtils"
+import { toISOValue, fromISOValue } from "../utils/isoUtils";
 
 interface DurationFieldProps {
-  title: string,
-  name: string,
-  value: string | null,
-  valueChanged: (value: string | null) => void,
-  validated: boolean,
-  errorMessage?: string | false,
-  triedToSubmit?: boolean,
-  onFocus?: (e: React.ChangeEvent<HTMLInputElement>) => void,
-  onBlur?: () => void,
-  handleEnter?: (e: any) => void,
-  readOnly?: boolean,
-};
+  title: string;
+  name: string;
+  value: string | null;
+  valueChanged: (value: string | null) => void;
+  validated: boolean;
+  errorMessage?: string | false;
+  triedToSubmit?: boolean;
+  onFocus?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onBlur?: () => void;
+  readOnly?: boolean;
+}
 
 const validPerField = (value: string | null) => {
   const duration = fromISOValue(value);
-  const {
-    days,
-    hours,
-    minutes,
-    seconds
-  } = duration;
+  const { days, hours, minutes, seconds } = duration;
 
   const daysValid = Number.isInteger(days) && days >= 0;
   const hoursValid = Number.isInteger(hours) && hours >= 0 && hours < 24;
@@ -40,8 +34,8 @@ const validPerField = (value: string | null) => {
     hoursValid,
     minutesValid,
     secondsValid,
-    allValid: daysValid && hoursValid && minutesValid && secondsValid
-  }
+    allValid: daysValid && hoursValid && minutesValid && secondsValid,
+  };
 };
 
 export const durationValidator = (value: string | null, required: boolean) => {
@@ -68,12 +62,12 @@ export const DurationField: React.FC<DurationFieldProps> = (props) => {
 
     const newDuration = {
       ...duration,
-      [key]: newValue
+      [key]: newValue,
     };
 
     props.valueChanged(toISOValue(newDuration));
-  }
-  
+  };
+
   const {
     title,
     name,
@@ -83,20 +77,13 @@ export const DurationField: React.FC<DurationFieldProps> = (props) => {
     triedToSubmit,
     onFocus,
     onBlur,
-    readOnly
+    readOnly,
   } = props;
 
   const duration = fromISOValue(value);
-  const {
-    days,
-    hours,
-    minutes,
-    seconds
-  } = duration;
+  const { days, hours, minutes, seconds } = duration;
 
-  const {
-    daysValid, hoursValid, minutesValid, secondsValid
-  } = validPerField(value);
+  const { daysValid, hoursValid, minutesValid, secondsValid } = validPerField(value);
 
   // Set validity of the input field
   const myDayInput = useRef<HTMLInputElement>(null);
@@ -105,38 +92,39 @@ export const DurationField: React.FC<DurationFieldProps> = (props) => {
   const mySecInput = useRef<HTMLInputElement>(null);
   useEffect(() => {
     if (
-      myDayInput && myDayInput.current &&
-      myHourInput && myHourInput.current &&
-      myMinInput && myMinInput.current &&
-      mySecInput && mySecInput.current
+      myDayInput &&
+      myDayInput.current &&
+      myHourInput &&
+      myHourInput.current &&
+      myMinInput &&
+      myMinInput.current &&
+      mySecInput &&
+      mySecInput.current
     ) {
       if (validated) {
-        myDayInput.current.setCustomValidity('');
-        myHourInput.current.setCustomValidity('');
-        myMinInput.current.setCustomValidity('');
-        mySecInput.current.setCustomValidity('');
+        myDayInput.current.setCustomValidity("");
+        myHourInput.current.setCustomValidity("");
+        myMinInput.current.setCustomValidity("");
+        mySecInput.current.setCustomValidity("");
       } else {
-        myDayInput.current.setCustomValidity(errorMessage || 'Invalid');
-        myHourInput.current.setCustomValidity(errorMessage || 'Invalid');
-        myMinInput.current.setCustomValidity(errorMessage || 'Invalid');
-        mySecInput.current.setCustomValidity(errorMessage || 'Invalid');
-      };
-    };
-  })
+        myDayInput.current.setCustomValidity(errorMessage || "Invalid");
+        myHourInput.current.setCustomValidity(errorMessage || "Invalid");
+        myMinInput.current.setCustomValidity(errorMessage || "Invalid");
+        mySecInput.current.setCustomValidity(errorMessage || "Invalid");
+      }
+    }
+  });
 
   return (
-    <label
-      htmlFor={name}
-      className={formStyles.Label}
-    >
-      <span className={formStyles.LabelTitle}>
-        {title}
-      </span>
+    <label htmlFor={name} className={formStyles.Label}>
+      <span className={formStyles.LabelTitle}>{title}</span>
       <div className={formStyles.FormGroup + " " + inputStyles.PositionRelative}>
         <div
           className={
-            styles.DurationInputFields + " " +
-            styles.DurationInputFieldDays + " " +
+            styles.DurationInputFields +
+            " " +
+            styles.DurationInputFieldDays +
+            " " +
             styles.TextAlignRight
           }
         >
@@ -148,14 +136,16 @@ export const DurationField: React.FC<DurationFieldProps> = (props) => {
             type="text"
             autoComplete="off"
             className={
-              formStyles.FormControl + " " + styles.TextAlignRight +
+              formStyles.FormControl +
+              " " +
+              styles.TextAlignRight +
               (triedToSubmit ? " " + formStyles.FormSubmitted : "") +
               (!daysValid ? " " + styles.Invalid : "") +
               (readOnly ? " " + inputStyles.ReadOnly : "")
             }
             maxLength={3}
             size={4}
-            onChange={e => updateValue('days', e.target.value)}
+            onChange={(e) => updateValue("days", e.target.value)}
             value={days}
             onFocus={onFocus}
             onBlur={onBlur}
@@ -171,14 +161,16 @@ export const DurationField: React.FC<DurationFieldProps> = (props) => {
             type="text"
             autoComplete="off"
             className={
-              formStyles.FormControl + " " + styles.TextAlignRight +
+              formStyles.FormControl +
+              " " +
+              styles.TextAlignRight +
               (triedToSubmit ? " " + formStyles.FormSubmitted : "") +
               (!hoursValid ? " " + styles.Invalid : "") +
               (readOnly ? " " + inputStyles.ReadOnly : "")
             }
             maxLength={2}
             size={2}
-            onChange={e => updateValue('hours', e.target.value)}
+            onChange={(e) => updateValue("hours", e.target.value)}
             value={hours}
             onFocus={onFocus}
             onBlur={onBlur}
@@ -202,7 +194,7 @@ export const DurationField: React.FC<DurationFieldProps> = (props) => {
             }
             maxLength={2}
             size={2}
-            onChange={e => updateValue('minutes', e.target.value)}
+            onChange={(e) => updateValue("minutes", e.target.value)}
             value={minutes}
             onFocus={onFocus}
             onBlur={onBlur}
@@ -225,7 +217,7 @@ export const DurationField: React.FC<DurationFieldProps> = (props) => {
             }
             maxLength={2}
             size={4}
-            onChange={e => updateValue('seconds', e.target.value)}
+            onChange={(e) => updateValue("seconds", e.target.value)}
             value={seconds}
             onFocus={onFocus}
             onBlur={onBlur}
@@ -236,4 +228,4 @@ export const DurationField: React.FC<DurationFieldProps> = (props) => {
       </div>
     </label>
   );
-}
+};

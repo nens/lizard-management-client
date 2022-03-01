@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import ReactMapGL, { Source, Layer, MapEvent, MapRef } from 'react-map-gl';
 import { mapBoxAccesToken } from '../mapboxConfig';
 import { MapPopup } from './MapPopup';
@@ -9,16 +9,22 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 
 // Use pump icon as iconImage for measuring station vector tile
 import pumpIcon from '../images/pump.png';
-const pumpIconImage = new Image(20, 20);
-pumpIconImage.src = pumpIcon;
+// const pumpIconImage = new Image(20, 20);
+// pumpIconImage.src = pumpIcon;
 
 /* eslint-disable @typescript-eslint/no-var-requires */
 // eslint-disable-next-line import/no-webpack-loader-syntax
-(mapboxgl as any).workerClass = require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker').default;
+(mapboxgl as any).workerClass = require("worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker").default;
+
+interface MapViewport {
+  latitude: number;
+  longitude: number;
+  zoom: number;
+}
 
 export default function MapViewer () {
   const selectedOrganisation = useSelector(getSelectedOrganisation);
-  const [viewport, setViewport] = useState({
+  const [viewport, setViewport] = useState<MapViewport>({
     latitude: 52.6892,
     longitude: 5.9,
     zoom: 8
@@ -27,13 +33,13 @@ export default function MapViewer () {
   const mapRef = useRef<MapRef>(null);
 
   return (
-    <div 
+    <div
       style={{
         position: "fixed",
         top: 0,
         left: 0,
-        width:"100vw",
-        height:"100vh",
+        width: "100vw",
+        height: "100vh",
       }}
     >
       <ReactMapGL
@@ -41,7 +47,7 @@ export default function MapViewer () {
         ref={mapRef}
         width="100%"
         height="100%"
-        onViewportChange={(viewport:any) => setViewport(viewport)}
+        onViewportChange={(viewport: MapViewport) => setViewport(viewport)}
         mapboxApiAccessToken={mapBoxAccesToken}
         mapStyle={"mapbox://styles/nelenschuurmans/ck8sgpk8h25ql1io2ccnueuj6"}
         onClick={(event)=>{
@@ -57,7 +63,7 @@ export default function MapViewer () {
             pumpIcon,
             (e, img) => {
               if (e || !img) return console.log('Failed to load image: ', e);
-              map.addImage('pumpIconImage', img, { sdf: true })
+              map.addImage('pumpIconImage', img, { sdf: true });
             }
           );
         }}

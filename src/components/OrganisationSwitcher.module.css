@@ -40,19 +40,18 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-
 }
 .OrganisationRow:last-child {
   border-bottom: 1px solid #ccc;
 }
 .OrganisationName {
-  margin-left: 20px;;
+  margin-left: 20px;
   min-width: 30%;
 }
 .OrganisationAuthorised {
   min-width: 30%;
   flex: 1;
-  color: #BE404A;
+  color: #be404a;
 }
 
 .OrganisationRow:hover {
@@ -64,7 +63,6 @@
   color: #fff;
 }
 .InActive {
-
 }
 
 .Enter {

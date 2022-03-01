@@ -1,38 +1,38 @@
-import React, { useState } from 'react';
-import { SelectDropdown, Value } from './SelectDropdown';
+import React, { useState } from "react";
+import { SelectDropdown, Value } from "./SelectDropdown";
 import formStyles from "../styles/Forms.module.css";
 import buttonStyles from "../styles/Buttons.module.css";
 
 export interface Recipient {
-  contact_group: Value,
-  message: Value
-};
+  contact_group: Value;
+  message: Value;
+}
 
 export interface NewRecipient {
-  contact_group: Value | null,
-  message: Value | null
-};
+  contact_group: Value | null;
+  message: Value | null;
+}
 
 interface MyProps {
-  title: string,
-  name: string,
-  organisation: string,
-  recipients: Recipient[],
-  availableGroups: any[],
-  availableTemplates: any[],
-  valueChanged: (recipients: Recipient[]) => void,
-  valueRemoved: (recipients: Recipient[]) => void,
-  clearInput?: (name: string) => void,
-  validated: boolean,
-  errorMessage?: string | false,
-  placeholder?: string,
-  onFocus?: (e: React.ChangeEvent<HTMLInputElement | HTMLButtonElement>) => void,
-  onBlur?: () => void,
-  triedToSubmit?: boolean,
-  readOnly?: boolean
-};
+  title: string;
+  name: string;
+  organisation: string;
+  recipients: Recipient[];
+  availableGroups: any[];
+  availableTemplates: any[];
+  valueChanged: (recipients: Recipient[]) => void;
+  valueRemoved: (recipients: Recipient[]) => void;
+  clearInput?: (name: string) => void;
+  validated: boolean;
+  errorMessage?: string | false;
+  placeholder?: string;
+  onFocus?: (e: React.ChangeEvent<HTMLInputElement | HTMLButtonElement>) => void;
+  onBlur?: () => void;
+  triedToSubmit?: boolean;
+  readOnly?: boolean;
+}
 
-export function Recipients (props: MyProps) {
+export function Recipients(props: MyProps) {
   const {
     title,
     name,
@@ -44,22 +44,17 @@ export function Recipients (props: MyProps) {
     onFocus,
     onBlur,
     triedToSubmit,
-    readOnly
+    readOnly,
   } = props;
 
   const [recipient, setRecipient] = useState<NewRecipient>({
     contact_group: null,
-    message: null
+    message: null,
   });
 
   return (
-    <label
-      htmlFor={name}
-      className={formStyles.Label}
-    >
-      <span className={formStyles.LabelTitle}>
-        {title}
-      </span>
+    <label htmlFor={name} className={formStyles.Label}>
+      <span className={formStyles.LabelTitle}>{title}</span>
       <div className={formStyles.GridContainer}>
         <div className={formStyles.SecondLabel}>Group</div>
         <div className={formStyles.SecondLabel}>Template message</div>
@@ -67,25 +62,25 @@ export function Recipients (props: MyProps) {
         {recipients.map((recipient, i) => (
           <React.Fragment key={i}>
             <SelectDropdown
-              title={''}
-              id={'contactGroup'}
-              name={'contactGroup' + i}
+              title={""}
+              id={"contactGroup"}
+              name={"contactGroup" + i}
               value={recipient.contact_group}
-              valueChanged={value => {
+              valueChanged={(value) => {
                 const newRecipientList = recipients.map((re, idx) => {
                   if (idx === i) {
                     return {
                       ...re,
-                      contact_group: value as Value
+                      contact_group: value as Value,
                     };
-                  };
+                  }
                   return re;
                 });
                 valueChanged(newRecipientList);
               }}
               options={availableGroups}
               validated={!!recipient.contact_group.value}
-              errorMessage={'Please select a group'}
+              errorMessage={"Please select a group"}
               triedToSubmit={triedToSubmit}
               dropUp
               isClearable={false}
@@ -94,25 +89,25 @@ export function Recipients (props: MyProps) {
               onBlur={onBlur}
             />
             <SelectDropdown
-              title={''}
-              id={'message'}
-              name={'message' + i}
+              title={""}
+              id={"message"}
+              name={"message" + i}
               value={recipient.message}
-              valueChanged={value => {
+              valueChanged={(value) => {
                 const newRecipientList = recipients.map((re, idx) => {
                   if (idx === i) {
                     return {
                       ...re,
-                      message: value as Value
+                      message: value as Value,
                     };
-                  };
+                  }
                   return re;
                 });
                 valueChanged(newRecipientList);
               }}
               options={availableTemplates}
               validated={!!recipient.message.value}
-              errorMessage={'Please select a template'}
+              errorMessage={"Please select a template"}
               triedToSubmit={triedToSubmit}
               dropUp
               isClearable={false}
@@ -122,12 +117,12 @@ export function Recipients (props: MyProps) {
             />
             <button
               className={`${buttonStyles.Button} ${buttonStyles.Link}`}
-              onClick={e => {
+              onClick={(e) => {
                 e.preventDefault();
-                valueRemoved(recipients.filter((_, idx) => idx !== i))
+                valueRemoved(recipients.filter((_, idx) => idx !== i));
               }}
               style={{
-                marginBottom: 24
+                marginBottom: 24,
               }}
             >
               REMOVE
@@ -135,15 +130,15 @@ export function Recipients (props: MyProps) {
           </React.Fragment>
         ))}
         <SelectDropdown
-          title={''}
-          id={'contactGroup'}
-          name={'newContactGroup'}
+          title={""}
+          id={"contactGroup"}
+          name={"newContactGroup"}
           value={recipient.contact_group}
-          valueChanged={value => {
+          valueChanged={(value) => {
             setRecipient({
               ...recipient,
-              contact_group: value as Value || null
-            })
+              contact_group: (value as Value) || null,
+            });
           }}
           options={availableGroups}
           validated
@@ -153,15 +148,15 @@ export function Recipients (props: MyProps) {
           onBlur={onBlur}
         />
         <SelectDropdown
-          title={''}
-          id={'message'}
-          name={'newMessage'}
+          title={""}
+          id={"message"}
+          name={"newMessage"}
           value={recipient.message}
-          valueChanged={value => {
+          valueChanged={(value) => {
             setRecipient({
               ...recipient,
-              message: value as Value || null
-            })
+              message: (value as Value) || null,
+            });
           }}
           options={availableTemplates}
           validated
@@ -172,22 +167,23 @@ export function Recipients (props: MyProps) {
         />
         <div />
         <button
-          id={'addRecipient'}
+          id={"addRecipient"}
           className={buttonStyles.NewButton}
-          onClick={e => {
+          onClick={(e) => {
             e.preventDefault();
             if (recipient.contact_group && recipient.message) {
-              valueChanged([
-                ...recipients,
-                recipient as Recipient
-              ]);
-            };
+              valueChanged([...recipients, recipient as Recipient]);
+            }
             setRecipient({
               contact_group: null,
-              message: null
+              message: null,
             });
           }}
-          title={!recipient.contact_group || !recipient.message ? 'Please select a group and a message for the new recipient' : undefined}
+          title={
+            !recipient.contact_group || !recipient.message
+              ? "Please select a group and a message for the new recipient"
+              : undefined
+          }
           disabled={!recipient.contact_group || !recipient.message}
           onFocus={onFocus}
           onBlur={onBlur}
@@ -197,4 +193,4 @@ export function Recipients (props: MyProps) {
       </div>
     </label>
   );
-};
+}

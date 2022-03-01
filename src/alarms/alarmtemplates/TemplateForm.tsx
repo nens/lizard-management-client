@@ -1,97 +1,99 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { FormattedMessage } from "react-intl.macro";
-import { connect, useSelector } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { ExplainSideColumn } from '../../components/ExplainSideColumn';
-import { TextInput } from './../../form/TextInput';
-import { SubmitButton } from '../../form/SubmitButton';
-import { CancelButton } from '../../form/CancelButton';
-import { useForm, Values } from '../../form/useForm';
-import { addNotification } from '../../actions';
-import { getSelectedOrganisation } from '../../reducers';
-import { TextArea } from '../../form/TextArea';
-import { CheckBox } from '../../form/CheckBox';
-import { SelectDropdown } from '../../form/SelectDropdown';
-import { convertToSelectObject } from '../../utils/convertToSelectObject';
-import { minLength } from '../../form/validators';
-import { templateFormHelpText } from '../../utils/help_texts/helpTextForAlarmTemplate';
-import { fetchWithOptions } from '../../utils/fetchWithOptions';
-import { baseUrl } from './TemplateTable';
-import DeleteModal from '../../components/DeleteModal';
-import formStyles from './../../styles/Forms.module.css';
-import buttonStyles from './../../styles/Buttons.module.css';
+import { connect, useSelector } from "react-redux";
+import { RouteComponentProps, withRouter } from "react-router-dom";
+import { ExplainSideColumn } from "../../components/ExplainSideColumn";
+import { TextInput } from "./../../form/TextInput";
+import { SubmitButton } from "../../form/SubmitButton";
+import { CancelButton } from "../../form/CancelButton";
+import { useForm, Values } from "../../form/useForm";
+import { addNotification } from "../../actions";
+import { getSelectedOrganisation } from "../../reducers";
+import { TextArea } from "../../form/TextArea";
+import { CheckBox } from "../../form/CheckBox";
+import { SelectDropdown } from "../../form/SelectDropdown";
+import { convertToSelectObject } from "../../utils/convertToSelectObject";
+import { minLength } from "../../form/validators";
+import { templateFormHelpText } from "../../utils/help_texts/helpTextForAlarmTemplate";
+import { fetchWithOptions } from "../../utils/fetchWithOptions";
+import { baseUrl } from "./TemplateTable";
+import { AppDispatch } from "../..";
+import { Message } from "../../types/messageType";
+import DeleteModal from "../../components/DeleteModal";
+import formStyles from "./../../styles/Forms.module.css";
+import buttonStyles from "./../../styles/Buttons.module.css";
 import templateIcon from "../../images/templates@3x.svg";
-import FormActionButtons from '../../components/FormActionButtons';
+import FormActionButtons from "../../components/FormActionButtons";
 
 interface Props {
-  currentRecord?: any
-};
+  currentRecord?: Message;
+}
 interface PropsFromDispatch {
-  addNotification: (message: string | number, timeout: number) => void
-};
+  addNotification: (message: string | number, timeout: number) => void;
+}
 
 export const availableParameters = [
   {
     parameter: "first_name",
     parameterText: "[[var:first_name]]",
     label: "first name recipient",
-    description: "First name of the recipient"
+    description: "First name of the recipient",
   },
   {
     parameter: "last_name",
     parameterText: "[[var:last_name]]",
     label: "last name recipient",
-    description: "Last name of the recipient"
+    description: "Last name of the recipient",
   },
   {
     parameter: "email",
     parameterText: "[[var:email]]",
     label: "email recipient",
     description: "E-mail address of the recipient",
-    templateType: "email"
+    templateType: "email",
   },
   {
     parameter: "alarm_name",
     parameterText: "[[var:alarm_name]]",
     label: "name alarm",
-    description: "Name of the alarm"
+    description: "Name of the alarm",
   },
   {
     parameter: "warning_value",
     parameterText: "[[var:warning_value]]",
     label: "value threshold",
-    description: "Numerical value of the threshold"
+    description: "Numerical value of the threshold",
   },
   {
     parameter: "warning_level",
     parameterText: "[[var:warning_level]]",
     label: "status threshold",
-    description: "Name of the threshold"
+    description: "Name of the threshold",
   },
   {
     parameter: "threshold_timestamp",
     parameterText: "[[var:threshold_timestamp]]",
     label: "timestamp threshold",
-    description: "Time the threshold was crossed"
+    description: "Time the threshold was crossed",
   },
   {
     parameter: "trigger_timestamp",
     parameterText: "[[var:trigger_timestamp]]",
     label: "trigger timestamp",
-    description: "Moment the alarm was analysed"
+    description: "Moment the alarm was analysed",
   },
   {
     parameter: "warning_timestamp",
     parameterText: "[[var:warning_timestamp]]",
     label: "warning timestamp",
-    description: "Time the peak or trough is reached"
+    description: "Time the peak or trough is reached",
   },
   {
     parameter: "first_timestamp",
     parameterText: "[[var:first_timestamp]]",
     label: "first timestamp",
-    description: "First time the alarm was triggered"
-  }
+    description: "First time the alarm was triggered",
+  },
 ];
 
 const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = (props) => {
@@ -99,19 +101,21 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
 
-  const initialValues = currentRecord ? {
-    name: currentRecord.name,
-    type: convertToSelectObject(currentRecord.type, currentRecord.type.toUpperCase()),
-    subject: currentRecord.subject,
-    message: currentRecord.type === 'sms' ? currentRecord.text : currentRecord.html, // if email, read html field
-    noFurtherImpactOption: currentRecord.no_further_impact,
-  } : {
-    name: null,
-    type: convertToSelectObject('email', 'EMAIL'),
-    subject: null,
-    message: '',
-    noFurtherImpactOption: false,
-  };
+  const initialValues = currentRecord
+    ? {
+        name: currentRecord.name,
+        type: convertToSelectObject(currentRecord.type, currentRecord.type.toUpperCase()),
+        subject: currentRecord.subject,
+        message: currentRecord.type === "sms" ? currentRecord.text : currentRecord.html, // if email, read html field
+        noFurtherImpactOption: currentRecord.no_further_impact,
+      }
+    : {
+        name: null,
+        type: convertToSelectObject("email", "EMAIL"),
+        subject: null,
+        message: "",
+        noFurtherImpactOption: false,
+      };
 
   const onSubmit = (values: Values) => {
     const body = {
@@ -130,43 +134,43 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
         body: JSON.stringify({
           ...body,
           type: values.type.value,
-          organisation: selectedOrganisation.uuid
+          organisation: selectedOrganisation.uuid,
+        }),
+      })
+        .then((response) => {
+          const status = response.status;
+          if (status === 201) {
+            props.addNotification("Success! New template created", 2000);
+            props.history.push("/management/alarms/templates");
+          } else if (status === 403) {
+            props.addNotification("Not authorized", 2000);
+            console.error(response);
+          } else {
+            props.addNotification(status, 2000);
+            console.error(response);
+          }
         })
-      })
-      .then(response => {
-        const status = response.status;
-        if (status === 201) {
-          props.addNotification('Success! New template created', 2000);
-          props.history.push("/management/alarms/templates");
-        } else if (status === 403) {
-          props.addNotification("Not authorized", 2000);
-          console.error(response);
-        } else {
-          props.addNotification(status, 2000);
-          console.error(response);
-        };
-      })
-      .catch(console.error);
+        .catch(console.error);
     } else {
       fetch(`/api/v4/messages/${currentRecord.id}/`, {
         credentials: "same-origin",
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body)
+        body: JSON.stringify(body),
       })
-      .then(response => {
-        const status = response.status;
-        if (status === 200) {
-          props.addNotification('Success! Template updated', 2000);
-          props.history.push("/management/alarms/templates");
-        } else {
-          props.addNotification(status, 2000);
-          console.error(response);
-        }
-      })
-      .catch(console.error);
+        .then((response) => {
+          const status = response.status;
+          if (status === 200) {
+            props.addNotification("Success! Template updated", 2000);
+            props.history.push("/management/alarms/templates");
+          } else {
+            props.addNotification(status, 2000);
+            console.error(response);
+          }
+        })
+        .catch(console.error);
     }
-  }
+  };
 
   const {
     values,
@@ -181,7 +185,7 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
     fieldOnFocus,
     handleBlur,
     handleFocus,
-  } = useForm({initialValues, onSubmit});
+  } = useForm({ initialValues, onSubmit });
 
   const insertTextInTemplateText = (templateText: string, addedText: string) => {
     let newTemplateText = "";
@@ -189,59 +193,63 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
     let caretPosition = 0;
 
     if (element.selectionStart || element.selectionStart === 0) {
-      newTemplateText = templateText.substring(0, element.selectionStart) +
-        addedText + templateText.substring(element.selectionEnd);
+      newTemplateText =
+        templateText.substring(0, element.selectionStart) +
+        addedText +
+        templateText.substring(element.selectionEnd);
       caretPosition = (templateText.substring(0, element.selectionStart) + addedText).length;
     } else {
       newTemplateText = templateText + addedText;
       caretPosition = (templateText + addedText).length;
-    };
+    }
 
-    handleValueChange('message', newTemplateText);
+    handleValueChange("message", newTemplateText);
     element.focus(); // set focus back to the text area element
-    window.setTimeout(()=>{element.setSelectionRange(caretPosition, caretPosition)},0);
+    window.setTimeout(() => {
+      element.setSelectionRange(caretPosition, caretPosition);
+    }, 0);
   };
 
   const RenderBlocks = () => (
     <div
       style={{
-        display: 'flex',
-        flexDirection: 'column'
+        display: "flex",
+        flexDirection: "column",
       }}
     >
       <span
         className={formStyles.LabelTitle}
         style={{
-          overflow: 'hidden',
-          whiteSpace: 'nowrap',
-          textOverflow: 'ellipsis'
+          overflow: "hidden",
+          whiteSpace: "nowrap",
+          textOverflow: "ellipsis",
         }}
-        title={'Add variables to message'}
+        title={"Add variables to message"}
       >
         Blocks (click to add to message)
       </span>
       <div>
-        {availableParameters.map(parameter => {
+        {availableParameters.map((parameter) => {
           if (!parameter.templateType || parameter.templateType === values.type.value) {
             return (
               <button
                 className={buttonStyles.BlockButton}
                 key={parameter.parameter}
                 title={parameter.description}
-                onClick={e => {
+                onClick={(e) => {
                   e.preventDefault();
-                  insertTextInTemplateText(values.message || '', parameter.parameterText);
+                  insertTextInTemplateText(values.message || "", parameter.parameterText);
                 }}
                 style={{
                   marginRight: 10,
-                  marginBottom: 10
+                  marginBottom: 10,
                 }}
                 tabIndex={-1}
               >
                 {parameter.parameter}
               </button>
             );
-          };
+          }
           return null;
         })}
       </div>
@@ -253,19 +261,15 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
       imgUrl={templateIcon}
       imgAltDescription={"Template icon"}
       headerText={"Templates"}
-      explanationText={templateFormHelpText[fieldOnFocus] || templateFormHelpText['default']}
+      explanationText={templateFormHelpText[fieldOnFocus] || templateFormHelpText["default"]}
       backUrl={"/management/alarms/templates"}
       fieldName={fieldOnFocus}
     >
-      <form
-        className={formStyles.Form}
-        onSubmit={handleSubmit}
-        onReset={handleReset}
-      >
+      <form className={formStyles.Form} onSubmit={handleSubmit} onReset={handleReset}>
         <TextInput
-          title={'Name *'}
-          name={'name'}
-          placeholder={'Please enter at least 1 character'}
+          title={"Name *"}
+          name={"name"}
+          placeholder={"Please enter at least 1 character"}
           value={values.name}
           valueChanged={handleInputChange}
           clearInput={clearInput}
@@ -276,49 +280,49 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           onBlur={handleBlur}
         />
         <SelectDropdown
-          title={'Type *'}
-          name={'type'}
+          title={"Type *"}
+          name={"type"}
           value={values.type}
-          valueChanged={value => handleValueChange('type', value)}
+          valueChanged={(value) => handleValueChange("type", value)}
           options={[
             {
-              value: 'email',
-              label: 'EMAIL'
+              value: "email",
+              label: "EMAIL",
             },
             {
-              value: 'sms',
-              label: 'SMS'
-            }
+              value: "sms",
+              label: "SMS",
+            },
           ]}
           validated
-          readOnly={currentRecord}
+          readOnly={!!currentRecord}
           isClearable={false}
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
         <TextInput
-          title={'Subject'}
-          name={'subject'}
+          title={"Subject"}
+          name={"subject"}
           value={values.subject}
           valueChanged={handleInputChange}
           clearInput={clearInput}
           validated
           onFocus={handleFocus}
           onBlur={handleBlur}
-          readOnly={values.type.value === 'sms'}
+          readOnly={values.type.value === "sms"}
         />
         <div
           style={{
-            display: 'grid',
-            gridTemplateColumns: '60% 40%',
+            display: "grid",
+            gridTemplateColumns: "60% 40%",
             columnGap: 20,
             marginBottom: 16,
           }}
         >
           <div>
             <TextArea
-              title={'Message *'}
-              name={'message'}
+              title={"Message *"}
+              name={"message"}
               value={values.message}
               valueChanged={handleInputChange}
               validated={!minLength(1, values.message)}
@@ -329,21 +333,23 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
               // onBlur={handleBlur}
             />
             <small>
-              {0?<FormattedMessage
-                id="alarmtemplates_app.template"
-                defaultMessage="Template"
-              />:null}Template{" "}
-              ({(values.message || '').length}{" "}
-              {0?<FormattedMessage
-                id="alarmtemplates_new.characters"
-                defaultMessage="characters"
-              />:null}characters)<br />
+              {0 ? (
+                <FormattedMessage id="alarmtemplates_app.template" defaultMessage="Template" />
+              ) : null}
+              Template ({(values.message || "").length}{" "}
+              {0 ? (
+                <FormattedMessage id="alarmtemplates_new.characters" defaultMessage="characters" />
+              ) : null}
+              characters)
+              <br />
               {values.type.value === "sms" ? (
                 <i>
-                  {0?<FormattedMessage
-                    id="alarmtemplates_new.sms_max_char_warning"
-                    defaultMessage="SMS messages have a limit of 160 characters after substituting the parameter tags"
-                  />:null}
+                  {0 ? (
+                    <FormattedMessage
+                      id="alarmtemplates_new.sms_max_char_warning"
+                      defaultMessage="SMS messages have a limit of 160 characters after substituting the parameter tags"
+                    />
+                  ) : null}
                   SMS messages have a limit of 160 characters after substituting the parameter tags
                 </i>
               ) : null}
@@ -352,53 +358,52 @@ const TemplateForm: React.FC<Props & PropsFromDispatch & RouteComponentProps> = 
           <RenderBlocks />
         </div>
         <CheckBox
-          title={'No further impact option'}
-          name={'noFurtherImpactOption'}
+          title={"No further impact option"}
+          name={"noFurtherImpactOption"}
           value={values.noFurtherImpactOption}
-          valueChanged={bool => handleValueChange('noFurtherImpactOption', bool)}
+          valueChanged={(bool) => handleValueChange("noFurtherImpactOption", bool)}
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
-        <div
-          className={formStyles.ButtonContainer}
-        >
-          <CancelButton
-            url={'/management/alarms/templates'}
-          />
-          <div style={{display: "flex"}}>
+        <div className={formStyles.ButtonContainer}>
+          <CancelButton url={"/management/alarms/templates"} />
+          <div style={{ display: "flex" }}>
             {currentRecord ? (
               <div style={{ marginRight: 16 }}>
                 <FormActionButtons
                   actions={[
                     {
                       displayValue: "Delete",
-                      actionFunction: () => setShowDeleteModal(true)
+                      actionFunction: () => setShowDeleteModal(true),
                     },
-                  ]} 
+                  ]}
                 />
               </div>
             ) : null}
-            <SubmitButton
-              onClick={tryToSubmitForm}
-            />
+            <SubmitButton onClick={tryToSubmitForm} />
           </div>
         </div>
       </form>
       {currentRecord && showDeleteModal ? (
         <DeleteModal
           rows={[currentRecord]}
-          displayContent={[{name: "name", width: 30}, {name: "type", width: 20}, {name: "id", width: 50}]}
+          displayContent={[
+            { name: "name", width: 30 },
+            { name: "type", width: 20 },
+            { name: "id", width: 50 },
+          ]}
           fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
           handleClose={() => setShowDeleteModal(false)}
-          tableUrl={'/management/alarms/templates'}
+          tableUrl={"/management/alarms/templates"}
         />
       ) : null}
     </ExplainSideColumn>
   );
 };
 
-const mapPropsToDispatch = (dispatch: any) => ({
-  addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout))
+const mapPropsToDispatch = (dispatch: AppDispatch) => ({
+  addNotification: (message: string | number, timeout: number) =>
+    dispatch(addNotification(message, timeout)),
 });
 
 export default connect(null, mapPropsToDispatch)(withRouter(TemplateForm));

@@ -1,9 +1,9 @@
 export const createFetchRecordFunctionFromUrl = (url: string) => {
-  return (async ()=>{
+  return async () => {
     const apiResult = await fetch(url, {
-      credentials: "same-origin"
+      credentials: "same-origin",
     });
     const parsed = await apiResult.json();
     return parsed;
-  })
-}
+  };
+};

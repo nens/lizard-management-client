@@ -29,7 +29,7 @@
 
 @media only screen and (max-width: 700px) {
   .AppTile {
-    transform: scale(.85);
+    transform: scale(0.85);
   }
 }
 
@@ -37,9 +37,9 @@
   position: absolute;
   top: 40px;
   left: 50%;
-  transform: translateX(-50%); 
-  -ms-transform: translateX(-50%);  
-  background-color: #55BFA2;
+  transform: translateX(-50%);
+  -ms-transform: translateX(-50%);
+  background-color: #55bfa2;
   width: 96px;
   height: 96px;
   border-radius: 48px;
@@ -60,7 +60,6 @@
   text-align: center;
   text-decoration: none;
 }
-
 
 .Img {
   position: absolute;

@@ -7,9 +7,14 @@ import { RasterLayerFromAPI } from "../api/rasters";
 import { SpatialBounds } from "../types/mapTypes";
 
 const getBounds = (raster: RasterLayerFromAPI) => {
-  const bounds = raster.spatial_bounds ? raster.spatial_bounds : {
-      north: 85, east: 180, south: -85, west: -180
-  };
+  const bounds = raster.spatial_bounds
+    ? raster.spatial_bounds
+    : {
+        north: 85,
+        east: 180,
+        south: -85,
+        west: -180,
+      };
   return bounds;
 };
 
@@ -29,7 +34,7 @@ const zoomLevelCalculation = (bounds: SpatialBounds) => {
   if (angle < 0) angle += 360;
   let angle2 = north - south;
   if (angle2 > angle) angle = angle2;
-  return Math.round(Math.log(960 * 360 / angle / GLOBE_WIDTH) / Math.LN2);
+  return Math.round(Math.log((960 * 360) / angle / GLOBE_WIDTH) / Math.LN2);
 };
 
 export const openRasterInLizardViewer = (raster: RasterLayerFromAPI) => {
@@ -37,5 +42,9 @@ export const openRasterInLizardViewer = (raster: RasterLayerFromAPI) => {
   const centerPoint = getCenterPoint(bounds);
   const zoom = zoomLevelCalculation(bounds);
 
-  window.open(`/viewer/nl/map/topography,raster$${raster.uuid.substring(0, 7)}/point/@${centerPoint.lat},${centerPoint.lng},${zoom}`);
+  window.open(
+    `/viewer/nl/map/topography,raster$${raster.uuid.substring(0, 7)}/point/@${centerPoint.lat},${
+      centerPoint.lng
+    },${zoom}`
+  );
 };

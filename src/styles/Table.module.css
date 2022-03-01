@@ -14,11 +14,10 @@
   overflow-x: auto;
 }
 .Table td {
-  padding: .75rem;
+  padding: 0.75rem;
   vertical-align: top;
   border-top: 1px solid #e9ecef;
 }
-
 
 .TdCol1 {
   width: 10%;

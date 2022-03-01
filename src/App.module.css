@@ -1,15 +1,15 @@
-:root {  
-  --color-dark-main: #354B61;
-  --color-light-main: #FFFFFF;
-  --color-light-main-second:#F6F6F6;
-  --color-border-table: #2C3E50;
+:root {
+  --color-dark-main: #354b61;
+  --color-light-main: #ffffff;
+  --color-light-main-second: #f6f6f6;
+  --color-border-table: #2c3e50;
   --color-header: #008080;
   --color-header-hover: #017676;
-  --color-button:  #009F86;
+  --color-button: #009f86;
   --color-button-disabled: #878787;
   --font-weight-button: 600;
-  --color-border-input: #73C9B2;
-  --color-border-input-invalid: #AE0000;
+  --color-border-input: #73c9b2;
+  --color-border-input-invalid: #ae0000;
   --color-input-disabled: rgb(216, 216, 216);
 }
 
@@ -24,7 +24,7 @@ html,
 body {
   height: 100vh;
   width: 100vw;
-  color: #2C3E50;
+  color: #2c3e50;
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -42,7 +42,7 @@ body {
 
 .AppContent {
   height: 100%;
-  width:86%;
+  width: 86%;
   flex: 1;
   min-height: 0;
 }
@@ -54,14 +54,13 @@ body {
   top: 3px;
 }
 
-
 .Primary {
   background-color: var(--color-header);
   color: #fff;
   text-transform: uppercase;
 }
 .Secondary {
-  background-color: #F6F6F6;
+  background-color: #f6f6f6;
   text-transform: uppercase;
 }
 .Secondary a {
@@ -72,11 +71,11 @@ body {
 .Footer {
   /* hide footer untill we decide what to do with it */
   display: none;
-  background-color: #D8D8D8;
+  background-color: #d8d8d8;
   text-transform: uppercase;
 }
 .Footer a {
-  color:var(--color-header);
+  color: var(--color-header);
   text-decoration: none;
 }
 .FooterLeft {
@@ -90,12 +89,12 @@ body {
   align-items: center;
   justify-content: flex-end;
 }
-.FooterRightWrapper{
+.FooterRightWrapper {
   display: flex;
   position: relative;
 }
 
-.DocumentationHyperlink{
+.DocumentationHyperlink {
   position: relative;
   top: 5px;
   font-size: 20px;
@@ -177,7 +176,7 @@ body {
   padding-right: 9px;
   margin-left: 5px;
   margin-right: 5px;
-}                        
+}
 
 .HomeLink:hover {
   background-color: var(--color-header-hover);
@@ -222,9 +221,9 @@ body {
   right: 0;
   width: 210px;
 
-  border: 1px solid rgba(0, 0, 0, .15);
+  border: 1px solid rgba(0, 0, 0, 0.15);
   background-color: #fafafa;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
 }
 .DropdownMenu a {
   text-decoration: none;

@@ -1,4 +1,3 @@
-
 .Container {
   margin-left: auto;
   margin-right: auto;
@@ -208,25 +207,22 @@
   }
 }
 
-
-
 .FloatRight {
-  float: right!important;
+  float: right !important;
 }
 .FloatLeft {
-  float: left!important;
+  float: left !important;
 }
 .FloatNone {
-  float: none!important;
+  float: none !important;
 }
-
 
 .TextLeft {
-  text-align: left!important;
+  text-align: left !important;
 }
 .TextRight {
-  text-align: right!important;
+  text-align: right !important;
 }
 .TextCenter {
-  text-align: center!important;
+  text-align: center !important;
 }

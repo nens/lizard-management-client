@@ -1,10 +1,10 @@
-.tableContainer{
+.tableContainer {
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-.tableSearch{
+.tableSearch {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -18,11 +18,11 @@
   display: flex;
   align-items: center;
   min-width: 800px;
-  color: #858E9C;
+  color: #858e9c;
   font-weight: bold;
   padding: 10px;
   display: flex;
-  border-bottom: 2px solid #858E9C;
+  border-bottom: 2px solid #858e9c;
   justify-content: space-between;
 }
 .tableBody {
@@ -30,27 +30,27 @@
   padding: 10px;
   flex: 1 0 0;
   display: flex;
-  border-bottom: 1px solid #D8D8D8;
+  border-bottom: 1px solid #d8d8d8;
   justify-content: space-between;
 }
 .tableFooter {
-  color: #858E9C;
+  color: #858e9c;
   font-weight: bold;
   padding: 10px;
   padding-right: 0px;
   display: flex;
-  border-top: 1px solid #858E9C;
+  border-top: 1px solid #858e9c;
   align-items: center;
   justify-content: space-between;
 }
 
-.tableFooterBelow{
+.tableFooterBelow {
   padding-top: 10px;
   display: flex;
   flex-direction: column;
 }
 
-.tableInfoAndPagination{
+.tableInfoAndPagination {
   display: flex;
   flex: 1 0 0;
   flex-direction: column;
@@ -103,7 +103,7 @@
   align-items: center;
 }
 
-.tableFooterLeftFiller{
+.tableFooterLeftFiller {
   display: flex;
   flex: 2 0 0;
 }
@@ -120,6 +120,6 @@
 .tableFooterDeleteRasters button {
   margin-bottom: 5px;
 }
-.tableFooterNumberOfRasters{
+.tableFooterNumberOfRasters {
   font-weight: normal;
 }

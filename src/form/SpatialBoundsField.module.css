@@ -34,9 +34,9 @@
 }
 .InactiveAddThresholdButton {
   cursor: not-allowed;
-  background-color: #C9C9C9;
+  background-color: #c9c9c9;
   color: #fff;
 }
 .InactiveAddThresholdButton:hover {
-  background-color: #C9C9C9;
+  background-color: #c9c9c9;
 }
