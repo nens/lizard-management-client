@@ -1,108 +1,152 @@
-import React, { useState, useEffect } from 'react';
-import Table from './Table';
-import { ColumnDefinition } from './Table';
-import Pagination from './Pagination';
-import Checkbox from './Checkbox';
-import TableSearchBox from './TableSearchBox';
-import TableSearchToggle from './TableSearchToggle';
-import { TableSearchToggleHelpText } from './TableSearchToggleHelpText';
-import { Value } from '../form/SelectDropdown';
+import { useState, useEffect, PropsWithChildren } from "react";
+import Table from "./Table";
+import { ColumnDefinition } from "./Table";
+import Pagination from "./Pagination";
+import Checkbox from "./Checkbox";
+import TableSearchBox from "./TableSearchBox";
+import TableSearchToggle from "./TableSearchToggle";
+import { TableSearchToggleHelpText } from "./TableSearchToggleHelpText";
+import { Value } from "../form/SelectDropdown";
 import { useSelector } from "react-redux";
-import { getSelectedOrganisation } from '../reducers';
-import { getRelativePathFromUrl } from '../utils/getRelativePathFromUrl';
-import { DataRetrievalState } from '../types/retrievingDataTypes';
+import { getSelectedOrganisation } from "../reducers";
+import { getRelativePathFromUrl } from "../utils/getRelativePathFromUrl";
+import { DataRetrievalState } from "../types/retrievingDataTypes";
 import unorderedIcon from "../images/list_order_icon_unordered.svg";
 import orderedIcon from "../images/list_order_icon_ordered.svg";
-import styles from './Table.module.css';
-import buttonStyles from '../styles/Buttons.module.css';
+import styles from "./Table.module.css";
+import buttonStyles from "../styles/Buttons.module.css";
 
-interface checkboxAction {
-  displayValue: string,
-  actionFunction: Function,
-  checkIfActionIsApplicable?: (row: any) => boolean
+interface checkboxAction<TableRowType> {
+  displayValue: string;
+  actionFunction: (
+    rows: TableRowType[],
+    tableData: TableRowType[],
+    setTableData: (data: TableRowType[]) => void,
+    triggerReloadWithCurrentPage: () => void,
+    triggerReloadWithBasePage: () => void,
+    setCheckBoxes: (checkboxes: string[]) => void
+  ) => void;
+  checkIfActionIsApplicable?: (row: TableRowType) => boolean;
 }
 
-interface Props {
+interface Props<TableRowType> {
   gridTemplateColumns: string;
-  columnDefinitions: ColumnDefinition[];
-  baseUrl: string; 
-  checkBoxActions: checkboxAction[];
+  columnDefinitions: ColumnDefinition<TableRowType>[];
+  baseUrl: string;
+  checkBoxActions: checkboxAction<TableRowType>[];
   filterOptions?: Value[];
   newItemOnClick?: () => void | null;
   customTableButton?: {
-    name: string,
-    disabled?: boolean,
-    onClick: () => void
+    name: string;
+    disabled?: boolean;
+    onClick: () => void;
   };
-  queryCheckBox?: {text: string, adaptUrlFunction: (url:string)=>string} | null;
+  queryCheckBox?: { text: string; adaptUrlFunction: (url: string) => string } | null;
   defaultUrlParams?: string;
   responsive?: boolean;
 }
 
+interface ListApiResponse<TableRowType> {
+  response: {
+    previous: string;
+    next: string;
+    results: TableRowType[];
+  } | null;
+  currentUrl: string;
+  dataRetrievalState: DataRetrievalState;
+}
+
 // Helper function to get row identifier (by uuid or id)
 // because sometimes tableData does not contain uuid but only id (e.g. alarm contacts)
-const getRowIdentifier = (row: any): string => {
-  return row.uuid || row.id || row.slug ;
+const getRowIdentifier = (row: { uuid?: string; id?: number; slug?: string }): string => {
+  return (row.uuid || row.id?.toString() || row.slug)!;
 };
 
-const TableStateContainer: React.FC<Props> = ({
-  gridTemplateColumns,
-  columnDefinitions,
-  baseUrl,
-  checkBoxActions,
-  filterOptions,
-  newItemOnClick,
-  customTableButton,
-  queryCheckBox,
-  defaultUrlParams,
-  responsive,
-}) => {
-  const [tableData, setTableData] = useState<any[]>([]);
+function TableStateContainer<TableRowType extends { uuid: string; checkboxChecked?: boolean }>(
+  props: PropsWithChildren<Props<TableRowType>>
+) {
+  const {
+    gridTemplateColumns,
+    columnDefinitions,
+    baseUrl,
+    checkBoxActions,
+    filterOptions,
+    newItemOnClick,
+    customTableButton,
+    queryCheckBox,
+    defaultUrlParams,
+    responsive,
+  } = props;
+  const [tableData, setTableData] = useState<TableRowType[]>([]);
   const [checkBoxes, setCheckBoxes] = useState<string[]>([]);
-  const [currentUrl, setCurrentUrl] = useState("");
-  const [nextUrl, setNextUrl] = useState("");
-  const [previousUrl, setPreviousUrl] = useState("");
-  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [currentUrl, setCurrentUrl] = useState<string>("");
+  const [nextUrl, setNextUrl] = useState<string>("");
+  const [previousUrl, setPreviousUrl] = useState<string>("");
+  const [itemsPerPage, setItemsPerPage] = useState<number>(10);
   const [ordering, setOrdering] = useState<string | null>("last_modified");
   const [searchInput, setSearchInput] = useState<string>("");
-  const [selectedFilterOption, setSelectedFilterOption] = useState<Value | null>(filterOptions && filterOptions.length > 0 ? filterOptions[0] : null)
-  const [dataRetrievalState, setDataRetrievalState] = useState<DataRetrievalState>("NEVER_DID_RETRIEVE");
-  const [apiResponse, setApiResponse] = useState<{response:any, currentUrl: string, dataRetrievalState: DataRetrievalState}>({response: {}, currentUrl: "", dataRetrievalState: "NEVER_DID_RETRIEVE"});
-  const [queryCheckBoxState, setQueryCheckBoxState] = useState(false);
+  const [selectedFilterOption, setSelectedFilterOption] = useState<Value | null>(
+    filterOptions && filterOptions.length > 0 ? filterOptions[0] : null
+  );
+  const [dataRetrievalState, setDataRetrievalState] = useState<DataRetrievalState>(
+    "NEVER_DID_RETRIEVE"
+  );
+  const [apiResponse, setApiResponse] = useState<ListApiResponse<TableRowType>>({
+    response: null,
+    currentUrl: "",
+    dataRetrievalState: "NEVER_DID_RETRIEVE",
+  });
+  const [queryCheckBoxState, setQueryCheckBoxState] = useState<boolean>(false);
 
   // todo later: find out how the state of the table can be represented in the url?
 
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const selectedOrganisationUuid = selectedOrganisation ? selectedOrganisation.uuid : "";
 
-  const preUrl = baseUrl +
+  const preUrl =
+    baseUrl +
     "writable=true" +
-    "&page_size=" + itemsPerPage +
+    "&page_size=" +
+    itemsPerPage +
     "&page=1" +
     (selectedFilterOption && searchInput ? "&" + selectedFilterOption.value + searchInput : "") +
-    "&ordering=" + ordering +
+    "&ordering=" +
+    ordering +
     // https://github.com/nens/lizard-management-client/issues/784
     // for timeseries table organisation is filtered on via location
     // Todo, should we instead put the logic for the organisation filter in the components using TableStateContainer?
-    (baseUrl === "/api/v4/timeseries/?" ? ("&location__organisation__uuid=" + selectedOrganisationUuid) : ("&organisation__uuid=" + selectedOrganisationUuid)) +
-    (defaultUrlParams ? defaultUrlParams : '');
+    (baseUrl === "/api/v4/timeseries/?"
+      ? "&location__organisation__uuid=" + selectedOrganisationUuid
+      : "&organisation__uuid=" + selectedOrganisationUuid) +
+    (defaultUrlParams ? defaultUrlParams : "");
 
-  const url = queryCheckBox && queryCheckBoxState? queryCheckBox.adaptUrlFunction(preUrl) : preUrl
-    
-  useEffect(() => { 
-    if (currentUrl !== "" && currentUrl === apiResponse.currentUrl) {
-      apiResponse.response.results && setTableData(apiResponse.response.results);
+  const url = queryCheckBox && queryCheckBoxState ? queryCheckBox.adaptUrlFunction(preUrl) : preUrl;
+
+  useEffect(() => {
+    if (currentUrl !== "" && currentUrl === apiResponse.currentUrl && apiResponse.response) {
+      const { results, previous, next } = apiResponse.response;
+      setTableData(results);
       // make sure no checkboxes are checked outside of current page !
-      apiResponse.response.results && setCheckBoxes(checkBoxesPar=>checkBoxesPar.filter(value => (apiResponse.response.results.map((item:any)=>getRowIdentifier(item))).includes(value)));
-      setDataRetrievalState(apiResponse.dataRetrievalState)
-      if (apiResponse.response.next) setNextUrl(getRelativePathFromUrl(apiResponse.response.next));
-      else if (apiResponse.response.next === null)  setNextUrl("")
-      if (apiResponse.response.previous) setPreviousUrl(getRelativePathFromUrl(apiResponse.response.previous));
-      else if (apiResponse.response.previous === null) setPreviousUrl("")
+      setCheckBoxes((checkBoxesPar) =>
+        checkBoxesPar.filter((value) =>
+          results.map((item) => getRowIdentifier(item)).includes(value)
+        )
+      );
+      setDataRetrievalState(apiResponse.dataRetrievalState);
+      if (next) {
+        setNextUrl(getRelativePathFromUrl(next));
+      } else if (next === null) {
+        setNextUrl("");
+      }
+      if (previous) {
+        setPreviousUrl(getRelativePathFromUrl(apiResponse.response.previous));
+      } else if (previous === null) {
+        setPreviousUrl("");
+      }
     }
   }, [apiResponse, currentUrl]);
 
-  useEffect(() => { 
+  useEffect(() => {
     fetchWithUrl(url);
   }, [url]);
 
@@ -110,142 +154,170 @@ const TableStateContainer: React.FC<Props> = ({
     setDataRetrievalState("RETRIEVING");
     setCurrentUrl(url);
     return fetch(url, {
-      credentials: "same-origin"
-    }).then(response=>{
-      return response.json();
-    }).then(parsedResponse=>{
-      setApiResponse({response: parsedResponse, currentUrl: url, dataRetrievalState: "RETRIEVED"})
-    }).catch(error=>{
-      console.log('fetching table data for url failed with error', url, error);
-      setApiResponse({response: {}, currentUrl: url, dataRetrievalState: {status:"ERROR", errorMesssage: error, url: url}})
-    });
-  }
+      credentials: "same-origin",
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((parsedResponse) => {
+        setApiResponse({
+          response: parsedResponse,
+          currentUrl: url,
+          dataRetrievalState: "RETRIEVED",
+        });
+      })
+      .catch((error) => {
+        console.log("fetching table data for url failed with error", url, error);
+        setApiResponse({
+          response: null,
+          currentUrl: url,
+          dataRetrievalState: { status: "ERROR", errorMesssage: error, url: url },
+        });
+      });
+  };
 
   const addUuidToCheckBoxes = (uuid: string) => {
-    const checkBoxesCopy = checkBoxes.map(uuid=>uuid);
+    const checkBoxesCopy = checkBoxes.map((uuid) => uuid);
     checkBoxesCopy.push(uuid);
     setCheckBoxes(checkBoxesCopy);
-  }
+  };
   const removeUuidFromCheckBoxes = (uuidParameter: string) => {
-    const checkBoxesCopy = checkBoxes.filter(uuid=> uuid !== uuidParameter);
+    const checkBoxesCopy = checkBoxes.filter((uuid) => uuid !== uuidParameter);
     setCheckBoxes(checkBoxesCopy);
-  }
+  };
 
   const removeAllChecked = () => {
-    setCheckBoxes([])
-  }
+    setCheckBoxes([]);
+  };
 
   const checkAllCheckBoxesOnCurrentPage = () => {
-    const allCurrentPageUuids = tableData.map(row => getRowIdentifier(row));
-    const mergedArrays = [...new Set([...checkBoxes ,...allCurrentPageUuids])];
+    const allCurrentPageUuids = tableData.map((row) => getRowIdentifier(row));
+    const mergedArrays = [...new Set([...checkBoxes, ...allCurrentPageUuids])];
     setCheckBoxes(mergedArrays);
-  }
+  };
 
-  const isChecked = (uuidParameter:string) => {
-    return !!checkBoxes.find((uuid) => uuid === uuidParameter)
-  }
+  const isChecked = (uuidParameter: string) => {
+    return !!checkBoxes.find((uuid) => uuid === uuidParameter);
+  };
 
   const areAllOnCurrentPageChecked = () => {
-    return tableData.length > 0 && tableData.every(row=>{
-      return checkBoxes.find(uuid => uuid === getRowIdentifier(row))
-    })
-  }
+    return (
+      tableData.length > 0 &&
+      tableData.every((row) => {
+        return checkBoxes.find((uuid) => uuid === getRowIdentifier(row));
+      })
+    );
+  };
 
-  const dataWithCheckBoxes = tableData.map((tableRow:any) => {
+  const dataWithCheckBoxes = tableData.map((tableRow) => {
     if (isChecked(getRowIdentifier(tableRow))) {
-      return {...tableRow, checkboxChecked: true};
+      return { ...tableRow, checkboxChecked: true };
     } else {
-      return {...tableRow, checkboxChecked: false};
+      return { ...tableRow, checkboxChecked: false };
     }
-  })
+  });
 
-  const checkBoxColumnDefinition: ColumnDefinition = {
-    titleRenderFunction: () => 
-      <Checkbox  
+  const checkBoxColumnDefinition: ColumnDefinition<TableRowType> = {
+    titleRenderFunction: () => (
+      <Checkbox
         checked={areAllOnCurrentPageChecked()}
-        onChange={()=>{
+        onChange={() => {
           if (areAllOnCurrentPageChecked()) {
             removeAllChecked();
           } else {
             checkAllCheckBoxesOnCurrentPage();
           }
         }}
-      />,
-    renderFunction: (row: any) => 
-      <Checkbox 
-        checked={row.checkboxChecked} 
-        onChange={()=>{
-          if (row.checkboxChecked) removeUuidFromCheckBoxes(getRowIdentifier(row))
-          else addUuidToCheckBoxes(getRowIdentifier(row))
-        }} 
-      />,
-      orderingField: null,
+      />
+    ),
+    renderFunction: (row: TableRowType) => (
+      <Checkbox
+        checked={row.checkboxChecked}
+        onChange={() => {
+          if (row.checkboxChecked) removeUuidFromCheckBoxes(getRowIdentifier(row));
+          else addUuidToCheckBoxes(getRowIdentifier(row));
+        }}
+      />
+    ),
+    orderingField: null,
   };
 
-  const columnDefinitionsPlusCheckbox = 
-    checkBoxActions.length > 0 ?  
-      [checkBoxColumnDefinition].concat(columnDefinitions)
-      :
-      columnDefinitions
-      ;
+  const columnDefinitionsPlusCheckbox =
+    checkBoxActions.length > 0
+      ? [checkBoxColumnDefinition].concat(columnDefinitions)
+      : columnDefinitions;
+  const getIfCheckBoxOfUuidIsSelected = (uuid: string) =>
+    !!checkBoxes.find((checkBoxUuid) => checkBoxUuid === uuid);
 
-  const getIfCheckBoxOfUuidIsSelected = ((uuid: string) => {return checkBoxes.find(checkBoxUuid=> checkBoxUuid===uuid)});
-
-  const columnDefinitionsPlusCheckboxSortable =
-  columnDefinitionsPlusCheckbox.map((columnDefinition, ind)=>{
-    const originalTitleRenderFunction = columnDefinition.titleRenderFunction;
-    const sortedTitleRenderFunction = () => {
-      const originalContent = originalTitleRenderFunction();
-      return (
-        <span>
-          {
-            columnDefinition.orderingField?
-            <>
-              <button
-                style={ordering !== columnDefinition.orderingField && ordering !== '-'+columnDefinition.orderingField ? {}: {display:"none"}}
-                onClick={()=>{
-                  setOrdering(columnDefinition.orderingField)
-                }}
-              >
-                {originalContent}
-                <img height="12px" src={`${unorderedIcon}`} alt="ordering icon unordened" />
-              </button>
-              <button
-                style={ordering === columnDefinition.orderingField ?{}:{display:"none"}}
-                onClick={()=>{
-                  setOrdering("-" + columnDefinition.orderingField)
-                }}
-              >
-                {originalContent}
-                <img height="6px" src={`${orderedIcon}`} alt="ordering icon ordened" />
-              </button>
-              <button
-                style={ordering === '-'+columnDefinition.orderingField ?{}:{display:"none"}}
-                onClick={()=>{
-                  setOrdering("last_modified");
-                }}
-              >
-                {originalContent}
-                <img height="6px" style={{transform: "scaleY(-1)",}} src={`${orderedIcon}`} alt="ordering icon ordened" />
-              </button>
-            </>
-          :
-          originalContent
-          }
-        </span>
-      );
+  const columnDefinitionsPlusCheckboxSortable = columnDefinitionsPlusCheckbox.map(
+    (columnDefinition, ind) => {
+      const originalTitleRenderFunction = columnDefinition.titleRenderFunction;
+      const sortedTitleRenderFunction = () => {
+        const originalContent = originalTitleRenderFunction();
+        return (
+          <span>
+            {columnDefinition.orderingField ? (
+              <>
+                <button
+                  style={
+                    ordering !== columnDefinition.orderingField &&
+                    ordering !== "-" + columnDefinition.orderingField
+                      ? {}
+                      : { display: "none" }
+                  }
+                  onClick={() => {
+                    setOrdering(columnDefinition.orderingField);
+                  }}
+                >
+                  {originalContent}
+                  <img height="12px" src={`${unorderedIcon}`} alt="ordering icon unordened" />
+                </button>
+                <button
+                  style={ordering === columnDefinition.orderingField ? {} : { display: "none" }}
+                  onClick={() => {
+                    setOrdering("-" + columnDefinition.orderingField);
+                  }}
+                >
+                  {originalContent}
+                  <img height="6px" src={`${orderedIcon}`} alt="ordering icon ordened" />
+                </button>
+                <button
+                  style={
+                    ordering === "-" + columnDefinition.orderingField ? {} : { display: "none" }
+                  }
+                  onClick={() => {
+                    setOrdering("last_modified");
+                  }}
+                >
+                  {originalContent}
+                  <img
+                    height="6px"
+                    style={{ transform: "scaleY(-1)" }}
+                    src={`${orderedIcon}`}
+                    alt="ordering icon ordened"
+                  />
+                </button>
+              </>
+            ) : (
+              originalContent
+            )}
+          </span>
+        );
+      };
+      return { ...columnDefinition, titleRenderFunction: sortedTitleRenderFunction };
     }
-    return {...columnDefinition, titleRenderFunction: sortedTitleRenderFunction}
-  });
+  );
 
   return (
-    <div style={{
-      height: "100%",
-      width: "100%",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "stretch",
-    }}>
+    <div
+      style={{
+        height: "100%",
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "stretch",
+      }}
+    >
       {/* above header */}
       <div
         style={{
@@ -255,19 +327,19 @@ const TableStateContainer: React.FC<Props> = ({
           marginTop: "18px",
         }}
       >
-        {filterOptions && filterOptions.length > 0 ?
+        {filterOptions && filterOptions.length > 0 ? (
           <div
             style={{
-              display: 'flex',
-              position: 'relative',
+              display: "flex",
+              position: "relative",
             }}
           >
             <TableSearchBox
-              onChange={event=>{
+              onChange={(event) => {
                 const newValue = event.target.value;
                 setSearchInput(newValue);
               }}
-              onClear={()=>setSearchInput("")}
+              onClear={() => setSearchInput("")}
               value={searchInput}
               placeholder={"Type to search"}
             />
@@ -275,16 +347,16 @@ const TableStateContainer: React.FC<Props> = ({
               <TableSearchToggle
                 options={filterOptions}
                 value={selectedFilterOption}
-                valueChanged={option => setSelectedFilterOption(option)}
+                valueChanged={(option) => setSelectedFilterOption(option)}
               />
             ) : null}
-            <TableSearchToggleHelpText
-              filterOption={selectedFilterOption}
-            />
+            <TableSearchToggleHelpText filterOption={selectedFilterOption} />
           </div>
-        : <div />}
+        ) : (
+          <div />
+        )}
         <div>
-          {queryCheckBox ?
+          {queryCheckBox ? (
             <span
               style={{
                 display: "flex",
@@ -293,17 +365,17 @@ const TableStateContainer: React.FC<Props> = ({
                 marginRight: 10,
               }}
             >
-              <span style={{marginRight: "8px"}}>{queryCheckBox.text}</span>
-               <Checkbox
-                  checked={queryCheckBoxState}
-                  onChange={()=>{
-                    if (queryCheckBoxState) setQueryCheckBoxState(false);
-                    else setQueryCheckBoxState(true)
-                  }}
-                  size={32}
-                />
+              <span style={{ marginRight: "8px" }}>{queryCheckBox.text}</span>
+              <Checkbox
+                checked={queryCheckBoxState}
+                onChange={() => {
+                  if (queryCheckBoxState) setQueryCheckBoxState(false);
+                  else setQueryCheckBoxState(true);
+                }}
+                size={32}
+              />
             </span>
-          : null}
+          ) : null}
           {customTableButton ? (
             <button
               className={buttonStyles.NewButton}
@@ -314,21 +386,17 @@ const TableStateContainer: React.FC<Props> = ({
               {customTableButton.name}
             </button>
           ) : null}
-          {newItemOnClick ?
-            <button
-              onClick={newItemOnClick}
-              className={buttonStyles.NewButton}
-            >
+          {newItemOnClick ? (
+            <button onClick={newItemOnClick} className={buttonStyles.NewButton}>
               + New Item
             </button>
-          : null}
+          ) : null}
         </div>
       </div>
       <div
-        // @ts-ignore
         style={{
-          visibility: checkBoxes.length > 0? "visible" : "hidden",
-          display: checkBoxActions.length === 0? "none" :"flex",
+          visibility: checkBoxes.length > 0 ? "visible" : "hidden",
+          display: checkBoxActions.length === 0 ? "none" : "flex",
           justifyContent: "space-between",
           backgroundColor: "var(--color-header)",
           color: "var(--color-light-main-second)",
@@ -336,7 +404,7 @@ const TableStateContainer: React.FC<Props> = ({
           fontWeight: "var(--font-weight-button)",
         }}
       >
-        <div 
+        <div
           style={{
             paddingTop: "17px",
             paddingBottom: "17px",
@@ -346,36 +414,49 @@ const TableStateContainer: React.FC<Props> = ({
           {`${checkBoxes.length} items selected`}
         </div>
         <div>
-        {
-          checkBoxActions.map((checkboxAction, i) => {
+          {checkBoxActions.map((checkboxAction, i) => {
             const { displayValue, actionFunction, checkIfActionIsApplicable } = checkboxAction;
-            const selectedRows = checkIfActionIsApplicable ? (
-              tableData.filter(row => getIfCheckBoxOfUuidIsSelected(getRowIdentifier(row)) && checkIfActionIsApplicable(row))
-            ) : (
-              tableData.filter(row => getIfCheckBoxOfUuidIsSelected(getRowIdentifier(row)))
-            );
+            const selectedRows = checkIfActionIsApplicable
+              ? tableData.filter(
+                  (row) =>
+                    getIfCheckBoxOfUuidIsSelected(getRowIdentifier(row)) &&
+                    checkIfActionIsApplicable(row)
+                )
+              : tableData.filter((row) => getIfCheckBoxOfUuidIsSelected(getRowIdentifier(row)));
             return (
               <button
                 key={i}
-                onClick={() => actionFunction(selectedRows, tableData, setTableData, ()=>fetchWithUrl(currentUrl), ()=>fetchWithUrl(url), setCheckBoxes)}
+                onClick={() =>
+                  actionFunction(
+                    selectedRows,
+                    tableData,
+                    setTableData,
+                    () => fetchWithUrl(currentUrl),
+                    () => fetchWithUrl(url),
+                    setCheckBoxes
+                  )
+                }
                 className={styles.TableActionButton}
               >
                 {`${displayValue} (${selectedRows.length})`}
               </button>
             );
-          })
-        }
+          })}
         </div>
       </div>
-      <div style={{flex:1, minHeight: 0}}>
+      <div style={{ flex: 1, minHeight: 0 }}>
         <Table
-          tableData={dataWithCheckBoxes} 
+          tableData={dataWithCheckBoxes}
           setTableData={setTableData}
-          gridTemplateColumns={gridTemplateColumns} 
+          gridTemplateColumns={gridTemplateColumns}
           columnDefinitions={columnDefinitionsPlusCheckboxSortable}
           dataRetrievalState={dataRetrievalState}
-          triggerReloadWithCurrentPage={()=>{fetchWithUrl(currentUrl)}}
-          triggerReloadWithBasePage={()=>{fetchWithUrl(url)}}
+          triggerReloadWithCurrentPage={() => {
+            fetchWithUrl(currentUrl);
+          }}
+          triggerReloadWithBasePage={() => {
+            fetchWithUrl(url);
+          }}
           getIfCheckBoxOfUuidIsSelected={getIfCheckBoxOfUuidIsSelected}
           responsive={responsive}
         />
@@ -389,7 +470,7 @@ const TableStateContainer: React.FC<Props> = ({
         setItemsPerPage={setItemsPerPage}
       />
     </div>
-  )
-};
+  );
+}
 
 export default TableStateContainer;

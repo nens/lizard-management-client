@@ -3,21 +3,20 @@ import { ClearInputButton } from "./ClearInputButton";
 import formStyles from "../styles/Forms.module.css";
 
 interface MyProps {
-  title: string,
-  name: string,
-  value: string,
-  options: string[],
-  valueChanged: (value: string | null) => void,
-  validated: boolean,
-  clearInput?: (name: string) => void,
-  errorMessage?: string | false,
-  placeholder?: string,
-  handleEnter?: (e: any) => void,
-  triedToSubmit?: boolean,
-  readOnly?: boolean
-};
+  title: string;
+  name: string;
+  value: string;
+  options: string[];
+  valueChanged: (value: string | null) => void;
+  validated: boolean;
+  clearInput?: (name: string) => void;
+  errorMessage?: string | false;
+  placeholder?: string;
+  triedToSubmit?: boolean;
+  readOnly?: boolean;
+}
 
-export const Dropdown: React.FC<MyProps> = (props) => {  
+export const Dropdown: React.FC<MyProps> = (props) => {
   const {
     title,
     name,
@@ -29,11 +28,11 @@ export const Dropdown: React.FC<MyProps> = (props) => {
     validated,
     errorMessage,
     triedToSubmit,
-    readOnly
+    readOnly,
   } = props;
 
   const [menuIsOpen, setMenuIsOpen] = useState<boolean>(false);
-  const [searchString, setSearchString] = useState<string>('');
+  const [searchString, setSearchString] = useState<string>("");
   const [filteredOptions, setFilteredOptions] = useState<string[]>(options);
 
   // Set validity of the input field
@@ -41,26 +40,26 @@ export const Dropdown: React.FC<MyProps> = (props) => {
   useEffect(() => {
     if (myInput && myInput.current) {
       if (validated) {
-        myInput.current.setCustomValidity('');
+        myInput.current.setCustomValidity("");
       } else {
-        myInput.current.setCustomValidity(errorMessage || '');
-      };
-    };
+        myInput.current.setCustomValidity(errorMessage || "");
+      }
+    }
   });
 
   // Filter options
   useEffect(() => {
-    setFilteredOptions(options.filter(
-      option => option.toLowerCase().includes(searchString.toLowerCase())
-    ));
+    setFilteredOptions(
+      options.filter((option) => option.toLowerCase().includes(searchString.toLowerCase()))
+    );
   }, [name, options, searchString]);
 
-  const handleKeyUp = (e: any) => {
+  const handleKeyUp = (e: React.KeyboardEvent) => {
     if (e.key === "Escape") {
       setMenuIsOpen(false);
-    };
+    }
   };
-  
+
   // const handleClickOutside = (event: Event) => {
   //   if (
   //       myInput.current &&
@@ -77,28 +76,23 @@ export const Dropdown: React.FC<MyProps> = (props) => {
   // });
 
   return (
-    <label
-      htmlFor={name}
-      className={formStyles.Label}
-    >
-      <span className={formStyles.LabelTitle}>
-        {title}
-      </span>
-      <div style={{position: 'relative'}}>
+    <label htmlFor={name} className={formStyles.Label}>
+      <span className={formStyles.LabelTitle}>{title}</span>
+      <div style={{ position: "relative" }}>
         <span
           style={{
-            position: 'absolute',
+            position: "absolute",
             top: 0,
             left: 0,
             padding: 10,
-            height: '100%',
-            width: '100%',
-            overflow: 'hidden',
-            whiteSpace: 'nowrap',
-            textOverflow: 'ellipsis',
-            display: 'flex',
-            alignItems: 'center',
-            visibility: searchString ? 'hidden' : 'visible'
+            height: "100%",
+            width: "100%",
+            overflow: "hidden",
+            whiteSpace: "nowrap",
+            textOverflow: "ellipsis",
+            display: "flex",
+            alignItems: "center",
+            visibility: searchString ? "hidden" : "visible",
           }}
         >
           {value}
@@ -107,33 +101,33 @@ export const Dropdown: React.FC<MyProps> = (props) => {
           ref={myInput}
           name={name}
           id={name}
-          autoComplete={'off'}
-          className={`${formStyles.FormControl} ${triedToSubmit ? formStyles.FormSubmitted : ''}`}
-          placeholder={!value ? placeholder : ''}
+          autoComplete={"off"}
+          className={`${formStyles.FormControl} ${triedToSubmit ? formStyles.FormSubmitted : ""}`}
+          placeholder={!value ? placeholder : ""}
           onClick={() => setMenuIsOpen(!menuIsOpen)}
-          onKeyUp={e => handleKeyUp(e)}
+          onKeyUp={(e) => handleKeyUp(e)}
           onKeyDown={() => setMenuIsOpen(true)}
-          onChange={e => setSearchString(e.target.value)}
+          onChange={(e) => setSearchString(e.target.value)}
           style={{
-            position: 'relative',
-            zIndex: -1
+            position: "relative",
+            zIndex: -1,
           }}
           onBlur={() => setMenuIsOpen(false)}
         />
-        {!readOnly && clearInput ? <ClearInputButton onClick={() => clearInput(name)}/> : null}
+        {!readOnly && clearInput ? <ClearInputButton onClick={() => clearInput(name)} /> : null}
         {menuIsOpen && (
           <ul
             style={{
-              position: 'absolute',
-              listStyle: 'none',
+              position: "absolute",
+              listStyle: "none",
               paddingLeft: 10,
-              top: '100%',
+              top: "100%",
               left: 0,
               zIndex: 1,
-              backgroundColor: 'grey',
+              backgroundColor: "grey",
               maxHeight: 250,
-              width: '100%',
-              overflowY: 'auto',
+              width: "100%",
+              overflowY: "auto",
               marginTop: 10,
               marginBottom: 10,
             }}
@@ -142,9 +136,9 @@ export const Dropdown: React.FC<MyProps> = (props) => {
               <li
                 key={i}
                 style={{
-                  padding: '2px 0'
+                  padding: "2px 0",
                 }}
-                onMouseDown={e => {
+                onMouseDown={(e) => {
                   e.preventDefault();
                   setMenuIsOpen(false);
                   valueChanged(option);
@@ -159,4 +153,4 @@ export const Dropdown: React.FC<MyProps> = (props) => {
       </div>
     </label>
   );
-}
+};

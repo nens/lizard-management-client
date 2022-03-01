@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import MDSpinner from "react-md-spinner";
 import {
   fetchScenarioRawResults,
@@ -9,80 +9,88 @@ import {
   deleteScenarioRawResults,
   deleteScenarioBasicResults,
   deleteScenarioArrivalResults,
-  deleteScenarioDamageResults
-} from '../api/scenarios';
+  deleteScenarioDamageResults,
+} from "../api/scenarios";
 import formStyles from "../styles/Forms.module.css";
 import buttonStyles from "../styles/Buttons.module.css";
 import scenarioResultStyles from "./ScenarioResult.module.css";
 
 interface Result {
-  id: number,
-  name: string,
-  scheduledForDeletion: boolean,
+  id: number;
+  name: string;
+  scheduledForDeletion: boolean;
   raster: string;
-};
+}
 interface Results {
-  results: Result[],
-  isFetching: boolean,
-  scheduledForBulkDeletion: boolean,
+  results: Result[];
+  isFetching: boolean;
+  scheduledForBulkDeletion: boolean;
 }
 
 interface MyProps {
-  name: string,
-  uuid: string,
-  formSubmitted?: boolean,
-  onFocus?: (e: React.FocusEvent<HTMLButtonElement>) => void,
-  onBlur?: () => void,
-  readOnly?: boolean
-};
+  name: string;
+  uuid: string;
+  formSubmitted?: boolean;
+  onFocus?: (e: React.FocusEvent<HTMLButtonElement>) => void;
+  onBlur?: () => void;
+  readOnly?: boolean;
+}
 
 interface DeleteButtonProps {
-  scheduledForDeletion: boolean,
-  handleClick: (e: React.MouseEvent<HTMLButtonElement>) => void,
-  onFocus?: (e: React.FocusEvent<HTMLButtonElement>) => void,
-  onBlur?: () => void,
-};
+  scheduledForDeletion: boolean;
+  handleClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  onFocus?: (e: React.FocusEvent<HTMLButtonElement>) => void;
+  onBlur?: () => void;
+}
 
 interface ResultGroupTitleProps {
-  name: string,
-  results: Result[],
-  scheduledForBulkDeletion: boolean,
-  handleDeletion: (e: React.MouseEvent<HTMLButtonElement>) => void,
-  onFocus?: (e: React.FocusEvent<HTMLButtonElement>) => void,
-  onBlur?: () => void,
-};
+  name: string;
+  results: Result[];
+  scheduledForBulkDeletion: boolean;
+  handleDeletion: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  onFocus?: (e: React.FocusEvent<HTMLButtonElement>) => void;
+  onBlur?: () => void;
+}
 
 interface ResultRowProps {
-  scheduledForBulkDeletion: boolean,
-  result: Result,
-  handleDeletion: (e: React.MouseEvent<HTMLButtonElement>, id: number) => void,
-  onFocus?: (e: React.FocusEvent<HTMLButtonElement>) => void,
-  onBlur?: () => void,
-};
+  scheduledForBulkDeletion: boolean;
+  result: Result;
+  handleDeletion: (e: React.MouseEvent<HTMLButtonElement>, id: number) => void;
+  onFocus?: (e: React.FocusEvent<HTMLButtonElement>) => void;
+  onBlur?: () => void;
+}
+
+interface ScenarioResultApiResponse {
+  id: number;
+  result_type: {
+    name: string;
+  };
+  raster: string; // url
+}
 
 // Render button for result deletion
 const DeleteButton: React.FC<DeleteButtonProps> = ({
   scheduledForDeletion,
   handleClick,
   onFocus,
-  onBlur
+  onBlur,
 }) => {
   return (
     <button
-      id={'resultDeleteButton'}
+      id={"resultDeleteButton"}
       className={buttonStyles.IconButton}
       onClick={handleClick}
       style={{
         fontSize: 18,
-        color: scheduledForDeletion ? '#2C3E50' : '#D50000',
+        color: scheduledForDeletion ? "#2C3E50" : "#D50000",
       }}
       onFocus={onFocus}
       onBlur={onBlur}
     >
       {scheduledForDeletion ? (
-        <i className='fa fa-undo' title='Undo' />
+        <i className="fa fa-undo" title="Undo" />
       ) : (
-        <i className='fa fa-trash' title='Delete'/>
+        <i className="fa fa-trash" title="Delete" />
       )}
     </button>
   );
@@ -95,7 +103,7 @@ const ResultGroupTitle: React.FC<ResultGroupTitleProps> = ({
   scheduledForBulkDeletion,
   handleDeletion,
   onFocus,
-  onBlur
+  onBlur,
 }) => {
   return (
     <div className={scenarioResultStyles.ResultTitleRow}>
@@ -118,29 +126,27 @@ const ResultRow: React.FC<ResultRowProps> = ({
   result,
   handleDeletion,
   onFocus,
-  onBlur
+  onBlur,
 }) => {
   let resultUrl;
   if (result.raster) {
-    const rasterLayerUuid = result.raster.split('/')[result.raster.split('/').length-2]; // retrieve uuid from api url of raster layer 
-    resultUrl = `/management/data_management/rasters/layers/${rasterLayerUuid}`
+    const rasterLayerUuid = result.raster.split("/")[result.raster.split("/").length - 2]; // retrieve uuid from api url of raster layer
+    resultUrl = `/management/data_management/rasters/layers/${rasterLayerUuid}`;
   }
   return (
     <div
       className={scenarioResultStyles.ResultRow}
       style={{
-        color: scheduledForBulkDeletion || result.scheduledForDeletion ? 'lightgrey' : ''
+        color: scheduledForBulkDeletion || result.scheduledForDeletion ? "lightgrey" : "",
       }}
     >
-      {resultUrl?
-        <a
-          href={resultUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-        >{result.name}</a>
-        :
+      {resultUrl ? (
+        <a href={resultUrl} target="_blank" rel="noopener noreferrer">
+          {result.name}
+        </a>
+      ) : (
         <span>{result.name}</span>
-      }
+      )}
       {!scheduledForBulkDeletion ? (
         <DeleteButton
           scheduledForDeletion={result.scheduledForDeletion}
@@ -166,7 +172,7 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
   const initialResults: Results = {
     isFetching: false,
     scheduledForBulkDeletion: false,
-    results: []
+    results: [],
   };
   const [rawResults, setRawResults] = useState<Results>(initialResults);
   const [basicResults, setBasicResults] = useState<Results>(initialResults);
@@ -195,64 +201,64 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
       scheduledForBulkDeletion: false,
       results: [],
     });
-  
-    fetchScenarioRawResults(uuid).then(res => 
+
+    fetchScenarioRawResults(uuid).then((res) =>
       setRawResults({
         isFetching: false,
         scheduledForBulkDeletion: false,
-        results: res.results.map((result: any) => {
+        results: res.results.map((result: ScenarioResultApiResponse) => {
           return {
             id: result.id,
             name: result.result_type.name,
             scheduledForDeletion: false,
             raster: result.raster,
           };
-        })
+        }),
       })
     );
 
-    fetchScenarioBasicResults(uuid).then(res => 
+    fetchScenarioBasicResults(uuid).then((res) =>
       setBasicResults({
         isFetching: false,
         scheduledForBulkDeletion: false,
-        results: res.results.map((result: any) => {
+        results: res.results.map((result: ScenarioResultApiResponse) => {
           return {
             id: result.id,
             name: result.result_type.name,
             scheduledForDeletion: false,
             raster: result.raster,
           };
-        })
+        }),
       })
     );
 
-    fetchScenarioArrivalResults(uuid).then(res => 
+    fetchScenarioArrivalResults(uuid).then((res) =>
       setArrivalResults({
         isFetching: false,
         scheduledForBulkDeletion: false,
-        results: res.results.map((result: any) => {
+        results: res.results.map((result: ScenarioResultApiResponse) => {
           return {
             id: result.id,
             name: result.result_type.name,
             scheduledForDeletion: false,
             raster: result.raster,
           };
-        })
+        }),
       })
     );
 
-    fetchScenarioDamageResults(uuid).then(res => 
+    fetchScenarioDamageResults(uuid).then((res) =>
       setDamageResults({
         isFetching: false,
         scheduledForBulkDeletion: false,
-        results: res.results.map((result: any) => {
+        results: res.results.map((result: ScenarioResultApiResponse) => {
           return {
             id: result.id,
             name: result.result_type.name,
             scheduledForDeletion: false,
             raster: result.raster,
           };
-        })
+        }),
       })
     );
   }, [uuid]);
@@ -268,131 +274,123 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
 
       // Delete selected raw results separately if bulk deletion is not selected
       if (!rawResults.scheduledForBulkDeletion) {
-        rawResults.results.filter(
-          result => result.scheduledForDeletion === true
-        ).map(
-          result => deleteScenarioResult(uuid, result.id)
-        );
-      };
+        rawResults.results
+          .filter((result) => result.scheduledForDeletion === true)
+          .map((result) => deleteScenarioResult(uuid, result.id));
+      }
 
       // Delete selected basic results separately if bulk deletion is not selected
       if (!basicResults.scheduledForBulkDeletion) {
-        basicResults.results.filter(
-          result => result.scheduledForDeletion === true
-        ).map(
-          result => deleteScenarioResult(uuid, result.id)
-        );
-      };
+        basicResults.results
+          .filter((result) => result.scheduledForDeletion === true)
+          .map((result) => deleteScenarioResult(uuid, result.id));
+      }
 
       // Delete selected arrival results separately if bulk deletion is not selected
       if (!arrivalResults.scheduledForBulkDeletion) {
-        arrivalResults.results.filter(
-          result => result.scheduledForDeletion === true
-        ).map(
-          result => deleteScenarioResult(uuid, result.id)
-        );
-      };
+        arrivalResults.results
+          .filter((result) => result.scheduledForDeletion === true)
+          .map((result) => deleteScenarioResult(uuid, result.id));
+      }
 
       // Delete selected damage results separately if bulk deletion is not selected
       if (!damageResults.scheduledForBulkDeletion) {
-        damageResults.results.filter(
-          result => result.scheduledForDeletion === true
-        ).map(
-          result => deleteScenarioResult(uuid, result.id)
-        );
-      };
-    };    
-  }, [formSubmitted, uuid, rawResults, basicResults, arrivalResults, damageResults])
+        damageResults.results
+          .filter((result) => result.scheduledForDeletion === true)
+          .map((result) => deleteScenarioResult(uuid, result.id));
+      }
+    }
+  }, [formSubmitted, uuid, rawResults, basicResults, arrivalResults, damageResults]);
 
   const handleRawResultDeletion = (e: React.MouseEvent<HTMLButtonElement>, id: number) => {
     e.preventDefault();
-    const result = rawResults.results.find(res => res.id === id);
+    const result = rawResults.results.find((res) => res.id === id);
 
     if (!result) {
-      console.error('Could not find the selected result with id', id);
+      console.error("Could not find the selected result with id", id);
       return;
-    };
+    }
 
     setRawResults({
       ...rawResults,
-      results: rawResults.results.map(res => {
+      results: rawResults.results.map((res) => {
         if (res.id === result.id) {
           return {
             ...result,
-            scheduledForDeletion: !result.scheduledForDeletion
+            scheduledForDeletion: !result.scheduledForDeletion,
           };
-        };
+        }
         return res;
-      })
+      }),
     });
   };
 
   const handleBasicResultDeletion = (e: React.MouseEvent<HTMLButtonElement>, id: number) => {
     e.preventDefault();
-    const result = basicResults.results.find(res => res.id === id);
+    const result = basicResults.results.find((res) => res.id === id);
 
     if (!result) {
-      console.error('Could not find the selected result with id', id);
+      console.error("Could not find the selected result with id", id);
       return;
-    };
+    }
 
     setBasicResults({
       ...basicResults,
-      results: basicResults.results.map(res => {
+      results: basicResults.results.map((res) => {
         if (res.id === result.id) {
           return {
             ...result,
-            scheduledForDeletion: !result.scheduledForDeletion
+            scheduledForDeletion: !result.scheduledForDeletion,
           };
-        };
+        }
         return res;
-      })
+      }),
     });
   };
 
   const handleArrivalResultDeletion = (e: React.MouseEvent<HTMLButtonElement>, id: number) => {
     e.preventDefault();
-    const result = arrivalResults.results.find(res => res.id === id);
+    const result = arrivalResults.results.find((res) => res.id === id);
 
     if (!result) {
-      console.error('Could not find the selected result with id', id);
+      console.error("Could not find the selected result with id", id);
       return;
-    };
+    }
 
     setArrivalResults({
       ...arrivalResults,
-      results: arrivalResults.results.map(res => {
+      results: arrivalResults.results.map((res) => {
         if (res.id === result.id) {
           return {
             ...result,
-            scheduledForDeletion: !result.scheduledForDeletion
+            scheduledForDeletion: !result.scheduledForDeletion,
           };
-        };
+        }
         return res;
-      })
+      }),
     });
   };
 
   const handleDamageResultDeletion = (e: React.MouseEvent<HTMLButtonElement>, id: number) => {
     e.preventDefault();
-    const result = damageResults.results.find(res => res.id === id);
+    const result = damageResults.results.find((res) => res.id === id);
 
     if (!result) {
-      console.error('Could not find the selected result with id', id);
+      console.error("Could not find the selected result with id", id);
       return;
-    };
+    }
 
     setDamageResults({
       ...damageResults,
-      results: damageResults.results.map(res => {
+      results: damageResults.results.map((res) => {
         if (res.id === result.id) {
           return {
             ...result,
-            scheduledForDeletion: !result.scheduledForDeletion
+            scheduledForDeletion: !result.scheduledForDeletion,
           };
-        };
+        }
         return res;
-      })
+      }),
     });
   };
 
@@ -400,39 +398,36 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
     e.preventDefault();
     setRawResults({
       ...rawResults,
-      scheduledForBulkDeletion: !rawResults.scheduledForBulkDeletion
+      scheduledForBulkDeletion: !rawResults.scheduledForBulkDeletion,
     });
   };
   const handleBasicResultsBulkDeletion = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setBasicResults({
       ...basicResults,
-      scheduledForBulkDeletion: !basicResults.scheduledForBulkDeletion
+      scheduledForBulkDeletion: !basicResults.scheduledForBulkDeletion,
     });
   };
   const handleArrivalResultsBulkDeletion = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setArrivalResults({
       ...arrivalResults,
-      scheduledForBulkDeletion: !arrivalResults.scheduledForBulkDeletion
+      scheduledForBulkDeletion: !arrivalResults.scheduledForBulkDeletion,
     });
   };
   const handleDamageResultsBulkDeletion = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setDamageResults({
       ...damageResults,
-      scheduledForBulkDeletion: !damageResults.scheduledForBulkDeletion
+      scheduledForBulkDeletion: !damageResults.scheduledForBulkDeletion,
     });
   };
 
   return (
-    <label
-      htmlFor={name}
-      className={`${formStyles.Label} ${scenarioResultStyles.ResultsGrid}`}
-    >
+    <label htmlFor={name} className={`${formStyles.Label} ${scenarioResultStyles.ResultsGrid}`}>
       <div>
         <ResultGroupTitle
-          name={'Raw'}
+          name={"Raw"}
           results={rawResults.results}
           scheduledForBulkDeletion={rawResults.scheduledForBulkDeletion}
           handleDeletion={handleRawResultsBulkDeletion}
@@ -442,7 +437,7 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
         {rawResults.isFetching ? (
           <MDSpinner size={24} />
         ) : (
-          rawResults.results.map(result => (
+          rawResults.results.map((result) => (
             <ResultRow
               key={result.id}
               scheduledForBulkDeletion={rawResults.scheduledForBulkDeletion}
@@ -456,7 +451,7 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
       </div>
       <div>
         <ResultGroupTitle
-          name={'Arrival'}
+          name={"Arrival"}
           results={arrivalResults.results}
           scheduledForBulkDeletion={arrivalResults.scheduledForBulkDeletion}
           handleDeletion={handleArrivalResultsBulkDeletion}
@@ -466,7 +461,7 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
         {arrivalResults.isFetching ? (
           <MDSpinner size={24} />
         ) : (
-          arrivalResults.results.map(result => (
+          arrivalResults.results.map((result) => (
             <ResultRow
               key={result.id}
               scheduledForBulkDeletion={arrivalResults.scheduledForBulkDeletion}
@@ -480,7 +475,7 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
       </div>
       <div>
         <ResultGroupTitle
-          name={'Basic'}
+          name={"Basic"}
           results={basicResults.results}
           scheduledForBulkDeletion={basicResults.scheduledForBulkDeletion}
           handleDeletion={handleBasicResultsBulkDeletion}
@@ -490,7 +485,7 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
         {basicResults.isFetching ? (
           <MDSpinner size={24} />
         ) : (
-          basicResults.results.map(result => (
+          basicResults.results.map((result) => (
             <ResultRow
               key={result.id}
               scheduledForBulkDeletion={basicResults.scheduledForBulkDeletion}
@@ -504,7 +499,7 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
       </div>
       <div>
         <ResultGroupTitle
-          name={'Damage'}
+          name={"Damage"}
           results={damageResults.results}
           scheduledForBulkDeletion={damageResults.scheduledForBulkDeletion}
           handleDeletion={handleDamageResultsBulkDeletion}
@@ -514,7 +509,7 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
         {damageResults.isFetching ? (
           <MDSpinner size={24} />
         ) : (
-          damageResults.results.map(result => (
+          damageResults.results.map((result) => (
             <ResultRow
               key={result.id}
               scheduledForBulkDeletion={damageResults.scheduledForBulkDeletion}
@@ -527,5 +522,5 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
         )}
       </div>
     </label>
-  )
-}
+  );
+};

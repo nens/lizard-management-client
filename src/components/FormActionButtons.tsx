@@ -1,10 +1,9 @@
-import React from 'react';
-import ActionButton from './ActionButton';
-
+import React from "react";
+import ActionButton from "./ActionButton";
 
 export interface Action {
   displayValue: string;
-  actionFunction: any; // function that takes uuid and performs action
+  actionFunction: () => void; // function that takes uuid and performs action
 }
 
 interface Props {
@@ -14,12 +13,12 @@ interface Props {
 const FormActionButtons: React.FC<Props> = ({ actions }) => {
   return (
     <ActionButton
-      actions={actions.map(action=>action.displayValue)}
-      onChange={actionDisplayValue=>{
-          const currentAction = actions.find(action => action.displayValue === actionDisplayValue);
-          if (currentAction) currentAction.actionFunction();
+      actions={actions.map((action) => action.displayValue)}
+      onChange={(actionDisplayValue) => {
+        const currentAction = actions.find((action) => action.displayValue === actionDisplayValue);
+        if (currentAction) currentAction.actionFunction();
       }}
-      display={'ACTIONS'}
+      display={"ACTIONS"}
       forForm
     />
   );

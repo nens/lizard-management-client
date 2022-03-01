@@ -5,16 +5,16 @@
 }
 
 .ActionButtons svg {
-  fill:#2c3e50;
+  fill: #2c3e50;
 }
 .ActionButtons > button:hover > svg {
-  fill: #009F86;
+  fill: #009f86;
 }
 .ActionButtons > button:focus {
   outline: none;
 }
 .ActionButtons > button:focus > svg {
-  fill: #009F86;
+  fill: #009f86;
 }
 
 .FormActionButton {

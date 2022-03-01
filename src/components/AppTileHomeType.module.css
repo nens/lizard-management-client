@@ -39,9 +39,6 @@
   }
 }
 
-
-
-
 .AppTile.Disabled {
   background-color: #b9b9b9;
   cursor: not-allowed;
@@ -59,11 +56,10 @@
 }
 
 .IconCircleContainer {
-
   margin-top: 13%;
   margin-left: 10%;
 
-  background-color: #55BFA2;
+  background-color: #55bfa2;
   /* size needs to be percentages in order for DecorativeLine to be positioned correctly if tile scales up or because of by screensize */
   /* element needs to be round thus width equal to height: 29% of 300px roughly equals 31% of 280px (size parent container is 300px by 280px)*/
   width: 29%;
@@ -86,7 +82,7 @@
   margin-right: 10%;
   margin-top: 8%;
   margin-bottom: 4%;
-  color: #2C3E50;
+  color: #2c3e50;
   font-family: Montserrat;
   font-size: 17px;
   text-transform: uppercase;
@@ -97,7 +93,7 @@
   margin-right: 10%;
   font: normal normal normal 16px/32px Montserrat;
   letter-spacing: 0px;
-  color: #2C3E50;
+  color: #2c3e50;
   opacity: 1;
 }
 @media only screen and (max-width: 1620px) {
@@ -126,5 +122,3 @@
   color: #707070;
   opacity: 0.53;
 }
-
-

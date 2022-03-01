@@ -1,22 +1,28 @@
-import React from 'react';
+import React from "react";
 import { NavLink } from "react-router-dom";
-import styles from './ExplainSideColumn.module.css';
-import backArrow from '../images/back_arrow.svg';
+import styles from "./ExplainSideColumn.module.css";
+import backArrow from "../images/back_arrow.svg";
 
 interface MyProps {
-  imgUrl: string,
-  imgAltDescription: string,
-  headerText: string,
-  explanationText: string | JSX.Element,
-  backUrl: string,
-  fieldName?: string, // for the animation effect of explain box to work when moving to a new field in form
+  imgUrl: string;
+  imgAltDescription: string;
+  headerText: string;
+  explanationText: string | JSX.Element;
+  backUrl: string;
+  fieldName?: string; // for the animation effect of explain box to work when moving to a new field in form
 }
 
 export const ExplainSideColumn: React.FC<MyProps> = ({
-  imgUrl, imgAltDescription, headerText, explanationText, backUrl, fieldName, children
+  imgUrl,
+  imgAltDescription,
+  headerText,
+  explanationText,
+  backUrl,
+  fieldName,
+  children,
 }) => {
   return (
-    <div 
+    <div
       style={{
         display: "flex",
         alignItems: "stretch",
@@ -41,12 +47,14 @@ export const ExplainSideColumn: React.FC<MyProps> = ({
             justifyContent: "flex-start",
           }}
         >
-          <NavLink to={backUrl}><span style={{fontSize:"36px"}}>
-            <img className={styles.BackArrow} alt="back" src={backArrow}/>
-          </span></NavLink>
+          <NavLink to={backUrl}>
+            <span style={{ fontSize: "36px" }}>
+              <img className={styles.BackArrow} alt="back" src={backArrow} />
+            </span>
+          </NavLink>
         </div>
-        <div style={{display:"flex", justifyContent: "center"}}>
-          <img src={imgUrl} alt={imgAltDescription? imgAltDescription: "Left sidebar icon"}/>
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <img src={imgUrl} alt={imgAltDescription ? imgAltDescription : "Left sidebar icon"} />
         </div>
         <h2
           style={{
@@ -76,7 +84,7 @@ export const ExplainSideColumn: React.FC<MyProps> = ({
         >
           <span
             style={{
-              lineHeight: "28px"
+              lineHeight: "28px",
             }}
           >
             {explanationText}
@@ -93,4 +101,4 @@ export const ExplainSideColumn: React.FC<MyProps> = ({
       </div>
     </div>
   );
-}
+};

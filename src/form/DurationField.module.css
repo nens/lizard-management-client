@@ -10,20 +10,20 @@
   margin-left: 20px;
   margin-right: 20px;
 }
-.DurationInputHourSecondSeperator{
+.DurationInputHourSecondSeperator {
   display: inline-block;
 }
-.TextAlignRight{
+.TextAlignRight {
   text-align: right;
 }
-.TextAlignCenter{
+.TextAlignCenter {
   text-align: center;
   width: 160px;
 }
-.Invalid{
+.Invalid {
   border-color: red;
 }
-.Invalid:focus{
+.Invalid:focus {
   border-color: red;
   box-shadow: 0 0 0 0.2rem rgba(255, 0, 0, 0.25);
 }

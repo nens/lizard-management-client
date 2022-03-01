@@ -1,7 +1,7 @@
 .ModalBody {
   width: 100%;
   font-size: 16px;
-  color: #003D7A;
+  color: #003d7a;
   padding: 20px 40px;
 }
 
@@ -29,7 +29,7 @@
 .GridContainerBody {
   max-height: 300px;
   overflow-y: auto;
-  border: 1px solid #003D7A;
+  border: 1px solid #003d7a;
 }
 
 .GridItem {
@@ -37,7 +37,7 @@
   line-height: 2;
   display: flex;
   align-items: center;
-  border-bottom: 1px solid #003D7A;
+  border-bottom: 1px solid #003d7a;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

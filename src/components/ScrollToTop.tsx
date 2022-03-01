@@ -1,8 +1,8 @@
 // This hook is to prevent react-router from restoring previous scrolling position
 // so switching tabs would always scroll to the top
 
-import React, { useEffect } from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import React, { useEffect } from "react";
+import { RouteComponentProps, withRouter } from "react-router-dom";
 
 const ScrollToTop: React.FC<RouteComponentProps> = ({ history }) => {
   useEffect(() => {

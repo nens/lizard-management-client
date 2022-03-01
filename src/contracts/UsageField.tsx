@@ -1,11 +1,11 @@
-import React from 'react';
-import UsagePieChart from '../components/UsagePieChart';
-import formStyles from '../styles/Forms.module.css';
+import React from "react";
+import UsagePieChart from "../components/UsagePieChart";
+import formStyles from "../styles/Forms.module.css";
 
 interface MyProps {
-  title: string,
-  used: number,
-  available: number
+  title: string;
+  used: number;
+  available: number;
 }
 
 export const UsageField = (props: MyProps) => {
@@ -13,16 +13,11 @@ export const UsageField = (props: MyProps) => {
     <div
       style={{
         marginRight: 100,
-        textAlign: 'center'
+        textAlign: "center",
       }}
     >
-      <div className={formStyles.LabelTitle}>
-        {props.title}
-      </div>
-      <UsagePieChart
-        used={props.used}
-        available={props.available}
-      />
+      <div className={formStyles.LabelTitle}>{props.title}</div>
+      <UsagePieChart used={props.used} available={props.available} />
     </div>
-  )
-}
+  );
+};

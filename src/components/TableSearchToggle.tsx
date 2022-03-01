@@ -1,42 +1,38 @@
-import React from 'react';
-import Select, { StylesConfig } from 'react-select';
-import { Value } from '../form/SelectDropdown';
+import React from "react";
+import Select, { StylesConfig } from "react-select";
+import { Value } from "../form/SelectDropdown";
 
 interface MyProps {
-  options: Value[],
-  value: Value | null,
-  valueChanged: (value: Value | null) => void,
+  options: Value[];
+  value: Value | null;
+  valueChanged: (value: Value | null) => void;
 }
 
-const TableSearchToggle: React.FC<MyProps> = ({
-  options,
-  value,
-  valueChanged
-}) => {
+const TableSearchToggle: React.FC<MyProps> = ({ options, value, valueChanged }) => {
   // Custom styling for different Select's child components
   const customStyles: StylesConfig<{}, boolean> = {
     // Custom styling for Control component
-    control: styles => ({
+    control: (styles) => ({
       ...styles,
       minWidth: 160,
-      backgroundColor: 'var(--color-dark-main)',
-      cursor: 'pointer'
+      backgroundColor: "var(--color-dark-main)",
+      cursor: "pointer",
     }),
     // Custom styling for input value
-    singleValue: styles => ({
+    singleValue: (styles) => ({
       ...styles,
-      color: 'var(--color-light-main)'
+      color: "var(--color-light-main)",
     }),
     // Custom styling for the Indicator components
     indicatorSeparator: () => ({
-      display: 'none'
+      display: "none",
     }),
-    dropdownIndicator: styles => ({
+    dropdownIndicator: (styles) => ({
       ...styles,
-      ':hover': {
-        color: 'var(--color-light-main)'
-      }
-    })
+      ":hover": {
+        color: "var(--color-light-main)",
+      },
+    }),
   };
 
   return (
@@ -48,7 +44,7 @@ const TableSearchToggle: React.FC<MyProps> = ({
       isSearchable={false}
       styles={customStyles}
     />
-  )
-}
+  );
+};
 
 export default TableSearchToggle;

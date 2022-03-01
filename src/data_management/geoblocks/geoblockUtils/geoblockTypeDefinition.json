@@ -10,17 +10,11 @@
     "parameters": [
       {
         "name": "a",
-        "type": [
-          "number",
-          "raster_block"
-        ]
+        "type": ["number", "raster_block"]
       },
       {
         "name": "b",
-        "type": [
-          "number",
-          "raster_block"
-        ]
+        "type": ["number", "raster_block"]
       }
     ]
   },
@@ -30,17 +24,11 @@
     "parameters": [
       {
         "name": "a",
-        "type": [
-          "boolean",
-          "raster_block"
-        ]
+        "type": ["boolean", "raster_block"]
       },
       {
         "name": "b",
-        "type": [
-          "boolean",
-          "raster_block"
-        ]
+        "type": ["boolean", "raster_block"]
       }
     ]
   },
@@ -99,10 +87,7 @@
       {
         "name": "statistic",
         "type": "enum",
-        "enum": [
-          "sum",
-          "count"
-        ]
+        "enum": ["sum", "count"]
       },
       {
         "name": "frequency",
@@ -138,17 +123,11 @@
     "parameters": [
       {
         "name": "a",
-        "type": [
-          "number",
-          "raster_block"
-        ]
+        "type": ["number", "raster_block"]
       },
       {
         "name": "b",
-        "type": [
-          "number",
-          "raster_block"
-        ]
+        "type": ["number", "raster_block"]
       }
     ]
   },
@@ -158,17 +137,11 @@
     "parameters": [
       {
         "name": "a",
-        "type": [
-          "number",
-          "raster_block"
-        ]
+        "type": ["number", "raster_block"]
       },
       {
         "name": "b",
-        "type": [
-          "number",
-          "raster_block"
-        ]
+        "type": ["number", "raster_block"]
       }
     ]
   },
@@ -198,17 +171,11 @@
     "parameters": [
       {
         "name": "a",
-        "type": [
-          "number",
-          "raster_block"
-        ]
+        "type": ["number", "raster_block"]
       },
       {
         "name": "b",
-        "type": [
-          "number",
-          "raster_block"
-        ]
+        "type": ["number", "raster_block"]
       }
     ]
   },
@@ -218,17 +185,11 @@
     "parameters": [
       {
         "name": "a",
-        "type": [
-          "number",
-          "raster_block"
-        ]
+        "type": ["number", "raster_block"]
       },
       {
         "name": "b",
-        "type": [
-          "number",
-          "raster_block"
-        ]
+        "type": ["number", "raster_block"]
       }
     ]
   },
@@ -348,17 +309,11 @@
     "parameters": [
       {
         "name": "a",
-        "type": [
-          "number",
-          "raster_block"
-        ]
+        "type": ["number", "raster_block"]
       },
       {
         "name": "b",
-        "type": [
-          "number",
-          "raster_block"
-        ]
+        "type": ["number", "raster_block"]
       }
     ]
   },
@@ -368,17 +323,11 @@
     "parameters": [
       {
         "name": "a",
-        "type": [
-          "number",
-          "raster_block"
-        ]
+        "type": ["number", "raster_block"]
       },
       {
         "name": "b",
-        "type": [
-          "number",
-          "raster_block"
-        ]
+        "type": ["number", "raster_block"]
       }
     ]
   },
@@ -460,17 +409,11 @@
     "parameters": [
       {
         "name": "a",
-        "type": [
-          "number",
-          "raster_block"
-        ]
+        "type": ["number", "raster_block"]
       },
       {
         "name": "b",
-        "type": [
-          "number",
-          "raster_block"
-        ]
+        "type": ["number", "raster_block"]
       }
     ]
   },
@@ -480,17 +423,11 @@
     "parameters": [
       {
         "name": "a",
-        "type": [
-          "number",
-          "raster_block"
-        ]
+        "type": ["number", "raster_block"]
       },
       {
         "name": "b",
-        "type": [
-          "number",
-          "raster_block"
-        ]
+        "type": ["number", "raster_block"]
       }
     ]
   },
@@ -500,17 +437,11 @@
     "parameters": [
       {
         "name": "a",
-        "type": [
-          "boolean",
-          "raster_block"
-        ]
+        "type": ["boolean", "raster_block"]
       },
       {
         "name": "b",
-        "type": [
-          "boolean",
-          "raster_block"
-        ]
+        "type": ["boolean", "raster_block"]
       }
     ]
   },
@@ -529,20 +460,14 @@
       {
         "name": "anchor",
         "type": "array",
-        "prefixItems": [
-          { "type": "number" },
-          { "type": "number" }
-        ]
+        "prefixItems": [{ "type": "number" }, { "type": "number" }]
       },
       {
         "name": "coordinates",
         "type": "array",
         "items": {
           "type": "array",
-          "prefixItems": [
-            { "type": "number" },
-            { "type": "number" }
-          ]
+          "prefixItems": [{ "type": "number" }, { "type": "number" }]
         }
       },
       {
@@ -572,17 +497,11 @@
     "parameters": [
       {
         "name": "a",
-        "type": [
-          "number",
-          "raster_block"
-        ]
+        "type": ["number", "raster_block"]
       },
       {
         "name": "b",
-        "type": [
-          "number",
-          "raster_block"
-        ]
+        "type": ["number", "raster_block"]
       }
     ]
   },
@@ -711,17 +630,11 @@
     "parameters": [
       {
         "name": "a",
-        "type": [
-          "number",
-          "raster_block"
-        ]
+        "type": ["number", "raster_block"]
       },
       {
         "name": "b",
-        "type": [
-          "number",
-          "raster_block"
-        ]
+        "type": ["number", "raster_block"]
       }
     ]
   },
@@ -740,29 +653,17 @@
       {
         "name": "statistic",
         "type": "enum",
-        "enum":[
-          "sum",
-          "count",
-          "mean",
-          "min",
-          "max"
-        ]
+        "enum": ["sum", "count", "mean", "min", "max"]
       },
       {
         "name": "closed",
         "type": "enum",
-        "enum":[
-          "left",
-          "right"
-        ]
+        "enum": ["left", "right"]
       },
       {
         "name": "label",
         "type": "enum",
-        "enum":[
-          "left",
-          "right"
-        ]
+        "enum": ["left", "right"]
       },
       {
         "name": "timezone",
@@ -777,17 +678,11 @@
     "parameters": [
       {
         "name": "a",
-        "type": [
-          "boolean",
-          "raster_block"
-        ]
+        "type": ["boolean", "raster_block"]
       },
       {
         "name": "b",
-        "type": [
-          "boolean",
-          "raster_block"
-        ]
+        "type": ["boolean", "raster_block"]
       }
     ]
   }

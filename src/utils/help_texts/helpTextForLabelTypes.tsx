@@ -3,7 +3,7 @@ import {
   HelpText,
   organisationHelpText,
   uuidHelpText,
-} from './defaultHelpText';
+} from "./defaultHelpText";
 
 export const lableTypeFormHelpText: HelpText = {
   default: "Label types are different types of labels that can exist in the system.",
@@ -11,4 +11,4 @@ export const lableTypeFormHelpText: HelpText = {
   uuid: uuidHelpText,
   description: descriptionHelpText,
   organisation: organisationHelpText,
-}
+};

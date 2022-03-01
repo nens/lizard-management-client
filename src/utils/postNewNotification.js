@@ -11,7 +11,7 @@ export async function postNewNotification(state, organisationId) {
     snooze_sign_on,
     snooze_sign_off,
     relative_start,
-    relative_end
+    relative_end,
   } = state;
 
   let url = "";
@@ -21,16 +21,16 @@ export async function postNewNotification(state, organisationId) {
     organisation: organisationId,
     thresholds: thresholds,
     comparison: comparison,
-    messages: messages.map(message => {
+    messages: messages.map((message) => {
       return {
         contact_group: message.groupId,
-        message: message.messageId
+        message: message.messageId,
       };
     }),
     snooze_sign_on,
     snooze_sign_off,
     relative_start: relative_start === "" ? null : relative_start,
-    relative_end: relative_end === "" ? null : relative_end
+    relative_end: relative_end === "" ? null : relative_end,
   };
   if (sourceType.display === "Timeseries") {
     url = "/api/v4/timeseriesalarms/";
@@ -40,18 +40,18 @@ export async function postNewNotification(state, organisationId) {
     body.raster = raster.uuid;
     body.geometry = {
       type: "Point",
-      coordinates: [markerPosition[1], markerPosition[0], 0.0]
-    }
+      coordinates: [markerPosition[1], markerPosition[0], 0.0],
+    };
   }
 
   const addedAlarm = await fetch(url, {
     credentials: "same-origin",
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body)
+    body: JSON.stringify(body),
   })
-    .then(response => response.json())
-    .then(data => {
+    .then((response) => response.json())
+    .then((data) => {
       return data;
     });
   return addedAlarm;
