@@ -90,14 +90,14 @@ const AppComponent = (props: RouteComponentProps) => {
     (navigationLinkTile) => {
       if (
         selectedOrganisation &&
-        selectedOrganisation.name === "Nelen & Schuurmans" &&
-        (username === "tom.deboer" ||
+        ( username === "tom.deboer" ||
           username === "lex.vandolderen" ||
           username === "remco.gerlich" ||
           username === "hoan.phung" ||
-          username === "joeri.verheijden" ||
-          username === "lirry.pinter" ||
-          username === "tom.deboer")
+          username === "remie.janssen@nelen-schuurmans.nl" ||
+          username === "gijs.nijholt@nelen-schuurmans.nl" ||
+          username === "carsten.byrman"
+        )
       ) {
         return true;
       }
