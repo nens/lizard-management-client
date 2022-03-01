@@ -10,11 +10,10 @@
   border: none;
   border-color: transparent;
   background-color: transparent;
-  
 }
 
 .ModalBody {
-  background-color: #EFEFEF;
+  background-color: #efefef;
   border-bottom: 0.5px solid #00000029;
   padding: 30px;
   padding-bottom: 50px;

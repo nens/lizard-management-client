@@ -1,19 +1,16 @@
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import configureStore from "./configureStore";
-import { 
-  IntlProvider 
-} from 'react-intl';
-import translations from './i18n/locales';
+import { IntlProvider } from "react-intl";
+import translations from "./i18n/locales";
 import { BrowserRouter as Router } from "react-router-dom";
 import { QueryClientProvider } from "react-query";
 import { queryClient } from "./api/hooks";
-import { getLocaleStringFromBrowserSetting } from './utils/detectLanguage';
+import { getLocaleStringFromBrowserSetting } from "./utils/detectLanguage";
 import ScrollToTop from "./components/ScrollToTop";
 import App from "./App";
 import { ThunkAction, ThunkDispatch } from "redux-thunk";
 import { AnyAction } from "redux";
-
 
 // Initialize Redux store
 const store = configureStore();
@@ -35,12 +32,14 @@ const Root = () => (
     locale={localeProp}
     defaultLocale="en"
     key={localeProp}
-    messages={translations[
-      // locale for traditional Chinese is zh-TW, but since
-      // zh-TW is not a valid name to be exported from locales.js
-      // we use zh_TW instead for traditional Chinese
-      localeProp === 'zh-TW' ? 'zh_TW' : localeProp
-    ]}
+    messages={
+      translations[
+        // locale for traditional Chinese is zh-TW, but since
+        // zh-TW is not a valid name to be exported from locales.js
+        // we use zh_TW instead for traditional Chinese
+        localeProp === "zh-TW" ? "zh_TW" : localeProp
+      ]
+    }
   >
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
@@ -50,12 +49,14 @@ const Root = () => (
             locale={localeProp}
             defaultLocale="en"
             key={localeProp}
-            messages={translations[
-              // locale for traditional Chinese is zh-TW, but since
-              // zh-TW is not a valid name to be exported from locales.js
-              // we use zh_TW instead for traditional Chinese
-              localeProp === 'zh-TW' ? 'zh_TW' : localeProp
-            ]}
+            messages={
+              translations[
+                // locale for traditional Chinese is zh-TW, but since
+                // zh-TW is not a valid name to be exported from locales.js
+                // we use zh_TW instead for traditional Chinese
+                localeProp === "zh-TW" ? "zh_TW" : localeProp
+              ]
+            }
           >
             <App />
           </IntlProvider>
@@ -75,12 +76,14 @@ if (module.hot) {
         locale={localeProp}
         defaultLocale="en"
         key={localeProp}
-        messages={translations[
-          // locale for traditional Chinese is zh-TW, but since
-          // zh-TW is not a valid name to be exported from locales.js
-          // we use zh_TW instead for traditional Chinese
-          localeProp === 'zh-TW' ? 'zh_TW' : localeProp
-        ]}
+        messages={
+          translations[
+            // locale for traditional Chinese is zh-TW, but since
+            // zh-TW is not a valid name to be exported from locales.js
+            // we use zh_TW instead for traditional Chinese
+            localeProp === "zh-TW" ? "zh_TW" : localeProp
+          ]
+        }
       >
         <Provider store={store}>
           <QueryClientProvider client={queryClient}>

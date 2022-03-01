@@ -1,30 +1,27 @@
-import React, { useEffect, useState } from 'react';
-import { DurationField } from './DurationField';
-import { SelectDropdown, Value } from './SelectDropdown';
-import { fromISOValue, toISOValue } from '../utils/isoUtils';
-import { convertDurationObjToSeconds, convertSecondsToDurationObject } from '../utils/dateUtils';
-import { convertToSelectObject } from '../utils/convertToSelectObject';
+import React, { useEffect, useState } from "react";
+import { DurationField } from "./DurationField";
+import { SelectDropdown, Value } from "./SelectDropdown";
+import { fromISOValue, toISOValue } from "../utils/isoUtils";
+import { convertDurationObjToSeconds, convertSecondsToDurationObject } from "../utils/dateUtils";
+import { convertToSelectObject } from "../utils/convertToSelectObject";
 import formStyles from "../styles/Forms.module.css";
 
 interface Props {
-  title: string,
-  name: string,
-  value: number | null,
-  valueChanged: (value: number | null) => void,
-  validated: boolean,
-  errorMessage?: string | false,
-  triedToSubmit?: boolean,
-  readOnly?: boolean,
-  onFocus?: (e: React.ChangeEvent<HTMLInputElement>) => void,
-  onBlur?: () => void,
+  title: string;
+  name: string;
+  value: number | null;
+  valueChanged: (value: number | null) => void;
+  validated: boolean;
+  errorMessage?: string | false;
+  triedToSubmit?: boolean;
+  readOnly?: boolean;
+  onFocus?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onBlur?: () => void;
 }
 
-const options = [
-  convertToSelectObject('Before'),
-  convertToSelectObject('After')
-];
+const options = [convertToSelectObject("Before"), convertToSelectObject("After")];
 
-export function RelativeField (props: Props) {
+export function RelativeField(props: Props) {
   const {
     title,
     name,
@@ -45,38 +42,33 @@ export function RelativeField (props: Props) {
     // call setSelection only when component first mounted
     // to set selection based on the interval value
     if (value !== null && value < 0) {
-      setSelection(convertToSelectObject('Before'));
+      setSelection(convertToSelectObject("Before"));
     } else if (value !== null && value >= 0) {
-      setSelection(convertToSelectObject('After'));
-    };
-  // eslint-disable-next-line
+      setSelection(convertToSelectObject("After"));
+    }
+    // eslint-disable-next-line
   }, []);
 
   return (
-    <label
-      htmlFor={name}
-      className={formStyles.Label}
-    >
-      <span className={formStyles.SecondLabel}>
-        {title}
-      </span>
+    <label htmlFor={name} className={formStyles.Label}>
+      <span className={formStyles.SecondLabel}>{title}</span>
       <div>
         <SelectDropdown
-          title={''}
+          title={""}
           name={name}
           value={selection}
-          valueChanged={e => {
+          valueChanged={(e) => {
             const event = e as Value | null;
             setSelection(event);
             if (!event) {
               valueChanged(null);
             } else if (value === null) {
               valueChanged(0);
-            } else if (event.value === 'Before') {
+            } else if (event.value === "Before") {
               valueChanged(-Math.abs(value));
-            } else if (event.value === 'After') {
+            } else if (event.value === "After") {
               valueChanged(Math.abs(value));
-            };
+            }
           }}
           options={options}
           validated={validated}
@@ -88,17 +80,17 @@ export function RelativeField (props: Props) {
           onBlur={onBlur}
         />
         <DurationField
-          title={''}
+          title={""}
           name={name}
           value={value ? toISOValue(convertSecondsToDurationObject(value)) : null}
-          valueChanged={e => {
+          valueChanged={(e) => {
             if (!selection) {
               valueChanged(null);
-            } else if (selection.value === 'Before') {
+            } else if (selection.value === "Before") {
               valueChanged(-convertDurationObjToSeconds(fromISOValue(e)));
-            } else if (selection.value === 'After')  {
+            } else if (selection.value === "After") {
               valueChanged(convertDurationObjToSeconds(fromISOValue(e)));
-            };
+            }
           }}
           validated={validated}
           readOnly={readOnly || !selection}
@@ -107,5 +99,5 @@ export function RelativeField (props: Props) {
         />
       </div>
     </label>
-  )
-};
+  );
+}

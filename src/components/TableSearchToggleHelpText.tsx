@@ -1,19 +1,19 @@
-import { Value } from '../form/SelectDropdown';
+import { Value } from "../form/SelectDropdown";
 
 interface Props {
-  filterOption: Value | null
+  filterOption: Value | null;
 }
 
-export function TableSearchToggleHelpText (props: Props) {
-  if (props.filterOption && props.filterOption.label.includes('*')) {
+export function TableSearchToggleHelpText(props: Props) {
+  if (props.filterOption && props.filterOption.label.includes("*")) {
     return (
       <div
         style={{
           fontSize: 14,
-          fontStyle: 'italic',
+          fontStyle: "italic",
           marginTop: 5,
-          position: 'absolute',
-          top: '100%',
+          position: "absolute",
+          top: "100%",
           left: 0,
         }}
       >
@@ -22,5 +22,5 @@ export function TableSearchToggleHelpText (props: Props) {
     );
   } else {
     return null;
-  };
-};
+  }
+}

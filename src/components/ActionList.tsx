@@ -1,5 +1,5 @@
-import React from 'react';
-import styles from './ActionList.module.css';
+import React from "react";
+import styles from "./ActionList.module.css";
 
 interface Props {
   actions: string[];
@@ -13,9 +13,9 @@ const ActionList: React.FC<Props> = ({ actions, onChange, showActionList, dropUp
     <ul
       className={styles.ActionList}
       style={{
-        display: showActionList ? 'block' : 'none',
-        bottom: dropUp ? '100%' : undefined,
-        top: dropUp ? 'unset' : undefined
+        display: showActionList ? "block" : "none",
+        bottom: dropUp ? "100%" : undefined,
+        top: dropUp ? "unset" : undefined,
       }}
     >
       {actions.map((action, i) => (
@@ -28,7 +28,7 @@ const ActionList: React.FC<Props> = ({ actions, onChange, showActionList, dropUp
         </li>
       ))}
     </ul>
-  )
+  );
 };
 
 export default ActionList;

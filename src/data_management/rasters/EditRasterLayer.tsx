@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { RouteComponentProps } from 'react-router';
+import { RouteComponentProps } from "react-router";
 import { fetchRasterV4, RasterLayerFromAPI } from "../../api/rasters";
 import RasterLayerForm from "./RasterLayerForm";
-import SpinnerIfNotLoaded from '../../components/SpinnerIfNotLoaded';
+import SpinnerIfNotLoaded from "../../components/SpinnerIfNotLoaded";
 
 interface RouteParams {
   uuid: string;
-};
+}
 
 export const EditRasterLayer: React.FC<RouteComponentProps<RouteParams>> = (props) => {
   const [currentRecord, setCurrentRecord] = useState<RasterLayerFromAPI | undefined>(undefined);
@@ -20,12 +20,8 @@ export const EditRasterLayer: React.FC<RouteComponentProps<RouteParams>> = (prop
   }, [uuid]);
 
   return (
-    <SpinnerIfNotLoaded
-      loaded={!!currentRecord}
-    >
-      <RasterLayerForm
-        currentRecord={currentRecord}
-      />;
+    <SpinnerIfNotLoaded loaded={!!currentRecord}>
+      <RasterLayerForm currentRecord={currentRecord} />;
     </SpinnerIfNotLoaded>
   );
 };

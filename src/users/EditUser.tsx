@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { RouteComponentProps } from 'react-router';
+import { RouteComponentProps } from "react-router";
 import { useSelector } from "react-redux";
 import { getSelectedOrganisation } from "../reducers";
 import { User } from "../types/userType";
 import UserForm from "./UserForm";
-import SpinnerIfNotLoaded from '../components/SpinnerIfNotLoaded';
-import {createFetchRecordFunctionFromUrl} from '../utils/createFetchRecordFunctionFromUrl';
+import SpinnerIfNotLoaded from "../components/SpinnerIfNotLoaded";
+import { createFetchRecordFunctionFromUrl } from "../utils/createFetchRecordFunctionFromUrl";
 
 interface RouteParams {
   id: string;
-};
+}
 
 export const EditUser: React.FC<RouteComponentProps<RouteParams>> = (props) => {
   const selectedOrganisation = useSelector(getSelectedOrganisation);
@@ -19,19 +19,17 @@ export const EditUser: React.FC<RouteComponentProps<RouteParams>> = (props) => {
   useEffect(() => {
     (async () => {
       if (selectedOrganisation && selectedOrganisation.uuid) {
-        const currentRecord = await createFetchRecordFunctionFromUrl(`/api/v4/organisations/${selectedOrganisation.uuid}/users/${id}/`)();
+        const currentRecord = await createFetchRecordFunctionFromUrl(
+          `/api/v4/organisations/${selectedOrganisation.uuid}/users/${id}/`
+        )();
         setCurrentRecord(currentRecord);
       }
     })();
   }, [id, selectedOrganisation]);
 
   return (
-    <SpinnerIfNotLoaded
-      loaded={!!currentRecord}
-    >
-      <UserForm
-        currentRecord={currentRecord!}
-      />
+    <SpinnerIfNotLoaded loaded={!!currentRecord}>
+      <UserForm currentRecord={currentRecord!} />
     </SpinnerIfNotLoaded>
   );
 };

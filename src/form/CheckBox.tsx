@@ -3,18 +3,18 @@ import formStyles from "../styles/Forms.module.css";
 import Checkbox from "../components/Checkbox";
 
 interface CheckBoxProps {
-  title: string | JSX.Element,
-  name: string,
-  value: boolean,
-  valueChanged: (bool: boolean) => void,
-  form?: string,
-  onFocus?: (e: React.ChangeEvent<HTMLInputElement>) => void,
-  onBlur?: () => void,
-  readOnly?: boolean
+  title: string | JSX.Element;
+  name: string;
+  value: boolean;
+  valueChanged: (bool: boolean) => void;
+  form?: string;
+  onFocus?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onBlur?: () => void;
+  readOnly?: boolean;
   validated?: boolean;
   errorMessage?: string | false;
-  htmlTitle?: string;  
-};
+  htmlTitle?: string;
+}
 
 export const CheckBox: React.FC<CheckBoxProps> = (props) => {
   const {
@@ -32,20 +32,15 @@ export const CheckBox: React.FC<CheckBoxProps> = (props) => {
   } = props;
 
   return (
-    <label
-      htmlFor={name+'_checkbox'}
-      className={formStyles.Label}
-    >
-      <span className={formStyles.LabelTitle}>
-        {title}
-      </span>
+    <label htmlFor={name + "_checkbox"} className={formStyles.Label}>
+      <span className={formStyles.LabelTitle}>{title}</span>
       <Checkbox
         name={name}
         checked={value}
         onChange={() => valueChanged(!value)}
         size={36}
         borderRadius={3}
-        checkmarkColor={'#009f86'}
+        checkmarkColor={"#009f86"}
         onFocus={onFocus}
         onBlur={onBlur}
         readOnly={readOnly}
@@ -56,4 +51,4 @@ export const CheckBox: React.FC<CheckBoxProps> = (props) => {
       />
     </label>
   );
-}
+};

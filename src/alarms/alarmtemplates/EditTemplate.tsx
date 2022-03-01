@@ -1,19 +1,18 @@
 import { useState, useEffect } from "react";
-import { RouteComponentProps } from 'react-router';
+import { RouteComponentProps } from "react-router";
 import TemplateForm from "./TemplateForm";
 import { Message } from "../../types/messageType";
-import {createFetchRecordFunctionFromUrl} from '../../utils/createFetchRecordFunctionFromUrl';
-import SpinnerIfNotLoaded from '../../components/SpinnerIfNotLoaded';
-
+import { createFetchRecordFunctionFromUrl } from "../../utils/createFetchRecordFunctionFromUrl";
+import SpinnerIfNotLoaded from "../../components/SpinnerIfNotLoaded";
 
 interface RouteParams {
   id: string;
-};
+}
 
 export const EditTemplate = (props: RouteComponentProps<RouteParams>) => {
   const { id } = props.match.params;
 
-  const [ currentRecord , setCurrentRecord] = useState<Message | null>(null)
+  const [currentRecord, setCurrentRecord] = useState<Message | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -23,13 +22,8 @@ export const EditTemplate = (props: RouteComponentProps<RouteParams>) => {
   }, [id]);
 
   return (
-    <SpinnerIfNotLoaded
-      loaded={!!currentRecord}
-    >
-      <TemplateForm
-        currentRecord={currentRecord!}
-      />
+    <SpinnerIfNotLoaded loaded={!!currentRecord}>
+      <TemplateForm currentRecord={currentRecord!} />
     </SpinnerIfNotLoaded>
-    
   );
 };

@@ -11,20 +11,20 @@ export const REQUEST_LIZARD_BOOTSTRAP = "REQUEST_LIZARD_BOOTSTRAP";
 
 export const fetchLizardBootstrap = (): Thunk => (dispatch) => {
   dispatch({
-    type: REQUEST_LIZARD_BOOTSTRAP
+    type: REQUEST_LIZARD_BOOTSTRAP,
   });
 
   fetch("/bootstrap/lizard/", {
-    credentials: "same-origin"
+    credentials: "same-origin",
   })
-  .then(response => response.json())
-  .then(data => {
+    .then((response) => response.json())
+    .then((data) => {
       dispatch({
         type: RECEIVE_LIZARD_BOOTSTRAP,
-        data
+        data,
       });
-  });
-}
+    });
+};
 
 // MARK: Notifications
 export const DISMISS_NOTIFICATION = "DISMISS_NOTIFICATION";
@@ -33,11 +33,14 @@ export const SHOW_NOTIFICATION = "SHOW_NOTIFICATION";
 export function dismissNotification(idx: number) {
   return {
     type: DISMISS_NOTIFICATION,
-    idx
+    idx,
   };
 }
 
-export const addNotification = (message: string | number | JSX.Element, timeout?: number): Thunk => (dispatch, getState) => {
+export const addNotification = (
+  message: string | number | JSX.Element,
+  timeout?: number
+): Thunk => (dispatch, getState) => {
   if (timeout) {
     const idx = getState().notifications.notifications.length;
     setTimeout(() => {
@@ -46,7 +49,7 @@ export const addNotification = (message: string | number | JSX.Element, timeout?
   }
   dispatch({
     type: SHOW_NOTIFICATION,
-    message
+    message,
   });
 };
 
@@ -65,7 +68,10 @@ export const fetchOrganisations = (): Thunk => async (dispatch, getState) => {
   // Get User ID from the Redux store and selected organisation from local storage
   const bootstrap = getState().bootstrap;
   const userId = bootstrap && bootstrap.bootstrap && bootstrap.bootstrap.user.id;
-  const selectedOrganisationLocalStorage = getLocalStorage("lizard-management-current-organisation", null);
+  const selectedOrganisationLocalStorage = getLocalStorage(
+    "lizard-management-current-organisation",
+    null
+  );
 
   // Fetch the list of available organisations with user roles by user ID
   const availableOrganisationsUrl = `/api/v4/users/${userId}/organisations/`;
@@ -74,30 +80,34 @@ export const fetchOrganisations = (): Thunk => async (dispatch, getState) => {
   // Dispatch action to update Redux store
   dispatch({
     type: RECEIVE_ORGANISATIONS,
-    available: availableOrganisations
+    available: availableOrganisations,
   });
 
   if (
     !selectedOrganisationLocalStorage ||
-    availableOrganisations.map(orga=>orga.uuid).indexOf(selectedOrganisationLocalStorage.uuid) === -1
+    availableOrganisations
+      .map((orga) => orga.uuid)
+      .indexOf(selectedOrganisationLocalStorage.uuid) === -1
   ) {
     const selectedOrganisation = availableOrganisations[0];
     dispatch(selectOrganisation(selectedOrganisation));
   } else {
-    const selectedOrganisation = availableOrganisations.find(org => org.uuid === selectedOrganisationLocalStorage.uuid);
+    const selectedOrganisation = availableOrganisations.find(
+      (org) => org.uuid === selectedOrganisationLocalStorage.uuid
+    );
     dispatch(selectOrganisation(selectedOrganisation || selectedOrganisationLocalStorage));
-  };
+  }
 
   // request contracts
   dispatch({
     type: REQUEST_CONTRACTS,
   });
-  const contracts = await recursiveFetchFunction('/api/v4/contracts/', {}, []);
+  const contracts = await recursiveFetchFunction("/api/v4/contracts/", {}, []);
   dispatch({
     type: SET_CONTRACTS,
     contracts: contracts,
   });
-}
+};
 
 export const requestUsage = (): Thunk => (dispatch, getState) => {
   const selectedOrganisation = getSelectedOrganisation(getState());
@@ -108,114 +118,111 @@ export const requestUsage = (): Thunk => (dispatch, getState) => {
     });
     const url = `/api/v4/organisations/${selectedorganisationUuid}/usage/`;
     fetch(url, {
-        credentials: "same-origin"
+      credentials: "same-origin",
     })
-    .then(response => response.json())
-    .then(data => {
+      .then((response) => response.json())
+      .then((data) => {
         dispatch({
           type: SET_USAGE,
           usage: data,
         });
-    });
+      });
   }
-}
+};
 
 export const selectOrganisation = (organisation: OrganisationWithRoles): Thunk => (dispatch) => {
-  localStorage.setItem(
-    "lizard-management-current-organisation",
-    JSON.stringify(organisation)
-  );
+  localStorage.setItem("lizard-management-current-organisation", JSON.stringify(organisation));
   dispatch({
     type: SELECT_ORGANISATION,
-    organisation
+    organisation,
   });
   dispatch(requestUsage());
-}
+};
 
 // MARK: Raster source uuid
 export const UPDATE_RASTER_SOURCE_UUID = "UPDATE_RASTER_SOURCE_UUID";
 export const REMOVE_RASTER_SOURCE_UUID = "REMOVE_RASTER_SOURCE_UUID";
 
-export const updateRasterSourceUUID = (uuid: string): Thunk => dispatch => {
+export const updateRasterSourceUUID = (uuid: string): Thunk => (dispatch) => {
   dispatch({
     type: UPDATE_RASTER_SOURCE_UUID,
-    uuid
+    uuid,
   });
-}
+};
 
-export const removeRasterSourceUUID = (): Thunk => dispatch => {
+export const removeRasterSourceUUID = (): Thunk => (dispatch) => {
   dispatch({
-    type: REMOVE_RASTER_SOURCE_UUID
+    type: REMOVE_RASTER_SOURCE_UUID,
   });
-}
+};
 
 // MARK: Location uuid
 export const UPDATE_LOCATION = "UPDATE_LOCATION";
 export const REMOVE_LOCATION = "REMOVE_LOCATION";
 
-export const updateLocation = (location: LocationFromAPI): Thunk => dispatch => {
+export const updateLocation = (location: LocationFromAPI): Thunk => (dispatch) => {
   dispatch({
     type: UPDATE_LOCATION,
-    location
+    location,
   });
-}
+};
 
-export const removeLocation = (): Thunk => dispatch => {
+export const removeLocation = (): Thunk => (dispatch) => {
   dispatch({
-    type: REMOVE_LOCATION
+    type: REMOVE_LOCATION,
   });
-}
+};
 
 // MARK: Uploads
 export const ADD_FILES_TO_QUEUE = "ADD_FILES_TO_QUEUE";
-export const ADD_TASK_UUID_TO_FILE = "ADD_TASK_UUID_TO_FILE"
+export const ADD_TASK_UUID_TO_FILE = "ADD_TASK_UUID_TO_FILE";
 export const UPDATE_TASK_STATUS = "UPDATE_TASK_STATUS";
 export const UPDATE_FILE_STATUS = "UPDATE_FILE_STATUS";
 export const REMOVE_FILE_FROM_QUEUE = "REMOVE_FILE";
 
-export const addFilesToQueue = (files: File[]): Thunk => dispatch => {
+export const addFilesToQueue = (files: File[]): Thunk => (dispatch) => {
   dispatch({
     type: ADD_FILES_TO_QUEUE,
-    files
+    files,
   });
-}
+};
 
-export const updateFileStatus = (file: File, status: string): Thunk => dispatch => {
+export const updateFileStatus = (file: File, status: string): Thunk => (dispatch) => {
   dispatch({
     type: UPDATE_FILE_STATUS,
     file,
-    status
+    status,
   });
-}
+};
 
-export const addTaskUuidToFile = (file: File, uuid: string): Thunk => dispatch => {
+export const addTaskUuidToFile = (file: File, uuid: string): Thunk => (dispatch) => {
   dispatch({
     type: ADD_TASK_UUID_TO_FILE,
     file,
-    uuid
+    uuid,
   });
-}
+};
 
-export const updateTaskStatus = (uuid: string, status: number): Thunk => dispatch => {
+export const updateTaskStatus = (uuid: string, status: number): Thunk => (dispatch) => {
   dispatch({
     type: UPDATE_TASK_STATUS,
     uuid,
-    status
+    status,
   });
-}
+};
 
-export const removeFileFromQueue = (file: File): Thunk => dispatch => {
+export const removeFileFromQueue = (file: File): Thunk => (dispatch) => {
   dispatch({
     type: REMOVE_FILE_FROM_QUEUE,
-    file
+    file,
   });
-}
+};
 
 export const SET_OPEN_CLOSE_UPLOADQUEUE_MODAL = "SET_OPEN_CLOSE_UPLOADQUEUE_MODAL";
 
-export const openCloseUploadQueueModal = (isOpen: boolean): Thunk => dispatch => {
+export const openCloseUploadQueueModal = (isOpen: boolean): Thunk => (dispatch) => {
   dispatch({
     type: SET_OPEN_CLOSE_UPLOADQUEUE_MODAL,
-    isOpen
+    isOpen,
   });
-}
+};

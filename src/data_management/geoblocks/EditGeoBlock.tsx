@@ -1,32 +1,28 @@
 import React, { useEffect, useState } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import GeoBlockForm from "./GeoBlockForm";
-import SpinnerIfNotLoaded from './../../components/SpinnerIfNotLoaded';
-import { createFetchRecordFunctionFromUrl } from './../../utils/createFetchRecordFunctionFromUrl';
+import SpinnerIfNotLoaded from "./../../components/SpinnerIfNotLoaded";
+import { createFetchRecordFunctionFromUrl } from "./../../utils/createFetchRecordFunctionFromUrl";
 import { RasterLayerFromAPI } from "../../api/rasters";
 
 interface RouteProps {
-  uuid: string
+  uuid: string;
 }
 
 export const EditGeoBlock = (props: RouteComponentProps<RouteProps>) => {
   const [currentRecord, setCurrentRecord] = useState<RasterLayerFromAPI | undefined>(undefined);
   const { uuid } = props.match.params;
 
-  useEffect (() => {
+  useEffect(() => {
     (async () => {
       const currentRecord = await createFetchRecordFunctionFromUrl(`/api/v4/rasters/${uuid}/`)();
       setCurrentRecord(currentRecord);
     })();
-  }, [uuid])
+  }, [uuid]);
 
   return (
-    <SpinnerIfNotLoaded
-      loaded={!!currentRecord}
-    >
-      <GeoBlockForm
-        currentRecord={currentRecord}
-      />
+    <SpinnerIfNotLoaded loaded={!!currentRecord}>
+      <GeoBlockForm currentRecord={currentRecord} />
     </SpinnerIfNotLoaded>
   );
-}
+};

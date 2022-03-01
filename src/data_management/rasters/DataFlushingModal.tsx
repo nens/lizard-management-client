@@ -1,18 +1,18 @@
-import { useState } from 'react';
-import { connect } from 'react-redux';
-import { AppDispatch } from '../..';
-import { RasterSourceFromAPI } from '../../api/rasters';
-import { addNotification } from './../../actions';
-import { Field, ModalDeleteContent } from './../../components/ModalDeleteContent';
-import Modal from './../../components/Modal';
+import { useState } from "react";
+import { connect } from "react-redux";
+import { AppDispatch } from "../..";
+import { RasterSourceFromAPI } from "../../api/rasters";
+import { addNotification } from "./../../actions";
+import { Field, ModalDeleteContent } from "./../../components/ModalDeleteContent";
+import Modal from "./../../components/Modal";
 
 interface MyProps {
-  row: RasterSourceFromAPI,
-  displayContent: Field[],
-  handleClose: () => void,
+  row: RasterSourceFromAPI;
+  displayContent: Field[];
+  handleClose: () => void;
 }
 
-function DataFlushingModal (props: MyProps & DispatchProps) {
+function DataFlushingModal(props: MyProps & DispatchProps) {
   const { row, displayContent } = props;
 
   const [busyDeleting, setBusyDeleting] = useState<boolean>(false);
@@ -23,26 +23,31 @@ function DataFlushingModal (props: MyProps & DispatchProps) {
       credentials: "same-origin",
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({})
-    }).then(res => {
-      setBusyDeleting(false);
-      if (res.status === 200) {
-        props.handleClose();
-        props.addNotification('Raster source data flushed successfully!', 2000);
-      } else if (res.status === 403) {
-        props.handleClose();
-        props.addNotification('Permission denied! You do not have permission to flush data of this raster source.', 2000);
-      } else {
-        console.error('Error flushing data from the raster source: ', res);
-        props.addNotification('An error occurred! Please try again!', 2000);
-      }
-    }).catch(console.error);
+      body: JSON.stringify({}),
+    })
+      .then((res) => {
+        setBusyDeleting(false);
+        if (res.status === 200) {
+          props.handleClose();
+          props.addNotification("Raster source data flushed successfully!", 2000);
+        } else if (res.status === 403) {
+          props.handleClose();
+          props.addNotification(
+            "Permission denied! You do not have permission to flush data of this raster source.",
+            2000
+          );
+        } else {
+          console.error("Error flushing data from the raster source: ", res);
+          props.addNotification("An error occurred! Please try again!", 2000);
+        }
+      })
+      .catch(console.error);
   };
 
   return (
     <Modal
-      title={'Are you sure?'}
-      buttonConfirmName={'Flush data'}
+      title={"Are you sure?"}
+      buttonConfirmName={"Flush data"}
       onClickButtonConfirm={fetchWithOptions}
       cancelAction={props.handleClose}
       disabledConfirmAction={busyDeleting}
@@ -51,11 +56,12 @@ function DataFlushingModal (props: MyProps & DispatchProps) {
       <p>All data of the following raster source will be flushed:</p>
       {ModalDeleteContent([row], busyDeleting, displayContent)}
     </Modal>
-  )
+  );
 }
 
 const mapDispatchToProps = (dispatch: AppDispatch) => ({
-  addNotification: (message: string | number, timeout?: number) => dispatch(addNotification(message, timeout))
+  addNotification: (message: string | number, timeout?: number) =>
+    dispatch(addNotification(message, timeout)),
 });
 type DispatchProps = ReturnType<typeof mapDispatchToProps>;
 

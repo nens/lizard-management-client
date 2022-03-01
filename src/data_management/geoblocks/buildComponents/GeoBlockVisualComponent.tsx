@@ -1,6 +1,6 @@
-import { useRef, useState } from 'react';
-import { connect } from 'react-redux';
-import { AppDispatch } from '../../..';
+import { useRef, useState } from "react";
+import { connect } from "react-redux";
+import { AppDispatch } from "../../..";
 import ReactFlow, {
   addEdge,
   Connection,
@@ -17,21 +17,21 @@ import ReactFlow, {
   ReactFlowProvider,
   removeElements,
   updateEdge,
-  useUpdateNodeInternals
-} from 'react-flow-renderer';
-import { SideBar } from './blockComponents/SideBar';
-import { Block } from './blockComponents/Block';
-import { GroupBlock } from './blockComponents/GroupBlock';
-import { RasterSource } from './blockComponents/RasterSource';
-import { geoblockType } from '../../../types/geoBlockType';
-import { getBlockData } from '../geoblockUtils/geoblockUtils';
-import { targetHandleValidator } from '../geoblockUtils/geoblockValidators';
-import { addNotification } from '../../../actions';
-import { v4 as uuid } from 'uuid';
+  useUpdateNodeInternals,
+} from "react-flow-renderer";
+import { SideBar } from "./blockComponents/SideBar";
+import { Block } from "./blockComponents/Block";
+import { GroupBlock } from "./blockComponents/GroupBlock";
+import { RasterSource } from "./blockComponents/RasterSource";
+import { geoblockType } from "../../../types/geoBlockType";
+import { getBlockData } from "../geoblockUtils/geoblockUtils";
+import { targetHandleValidator } from "../geoblockUtils/geoblockValidators";
+import { addNotification } from "../../../actions";
+import { v4 as uuid } from "uuid";
 
 interface MyProps {
-  elements: Elements,
-  setElements: React.Dispatch<React.SetStateAction<Elements<any>>>
+  elements: Elements;
+  setElements: React.Dispatch<React.SetStateAction<Elements<any>>>;
 }
 
 const GeoBlockVisualFlow = (props: MyProps & DispatchProps) => {
@@ -48,13 +48,14 @@ const GeoBlockVisualFlow = (props: MyProps & DispatchProps) => {
         console.error(connectError.errorMessage);
         addNotification(connectError.errorMessage, 2000);
         return els;
-      };
+      }
 
-      const sourceNode = els.find(el => el.id === newConnection.source)!;
+      const sourceNode = els.find((el) => el.id === newConnection.source)!;
 
-      const newElements = els.map(el => {
-        if (el.id === oldEdge.target) el.data.parameters[oldEdge.targetHandle!] = ''; // remove old value
-        if (el.id === newConnection.target) el.data.parameters[newConnection.targetHandle!] = sourceNode.data.label; // update new value
+      const newElements = els.map((el) => {
+        if (el.id === oldEdge.target) el.data.parameters[oldEdge.targetHandle!] = ""; // remove old value
+        if (el.id === newConnection.target)
+          el.data.parameters[newConnection.targetHandle!] = sourceNode.data.label; // update new value
         return el;
       });
 
@@ -70,42 +71,48 @@ const GeoBlockVisualFlow = (props: MyProps & DispatchProps) => {
         console.error(connectError.errorMessage);
         addNotification(connectError.errorMessage, 2000);
         return els;
-      };
+      }
 
-      const sourceNode = els.find(el => el.id === params.source)!;
+      const sourceNode = els.find((el) => el.id === params.source)!;
 
-      const newElements = els.map(el => {
-        if (el.id === params.target) el.data.parameters[params.targetHandle!] = sourceNode.data.label; // update new value
+      const newElements = els.map((el) => {
+        if (el.id === params.target)
+          el.data.parameters[params.targetHandle!] = sourceNode.data.label; // update new value
         return el;
       });
 
-      return addEdge({
-        ...params,
-        type: ConnectionLineType.SmoothStep,
-        animated: true
-      }, newElements);
+      return addEdge(
+        {
+          ...params,
+          type: ConnectionLineType.SmoothStep,
+          animated: true,
+        },
+        newElements
+      );
     });
     params.target && updateNodeInternals(params.target); // update node internals
   };
 
   const onElementsRemove = (elementsToRemove: Elements) => {
     setElements((els) => {
-      const newElements = els.map(el => {
-        const edgesToRemove = elementsToRemove.filter(elm => isEdge(elm)) as Edge[];
-        edgesToRemove.forEach(edge => {
+      const newElements = els.map((el) => {
+        const edgesToRemove = elementsToRemove.filter((elm) => isEdge(elm)) as Edge[];
+        edgesToRemove.forEach((edge) => {
           if (edge.target === el.id) {
             const parameterIndex = parseInt(edge.targetHandle!);
             const { parameters, parameterTypes } = el.data!;
-            const parameterType = Array.isArray(parameterTypes) ? parameterTypes[parameterIndex].type :[];
+            const parameterType = Array.isArray(parameterTypes)
+              ? parameterTypes[parameterIndex].type
+              : [];
 
-            if (parameterType.includes('boolean')) {
+            if (parameterType.includes("boolean")) {
               // replace old value by false value in case of a boolean parameter field
               parameters[parameterIndex] = false;
             } else {
               // replace old value by an empty string
-              parameters[parameterIndex] = '';
+              parameters[parameterIndex] = "";
             }
-          };
+          }
         });
         return el;
       });
@@ -120,14 +127,14 @@ const GeoBlockVisualFlow = (props: MyProps & DispatchProps) => {
   // Drag and drop actions
   const onDragOver = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
-    event.dataTransfer.dropEffect = 'move';
+    event.dataTransfer.dropEffect = "move";
   };
 
   const onDrop = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
     if (reactFlowWrapper && reactFlowWrapper.current) {
       const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
-      const blockName = event.dataTransfer.getData('application/reactflow');
+      const blockName = event.dataTransfer.getData("application/reactflow");
       const position = reactFlowInstance.project({
         x: event.clientX - reactFlowBounds.left,
         y: event.clientY - reactFlowBounds.top,
@@ -136,7 +143,7 @@ const GeoBlockVisualFlow = (props: MyProps & DispatchProps) => {
       const targetPosition = Position.Left;
 
       // Keep track of number of block elements in the graph to create block id
-      const numberOfBlocks = elements.filter(elm => {
+      const numberOfBlocks = elements.filter((elm) => {
         // @ts-ignore
         return isNode(elm) && elm.data && elm.data.classOfBlock === geoblockType[blockName].class;
       }).length;
@@ -145,26 +152,31 @@ const GeoBlockVisualFlow = (props: MyProps & DispatchProps) => {
 
       const newBlock = {
         id: idOfNewBlock,
-        type: (
-          blockName === 'RasterSource' ? blockName :
-          blockName === 'Group' || blockName === 'GroupTemporal' || blockName === 'FillNoData' || blockName === 'Max' ? 'GroupBlock' : 'Block'
-        ),
+        type:
+          blockName === "RasterSource"
+            ? blockName
+            : blockName === "Group" ||
+              blockName === "GroupTemporal" ||
+              blockName === "FillNoData" ||
+              blockName === "Max"
+            ? "GroupBlock"
+            : "Block",
         position,
         sourcePosition,
         targetPosition,
-        data: getBlockData(blockName, numberOfBlocks, idOfNewBlock, setElements)
+        data: getBlockData(blockName, numberOfBlocks, idOfNewBlock, setElements),
       };
-      console.log('newBlock', newBlock);
+      console.log("newBlock", newBlock);
       setElements((es) => es.concat(newBlock));
-    };
+    }
   };
 
   return (
     <div
       style={{
-        display: 'grid',
-        gridTemplateColumns: '1fr 150px',
-        columnGap: 10
+        display: "grid",
+        gridTemplateColumns: "1fr 150px",
+        columnGap: 10,
       }}
     >
       <ReactFlow
@@ -172,8 +184,8 @@ const GeoBlockVisualFlow = (props: MyProps & DispatchProps) => {
         elements={elements}
         onElementsRemove={onElementsRemove}
         style={{
-          position: 'relative',
-          border: 'thin solid var(--color-header)'
+          position: "relative",
+          border: "thin solid var(--color-header)",
         }}
         snapToGrid
         onEdgeUpdate={onEdgeUpdate}
@@ -183,18 +195,20 @@ const GeoBlockVisualFlow = (props: MyProps & DispatchProps) => {
         onDrop={onDrop}
         nodeTypes={{
           Block: (block: Node) => <Block block={block} onElementsRemove={onElementsRemove} />,
-          GroupBlock: (block: Node) => <GroupBlock block={block} onElementsRemove={onElementsRemove} />,
-          RasterSource
+          GroupBlock: (block: Node) => (
+            <GroupBlock block={block} onElementsRemove={onElementsRemove} />
+          ),
+          RasterSource,
         }}
         // use Backspace key for deletion on Mac instead of Delete key (for other platforms)
-        deleteKeyCode={window.navigator.platform.startsWith("Mac") ? 'Backspace' : 'Delete'}
+        deleteKeyCode={window.navigator.platform.startsWith("Mac") ? "Backspace" : "Delete"}
       >
         {elements.length > 100 ? (
           <MiniMap
             nodeColor={(node) => {
-              if (node.type === 'RasterSource') return 'orange'; // raster source block
-              if (getOutgoers(node, elements).length === 0) return 'red'; // output block
-              return 'lightgrey'; // other blocks
+              if (node.type === "RasterSource") return "orange"; // raster source block
+              if (getOutgoers(node, elements).length === 0) return "red"; // output block
+              return "lightgrey"; // other blocks
             }}
             nodeStrokeWidth={3}
           />
@@ -203,8 +217,8 @@ const GeoBlockVisualFlow = (props: MyProps & DispatchProps) => {
       </ReactFlow>
       <SideBar />
     </div>
-  )
-}
+  );
+};
 
 const GeoBlockVisualComponent = (props: MyProps & DispatchProps) => (
   // Wrap the GeoBlockVisualFlow component inside the ReactFlowProvider
@@ -218,10 +232,11 @@ const GeoBlockVisualComponent = (props: MyProps & DispatchProps) => (
       addNotification={props.addNotification}
     />
   </ReactFlowProvider>
-)
+);
 
 const mapDispatchToProps = (dispatch: AppDispatch) => ({
-  addNotification: (message: string | number, timeout?: number) => dispatch(addNotification(message, timeout))
+  addNotification: (message: string | number, timeout?: number) =>
+    dispatch(addNotification(message, timeout)),
 });
 type DispatchProps = ReturnType<typeof mapDispatchToProps>;
 

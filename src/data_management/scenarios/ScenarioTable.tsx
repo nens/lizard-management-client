@@ -1,38 +1,38 @@
-import { useState }  from 'react';
-import { useSelector } from 'react-redux';
-import TableStateContainer from '../../components/TableStateContainer';
+import { useState } from "react";
+import { useSelector } from "react-redux";
+import TableStateContainer from "../../components/TableStateContainer";
 import { NavLink } from "react-router-dom";
-import TableActionButtons from '../../components/TableActionButtons';
-import { ExplainSideColumn } from '../../components/ExplainSideColumn';
+import TableActionButtons from "../../components/TableActionButtons";
+import { ExplainSideColumn } from "../../components/ExplainSideColumn";
 import threediIcon from "../../images/3di@3x.svg";
 import tableStyles from "../../components/Table.module.css";
-import {  getUsername } from "../../reducers";
-import { bytesToDisplayValue } from '../../utils/byteUtils';
-import { DefaultScenarioExplanationText } from '../../utils/help_texts/helpTextForScenarios';
-import { getLocalDateString } from '../../utils/dateUtils';
-import DeleteModal from '../../components/DeleteModal';
-import AuthorisationModal from '../../components/AuthorisationModal';
-import { ColumnDefinition } from '../../components/Table';
-import { Scenario } from '../../types/scenarioType';
+import { getUsername } from "../../reducers";
+import { bytesToDisplayValue } from "../../utils/byteUtils";
+import { DefaultScenarioExplanationText } from "../../utils/help_texts/helpTextForScenarios";
+import { getLocalDateString } from "../../utils/dateUtils";
+import DeleteModal from "../../components/DeleteModal";
+import AuthorisationModal from "../../components/AuthorisationModal";
+import { ColumnDefinition } from "../../components/Table";
+import { Scenario } from "../../types/scenarioType";
 
 const baseUrl = "/api/v4/scenarios/";
 const navigationUrl = "/management/data_management/scenarios";
 
 const fetchScenariosWithOptions = (uuids: string[], fetchOptions: RequestInit) => {
-  const fetches = uuids.map (uuid => {
+  const fetches = uuids.map((uuid) => {
     return fetch(baseUrl + uuid + "/", fetchOptions);
   });
   return Promise.all(fetches);
 };
 
 const fetchRawDataWithOptions = (uuids: string[], fetchOptions: RequestInit) => {
-  const fetches = uuids.map (uuid => {
+  const fetches = uuids.map((uuid) => {
     return fetch(baseUrl + uuid + "/results/raw/", fetchOptions);
   });
   return Promise.all(fetches);
 };
 
-export const ScenarioTable = () =>  {
+export const ScenarioTable = () => {
   const [rowsToBeDeleted, setRowsToBeDeleted] = useState<Scenario[]>([]);
   const [rowsWithRawDataToBeDeleted, setRowsWithRawDataToBeDeleted] = useState<Scenario[]>([]);
   const [resetTable, setResetTable] = useState<Function | null>(null);
@@ -69,100 +69,121 @@ export const ScenarioTable = () =>  {
   const columnDefinitions: ColumnDefinition<Scenario>[] = [
     {
       titleRenderFunction: () => "Name",
-      renderFunction: (row) => 
+      renderFunction: (row) => (
         <span
           className={tableStyles.CellEllipsis}
           title={row.name}
           style={{
             // Allow name to break into multiple lines if too long
-            whiteSpace: 'normal',
-            wordBreak: 'break-all'
+            whiteSpace: "normal",
+            wordBreak: "break-all",
           }}
         >
           <NavLink to={`${navigationUrl}/${row.uuid}`}>{row.name}</NavLink>
-        </span>,
+        </span>
+      ),
       orderingField: "name",
     },
     {
-      titleRenderFunction: () =>  "Based on",
-      renderFunction: (row) => 
+      titleRenderFunction: () => "Based on",
+      renderFunction: (row) => (
         <span
           className={tableStyles.CellEllipsis}
           title={row.model_name}
           style={{
             // Allow model name to break into multiple lines if too long
-            whiteSpace: 'normal',
-            wordBreak: 'break-all'
+            whiteSpace: "normal",
+            wordBreak: "break-all",
           }}
         >
           {row.model_name}
-        </span>,
+        </span>
+      ),
       orderingField: "model_name",
     },
     {
-      titleRenderFunction: () =>  "User",
-      renderFunction: (row) =>  
-      <span
-        className={tableStyles.CellEllipsis}
-        title={row.username}
-      >
-        {row.username}
-      </span>,
+      titleRenderFunction: () => "User",
+      renderFunction: (row) => (
+        <span className={tableStyles.CellEllipsis} title={row.username}>
+          {row.username}
+        </span>
+      ),
       orderingField: "username",
     },
     {
-      titleRenderFunction: () =>  "Raw data",
-      renderFunction: (row) => row.has_raw_results === true? "Yes" : "No",
+      titleRenderFunction: () => "Raw data",
+      renderFunction: (row) => (row.has_raw_results === true ? "Yes" : "No"),
       orderingField: null,
     },
     {
-      titleRenderFunction: () =>  "Last update",
+      titleRenderFunction: () => "Last update",
       renderFunction: (row) => getLocalDateString(row.last_modified),
       orderingField: "last_modified",
     },
     {
-      titleRenderFunction: () =>  "Size",
-      renderFunction: (row) => 
+      titleRenderFunction: () => "Size",
+      renderFunction: (row) => (
         <span
           className={tableStyles.CellEllipsis}
-          title={`${row.total_size? row.total_size: 0} Bytes`}
+          title={`${row.total_size ? row.total_size : 0} Bytes`}
         >
-          {`${row.total_size? bytesToDisplayValue(row.total_size): 0}`}
+          {`${row.total_size ? bytesToDisplayValue(row.total_size) : 0}`}
         </span>
-      ,
+      ),
       orderingField: "total_size",
     },
     {
-      titleRenderFunction: () =>  "",//"Actions",
-      renderFunction: (row, _updateTableRow, triggerReloadWithCurrentPage, triggerReloadWithBasePage) => {
+      titleRenderFunction: () => "", //"Actions",
+      renderFunction: (
+        row,
+        _updateTableRow,
+        triggerReloadWithCurrentPage,
+        triggerReloadWithBasePage
+      ) => {
         return (
-            <TableActionButtons
-              tableRow={row}
-              triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
-              triggerReloadWithBasePage={triggerReloadWithBasePage}
-              editUrl={`${navigationUrl}/${row.uuid}`}
-              actions={row.has_raw_results ? [
-                {
-                  displayValue: "Delete raw data",
-                  actionFunction: (row, triggerReloadWithCurrentPage, _triggerReloadWithBasePage) => {
-                    deleteRawActions([row], triggerReloadWithCurrentPage, null)
-                  }
-                },
-                {
-                  displayValue: "Delete",
-                  actionFunction: (row, triggerReloadWithCurrentPage, _triggerReloadWithBasePage) => {
-                    deleteActions([row], triggerReloadWithCurrentPage, null)
-                  }
-                }
-              ] : [
-                {
-                  displayValue: "Delete",
-                  actionFunction: (row, triggerReloadWithCurrentPage, _triggerReloadWithBasePage) => {
-                    deleteActions([row], triggerReloadWithCurrentPage, null)
-                  }
-                }
-              ]}
-            />
+          <TableActionButtons
+            tableRow={row}
+            triggerReloadWithCurrentPage={triggerReloadWithCurrentPage}
+            triggerReloadWithBasePage={triggerReloadWithBasePage}
+            editUrl={`${navigationUrl}/${row.uuid}`}
+            actions={
+              row.has_raw_results
+                ? [
+                    {
+                      displayValue: "Delete raw data",
+                      actionFunction: (
+                        row,
+                        triggerReloadWithCurrentPage,
+                        _triggerReloadWithBasePage
+                      ) => {
+                        deleteRawActions([row], triggerReloadWithCurrentPage, null);
+                      },
+                    },
+                    {
+                      displayValue: "Delete",
+                      actionFunction: (
+                        row,
+                        triggerReloadWithCurrentPage,
+                        _triggerReloadWithBasePage
+                      ) => {
+                        deleteActions([row], triggerReloadWithCurrentPage, null);
+                      },
+                    },
+                  ]
+                : [
+                    {
+                      displayValue: "Delete",
+                      actionFunction: (
+                        row,
+                        triggerReloadWithCurrentPage,
+                        _triggerReloadWithBasePage
+                      ) => {
+                        deleteActions([row], triggerReloadWithCurrentPage, null);
+                      },
+                    },
+                  ]
+            }
+          />
         );
       },
       orderingField: null,
@@ -177,81 +198,111 @@ export const ScenarioTable = () =>  {
       explanationText={<DefaultScenarioExplanationText />}
       backUrl={"/management/data_management"}
     >
-        <TableStateContainer 
-          gridTemplateColumns={"4fr 20fr 25fr 13fr 10fr 14fr 10fr 4fr"}
-          columnDefinitions={columnDefinitions}
-          baseUrl={`${baseUrl}?`} 
-          checkBoxActions={[
-            {
-              displayValue: "Change rights",
-              actionFunction: (rows, _tableData, _setTableData, triggerReloadWithCurrentPage, _triggerReloadWithBasePage, setCheckboxes) => {
-                setRowsToChangeAccess(rows);
-                setResetTable(() => () => {
-                  triggerReloadWithCurrentPage();
-                  setCheckboxes([]);
-                });
-              }
+      <TableStateContainer
+        gridTemplateColumns={"4fr 20fr 25fr 13fr 10fr 14fr 10fr 4fr"}
+        columnDefinitions={columnDefinitions}
+        baseUrl={`${baseUrl}?`}
+        checkBoxActions={[
+          {
+            displayValue: "Change rights",
+            actionFunction: (
+              rows,
+              _tableData,
+              _setTableData,
+              triggerReloadWithCurrentPage,
+              _triggerReloadWithBasePage,
+              setCheckboxes
+            ) => {
+              setRowsToChangeAccess(rows);
+              setResetTable(() => () => {
+                triggerReloadWithCurrentPage();
+                setCheckboxes([]);
+              });
             },
-            {
-              displayValue: "Delete",
-              actionFunction: (rows, _tableData, _setTableData, triggerReloadWithCurrentPage, _triggerReloadWithBasePage, setCheckboxes) => {
-                deleteActions(rows, triggerReloadWithCurrentPage, setCheckboxes)
-              }
-            },{
-              displayValue: "Delete raw",
-              actionFunction: (rows, _tableData, _setTableData, triggerReloadWithCurrentPage, _triggerReloadWithBasePage, setCheckboxes) => {
-                deleteRawActions(rows, triggerReloadWithCurrentPage, setCheckboxes)
-              },
-              checkIfActionIsApplicable: (row) => row.has_raw_results === true
+          },
+          {
+            displayValue: "Delete",
+            actionFunction: (
+              rows,
+              _tableData,
+              _setTableData,
+              triggerReloadWithCurrentPage,
+              _triggerReloadWithBasePage,
+              setCheckboxes
+            ) => {
+              deleteActions(rows, triggerReloadWithCurrentPage, setCheckboxes);
             },
+          },
+          {
+            displayValue: "Delete raw",
+            actionFunction: (
+              rows,
+              _tableData,
+              _setTableData,
+              triggerReloadWithCurrentPage,
+              _triggerReloadWithBasePage,
+              setCheckboxes
+            ) => {
+              deleteRawActions(rows, triggerReloadWithCurrentPage, setCheckboxes);
+            },
+            checkIfActionIsApplicable: (row) => row.has_raw_results === true,
+          },
+        ]}
+        queryCheckBox={{
+          text: "Only show own scenario's",
+          adaptUrlFunction: (url: string) => {
+            return userName ? url + `&username__contains=${userName}` : url;
+          },
+        }}
+        filterOptions={[
+          { value: "name__icontains=", label: "Name" },
+          { value: "uuid=", label: "UUID" },
+          { value: "username__icontains=", label: "Username" },
+          { value: "model_name__icontains=", label: "Model name" },
+        ]}
+      />
+      {rowsToBeDeleted.length > 0 ? (
+        <DeleteModal
+          rows={rowsToBeDeleted}
+          displayContent={[
+            { name: "name", width: 65 },
+            { name: "uuid", width: 35 },
           ]}
-          queryCheckBox={{
-            text:"Only show own scenario's",
-            adaptUrlFunction: (url:string) => {return userName? url + `&username__contains=${userName}` : url},
+          fetchFunction={fetchScenariosWithOptions}
+          resetTable={resetTable}
+          handleClose={() => {
+            setRowsToBeDeleted([]);
+            setResetTable(null);
           }}
-          filterOptions={[
-            {value: 'name__icontains=', label: 'Name'},
-            {value: 'uuid=', label: 'UUID'},
-            {value: 'username__icontains=', label: 'Username'},
-            {value: 'model_name__icontains=', label: 'Model name'},
-          ]}
         />
-        {rowsToBeDeleted.length > 0 ? (
-          <DeleteModal
-            rows={rowsToBeDeleted}
-            displayContent={[{name: "name", width: 65}, {name: "uuid", width: 35}]}
-            fetchFunction={fetchScenariosWithOptions}
-            resetTable={resetTable}
-            handleClose={() => {
-              setRowsToBeDeleted([]);
-              setResetTable(null);
-            }}
-          />
-        ) : null}
-        {rowsWithRawDataToBeDeleted.length > 0 ? (
-          <DeleteModal
-            rows={rowsWithRawDataToBeDeleted}
-            displayContent={[{name: "name", width: 65}, {name: "uuid", width: 35}]}
-            fetchFunction={fetchRawDataWithOptions}
-            resetTable={resetTable}
-            handleClose={() => {
-              setRowsWithRawDataToBeDeleted([]);
-              setResetTable(null);
-            }}
-            text={"Are you sure? You are deleting the RAW results of the following scenario(s):"}
-          />
-        ) : null}
-        {rowsToChangeAccess.length > 0 ? (
-          <AuthorisationModal
-            rows={rowsToChangeAccess}
-            fetchFunction={fetchScenariosWithOptions}
-            resetTable={resetTable}
-            handleClose={() => {
-              setRowsToChangeAccess([]);
-              setResetTable(null);
-            }}
-          />
-        ) : null}
-     </ExplainSideColumn>
+      ) : null}
+      {rowsWithRawDataToBeDeleted.length > 0 ? (
+        <DeleteModal
+          rows={rowsWithRawDataToBeDeleted}
+          displayContent={[
+            { name: "name", width: 65 },
+            { name: "uuid", width: 35 },
+          ]}
+          fetchFunction={fetchRawDataWithOptions}
+          resetTable={resetTable}
+          handleClose={() => {
+            setRowsWithRawDataToBeDeleted([]);
+            setResetTable(null);
+          }}
+          text={"Are you sure? You are deleting the RAW results of the following scenario(s):"}
+        />
+      ) : null}
+      {rowsToChangeAccess.length > 0 ? (
+        <AuthorisationModal
+          rows={rowsToChangeAccess}
+          fetchFunction={fetchScenariosWithOptions}
+          resetTable={resetTable}
+          handleClose={() => {
+            setRowsToChangeAccess([]);
+            setResetTable(null);
+          }}
+        />
+      ) : null}
+    </ExplainSideColumn>
   );
-}
+};

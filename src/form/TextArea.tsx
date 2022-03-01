@@ -3,23 +3,23 @@ import { ClearInputButton } from "./ClearInputButton";
 import formStyles from "../styles/Forms.module.css";
 
 interface MyProps {
-  title: string,
-  name: string,
-  value: string | null,
-  valueChanged: (e: React.ChangeEvent<HTMLTextAreaElement>) => void,
-  clearInput?: (name: string) => void,
-  validated: boolean,
-  errorMessage?: string | false,
-  placeholder?: string,
-  onFocus?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void,
-  onBlur?: () => void,
-  triedToSubmit?: boolean,
-  readOnly?: boolean,
-  form?: string,
-  rows?: number
-};
+  title: string;
+  name: string;
+  value: string | null;
+  valueChanged: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  clearInput?: (name: string) => void;
+  validated: boolean;
+  errorMessage?: string | false;
+  placeholder?: string;
+  onFocus?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  onBlur?: () => void;
+  triedToSubmit?: boolean;
+  readOnly?: boolean;
+  form?: string;
+  rows?: number;
+}
 
-export const TextArea: React.FC<MyProps> = (props) => {  
+export const TextArea: React.FC<MyProps> = (props) => {
   const {
     title,
     name,
@@ -34,7 +34,7 @@ export const TextArea: React.FC<MyProps> = (props) => {
     triedToSubmit,
     readOnly,
     form,
-    rows
+    rows,
   } = props;
 
   // Set validity of the input field
@@ -42,30 +42,25 @@ export const TextArea: React.FC<MyProps> = (props) => {
   useEffect(() => {
     if (myInput && myInput.current) {
       if (validated) {
-        myInput.current.setCustomValidity('');
+        myInput.current.setCustomValidity("");
       } else {
-        myInput.current.setCustomValidity(errorMessage || '');
-      };
-    };
-  })
+        myInput.current.setCustomValidity(errorMessage || "");
+      }
+    }
+  });
 
   return (
-    <label
-      htmlFor={name}
-      className={formStyles.Label}
-    >
-      <span className={formStyles.LabelTitle}>
-        {title}
-      </span>
-      <div style={{ position: 'relative'}}>
+    <label htmlFor={name} className={formStyles.Label}>
+      <span className={formStyles.LabelTitle}>{title}</span>
+      <div style={{ position: "relative" }}>
         <textarea
           ref={myInput}
           name={name}
           id={name}
           autoComplete="off"
-          className={`${formStyles.FormControl} ${triedToSubmit ? formStyles.FormSubmitted : ''}`}
+          className={`${formStyles.FormControl} ${triedToSubmit ? formStyles.FormSubmitted : ""}`}
           placeholder={placeholder}
-          onChange={e => valueChanged(e)}
+          onChange={(e) => valueChanged(e)}
           value={value || ""}
           onFocus={onFocus}
           onBlur={onBlur}
@@ -76,11 +71,13 @@ export const TextArea: React.FC<MyProps> = (props) => {
           style={{
             // https://bugzilla.mozilla.org/show_bug.cgi?id=1137650
             // whiteline in firefox
-            whiteSpace: 'pre-wrap'
+            whiteSpace: "pre-wrap",
           }}
         />
-        {clearInput && !readOnly && value !== null && (value + '').length ? <ClearInputButton onClick={() => clearInput(name)}/> : null}
+        {clearInput && !readOnly && value !== null && (value + "").length ? (
+          <ClearInputButton onClick={() => clearInput(name)} />
+        ) : null}
       </div>
     </label>
   );
-}
+};

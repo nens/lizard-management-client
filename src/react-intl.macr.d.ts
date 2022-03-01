@@ -1,7 +1,7 @@
 /* Definitions for react-intl.macro */
 
-declare module 'react-intl.macro' {
-  import React from 'react';
+declare module "react-intl.macro" {
+  import React from "react";
 
   interface FormattedMessageProps {
     id: string;
@@ -9,4 +9,4 @@ declare module 'react-intl.macro' {
     values?: object;
   }
   export class FormattedMessage extends React.Component<FormattedMessageProps> {}
-};
+}

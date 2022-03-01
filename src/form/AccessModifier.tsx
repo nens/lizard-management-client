@@ -3,22 +3,22 @@ import styles from "./AccessModifier.module.css";
 import formStyles from "../styles/Forms.module.css";
 
 interface MyProps {
-  title: string,
-  name: string,
-  value: string | null,
-  valueChanged: (value: string) => void,
-  onFocus?: (e: any) => void,
-  onBlur?: () => void,
-  readOnly?: boolean,
-  form?: string,
-};
+  title: string;
+  name: string;
+  value: string | null;
+  valueChanged: (value: string) => void;
+  onFocus?: (e: any) => void;
+  onBlur?: () => void;
+  readOnly?: boolean;
+  form?: string;
+}
 
 export const getAccessibiltyText = (accessModifier: string) => {
-  if (accessModifier === 'Common') return 'Login';
+  if (accessModifier === "Common") return "Login";
   return accessModifier;
 };
 
-export const AccessModifier: React.FC<MyProps> = (props) => {  
+export const AccessModifier: React.FC<MyProps> = (props) => {
   const {
     title,
     name,
@@ -27,24 +27,21 @@ export const AccessModifier: React.FC<MyProps> = (props) => {
     // form,
     onFocus,
     onBlur,
-    readOnly
+    readOnly,
   } = props;
 
   return (
-    <label
-      htmlFor={name}
-      className={formStyles.Label}
-    >
-      <span className={formStyles.LabelTitle}>
-        {title}
-      </span>
-      <div
-        className={readOnly ? styles.AccessModifierTilesReadOnly : styles.AccessModifierTiles}
-      >
+    <label htmlFor={name} className={formStyles.Label}>
+      <span className={formStyles.LabelTitle}>{title}</span>
+      <div className={readOnly ? styles.AccessModifierTilesReadOnly : styles.AccessModifierTiles}>
         <div
           id={name}
-          className={value === 'Private' ? `${styles.AccessModifier} ${styles.AccessModifierSelected}` : styles.AccessModifier}
-          onClick={() => !readOnly && valueChanged('Private')}
+          className={
+            value === "Private"
+              ? `${styles.AccessModifier} ${styles.AccessModifierSelected}`
+              : styles.AccessModifier
+          }
+          onClick={() => !readOnly && valueChanged("Private")}
           tabIndex={0}
           onFocus={onFocus}
           onBlur={onBlur}
@@ -54,8 +51,12 @@ export const AccessModifier: React.FC<MyProps> = (props) => {
         </div>
         <div
           id={name}
-          className={value === 'Common' ? `${styles.AccessModifier} ${styles.AccessModifierSelected}` : styles.AccessModifier}
-          onClick={() => !readOnly && valueChanged('Common')}
+          className={
+            value === "Common"
+              ? `${styles.AccessModifier} ${styles.AccessModifierSelected}`
+              : styles.AccessModifier
+          }
+          onClick={() => !readOnly && valueChanged("Common")}
           tabIndex={0}
           onFocus={onFocus}
           onBlur={onBlur}
@@ -65,8 +66,12 @@ export const AccessModifier: React.FC<MyProps> = (props) => {
         </div>
         <div
           id={name}
-          className={value === 'Public' ? `${styles.AccessModifier} ${styles.AccessModifierSelected}` : styles.AccessModifier}
-          onClick={() => !readOnly && valueChanged('Public')}
+          className={
+            value === "Public"
+              ? `${styles.AccessModifier} ${styles.AccessModifierSelected}`
+              : styles.AccessModifier
+          }
+          onClick={() => !readOnly && valueChanged("Public")}
           tabIndex={0}
           onFocus={onFocus}
           onBlur={onBlur}
@@ -77,4 +82,4 @@ export const AccessModifier: React.FC<MyProps> = (props) => {
       </div>
     </label>
   );
-}
+};

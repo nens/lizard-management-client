@@ -16,7 +16,10 @@ export const convertSecondsToDurationObject = (totalSeconds: number) => {
   const seconds = ((absoluteTotalSeconds % 86400) % 3600) % 60;
 
   const durationObject = {
-    days, hours, minutes, seconds
+    days,
+    hours,
+    minutes,
+    seconds,
   };
 
   return durationObject;

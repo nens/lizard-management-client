@@ -1,11 +1,8 @@
-import ModalBackground from './ModalBackground';
-import styles from './UnauthenticatedModal.module.css';
-import buttonStyles from './../styles/Buttons.module.css';
-import {
-  getSsoLogin,
-} from '../reducers';
-import {  useSelector } from "react-redux";
-
+import ModalBackground from "./ModalBackground";
+import styles from "./UnauthenticatedModal.module.css";
+import buttonStyles from "./../styles/Buttons.module.css";
+import { getSsoLogin } from "../reducers";
+import { useSelector } from "react-redux";
 
 interface Props {
   handleClose: () => void;
@@ -13,30 +10,26 @@ interface Props {
 }
 
 const UnauthenticatedModal = (props: Props) => {
-
-  const { redirectHome} = props;
+  const { redirectHome } = props;
   const ssoLogin = useSelector(getSsoLogin);
 
   return (
     <ModalBackground
-      title={'Not logged-in'}
+      title={"Not logged-in"}
       style={{
-        height: 400
+        height: 400,
       }}
     >
       <div className={styles.ModalBody}>
         <span>You need to be logged in to use this page</span>
       </div>
       <div className={styles.ModalFooter}>
-        <button
-          className={buttonStyles.NewButton}
-          onClick={redirectHome}
-        >
+        <button className={buttonStyles.NewButton} onClick={redirectHome}>
           Home
         </button>
         <button
           className={buttonStyles.NewButton}
-          onClick={()=>{
+          onClick={() => {
             window.location.href = `${ssoLogin}&next=${window.location.href}`;
           }}
         >
@@ -44,7 +37,7 @@ const UnauthenticatedModal = (props: Props) => {
         </button>
       </div>
     </ModalBackground>
-  )
-}
+  );
+};
 
 export default UnauthenticatedModal;

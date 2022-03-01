@@ -1,8 +1,8 @@
-import { QueryClient, useQuery } from 'react-query';
-import { appDispatch } from '../index';
-import { addNotification } from '../actions';
+import { QueryClient, useQuery } from "react-query";
+import { appDispatch } from "../index";
+import { addNotification } from "../actions";
 
-export type Params = Record<string, string|number>;
+export type Params = Record<string, string | number>;
 
 // Query client is set using the global provider in App.js!
 export const queryClient = new QueryClient({
@@ -15,20 +15,20 @@ export const queryClient = new QueryClient({
       refetchOnReconnect: true,
       refetchIntervalInBackground: true,
       refetchInterval: false,
-    }
-  }
+    },
+  },
 });
 
 export function combineUrlAndParams(url: string, params: Params) {
-  let query = Object.keys(params).map(
-    k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k])
-  ).join('&');
+  let query = Object.keys(params)
+    .map((k) => encodeURIComponent(k) + "=" + encodeURIComponent(params[k]))
+    .join("&");
 
   if (query) {
-    if (url.indexOf('?') >= 0) {
-      return url + '&' + query;
+    if (url.indexOf("?") >= 0) {
+      return url + "&" + query;
     } else {
-      return url + '?' + query;
+      return url + "?" + query;
     }
   }
   return url;
@@ -37,21 +37,18 @@ export function combineUrlAndParams(url: string, params: Params) {
 // Error to throw if status code isn't 2xx
 export class FetchError extends Error {
   constructor(public res: Response, message?: string) {
-    super(message)
+    super(message);
   }
 }
 
-export async function basicFetchFunction(
-  baseUrl: string,
-  params: Params
-) {
+export async function basicFetchFunction(baseUrl: string, params: Params) {
   const response = await fetch(combineUrlAndParams(baseUrl, params), {
-    method: 'GET',
+    method: "GET",
     credentials: "same-origin",
     headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-    }
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
   });
 
   if (response.ok) {
@@ -61,43 +58,45 @@ export async function basicFetchFunction(
     let previousUrl = json.previous;
     // This hack is for development; turn absolute URLs into local ones.
     if (nextUrl) {
-      nextUrl = nextUrl.split('lizard.net')[1];
+      nextUrl = nextUrl.split("lizard.net")[1];
     }
     if (previousUrl) {
-      previousUrl = previousUrl.split('lizard.net')[1];
+      previousUrl = previousUrl.split("lizard.net")[1];
     }
     // This is how Lizard API v4 formats list responses.
     return {
       nextUrl,
       previousUrl,
-      data: json.results
+      data: json.results,
     };
   } else {
-    appDispatch(addNotification(`Failed to load "${baseUrl}". Received status: ${response.status}`, 2000));
+    appDispatch(
+      addNotification(`Failed to load "${baseUrl}". Received status: ${response.status}`, 2000)
+    );
     throw new FetchError(response, `Received status: ${response.status}`);
   }
 }
 
-export async function recursiveFetchFunction (
-    baseUrl: string,
-    params: Params,
-    previousResults: any[] = []
+export async function recursiveFetchFunction(
+  baseUrl: string,
+  params: Params,
+  previousResults: any[] = []
 ): Promise<any[]> {
   const response = await basicFetchFunction(baseUrl, params);
 
   const results = previousResults.concat(response.data);
   if (response.nextUrl) {
     return await recursiveFetchFunction(response.nextUrl, {}, results);
-  };
+  }
   return results;
-};
+}
 
-export function useRecursiveFetch (
+export function useRecursiveFetch(
   baseUrl: string,
   params: Params,
   queryOptions: {
-    enabled?: boolean,
-    cacheTime?: number,
+    enabled?: boolean;
+    cacheTime?: number;
   } = {},
   previousResults: any[] = []
 ) {
@@ -107,4 +106,4 @@ export function useRecursiveFetch (
   const query = useQuery(fetchKey, queryFunction, queryOptions);
 
   return query;
-};
+}

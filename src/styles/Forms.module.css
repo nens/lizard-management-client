@@ -83,7 +83,7 @@
   background-clip: padding-box;
   border: 1px solid #ced4da;
   border-radius: 4px;
-  transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+  transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -118,8 +118,8 @@
   background-image: none;
   background-clip: padding-box;
   border: 1px solid #ced4da;
-  border-radius: .25rem;
-  transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+  border-radius: 0.25rem;
+  transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
 }
 .FormControlSmall:focus {
   border-color: var(--color-border-input);
@@ -139,7 +139,7 @@
 
 .Checkmark {
   margin-left: 12px;
-  color: #009F86;
+  color: #009f86;
 }
 
 .Errors {

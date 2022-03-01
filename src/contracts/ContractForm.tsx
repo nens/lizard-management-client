@@ -1,11 +1,11 @@
 import { useSelector } from "react-redux";
-import { ExplainSideColumn } from '../components/ExplainSideColumn';
-import { InfoLabel } from '../form/InfoLabel';
-import { UsageField } from './UsageField';
-import { CancelButton } from '../form/CancelButton';
-import { getContractForSelectedOrganisation, getUsage } from '../reducers';
-import { helpTextContractView } from '../utils/help_texts/helpTextContractView';
-import formStyles from './../styles/Forms.module.css';
+import { ExplainSideColumn } from "../components/ExplainSideColumn";
+import { InfoLabel } from "../form/InfoLabel";
+import { UsageField } from "./UsageField";
+import { CancelButton } from "../form/CancelButton";
+import { getContractForSelectedOrganisation, getUsage } from "../reducers";
+import { helpTextContractView } from "../utils/help_texts/helpTextContractView";
+import formStyles from "./../styles/Forms.module.css";
 import agreementIcon from "../images/agreement.svg";
 
 export const ContractForm = () => {
@@ -17,41 +17,37 @@ export const ContractForm = () => {
       imgUrl={agreementIcon}
       imgAltDescription={"Contract Icon"}
       headerText={"Contract"}
-      explanationText={helpTextContractView['default']}
+      explanationText={helpTextContractView["default"]}
       backUrl={"/management"}
     >
-      <form
-        className={formStyles.Form}
-      >
+      <form className={formStyles.Form}>
         <span className={`${formStyles.FormFieldTitle} ${formStyles.FirstFormFieldTitle}`}>
           1: General
         </span>
         <InfoLabel
-          title={'Start date'}
-          name={'start_date_contract'}
+          title={"Start date"}
+          name={"start_date_contract"}
           value={new Date(contractObjApi.start).toLocaleDateString()}
         />
-        <span className={formStyles.FormFieldTitle}>
-          2. Usage
-        </span>
+        <span className={formStyles.FormFieldTitle}>2. Usage</span>
         <div
           style={{
             marginBottom: 24,
-            display: 'flex'
+            display: "flex",
           }}
         >
           <UsageField
-            title={'Rasters'}
+            title={"Rasters"}
             used={usageObj.raster_total_size}
             available={contractObjApi.raster_storage_capacity}
           />
           <UsageField
-            title={'Scenarios'}
+            title={"Scenarios"}
             used={usageObj.scenario_total_size}
             available={contractObjApi.scenario_storage_capacity}
           />
           <UsageField
-            title={'Timeseries'}
+            title={"Timeseries"}
             used={usageObj.timeseries_total_size}
             available={contractObjApi.timeseries_storage_capacity}
           />
@@ -93,9 +89,7 @@ export const ContractForm = () => {
             />
           ) : null}
         </div> */}
-        <span className={formStyles.FormFieldTitle}>
-          3. Links
-        </span>
+        <span className={formStyles.FormFieldTitle}>3. Links</span>
         {contractObjApi.links.map((link: string) => (
           // show list of links
           <a
@@ -109,13 +103,8 @@ export const ContractForm = () => {
             {link}
           </a>
         ))}
-        <div
-          className={formStyles.ButtonContainer}
-        >
-          <CancelButton
-            url={'/management'}
-            buttonText={"CLOSE"}
-          />
+        <div className={formStyles.ButtonContainer}>
+          <CancelButton url={"/management"} buttonText={"CLOSE"} />
         </div>
       </form>
     </ExplainSideColumn>

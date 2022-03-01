@@ -3,8 +3,8 @@ import CSSTransition from "react-transition-group/CSSTransition";
 import styles from ".//ErrorOverlay.module.css";
 
 interface Props {
-  confirmModal: boolean,
-  handleClose: () => void
+  confirmModal: boolean;
+  handleClose: () => void;
 }
 
 const Overlay: React.FC<Props> = (props) => {
@@ -30,17 +30,15 @@ const Overlay: React.FC<Props> = (props) => {
           exit: styles.Leave,
           exitActive: styles.LeaveActive,
           appear: styles.Appear,
-          appearActive: styles.AppearActive
+          appearActive: styles.AppearActive,
         }}
       >
-        <div
-          className={props.confirmModal ? styles.ConfirmOverlay : styles.ErrorOverlay}
-        >
+        <div className={props.confirmModal ? styles.ConfirmOverlay : styles.ErrorOverlay}>
           {props.children}
         </div>
       </CSSTransition>
     </div>
   );
-}
+};
 
 export default Overlay;

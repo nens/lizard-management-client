@@ -1,23 +1,23 @@
-import React from 'react';
-import { TextInput } from './TextInput';
+import React from "react";
+import { TextInput } from "./TextInput";
 
 interface MyProps {
-  title: string,
-  name: string,
-  value: string,
-  validated: boolean,
-  valueChanged: (e: React.ChangeEvent<HTMLInputElement>) => void,
-  clearInput?: (e: string) => void,
-  errorMessage?: string | false,
-  placeholder?: string,
-  onFocus?: (e: React.ChangeEvent<HTMLInputElement>) => void,
-  onBlur?: () => void,
-  form?: string,
-  triedToSubmit?: boolean,
-  readOnly?: boolean
-};
+  title: string;
+  name: string;
+  value: string;
+  validated: boolean;
+  valueChanged: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  clearInput?: (e: string) => void;
+  errorMessage?: string | false;
+  placeholder?: string;
+  onFocus?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onBlur?: () => void;
+  form?: string;
+  triedToSubmit?: boolean;
+  readOnly?: boolean;
+}
 
-export const IntegerInput: React.FC<MyProps> = (props) => {  
+export const IntegerInput: React.FC<MyProps> = (props) => {
   const {
     title,
     name,
@@ -31,7 +31,7 @@ export const IntegerInput: React.FC<MyProps> = (props) => {
     errorMessage,
     triedToSubmit,
     form,
-    readOnly
+    readOnly,
   } = props;
 
   return (
@@ -45,9 +45,9 @@ export const IntegerInput: React.FC<MyProps> = (props) => {
       valueChanged={(e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         var reg = /^\d+$/;
-        if (reg.test(value) || value === '' || value === null) {
+        if (reg.test(value) || value === "" || value === null) {
           valueChanged(e);
-        };
+        }
       }}
       clearInput={clearInput}
       onFocus={onFocus}
@@ -58,4 +58,4 @@ export const IntegerInput: React.FC<MyProps> = (props) => {
       form={form}
     />
   );
-}
+};

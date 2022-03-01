@@ -2,8 +2,8 @@
 // Centralized here so we know what is used and what isn't,
 // to start the Typescriptification process and to do error
 // handling in a more uniform way, if we do it.
-import { GeoBlockSource } from "../types/geoBlockType"
-import { Organisation } from "../types/organisationType"
+import { GeoBlockSource } from "../types/geoBlockType";
+import { Organisation } from "../types/organisationType";
 
 export interface OldRaster {
   name: string;
@@ -36,18 +36,18 @@ export interface OldRasterEdit {
 }
 
 export interface Layercollection {
-  uuid: string,
-  slug: string,
-  access_modifier: string,
-  supplier: string,
+  uuid: string;
+  slug: string;
+  access_modifier: string;
+  supplier: string;
 }
 
 export interface ObservationType {
-  id: number,
-  code: string,
-  parameter: string,
-  unit: string,
-  reference_frame: string | null,
+  id: number;
+  code: string;
+  parameter: string;
+  unit: string;
+  reference_frame: string | null;
 }
 
 interface RasterSourceInstance {
@@ -63,7 +63,7 @@ interface RasterSourceInstance {
 
 export type RasterSourceFromForm = RasterSourceInstance & {
   organisation: string;
-}
+};
 
 export type RasterSourceFromAPI = RasterSourceInstance & {
   uuid: string;
@@ -73,7 +73,7 @@ export type RasterSourceFromAPI = RasterSourceInstance & {
   first_value_timestamp: string | null;
   last_value_timestamp: string | null;
   size: number;
-}
+};
 
 interface RasterLayerInstance {
   name: string;
@@ -86,19 +86,19 @@ interface RasterLayerInstance {
   colormap: string;
   raster_sources?: string[];
   rescalable: boolean;
-  uuid?: string,
+  uuid?: string;
 }
 
 export const rasterLayerFromAPIBelongsToScenario = (raster: RasterLayerFromAPI) => {
-  return raster.wms_info && raster.wms_info.layer && raster.wms_info.layer.includes('scenarios:')
-}
+  return raster.wms_info && raster.wms_info.layer && raster.wms_info.layer.includes("scenarios:");
+};
 
 export type RasterLayerFromForm = RasterLayerInstance & {
   organisation: string;
   shared_with: string[];
   observation_type: string;
   layer_collections: string[];
-}
+};
 
 export type RasterLayerFromAPI = RasterLayerInstance & {
   uuid: string;
@@ -109,44 +109,36 @@ export type RasterLayerFromAPI = RasterLayerInstance & {
   wms_info: {
     endpoint: string;
     layer: string;
-  },
+  };
   spatial_bounds: {
-    north: number,
-    east: number,
-    south: number,
-    west: number
+    north: number;
+    east: number;
+    south: number;
+    west: number;
   } | null;
   source: GeoBlockSource | null;
   weight: number;
   is_geoblock: boolean;
   temporal: boolean;
-}
+};
 
 export const fetchRasterSourcesV4 = async (query?: string) => {
-  const url = query ? (
-    `/api/v4/rastersources/?${query}`
-  ) : (
-    `/api/v4/rastersources/`
-  );
+  const url = query ? `/api/v4/rastersources/?${query}` : `/api/v4/rastersources/`;
   const response = await fetch(url, {
     credentials: "same-origin",
     method: "GET",
-    headers: {"Content-Type": "application/json"}
+    headers: { "Content-Type": "application/json" },
   });
 
   return response.json();
 };
 
 export const fetchRasterLayersV4 = async (query?: string) => {
-  const url = query ? (
-    `/api/v4/rasters/?${query}`
-  ) : (
-    `/api/v4/rasters/`
-  );
+  const url = query ? `/api/v4/rasters/?${query}` : `/api/v4/rasters/`;
   const response = await fetch(url, {
     credentials: "same-origin",
     method: "GET",
-    headers: {"Content-Type": "application/json"}
+    headers: { "Content-Type": "application/json" },
   });
 
   return response.json();
@@ -154,29 +146,35 @@ export const fetchRasterLayersV4 = async (query?: string) => {
 
 export const fetchRasterV3 = async (uuid: string) => {
   const response = await fetch(`/api/v3/rasters/${uuid}/`, {
-    credentials: "same-origin"
+    credentials: "same-origin",
   });
 
   return response.json();
 };
 
-export const fetchRasterSourceV4 = async (uuid: string, options: RequestInit = {
-  credentials: "same-origin"
-}) => {
+export const fetchRasterSourceV4 = async (
+  uuid: string,
+  options: RequestInit = {
+    credentials: "same-origin",
+  }
+) => {
   const response = await fetch(`/api/v4/rastersources/${uuid}/`, {
     ...options,
-    method: "GET"
+    method: "GET",
   });
 
   return response.json();
 };
 
-export const fetchRasterV4 = async (uuid: string, options: RequestInit = {
-  credentials: "same-origin"
-}) => {
+export const fetchRasterV4 = async (
+  uuid: string,
+  options: RequestInit = {
+    credentials: "same-origin",
+  }
+) => {
   const response = await fetch(`/api/v4/rasters/${uuid}/`, {
     ...options,
-    method: "GET"
+    method: "GET",
   });
 
   return response.json();
@@ -250,14 +248,14 @@ export const flushRaster = async (uuid: string) => {
 
 export const flushRasters = (uuids: string[]) => {
   return Promise.all(uuids.map(flushRaster));
-}
+};
 
 export const deleteRaster = async (uuid: string) => {
   const deleteOpts: RequestInit = {
     credentials: "same-origin",
     method: "DELETE",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({})
+    body: JSON.stringify({}),
   };
 
   // Re-fetch raster so we have up to date information here
@@ -285,29 +283,31 @@ export const deleteRaster = async (uuid: string) => {
 
 export const deleteRasters = (uuids: string[]) => {
   return Promise.all(uuids.map(deleteRaster));
-}
+};
 
 export const listRastersForTable = async (
   pageSize: number,
   page: number,
   searchString: string,
   include3diScenarios: boolean,
-  organisationUuid: string,
+  organisationUuid: string
 ) => {
-  const url = include3diScenarios ? (
-    `/api/v4/rasters/?writable=true&page_size=${pageSize}&page=${page}&name__icontains=${searchString}&ordering=last_modified&organisation__uuid=${organisationUuid}`
-  ) : (
-    `/api/v4/rasters/?writable=true&page_size=${pageSize}&page=${page}&name__icontains=${searchString}&ordering=last_modified&organisation__uuid=${organisationUuid}&scenario__isnull=true`
-  );
+  const url = include3diScenarios
+    ? `/api/v4/rasters/?writable=true&page_size=${pageSize}&page=${page}&name__icontains=${searchString}&ordering=last_modified&organisation__uuid=${organisationUuid}`
+    : `/api/v4/rasters/?writable=true&page_size=${pageSize}&page=${page}&name__icontains=${searchString}&ordering=last_modified&organisation__uuid=${organisationUuid}&scenario__isnull=true`;
 
   const response = await fetch(url, {
-    credentials: "same-origin"
+    credentials: "same-origin",
   });
 
   return response.json();
 };
 
-export const uploadRasterSourceFile = async (rasterSourceUuid: string, file: File, timestamp: Date | undefined) => {
+export const uploadRasterSourceFile = async (
+  rasterSourceUuid: string,
+  file: File,
+  timestamp: Date | undefined
+) => {
   const form = new FormData();
 
   form.append("file", file);
@@ -322,9 +322,9 @@ export const uploadRasterSourceFile = async (rasterSourceUuid: string, file: Fil
     credentials: "same-origin",
     method: "POST",
     headers: {
-      mimeType: "multipart/form-data"
+      mimeType: "multipart/form-data",
     },
-    body: form
+    body: form,
   };
 
   const response = await fetch(url, opts);
@@ -346,9 +346,9 @@ export const uploadRasterFile = async (rasterUuid: string, file: File, timestamp
     credentials: "same-origin",
     method: "POST",
     headers: {
-      mimeType: "multipart/form-data"
+      mimeType: "multipart/form-data",
     },
-    body: form
+    body: form,
   };
 
   const response = await fetch(url, opts);
@@ -370,12 +370,12 @@ export const createRasterSource = (rasterSource: RasterSourceFromForm) => {
     supplier: rasterSource.supplier,
     supplier_code: rasterSource.supplier_code,
     temporal: rasterSource.temporal,
-    interval: rasterSource.temporal ? rasterSource.interval : undefined
+    interval: rasterSource.temporal ? rasterSource.interval : undefined,
   };
 
-  const rasterSourceResponse = fetch('/api/v4/rastersources/', {
+  const rasterSourceResponse = fetch("/api/v4/rastersources/", {
     ...defaultOpts,
-    body: JSON.stringify(rasterSourceBody)
+    body: JSON.stringify(rasterSourceBody),
   });
 
   return rasterSourceResponse;
@@ -388,7 +388,7 @@ export const createRasterLayer = (rasterLayer: RasterLayerFromForm, rasterSource
     headers: { "Content-Type": "application/json" },
   };
 
-  return fetchRasterSourceV4(rasterSourceUuid).then(rasterSource => {
+  return fetchRasterSourceV4(rasterSourceUuid).then((rasterSource) => {
     const rasterLayerBody = {
       name: rasterLayer.name,
       organisation: rasterLayer.organisation,
@@ -404,25 +404,20 @@ export const createRasterLayer = (rasterLayer: RasterLayerFromForm, rasterSource
       layer_collections: rasterLayer.layer_collections,
       source: {
         graph: {
-          raster: [
-            "lizard_nxt.blocks.LizardRasterSource",
-            rasterSourceUuid
-          ]
+          raster: ["lizard_nxt.blocks.LizardRasterSource", rasterSourceUuid],
         },
-        name: "raster"
+        name: "raster",
       },
       temporal: rasterSource.temporal,
     };
-  
-    const rasterLayerResponse = fetch('/api/v4/rasters/', {
+
+    const rasterLayerResponse = fetch("/api/v4/rasters/", {
       ...defaultOpts,
-      body: JSON.stringify(rasterLayerBody)
+      body: JSON.stringify(rasterLayerBody),
     });
-  
+
     return rasterLayerResponse;
   });
-
-  
 };
 
 export const createRaster = async (raster: OldRaster) => {
@@ -444,12 +439,12 @@ export const createRaster = async (raster: OldRaster) => {
     supplier: raster.supplier,
     supplier_code: raster.supplier_code,
     temporal: raster.temporal,
-    interval: raster.temporal ? raster.interval : undefined
+    interval: raster.temporal ? raster.interval : undefined,
   };
 
-  const rasterSourceResponse = await fetch('/api/v4/rastersources/', {
+  const rasterSourceResponse = await fetch("/api/v4/rastersources/", {
     ...defaultOpts,
-    body: JSON.stringify(rasterSourceBody)
+    body: JSON.stringify(rasterSourceBody),
   });
 
   if (rasterSourceResponse.status !== 201) {
@@ -473,18 +468,15 @@ export const createRaster = async (raster: OldRaster) => {
     temporal: raster.temporal,
     source: {
       graph: {
-        raster: [
-          "lizard_nxt.blocks.LizardRasterSource",
-          rasterSource.uuid
-        ]
+        raster: ["lizard_nxt.blocks.LizardRasterSource", rasterSource.uuid],
       },
-      name: "raster"
-    }
+      name: "raster",
+    },
   };
 
-  const rasterResponse = await fetch('/api/v4/rasters/', {
+  const rasterResponse = await fetch("/api/v4/rasters/", {
     ...defaultOpts,
-    body: JSON.stringify(rasterBody)
+    body: JSON.stringify(rasterBody),
   });
 
   return rasterResponse;
@@ -497,28 +489,31 @@ export const patchRaster = async (rasterUuid: string, raster: OldRasterEdit) => 
     credentials: "same-origin",
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(raster)
+    body: JSON.stringify(raster),
   };
 
   const newRasterResponse = await fetch(url + rasterUuid + "/", opts);
   const newRaster = await newRasterResponse.json();
 
   if (newRasterResponse.ok) {
-      // Only supplier code is stored on the raster source
-    if (raster.supplier_code !== undefined &&
-        newRaster.raster_sources && newRaster.raster_sources.length === 1)  {
+    // Only supplier code is stored on the raster source
+    if (
+      raster.supplier_code !== undefined &&
+      newRaster.raster_sources &&
+      newRaster.raster_sources.length === 1
+    ) {
       fetch(newRaster.raster_sources[0], {
         credentials: "same-origin",
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({supplier_code: raster.supplier_code})
+        body: JSON.stringify({ supplier_code: raster.supplier_code }),
       });
     }
   }
 
   return {
     response: newRasterResponse,
-    raster: newRaster
+    raster: newRaster,
   };
 };
 
@@ -529,7 +524,7 @@ export const patchRasterSource = async (rasterUuid: string, rasterSource: Raster
     credentials: "same-origin",
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(rasterSource)
+    body: JSON.stringify(rasterSource),
   };
 
   const newRasterSourceResponse = await fetch(url + rasterUuid + "/", opts);
@@ -537,7 +532,7 @@ export const patchRasterSource = async (rasterUuid: string, rasterSource: Raster
 
   return {
     response: newRasterSourceResponse,
-    rasterSource: newRasterSource
+    rasterSource: newRasterSource,
   };
 };
 
@@ -548,28 +543,31 @@ export const patchRasterLayer = async (rasterUuid: string, raster: RasterLayerFr
     credentials: "same-origin",
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(raster)
+    body: JSON.stringify(raster),
   };
 
   const newRasterResponse = await fetch(url + rasterUuid + "/", opts);
   const newRaster = await newRasterResponse.json();
 
   if (newRasterResponse.ok) {
-      // Only supplier code is stored on the raster source
-    if (raster.supplier_code !== undefined &&
-        newRaster.raster_sources && newRaster.raster_sources.length === 1)  {
+    // Only supplier code is stored on the raster source
+    if (
+      raster.supplier_code !== undefined &&
+      newRaster.raster_sources &&
+      newRaster.raster_sources.length === 1
+    ) {
       fetch(newRaster.raster_sources[0], {
         credentials: "same-origin",
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({supplier_code: raster.supplier_code})
+        body: JSON.stringify({ supplier_code: raster.supplier_code }),
       });
-    };
-  };
+    }
+  }
 
   return {
     response: newRasterResponse,
-    raster: newRaster
+    raster: newRaster,
   };
 };
 
@@ -579,21 +577,21 @@ Next function api call fails with error:
 //*/
 // useForce works, but we are not going to use it for now
 export const deleteRasterSource = async (
-  uuid: string, 
+  uuid: string
   // useForce?:boolean
-) => {  
+) => {
   // const body = useForce===true ? {"force": true,} : {};
   const body = {};
   // Try to delete source, ignore errors
-  const result = await fetch("/api/v4/rastersources/"+uuid, {
+  const result = await fetch("/api/v4/rastersources/" + uuid, {
     credentials: "same-origin",
     method: "DELETE",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body)
+    body: JSON.stringify(body),
   });
   return result;
-}
+};
 
 export const deleteRasterSources = (uuids: string[]) => {
-  return Promise.all(uuids.map((uuid)=>deleteRasterSource(uuid)));
-}
+  return Promise.all(uuids.map((uuid) => deleteRasterSource(uuid)));
+};

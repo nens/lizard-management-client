@@ -1,5 +1,5 @@
 import MDSpinner from "react-md-spinner";
-import spinnerStyles from '../styles/Spinner.module.css';
+import spinnerStyles from "../styles/Spinner.module.css";
 
 interface Props {
   loaded: boolean;
@@ -7,12 +7,10 @@ interface Props {
 
 const SpinnerIfNotLoaded: React.FC<Props> = ({ loaded, children }) => {
   if (loaded) {
-    return <>{children}</>
+    return <>{children}</>;
   } else {
     return (
-      <div
-        className={spinnerStyles.SpinnerContainer}
-      >
+      <div className={spinnerStyles.SpinnerContainer}>
         <MDSpinner size={24} />
       </div>
     );

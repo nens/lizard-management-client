@@ -1,41 +1,45 @@
-import { useState, useEffect } from 'react';
-import TableStateContainer from '../../components/TableStateContainer';
+import { useState, useEffect } from "react";
+import TableStateContainer from "../../components/TableStateContainer";
 import { NavLink, RouteComponentProps } from "react-router-dom";
-import TableActionButtons from '../../components/TableActionButtons';
-import { ExplainSideColumn } from '../../components/ExplainSideColumn';
+import TableActionButtons from "../../components/TableActionButtons";
+import { ExplainSideColumn } from "../../components/ExplainSideColumn";
 import rasterSourcesIcon from "../../images/raster_source_icon.svg";
 import tableStyles from "../../components/Table.module.css";
-import { bytesToDisplayValue } from '../../utils/byteUtils';
-import Modal from '../../components/Modal';
-import { ModalDeleteContent } from '../../components/ModalDeleteContent';
-import DeleteRasterSourceNotAllowed  from './DeleteRasterSourceNotAllowed';
+import { bytesToDisplayValue } from "../../utils/byteUtils";
+import Modal from "../../components/Modal";
+import { ModalDeleteContent } from "../../components/ModalDeleteContent";
+import DeleteRasterSourceNotAllowed from "./DeleteRasterSourceNotAllowed";
 import MDSpinner from "react-md-spinner";
-import { DefaultRasterSourceExplanationTextTable } from '../../utils/help_texts/helpTextForRasters';
-import { fetchWithOptions } from '../../utils/fetchWithOptions';
-import DeleteModal from '../../components/DeleteModal';
-import DataFlushingModal from './DataFlushingModal';
-import TemporalDataFlushingModal from './TemporalDataFlushingModal';
-import { ColumnDefinition } from '../../components/Table';
-import { RasterSourceFromAPI } from '../../api/rasters';
+import { DefaultRasterSourceExplanationTextTable } from "../../utils/help_texts/helpTextForRasters";
+import { fetchWithOptions } from "../../utils/fetchWithOptions";
+import DeleteModal from "../../components/DeleteModal";
+import DataFlushingModal from "./DataFlushingModal";
+import TemporalDataFlushingModal from "./TemporalDataFlushingModal";
+import { ColumnDefinition } from "../../components/Table";
+import { RasterSourceFromAPI } from "../../api/rasters";
 
 export const baseUrl = "/api/v4/rastersources/";
 const navigationUrlRasters = "/management/data_management/rasters/sources";
 
 export const RasterSourceTable = (props: RouteComponentProps) => {
   const [rowToFlushData, setRowToFlushData] = useState<RasterSourceFromAPI | null>(null);
-  const [rowToFlushDataPartially, setRowToFlushDataPartially] = useState<RasterSourceFromAPI | null>(null);
+  const [
+    rowToFlushDataPartially,
+    setRowToFlushDataPartially,
+  ] = useState<RasterSourceFromAPI | null>(null);
   const [rowToBeDeleted, setRowToBeDeleted] = useState<RasterSourceFromAPI | null>(null);
   const [resetTable, setResetTable] = useState<Function | null>(null);
-  const [currentRowDetailView, setCurrentRowDetailView] = useState<RasterSourceFromAPI | null>(null);
+  const [currentRowDetailView, setCurrentRowDetailView] = useState<RasterSourceFromAPI | null>(
+    null
+  );
   const [showDeleteFailedModal, setShowDeleteFailedModal] = useState<boolean>(false);
 
-
-  useEffect(() => { 
+  useEffect(() => {
     if (rowToBeDeleted) {
       fetch(baseUrl + rowToBeDeleted.uuid)
-        .then(res => res.json())
-        .then(detailView => setCurrentRowDetailView(detailView))
-    };
+        .then((res) => res.json())
+        .then((detailView) => setCurrentRowDetailView(detailView));
+    }
   }, [rowToBeDeleted]);
 
   const deleteAction = (
@@ -77,104 +81,122 @@ export const RasterSourceTable = (props: RouteComponentProps) => {
   const rasterSourceColumnDefinitions: ColumnDefinition<RasterSourceFromAPI>[] = [
     {
       titleRenderFunction: () => "Name",
-      renderFunction: (row) => 
-        <span
-          className={tableStyles.CellEllipsis}
-          title={row.name}
-        >
-          <NavLink to={`${navigationUrlRasters}/${row.uuid}`}>{!row.name? "(empty name)" : row.name }</NavLink>
+      renderFunction: (row) => (
+        <span className={tableStyles.CellEllipsis} title={row.name}>
+          <NavLink to={`${navigationUrlRasters}/${row.uuid}`}>
+            {!row.name ? "(empty name)" : row.name}
+          </NavLink>
         </span>
-      ,
+      ),
       orderingField: "name",
     },
     {
-      titleRenderFunction: () =>  "Code",
-      renderFunction: (row) =>
-        <span
-          className={tableStyles.CellEllipsis}
-          title={row.supplier_code}
-        >
-          {!row.supplier_code? "(empty code)" : row.supplier_code }
+      titleRenderFunction: () => "Code",
+      renderFunction: (row) => (
+        <span className={tableStyles.CellEllipsis} title={row.supplier_code}>
+          {!row.supplier_code ? "(empty code)" : row.supplier_code}
         </span>
-      ,
+      ),
       orderingField: "supplier_code",
     },
     {
-      titleRenderFunction: () =>  "Temporal",
-      renderFunction: (row) => 
-        <span
-          className={tableStyles.CellEllipsis}
-        >
-          {row.temporal === true? "Yes" : "No"}
-        </span>
-      ,
+      titleRenderFunction: () => "Temporal",
+      renderFunction: (row) => (
+        <span className={tableStyles.CellEllipsis}>{row.temporal === true ? "Yes" : "No"}</span>
+      ),
       orderingField: null,
     },
     {
-      titleRenderFunction: () =>  "Size",
-      renderFunction: (row) => 
-        <span
-          className={tableStyles.CellEllipsis}
-          title={`${row.size? row.size: 0} Bytes`}
-        >
-          {bytesToDisplayValue(row.size? row.size: 0)}
+      titleRenderFunction: () => "Size",
+      renderFunction: (row) => (
+        <span className={tableStyles.CellEllipsis} title={`${row.size ? row.size : 0} Bytes`}>
+          {bytesToDisplayValue(row.size ? row.size : 0)}
         </span>
-      ,
+      ),
       orderingField: "size",
     },
     {
-      titleRenderFunction: () =>  "",
-      renderFunction: (row, _updateTableRow, triggerReloadWithCurrentPage, triggerReloadWithBasePage) => {
+      titleRenderFunction: () => "",
+      renderFunction: (
+        row,
+        _updateTableRow,
+        triggerReloadWithCurrentPage,
+        triggerReloadWithBasePage
+      ) => {
         return (
-            <TableActionButtons
-              tableRow={row}
-              triggerReloadWithCurrentPage={triggerReloadWithCurrentPage} 
-              triggerReloadWithBasePage={triggerReloadWithBasePage}
-              editUrl={`${navigationUrlRasters}/${row.uuid}`}
-              actions={row.temporal ? [
-                {
-                  displayValue: "Delete",
-                  actionFunction: (row, triggerReloadWithCurrentPage, _triggerReloadWithBasePage) => {
-                    deleteAction(row, triggerReloadWithCurrentPage, null);
-                  }
-                },
-                {
-                  displayValue: "Flush data",
-                  actionFunction: (row, triggerReloadWithCurrentPage, _triggerReloadWithBasePage) => {
-                    flushDataAction(row, triggerReloadWithCurrentPage, null);
-                  }
-                },
-                {
-                  displayValue: "Flush range",
-                  actionFunction: (row, triggerReloadWithCurrentPage, _triggerReloadWithBasePage) => {
-                    flushDataPartiallyAction(row, triggerReloadWithCurrentPage, null);
-                  }
-                },
-              ] : [
-                {
-                  displayValue: "Delete",
-                  actionFunction: (row, triggerReloadWithCurrentPage, _triggerReloadWithBasePage) => {
-                    deleteAction(row, triggerReloadWithCurrentPage, null);
-                  }
-                },
-                {
-                  displayValue: "Flush data",
-                  actionFunction: (row, triggerReloadWithCurrentPage, _triggerReloadWithBasePage) => {
-                    flushDataAction(row, triggerReloadWithCurrentPage, null);
-                  }
-                },
-              ]}
-            />
+          <TableActionButtons
+            tableRow={row}
+            triggerReloadWithCurrentPage={triggerReloadWithCurrentPage}
+            triggerReloadWithBasePage={triggerReloadWithBasePage}
+            editUrl={`${navigationUrlRasters}/${row.uuid}`}
+            actions={
+              row.temporal
+                ? [
+                    {
+                      displayValue: "Delete",
+                      actionFunction: (
+                        row,
+                        triggerReloadWithCurrentPage,
+                        _triggerReloadWithBasePage
+                      ) => {
+                        deleteAction(row, triggerReloadWithCurrentPage, null);
+                      },
+                    },
+                    {
+                      displayValue: "Flush data",
+                      actionFunction: (
+                        row,
+                        triggerReloadWithCurrentPage,
+                        _triggerReloadWithBasePage
+                      ) => {
+                        flushDataAction(row, triggerReloadWithCurrentPage, null);
+                      },
+                    },
+                    {
+                      displayValue: "Flush range",
+                      actionFunction: (
+                        row,
+                        triggerReloadWithCurrentPage,
+                        _triggerReloadWithBasePage
+                      ) => {
+                        flushDataPartiallyAction(row, triggerReloadWithCurrentPage, null);
+                      },
+                    },
+                  ]
+                : [
+                    {
+                      displayValue: "Delete",
+                      actionFunction: (
+                        row,
+                        triggerReloadWithCurrentPage,
+                        _triggerReloadWithBasePage
+                      ) => {
+                        deleteAction(row, triggerReloadWithCurrentPage, null);
+                      },
+                    },
+                    {
+                      displayValue: "Flush data",
+                      actionFunction: (
+                        row,
+                        triggerReloadWithCurrentPage,
+                        _triggerReloadWithBasePage
+                      ) => {
+                        flushDataAction(row, triggerReloadWithCurrentPage, null);
+                      },
+                    },
+                  ]
+            }
+          />
         );
       },
       orderingField: null,
     },
   ];
 
-  const handleNewRasterClick  = () => {
+  const handleNewRasterClick = () => {
     const { history } = props;
     history.push(`${navigationUrlRasters}/new`);
-  }
+  };
 
   return (
     <ExplainSideColumn
@@ -185,32 +207,34 @@ export const RasterSourceTable = (props: RouteComponentProps) => {
       backUrl={"/management/data_management/rasters"}
     >
       <TableStateContainer
-        gridTemplateColumns={"37% 25% 10% 20% 8%"}  
+        gridTemplateColumns={"37% 25% 10% 20% 8%"}
         columnDefinitions={rasterSourceColumnDefinitions}
-        baseUrl={`${baseUrl}?`} 
+        baseUrl={`${baseUrl}?`}
         checkBoxActions={[]}
         newItemOnClick={handleNewRasterClick}
         filterOptions={[
-          {value: 'name__icontains=', label: 'Name'},
-          {value: 'uuid=', label: 'UUID'},
+          { value: "name__icontains=", label: "Name" },
+          { value: "uuid=", label: "UUID" },
         ]}
-        defaultUrlParams={'&scenario__isnull=true'} // to exclude 3Di scenario rasters
+        defaultUrlParams={"&scenario__isnull=true"} // to exclude 3Di scenario rasters
       />
       {rowToBeDeleted && !currentRowDetailView ? (
         <Modal
-           title={'Loading'}
-           cancelAction={()=>{
+          title={"Loading"}
+          cancelAction={() => {
             setShowDeleteFailedModal(false);
             setRowToBeDeleted(null);
             setCurrentRowDetailView(null);
-           }}
-         >
+          }}
+        >
           <MDSpinner size={24} />
-          <span style={{marginLeft: "40px"}}>Loading dependent objects for delete ..</span>
-         </Modal>
+          <span style={{ marginLeft: "40px" }}>Loading dependent objects for delete ..</span>
+        </Modal>
       ) : null}
-      {rowToBeDeleted && currentRowDetailView && (currentRowDetailView.layers.length !== 0 || currentRowDetailView.labeltypes.length !== 0) ? (
-        <DeleteRasterSourceNotAllowed 
+      {rowToBeDeleted &&
+      currentRowDetailView &&
+      (currentRowDetailView.layers.length !== 0 || currentRowDetailView.labeltypes.length !== 0) ? (
+        <DeleteRasterSourceNotAllowed
           rowToBeDeleted={rowToBeDeleted}
           handleClose={() => {
             setRowToBeDeleted(null);
@@ -220,10 +244,16 @@ export const RasterSourceTable = (props: RouteComponentProps) => {
           }}
         />
       ) : null}
-      {rowToBeDeleted && currentRowDetailView && (currentRowDetailView.layers.length === 0 && currentRowDetailView.labeltypes.length === 0) ? (
+      {rowToBeDeleted &&
+      currentRowDetailView &&
+      currentRowDetailView.layers.length === 0 &&
+      currentRowDetailView.labeltypes.length === 0 ? (
         <DeleteModal
           rows={[rowToBeDeleted]}
-          displayContent={[{name: "name", width: 40}, {name: "uuid", width: 60}]}
+          displayContent={[
+            { name: "name", width: 40 },
+            { name: "uuid", width: 60 },
+          ]}
           fetchFunction={(uuids, fetchOptions) => fetchWithOptions(baseUrl, uuids, fetchOptions)}
           resetTable={resetTable}
           handleClose={() => {
@@ -235,17 +265,21 @@ export const RasterSourceTable = (props: RouteComponentProps) => {
       ) : null}
       {currentRowDetailView && showDeleteFailedModal ? (
         <Modal
-          title={'Not allowed'}
-          cancelAction={()=>{
+          title={"Not allowed"}
+          cancelAction={() => {
             setShowDeleteFailedModal(false);
             setRowToBeDeleted(null);
             setCurrentRowDetailView(null);
           }}
         >
           <p>You are trying to delete the following raster-source:</p>
-          {ModalDeleteContent([currentRowDetailView], false, [{name: "name", width: 65}, {name: "uuid", width: 25}])}
+          {ModalDeleteContent([currentRowDetailView], false, [
+            { name: "name", width: 65 },
+            { name: "uuid", width: 25 },
+          ])}
           <p>But this raster-source is still in use by objects outside your organisation.</p>
-          <p>{"Please contact "}
+          <p>
+            {"Please contact "}
             <a
               href="https://nelen-schuurmans.topdesk.net/tas/public/ssp"
               target="_blank"
@@ -253,13 +287,16 @@ export const RasterSourceTable = (props: RouteComponentProps) => {
             >
               support
             </a>
-          </p>             
+          </p>
         </Modal>
       ) : null}
       {rowToFlushData ? (
         <DataFlushingModal
           row={rowToFlushData}
-          displayContent={[{name: "name", width: 50}, {name: "uuid", width: 50}]}
+          displayContent={[
+            { name: "name", width: 50 },
+            { name: "uuid", width: 50 },
+          ]}
           handleClose={() => {
             setRowToFlushData(null);
             setCurrentRowDetailView(null);
@@ -269,14 +306,14 @@ export const RasterSourceTable = (props: RouteComponentProps) => {
       ) : null}
       {rowToFlushDataPartially ? (
         <TemporalDataFlushingModal
-        row={rowToFlushDataPartially}
-        handleClose={() => {
-          setRowToFlushDataPartially(null);
-          setCurrentRowDetailView(null);
-          setResetTable(null);
-        }}
-      />
+          row={rowToFlushDataPartially}
+          handleClose={() => {
+            setRowToFlushDataPartially(null);
+            setCurrentRowDetailView(null);
+            setResetTable(null);
+          }}
+        />
       ) : null}
     </ExplainSideColumn>
   );
-}
+};

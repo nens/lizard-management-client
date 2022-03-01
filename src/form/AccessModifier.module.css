@@ -5,7 +5,7 @@
   height: 96px;
   width: 180px;
   margin-right: 20px;
-  border: 1px solid #C9C9C9;
+  border: 1px solid #c9c9c9;
   cursor: pointer;
 
   display: flex;
@@ -20,7 +20,7 @@
 }
 .AccessModifierSelected {
   border: 1px solid var(--color-border-input);
-  background-color: #55BFA226;
+  background-color: #55bfa226;
 }
 
 .AccessModifierTilesReadOnly {
@@ -31,6 +31,6 @@
   cursor: not-allowed;
 }
 .AccessModifierTilesReadOnly > .AccessModifierSelected {
-  border-color:#C9C9C9;
-  background-color: #F6F6F6;
+  border-color: #c9c9c9;
+  background-color: #f6f6f6;
 }

@@ -1,67 +1,71 @@
-import { RouteComponentProps, withRouter } from 'react-router';
-import { connect, useSelector } from 'react-redux';
-import { AppDispatch } from '../..';
-import { getOrganisations,  getUsername } from '../../reducers';
-import { ScenarioResult } from '../../form/ScenarioResult';
-import { ExplainSideColumn } from '../../components/ExplainSideColumn';
-import { TextInput } from './../../form/TextInput';
-import { AccessModifier } from '../../form/AccessModifier';
-import { SubmitButton } from '../../form/SubmitButton';
-import { CancelButton } from '../../form/CancelButton';
-import { useForm, Values } from '../../form/useForm';
-import { minLength } from '../../form/validators';
-import { addNotification } from '../../actions';
-import { scenarioFormHelpText } from '../../utils/help_texts/helpTextForScenarios';
-import { Scenario } from '../../types/scenarioType';
+import { RouteComponentProps, withRouter } from "react-router";
+import { connect, useSelector } from "react-redux";
+import { AppDispatch } from "../..";
+import { getOrganisations, getUsername } from "../../reducers";
+import { ScenarioResult } from "../../form/ScenarioResult";
+import { ExplainSideColumn } from "../../components/ExplainSideColumn";
+import { TextInput } from "./../../form/TextInput";
+import { AccessModifier } from "../../form/AccessModifier";
+import { SubmitButton } from "../../form/SubmitButton";
+import { CancelButton } from "../../form/CancelButton";
+import { useForm, Values } from "../../form/useForm";
+import { minLength } from "../../form/validators";
+import { addNotification } from "../../actions";
+import { scenarioFormHelpText } from "../../utils/help_texts/helpTextForScenarios";
+import { Scenario } from "../../types/scenarioType";
 import threediIcon from "../../images/3di@3x.svg";
-import formStyles from './../../styles/Forms.module.css';
+import formStyles from "./../../styles/Forms.module.css";
 
 interface Props {
-  currentRecord: Scenario
-};
+  currentRecord: Scenario;
+}
 interface PropsFromDispatch {
-  addNotification: (message: string | number, timeout: number) => void
-};
+  addNotification: (message: string | number, timeout: number) => void;
+}
 interface RouteParams {
   uuid: string;
-};
+}
 
-const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<RouteParams>> = (props) => {
+const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<RouteParams>> = (
+  props
+) => {
   const { currentRecord } = props;
   const organisations = useSelector(getOrganisations).available;
-  const scenarioOrganisation = organisations.find(org => org.uuid === currentRecord.organisation.uuid)!;
+  const scenarioOrganisation = organisations.find(
+    (org) => org.uuid === currentRecord.organisation.uuid
+  )!;
   const username = useSelector(getUsername);
 
   const initialValues = {
     name: currentRecord.name,
     uuid: currentRecord.uuid,
-    modelName: currentRecord.model_name || '',
-    supplier: currentRecord.username || '',
-    organisation: currentRecord.organisation.name || '',
-    accessModifier: currentRecord.access_modifier
+    modelName: currentRecord.model_name || "",
+    supplier: currentRecord.username || "",
+    organisation: currentRecord.organisation.name || "",
+    accessModifier: currentRecord.access_modifier,
   };
 
   const onSubmit = (values: Values) => {
     const body = {
       name: values.name,
-      access_modifier: values.accessModifier
+      access_modifier: values.accessModifier,
     };
 
     fetch(`/api/v4/scenarios/${currentRecord.uuid}/`, {
-      credentials: 'same-origin',
-      method: 'PATCH',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(body)
+      credentials: "same-origin",
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
     })
-      .then(data => {
+      .then((data) => {
         const status = data.status;
         if (status === 200) {
-          props.addNotification('Success! Scenario updated', 2000);
-          props.history.push('/management/data_management/scenarios/');
+          props.addNotification("Success! Scenario updated", 2000);
+          props.history.push("/management/data_management/scenarios/");
         } else {
           props.addNotification(status, 2000);
           console.error(data);
-        };
+        }
       })
       .catch(console.error);
   };
@@ -79,32 +83,25 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
     handleSubmit,
     handleReset,
     clearInput,
-  } = useForm({initialValues, onSubmit});
+  } = useForm({ initialValues, onSubmit });
 
   return (
     <ExplainSideColumn
       imgUrl={threediIcon}
       imgAltDescription={"3Di icon"}
       headerText={"3Di Scenarios"}
-      explanationText={
-        scenarioFormHelpText[fieldOnFocus] || 
-        scenarioFormHelpText['default']
-      }
+      explanationText={scenarioFormHelpText[fieldOnFocus] || scenarioFormHelpText["default"]}
       backUrl={"/management/data_management/scenarios/"}
       fieldName={fieldOnFocus}
     >
-      <form
-        className={formStyles.Form}
-        onSubmit={handleSubmit}
-        onReset={handleReset}
-      >
+      <form className={formStyles.Form} onSubmit={handleSubmit} onReset={handleReset}>
         <span className={`${formStyles.FormFieldTitle} ${formStyles.FirstFormFieldTitle}`}>
           1: General
         </span>
         <TextInput
-          title={'Scenario name *'}
-          name={'name'}
-          placeholder={'Please enter at least 3 characters'}
+          title={"Scenario name *"}
+          name={"name"}
+          placeholder={"Please enter at least 3 characters"}
           value={values.name}
           valueChanged={handleInputChange}
           clearInput={clearInput}
@@ -113,12 +110,14 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
           triedToSubmit={triedToSubmit}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          readOnly={!scenarioOrganisation.roles.includes("admin") && !(username === currentRecord.username)}
+          readOnly={
+            !scenarioOrganisation.roles.includes("admin") && !(username === currentRecord.username)
+          }
         />
         {currentRecord ? (
           <TextInput
-            title={'UUID'}
-            name={'uuid'}
+            title={"UUID"}
+            name={"uuid"}
             value={values.uuid}
             valueChanged={handleInputChange}
             validated
@@ -128,8 +127,8 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
           />
         ) : null}
         <TextInput
-          title={'Based on model'}
-          name={'modelName'}
+          title={"Based on model"}
+          name={"modelName"}
           value={values.modelName}
           valueChanged={handleInputChange}
           clearInput={clearInput}
@@ -138,30 +137,26 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
           onBlur={handleBlur}
           readOnly
         />
-        <span className={formStyles.FormFieldTitle}>
-          2: Data
-        </span>
+        <span className={formStyles.FormFieldTitle}>2: Data</span>
         <ScenarioResult
-          name={'results'}
+          name={"results"}
           uuid={currentRecord.uuid}
           formSubmitted={formSubmitted}
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
-        <span className={formStyles.FormFieldTitle}>
-          3: Rights
-        </span>
+        <span className={formStyles.FormFieldTitle}>3: Rights</span>
         <AccessModifier
-          title={'Accessibility *'}
-          name={'accessModifier'}
+          title={"Accessibility *"}
+          name={"accessModifier"}
           value={values.accessModifier}
-          valueChanged={value => handleValueChange('accessModifier', value)}
+          valueChanged={(value) => handleValueChange("accessModifier", value)}
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
         <TextInput
-          title={'Organisation *'}
-          name={'organisation'}
+          title={"Organisation *"}
+          name={"organisation"}
           value={values.organisation}
           valueChanged={handleInputChange}
           clearInput={clearInput}
@@ -171,8 +166,8 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
           readOnly
         />
         <TextInput
-          title={'Username of supplier'}
-          name={'supplier'}
+          title={"Username of supplier"}
+          name={"supplier"}
           value={values.supplier}
           valueChanged={handleInputChange}
           clearInput={clearInput}
@@ -181,15 +176,9 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
           onBlur={handleBlur}
           readOnly
         />
-        <div
-          className={formStyles.ButtonContainer}
-        >
-          <CancelButton
-            url={'/management/data_management/scenarios/'}
-          />
-          <SubmitButton
-            onClick={tryToSubmitForm}
-          />
+        <div className={formStyles.ButtonContainer}>
+          <CancelButton url={"/management/data_management/scenarios/"} />
+          <SubmitButton onClick={tryToSubmitForm} />
         </div>
       </form>
     </ExplainSideColumn>
@@ -197,7 +186,8 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
 };
 
 const mapPropsToDispatch = (dispatch: AppDispatch) => ({
-  addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout))
+  addNotification: (message: string | number, timeout: number) =>
+    dispatch(addNotification(message, timeout)),
 });
 
 export default connect(null, mapPropsToDispatch)(withRouter(ScenarioForm));
