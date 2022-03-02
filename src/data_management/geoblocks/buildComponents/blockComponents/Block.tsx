@@ -9,7 +9,7 @@ interface BlockInput {
   parameterTypes: {
     name: string;
     type: string | string[];
-    [key: string]: any;
+    [key: string]: string | string[];
   }[];
   onChange: (value: string | number | boolean, i: number) => void;
   onBlockNameChange: (value: string) => void;

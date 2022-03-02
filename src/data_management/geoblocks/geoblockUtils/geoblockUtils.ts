@@ -1,7 +1,7 @@
 import { appDispatch } from "../../../index";
 import { addNotification } from "../../../actions";
 import { Elements, getOutgoers, isNode, Node } from "react-flow-renderer";
-import { GeoBlockSource, geoblockType } from "../../../types/geoBlockType";
+import { AllGeoBlockType, GeoBlockSource, geoblockType } from "../../../types/geoBlockType";
 import { geoBlockValidator } from "./geoblockValidators";
 
 const position = { x: 0, y: 0 };
@@ -10,7 +10,7 @@ export const getBlockData = (
   blockName: string,
   numberOfBlocks: number,
   idOfNewBlock: string,
-  setElements: React.Dispatch<React.SetStateAction<Elements<any>>>
+  setElements: React.Dispatch<React.SetStateAction<Elements>>
 ) => {
   const dataOfRasterSourceBlock = {
     label: "LizardRasterSource_" + (numberOfBlocks + 1),
@@ -20,10 +20,9 @@ export const getBlockData = (
     onBlockNameChange: (name: string) => onBlockNameChange(name, idOfNewBlock, setElements),
   };
 
-  // @ts-ignore
-  const blockDefinition = geoblockType[blockName];
+  const blockDefinition = geoblockType[blockName as keyof AllGeoBlockType]!;
   const blockParameters = Array.isArray(blockDefinition.parameters)
-    ? blockDefinition.parameters.map((parameter: any) =>
+    ? blockDefinition.parameters.map((parameter) =>
         parameter.type.includes("boolean") && parameter.default === undefined
           ? false
           : parameter.default
@@ -48,7 +47,7 @@ export const getBlockData = (
 
 const getRasterElements = (
   graph: GeoBlockSource["graph"],
-  setElements: React.Dispatch<React.SetStateAction<Elements<any>>>
+  setElements: React.Dispatch<React.SetStateAction<Elements>>
 ): Elements => {
   const allBlockNames = Object.keys(graph);
   const rasterSourceBlockNames = allBlockNames.filter((blockName) => {
@@ -72,7 +71,7 @@ const getRasterElements = (
 
 const getBlockElements = (
   graph: GeoBlockSource["graph"],
-  setElements: React.Dispatch<React.SetStateAction<Elements<any>>>
+  setElements: React.Dispatch<React.SetStateAction<Elements>>
 ): Elements => {
   const allBlockNames = Object.keys(graph);
   const blockNames = allBlockNames.filter((blockName) => {
@@ -121,7 +120,7 @@ const getBlockElements = (
 const onBlockNameChange = (
   name: string,
   blockId: string,
-  setElements: React.Dispatch<React.SetStateAction<Elements<any>>>
+  setElements: React.Dispatch<React.SetStateAction<Elements>>
 ) => {
   setElements((elms) => {
     return elms.map((elm) => {
@@ -147,7 +146,7 @@ const onBlockChange = (
   value: string | number | boolean,
   index: number,
   blockId: string,
-  setElements: React.Dispatch<React.SetStateAction<Elements<any>>>
+  setElements: React.Dispatch<React.SetStateAction<Elements>>
 ) => {
   setElements((elms) => {
     return elms.map((elm) => {
@@ -161,7 +160,7 @@ const onBlockChange = (
 const onRasterSourceBlockChange = (
   value: string,
   blockId: string,
-  setElements: React.Dispatch<React.SetStateAction<Elements<any>>>
+  setElements: React.Dispatch<React.SetStateAction<Elements>>
 ) => {
   setElements((elms) => {
     return elms.map((elm) => {
@@ -173,7 +172,7 @@ const onRasterSourceBlockChange = (
 
 export const convertGeoblockSourceToFlowElements = (
   source: GeoBlockSource | null,
-  setElements: React.Dispatch<React.SetStateAction<Elements<any>>>
+  setElements: React.Dispatch<React.SetStateAction<Elements>>
 ) => {
   // Return empty array if it is a new geoblock or the geoblock has no value yet
   if (!source || !source.graph) return [];
@@ -214,7 +213,7 @@ export const convertElementsToGeoBlockSource = (
     if (block.type === "RasterSource") {
       blockValue = ["lizard_nxt.blocks.LizardRasterSource", block.data.value];
     } else {
-      const parameters = block.data.parameters.map((parameter: any, i: number) => {
+      const parameters = block.data.parameters.map((parameter: string, i: number) => {
         const parameterType = block.data.parameterTypes[i];
         if (parameterType && parameterType.type === "array") {
           // parse string to array if parameter type is 'array'

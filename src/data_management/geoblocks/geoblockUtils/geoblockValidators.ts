@@ -200,7 +200,7 @@ const getBlocksWithInvalidArrayInput = (blocks: Elements) => {
   });
 
   const blocksWithInvalidArrayInput = blocksWithArrayInput.filter((block) => {
-    const invalidJsonParameters = block.data.parameters.filter((parameter: any, i: number) => {
+    const invalidJsonParameters = block.data.parameters.filter((parameter: string, i: number) => {
       const parameterType = block.data.parameterTypes[i];
 
       return parameterType && parameterType.type === "array" && jsonValidator(parameter);

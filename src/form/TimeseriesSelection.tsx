@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { AssetResponseFromSearchEndpoint } from "../types/locationFormTypes";
 import { getTimeseriesLabel, TimeseriesFromAssetEndpoint } from "../types/timeseriesType";
 import { convertToSelectObject } from "../utils/convertToSelectObject";
 import { SelectDropdown, Value } from "./SelectDropdown";
@@ -44,7 +45,7 @@ const fetchAssets = async (searchInput: string) => {
   });
   const responseJSON = await response.json();
 
-  return responseJSON.results.map((asset: any) => ({
+  return responseJSON.results.map((asset: AssetResponseFromSearchEndpoint) => ({
     ...asset,
     value: asset.id,
     label: asset.title,

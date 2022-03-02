@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { RouteComponentProps } from "react-router";
+import { Layercollection } from "../../api/rasters";
 import { createFetchRecordFunctionFromUrl } from "../../utils/createFetchRecordFunctionFromUrl";
-
 import LayerCollectionForm from "./LayerCollectionForm";
 import SpinnerIfNotLoaded from "../../components/SpinnerIfNotLoaded";
 
@@ -10,7 +10,7 @@ interface RouteParams {
 }
 
 export const EditLayerCollection: React.FC<RouteComponentProps<RouteParams>> = (props) => {
-  const [currentRecord, setCurrentRecord] = useState<any | undefined>(undefined);
+  const [currentRecord, setCurrentRecord] = useState<Layercollection | undefined>(undefined);
 
   const { slug } = props.match.params;
   useEffect(() => {

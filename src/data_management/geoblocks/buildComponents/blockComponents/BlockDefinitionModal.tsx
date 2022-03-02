@@ -1,25 +1,9 @@
-import React from "react";
 import ModalBackground from "../../../../components/ModalBackground";
 import styles from "./BlockDefinitionModal.module.css";
+import { BlockDefinition } from "./SideBar";
 
 interface MyProps {
-  blockDefinition: {
-    title: string;
-    class: string;
-    description: string;
-    parameters:
-      | {
-          name: string;
-          type: string | string[];
-          [key: string]: any;
-        }[]
-      | {
-          type: string;
-          items: {
-            type: string;
-          };
-        };
-  };
+  blockDefinition: BlockDefinition;
   handleClose: () => void;
 }
 

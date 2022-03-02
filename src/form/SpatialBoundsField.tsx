@@ -18,7 +18,7 @@ interface SpatialBoundsProps {
     wmsLayerSlug: string;
     wmsLayerUrl: string;
   };
-  valueChanged: Function;
+  valueChanged: (value: SpatialBounds | null) => void;
   geoServerError: boolean;
   showGeoServerError: Function;
   onFocus?: (e: React.ChangeEvent<HTMLInputElement>) => void;

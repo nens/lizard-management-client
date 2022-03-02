@@ -144,8 +144,9 @@ const ColorMapInput: React.FC<ColorMapProps> = (props) => {
     if (colorMap === "Custom colormap") {
       setShowCustomColormapModal(true);
       window.setTimeout(() => {
-        // @ts-ignore
-        document.activeElement && document.activeElement.blur && document.activeElement.blur();
+        if (document.activeElement && document.activeElement instanceof HTMLElement) {
+          document.activeElement.blur();
+        };
       }, 0);
       return;
     }
@@ -222,7 +223,7 @@ const ColorMapInput: React.FC<ColorMapProps> = (props) => {
     minValue = null,
     maxValue = null;
   if (previewColor !== null) {
-    colors = previewColor.legend.map((obj: any, i: number) => {
+    colors = previewColor.legend.map((obj, i) => {
       return <div style={{ flex: 1, backgroundColor: obj.color }} key={i} />;
     });
     minValue = previewColor.limits[0];
@@ -291,9 +292,7 @@ const ColorMapInput: React.FC<ColorMapProps> = (props) => {
               colorMaps
                 ? [
                     customColorMapOption,
-                    ...colorMaps.map((colorMap: any) =>
-                      convertToSelectObject(colorMap.name, colorMap.name, colorMap.description)
-                    ),
+                    ...colorMaps.map(colorMap => convertToSelectObject(colorMap.name, colorMap.name, colorMap.description))
                   ]
                 : [customColorMapOption]
             }

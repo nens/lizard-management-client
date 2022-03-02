@@ -13,7 +13,7 @@ interface Props {
   title: string | JSX.Element;
   name: string;
   value: string;
-  valueChanged: (event: any) => void;
+  valueChanged: (event: React.ChangeEvent<HTMLInputElement>) => void;
   readonly?: boolean;
   options: Option[];
 }
@@ -34,9 +34,7 @@ export const CustomRadioSelect: React.FC<Props> = (props) => {
                 type="radio"
                 name={name}
                 value={option.value}
-                onChange={(event: any) => {
-                  valueChanged(event);
-                }}
+                onChange={event => valueChanged(event)}
                 checked={option.value === value}
                 readOnly={readonly}
               />

@@ -90,7 +90,6 @@ const ColormapForm: React.FC<Props> = (props) => {
     if (values.type === "Logarithmic") {
       jsonObj.type = "GradientColormap";
       // the api seems to only accept a "log" field if log:true
-      // @ts-ignore
       jsonObj.log = true;
     }
     jsonObj.data = values.data.map(toApiColorMapStep);
