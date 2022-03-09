@@ -11,6 +11,7 @@ import {
   deleteScenarioArrivalResults,
   deleteScenarioDamageResults,
 } from "../api/scenarios";
+import { getUuidFromUrl } from "../utils/getUuidFromUrl";
 import formStyles from "../styles/Forms.module.css";
 import buttonStyles from "../styles/Buttons.module.css";
 import scenarioResultStyles from "./ScenarioResult.module.css";
@@ -128,11 +129,6 @@ const ResultRow: React.FC<ResultRowProps> = ({
   onFocus,
   onBlur,
 }) => {
-  let resultUrl;
-  if (result.raster) {
-    const rasterLayerUuid = result.raster.split("/")[result.raster.split("/").length - 2]; // retrieve uuid from api url of raster layer
-    resultUrl = `/management/data_management/rasters/layers/${rasterLayerUuid}`;
-  }
   return (
     <div
       className={scenarioResultStyles.ResultRow}
@@ -140,8 +136,12 @@ const ResultRow: React.FC<ResultRowProps> = ({
         color: scheduledForBulkDeletion || result.scheduledForDeletion ? "lightgrey" : "",
       }}
     >
-      {resultUrl ? (
-        <a href={resultUrl} target="_blank" rel="noopener noreferrer">
+      {result.raster && !scheduledForBulkDeletion && !result.scheduledForDeletion ? (
+        <a
+          href={`/management/data_management/rasters/layers/${getUuidFromUrl(result.raster)}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           {result.name}
         </a>
       ) : (
