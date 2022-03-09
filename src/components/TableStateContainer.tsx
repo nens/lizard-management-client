@@ -323,7 +323,7 @@ function TableStateContainer<TableRowType extends { uuid: string; checkboxChecke
         style={{
           display: "flex",
           justifyContent: "space-between",
-          marginBottom: "16px",
+          marginBottom: "26px",
           marginTop: "18px",
         }}
       >

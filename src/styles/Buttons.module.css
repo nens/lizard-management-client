@@ -96,6 +96,7 @@
   background-image: none;
   outline: 0;
   box-shadow: 0 0 0 3px rgba(0, 205, 171, 0.5);
+  transform: none;
 }
 .Inactive:hover {
   background-color: #b9b9b9;
