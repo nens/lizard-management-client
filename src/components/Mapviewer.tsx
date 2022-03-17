@@ -1,34 +1,21 @@
 import { useRef, useState } from 'react';
-import ReactMapGL, { Source, Layer, MapEvent, MapRef, Popup } from 'react-map-gl';
-import { mapBoxAccesToken } from '../mapboxConfig';
+import Map, { Source, Layer, MapRef, Popup } from 'react-map-gl';
 import { useSelector } from 'react-redux';
 import { getSelectedOrganisation } from '../reducers';
-import mapboxgl from "mapbox-gl";
-import 'mapbox-gl/dist/mapbox-gl.css';
+// import { mapBoxAccesToken } from '../mapboxConfig';
+// import mapboxgl from "mapbox-gl";
+// import 'mapbox-gl/dist/mapbox-gl.css';
+import maplibregl from 'maplibre-gl';
+import 'maplibre-gl/dist/maplibre-gl.css';
 
 // Use pump icon as iconImage for measuring station vector tile
-import pumpIcon from '../images/pump.png';
+// import pumpIcon from '../images/pump.png';
 // const pumpIconImage = new Image(20, 20);
 // pumpIconImage.src = pumpIcon;
 
-/* eslint-disable @typescript-eslint/no-var-requires */
-// eslint-disable-next-line import/no-webpack-loader-syntax
-(mapboxgl as any).workerClass = require("worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker").default;
-
-interface MapViewport {
-  latitude: number;
-  longitude: number;
-  zoom: number;
-}
-
 export default function MapViewer () {
   const selectedOrganisation = useSelector(getSelectedOrganisation);
-  const [viewport, setViewport] = useState<MapViewport>({
-    latitude: 52.6892,
-    longitude: 5.9,
-    zoom: 8
-  });
-  const [popupData, setPopupData] = useState<MapEvent | null>(null);
+  const [popupData, setPopupData] = useState<any | null>(null);
   const mapRef = useRef<MapRef>(null);
 
   return (
@@ -41,31 +28,37 @@ export default function MapViewer () {
         height: "100vh",
       }}
     >
-      <ReactMapGL
-        {...viewport}
+      <Map
+        initialViewState={{
+          latitude: 52.6892,
+          longitude: 5.9,
+          zoom: 8
+        }}
+        mapLib={maplibregl}
         ref={mapRef}
-        width="100%"
-        height="100%"
-        onViewportChange={(viewport: MapViewport) => setViewport(viewport)}
-        mapboxApiAccessToken={mapBoxAccesToken}
-        mapStyle={"mapbox://styles/nelenschuurmans/ck8sgpk8h25ql1io2ccnueuj6"}
-        onClick={(event)=>{
-          console.log('hoan event', event.features);
+        style={{
+          width: '100%',
+          height: '100%'
+        }}
+        // mapStyle={'mapbox://styles/nelenschuurmans/ck8sgpk8h25ql1io2ccnueuj6'}
+        mapStyle={"https://api.maptiler.com/maps/streets/style.json?key=apPhpL758oE94pC4mFOd"}
+        onClick={(event) => {
+          console.log('hoan event', event);
           setPopupData(event);
         }}
-        onLoad={() => {
-          const map: mapboxgl.Map = mapRef && mapRef.current && mapRef.current.getMap();
-          // console.log('hoan source', map.getSource('measuringstation'))
-          // console.log('hoan layer', map.getLayer('layer-1'))
-          // map.addImage('hoanImage', image, { sdf: true })
-          map.loadImage(
-            pumpIcon,
-            (e, img) => {
-              if (e || !img) return console.log('Failed to load image: ', e);
-              map.addImage('pumpIconImage', img, { sdf: true });
-            }
-          );
-        }}
+        // onLoad={() => {
+        //   const map: mapboxgl.Map = mapRef && mapRef.current && mapRef.current.getMap();
+        //   // console.log('hoan source', map.getSource('measuringstation'))
+        //   // console.log('hoan layer', map.getLayer('layer-1'))
+        //   // map.addImage('hoanImage', image, { sdf: true })
+        //   map.loadImage(
+        //     pumpIcon,
+        //     (e, img) => {
+        //       if (e || !img) return console.log('Failed to load image: ', e);
+        //       map.addImage('pumpIconImage', img, { sdf: true });
+        //     }
+        //   );
+        // }}
       >
         {popupData && popupData.features?.length ? (
           <Popup
@@ -109,40 +102,40 @@ export default function MapViewer () {
           <Layer
             key={'layer-1'}
             id={'layer-1'}
-            // type={'circle'}
-            type={'symbol'}
+            type={'circle'}
+            // type={'symbol'}
             source={'measuringstation'}
             source-layer={'default'}
-            layout={{
-              "text-field": "{object_name}",
-              "text-size": 14,
-              "text-anchor": "bottom-left",
-              "icon-image": "pumpIconImage",
-              "icon-anchor": "bottom-right",
-              "icon-size": 0.1
-            }}
+            // layout={{
+            //   "text-field": "{object_name}",
+            //   "text-size": 14,
+            //   "text-anchor": "bottom-left",
+            //   "icon-image": "pumpIconImage",
+            //   "icon-anchor": "bottom-right",
+            //   "icon-size": 0.1
+            // }}
             paint={{
-              // "circle-radius": 4,
-              // "circle-stroke-width": 1,
-              // "circle-stroke-color": 'grey',
-              // "circle-color": [
+              "circle-radius": 4,
+              "circle-stroke-width": 1,
+              "circle-stroke-color": 'grey',
+              "circle-color": [
+                'case',
+                ['>', ["get", "object_id"], 1000],
+                'red',
+                'blue'
+              ],
+              // "text-color": [
               //   'case',
               //   ['>', ["get", "object_id"], 1000],
-              //   'red',
-              //   'blue'
+              //   'blue',
+              //   'red'
               // ],
-              "text-color": [
-                'case',
-                ['>', ["get", "object_id"], 1000],
-                'blue',
-                'red'
-              ],
-              "icon-color": [
-                'case',
-                ['>', ["get", "object_id"], 1000],
-                'blue',
-                'red'
-              ],
+              // "icon-color": [
+              //   'case',
+              //   ['>', ["get", "object_id"], 1000],
+              //   'blue',
+              //   'red'
+              // ],
               // "icon-color": [
               //   'match',
               //   ["get", "object_name"],
@@ -155,7 +148,7 @@ export default function MapViewer () {
             }}
           />
         </Source>
-      </ReactMapGL>
+      </Map>
     </div>
   )
 }
