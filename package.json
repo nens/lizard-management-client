@@ -116,7 +116,6 @@
     "@types/react-intl": "^3.0.0",
     "@types/react-leaflet": "^2.5.0",
     "@types/react-lottie": "^1.2.5",
-    "@types/react-map-gl": "^5.2.9",
     "@types/react-onclickoutside": "^6.7.3",
     "@types/react-redux": "^7.0.7",
     "@types/react-router-dom": "^5.1.5",
