@@ -2,9 +2,11 @@ import { useRef, useState } from 'react';
 import Map, { Source, Layer, MapRef, Popup, MapLayerMouseEvent } from 'react-map-gl';
 import { useSelector } from 'react-redux';
 import { getSelectedOrganisation } from '../reducers';
+import pumpIcon from '../images/pump.png';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
-// import pumpIcon from '../images/pump.png';
+
+const mapTilerApiKey = "apPhpL758oE94pC4mFOd";
 
 export default function MapViewer () {
   const selectedOrganisation = useSelector(getSelectedOrganisation);
@@ -22,34 +24,36 @@ export default function MapViewer () {
       }}
     >
       <Map
+        ref={mapRef}
+        mapLib={maplibregl}
         initialViewState={{
           latitude: 52.6892,
           longitude: 5.9,
           zoom: 8
         }}
-        mapLib={maplibregl}
-        ref={mapRef}
         style={{
           width: '100%',
           height: '100%'
         }}
-        interactiveLayerIds={['layer-1']}
-        mapStyle={"https://api.maptiler.com/maps/fde8275a-3062-4cd8-acd3-366f9e3602ec/style.json?key=apPhpL758oE94pC4mFOd"}
+        interactiveLayerIds={['layer-2']}
+        // mapboxAccessToken={mapBoxAccesToken}
+        // mapStyle={"mapbox://styles/nelenschuurmans/ck8sgpk8h25ql1io2ccnueuj6"}
+        mapStyle={`https://api.maptiler.com/maps/fde8275a-3062-4cd8-acd3-366f9e3602ec/style.json?key=${mapTilerApiKey}`}
         onClick={(event: MapLayerMouseEvent) => {
           console.log('clicked event', event.features);
           setPopupData(event);
         }}
-        // onLoad={() => {
-        //   if (!mapRef || !mapRef.current) return;
-        //   const map = mapRef && mapRef.current;
-        //   map.loadImage(
-        //     pumpIcon,
-        //     (e, img) => {
-        //       if (e || !img) return console.log('Failed to load image: ', e);
-        //       map.addImage('pumpIconImage', img, { sdf: true });
-        //     }
-        //   );
-        // }}
+        onLoad={() => {
+          if (!mapRef || !mapRef.current) return;
+          const map = mapRef && mapRef.current;
+          map.loadImage(
+            pumpIcon,
+            (e, img) => {
+              if (e || !img) return console.log('Failed to load image: ', e);
+              map.addImage('pumpIconImage', img, { sdf: true });
+            }
+          );
+        }}
       >
         {popupData && popupData.features?.length ? (
           <Popup
@@ -90,7 +94,7 @@ export default function MapViewer () {
           minzoom={6}
           maxzoom={14}
         >
-          <Layer
+          {/* <Layer
             id={'layer-1'}
             type={'circle'}
             source={'measuringstation'}
@@ -106,8 +110,8 @@ export default function MapViewer () {
                 'blue'
               ]
             }}
-          />
-          {/* <Layer
+          /> */}
+          <Layer
             id={'layer-2'}
             type={'symbol'}
             source={'measuringstation'}
@@ -143,7 +147,7 @@ export default function MapViewer () {
               //   'blue'
               // ]
             }}
-          /> */}
+          />
         </Source>
       </Map>
     </div>
