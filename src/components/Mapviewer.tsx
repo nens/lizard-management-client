@@ -1,161 +1,102 @@
-import { useRef, useState } from 'react';
-import ReactMapGL, { Source, Layer, MapEvent, MapRef, Popup } from 'react-map-gl';
+import { LatLngBounds } from 'leaflet';
+import { useEffect, useState } from 'react';
+import { Map, Pane, TileLayer, WMSTileLayer } from 'react-leaflet';
+import { fetchRasterV4, RasterLayerFromAPI } from '../api/rasters';
 import { mapBoxAccesToken } from '../mapboxConfig';
-import { useSelector } from 'react-redux';
-import { getSelectedOrganisation } from '../reducers';
-import mapboxgl from "mapbox-gl";
-import 'mapbox-gl/dist/mapbox-gl.css';
 
-// Use pump icon as iconImage for measuring station vector tile
-import pumpIcon from '../images/pump.png';
-// const pumpIconImage = new Image(20, 20);
-// pumpIconImage.src = pumpIcon;
+const getBounds = (raster: RasterLayerFromAPI): LatLngBounds => {
+  const bounds = raster.spatial_bounds!;
+  return new LatLngBounds(
+    [bounds.north, bounds.west], [bounds.south, bounds.east]
+  );
+};
 
-/* eslint-disable @typescript-eslint/no-var-requires */
-// eslint-disable-next-line import/no-webpack-loader-syntax
-(mapboxgl as any).workerClass = require("worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker").default;
-
-interface MapViewport {
-  latitude: number;
-  longitude: number;
-  zoom: number;
-}
+const timestamps = [
+  '2021-02-02T10:00:00',
+  '2021-02-02T10:05:00',
+  '2021-02-02T10:10:00',
+  '2021-02-02T10:15:00',
+  '2021-02-02T10:20:00',
+  '2021-02-02T10:25:00',
+  '2021-02-02T10:30:00',
+  '2021-02-02T10:35:00',
+  '2021-02-02T10:40:00',
+  '2021-02-02T10:45:00',
+  '2021-02-02T10:50:00',
+  '2021-02-02T10:55:00',
+  '2021-02-02T11:00:00'
+];
 
 export default function MapViewer () {
-  const selectedOrganisation = useSelector(getSelectedOrganisation);
-  const [viewport, setViewport] = useState<MapViewport>({
-    latitude: 52.6892,
-    longitude: 5.9,
-    zoom: 8
-  });
-  const [popupData, setPopupData] = useState<MapEvent | null>(null);
-  const mapRef = useRef<MapRef>(null);
+  const [raster, setRaster] = useState<RasterLayerFromAPI | null>(null);
+
+  useEffect(() => {
+    (async () => {
+      const raster = await fetchRasterV4('3e5f56a7-b16e-4deb-8449-cc2c88805159'); // regen van nationale regenradar
+      setRaster(raster)
+    })()
+  }, [])
+
+  if (!raster) return <div>loading ...</div>
 
   return (
     <div
       style={{
-        position: "fixed",
+        position: 'absolute',
         top: 0,
         left: 0,
-        width: "100vw",
-        height: "100vh",
+        width: '100%',
+        height: '100%',
+        display: 'grid',
+        // gridTemplateRows: '9fr 1fr',
+        // rowGap: 10
       }}
     >
-      <ReactMapGL
-        {...viewport}
-        ref={mapRef}
-        width="100%"
-        height="100%"
-        onViewportChange={(viewport: MapViewport) => setViewport(viewport)}
-        mapboxApiAccessToken={mapBoxAccesToken}
-        mapStyle={"mapbox://styles/nelenschuurmans/ck8sgpk8h25ql1io2ccnueuj6"}
-        onClick={(event)=>{
-          console.log('hoan event', event.features);
-          setPopupData(event);
-        }}
-        onLoad={() => {
-          const map: mapboxgl.Map = mapRef && mapRef.current && mapRef.current.getMap();
-          // console.log('hoan source', map.getSource('measuringstation'))
-          // console.log('hoan layer', map.getLayer('layer-1'))
-          // map.addImage('hoanImage', image, { sdf: true })
-          map.loadImage(
-            pumpIcon,
-            (e, img) => {
-              if (e || !img) return console.log('Failed to load image: ', e);
-              map.addImage('pumpIconImage', img, { sdf: true });
-            }
-          );
-        }}
+      <Map
+        bounds={getBounds(raster)}
       >
-        {popupData && popupData.features?.length ? (
-          <Popup
-            latitude={popupData.lngLat[1]}
-            longitude={popupData.lngLat[0]}
-            closeButton={true}
-            closeOnClick={false}
-            onClose={() => setPopupData(null)}
-            anchor="top"
-          >
-            <h3>Properties</h3>
-            {popupData.features.map((feature: any, i: number) => {
-              return (
-                <div key={i}>
-                  <hr />
-                  <h4>{feature.source}</h4>
-                  {Object.keys(feature.properties).map(key => {
-                    return (
-                      <div key={key}>
-                        {key}: {feature.properties[key]}
-                      </div>
-                    );
-                  })}
-                </div>
-              )
-            })}
-          </Popup>
-        ) : null}
-
-        {/* Vector tile layer for measuring stations from Lizard */}
-        <Source
-          key={"measuringstation"}
-          id={"measuringstation"}
-          type={'vector'}
-          tiles={[
-            `/api/v4/measuringstations/vectortiles/{z}/{x}/{y}/?organisation__uuid=${selectedOrganisation.uuid}`
-          ]}
-          minzoom={6}
-          maxzoom={14}
+        <TileLayer
+          url={`https://api.mapbox.com/styles/v1/nelenschuurmans/ck8sgpk8h25ql1io2ccnueuj6/tiles/256/{z}/{x}/{y}@2x?access_token=${mapBoxAccesToken}`}
+        />
+        {/* <Pane
+          style={{
+            visibility: 'hidden'
+          }}
         >
-          <Layer
-            key={'layer-1'}
-            id={'layer-1'}
-            // type={'circle'}
-            type={'symbol'}
-            source={'measuringstation'}
-            source-layer={'default'}
-            layout={{
-              "text-field": "{object_name}",
-              "text-size": 14,
-              "text-anchor": "bottom-left",
-              "icon-image": "pumpIconImage",
-              "icon-anchor": "bottom-right",
-              "icon-size": 0.1
-            }}
-            paint={{
-              // "circle-radius": 4,
-              // "circle-stroke-width": 1,
-              // "circle-stroke-color": 'grey',
-              // "circle-color": [
-              //   'case',
-              //   ['>', ["get", "object_id"], 1000],
-              //   'red',
-              //   'blue'
-              // ],
-              "text-color": [
-                'case',
-                ['>', ["get", "object_id"], 1000],
-                'blue',
-                'red'
-              ],
-              "icon-color": [
-                'case',
-                ['>', ["get", "object_id"], 1000],
-                'blue',
-                'red'
-              ],
-              // "icon-color": [
-              //   'match',
-              //   ["get", "object_name"],
-              //   "ZWOLLE",
-              //   'red',
-              //   "Dante",
-              //   'brown',
-              //   'blue'
-              // ]
-            }}
+          <WMSTileLayer
+            url={'/wms/'}
+            layers={'radar:5min'}
+            styles={'radar-5min'}
+            time={'2021-02-02T10:50:00'}
+            format={'image/png'}
+            uppercase={true}
           />
-        </Source>
-      </ReactMapGL>
+        </Pane> */}
+        {timestamps.map(timestamp => (
+          <Pane
+            key={timestamp}
+            style={{
+              visibility: 'visible'
+            }}
+          >
+            <WMSTileLayer
+              url={'/wms/'}
+              layers={'radar:5min'}
+              styles={'radar-5min'}
+              time={timestamp}
+              format={'image/png'}
+              uppercase={true}
+              bounds={getBounds(raster)}
+              opacity={1}
+            />
+          </Pane>
+        ))}
+      </Map>
+      {/* <div
+        style={{
+          border: '1px solid grey'
+        }}
+      /> */}
     </div>
   )
 }
