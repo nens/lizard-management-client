@@ -22,14 +22,6 @@ export default function MapViewer () {
     fetchRasterV4("3e5f56a7-b16e-4deb-8449-cc2c88805159").then(res => setRaster(res));
   }, [])
 
-  useEffect(() => {
-    if (raster) {
-      setInterval(() => {
-        setStep((step) => (step + 1) % frameCount);
-      }, 1000)
-    }
-  }, [raster])
-
   if (!raster) return <div>loading ...</div>
 
   return (
@@ -41,8 +33,8 @@ export default function MapViewer () {
         width: '100%',
         height: '100%',
         display: 'grid',
-        // gridTemplateRows: '9fr 1fr',
-        // rowGap: 10
+        gridTemplateRows: '14fr 1fr',
+        rowGap: 10
       }}
     >
       <Map
@@ -86,6 +78,18 @@ export default function MapViewer () {
           </Pane>
         ))}
       </Map>
+      <div>
+        <button
+          onClick={() => {
+            setInterval(() => {
+              setStep((step) => (step + 1) % frameCount);
+            }, 1000);
+          }}
+        >
+          Play
+        </button>
+        <div>Time: {timestamps[step]}</div>
+      </div>
     </div>
   )
 }
