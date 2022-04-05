@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Map, Pane, TileLayer, WMSTileLayer } from 'react-leaflet';
 import { fetchRasterV4, RasterLayerFromAPI } from '../api/rasters';
 import { mapBoxAccesToken } from '../mapboxConfig';
+import { timestamps } from '../utils/getPath';
 
 const getBounds = (raster: RasterLayerFromAPI): LatLngBounds => {
   const bounds = raster.spatial_bounds!;
@@ -11,31 +12,23 @@ const getBounds = (raster: RasterLayerFromAPI): LatLngBounds => {
   );
 };
 
-const timestamps = [
-  '2021-02-02T10:00:00',
-  '2021-02-02T10:05:00',
-  '2021-02-02T10:10:00',
-  '2021-02-02T10:15:00',
-  '2021-02-02T10:20:00',
-  '2021-02-02T10:25:00',
-  '2021-02-02T10:30:00',
-  '2021-02-02T10:35:00',
-  '2021-02-02T10:40:00',
-  '2021-02-02T10:45:00',
-  '2021-02-02T10:50:00',
-  '2021-02-02T10:55:00',
-  '2021-02-02T11:00:00'
-];
+const frameCount = 13;
 
 export default function MapViewer () {
   const [raster, setRaster] = useState<RasterLayerFromAPI | null>(null);
+  const [step, setStep] = useState<number>(0);
 
   useEffect(() => {
-    (async () => {
-      const raster = await fetchRasterV4('3e5f56a7-b16e-4deb-8449-cc2c88805159'); // regen van nationale regenradar
-      setRaster(raster)
-    })()
+    fetchRasterV4("3e5f56a7-b16e-4deb-8449-cc2c88805159").then(res => setRaster(res));
   }, [])
+
+  useEffect(() => {
+    if (raster) {
+      setInterval(() => {
+        setStep((step) => (step + 1) % frameCount);
+      }, 1000)
+    }
+  }, [raster])
 
   if (!raster) return <div>loading ...</div>
 
@@ -60,7 +53,7 @@ export default function MapViewer () {
         />
         {/* <Pane
           style={{
-            visibility: 'hidden'
+            visibility: timestamps[step] === '2021-02-02T10:50:00' ? 'visible' : 'hidden'
           }}
         >
           <WMSTileLayer
@@ -76,7 +69,7 @@ export default function MapViewer () {
           <Pane
             key={timestamp}
             style={{
-              visibility: 'visible'
+              visibility: timestamp === timestamps[step] ? 'visible' : 'hidden'
             }}
           >
             <WMSTileLayer
@@ -88,15 +81,11 @@ export default function MapViewer () {
               uppercase={true}
               bounds={getBounds(raster)}
               opacity={1}
+              // onload={() => console.log('hoan', timestamp, timestamps[step])}
             />
           </Pane>
         ))}
       </Map>
-      {/* <div
-        style={{
-          border: '1px solid grey'
-        }}
-      /> */}
     </div>
   )
 }
