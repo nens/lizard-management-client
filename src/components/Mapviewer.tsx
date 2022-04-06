@@ -1,9 +1,9 @@
 import { LatLngBounds } from 'leaflet';
 import { useEffect, useState } from 'react';
-import { Map, Pane, TileLayer, WMSTileLayer } from 'react-leaflet';
+import { Map, TileLayer, WMSTileLayer } from 'react-leaflet';
 import { fetchRasterV4, RasterLayerFromAPI } from '../api/rasters';
 import { mapBoxAccesToken } from '../mapboxConfig';
-import { timestamps } from '../utils/getPath';
+import { timestamps as initialTimestamps } from '../utils/getPath';
 
 const getBounds = (raster: RasterLayerFromAPI): LatLngBounds => {
   const bounds = raster.spatial_bounds!;
@@ -12,15 +12,41 @@ const getBounds = (raster: RasterLayerFromAPI): LatLngBounds => {
   );
 };
 
-const frameCount = 13;
+// number of frame count based on the number of time steps
+const frameCount = initialTimestamps.length;
+
+// keep track of counter id in global scope to stop the setInterval
+let counterId: number;
 
 export default function MapViewer () {
   const [raster, setRaster] = useState<RasterLayerFromAPI | null>(null);
   const [step, setStep] = useState<number>(0);
+  const [tilesReady, setTilesReady] = useState<boolean>(false);
+  const [timestamps, setTimestamps] = useState<{time: string, loaded: boolean}[]>(initialTimestamps);
+  const [playAnimation, setPlayAnimation] = useState<boolean>(false);
+
+  // Functions to stop and start the animation
+  const startAnimation = () => {
+    setPlayAnimation(true);
+    counterId = window.setInterval(() => setStep((step) => (step + 1) % frameCount), 750);
+  };
+  const stopAnimation = () => {
+    setPlayAnimation(false);
+    window.clearInterval(counterId);
+  };
 
   useEffect(() => {
     fetchRasterV4("3e5f56a7-b16e-4deb-8449-cc2c88805159").then(res => setRaster(res));
   }, [])
+
+  useEffect(() => {
+    const unloadedTiles = timestamps.filter(ts => !ts.loaded).length;
+    if (unloadedTiles === 0) {
+      setTilesReady(true);
+    } else {
+      setTilesReady(false);
+    }
+  }, [timestamps])
 
   if (!raster) return <div>loading ...</div>
 
@@ -43,52 +69,60 @@ export default function MapViewer () {
         <TileLayer
           url={`https://api.mapbox.com/styles/v1/nelenschuurmans/ck8sgpk8h25ql1io2ccnueuj6/tiles/256/{z}/{x}/{y}@2x?access_token=${mapBoxAccesToken}`}
         />
-        {/* <Pane
-          style={{
-            visibility: timestamps[step] === '2021-02-02T10:50:00' ? 'visible' : 'hidden'
-          }}
-        >
+        {timestamps.map(timestamp => (
           <WMSTileLayer
+            key={timestamp.time}
             url={'/wms/'}
             layers={'radar:5min'}
             styles={'radar-5min'}
-            time={'2021-02-02T10:50:00'}
+            time={timestamp.time}
             format={'image/png'}
             uppercase={true}
-          />
-        </Pane> */}
-        {timestamps.map(timestamp => (
-          <Pane
-            key={timestamp}
-            style={{
-              visibility: timestamp === timestamps[step] ? 'visible' : 'hidden'
+            bounds={getBounds(raster)}
+            tileSize={1024}
+            opacity={timestamp.time === timestamps[step].time ? 1 : 0}
+            onload={() => {
+              console.log('finish loading tiles for ', timestamp.time)
+              setTimestamps(timestamps.map(ts => {
+                if (ts.time === timestamp.time) {
+                  return {
+                    ...ts,
+                    loaded: true
+                  }
+                };
+                return ts;
+              }))
             }}
-          >
-            <WMSTileLayer
-              url={'/wms/'}
-              layers={'radar:5min'}
-              styles={'radar-5min'}
-              time={timestamp}
-              format={'image/png'}
-              uppercase={true}
-              bounds={getBounds(raster)}
-              opacity={1}
-              // onload={() => console.log('hoan', timestamp, timestamps[step])}
-            />
-          </Pane>
+            // the onTileLoadStart happens when a tile is requested and starts loading
+            // in this case, stop the animation and set the "loaded" parameter back to false
+            // to indicate that the tiles are being reloaded
+            // However, it normally takes very long to reload all the tiles (way longer than the first time)
+            // During this time, user is not supposed to zoom in/zoom out, else the reloading process will happen again
+            ontileloadstart={() => {
+              stopAnimation()
+              setTimestamps(timestamps.map(ts => ({
+                ...ts,
+                loaded: false
+              })));
+            }}
+          />
         ))}
       </Map>
       <div>
         <button
-          onClick={() => {
-            setInterval(() => {
-              setStep((step) => (step + 1) % frameCount);
-            }, 1000);
-          }}
+          onClick={() => startAnimation()}
+          disabled={!tilesReady || playAnimation}
         >
-          Play
+          {tilesReady ? 'Play' : 'Loading ...'}
         </button>
-        <div>Time: {timestamps[step]}</div>
+        {' '}
+        <button
+          onClick={() => stopAnimation()}
+        >
+          Stop
+        </button>
+        {' '}
+        <span>Time: {timestamps[step].time}</span>
       </div>
     </div>
   )
