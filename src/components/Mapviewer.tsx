@@ -83,15 +83,17 @@ export default function MapViewer () {
             opacity={timestamp.time === timestamps[step].time ? 1 : 0}
             onload={() => {
               console.log('finish loading tiles for ', timestamp.time)
-              setTimestamps(timestamps.map(ts => {
-                if (ts.time === timestamp.time) {
-                  return {
-                    ...ts,
-                    loaded: true
-                  }
-                };
-                return ts;
-              }))
+              setTimestamps(timestamps =>
+                timestamps.map(ts => {
+                  if (ts.time === timestamp.time) {
+                    return {
+                      ...ts,
+                      loaded: true
+                    }
+                  };
+                  return ts;
+                })
+              )
             }}
             // the onTileLoadStart happens when a tile is requested and starts loading
             // in this case, stop the animation and set the "loaded" parameter back to false
@@ -99,25 +101,32 @@ export default function MapViewer () {
             // However, it normally takes very long to reload all the tiles (way longer than the first time)
             // During this time, user is not supposed to zoom in/zoom out, else the reloading process will happen again
             ontileloadstart={() => {
-              stopAnimation()
-              setTimestamps(timestamps.map(ts => ({
-                ...ts,
-                loaded: false
-              })));
+              stopAnimation();
+              setTimestamps(timestamps =>
+                timestamps.map(ts => {
+                  if (ts.time === timestamp.time) {
+                    return {
+                      ...ts,
+                      loaded: false
+                    }
+                  };
+                  return ts;
+                })
+              )
             }}
           />
         ))}
       </Map>
       <div>
         <button
-          onClick={() => startAnimation()}
+          onClick={startAnimation}
           disabled={!tilesReady || playAnimation}
         >
           {tilesReady ? 'Play' : 'Loading ...'}
         </button>
         {' '}
         <button
-          onClick={() => stopAnimation()}
+          onClick={stopAnimation}
         >
           Stop
         </button>
