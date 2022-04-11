@@ -102,15 +102,6 @@ export const ScenarioTable = () => {
       orderingField: "model_name",
     },
     {
-      titleRenderFunction: () => "User",
-      renderFunction: (row) => (
-        <span className={tableStyles.CellEllipsis} title={row.username}>
-          {row.username}
-        </span>
-      ),
-      orderingField: "username",
-    },
-    {
       titleRenderFunction: () => "Raw data",
       renderFunction: (row) => (row.has_raw_results === true ? "Yes" : "No"),
       orderingField: null,
@@ -199,7 +190,7 @@ export const ScenarioTable = () => {
       backUrl={"/management/data_management/scenarios"}
     >
       <TableStateContainer
-        gridTemplateColumns={"4fr 20fr 25fr 13fr 10fr 14fr 10fr 4fr"}
+        gridTemplateColumns={"4fr 25fr 30fr 10fr 14fr 10fr 4fr"}
         columnDefinitions={columnDefinitions}
         baseUrl={`${baseUrl}?`}
         checkBoxActions={[
