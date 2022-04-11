@@ -42,6 +42,8 @@ import { NewGroup } from "../alarms/alarmgroups/NewGroup";
 import { EditGroup } from "../alarms/alarmgroups/EditGroup";
 import { NewTemplate } from "../alarms/alarmtemplates/NewAlarmTemplate";
 import { EditTemplate } from "../alarms/alarmtemplates/EditTemplate";
+import MapViewer from "../components/Mapviewer";
+import WmsAnimation from "../components/WmsAnimation";
 import { UserTable } from "../users/UserTable";
 import { EditUser } from "../users/EditUser";
 import { NewUser } from "../users/NewUser";
@@ -52,7 +54,6 @@ import { GeoBlockTable } from "../data_management/geoblocks/GeoBlockTable";
 import { NewGeoBlock } from "../data_management/geoblocks/NewGeoBlock";
 import { EditGeoBlock } from "../data_management/geoblocks/EditGeoBlock";
 import SpinnerIfStandardSelectorsNotLoaded from "../components/SpinnerIfStandardSelectorsNotLoaded";
-import MapViewer from "../components/Mapviewer";
 // import { ViewContract } from '../contracts/ViewContract';
 
 const authenticatedRoutes = () => {
@@ -60,6 +61,7 @@ const authenticatedRoutes = () => {
     <SpinnerIfStandardSelectorsNotLoaded>
       <Switch>
         <Route exact path="/management/map_viewer" component={MapViewer} />
+        <Route exact path="/management/animation" component={WmsAnimation} />
         <Route exact path="/management/users" component={UserTable} />
         <Route exact path="/management/users/new" component={NewUser} />
         <Route exact path="/management/users/:id" component={EditUser} />
