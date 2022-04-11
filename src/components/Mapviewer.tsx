@@ -1,138 +1,161 @@
-import { LatLngBounds } from 'leaflet';
-import { useEffect, useState } from 'react';
-import { Map, TileLayer, WMSTileLayer } from 'react-leaflet';
-import { fetchRasterV4, RasterLayerFromAPI } from '../api/rasters';
+import { useRef, useState } from 'react';
+import ReactMapGL, { Source, Layer, MapEvent, MapRef, Popup } from 'react-map-gl';
 import { mapBoxAccesToken } from '../mapboxConfig';
-import { timestamps as initialTimestamps } from '../utils/getPath';
+import { useSelector } from 'react-redux';
+import { getSelectedOrganisation } from '../reducers';
+import mapboxgl from "mapbox-gl";
+import 'mapbox-gl/dist/mapbox-gl.css';
 
-const getBounds = (raster: RasterLayerFromAPI): LatLngBounds => {
-  const bounds = raster.spatial_bounds!;
-  return new LatLngBounds(
-    [bounds.north, bounds.west], [bounds.south, bounds.east]
-  );
-};
+// Use pump icon as iconImage for measuring station vector tile
+import pumpIcon from '../images/pump.png';
+// const pumpIconImage = new Image(20, 20);
+// pumpIconImage.src = pumpIcon;
 
-// number of frame count based on the number of time steps
-const frameCount = initialTimestamps.length;
+/* eslint-disable @typescript-eslint/no-var-requires */
+// eslint-disable-next-line import/no-webpack-loader-syntax
+(mapboxgl as any).workerClass = require("worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker").default;
 
-// keep track of counter id in global scope to stop the setInterval
-let counterId: number;
+interface MapViewport {
+  latitude: number;
+  longitude: number;
+  zoom: number;
+}
 
 export default function MapViewer () {
-  const [raster, setRaster] = useState<RasterLayerFromAPI | null>(null);
-  const [step, setStep] = useState<number>(0);
-  const [tilesReady, setTilesReady] = useState<boolean>(false);
-  const [timestamps, setTimestamps] = useState<{time: string, loaded: boolean}[]>(initialTimestamps);
-  const [playAnimation, setPlayAnimation] = useState<boolean>(false);
-
-  // Functions to stop and start the animation
-  const startAnimation = () => {
-    setPlayAnimation(true);
-    counterId = window.setInterval(() => setStep((step) => (step + 1) % frameCount), 750);
-  };
-  const stopAnimation = () => {
-    setPlayAnimation(false);
-    window.clearInterval(counterId);
-  };
-
-  useEffect(() => {
-    fetchRasterV4("3e5f56a7-b16e-4deb-8449-cc2c88805159").then(res => setRaster(res));
-  }, [])
-
-  useEffect(() => {
-    const unloadedTiles = timestamps.filter(ts => !ts.loaded).length;
-    if (unloadedTiles === 0) {
-      setTilesReady(true);
-    } else {
-      setTilesReady(false);
-    }
-  }, [timestamps])
-
-  if (!raster) return <div>loading ...</div>
+  const selectedOrganisation = useSelector(getSelectedOrganisation);
+  const [viewport, setViewport] = useState<MapViewport>({
+    latitude: 52.6892,
+    longitude: 5.9,
+    zoom: 8
+  });
+  const [popupData, setPopupData] = useState<MapEvent | null>(null);
+  const mapRef = useRef<MapRef>(null);
 
   return (
     <div
       style={{
-        position: 'absolute',
+        position: "fixed",
         top: 0,
         left: 0,
-        width: '100%',
-        height: '100%',
-        display: 'grid',
-        gridTemplateRows: '14fr 1fr',
-        rowGap: 10
+        width: "100vw",
+        height: "100vh",
       }}
     >
-      <Map
-        bounds={getBounds(raster)}
+      <ReactMapGL
+        {...viewport}
+        ref={mapRef}
+        width="100%"
+        height="100%"
+        onViewportChange={(viewport: MapViewport) => setViewport(viewport)}
+        mapboxApiAccessToken={mapBoxAccesToken}
+        mapStyle={"mapbox://styles/nelenschuurmans/ck8sgpk8h25ql1io2ccnueuj6"}
+        onClick={(event)=>{
+          console.log('hoan event', event.features);
+          setPopupData(event);
+        }}
+        onLoad={() => {
+          const map: mapboxgl.Map = mapRef && mapRef.current && mapRef.current.getMap();
+          // console.log('hoan source', map.getSource('measuringstation'))
+          // console.log('hoan layer', map.getLayer('layer-1'))
+          // map.addImage('hoanImage', image, { sdf: true })
+          map.loadImage(
+            pumpIcon,
+            (e, img) => {
+              if (e || !img) return console.log('Failed to load image: ', e);
+              map.addImage('pumpIconImage', img, { sdf: true });
+            }
+          );
+        }}
       >
-        <TileLayer
-          url={`https://api.mapbox.com/styles/v1/nelenschuurmans/ck8sgpk8h25ql1io2ccnueuj6/tiles/256/{z}/{x}/{y}@2x?access_token=${mapBoxAccesToken}`}
-        />
-        {timestamps.map(timestamp => (
-          <WMSTileLayer
-            key={timestamp.time}
-            url={'/wms/'}
-            layers={'radar:5min'}
-            styles={'radar-5min'}
-            time={timestamp.time}
-            format={'image/png'}
-            uppercase={true}
-            bounds={getBounds(raster)}
-            tileSize={1024}
-            opacity={timestamp.time === timestamps[step].time ? 1 : 0}
-            onload={() => {
-              console.log('finish loading tiles for ', timestamp.time)
-              setTimestamps(timestamps =>
-                timestamps.map(ts => {
-                  if (ts.time === timestamp.time) {
-                    return {
-                      ...ts,
-                      loaded: true
-                    }
-                  };
-                  return ts;
-                })
+        {popupData && popupData.features?.length ? (
+          <Popup
+            latitude={popupData.lngLat[1]}
+            longitude={popupData.lngLat[0]}
+            closeButton={true}
+            closeOnClick={false}
+            onClose={() => setPopupData(null)}
+            anchor="top"
+          >
+            <h3>Properties</h3>
+            {popupData.features.map((feature: any, i: number) => {
+              return (
+                <div key={i}>
+                  <hr />
+                  <h4>{feature.source}</h4>
+                  {Object.keys(feature.properties).map(key => {
+                    return (
+                      <div key={key}>
+                        {key}: {feature.properties[key]}
+                      </div>
+                    );
+                  })}
+                </div>
               )
+            })}
+          </Popup>
+        ) : null}
+
+        {/* Vector tile layer for measuring stations from Lizard */}
+        <Source
+          key={"measuringstation"}
+          id={"measuringstation"}
+          type={'vector'}
+          tiles={[
+            `/api/v4/measuringstations/vectortiles/{z}/{x}/{y}/?organisation__uuid=${selectedOrganisation.uuid}`
+          ]}
+          minzoom={6}
+          maxzoom={14}
+        >
+          <Layer
+            key={'layer-1'}
+            id={'layer-1'}
+            // type={'circle'}
+            type={'symbol'}
+            source={'measuringstation'}
+            source-layer={'default'}
+            layout={{
+              "text-field": "{object_name}",
+              "text-size": 14,
+              "text-anchor": "bottom-left",
+              "icon-image": "pumpIconImage",
+              "icon-anchor": "bottom-right",
+              "icon-size": 0.1
             }}
-            // the onTileLoadStart happens when a tile is requested and starts loading
-            // in this case, stop the animation and set the "loaded" parameter back to false
-            // to indicate that the tiles are being reloaded
-            // However, it normally takes very long to reload all the tiles (way longer than the first time)
-            // During this time, user is not supposed to zoom in/zoom out, else the reloading process will happen again
-            ontileloadstart={() => {
-              stopAnimation();
-              setTimestamps(timestamps =>
-                timestamps.map(ts => {
-                  if (ts.time === timestamp.time) {
-                    return {
-                      ...ts,
-                      loaded: false
-                    }
-                  };
-                  return ts;
-                })
-              )
+            paint={{
+              // "circle-radius": 4,
+              // "circle-stroke-width": 1,
+              // "circle-stroke-color": 'grey',
+              // "circle-color": [
+              //   'case',
+              //   ['>', ["get", "object_id"], 1000],
+              //   'red',
+              //   'blue'
+              // ],
+              "text-color": [
+                'case',
+                ['>', ["get", "object_id"], 1000],
+                'blue',
+                'red'
+              ],
+              "icon-color": [
+                'case',
+                ['>', ["get", "object_id"], 1000],
+                'blue',
+                'red'
+              ],
+              // "icon-color": [
+              //   'match',
+              //   ["get", "object_name"],
+              //   "ZWOLLE",
+              //   'red',
+              //   "Dante",
+              //   'brown',
+              //   'blue'
+              // ]
             }}
           />
-        ))}
-      </Map>
-      <div>
-        <button
-          onClick={startAnimation}
-          disabled={!tilesReady || playAnimation}
-        >
-          {tilesReady ? 'Play' : 'Loading ...'}
-        </button>
-        {' '}
-        <button
-          onClick={stopAnimation}
-        >
-          Stop
-        </button>
-        {' '}
-        <span>Time: {timestamps[step].time}</span>
-      </div>
+        </Source>
+      </ReactMapGL>
     </div>
   )
 }

@@ -100,7 +100,10 @@ const AppComponent = (props: RouteComponentProps) => {
       ) {
         return true;
       }
-      if (navigationLinkTile.linksToUrl === "/management/map_viewer") {
+      if (
+        navigationLinkTile.linksToUrl === "/management/map_viewer" ||
+        navigationLinkTile.linksToUrl === "/management/animation"
+      ) {
         return false;
       }
       return true;
