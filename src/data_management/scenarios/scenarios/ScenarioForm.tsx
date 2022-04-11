@@ -1,20 +1,20 @@
 import { RouteComponentProps, withRouter } from "react-router";
 import { connect, useSelector } from "react-redux";
-import { AppDispatch } from "../..";
-import { getOrganisations, getUsername } from "../../reducers";
-import { ScenarioResult } from "../../form/ScenarioResult";
-import { ExplainSideColumn } from "../../components/ExplainSideColumn";
-import { TextInput } from "./../../form/TextInput";
-import { AccessModifier } from "../../form/AccessModifier";
-import { SubmitButton } from "../../form/SubmitButton";
-import { CancelButton } from "../../form/CancelButton";
-import { useForm, Values } from "../../form/useForm";
-import { minLength } from "../../form/validators";
-import { addNotification } from "../../actions";
-import { scenarioFormHelpText } from "../../utils/help_texts/helpTextForScenarios";
-import { Scenario } from "../../types/scenarioType";
-import threediIcon from "../../images/3di@3x.svg";
-import formStyles from "./../../styles/Forms.module.css";
+import { AppDispatch } from "../../..";
+import { getOrganisations, getUsername } from "../../../reducers";
+import { ScenarioResult } from "../../../form/ScenarioResult";
+import { ExplainSideColumn } from "../../../components/ExplainSideColumn";
+import { TextInput } from "./../../../form/TextInput";
+import { AccessModifier } from "../../../form/AccessModifier";
+import { SubmitButton } from "../../../form/SubmitButton";
+import { CancelButton } from "../../../form/CancelButton";
+import { useForm, Values } from "../../../form/useForm";
+import { minLength } from "../../../form/validators";
+import { addNotification } from "../../../actions";
+import { scenarioFormHelpText } from "../../../utils/help_texts/helpTextForScenarios";
+import { Scenario } from "../../../types/scenarioType";
+import threediIcon from "../../../images/3di@3x.svg";
+import formStyles from "./../../../styles/Forms.module.css";
 
 interface Props {
   currentRecord: Scenario;
@@ -25,6 +25,8 @@ interface PropsFromDispatch {
 interface RouteParams {
   uuid: string;
 }
+
+const navigationUrl = "/management/data_management/scenarios/scenarios";
 
 const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<RouteParams>> = (
   props
@@ -61,7 +63,7 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
         const status = data.status;
         if (status === 200) {
           props.addNotification("Success! Scenario updated", 2000);
-          props.history.push("/management/data_management/scenarios/");
+          props.history.push(navigationUrl);
         } else {
           props.addNotification(status, 2000);
           console.error(data);
@@ -91,7 +93,7 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
       imgAltDescription={"3Di icon"}
       headerText={"3Di Scenarios"}
       explanationText={scenarioFormHelpText[fieldOnFocus] || scenarioFormHelpText["default"]}
-      backUrl={"/management/data_management/scenarios/"}
+      backUrl={navigationUrl}
       fieldName={fieldOnFocus}
     >
       <form className={formStyles.Form} onSubmit={handleSubmit} onReset={handleReset}>
@@ -177,7 +179,7 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
           readOnly
         />
         <div className={formStyles.ButtonContainer}>
-          <CancelButton url={"/management/data_management/scenarios/"} />
+          <CancelButton url={navigationUrl} />
           <SubmitButton onClick={tryToSubmitForm} />
         </div>
       </form>

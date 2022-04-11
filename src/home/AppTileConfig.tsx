@@ -1,4 +1,3 @@
-import React from "react";
 import alarmIcon from "../images/alarm@3x.svg";
 import userManagementIcon from "../images/userManagement.svg";
 import dataManagementIcon from "../images/database.svg";
@@ -148,6 +147,11 @@ export const navigationLinkPages: NavigationLinkPage[] = [
   },
   {
     onUrl: "/management/data_management/timeseries",
+    needsAuthentication: true,
+    needsOneOfRoles: ["admin", "supplier"],
+  },
+  {
+    onUrl: "/management/data_management/scenarios",
     needsAuthentication: true,
     needsOneOfRoles: ["admin", "supplier"],
   },
@@ -628,6 +632,54 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     homePageIcon: false,
     order: 400,
     onUrl: "/management/data_management/timeseries",
+    linksToUrl: "/management/data_management",
+    linksToUrlExternal: false,
+    requiresOneOfRoles: [],
+    icon: backArrowIcon,
+  },
+  {
+    title: "Projects",
+    // title: (
+    //   <FormattedMessage
+    //     id="home.projects"
+    //     defaultMessage="Projects"
+    //   />
+    // ),
+    order: 400,
+    homePageIcon: false,
+    onUrl: "/management/data_management/scenarios",
+    linksToUrl: "/management/data_management/scenarios/projects",
+    linksToUrlExternal: false,
+    requiresOneOfRoles: ["admin", "supplier"],
+    icon: threediIcon,
+  },
+  {
+    title: "3Di Scenarios",
+    // title: (
+    //   <FormattedMessage
+    //     id="home.scenarios"
+    //     defaultMessage="3Di Scenarios"
+    //   />
+    // ),
+    order: 400,
+    homePageIcon: false,
+    onUrl: "/management/data_management/scenarios",
+    linksToUrl: "/management/data_management/scenarios/scenarios",
+    linksToUrlExternal: false,
+    requiresOneOfRoles: ["admin", "supplier"],
+    icon: threediIcon,
+  },
+  {
+    title: "Go Back",
+    // title: (
+    //   <FormattedMessage
+    //     id="go_back"
+    //     defaultMessage="Go Back"
+    //   />
+    // ),
+    homePageIcon: false,
+    order: 400,
+    onUrl: "/management/data_management/scenarios",
     linksToUrl: "/management/data_management",
     linksToUrlExternal: false,
     requiresOneOfRoles: [],

@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import ScenarioForm from "./ScenarioForm";
-import SpinnerIfNotLoaded from "../../components/SpinnerIfNotLoaded";
-import { createFetchRecordFunctionFromUrl } from "../../utils/createFetchRecordFunctionFromUrl";
-import { Scenario } from "../../types/scenarioType";
+import SpinnerIfNotLoaded from "../../../components/SpinnerIfNotLoaded";
+import { createFetchRecordFunctionFromUrl } from "../../../utils/createFetchRecordFunctionFromUrl";
+import { Scenario } from "../../../types/scenarioType";
 
 interface RouteProps {
   uuid: string;

@@ -1,9 +1,6 @@
-import React from "react";
 import { Route, Switch } from "react-router-dom";
-
 import { navigationLinkPages } from "./AppTileConfig";
 import { App as Home } from "./App";
-
 import { PersonalApiKeysTable } from "../personal_api_keys/PersonalApiKeysTable";
 import { EditPersonalApiKey } from "../personal_api_keys/EditPersonalApiKey";
 import { NewPersonalApiKey } from "../personal_api_keys/NewPersonalApiKey";
@@ -15,8 +12,9 @@ import { NewRasterSource } from "../data_management/rasters/NewRasterSource";
 import { NewRasterLayer } from "../data_management/rasters/NewRasterLayer";
 import { EditRasterSource } from "../data_management/rasters/EditRasterSource";
 import { EditRasterLayer } from "../data_management/rasters/EditRasterLayer";
-import { ScenarioTable } from "../data_management/scenarios/ScenarioTable";
-import { EditScenario } from "../data_management/scenarios/EditScenario";
+import { ProjectTable } from "../data_management/scenarios/projects/ProjectTable";
+import { ScenarioTable } from "../data_management/scenarios/scenarios/ScenarioTable";
+import { EditScenario } from "../data_management/scenarios/scenarios/EditScenario";
 import { EditWmsLayer } from "../data_management/wms_layers/EditWmsLayer";
 import { NewWmsLayer } from "../data_management/wms_layers/NewWmsLayer";
 import { TimeseriesTable } from "../data_management/timeseries/timeseries/TimeseriesTable";
@@ -44,17 +42,17 @@ import { NewGroup } from "../alarms/alarmgroups/NewGroup";
 import { EditGroup } from "../alarms/alarmgroups/EditGroup";
 import { NewTemplate } from "../alarms/alarmtemplates/NewAlarmTemplate";
 import { EditTemplate } from "../alarms/alarmtemplates/EditTemplate";
-import MapViewer from "../components/Mapviewer";
 import { UserTable } from "../users/UserTable";
 import { EditUser } from "../users/EditUser";
 import { NewUser } from "../users/NewUser";
 import { LayerCollectionsTable } from "../data_management/layer_collections/LayerCollectionsTable";
 import { EditLayerCollection } from "../data_management/layer_collections/EditLayerCollection";
 import { NewLayerCollection } from "../data_management/layer_collections/NewLayerCollection";
-import SpinnerIfStandardSelectorsNotLoaded from "../components/SpinnerIfStandardSelectorsNotLoaded";
 import { GeoBlockTable } from "../data_management/geoblocks/GeoBlockTable";
 import { NewGeoBlock } from "../data_management/geoblocks/NewGeoBlock";
 import { EditGeoBlock } from "../data_management/geoblocks/EditGeoBlock";
+import SpinnerIfStandardSelectorsNotLoaded from "../components/SpinnerIfStandardSelectorsNotLoaded";
+import MapViewer from "../components/Mapviewer";
 // import { ViewContract } from '../contracts/ViewContract';
 
 const authenticatedRoutes = () => {
@@ -176,8 +174,10 @@ const authenticatedRoutes = () => {
           component={EditLocation}
         />
 
-        <Route exact path="/management/data_management/scenarios" component={ScenarioTable} />
-        <Route exact path="/management/data_management/scenarios/:uuid" component={EditScenario} />
+        <Route exact path="/management/data_management/scenarios/scenarios" component={ScenarioTable} />
+        <Route exact path="/management/data_management/scenarios/scenarios/:uuid" component={EditScenario} />
+        <Route exact path="/management/data_management/scenarios/projects" component={ProjectTable} />
+        {/* <Route exact path="/management/data_management/scenarios/projects/:uuid" component={EditScenario} /> */}
 
         <Route
           exact

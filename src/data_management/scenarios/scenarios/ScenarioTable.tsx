@@ -1,22 +1,22 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import TableStateContainer from "../../components/TableStateContainer";
+import TableStateContainer from "../../../components/TableStateContainer";
 import { NavLink } from "react-router-dom";
-import TableActionButtons from "../../components/TableActionButtons";
-import { ExplainSideColumn } from "../../components/ExplainSideColumn";
-import threediIcon from "../../images/3di@3x.svg";
-import tableStyles from "../../components/Table.module.css";
-import { getUsername } from "../../reducers";
-import { bytesToDisplayValue } from "../../utils/byteUtils";
-import { DefaultScenarioExplanationText } from "../../utils/help_texts/helpTextForScenarios";
-import { getLocalDateString } from "../../utils/dateUtils";
-import DeleteModal from "../../components/DeleteModal";
-import AuthorisationModal from "../../components/AuthorisationModal";
-import { ColumnDefinition } from "../../components/Table";
-import { Scenario } from "../../types/scenarioType";
+import TableActionButtons from "../../../components/TableActionButtons";
+import { ExplainSideColumn } from "../../../components/ExplainSideColumn";
+import threediIcon from "../../../images/3di@3x.svg";
+import tableStyles from "../../../components/Table.module.css";
+import { getUsername } from "../../../reducers";
+import { bytesToDisplayValue } from "../../../utils/byteUtils";
+import { DefaultScenarioExplanationText } from "../../../utils/help_texts/helpTextForScenarios";
+import { getLocalDateString } from "../../../utils/dateUtils";
+import DeleteModal from "../../../components/DeleteModal";
+import AuthorisationModal from "../../../components/AuthorisationModal";
+import { ColumnDefinition } from "../../../components/Table";
+import { Scenario } from "../../../types/scenarioType";
 
 const baseUrl = "/api/v4/scenarios/";
-const navigationUrl = "/management/data_management/scenarios";
+const navigationUrl = "/management/data_management/scenarios/scenarios";
 
 const fetchScenariosWithOptions = (uuids: string[], fetchOptions: RequestInit) => {
   const fetches = uuids.map((uuid) => {
@@ -196,7 +196,7 @@ export const ScenarioTable = () => {
       imgAltDescription={"3Di icon"}
       headerText={"3Di Scenarios"}
       explanationText={<DefaultScenarioExplanationText />}
-      backUrl={"/management/data_management"}
+      backUrl={"/management/data_management/scenarios"}
     >
       <TableStateContainer
         gridTemplateColumns={"4fr 20fr 25fr 13fr 10fr 14fr 10fr 4fr"}
