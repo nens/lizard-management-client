@@ -1,4 +1,3 @@
-import React from "react";
 import { useSelector } from "react-redux";
 import {
   getScenarioTotalSize,
@@ -61,4 +60,12 @@ export const scenarioFormHelpText: HelpText = {
   organisation: organisationHelpText,
   supplier: supplierHelpText,
   accessModifier: accessModifierHelpText,
+  extraMetadata: (
+    <>
+      <p>Free JSON field to add information to this object.</p>
+      <p>
+        <i>e.g. {"{“Location description”: “Near weir with code KST-43668”}"}</i>
+      </p>
+    </>
+  ),
 };

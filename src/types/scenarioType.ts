@@ -19,4 +19,5 @@ export interface Scenario {
   has_raw_results: boolean;
   total_size: number;
   extra_metadata: Object;
+  project: string;
 }

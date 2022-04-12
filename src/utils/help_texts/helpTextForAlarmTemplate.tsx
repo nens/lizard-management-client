@@ -1,5 +1,3 @@
-import React from "react";
-
 import { HelpText, nameHelpText } from "./defaultHelpText";
 
 export const templateFormHelpText: HelpText = {

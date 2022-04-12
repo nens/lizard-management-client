@@ -60,12 +60,12 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
       description: values.description,
       access_modifier: values.accessModifier,
       organisation: values.organisation && values.organisation.value,
-      simulationStart: values.simulationStart,
-      simulationEnd: values.simulationEnd,
-      simulationIdentifier: values.simulationIdentifier,
-      modelName: values.modelName,
-      modelIdentifier: values.modelIdentifier,
-      modelRevision: values.modelRevision,
+      simulation_start: values.simulationStart,
+      simulation_end: values.simulationEnd,
+      simulation_identifier: values.simulationIdentifier,
+      model_name: values.modelName,
+      model_identifier: values.modelIdentifier,
+      model_revision: values.modelRevision,
       extra_metadata: values.extraMetadata ? JSON.parse(values.extraMetadata) : {},
     };
 
