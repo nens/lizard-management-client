@@ -16,7 +16,7 @@ import { Project } from "../../../types/projectType";
 import { SelectDropdown } from "../../../form/SelectDropdown";
 import { fetchSuppliers } from "../../rasters/RasterSourceForm";
 import { TextArea } from "../../../form/TextArea";
-import threediIcon from "../../../images/3di@3x.svg";
+import projectIcon from "../../../images/project.svg";
 import formStyles from "./../../../styles/Forms.module.css";
 
 interface Props {
@@ -122,8 +122,8 @@ const ProjectForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rout
 
   return (
     <ExplainSideColumn
-      imgUrl={threediIcon}
-      imgAltDescription={"3Di icon"}
+      imgUrl={projectIcon}
+      imgAltDescription={"Projects"}
       headerText={"Projects"}
       explanationText={scenarioFormHelpText[fieldOnFocus] || scenarioFormHelpText["default"]}
       backUrl={navigationUrl}

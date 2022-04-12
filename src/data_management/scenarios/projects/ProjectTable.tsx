@@ -2,14 +2,14 @@ import { useState } from "react";
 import { NavLink, RouteComponentProps } from "react-router-dom";
 import TableStateContainer from "../../../components/TableStateContainer";
 import TableActionButtons from "../../../components/TableActionButtons";
-import { ExplainSideColumn } from "../../../components/ExplainSideColumn";
-import threediIcon from "../../../images/3di@3x.svg";
-import tableStyles from "../../../components/Table.module.css";
-import { DefaultScenarioExplanationText } from "../../../utils/help_texts/helpTextForScenarios";
 import DeleteModal from "../../../components/DeleteModal";
+import { ExplainSideColumn } from "../../../components/ExplainSideColumn";
+import { DefaultScenarioExplanationText } from "../../../utils/help_texts/helpTextForScenarios";
 import { ColumnDefinition } from "../../../components/Table";
 import { Project } from "../../../types/projectType";
 import { getAccessibiltyText } from "../../../form/AccessModifier";
+import projectIcon from "../../../images/project.svg";
+import tableStyles from "../../../components/Table.module.css";
 
 const baseUrl = "/api/v4/projects/";
 const navigationUrl = "/management/data_management/scenarios/projects";
@@ -105,9 +105,9 @@ export const ProjectTable = (props: RouteComponentProps) => {
 
   return (
     <ExplainSideColumn
-      imgUrl={threediIcon}
-      imgAltDescription={"3Di icon"}
-      headerText={"3Di Scenarios"}
+      imgUrl={projectIcon}
+      imgAltDescription={"Project"}
+      headerText={"Projects"}
       explanationText={<DefaultScenarioExplanationText />}
       backUrl={"/management/data_management/scenarios"}
     >
