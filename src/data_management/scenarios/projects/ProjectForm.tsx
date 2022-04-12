@@ -10,7 +10,7 @@ import { CancelButton } from "../../../form/CancelButton";
 import { useForm, Values } from "../../../form/useForm";
 import { minLength } from "../../../form/validators";
 import { addNotification } from "../../../actions";
-import { scenarioFormHelpText } from "../../../utils/help_texts/helpTextForScenarios";
+import { projectFormHelpText } from "../../../utils/help_texts/helpTextForProject";
 import { convertToSelectObject } from "../../../utils/convertToSelectObject";
 import { Project } from "../../../types/projectType";
 import { SelectDropdown } from "../../../form/SelectDropdown";
@@ -125,7 +125,7 @@ const ProjectForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rout
       imgUrl={projectIcon}
       imgAltDescription={"Projects"}
       headerText={"Projects"}
-      explanationText={scenarioFormHelpText[fieldOnFocus] || scenarioFormHelpText["default"]}
+      explanationText={projectFormHelpText[fieldOnFocus] || projectFormHelpText["default"]}
       backUrl={navigationUrl}
       fieldName={fieldOnFocus}
     >

@@ -4,7 +4,7 @@ import TableStateContainer from "../../../components/TableStateContainer";
 import TableActionButtons from "../../../components/TableActionButtons";
 import DeleteModal from "../../../components/DeleteModal";
 import { ExplainSideColumn } from "../../../components/ExplainSideColumn";
-import { DefaultScenarioExplanationText } from "../../../utils/help_texts/helpTextForScenarios";
+import { defaultTableHelpText } from "../../../utils/help_texts/defaultHelpText";
 import { ColumnDefinition } from "../../../components/Table";
 import { Project } from "../../../types/projectType";
 import { getAccessibiltyText } from "../../../form/AccessModifier";
@@ -108,7 +108,9 @@ export const ProjectTable = (props: RouteComponentProps) => {
       imgUrl={projectIcon}
       imgAltDescription={"Project"}
       headerText={"Projects"}
-      explanationText={<DefaultScenarioExplanationText />}
+      explanationText={defaultTableHelpText(
+        "Projects are used to group and give insights on 3Di scenarios."
+      )}
       backUrl={"/management/data_management/scenarios"}
     >
       <TableStateContainer
