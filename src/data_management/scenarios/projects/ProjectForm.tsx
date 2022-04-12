@@ -202,13 +202,7 @@ const ProjectForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rout
           onFocus={handleFocus}
           onBlur={handleBlur}
           readOnly={
-            !selectedOrganisation
-              ? true
-              : !(
-                  !currentRecord &&
-                  organisationsToSwitchTo.length > 0 &&
-                  selectedOrganisation.roles.includes("admin")
-                )
+            !(organisationsToSwitchTo.length > 0 && selectedOrganisation.roles.includes("admin"))
           }
         />
         <SelectDropdown
@@ -221,12 +215,8 @@ const ProjectForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rout
           validated
           isAsync
           isCached
-          loadOptions={
-            selectedOrganisation
-              ? (searchInput) => fetchSuppliers(selectedOrganisation.uuid, searchInput)
-              : undefined
-          }
-          readOnly={!selectedOrganisation ? true : !selectedOrganisation.roles.includes("admin")}
+          loadOptions={(searchInput) => fetchSuppliers(selectedOrganisation.uuid, searchInput)}
+          readOnly={!selectedOrganisation.roles.includes("admin")}
           dropUp
           onFocus={handleFocus}
           onBlur={handleBlur}
