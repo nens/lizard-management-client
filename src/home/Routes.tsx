@@ -13,6 +13,8 @@ import { NewRasterLayer } from "../data_management/rasters/NewRasterLayer";
 import { EditRasterSource } from "../data_management/rasters/EditRasterSource";
 import { EditRasterLayer } from "../data_management/rasters/EditRasterLayer";
 import { ProjectTable } from "../data_management/scenarios/projects/ProjectTable";
+import { EditProject } from "../data_management/scenarios/projects/EditProject";
+import { NewProject } from "../data_management/scenarios/projects/NewProject";
 import { ScenarioTable } from "../data_management/scenarios/scenarios/ScenarioTable";
 import { EditScenario } from "../data_management/scenarios/scenarios/EditScenario";
 import { EditWmsLayer } from "../data_management/wms_layers/EditWmsLayer";
@@ -176,10 +178,31 @@ const authenticatedRoutes = () => {
           component={EditLocation}
         />
 
-        <Route exact path="/management/data_management/scenarios/scenarios" component={ScenarioTable} />
-        <Route exact path="/management/data_management/scenarios/scenarios/:uuid" component={EditScenario} />
-        <Route exact path="/management/data_management/scenarios/projects" component={ProjectTable} />
-        {/* <Route exact path="/management/data_management/scenarios/projects/:uuid" component={EditScenario} /> */}
+        <Route
+          exact
+          path="/management/data_management/scenarios/scenarios"
+          component={ScenarioTable}
+        />
+        <Route
+          exact
+          path="/management/data_management/scenarios/scenarios/:uuid"
+          component={EditScenario}
+        />
+        <Route
+          exact
+          path="/management/data_management/scenarios/projects"
+          component={ProjectTable}
+        />
+        <Route
+          exact
+          path="/management/data_management/scenarios/projects/new"
+          component={NewProject}
+        />
+        <Route
+          exact
+          path="/management/data_management/scenarios/projects/:uuid"
+          component={EditProject}
+        />
 
         <Route
           exact
