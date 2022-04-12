@@ -643,22 +643,6 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     icon: backArrowIcon,
   },
   {
-    title: "Projects",
-    // title: (
-    //   <FormattedMessage
-    //     id="home.projects"
-    //     defaultMessage="Projects"
-    //   />
-    // ),
-    order: 400,
-    homePageIcon: false,
-    onUrl: "/management/data_management/scenarios",
-    linksToUrl: "/management/data_management/scenarios/projects",
-    linksToUrlExternal: false,
-    requiresOneOfRoles: ["admin", "supplier"],
-    icon: projectIcon,
-  },
-  {
     title: "3Di Scenarios",
     // title: (
     //   <FormattedMessage
@@ -666,13 +650,29 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     //     defaultMessage="3Di Scenarios"
     //   />
     // ),
-    order: 400,
+    order: 100,
     homePageIcon: false,
     onUrl: "/management/data_management/scenarios",
     linksToUrl: "/management/data_management/scenarios/scenarios",
     linksToUrlExternal: false,
     requiresOneOfRoles: ["admin", "supplier"],
     icon: threediIcon,
+  },
+  {
+    title: "Projects",
+    // title: (
+    //   <FormattedMessage
+    //     id="home.projects"
+    //     defaultMessage="Projects"
+    //   />
+    // ),
+    order: 200,
+    homePageIcon: false,
+    onUrl: "/management/data_management/scenarios",
+    linksToUrl: "/management/data_management/scenarios/projects",
+    linksToUrlExternal: false,
+    requiresOneOfRoles: ["admin", "supplier"],
+    icon: projectIcon,
   },
   {
     title: "Go Back",
@@ -683,7 +683,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     //   />
     // ),
     homePageIcon: false,
-    order: 400,
+    order: 300,
     onUrl: "/management/data_management/scenarios",
     linksToUrl: "/management/data_management",
     linksToUrlExternal: false,

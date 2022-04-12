@@ -1,19 +1,20 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import TableStateContainer from "../../../components/TableStateContainer";
 import { NavLink } from "react-router-dom";
+import TableStateContainer from "../../../components/TableStateContainer";
 import TableActionButtons from "../../../components/TableActionButtons";
 import { ExplainSideColumn } from "../../../components/ExplainSideColumn";
-import threediIcon from "../../../images/3di@3x.svg";
-import tableStyles from "../../../components/Table.module.css";
+import { ColumnDefinition } from "../../../components/Table";
+import { Scenario } from "../../../types/scenarioType";
 import { getUsername } from "../../../reducers";
 import { bytesToDisplayValue } from "../../../utils/byteUtils";
 import { DefaultScenarioExplanationText } from "../../../utils/help_texts/helpTextForScenarios";
 import { getLocalDateString } from "../../../utils/dateUtils";
 import DeleteModal from "../../../components/DeleteModal";
 import AuthorisationModal from "../../../components/AuthorisationModal";
-import { ColumnDefinition } from "../../../components/Table";
-import { Scenario } from "../../../types/scenarioType";
+import AddToProjectModal from "./AddToProjectModal";
+import threediIcon from "../../../images/3di@3x.svg";
+import tableStyles from "../../../components/Table.module.css";
 
 const baseUrl = "/api/v4/scenarios/";
 const navigationUrl = "/management/data_management/scenarios/scenarios";
@@ -39,6 +40,9 @@ export const ScenarioTable = () => {
 
   // selected rows for action to change accessibility
   const [rowsToChangeAccess, setRowsToChangeAccess] = useState<Scenario[]>([]);
+
+  // selected rows for adding scenarios to project action
+  const [selectedRowsToAddToProject, setSelectedRowsToAddToProject] = useState<Scenario[]>([]);
 
   const userName = useSelector(getUsername);
 
@@ -141,6 +145,10 @@ export const ScenarioTable = () => {
               row.has_raw_results
                 ? [
                     {
+                      displayValue: "Add to Project",
+                      actionFunction: (row) => setSelectedRowsToAddToProject([row]),
+                    },
+                    {
                       displayValue: "Delete raw data",
                       actionFunction: (
                         row,
@@ -162,6 +170,10 @@ export const ScenarioTable = () => {
                     },
                   ]
                 : [
+                    {
+                      displayValue: "Add to Project",
+                      actionFunction: (row) => setSelectedRowsToAddToProject([row]),
+                    },
                     {
                       displayValue: "Delete",
                       actionFunction: (
@@ -290,6 +302,16 @@ export const ScenarioTable = () => {
           resetTable={resetTable}
           handleClose={() => {
             setRowsToChangeAccess([]);
+            setResetTable(null);
+          }}
+        />
+      ) : null}
+      {selectedRowsToAddToProject.length > 0 ? (
+        <AddToProjectModal
+          scenarios={selectedRowsToAddToProject}
+          resetTable={resetTable}
+          handleClose={() => {
+            setSelectedRowsToAddToProject([]);
             setResetTable(null);
           }}
         />
