@@ -42,8 +42,8 @@ interface Props {
 }
 
 // Helper function to fetch paginated raster layers with search query
-const fetchRasterLayers = async (uuid: string, searchQuery: string) => {
-  const params = [`organisation__uuid=${uuid}`, "temporal=true", "page_size=20"];
+const fetchRasterLayers = async (searchQuery: string) => {
+  const params = ["temporal=true", "page_size=20"];
 
   if (searchQuery) {
     if (UUID_REGEX.test(searchQuery)) {
@@ -254,7 +254,7 @@ const RasterAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           triedToSubmit={triedToSubmit}
           isAsync
           isCached
-          loadOptions={(searchInput) => fetchRasterLayers(selectedOrganisation.uuid, searchInput)}
+          loadOptions={fetchRasterLayers}
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
