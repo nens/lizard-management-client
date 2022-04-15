@@ -38,6 +38,10 @@ export const ScenarioTable = () => {
   const [rowsWithRawDataToBeDeleted, setRowsWithRawDataToBeDeleted] = useState<Scenario[]>([]);
   const [resetTable, setResetTable] = useState<Function | null>(null);
 
+  // Get query param of project__uuid from the URL if there is
+  // to show a list of scenarios for a specific project
+  const projectUuid = new URLSearchParams(window.location.search).get("project__uuid");
+
   // selected rows for action to change accessibility
   const [rowsToChangeAccess, setRowsToChangeAccess] = useState<Scenario[]>([]);
 
@@ -204,7 +208,7 @@ export const ScenarioTable = () => {
       <TableStateContainer
         gridTemplateColumns={"4fr 25fr 30fr 10fr 14fr 10fr 4fr"}
         columnDefinitions={columnDefinitions}
-        baseUrl={`${baseUrl}?`}
+        baseUrl={`${baseUrl}?${projectUuid ? `project__uuid=${projectUuid}&` : ''}`}
         checkBoxActions={[
           {
             displayValue: "Change rights",

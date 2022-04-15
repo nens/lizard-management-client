@@ -89,6 +89,10 @@ export const ProjectTable = (props: RouteComponentProps) => {
                 ) => {
                   deleteActions([row], triggerReloadWithCurrentPage, null);
                 },
+              },
+              {
+                displayValue: "List of scenarios",
+                actionFunction: (row) => window.open(`/management/data_management/scenarios/scenarios/?project__uuid=${row.uuid}`)
               }
             ]}
           />
