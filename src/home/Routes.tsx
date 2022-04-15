@@ -203,6 +203,14 @@ const authenticatedRoutes = () => {
           path="/management/data_management/scenarios/projects/:uuid"
           component={EditProject}
         />
+        {/* Temporal solution to keep scenario form backwards compatible with previous URL link */}
+        {/* Once the links to scenario in the lizard catalogue and the result email are updated to the new URL, we can remove this part. */}
+        <Route
+          exact
+          path="/management/data_management/scenarios/:uuid"
+          component={EditScenario}
+        />
+        {/* END */}
 
         <Route
           exact
