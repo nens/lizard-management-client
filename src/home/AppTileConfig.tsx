@@ -1,4 +1,3 @@
-import React from "react";
 import alarmIcon from "../images/alarm@3x.svg";
 import userManagementIcon from "../images/userManagement.svg";
 import dataManagementIcon from "../images/database.svg";
@@ -337,12 +336,6 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
   // },
   {
     title: "Map viewer",
-    // title: (
-    //   <FormattedMessage
-    //     id="home.personal_api_keys"
-    //     defaultMessage="Personal API keys"
-    //   />
-    // ),
     homePageIcon: false,
     order: 600,
     onUrl: "/management",
@@ -351,22 +344,32 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     requiresOneOfRoles: ["user", "admin", "supplier", "manager"],
     icon: rasterIcon,
   },
-  // {
-  //   title: "Go Back",
-  //   // title: (
-  //   //   <FormattedMessage
-  //   //     id="go_back"
-  //   //     defaultMessage="Go Back"
-  //   //   />
-  //   // ),
-  //   homePageIcon: false,
-  //   order: 600,
-  //   onUrl: "/management",
-  //   linksToUrl: "/",
-  //   linksToUrlExternal: false,
-  //   requiresOneOfRoles: [],
-  //   icon: backArrowIcon
-  // },
+  {
+    title: "WMS Animation",
+    homePageIcon: false,
+    order: 700,
+    onUrl: "/management",
+    linksToUrl: "/management/animation",
+    linksToUrlExternal: false,
+    requiresOneOfRoles: ["user", "admin", "supplier", "manager"],
+    icon: rasterSourcesIcon,
+  },
+  {
+    title: "Go Back",
+    // title: (
+    //   <FormattedMessage
+    //     id="go_back"
+    //     defaultMessage="Go Back"
+    //   />
+    // ),
+    homePageIcon: false,
+    order: 800,
+    onUrl: "/management",
+    linksToUrl: "/",
+    linksToUrlExternal: false,
+    requiresOneOfRoles: [],
+    icon: backArrowIcon
+  },
   {
     title: "rasters",
     // title: (

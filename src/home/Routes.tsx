@@ -1,4 +1,3 @@
-import React from "react";
 import { Route, Switch } from "react-router-dom";
 
 import { navigationLinkPages } from "./AppTileConfig";
@@ -45,6 +44,7 @@ import { EditGroup } from "../alarms/alarmgroups/EditGroup";
 import { NewTemplate } from "../alarms/alarmtemplates/NewAlarmTemplate";
 import { EditTemplate } from "../alarms/alarmtemplates/EditTemplate";
 import MapViewer from "../components/Mapviewer";
+import WmsAnimation from "../components/WmsAnimation";
 import { UserTable } from "../users/UserTable";
 import { EditUser } from "../users/EditUser";
 import { NewUser } from "../users/NewUser";
@@ -62,6 +62,7 @@ const authenticatedRoutes = () => {
     <SpinnerIfStandardSelectorsNotLoaded>
       <Switch>
         <Route exact path="/management/map_viewer" component={MapViewer} />
+        <Route exact path="/management/animation" component={WmsAnimation} />
         <Route exact path="/management/users" component={UserTable} />
         <Route exact path="/management/users/new" component={NewUser} />
         <Route exact path="/management/users/:id" component={EditUser} />

@@ -41,6 +41,19 @@ export const timestamps = [
   }
 ];
 
-export const getPath = (timestamp: string) => {
-  return `/wms/?service=WMS&request=GetMap&version=1.1.1&format=image/png&layers=radar:5min&styles=radar-5min&transparent=false&srs=EPSG:3857&time=${timestamp}&bbox={bbox-epsg-3857}`
+export const getPath = (step: number) => {
+  return `/wms/?
+    service=WMS&
+    request=GetMap&
+    version=1.1.1&
+    format=image/png&
+    layers=radar:5min&
+    styles=radar-5min&
+    transparent=false&
+    height=256&
+    width=256&
+    srs=EPSG:3857&
+    time=${timestamps[step].time}&
+    bbox={bbox-epsg-3857}
+  `
 }
