@@ -58,7 +58,7 @@ const ProjectForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rout
     const body = {
       name: values.name,
       code: values.code,
-      description: values.description,
+      description: values.description || '',
       access_modifier: values.accessModifier,
       organisation: values.organisation && values.organisation.value,
       supplier: values.supplier && values.supplier.label,
@@ -169,14 +169,16 @@ const ProjectForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rout
           validated
         />
         <TextInput
-          title={"Code"}
+          title={"Code *"}
           name={"code"}
           value={values.code}
           valueChanged={handleInputChange}
           onFocus={handleFocus}
           onBlur={handleBlur}
           clearInput={clearInput}
-          validated
+          validated={!minLength(1, values.code)}
+          errorMessage={minLength(1, values.code)}
+          triedToSubmit={triedToSubmit}
         />
         <span className={formStyles.FormFieldTitle}>2: Rights</span>
         <AccessModifier
