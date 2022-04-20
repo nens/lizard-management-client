@@ -270,8 +270,7 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
 };
 
 const mapPropsToDispatch = (dispatch: AppDispatch) => ({
-  addNotification: (message: string | number, timeout: number) =>
-    dispatch(addNotification(message, timeout)),
+  addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout))
 });
 
 export default connect(null, mapPropsToDispatch)(withRouter(ScenarioForm));

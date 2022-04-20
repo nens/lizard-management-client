@@ -233,8 +233,7 @@ const ProjectForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rout
 };
 
 const mapPropsToDispatch = (dispatch: AppDispatch) => ({
-  addNotification: (message: string | number, timeout: number) =>
-    dispatch(addNotification(message, timeout)),
+  addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout))
 });
 
 export default connect(null, mapPropsToDispatch)(withRouter(ProjectForm));

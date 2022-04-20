@@ -36,23 +36,27 @@ function AddToProjectModal(props: MyProps & DispatchProps) {
   const handleSubmit = () => {
     if (!selectedProject) return;
 
-    fetch(`/api/v4/projects/${selectedProject.value}/scenarios/`, {
-      credentials: "same-origin",
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(scenarios.map((scenario) => scenario.uuid)),
-    })
-      .then((res) => {
-        if (res.status === 204) {
-          props.addNotification("Success! Scenarios added to project", 2000);
-          props.handleClose();
-          props.resetTable && props.resetTable();
-        } else {
-          props.addNotification("An error occurred! Please try again!", 2000);
-          console.error("Error adding scenarios to project: ", res);
-        }
+    scenarios.forEach(scenario => {
+      fetch(`/api/v4/scenarios/${scenario.uuid}/`, {
+        credentials: "same-origin",
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          project: selectedProject.value
+        })
       })
-      .catch(console.error);
+        .then((res) => {
+          if (res.status === 200) {
+            props.addNotification("Success! Scenarios added to project", 2000);
+            props.handleClose();
+            props.resetTable && props.resetTable();
+          } else {
+            props.addNotification("An error occurred! Please try again!", 2000);
+            console.error("Error adding scenarios to project: ", res);
+          }
+        })
+        .catch(console.error);
+    });
   };
 
   return (
@@ -83,15 +87,9 @@ function AddToProjectModal(props: MyProps & DispatchProps) {
             name={"project"}
             placeholder={"- Search and select -"}
             valueChanged={(value) => setSelectedProject(value as Value)}
-            options={
-              availableProjects
-                ? availableProjects.map((project: Project) =>
-                    convertToSelectObject(project.uuid, project.name)
-                  )
-                : []
-            }
-            validated
+            options={availableProjects ? availableProjects.map((project: Project) => convertToSelectObject(project.uuid, project.name)) : []}
             isLoading={projectsIsFetching}
+            validated
           />
         </div>
         <div className={formStyles.ButtonContainer}>
@@ -109,8 +107,7 @@ function AddToProjectModal(props: MyProps & DispatchProps) {
 }
 
 const mapDispatchToProps = (dispatch: AppDispatch) => ({
-  addNotification: (message: string | number, timeout: number) =>
-    dispatch(addNotification(message, timeout)),
+  addNotification: (message: string | number, timeout: number) => dispatch(addNotification(message, timeout))
 });
 type DispatchProps = ReturnType<typeof mapDispatchToProps>;
 
