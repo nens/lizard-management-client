@@ -16,6 +16,7 @@ import { addNotification } from "../../../actions";
 import { scenarioFormHelpText } from "../../../utils/help_texts/helpTextForScenarios";
 import { convertToSelectObject } from "../../../utils/convertToSelectObject";
 import { Scenario } from "../../../types/scenarioType";
+import { Project } from "../../../types/projectType";
 import threediIcon from "../../../images/3di@3x.svg";
 import formStyles from "./../../../styles/Forms.module.css";
 
@@ -28,6 +29,15 @@ interface PropsFromDispatch {
 interface RouteParams {
   uuid: string;
 }
+
+// Helper function to fetch paginated projects with search query
+export const fetchProjects = async (searchQuery: string) => {
+  const urlQuery = searchQuery ? `?name__icontains=${searchQuery}` : "";
+  const response = await fetch(`/api/v4/projects/${urlQuery}`);
+  const responseJSON = await response.json();
+
+  return responseJSON.results.map((project: Project) => convertToSelectObject(project.uuid, project.name));
+};
 
 const navigationUrl = "/management/data_management/scenarios/scenarios";
 
@@ -43,6 +53,8 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
     name: currentRecord.name,
     uuid: currentRecord.uuid,
     description: currentRecord.description,
+    source: currentRecord.source,
+    project: currentRecord.project ? convertToSelectObject(currentRecord.project) : null,
     simulationStart: currentRecord.simulation_start,
     simulationEnd: currentRecord.simulation_end,
     simulationIdentifier: currentRecord.simulation_identifier,
@@ -58,6 +70,7 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
     const body = {
       name: values.name,
       description: values.description,
+      project: values.project && values.project.value,
       access_modifier: values.accessModifier,
       organisation: values.organisation && values.organisation.value,
       simulation_start: values.simulationStart,
@@ -150,6 +163,30 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
           onBlur={handleBlur}
           clearInput={clearInput}
           validated
+        />
+        <TextInput
+          title={"Source"}
+          name={"source"}
+          value={values.source}
+          valueChanged={handleInputChange}
+          validated
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          readOnly
+        />
+        <SelectDropdown
+          title={"Project"}
+          name={"project"}
+          placeholder={"- Search and select -"}
+          value={values.project}
+          valueChanged={(value) => handleValueChange("project", value)}
+          options={[]}
+          validated
+          isAsync
+          isCached
+          loadOptions={fetchProjects}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         <TextInput
           title={"Simulation start"}

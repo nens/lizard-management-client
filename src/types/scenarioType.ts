@@ -4,6 +4,7 @@ export interface Scenario {
   url: string;
   uuid: string;
   name: string;
+  source: string;
   description: string;
   organisation: Organisation;
   access_modifier: string;
