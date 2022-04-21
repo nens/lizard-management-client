@@ -6,6 +6,7 @@ import {
 } from "../../reducers";
 import {
   accessModifierHelpText,
+  descriptionHelpText,
   HelpText,
   organisationHelpText,
   supplierHelpText,
@@ -45,7 +46,15 @@ export const scenarioFormHelpText: HelpText = {
   default: "View and manage a 3Di scenario.",
   name: "The scenario name comes from 3Di. This name can be changed for your convenience.",
   uuid: uuidHelpText,
+  description: descriptionHelpText,
+  source: "Source of the scenario.",
+  project: "Project to group and give insights on 3Di scenarios.",
+  simulationStart: "Start time of the simulation",
+  simulationEnd: "End time of the simulation",
+  simulationIdentifier: "Identifier of the simulation",
   modelName: "The model that was used to create this scenario.",
+  modelIdentifier: "Identifier of the source model.",
+  modelRevision: "Revision number of the source model.",
   resultDeleteButton: (
     <>
       <p>Delete data that was saved in this scenario.</p>
