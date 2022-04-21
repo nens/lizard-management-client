@@ -33,30 +33,33 @@ function AddToProjectModal(props: MyProps & DispatchProps) {
   });
 
   // POST requests to update selected monitoring network with the selected timeseries
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!selectedProject) return;
 
-    scenarios.forEach(scenario => {
-      fetch(`/api/v4/scenarios/${scenario.uuid}/`, {
+    const fetchScenariosWithOptions = scenarios.map(scenario => {
+      return fetch(`/api/v4/scenarios/${scenario.uuid}/`, {
         credentials: "same-origin",
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           project: selectedProject.value
         })
-      })
-        .then((res) => {
-          if (res.status === 200) {
-            props.addNotification("Success! Scenarios added to project", 2000);
-            props.handleClose();
-            props.resetTable && props.resetTable();
-          } else {
-            props.addNotification("An error occurred! Please try again!", 2000);
-            console.error("Error adding scenarios to project: ", res);
-          }
-        })
-        .catch(console.error);
+      });
     });
+
+    try {
+      const results = await Promise.all(fetchScenariosWithOptions);
+      if (results.every(res => res.status === 200)) {
+        props.addNotification("Success! Scenarios added to project", 2000);
+        props.handleClose();
+        props.resetTable && props.resetTable();
+      } else {
+        props.addNotification("An error occurred! Please try again!", 2000);
+        console.error("Error adding scenarios to project: ", results);
+      }
+    } catch (message_1) {
+      return console.error(message_1);
+    };
   };
 
   return (

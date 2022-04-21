@@ -228,6 +228,20 @@ export const ScenarioTable = () => {
             },
           },
           {
+            displayValue: "Add to Project",
+            actionFunction: (
+              rows,
+              _tableData,
+              _setTableData,
+              _triggerReloadWithCurrentPage,
+              _triggerReloadWithBasePage,
+              setCheckboxes
+            ) => {
+              setSelectedRowsToAddToProject(rows);
+              setResetTable(() => () => setCheckboxes([]));
+            }
+          },
+          {
             displayValue: "Delete",
             actionFunction: (
               rows,
