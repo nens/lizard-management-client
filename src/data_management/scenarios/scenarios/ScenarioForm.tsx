@@ -22,6 +22,7 @@ import formStyles from "./../../../styles/Forms.module.css";
 
 interface Props {
   currentRecord: Scenario;
+  selectedProject: Project | null;
 }
 interface PropsFromDispatch {
   addNotification: (message: string | number, timeout: number) => void;
@@ -44,7 +45,7 @@ const navigationUrl = "/management/data_management/scenarios/scenarios";
 const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<RouteParams>> = (
   props
 ) => {
-  const { currentRecord } = props;
+  const { currentRecord, selectedProject } = props;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const organisations = useSelector(getOrganisations).available;
   const organisationsToSwitchTo = organisations.filter((org) => org.roles.includes("admin"));
@@ -54,7 +55,7 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
     uuid: currentRecord.uuid,
     description: currentRecord.description,
     source: currentRecord.source,
-    project: currentRecord.project ? convertToSelectObject(currentRecord.project) : null,
+    project: selectedProject ? convertToSelectObject(selectedProject.uuid, selectedProject.name) : null,
     simulationStart: currentRecord.simulation_start,
     simulationEnd: currentRecord.simulation_end,
     simulationIdentifier: currentRecord.simulation_identifier,
