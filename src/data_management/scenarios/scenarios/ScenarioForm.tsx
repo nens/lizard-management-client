@@ -6,6 +6,7 @@ import { ScenarioResult } from "../../../form/ScenarioResult";
 import { ExplainSideColumn } from "../../../components/ExplainSideColumn";
 import { TextInput } from "./../../../form/TextInput";
 import { TextArea } from "../../../form/TextArea";
+import { DateTimeInput } from "../../../form/DateTimeInput";
 import { AccessModifier } from "../../../form/AccessModifier";
 import { SubmitButton } from "../../../form/SubmitButton";
 import { CancelButton } from "../../../form/CancelButton";
@@ -189,25 +190,19 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
-        <TextInput
+        <DateTimeInput
           title={"Simulation start"}
           name={"simulationStart"}
           value={values.simulationStart}
-          valueChanged={handleInputChange}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
+          valueChanged={value => handleValueChange("simulationStart", value)}
           clearInput={clearInput}
-          validated
         />
-        <TextInput
+        <DateTimeInput
           title={"Simulation end"}
           name={"simulationEnd"}
           value={values.simulationEnd}
-          valueChanged={handleInputChange}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
+          valueChanged={value => handleValueChange("simulationEnd", value)}
           clearInput={clearInput}
-          validated
         />
         <TextInput
           title={"Simulation identifier"}
