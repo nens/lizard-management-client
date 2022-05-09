@@ -70,6 +70,7 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
     const body = {
       name: values.name,
       description: values.description,
+      source: values.source,
       project: values.project && values.project.value,
       access_modifier: values.accessModifier,
       organisation: values.organisation && values.organisation.value,
@@ -172,7 +173,6 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
           validated
           onFocus={handleFocus}
           onBlur={handleBlur}
-          readOnly
         />
         <SelectDropdown
           title={"Project"}
