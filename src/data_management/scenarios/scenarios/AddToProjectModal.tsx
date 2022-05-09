@@ -5,10 +5,8 @@ import { SelectDropdown, Value } from "../../../form/SelectDropdown";
 import { SubmitButton } from "../../../form/SubmitButton";
 import { getSelectedOrganisation } from "../../../reducers";
 import { addNotification } from "../../../actions";
-import { convertToSelectObject } from "../../../utils/convertToSelectObject";
-import { useRecursiveFetch } from "../../../api/hooks";
+import { fetchProjects } from "./ScenarioForm";
 import { Scenario } from "../../../types/scenarioType";
-import { Project } from "../../../types/projectType";
 import ModalBackground from "../../../components/ModalBackground";
 import formStyles from "../../../styles/Forms.module.css";
 import buttonStyles from "../../../styles/Buttons.module.css";
@@ -23,14 +21,6 @@ function AddToProjectModal(props: MyProps & DispatchProps) {
   const { scenarios } = props;
   const selectedOrganisation = useSelector(getSelectedOrganisation);
   const [selectedProject, setSelectedProject] = useState<Value | null>(null);
-
-  // useEffect to load the list of available monitoring networks for the selected organisation
-  const {
-    data: availableProjects,
-    isFetching: projectsIsFetching,
-  } = useRecursiveFetch("/api/v4/projects/", {
-    organisation__uuid: selectedOrganisation.uuid,
-  });
 
   // POST requests to update selected monitoring network with the selected timeseries
   const handleSubmit = async () => {
@@ -90,9 +80,11 @@ function AddToProjectModal(props: MyProps & DispatchProps) {
             name={"project"}
             placeholder={"- Search and select -"}
             valueChanged={(value) => setSelectedProject(value as Value)}
-            options={availableProjects ? availableProjects.map((project: Project) => convertToSelectObject(project.uuid, project.name)) : []}
-            isLoading={projectsIsFetching}
+            options={[]}
             validated
+            isAsync
+            isCached
+            loadOptions={(input) => fetchProjects(input, selectedOrganisation.uuid)}
           />
         </div>
         <div className={formStyles.ButtonContainer}>

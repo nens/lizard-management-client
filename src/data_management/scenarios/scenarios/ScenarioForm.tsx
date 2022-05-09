@@ -31,8 +31,8 @@ interface RouteParams {
 }
 
 // Helper function to fetch paginated projects with search query
-export const fetchProjects = async (searchQuery: string) => {
-  const urlQuery = searchQuery ? `?name__icontains=${searchQuery}` : "";
+export const fetchProjects = async (searchQuery: string, organisationUuid: string) => {
+  const urlQuery = searchQuery ? `?name__icontains=${searchQuery}&organisation__uuid=${organisationUuid}` : `?organisation__uuid=${organisationUuid}`;
   const response = await fetch(`/api/v4/projects/${urlQuery}`);
   const responseJSON = await response.json();
 
@@ -184,7 +184,7 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
           validated
           isAsync
           isCached
-          loadOptions={fetchProjects}
+          loadOptions={(input) => fetchProjects(input, selectedOrganisation.uuid)}
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
