@@ -1,4 +1,3 @@
-import React from "react";
 import ButtonStyles from "../../styles/Buttons.module.css";
 
 import { HelpText, nameHelpText, uuidHelpText } from "./defaultHelpText";

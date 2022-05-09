@@ -1,22 +1,23 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import TableStateContainer from "../../components/TableStateContainer";
 import { NavLink } from "react-router-dom";
-import TableActionButtons from "../../components/TableActionButtons";
-import { ExplainSideColumn } from "../../components/ExplainSideColumn";
-import threediIcon from "../../images/3di@3x.svg";
-import tableStyles from "../../components/Table.module.css";
-import { getUsername } from "../../reducers";
-import { bytesToDisplayValue } from "../../utils/byteUtils";
-import { DefaultScenarioExplanationText } from "../../utils/help_texts/helpTextForScenarios";
-import { getLocalDateString } from "../../utils/dateUtils";
-import DeleteModal from "../../components/DeleteModal";
-import AuthorisationModal from "../../components/AuthorisationModal";
-import { ColumnDefinition } from "../../components/Table";
-import { Scenario } from "../../types/scenarioType";
+import TableStateContainer from "../../../components/TableStateContainer";
+import TableActionButtons from "../../../components/TableActionButtons";
+import { ExplainSideColumn } from "../../../components/ExplainSideColumn";
+import { ColumnDefinition } from "../../../components/Table";
+import { Scenario } from "../../../types/scenarioType";
+import { getUsername } from "../../../reducers";
+import { bytesToDisplayValue } from "../../../utils/byteUtils";
+import { DefaultScenarioExplanationText } from "../../../utils/help_texts/helpTextForScenarios";
+import { getLocalDateString } from "../../../utils/dateUtils";
+import DeleteModal from "../../../components/DeleteModal";
+import AuthorisationModal from "../../../components/AuthorisationModal";
+import AddToProjectModal from "./AddToProjectModal";
+import threediIcon from "../../../images/3di@3x.svg";
+import tableStyles from "../../../components/Table.module.css";
 
 const baseUrl = "/api/v4/scenarios/";
-const navigationUrl = "/management/data_management/scenarios";
+const navigationUrl = "/management/data_management/scenarios/scenarios";
 
 const fetchScenariosWithOptions = (uuids: string[], fetchOptions: RequestInit) => {
   const fetches = uuids.map((uuid) => {
@@ -37,8 +38,15 @@ export const ScenarioTable = () => {
   const [rowsWithRawDataToBeDeleted, setRowsWithRawDataToBeDeleted] = useState<Scenario[]>([]);
   const [resetTable, setResetTable] = useState<Function | null>(null);
 
+  // Get query param of project__uuid from the URL if there is
+  // to show a list of scenarios for a specific project
+  const projectUuid = new URLSearchParams(window.location.search).get("project__uuid");
+
   // selected rows for action to change accessibility
   const [rowsToChangeAccess, setRowsToChangeAccess] = useState<Scenario[]>([]);
+
+  // selected rows for adding scenarios to project action
+  const [selectedRowsToAddToProject, setSelectedRowsToAddToProject] = useState<Scenario[]>([]);
 
   const userName = useSelector(getUsername);
 
@@ -102,15 +110,6 @@ export const ScenarioTable = () => {
       orderingField: "model_name",
     },
     {
-      titleRenderFunction: () => "User",
-      renderFunction: (row) => (
-        <span className={tableStyles.CellEllipsis} title={row.username}>
-          {row.username}
-        </span>
-      ),
-      orderingField: "username",
-    },
-    {
       titleRenderFunction: () => "Raw data",
       renderFunction: (row) => (row.has_raw_results === true ? "Yes" : "No"),
       orderingField: null,
@@ -150,6 +149,10 @@ export const ScenarioTable = () => {
               row.has_raw_results
                 ? [
                     {
+                      displayValue: "Add to Project",
+                      actionFunction: (row) => setSelectedRowsToAddToProject([row]),
+                    },
+                    {
                       displayValue: "Delete raw data",
                       actionFunction: (
                         row,
@@ -171,6 +174,10 @@ export const ScenarioTable = () => {
                     },
                   ]
                 : [
+                    {
+                      displayValue: "Add to Project",
+                      actionFunction: (row) => setSelectedRowsToAddToProject([row]),
+                    },
                     {
                       displayValue: "Delete",
                       actionFunction: (
@@ -196,12 +203,12 @@ export const ScenarioTable = () => {
       imgAltDescription={"3Di icon"}
       headerText={"3Di Scenarios"}
       explanationText={<DefaultScenarioExplanationText />}
-      backUrl={"/management/data_management"}
+      backUrl={"/management/data_management/scenarios"}
     >
       <TableStateContainer
-        gridTemplateColumns={"4fr 20fr 25fr 13fr 10fr 14fr 10fr 4fr"}
+        gridTemplateColumns={"4fr 25fr 30fr 10fr 14fr 10fr 4fr"}
         columnDefinitions={columnDefinitions}
-        baseUrl={`${baseUrl}?`}
+        baseUrl={`${baseUrl}?${projectUuid ? `project__uuid=${projectUuid}&` : ''}`}
         checkBoxActions={[
           {
             displayValue: "Change rights",
@@ -219,6 +226,20 @@ export const ScenarioTable = () => {
                 setCheckboxes([]);
               });
             },
+          },
+          {
+            displayValue: "Add to Project",
+            actionFunction: (
+              rows,
+              _tableData,
+              _setTableData,
+              _triggerReloadWithCurrentPage,
+              _triggerReloadWithBasePage,
+              setCheckboxes
+            ) => {
+              setSelectedRowsToAddToProject(rows);
+              setResetTable(() => () => setCheckboxes([]));
+            }
           },
           {
             displayValue: "Delete",
@@ -299,6 +320,16 @@ export const ScenarioTable = () => {
           resetTable={resetTable}
           handleClose={() => {
             setRowsToChangeAccess([]);
+            setResetTable(null);
+          }}
+        />
+      ) : null}
+      {selectedRowsToAddToProject.length > 0 ? (
+        <AddToProjectModal
+          scenarios={selectedRowsToAddToProject}
+          resetTable={resetTable}
+          handleClose={() => {
+            setSelectedRowsToAddToProject([]);
             setResetTable(null);
           }}
         />

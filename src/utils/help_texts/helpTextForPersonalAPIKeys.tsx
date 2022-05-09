@@ -1,4 +1,3 @@
-import React from "react";
 import { HelpText } from "./defaultHelpText";
 
 export const personalApiKeysFormHelpText: HelpText = {

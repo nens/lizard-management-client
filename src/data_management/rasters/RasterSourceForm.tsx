@@ -305,13 +305,7 @@ const RasterSourceForm: React.FC<Props & DispatchProps & RouteComponentProps<Rou
           onFocus={handleFocus}
           onBlur={handleBlur}
           readOnly={
-            !selectedOrganisation
-              ? true
-              : !(
-                  !currentRecord &&
-                  organisationsToSwitchTo.length > 0 &&
-                  selectedOrganisation.roles.includes("admin")
-                )
+            !(organisationsToSwitchTo.length > 0 && selectedOrganisation.roles.includes("admin"))
           }
         />
         <SelectDropdown
@@ -324,12 +318,8 @@ const RasterSourceForm: React.FC<Props & DispatchProps & RouteComponentProps<Rou
           validated
           isAsync
           isCached
-          loadOptions={
-            selectedOrganisation
-              ? (searchInput) => fetchSuppliers(selectedOrganisation.uuid, searchInput)
-              : undefined
-          }
-          readOnly={!selectedOrganisation ? true : !selectedOrganisation.roles.includes("admin")}
+          loadOptions={(searchInput) => fetchSuppliers(selectedOrganisation.uuid, searchInput)}
+          readOnly={!selectedOrganisation.roles.includes("admin")}
           dropUp
           onFocus={handleFocus}
           onBlur={handleBlur}

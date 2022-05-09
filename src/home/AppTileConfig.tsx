@@ -5,6 +5,7 @@ import personalApiKeysIcon from "../images/personal_api_key_icon.svg";
 import rasterIcon from "../images/raster_icon.svg";
 import wmsIcon from "../images/wms@3x.svg";
 import threediIcon from "../images/3di@3x.svg";
+import projectIcon from "../images/project.svg";
 import backArrowIcon from "../images/backArrow.svg";
 import labelIcon from "../images/labels_icon.svg";
 import rasterSourcesIcon from "../images/raster_source_icon.svg";
@@ -147,6 +148,11 @@ export const navigationLinkPages: NavigationLinkPage[] = [
   },
   {
     onUrl: "/management/data_management/timeseries",
+    needsAuthentication: true,
+    needsOneOfRoles: ["admin", "supplier"],
+  },
+  {
+    onUrl: "/management/data_management/scenarios",
     needsAuthentication: true,
     needsOneOfRoles: ["admin", "supplier"],
   },
@@ -445,11 +451,11 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     icon: timeseriesIcon,
   },
   {
-    title: "3Di Scenarios",
+    title: "Scenarios",
     // title: (
     //   <FormattedMessage
     //     id="home.scenarios"
-    //     defaultMessage="3Di Scenarios"
+    //     defaultMessage="Scenarios"
     //   />
     // ),
     order: 300,
@@ -631,6 +637,54 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     homePageIcon: false,
     order: 400,
     onUrl: "/management/data_management/timeseries",
+    linksToUrl: "/management/data_management",
+    linksToUrlExternal: false,
+    requiresOneOfRoles: [],
+    icon: backArrowIcon,
+  },
+  {
+    title: "3Di Scenarios",
+    // title: (
+    //   <FormattedMessage
+    //     id="home.scenarios"
+    //     defaultMessage="3Di Scenarios"
+    //   />
+    // ),
+    order: 100,
+    homePageIcon: false,
+    onUrl: "/management/data_management/scenarios",
+    linksToUrl: "/management/data_management/scenarios/scenarios",
+    linksToUrlExternal: false,
+    requiresOneOfRoles: ["admin", "supplier"],
+    icon: threediIcon,
+  },
+  {
+    title: "Projects",
+    // title: (
+    //   <FormattedMessage
+    //     id="home.projects"
+    //     defaultMessage="Projects"
+    //   />
+    // ),
+    order: 200,
+    homePageIcon: false,
+    onUrl: "/management/data_management/scenarios",
+    linksToUrl: "/management/data_management/scenarios/projects",
+    linksToUrlExternal: false,
+    requiresOneOfRoles: ["admin", "supplier"],
+    icon: projectIcon,
+  },
+  {
+    title: "Go Back",
+    // title: (
+    //   <FormattedMessage
+    //     id="go_back"
+    //     defaultMessage="Go Back"
+    //   />
+    // ),
+    homePageIcon: false,
+    order: 300,
+    onUrl: "/management/data_management/scenarios",
     linksToUrl: "/management/data_management",
     linksToUrlExternal: false,
     requiresOneOfRoles: [],

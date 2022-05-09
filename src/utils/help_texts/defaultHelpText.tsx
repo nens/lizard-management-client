@@ -1,5 +1,3 @@
-import React from "react";
-
 export interface HelpText {
   [name: string]: string | JSX.Element;
 }
