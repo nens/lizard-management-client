@@ -83,7 +83,7 @@ function TableStateContainer<TableRowType extends { uuid: string; checkboxChecke
   const [nextUrl, setNextUrl] = useState<string>("");
   const [previousUrl, setPreviousUrl] = useState<string>("");
   const [itemsPerPage, setItemsPerPage] = useState<number>(10);
-  const [ordering, setOrdering] = useState<string | null>("last_modified");
+  const [ordering, setOrdering] = useState<string | null>("-last_modified");
   const [searchInput, setSearchInput] = useState<string>("");
   const [selectedFilterOption, setSelectedFilterOption] = useState<Value | null>(
     filterOptions && filterOptions.length > 0 ? filterOptions[0] : null
