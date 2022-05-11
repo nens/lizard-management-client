@@ -270,9 +270,9 @@ export const ScenarioTable = () => {
           },
         ]}
         queryCheckBox={{
-          text: "Only show own scenario's",
+          text: "Only show own scenarios",
           adaptUrlFunction: (url: string) => {
-            return userName ? url + `&username__contains=${userName}` : url;
+            return userName ? url + `&supplier__username=${userName}` : url;
           },
         }}
         filterOptions={[
