@@ -278,7 +278,7 @@ export const ScenarioTable = () => {
         filterOptions={[
           { value: "name__icontains=", label: "Name" },
           { value: "uuid=", label: "UUID" },
-          { value: "username__icontains=", label: "Username" },
+          { value: "supplier__username__icontains=", label: "Username" },
           { value: "model_name__icontains=", label: "Model name" },
         ]}
       />
