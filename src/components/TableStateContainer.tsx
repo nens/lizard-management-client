@@ -11,6 +11,7 @@ import { useSelector } from "react-redux";
 import { getSelectedOrganisation } from "../reducers";
 import { getRelativePathFromUrl } from "../utils/getRelativePathFromUrl";
 import { DataRetrievalState } from "../types/retrievingDataTypes";
+import { UUID_REGEX } from "./Breadcrumbs";
 import unorderedIcon from "../images/list_order_icon_unordered.svg";
 import orderedIcon from "../images/list_order_icon_ordered.svg";
 import styles from "./Table.module.css";
@@ -109,7 +110,12 @@ function TableStateContainer<TableRowType extends { uuid: string; checkboxChecke
     "&page_size=" +
     itemsPerPage +
     "&page=1" +
-    (selectedFilterOption && searchInput ? "&" + selectedFilterOption.value + searchInput : "") +
+    (
+      // For UUID filter, partial UUID filter is not allowed by backend,
+      // so only when a fully correct UUID has been entered, the table URL will be updated
+      (selectedFilterOption && selectedFilterOption.value === "uuid=" && searchInput && UUID_REGEX.test(searchInput)) ||
+      (selectedFilterOption && selectedFilterOption.value !== "uuid=" && searchInput) ? "&" + selectedFilterOption.value + searchInput : ""
+    ) +
     "&ordering=" +
     ordering +
     // https://github.com/nens/lizard-management-client/issues/784
@@ -350,7 +356,7 @@ function TableStateContainer<TableRowType extends { uuid: string; checkboxChecke
                 valueChanged={(option) => setSelectedFilterOption(option)}
               />
             ) : null}
-            <TableSearchToggleHelpText filterOption={selectedFilterOption} />
+            <TableSearchToggleHelpText filterOption={selectedFilterOption} searchInput={searchInput} />
           </div>
         ) : (
           <div />
