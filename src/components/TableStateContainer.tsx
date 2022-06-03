@@ -361,9 +361,9 @@ function TableStateContainer<TableRowType extends { uuid: string; checkboxChecke
         ) : (
           <div />
         )}
-        <div>
+        <div style={{ display: "flex" }}>
           {queryCheckBox ? (
-            <span
+            <div
               style={{
                 display: "flex",
                 alignItems: "center",
@@ -380,7 +380,7 @@ function TableStateContainer<TableRowType extends { uuid: string; checkboxChecke
                 }}
                 size={32}
               />
-            </span>
+            </div>
           ) : null}
           {customTableButton ? (
             <button

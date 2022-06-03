@@ -17,6 +17,7 @@ import { EditProject } from "../data_management/scenarios/projects/EditProject";
 import { NewProject } from "../data_management/scenarios/projects/NewProject";
 import { ScenarioTable } from "../data_management/scenarios/scenarios/ScenarioTable";
 import { EditScenario } from "../data_management/scenarios/scenarios/EditScenario";
+import { NewScenario } from "../data_management/scenarios/scenarios/NewScenario";
 import { EditWmsLayer } from "../data_management/wms_layers/EditWmsLayer";
 import { NewWmsLayer } from "../data_management/wms_layers/NewWmsLayer";
 import { TimeseriesTable } from "../data_management/timeseries/timeseries/TimeseriesTable";
@@ -56,7 +57,6 @@ import { GeoBlockTable } from "../data_management/geoblocks/GeoBlockTable";
 import { NewGeoBlock } from "../data_management/geoblocks/NewGeoBlock";
 import { EditGeoBlock } from "../data_management/geoblocks/EditGeoBlock";
 import SpinnerIfStandardSelectorsNotLoaded from "../components/SpinnerIfStandardSelectorsNotLoaded";
-// import { ViewContract } from '../contracts/ViewContract';
 
 const authenticatedRoutes = () => {
   return (
@@ -182,6 +182,11 @@ const authenticatedRoutes = () => {
           exact
           path="/management/data_management/scenarios/scenarios"
           component={ScenarioTable}
+        />
+        <Route
+          exact
+          path="/management/data_management/scenarios/scenarios/new"
+          component={NewScenario}
         />
         <Route
           exact

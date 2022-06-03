@@ -22,8 +22,8 @@ import threediIcon from "../../../images/3di@3x.svg";
 import formStyles from "./../../../styles/Forms.module.css";
 
 interface Props {
-  currentRecord: Scenario;
-  selectedProject: Project | null;
+  currentRecord?: Scenario;
+  selectedProject?: Project | null;
 }
 interface PropsFromDispatch {
   addNotification: (message: string | number, timeout: number) => void;
@@ -51,7 +51,7 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
   const organisations = useSelector(getOrganisations).available;
   const organisationsToSwitchTo = organisations.filter((org) => org.roles.includes("admin"));
 
-  const initialValues = {
+  const initialValues = currentRecord ? {
     name: currentRecord.name,
     uuid: currentRecord.uuid,
     description: currentRecord.description,
@@ -66,6 +66,21 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
     organisation: currentRecord.organisation ? convertToSelectObject(currentRecord.organisation.uuid, currentRecord.organisation.name) : null,
     accessModifier: currentRecord.access_modifier,
     extraMetadata: JSON.stringify(currentRecord.extra_metadata),
+  } : {
+    name: null,
+    uuid: null,
+    description: null,
+    source: "3Di",
+    project: null,
+    simulationStart: null,
+    simulationEnd: null,
+    simulationIdentifier: null,
+    modelName: null,
+    modelIdentifier: null,
+    modelRevision: null,
+    organisation: selectedOrganisation ? convertToSelectObject(selectedOrganisation.uuid, selectedOrganisation.name) : null,
+    accessModifier: "Private",
+    extraMetadata: null,
   };
 
   const onSubmit = (values: Values) => {
@@ -85,23 +100,46 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
       extra_metadata: values.extraMetadata ? JSON.parse(values.extraMetadata) : {},
     };
 
-    fetch(`/api/v4/scenarios/${currentRecord.uuid}/`, {
-      credentials: "same-origin",
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    })
-      .then((data) => {
-        const status = data.status;
-        if (status === 200) {
-          props.addNotification("Success! Scenario updated", 2000);
-          props.history.push(navigationUrl);
-        } else {
-          props.addNotification(status, 2000);
-          console.error(data);
-        }
+    if (!currentRecord) {
+      fetch("/api/v4/scenarios/", {
+        credentials: "same-origin",
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
       })
-      .catch(console.error);
+        .then((response) => {
+          const status = response.status;
+          if (status === 201) {
+            props.addNotification("Success! New scenario created", 2000);
+            props.history.push(navigationUrl);
+          } else if (status === 403) {
+            props.addNotification("Not authorized", 2000);
+            console.error(response);
+          } else {
+            props.addNotification(status, 2000);
+            console.error(response);
+          }
+        })
+        .catch(console.error);
+    } else {
+      fetch(`/api/v4/scenarios/${currentRecord.uuid}/`, {
+        credentials: "same-origin",
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      })
+        .then((data) => {
+          const status = data.status;
+          if (status === 200) {
+            props.addNotification("Success! Scenario updated", 2000);
+            props.history.push(navigationUrl);
+          } else {
+            props.addNotification(status, 2000);
+            console.error(data);
+          }
+        })
+        .catch(console.error);
+    }
   };
 
   const {
@@ -247,7 +285,7 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
         <span className={formStyles.FormFieldTitle}>2: Data</span>
         <ScenarioResult
           name={"results"}
-          uuid={currentRecord.uuid}
+          uuid={currentRecord ? currentRecord.uuid : undefined}
           formSubmitted={formSubmitted}
           onFocus={handleFocus}
           onBlur={handleBlur}
