@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { NavLink } from "react-router-dom";
+import { NavLink, RouteComponentProps } from "react-router-dom";
 import TableStateContainer from "../../../components/TableStateContainer";
 import TableActionButtons from "../../../components/TableActionButtons";
 import { ExplainSideColumn } from "../../../components/ExplainSideColumn";
@@ -33,7 +33,7 @@ const fetchRawDataWithOptions = (uuids: string[], fetchOptions: RequestInit) => 
   return Promise.all(fetches);
 };
 
-export const ScenarioTable = () => {
+export const ScenarioTable = (props: RouteComponentProps) => {
   const [rowsToBeDeleted, setRowsToBeDeleted] = useState<Scenario[]>([]);
   const [rowsWithRawDataToBeDeleted, setRowsWithRawDataToBeDeleted] = useState<Scenario[]>([]);
   const [resetTable, setResetTable] = useState<Function | null>(null);
@@ -197,6 +197,11 @@ export const ScenarioTable = () => {
     },
   ];
 
+  const handleNewClick = () => {
+    const { history } = props;
+    history.push(`${navigationUrl}/new`);
+  };
+
   return (
     <ExplainSideColumn
       imgUrl={threediIcon}
@@ -209,6 +214,7 @@ export const ScenarioTable = () => {
         gridTemplateColumns={"4fr 25fr 30fr 10fr 14fr 10fr 4fr"}
         columnDefinitions={columnDefinitions}
         baseUrl={`${baseUrl}?${projectUuid ? `project__uuid=${projectUuid}&` : ''}`}
+        newItemOnClick={handleNewClick}
         checkBoxActions={[
           {
             displayValue: "Change rights",
