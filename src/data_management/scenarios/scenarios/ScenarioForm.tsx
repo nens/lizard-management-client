@@ -283,15 +283,13 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
           validated
         />
         <span className={formStyles.FormFieldTitle}>2: Data</span>
-        {currentRecord ? (
-          <ScenarioResult
-            name={"results"}
-            uuid={currentRecord.uuid}
-            formSubmitted={formSubmitted}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-          />
-        ): null}
+        <ScenarioResult
+          name={"results"}
+          uuid={currentRecord ? currentRecord.uuid : undefined}
+          formSubmitted={formSubmitted}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+        />
         <TextArea
           title={"Extra metadata (JSON)"}
           name={"extraMetadata"}

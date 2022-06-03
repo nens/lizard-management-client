@@ -30,7 +30,7 @@ interface Results {
 
 interface MyProps {
   name: string;
-  uuid: string;
+  uuid: string | undefined;
   formSubmitted?: boolean;
   onFocus?: (e: React.FocusEvent<HTMLButtonElement>) => void;
   onBlur?: () => void;
@@ -179,91 +179,93 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
 
   // useEffect to fetch different results of scenario
   useEffect(() => {
-    setRawResults({
-      isFetching: true,
-      scheduledForBulkDeletion: false,
-      results: [],
-    });
-    setBasicResults({
-      isFetching: true,
-      scheduledForBulkDeletion: false,
-      results: [],
-    });
-    setArrivalResults({
-      isFetching: true,
-      scheduledForBulkDeletion: false,
-      results: [],
-    });
-    setDamageResults({
-      isFetching: true,
-      scheduledForBulkDeletion: false,
-      results: [],
-    });
-
-    fetchScenarioRawResults(uuid).then((res) =>
+    if (uuid) {
       setRawResults({
-        isFetching: false,
+        isFetching: true,
         scheduledForBulkDeletion: false,
-        results: res.results.map((result: ScenarioResultApiResponse) => {
-          return {
-            id: result.id,
-            name: result.name,
-            scheduledForDeletion: false,
-            raster: result.raster,
-          };
-        }),
-      })
-    );
-
-    fetchScenarioBasicResults(uuid).then((res) =>
+        results: [],
+      });
       setBasicResults({
-        isFetching: false,
+        isFetching: true,
         scheduledForBulkDeletion: false,
-        results: res.results.map((result: ScenarioResultApiResponse) => {
-          return {
-            id: result.id,
-            name: result.name,
-            scheduledForDeletion: false,
-            raster: result.raster,
-          };
-        }),
-      })
-    );
-
-    fetchScenarioArrivalResults(uuid).then((res) =>
+        results: [],
+      });
       setArrivalResults({
-        isFetching: false,
+        isFetching: true,
         scheduledForBulkDeletion: false,
-        results: res.results.map((result: ScenarioResultApiResponse) => {
-          return {
-            id: result.id,
-            name: result.name,
-            scheduledForDeletion: false,
-            raster: result.raster,
-          };
-        }),
-      })
-    );
-
-    fetchScenarioDamageResults(uuid).then((res) =>
+        results: [],
+      });
       setDamageResults({
-        isFetching: false,
+        isFetching: true,
         scheduledForBulkDeletion: false,
-        results: res.results.map((result: ScenarioResultApiResponse) => {
-          return {
-            id: result.id,
-            name: result.name,
-            scheduledForDeletion: false,
-            raster: result.raster,
-          };
-        }),
-      })
-    );
+        results: [],
+      });
+
+      fetchScenarioRawResults(uuid).then((res) =>
+        setRawResults({
+          isFetching: false,
+          scheduledForBulkDeletion: false,
+          results: res.results.map((result: ScenarioResultApiResponse) => {
+            return {
+              id: result.id,
+              name: result.name,
+              scheduledForDeletion: false,
+              raster: result.raster,
+            };
+          }),
+        })
+      );
+
+      fetchScenarioBasicResults(uuid).then((res) =>
+        setBasicResults({
+          isFetching: false,
+          scheduledForBulkDeletion: false,
+          results: res.results.map((result: ScenarioResultApiResponse) => {
+            return {
+              id: result.id,
+              name: result.name,
+              scheduledForDeletion: false,
+              raster: result.raster,
+            };
+          }),
+        })
+      );
+
+      fetchScenarioArrivalResults(uuid).then((res) =>
+        setArrivalResults({
+          isFetching: false,
+          scheduledForBulkDeletion: false,
+          results: res.results.map((result: ScenarioResultApiResponse) => {
+            return {
+              id: result.id,
+              name: result.name,
+              scheduledForDeletion: false,
+              raster: result.raster,
+            };
+          }),
+        })
+      );
+
+      fetchScenarioDamageResults(uuid).then((res) =>
+        setDamageResults({
+          isFetching: false,
+          scheduledForBulkDeletion: false,
+          results: res.results.map((result: ScenarioResultApiResponse) => {
+            return {
+              id: result.id,
+              name: result.name,
+              scheduledForDeletion: false,
+              raster: result.raster,
+            };
+          }),
+        })
+      );
+    }
   }, [uuid]);
 
   // useEffect for deletion of selected results when form is submitted
   useEffect(() => {
-    if (formSubmitted === true) {
+    if (formSubmitted && uuid) {
       // Delete results in bulks
       if (rawResults.scheduledForBulkDeletion) deleteScenarioRawResults(uuid);
       if (basicResults.scheduledForBulkDeletion) deleteScenarioBasicResults(uuid);
