@@ -63,9 +63,7 @@ interface ResultRowProps {
 
 interface ScenarioResultApiResponse {
   id: number;
-  result_type: {
-    name: string;
-  };
+  name: string;
   raster: string; // url
 }
 
@@ -209,7 +207,7 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
         results: res.results.map((result: ScenarioResultApiResponse) => {
           return {
             id: result.id,
-            name: result.result_type.name,
+            name: result.name,
             scheduledForDeletion: false,
             raster: result.raster,
           };
@@ -224,7 +222,7 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
         results: res.results.map((result: ScenarioResultApiResponse) => {
           return {
             id: result.id,
-            name: result.result_type.name,
+            name: result.name,
             scheduledForDeletion: false,
             raster: result.raster,
           };
@@ -239,7 +237,7 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
         results: res.results.map((result: ScenarioResultApiResponse) => {
           return {
             id: result.id,
-            name: result.result_type.name,
+            name: result.name,
             scheduledForDeletion: false,
             raster: result.raster,
           };
@@ -254,7 +252,7 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
         results: res.results.map((result: ScenarioResultApiResponse) => {
           return {
             id: result.id,
-            name: result.result_type.name,
+            name: result.name,
             scheduledForDeletion: false,
             raster: result.raster,
           };
