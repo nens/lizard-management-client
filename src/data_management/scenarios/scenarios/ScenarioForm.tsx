@@ -67,7 +67,20 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
     accessModifier: currentRecord.access_modifier,
     extraMetadata: JSON.stringify(currentRecord.extra_metadata),
   } : {
-
+    name: null,
+    uuid: null,
+    description: null,
+    source: "3Di",
+    project: null,
+    simulationStart: null,
+    simulationEnd: null,
+    simulationIdentifier: null,
+    modelName: null,
+    modelIdentifier: null,
+    modelRevision: null,
+    organisation: selectedOrganisation ? convertToSelectObject(selectedOrganisation.uuid, selectedOrganisation.name) : null,
+    accessModifier: "Private",
+    extraMetadata: null,
   };
 
   const onSubmit = (values: Values) => {
@@ -88,7 +101,26 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
     };
 
     if (!currentRecord) {
-      console.log('hoan POST')
+      fetch("/api/v4/scenarios/", {
+        credentials: "same-origin",
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      })
+        .then((response) => {
+          const status = response.status;
+          if (status === 201) {
+            props.addNotification("Success! New scenario created", 2000);
+            props.history.push(navigationUrl);
+          } else if (status === 403) {
+            props.addNotification("Not authorized", 2000);
+            console.error(response);
+          } else {
+            props.addNotification(status, 2000);
+            console.error(response);
+          }
+        })
+        .catch(console.error);
     } else {
       fetch(`/api/v4/scenarios/${currentRecord.uuid}/`, {
         credentials: "same-origin",
