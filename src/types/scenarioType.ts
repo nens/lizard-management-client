@@ -22,3 +22,15 @@ export interface Scenario {
   extra_metadata: Object;
   project: string;
 }
+
+export interface ScenarioResult {
+  url: string;
+  id: number;
+  name: string;
+  code: string;
+  description: string;
+  scenario: string;
+  raster: string;
+  attachment_url: string | null;
+  family: "R" | "B" | "A" | "D";
+}

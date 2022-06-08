@@ -11,16 +11,14 @@ import {
   deleteScenarioArrivalResults,
   deleteScenarioDamageResults,
 } from "../api/scenarios";
+import { ScenarioResult as ScenarioResultFromApi } from "../types/scenarioType";
 import { getUuidFromUrl } from "../utils/getUuidFromUrl";
 import formStyles from "../styles/Forms.module.css";
 import buttonStyles from "../styles/Buttons.module.css";
 import scenarioResultStyles from "./ScenarioResult.module.css";
 
-interface Result {
-  id: number;
-  name: string;
+type Result = ScenarioResultFromApi & {
   scheduledForDeletion: boolean;
-  raster: string;
 }
 interface Results {
   results: Result[];
@@ -59,12 +57,6 @@ interface ResultRowProps {
   handleDeletion: (e: React.MouseEvent<HTMLButtonElement>, id: number) => void;
   onFocus?: (e: React.FocusEvent<HTMLButtonElement>) => void;
   onBlur?: () => void;
-}
-
-interface ScenarioResultApiResponse {
-  id: number;
-  name: string;
-  raster: string; // url
 }
 
 // Render button for result deletion
@@ -134,9 +126,10 @@ const ResultRow: React.FC<ResultRowProps> = ({
         color: scheduledForBulkDeletion || result.scheduledForDeletion ? "lightgrey" : "",
       }}
     >
-      {result.raster && !scheduledForBulkDeletion && !result.scheduledForDeletion ? (
+      {/* Only display a link to the result form if the result is not of RAW (R family) type */}
+      {result.family !== "R" && !scheduledForBulkDeletion && !result.scheduledForDeletion ? (
         <a
-          href={`/management/data_management/rasters/layers/${getUuidFromUrl(result.raster)}`}
+          href={`/management/data_management/scenarios/scenarios/${getUuidFromUrl(result.scenario)}/${result.id}`}
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -205,12 +198,10 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
         setRawResults({
           isFetching: false,
           scheduledForBulkDeletion: false,
-          results: res.results.map((result: ScenarioResultApiResponse) => {
+          results: res.results.map((result: ScenarioResultFromApi) => {
             return {
-              id: result.id,
-              name: result.name,
-              scheduledForDeletion: false,
-              raster: result.raster,
+              ...result,
+              scheduledForDeletion: false
             };
           }),
         })
@@ -220,12 +211,10 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
         setBasicResults({
           isFetching: false,
           scheduledForBulkDeletion: false,
-          results: res.results.map((result: ScenarioResultApiResponse) => {
+          results: res.results.map((result: ScenarioResultFromApi) => {
             return {
-              id: result.id,
-              name: result.name,
-              scheduledForDeletion: false,
-              raster: result.raster,
+              ...result,
+              scheduledForDeletion: false
             };
           }),
         })
@@ -235,12 +224,10 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
         setArrivalResults({
           isFetching: false,
           scheduledForBulkDeletion: false,
-          results: res.results.map((result: ScenarioResultApiResponse) => {
+          results: res.results.map((result: ScenarioResultFromApi) => {
             return {
-              id: result.id,
-              name: result.name,
-              scheduledForDeletion: false,
-              raster: result.raster,
+              ...result,
+              scheduledForDeletion: false
             };
           }),
         })
@@ -250,12 +237,10 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
         setDamageResults({
           isFetching: false,
           scheduledForBulkDeletion: false,
-          results: res.results.map((result: ScenarioResultApiResponse) => {
+          results: res.results.map((result: ScenarioResultFromApi) => {
             return {
-              id: result.id,
-              name: result.name,
-              scheduledForDeletion: false,
-              raster: result.raster,
+              ...result,
+              scheduledForDeletion: false
             };
           }),
         })
