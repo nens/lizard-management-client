@@ -19,6 +19,16 @@
   align-items: center;
 }
 
+.ResultTitleRowLeft {
+  display: flex;
+  align-items: center;
+}
+.ResultTitleRowLeft button {
+  color: var(--color-button);
+  font-size: 25px;
+  margin-left: 5px;
+}
+
 .ResultRow {
   display: flex;
   justify-content: space-between;

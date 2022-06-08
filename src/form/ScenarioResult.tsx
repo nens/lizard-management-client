@@ -98,7 +98,21 @@ const ResultGroupTitle: React.FC<ResultGroupTitleProps> = ({
 }) => {
   return (
     <div className={scenarioResultStyles.ResultTitleRow}>
-      <span>{name}</span>
+      <div className={scenarioResultStyles.ResultTitleRowLeft}>
+        <span>{name}</span>
+        {name !== "Raw" ? (
+          <button
+            id={"resultAddButton"}
+            title={`Add new ${name} result`}
+            className={buttonStyles.IconButton}
+            onClick={(e) => e.preventDefault()}
+            onFocus={onFocus}
+            onBlur={onBlur}
+          >
+            <i className="fa fa-plus-circle" />
+          </button>
+        ): null}
+      </div>
       {results.length ? (
         <DeleteButton
           scheduledForDeletion={scheduledForBulkDeletion}

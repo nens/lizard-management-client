@@ -66,6 +66,7 @@ export const scenarioFormHelpText: HelpText = {
       </p>
     </>
   ),
+  resultAddButton: "Add new result to the scenario.",
   organisation: organisationHelpText,
   supplier: supplierHelpText,
   accessModifier: accessModifierHelpText,
