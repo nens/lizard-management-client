@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router";
 import MDSpinner from "react-md-spinner";
 import {
   fetchScenarioRawResults,
@@ -46,6 +47,7 @@ interface ResultGroupTitleProps {
   name: string;
   results: Result[];
   scheduledForBulkDeletion: boolean;
+  uuid?: string;
   handleDeletion: (e: React.MouseEvent<HTMLButtonElement>) => void;
   onFocus?: (e: React.FocusEvent<HTMLButtonElement>) => void;
   onBlur?: () => void;
@@ -93,19 +95,27 @@ const ResultGroupTitle: React.FC<ResultGroupTitleProps> = ({
   results,
   scheduledForBulkDeletion,
   handleDeletion,
+  uuid,
   onFocus,
   onBlur,
 }) => {
+  const history = useHistory();
+
   return (
     <div className={scenarioResultStyles.ResultTitleRow}>
       <div className={scenarioResultStyles.ResultTitleRowLeft}>
         <span>{name}</span>
-        {name !== "Raw" ? (
+        {uuid && name !== "Raw" ? (
           <button
             id={"resultAddButton"}
-            title={`Add new ${name} result`}
+            title={`Add a new result`}
             className={buttonStyles.IconButton}
-            onClick={(e) => e.preventDefault()}
+            onClick={e => {
+              e.preventDefault();
+              if (window.confirm("You will be redirected to the Scenario Result form. Please save your changes before continue. Do you want to continue?")) {
+                history.push(`/management/data_management/scenarios/scenarios/${uuid}/new_result`);
+              };
+            }}
             onFocus={onFocus}
             onBlur={onBlur}
           >
@@ -454,6 +464,7 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
           results={arrivalResults.results}
           scheduledForBulkDeletion={arrivalResults.scheduledForBulkDeletion}
           handleDeletion={handleArrivalResultsBulkDeletion}
+          uuid={uuid}
           onFocus={onFocus}
           onBlur={onBlur}
         />
@@ -478,6 +489,7 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
           results={basicResults.results}
           scheduledForBulkDeletion={basicResults.scheduledForBulkDeletion}
           handleDeletion={handleBasicResultsBulkDeletion}
+          uuid={uuid}
           onFocus={onFocus}
           onBlur={onBlur}
         />
@@ -502,6 +514,7 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
           results={damageResults.results}
           scheduledForBulkDeletion={damageResults.scheduledForBulkDeletion}
           handleDeletion={handleDamageResultsBulkDeletion}
+          uuid={uuid}
           onFocus={onFocus}
           onBlur={onBlur}
         />

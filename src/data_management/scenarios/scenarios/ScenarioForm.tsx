@@ -131,8 +131,12 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
         .then((data) => {
           const status = data.status;
           if (status === 200) {
+            // Here we don't navigate back to the scenario table.
+            // The reason is because we want to stay at the scenario form
+            // to add new scenario results if it is the case. Adding a new
+            // scenario result will redirect us to a different page and we
+            // will lose any unsaved changes in the scenario form.
             props.addNotification("Success! Scenario updated", 2000);
-            props.history.push(navigationUrl);
           } else {
             props.addNotification(status, 2000);
             console.error(data);

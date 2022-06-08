@@ -90,7 +90,7 @@ const ResultForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Route
       name: values.name,
       description: values.description,
       code: values.code,
-      raster: values.raster,
+      raster: values.raster && values.raster.value,
       family: values.family && values.family.value,
       attachment_url: null,
     };
