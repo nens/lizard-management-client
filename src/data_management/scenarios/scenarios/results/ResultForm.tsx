@@ -13,11 +13,14 @@ import { addNotification } from "../../../../actions";
 import { ScenarioResult } from "../../../../types/scenarioType";
 import { convertToSelectObject } from "../../../../utils/convertToSelectObject";
 import { scenarioResultFormHelpText } from "../../../../utils/help_texts/helpTextForScenarioResult";
+import { fetchRasterLayersV4, RasterLayerFromAPI } from "../../../../api/rasters";
+import { UUID_REGEX } from "../../../../components/Breadcrumbs";
 import threediIcon from "../../../../images/3di@3x.svg";
 import formStyles from "./../../../../styles/Forms.module.css";
 
 interface Props {
   currentRecord?: ScenarioResult;
+  rasterLayer?: RasterLayerFromAPI | null;
 }
 interface PropsFromDispatch {
   addNotification: (message: string | number, timeout: number) => void;
@@ -39,10 +42,30 @@ const getResultFamilyTypeLabel = (result: ScenarioResult) => {
   };
 }
 
+// Helper function to fetch paginated raster layers with search query
+const fetchRasterLayers = async (searchQuery: string) => {
+  const params = ["page_size=20"];
+
+  if (searchQuery) {
+    if (UUID_REGEX.test(searchQuery)) {
+      params.push(`uuid=${searchQuery}`);
+    } else {
+      params.push(`name__icontains=${searchQuery}`);
+    }
+  }
+
+  const urlQuery = params.join("&");
+  const response = await fetchRasterLayersV4(urlQuery);
+
+  return response.results.map((raster: RasterLayerFromAPI) =>
+    convertToSelectObject(raster.uuid, raster.name)
+  );
+}
+
 const ResultForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<RouteParams>> = (
   props
 ) => {
-  const { currentRecord } = props;
+  const { currentRecord, rasterLayer } = props;
   const { uuid, id } = props.match.params;
 
   const navigationUrl = `/management/data_management/scenarios/scenarios/${uuid}`;
@@ -52,14 +75,12 @@ const ResultForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Route
     id: currentRecord.id,
     description: currentRecord.description,
     code: currentRecord.code,
-    scenario: currentRecord.scenario,
-    raster: currentRecord.raster,
+    raster: rasterLayer ? convertToSelectObject(rasterLayer.uuid, rasterLayer.name) : null,
     family: currentRecord.family ? convertToSelectObject(currentRecord.family, getResultFamilyTypeLabel(currentRecord)) : null,
   } : {
     name: null,
     description: null,
     code: null,
-    scenario: null,
     raster: null,
     family: null,
   };
@@ -69,7 +90,6 @@ const ResultForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Route
       name: values.name,
       description: values.description,
       code: values.code,
-      scenario: values.scenario,
       raster: values.raster,
       family: values.family && values.family.value,
       attachment_url: null,
@@ -188,24 +208,19 @@ const ResultForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Route
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
-        <TextInput
-          title={"Scenario"}
-          name={"scenario"}
-          value={values.scenario}
-          valueChanged={handleInputChange}
-          validated
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-        />
-        <TextInput
+        <SelectDropdown
           title={"Raster layer"}
           name={"raster"}
+          placeholder={"- Search and select -"}
           value={values.raster}
-          valueChanged={handleInputChange}
+          valueChanged={(value) => handleValueChange("raster", value)}
+          options={[]}
+          validated
+          isAsync
+          isCached
+          loadOptions={fetchRasterLayers}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          clearInput={clearInput}
-          validated
         />
         <SelectDropdown
           title={"Family *"}
