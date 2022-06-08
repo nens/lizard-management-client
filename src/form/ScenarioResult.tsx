@@ -30,6 +30,7 @@ interface MyProps {
   name: string;
   uuid: string | undefined;
   formSubmitted?: boolean;
+  openNewResultModal?: () => void;
   onFocus?: (e: React.FocusEvent<HTMLButtonElement>) => void;
   onBlur?: () => void;
   readOnly?: boolean;
@@ -47,6 +48,7 @@ interface ResultGroupTitleProps {
   results: Result[];
   scheduledForBulkDeletion: boolean;
   handleDeletion: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  openNewResultModal?: () => void;
   onFocus?: (e: React.FocusEvent<HTMLButtonElement>) => void;
   onBlur?: () => void;
 }
@@ -93,6 +95,7 @@ const ResultGroupTitle: React.FC<ResultGroupTitleProps> = ({
   results,
   scheduledForBulkDeletion,
   handleDeletion,
+  openNewResultModal,
   onFocus,
   onBlur,
 }) => {
@@ -100,12 +103,15 @@ const ResultGroupTitle: React.FC<ResultGroupTitleProps> = ({
     <div className={scenarioResultStyles.ResultTitleRow}>
       <div className={scenarioResultStyles.ResultTitleRowLeft}>
         <span>{name}</span>
-        {name !== "Raw" ? (
+        {openNewResultModal ? (
           <button
             id={"resultAddButton"}
             title={`Add new ${name} result`}
             className={buttonStyles.IconButton}
-            onClick={(e) => e.preventDefault()}
+            onClick={(e) => {
+              e.preventDefault();
+              openNewResultModal();
+            }}
             onFocus={onFocus}
             onBlur={onBlur}
           >
@@ -169,6 +175,7 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
     name,
     uuid,
     formSubmitted,
+    openNewResultModal,
     onFocus,
     onBlur,
     // readOnly
@@ -454,6 +461,7 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
           results={arrivalResults.results}
           scheduledForBulkDeletion={arrivalResults.scheduledForBulkDeletion}
           handleDeletion={handleArrivalResultsBulkDeletion}
+          openNewResultModal={openNewResultModal}
           onFocus={onFocus}
           onBlur={onBlur}
         />
@@ -478,6 +486,7 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
           results={basicResults.results}
           scheduledForBulkDeletion={basicResults.scheduledForBulkDeletion}
           handleDeletion={handleBasicResultsBulkDeletion}
+          openNewResultModal={openNewResultModal}
           onFocus={onFocus}
           onBlur={onBlur}
         />
@@ -502,6 +511,7 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
           results={damageResults.results}
           scheduledForBulkDeletion={damageResults.scheduledForBulkDeletion}
           handleDeletion={handleDamageResultsBulkDeletion}
+          openNewResultModal={openNewResultModal}
           onFocus={onFocus}
           onBlur={onBlur}
         />
