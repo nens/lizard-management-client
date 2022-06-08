@@ -24,14 +24,28 @@ interface PropsFromDispatch {
 }
 interface RouteParams {
   uuid: string;
+  id: string;
 }
 
-const navigationUrl = "/management/data_management/scenarios/scenarios";
+const getResultFamilyTypeLabel = (result: ScenarioResult) => {
+  if (result.family === "R") {
+    return "Raw";
+  } else if (result.family === "B") {
+    return "Basic";
+  } else if (result.family === "A") {
+    return "Arrival";
+  } else { // family is "D"
+    return "Damage";
+  };
+}
 
 const ResultForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<RouteParams>> = (
   props
 ) => {
   const { currentRecord } = props;
+  const { uuid, id } = props.match.params;
+
+  const navigationUrl = `/management/data_management/scenarios/scenarios/${uuid}`;
 
   const initialValues = currentRecord ? {
     name: currentRecord.name,
@@ -40,7 +54,7 @@ const ResultForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Route
     code: currentRecord.code,
     scenario: currentRecord.scenario,
     raster: currentRecord.raster,
-    family: currentRecord.family ? convertToSelectObject(currentRecord.family) : null,
+    family: currentRecord.family ? convertToSelectObject(currentRecord.family, getResultFamilyTypeLabel(currentRecord)) : null,
   } : {
     name: null,
     description: null,
@@ -58,10 +72,11 @@ const ResultForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Route
       scenario: values.scenario,
       raster: values.raster,
       family: values.family && values.family.value,
+      attachment_url: null,
     };
 
     if (!currentRecord) {
-      fetch("/api/v4/scenarios/uuid/results/", {
+      fetch(`/api/v4/scenarios/${uuid}/results/`, {
         credentials: "same-origin",
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -82,7 +97,7 @@ const ResultForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Route
         })
         .catch(console.error);
     } else {
-      fetch(`/api/v4/scenarios/uuid/results/`, {
+      fetch(`/api/v4/scenarios/${uuid}/results/${id}/`, {
         credentials: "same-origin",
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -193,7 +208,7 @@ const ResultForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Route
           validated
         />
         <SelectDropdown
-          title={"Family"}
+          title={"Family *"}
           name={"family"}
           placeholder={"- Select -"}
           value={values.family}
