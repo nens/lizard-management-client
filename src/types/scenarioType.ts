@@ -29,7 +29,6 @@ export interface ScenarioResult {
   name: string;
   code: string;
   description: string;
-  scenario: string;
   raster: string;
   attachment_url: string | null;
   family: "R" | "B" | "A" | "D";
