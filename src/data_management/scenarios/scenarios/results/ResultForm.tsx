@@ -208,6 +208,33 @@ const ResultForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Route
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
+        <span className={formStyles.FormFieldTitle}>2: Data</span>
+        <SelectDropdown
+          title={"Result type *"}
+          name={"family"}
+          placeholder={"- Select -"}
+          value={values.family}
+          valueChanged={(value) => handleValueChange("family", value)}
+          options={[
+            {
+              value: "B",
+              label: "Basic"
+            },
+            {
+              value: "A",
+              label: "Arrival"
+            },
+            {
+              value: "D",
+              label: "Damage"
+            }
+          ]}
+          validated={!!values.family}
+          errorMessage={"Please select an option"}
+          triedToSubmit={triedToSubmit}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+        />
         <SelectDropdown
           title={"Raster layer"}
           name={"raster"}
@@ -234,32 +261,6 @@ const ResultForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Route
             </a>
           </div>
         ) : null}
-        <SelectDropdown
-          title={"Family *"}
-          name={"family"}
-          placeholder={"- Select -"}
-          value={values.family}
-          valueChanged={(value) => handleValueChange("family", value)}
-          options={[
-            {
-              value: "B",
-              label: "Basic"
-            },
-            {
-              value: "A",
-              label: "Arrival"
-            },
-            {
-              value: "D",
-              label: "Damage"
-            }
-          ]}
-          validated={!!values.family}
-          errorMessage={"Please select an option"}
-          triedToSubmit={triedToSubmit}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-        />
         <div className={formStyles.ButtonContainer}>
           <CancelButton url={navigationUrl} />
           <SubmitButton onClick={tryToSubmitForm} />
