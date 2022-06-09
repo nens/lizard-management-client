@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { RouteComponentProps, withRouter } from "react-router";
 import { connect, useSelector } from "react-redux";
 import { AppDispatch } from "../../..";
@@ -19,7 +18,6 @@ import { scenarioFormHelpText } from "../../../utils/help_texts/helpTextForScena
 import { convertToSelectObject } from "../../../utils/convertToSelectObject";
 import { Scenario } from "../../../types/scenarioType";
 import { Project } from "../../../types/projectType";
-import ResultFormModal from "./results/ResultFormModal";
 import threediIcon from "../../../images/3di@3x.svg";
 import formStyles from "./../../../styles/Forms.module.css";
 
@@ -124,6 +122,7 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
         })
         .catch(console.error);
     } else {
+      console.log('onSubmit in scenarioForm')
       fetch(`/api/v4/scenarios/${currentRecord.uuid}/`, {
         credentials: "same-origin",
         method: "PATCH",
@@ -158,8 +157,6 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
     handleReset,
     clearInput,
   } = useForm({ initialValues, onSubmit });
-
-  const [newResultModal, setNewResultModal] = useState<boolean>(false);
 
   return (
     <ExplainSideColumn
@@ -291,7 +288,6 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
           name={"results"}
           uuid={currentRecord ? currentRecord.uuid : undefined}
           formSubmitted={formSubmitted}
-          openNewResultModal={() => setNewResultModal(true)}
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
@@ -341,11 +337,6 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
           <SubmitButton onClick={tryToSubmitForm} />
         </div>
       </form>
-      {newResultModal ? (
-        <ResultFormModal
-          handleClose={() => setNewResultModal(false)}
-        />
-      ) : null}
     </ExplainSideColumn>
   );
 };

@@ -21,6 +21,9 @@ import formStyles from "./../../../../styles/Forms.module.css";
 interface Props {
   currentRecord?: ScenarioResult;
   rasterLayer?: RasterLayerFromAPI | null;
+  formInModal?: boolean;
+  closeModal?: () => void;
+  resultType?: string;
 }
 interface PropsFromDispatch {
   addNotification: (message: string | number, timeout: number) => void;
@@ -65,7 +68,7 @@ const fetchRasterLayers = async (searchQuery: string) => {
 const ResultForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<RouteParams>> = (
   props
 ) => {
-  const { currentRecord, rasterLayer } = props;
+  const { currentRecord, rasterLayer, resultType, formInModal, closeModal } = props;
   const { uuid, id } = props.match.params;
 
   const navigationUrl = `/management/data_management/scenarios/scenarios/${uuid}`;
@@ -82,7 +85,7 @@ const ResultForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Route
     description: null,
     code: null,
     raster: null,
-    family: null,
+    family: resultType ? convertToSelectObject(resultType.charAt(0), resultType) : null,
   };
 
   const onSubmit = (values: Values) => {
@@ -90,7 +93,7 @@ const ResultForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Route
       name: values.name,
       description: values.description,
       code: values.code,
-      raster: values.raster,
+      raster: values.raster && values.raster.value,
       family: values.family && values.family.value,
       attachment_url: null,
     };
@@ -106,7 +109,7 @@ const ResultForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Route
           const status = response.status;
           if (status === 201) {
             props.addNotification("Success! New result created", 2000);
-            props.history.push(navigationUrl);
+            formInModal && closeModal ? closeModal() : props.history.push(navigationUrl);
           } else if (status === 403) {
             props.addNotification("Not authorized", 2000);
             console.error(response);
@@ -208,22 +211,9 @@ const ResultForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Route
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
+        <span className={formStyles.FormFieldTitle}>2: Data</span>
         <SelectDropdown
-          title={"Raster layer"}
-          name={"raster"}
-          placeholder={"- Search and select -"}
-          value={values.raster}
-          valueChanged={(value) => handleValueChange("raster", value)}
-          options={[]}
-          validated
-          isAsync
-          isCached
-          loadOptions={fetchRasterLayers}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-        />
-        <SelectDropdown
-          title={"Family *"}
+          title={"Result type *"}
           name={"family"}
           placeholder={"- Select -"}
           value={values.family}
@@ -248,8 +238,35 @@ const ResultForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Route
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
+        <SelectDropdown
+          title={"Raster layer"}
+          name={"raster"}
+          placeholder={"- Search and select -"}
+          value={values.raster}
+          valueChanged={(value) => handleValueChange("raster", value)}
+          options={[]}
+          dropUp
+          validated
+          isAsync
+          isCached
+          loadOptions={fetchRasterLayers}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+        />
+        {values.raster ? (
+          <div className={formStyles.Label}>
+            <span className={formStyles.LabelTitle}>Link to selected raster layer</span>
+            <a
+              href={`/management/data_management/rasters/layers/${values.raster.uuid}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {values.raster.label}
+            </a>
+          </div>
+        ) : null}
         <div className={formStyles.ButtonContainer}>
-          <CancelButton url={navigationUrl} />
+          {!formInModal ? <CancelButton url={navigationUrl} /> : <div />}
           <SubmitButton onClick={tryToSubmitForm} />
         </div>
       </form>

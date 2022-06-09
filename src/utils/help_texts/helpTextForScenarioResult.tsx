@@ -11,7 +11,17 @@ export const scenarioResultFormHelpText: HelpText = {
   id: "ID of this object.",
   description: descriptionHelpText,
   code: codeHelpText,
-  scenario: "Scenario source.",
-  raster: "Connected raster layer.",
-  family: "Different result types: R - Raw, B - Basic, A - Arrival, D - Damage.",
+  raster: "Please select a raster layer.",
+  family: (
+    <>
+      <p>Please select a scenario result type.</p>
+      <ul>
+        <li>R - Raw</li>
+        <li>B - Basic</li>
+        <li>A - Arrival</li>
+        <li>D - Damage</li>
+      </ul>
+      <em>Note: Raw selection is not supported yet.</em>
+    </>
+  ),
 };

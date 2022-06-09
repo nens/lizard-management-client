@@ -16,6 +16,7 @@ import { getUuidFromUrl } from "../utils/getUuidFromUrl";
 import formStyles from "../styles/Forms.module.css";
 import buttonStyles from "../styles/Buttons.module.css";
 import scenarioResultStyles from "./ScenarioResult.module.css";
+import ResultFormModal from "../data_management/scenarios/scenarios/results/ResultFormModal";
 
 type Result = ScenarioResultFromApi & {
   scheduledForDeletion: boolean;
@@ -30,7 +31,6 @@ interface MyProps {
   name: string;
   uuid: string | undefined;
   formSubmitted?: boolean;
-  openNewResultModal?: () => void;
   onFocus?: (e: React.FocusEvent<HTMLButtonElement>) => void;
   onBlur?: () => void;
   readOnly?: boolean;
@@ -172,10 +172,8 @@ const ResultRow: React.FC<ResultRowProps> = ({
 
 export const ScenarioResult: React.FC<MyProps> = (props) => {
   const {
-    name,
     uuid,
     formSubmitted,
-    openNewResultModal,
     onFocus,
     onBlur,
     // readOnly
@@ -191,9 +189,12 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
   const [arrivalResults, setArrivalResults] = useState<Results>(initialResults);
   const [damageResults, setDamageResults] = useState<Results>(initialResults);
 
+  // Modal to create new scenario result using the scenario result form
+  const [newResultModal, setNewResultModal] = useState<string | null>(null);
+
   // useEffect to fetch different results of scenario
   useEffect(() => {
-    if (uuid) {
+    if (uuid && !newResultModal) {
       setRawResults({
         isFetching: true,
         scheduledForBulkDeletion: false,
@@ -267,7 +268,7 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
         })
       );
     }
-  }, [uuid]);
+  }, [uuid, newResultModal]);
 
   // useEffect for deletion of selected results when form is submitted
   useEffect(() => {
@@ -430,7 +431,7 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
   };
 
   return (
-    <label htmlFor={name} className={`${formStyles.Label} ${scenarioResultStyles.ResultsGrid}`}>
+    <div className={`${formStyles.Label} ${scenarioResultStyles.ResultsGrid}`}>
       <div>
         <ResultGroupTitle
           name={"Raw"}
@@ -461,7 +462,7 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
           results={arrivalResults.results}
           scheduledForBulkDeletion={arrivalResults.scheduledForBulkDeletion}
           handleDeletion={handleArrivalResultsBulkDeletion}
-          openNewResultModal={openNewResultModal}
+          openNewResultModal={() => setNewResultModal("Arrival")}
           onFocus={onFocus}
           onBlur={onBlur}
         />
@@ -486,7 +487,7 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
           results={basicResults.results}
           scheduledForBulkDeletion={basicResults.scheduledForBulkDeletion}
           handleDeletion={handleBasicResultsBulkDeletion}
-          openNewResultModal={openNewResultModal}
+          openNewResultModal={() => setNewResultModal("Basic")}
           onFocus={onFocus}
           onBlur={onBlur}
         />
@@ -511,7 +512,7 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
           results={damageResults.results}
           scheduledForBulkDeletion={damageResults.scheduledForBulkDeletion}
           handleDeletion={handleDamageResultsBulkDeletion}
-          openNewResultModal={openNewResultModal}
+          openNewResultModal={() => setNewResultModal("Damage")}
           onFocus={onFocus}
           onBlur={onBlur}
         />
@@ -530,6 +531,9 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
           ))
         )}
       </div>
-    </label>
+      {newResultModal ? (
+        <ResultFormModal resultType={newResultModal} handleClose={() => setNewResultModal(null)} />
+      ) : null}
+    </div>
   );
 };
