@@ -222,6 +222,18 @@ const ResultForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Route
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
+        {values.raster ? (
+          <div className={formStyles.Label}>
+            <span className={formStyles.LabelTitle}>Link to selected raster layer</span>
+            <a
+              href={`/management/data_management/rasters/layers/${values.raster.value}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {values.raster.label}
+            </a>
+          </div>
+        ) : null}
         <SelectDropdown
           title={"Family *"}
           name={"family"}
