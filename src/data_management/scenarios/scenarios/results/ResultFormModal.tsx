@@ -3,6 +3,7 @@ import ResultForm from "./ResultForm";
 
 interface MyProps {
   resultType: string;
+  refetchResultType: () => void;
   handleClose: () => void;
 }
 
@@ -17,7 +18,13 @@ function ResultFormModal(props: MyProps) {
       }}
     >
       <div style={{ paddingLeft: 30, paddingRight: 30 }}>
-        <ResultForm formInModal resultType={props.resultType} closeModal={props.handleClose} />
+        <ResultForm
+          resultType={props.resultType}
+          submitNewResult={() => {
+            props.handleClose();
+            props.refetchResultType();
+          }}
+        />
       </div>
     </ModalBackground>
   );

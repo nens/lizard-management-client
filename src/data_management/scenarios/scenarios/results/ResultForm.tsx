@@ -21,9 +21,8 @@ import formStyles from "./../../../../styles/Forms.module.css";
 interface Props {
   currentRecord?: ScenarioResult;
   rasterLayer?: RasterLayerFromAPI | null;
-  formInModal?: boolean;
-  closeModal?: () => void;
   resultType?: string;
+  submitNewResult?: () => void;
 }
 interface PropsFromDispatch {
   addNotification: (message: string | number, timeout: number) => void;
@@ -68,8 +67,9 @@ const fetchRasterLayers = async (searchQuery: string) => {
 const ResultForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<RouteParams>> = (
   props
 ) => {
-  const { currentRecord, rasterLayer, resultType, formInModal, closeModal } = props;
+  const { currentRecord, rasterLayer, resultType, submitNewResult } = props;
   const { uuid, id } = props.match.params;
+  const newResultForm = !!resultType;
 
   const navigationUrl = `/management/data_management/scenarios/scenarios/${uuid}`;
 
@@ -109,8 +109,8 @@ const ResultForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Route
           const status = response.status;
           if (status === 201) {
             props.addNotification("Success! New result created", 2000);
-            if (formInModal && closeModal) {
-              closeModal();
+            if (newResultForm && submitNewResult) {
+              submitNewResult();
             } else {
               props.history.push(navigationUrl);
             }
@@ -164,7 +164,7 @@ const ResultForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Route
       imgAltDescription={"3Di icon"}
       headerText={"Scenario Result"}
       explanationText={scenarioResultFormHelpText[fieldOnFocus] || scenarioResultFormHelpText["default"]}
-      backUrl={!formInModal ? navigationUrl : null}
+      backUrl={!newResultForm ? navigationUrl : null}
       fieldName={fieldOnFocus}
     >
       <form className={formStyles.Form} onSubmit={handleSubmit} onReset={handleReset}>
@@ -241,6 +241,7 @@ const ResultForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Route
           triedToSubmit={triedToSubmit}
           onFocus={handleFocus}
           onBlur={handleBlur}
+          readOnly={newResultForm}
         />
         <SelectDropdown
           title={"Raster layer"}
@@ -270,7 +271,7 @@ const ResultForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Route
           </div>
         ) : null}
         <div className={formStyles.ButtonContainer}>
-          {formInModal ? <div /> : <CancelButton url={navigationUrl} />}
+          {!newResultForm ? <CancelButton url={navigationUrl} /> : <div />}
           <SubmitButton onClick={tryToSubmitForm} />
         </div>
       </form>
