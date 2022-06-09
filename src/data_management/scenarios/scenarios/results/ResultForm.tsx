@@ -164,7 +164,7 @@ const ResultForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Route
       imgAltDescription={"3Di icon"}
       headerText={"Scenario Result"}
       explanationText={scenarioResultFormHelpText[fieldOnFocus] || scenarioResultFormHelpText["default"]}
-      backUrl={navigationUrl}
+      backUrl={!formInModal ? navigationUrl : null}
       fieldName={fieldOnFocus}
     >
       <form className={formStyles.Form} onSubmit={handleSubmit} onReset={handleReset}>

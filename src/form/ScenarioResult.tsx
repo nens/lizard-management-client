@@ -12,7 +12,6 @@ import {
   deleteScenarioDamageResults,
 } from "../api/scenarios";
 import { ScenarioResult as ScenarioResultFromApi } from "../types/scenarioType";
-import { getUuidFromUrl } from "../utils/getUuidFromUrl";
 import formStyles from "../styles/Forms.module.css";
 import buttonStyles from "../styles/Buttons.module.css";
 import scenarioResultStyles from "./ScenarioResult.module.css";
