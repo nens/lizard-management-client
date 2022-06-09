@@ -29,7 +29,7 @@ interface Results {
 
 interface MyProps {
   name: string;
-  uuid: string | undefined;
+  uuid: string;
   formSubmitted?: boolean;
   onFocus?: (e: React.FocusEvent<HTMLButtonElement>) => void;
   onBlur?: () => void;
@@ -54,6 +54,7 @@ interface ResultGroupTitleProps {
 }
 
 interface ResultRowProps {
+  uuid: string;
   scheduledForBulkDeletion: boolean;
   result: Result;
   handleDeletion: (e: React.MouseEvent<HTMLButtonElement>, id: number) => void;
@@ -133,6 +134,7 @@ const ResultGroupTitle: React.FC<ResultGroupTitleProps> = ({
 
 // Render result row
 const ResultRow: React.FC<ResultRowProps> = ({
+  uuid,
   scheduledForBulkDeletion,
   result,
   handleDeletion,
@@ -149,7 +151,7 @@ const ResultRow: React.FC<ResultRowProps> = ({
       {/* Only display a link to the result form if the result is not of RAW (R family) type */}
       {result.family !== "R" && !scheduledForBulkDeletion && !result.scheduledForDeletion ? (
         <a
-          href={`/management/data_management/scenarios/scenarios/${getUuidFromUrl(result.scenario)}/${result.id}`}
+          href={`/management/data_management/scenarios/scenarios/${uuid}/${result.id}`}
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -176,7 +178,6 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
     formSubmitted,
     onFocus,
     onBlur,
-    // readOnly
   } = props;
 
   const initialResults: Results = {
@@ -194,7 +195,7 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
 
   // useEffect to fetch different results of scenario
   useEffect(() => {
-    if (uuid && !newResultModal) {
+    if (!newResultModal) {
       setRawResults({
         isFetching: true,
         scheduledForBulkDeletion: false,
@@ -272,7 +273,7 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
 
   // useEffect for deletion of selected results when form is submitted
   useEffect(() => {
-    if (formSubmitted && uuid) {
+    if (formSubmitted) {
       // Delete results in bulks
       if (rawResults.scheduledForBulkDeletion) deleteScenarioRawResults(uuid);
       if (basicResults.scheduledForBulkDeletion) deleteScenarioBasicResults(uuid);
@@ -447,6 +448,7 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
           rawResults.results.map((result) => (
             <ResultRow
               key={result.id}
+              uuid={uuid}
               scheduledForBulkDeletion={rawResults.scheduledForBulkDeletion}
               result={result}
               handleDeletion={handleRawResultDeletion}
@@ -472,6 +474,7 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
           arrivalResults.results.map((result) => (
             <ResultRow
               key={result.id}
+              uuid={uuid}
               scheduledForBulkDeletion={arrivalResults.scheduledForBulkDeletion}
               result={result}
               handleDeletion={handleArrivalResultDeletion}
@@ -497,6 +500,7 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
           basicResults.results.map((result) => (
             <ResultRow
               key={result.id}
+              uuid={uuid}
               scheduledForBulkDeletion={basicResults.scheduledForBulkDeletion}
               result={result}
               handleDeletion={handleBasicResultDeletion}
@@ -522,6 +526,7 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
           damageResults.results.map((result) => (
             <ResultRow
               key={result.id}
+              uuid={uuid}
               scheduledForBulkDeletion={damageResults.scheduledForBulkDeletion}
               result={result}
               handleDeletion={handleDamageResultDeletion}

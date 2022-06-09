@@ -6,7 +6,7 @@ import {
 } from "./defaultHelpText";
 
 export const scenarioResultFormHelpText: HelpText = {
-  default: "Form to edit a scenario result. Please select a field to get more information.",
+  default: "Form to create / edit a scenario result. Please select a field to get more information.",
   name: nameHelpText,
   id: "ID of this object.",
   description: descriptionHelpText,

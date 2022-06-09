@@ -109,7 +109,11 @@ const ResultForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Route
           const status = response.status;
           if (status === 201) {
             props.addNotification("Success! New result created", 2000);
-            formInModal && closeModal ? closeModal() : props.history.push(navigationUrl);
+            if (formInModal && closeModal) {
+              closeModal();
+            } else {
+              props.history.push(navigationUrl);
+            }
           } else if (status === 403) {
             props.addNotification("Not authorized", 2000);
             console.error(response);
@@ -266,7 +270,7 @@ const ResultForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Route
           </div>
         ) : null}
         <div className={formStyles.ButtonContainer}>
-          {!formInModal ? <CancelButton url={navigationUrl} /> : <div />}
+          {formInModal ? <div /> : <CancelButton url={navigationUrl} />}
           <SubmitButton onClick={tryToSubmitForm} />
         </div>
       </form>
