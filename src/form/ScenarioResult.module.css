@@ -13,6 +13,7 @@
 
 .ResultTitleRow {
   font-weight: 600;
+  height: 40px;
   margin: 10px 0;
   display: flex;
   justify-content: space-between;
@@ -36,10 +37,12 @@
   height: 30px;
 }
 
-.ResultRow span {
+.ResultName {
   text-transform: capitalize;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   margin-right: 10px;
+  padding: 0;
+  border: 0;
 }

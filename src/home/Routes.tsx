@@ -18,7 +18,6 @@ import { NewProject } from "../data_management/scenarios/projects/NewProject";
 import { ScenarioTable } from "../data_management/scenarios/scenarios/ScenarioTable";
 import { EditScenario } from "../data_management/scenarios/scenarios/EditScenario";
 import { NewScenario } from "../data_management/scenarios/scenarios/NewScenario";
-import { EditResult } from "../data_management/scenarios/scenarios/results/EditResult";
 import { EditWmsLayer } from "../data_management/wms_layers/EditWmsLayer";
 import { NewWmsLayer } from "../data_management/wms_layers/NewWmsLayer";
 import { TimeseriesTable } from "../data_management/timeseries/timeseries/TimeseriesTable";
@@ -193,11 +192,6 @@ const authenticatedRoutes = () => {
           exact
           path="/management/data_management/scenarios/scenarios/:uuid"
           component={EditScenario}
-        />
-        <Route
-          exact
-          path="/management/data_management/scenarios/scenarios/:uuid/:id"
-          component={EditResult}
         />
         <Route
           exact

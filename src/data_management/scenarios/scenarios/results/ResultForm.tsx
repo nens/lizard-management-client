@@ -5,7 +5,6 @@ import { ExplainSideColumn } from "../../../../components/ExplainSideColumn";
 import { TextInput } from "../../../../form/TextInput";
 import { TextArea } from "../../../../form/TextArea";
 import { SubmitButton } from "../../../../form/SubmitButton";
-import { CancelButton } from "../../../../form/CancelButton";
 import { useForm, Values } from "../../../../form/useForm";
 import { minLength } from "../../../../form/validators";
 import { SelectDropdown } from "../../../../form/SelectDropdown";
@@ -21,8 +20,8 @@ import formStyles from "./../../../../styles/Forms.module.css";
 interface Props {
   currentRecord?: ScenarioResult;
   rasterLayer?: RasterLayerFromAPI | null;
-  resultType?: string;
-  submitNewResult?: () => void;
+  resultType?: string | null;
+  submit: () => void;
 }
 interface PropsFromDispatch {
   addNotification: (message: string | number, timeout: number) => void;
@@ -56,11 +55,9 @@ const fetchRasterLayers = async (searchQuery: string) => {
 const ResultForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<RouteParams>> = (
   props
 ) => {
-  const { currentRecord, rasterLayer, resultType, submitNewResult } = props;
-  const { uuid, id } = props.match.params;
+  const { currentRecord, rasterLayer, resultType, submit } = props;
+  const { uuid } = props.match.params;
   const newResultForm = !!resultType;
-
-  const navigationUrl = `/management/data_management/scenarios/scenarios/${uuid}`;
 
   const initialValues = currentRecord ? {
     name: currentRecord.name,
@@ -98,11 +95,7 @@ const ResultForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Route
           const status = response.status;
           if (status === 201) {
             props.addNotification("Success! New result created", 2000);
-            if (newResultForm && submitNewResult) {
-              submitNewResult();
-            } else {
-              props.history.push(navigationUrl);
-            }
+            submit();
           } else if (status === 403) {
             props.addNotification("Not authorized", 2000);
             console.error(response);
@@ -113,7 +106,7 @@ const ResultForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Route
         })
         .catch(console.error);
     } else {
-      fetch(`/api/v4/scenarios/${uuid}/results/${id}/`, {
+      fetch(`/api/v4/scenarios/${uuid}/results/${currentRecord.id}/`, {
         credentials: "same-origin",
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -123,7 +116,7 @@ const ResultForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Route
           const status = data.status;
           if (status === 200) {
             props.addNotification("Success! Result updated", 2000);
-            props.history.push(navigationUrl);
+            submit();
           } else {
             props.addNotification(status, 2000);
             console.error(data);
@@ -153,13 +146,9 @@ const ResultForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Route
       imgAltDescription={"3Di icon"}
       headerText={"Scenario Result"}
       explanationText={scenarioResultFormHelpText[fieldOnFocus] || scenarioResultFormHelpText["default"]}
-      backUrl={!newResultForm ? navigationUrl : null}
       fieldName={fieldOnFocus}
     >
       <form className={formStyles.Form} onSubmit={handleSubmit} onReset={handleReset}>
-        <span className={`${formStyles.FormFieldTitle} ${formStyles.FirstFormFieldTitle}`}>
-          1: General
-        </span>
         <TextInput
           title={"Scenario result name *"}
           name={"name"}
@@ -207,7 +196,6 @@ const ResultForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Route
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
-        <span className={formStyles.FormFieldTitle}>2: Data</span>
         <SelectDropdown
           title={"Result type *"}
           name={"family"}
@@ -263,7 +251,7 @@ const ResultForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Route
           </div>
         ) : null}
         <div className={formStyles.ButtonContainer}>
-          {!newResultForm ? <CancelButton url={navigationUrl} /> : <div />}
+          <div />
           <SubmitButton onClick={tryToSubmitForm} />
         </div>
       </form>

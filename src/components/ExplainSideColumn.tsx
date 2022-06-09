@@ -8,7 +8,7 @@ interface MyProps {
   imgAltDescription: string;
   headerText: string;
   explanationText: string | JSX.Element;
-  backUrl: string | null;
+  backUrl?: string;
   fieldName?: string; // for the animation effect of explain box to work when moving to a new field in form
 }
 

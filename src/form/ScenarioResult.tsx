@@ -47,7 +47,7 @@ interface ResultGroupTitleProps {
   results: Result[];
   scheduledForBulkDeletion: boolean;
   handleDeletion: (e: React.MouseEvent<HTMLButtonElement>) => void;
-  openNewResultModal?: () => void;
+  openResultFormModal?: () => void;
   onFocus?: (e: React.FocusEvent<HTMLButtonElement>) => void;
   onBlur?: () => void;
 }
@@ -57,6 +57,7 @@ interface ResultRowProps {
   scheduledForBulkDeletion: boolean;
   result: Result;
   handleDeletion: (e: React.MouseEvent<HTMLButtonElement>, id: number) => void;
+  openResultFormModal?: () => void;
   onFocus?: (e: React.FocusEvent<HTMLButtonElement>) => void;
   onBlur?: () => void;
 }
@@ -95,7 +96,7 @@ const ResultGroupTitle: React.FC<ResultGroupTitleProps> = ({
   results,
   scheduledForBulkDeletion,
   handleDeletion,
-  openNewResultModal,
+  openResultFormModal,
   onFocus,
   onBlur,
 }) => {
@@ -103,14 +104,14 @@ const ResultGroupTitle: React.FC<ResultGroupTitleProps> = ({
     <div className={scenarioResultStyles.ResultTitleRow}>
       <div className={scenarioResultStyles.ResultTitleRowLeft}>
         <span>{name}</span>
-        {openNewResultModal ? (
+        {openResultFormModal ? (
           <button
             id={"resultAddButton"}
-            title={`Add new ${name} result`}
+            title={`Add a new ${name} result`}
             className={buttonStyles.IconButton}
             onClick={(e) => {
               e.preventDefault();
-              openNewResultModal();
+              openResultFormModal();
             }}
             onFocus={onFocus}
             onBlur={onBlur}
@@ -133,10 +134,10 @@ const ResultGroupTitle: React.FC<ResultGroupTitleProps> = ({
 
 // Render result row
 const ResultRow: React.FC<ResultRowProps> = ({
-  uuid,
   scheduledForBulkDeletion,
   result,
   handleDeletion,
+  openResultFormModal,
   onFocus,
   onBlur,
 }) => {
@@ -147,17 +148,16 @@ const ResultRow: React.FC<ResultRowProps> = ({
         color: scheduledForBulkDeletion || result.scheduledForDeletion ? "lightgrey" : "",
       }}
     >
-      {/* Only display a link to the result form if the result is not of RAW (R family) type */}
       {result.family !== "Raw" && !scheduledForBulkDeletion && !result.scheduledForDeletion ? (
-        <a
-          href={`/management/data_management/scenarios/scenarios/${uuid}/${result.id}`}
-          target="_blank"
-          rel="noopener noreferrer"
+        <button
+          className={`${buttonStyles.Link} ${scenarioResultStyles.ResultName}`}
+          title={"Click to open"}
+          onClick={openResultFormModal}
         >
           {result.name}
-        </a>
+        </button>
       ) : (
-        <span>{result.name}</span>
+        <span className={scenarioResultStyles.ResultName}>{result.name}</span>
       )}
       {!scheduledForBulkDeletion ? (
         <DeleteButton
@@ -191,6 +191,11 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
 
   // set result type to open / close the ResultFormModal
   const [resultType, setResultType] = useState<string | null>(null);
+  const [result, setResult] = useState<Result | null>(null);
+  const closeResultFormModal = () => {
+    setResult(null);
+    setResultType(null);
+  };
 
   const fetchRawResults = (uuid: string) => {
     setRawResults({
@@ -473,7 +478,7 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
           results={arrivalResults.results}
           scheduledForBulkDeletion={arrivalResults.scheduledForBulkDeletion}
           handleDeletion={handleArrivalResultsBulkDeletion}
-          openNewResultModal={() => setResultType("Arrival")}
+          openResultFormModal={() => setResultType("Arrival")}
           onFocus={onFocus}
           onBlur={onBlur}
         />
@@ -487,6 +492,7 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
               scheduledForBulkDeletion={arrivalResults.scheduledForBulkDeletion}
               result={result}
               handleDeletion={handleArrivalResultDeletion}
+              openResultFormModal={() => setResult(result)}
               onFocus={onFocus}
               onBlur={onBlur}
             />
@@ -499,7 +505,7 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
           results={basicResults.results}
           scheduledForBulkDeletion={basicResults.scheduledForBulkDeletion}
           handleDeletion={handleBasicResultsBulkDeletion}
-          openNewResultModal={() => setResultType("Basic")}
+          openResultFormModal={() => setResultType("Basic")}
           onFocus={onFocus}
           onBlur={onBlur}
         />
@@ -513,6 +519,7 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
               scheduledForBulkDeletion={basicResults.scheduledForBulkDeletion}
               result={result}
               handleDeletion={handleBasicResultDeletion}
+              openResultFormModal={() => setResult(result)}
               onFocus={onFocus}
               onBlur={onBlur}
             />
@@ -525,7 +532,7 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
           results={damageResults.results}
           scheduledForBulkDeletion={damageResults.scheduledForBulkDeletion}
           handleDeletion={handleDamageResultsBulkDeletion}
-          openNewResultModal={() => setResultType("Damage")}
+          openResultFormModal={() => setResultType("Damage")}
           onFocus={onFocus}
           onBlur={onBlur}
         />
@@ -539,20 +546,27 @@ export const ScenarioResult: React.FC<MyProps> = (props) => {
               scheduledForBulkDeletion={damageResults.scheduledForBulkDeletion}
               result={result}
               handleDeletion={handleDamageResultDeletion}
+              openResultFormModal={() => setResult(result)}
               onFocus={onFocus}
               onBlur={onBlur}
             />
           ))
         )}
       </div>
-      {resultType ? (
+      {resultType || result ? (
         <ResultFormModal
           resultType={resultType}
-          handleClose={() => setResultType(null)}
-          refetchResultType={() => {
+          result={result}
+          handleClose={closeResultFormModal}
+          refetchResults={() => {
             if (resultType === "Basic") fetchBasicResults(uuid);
-            if (resultType === "Arrival") fetchArrivalResults(uuid);
-            if (resultType === "Damage") fetchDamageResults(uuid);
+            else if (resultType === "Arrival") fetchArrivalResults(uuid);
+            else if (resultType === "Damage") fetchDamageResults(uuid);
+            else {
+              fetchBasicResults(uuid);
+              fetchArrivalResults(uuid);
+              fetchDamageResults(uuid);
+            };
           }}
         />
       ) : null}
