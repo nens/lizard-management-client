@@ -262,7 +262,7 @@ const ResultForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Route
           <div className={formStyles.Label}>
             <span className={formStyles.LabelTitle}>Link to selected raster layer</span>
             <a
-              href={`/management/data_management/rasters/layers/${values.raster.uuid}`}
+              href={`/management/data_management/rasters/layers/${values.raster.value}`}
               target="_blank"
               rel="noopener noreferrer"
             >
