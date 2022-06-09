@@ -13,6 +13,7 @@ import {
   deleteScenarioDamageResults,
 } from "../api/scenarios";
 import { ScenarioResult as ScenarioResultFromApi } from "../types/scenarioType";
+import Modal from "../components/Modal";
 import formStyles from "../styles/Forms.module.css";
 import buttonStyles from "../styles/Buttons.module.css";
 import scenarioResultStyles from "./ScenarioResult.module.css";
@@ -100,38 +101,51 @@ const ResultGroupTitle: React.FC<ResultGroupTitleProps> = ({
   onBlur,
 }) => {
   const history = useHistory();
+  const [confirmModal, setConfirmModal] = useState<boolean>(false);
 
   return (
-    <div className={scenarioResultStyles.ResultTitleRow}>
-      <div className={scenarioResultStyles.ResultTitleRowLeft}>
-        <span>{name}</span>
-        {name !== "Raw" ? (
-          <button
-            id={"resultAddButton"}
-            title={`Add a new result`}
-            className={buttonStyles.IconButton}
-            onClick={e => {
-              e.preventDefault();
-              if (window.confirm("You will be redirected to the Scenario Result form. Please save your changes before continue. Do you want to continue?")) {
-                history.push(`/management/data_management/scenarios/scenarios/${uuid}/new_result`);
-              };
-            }}
+    <>
+      <div className={scenarioResultStyles.ResultTitleRow}>
+        <div className={scenarioResultStyles.ResultTitleRowLeft}>
+          <span>{name}</span>
+          {name !== "Raw" ? (
+            <button
+              id={"resultAddButton"}
+              title={`Add a new result`}
+              className={buttonStyles.IconButton}
+              onClick={e => {
+                e.preventDefault();
+                setConfirmModal(true);
+              }}
+              onFocus={onFocus}
+              onBlur={onBlur}
+            >
+              <i className="fa fa-plus-circle" />
+            </button>
+          ): null}
+        </div>
+        {results.length ? (
+          <DeleteButton
+            scheduledForDeletion={scheduledForBulkDeletion}
+            handleClick={handleDeletion}
             onFocus={onFocus}
             onBlur={onBlur}
-          >
-            <i className="fa fa-plus-circle" />
-          </button>
-        ): null}
+          />
+        ) : null}
       </div>
-      {results.length ? (
-        <DeleteButton
-          scheduledForDeletion={scheduledForBulkDeletion}
-          handleClick={handleDeletion}
-          onFocus={onFocus}
-          onBlur={onBlur}
-        />
+      {confirmModal ? (
+        <Modal
+          title={"New scenario result"}
+          buttonConfirmName={"Continue"}
+          onClickButtonConfirm={() => history.push(`/management/data_management/scenarios/scenarios/${uuid}/new_result`)}
+          cancelAction={() => setConfirmModal(false)}
+        >
+          You will be redirected to the Scenario Result form.
+          Please save your changes before continue.
+          Do you want to continue?
+        </Modal>
       ) : null}
-    </div>
+    </>
   );
 };
 
