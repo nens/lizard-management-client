@@ -185,21 +185,24 @@ const ResultForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Route
             readOnly
           />
         ) : null}
+        <TextInput
+          title={"Code *"}
+          name={"code"}
+          value={values.code}
+          valueChanged={handleInputChange}
+          clearInput={clearInput}
+          validated={!minLength(1, values.code)}
+          errorMessage={minLength(1, values.code)}
+          triedToSubmit={triedToSubmit}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+        />
         <TextArea
           title={"Description"}
           name={"description"}
           value={values.description}
           valueChanged={handleInputChange}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
           clearInput={clearInput}
-          validated
-        />
-        <TextInput
-          title={"Code"}
-          name={"code"}
-          value={values.code}
-          valueChanged={handleInputChange}
           validated
           onFocus={handleFocus}
           onBlur={handleBlur}
