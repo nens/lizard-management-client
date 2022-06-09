@@ -31,5 +31,5 @@ export interface ScenarioResult {
   description: string;
   raster: string;
   attachment_url: string | null;
-  family: "R" | "B" | "A" | "D";
+  family: "Raw" | "Basic" | "Arrival" | "Damage";
 }

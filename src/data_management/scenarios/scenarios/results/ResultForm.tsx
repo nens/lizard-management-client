@@ -27,21 +27,10 @@ interface Props {
 interface PropsFromDispatch {
   addNotification: (message: string | number, timeout: number) => void;
 }
+
 interface RouteParams {
   uuid: string;
   id: string;
-}
-
-const getResultFamilyTypeLabel = (result: ScenarioResult) => {
-  if (result.family === "R") {
-    return "Raw";
-  } else if (result.family === "B") {
-    return "Basic";
-  } else if (result.family === "A") {
-    return "Arrival";
-  } else { // family is "D"
-    return "Damage";
-  };
 }
 
 // Helper function to fetch paginated raster layers with search query
@@ -79,13 +68,13 @@ const ResultForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Route
     description: currentRecord.description,
     code: currentRecord.code,
     raster: rasterLayer ? convertToSelectObject(rasterLayer.uuid, rasterLayer.name) : null,
-    family: currentRecord.family ? convertToSelectObject(currentRecord.family, getResultFamilyTypeLabel(currentRecord)) : null,
+    family: currentRecord.family ? convertToSelectObject(currentRecord.family) : null,
   } : {
     name: null,
     description: null,
     code: null,
     raster: null,
-    family: resultType ? convertToSelectObject(resultType.charAt(0), resultType) : null,
+    family: resultType ? convertToSelectObject(resultType) : null,
   };
 
   const onSubmit = (values: Values) => {
@@ -224,15 +213,15 @@ const ResultForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Route
           valueChanged={(value) => handleValueChange("family", value)}
           options={[
             {
-              value: "B",
+              value: "Basic",
               label: "Basic"
             },
             {
-              value: "A",
+              value: "Arrival",
               label: "Arrival"
             },
             {
-              value: "D",
+              value: "Damage",
               label: "Damage"
             }
           ]}

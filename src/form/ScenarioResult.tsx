@@ -148,7 +148,7 @@ const ResultRow: React.FC<ResultRowProps> = ({
       }}
     >
       {/* Only display a link to the result form if the result is not of RAW (R family) type */}
-      {result.family !== "R" && !scheduledForBulkDeletion && !result.scheduledForDeletion ? (
+      {result.family !== "Raw" && !scheduledForBulkDeletion && !result.scheduledForDeletion ? (
         <a
           href={`/management/data_management/scenarios/scenarios/${uuid}/${result.id}`}
           target="_blank"
