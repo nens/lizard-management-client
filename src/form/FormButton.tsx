@@ -13,7 +13,6 @@ interface MyProps {
   readOnly?: boolean;
   readOnlyTooltip?: string;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
-  form?: string;
 }
 
 export const FormButton: React.FC<MyProps> = (props) => {
@@ -28,7 +27,6 @@ export const FormButton: React.FC<MyProps> = (props) => {
     readOnly,
     readOnlyTooltip,
     onClick,
-    form,
   } = props;
 
   // Set validity of the input field
@@ -54,7 +52,6 @@ export const FormButton: React.FC<MyProps> = (props) => {
           className={`${buttonStyles.NewButton} ${readOnly ? buttonStyles.Inactive : ""}`}
           onClick={!readOnly ? onClick : (e) => e.preventDefault()}
           title={(readOnly && readOnlyTooltip) || undefined}
-          form={form}
           onFocus={onFocus}
           onBlur={onBlur}
         >

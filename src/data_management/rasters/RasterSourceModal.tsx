@@ -29,7 +29,7 @@ export const RasterSourceModal: React.FC<SourceModalProps> = (props) => {
       {rasterSources && rasterSources.length > 0 ? (
         <ol>
           {rasterSources.map((rasterSource) => (
-            <li>
+            <li key={rasterSource}>
               <a
                 key={rasterSource}
                 href={`/management/data_management/rasters/sources/${rasterSource}/`}

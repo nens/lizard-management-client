@@ -43,7 +43,6 @@ interface ColorMapProps {
   triedToSubmit?: boolean;
   placeholder?: string;
   validators?: Function[];
-  form?: string;
   onFocus?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur?: () => void;
 }
@@ -86,7 +85,7 @@ const usePrevious = (value: any) => {
 };
 
 const ColorMapInput: React.FC<ColorMapProps> = (props) => {
-  const { title, name, colorMapValue, valueChanged, triedToSubmit, form, onFocus, onBlur } = props;
+  const { title, name, colorMapValue, valueChanged, triedToSubmit, onFocus, onBlur } = props;
 
   // const intl = useIntl();
 
@@ -320,7 +319,6 @@ const ColorMapInput: React.FC<ColorMapProps> = (props) => {
             }}
             placeholder={placeholderColorMapSelection}
             readOnly={readOnly}
-            form={form}
             onFocus={onFocus}
             onBlur={onBlur}
           />
@@ -349,7 +347,6 @@ const ColorMapInput: React.FC<ColorMapProps> = (props) => {
           onFocus={onFocus}
           onBlur={onBlur}
           readOnly={readOnly}
-          form={form}
         />
         <FloatInput
           title={"Maximum of color map range"}
@@ -363,14 +360,12 @@ const ColorMapInput: React.FC<ColorMapProps> = (props) => {
           onFocus={onFocus}
           onBlur={onBlur}
           readOnly={readOnly}
-          form={form}
         />
         <CheckBox
           title={"Rescalable"}
           name={name + "_rescalable"}
           value={colorMapValue.rescalable}
           valueChanged={(bool: boolean) => rescalableChanged(bool)}
-          form={form}
           onFocus={onFocus}
           onBlur={onBlur}
         />

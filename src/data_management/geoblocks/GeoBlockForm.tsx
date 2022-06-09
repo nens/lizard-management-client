@@ -189,7 +189,7 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
       backUrl={"/management/data_management/geoblocks"}
       fieldName={fieldOnFocus}
     >
-      <form onSubmit={handleSubmit} onReset={handleReset} id={"geoblock_form_id"}></form>
+      <form onSubmit={handleSubmit} onReset={handleReset} id={"geoblock_form_id"} />
       <div className={formStyles.Form}>
         <span className={`${formStyles.FormFieldTitle} ${formStyles.FirstFormFieldTitle}`}>
           1: General
@@ -205,7 +205,6 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
           validated={!minLength(3, values.name)}
           errorMessage={minLength(3, values.name)}
           triedToSubmit={triedToSubmit}
-          form={"geoblock_form_id"}
         />
         {currentRecord ? (
           <TextInput
@@ -228,7 +227,6 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
           onBlur={handleBlur}
           clearInput={clearInput}
           validated
-          form={"geoblock_form_id"}
         />
         {!belongsToScenario ? (
           <SelectDropdown
@@ -243,7 +241,6 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
             isAsync
             isCached
             loadOptions={fetchLayerCollections}
-            form={"geoblock_form_id"}
             onFocus={handleFocus}
             onBlur={handleBlur}
           />
@@ -315,7 +312,6 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
           validated={!!values.aggregationType}
           errorMessage={"Please select an option"}
           triedToSubmit={triedToSubmit}
-          form={"geoblock_form_id"}
           onFocus={handleFocus}
           onBlur={handleBlur}
           isSearchable={false}
@@ -330,7 +326,6 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
           validated={!required("Please select an observation type", values.observationType)}
           errorMessage={required("Please select an observation type", values.observationType)}
           triedToSubmit={triedToSubmit}
-          form={"geoblock_form_id"}
           onFocus={handleFocus}
           onBlur={handleBlur}
           isAsync
@@ -343,7 +338,6 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
           colorMapValue={values.colorMap}
           valueChanged={(value) => handleValueChange("colorMap", value)}
           validated
-          form={"geoblock_form_id"}
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
@@ -367,7 +361,6 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
           readOnlyTooltip={"Please first fill in the required fields."}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          form={"geoblock_form_id"}
         />
         <span className={formStyles.FormFieldTitle}>3: Rights</span>
         <AccessModifier
@@ -378,7 +371,6 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
           onFocus={handleFocus}
           onBlur={handleBlur}
           readOnly={belongsToScenario}
-          form={"geoblock_form_id"}
         />
         <CheckBox
           title={"Shared with other organisations"}
@@ -388,7 +380,6 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
           onFocus={handleFocus}
           onBlur={handleBlur}
           readOnly={belongsToScenario}
-          form={"geoblock_form_id"}
         />
         {values.sharedWith ? (
           <SelectDropdown
@@ -406,7 +397,6 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
             isCached
             loadOptions={fetchOrganisationsToShareWith}
             readOnly={belongsToScenario}
-            form={"geoblock_form_id"}
           />
         ) : null}
         <SelectDropdown
@@ -424,7 +414,6 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
           onFocus={handleFocus}
           onBlur={handleBlur}
           readOnly
-          form={"geoblock_form_id"}
         />
         <SelectDropdown
           title={"Supplier"}
@@ -441,10 +430,9 @@ const GeoBlockForm: React.FC<Props & DispatchProps & RouteComponentProps> = (pro
           dropUp
           onFocus={handleFocus}
           onBlur={handleBlur}
-          form={"geoblock_form_id"}
         />
         <div className={formStyles.ButtonContainer}>
-          <CancelButton url={"/management/data_management/geoblocks"} form={"geoblock_form_id"} />
+          <CancelButton url={"/management/data_management/geoblocks"} />
           <div style={{ display: "flex" }}>
             {currentRecord ? (
               <div style={{ marginRight: 16 }}>

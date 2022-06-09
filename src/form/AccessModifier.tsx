@@ -10,7 +10,6 @@ interface MyProps {
   onFocus?: (e: any) => void;
   onBlur?: () => void;
   readOnly?: boolean;
-  form?: string;
 }
 
 export const getAccessibiltyText = (accessModifier: string) => {
@@ -24,7 +23,6 @@ export const AccessModifier: React.FC<MyProps> = (props) => {
     name,
     value,
     valueChanged,
-    // form,
     onFocus,
     onBlur,
     readOnly,

@@ -20,7 +20,6 @@ interface MyProps {
   validators?: Function[];
   validated: boolean;
   valueChanged: Function;
-  form?: string;
   onFocus?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur?: () => void;
 }
@@ -49,7 +48,6 @@ export const SlushBucket: React.FC<MyProps> = (props) => {
     value,
     placeholder,
     valueChanged,
-    form,
     onFocus,
     onBlur,
     readOnly,
@@ -81,7 +79,6 @@ export const SlushBucket: React.FC<MyProps> = (props) => {
             onFocus={onFocus}
             onBlur={onBlur}
             readOnly={readOnly}
-            form={form}
           />
           <div
             style={{

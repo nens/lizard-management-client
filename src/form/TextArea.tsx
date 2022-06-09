@@ -15,7 +15,6 @@ interface MyProps {
   onBlur?: () => void;
   triedToSubmit?: boolean;
   readOnly?: boolean;
-  form?: string;
   rows?: number;
 }
 
@@ -33,7 +32,6 @@ export const TextArea: React.FC<MyProps> = (props) => {
     errorMessage,
     triedToSubmit,
     readOnly,
-    form,
     rows,
   } = props;
 
@@ -65,7 +63,6 @@ export const TextArea: React.FC<MyProps> = (props) => {
           onFocus={onFocus}
           onBlur={onBlur}
           readOnly={!!readOnly}
-          form={form}
           rows={rows}
           spellCheck={false}
           style={{

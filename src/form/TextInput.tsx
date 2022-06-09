@@ -15,7 +15,6 @@ interface MyProps {
   onBlur?: () => void;
   triedToSubmit?: boolean;
   readOnly?: boolean;
-  form?: string;
   type?: string;
   required?: boolean;
 }
@@ -34,7 +33,6 @@ export const TextInput: React.FC<MyProps> = (props) => {
     errorMessage,
     triedToSubmit,
     readOnly,
-    form,
     type,
     required,
   } = props;
@@ -65,7 +63,6 @@ export const TextInput: React.FC<MyProps> = (props) => {
           onChange={valueChanged}
           value={value || (value === 0 ? value : "")}
           readOnly={!!readOnly}
-          form={form}
           type={type || "text"}
           required={required}
           onFocus={onFocus}
