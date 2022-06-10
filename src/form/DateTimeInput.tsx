@@ -13,6 +13,7 @@ interface MyProps {
   title: string;
   name: string;
   value: string;
+  form?: string;
   valueChanged: (value: string) => void;
   clearInput: (name: string) => void;
 }
@@ -22,6 +23,7 @@ export const DateTimeInput: React.FC<MyProps> = (props) => {
     title,
     name,
     value,
+    form,
     valueChanged,
     clearInput,
   } = props;
@@ -38,7 +40,7 @@ export const DateTimeInput: React.FC<MyProps> = (props) => {
           }}
           renderInput={(props) => (
             <div>
-              <input {...props} value={value ? props.value : ''}/>
+              <input {...props} value={value ? props.value : ''} form={form} />
               <ClearInputButton onClick={() => clearInput(name)} />
             </div>
           )}

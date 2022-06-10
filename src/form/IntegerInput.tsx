@@ -14,6 +14,7 @@ interface MyProps {
   onBlur?: () => void;
   triedToSubmit?: boolean;
   readOnly?: boolean;
+  form?: string;
 }
 
 export const IntegerInput: React.FC<MyProps> = (props) => {
@@ -30,6 +31,7 @@ export const IntegerInput: React.FC<MyProps> = (props) => {
     errorMessage,
     triedToSubmit,
     readOnly,
+    form,
   } = props;
 
   return (
@@ -53,6 +55,7 @@ export const IntegerInput: React.FC<MyProps> = (props) => {
       errorMessage={errorMessage}
       readOnly={readOnly}
       triedToSubmit={triedToSubmit}
+      form={form}
     />
   );
 };

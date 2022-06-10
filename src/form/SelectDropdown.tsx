@@ -21,6 +21,7 @@ interface MyProps {
   title: string;
   name: string;
   id?: string;
+  form?: string;
   value?: Value | null;
   valueChanged: (value: ValueType<Value, boolean> | {}) => void;
   options: Value[];
@@ -46,6 +47,7 @@ export const SelectDropdown = (props: MyProps) => {
     title,
     name,
     id,
+    form,
     placeholder,
     value,
     valueChanged,
@@ -228,6 +230,7 @@ export const SelectDropdown = (props: MyProps) => {
           tabIndex={-1}
           autoComplete="off"
           onFocus={() => mySelect.current && mySelect.current.focus()}
+          form={form}
           style={{
             position: "absolute",
             opacity: 0,

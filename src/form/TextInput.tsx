@@ -17,6 +17,7 @@ interface MyProps {
   readOnly?: boolean;
   type?: string;
   required?: boolean;
+  form?: string;
 }
 
 export const TextInput: React.FC<MyProps> = (props) => {
@@ -35,6 +36,7 @@ export const TextInput: React.FC<MyProps> = (props) => {
     readOnly,
     type,
     required,
+    form,
   } = props;
 
   // Set validity of the input field
@@ -67,6 +69,7 @@ export const TextInput: React.FC<MyProps> = (props) => {
           required={required}
           onFocus={onFocus}
           onBlur={onBlur}
+          form={form}
           step={"any"} // no stepping is implied for number input type
         />
         {clearInput && !readOnly && value !== null && (value + "").length ? (

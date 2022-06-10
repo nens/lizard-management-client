@@ -14,6 +14,7 @@ interface MyProps {
   onBlur?: () => void;
   triedToSubmit?: boolean;
   readOnly?: boolean;
+  form?: string;
 }
 
 export const FloatInput: React.FC<MyProps> = (props) => {
@@ -30,6 +31,7 @@ export const FloatInput: React.FC<MyProps> = (props) => {
     errorMessage,
     triedToSubmit,
     readOnly,
+    form,
   } = props;
 
   return (
@@ -47,6 +49,7 @@ export const FloatInput: React.FC<MyProps> = (props) => {
       triedToSubmit={triedToSubmit}
       readOnly={readOnly}
       clearInput={clearInput}
+      form={form}
     />
   );
 };

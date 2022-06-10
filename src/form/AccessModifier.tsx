@@ -10,6 +10,7 @@ interface MyProps {
   onFocus?: (e: any) => void;
   onBlur?: () => void;
   readOnly?: boolean;
+  form?: string;
 }
 
 export const getAccessibiltyText = (accessModifier: string) => {
