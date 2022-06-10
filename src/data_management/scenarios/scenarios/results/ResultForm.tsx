@@ -14,7 +14,7 @@ import { convertToSelectObject } from "../../../../utils/convertToSelectObject";
 import { scenarioResultFormHelpText } from "../../../../utils/help_texts/helpTextForScenarioResult";
 import { fetchRasterLayersV4, RasterLayerFromAPI } from "../../../../api/rasters";
 import { UUID_REGEX } from "../../../../components/Breadcrumbs";
-import threediIcon from "../../../../images/3di@3x.svg";
+import scenarioIcon from "../../../../images/scenario.svg";
 import formStyles from "./../../../../styles/Forms.module.css";
 
 interface Props {
@@ -142,8 +142,8 @@ const ResultForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Route
 
   return (
     <ExplainSideColumn
-      imgUrl={threediIcon}
-      imgAltDescription={"3Di icon"}
+      imgUrl={scenarioIcon}
+      imgAltDescription={"Scenario icon"}
       headerText={"Scenario Result"}
       explanationText={scenarioResultFormHelpText[fieldOnFocus] || scenarioResultFormHelpText["default"]}
       fieldName={fieldOnFocus}

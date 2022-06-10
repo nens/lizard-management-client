@@ -4,7 +4,7 @@ import dataManagementIcon from "../images/database.svg";
 import personalApiKeysIcon from "../images/personal_api_key_icon.svg";
 import rasterIcon from "../images/raster_icon.svg";
 import wmsIcon from "../images/wms@3x.svg";
-import threediIcon from "../images/3di@3x.svg";
+import scenarioIcon from "../images/scenario.svg";
 import projectIcon from "../images/project.svg";
 import backArrowIcon from "../images/backArrow.svg";
 import labelIcon from "../images/labels_icon.svg";
@@ -464,7 +464,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     linksToUrl: "/management/data_management/scenarios",
     linksToUrlExternal: false,
     requiresOneOfRoles: ["admin", "supplier"],
-    icon: threediIcon,
+    icon: scenarioIcon,
   },
   {
     title: "Labels",
@@ -643,7 +643,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     icon: backArrowIcon,
   },
   {
-    title: "3Di Scenarios",
+    title: "Scenarios",
     // title: (
     //   <FormattedMessage
     //     id="home.scenarios"
@@ -656,7 +656,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     linksToUrl: "/management/data_management/scenarios/scenarios",
     linksToUrlExternal: false,
     requiresOneOfRoles: ["admin", "supplier"],
-    icon: threediIcon,
+    icon: scenarioIcon,
   },
   {
     title: "Projects",

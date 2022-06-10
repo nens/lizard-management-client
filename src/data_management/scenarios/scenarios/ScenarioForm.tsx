@@ -18,7 +18,7 @@ import { scenarioFormHelpText } from "../../../utils/help_texts/helpTextForScena
 import { convertToSelectObject } from "../../../utils/convertToSelectObject";
 import { Scenario } from "../../../types/scenarioType";
 import { Project } from "../../../types/projectType";
-import threediIcon from "../../../images/3di@3x.svg";
+import scenarioIcon from "../../../images/scenario.svg";
 import formStyles from "./../../../styles/Forms.module.css";
 
 interface Props {
@@ -159,9 +159,9 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
 
   return (
     <ExplainSideColumn
-      imgUrl={threediIcon}
-      imgAltDescription={"3Di icon"}
-      headerText={"3Di Scenarios"}
+      imgUrl={scenarioIcon}
+      imgAltDescription={"Scenario icon"}
+      headerText={"Scenarios"}
       explanationText={scenarioFormHelpText[fieldOnFocus] || scenarioFormHelpText["default"]}
       backUrl={navigationUrl}
       fieldName={fieldOnFocus}
