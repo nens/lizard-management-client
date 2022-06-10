@@ -14,13 +14,13 @@ interface MyProps {
 }
 
 function ResultFormModal(props: MyProps) {
-  const { result, resultType, refetchResults, handleClose } = props;
+  const { result, resultType } = props;
 
   const [rasterLayer, setRasterLayer] = useState<RasterLayerFromAPI | null>(null);
 
   const submit = () => {
-    handleClose();
-    refetchResults();
+    props.handleClose();
+    props.refetchResults();
   };
 
   useEffect(() => {
@@ -35,7 +35,7 @@ function ResultFormModal(props: MyProps) {
   return (
     <ModalBackground
       title={"Scenario Result"}
-      handleClose={handleClose}
+      handleClose={props.handleClose}
       style={{
         width: "80%",
         height: "85%",
