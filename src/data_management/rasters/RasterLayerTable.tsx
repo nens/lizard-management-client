@@ -144,7 +144,7 @@ export const RasterLayerTable: React.FC<RouteComponentProps> = (props) => {
           { value: "name__icontains=", label: "Name" },
           { value: "uuid=", label: "UUID" },
         ]}
-        defaultUrlParams={"&scenario__isnull=true"} // to exclude 3Di scenario rasters
+        defaultUrlParams={"&scenario__isnull=true"} // to exclude scenario rasters
       />
       {rowsToBeDeleted.length > 0 ? (
         <DeleteModal

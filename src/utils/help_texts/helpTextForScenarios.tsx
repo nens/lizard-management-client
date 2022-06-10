@@ -8,6 +8,7 @@ import {
   accessModifierHelpText,
   descriptionHelpText,
   HelpText,
+  nameHelpText,
   organisationHelpText,
   supplierHelpText,
   uuidHelpText,
@@ -43,12 +44,12 @@ export const DefaultScenarioExplanationText = () => {
 };
 
 export const scenarioFormHelpText: HelpText = {
-  default: "View and manage a 3Di scenario.",
-  name: "The scenario name comes from 3Di. This name can be changed for your convenience.",
+  default: "View and manage a scenario.",
+  name: nameHelpText,
   uuid: uuidHelpText,
   description: descriptionHelpText,
   source: "Source of the scenario.",
-  project: "Project to group and give insights on 3Di scenarios.",
+  project: "Project to group and give insights on scenarios.",
   simulationStart: "Start time of the simulation",
   simulationEnd: "End time of the simulation",
   simulationIdentifier: "Identifier of the simulation",

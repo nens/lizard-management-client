@@ -647,7 +647,7 @@ export const navigationLinkTiles: NavigationLinkTile[] = [
     // title: (
     //   <FormattedMessage
     //     id="home.scenarios"
-    //     defaultMessage="3Di Scenarios"
+    //     defaultMessage="Scenarios"
     //   />
     // ),
     order: 100,
