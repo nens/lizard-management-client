@@ -18,7 +18,7 @@ import { scenarioFormHelpText } from "../../../utils/help_texts/helpTextForScena
 import { convertToSelectObject } from "../../../utils/convertToSelectObject";
 import { Scenario } from "../../../types/scenarioType";
 import { Project } from "../../../types/projectType";
-import threediIcon from "../../../images/3di@3x.svg";
+import scenarioIcon from "../../../images/scenario.svg";
 import formStyles from "./../../../styles/Forms.module.css";
 
 interface Props {
@@ -86,7 +86,7 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
   const onSubmit = (values: Values) => {
     const body = {
       name: values.name,
-      description: values.description,
+      description: values.description || "",
       source: values.source,
       project: values.project && values.project.value,
       access_modifier: values.accessModifier,
@@ -159,14 +159,20 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
 
   return (
     <ExplainSideColumn
-      imgUrl={threediIcon}
-      imgAltDescription={"3Di icon"}
-      headerText={"3Di Scenarios"}
+      imgUrl={scenarioIcon}
+      imgAltDescription={"Scenario icon"}
+      headerText={"Scenarios"}
       explanationText={scenarioFormHelpText[fieldOnFocus] || scenarioFormHelpText["default"]}
       backUrl={navigationUrl}
       fieldName={fieldOnFocus}
     >
-      <form className={formStyles.Form} onSubmit={handleSubmit} onReset={handleReset}>
+      {/* Use the form method in RasterLayerForm */}
+      <form
+        onSubmit={handleSubmit}
+        onReset={handleReset}
+        id={"scenario_form"}
+      />
+      <div className={formStyles.Form}>
         <span className={`${formStyles.FormFieldTitle} ${formStyles.FirstFormFieldTitle}`}>
           1: General
         </span>
@@ -283,13 +289,15 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
           validated
         />
         <span className={formStyles.FormFieldTitle}>2: Data</span>
-        <ScenarioResult
-          name={"results"}
-          uuid={currentRecord ? currentRecord.uuid : undefined}
-          formSubmitted={formSubmitted}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-        />
+        {currentRecord ? (
+          <ScenarioResult
+            name={"results"}
+            uuid={currentRecord.uuid}
+            formSubmitted={formSubmitted}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+          />
+        ) : null}
         <TextArea
           title={"Extra metadata (JSON)"}
           name={"extraMetadata"}
@@ -333,9 +341,9 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
         />
         <div className={formStyles.ButtonContainer}>
           <CancelButton url={navigationUrl} />
-          <SubmitButton onClick={tryToSubmitForm} />
+          <SubmitButton onClick={tryToSubmitForm} form={"scenario_form"} />
         </div>
-      </form>
+      </div>
     </ExplainSideColumn>
   );
 };

@@ -13,7 +13,7 @@ import { getLocalDateString } from "../../../utils/dateUtils";
 import DeleteModal from "../../../components/DeleteModal";
 import AuthorisationModal from "../../../components/AuthorisationModal";
 import AddToProjectModal from "./AddToProjectModal";
-import threediIcon from "../../../images/3di@3x.svg";
+import scenarioIcon from "../../../images/scenario.svg";
 import tableStyles from "../../../components/Table.module.css";
 
 const baseUrl = "/api/v4/scenarios/";
@@ -204,9 +204,9 @@ export const ScenarioTable = (props: RouteComponentProps) => {
 
   return (
     <ExplainSideColumn
-      imgUrl={threediIcon}
-      imgAltDescription={"3Di icon"}
-      headerText={"3Di Scenarios"}
+      imgUrl={scenarioIcon}
+      imgAltDescription={"Scenario icon"}
+      headerText={"Scenarios"}
       explanationText={<DefaultScenarioExplanationText />}
       backUrl={"/management/data_management/scenarios"}
     >

@@ -8,7 +8,7 @@ interface MyProps {
   imgAltDescription: string;
   headerText: string;
   explanationText: string | JSX.Element;
-  backUrl: string;
+  backUrl?: string;
   fieldName?: string; // for the animation effect of explain box to work when moving to a new field in form
 }
 
@@ -45,13 +45,16 @@ export const ExplainSideColumn: React.FC<MyProps> = ({
           style={{
             display: "flex",
             justifyContent: "flex-start",
+            minHeight: 50,
           }}
         >
-          <NavLink to={backUrl}>
-            <span style={{ fontSize: "36px" }}>
-              <img className={styles.BackArrow} alt="back" src={backArrow} />
-            </span>
-          </NavLink>
+          {backUrl ? (
+            <NavLink to={backUrl}>
+              <span style={{ fontSize: "36px" }}>
+                <img className={styles.BackArrow} alt="back" src={backArrow} />
+              </span>
+            </NavLink>
+          ) : null}
         </div>
         <div style={{ display: "flex", justifyContent: "center" }}>
           <img src={imgUrl} alt={imgAltDescription ? imgAltDescription : "Left sidebar icon"} />

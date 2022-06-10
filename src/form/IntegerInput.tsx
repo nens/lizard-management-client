@@ -12,7 +12,6 @@ interface MyProps {
   placeholder?: string;
   onFocus?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur?: () => void;
-  form?: string;
   triedToSubmit?: boolean;
   readOnly?: boolean;
 }
@@ -30,7 +29,6 @@ export const IntegerInput: React.FC<MyProps> = (props) => {
     clearInput,
     errorMessage,
     triedToSubmit,
-    form,
     readOnly,
   } = props;
 
@@ -55,7 +53,6 @@ export const IntegerInput: React.FC<MyProps> = (props) => {
       errorMessage={errorMessage}
       readOnly={readOnly}
       triedToSubmit={triedToSubmit}
-      form={form}
     />
   );
 };

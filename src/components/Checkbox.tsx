@@ -12,7 +12,6 @@ interface Props {
   onFocus?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur?: () => void;
   readOnly?: boolean;
-  form?: string;
   validated?: boolean;
   errorMessage?: string | false;
   title?: string;
@@ -29,7 +28,6 @@ const Checkbox: React.FC<Props> = (props) => {
     onFocus,
     onBlur,
     readOnly,
-    form,
     validated,
     errorMessage,
     title,
@@ -71,7 +69,6 @@ const Checkbox: React.FC<Props> = (props) => {
         onFocus={onFocus}
         onBlur={onBlur}
         readOnly={readOnly}
-        form={form}
         title={title}
       />
       {/* next div is checkmark */}

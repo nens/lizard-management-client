@@ -34,7 +34,6 @@ interface MyProps {
   isLoading?: boolean;
   isMulti?: boolean;
   dropUp?: boolean;
-  form?: string;
   isAsync?: boolean;
   isCached?: boolean;
   loadOptions?: (inputValue: string) => Promise<any>; // loadOptions is required if isAsync === true
@@ -62,7 +61,6 @@ export const SelectDropdown = (props: MyProps) => {
     isAsync,
     isCached,
     loadOptions,
-    form,
     onFocus,
     onBlur,
     readOnly,
@@ -230,7 +228,6 @@ export const SelectDropdown = (props: MyProps) => {
           tabIndex={-1}
           autoComplete="off"
           onFocus={() => mySelect.current && mySelect.current.focus()}
-          form={form}
           style={{
             position: "absolute",
             opacity: 0,
