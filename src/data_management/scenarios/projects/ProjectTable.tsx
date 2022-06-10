@@ -113,7 +113,7 @@ export const ProjectTable = (props: RouteComponentProps) => {
       imgAltDescription={"Project"}
       headerText={"Projects"}
       explanationText={defaultTableHelpText(
-        "Projects are used to group and give insights on 3Di scenarios."
+        "Projects are used to group and give insights on scenarios."
       )}
       backUrl={"/management/data_management/scenarios"}
     >

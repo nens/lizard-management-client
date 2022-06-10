@@ -16,6 +16,7 @@ interface MyProps {
   triedToSubmit?: boolean;
   readOnly?: boolean;
   rows?: number;
+  form?: string;
 }
 
 export const TextArea: React.FC<MyProps> = (props) => {
@@ -33,6 +34,7 @@ export const TextArea: React.FC<MyProps> = (props) => {
     triedToSubmit,
     readOnly,
     rows,
+    form,
   } = props;
 
   // Set validity of the input field
@@ -65,6 +67,7 @@ export const TextArea: React.FC<MyProps> = (props) => {
           readOnly={!!readOnly}
           rows={rows}
           spellCheck={false}
+          form={form}
           style={{
             // https://bugzilla.mozilla.org/show_bug.cgi?id=1137650
             // whiteline in firefox

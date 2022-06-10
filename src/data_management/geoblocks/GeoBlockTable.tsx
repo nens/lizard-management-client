@@ -139,7 +139,7 @@ export const GeoBlockTable: React.FC<RouteComponentProps> = (props) => {
           { value: "name__icontains=", label: "Name" },
           { value: "uuid=", label: "UUID" },
         ]}
-        defaultUrlParams={"&scenario__isnull=true&is_geoblock=true"} // to only show geoblocks & to exclude 3Di result layers
+        defaultUrlParams={"&scenario__isnull=true&is_geoblock=true"} // to only show geoblocks & to exclude scenario result layers
       />
       {rowsToBeDeleted.length > 0 ? (
         <DeleteModal

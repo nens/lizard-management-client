@@ -43,6 +43,8 @@ export const fetchProjects = async (searchQuery: string, organisationUuid: strin
 
 const navigationUrl = "/management/data_management/scenarios/scenarios";
 
+const formId = "scenario_form";
+
 const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<RouteParams>> = (
   props
 ) => {
@@ -70,7 +72,7 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
     name: null,
     uuid: null,
     description: null,
-    source: "3Di",
+    source: null,
     project: null,
     simulationStart: null,
     simulationEnd: null,
@@ -170,7 +172,7 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
       <form
         onSubmit={handleSubmit}
         onReset={handleReset}
-        id={"scenario_form"}
+        id={formId}
       />
       <div className={formStyles.Form}>
         <span className={`${formStyles.FormFieldTitle} ${formStyles.FirstFormFieldTitle}`}>
@@ -188,6 +190,7 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
           triedToSubmit={triedToSubmit}
           onFocus={handleFocus}
           onBlur={handleBlur}
+          form={formId}
         />
         {currentRecord ? (
           <TextInput
@@ -198,9 +201,22 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
             validated
             onFocus={handleFocus}
             onBlur={handleBlur}
+            form={formId}
             readOnly
           />
         ) : null}
+        <TextInput
+          title={"Source *"}
+          name={"source"}
+          value={values.source}
+          valueChanged={handleInputChange}
+          validated={!minLength(1, values.source)}
+          errorMessage={minLength(1, values.source)}
+          triedToSubmit={triedToSubmit}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          form={formId}
+        />
         <TextArea
           title={"Description"}
           name={"description"}
@@ -209,16 +225,8 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
           onFocus={handleFocus}
           onBlur={handleBlur}
           clearInput={clearInput}
+          form={formId}
           validated
-        />
-        <TextInput
-          title={"Source"}
-          name={"source"}
-          value={values.source}
-          valueChanged={handleInputChange}
-          validated
-          onFocus={handleFocus}
-          onBlur={handleBlur}
         />
         <SelectDropdown
           title={"Project"}
@@ -233,6 +241,7 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
           loadOptions={(input) => fetchProjects(input, selectedOrganisation.uuid)}
           onFocus={handleFocus}
           onBlur={handleBlur}
+          form={formId}
         />
         <DateTimeInput
           title={"Simulation start"}
@@ -240,6 +249,7 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
           value={values.simulationStart}
           valueChanged={value => handleValueChange("simulationStart", value)}
           clearInput={clearInput}
+          form={formId}
         />
         <DateTimeInput
           title={"Simulation end"}
@@ -247,6 +257,7 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
           value={values.simulationEnd}
           valueChanged={value => handleValueChange("simulationEnd", value)}
           clearInput={clearInput}
+          form={formId}
         />
         <TextInput
           title={"Simulation identifier"}
@@ -256,6 +267,7 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
           onFocus={handleFocus}
           onBlur={handleBlur}
           clearInput={clearInput}
+          form={formId}
           validated
         />
         <TextArea
@@ -266,6 +278,7 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
           onFocus={handleFocus}
           onBlur={handleBlur}
           clearInput={clearInput}
+          form={formId}
           validated
         />
         <TextInput
@@ -276,6 +289,7 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
           onFocus={handleFocus}
           onBlur={handleBlur}
           clearInput={clearInput}
+          form={formId}
           validated
         />
         <TextInput
@@ -286,6 +300,7 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
           onFocus={handleFocus}
           onBlur={handleBlur}
           clearInput={clearInput}
+          form={formId}
           validated
         />
         <span className={formStyles.FormFieldTitle}>2: Data</span>
@@ -310,6 +325,7 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
           triedToSubmit={triedToSubmit}
           onFocus={handleFocus}
           onBlur={handleBlur}
+          form={formId}
         />
         <span className={formStyles.FormFieldTitle}>3: Rights</span>
         <AccessModifier
@@ -319,6 +335,7 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
           valueChanged={(value) => handleValueChange("accessModifier", value)}
           onFocus={handleFocus}
           onBlur={handleBlur}
+          form={formId}
         />
         <SelectDropdown
           title={"Organisation *"}
@@ -334,6 +351,7 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
           triedToSubmit={triedToSubmit}
           onFocus={handleFocus}
           onBlur={handleBlur}
+          form={formId}
           readOnly={
             !(organisationsToSwitchTo.length > 0 && selectedOrganisation.roles.includes("admin"))
           }
@@ -341,7 +359,7 @@ const ScenarioForm: React.FC<Props & PropsFromDispatch & RouteComponentProps<Rou
         />
         <div className={formStyles.ButtonContainer}>
           <CancelButton url={navigationUrl} />
-          <SubmitButton onClick={tryToSubmitForm} form={"scenario_form"} />
+          <SubmitButton onClick={tryToSubmitForm} form={formId} />
         </div>
       </div>
     </ExplainSideColumn>

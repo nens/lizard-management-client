@@ -13,6 +13,7 @@ interface CheckBoxProps {
   validated?: boolean;
   errorMessage?: string | false;
   htmlTitle?: string;
+  form?: string;
 }
 
 export const CheckBox: React.FC<CheckBoxProps> = (props) => {
@@ -27,6 +28,7 @@ export const CheckBox: React.FC<CheckBoxProps> = (props) => {
     validated,
     errorMessage,
     htmlTitle,
+    form,
   } = props;
 
   return (
@@ -45,6 +47,7 @@ export const CheckBox: React.FC<CheckBoxProps> = (props) => {
         validated={validated}
         errorMessage={errorMessage}
         title={htmlTitle}
+        form={form}
       />
     </label>
   );

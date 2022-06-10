@@ -306,6 +306,8 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
   // Modal to view connected sources of a layer
   const [rasterSourceModal, setRasterSourceModal] = useState<boolean>(false);
 
+  const formId = "raster_layer_form_id";
+
   return (
     <ExplainSideColumn
       imgUrl={rasterLayerIcon}
@@ -322,7 +324,7 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
       https://stackoverflow.com/questions/3430214/form-inside-a-form-is-that-alright?lq=1
       Answer from user: "ilevent"
       */}
-      <form onSubmit={handleSubmit} onReset={handleReset} id={"raster_layer_form_id"} />
+      <form onSubmit={handleSubmit} onReset={handleReset} id={formId} />
       <div className={formStyles.Form}>
         <span className={`${formStyles.FormFieldTitle} ${formStyles.FirstFormFieldTitle}`}>
           1: General
@@ -339,6 +341,7 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           validated={!minLength(3, values.name)}
           errorMessage={minLength(3, values.name)}
           triedToSubmit={triedToSubmit}
+          form={formId}
         />
         {currentRecord ? (
           <TextInput
@@ -349,6 +352,7 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
             validated
             onFocus={handleFocus}
             onBlur={handleBlur}
+            form={formId}
             readOnly
           />
         ) : null}
@@ -361,6 +365,7 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           onFocus={handleFocus}
           onBlur={handleBlur}
           clearInput={clearInput}
+          form={formId}
           validated
         />
         {!belongsToScenario ? (
@@ -378,6 +383,7 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
             loadOptions={fetchLayerCollections}
             onFocus={handleFocus}
             onBlur={handleBlur}
+            form={formId}
           />
         ) : null}
         <span className={formStyles.FormFieldTitle}>2: Data</span>
@@ -407,6 +413,7 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
             triedToSubmit={triedToSubmit}
             onFocus={handleFocus}
             onBlur={handleBlur}
+            form={formId}
             readOnly={!!currentRecord || !!rasterSourceUUID}
             isAsync={!rasterSourceUUID && !currentRecord}
             isCached
@@ -483,6 +490,7 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           triedToSubmit={triedToSubmit}
           onFocus={handleFocus}
           onBlur={handleBlur}
+          form={formId}
           isSearchable={false}
         />
         <SelectDropdown
@@ -497,6 +505,7 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           triedToSubmit={triedToSubmit}
           onFocus={handleFocus}
           onBlur={handleBlur}
+          form={formId}
           isAsync
           isCached
           loadOptions={fetchObservationTypes}
@@ -509,6 +518,7 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           validated
           onFocus={handleFocus}
           onBlur={handleBlur}
+          form={formId}
         />
         <span className={formStyles.FormFieldTitle}>3: Rights</span>
         <AccessModifier
@@ -519,6 +529,7 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           onFocus={handleFocus}
           onBlur={handleBlur}
           readOnly={belongsToScenario}
+          form={formId}
         />
         <CheckBox
           title={"Shared with other organisations"}
@@ -528,6 +539,7 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           onFocus={handleFocus}
           onBlur={handleBlur}
           readOnly={belongsToScenario}
+          form={formId}
         />
         {values.sharedWith ? (
           <SelectDropdown
@@ -545,6 +557,7 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
             isCached
             loadOptions={fetchOrganisationsToShareWith}
             readOnly={belongsToScenario}
+            form={formId}
           />
         ) : null}
         <SelectDropdown
@@ -561,6 +574,7 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           triedToSubmit={triedToSubmit}
           onFocus={handleFocus}
           onBlur={handleBlur}
+          form={formId}
           readOnly={true}
         />
         <SelectDropdown
@@ -578,6 +592,7 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
           dropUp
           onFocus={handleFocus}
           onBlur={handleBlur}
+          form={formId}
         />
         <div className={formStyles.ButtonContainer}>
           <CancelButton
@@ -596,7 +611,7 @@ const RasterLayerForm: React.FC<Props & DispatchProps & RouteComponentProps> = (
                 />
               </div>
             ) : null}
-            <SubmitButton onClick={tryToSubmitForm} form={"raster_layer_form_id"} />
+            <SubmitButton onClick={tryToSubmitForm} form={formId} />
           </div>
         </div>
       </div>
