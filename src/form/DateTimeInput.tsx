@@ -32,7 +32,7 @@ export const DateTimeInput: React.FC<MyProps> = (props) => {
       <div style={{ position: "relative" }}>
         <Datetime
           value={moment(value)}
-          onChange={event => valueChanged(moment(event).format("YYYY-MM-DDTHH:mm:SS") + "Z")}
+          onChange={event => valueChanged(moment(event).format("YYYY-MM-DDTHH:mm:ss") + "Z")}
           inputProps={{
             className: `${formStyles.FormControl} ${formStyles.FormSubmitted}`
           }}
