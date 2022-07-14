@@ -34,8 +34,6 @@ export function AlarmThresholds(props: MyProps) {
     thresholds,
     valueChanged,
     valueRemoved,
-    // onFocus,
-    // onBlur,
     validated,
     errorMessage,
     triedToSubmit,
