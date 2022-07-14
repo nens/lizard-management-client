@@ -130,14 +130,23 @@ const TimeseriesAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps>
           organisation: selectedOrganisation.uuid,
         }),
       })
-        .then((response) => {
+        .then(async (response) => {
           const status = response.status;
+          const parsedResponse = await response.json();
           if (status === 201) {
             props.addNotification("Success! New timeseries alarm created", 2000);
             props.history.push("/management/alarms/notifications/timeseries_alarms");
           } else if (status === 403) {
             props.addNotification("Not authorized", 2000);
             console.error(response);
+          } else if (
+            status === 400 &&
+            parsedResponse &&
+            parsedResponse.detail &&
+            parsedResponse.detail.thresholds
+          ) {
+            props.addNotification("Error! " + parsedResponse.detail.thresholds[0]);
+            console.error(parsedResponse);
           } else {
             props.addNotification(status, 2000);
             console.error(response);
@@ -151,12 +160,21 @@ const TimeseriesAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps>
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       })
-        .then((response) => {
+        .then(async (response) => {
           const status = response.status;
+          const parsedResponse = await response.json();
           if (status === 200) {
             props.addNotification("Success! Timeseries alarm updated", 2000);
             props.history.push("/management/alarms/notifications/timeseries_alarms");
-          } else {
+          }  else if (
+            status === 400 &&
+            parsedResponse &&
+            parsedResponse.detail &&
+            parsedResponse.detail.thresholds
+          ) {
+            props.addNotification("Error! " + parsedResponse.detail.thresholds[0]);
+            console.error(parsedResponse);
+          }else {
             props.addNotification(status, 2000);
             console.error(response);
           }
@@ -379,7 +397,7 @@ const TimeseriesAlarmForm: React.FC<Props & DispatchProps & RouteComponentProps>
 };
 
 const mapPropsToDispatch = (dispatch: AppDispatch) => ({
-  addNotification: (message: string | number, timeout: number) =>
+  addNotification: (message: string | number, timeout?: number) =>
     dispatch(addNotification(message, timeout)),
 });
 type DispatchProps = ReturnType<typeof mapPropsToDispatch>;
